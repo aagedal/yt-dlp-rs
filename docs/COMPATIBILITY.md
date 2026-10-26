@@ -650,6 +650,60 @@ item's dict; several make a playlist. Wayback Machine YouTube captures
 (`web.archive:youtube`) are not supported. `tests/fixtures/sites/archiveorg/`
 is compared with pinned upstream output.
 
+ARD Mediathek videos (`ardmediathek.de/[CHANNEL/]player|live|video/[...]/ID`,
+also `beta.`) follow upstream `ARDBetaMediathekIE` (`ARDMediathek`): with an
+`ams` cookie for `sso.ardmediathek.de`, the non-fatal `sso/token` JSON's
+`idToken` JWT (`user_id`, else `sub`) is sent as `x-authorization` with a
+`userId` query (`Unable to extract token, continuing without authentication`
+and `Account is not verified as 18+` warnings); then the
+`page-gateway/pages/ard/item/ID?embedded=false&mcV6=true` JSON. Its
+`tracking.atiCustomVars.contentId` is the ID (the URL's ID becomes an
+`ardbetamediathek` `_old_archive_ids` entry), else the URL's ID with
+upstream's `Could not extract contentId` warning. The first
+`player_ondemand`/`player_live` widget is required (upstream's
+`'NoneType' object has no attribute 'get'` without one); `blockedByFsk`
+raises the login-required error. Each stream's media with a URL become
+non-fatal HLS formats (`hls-KIND`, master playlist only, live variants for
+`player_live`) or `http-KIND` formats (`forcedLabel` note, resolution, video
+codec), the `main` stream with preference 1, and every format gets the first
+audio's `LANGCODE[-KIND]` language (`deu` by default, `standard` removed) and
+a `language_preference` of 10 for `deu`, else -10. HLS subtitles are merged
+with the `subtitles` sources (`webvtt` as `vtt`, `ebutt` as `ttml`, others by
+URL extension; `deu` by default). Jump-mark chapters with a truthy time, the
+`FSKNN` age limit, `meta` title, synopsis, broadcast timestamp, series, first
+image, duration and clip source channel follow upstream's dict, and the page
+title's season/episode numbers and episode come from upstream's
+`_extract_episode_info` patterns.
+
+ARD Mediathek shows, series seasons and compilations
+(`ardmediathek.de/[CHANNEL/]sendung|serie|sammlung/[SLUG/]ID[/SEASON[/OV|AD]]`)
+follow upstream `ARDMediathekCollectionIE`: the `widgets/ard/asset` (or, for
+`sammlung`, `compilations/ard`) page-gateway JSON with `pageNumber`,
+`pageSize=100` and, for a season, the `seasoned`/`seasonNumber`/
+`withOriginalversion`/`withAudiodescription` query (`Downloading playlist page
+N`); each teaser's `links.target.urlId`/`id` (else its `id`, skipping the
+playlist itself) becomes an `ARDBetaMediathek` (`video/ID`) or, for
+compilations, `ARDMediathekCollection` (`sammlung/ID`) `url` result with the
+teaser's ID, long title, duration and broadcast timestamp. The playlist ID
+joins the ID, season and version with `_`; `display_id`, title and synopsis
+are kept even when `None`, like upstream. Pages are fetched until one yields
+fewer than 100 entries, eagerly at extraction (upstream's `OnDemandPagedList`
+fetches them while processing, so `--playlist-items` saves no requests here).
+
+ARD Audiothek episodes (`ardaudiothek.de|ardsounds.de/episode/urn:ard:
+episode|section|extra:HEX`) follow upstream `ARDAudiothekIE`: the POSTed
+GraphQL `item` query (a missing `data` is upstream's `KeyError`; a `null`
+item has no formats), its `audioList` entries with a URL as audio-only
+formats (distribution type ID, int bitrate, codec), and the publisher
+channel, description, duration, show title as series, episode number, square
+image without its query, start-date timestamp and title. Shows
+(`.../sendung/SLUG/urn:ard:show:HEX`) follow `ARDAudiothekPlaylistIE`: the
+GraphQL `show` query's published item URLs as `ARDAudiothek` `url` results
+with the slug as `display_id`, title and description.
+`ARDMediathekBaseIE` (used only by `SRMediathekIE`) is not ported.
+`tests/fixtures/sites/ard/` (synthetic API responses shaped like upstream's
+parsing and tests) is compared with pinned upstream output.
+
 Arte videos (`arte.tv/LANG/videos/ID`, `api.arte.tv/api/player/vN/config/LANG/ID`,
 `arte://program/ID`, including `LIVE`) follow upstream `ArteTVIE`: the player
 config API (`x-validated-age: 18`; an `arte://` URL requests the `None`

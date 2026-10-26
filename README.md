@@ -120,7 +120,7 @@ Supported today:
   Megaphone players (`player.megaphone.fm/ID`) through their page,
   ReverbNation songs through the song API, Hypem tracks through their page
   and served source, HistoricFilms tapes through their page, Livestreamfails
-  clips through the clip API, Arte videos, embeds, collections and category pages through the player config and programs APIs, Il Post podcast episodes through the podcast endpoint, Kickstarter native project videos through their page, INA videos and audio through the asset API, HSE TV shows and product videos through their Redux data, Gronkh streams through the video API, LNK videos through the video-config API, EbaumsWorld and tv.dfb.de videos through the player XML,
+  clips through the clip API, ARD Mediathek videos, shows and compilations through the page-gateway API, ARD Audiothek episodes and shows through its GraphQL API, Arte videos, embeds, collections and category pages through the player config and programs APIs, Il Post podcast episodes through the podcast endpoint, Kickstarter native project videos through their page, INA videos and audio through the asset API, HSE TV shows and product videos through their Redux data, Gronkh streams through the video API, LNK videos through the video-config API, EbaumsWorld and tv.dfb.de videos through the player XML,
   Glide messages through their share page, GodTube videos through their
   player XML, FC Zenit videos through the player API, BehindKink posts
   QingTing programs, Radio ZET podcasts, OnePlace episodes, SzTV videos, Photobucket media and

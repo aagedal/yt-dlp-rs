@@ -1,0 +1,631 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.ardmediathek.de/video/filme-im-mdr/liebe-auf-vier-pfoten/mdr-fernsehen/Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"12939099\", \"display_id\": \"Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\", \"formats\": [{\"url\": \"https://ardmediathek-vod.example/mdr/liebe_dgs.mp4\", \"format_id\": \"http-sign_language\", \"preference\": null, \"language\": \"eng\", \"language_preference\": -10, \"format_note\": \"DGS\", \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-sign_language - 640x360 (DGS)\"}, {\"url\": \"https://ardmediathek-vod.example/mdr/liebe_ad_960x540.mp4\", \"format_id\": \"http-main-0\", \"preference\": 1, \"language\": \"deu-audio-description\", \"language_preference\": -10, \"width\": 960, \"height\": 540, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-main-0 - 960x540\"}, {\"format_id\": \"hls-main-1100\", \"format_index\": null, \"url\": \"https://ardmediathek-vod.example/mdr/540/index.m3u8\", \"manifest_url\": \"https://ardmediathek-vod.example/mdr/master.m3u8\", \"tbr\": 1100.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-main-1100 - 960x540\"}, {\"url\": \"https://ardmediathek-vod.example/mdr/liebe_1280x720.mp4\", \"format_id\": \"http-main-1\", \"preference\": 1, \"language\": \"deu\", \"language_preference\": 10, \"format_note\": \"HD\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H.264\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-main-1 - 1280x720 (HD)\"}, {\"format_id\": \"hls-main-3400\", \"format_index\": null, \"url\": \"https://ardmediathek-vod.example/mdr/720/index.m3u8\", \"manifest_url\": \"https://ardmediathek-vod.example/mdr/master.m3u8\", \"tbr\": 3400.0, \"ext\": \"mp4\", \"fps\": 50.0, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-main-3400 - 1280x720\"}], \"subtitles\": {\"de\": [{\"url\": \"https://ardmediathek-vod.example/mdr/subs/de.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"deu\": [{\"url\": \"https://classic.ardmediathek.de/subtitle/410784.xml\", \"ext\": \"ttml\"}, {\"url\": \"https://classic.ardmediathek.de/subtitle/410784.vtt\", \"ext\": \"vtt\"}, {\"url\": \"https://classic.ardmediathek.de/subtitle/410784.srt\", \"ext\": \"srt\"}]}, \"is_live\": false, \"age_limit\": 0, \"chapters\": [{\"start_time\": 0, \"end_time\": 600, \"title\": \"<Untitled Chapter 1>\"}, {\"start_time\": 600, \"title\": \"Die Begegnung\", \"end_time\": 3000}, {\"start_time\": 3000, \"title\": \"Das Wiedersehen\", \"end_time\": 5222}], \"title\": \"Liebe auf vier Pfoten\", \"description\": \"Claudia Schmitt, Anw\\u00e4ltin in Salzburg, ...\", \"timestamp\": 1701343800, \"series\": \"Filme im MDR\", \"thumbnail\": \"https://api.ardmediathek.de/image-service/images/urn:ard:image:aee7cbf8f06de976?w=960&ch=ae4d0f2ee47d8b9b\", \"duration\": 5222, \"channel\": \"MDR\", \"episode\": \"Liebe auf vier Pfoten\", \"_old_archive_ids\": [\"ardbetamediathek Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\"], \"webpage_url\": \"https://www.ardmediathek.de/video/filme-im-mdr/liebe-auf-vier-pfoten/mdr-fernsehen/Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\", \"original_url\": \"https://www.ardmediathek.de/video/filme-im-mdr/liebe-auf-vier-pfoten/mdr-fernsehen/Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\", \"webpage_url_basename\": \"Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\", \"webpage_url_domain\": \"ardmediathek.de\", \"extractor\": \"ARDMediathek\", \"extractor_key\": \"ARDBetaMediathek\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://api.ardmediathek.de/image-service/images/urn:ard:image:aee7cbf8f06de976?w=960&ch=ae4d0f2ee47d8b9b\", \"id\": \"0\"}], \"fulltitle\": \"Liebe auf vier Pfoten\", \"duration_string\": \"1:27:02\", \"upload_date\": \"20231130\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-main-3400\", \"url\": \"https://ardmediathek-vod.example/mdr/720/index.m3u8\", \"manifest_url\": \"https://ardmediathek-vod.example/mdr/master.m3u8\", \"tbr\": 3400.0, \"ext\": \"mp4\", \"fps\": 50.0, \"protocol\": \"m3u8_native\", \"preference\": 1, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-main-3400 - 1280x720\", \"_filename\": \"Liebe auf vier Pfoten [12939099].mp4\", \"filename\": \"Liebe auf vier Pfoten [12939099].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-main-3400\", \"format_index\": null, \"url\": \"https://ardmediathek-vod.example/mdr/720/index.m3u8\", \"manifest_url\": \"https://ardmediathek-vod.example/mdr/master.m3u8\", \"tbr\": 3400.0, \"ext\": \"mp4\", \"fps\": 50.0, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-main-3400 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/video/filme-im-mdr/liebe-auf-vier-pfoten/mdr-fernsehen/Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ARDMediathek] Extracting URL: https://www.ardmediathek.de/video/filme-im-mdr/liebe-auf-vier-pfoten/mdr-fernsehen/Y3JpZDovL21kci...MC80MjIwOTEtNDAyNTM0",
+    "[ARDMediathek] Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0: Downloading JSON metadata",
+    "[ARDMediathek] 12939099: Downloading m3u8 information",
+    "[info] Available formats for 12939099:",
+    "ID                 EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC      ACODEC    MORE INFO",
+    "--------------------------------------------------------------------------------------------------------------",
+    "http-sign_language mp4 640x360        |                  https | avc1.4d401e unknown   [eng] DGS",
+    "http-main-0        mp4 960x540        |                  https | unknown     unknown   [deu-audio-description]",
+    "hls-main-1100      mp4 960x540     25 | ~684.76MiB 1100k m3u8  | avc1.4d401f mp4a.40.2 [deu]",
+    "http-main-1        mp4 1280x720       |                  https | H.264       unknown   [deu] HD",
+    "hls-main-3400      mp4 1280x720    50 | ~  2.07GiB 3400k m3u8  | avc1.640020 mp4a.40.2 [deu]"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/video/filme-im-mdr/liebe-auf-vier-pfoten/mdr-fernsehen/Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ARDMediathek] Extracting URL: https://www.ardmediathek.de/video/filme-im-mdr/liebe-auf-vier-pfoten/mdr-fernsehen/Y3JpZDovL21kci...MC80MjIwOTEtNDAyNTM0",
+    "[ARDMediathek] Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0: Downloading JSON metadata",
+    "[ARDMediathek] 12939099: Downloading m3u8 information",
+    "[info] Available subtitles for 12939099:",
+    "Language Formats",
+    "de       vtt",
+    "deu      srt, vtt, ttml"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/video/filme-im-mdr/liebe-auf-vier-pfoten/mdr-fernsehen/Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(episode)s|%(series)s|%(channel)s|%(age_limit)s|%(timestamp)s|%(upload_date)s|%(duration)s|%(format_id)s|%(language)s|%(chapters)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "12939099|Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0|Liebe auf vier Pfoten|Liebe auf vier Pfoten|Filme im MDR|MDR|0|1701343800|20231130|5222|hls-main-3400|deu|[{'start_time': 0, 'end_time': 600, 'title': '<Untitled Chapter 1>'}, {'start_time': 600, 'title': 'Die Begegnung', 'end_time': 3000}, {'start_time': 3000, 'title': 'Das Wiedersehen', 'end_time': 5222}]"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/video/filme-im-mdr/liebe-auf-vier-pfoten/mdr-fernsehen/Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0",
+   "args": [
+    "-f",
+    "http-sign_language",
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ARDMediathek] Extracting URL: https://www.ardmediathek.de/video/filme-im-mdr/liebe-auf-vier-pfoten/mdr-fernsehen/Y3JpZDovL21kci...MC80MjIwOTEtNDAyNTM0",
+    "[ARDMediathek] Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0: Downloading JSON metadata",
+    "[ARDMediathek] 12939099: Downloading m3u8 information",
+    "[info] 12939099: Downloading 1 format(s): http-sign_language",
+    "[download] Destination: 12939099.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "12939099.mp4": 792
+   }
+  },
+  {
+   "url": "https://www.ardmediathek.de/ard/player/EP1/",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"EP1\", \"display_id\": \"EP1\", \"formats\": [{\"url\": \"https://ardmediathek-vod.example/simple.mp4\", \"format_id\": \"http-main\", \"preference\": 1, \"language\": \"eng\", \"language_preference\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-main - unknown\"}], \"subtitles\": {}, \"is_live\": false, \"age_limit\": 12, \"title\": \"Homo sapiens (S06/E07) - Originalversion\", \"season_number\": 6, \"episode_number\": 7, \"episode\": \"Homo sapiens - Originalversion\", \"_old_archive_ids\": null, \"webpage_url\": \"https://www.ardmediathek.de/ard/player/EP1/\", \"original_url\": \"https://www.ardmediathek.de/ard/player/EP1/\", \"webpage_url_basename\": \"EP1\", \"webpage_url_domain\": \"ardmediathek.de\", \"extractor\": \"ARDMediathek\", \"extractor_key\": \"ARDBetaMediathek\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Homo sapiens (S06/E07) - Originalversion\", \"release_year\": null, \"season\": \"Season 6\", \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://ardmediathek-vod.example/simple.mp4\", \"format_id\": \"http-main\", \"preference\": 1, \"language\": \"eng\", \"language_preference\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-main - unknown\", \"_filename\": \"Homo sapiens (S06\\u29f8E07) - Originalversion [EP1].mp4\", \"filename\": \"Homo sapiens (S06\\u29f8E07) - Originalversion [EP1].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [ARDMediathek] Could not extract contentId; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://beta.ardmediathek.de/ard/video/EP2",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(episode)s|%(season_number)s|%(episode_number)s|%(age_limit)s|%(_old_archive_ids)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "101|Fritjof aus Norwegen (2) (AD)|Fritjof aus Norwegen (AD)|NA|2|NA|['ardbetamediathek EP2']"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://beta.ardmediathek.de/ard/video/EP3",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(episode)s|%(season_number)s|%(episode_number)s|%(age_limit)s|%(_old_archive_ids)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "102|Folge 3: \"Der Anfang\" (Wdh.)|Der Anfang|NA|3|16|['ardbetamediathek EP3']"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://beta.ardmediathek.de/ard/video/EP4",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(episode)s|%(season_number)s|%(episode_number)s|%(age_limit)s|%(_old_archive_ids)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "103|Folge 25/42: Symmetrie|Symmetrie|NA|25|NA|['ardbetamediathek EP4']"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://beta.ardmediathek.de/ard/video/EP5",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(episode)s|%(season_number)s|%(episode_number)s|%(age_limit)s|%(_old_archive_ids)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "104|Folge 1063 - Vertrauen|Vertrauen|NA|1063|NA|['ardbetamediathek EP5']"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://beta.ardmediathek.de/ard/video/EP6",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(episode)s|%(season_number)s|%(episode_number)s|%(age_limit)s|%(_old_archive_ids)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "105|Teil (1/2)|Teil|NA|1|NA|['ardbetamediathek EP6']"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/mdr/live/Y3JpZDovL21kci5kZS9saXZlc3RyZWFtL21kci1zYWNoc2Vu",
+   "args": [
+    "--print",
+    "%(id)s|%(is_live)s|%(live_status)s|%(protocol)s|%(format_id)s|%(fulltitle)s|%(channel)s|%(episode)s|%(language)s|%(thumbnail)s|%(age_limit)s|%(_old_archive_ids)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "4711|True|is_live|m3u8_native|hls-main|MDR Fernsehen|MDR|MDR Fernsehen live|deu|NA|NA|['ardbetamediathek Y3JpZDovL21kci5kZS9saXZlc3RyZWFtL21kci1zYWNoc2Vu']"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/mdr/live/Y3JpZDovL21kci5kZS9saXZlc3RyZWFtL21kci1zYWNoc2Vu",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ARDMediathek] Extracting URL: https://www.ardmediathek.de/mdr/live/Y3JpZDovL21kci5kZS9saXZlc3RyZWFtL21kci1zYWNoc2Vu",
+    "[ARDMediathek] Y3JpZDovL21kci5kZS9saXZlc3RyZWFtL21kci1zYWNoc2Vu: Downloading JSON metadata",
+    "[ARDMediathek] 4711: Downloading m3u8 information",
+    "[info] Available formats for 4711:",
+    "ID       EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC    MORE INFO",
+    "-----------------------------------------------------------------------",
+    "hls-main mp4 1280x720   | 2000k m3u8  | avc1.640020 mp4a.40.2 [deu]"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/video/tatort/FSKBLOCKED",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [ARDMediathek] FSKBLOCKED: This video is only available for age verified users or after 22:00. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/video/x/NOFORMATS",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [ARDMediathek] 556: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "ERROR: [ARDMediathek] 556: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/video/x/NOFORMATS",
+   "args": [
+    "--ignore-no-formats-error",
+    "--print",
+    "%(id)s|%(title)s|%(duration)s|%(is_live)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "556|Leer|61|False"
+   ],
+   "stderr": [
+    "WARNING: [ARDMediathek] 556: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/video/x/NOPLAYER",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 'NoneType' object has no attribute 'get'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/video/x/MISSING",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [ARDMediathek] MISSING: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/video/x/EP5",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "--print",
+    "%(id)s|%(title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "101|Fritjof aus Norwegen (2) (AD)"
+   ],
+   "stderr": [
+    "WARNING: [ARDMediathek] Account is not verified as 18+; video may be unavailable"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/serie/quiz/staffel-1-originalversion/Y3JpZDovL3dkci5kZS9vbmUvcXVpeg/1/OV",
+   "args": [
+    "--no-geo-bypass",
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"display_id\": \"quiz/staffel-1-originalversion\", \"title\": \"Staffel 1 Originalversion\", \"description\": null, \"id\": \"Y3JpZDovL3dkci5kZS9vbmUvcXVpeg_1_OV\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"Y3JpZDovL3dkci5kZS9CZWl0cmFnLTE\", \"title\": \"Quiz (S01/E01) - Originalversion\", \"duration\": 2700, \"timestamp\": 1614888900, \"ie_key\": \"ARDBetaMediathek\", \"_type\": \"url\", \"url\": \"https://www.ardmediathek.de/video/Y3JpZDovL3dkci5kZS9CZWl0cmFnLTEurl\", \"__x_forwarded_for_ip\": null}, {\"id\": \"Y3JpZDovL3dkci5kZS9CZWl0cmFnLTI\", \"title\": \"Quiz (S01/E02)\", \"duration\": 2650, \"ie_key\": \"ARDBetaMediathek\", \"_type\": \"url\", \"url\": \"https://www.ardmediathek.de/video/Y3JpZDovL3dkci5kZS9CZWl0cmFnLTI\", \"__x_forwarded_for_ip\": null}, {\"id\": \"Y3JpZDovL3dkci5kZS9CZWl0cmFnLTM\", \"ie_key\": \"ARDBetaMediathek\", \"_type\": \"url\", \"url\": \"https://www.ardmediathek.de/video/Y3JpZDovL3dkci5kZS9CZWl0cmFnLTM\", \"__x_forwarded_for_ip\": null}, {\"id\": \"3bQCDwJVQL6FBMBrcbBbBn\", \"title\": \"Mehr Quiz\", \"ie_key\": \"ARDMediathekCollection\", \"_type\": \"url\", \"url\": \"https://www.ardmediathek.de/sammlung/3bQCDwJVQL6FBMBrcbBbBn\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.ardmediathek.de/serie/quiz/staffel-1-originalversion/Y3JpZDovL3dkci5kZS9vbmUvcXVpeg/1/OV\", \"original_url\": \"https://www.ardmediathek.de/serie/quiz/staffel-1-originalversion/Y3JpZDovL3dkci5kZS9vbmUvcXVpeg/1/OV\", \"webpage_url_basename\": \"OV\", \"webpage_url_domain\": \"ardmediathek.de\", \"extractor\": \"ARDMediathekCollection\", \"extractor_key\": \"ARDMediathekCollection\", \"release_year\": null, \"playlist_count\": 4, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/serie/babylon-berlin/staffel-4-mit-audiodeskription/Y3JpZDovL2Rhc2Vyc3RlLmRlL2JhYnlsb24tYmVybGlu/4/AD",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"display_id\": \"babylon-berlin/staffel-4-mit-audiodeskription\", \"title\": \"Staffel 4 mit Audiodeskription\", \"description\": \"Berlin 1930.\", \"id\": \"Y3JpZDovL2Rhc2Vyc3RlLmRlL2JhYnlsb24tYmVybGlu_4_AD\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"12939099\", \"display_id\": \"Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\", \"formats\": [{\"url\": \"https://ardmediathek-vod.example/mdr/liebe_dgs.mp4\", \"format_id\": \"http-sign_language\", \"preference\": null, \"language\": \"eng\", \"language_preference\": -10, \"format_note\": \"DGS\", \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-sign_language - 640x360 (DGS)\"}, {\"url\": \"https://ardmediathek-vod.example/mdr/liebe_ad_960x540.mp4\", \"format_id\": \"http-main-0\", \"preference\": 1, \"language\": \"deu-audio-description\", \"language_preference\": -10, \"width\": 960, \"height\": 540, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-main-0 - 960x540\"}, {\"format_id\": \"hls-main-1100\", \"format_index\": null, \"url\": \"https://ardmediathek-vod.example/mdr/540/index.m3u8\", \"manifest_url\": \"https://ardmediathek-vod.example/mdr/master.m3u8\", \"tbr\": 1100.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-main-1100 - 960x540\"}, {\"url\": \"https://ardmediathek-vod.example/mdr/liebe_1280x720.mp4\", \"format_id\": \"http-main-1\", \"preference\": 1, \"language\": \"deu\", \"language_preference\": 10, \"format_note\": \"HD\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H.264\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-main-1 - 1280x720 (HD)\"}, {\"format_id\": \"hls-main-3400\", \"format_index\": null, \"url\": \"https://ardmediathek-vod.example/mdr/720/index.m3u8\", \"manifest_url\": \"https://ardmediathek-vod.example/mdr/master.m3u8\", \"tbr\": 3400.0, \"ext\": \"mp4\", \"fps\": 50.0, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-main-3400 - 1280x720\"}], \"subtitles\": {\"de\": [{\"url\": \"https://ardmediathek-vod.example/mdr/subs/de.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"deu\": [{\"url\": \"https://classic.ardmediathek.de/subtitle/410784.xml\", \"ext\": \"ttml\"}, {\"url\": \"https://classic.ardmediathek.de/subtitle/410784.vtt\", \"ext\": \"vtt\"}, {\"url\": \"https://classic.ardmediathek.de/subtitle/410784.srt\", \"ext\": \"srt\"}]}, \"is_live\": false, \"age_limit\": 0, \"chapters\": [{\"start_time\": 0, \"end_time\": 600, \"title\": \"<Untitled Chapter 1>\"}, {\"start_time\": 600, \"title\": \"Die Begegnung\", \"end_time\": 3000}, {\"start_time\": 3000, \"title\": \"Das Wiedersehen\", \"end_time\": 5222}], \"title\": \"Liebe auf vier Pfoten\", \"description\": \"Claudia Schmitt, Anw\\u00e4ltin in Salzburg, ...\", \"timestamp\": 1701343800, \"series\": \"Filme im MDR\", \"thumbnail\": \"https://api.ardmediathek.de/image-service/images/urn:ard:image:aee7cbf8f06de976?w=960&ch=ae4d0f2ee47d8b9b\", \"duration\": 5222, \"channel\": \"MDR\", \"episode\": \"Liebe auf vier Pfoten\", \"_old_archive_ids\": [\"ardbetamediathek Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\"], \"webpage_url\": \"https://www.ardmediathek.de/video/Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\", \"original_url\": \"https://www.ardmediathek.de/video/Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\", \"webpage_url_basename\": \"Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\", \"webpage_url_domain\": \"ardmediathek.de\", \"extractor\": \"ARDMediathek\", \"extractor_key\": \"ARDBetaMediathek\", \"playlist_count\": 1, \"playlist\": \"Staffel 4 mit Audiodeskription\", \"playlist_id\": \"Y3JpZDovL2Rhc2Vyc3RlLmRlL2JhYnlsb24tYmVybGlu_4_AD\", \"playlist_title\": \"Staffel 4 mit Audiodeskription\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.ardmediathek.de/serie/babylon-berlin/staffel-4-mit-audiodeskription/Y3JpZDovL2Rhc2Vyc3RlLmRlL2JhYnlsb24tYmVybGlu/4/AD\", \"n_entries\": 1, \"playlist_index\": 1, \"__last_playlist_index\": 1, \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://api.ardmediathek.de/image-service/images/urn:ard:image:aee7cbf8f06de976?w=960&ch=ae4d0f2ee47d8b9b\", \"id\": \"0\"}], \"fulltitle\": \"Liebe auf vier Pfoten\", \"duration_string\": \"1:27:02\", \"upload_date\": \"20231130\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-main-3400\", \"url\": \"https://ardmediathek-vod.example/mdr/720/index.m3u8\", \"manifest_url\": \"https://ardmediathek-vod.example/mdr/master.m3u8\", \"tbr\": 3400.0, \"ext\": \"mp4\", \"fps\": 50.0, \"protocol\": \"m3u8_native\", \"preference\": 1, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-main-3400 - 1280x720\", \"_filename\": \"Liebe auf vier Pfoten [12939099].mp4\", \"filename\": \"Liebe auf vier Pfoten [12939099].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-main-3400\", \"format_index\": null, \"url\": \"https://ardmediathek-vod.example/mdr/720/index.m3u8\", \"manifest_url\": \"https://ardmediathek-vod.example/mdr/master.m3u8\", \"tbr\": 3400.0, \"ext\": \"mp4\", \"fps\": 50.0, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-main-3400 - 1280x720\"}], \"webpage_url\": \"https://www.ardmediathek.de/serie/babylon-berlin/staffel-4-mit-audiodeskription/Y3JpZDovL2Rhc2Vyc3RlLmRlL2JhYnlsb24tYmVybGlu/4/AD\", \"original_url\": \"https://www.ardmediathek.de/serie/babylon-berlin/staffel-4-mit-audiodeskription/Y3JpZDovL2Rhc2Vyc3RlLmRlL2JhYnlsb24tYmVybGlu/4/AD\", \"webpage_url_basename\": \"AD\", \"webpage_url_domain\": \"ardmediathek.de\", \"extractor\": \"ARDMediathekCollection\", \"extractor_key\": \"ARDMediathekCollection\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/serie/babylon-berlin/staffel-1/Y3JpZDovL2Rhc2Vyc3RlLmRlL2JhYnlsb24tYmVybGlu/1/",
+   "args": [
+    "--no-geo-bypass",
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"display_id\": \"babylon-berlin/staffel-1\", \"title\": null, \"description\": null, \"id\": \"Y3JpZDovL2Rhc2Vyc3RlLmRlL2JhYnlsb24tYmVybGlu_1\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.ardmediathek.de/serie/babylon-berlin/staffel-1/Y3JpZDovL2Rhc2Vyc3RlLmRlL2JhYnlsb24tYmVybGlu/1/\", \"original_url\": \"https://www.ardmediathek.de/serie/babylon-berlin/staffel-1/Y3JpZDovL2Rhc2Vyc3RlLmRlL2JhYnlsb24tYmVybGlu/1/\", \"webpage_url_basename\": \"1\", \"webpage_url_domain\": \"ardmediathek.de\", \"extractor\": \"ARDMediathekCollection\", \"extractor_key\": \"ARDMediathekCollection\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/sendung/tatort/Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(title)s|%(duration)s|%(timestamp)s|%(playlist_title)s|%(playlist_id)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "001|tatort-000|Tatort 0|5400|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-000",
+    "002|tatort-001|Tatort 1|5401|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-001",
+    "003|tatort-002|Tatort 2|5402|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-002",
+    "004|tatort-003|Tatort 3|5403|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-003",
+    "005|tatort-004|Tatort 4|5404|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-004",
+    "006|tatort-005|Tatort 5|5405|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-005",
+    "007|tatort-006|Tatort 6|5406|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-006",
+    "008|tatort-007|Tatort 7|5407|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-007",
+    "009|tatort-008|Tatort 8|5408|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-008",
+    "010|tatort-009|Tatort 9|5409|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-009",
+    "011|tatort-010|Tatort 10|5410|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-010",
+    "012|tatort-011|Tatort 11|5411|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-011",
+    "013|tatort-012|Tatort 12|5412|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-012",
+    "014|tatort-013|Tatort 13|5413|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-013",
+    "015|tatort-014|Tatort 14|5414|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-014",
+    "016|tatort-015|Tatort 15|5415|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-015",
+    "017|tatort-016|Tatort 16|5416|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-016",
+    "018|tatort-017|Tatort 17|5417|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-017",
+    "019|tatort-018|Tatort 18|5418|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-018",
+    "020|tatort-019|Tatort 19|5419|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-019",
+    "021|tatort-020|Tatort 20|5420|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-020",
+    "022|tatort-021|Tatort 21|5421|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-021",
+    "023|tatort-022|Tatort 22|5422|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-022",
+    "024|tatort-023|Tatort 23|5423|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-023",
+    "025|tatort-024|Tatort 24|5424|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-024",
+    "026|tatort-025|Tatort 25|5425|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-025",
+    "027|tatort-026|Tatort 26|5426|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-026",
+    "028|tatort-027|Tatort 27|5427|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-027",
+    "029|tatort-028|Tatort 28|5428|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-028",
+    "030|tatort-029|Tatort 29|5429|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-029",
+    "031|tatort-030|Tatort 30|5430|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-030",
+    "032|tatort-031|Tatort 31|5431|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-031",
+    "033|tatort-032|Tatort 32|5432|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-032",
+    "034|tatort-033|Tatort 33|5433|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-033",
+    "035|tatort-034|Tatort 34|5434|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-034",
+    "036|tatort-035|Tatort 35|5435|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-035",
+    "037|tatort-036|Tatort 36|5436|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-036",
+    "038|tatort-037|Tatort 37|5437|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-037",
+    "039|tatort-038|Tatort 38|5438|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-038",
+    "040|tatort-039|Tatort 39|5439|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-039",
+    "041|tatort-040|Tatort 40|5440|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-040",
+    "042|tatort-041|Tatort 41|5441|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-041",
+    "043|tatort-042|Tatort 42|5442|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-042",
+    "044|tatort-043|Tatort 43|5443|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-043",
+    "045|tatort-044|Tatort 44|5444|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-044",
+    "046|tatort-045|Tatort 45|5445|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-045",
+    "047|tatort-046|Tatort 46|5446|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-046",
+    "048|tatort-047|Tatort 47|5447|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-047",
+    "049|tatort-048|Tatort 48|5448|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-048",
+    "050|tatort-049|Tatort 49|5449|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-049",
+    "051|tatort-050|Tatort 50|5450|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-050",
+    "052|tatort-051|Tatort 51|5451|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-051",
+    "053|tatort-052|Tatort 52|5452|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-052",
+    "054|tatort-053|Tatort 53|5453|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-053",
+    "055|tatort-054|Tatort 54|5454|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-054",
+    "056|tatort-055|Tatort 55|5455|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-055",
+    "057|tatort-056|Tatort 56|5456|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-056",
+    "058|tatort-057|Tatort 57|5457|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-057",
+    "059|tatort-058|Tatort 58|5458|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-058",
+    "060|tatort-059|Tatort 59|5459|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-059",
+    "061|tatort-060|Tatort 60|5460|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-060",
+    "062|tatort-061|Tatort 61|5461|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-061",
+    "063|tatort-062|Tatort 62|5462|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-062",
+    "064|tatort-063|Tatort 63|5463|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-063",
+    "065|tatort-064|Tatort 64|5464|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-064",
+    "066|tatort-065|Tatort 65|5465|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-065",
+    "067|tatort-066|Tatort 66|5466|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-066",
+    "068|tatort-067|Tatort 67|5467|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-067",
+    "069|tatort-068|Tatort 68|5468|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-068",
+    "070|tatort-069|Tatort 69|5469|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-069",
+    "071|tatort-070|Tatort 70|5470|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-070",
+    "072|tatort-071|Tatort 71|5471|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-071",
+    "073|tatort-072|Tatort 72|5472|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-072",
+    "074|tatort-073|Tatort 73|5473|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-073",
+    "075|tatort-074|Tatort 74|5474|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-074",
+    "076|tatort-075|Tatort 75|5475|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-075",
+    "077|tatort-076|Tatort 76|5476|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-076",
+    "078|tatort-077|Tatort 77|5477|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-077",
+    "079|tatort-078|Tatort 78|5478|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-078",
+    "080|tatort-079|Tatort 79|5479|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-079",
+    "081|tatort-080|Tatort 80|5480|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-080",
+    "082|tatort-081|Tatort 81|5481|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-081",
+    "083|tatort-082|Tatort 82|5482|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-082",
+    "084|tatort-083|Tatort 83|5483|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-083",
+    "085|tatort-084|Tatort 84|5484|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-084",
+    "086|tatort-085|Tatort 85|5485|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-085",
+    "087|tatort-086|Tatort 86|5486|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-086",
+    "088|tatort-087|Tatort 87|5487|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-087",
+    "089|tatort-088|Tatort 88|5488|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-088",
+    "090|tatort-089|Tatort 89|5489|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-089",
+    "091|tatort-090|Tatort 90|5490|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-090",
+    "092|tatort-091|Tatort 91|5491|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-091",
+    "093|tatort-092|Tatort 92|5492|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-092",
+    "094|tatort-093|Tatort 93|5493|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-093",
+    "095|tatort-094|Tatort 94|5494|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-094",
+    "096|tatort-095|Tatort 95|5495|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-095",
+    "097|tatort-096|Tatort 96|5496|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-096",
+    "098|tatort-097|Tatort 97|5497|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-097",
+    "099|tatort-098|Tatort 98|5498|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-098",
+    "100|tatort-099|Tatort 99|5499|1704654900|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-099",
+    "101|tatort-100|Tatort 100|NA|NA|Tatort|Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA|https://www.ardmediathek.de/video/tatort-100"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/sammlung/die-kirche-bleibt-im-dorf/5eOHzt8XB2sqeFXbIoJlg2",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"display_id\": \"die-kirche-bleibt-im-dorf\", \"title\": \"Die Kirche bleibt im Dorf\", \"description\": \"Die Kirche bleibt im Dorf\", \"id\": \"5eOHzt8XB2sqeFXbIoJlg2\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"12939099\", \"display_id\": \"Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\", \"formats\": [{\"url\": \"https://ardmediathek-vod.example/mdr/liebe_dgs.mp4\", \"format_id\": \"http-sign_language\", \"preference\": null, \"language\": \"eng\", \"language_preference\": -10, \"format_note\": \"DGS\", \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-sign_language - 640x360 (DGS)\"}, {\"url\": \"https://ardmediathek-vod.example/mdr/liebe_ad_960x540.mp4\", \"format_id\": \"http-main-0\", \"preference\": 1, \"language\": \"deu-audio-description\", \"language_preference\": -10, \"width\": 960, \"height\": 540, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-main-0 - 960x540\"}, {\"format_id\": \"hls-main-1100\", \"format_index\": null, \"url\": \"https://ardmediathek-vod.example/mdr/540/index.m3u8\", \"manifest_url\": \"https://ardmediathek-vod.example/mdr/master.m3u8\", \"tbr\": 1100.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-main-1100 - 960x540\"}, {\"url\": \"https://ardmediathek-vod.example/mdr/liebe_1280x720.mp4\", \"format_id\": \"http-main-1\", \"preference\": 1, \"language\": \"deu\", \"language_preference\": 10, \"format_note\": \"HD\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H.264\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-main-1 - 1280x720 (HD)\"}, {\"format_id\": \"hls-main-3400\", \"format_index\": null, \"url\": \"https://ardmediathek-vod.example/mdr/720/index.m3u8\", \"manifest_url\": \"https://ardmediathek-vod.example/mdr/master.m3u8\", \"tbr\": 3400.0, \"ext\": \"mp4\", \"fps\": 50.0, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-main-3400 - 1280x720\"}], \"subtitles\": {\"de\": [{\"url\": \"https://ardmediathek-vod.example/mdr/subs/de.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"deu\": [{\"url\": \"https://classic.ardmediathek.de/subtitle/410784.xml\", \"ext\": \"ttml\"}, {\"url\": \"https://classic.ardmediathek.de/subtitle/410784.vtt\", \"ext\": \"vtt\"}, {\"url\": \"https://classic.ardmediathek.de/subtitle/410784.srt\", \"ext\": \"srt\"}]}, \"is_live\": false, \"age_limit\": 0, \"chapters\": [{\"start_time\": 0, \"end_time\": 600, \"title\": \"<Untitled Chapter 1>\"}, {\"start_time\": 600, \"title\": \"Die Begegnung\", \"end_time\": 3000}, {\"start_time\": 3000, \"title\": \"Das Wiedersehen\", \"end_time\": 5222}], \"title\": \"Liebe auf vier Pfoten\", \"description\": \"Claudia Schmitt, Anw\\u00e4ltin in Salzburg, ...\", \"timestamp\": 1701343800, \"series\": \"Filme im MDR\", \"thumbnail\": \"https://api.ardmediathek.de/image-service/images/urn:ard:image:aee7cbf8f06de976?w=960&ch=ae4d0f2ee47d8b9b\", \"duration\": 5222, \"channel\": \"MDR\", \"episode\": \"Liebe auf vier Pfoten\", \"_old_archive_ids\": [\"ardbetamediathek Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\"], \"webpage_url\": \"https://www.ardmediathek.de/video/Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\", \"original_url\": \"https://www.ardmediathek.de/video/Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\", \"webpage_url_basename\": \"Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\", \"webpage_url_domain\": \"ardmediathek.de\", \"extractor\": \"ARDMediathek\", \"extractor_key\": \"ARDBetaMediathek\", \"playlist_count\": 2, \"playlist\": \"Die Kirche bleibt im Dorf\", \"playlist_id\": \"5eOHzt8XB2sqeFXbIoJlg2\", \"playlist_title\": \"Die Kirche bleibt im Dorf\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.ardmediathek.de/sammlung/die-kirche-bleibt-im-dorf/5eOHzt8XB2sqeFXbIoJlg2\", \"n_entries\": 2, \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://api.ardmediathek.de/image-service/images/urn:ard:image:aee7cbf8f06de976?w=960&ch=ae4d0f2ee47d8b9b\", \"id\": \"0\"}], \"fulltitle\": \"Liebe auf vier Pfoten\", \"duration_string\": \"1:27:02\", \"upload_date\": \"20231130\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-main-3400\", \"url\": \"https://ardmediathek-vod.example/mdr/720/index.m3u8\", \"manifest_url\": \"https://ardmediathek-vod.example/mdr/master.m3u8\", \"tbr\": 3400.0, \"ext\": \"mp4\", \"fps\": 50.0, \"protocol\": \"m3u8_native\", \"preference\": 1, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-main-3400 - 1280x720\", \"_filename\": \"Liebe auf vier Pfoten [12939099].mp4\", \"filename\": \"Liebe auf vier Pfoten [12939099].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-main-3400\", \"format_index\": null, \"url\": \"https://ardmediathek-vod.example/mdr/720/index.m3u8\", \"manifest_url\": \"https://ardmediathek-vod.example/mdr/master.m3u8\", \"tbr\": 3400.0, \"ext\": \"mp4\", \"fps\": 50.0, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-main-3400 - 1280x720\"}, {\"id\": \"101\", \"display_id\": \"EP2\", \"formats\": [{\"url\": \"https://ardmediathek-vod.example/simple.mp4\", \"format_id\": \"http-main\", \"preference\": 1, \"language\": \"eng\", \"language_preference\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-main - unknown\"}], \"subtitles\": {}, \"is_live\": false, \"age_limit\": null, \"title\": \"Fritjof aus Norwegen (2) (AD)\", \"episode_number\": 2, \"episode\": \"Fritjof aus Norwegen (AD)\", \"_old_archive_ids\": [\"ardbetamediathek EP2\"], \"webpage_url\": \"https://www.ardmediathek.de/video/EP2\", \"original_url\": \"https://www.ardmediathek.de/video/EP2\", \"webpage_url_basename\": \"EP2\", \"webpage_url_domain\": \"ardmediathek.de\", \"extractor\": \"ARDMediathek\", \"extractor_key\": \"ARDBetaMediathek\", \"playlist_count\": 2, \"playlist\": \"Die Kirche bleibt im Dorf\", \"playlist_id\": \"5eOHzt8XB2sqeFXbIoJlg2\", \"playlist_title\": \"Die Kirche bleibt im Dorf\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.ardmediathek.de/sammlung/die-kirche-bleibt-im-dorf/5eOHzt8XB2sqeFXbIoJlg2\", \"n_entries\": 2, \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"fulltitle\": \"Fritjof aus Norwegen (2) (AD)\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://ardmediathek-vod.example/simple.mp4\", \"format_id\": \"http-main\", \"preference\": 1, \"language\": \"eng\", \"language_preference\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-main - unknown\", \"_filename\": \"Fritjof aus Norwegen (2) (AD) [101].mp4\", \"filename\": \"Fritjof aus Norwegen (2) (AD) [101].mp4\", \"__write_download_archive\": false}], \"url\": \"https://ardmediathek-vod.example/simple.mp4\", \"format_id\": \"http-main\", \"preference\": 1, \"language\": \"eng\", \"language_preference\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-main - unknown\"}], \"webpage_url\": \"https://www.ardmediathek.de/sammlung/die-kirche-bleibt-im-dorf/5eOHzt8XB2sqeFXbIoJlg2\", \"original_url\": \"https://www.ardmediathek.de/sammlung/die-kirche-bleibt-im-dorf/5eOHzt8XB2sqeFXbIoJlg2\", \"webpage_url_basename\": \"5eOHzt8XB2sqeFXbIoJlg2\", \"webpage_url_domain\": \"ardmediathek.de\", \"extractor\": \"ARDMediathekCollection\", \"extractor_key\": \"ARDMediathekCollection\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/ard/sammlung/5eOHzt8XB2sqeFXbIoJlg2/",
+   "args": [
+    "--no-geo-bypass",
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"display_id\": null, \"title\": \"Die Kirche bleibt im Dorf\", \"description\": \"Die Kirche bleibt im Dorf\", \"id\": \"5eOHzt8XB2sqeFXbIoJlg2\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"K1\", \"title\": \"Liebe auf vier Pfoten\", \"duration\": 5222, \"timestamp\": 1701343800, \"ie_key\": \"ARDBetaMediathek\", \"_type\": \"url\", \"url\": \"https://www.ardmediathek.de/video/Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0\", \"__x_forwarded_for_ip\": null}, {\"id\": \"K2\", \"title\": \"Fritjof\", \"ie_key\": \"ARDBetaMediathek\", \"_type\": \"url\", \"url\": \"https://www.ardmediathek.de/video/EP2\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.ardmediathek.de/ard/sammlung/5eOHzt8XB2sqeFXbIoJlg2/\", \"original_url\": \"https://www.ardmediathek.de/ard/sammlung/5eOHzt8XB2sqeFXbIoJlg2/\", \"webpage_url_basename\": \"5eOHzt8XB2sqeFXbIoJlg2\", \"webpage_url_domain\": \"ardmediathek.de\", \"extractor\": \"ARDMediathekCollection\", \"extractor_key\": \"ARDMediathekCollection\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/sammlung/GONE",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [ARDMediathekCollection] GONE: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardaudiothek.de/episode/urn:ard:episode:eabead1add170e93/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"urn:ard:episode:eabead1add170e93\", \"formats\": [{\"url\": \"https://wdrmedien-a.akamaihd.net/medp/podcast/caiman_club_s04e04.mp3\", \"format_id\": \"download\", \"abr\": 128, \"acodec\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 53424000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"download - audio only\"}, {\"url\": \"https://wdrmedien-a.akamaihd.net/medp/stream/caiman_club_s04e04.mp3\", \"format_id\": \"stream\", \"abr\": 256, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 256, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 106848000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"stream - audio only\"}], \"channel\": \"WDR\", \"description\": \"Mit Cash Out ...\", \"duration\": 3339, \"series\": \"1LIVE Caiman Club\", \"episode_number\": 4, \"thumbnail\": \"https://api.ardmediathek.de/image-service/images/urn:ard:image:ed64411a07a4b405\", \"timestamp\": 1721181641, \"title\": \"CAIMAN CLUB (S04E04): Cash Out\", \"webpage_url\": \"https://www.ardaudiothek.de/episode/urn:ard:episode:eabead1add170e93/\", \"original_url\": \"https://www.ardaudiothek.de/episode/urn:ard:episode:eabead1add170e93/\", \"webpage_url_basename\": \"urn:ard:episode:eabead1add170e93\", \"webpage_url_domain\": \"ardaudiothek.de\", \"extractor\": \"ARDAudiothek\", \"extractor_key\": \"ARDAudiothek\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://api.ardmediathek.de/image-service/images/urn:ard:image:ed64411a07a4b405\", \"id\": \"0\"}], \"display_id\": \"urn:ard:episode:eabead1add170e93\", \"fulltitle\": \"CAIMAN CLUB (S04E04): Cash Out\", \"duration_string\": \"55:39\", \"upload_date\": \"20240717\", \"release_year\": null, \"episode\": \"Episode 4\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://wdrmedien-a.akamaihd.net/medp/stream/caiman_club_s04e04.mp3\", \"format_id\": \"stream\", \"abr\": 256, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 256, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"filesize_approx\": 106848000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"stream - audio only\", \"_filename\": \"CAIMAN CLUB (S04E04)\\uff1a Cash Out [urn\\uff1aard\\uff1aepisode\\uff1aeabead1add170e93].mp3\", \"filename\": \"CAIMAN CLUB (S04E04)\\uff1a Cash Out [urn\\uff1aard\\uff1aepisode\\uff1aeabead1add170e93].mp3\", \"__write_download_archive\": false}], \"url\": \"https://wdrmedien-a.akamaihd.net/medp/stream/caiman_club_s04e04.mp3\", \"format_id\": \"stream\", \"abr\": 256, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 256, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 106848000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"stream - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardaudiothek.de/episode/urn:ard:episode:eabead1add170e93/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ARDAudiothek] Extracting URL: https://www.ardaudiothek.de/episode/urn:ard:episode:eabead1add170e93/",
+    "[ARDAudiothek] urn:ard:episode:eabead1add170e93: Downloading JSON metadata",
+    "[info] Available formats for urn:ard:episode:eabead1add170e93:",
+    "ID       EXT RESOLUTION |   FILESIZE  TBR PROTO | VCODEC     ACODEC  ABR",
+    "------------------------------------------------------------------------",
+    "download mp3 audio only | ≈ 50.95MiB 128k https | audio only mp3    128k",
+    "stream   mp3 audio only | ≈101.90MiB 256k https | audio only mp3    256k"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardaudiothek.de/episode/urn:ard:episode:eabead1add170e93/",
+   "args": [
+    "-f",
+    "download",
+    "--no-progress",
+    "-o",
+    "episode.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ARDAudiothek] Extracting URL: https://www.ardaudiothek.de/episode/urn:ard:episode:eabead1add170e93/",
+    "[ARDAudiothek] urn:ard:episode:eabead1add170e93: Downloading JSON metadata",
+    "[info] urn:ard:episode:eabead1add170e93: Downloading 1 format(s): download",
+    "[download] Destination: episode.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "episode.mp3": 792
+   }
+  },
+  {
+   "url": "https://www.ardaudiothek.de/episode/urn:ard:section:855c7a53dac72e0a/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"urn:ard:section:855c7a53dac72e0a\", \"formats\": [{\"url\": \"https://media.example/ard/section.mp4\", \"format_id\": \"stream\", \"acodec\": \"aac\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp4\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"stream - audio only\"}], \"episode_number\": 1, \"timestamp\": 1735629900, \"title\": \"Illegaler DDR-Detektiv (1/2) - Wendezeit\", \"webpage_url\": \"https://www.ardaudiothek.de/episode/urn:ard:section:855c7a53dac72e0a/\", \"original_url\": \"https://www.ardaudiothek.de/episode/urn:ard:section:855c7a53dac72e0a/\", \"webpage_url_basename\": \"urn:ard:section:855c7a53dac72e0a\", \"webpage_url_domain\": \"ardaudiothek.de\", \"extractor\": \"ARDAudiothek\", \"extractor_key\": \"ARDAudiothek\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"urn:ard:section:855c7a53dac72e0a\", \"fulltitle\": \"Illegaler DDR-Detektiv (1/2) - Wendezeit\", \"upload_date\": \"20241231\", \"release_year\": null, \"episode\": \"Episode 1\", \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://media.example/ard/section.mp4\", \"format_id\": \"stream\", \"acodec\": \"aac\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp4\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"stream - audio only\", \"_filename\": \"Illegaler DDR-Detektiv (1\\u29f82) - Wendezeit [urn\\uff1aard\\uff1asection\\uff1a855c7a53dac72e0a].mp4\", \"filename\": \"Illegaler DDR-Detektiv (1\\u29f82) - Wendezeit [urn\\uff1aard\\uff1asection\\uff1a855c7a53dac72e0a].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardsounds.de/episode/urn:ard:extra:0000000000000000/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [ARDAudiothek] urn:ard:extra:0000000000000000: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardsounds.de/episode/urn:ard:extra:1111111111111111/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: urn:ard:extra:1111111111111111: An extractor error has occurred. (caused by KeyError('data')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardaudiothek.de/sendung/mia-insomnia/urn:ard:show:c405aa26d9a4060a/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"display_id\": \"mia-insomnia\", \"title\": \"Mia Insomnia\", \"description\": \"Eine Serie \\u00fcber Schlaflosigkeit.\", \"id\": \"urn:ard:show:c405aa26d9a4060a\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"ARDAudiothek\", \"_type\": \"url\", \"url\": \"https://www.ardaudiothek.de/episode/urn:ard:episode:eabead1add170e93/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"ARDAudiothek\", \"_type\": \"url\", \"url\": \"https://www.ardaudiothek.de/episode/urn:ard:section:855c7a53dac72e0a/\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.ardaudiothek.de/sendung/mia-insomnia/urn:ard:show:c405aa26d9a4060a/\", \"original_url\": \"https://www.ardaudiothek.de/sendung/mia-insomnia/urn:ard:show:c405aa26d9a4060a/\", \"webpage_url_basename\": \"urn:ard:show:c405aa26d9a4060a\", \"webpage_url_domain\": \"ardaudiothek.de\", \"extractor\": \"ARDAudiothekPlaylist\", \"extractor_key\": \"ARDAudiothekPlaylist\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardaudiothek.de/sendung/mia-insomnia/urn:ard:show:c405aa26d9a4060a/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"display_id\": \"mia-insomnia\", \"title\": \"Mia Insomnia\", \"description\": \"Eine Serie \\u00fcber Schlaflosigkeit.\", \"id\": \"urn:ard:show:c405aa26d9a4060a\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"urn:ard:episode:eabead1add170e93\", \"formats\": [{\"url\": \"https://wdrmedien-a.akamaihd.net/medp/podcast/caiman_club_s04e04.mp3\", \"format_id\": \"download\", \"abr\": 128, \"acodec\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 53424000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"download - audio only\"}, {\"url\": \"https://wdrmedien-a.akamaihd.net/medp/stream/caiman_club_s04e04.mp3\", \"format_id\": \"stream\", \"abr\": 256, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 256, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 106848000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"stream - audio only\"}], \"channel\": \"WDR\", \"description\": \"Mit Cash Out ...\", \"duration\": 3339, \"series\": \"1LIVE Caiman Club\", \"episode_number\": 4, \"thumbnail\": \"https://api.ardmediathek.de/image-service/images/urn:ard:image:ed64411a07a4b405\", \"timestamp\": 1721181641, \"title\": \"CAIMAN CLUB (S04E04): Cash Out\", \"webpage_url\": \"https://www.ardaudiothek.de/episode/urn:ard:episode:eabead1add170e93/\", \"original_url\": \"https://www.ardaudiothek.de/episode/urn:ard:episode:eabead1add170e93/\", \"webpage_url_basename\": \"urn:ard:episode:eabead1add170e93\", \"webpage_url_domain\": \"ardaudiothek.de\", \"extractor\": \"ARDAudiothek\", \"extractor_key\": \"ARDAudiothek\", \"playlist_count\": 2, \"playlist\": \"Mia Insomnia\", \"playlist_id\": \"urn:ard:show:c405aa26d9a4060a\", \"playlist_title\": \"Mia Insomnia\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.ardaudiothek.de/sendung/mia-insomnia/urn:ard:show:c405aa26d9a4060a/\", \"n_entries\": 2, \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://api.ardmediathek.de/image-service/images/urn:ard:image:ed64411a07a4b405\", \"id\": \"0\"}], \"display_id\": \"urn:ard:episode:eabead1add170e93\", \"fulltitle\": \"CAIMAN CLUB (S04E04): Cash Out\", \"duration_string\": \"55:39\", \"upload_date\": \"20240717\", \"release_year\": null, \"episode\": \"Episode 4\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://wdrmedien-a.akamaihd.net/medp/stream/caiman_club_s04e04.mp3\", \"format_id\": \"stream\", \"abr\": 256, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 256, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"filesize_approx\": 106848000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"stream - audio only\", \"_filename\": \"CAIMAN CLUB (S04E04)\\uff1a Cash Out [urn\\uff1aard\\uff1aepisode\\uff1aeabead1add170e93].mp3\", \"filename\": \"CAIMAN CLUB (S04E04)\\uff1a Cash Out [urn\\uff1aard\\uff1aepisode\\uff1aeabead1add170e93].mp3\", \"__write_download_archive\": false}], \"url\": \"https://wdrmedien-a.akamaihd.net/medp/stream/caiman_club_s04e04.mp3\", \"format_id\": \"stream\", \"abr\": 256, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 256, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 106848000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"stream - audio only\"}, {\"id\": \"urn:ard:section:855c7a53dac72e0a\", \"formats\": [{\"url\": \"https://media.example/ard/section.mp4\", \"format_id\": \"stream\", \"acodec\": \"aac\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp4\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"stream - audio only\"}], \"episode_number\": 1, \"timestamp\": 1735629900, \"title\": \"Illegaler DDR-Detektiv (1/2) - Wendezeit\", \"webpage_url\": \"https://www.ardaudiothek.de/episode/urn:ard:section:855c7a53dac72e0a/\", \"original_url\": \"https://www.ardaudiothek.de/episode/urn:ard:section:855c7a53dac72e0a/\", \"webpage_url_basename\": \"urn:ard:section:855c7a53dac72e0a\", \"webpage_url_domain\": \"ardaudiothek.de\", \"extractor\": \"ARDAudiothek\", \"extractor_key\": \"ARDAudiothek\", \"playlist_count\": 2, \"playlist\": \"Mia Insomnia\", \"playlist_id\": \"urn:ard:show:c405aa26d9a4060a\", \"playlist_title\": \"Mia Insomnia\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.ardaudiothek.de/sendung/mia-insomnia/urn:ard:show:c405aa26d9a4060a/\", \"n_entries\": 2, \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"display_id\": \"urn:ard:section:855c7a53dac72e0a\", \"fulltitle\": \"Illegaler DDR-Detektiv (1/2) - Wendezeit\", \"upload_date\": \"20241231\", \"release_year\": null, \"episode\": \"Episode 1\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://media.example/ard/section.mp4\", \"format_id\": \"stream\", \"acodec\": \"aac\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp4\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"stream - audio only\", \"_filename\": \"Illegaler DDR-Detektiv (1\\u29f82) - Wendezeit [urn\\uff1aard\\uff1asection\\uff1a855c7a53dac72e0a].mp4\", \"filename\": \"Illegaler DDR-Detektiv (1\\u29f82) - Wendezeit [urn\\uff1aard\\uff1asection\\uff1a855c7a53dac72e0a].mp4\", \"__write_download_archive\": false}], \"url\": \"https://media.example/ard/section.mp4\", \"format_id\": \"stream\", \"acodec\": \"aac\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp4\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"stream - audio only\"}], \"webpage_url\": \"https://www.ardaudiothek.de/sendung/mia-insomnia/urn:ard:show:c405aa26d9a4060a/\", \"original_url\": \"https://www.ardaudiothek.de/sendung/mia-insomnia/urn:ard:show:c405aa26d9a4060a/\", \"webpage_url_basename\": \"urn:ard:show:c405aa26d9a4060a\", \"webpage_url_domain\": \"ardaudiothek.de\", \"extractor\": \"ARDAudiothekPlaylist\", \"extractor_key\": \"ARDAudiothekPlaylist\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardsounds.de/sendung/100-berlin/urn:ard:show:4d248e0806ce37bc/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"display_id\": \"100-berlin\", \"id\": \"urn:ard:show:4d248e0806ce37bc\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.ardsounds.de/sendung/100-berlin/urn:ard:show:4d248e0806ce37bc/\", \"original_url\": \"https://www.ardsounds.de/sendung/100-berlin/urn:ard:show:4d248e0806ce37bc/\", \"webpage_url_basename\": \"urn:ard:show:4d248e0806ce37bc\", \"webpage_url_domain\": \"ardsounds.de\", \"extractor\": \"ARDAudiothekPlaylist\", \"extractor_key\": \"ARDAudiothekPlaylist\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

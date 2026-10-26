@@ -1,0 +1,44 @@
+{
+ "id": "x",
+ "title": "Folge 1063 - Vertrauen",
+ "tracking": {
+  "atiCustomVars": {
+   "contentId": 104,
+   "clipTitle": "Folge 1063 - Vertrauen"
+  }
+ },
+ "widgets": [
+  {
+   "type": "teaser_lane",
+   "title": "Mehr"
+  },
+  {
+   "id": "p",
+   "type": "player_ondemand",
+   "title": "Folge 1063 - Vertrauen",
+   "mediaCollection": {
+    "embedded": {
+     "streams": [
+      {
+       "kind": "main",
+       "media": [
+        {
+         "url": "https://ardmediathek-vod.example/simple.mp4",
+         "audios": [
+          {
+           "languageCode": "eng"
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "meta": {
+      "title": "Folge 1063 - Vertrauen"
+     }
+    },
+    "href": "https://api.ardmediathek.de/x"
+   }
+  }
+ ]
+}

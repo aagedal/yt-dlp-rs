@@ -1,0 +1,45 @@
+{
+ "id": "x",
+ "title": "Folge 25/42: Symmetrie",
+ "fskRating": "unknown",
+ "tracking": {
+  "atiCustomVars": {
+   "contentId": 103,
+   "clipTitle": "Folge 25/42: Symmetrie"
+  }
+ },
+ "widgets": [
+  {
+   "type": "teaser_lane",
+   "title": "Mehr"
+  },
+  {
+   "id": "p",
+   "type": "player_ondemand",
+   "title": "Folge 25/42: Symmetrie",
+   "mediaCollection": {
+    "embedded": {
+     "streams": [
+      {
+       "kind": "main",
+       "media": [
+        {
+         "url": "https://ardmediathek-vod.example/simple.mp4",
+         "audios": [
+          {
+           "languageCode": "eng"
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "meta": {
+      "title": "Folge 25/42: Symmetrie"
+     }
+    },
+    "href": "https://api.ardmediathek.de/x"
+   }
+  }
+ ]
+}

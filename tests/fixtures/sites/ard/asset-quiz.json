@@ -1,0 +1,61 @@
+{
+ "id": "Y3JpZDovL3dkci5kZS9vbmUvcXVpeg",
+ "title": "Staffel 1 Originalversion",
+ "pagination": {
+  "pageNumber": 0,
+  "pageSize": 100,
+  "totalElements": 5
+ },
+ "teasers": [
+  {
+   "id": "Y3JpZDovL3dkci5kZS9CZWl0cmFnLTE",
+   "type": "ondemand",
+   "longTitle": "Quiz (S01/E01) - Originalversion",
+   "duration": 2700,
+   "broadcastedOn": "2021-03-04T20:15:00Z",
+   "links": {
+    "target": {
+     "id": "Y3JpZDovL3dkci5kZS9CZWl0cmFnLTE",
+     "urlId": "Y3JpZDovL3dkci5kZS9CZWl0cmFnLTEurl",
+     "href": "https://api.ardmediathek.de/x"
+    }
+   }
+  },
+  {
+   "id": "Y3JpZDovL3dkci5kZS9CZWl0cmFnLTI",
+   "type": "ondemand",
+   "longTitle": "Quiz (S01/E02)",
+   "duration": "2650",
+   "broadcastedOn": "not a date",
+   "links": {
+    "target": {
+     "id": "Y3JpZDovL3dkci5kZS9CZWl0cmFnLTI"
+    }
+   }
+  },
+  {
+   "id": "Y3JpZDovL3dkci5kZS9CZWl0cmFnLTM",
+   "type": "ondemand"
+  },
+  {
+   "id": "3bQCDwJVQL6FBMBrcbBbBn",
+   "type": "compilation",
+   "longTitle": "Mehr Quiz",
+   "links": {
+    "target": {
+     "urlId": "3bQCDwJVQL6FBMBrcbBbBn"
+    }
+   }
+  },
+  {
+   "id": "Y3JpZDovL3dkci5kZS9vbmUvcXVpeg",
+   "type": "show",
+   "longTitle": "Quiz"
+  },
+  {
+   "type": "ondemand",
+   "longTitle": "Ohne ID"
+  },
+  "junk"
+ ]
+}
