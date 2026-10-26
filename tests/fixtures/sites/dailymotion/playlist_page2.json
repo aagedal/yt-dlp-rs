@@ -1,0 +1,22 @@
+{
+ "data": {
+  "collection": {
+   "videos": {
+    "edges": [
+     {
+      "node": {
+       "xid": "x7p101",
+       "url": "https://www.dailymotion.com/video/x7p101"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p102",
+       "url": "https://www.dailymotion.com/video/x7p102"
+      }
+     }
+    ]
+   }
+  }
+ }
+}

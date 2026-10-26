@@ -144,7 +144,7 @@ mod odnoklassniki;
 mod onefootball;
 mod onenewsnz;
 mod oneplace;
-mod paged;
+pub(crate) mod paged;
 mod parlview;
 mod pearvideo;
 mod peertube;
@@ -281,7 +281,15 @@ pub use cozytv::{CozyTv, suitable as cozytv_suitable};
 pub use crooksandliars::{CrooksAndLiars, suitable as crooksandliars_suitable};
 pub use crtvg::{Crtvg, suitable as crtvg_suitable};
 pub use cultureunplugged::{CultureUnplugged, suitable as cultureunplugged_suitable};
-pub use dailymotion::{Dailymotion, suitable as dailymotion_suitable};
+pub use dailymotion::{
+    Dailymotion, DailymotionPlaylist, DailymotionSearch, DailymotionUser,
+    playlist_suitable as dailymotion_playlist_suitable,
+    search_suitable as dailymotion_search_suitable, suitable as dailymotion_suitable,
+    user_suitable as dailymotion_user_suitable,
+};
+pub(crate) use dailymotion::{
+    fetch_pages as fetch_dailymotion_pages, is_pending_state as dailymotion_pending_state,
+};
 pub use daystar::{DaystarClip, suitable as daystar_suitable};
 pub use democracynow::{Democracynow, suitable as democracynow_suitable};
 pub use dfb::{Dfb, suitable as dfb_suitable};
@@ -1880,6 +1888,18 @@ pub(crate) static NO_PLAYLIST: std::sync::atomic::AtomicBool =
 /// `self.get_param('noplaylist')`.
 pub(crate) fn no_playlist() -> bool {
     NO_PLAYLIST.load(std::sync::atomic::Ordering::Relaxed)
+}
+
+/// Upstream `age_limit` (`--age-limit`; `i64::MIN` without one), for
+/// [`age_restricted`].
+pub(crate) static AGE_LIMIT: std::sync::atomic::AtomicI64 =
+    std::sync::atomic::AtomicI64::new(i64::MIN);
+
+/// Upstream `age_restricted(content_limit, self.get_param('age_limit'))`:
+/// whether `--age-limit` is below the content's limit.
+pub(crate) fn age_restricted(content_limit: i64) -> bool {
+    let age_limit = AGE_LIMIT.load(std::sync::atomic::Ordering::Relaxed);
+    age_limit != i64::MIN && age_limit < content_limit
 }
 
 /// Upstream `getcomments` (`--write-comments`), for `extract_comments`.

@@ -52,7 +52,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--newline`, `--no-progress`, `--progress`, `--progress-delta SECONDS` | Upstream progress lines and printers (fragmented downloads like FragmentFD's hook: its size estimate over the running total, `ProgressCalculator`'s smoothed speed and ETA, and a line as each fragment finishes); see [download progress](#download-progress-and-cooperative-cancellation) |
 | `--sleep-requests SECONDS` | Upstream `_request_webpage` delay: every extraction request after the run's first one waits, announced as `[EXTRACTOR] Sleeping SECONDS seconds ...` before its `Downloading …` line; this port's extra media/child-playlist probes (plain HTML5 sources, HLS variants, YouTube media) are not delayed, as upstream does not make them; validated with upstream's message |
 | `-c`, `--continue`, `--no-continue`, `--part`, `--no-part` | Upstream `.part` files for whole-file media downloads: the transfer is written to `FILE.part` (kept after a failure) and renamed on success; an existing part file is continued with a plain `Range` request (`[download] Resuming download at byte N`; a full response restarts with `[download] Unable to resume`, and a complete part file fails with the server's 416 like upstream); `--no-continue` restarts it and `--no-part` writes the output directly. Merged, fragmented and postprocessed downloads keep private temporary files, and the library default remains a private temporary file removed on failure |
-| `--age-limit YEARS` | Upstream `age_restricted`: skip videos whose `age_limit` exceeds YEARS (`Skipping "TITLE" because it is age restricted`); unknown ratings pass |
+| `--age-limit YEARS` | Upstream `age_restricted`: skip videos whose `age_limit` exceeds YEARS (`Skipping "TITLE" because it is age restricted`); unknown ratings pass. Extractors see it as the `age_limit` param (Dailymotion's family filter) |
 | `--min-views`, `--max-views`, `--match-title`, `--reject-title`, `--break-on-reject` (hidden upstream) | Upstream `_match_entry` order and messages: case-insensitive title regexes (Rust `regex` syntax, validated at startup), view counts when known, and `--break-on-reject` turning any rejection into the `RejectedVideoReached` cancellation (exit 101) |
 | `--max-downloads NUMBER` | Stop after NUMBER processed videos (simulated, already-downloaded and size-skipped ones count), print upstream's message and exit 101; 0 means unlimited |
 | `-r`, `--limit-rate`, `--rate-limit RATE` | Upstream `slow_down` per whole-file media transfer or fragment request: sleep after each read until the average rate is at most RATE (`parse_bytes`, strictly positive); subtitles are not limited |
@@ -1307,8 +1307,33 @@ manifests requested with upstream's randomized headers, then upstream's
 Chrome and Firefox impersonated retries (which need the `impersonate`
 feature; without it, upstream's error text), including
 `PROGRESSIVE-URI` `http-` formats, and progressive H264 URLs with sizes and
-`@60` frame rates, plus subtitles, posters and metadata. Playlist URLs (and
-`?playlist=` without `--no-playlist`) are not supported.
+`@60` frame rates, plus subtitles, posters and metadata. `--age-limit` below
+18 turns the family filter on when there is no `ff` cookie
+(`age_restricted`). A video URL with `?playlist=ID` (or a `player.html?playlist=`
+URL) is, without `--no-playlist`, a `url` result for
+`http://www.dailymotion.com/playlist/ID` followed by the playlist extractor.
+
+Dailymotion playlists (`dailymotion.TLD/playlist/xID`, upstream
+`DailymotionPlaylistIE`), channels (`dailymotion.TLD/[old/]user/NAME` and
+`dailymotion.TLD/NAME`, `DailymotionUserIE`) and video searches
+(`dailymotion.TLD/search/TERM/videos`, `DailymotionSearchIE`, the term
+`unquote_plus`-decoded as ID and title; upstream has no search prefix for it)
+are `OnDemandPagedList`s of Dailymotion `url` results: the GraphQL
+`collection`/`channel` object's `videos(allowExplicit: ..., first: 100,
+page: N)` edges (`allowExplicit: false` with the family filter; a missing
+object is its first error message) and the `SEARCH_QUERY` operation's pages of
+20 (no search data is its error message, else `Could not fetch search data`,
+with upstream's bug report request). The client token is requested with the
+first page, after `Downloading playlist`. Like upstream's `PlaylistEntries`,
+only the pages holding the requested entries are fetched, in request order
+(`-I 101,3` reads page 2 then page 1); reading past the end reads every page,
+and the count is unknown (`NA`) otherwise. Errors while the pages are read are
+upstream's lazy ones (no `[IE]` prefix): the entry being read is `None`
+(`null` with `-J`, reported once, exit code 1) and the failed page ends the
+list (`_pagecount = pagenum - 1`), so the playlist still finishes. Selecting,
+after such a failure, an entry of the failed page that precedes the failed one
+is an explicit native error. Not ported: `DailymotionPlaylistIE`'s jukebox
+widget embeds on generic pages.
 `tests/fixtures/sites/dailymotion/` and `tests/fixtures/sites/dailymotion-login/`
 are compared with pinned upstream output.
 

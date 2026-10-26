@@ -1,0 +1,610 @@
+{
+ "data": {
+  "collection": {
+   "videos": {
+    "edges": [
+     {
+      "node": {
+       "xid": "x7p001",
+       "url": "https://www.dailymotion.com/video/x7p001"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p002",
+       "url": "https://www.dailymotion.com/video/x7p002"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p003",
+       "url": "https://www.dailymotion.com/video/x7p003"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p004",
+       "url": "https://www.dailymotion.com/video/x7p004"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p005",
+       "url": "https://www.dailymotion.com/video/x7p005"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p006",
+       "url": "https://www.dailymotion.com/video/x7p006"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p007",
+       "url": "https://www.dailymotion.com/video/x7p007"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p008",
+       "url": "https://www.dailymotion.com/video/x7p008"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p009",
+       "url": "https://www.dailymotion.com/video/x7p009"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p010",
+       "url": "https://www.dailymotion.com/video/x7p010"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p011",
+       "url": "https://www.dailymotion.com/video/x7p011"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p012",
+       "url": "https://www.dailymotion.com/video/x7p012"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p013",
+       "url": "https://www.dailymotion.com/video/x7p013"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p014",
+       "url": "https://www.dailymotion.com/video/x7p014"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p015",
+       "url": "https://www.dailymotion.com/video/x7p015"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p016",
+       "url": "https://www.dailymotion.com/video/x7p016"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p017",
+       "url": "https://www.dailymotion.com/video/x7p017"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p018",
+       "url": "https://www.dailymotion.com/video/x7p018"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p019",
+       "url": "https://www.dailymotion.com/video/x7p019"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p020",
+       "url": "https://www.dailymotion.com/video/x7p020"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p021",
+       "url": "https://www.dailymotion.com/video/x7p021"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p022",
+       "url": "https://www.dailymotion.com/video/x7p022"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p023",
+       "url": "https://www.dailymotion.com/video/x7p023"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p024",
+       "url": "https://www.dailymotion.com/video/x7p024"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p025",
+       "url": "https://www.dailymotion.com/video/x7p025"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p026",
+       "url": "https://www.dailymotion.com/video/x7p026"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p027",
+       "url": "https://www.dailymotion.com/video/x7p027"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p028",
+       "url": "https://www.dailymotion.com/video/x7p028"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p029",
+       "url": "https://www.dailymotion.com/video/x7p029"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p030",
+       "url": "https://www.dailymotion.com/video/x7p030"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p031",
+       "url": "https://www.dailymotion.com/video/x7p031"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p032",
+       "url": "https://www.dailymotion.com/video/x7p032"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p033",
+       "url": "https://www.dailymotion.com/video/x7p033"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p034",
+       "url": "https://www.dailymotion.com/video/x7p034"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p035",
+       "url": "https://www.dailymotion.com/video/x7p035"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p036",
+       "url": "https://www.dailymotion.com/video/x7p036"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p037",
+       "url": "https://www.dailymotion.com/video/x7p037"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p038",
+       "url": "https://www.dailymotion.com/video/x7p038"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p039",
+       "url": "https://www.dailymotion.com/video/x7p039"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p040",
+       "url": "https://www.dailymotion.com/video/x7p040"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p041",
+       "url": "https://www.dailymotion.com/video/x7p041"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p042",
+       "url": "https://www.dailymotion.com/video/x7p042"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p043",
+       "url": "https://www.dailymotion.com/video/x7p043"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p044",
+       "url": "https://www.dailymotion.com/video/x7p044"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p045",
+       "url": "https://www.dailymotion.com/video/x7p045"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p046",
+       "url": "https://www.dailymotion.com/video/x7p046"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p047",
+       "url": "https://www.dailymotion.com/video/x7p047"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p048",
+       "url": "https://www.dailymotion.com/video/x7p048"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p049",
+       "url": "https://www.dailymotion.com/video/x7p049"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p050",
+       "url": "https://www.dailymotion.com/video/x7p050"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p051",
+       "url": "https://www.dailymotion.com/video/x7p051"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p052",
+       "url": "https://www.dailymotion.com/video/x7p052"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p053",
+       "url": "https://www.dailymotion.com/video/x7p053"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p054",
+       "url": "https://www.dailymotion.com/video/x7p054"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p055",
+       "url": "https://www.dailymotion.com/video/x7p055"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p056",
+       "url": "https://www.dailymotion.com/video/x7p056"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p057",
+       "url": "https://www.dailymotion.com/video/x7p057"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p058",
+       "url": "https://www.dailymotion.com/video/x7p058"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p059",
+       "url": "https://www.dailymotion.com/video/x7p059"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p060",
+       "url": "https://www.dailymotion.com/video/x7p060"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p061",
+       "url": "https://www.dailymotion.com/video/x7p061"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p062",
+       "url": "https://www.dailymotion.com/video/x7p062"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p063",
+       "url": "https://www.dailymotion.com/video/x7p063"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p064",
+       "url": "https://www.dailymotion.com/video/x7p064"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p065",
+       "url": "https://www.dailymotion.com/video/x7p065"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p066",
+       "url": "https://www.dailymotion.com/video/x7p066"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p067",
+       "url": "https://www.dailymotion.com/video/x7p067"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p068",
+       "url": "https://www.dailymotion.com/video/x7p068"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p069",
+       "url": "https://www.dailymotion.com/video/x7p069"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p070",
+       "url": "https://www.dailymotion.com/video/x7p070"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p071",
+       "url": "https://www.dailymotion.com/video/x7p071"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p072",
+       "url": "https://www.dailymotion.com/video/x7p072"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p073",
+       "url": "https://www.dailymotion.com/video/x7p073"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p074",
+       "url": "https://www.dailymotion.com/video/x7p074"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p075",
+       "url": "https://www.dailymotion.com/video/x7p075"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p076",
+       "url": "https://www.dailymotion.com/video/x7p076"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p077",
+       "url": "https://www.dailymotion.com/video/x7p077"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p078",
+       "url": "https://www.dailymotion.com/video/x7p078"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p079",
+       "url": "https://www.dailymotion.com/video/x7p079"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p080",
+       "url": "https://www.dailymotion.com/video/x7p080"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p081",
+       "url": "https://www.dailymotion.com/video/x7p081"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p082",
+       "url": "https://www.dailymotion.com/video/x7p082"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p083",
+       "url": "https://www.dailymotion.com/video/x7p083"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p084",
+       "url": "https://www.dailymotion.com/video/x7p084"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p085",
+       "url": "https://www.dailymotion.com/video/x7p085"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p086",
+       "url": "https://www.dailymotion.com/video/x7p086"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p087",
+       "url": "https://www.dailymotion.com/video/x7p087"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p088",
+       "url": "https://www.dailymotion.com/video/x7p088"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p089",
+       "url": "https://www.dailymotion.com/video/x7p089"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p090",
+       "url": "https://www.dailymotion.com/video/x7p090"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p091",
+       "url": "https://www.dailymotion.com/video/x7p091"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p092",
+       "url": "https://www.dailymotion.com/video/x7p092"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p093",
+       "url": "https://www.dailymotion.com/video/x7p093"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p094",
+       "url": "https://www.dailymotion.com/video/x7p094"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p095",
+       "url": "https://www.dailymotion.com/video/x7p095"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p096",
+       "url": "https://www.dailymotion.com/video/x7p096"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p097",
+       "url": "https://www.dailymotion.com/video/x7p097"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p098",
+       "url": "https://www.dailymotion.com/video/x7p098"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p099",
+       "url": "https://www.dailymotion.com/video/x7p099"
+      }
+     },
+     {
+      "node": {
+       "xid": "x7p100",
+       "url": "https://www.dailymotion.com/video/x7p100"
+      }
+     }
+    ]
+   }
+  }
+ }
+}

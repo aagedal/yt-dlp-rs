@@ -821,7 +821,7 @@
         "tests/fixtures/sites/dailymotion/",
         "tests/fixtures/sites/dailymotion-login/"
       ],
-      "scope": "DailymotionIE token, GraphQL media and player metadata, randomized-header HLS with PROGRESSIVE-URI formats, progressive H264 formats, subtitles, thumbnails and metadata, geo/API errors; no playlists; compared with pinned upstream output through the fixture proxy; account tokens through _get_login_info (password grant, 400 error_description) compared with pinned upstream through tests/fixtures/sites/dailymotion-login/"
+      "scope": "DailymotionIE token, GraphQL media and player metadata, randomized-header HLS with PROGRESSIVE-URI formats, progressive H264 formats, subtitles, thumbnails and metadata, geo/API errors, the family filter from the ff cookie or --age-limit, ?playlist= url results for DailymotionPlaylist (_yes_playlist); DailymotionPlaylistIE, DailymotionUserIE and DailymotionSearchIE (DailymotionPlaylistBaseIE) GraphQL collection/channel video pages of 100 and SEARCH_QUERY pages of 20 as OnDemandPagedList url playlists (random-access pending pages through the shared extractor/paged.rs, including upstream lazy page errors: the read entry None and the list ended before the failed page), their API error messages; not ported: DailymotionPlaylistIE jukebox embeds on generic pages; compared with pinned upstream output through the fixture proxy; account tokens through _get_login_info (password grant, 400 error_description) compared with pinned upstream through tests/fixtures/sites/dailymotion-login/"
     },
     {
       "name": "daystar",

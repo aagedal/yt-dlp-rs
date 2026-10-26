@@ -61,6 +61,9 @@ pub struct YoutubeOptions {
     pub live_from_start: bool,
     /// Upstream `mark_watched` (only when cookies were passed).
     pub mark_watched: bool,
+    /// Upstream `age_limit` (`--age-limit`), for extractors'
+    /// `age_restricted` (Dailymotion's family filter).
+    pub age_limit: Option<i64>,
 }
 
 /// `--wait-for-video MIN[-MAX]` seconds, and whether progress lines are shown.
