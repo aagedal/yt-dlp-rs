@@ -1,0 +1,45 @@
+{
+ "id": "x",
+ "title": "Folge 3: \"Der Anfang\" (Wdh.)",
+ "fskRating": "FSK16",
+ "tracking": {
+  "atiCustomVars": {
+   "contentId": 102,
+   "clipTitle": "Folge 3: \"Der Anfang\" (Wdh.)"
+  }
+ },
+ "widgets": [
+  {
+   "type": "teaser_lane",
+   "title": "Mehr"
+  },
+  {
+   "id": "p",
+   "type": "player_ondemand",
+   "title": "Folge 3: \"Der Anfang\" (Wdh.)",
+   "mediaCollection": {
+    "embedded": {
+     "streams": [
+      {
+       "kind": "main",
+       "media": [
+        {
+         "url": "https://ardmediathek-vod.example/simple.mp4",
+         "audios": [
+          {
+           "languageCode": "eng"
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "meta": {
+      "title": "Folge 3: \"Der Anfang\" (Wdh.)"
+     }
+    },
+    "href": "https://api.ardmediathek.de/x"
+   }
+  }
+ ]
+}

@@ -143,7 +143,7 @@ fn text_field(value: Option<&Value>, what: &str) -> Result<Value> {
 
 /// `_merge_subtitles(subs, target=subtitles)`: tracks with an already listed
 /// URL (and data) are dropped.
-pub(super) fn merge_subtitles(target: &mut Subtitles, source: Subtitles) {
+pub(crate) fn merge_subtitles(target: &mut Subtitles, source: Subtitles) {
     for (language, tracks) in source.entries {
         let existing = match target.entries.iter_mut().find(|(key, _)| *key == language) {
             Some((_, existing)) => existing,

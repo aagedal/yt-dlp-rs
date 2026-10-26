@@ -1,0 +1,44 @@
+{
+ "id": "x",
+ "title": "Teil (1/2)",
+ "tracking": {
+  "atiCustomVars": {
+   "contentId": 105,
+   "clipTitle": "Teil (1/2)"
+  }
+ },
+ "widgets": [
+  {
+   "type": "teaser_lane",
+   "title": "Mehr"
+  },
+  {
+   "id": "p",
+   "type": "player_ondemand",
+   "title": "Teil (1/2)",
+   "mediaCollection": {
+    "embedded": {
+     "streams": [
+      {
+       "kind": "main",
+       "media": [
+        {
+         "url": "https://ardmediathek-vod.example/simple.mp4",
+         "audios": [
+          {
+           "languageCode": "eng"
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "meta": {
+      "title": "Teil (1/2)"
+     }
+    },
+    "href": "https://api.ardmediathek.de/x"
+   }
+  }
+ ]
+}

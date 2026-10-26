@@ -1,0 +1,32 @@
+{
+ "id": "x",
+ "title": "Tatort: Spätes Erwachen",
+ "fskRating": "FSK18",
+ "tracking": {
+  "atiCustomVars": {
+   "contentId": 555,
+   "clipTitle": "Tatort: Spätes Erwachen"
+  }
+ },
+ "widgets": [
+  {
+   "type": "teaser_lane",
+   "title": "Mehr"
+  },
+  {
+   "id": "p",
+   "type": "player_ondemand",
+   "title": "Tatort: Spätes Erwachen",
+   "mediaCollection": {
+    "embedded": {
+     "streams": [],
+     "meta": {
+      "title": "Tatort"
+     }
+    },
+    "href": "https://api.ardmediathek.de/x"
+   },
+   "blockedByFsk": true
+  }
+ ]
+}

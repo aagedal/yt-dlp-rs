@@ -1,0 +1,23 @@
+{
+ "data": {
+  "item": {
+   "audioList": [
+    {
+     "href": "https://media.example/ard/section.mp4",
+     "distributionType": "stream",
+     "audioBitrate": null,
+     "audioCodec": "aac"
+    }
+   ],
+   "show": null,
+   "image": null,
+   "programSet": {
+    "publicationService": null
+   },
+   "title": "Illegaler DDR-Detektiv (1/2) - Wendezeit",
+   "duration": null,
+   "startDate": "2024-12-31T07:25:00Z",
+   "episodeNumber": 1
+  }
+ }
+}

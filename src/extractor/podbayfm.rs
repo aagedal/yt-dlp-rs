@@ -44,7 +44,7 @@ fn unsupported(what: &str) -> Error {
 }
 
 /// `jwt_decode_hs256` (errors are dropped by `traverse_obj`).
-fn jwt_payload(jwt: &str) -> Option<Value> {
+pub(crate) fn jwt_payload(jwt: &str) -> Option<Value> {
     let parts: Vec<&str> = jwt.split('.').collect();
     let [_, payload, _] = parts.as_slice() else {
         return None;

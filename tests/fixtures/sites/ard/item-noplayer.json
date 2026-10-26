@@ -1,0 +1,14 @@
+{
+ "id": "x",
+ "title": "Ohne Player",
+ "tracking": {
+  "atiCustomVars": {
+   "contentId": 557
+  }
+ },
+ "widgets": [
+  {
+   "type": "teaser_lane"
+  }
+ ]
+}

@@ -1,0 +1,40 @@
+{
+ "data": {
+  "item": {
+   "audioList": [
+    {
+     "href": "https://wdrmedien-a.akamaihd.net/medp/podcast/caiman_club_s04e04.mp3",
+     "distributionType": "download",
+     "audioBitrate": 128,
+     "audioCodec": "mp3"
+    },
+    {
+     "href": "https://wdrmedien-a.akamaihd.net/medp/stream/caiman_club_s04e04.mp3",
+     "distributionType": "stream",
+     "audioBitrate": "256",
+     "audioCodec": null
+    },
+    {
+     "href": null,
+     "distributionType": "broken"
+    }
+   ],
+   "show": {
+    "title": "1LIVE Caiman Club"
+   },
+   "image": {
+    "url1X1": "https://api.ardmediathek.de/image-service/images/urn:ard:image:ed64411a07a4b405?w={width}&ch=865"
+   },
+   "programSet": {
+    "publicationService": {
+     "organizationName": "WDR"
+    }
+   },
+   "description": "Mit Cash Out ...",
+   "title": "CAIMAN CLUB (S04E04): Cash Out",
+   "duration": 3339,
+   "startDate": "2024-07-17T02:00:41+00:00",
+   "episodeNumber": 4
+  }
+ }
+}

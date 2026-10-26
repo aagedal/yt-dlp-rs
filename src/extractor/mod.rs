@@ -2,6 +2,7 @@ pub mod adobepass;
 mod amadeustv;
 mod angel;
 mod archiveorg;
+mod ard;
 mod arte;
 mod audioboom;
 mod bandcamp;
@@ -232,6 +233,12 @@ mod zhihu;
 pub use amadeustv::{AmadeusTv, suitable as amadeustv_suitable};
 pub use angel::{Angel, suitable as angel_suitable};
 pub use archiveorg::{ArchiveOrg, suitable as archiveorg_suitable};
+pub use ard::{
+    ArdAudiothek, ArdAudiothekPlaylist, ArdMediathek, ArdMediathekCollection,
+    audiothek_playlist_suitable as ard_audiothek_playlist_suitable,
+    audiothek_suitable as ard_audiothek_suitable, collection_suitable as ard_collection_suitable,
+    suitable as ard_suitable,
+};
 pub use arte::{
     ArteTv, ArteTvCategory, ArteTvEmbed, ArteTvPlaylist,
     category_suitable as artetv_category_suitable, embed_suitable as artetv_embed_suitable,

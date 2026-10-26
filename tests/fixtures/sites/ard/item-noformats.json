@@ -1,0 +1,46 @@
+{
+ "id": "x",
+ "title": "Leer",
+ "tracking": {
+  "atiCustomVars": {
+   "contentId": 556,
+   "clipTitle": "Leer"
+  }
+ },
+ "widgets": [
+  {
+   "type": "teaser_lane",
+   "title": "Mehr"
+  },
+  {
+   "id": "p",
+   "type": "player_ondemand",
+   "title": "Leer",
+   "mediaCollection": {
+    "embedded": {
+     "meta": {
+      "title": "Leer",
+      "durationSeconds": "61"
+     },
+     "streams": [
+      {
+       "kind": "main",
+       "media": [
+        {
+         "url": "https://ardmediathek-vod.example/broken/master.m3u8",
+         "audios": [
+          {
+           "kind": "standard",
+           "languageCode": "deu"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    "href": "https://api.ardmediathek.de/x"
+   }
+  }
+ ]
+}
