@@ -1,7 +1,9 @@
 //! Upstream `BitChuteIE` (`yt_dlp/extractor/bitchute.py`): the beta API's
 //! `video/media` URL (HLS, or a progressive file checked across upstream's
 //! seed hosts), the `video` and `channel` metadata (non-fatal) and the API's
-//! geo-restriction errors. Channel and playlist pages are not supported.
+//! geo-restriction errors. `BitChuteChannelIE`: the old site's channel or
+//! playlist page (title, description, video count) and its `extend/` pages
+//! (`OnDemandPagedList`, 25 per page) of `url_transparent` entries.
 use super::Extractor;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
@@ -405,9 +407,322 @@ impl Extractor for BitChute {
     }
 }
 
+pub struct BitChuteChannel;
+
+const CHANNEL_NAME: &str = "BitChuteChannel";
+/// `BitChuteChannelIE._TOKEN`.
+const TOKEN: &str = "zyG6tQcGPE5swyAEFLqKUwMuMMuF6IO2DZ6ZDQjGfsL0e4dcTLwqkTTul05Jdve7";
+/// `BitChuteChannelIE.PAGE_SIZE`.
+const PAGE_SIZE: usize = 25;
+
+static CHANNEL_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        r"^https?://(?:(?:www|old)\.)?bitchute\.com/(?P<type>channel|playlist)/(?P<id>[^/?#&]+)",
+    )
+    .unwrap()
+});
+static VIDEO_HREF: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"<a\s[^>]*\bhref=["']/video/([^"'/]+)"#).unwrap());
+static VIDEO_COUNT: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"<span>(\d+)\s+videos?</span>").unwrap());
+
+/// `BitChuteChannelIE.suitable`.
+pub fn channel_suitable(url: &str) -> bool {
+    CHANNEL_URL.is_match(url)
+}
+
+/// `HTML_CLASS_NAMES[playlist_type]`: the container, title and
+/// description classes.
+fn class_names(playlist_type: &str) -> (&'static str, &'static str, &'static str) {
+    if playlist_type == "channel" {
+        (
+            "channel-videos-container",
+            "channel-videos-title",
+            "channel-videos-text",
+        )
+    } else {
+        ("playlist-video", "title", "description")
+    }
+}
+
+/// `_make_url(playlist_id, playlist_type)`.
+fn make_url(playlist_id: &str, playlist_type: &str) -> String {
+    format!("https://old.bitchute.com/{playlist_type}/{playlist_id}/")
+}
+
+fn unsupported(what: &str) -> Error {
+    Error::UnsupportedHtml5(format!("BitChute {what} are not supported natively"))
+}
+
+/// Upstream `get_element_by_class(class_name, html)`: the first element's
+/// unescaped content.
+fn element_by_class(class: &str, html: &str) -> Option<String> {
+    crate::html_elements::elements_text_and_html_by_class(class, html)
+        .ok()?
+        .into_iter()
+        .next()
+        .map(|(text, _)| text)
+}
+
+/// `url_result(url, BitChuteIE, video_id, url_transparent=True, **fields)`.
+fn url_entry(target: &str, video_id: &str, fields: Vec<(&str, Value)>) -> Result<VideoInfo> {
+    let url = Url::parse(target)?;
+    let mut info = super::direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    info.id = video_id.to_owned();
+    let mut raw = Map::new();
+    let mut overlay = Map::new();
+    for (key, value) in fields {
+        if key == "title"
+            && let Some(title) = value.as_str()
+        {
+            info.title = title.to_owned();
+        }
+        raw.insert(key.into(), value.clone());
+        overlay.insert(key.into(), value);
+    }
+    raw.insert("ie_key".into(), NAME.into());
+    raw.insert("id".into(), video_id.into());
+    raw.insert("_type".into(), "url_transparent".into());
+    raw.insert("url".into(), target.into());
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": overlay,
+            "ie_key": NAME,
+            "extractor": NAME,
+            "entry": Value::Object(raw),
+        }),
+    );
+    Ok(info)
+}
+
+/// Whether a playlist's pending state is a BitChute channel's or playlist's.
+pub(crate) fn is_pending_state(state: &Value) -> bool {
+    state["kind"] == "bitchute"
+}
+
+/// `_download_json(f'{playlist_url}extend/', ..., data=urlencode_postdata(...))`.
+fn post_page(client: &Client, playlist_url: &str, playlist_id: &str, page: usize) -> Result<Value> {
+    use std::io::Read;
+    crate::screen::screen(&format!(
+        "[{CHANNEL_NAME}] {playlist_id}: Downloading page {page}"
+    ));
+    let url = Url::parse(&format!("{playlist_url}extend/"))?;
+    let offset = (page * PAGE_SIZE).to_string();
+    let body = url::form_urlencoded::Serializer::new(String::new())
+        .extend_pairs([
+            ("csrfmiddlewaretoken", TOKEN),
+            ("name", ""),
+            ("offset", offset.as_str()),
+        ])
+        .finish();
+    let cookie = format!("csrftoken={TOKEN}");
+    let mut response = super::direct::post(
+        client,
+        &url,
+        &[
+            (
+                "Content-Type",
+                "application/x-www-form-urlencoded; charset=UTF-8",
+            ),
+            ("Referer", playlist_url),
+            ("X-Requested-With", "XMLHttpRequest"),
+            ("Cookie", cookie.as_str()),
+        ],
+        body,
+    )
+    .map_err(|error| match error {
+        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
+            extractor: CHANNEL_NAME,
+            id: playlist_id.to_owned(),
+            what: "JSON metadata",
+            source: Box::new(error),
+        },
+        error => error,
+    })?;
+    let mut bytes = Vec::new();
+    response
+        .read_to_end(&mut bytes)
+        .map_err(Error::ExtractionRead)?;
+    let bytes = super::decode_content(response.headers(), bytes).map_err(Error::ExtractionRead)?;
+    let text = super::decode_webpage(&bytes, response.headers());
+    crate::json::from_str(&text).map_err(|error| {
+        Error::Reported(format!(
+            "[{CHANNEL_NAME}] {playlist_id}: Failed to parse JSON  (caused by {error})"
+        ))
+    })
+}
+
+/// `_fetch_page(playlist_id, playlist_type, page_num)`: the page's videos as
+/// `url_transparent` entries (none once the response is not `success`).
+fn fetch_page(client: &Client, state: &Value, page: usize) -> Result<Vec<VideoInfo>> {
+    let playlist_id = state["playlist_id"].as_str().unwrap_or_default();
+    let playlist_type = state["playlist_type"].as_str().unwrap_or_default();
+    let playlist_url = make_url(playlist_id, playlist_type);
+    let data = post_page(client, &playlist_url, playlist_id, page)?;
+    let Value::Object(data) = data else {
+        return Err(unsupported("page responses that are not objects"));
+    };
+    if !data.get("success").is_some_and(super::nuxt::truthy) {
+        return Ok(Vec::new());
+    }
+    let Some(Value::String(html)) = data.get("html") else {
+        return Err(unsupported("page responses without HTML"));
+    };
+    let (container, title_class, description_class) = class_names(playlist_type);
+    let videos = crate::html_elements::elements_text_and_html_by_class(container, html)
+        .map_err(|error| Error::Reported(format!("[{CHANNEL_NAME}] {playlist_id}: {error}")))?;
+    let mut entries = Vec::new();
+    for (_, video_html) in videos {
+        let Some(video_id) = VIDEO_HREF
+            .captures(&video_html)
+            .map(|found| found[1].to_owned())
+        else {
+            continue;
+        };
+        let cleaned = |class: &str| {
+            element_by_class(class, &video_html)
+                .map(|text| crate::html::clean_html(&text))
+                .map_or(Value::Null, Value::from)
+        };
+        let duration = element_by_class("video-duration", &video_html)
+            .and_then(|text| crate::parse_duration(&text))
+            .and_then(|duration| serde_json::to_value(duration).ok())
+            .unwrap_or(Value::Null);
+        let view_count = element_by_class("video-views", &video_html)
+            .and_then(|text| super::youtube::dict::parse_count(&crate::html::clean_html(&text)))
+            .map_or(Value::Null, Value::from);
+        entries.push(url_entry(
+            &format!("https://www.bitchute.com/video/{video_id}"),
+            &video_id,
+            vec![
+                ("title", cleaned(title_class)),
+                ("description", cleaned(description_class)),
+                ("duration", duration),
+                ("view_count", view_count),
+            ],
+        )?);
+    }
+    Ok(entries)
+}
+
+/// `OnDemandPagedList(page_func, 25)` read by upstream's `PlaylistEntries`
+/// (see [`super::paged`]).
+pub(crate) fn fetch_pages(
+    client: &Client,
+    state: Value,
+    limit: Option<usize>,
+    entries: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let page_state = state.clone();
+    let mut fetch = |page| fetch_page(client, &page_state, page);
+    let placeholder = || url_entry("https://www.bitchute.com/video/None", "None", Vec::new());
+    super::paged::fetch_requested(state, limit, entries, PAGE_SIZE, &mut fetch, &placeholder)
+}
+
+impl Extractor for BitChuteChannel {
+    fn key(&self) -> &'static str {
+        CHANNEL_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = CHANNEL_URL.captures(page.as_str()) else {
+            return Ok(None);
+        };
+        let playlist_type = found["type"].to_owned();
+        let playlist_id = found["id"].to_owned();
+        crate::screen::set_extractor(CHANNEL_NAME);
+        crate::screen::screen(&format!(
+            "[{CHANNEL_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(page.as_str())
+        ));
+        let webpage = super::download_webpage(
+            client,
+            &Url::parse(&make_url(&playlist_id, &playlist_type))?,
+            CHANNEL_NAME,
+            &playlist_id,
+        )?;
+        let title = crate::html::html_extract_title(&webpage);
+        let description = ["description", "og:description", "twitter:description"]
+            .iter()
+            .find_map(|prop| crate::html::html_search_meta(&webpage, prop));
+        // `int_or_none(_html_search_regex(r'<span>(\d+)\s+videos?</span>'))`.
+        let playlist_count = VIDEO_COUNT
+            .captures(&webpage)
+            .and_then(|found| crate::html::clean_html(&found[1]).parse::<u64>().ok());
+
+        let mut extra = Map::new();
+        let title = match title {
+            Some(title) => title,
+            None => {
+                extra.insert("title".into(), Value::Null);
+                String::new()
+            }
+        };
+        extra.insert(
+            "description".into(),
+            description.map_or(Value::Null, Value::from),
+        );
+        extra.insert(
+            "playlist_count".into(),
+            playlist_count.map_or(Value::Null, Value::from),
+        );
+        // `OnDemandPagedList`, whose full count, like a generator's, is
+        // unknown unless a selection reads past its end.
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            format!(
+                "playlist-dict;title,description,playlist_count,id{}",
+                crate::info_order::GENERATOR
+            )
+            .into(),
+        );
+        let state = json!({
+            "kind": "bitchute",
+            "playlist_id": playlist_id,
+            "playlist_type": playlist_type,
+            "random_access": true,
+        });
+        Ok(Some(ExtractResult::Playlist(crate::PlaylistInfo {
+            id: playlist_id,
+            title,
+            webpage_url: page.clone(),
+            extractor: CHANNEL_NAME.into(),
+            extractor_key: CHANNEL_NAME.into(),
+            nested: Vec::new(),
+            pending: Some(crate::PendingEntries { state }),
+            entries: Vec::new(),
+            extra,
+        })))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn channel_urls_follow_upstream_valid_url() {
+        for url in [
+            "https://www.bitchute.com/channel/bitchute/",
+            "https://www.bitchute.com/playlist/wV9Imujxasw9/",
+            "https://old.bitchute.com/playlist/wV9Imujxasw9/",
+        ] {
+            assert!(channel_suitable(url), "{url}");
+            assert!(!suitable(url), "{url}");
+        }
+        assert!(!channel_suitable(
+            "https://www.bitchute.com/video/UGlrF9o9b-Q/"
+        ));
+    }
 
     #[test]
     fn urls_follow_upstream_valid_url() {

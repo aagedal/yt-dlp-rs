@@ -154,8 +154,8 @@ Supported today:
   clip pages, Dailymotion videos (and the kicker.de videos that embed them), SoundCloud tracks, Twitch VODs, clips, live streams,
   channel video/clip/collection lists and collections,
   Bandcamp tracks, Rumble videos, Kick VODs, clips, live channels and channel video/clip lists, Bluesky
-  posts, Mixcloud shows, Pinterest pins, Odysee/LBRY streams,
-  Tumblr posts, Imgur media, galleries and albums, Bilibili videos, VK videos, wall posts, user video lists and VK Play Live streams, Niconico videos, Weibo posts, XiaoHongShu (RedNote) video notes, TED talks, playlists and series, Rutube videos, LinkedIn posts, Internet Archive items, BitChute videos, Coub clips, Loom videos, OK.ru videos,
+  posts, Mixcloud shows, Pinterest pins, Odysee/LBRY streams, channels and playlists,
+  Tumblr posts, Imgur media, galleries and albums, Bilibili videos, VK videos, wall posts, user video lists and VK Play Live streams, Niconico videos, Weibo posts, XiaoHongShu (RedNote) video notes, TED talks, playlists and series, Rutube videos, LinkedIn posts, Internet Archive items, BitChute videos, channels and playlists, Coub clips, Loom videos, OK.ru videos,
   Telegram public posts (multi-video posts as playlists), Snapchat Spotlight
   snaps, plus
   either site's iframe embeds on other pages (one is followed; several form a

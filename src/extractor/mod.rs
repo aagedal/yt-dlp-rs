@@ -258,7 +258,13 @@ pub use behindkink::{BehindKink, suitable as behindkink_suitable};
 pub use bigo::{Bigo, suitable as bigo_suitable};
 pub use bild::{Bild, suitable as bild_suitable};
 pub use bilibili::{BiliBili, suitable as bilibili_suitable};
-pub use bitchute::{BitChute, suitable as bitchute_suitable};
+pub use bitchute::{
+    BitChute, BitChuteChannel, channel_suitable as bitchute_channel_suitable,
+    suitable as bitchute_suitable,
+};
+pub(crate) use bitchute::{
+    fetch_pages as fetch_bitchute_pages, is_pending_state as bitchute_pending_state,
+};
 pub use bitmovin::{Bitmovin, suitable as bitmovin_suitable};
 pub use blogger::{Blogger, suitable as blogger_suitable};
 pub use bluesky::{Bluesky, suitable as bluesky_suitable};
@@ -392,7 +398,11 @@ pub use kickstarter::{KickStarter, suitable as kickstarter_suitable};
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use kth::{Kth, suitable as kth_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
-pub use lbry::{Lbry, suitable as lbry_suitable};
+pub use lbry::{
+    Lbry, LbryChannel, LbryPlaylist, channel_suitable as lbry_channel_suitable,
+    playlist_suitable as lbry_playlist_suitable, suitable as lbry_suitable,
+};
+pub(crate) use lbry::{fetch_pages as fetch_lbry_pages, is_pending_state as lbry_pending_state};
 pub use libsyn::{Libsyn, suitable as libsyn_suitable};
 pub use linkedin::{LinkedIn, suitable as linkedin_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};

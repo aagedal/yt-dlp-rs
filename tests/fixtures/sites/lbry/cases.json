@@ -2,5 +2,16 @@
  {"url": "https://odysee.com/@Mantega:1/First-day-LBRY:1", "args": ["-J"]},
  {"url": "https://lbry.tv/@Mantega:1/First-day-LBRY:1", "args": ["-F"]},
  {"url": "https://odysee.com/@Mantega:1/missing:2", "args": ["-j"]},
- {"url": "https://odysee.com/@Mantega:1/First-day-LBRY:1", "args": ["-f", "original", "--no-progress", "-o", "%(id)s.%(ext)s"]}
+ {"url": "https://odysee.com/@Mantega:1/First-day-LBRY:1", "args": ["-f", "original", "--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://odysee.com/@TestChan:5", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://odysee.com/@TestChan:5", "args": ["--flat-playlist", "-I", "51,3,50", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://lbry.tv/@TestChan:5/", "args": ["--flat-playlist", "-I", "50:60", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://odysee.com/@TestChan:5", "args": ["--flat-playlist", "-I", "1"]},
+ {"url": "https://odysee.com/@TestChan:5?order=top&content=audio&duration=short&language=en&fee_amount=", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://odysee.com/@TestChan:5?order=bogus", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://odysee.com/@Gone", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://odysee.com/@Odd:7", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://odysee.com/$/playlist/ffef782f", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://odysee.com/$/list/ffef782f", "args": ["--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://odysee.com/@TestChan:5", "args": ["--flat-playlist", "-I", "51,3"]}
 ]
