@@ -828,7 +828,23 @@ follow upstream `BitChuteIE`: the beta API's `video/media` URL (HLS as live
 formats, or a progressive file HEAD-checked on its own and upstream's
 alternative seed hosts, unchecked with `--no-check-formats`), the `video`
 and `channel` metadata (non-fatal, with upstream's warnings) and the API's
-403 geo-restriction errors. Channel and playlist pages are not supported.
+403 geo-restriction errors.
+BitChute channels and playlists (`[www.|old.]bitchute.com/channel|playlist/ID`)
+follow upstream `BitChuteChannelIE`: the `old.bitchute.com` page gives the
+`<title>`, the `description`/`og:description`/`twitter:description` meta and
+the `<span>N videos</span>` count as `playlist_count` (`None` otherwise, when
+the count comes from reading the entries); the `extend/` form POSTs (upstream's
+CSRF token as field and cookie, `offset` = page × 25, `Downloading page N`
+from 0) give, while `success` is true, each `channel-videos-container` or
+`playlist-video` element's `/video/ID` link as a `url_transparent` BitChute
+entry with its title, description, `video-duration` and `video-views` count
+(an element without a link is skipped; a response that is not `success` ends
+the list). Pages follow upstream's `OnDemandPagedList` read by
+`PlaylistEntries` like PeerTube playlists' (only the pages holding requested
+entries, in request order). Not ported: a page request failing after the
+playlist started (upstream reports it per requested entry and continues; the
+port stops with the error) and `success` answers without `html`, which are
+unsupported errors.
 `tests/fixtures/sites/bitchute/` is compared with pinned upstream output.
 
 Bitmovin streams (`streams.bitmovin.com/ID`) follow upstream `BitmovinIE`:
@@ -2563,7 +2579,28 @@ proxy's `resolve` and `get`, the v3 API's original file (when the answer is
 not an m3u8), the streaming URL's redirect to its HLS master, livestreams
 through `api.odysee.live` (`This stream is not live` otherwise), the
 claim's metadata and channel URL, and upstream's `lbry said: CODE -
-MESSAGE` errors. Channels and playlists are not supported.
+MESSAGE` errors.
+Odysee/LBRY channels (`@NAME[:CLAIM]` with an optional query, `lbry://@NAME#CLAIM`)
+and playlists (`$/playlist/ID`, `$/list/ID`) follow upstream `LBRYChannelIE`
+and `LBRYPlaylistIE`: the channel's `resolve` (`Downloading channel JSON
+metadata`) gives its claim ID (the playlist's ID) and the `title`/`description`;
+a playlist's first `claim_search` (`claim_ids: [ID]`) gives its item's
+`title`/`description` and the string `value.claims` to search. Entries come
+from `claim_search` pages of 50 (`Downloading page N JSON metadata`, with
+`no_totals`, `fee_amount` (default `>=0`), `order_by` from `order=new|top|trending`,
+`claim_type: stream`, `stream_types` from `content=audio|video`, `duration`
+from `long|short`, `any_languages` from `language` (`en` adds `none`), from
+the URL's query; an unknown `order` or `duration` is upstream's `KeyError`
+report): each item with a `name` and `claim_id` becomes a `url` LBRY entry with
+the claim's metadata and its `https://HOST/NAME:CLAIM` URL. Pages follow
+upstream's `OnDemandPagedList` read by `PlaylistEntries` like PeerTube
+playlists' (only the pages holding requested entries, in request order; the
+count is `NA` unless a selection reads past the end). API errors are
+upstream's `lbry:channel said: CODE - MESSAGE` (`lbry:playlist`), unprefixed
+for a page read while processing. Not ported: a page request failing after
+the playlist started (upstream reports it per requested entry and continues,
+and re-requests it for every following index without `-I`; the port stops with
+the error).
 `tests/fixtures/sites/lbry/` is compared with pinned upstream output.
 
 LinkedIn posts (`linkedin.com/posts/SLUG-ID-XXXX`,

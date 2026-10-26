@@ -366,6 +366,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Bild",
     "BiliBili",
     "BitChute",
+    "BitChuteChannel",
     "Bitmovin",
     "blogger.com",
     "Bluesky",
@@ -479,6 +480,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "KTH",
     "Ku6",
     "lbry",
+    "lbry:channel",
+    "lbry:playlist",
     "Libsyn",
     "LinkedIn",
     "Livestreamfails",
@@ -873,6 +876,8 @@ impl YoutubeDl {
                 Box::new(extractor::Mixcloud),
                 Box::new(extractor::Pinterest),
                 Box::new(extractor::Lbry),
+                Box::new(extractor::LbryChannel),
+                Box::new(extractor::LbryPlaylist),
                 Box::new(extractor::TrtCocukVideo),
                 Box::new(extractor::Freesound),
                 Box::new(extractor::HearThisAt),
@@ -973,6 +978,7 @@ impl YoutubeDl {
                 Box::new(extractor::ArteTv),
                 Box::new(extractor::ArteTvPlaylist),
                 Box::new(extractor::BitChute),
+                Box::new(extractor::BitChuteChannel),
                 Box::new(extractor::Coub),
                 Box::new(extractor::Loom),
                 Box::new(extractor::Odnoklassniki),
@@ -1891,6 +1897,10 @@ impl YoutubeDl {
                 extractor::fetch_kick_entries
             } else if extractor::peertube_pending_state(&pending.state) {
                 extractor::fetch_peertube_pages
+            } else if extractor::lbry_pending_state(&pending.state) {
+                extractor::fetch_lbry_pages
+            } else if extractor::bitchute_pending_state(&pending.state) {
+                extractor::fetch_bitchute_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };
