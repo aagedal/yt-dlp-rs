@@ -20,6 +20,7 @@
   {"url": "https://framatube.org/api/v1/accounts/framasoft", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "account.json"},
   {"url": "https://framatube.org/api/v1/accounts/framasoft/videos?sort=-createdAt&start=0&count=30&nsfw=both", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "account_page1.json"},
   {"url": "https://framatube.org/api/v1/accounts/framasoft/videos?sort=-createdAt&start=30&count=30&nsfw=both", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "account_page2.json"},
+  {"url": "https://framatube.org/api/v1/accounts/framasoft/videos?sort=-createdAt&start=60&count=30&nsfw=both", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "account_page3.json"},
   {"url": "https://framatube.org/api/v1/video-playlists/oZG9JjrNAH9H4FryYyMrQM", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "playlist.json"},
   {"url": "https://framatube.org/api/v1/video-playlists/oZG9JjrNAH9H4FryYyMrQM/videos?sort=-createdAt&start=0&count=30&nsfw=both", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "playlist_page1.json"},
   {"url": "https://framatube.org/api/v1/video-channels/missing/videos?sort=-createdAt&start=0&count=30&nsfw=both", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body": "{\"total\": 0, \"data\": []}"},

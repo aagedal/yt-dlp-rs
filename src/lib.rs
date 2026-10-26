@@ -1889,6 +1889,8 @@ impl YoutubeDl {
                 extractor::fetch_vk_user_videos_pages
             } else if extractor::kick_pending_state(&pending.state) {
                 extractor::fetch_kick_entries
+            } else if extractor::peertube_pending_state(&pending.state) {
+                extractor::fetch_peertube_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };

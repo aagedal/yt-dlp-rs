@@ -3,7 +3,8 @@
 //! `peertube:HOST:ID` pseudo-URL) through the `/api/v1/videos/ID/` JSON (its
 //! HLS master playlists, web-video and HLS files, the description and
 //! captions endpoints), and an instance's accounts, video channels and video
-//! playlists as paged `url` playlists.
+//! playlists as paged `url` playlists, whose pages are pending entries
+//! fetched while processing like upstream's `OnDemandPagedList`.
 mod instances;
 
 use super::{Extractor, dict_format, dict_info};
@@ -486,6 +487,192 @@ fn py_type(value: Option<&Value>) -> &'static str {
     }
 }
 
+/// Whether a playlist's pending state is a PeerTube playlist's.
+pub(crate) fn is_pending_state(state: &Value) -> bool {
+    state["kind"] == "peertube"
+}
+
+/// An `OnDemandPagedList(fetch_page, 30)` with its page cache: `entries`
+/// holds every page up to the last fetched one, with placeholders for the
+/// full pages not fetched yet, and `counts[page]` is a fetched page's length.
+struct PagedEntries<'a> {
+    client: &'a Client,
+    host: String,
+    playlist_type: String,
+    playlist_id: String,
+    counts: Vec<Option<usize>>,
+    entries: &'a mut Vec<VideoInfo>,
+}
+
+impl PagedEntries<'_> {
+    /// `fetch_page(page)` (cached): the `/videos?sort=-createdAt` page's
+    /// `url` results, put in place of their placeholders.
+    fn page(&mut self, page: usize) -> Result<usize> {
+        if let Some(Some(count)) = self.counts.get(page) {
+            return Ok(*count);
+        }
+        let api = Url::parse(&format!(
+            "https://{}/api/v1/{}/{}/videos?sort=-createdAt&start={}&count={PAGE_SIZE}&nsfw=both",
+            self.host,
+            self.playlist_type,
+            self.playlist_id,
+            PAGE_SIZE * page
+        ))?;
+        let data = super::download_json_note(
+            self.client,
+            &api,
+            PLAYLIST_NAME,
+            &self.playlist_id,
+            &format!("Downloading page {}", page + 1),
+        )?;
+        if !data.is_object() {
+            return Err(Error::Reported(format!(
+                "'{}' object has no attribute 'get'",
+                py_type(Some(&data))
+            )));
+        }
+        let videos = match data.get("data") {
+            None => &Vec::new(),
+            Some(Value::Array(videos)) => videos,
+            Some(_) => return Err(unsupported("page data that are not arrays")),
+        };
+        let mut fetched = Vec::with_capacity(videos.len());
+        for video in videos {
+            let field = |key: &str| {
+                video
+                    .get(key)
+                    .filter(|value| super::nuxt::truthy(value))
+                    .or_else(|| try_get(video, &["video", key]))
+                    .filter(|value| !value.is_null())
+            };
+            let short_uuid = field("shortUUID").map(py_str).transpose()?;
+            let target = format!(
+                "https://{}/w/{}",
+                self.host,
+                short_uuid.as_deref().unwrap_or("None")
+            );
+            fetched.push(url_entry(&target, short_uuid, field("name").cloned())?);
+        }
+        let count = fetched.len();
+        let offset = PAGE_SIZE * page;
+        // Pages before this one that were not fetched yet are full.
+        while self.entries.len() < offset {
+            let placeholder = url_entry(&format!("https://{}/w/None", self.host), None, None)?;
+            self.entries.push(placeholder);
+        }
+        if self.counts.len() <= page {
+            self.counts.resize(page + 1, None);
+        }
+        let end = (offset + PAGE_SIZE).min(self.entries.len());
+        if count < PAGE_SIZE {
+            // The last page: nothing follows it.
+            self.entries.truncate(offset);
+            self.entries.extend(fetched);
+            self.counts.truncate(page + 1);
+        } else {
+            self.entries.splice(offset..end, fetched);
+        }
+        self.counts[page] = Some(count);
+        Ok(count)
+    }
+
+    /// `entries[index]`: whether the entry exists, after fetching its page.
+    fn has(&mut self, index: usize) -> Result<bool> {
+        Ok(index % PAGE_SIZE < self.page(index / PAGE_SIZE)?)
+    }
+
+    /// `len(entries)`: every page in order until one is shorter than the
+    /// page size.
+    fn read_all(&mut self) -> Result<()> {
+        for page in 0.. {
+            if self.page(page)? < PAGE_SIZE {
+                return Ok(());
+            }
+        }
+        Ok(())
+    }
+
+    fn exhausted(&self) -> bool {
+        self.counts.iter().all(Option::is_some)
+            && self
+                .counts
+                .last()
+                .is_some_and(|count| count.is_some_and(|count| count < PAGE_SIZE))
+    }
+}
+
+/// `OnDemandPagedList(fetch_page, 30)` read by upstream's `PlaylistEntries`:
+/// with the selection's `requests` (see
+/// [`crate::playlist::PlaylistSelection::entry_requests`]) only the pages of
+/// the requested entries are fetched, in request order, and reading past the
+/// end reads every page (`get_full_count`'s `len`); without them, the first
+/// `limit` entries (or every page).
+pub(crate) fn fetch_pages(
+    client: &Client,
+    mut state: Value,
+    limit: Option<usize>,
+    entries: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let requests = match state
+        .as_object_mut()
+        .and_then(|state| state.shift_remove("requests"))
+    {
+        Some(Value::Array(requests)) => requests,
+        _ => match limit {
+            Some(limit) => vec![json!({"start": 0, "stop": limit, "step": 1})],
+            None => vec!["all".into()],
+        },
+    };
+    let text = |key: &str| state[key].as_str().unwrap_or_default().to_owned();
+    let counts = state["pages"]
+        .as_array()
+        .map(|pages| {
+            pages
+                .iter()
+                .map(|count| count.as_u64().map(|count| count as usize))
+                .collect()
+        })
+        .unwrap_or_default();
+    let mut paged = PagedEntries {
+        client,
+        host: text("host"),
+        playlist_type: text("playlist_type"),
+        playlist_id: text("playlist_id"),
+        counts,
+        entries,
+    };
+    let mut exhausted = false;
+    for request in &requests {
+        if request == "all" {
+            exhausted = true;
+            break;
+        }
+        let step = request["step"].as_i64().unwrap_or(1);
+        let stop = request["stop"].as_i64();
+        let mut index = request["start"].as_i64().unwrap_or_default();
+        while stop.is_none_or(|stop| if step > 0 { index < stop } else { index > stop }) {
+            if index >= 0 && !paged.has(index as usize)? {
+                exhausted = true;
+                if step > 0 {
+                    break;
+                }
+            }
+            index += step;
+            if index < 0 && step < 0 {
+                break;
+            }
+        }
+    }
+    if exhausted {
+        paged.read_all()?;
+    }
+    if paged.exhausted() {
+        return Ok(None);
+    }
+    state["pages"] = paged.counts.into();
+    Ok(Some(state))
+}
+
 impl Extractor for PeerTubePlaylist {
     fn key(&self) -> &'static str {
         PLAYLIST_KEY
@@ -567,51 +754,6 @@ impl Extractor for PeerTubePlaylist {
             None => String::new(),
         };
 
-        // `OnDemandPagedList`: pages until one is shorter than the page size.
-        let mut entries = Vec::new();
-        for page in 1.. {
-            let api = Url::parse(&format!(
-                "https://{host}/api/v1/{playlist_type}/{playlist_id}/videos?sort=-createdAt&start={}&count={PAGE_SIZE}&nsfw=both",
-                PAGE_SIZE * (page - 1)
-            ))?;
-            let data = super::download_json_note(
-                client,
-                &api,
-                PLAYLIST_NAME,
-                &playlist_id,
-                &format!("Downloading page {page}"),
-            )?;
-            if !data.is_object() {
-                return Err(Error::Reported(format!(
-                    "'{}' object has no attribute 'get'",
-                    py_type(Some(&data))
-                )));
-            }
-            let videos = match data.get("data") {
-                None => Vec::new(),
-                Some(Value::Array(videos)) => videos.clone(),
-                Some(_) => return Err(unsupported("page data that are not arrays")),
-            };
-            for video in &videos {
-                let field = |key: &str| {
-                    video
-                        .get(key)
-                        .filter(|value| super::nuxt::truthy(value))
-                        .or_else(|| try_get(video, &["video", key]))
-                        .filter(|value| !value.is_null())
-                };
-                let short_uuid = field("shortUUID").map(py_str).transpose()?;
-                let target = format!(
-                    "https://{host}/w/{}",
-                    short_uuid.as_deref().unwrap_or("None")
-                );
-                entries.push(url_entry(&target, short_uuid, field("name").cloned())?);
-            }
-            if videos.len() < PAGE_SIZE {
-                break;
-            }
-        }
-
         let mut extra = Map::new();
         extra.insert("timestamp".into(), timestamp(info.get("createdAt")));
         extra.insert("channel".into(), channel);
@@ -625,10 +767,24 @@ impl Extractor for PeerTubePlaylist {
             extra.insert("description".into(), description);
             keys.push("description");
         }
+        // `OnDemandPagedList`, whose full count, like a generator's, is
+        // unknown unless a selection reads past its end.
         extra.insert(
             crate::info_order::INFO_SHAPE.into(),
-            format!("playlist-dict;{}", keys.join(",")).into(),
+            format!(
+                "playlist-dict;{}{}",
+                keys.join(","),
+                crate::info_order::GENERATOR
+            )
+            .into(),
         );
+        let state = json!({
+            "kind": "peertube",
+            "host": host,
+            "playlist_type": playlist_type,
+            "playlist_id": playlist_id,
+            "random_access": true,
+        });
         Ok(Some(ExtractResult::Playlist(PlaylistInfo {
             id: playlist_id,
             title: title.unwrap_or_default(),
@@ -636,8 +792,8 @@ impl Extractor for PeerTubePlaylist {
             extractor: PLAYLIST_NAME.into(),
             extractor_key: PLAYLIST_KEY.into(),
             nested: Vec::new(),
-            pending: None,
-            entries,
+            pending: Some(crate::PendingEntries { state }),
+            entries: Vec::new(),
             extra,
         })))
     }

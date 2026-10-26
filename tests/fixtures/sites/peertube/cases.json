@@ -17,5 +17,16 @@
  {"url": "https://framatube.org/a/framasoft", "args": ["--flat-playlist", "--print", "%(id)s|%(title)s|%(ie_key)s|%(url)s|%(playlist_id)s|%(playlist_title)s|%(playlist_index)s"]},
  {"url": "https://framatube.org/w/p/oZG9JjrNAH9H4FryYyMrQM", "args": ["--flat-playlist", "-J"]},
  {"url": "https://framatube.org/a/empty", "args": ["--flat-playlist", "-J"]},
- {"url": "https://framatube.org/c/missing/videos", "args": ["--flat-playlist", "-j"]}
+ {"url": "https://framatube.org/c/missing/videos", "args": ["--flat-playlist", "-j"]},
+ {"url": "https://framatube.org/a/framasoft", "args": ["-I", "1", "--flat-playlist"]},
+ {"url": "https://framatube.org/a/framasoft", "args": ["-I", "2", "--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://framatube.org/a/framasoft", "args": ["-I", "31", "--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://framatube.org/a/framasoft", "args": ["-I", "29:40", "--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://framatube.org/a/framasoft", "args": ["-I", "-1", "--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://framatube.org/a/framasoft", "args": ["-I", "31", "--flat-playlist"]},
+ {"url": "https://framatube.org/a/framasoft", "args": ["-I", "31:40", "--flat-playlist"]},
+ {"url": "https://framatube.org/a/framasoft", "args": ["-I", "1,61", "--flat-playlist"]},
+ {"url": "https://framatube.org/a/framasoft", "args": ["-I", "32:29:-1", "--flat-playlist"]},
+ {"url": "https://framatube.org/a/framasoft", "args": ["-I", "31,2", "--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://framatube.org/a/framasoft", "args": ["-I", "34", "--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]}
 ]

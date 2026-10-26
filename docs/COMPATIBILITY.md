@@ -1135,11 +1135,14 @@ non-fatal `/api/v1/TYPE/ID` information (a failed request is upstream's
 description, `createdAt` timestamp, owner account name and ID (else the
 item's own) as `channel`/`channel_id` and the `https://HOST` +
 `thumbnailPath` thumbnail (else `''`); the `/videos?sort=-createdAt` pages of
-30 give `url` entries for `https://HOST/w/SHORT_UUID` with their names. Pages
-are fetched up front until one is shorter than 30 entries; upstream's
-`OnDemandPagedList` fetches only the pages `--playlist-items` needs, so a
-partial selection may make more requests here (the selected entries are the
-same). Not ported: PeerTube detection on other hosts (GenericIE's
+30 give `url` entries for `https://HOST/w/SHORT_UUID` with their names. Like
+upstream's `OnDemandPagedList` read by `PlaylistEntries`, pages are fetched
+while the playlist is processed (after `Downloading playlist`), only those
+holding the requested entries and in request order (`-I 31` reads only page 2,
+`-I 31,1` page 2 then page 1), each once; a negative or reversed open bound,
+or a request past the end, reads every page in order until one is shorter
+than 30 entries. The count is unknown (`NA`) unless a selection reads past the
+end. Not ported: PeerTube detection on other hosts (GenericIE's
 `_EMBED_REGEX` iframes and `og:platform` page check), which stays the
 generic extractor's unsupported-URL path.
 
