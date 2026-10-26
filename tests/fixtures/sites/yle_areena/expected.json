@@ -1,0 +1,306 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://areena.yle.fi/1-4371942",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Pouchit\", \"id\": \"1-4371942\", \"description\": \"Kausi 1. Pojat pohtivat pouchien k\\u00e4ytt\\u00f6\\u00e4.\", \"series\": \"Modernit miehet\", \"season_number\": 1, \"episode_number\": 2, \"subtitles\": {\"fi\": [{\"url\": \"https://subtitles.api.yle.fi/1-4371942/fi.srt\", \"ext\": \"srt\", \"name\": \"hardOfHearing\"}, {\"url\": \"https://yleawodamd.akamaized.net/i/1-4371942/subs/fi.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"und\": [{\"url\": \"https://subtitles.api.yle.fi/1-4371942/und.srt\", \"ext\": \"srt\", \"name\": null}]}, \"age_limit\": 7, \"release_timestamp\": 1546718460, \"duration\": 1435, \"formats\": [{\"format_id\": \"hls-500\", \"format_index\": null, \"url\": \"https://yleawodamd.akamaized.net/i/1-4371942/360/index.m3u8\", \"manifest_url\": \"https://yleawodamd.akamaized.net/i/1-4371942/master.m3u8\", \"tbr\": 500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-500 - 640x360\"}, {\"format_id\": \"hls-1200\", \"format_index\": null, \"url\": \"https://yleawodamd.akamaized.net/i/1-4371942/720/index.m3u8\", \"manifest_url\": \"https://yleawodamd.akamaized.net/i/1-4371942/master.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1200 - 1280x720\"}], \"webpage_url\": \"https://areena.yle.fi/1-4371942\", \"original_url\": \"https://areena.yle.fi/1-4371942\", \"webpage_url_basename\": \"1-4371942\", \"webpage_url_domain\": \"areena.yle.fi\", \"extractor\": \"YleAreena\", \"extractor_key\": \"YleAreena\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1-4371942\", \"fulltitle\": \"Pouchit\", \"duration_string\": \"23:55\", \"release_date\": \"20190105\", \"release_year\": 2019, \"season\": \"Season 1\", \"episode\": \"Episode 2\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1200\", \"url\": \"https://yleawodamd.akamaized.net/i/1-4371942/720/index.m3u8\", \"manifest_url\": \"https://yleawodamd.akamaized.net/i/1-4371942/master.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1200 - 1280x720\", \"_filename\": \"Pouchit [1-4371942].mp4\", \"filename\": \"Pouchit [1-4371942].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1200\", \"format_index\": null, \"url\": \"https://yleawodamd.akamaized.net/i/1-4371942/720/index.m3u8\", \"manifest_url\": \"https://yleawodamd.akamaized.net/i/1-4371942/master.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1200 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/1-4371942",
+   "args": [
+    "--no-geo-bypass",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[YleAreena] Extracting URL: https://areena.yle.fi/1-4371942",
+    "[YleAreena] 1-4371942: Downloading webpage",
+    "[YleAreena] 1-4371942: Downloading JSON metadata",
+    "[YleAreena] 1-4371942: Downloading m3u8 information",
+    "[info] Available formats for 1-4371942:",
+    "ID       EXT RESOLUTION |   FILESIZE   TBR PROTO | VCODEC      ACODEC",
+    "------------------------------------------------------------------------",
+    "hls-500  mp4 640x360    | ~ 85.53MiB  500k m3u8  | avc1.4d401e mp4a.40.2",
+    "hls-1200 mp4 1280x720   | ~205.28MiB 1200k m3u8  | avc1.64001f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/1-4371942",
+   "args": [
+    "--no-geo-bypass",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[YleAreena] Extracting URL: https://areena.yle.fi/1-4371942",
+    "[YleAreena] 1-4371942: Downloading webpage",
+    "[YleAreena] 1-4371942: Downloading JSON metadata",
+    "[YleAreena] 1-4371942: Downloading m3u8 information",
+    "[info] Available subtitles for 1-4371942:",
+    "Language Name                   Formats",
+    "fi       unknown, hardOfHearing vtt, srt",
+    "und                             srt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/1-4371942",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "%(id)s|%(title)s|%(series)s|%(season_number)s|%(episode)s|%(episode_number)s|%(age_limit)s|%(release_date)s|%(duration)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1-4371942|Pouchit|Modernit miehet|1|Episode 2|2|7|20190105|1435|hls-1200"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/1-2158940",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Albi haluaa vessan\", \"id\": \"1-2158940\", \"description\": \"Albi haluaa vessan.\", \"series\": \"Albi Lumiukko\", \"season_number\": null, \"episode_number\": null, \"subtitles\": null, \"age_limit\": 0, \"release_timestamp\": 1639555200, \"duration\": 319, \"formats\": [{\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://yleawodamd.akamaized.net/i/1-2158940/540/index.m3u8\", \"manifest_url\": \"https://yleawodamd.akamaized.net/i/1-2158940/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 960x540\"}], \"webpage_url\": \"https://areena.yle.fi/1-2158940\", \"original_url\": \"https://areena.yle.fi/1-2158940\", \"webpage_url_basename\": \"1-2158940\", \"webpage_url_domain\": \"areena.yle.fi\", \"extractor\": \"YleAreena\", \"extractor_key\": \"YleAreena\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1-2158940\", \"fulltitle\": \"Albi haluaa vessan\", \"duration_string\": \"5:19\", \"release_date\": \"20211215\", \"release_year\": 2021, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-800\", \"url\": \"https://yleawodamd.akamaized.net/i/1-2158940/540/index.m3u8\", \"manifest_url\": \"https://yleawodamd.akamaized.net/i/1-2158940/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 960x540\", \"_filename\": \"Albi haluaa vessan [1-2158940].mp4\", \"filename\": \"Albi haluaa vessan [1-2158940].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://yleawodamd.akamaized.net/i/1-2158940/540/index.m3u8\", \"manifest_url\": \"https://yleawodamd.akamaized.net/i/1-2158940/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 960x540\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/1-72251830",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "%(id)s|%(is_live)s|%(live_status)s|%(protocol)s|%(format_id)s|%(ext)s|%(series)s|%(description)s|%(duration)s|%(release_timestamp)s|%(subtitles)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1-72251830|True|is_live|m3u8_native|hls-800|mp4|Pentulive|Pentuja livenä.|NA|1729875600|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/podcastit/1-71022852",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"V\\u00e4ritysp\\u00e4iv\\u00e4\", \"id\": \"1-71022852\", \"description\": \"Murun ja Paukun v\\u00e4ritysp\\u00e4iv\\u00e4.\", \"series\": \"Murun ja Paukun ikioma kaupunki\", \"season_number\": null, \"episode_number\": 1, \"subtitles\": null, \"release_timestamp\": 1717736400, \"duration\": 442, \"url\": \"https://yleawodamd.akamaized.net/audio/1-71022852.mp3\", \"webpage_url\": \"https://areena.yle.fi/podcastit/1-71022852\", \"original_url\": \"https://areena.yle.fi/podcastit/1-71022852\", \"webpage_url_basename\": \"1-71022852\", \"webpage_url_domain\": \"areena.yle.fi\", \"extractor\": \"YleAreena\", \"extractor_key\": \"YleAreena\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1-71022852\", \"fulltitle\": \"V\\u00e4ritysp\\u00e4iv\\u00e4\", \"duration_string\": \"7:22\", \"release_date\": \"20240607\", \"release_year\": 2024, \"episode\": \"Episode 1\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"V\\u00e4ritysp\\u00e4iv\\u00e4 [1-71022852].mp3\", \"filename\": \"V\\u00e4ritysp\\u00e4iv\\u00e4 [1-71022852].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/podcastit/1-71022852",
+   "args": [
+    "--no-geo-bypass",
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[YleAreena] Extracting URL: https://areena.yle.fi/podcastit/1-71022852",
+    "[YleAreena] 1-71022852: Downloading webpage",
+    "[YleAreena] 1-71022852: Downloading JSON metadata",
+    "[info] 1-71022852: Downloading 1 format(s): 0",
+    "[download] Destination: 1-71022852.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "1-71022852.mp3": 14
+   }
+  },
+  {
+   "url": "https://areena.yle.fi/1-71022852",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [YleAreena] 1-71022852: Unable to extract content; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/1-1111",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0_yle1234\", \"title\": \"Vanha ohjelma\", \"formats\": [{\"format_id\": \"mp4-900\", \"ext\": \"mp4\", \"tbr\": 900, \"fps\": 25, \"filesize_approx\": 67500000, \"container\": null, \"vcodec\": \"avc1\", \"height\": 720, \"width\": 1280, \"url\": \"https://cdnapisec.kaltura.com/p/1955031/sp/195503100/playManifest/entryId/0_yle1234/format/url/protocol/https/flavorId/0_f1?referrer=aHR0cHM6Ly9hcmVlbmEueWxlLmZp\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-900 - 1280x720\"}], \"subtitles\": {\"fi\": [{\"url\": \"https://subtitles.api.yle.fi/1-1111/fi.srt\", \"ext\": \"srt\", \"name\": \"translation\"}]}, \"description\": \"Kausi 3. Arkistosta.\", \"thumbnail\": \"https://cfvod.kaltura.com/p/1955031/thumbnail/entry_id/0_yle1234\", \"duration\": 600, \"timestamp\": 1267444800, \"uploader_id\": \"\", \"view_count\": 5, \"original_url\": \"https://areena.yle.fi/1-1111\", \"webpage_url\": \"https://areena.yle.fi/1-1111\", \"webpage_url_basename\": \"1-1111\", \"webpage_url_domain\": \"areena.yle.fi\", \"extractor\": \"Kaltura\", \"extractor_key\": \"Kaltura\", \"series\": \"Arkisto\", \"season_number\": 3, \"age_limit\": 12, \"release_timestamp\": 1267444800, \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cfvod.kaltura.com/p/1955031/thumbnail/entry_id/0_yle1234\", \"id\": \"0\"}], \"display_id\": \"0_yle1234\", \"fulltitle\": \"Vanha ohjelma\", \"duration_string\": \"10:00\", \"upload_date\": \"20100301\", \"release_date\": \"20100301\", \"release_year\": 2010, \"season\": \"Season 3\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"mp4-900\", \"ext\": \"mp4\", \"tbr\": 900, \"fps\": 25, \"filesize_approx\": 67500000, \"vcodec\": \"avc1\", \"height\": 720, \"width\": 1280, \"url\": \"https://cdnapisec.kaltura.com/p/1955031/sp/195503100/playManifest/entryId/0_yle1234/format/url/protocol/https/flavorId/0_f1?referrer=aHR0cHM6Ly9hcmVlbmEueWxlLmZp\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-900 - 1280x720\", \"_filename\": \"Vanha ohjelma [0_yle1234].mp4\", \"filename\": \"Vanha ohjelma [0_yle1234].mp4\", \"__write_download_archive\": false}], \"format_id\": \"mp4-900\", \"ext\": \"mp4\", \"tbr\": 900, \"fps\": 25, \"filesize_approx\": 67500000, \"container\": null, \"vcodec\": \"avc1\", \"height\": 720, \"width\": 1280, \"url\": \"https://cdnapisec.kaltura.com/p/1955031/sp/195503100/playManifest/entryId/0_yle1234/format/url/protocol/https/flavorId/0_f1?referrer=aHR0cHM6Ly9hcmVlbmEueWxlLmZp\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-900 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Kaltura] 0_yle1234: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/1-1111",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s|%(duration)s|%(season_number)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "0_yle1234|Vanha ohjelma|Kaltura|https://areena.yle.fi/1-1111|https://areena.yle.fi/1-1111|600|3"
+   ],
+   "stderr": [
+    "WARNING: [Kaltura] 0_yle1234: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/1-2222",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [YleAreena] 1-2222: The content is no longer available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/1-2222",
+   "args": [
+    "--no-geo-bypass",
+    "--ignore-no-formats-error",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1-2222\", \"title\": \"Poistunut ohjelma\", \"description\": \"Ei en\\u00e4\\u00e4 saatavilla.\", \"series\": null, \"season_number\": null, \"episode_number\": null, \"subtitles\": null, \"release_timestamp\": 1420070400, \"webpage_url\": \"https://areena.yle.fi/1-2222\", \"original_url\": \"https://areena.yle.fi/1-2222\", \"webpage_url_basename\": \"1-2222\", \"webpage_url_domain\": \"areena.yle.fi\", \"extractor\": \"YleAreena\", \"extractor_key\": \"YleAreena\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1-2222\", \"fulltitle\": \"Poistunut ohjelma\", \"release_date\": \"20150101\", \"release_year\": 2015, \"requested_subtitles\": null, \"_has_drm\": null, \"formats\": [], \"requested_downloads\": [{\"_filename\": \"Poistunut ohjelma [1-2222].NA\", \"filename\": \"Poistunut ohjelma [1-2222].NA\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [YleAreena] 1-2222: The content is no longer available",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/1-3333",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 1-3333: An extractor error has occurred. (caused by KeyError('data')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/1-5555",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [YleAreena] 1-5555: Unable to extract content; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/1-4444",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1-4444\", \"title\": \"YleAreena video #1-4444\", \"description\": null, \"series\": null, \"season_number\": null, \"episode_number\": null, \"subtitles\": null, \"duration\": 60, \"formats\": [{\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://yleawodamd.akamaized.net/i/1-4444/540/index.m3u8\", \"manifest_url\": \"https://yleawodamd.akamaized.net/i/1-4444/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 960x540\"}], \"webpage_url\": \"https://areena.yle.fi/1-4444\", \"original_url\": \"https://areena.yle.fi/1-4444\", \"webpage_url_basename\": \"1-4444\", \"webpage_url_domain\": \"areena.yle.fi\", \"extractor\": \"YleAreena\", \"extractor_key\": \"YleAreena\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1-4444\", \"fulltitle\": null, \"duration_string\": \"1:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-800\", \"url\": \"https://yleawodamd.akamaized.net/i/1-4444/540/index.m3u8\", \"manifest_url\": \"https://yleawodamd.akamaized.net/i/1-4444/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 960x540\", \"_filename\": \"YleAreena video #1-4444 [1-4444].mp4\", \"filename\": \"YleAreena video #1-4444 [1-4444].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://yleawodamd.akamaized.net/i/1-4444/540/index.m3u8\", \"manifest_url\": \"https://yleawodamd.akamaized.net/i/1-4444/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 960x540\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/podcastit/1-71022853",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1-71022853\", \"title\": \"Jakso\", \"description\": null, \"series\": null, \"season_number\": null, \"episode_number\": 3, \"subtitles\": {\"fi\": [{\"url\": \"https://subtitles.api.yle.fi/1-71022853/fi.srt\", \"ext\": \"srt\", \"name\": null}], \"sv\": [{\"url\": \"https://subtitles.api.yle.fi/1-71022853/sv.srt\", \"ext\": \"srt\", \"name\": \"translation\"}]}, \"url\": \"https://yleawodamd.akamaized.net/audio/1-71022853.mp3\", \"webpage_url\": \"https://areena.yle.fi/podcastit/1-71022853\", \"original_url\": \"https://areena.yle.fi/podcastit/1-71022853\", \"webpage_url_basename\": \"1-71022853\", \"webpage_url_domain\": \"areena.yle.fi\", \"extractor\": \"YleAreena\", \"extractor_key\": \"YleAreena\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1-71022853\", \"fulltitle\": \"Jakso\", \"release_year\": null, \"episode\": \"Episode 3\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Jakso [1-71022853].mp3\", \"filename\": \"Jakso [1-71022853].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/podcastit/1-71022853",
+   "args": [
+    "--no-geo-bypass",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[YleAreena] Extracting URL: https://areena.yle.fi/podcastit/1-71022853",
+    "[YleAreena] 1-71022853: Downloading webpage",
+    "[YleAreena] 1-71022853: Downloading JSON metadata",
+    "[info] Available subtitles for 1-71022853:",
+    "Language Name        Formats",
+    "fi                   srt",
+    "sv       translation srt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://areena.yle.fi/1-6666",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [YleAreena] 1-6666: Failed to download m3u8 information: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

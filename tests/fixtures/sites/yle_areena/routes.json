@@ -1,0 +1,269 @@
+{
+ "routes": [
+  {
+   "url": "https://areena.yle.fi/1-4371942",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "pouchit.html"
+  },
+  {
+   "url": "https://player.api.yle.fi/v1/preview/1-4371942.json?app_id=player_static_prod&app_key=8930d72170e48303cf5f3867780d549b",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "pouchit.json",
+   "request_headers": {
+    "Origin": "https://areena.yle.fi",
+    "Referer": "https://areena.yle.fi/",
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://areena.yle.fi/1-2158940",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "albi.html"
+  },
+  {
+   "url": "https://player.api.yle.fi/v1/preview/1-2158940.json?app_id=player_static_prod&app_key=8930d72170e48303cf5f3867780d549b",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "albi.json",
+   "request_headers": {
+    "Origin": "https://areena.yle.fi",
+    "Referer": "https://areena.yle.fi/",
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://areena.yle.fi/1-72251830",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "live.html"
+  },
+  {
+   "url": "https://player.api.yle.fi/v1/preview/1-72251830.json?app_id=player_static_prod&app_key=8930d72170e48303cf5f3867780d549b",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "live.json",
+   "request_headers": {
+    "Origin": "https://areena.yle.fi",
+    "Referer": "https://areena.yle.fi/",
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://areena.yle.fi/1-71022852",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "podcast.html"
+  },
+  {
+   "url": "https://player.api.yle.fi/v1/preview/1-71022852.json?app_id=player_static_prod&app_key=8930d72170e48303cf5f3867780d549b",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "podcast.json",
+   "request_headers": {
+    "Origin": "https://areena.yle.fi",
+    "Referer": "https://areena.yle.fi/",
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://areena.yle.fi/1-1111",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "plain.html"
+  },
+  {
+   "url": "https://player.api.yle.fi/v1/preview/1-1111.json?app_id=player_static_prod&app_key=8930d72170e48303cf5f3867780d549b",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "kaltura.json",
+   "request_headers": {
+    "Origin": "https://areena.yle.fi",
+    "Referer": "https://areena.yle.fi/",
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://areena.yle.fi/1-2222",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "plain.html"
+  },
+  {
+   "url": "https://player.api.yle.fi/v1/preview/1-2222.json?app_id=player_static_prod&app_key=8930d72170e48303cf5f3867780d549b",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "gone.json",
+   "request_headers": {
+    "Origin": "https://areena.yle.fi",
+    "Referer": "https://areena.yle.fi/",
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://areena.yle.fi/1-3333",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "plain.html"
+  },
+  {
+   "url": "https://player.api.yle.fi/v1/preview/1-3333.json?app_id=player_static_prod&app_key=8930d72170e48303cf5f3867780d549b",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "nodata.json",
+   "request_headers": {
+    "Origin": "https://areena.yle.fi",
+    "Referer": "https://areena.yle.fi/",
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://areena.yle.fi/1-5555",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "plain.html"
+  },
+  {
+   "url": "https://player.api.yle.fi/v1/preview/1-5555.json?app_id=player_static_prod&app_key=8930d72170e48303cf5f3867780d549b",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "empty.json",
+   "request_headers": {
+    "Origin": "https://areena.yle.fi",
+    "Referer": "https://areena.yle.fi/",
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://areena.yle.fi/1-4444",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "plain.html"
+  },
+  {
+   "url": "https://player.api.yle.fi/v1/preview/1-4444.json?app_id=player_static_prod&app_key=8930d72170e48303cf5f3867780d549b",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "untitled.json",
+   "request_headers": {
+    "Origin": "https://areena.yle.fi",
+    "Referer": "https://areena.yle.fi/",
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://areena.yle.fi/1-6666",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "plain.html"
+  },
+  {
+   "url": "https://player.api.yle.fi/v1/preview/1-6666.json?app_id=player_static_prod&app_key=8930d72170e48303cf5f3867780d549b",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "broken.json",
+   "request_headers": {
+    "Origin": "https://areena.yle.fi",
+    "Referer": "https://areena.yle.fi/",
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://areena.yle.fi/podcastit/1-71022852",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "podcast.html"
+  },
+  {
+   "url": "https://areena.yle.fi/podcastit/1-71022853",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "plain.html"
+  },
+  {
+   "url": "https://player.api.yle.fi/v1/preview/1-71022853.json?app_id=player_static_prod&app_key=8930d72170e48303cf5f3867780d549b",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "podcast_subs.json"
+  },
+  {
+   "url": "https://yleawodamd.akamaized.net/i/1-6666/master.m3u8",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "status": 404,
+   "body": "missing"
+  },
+  {
+   "url": "https://yleawodamd.akamaized.net/i/1-4371942/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://yleawodamd.akamaized.net/i/1-2158940/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "plain_master.m3u8"
+  },
+  {
+   "url": "https://yleawodamd.akamaized.net/i/1-4444/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "plain_master.m3u8"
+  },
+  {
+   "url": "https://yleawodamd.akamaized.net/live/1-72251830/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "plain_master.m3u8"
+  },
+  {
+   "url": "https://yleawodamd.akamaized.net/audio/1-71022852.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3fixture-mp3"
+  },
+  {
+   "url": "http://cdnapi.kaltura.com/api_v3/service/multirequest",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "kaltura_entry.json",
+   "request_body": [
+    "\"redirectFromEntryId\": \"0_yle1234\"",
+    "\"widgetId\": \"_1955031\""
+   ]
+  }
+ ]
+}

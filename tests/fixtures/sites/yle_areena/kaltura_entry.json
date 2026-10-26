@@ -1,0 +1,36 @@
+[
+ {
+  "partnerId": 1955031,
+  "ks": "KS",
+  "objectType": "KalturaStartWidgetSessionResponse"
+ },
+ {
+  "objects": [
+   {
+    "id": "0_yle1234",
+    "name": "Kaltura name",
+    "description": "Kaltura description",
+    "dataUrl": "https://cdnapisec.kaltura.com/p/1955031/sp/195503100/playManifest/entryId/0_yle1234/format/url/protocol/https",
+    "plays": 5,
+    "duration": 601,
+    "createdAt": 1267444800,
+    "thumbnailUrl": "https://cfvod.kaltura.com/p/1955031/thumbnail/entry_id/0_yle1234"
+   }
+  ]
+ },
+ [
+  {
+   "id": "0_f1",
+   "status": 2,
+   "fileExt": "mp4",
+   "bitrate": 900,
+   "width": 1280,
+   "height": 720,
+   "frameRate": 25,
+   "videoCodecId": "avc1"
+  }
+ ],
+ {
+  "objects": []
+ }
+]

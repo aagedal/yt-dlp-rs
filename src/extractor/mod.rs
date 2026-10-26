@@ -220,6 +220,7 @@ mod xboxclips;
 mod xiaohongshu;
 mod xspf;
 mod yfanefa;
+mod yle_areena;
 pub(crate) mod youtube;
 mod zhihu;
 
@@ -528,6 +529,7 @@ pub use worldstarhiphop::{WorldStarHipHop, suitable as worldstarhiphop_suitable}
 pub use xboxclips::{XboxClips, suitable as xboxclips_suitable};
 pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
+pub use yle_areena::{YleAreena, suitable as yle_areena_suitable};
 pub(crate) use youtube::YoutubeUnsupported;
 pub(crate) use youtube::clip::YoutubeClip;
 pub(crate) use youtube::comments::post_extract as youtube_comments;

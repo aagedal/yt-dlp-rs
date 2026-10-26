@@ -1,0 +1,21 @@
+[
+ {"url": "https://areena.yle.fi/1-4371942", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://areena.yle.fi/1-4371942", "args": ["--no-geo-bypass", "-F"]},
+ {"url": "https://areena.yle.fi/1-4371942", "args": ["--no-geo-bypass", "--list-subs"]},
+ {"url": "https://areena.yle.fi/1-4371942", "args": ["--no-geo-bypass", "--print", "%(id)s|%(title)s|%(series)s|%(season_number)s|%(episode)s|%(episode_number)s|%(age_limit)s|%(release_date)s|%(duration)s|%(format_id)s"]},
+ {"url": "https://areena.yle.fi/1-2158940", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://areena.yle.fi/1-72251830", "args": ["--no-geo-bypass", "--print", "%(id)s|%(is_live)s|%(live_status)s|%(protocol)s|%(format_id)s|%(ext)s|%(series)s|%(description)s|%(duration)s|%(release_timestamp)s|%(subtitles)s"]},
+ {"url": "https://areena.yle.fi/podcastit/1-71022852", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://areena.yle.fi/podcastit/1-71022852", "args": ["--no-geo-bypass", "--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://areena.yle.fi/1-71022852", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://areena.yle.fi/1-1111", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://areena.yle.fi/1-1111", "args": ["--no-geo-bypass", "--print", "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s|%(duration)s|%(season_number)s"]},
+ {"url": "https://areena.yle.fi/1-2222", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://areena.yle.fi/1-2222", "args": ["--no-geo-bypass", "--ignore-no-formats-error", "-J"]},
+ {"url": "https://areena.yle.fi/1-3333", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://areena.yle.fi/1-5555", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://areena.yle.fi/1-4444", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://areena.yle.fi/podcastit/1-71022853", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://areena.yle.fi/podcastit/1-71022853", "args": ["--no-geo-bypass", "--list-subs"]},
+ {"url": "https://areena.yle.fi/1-6666", "args": ["--no-geo-bypass", "-J"]}
+]

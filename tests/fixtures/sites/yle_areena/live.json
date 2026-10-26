@@ -1,0 +1,25 @@
+{
+ "data": {
+  "ongoing_event": {
+   "title": {
+    "fin": "Pentulive 2024 | Pentulive 2024-10-25 20:00"
+   },
+   "description": {
+    "fin": "Pentuja livenä."
+   },
+   "series": {
+    "title": {
+     "fin": "Pentulive"
+    }
+   },
+   "start_time": "2024-10-25T20:00:00+03:00",
+   "duration": {
+    "duration_in_seconds": 3600
+   },
+   "manifest_url": "https://yleawodamd.akamaized.net/live/1-72251830/master.m3u8"
+  },
+  "ongoing_ondemand": {
+   "manifest_url": "https://example.invalid/unused.m3u8"
+  }
+ }
+}

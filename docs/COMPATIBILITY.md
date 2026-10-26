@@ -1621,6 +1621,26 @@ warning) or one `mp4` format, the `PATH` ID with slashes as dashes, the
 OpenGraph title (else the `<title>` without ` | Yorkshire Film Archive`), and
 the URL-valued preview and integer duration.
 
+Yle Areena programmes and podcasts (`areena.yle.fi/[podcastit/]ID`) follow
+upstream `YleAreenaIE` (`_GEO_COUNTRIES = ['FI']`): the page's JSON-LD title
+(parsed with upstream's `K1, J2: EPISODE | SERIES` regex, including its
+top-level alternation) and thumbnails, then the fatal
+`player.api.yle.fi/v1/preview/ID.json` API (`origin`/`referer`/`content-type`
+headers; a missing `data` is upstream's `KeyError`). A podcast URL with an
+`ongoing_ondemand.media_url` is a single-URL result; otherwise an
+`ongoing_event` manifest (live, its duration dropped) or an
+`ongoing_ondemand` manifest gives fatal master-only `hls` formats whose
+subtitles merge into the on-demand SRT tracks (`language` else `und`, `kind`
+as `name`); a `kaltura.id` is a `url_transparent` result of
+`kaltura:1955031:ID` (smuggled `source_url`, extracted like Kaltura above)
+overlaid with the Yle fields; `gone` is `raise_no_formats` (`The content is no
+longer available`), and anything else `Unable to extract content`. Titles,
+descriptions, series, `Kausi N` season numbers, episode numbers, age limits,
+`start_time` and durations keep upstream's key order and `None` values.
+Non-string subtitle languages or kinds, non-string manifest URLs and
+non-absolute media URLs are explicit native errors.
+`tests/fixtures/sites/yle_areena/` is compared with pinned upstream output.
+
 Zhihu videos (`zhihu.com/zvideo/ID`) follow upstream `ZhihuIE`: the zvideos
 API's playlist qualities with a URL (`url` else `play_url`) as formats with
 their sample rate, size, FPS, dimensions and bitrate, the fatal title, the
