@@ -1,0 +1,5 @@
+[
+ {"url": "https://odysee.com/@TestChan:5", "args": ["--flat-playlist", "-I", "51,3", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://odysee.com/@TestChan:5", "args": ["--flat-playlist", "-I", "3,51"]},
+ {"url": "https://odysee.com/@TestChan:5", "args": ["--flat-playlist", "-I", "2", "--print", "%(playlist_index)s|%(id)s"]}
+]

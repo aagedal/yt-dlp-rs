@@ -841,9 +841,9 @@ entry with its title, description, `video-duration` and `video-views` count
 (an element without a link is skipped; a response that is not `success` ends
 the list). Pages follow upstream's `OnDemandPagedList` read by
 `PlaylistEntries` like PeerTube playlists' (only the pages holding requested
-entries, in request order). Not ported: a page request failing after the
-playlist started (upstream reports it per requested entry and continues; the
-port stops with the error) and `success` answers without `html`, which are
+entries, in request order); a page failing while entries are read is reported
+once without a prefix, its entry is `None` and the list ends there, like
+upstream (see Dailymotion playlists). `success` answers without `html` are
 unsupported errors.
 `tests/fixtures/sites/bitchute/` is compared with pinned upstream output.
 
@@ -2625,11 +2625,10 @@ upstream's `OnDemandPagedList` read by `PlaylistEntries` like PeerTube
 playlists' (only the pages holding requested entries, in request order; the
 count is `NA` unless a selection reads past the end). API errors are
 upstream's `lbry:channel said: CODE - MESSAGE` (`lbry:playlist`), unprefixed
-for a page read while processing. Not ported: a page request failing after
-the playlist started (upstream reports it per requested entry and continues,
-and re-requests it for every following index without `-I`; the port stops with
-the error).
-`tests/fixtures/sites/lbry/` is compared with pinned upstream output.
+for a page read while processing; a failing page is reported once, its entry
+is `None` and the list ends there, like upstream (see Dailymotion playlists).
+`tests/fixtures/sites/lbry/` and `tests/fixtures/sites/lbry-pagefail/` are
+compared with pinned upstream output.
 
 LinkedIn posts (`linkedin.com/posts/SLUG-ID-XXXX`,
 `feed/update/urn:li:activity:ID`) follow upstream `LinkedInIE`: the page's

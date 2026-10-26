@@ -91,9 +91,17 @@ impl Paged<'_, '_> {
         }
         self.entries.truncate(index);
         let mut entry = (self.placeholder)()?;
-        entry
-            .extra
-            .insert(crate::FETCH_ERROR.into(), error.to_string().into());
+        // Raised while reading entries, outside `extract()`, the error has
+        // no `[extractor]` prefix upstream.
+        let text = error.to_string();
+        let text = match text
+            .strip_prefix('[')
+            .and_then(|rest| rest.split_once("] "))
+        {
+            Some((name, rest)) if !name.contains(' ') => rest.to_owned(),
+            _ => text,
+        };
+        entry.extra.insert(crate::FETCH_ERROR.into(), text.into());
         entry
             .extra
             .insert(crate::FETCH_ERROR_COUNT.into(), offset.into());

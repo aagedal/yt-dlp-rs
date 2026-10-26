@@ -544,7 +544,7 @@
         "src/extractor/bitchute.rs",
         "tests/fixtures/sites/bitchute/"
       ],
-      "scope": "BitChuteIE beta API media URL with seed-host checks, video/channel metadata and geo errors; BitChuteChannelIE channel/playlist pages and extend/ pages as random-access OnDemandPagedList url_transparent entries (page errors after the playlist starts stop the run instead of upstream per-entry reports); compared with pinned upstream output through the fixture proxy"
+      "scope": "BitChuteIE beta API media URL with seed-host checks, video/channel metadata and geo errors; BitChuteChannelIE channel/playlist pages and extend/ pages as random-access OnDemandPagedList url_transparent entries (a failing page is reported once, unprefixed, and ends the list like upstream); compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "bitmovin",
@@ -1568,9 +1568,10 @@
       ],
       "rust": [
         "src/extractor/lbry.rs",
-        "tests/fixtures/sites/lbry/"
+        "tests/fixtures/sites/lbry/",
+        "tests/fixtures/sites/lbry-pagefail/"
       ],
-      "scope": "LBRYIE resolve/get API proxy, original files, streaming-redirect HLS formats, livestreams, claim metadata and API errors; LBRYChannelIE/LBRYPlaylistIE resolve or claim_search metadata, query filters and claim_search pages as random-access OnDemandPagedList url entries (page errors after the playlist starts stop the run instead of upstream per-entry reports); compared with pinned upstream output through the fixture proxy"
+      "scope": "LBRYIE resolve/get API proxy, original files, streaming-redirect HLS formats, livestreams, claim metadata and API errors; LBRYChannelIE/LBRYPlaylistIE resolve or claim_search metadata, query filters and claim_search pages as random-access OnDemandPagedList url entries (a failing page is reported once, unprefixed, and ends the list like upstream); compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "linkedin",
