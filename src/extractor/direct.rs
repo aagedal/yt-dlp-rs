@@ -180,6 +180,7 @@ fn mime_extension(mime: &str) -> Option<&'static str> {
         "video/quicktime" => Some("mov"),
         "video/x-msvideo" => Some("avi"),
         "video/x-flv" => Some("flv"),
+        "video/mpeg" => Some("mpg"),
         "audio/mpeg" => Some("mp3"),
         "audio/mp4" | "audio/x-m4a" => Some("m4a"),
         "audio/aac" => Some("aac"),

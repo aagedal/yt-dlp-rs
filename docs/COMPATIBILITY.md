@@ -2059,6 +2059,19 @@ the `thumb`/`still` stills, duration and kudos/views stats. Non-array item or
 media lists and non-string titles or URIs remain explicit native errors.
 `tests/fixtures/sites/dumpert/` is compared with pinned upstream output.
 
+Flickr videos (`[www.|secure.]flickr.com/photos/USER/ID`) follow upstream
+`FlickrIE`: the API key from `hermes_error_beacon.gne`, the REST API's
+`flickr.photos.getInfo` (a failed `stat` is upstream's unexpected error with
+the API message; a non-video photo is `not a video`) and
+`flickr.video.getStreamInfo` with the photo's secret, streams ranked by
+`qualities(288p, iphone_wifi, 100, 300, 700, 360p, appletv, 720p, 1080p,
+orig)` (a missing type is upstream's `None` format ID), owner, counts, tags,
+duration, upload timestamp and license names. Info fields that are not
+objects, and non-string stream URLs or API messages remain explicit native
+errors. Like other site formats, downloads check that the response is media;
+`video/mpeg` (Flickr's `orig` MPEG files) is recognized as `mpg`.
+`tests/fixtures/sites/flickr/` is compared with pinned upstream output.
+
 CloudyCDN and Backscreen embeds (`embed.cloudycdn.services|backscreen.com/SITE/media/ID`)
 follow upstream `CloudyCDNIE`: the `player.DOMAIN/player/SITE/media/ID/`
 JSON form POST (`version=6.4.0`, `referer`), each `source.sources[].src` URL

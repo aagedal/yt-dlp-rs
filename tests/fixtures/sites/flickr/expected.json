@@ -1,0 +1,100 @@
+{
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
+ "cases": [
+  {
+   "url": "https://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5645318632\", \"title\": \"Dark Hollow Waterfalls\", \"description\": \"Waterfalls in the Springtime.\", \"formats\": [{\"format_id\": \"700\", \"url\": \"https://live.staticflickr.test/video/700.mp4\", \"quality\": 4, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"700 - unknown\"}, {\"format_id\": \"appletv\", \"url\": \"https://live.staticflickr.test/video/appletv.mp4\", \"quality\": 6, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"appletv - unknown\"}, {\"format_id\": \"orig\", \"url\": \"https://live.staticflickr.test/video/orig.mpg\", \"quality\": 9, \"protocol\": \"https\", \"ext\": \"mpg\", \"video_ext\": \"mpg\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"orig - unknown\"}], \"timestamp\": 1303528740, \"duration\": 19, \"uploader_id\": \"10922353@N03\", \"uploader\": \"Forest Wander\", \"uploader_url\": \"https://www.flickr.com/photos/forestwander-nature-pictures/\", \"comment_count\": 3, \"view_count\": 4567, \"tags\": [\"waterfall\", \"virginia\", null], \"license\": \"Attribution-ShareAlike\", \"webpage_url\": \"https://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/\", \"original_url\": \"https://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/\", \"webpage_url_basename\": \"photostream\", \"webpage_url_domain\": \"flickr.com\", \"extractor\": \"Flickr\", \"extractor_key\": \"Flickr\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"5645318632\", \"fulltitle\": \"Dark Hollow Waterfalls\", \"duration_string\": \"19\", \"upload_date\": \"20110423\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"orig\", \"url\": \"https://live.staticflickr.test/video/orig.mpg\", \"quality\": 9, \"protocol\": \"https\", \"ext\": \"mpg\", \"video_ext\": \"mpg\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"orig - unknown\", \"_filename\": \"Dark Hollow Waterfalls [5645318632].mpg\", \"filename\": \"Dark Hollow Waterfalls [5645318632].mpg\", \"__write_download_archive\": false}], \"format_id\": \"orig\", \"url\": \"https://live.staticflickr.test/video/orig.mpg\", \"quality\": 9, \"protocol\": \"https\", \"ext\": \"mpg\", \"video_ext\": \"mpg\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"orig - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Flickr] Extracting URL: https://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/",
+    "[Flickr] 5645318632: Downloading api key",
+    "[Flickr] 5645318632: Downloading video info",
+    "[Flickr] 5645318632: Downloading streams info",
+    "[info] Available formats for 5645318632:",
+    "ID      EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "------------------------------------------------",
+    "700     mp4 unknown    | https | unknown unknown",
+    "appletv mp4 unknown    | https | unknown unknown",
+    "orig    mpg unknown    | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/",
+   "args": [
+    "--no-progress",
+    "-f",
+    "orig",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Flickr] Extracting URL: https://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/",
+    "[Flickr] 5645318632: Downloading api key",
+    "[Flickr] 5645318632: Downloading video info",
+    "[Flickr] 5645318632: Downloading streams info",
+    "[info] 5645318632: Downloading 1 format(s): orig",
+    "[download] Destination: 5645318632.mpg",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "5645318632.mpg": 18
+   }
+  },
+  {
+   "url": "https://secure.flickr.com/photos/99@N01/333",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"333\", \"title\": \"Minimal\", \"description\": null, \"formats\": [{\"format_id\": \"360\", \"url\": \"https://live.staticflickr.test/video/333.mp4\", \"quality\": -1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360 - unknown\"}, {\"format_id\": \"None\", \"url\": \"https://live.staticflickr.test/video/333-none.mp4\", \"quality\": -1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"None - unknown\"}], \"timestamp\": null, \"uploader_id\": \"99@N01\", \"uploader\": null, \"uploader_url\": \"https://www.flickr.com/photos/99@N01/\", \"comment_count\": null, \"view_count\": null, \"tags\": [], \"license\": null, \"webpage_url\": \"https://secure.flickr.com/photos/99@N01/333\", \"original_url\": \"https://secure.flickr.com/photos/99@N01/333\", \"webpage_url_basename\": \"333\", \"webpage_url_domain\": \"secure.flickr.com\", \"extractor\": \"Flickr\", \"extractor_key\": \"Flickr\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"333\", \"fulltitle\": \"Minimal\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"None\", \"url\": \"https://live.staticflickr.test/video/333-none.mp4\", \"quality\": -1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"None - unknown\", \"_filename\": \"Minimal [333].mp4\", \"filename\": \"Minimal [333].mp4\", \"__write_download_archive\": false}], \"format_id\": \"None\", \"url\": \"https://live.staticflickr.test/video/333-none.mp4\", \"quality\": -1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"None - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.flickr.com/photos/someone/111",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Flickr] 111: not a video"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.flickr.com/photos/someone/222",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Flickr] 222: Photo \"222\" not found (invalid ID); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

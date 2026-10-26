@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://www.flickr.com/hermes_error_beacon.gne",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"site_key\": \"fixturekey\"}"
+  },
+  {
+   "url": "https://api.flickr.com/services/rest?photo_id=5645318632&method=flickr.photos.getInfo&api_key=fixturekey&format=json&nojsoncallback=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"photo\": {\"id\": \"5645318632\", \"secret\": \"abc123\", \"dateuploaded\": \"1303528740\", \"license\": \"5\", \"media\": \"video\", \"views\": \"4567\", \"owner\": {\"nsid\": \"10922353@N03\", \"realname\": \"Forest Wander\", \"path_alias\": \"forestwander-nature-pictures\"}, \"title\": {\"_content\": \"Dark Hollow Waterfalls\"}, \"description\": {\"_content\": \"Waterfalls in the Springtime.\"}, \"comments\": {\"_content\": \"3\"}, \"tags\": {\"tag\": [{\"_content\": \"waterfall\"}, {\"_content\": \"virginia\"}, {\"raw\": \"x\"}]}, \"video\": {\"duration\": \"19\", \"ready\": 1}}, \"stat\": \"ok\"}"
+  },
+  {
+   "url": "https://api.flickr.com/services/rest?photo_id=5645318632&method=flickr.video.getStreamInfo&api_key=fixturekey&format=json&nojsoncallback=1&secret=abc123",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"streams\": {\"stream\": [{\"type\": \"orig\", \"_content\": \"https://live.staticflickr.test/video/orig.mpg\"}, {\"type\": \"700\", \"_content\": \"https://live.staticflickr.test/video/700.mp4\"}, {\"type\": \"appletv\", \"_content\": \"https://live.staticflickr.test/video/appletv.mp4\"}]}, \"stat\": \"ok\"}"
+  },
+  {
+   "url": "https://api.flickr.com/services/rest?photo_id=333&method=flickr.photos.getInfo&api_key=fixturekey&format=json&nojsoncallback=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"photo\": {\"id\": \"333\", \"secret\": \"\", \"media\": \"video\", \"license\": 7, \"owner\": {\"nsid\": \"99@N01\", \"path_alias\": \"\"}, \"title\": {\"_content\": \"Minimal\"}, \"video\": {}}, \"stat\": \"ok\"}"
+  },
+  {
+   "url": "https://api.flickr.com/services/rest?photo_id=333&method=flickr.video.getStreamInfo&api_key=fixturekey&format=json&nojsoncallback=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"streams\": {\"stream\": [{\"type\": 360, \"_content\": \"https://live.staticflickr.test/video/333.mp4\"}, {\"_content\": \"https://live.staticflickr.test/video/333-none.mp4\"}]}, \"stat\": \"ok\"}"
+  },
+  {
+   "url": "https://api.flickr.com/services/rest?photo_id=111&method=flickr.photos.getInfo&api_key=fixturekey&format=json&nojsoncallback=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"photo\": {\"id\": \"111\", \"secret\": \"s\", \"media\": \"photo\", \"title\": {\"_content\": \"A photo\"}}, \"stat\": \"ok\"}"
+  },
+  {
+   "url": "https://api.flickr.com/services/rest?photo_id=222&method=flickr.photos.getInfo&api_key=fixturekey&format=json&nojsoncallback=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"stat\": \"fail\", \"code\": 1, \"message\": \"Photo \\\"222\\\" not found (invalid ID)\"}"
+  },
+  {
+   "url": "https://live.staticflickr.test/video/orig.mpg",
+   "headers": {
+    "Content-Type": "video/mpeg"
+   },
+   "body": "fixture mpeg bytes"
+  }
+ ]
+}
