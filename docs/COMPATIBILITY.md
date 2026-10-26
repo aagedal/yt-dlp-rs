@@ -2721,8 +2721,30 @@ genre, tag and count fields. The comment "subtitles" (inline JSON data)
 are an unsupported error with `--write-subs`/`--list-subs`. Logins follow
 `NiconicoBaseIE._perform_login` (session cookies, the `mail_tel`/`password`
 form, its notice error, the MFA one-time password with its error messages,
-upstream's unexpected-login error). Playlists, series, search, live and user
-pages are not supported. `tests/fixtures/sites/niconico/` and
+upstream's unexpected-login error). Live and channel pages are not
+supported.
+
+Niconico mylists (`[www.|sp.]nicovideo.jp/[user/ID/][my/]mylist/[#/]ID`,
+`nico.ms`), series (`.../[user/ID/]series/ID`) and the logged-in user's
+history and likes (`.../my/history[/like]`) follow upstream
+`NiconicoPlaylistBaseIE`: the `nvapi` list request (`pageSize=1`) for the
+title, description and owner, then 100-entry pages as an `OnDemandPagedList`
+(only the pages of `-I` selections are requested, in request order; the
+count is known only once read past the end), each item's `video` (or the item)
+as an entry dict with upstream's fields (the `thumbnail` list of its branching
+path included). History uses cookies only (no password login: `-u` warns
+like upstream), and a 401 answer is upstream's login-required error. User
+videos (`nicovideo.jp/user/ID[/video]`) follow `NiconicoUserIE`'s generator
+(pages until the first page's `totalCount` is listed). `nicosearch[N|all]:`
+and `nicosearchdate[N|all]:` queries, search URLs (`nicovideo.jp/search/...`)
+and tag URLs (`nicovideo.jp/tag/...`) follow `NicovideoSearchBaseIE`: the
+result pages' `data-video-id` values (upstream's `findall`), pages 1, 2, …
+until one has none, at most `N` results (one without a count); the date search
+checks page 50 of each interval from 2007-01-01 to the local date and splits
+full intervals in two (newer half first). Non-ASCII search/tag URL text is
+matched as the percent-encoded URL (upstream keeps the input text). Errors
+while the entries are read have no `[extractor]` prefix, like upstream's.
+`tests/fixtures/sites/niconico/` and
 `tests/fixtures/sites/niconico-login/` are compared with pinned upstream
 output.
 

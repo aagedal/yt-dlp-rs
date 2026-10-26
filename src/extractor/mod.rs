@@ -413,7 +413,19 @@ pub use mux::{Mux, suitable as mux_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
 pub use netzkino::{Netzkino, suitable as netzkino_suitable};
 pub use newsy::{Newsy, suitable as newsy_suitable};
-pub use niconico::{Niconico, suitable as niconico_suitable};
+pub use niconico::{
+    Niconico, NiconicoHistory, NiconicoPlaylist, NiconicoSeries, NiconicoUser, NicovideoSearch,
+    NicovideoSearchDate, NicovideoSearchUrl, NicovideoTagUrl,
+    history_suitable as niconico_history_suitable, playlist_suitable as niconico_playlist_suitable,
+    search_date_suitable as nicovideo_search_date_suitable,
+    search_suitable as nicovideo_search_suitable,
+    search_url_suitable as nicovideo_search_url_suitable,
+    series_suitable as niconico_series_suitable, suitable as niconico_suitable,
+    tag_suitable as niconico_tag_suitable, user_suitable as niconico_user_suitable,
+};
+pub(crate) use niconico::{
+    fetch_pages as fetch_niconico_pages, is_pending_state as niconico_pending_state,
+};
 pub use ninegag::{NineGag, suitable as ninegag_suitable};
 pub use ninenews::{NineNews, suitable as ninenews_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
@@ -1751,6 +1763,8 @@ pub fn pseudo_url(url: &str) -> bool {
     (url.starts_with("jwplatform:") && jwplatform::suitable(url))
         || (url.starts_with("kaltura:") && kaltura::suitable(url))
         || youtube::search::suitable(url)
+        || (url.starts_with("nicosearch")
+            && (niconico::search_suitable(url) || niconico::search_date_suitable(url)))
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("arte://") && arte::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))

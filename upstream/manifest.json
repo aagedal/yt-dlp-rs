@@ -1765,7 +1765,7 @@
         "tests/fixtures/sites/niconico/",
         "tests/fixtures/sites/niconico-login/"
       ],
-      "scope": "NiconicoIE watch API with its errors, domand access-rights HLS formats, thumbnails and metadata; NiconicoBaseIE login (session cookies, mail_tel/password form, notice errors, MFA one-time password with formError/error-code messages, unexpected-login error) with a user_session cookie switching to the v3 API; no comment subtitles, playlists, series, search, live or user pages; compared with pinned upstream output through the fixture proxy"
+      "scope": "NiconicoIE watch API with its errors, domand access-rights HLS formats, thumbnails and metadata; NiconicoBaseIE login (session cookies, mail_tel/password form, notice errors, MFA one-time password with formError/error-code messages, unexpected-login error) with a user_session cookie switching to the v3 API; NiconicoPlaylistBaseIE mylists, series and history/likes (NiconicoHistoryIE cookies only, its 401 login-required error) as random-access OnDemandPagedList pages (src/extractor/paged.rs), NiconicoUserIE's totalCount generator, NicovideoSearchBaseIE page generators for nicosearch/nicosearchdate prefixes (SearchInfoExtractor counts; the date search's last-page check and interval bisection from the local date), search and tag URLs (non-ASCII input text is matched percent-encoded); no comment subtitles, live or channel pages; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "nobelprize",
