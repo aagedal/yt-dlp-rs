@@ -222,9 +222,7 @@ impl Extractor for Tv2 {
                 }
                 format_urls.push(video_url.clone());
                 let ext = super::direct::determine_ext(&video_url);
-                let drm = data
-                    .get("drmProtected")
-                    .is_some_and(super::nuxt::truthy);
+                let drm = data.get("drmProtected").is_some_and(super::nuxt::truthy);
                 match ext.as_deref() {
                     Some("f4m") => return Err(unsupported("HDS (f4m) streams")),
                     Some("m3u8") => {
@@ -266,11 +264,7 @@ impl Extractor for Tv2 {
                 }
             }
         }
-        if formats.is_empty()
-            && data
-                .get("drmProtected")
-                .is_some_and(super::nuxt::truthy)
-        {
+        if formats.is_empty() && data.get("drmProtected").is_some_and(super::nuxt::truthy) {
             // `report_drm`.
             crate::no_formats::raise_expected(
                 NAME,
