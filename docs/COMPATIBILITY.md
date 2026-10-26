@@ -1772,6 +1772,36 @@ title, channel, uploader, proto-relative thumbnail, viewer/follower counts
 and `adult` age limit. A master URL that serves a live media playlist is
 one format, as upstream.
 
+Google Drive files (`drive.google.com/file/d/ID`, `uc?id=`/`open?id=`,
+`drive.usercontent.google.com/download?id=`, `video.google.com/get_player`)
+follow upstream `GoogleDriveIE`: the workspace-video playback API
+(`Downloading video webpage`, HTTP errors fatal) for its adaptive and
+progressive transcodes with URL values (integer `itag` IDs, else processing's
+numbered IDs; `mimetype2ext` extension, size, FPS, file size and codecs with
+`none` for a missing codec; 10 MiB HTTP chunks), the string title,
+`parse_duration` duration and URL-valued thumbnails (`ext` and integer
+dimensions). The source format requests
+`drive.usercontent.google.com/download?id=ID&export=download&confirm=t`
+(`Requesting source file`; HTTP errors are upstream's warning): a response
+with a Content-Disposition is the `source` format at its final (redirected)
+URL, otherwise the virus-scan page's `download-form` action is posted empty
+(`Requesting confirmed source file`) and kept when that answers with a
+Content-Disposition, and a page without the form warns with its
+`uc-error-subcaption`/`uc-error-caption` text (else `unable to extract
+confirmation code`). An untitled file takes the Content-Disposition file name,
+and the source extension is the title's (default `mp4`). With subtitles
+requested, the `timedTextBaseUrl` track list (`Downloading subtitles XML`,
+non-fatal) gives each `track`'s language in every listed `format`, with its
+`lang_original` name and `kind`. Generic pages' first Drive player/file
+`<iframe>` joins the generic embed detection. Folders
+(`drive.google.com/drive/folders/ID`, `GoogleDrive:Folder`) read the page's
+first quoted 39-character API key (missing: upstream's `Unable to extract
+key`), the non-fatal batch folder request's title (no JSON: upstream's
+warning) and every batch listing page (`nextPageToken`) as a playlist of
+de-duplicated `drive.google.com/file/d/ID` URL entries; a failing folder
+request (upstream's `TypeError`) and non-string titles, IDs or page tokens
+are reported as unsupported.
+
 Graspop concerts (`vod.graspop.be/LL/ID/`) follow upstream `GraspopIE`: the
 Proximus festival stream's `source.assetUri` over `http:` as fatal HLS
 formats, the string `name` title (else the generic title) and the URL-valued
@@ -2746,7 +2776,7 @@ information of song ID`) as an untyped `mp3` audio-only result with the artist
 as `uploader`/`uploader_id`, and `thumbnail`/`image` thumbnails ranked like
 `qualities`; a missing `name`/`url` is upstream's `KeyError` extractor error.
 
-On generic pages, the embeds of Blogger, JW Platform, Megaphone, Streamable, Wistia (above) and YouTube
+On generic pages, the embeds of Blogger, Google Drive, JW Platform, Megaphone, Streamable, Wistia (above) and YouTube
 (`YoutubeIE._EMBED_REGEX`: iframe/embed/object/SWFObject/`data-video-url`
 `youtube[-nocookie].com/embed|v|p/ID` URLs and lazy-load watch links, kept when
 this port's YouTube extractor accepts them), in

@@ -1,0 +1,9 @@
+--batch_7Kd0zCq3d
+Content-Type: application/http
+Content-ID: <response-8yx5d>
+
+HTTP/1.1 404 Not Found
+Content-Type: text/plain
+
+Not Found
+--batch_7Kd0zCq3d--

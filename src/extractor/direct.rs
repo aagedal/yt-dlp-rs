@@ -411,7 +411,7 @@ pub(crate) fn mimetype2ext_or(mime: &str, default: Option<&str>) -> String {
 
 /// Upstream `disposition_filename`: the Content-Disposition `filename*`
 /// (RFC 2231/5987) or `filename` parameter.
-fn disposition_filename(response: &Response) -> Option<String> {
+pub(crate) fn disposition_filename(response: &Response) -> Option<String> {
     let header = response
         .headers()
         .get(reqwest::header::CONTENT_DISPOSITION)?;

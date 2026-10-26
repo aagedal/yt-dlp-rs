@@ -2158,6 +2158,27 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                     }
                 }
             }
+            // `requested_subtitles` holds the same track dicts.
+            if let Some(Value::Object(requested)) = match replay.out.get_mut("requested_subtitles")
+            {
+                Some(requested) => Some(requested),
+                None => replay.ours.get_mut("requested_subtitles"),
+            } {
+                for track in requested
+                    .values_mut()
+                    .filter_map(Value::as_object_mut)
+                    .filter(|track| !track.contains_key("manifest_url"))
+                {
+                    let mut ordered = Map::new();
+                    for key in subtitle_keys.split(',') {
+                        if let Some(value) = track.shift_remove(key) {
+                            ordered.insert(key.to_owned(), value);
+                        }
+                    }
+                    ordered.append(track);
+                    *track = ordered;
+                }
+            }
         }
         // The extractor's thumbnail keys, then `_sanitize_thumbnails`' `id`
         // and `resolution` (also for thumbnails a `url_transparent` entry

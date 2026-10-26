@@ -1,0 +1,16 @@
+--batch_7Kd0zCq3d
+Content-Type: application/http
+Content-ID: <response-8yx5c>
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=UTF-8
+
+{
+ "kind": "drive#fileList",
+ "incompleteSearch": false,
+ "items": [
+  {"kind": "drive#file", "id": "0ByeS4oOUV-49Zzh4R1J6R09zazQ", "title": "Big Buck Bunny (shortcut).mp4", "mimeType": "video/mp4"}
+ ]
+}
+
+--batch_7Kd0zCq3d--

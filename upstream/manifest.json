@@ -1188,6 +1188,18 @@
       "scope": "GoodGameIE stream API, offline error and live master HLS playlist (a live media-only playlist is one format) with traverse_obj channel fields compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "googledrive",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/googledrive.py"
+      ],
+      "rust": [
+        "src/extractor/googledrive.rs",
+        "tests/fixtures/sites/googledrive/"
+      ],
+      "scope": "GoogleDriveIE playback API transcodes, title, duration and thumbnails, the source file with its redirect URL, virus-scan confirmation form POST and error-caption warning, Content-Disposition titles, timed-text subtitle lists and generic-page iframe embeds; GoogleDriveFolderIE API key, batch folder title and paginated listing as de-duplicated file URL entries. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "graspop",
       "status": "partial",
       "upstream": [

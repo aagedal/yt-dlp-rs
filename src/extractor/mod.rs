@@ -69,6 +69,7 @@ mod godresource;
 mod godtube;
 mod golem;
 mod goodgame;
+mod googledrive;
 mod graspop;
 mod gronkh;
 mod harpodeon;
@@ -316,6 +317,10 @@ pub use godresource::{GodResource, suitable as godresource_suitable};
 pub use godtube::{GodTube, suitable as godtube_suitable};
 pub use golem::{Golem, suitable as golem_suitable};
 pub use goodgame::{GoodGame, suitable as goodgame_suitable};
+pub use googledrive::{
+    GoogleDrive, GoogleDriveFolder, folder_suitable as googledrive_folder_suitable,
+    suitable as googledrive_suitable,
+};
 pub use graspop::{Graspop, suitable as graspop_suitable};
 pub use gronkh::{Gronkh, suitable as gronkh_suitable};
 pub use harpodeon::{Harpodeon, suitable as harpodeon_suitable};

@@ -1,0 +1,75 @@
+{
+  "mediaStreamingData": {
+    "formatStreamingData": {
+      "adaptiveTranscodes": [
+        {
+          "itag": 136,
+          "url": "https://rr1---sn-test.c.drive.google.com/videoplayback?id=bunny&itag=136&source=webdrive",
+          "transcodeMetadata": {
+            "mimeType": "video/mp4",
+            "videoCodecString": "avc1.4d401f",
+            "width": 1280,
+            "height": 720,
+            "videoFps": 24,
+            "contentLength": "5824091"
+          }
+        },
+        {
+          "itag": "140",
+          "url": "https://rr1---sn-test.c.drive.google.com/videoplayback?id=bunny&itag=140&source=webdrive",
+          "transcodeMetadata": {
+            "mimeType": "audio/mp4",
+            "audioCodecString": "mp4a.40.2",
+            "contentLength": "730114"
+          }
+        },
+        {
+          "itag": 999,
+          "url": "not a url",
+          "transcodeMetadata": {"mimeType": "video/mp4"}
+        }
+      ],
+      "progressiveTranscodes": [
+        {
+          "itag": 18,
+          "url": "https://rr1---sn-test.c.drive.google.com/videoplayback?id=bunny&itag=18&source=webdrive",
+          "transcodeMetadata": {
+            "mimeType": "video/mp4",
+            "videoCodecString": "avc1.42001E",
+            "audioCodecString": "mp4a.40.2",
+            "width": 640,
+            "height": 360,
+            "videoFps": 24,
+            "contentLength": "2900000"
+          }
+        }
+      ]
+    },
+    "hlsStreamingData": {
+      "hlsManifestUrl": "https://rr1---sn-test.c.drive.google.com/manifest/hls_variant/id/bunny/index.m3u8"
+    }
+  },
+  "mediaMetadata": {
+    "title": "Big Buck Bunny.mp4",
+    "duration": "45.069s"
+  },
+  "thumbnails": [
+    {
+      "url": "https://lh3.googleusercontent.com/drive-storage/bunny-thumb=w1280",
+      "mimeType": "image/jpeg",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "url": "https://lh3.googleusercontent.com/drive-storage/bunny-thumb=w320",
+      "mimeType": "image/webp",
+      "width": "320"
+    },
+    {
+      "mimeType": "image/jpeg"
+    }
+  ],
+  "timedTextDetails": {
+    "timedTextBaseUrl": "https://drive.google.com/timedtext?id=0ByeS4oOUV-49Zzh4R1J6R09zazQ&vid=4f7b1c2d"
+  }
+}
