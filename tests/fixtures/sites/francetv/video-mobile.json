@@ -1,0 +1,19 @@
+{
+ "video": {
+  "workflow": "token-akamai",
+  "format": "hls",
+  "url": "https://cloudingest.ftven.fr/ec217ecc/master.m3u8",
+  "token": "https://hdfauth.ftven.fr/esi/TA?device=mobile",
+  "duration": 2581,
+  "is_live": false,
+  "spritesheets": null
+ },
+ "meta": {
+  "id": "ec217ecc-0733-48cf-ac06-af1347b849d1",
+  "title": "Ignored title",
+  "additional_title": "Ignored subtitle",
+  "pre_title": "S2 E5",
+  "image_url": "https://www.france.tv/image/ignored.jpg",
+  "broadcasted_at": "2018-01-01T00:00:00Z"
+ }
+}

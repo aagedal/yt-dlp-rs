@@ -1,0 +1,15 @@
+{
+ "video": {
+  "format": null,
+  "url": "rtmp://rtmp.ftven.fr/ondemand/d12458ee/video.flv",
+  "duration": 1637,
+  "is_live": false
+ },
+ "meta": {
+  "title": "Soir 3",
+  "additional_title": "Émission du jeudi 22 août 2019",
+  "pre_title": "S1E12",
+  "image_url": "https://media.ftven.fr/d12458ee/poster.jpg",
+  "broadcasted_at": "2019-08-22T21:52:10+00:00"
+ }
+}

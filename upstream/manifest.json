@@ -2332,6 +2332,18 @@
       "scope": "Formula1IE URL Brightcove ID as a url result of the BrightcoveNew player template, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "francetv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/francetv.py"
+      ],
+      "rust": [
+        "src/extractor/francetv.rs",
+        "tests/fixtures/sites/francetv/"
+      ],
+      "scope": "FranceTVIE (francetv:ID pseudo-URLs with the smuggled hostname: desktop/mobile k7 video JSON with 422 bodies, the 2009 geo error, 2015/2017/2019 DRM report and other codes' warnings, metadata from the first responses with upstream's per-response season/episode reset, signed token URLs, non-fatal DASH and master-only HLS with the audio bitrate fixup, RTMP, checked plain URLs, the qtz/qad audio description preference, the spritesheet storyboard and the HEAD x-errortype geo check), FranceTVSiteIE (france.tv pages' Next.js v13 flight data options.id as a smuggled francetv: url result) and FranceTVInfoIE (player wrapper ids and the older regex patterns as francetv: url results; Dailymotion embeds through DailymotionIE's embed patterns as a playlist of url results), compared with pinned upstream output through the fixture proxy. f4m (HDS) video URLs are explicit native errors"
+    },
+    {
       "name": "thisamericanlife",
       "status": "partial",
       "upstream": [

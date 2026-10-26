@@ -1,0 +1,157 @@
+{
+ "routes": [
+  {
+   "url": "https://k7.ftven.fr/videos/ec217ecc-0733-48cf-ac06-af1347b849d1?device_type=desktop&browser=chrome&domain=www.france.tv",
+   "headers": {"Content-Type": "application/json"},
+   "body_file": "video-desktop.json"
+  },
+  {
+   "url": "https://k7.ftven.fr/videos/ec217ecc-0733-48cf-ac06-af1347b849d1?device_type=mobile&browser=safari&domain=www.france.tv",
+   "headers": {"Content-Type": "application/json"},
+   "body_file": "video-mobile.json"
+  },
+  {
+   "url": "https://hdfauth.ftven.fr/esi/TA?device=desktop&format=json&url=https%3A%2F%2Fcloudingest.ftven.fr%2Fec217ecc%2Fmanifest.mpd",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"url\": \"https://signed.ftven.fr/ec217ecc/manifest.mpd?hdnea=exp%3D1\"}"
+  },
+  {
+   "url": "https://hdfauth.ftven.fr/esi/TA?device=mobile&format=json&url=https%3A%2F%2Fcloudingest.ftven.fr%2Fec217ecc%2Fmaster.m3u8",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"url\": \"https://signed.ftven.fr/ec217ecc/master.m3u8?hdnea=exp%3D1\"}"
+  },
+  {
+   "url": "https://signed.ftven.fr/ec217ecc/manifest.mpd?hdnea=exp%3D1",
+   "headers": {"Content-Type": "application/dash+xml"},
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://signed.ftven.fr/ec217ecc/master.m3u8?hdnea=exp%3D1",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://k7.ftven.fr/videos/SIM_France3?device_type=desktop&browser=chrome&domain=www.france.tv",
+   "status": 422,
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"code\": 2019, \"message\": \"L'accès à cette vidéo est incompatible avec votre configuration.\"}"
+  },
+  {
+   "url": "https://k7.ftven.fr/videos/SIM_France3?device_type=mobile&browser=safari&domain=www.france.tv",
+   "headers": {"Content-Type": "application/json"},
+   "body_file": "live.json"
+  },
+  {
+   "url": "https://live.ftven.fr/france3/master.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "live.m3u8"
+  },
+  {
+   "url": "https://k7.ftven.fr/videos/geo-id?device_type=desktop&browser=chrome&domain=www.france.tv",
+   "status": 422,
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"code\": 2009, \"message\": \"Cette vidéo n'est pas disponible depuis votre pays.\"}"
+  },
+  {
+   "url": "https://k7.ftven.fr/videos/drm-id?device_type=desktop&browser=chrome&domain=www.france.tv",
+   "status": 422,
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"code\": 2015, \"message\": \"L'accès à cette vidéo est impossible.\"}"
+  },
+  {
+   "url": "https://k7.ftven.fr/videos/drm-id?device_type=mobile&browser=safari&domain=www.france.tv",
+   "status": 422,
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"code\": 2017, \"message\": \"Cette vidéo n'est pas disponible depuis le site web mobile.\"}"
+  },
+  {
+   "url": "https://k7.ftven.fr/videos/nofmt-id?device_type=desktop&browser=chrome&domain=www.france.tv",
+   "headers": {"Content-Type": "application/json"},
+   "body_file": "nofmt-desktop.json"
+  },
+  {
+   "url": "https://cloudingest.ftven.fr/nofmt/master.m3u8",
+   "status": 403,
+   "headers": {"Content-Type": "text/html", "X-Errortype": "geo"},
+   "body": "<h1>Forbidden</h1>"
+  },
+  {
+   "url": "https://www.france.tv/france-2/13h15-le-dimanche/140921-les-mysteres-de-jesus.html",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "site.html"
+  },
+  {
+   "url": "https://mobile.france.tv/france-3/regions/137347-emission.html",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "site-mobile.html"
+  },
+  {
+   "url": "https://k7.ftven.fr/videos/6c5e2b1a-1111-2222-3333-444455556666?device_type=desktop&browser=chrome&domain=mobile.france.tv",
+   "status": 422,
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"code\": 2015, \"message\": \"DRM\"}"
+  },
+  {
+   "url": "https://k7.ftven.fr/videos/6c5e2b1a-1111-2222-3333-444455556666?device_type=mobile&browser=safari&domain=mobile.france.tv",
+   "status": 422,
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"code\": 2017, \"message\": \"DRM\"}"
+  },
+  {
+   "url": "https://www.france.tv/france-4/direct.html",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<html><body><script>self.__next_f.push([1,\"4:{\\\"options\\\":{}}\\n\"])</script></body></html>"
+  },
+  {
+   "url": "https://www.francetvinfo.fr/replay-jt/france-3/soir-3/jt-grand-soir-3-jeudi-22-aout-2019_3561461.html",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "info.html"
+  },
+  {
+   "url": "https://k7.ftven.fr/videos/d12458ee-5062-48fe-bfdd-a30d6a01b793?device_type=desktop&browser=chrome&domain=www.francetvinfo.fr",
+   "headers": {"Content-Type": "application/json"},
+   "body_file": "rtmp-desktop.json"
+  },
+  {
+   "url": "https://k7.ftven.fr/videos/d12458ee-5062-48fe-bfdd-a30d6a01b793?device_type=mobile&browser=safari&domain=www.francetvinfo.fr",
+   "headers": {"Content-Type": "application/json"},
+   "body_file": "rtmp-mobile.json"
+  },
+  {
+   "url": "https://france3-regions.francetvinfo.fr/limousin/emissions/jt-1213-limousin",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "info-regions.html"
+  },
+  {
+   "url": "https://k7.ftven.fr/videos/NI_657393?device_type=desktop&browser=chrome&domain=france3-regions.francetvinfo.fr",
+   "status": 422,
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"code\": 1234, \"message\": \"<p>Vid&eacute;o temporairement indisponible</p>\"}"
+  },
+  {
+   "url": "https://k7.ftven.fr/videos/NI_657393?device_type=mobile&browser=safari&domain=france3-regions.francetvinfo.fr",
+   "headers": {"Content-Type": "application/json"},
+   "body_file": "regions-mobile.json"
+  },
+  {
+   "url": "https://media.ftven.fr/NI_657393/video.mp4",
+   "headers": {"Content-Type": "video/mp4"},
+   "body": "\u0000\u0000\u0000\u0018ftypmp42francetv-fixture"
+  },
+  {
+   "url": "https://www.francetvinfo.fr/politique/video-cecile-duflot_1520091.html",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "info-dailymotion.html"
+  },
+  {
+   "url": "https://www.franceinfo.fr/monde/sans-video_7764542.html",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<html><body><p>Pas de vidéo</p></body></html>"
+  },
+  {
+   "url": "https://www.francetvinfo.fr/culture/notre-dame_4372291.html",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<html><body><script>player.load({target: 'p'});</script>\n<figure class=\"video\" id=\"7d204c9e-a2d3-11eb-9e4c-000d3a23d482\"></figure></body></html>"
+  }
+ ]
+}
