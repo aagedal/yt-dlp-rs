@@ -1,0 +1,302 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"00212301010\", \"formats\": [{\"format_id\": \"video-hls-SignLanguage-1200\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/sign/low/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/sign/master.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video-hls-SignLanguage-1200 - 640x360\"}, {\"format_id\": \"video-hls-SignLanguage-4500\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/sign/high/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/sign/master.m3u8\", \"tbr\": 4500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video-hls-SignLanguage-4500 - 1920x1080\"}, {\"format_id\": \"video-hls-1200\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/low/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/master.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video-hls-1200 - 640x360\"}, {\"format_id\": \"video-hls-4500\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/high/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/master.m3u8\", \"tbr\": 4500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video-hls-4500 - 1920x1080\"}], \"subtitles\": {\"da\": [{\"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/subs/da.vtt\", \"ext\": \"vtt\"}], \"da_foreign\": [{\"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/subs/foreign.vtt\", \"ext\": \"vtt\"}], \"da-SignLanguage\": [{\"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/subs/sign.srt\", \"ext\": \"srt\"}]}, \"title\": \"Spise med Price: Pasta Selv\", \"alt_title\": \"1. Pasta Selv\", \"description\": \"Br\\u00f8drene Price laver pasta fra bunden.\", \"thumbnail\": \"https://asset.dr.dk/imagescaler/?file=price-wall.jpg\", \"release_timestamp\": 1691438400, \"duration\": 1750, \"series\": \"Spise med Price\", \"season\": \"Spise med Price\", \"season_number\": 15, \"season_id\": \"397440\", \"episode\": \"Spise med Price: Pasta Selv\", \"episode_number\": 1, \"release_year\": 2022, \"webpage_url\": \"https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445\", \"original_url\": \"https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445\", \"webpage_url_basename\": \"spise-med-price_-pasta-selv_397445\", \"webpage_url_domain\": \"dr.dk\", \"extractor\": \"drtv\", \"extractor_key\": \"DRTV\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://asset.dr.dk/imagescaler/?file=price-wall.jpg\", \"id\": \"0\"}], \"display_id\": \"00212301010\", \"fulltitle\": \"Spise med Price: Pasta Selv\", \"duration_string\": \"29:10\", \"release_date\": \"20230807\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"video-hls-4500\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/high/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/master.m3u8\", \"tbr\": 4500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video-hls-4500 - 1920x1080\", \"_filename\": \"Spise med Price\\uff1a Pasta Selv [00212301010].mp4\", \"filename\": \"Spise med Price\\uff1a Pasta Selv [00212301010].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(alt_title)s|%(release_date)s|%(release_timestamp)s|%(duration)s|%(series)s|%(season)s|%(season_number)s|%(season_id)s|%(episode)s|%(episode_number)s|%(release_year)s|%(format_id)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "00212301010|Spise med Price: Pasta Selv|1. Pasta Selv|20230807|1691438400|1750|Spise med Price|Spise med Price|15|397440|Spise med Price: Pasta Selv|1|2022|video-hls-4500|mp4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[drtv] Downloading anonymous token",
+    "[drtv] Extracting URL: https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445",
+    "[drtv] spise-med-price_-pasta-selv_397445: Downloading webpage",
+    "[drtv] 00212301010: Downloading stream data",
+    "[drtv] 00212301010: Downloading m3u8 information",
+    "[drtv] 00212301010: Downloading m3u8 information",
+    "[info] Available formats for 00212301010:",
+    "ID                          EXT RESOLUTION |   FILESIZE   TBR PROTO | VCODEC      ACODEC",
+    "-------------------------------------------------------------------------------------------",
+    "video-hls-SignLanguage-1200 mp4 640x360    | ~250.34MiB 1200k m3u8  | avc1.4d401e mp4a.40.2",
+    "video-hls-SignLanguage-4500 mp4 1920x1080  | ~938.77MiB 4500k m3u8  | avc1.640028 mp4a.40.2",
+    "video-hls-1200              mp4 640x360    | ~250.34MiB 1200k m3u8  | avc1.4d401e mp4a.40.2",
+    "video-hls-4500              mp4 1920x1080  | ~938.77MiB 4500k m3u8  | avc1.640028 mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[drtv] Downloading anonymous token",
+    "[drtv] Extracting URL: https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445",
+    "[drtv] spise-med-price_-pasta-selv_397445: Downloading webpage",
+    "[drtv] 00212301010: Downloading stream data",
+    "[drtv] 00212301010: Downloading m3u8 information",
+    "[drtv] 00212301010: Downloading m3u8 information",
+    "[info] Available subtitles for 00212301010:",
+    "Language        Formats",
+    "da              vtt",
+    "da_foreign      vtt",
+    "da-SignLanguage srt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445",
+   "args": [
+    "--write-subs",
+    "--all-subs",
+    "--skip-download",
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[drtv] Downloading anonymous token",
+    "[drtv] Extracting URL: https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445",
+    "[drtv] spise-med-price_-pasta-selv_397445: Downloading webpage",
+    "[drtv] 00212301010: Downloading stream data",
+    "[drtv] 00212301010: Downloading m3u8 information",
+    "[drtv] 00212301010: Downloading m3u8 information",
+    "[info] 00212301010: Downloading subtitles: da, da_foreign, da-SignLanguage",
+    "[info] 00212301010: Downloading 1 format(s): video-hls-4500",
+    "[info] Writing video subtitles to: 00212301010.da.vtt",
+    "[download] Destination: 00212301010.da.vtt",
+    "[download] Download completed",
+    "[info] Writing video subtitles to: 00212301010.da_foreign.vtt",
+    "[download] Destination: 00212301010.da_foreign.vtt",
+    "[download] Download completed",
+    "[info] Writing video subtitles to: 00212301010.da-SignLanguage.srt",
+    "[download] Destination: 00212301010.da-SignLanguage.srt",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "00212301010.da-SignLanguage.srt": 37,
+    "00212301010.da.vtt": 36,
+    "00212301010.da_foreign.vtt": 38
+   }
+  },
+  {
+   "url": "https://www.dr.dk/drtv/episode/bonderoeven_71769",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"71769\", \"formats\": [{\"format_id\": \"na-SpokenSubtitles-2000\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/bonde/hd/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/bonde/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"na-SpokenSubtitles-2000 - 1280x720\"}], \"subtitles\": {\"da\": [{\"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/bonde/subs/da.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"title\": \"Bonder\\u00f8ven\", \"duration\": 2576, \"series\": \"Bonder\\u00f8ven\", \"season\": \"Bonder\\u00f8ven 2019\", \"season_number\": 2019, \"season_id\": 67125, \"episode_number\": 3, \"webpage_url\": \"https://www.dr.dk/drtv/episode/bonderoeven_71769\", \"original_url\": \"https://www.dr.dk/drtv/episode/bonderoeven_71769\", \"webpage_url_basename\": \"bonderoeven_71769\", \"webpage_url_domain\": \"dr.dk\", \"extractor\": \"drtv\", \"extractor_key\": \"DRTV\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"71769\", \"fulltitle\": \"Bonder\\u00f8ven\", \"duration_string\": \"42:56\", \"release_year\": null, \"episode\": \"Episode 3\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"na-SpokenSubtitles-2000\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/bonde/hd/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/bonde/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"na-SpokenSubtitles-2000 - 1280x720\", \"_filename\": \"Bonder\\u00f8ven [71769].mp4\", \"filename\": \"Bonder\\u00f8ven [71769].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/tv/se/boern/ultra/klassen-ultra/klassen-darlig-taber-10",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"00831690010\", \"formats\": [{\"format_id\": \"video-hls\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/klassen/index.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video-hls - unknown\"}], \"subtitles\": {}, \"title\": \"Klassen - D\\u00e5rlig taber (10)\", \"description\": \"Klassen er tilbage.\", \"release_timestamp\": 1539093000, \"duration\": 606, \"series\": \"Klassen\", \"season\": \"Klassen I\", \"season_number\": 1, \"season_id\": \"urn:dr:mu:bundle:57d7e8216187a4031cfd6f6b\", \"episode\": \"Episode 10\", \"episode_number\": 10, \"release_year\": 2016, \"webpage_url\": \"https://www.dr.dk/tv/se/boern/ultra/klassen-ultra/klassen-darlig-taber-10\", \"original_url\": \"https://www.dr.dk/tv/se/boern/ultra/klassen-ultra/klassen-darlig-taber-10\", \"webpage_url_basename\": \"klassen-darlig-taber-10\", \"webpage_url_domain\": \"dr.dk\", \"extractor\": \"drtv\", \"extractor_key\": \"DRTV\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"00831690010\", \"fulltitle\": \"Klassen - D\\u00e5rlig taber (10)\", \"duration_string\": \"10:06\", \"release_date\": \"20181009\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"video-hls\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/klassen/index.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video-hls - unknown\", \"_filename\": \"Klassen - D\\u00e5rlig taber (10) [00831690010].mp4\", \"filename\": \"Klassen - D\\u00e5rlig taber (10) [00831690010].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [drtv] unable to extract data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/drtv/se/geo_111",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [drtv] geo_111: This video is not available from your location due to geo restriction"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/drtv/se/none_222",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [drtv] 222: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "ERROR: [drtv] 222: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/drtv/se/none_222",
+   "args": [
+    "--ignore-no-formats-error",
+    "--print",
+    "%(id)s|%(title)s|%(formats)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "222|Ingen strømme|[]"
+   ],
+   "stderr": [
+    "WARNING: [drtv] 222: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/tv/live/dr1",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "%(id)s|%(is_live)s|%(live_status)s|%(format_id)s|%(ext)s|%(protocol)s|%(thumbnail)s|%(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "dr1|True|is_live|HLS-1|mp4|m3u8_native|https://asset.dr.dk/imagescaler/?file=dr1.png|drtv:live"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/tv/live/dr1",
+   "args": [
+    "--no-geo-bypass",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[drtv:live] Extracting URL: https://www.dr.dk/tv/live/dr1",
+    "[drtv:live] dr1: Downloading JSON metadata",
+    "[drtv:live] dr1: Downloading m3u8 information",
+    "[info] Available formats for dr1:",
+    "ID    EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "----------------------------------------------------------",
+    "HLS-0 mp4 640x360    |  800k m3u8  | avc1.4d401e mp4a.40.2",
+    "HLS-1 mp4 1280x720   | 3000k m3u8  | avc1.64001f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/tv/live/notitle",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: notitle: An extractor error has occurred. (caused by KeyError('Title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/drtv/saeson/frank-and-kastaniegaarden_9008",
+   "args": [
+    "--no-geo-bypass",
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"id\": \"9008\", \"display_id\": \"frank-and-kastaniegaarden\", \"title\": \"Frank & Kastaniegaarden\", \"alt_title\": \"Season 2008\", \"series\": \"Frank & Kastaniegaarden\", \"entries\": [{\"_type\": \"url\", \"url\": \"https://www.dr.dk/drtv/episode/bonderoeven_71769\", \"ie_key\": \"DRTV\", \"title\": \"Bonder\\u00f8ven\", \"alt_title\": \"1. Afsnit\", \"episode\": \"Episode 1\", \"description\": \"Kort beskrivelse\", \"series\": \"Frank & Kastaniegaarden\", \"season_number\": 2008, \"episode_number\": 1, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445\", \"ie_key\": \"DRTV\", \"title\": \"Spise med Price: Pasta Selv\", \"alt_title\": null, \"episode\": null, \"description\": null, \"series\": \"Frank & Kastaniegaarden\", \"season_number\": 2008, \"episode_number\": null, \"__x_forwarded_for_ip\": null}], \"season_number\": 2008, \"webpage_url\": \"https://www.dr.dk/drtv/saeson/frank-and-kastaniegaarden_9008\", \"original_url\": \"https://www.dr.dk/drtv/saeson/frank-and-kastaniegaarden_9008\", \"webpage_url_basename\": \"frank-and-kastaniegaarden_9008\", \"webpage_url_domain\": \"dr.dk\", \"extractor\": \"drtv:season\", \"extractor_key\": \"DRTVSeason\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/drtv/saeson/frank-and-kastaniegaarden_9008",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"id\": \"9008\", \"display_id\": \"frank-and-kastaniegaarden\", \"title\": \"Frank & Kastaniegaarden\", \"alt_title\": \"Season 2008\", \"series\": \"Frank & Kastaniegaarden\", \"entries\": [{\"id\": \"71769\", \"formats\": [{\"format_id\": \"na-SpokenSubtitles-2000\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/bonde/hd/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/bonde/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"na-SpokenSubtitles-2000 - 1280x720\"}], \"subtitles\": {\"da\": [{\"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/bonde/subs/da.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"title\": \"Bonder\\u00f8ven\", \"duration\": 2576, \"series\": \"Bonder\\u00f8ven\", \"season\": \"Bonder\\u00f8ven 2019\", \"season_number\": 2019, \"season_id\": 67125, \"episode_number\": 3, \"webpage_url\": \"https://www.dr.dk/drtv/episode/bonderoeven_71769\", \"original_url\": \"https://www.dr.dk/drtv/episode/bonderoeven_71769\", \"webpage_url_basename\": \"bonderoeven_71769\", \"webpage_url_domain\": \"dr.dk\", \"extractor\": \"drtv\", \"extractor_key\": \"DRTV\", \"playlist_count\": 2, \"playlist\": \"Frank & Kastaniegaarden\", \"playlist_id\": \"9008\", \"playlist_title\": \"Frank & Kastaniegaarden\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.dr.dk/drtv/saeson/frank-and-kastaniegaarden_9008\", \"n_entries\": 2, \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"display_id\": \"71769\", \"fulltitle\": \"Bonder\\u00f8ven\", \"duration_string\": \"42:56\", \"release_year\": null, \"episode\": \"Episode 3\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"na-SpokenSubtitles-2000\", \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/bonde/hd/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/bonde/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": -1, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"na-SpokenSubtitles-2000 - 1280x720\", \"_filename\": \"Bonder\\u00f8ven [71769].mp4\", \"filename\": \"Bonder\\u00f8ven [71769].mp4\", \"__write_download_archive\": false}], \"format_id\": \"na-SpokenSubtitles-2000\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/bonde/hd/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/bonde/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"na-SpokenSubtitles-2000 - 1280x720\"}, {\"id\": \"00212301010\", \"formats\": [{\"format_id\": \"video-hls-SignLanguage-1200\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/sign/low/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/sign/master.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video-hls-SignLanguage-1200 - 640x360\"}, {\"format_id\": \"video-hls-SignLanguage-4500\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/sign/high/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/sign/master.m3u8\", \"tbr\": 4500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video-hls-SignLanguage-4500 - 1920x1080\"}, {\"format_id\": \"video-hls-1200\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/low/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/master.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video-hls-1200 - 640x360\"}, {\"format_id\": \"video-hls-4500\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/high/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/master.m3u8\", \"tbr\": 4500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video-hls-4500 - 1920x1080\"}], \"subtitles\": {\"da\": [{\"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/subs/da.vtt\", \"ext\": \"vtt\"}], \"da_foreign\": [{\"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/subs/foreign.vtt\", \"ext\": \"vtt\"}], \"da-SignLanguage\": [{\"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/subs/sign.srt\", \"ext\": \"srt\"}]}, \"title\": \"Spise med Price: Pasta Selv\", \"alt_title\": \"1. Pasta Selv\", \"description\": \"Br\\u00f8drene Price laver pasta fra bunden.\", \"thumbnail\": \"https://asset.dr.dk/imagescaler/?file=price-wall.jpg\", \"release_timestamp\": 1691438400, \"duration\": 1750, \"series\": \"Spise med Price\", \"season\": \"Spise med Price\", \"season_number\": 15, \"season_id\": \"397440\", \"episode\": \"Spise med Price: Pasta Selv\", \"episode_number\": 1, \"release_year\": 2022, \"webpage_url\": \"https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445\", \"original_url\": \"https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445\", \"webpage_url_basename\": \"spise-med-price_-pasta-selv_397445\", \"webpage_url_domain\": \"dr.dk\", \"extractor\": \"drtv\", \"extractor_key\": \"DRTV\", \"playlist_count\": 2, \"playlist\": \"Frank & Kastaniegaarden\", \"playlist_id\": \"9008\", \"playlist_title\": \"Frank & Kastaniegaarden\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.dr.dk/drtv/saeson/frank-and-kastaniegaarden_9008\", \"n_entries\": 2, \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"thumbnails\": [{\"url\": \"https://asset.dr.dk/imagescaler/?file=price-wall.jpg\", \"id\": \"0\"}], \"display_id\": \"00212301010\", \"fulltitle\": \"Spise med Price: Pasta Selv\", \"duration_string\": \"29:10\", \"release_date\": \"20230807\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"video-hls-4500\", \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/high/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/master.m3u8\", \"tbr\": 4500.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": 1, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video-hls-4500 - 1920x1080\", \"_filename\": \"Spise med Price\\uff1a Pasta Selv [00212301010].mp4\", \"filename\": \"Spise med Price\\uff1a Pasta Selv [00212301010].mp4\", \"__write_download_archive\": false}], \"format_id\": \"video-hls-4500\", \"format_index\": null, \"url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/high/index.m3u8\", \"manifest_url\": \"https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/master.m3u8\", \"tbr\": 4500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video-hls-4500 - 1920x1080\"}], \"season_number\": 2008, \"webpage_url\": \"https://www.dr.dk/drtv/saeson/frank-and-kastaniegaarden_9008\", \"original_url\": \"https://www.dr.dk/drtv/saeson/frank-and-kastaniegaarden_9008\", \"webpage_url_basename\": \"frank-and-kastaniegaarden_9008\", \"webpage_url_domain\": \"dr.dk\", \"extractor\": \"drtv:season\", \"extractor_key\": \"DRTVSeason\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/drtv/saeson/brudt_1",
+   "args": [
+    "--no-geo-bypass",
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 1: An extractor error has occurred. (caused by KeyError('path')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/drtv/serie/frank-and-kastaniegaarden_6954",
+   "args": [
+    "--no-geo-bypass",
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"id\": \"6954\", \"display_id\": \"frank-and-kastaniegaarden\", \"title\": \"Frank & Kastaniegaarden\", \"alt_title\": \"\", \"series\": \"Frank & Kastaniegaarden\", \"entries\": [{\"_type\": \"url\", \"url\": \"https://www.dr.dk/drtv/saeson/frank-and-kastaniegaarden_9008\", \"ie_key\": \"DRTVSeason\", \"title\": \"Frank & Kastaniegaarden\", \"alt_title\": \"Season 2008\", \"series\": \"Frank & Kastaniegaarden\", \"season_number\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"https://www.dr.dk/drtvNone\", \"ie_key\": \"DRTVSeason\", \"title\": \"Uden sti\", \"alt_title\": null, \"series\": \"Frank & Kastaniegaarden\", \"season_number\": null, \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.dr.dk/drtv/serie/frank-and-kastaniegaarden_6954\", \"original_url\": \"https://www.dr.dk/drtv/serie/frank-and-kastaniegaarden_6954\", \"webpage_url_basename\": \"frank-and-kastaniegaarden_6954\", \"webpage_url_domain\": \"dr.dk\", \"extractor\": \"drtv:series\", \"extractor_key\": \"DRTVSeries\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/drtv/serie/frank-and-kastaniegaarden_6954",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "9008|Frank & Kastaniegaarden|https://www.dr.dk/drtv/saeson/frank-and-kastaniegaarden_9008|DRTVSeason|6954|Frank & Kastaniegaarden",
+    "NA|Uden sti|https://www.dr.dk/drtvNone|DRTVSeason|6954|Frank & Kastaniegaarden"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

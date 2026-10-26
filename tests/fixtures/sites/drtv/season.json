@@ -1,0 +1,27 @@
+{
+ "entries": [
+  {
+   "item": {
+    "title": "Frank & Kastaniegaarden",
+    "contextualTitle": "Season 2008",
+    "seasonNumber": 2008,
+    "episodes": {
+     "items": [
+      {
+       "path": "/episode/bonderoeven_71769",
+       "title": "Bonderøven",
+       "contextualTitle": "1. Afsnit",
+       "episodeName": "Episode 1",
+       "shortDescription": "Kort beskrivelse",
+       "episodeNumber": 1
+      },
+      {
+       "path": "/se/spise-med-price_-pasta-selv_397445",
+       "title": "Spise med Price: Pasta Selv"
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

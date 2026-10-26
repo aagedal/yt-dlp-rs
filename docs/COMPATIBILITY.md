@@ -829,6 +829,40 @@ Brightcove players above), overlaid with the page's title, `summury` and
 featured image. `tests/fixtures/sites/drtalks/` is compared with pinned
 upstream output.
 
+DR TV programs (`dr.dk/tv/se[/ondemand]/.../SLUG`,
+`dr.dk|dr-massive.com/drtv/se|episode|program/SLUG`) follow upstream
+`DRTVIE`: once per run an anonymous token (`Downloading anonymous token`, a
+JSON POST to `isl.dr-massive.com`; the first `UserAccount` value, else
+`Unable to get anonymous token`), the page's `window.__data` item (each
+`cache.page` value's `item`, else its first entry's `item`; without one the
+`unable to extract data` warning and the backup `production-cdn` items API
+for the slug's last `_` part), the `customId`'s last `:` part as the ID, and
+the bearer-authorized `account/items/ID/videos` stream list: every stream
+with a URL as non-fatal HLS (master playlist only, `FORMAT[-SERVICE]` IDs,
+preference 1 for `StandardVideo` and -1 for spoken-subtitle, sign-language
+and visually-interpreted streams), its API subtitle links (`SUBTITLE_LANGS`
+names with the service suffix, `mimetype2ext` or `vtt`) or else the
+manifest's deduplicated subtitles; the Denmark-only geo error (no bypass)
+when nothing is found and the season is marked geo-restricted; title,
+contextual title, description, wallpaper thumbnail, `BroadcastTimeDK`
+release timestamp, duration, series, season (title, number, ID), episode
+(name, number) and release year as upstream's `traverse_obj`. DR TV live
+channels (`dr.dk/tv/live/ID`) follow `DRTVLiveIE`: the `mu-online` channel
+JSON (`Title` required), each HLS streaming server's stream paths with a
+`b=` query as live master-playlist formats (`HLS-N`); HDS servers are
+explicit native errors. Season and series pages (`drtv/saeson|serie/SLUG_ID`)
+follow `DRTVSeasonIE`/`DRTVSeriesIE`: the `dr-massive` page API's episodes
+(a missing `path` is upstream's `KeyError`) or seasons (a missing `path`
+gives upstream's `https://www.dr.dk/drtvNone`) as raw `url` results with
+their titles, descriptions and numbers, in a playlist with `display_id`,
+title, contextual title, series (and the season number). None of the four
+is marked `_WORKING = False` upstream. Non-string IDs, titles and paths
+(where upstream would stringify or raise a `TypeError`) are explicit native
+errors, and a malformed `window.__data` JSON warns without Python's
+`JSONDecodeError` text. `tests/fixtures/sites/drtv/` (constructed responses:
+the live API is geo-restricted and the old channel API retired) is compared
+with pinned upstream output.
+
 Toronto Star pages (`thestar.com/.../SLUG.html`) follow upstream `TheStarIE`:
 the page's `mainartBrightcoveVideoId` (else upstream's error) as a `url`
 result of its `players.brightcove.net/794267642001/default_default` player,
