@@ -494,6 +494,45 @@
    "files": {}
   },
   {
+   "url": "https://www.ardmediathek.de/sendung/tatort/Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA",
+   "args": [
+    "--no-geo-bypass",
+    "-I",
+    "101",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ARDMediathekCollection] Extracting URL: https://www.ardmediathek.de/sendung/tatort/Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA",
+    "[ARDMediathekCollection] Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA: Downloading playlist page 0",
+    "[download] Downloading playlist: Tatort",
+    "[ARDMediathekCollection] Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA: Downloading playlist page 1",
+    "[ARDMediathekCollection] Playlist Tatort: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Tatort"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardmediathek.de/sendung/tatort/Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA",
+   "args": [
+    "--no-geo-bypass",
+    "-I",
+    "101,1",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "101|tatort-100|NA",
+    "001|tatort-000|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
    "url": "https://www.ardmediathek.de/sammlung/die-kirche-bleibt-im-dorf/5eOHzt8XB2sqeFXbIoJlg2",
    "args": [
     "--no-geo-bypass",

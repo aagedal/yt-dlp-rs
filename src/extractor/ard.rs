@@ -743,78 +743,81 @@ pub(crate) fn is_pending_state(state: &Value) -> bool {
     state["kind"] == "ard"
 }
 
-/// `OnDemandPagedList(fetch_page, 100)`: the collection's pages, in order,
-/// until `limit` entries exist or a page yields fewer entries than the page
-/// size.
+/// `fetch_page(page_num)`: the page's teasers as `url` results.
+fn page_entries(client: &Client, state: &Value, page: usize) -> Result<Vec<VideoInfo>> {
+    let playlist_id = state["playlist_id"].as_str().unwrap_or_default().to_owned();
+    let data = collection_page(client, state, page)?;
+    let mut entries = Vec::new();
+    for item in branch(data.get("teasers")) {
+        if !item.is_object() {
+            continue;
+        }
+        let target = item.get("links").and_then(|links| links.get("target"));
+        let item_id = target
+            .and_then(|target| {
+                ["urlId", "id"]
+                    .iter()
+                    .filter_map(|key| target.get(*key))
+                    .find(|value| !value.is_null())
+            })
+            .or_else(|| item.get("id").filter(|value| !value.is_null()));
+        let Some(item_id) = item_id else {
+            continue;
+        };
+        if !super::nuxt::truthy(item_id) || item_id.as_str() == Some(playlist_id.as_str()) {
+            continue;
+        }
+        let item_id = py_str(Some(item_id), "teaser IDs")?;
+        let compilation = item.get("type").and_then(Value::as_str) == Some("compilation");
+        let (mode, ie) = if compilation {
+            ("sammlung", (COLLECTION, COLLECTION))
+        } else {
+            ("video", (KEY, NAME))
+        };
+        let mut fields = Vec::new();
+        for (key, value) in [
+            (
+                "id",
+                str_value(item.get("id")).map_or(Value::Null, Value::from),
+            ),
+            (
+                "title",
+                str_value(item.get("longTitle")).map_or(Value::Null, Value::from),
+            ),
+            ("duration", int_or_none(item.get("duration"))),
+            ("timestamp", timestamp_value(item.get("broadcastedOn"))),
+        ] {
+            if !value.is_null() {
+                fields.push((key, value));
+            }
+        }
+        entries.push(url_entry(
+            &format!("https://www.ardmediathek.de/{mode}/{item_id}"),
+            ie,
+            fields,
+        )?);
+    }
+    Ok(entries)
+}
+
+/// `OnDemandPagedList(fetch_page, 100)` read by upstream's `PlaylistEntries`
+/// (see [`super::paged`]).
 pub(crate) fn fetch_pages(
     client: &Client,
-    mut state: Value,
+    state: Value,
     limit: Option<usize>,
     entries: &mut Vec<VideoInfo>,
 ) -> Result<Option<Value>> {
-    let playlist_id = state["playlist_id"].as_str().unwrap_or_default().to_owned();
-    loop {
-        if limit.is_some_and(|limit| entries.len() >= limit) {
-            return Ok(Some(state));
-        }
-        let page = state["page"].as_u64().unwrap_or_default() as usize;
-        let data = collection_page(client, &state, page)?;
-        let mut yielded = 0;
-        for item in branch(data.get("teasers")) {
-            if !item.is_object() {
-                continue;
-            }
-            let target = item.get("links").and_then(|links| links.get("target"));
-            let item_id = target
-                .and_then(|target| {
-                    ["urlId", "id"]
-                        .iter()
-                        .filter_map(|key| target.get(*key))
-                        .find(|value| !value.is_null())
-                })
-                .or_else(|| item.get("id").filter(|value| !value.is_null()));
-            let Some(item_id) = item_id else {
-                continue;
-            };
-            if !super::nuxt::truthy(item_id) || item_id.as_str() == Some(playlist_id.as_str()) {
-                continue;
-            }
-            let item_id = py_str(Some(item_id), "teaser IDs")?;
-            let compilation = item.get("type").and_then(Value::as_str) == Some("compilation");
-            let (mode, ie) = if compilation {
-                ("sammlung", (COLLECTION, COLLECTION))
-            } else {
-                ("video", (KEY, NAME))
-            };
-            let mut fields = Vec::new();
-            for (key, value) in [
-                (
-                    "id",
-                    str_value(item.get("id")).map_or(Value::Null, Value::from),
-                ),
-                (
-                    "title",
-                    str_value(item.get("longTitle")).map_or(Value::Null, Value::from),
-                ),
-                ("duration", int_or_none(item.get("duration"))),
-                ("timestamp", timestamp_value(item.get("broadcastedOn"))),
-            ] {
-                if !value.is_null() {
-                    fields.push((key, value));
-                }
-            }
-            entries.push(url_entry(
-                &format!("https://www.ardmediathek.de/{mode}/{item_id}"),
-                ie,
-                fields,
-            )?);
-            yielded += 1;
-        }
-        if yielded < PAGE_SIZE {
-            return Ok(None);
-        }
-        state["page"] = (page + 1).into();
-    }
+    let page_state = state.clone();
+    let mut fetch = |page| page_entries(client, &page_state, page);
+    let placeholder = || {
+        url_entry(
+            "https://www.ardmediathek.de/video/None",
+            (KEY, NAME),
+            Vec::new(),
+        )
+    };
+    super::paged::fetch_requested(state, limit, entries, PAGE_SIZE, &mut fetch, &placeholder)
 }
 
 impl Extractor for ArdMediathekCollection {
@@ -857,7 +860,7 @@ impl Extractor for ArdMediathekCollection {
             "playlist_id": playlist_id,
             "season": season,
             "version": version,
-            "page": 0,
+            "random_access": true,
         });
         let page_data = collection_page(client, &state, 0)?;
         let mut full_id = playlist_id.clone();

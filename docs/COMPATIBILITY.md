@@ -723,10 +723,10 @@ compilations, `ARDMediathekCollection` (`sammlung/ID`) `url` result with the
 teaser's ID, long title, duration and broadcast timestamp. The playlist ID
 joins the ID, season and version with `_`; `display_id`, title and synopsis
 are kept even when `None`, like upstream. Like upstream's
-`OnDemandPagedList`, page 0 is read for the title, then pages are fetched as
-the playlist is processed until one yields fewer than 100 entries
-(`--playlist-items` stops paging early; the count is unknown unless a
-selection reads past the end).
+`OnDemandPagedList`, page 0 is read for the title, then only the pages holding
+the requested entries are fetched (cached, in request order, so `-I 101` reads
+just page 1), reading every page when a selection reads past the end (the
+count is unknown otherwise).
 
 ARD Audiothek episodes (`ardaudiothek.de|ardsounds.de/episode/urn:ard:
 episode|section|extra:HEX`) follow upstream `ARDAudiothekIE`: the POSTed

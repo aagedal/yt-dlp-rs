@@ -144,6 +144,7 @@ mod odnoklassniki;
 mod onefootball;
 mod onenewsnz;
 mod oneplace;
+mod paged;
 mod parlview;
 mod pearvideo;
 mod peertube;
