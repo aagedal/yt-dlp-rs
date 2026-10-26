@@ -14,7 +14,7 @@ import json
 from pathlib import Path
 import sys
 
-PINNED_UPSTREAM = '6ccd977303412151ee23352c6257dd658ffc1987'
+PINNED_UPSTREAM = 'fa9886678eb65103303c627b8e013f13f8999b41'
 FIXTURES = Path(__file__).resolve().parents[1] / 'tests/fixtures/jsinterp'
 
 

@@ -1,5 +1,5 @@
 //! Upstream `InfoExtractor._search_nuxt_data`, `_resolve_nuxt_array` and
-//! `_search_nuxt_json` (`yt_dlp/extractor/common.py`, pinned 6ccd977).
+//! `_search_nuxt_json` (`yt_dlp/extractor/common.py`, pinned fa98866).
 //!
 //! `_search_nuxt_data` reads Nuxt 2's `window.__NUXT__=(function(a,b,...)
 //! {return {...}}(1,"x",...))`: the call's arguments are parsed with

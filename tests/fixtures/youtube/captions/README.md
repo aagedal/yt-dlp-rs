@@ -1,6 +1,6 @@
 # Saved YouTube WEB caption references
 
-Official pinned source: `6ccd977303412151ee23352c6257dd658ffc1987`.
+Official pinned source: `fa9886678eb65103303c627b8e013f13f8999b41`.
 Run `python3 tools/compare_youtube_captions.py --upstream /path/to/pinned/yt-dlp`.
 
 Twenty shared extraction cases reference saved `player-*.json` responses, plus

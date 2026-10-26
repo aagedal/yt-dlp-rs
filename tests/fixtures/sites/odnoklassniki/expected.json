@@ -1,5 +1,5 @@
 {
- "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
  "cases": [
   {
    "url": "https://ok.ru/video/20079905452?fromTime=5",
@@ -23,6 +23,31 @@
     "{\"id\": \"yt-copy\", \"title\": \"From YouTube\", \"timestamp\": null, \"direct\": true, \"formats\": [{\"format_id\": \"mp4\", \"url\": \"https://media.example.test/yt-copy.mp4\", \"ext\": \"mp4\", \"vcodec\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\"}], \"subtitles\": {}, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"hls_aes\": null, \"original_url\": \"https://ok.ru/videoembed/555-1\", \"webpage_url\": \"https://ok.ru/videoembed/555-1\", \"webpage_url_basename\": \"555-1\", \"webpage_url_domain\": \"ok.ru\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"duration\": 10, \"uploader\": \"yt\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"yt-copy\", \"fulltitle\": \"From YouTube\", \"duration_string\": \"10\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"mp4\", \"url\": \"https://media.example.test/yt-copy.mp4\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"format\": \"mp4 - unknown\", \"_filename\": \"From YouTube [yt-copy].mp4\", \"filename\": \"From YouTube [yt-copy].mp4\", \"__write_download_archive\": false}], \"format_id\": \"mp4\", \"url\": \"https://media.example.test/yt-copy.mp4\", \"ext\": \"mp4\", \"vcodec\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"mp4 - unknown\", \"_type\": \"video\"}"
    ],
    "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://ok.ru/videoembed/4242",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4242\", \"title\": \"Boosty clip\", \"thumbnail\": \"https://iv.okcdn.test/boosty.jpg\", \"duration\": 42, \"upload_date\": null, \"uploader\": \"boosty author\", \"uploader_id\": \"4242\", \"like_count\": null, \"age_limit\": null, \"start_time\": null, \"subtitles\": {}, \"formats\": [{\"url\": \"https://vd.mycdn.test/?expires=1&type=3&id=4242\", \"ext\": \"mp4\", \"format_id\": \"hd\", \"quality\": 4, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - unknown\"}], \"original_url\": \"https://ok.ru/videoembed/4242\", \"webpage_url\": \"https://ok.ru/videoembed/4242#__youtubedl_smuggle=%7B%22referrer%22%3A+%22https%3A%2F%2Fboosty.to%22%7D\", \"webpage_url_basename\": \"4242\", \"webpage_url_domain\": \"ok.ru\", \"extractor\": \"Odnoklassniki\", \"extractor_key\": \"Odnoklassniki\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://iv.okcdn.test/boosty.jpg\", \"id\": \"0\"}], \"display_id\": \"4242\", \"fulltitle\": \"Boosty clip\", \"duration_string\": \"42\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://vd.mycdn.test/?expires=1&type=3&id=4242\", \"ext\": \"mp4\", \"format_id\": \"hd\", \"quality\": 4, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - unknown\", \"_filename\": \"Boosty clip [4242].mp4\", \"filename\": \"Boosty clip [4242].mp4\", \"__write_download_archive\": false}], \"url\": \"https://vd.mycdn.test/?expires=1&type=3&id=4242\", \"ext\": \"mp4\", \"format_id\": \"hd\", \"quality\": 4, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://ok.ru/videoembed/4343",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Odnoklassniki] 4343: The author of this video has not been found or is blocked"
+   ],
    "files": {}
   },
   {

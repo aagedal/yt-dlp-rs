@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "https://github.com/yt-dlp/yt-dlp.git",
-  "baseline": "6ccd977303412151ee23352c6257dd658ffc1987",
+  "baseline": "fa9886678eb65103303c627b8e013f13f8999b41",
   "upstream_version": "2026.10.21",
   "components": [
     {
@@ -1690,7 +1690,7 @@
         "src/extractor/odnoklassniki.rs",
         "tests/fixtures/sites/odnoklassniki/"
       ],
-      "scope": "OdnoklassnikiIE player options, flashvars or POSTed metadata, progressive/HLS/DASH/RTMP formats, subtitles, errors and url/url_transparent results; no embedded DASH manifests; compared with pinned upstream output through the fixture proxy"
+      "scope": "OdnoklassnikiIE player options, flashvars or POSTed metadata, progressive/HLS/DASH/RTMP formats, subtitles, errors and url/url_transparent results, the smuggled referrer as Referer and the boosty direct-link retry; no embedded DASH manifests; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "onefootball",
@@ -2136,7 +2136,7 @@
         "src/devalue.rs",
         "src/extractor/nuxt.rs"
       ],
-      "scope": "InfoExtractor._search_nuxt_data (window.__NUXT__ pure-function payloads through js_to_json with vars), _resolve_nuxt_array and _search_nuxt_json (devalue.parse_iter with the Nuxt revivers), unit-tested against upstream's test_search_nuxt_json, test_js_to_json_vars_strings and test_devalue cases; cycles resolve to null, NaN/Infinity to null, Date/RegExp to their strings and bytes to byte arrays; payloads that fail to parse as JSON are explicit native errors"
+      "scope": "InfoExtractor._search_nuxt_data (window.__NUXT__ pure-function payloads through js_to_json with vars), _resolve_nuxt_array and _search_nuxt_json (devalue.parse_iter with the Nuxt revivers), unit-tested against upstream's test_search_nuxt_json, test_js_to_json_vars_strings and test_devalue cases; cycles resolve to null, NaN/Infinity to null, Date (validated like CPython's C datetime.fromisoformat, dates::is_py_isoformat_datetime)/RegExp to their strings and bytes to byte arrays; payloads that fail to parse as JSON are explicit native errors"
     },
     {
       "name": "streetvoice",

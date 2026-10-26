@@ -19,7 +19,7 @@ challenge plumbing, asserting the rewritten manifest path and preserved
 parity.
 
 Reference: official yt-dlp commit
-`6ccd977303412151ee23352c6257dd658ffc1987`, particularly
+`fa9886678eb65103303c627b8e013f13f8999b41`, particularly
 `yt_dlp/extractor/youtube/_base.py` WEB protocol token policies and
 `yt_dlp/extractor/youtube/_video.py` manifest discovery/path-n handling.
 

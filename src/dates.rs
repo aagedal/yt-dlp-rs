@@ -1074,6 +1074,258 @@ fn local_offset(_: i64) -> Option<i64> {
     None
 }
 
+/// Whether `datetime.datetime.fromisoformat` accepts `text`, following
+/// CPython's C implementation (`Modules/_datetimemodule.c`, 3.15): the date
+/// forms `YYYY-MM-DD`, `YYYYMMDD`, `YYYY-Www[-D]` and `YYYYWww[D]`, any
+/// one-character separator, then `HH[:MM[:SS[{.,}f+]]]` with an optional
+/// `Z` or `±HH[:MM[:SS[.f+]]]` offset; `24:00` rolls over to the next day.
+/// The C parser works on the NUL-terminated UTF-8 buffer and may read past a
+/// component's end (so junk before an offset is tolerated); `IsoBuffer`
+/// reproduces those reads.
+pub fn is_py_isoformat_datetime(text: &str) -> bool {
+    if text.chars().count() < 7 {
+        return false;
+    }
+    let buffer = IsoBuffer(text.as_bytes());
+    let len = text.len();
+    let Some(separator) = buffer.separator() else {
+        return false;
+    };
+    let Some((mut year, mut month, mut day)) = buffer.date(separator) else {
+        return false;
+    };
+    let mut time = IsoTime::default();
+    if len > separator {
+        let width = match buffer.at(separator) {
+            lead if lead & 0x80 == 0 => 1,
+            lead if lead & 0xf0 == 0xe0 => 3,
+            lead if lead & 0xf0 == 0xf0 => 4,
+            _ => 2,
+        };
+        let Some(parsed) = buffer.time(separator + width) else {
+            return false;
+        };
+        time = parsed;
+    }
+    if time.hour == 24 && (1..=12).contains(&month) && day <= days_in_month(year, month) {
+        if time.minute != 0 || time.second != 0 || time.microsecond != 0 {
+            return false;
+        }
+        time.hour = 0;
+        day += 1;
+        if day > days_in_month(year, month) {
+            day = 1;
+            month += 1;
+            if month > 12 {
+                month = 1;
+                year += 1;
+            }
+        }
+    }
+    (1..=9999).contains(&year)
+        && (1..=12).contains(&month)
+        && (1..=days_in_month(year, month)).contains(&day)
+        && time.hour <= 23
+        && time.minute <= 59
+        && time.second <= 59
+}
+
+#[derive(Default)]
+struct IsoTime {
+    hour: i64,
+    minute: i64,
+    second: i64,
+    microsecond: i64,
+}
+
+/// A NUL-terminated byte buffer, as the C parser sees the string.
+struct IsoBuffer<'a>(&'a [u8]);
+
+impl IsoBuffer<'_> {
+    fn at(&self, index: usize) -> u8 {
+        self.0.get(index).copied().unwrap_or(0)
+    }
+
+    /// `parse_digits`: the value and the position after the digits.
+    fn digits(&self, mut pos: usize, count: usize) -> Option<(i64, usize)> {
+        let mut value = 0;
+        for _ in 0..count {
+            let digit = self.at(pos).wrapping_sub(b'0');
+            if digit > 9 {
+                return None;
+            }
+            value = value * 10 + i64::from(digit);
+            pos += 1;
+        }
+        Some((value, pos))
+    }
+
+    /// `_find_isoformat_datetime_separator`.
+    fn separator(&self) -> Option<usize> {
+        let len = self.0.len();
+        if len == 7 {
+            return Some(7);
+        }
+        if self.at(4) == b'-' {
+            if self.at(5) != b'W' {
+                return Some(10);
+            }
+            if len > 8 && self.at(8) == b'-' {
+                if len == 9 {
+                    return None;
+                }
+                if len > 10 && self.at(10).is_ascii_digit() {
+                    return Some(8);
+                }
+                return Some(10);
+            }
+            return Some(8);
+        }
+        if self.at(4) != b'W' {
+            return Some(8);
+        }
+        let idx = (7..len)
+            .find(|&idx| !self.at(idx).is_ascii_digit())
+            .unwrap_or(len.max(7));
+        if idx < 9 {
+            Some(idx)
+        } else if idx % 2 == 0 {
+            Some(7)
+        } else {
+            Some(8)
+        }
+    }
+
+    /// `parse_isoformat_date` and `iso_to_ymd`.
+    fn date(&self, len: usize) -> Option<(i64, i64, i64)> {
+        let (year, mut pos) = self.digits(0, 4)?;
+        let uses_separator = self.at(pos) == b'-';
+        pos += usize::from(uses_separator);
+        if self.at(pos) == b'W' {
+            let (week, mut pos) = self.digits(pos + 1, 2)?;
+            let mut weekday = 1;
+            if pos < len {
+                if uses_separator {
+                    if self.at(pos) != b'-' {
+                        return None;
+                    }
+                    pos += 1;
+                }
+                weekday = self.digits(pos, 1)?.0;
+            }
+            return iso_week_to_gregorian(year, week, weekday);
+        }
+        let (month, mut pos) = self.digits(pos, 2)?;
+        if uses_separator {
+            if self.at(pos) != b'-' {
+                return None;
+            }
+            pos += 1;
+        }
+        let (day, _) = self.digits(pos, 2)?;
+        Some((year, month, day))
+    }
+
+    /// `parse_hh_mm_ss_ff`: `Err` for a negative return code, otherwise the
+    /// fields and whether anything followed them.
+    fn hh_mm_ss_ff(&self, start: usize, end: usize) -> Result<(IsoTime, bool), ()> {
+        let mut values = [0; 3];
+        let mut pos = start;
+        let mut has_separator = true;
+        let mut finished = None;
+        for (index, value) in values.iter_mut().enumerate() {
+            (*value, pos) = self.digits(pos, 2).ok_or(())?;
+            let c = self.at(pos);
+            pos += 1;
+            if index == 0 {
+                has_separator = c == b':';
+            }
+            if c == b'.' || c == b',' {
+                if index < 2 || pos >= end {
+                    return Err(());
+                }
+                break;
+            } else if pos >= end {
+                finished = Some(c != 0);
+                break;
+            } else if has_separator && c == b':' {
+                if index == 2 {
+                    return Err(());
+                }
+            } else if !has_separator {
+                pos -= 1;
+            } else {
+                return Err(());
+            }
+        }
+        let [hour, minute, second] = values;
+        let mut time = IsoTime {
+            hour,
+            minute,
+            second,
+            microsecond: 0,
+        };
+        if let Some(trailing) = finished {
+            return Ok((time, trailing));
+        }
+        let count = (end - pos).min(6);
+        let (fraction, mut pos) = self.digits(pos, count).ok_or(())?;
+        time.microsecond = fraction * 10_i64.pow((6 - count) as u32);
+        while self.at(pos).is_ascii_digit() {
+            pos += 1;
+        }
+        Ok((time, self.at(pos) != 0))
+    }
+
+    /// `parse_isoformat_time` from `start` to the end of the buffer.
+    fn time(&self, start: usize) -> Option<IsoTime> {
+        let end = self.0.len();
+        let mut tz = start;
+        loop {
+            if matches!(self.at(tz), b'Z' | b'+' | b'-') {
+                break;
+            }
+            tz += 1;
+            if tz >= end {
+                break;
+            }
+        }
+        let (time, trailing) = self.hh_mm_ss_ff(start, tz).ok()?;
+        if tz == end {
+            return (!trailing).then_some(time);
+        }
+        if self.at(tz) == b'Z' {
+            return (self.at(tz + 1) == 0).then_some(time);
+        }
+        let (offset, trailing) = self.hh_mm_ss_ff(tz + 1, end).ok()?;
+        (!trailing && offset.hour <= 23 && offset.minute <= 59 && offset.second <= 59)
+            .then_some(time)
+    }
+}
+
+/// `iso_to_ymd`.
+fn iso_week_to_gregorian(year: i64, week: i64, weekday: i64) -> Option<(i64, i64, i64)> {
+    if !(1..=9999).contains(&year) {
+        return None;
+    }
+    // Monday = 0; 1970-01-01 was a Thursday.
+    let first_weekday = (days_from_civil(year, 1, 1) + 3).rem_euclid(7);
+    let long_year = first_weekday == 3 || (first_weekday == 2 && is_leap(year));
+    if !(1..=52).contains(&week) && !(week == 53 && long_year) {
+        return None;
+    }
+    if !(1..=7).contains(&weekday) {
+        return None;
+    }
+    let mut week1_monday = days_from_civil(year, 1, 1) - first_weekday;
+    if first_weekday > 3 {
+        week1_monday += 7;
+    }
+    Some(civil_from_days(
+        week1_monday + (week - 1) * 7 + (weekday - 1),
+    ))
+}
+
 #[cfg(test)]
 mod tests {
     #[test]
@@ -1096,6 +1348,47 @@ mod tests {
     }
 
     use super::*;
+
+    #[test]
+    fn isoformat_validation_matches_cpython() {
+        // Results of CPython 3.15's `datetime.datetime.fromisoformat`.
+        for (input, expected) in [
+            ("2001-09-09T01:46:40.000Z", true),
+            ("2001-09-09", true),
+            ("20010909", true),
+            ("2001-09-09 01:46", true),
+            ("2001-09-09é01:46", true),
+            ("2001-09-09T24:00", true),
+            ("2001-12-31T24:00", true),
+            ("9999-12-31T24:00", false),
+            ("2001-02-30T24:00", false),
+            ("2001-09-09T24:00:00.0000001", true),
+            ("2001-09-09T24:00:00.1", false),
+            ("2001-W01", true),
+            ("2001W011", true),
+            ("2004-W53-7", true),
+            ("2001-W53-1", false),
+            ("2001-09-09T01:46:40+0530", true),
+            ("2001-09-09T01:46:40.123456789", true),
+            ("2001-09-09T014640123", true),
+            ("2001-09-09T009Z", true),
+            ("2001-09-09T009", false),
+            ("2001-09-09T01:46:408+05:30", true),
+            ("2001-09-09T01:46:40.123456x+05", true),
+            ("2001-09-09T01:46:40+24:00", false),
+            ("2001-09-09T01:46:40Z+01", false),
+            ("2001-09-09 ", false),
+            ("2025-02-29", false),
+            ("0000-01-01", false),
+            ("2001-9-09", false),
+            ("٢٠٠١-09-09", false),
+            ("2001-09-09Tab", false),
+            ("x", false),
+            ("123456", false),
+        ] {
+            assert_eq!(is_py_isoformat_datetime(input), expected, "{input}");
+        }
+    }
 
     #[test]
     fn saved_upstream_unified_timestamp_and_strftime_cases() {

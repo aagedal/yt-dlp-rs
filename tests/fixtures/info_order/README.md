@@ -1,6 +1,6 @@
 # Saved upstream `-j` lines (info dict key order)
 
-Pinned official yt-dlp: `6ccd977303412151ee23352c6257dd658ffc1987`.
+Pinned official yt-dlp: `fa9886678eb65103303c627b8e013f13f8999b41`.
 
 `site/` holds the served files; `cases.json` the exact `-j --user-agent fixture`
 lines (`lines`) and `-J` lines (`single`) pinned upstream printed for each, with the `Content-Type` and

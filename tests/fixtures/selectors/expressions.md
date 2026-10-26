@@ -6,7 +6,7 @@ match). Four malformed late fallback branches must raise syntax errors during
 construction, even though their first branch would otherwise succeed.
 
 Reference: official yt-dlp commit
-`6ccd977303412151ee23352c6257dd658ffc1987`, `YoutubeDL.build_format_selector`
+`fa9886678eb65103303c627b8e013f13f8999b41`, `YoutubeDL.build_format_selector`
 in `yt_dlp/YoutubeDL.py`:
 
 - Around 2390: recursive grouping, merge and fallback parser.

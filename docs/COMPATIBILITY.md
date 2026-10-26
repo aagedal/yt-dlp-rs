@@ -2484,8 +2484,11 @@ page's stub error text and restricted-access login error, the player
 POSTed metadata URL, progressive, HLS, DASH, live HLS and RTMP formats with
 upstream's `type` qualities (CDN cookies cleared after each manifest),
 subtitles, page meta upload date and age limit, and YouTube-hosted videos as
-`url_transparent` results. Inline embedded DASH manifests are an unsupported
-error; upstream's boosty branch calls a missing method and fails the same way.
+`url_transparent` results. A smuggled `referrer` is sent as the page's
+`Referer`; a boosty direct `videoembed` link (the author-not-found stub, no
+referrer) is re-extracted with `https://boosty.to` as the referrer, keeping
+upstream's smuggled `webpage_url` (upstream fa98866). Inline embedded DASH
+manifests are an unsupported error.
 `tests/fixtures/sites/odnoklassniki/` is compared with pinned upstream output.
 
 OnePlace episodes (`oneplace.com/.../listen/SLUG-ID`) follow upstream
@@ -2975,7 +2978,7 @@ The per-request timeouts still apply to each attempt; there is no overall
 download deadline. Cooperative download cancellation is described below.
 
 This slice is based on the same pinned revision
-**6ccd977303412151ee23352c6257dd658ffc1987**, specifically
+**fa9886678eb65103303c627b8e013f13f8999b41**, specifically
 `yt_dlp/downloader/http.py`'s `RetryDownload`/`RetryManager` control flow,
 transport-read failures, and Content-Length validation. Its broader 5xx retry
 handling remains outside this slice.
@@ -3108,13 +3111,13 @@ expose cancellation flags.
 
 The library observer is a native extension of the transport milestone, not a
 port of upstream's progress-hook contract or CLI cancellation behavior. The pinned baseline remains
-**6ccd977303412151ee23352c6257dd658ffc1987**. Deterministic local HTTP tests in
+**fa9886678eb65103303c627b8e013f13f8999b41**. Deterministic local HTTP tests in
 `tests/progress.rs` cover observer events, response-derived/unknown totals,
 resumed and restarted counters, cancellation cleanup, and retry-wait polling.
 
 ## Source and differential fixtures
 
-This slice uses the existing baseline, **6ccd977303412151ee23352c6257dd658ffc1987**:
+This slice uses the existing baseline, **fa9886678eb65103303c627b8e013f13f8999b41**:
 
 - `yt_dlp/extractor/generic.py`: response dispatch, HTML embed orchestration, and single-vs-playlist dispatch.
 - `yt_dlp/extractor/genericembeds.py`, `HTML5MediaEmbedIE`: numbered entry metadata for single videos and playlists.
@@ -3165,7 +3168,7 @@ recursive result processing remain unimplemented.
 ## Progressive automatic selection source slice
 
 This slice uses the existing pinned source commit
-**6ccd977303412151ee23352c6257dd658ffc1987** and leaves the global baseline unchanged.
+**fa9886678eb65103303c627b8e013f13f8999b41** and leaves the global baseline unchanged.
 `InfoExtractor._parse_html5_media_entries` in `yt_dlp/extractor/common.py` supplies
 source width/height/res handling; its corresponding dimension examples in
 `test/test_InfoExtractor.py` were reviewed. `FormatSorter` in
