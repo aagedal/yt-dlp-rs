@@ -178,6 +178,7 @@ mod snapchat;
 mod soundcloud;
 mod soundgasm;
 mod spiegel;
+mod steam;
 mod streamable;
 mod streetvoice;
 mod svt;
@@ -458,6 +459,10 @@ pub use soundgasm::{
     suitable as soundgasm_suitable,
 };
 pub use spiegel::{Spiegel, suitable as spiegel_suitable};
+pub use steam::{
+    Steam, SteamCommunity, SteamCommunityBroadcast, broadcast_suitable as steam_broadcast_suitable,
+    community_suitable as steam_community_suitable, suitable as steam_suitable,
+};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use streetvoice::{StreetVoice, suitable as streetvoice_suitable};
 pub use svt::{

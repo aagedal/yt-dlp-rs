@@ -908,6 +908,19 @@
       "scope": "DumpertIE mobile_api info JSON, the first item's VIDEO media variants (fatal HLS with version ids or progressive URLs, qualities ranking), stills thumbnails, stats, duration and KeyError/IndexError/StopIteration paths compared with pinned upstream output through the fixture proxy; non-array item/media lists and non-string titles or URIs remain explicit native errors"
     },
     {
+      "name": "steam",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/steam.py"
+      ],
+      "rust": [
+        "src/extractor/steam.rs",
+        "tests/fixtures/sites/steam/",
+        "tests/sites.rs"
+      ],
+      "scope": "SteamIE age-check cookies, carousel data-props trailers as an eagerly extracted playlist (master-only HLS, DASH, duplicate removal, parse_resolution thumbnails), SteamCommunityIE YouTube follows and No video found, and SteamCommunityBroadcastIE live HLS with uploader fields compared with pinned upstream output through the fixture proxy (the YouTube follow by its watch-page request)"
+    },
+    {
       "name": "tv2",
       "status": "partial",
       "upstream": [

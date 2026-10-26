@@ -181,6 +181,10 @@ upstream equivalence for every option interaction or filename rule.
 
 ## YouTube watch-page subset
 
+Known gap: when the watch page answers HTTP 404, upstream retries it
+(`HTTP Error 404: Not Found. Retrying (N/3)...`), then continues with the
+player API; this port reports the watch page error at once.
+
 The built-in `Youtube` extractor runs before the generic HTTP fallback and
 takes the URLs of pinned upstream's `YoutubeIE._VALID_URL` (ported with its
 `_INVIDIOUS_SITES` list, `src/extractor/youtube/urls.rs`): watch URLs (also
@@ -2249,6 +2253,21 @@ embed whose JSON does not parse warns without upstream's Python decoder
 message. Upstream's Katsomo and MTV Uutiset extractors are marked broken and
 not ported. `tests/fixtures/sites/tv2/` is compared with pinned upstream
 output.
+
+Steam store apps (`store.steampowered.com[/agecheck]/app/ID[/NAME]`) follow
+upstream `SteamIE`: the age-check cookies, the `gamehighlight_desktopcarousel`
+element's `data-props` (app name and trailers with an `id`), each trailer's
+non-fatal master-only HLS and DASH manifests with duplicate formats removed
+(by URL, or by fragment URLs), poster/thumbnail thumbnails with
+`parse_resolution` sizes, as a playlist (`APP-MOVIE` IDs, `APP video MOVIE`
+titles, series fields). Upstream yields the trailers from a generator; they
+are extracted eagerly, so their manifest messages precede the playlist's.
+`SteamCommunityIE` shared files follow the flashvars' `YOUTUBE_VIDEO_ID` (or
+the `movieFrame modal` element's ID) to the YouTube extractor, else
+`No video found`. `SteamCommunityBroadcastIE` broadcasts give the fatal
+master-only live HLS, view count and uploader. `tests/fixtures/sites/steam/`
+is compared with pinned upstream output (the YouTube follow is checked by
+the request it makes).
 
 CloudyCDN and Backscreen embeds (`embed.cloudycdn.services|backscreen.com/SITE/media/ID`)
 follow upstream `CloudyCDNIE`: the `player.DOMAIN/player/SITE/media/ID/`

@@ -298,6 +298,37 @@ fn a_single_youtube_embed_is_followed_by_the_youtube_extractor() {
 }
 
 #[test]
+fn steam_community_youtube_videos_are_followed_by_the_youtube_extractor() {
+    // Upstream's `url_result(youtube_id, YoutubeIE)` from the flashvars and
+    // from the `movieFrame modal` element: the YouTube extractor requests
+    // the watch page (which this fixture does not serve).
+    for url in [
+        "https://steamcommunity.com/sharedfiles/filedetails/?id=242472205",
+        "https://steamcommunity.com/sharedfiles/filedetails/242472206",
+    ] {
+        let proxy = site_proxy::SiteProxy::start("steam");
+        let work = tempfile::tempdir().unwrap();
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args([
+                "--ignore-config",
+                "--proxy",
+                &proxy.url,
+                "--no-check-certificate",
+            ])
+            .args(["-s", url])
+            .current_dir(work.path())
+            .output()
+            .unwrap();
+        let requests = proxy.requests.lock().unwrap();
+        assert!(
+            requests.iter().any(|request| request
+                == "https://www.youtube.com/watch?v=BaW_jenozKc&bpctr=9999999999&has_verified=1"),
+            "{url}: {requests:?}"
+        );
+    }
+}
+
+#[test]
 fn youtube_live_chat_replays_are_written_like_upstream() {
     // Upstream `YoutubeLiveChatFD`'s JSON lines for the saved chat replay.
     let proxy = site_proxy::SiteProxy::start("youtube-live-chat");

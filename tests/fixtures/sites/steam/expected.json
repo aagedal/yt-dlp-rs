@@ -1,0 +1,87 @@
+{
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
+ "cases": [
+  {
+   "url": "https://store.steampowered.com/app/105600/Terraria/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "{\"id\": \"105600\", \"title\": \"Terraria & Friends\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"105600-256785003\", \"title\": \"Terraria & Friends video 256785003\", \"formats\": [{\"format_id\": \"dash-a1\", \"manifest_url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/dash_h264.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"en\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/audio_128.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-a1 - audio only (DASH audio)\"}, {\"format_id\": \"hls-1200\", \"format_index\": null, \"url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/hls_264_720.m3u8\", \"manifest_url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/hls_264_master.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1200 - 1280x720\"}, {\"format_id\": \"dash-v1\", \"manifest_url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/dash_h264.mpd\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1000.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/video_720.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1000.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-v1 - 1280x720 (DASH video)\"}], \"series\": \"Terraria & Friends\", \"series_id\": \"105600\", \"thumbnails\": [{\"url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/movie_max.jpg\", \"id\": \"0\"}, {\"url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/movie.293x165.jpg\", \"width\": 293, \"height\": 165, \"id\": \"1\", \"resolution\": \"293x165\"}], \"playlist_count\": 2, \"playlist\": \"Terraria & Friends\", \"playlist_id\": \"105600\", \"playlist_title\": \"Terraria & Friends\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://store.steampowered.com/app/105600/Terraria/\", \"n_entries\": 2, \"webpage_url\": \"https://store.steampowered.com/app/105600/Terraria/\", \"webpage_url_basename\": \"Terraria\", \"webpage_url_domain\": \"store.steampowered.com\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"Steam\", \"extractor_key\": \"Steam\", \"playlist_autonumber\": 1, \"thumbnail\": \"https://video.akamai.steamstatic.test/store_trailers/105600/movie.293x165.jpg\", \"display_id\": \"105600-256785003\", \"fulltitle\": \"Terraria & Friends video 256785003\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"requested_formats\": [{\"format_id\": \"dash-v1\", \"manifest_url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/dash_h264.mpd\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1000.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/video_720.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1000.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-v1 - 1280x720 (DASH video)\"}, {\"format_id\": \"dash-a1\", \"manifest_url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/dash_h264.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"en\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/audio_128.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-a1 - audio only (DASH audio)\"}], \"format\": \"dash-v1 - 1280x720 (DASH video)+dash-a1 - audio only (DASH audio)\", \"format_id\": \"dash-v1+dash-a1\", \"ext\": \"mp4\", \"protocol\": \"https+https\", \"language\": \"en\", \"format_note\": \"DASH video+DASH audio\", \"tbr\": 1128.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.4d401f\", \"vbr\": 1000.0, \"aspect_ratio\": 1.78, \"acodec\": \"mp4a.40.2\", \"abr\": 128.0, \"asr\": 48000, \"_filename\": \"Terraria & Friends video 256785003 [105600-256785003].mp4\", \"filename\": \"Terraria & Friends video 256785003 [105600-256785003].mp4\", \"__write_download_archive\": false}], \"requested_formats\": [{\"format_id\": \"dash-v1\", \"manifest_url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/dash_h264.mpd\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1000.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/video_720.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1000.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-v1 - 1280x720 (DASH video)\"}, {\"format_id\": \"dash-a1\", \"manifest_url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/dash_h264.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"en\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/audio_128.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-a1 - audio only (DASH audio)\"}], \"format\": \"dash-v1 - 1280x720 (DASH video)+dash-a1 - audio only (DASH audio)\", \"format_id\": \"dash-v1+dash-a1\", \"ext\": \"mp4\", \"protocol\": \"https+https\", \"language\": \"en\", \"format_note\": \"DASH video+DASH audio\", \"filesize_approx\": null, \"tbr\": 1128.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"fps\": null, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.4d401f\", \"vbr\": 1000.0, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": \"mp4a.40.2\", \"abr\": 128.0, \"asr\": 48000, \"audio_channels\": null}, null], \"webpage_url\": \"https://store.steampowered.com/app/105600/Terraria/\", \"original_url\": \"https://store.steampowered.com/app/105600/Terraria/\", \"webpage_url_basename\": \"Terraria\", \"webpage_url_domain\": \"store.steampowered.com\", \"extractor\": \"Steam\", \"extractor_key\": \"Steam\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "ERROR: [Steam] 105600-2028: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://store.steampowered.com/app/105600/Terraria/",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(series)s|%(series_id)s|%(thumbnails)j|%(format_id)s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "105600-256785003|Terraria & Friends video 256785003|Terraria & Friends|105600|[{\"url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/movie_max.jpg\", \"id\": \"0\"}, {\"url\": \"https://video.akamai.steamstatic.test/store_trailers/105600/movie.293x165.jpg\", \"width\": 293, \"height\": 165, \"id\": \"1\", \"resolution\": \"293x165\"}]|dash-v1+dash-a1"
+   ],
+   "stderr": [
+    "ERROR: [Steam] 105600-2028: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://store.steampowered.com/app/105600/Terraria/",
+   "args": [
+    "-I",
+    "1",
+    "--print",
+    "%(id)s|%(format_id)s|%(playlist_index)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "105600-256785003|dash-v1+dash-a1|1|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://store.steampowered.com/app/999/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"999\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://store.steampowered.com/app/999/\", \"original_url\": \"https://store.steampowered.com/app/999/\", \"webpage_url_basename\": \"999\", \"webpage_url_domain\": \"store.steampowered.com\", \"extractor\": \"Steam\", \"extractor_key\": \"Steam\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [SteamCommunity] 1: No video found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://steamcommunity.com/broadcast/watch/76561199073851486",
+   "args": [
+    "--print",
+    "%(id)s|%(live_status)s|%(view_count)s|%(uploader)s|%(uploader_id)s|%(format_id)s|%(protocol)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "76561199073851486|is_live|42|Streamer|1113585758|1200|m3u8_native"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}
