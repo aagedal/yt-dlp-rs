@@ -117,7 +117,7 @@ remain outside the current result contract.
    Windows-host path sanitization remain open. `--print` video-stage field lists/templates and
    the title/ID/URL/filename `--get-*` aliases print unsanitized values with
    quiet simulation; `--print-to-file` appends video-stage lines to output-template
-   destinations without implying simulation. Other print stages remain open.
+   destinations without implying simulation. All upstream print stages are implemented.
    `-a/--batch-file` URL lists follow upstream `get_urls` parsing, and the
    `-w`/`--force-overwrites` modes follow upstream existing-file decisions.
    Full upstream ranking and general selector

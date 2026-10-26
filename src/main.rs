@@ -4267,19 +4267,42 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 // Upstream `process_video_result`: `pre_process` and
                 // `after_filter` processors precede listing and selection,
                 // with `post_extract` (comments) between them.
-                run_metadata_parser(
-                    &metadata_actions,
-                    "pre_process",
-                    &mut info,
-                    &template_options,
-                )?;
+                // `run_all_pps(key)`: the stage's prints, then its processors
+                // (MetadataParser, then `--exec`).
+                let early_stage = |stage: Stage,
+                                   info: &mut yt_dlp_rs::VideoInfo,
+                                   when: &str|
+                 -> Result<(), Box<dyn std::error::Error>> {
+                    // Before format selection the dict has no `ext`/`url` of
+                    // its own unless the extractor set them.
+                    let mut view = info.clone();
+                    view.mark_unselected();
+                    let filename = prepare_media(&templates, &view, &template_options)
+                        .map(|path| path.to_string_lossy().into_owned());
+                    render_stage(
+                        stage,
+                        &print_templates,
+                        &print_files,
+                        &view,
+                        filename.as_deref(),
+                        StagePaths {
+                            filepath: None,
+                            prepared: filename.as_deref().ok(),
+                        },
+                        &template_options,
+                    )?
+                    .emit()?;
+                    run_metadata_parser(&metadata_actions, when, info, &template_options)?;
+                    // A failed command is a deferred preprocessing error.
+                    if let Err(error) = run_exec(&exec, stage, info, None, None, &template_options)
+                    {
+                        defer(error);
+                    }
+                    Ok(())
+                };
+                early_stage(Stage::PreProcess, &mut info, "pre_process")?;
                 downloader.post_extract(&mut info)?;
-                run_metadata_parser(
-                    &metadata_actions,
-                    "after_filter",
-                    &mut info,
-                    &template_options,
-                )?;
+                early_stage(Stage::AfterFilter, &mut info, "after_filter")?;
                 // Upstream `SponsorBlockPP`, the last `after_filter` processor.
                 // Its failure is a deferred preprocessing error, like upstream's
                 // `__pending_error`.

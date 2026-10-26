@@ -326,7 +326,7 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
     };
     Ok(match name {
         // A result without formats (`--ignore-no-formats-error`).
-        "ext" | "url" if info.has_no_formats() => None,
+        "ext" | "url" if info.has_no_formats() || info.unselected(name) => None,
         "id" => Some(Text(&info.id)),
         "title" => Some(Text(&info.title)),
         "ext" => Some(Text(&info.ext)),

@@ -1,0 +1,107 @@
+{
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
+ "cases": [
+  {
+   "url": "https://example.test/page.html",
+   "args": [
+    "--print",
+    "pre_process:%(id)s|%(title)s|%(format_id)s|%(filename)s",
+    "--print",
+    "after_filter:%(id)s|%(format_id)s",
+    "--print",
+    "%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "page-1|Stages page (1)|NA|Stages page (1) [page-1].NA",
+    "page-1|NA",
+    "0"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://example.test/page.html",
+   "args": [
+    "--print",
+    "PRE_PROCESS:title",
+    "-O",
+    "after_filter:id,ext"
+   ],
+   "exit": 0,
+   "stdout": [
+    "Stages page (1)",
+    "page-1",
+    "NA"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://example.test/page.html",
+   "args": [
+    "--exec",
+    "pre_process:echo pre %(id)s {}",
+    "--exec",
+    "after_filter:echo after",
+    "--skip-download",
+    "--no-progress"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: Unsafe conversion(s) in exec command: 'echo pre %(id)s {}'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://example.test/page.html",
+   "args": [
+    "--exec",
+    "pre_process:echo pre %(id)q {}",
+    "--exec",
+    "after_filter:echo after",
+    "--skip-download",
+    "--no-progress"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[generic] Extracting URL: https://example.test/page.html",
+    "[generic] page: Downloading webpage",
+    "[generic] page: Extracting information",
+    "[Exec] Executing command: echo pre page-1 {}",
+    "pre page-1 {}",
+    "[Exec] Executing command: echo after",
+    "after",
+    "[info] page-1: Downloading 1 format(s): 0"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://example.test/page.html",
+   "args": [
+    "--exec",
+    "pre_process:false",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [
+    "page-1"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "ERROR: Preprocessing: Command returned error code 1",
+    "ERROR: Preprocessing: Command returned error code 1"
+   ],
+   "files": {}
+  }
+ ]
+}

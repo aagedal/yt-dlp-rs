@@ -1,0 +1,7 @@
+[
+ {"url": "https://example.test/page.html", "args": ["--print", "pre_process:%(id)s|%(title)s|%(format_id)s|%(filename)s", "--print", "after_filter:%(id)s|%(format_id)s", "--print", "%(format_id)s"]},
+ {"url": "https://example.test/page.html", "args": ["--print", "PRE_PROCESS:title", "-O", "after_filter:id,ext"]},
+ {"url": "https://example.test/page.html", "args": ["--exec", "pre_process:echo pre %(id)s {}", "--exec", "after_filter:echo after", "--skip-download", "--no-progress"]},
+ {"url": "https://example.test/page.html", "args": ["--exec", "pre_process:echo pre %(id)q {}", "--exec", "after_filter:echo after", "--skip-download", "--no-progress"]},
+ {"url": "https://example.test/page.html", "args": ["--exec", "pre_process:false", "--print", "id"]}
+]

@@ -38,8 +38,7 @@ pub struct StagePaths<'a> {
 
 impl PrintTemplate {
     /// Parse `[WHEN:]TEMPLATE`. WHEN is case-insensitive and defaults to
-    /// `video`; `pre_process` and `after_filter` are rejected
-    /// rather than printed at the wrong time.
+    /// `video`.
     /// Bare field lists become one `%(field)s` line per field, and a trailing
     /// `=` prints `field = %(field)#j`, as upstream's `_forceprint` does.
     pub fn parse(spec: &str) -> Result<Self> {
@@ -339,7 +338,7 @@ mod tests {
             print("filename,urls"),
             "out/a.mp4\nhttps://example.com/m.mp4"
         );
-        assert!(PrintTemplate::parse("pre_process:%(id)s").is_err());
+        assert!(PrintTemplate::parse("pre_process:%(id)s").is_ok());
         assert_eq!(print("unknown:id"), "NA");
         // Upstream's key grammar: unmatched keys and missing traversals are NA.
         assert_eq!(print("-1"), "NA");
