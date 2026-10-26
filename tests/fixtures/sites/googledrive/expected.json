@@ -1,0 +1,366 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0ByeS4oOUV-49Zzh4R1J6R09zazQ\", \"title\": \"Big Buck Bunny.mp4\", \"duration\": 45.069, \"thumbnails\": [{\"url\": \"https://lh3.googleusercontent.com/drive-storage/bunny-thumb=w320\", \"ext\": \"webp\", \"id\": \"0\"}, {\"url\": \"https://lh3.googleusercontent.com/drive-storage/bunny-thumb=w1280\", \"ext\": \"jpg\", \"width\": 1280, \"height\": 720, \"id\": \"1\", \"resolution\": \"1280x720\"}], \"formats\": [{\"url\": \"https://rr1---sn-test.c.drive.google.com/videoplayback?id=bunny&itag=140&source=webdrive\", \"ext\": \"m4a\", \"filesize\": 730114, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}, {\"url\": \"https://rr1---sn-test.c.drive.google.com/videoplayback?id=bunny&itag=18&source=webdrive\", \"format_id\": \"18\", \"ext\": \"mp4\", \"width\": 640, \"height\": 360, \"fps\": 24, \"filesize\": 2900000, \"vcodec\": \"avc1.42001E\", \"acodec\": \"mp4a.40.2\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"18 - 640x360\"}, {\"url\": \"https://rr1---sn-test.c.drive.google.com/videoplayback?id=bunny&itag=136&source=webdrive\", \"format_id\": \"136\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"fps\": 24, \"filesize\": 5824091, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"136 - 1280x720\"}, {\"url\": \"https://doc-0s-3g-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l/bunny?e=download&uuid=1a2b\", \"ext\": \"mp4\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\"}], \"subtitles\": {}, \"webpage_url\": \"https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1\", \"original_url\": \"https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1\", \"webpage_url_basename\": \"edit\", \"webpage_url_domain\": \"drive.google.com\", \"extractor\": \"GoogleDrive\", \"extractor_key\": \"GoogleDrive\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://lh3.googleusercontent.com/drive-storage/bunny-thumb=w1280\", \"display_id\": \"0ByeS4oOUV-49Zzh4R1J6R09zazQ\", \"fulltitle\": \"Big Buck Bunny.mp4\", \"duration_string\": \"45\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://doc-0s-3g-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l/bunny?e=download&uuid=1a2b\", \"ext\": \"mp4\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\", \"_filename\": \"Big Buck Bunny.mp4 [0ByeS4oOUV-49Zzh4R1J6R09zazQ].mp4\", \"filename\": \"Big Buck Bunny.mp4 [0ByeS4oOUV-49Zzh4R1J6R09zazQ].mp4\", \"__write_download_archive\": false}], \"url\": \"https://doc-0s-3g-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l/bunny?e=download&uuid=1a2b\", \"ext\": \"mp4\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[GoogleDrive] Extracting URL: https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1",
+    "[GoogleDrive] 0ByeS4oOUV-49Zzh4R1J6R09zazQ: Downloading video webpage",
+    "[GoogleDrive] 0ByeS4oOUV-49Zzh4R1J6R09zazQ: Requesting source file",
+    "[info] Available formats for 0ByeS4oOUV-49Zzh4R1J6R09zazQ:",
+    "ID     EXT RESOLUTION FPS |   FILESIZE PROTO | VCODEC      ACODEC",
+    "---------------------------------------------------------------------",
+    "0      m4a audio only     |  713.00KiB https | audio only  mp4a.40.2",
+    "18     mp4 640x360     24 |    2.77MiB https | avc1.42001E mp4a.40.2",
+    "136    mp4 1280x720    24 |    5.55MiB https | avc1.4d401f video only",
+    "source mp4 unknown        |            https | unknown     unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(ext)s|%(duration)s|%(format_id)s|%(thumbnail)s|%(extractor)s|%(extractor_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "0ByeS4oOUV-49Zzh4R1J6R09zazQ|Big Buck Bunny.mp4|mp4|45.069|source|https://lh3.googleusercontent.com/drive-storage/bunny-thumb=w1280|GoogleDrive|GoogleDrive"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[GoogleDrive] Extracting URL: https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1",
+    "[GoogleDrive] 0ByeS4oOUV-49Zzh4R1J6R09zazQ: Downloading video webpage",
+    "[GoogleDrive] 0ByeS4oOUV-49Zzh4R1J6R09zazQ: Requesting source file",
+    "[GoogleDrive] 0ByeS4oOUV-49Zzh4R1J6R09zazQ: Downloading subtitles XML",
+    "[info] Available subtitles for 0ByeS4oOUV-49Zzh4R1J6R09zazQ:",
+    "Language Name         Formats",
+    "en       English      srv3, vtt",
+    "nb       Norsk bokmål srv3, vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1",
+   "args": [
+    "-J",
+    "--write-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0ByeS4oOUV-49Zzh4R1J6R09zazQ\", \"title\": \"Big Buck Bunny.mp4\", \"duration\": 45.069, \"thumbnails\": [{\"url\": \"https://lh3.googleusercontent.com/drive-storage/bunny-thumb=w320\", \"ext\": \"webp\", \"id\": \"0\"}, {\"url\": \"https://lh3.googleusercontent.com/drive-storage/bunny-thumb=w1280\", \"ext\": \"jpg\", \"width\": 1280, \"height\": 720, \"id\": \"1\", \"resolution\": \"1280x720\"}], \"formats\": [{\"url\": \"https://rr1---sn-test.c.drive.google.com/videoplayback?id=bunny&itag=140&source=webdrive\", \"ext\": \"m4a\", \"filesize\": 730114, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}, {\"url\": \"https://rr1---sn-test.c.drive.google.com/videoplayback?id=bunny&itag=18&source=webdrive\", \"format_id\": \"18\", \"ext\": \"mp4\", \"width\": 640, \"height\": 360, \"fps\": 24, \"filesize\": 2900000, \"vcodec\": \"avc1.42001E\", \"acodec\": \"mp4a.40.2\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"18 - 640x360\"}, {\"url\": \"https://rr1---sn-test.c.drive.google.com/videoplayback?id=bunny&itag=136&source=webdrive\", \"format_id\": \"136\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"fps\": 24, \"filesize\": 5824091, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"136 - 1280x720\"}, {\"url\": \"https://doc-0s-3g-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l/bunny?e=download&uuid=1a2b\", \"ext\": \"mp4\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\"}], \"subtitles\": {\"en\": [{\"url\": \"https://drive.google.com/timedtext?id=0ByeS4oOUV-49Zzh4R1J6R09zazQ&vid=4f7b1c2d&hl=en-US&v=0ByeS4oOUV-49Zzh4R1J6R09zazQ&type=track&lang=en&fmt=vtt&kind=asr\", \"name\": \"English\", \"ext\": \"vtt\"}, {\"url\": \"https://drive.google.com/timedtext?id=0ByeS4oOUV-49Zzh4R1J6R09zazQ&vid=4f7b1c2d&hl=en-US&v=0ByeS4oOUV-49Zzh4R1J6R09zazQ&type=track&lang=en&fmt=srv3&kind=asr\", \"name\": \"English\", \"ext\": \"srv3\"}], \"nb\": [{\"url\": \"https://drive.google.com/timedtext?id=0ByeS4oOUV-49Zzh4R1J6R09zazQ&vid=4f7b1c2d&hl=en-US&v=0ByeS4oOUV-49Zzh4R1J6R09zazQ&type=track&lang=nb&fmt=vtt\", \"name\": \"Norsk bokm\\u00e5l\", \"ext\": \"vtt\"}, {\"url\": \"https://drive.google.com/timedtext?id=0ByeS4oOUV-49Zzh4R1J6R09zazQ&vid=4f7b1c2d&hl=en-US&v=0ByeS4oOUV-49Zzh4R1J6R09zazQ&type=track&lang=nb&fmt=srv3\", \"name\": \"Norsk bokm\\u00e5l\", \"ext\": \"srv3\"}]}, \"webpage_url\": \"https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1\", \"original_url\": \"https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1\", \"webpage_url_basename\": \"edit\", \"webpage_url_domain\": \"drive.google.com\", \"extractor\": \"GoogleDrive\", \"extractor_key\": \"GoogleDrive\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://lh3.googleusercontent.com/drive-storage/bunny-thumb=w1280\", \"display_id\": \"0ByeS4oOUV-49Zzh4R1J6R09zazQ\", \"fulltitle\": \"Big Buck Bunny.mp4\", \"duration_string\": \"45\", \"release_year\": null, \"requested_subtitles\": {\"en\": {\"url\": \"https://drive.google.com/timedtext?id=0ByeS4oOUV-49Zzh4R1J6R09zazQ&vid=4f7b1c2d&hl=en-US&v=0ByeS4oOUV-49Zzh4R1J6R09zazQ&type=track&lang=en&fmt=srv3&kind=asr\", \"name\": \"English\", \"ext\": \"srv3\"}}, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://doc-0s-3g-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l/bunny?e=download&uuid=1a2b\", \"ext\": \"mp4\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\", \"_filename\": \"Big Buck Bunny.mp4 [0ByeS4oOUV-49Zzh4R1J6R09zazQ].mp4\", \"filename\": \"Big Buck Bunny.mp4 [0ByeS4oOUV-49Zzh4R1J6R09zazQ].mp4\", \"__write_download_archive\": false}], \"url\": \"https://doc-0s-3g-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l/bunny?e=download&uuid=1a2b\", \"ext\": \"mp4\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1",
+   "args": [
+    "--no-progress",
+    "--write-subs",
+    "--sub-langs",
+    "en",
+    "--skip-download",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[GoogleDrive] Extracting URL: https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1",
+    "[GoogleDrive] 0ByeS4oOUV-49Zzh4R1J6R09zazQ: Downloading video webpage",
+    "[GoogleDrive] 0ByeS4oOUV-49Zzh4R1J6R09zazQ: Requesting source file",
+    "[GoogleDrive] 0ByeS4oOUV-49Zzh4R1J6R09zazQ: Downloading subtitles XML",
+    "[info] 0ByeS4oOUV-49Zzh4R1J6R09zazQ: Downloading subtitles: en",
+    "[info] 0ByeS4oOUV-49Zzh4R1J6R09zazQ: Downloading 1 format(s): source",
+    "[info] Writing video subtitles to: 0ByeS4oOUV-49Zzh4R1J6R09zazQ.en.srv3",
+    "[download] Destination: 0ByeS4oOUV-49Zzh4R1J6R09zazQ.en.srv3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "0ByeS4oOUV-49Zzh4R1J6R09zazQ.en.srv3": 119
+   }
+  },
+  {
+   "url": "https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1",
+   "args": [
+    "--no-progress",
+    "-f",
+    "source",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[GoogleDrive] Extracting URL: https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/edit?pli=1",
+    "[GoogleDrive] 0ByeS4oOUV-49Zzh4R1J6R09zazQ: Downloading video webpage",
+    "[GoogleDrive] 0ByeS4oOUV-49Zzh4R1J6R09zazQ: Requesting source file",
+    "[info] 0ByeS4oOUV-49Zzh4R1J6R09zazQ: Downloading 1 format(s): source",
+    "[download] Destination: 0ByeS4oOUV-49Zzh4R1J6R09zazQ.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "0ByeS4oOUV-49Zzh4R1J6R09zazQ.mp4": 40
+   }
+  },
+  {
+   "url": "https://drive.google.com/uc?id=1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x\", \"title\": \"My Buddy - Henry Burr - Gus Kahn - Walter Donaldson.MP3\", \"duration\": 184.68, \"formats\": [{\"url\": \"https://rr2---sn-test.c.drive.google.com/videoplayback?id=buddy&itag=50&source=webdrive\", \"format_id\": \"50\", \"ext\": \"mp3\", \"filesize\": 2954240, \"vcodec\": \"none\", \"acodec\": \"mp3\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"50 - audio only\"}, {\"url\": \"https://drive.usercontent.google.com/download?id=1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x&export=download&confirm=t&uuid=4c1d2e3f\", \"ext\": \"mp3\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\"}], \"subtitles\": {}, \"webpage_url\": \"https://drive.google.com/uc?id=1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x\", \"original_url\": \"https://drive.google.com/uc?id=1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x\", \"webpage_url_basename\": \"uc\", \"webpage_url_domain\": \"drive.google.com\", \"extractor\": \"GoogleDrive\", \"extractor_key\": \"GoogleDrive\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x\", \"fulltitle\": \"My Buddy - Henry Burr - Gus Kahn - Walter Donaldson.MP3\", \"duration_string\": \"3:04\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://drive.usercontent.google.com/download?id=1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x&export=download&confirm=t&uuid=4c1d2e3f\", \"ext\": \"mp3\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"acodec\": \"mp3\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\", \"_filename\": \"My Buddy - Henry Burr - Gus Kahn - Walter Donaldson.MP3 [1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x].mp3\", \"filename\": \"My Buddy - Henry Burr - Gus Kahn - Walter Donaldson.MP3 [1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x].mp3\", \"__write_download_archive\": false}], \"url\": \"https://drive.usercontent.google.com/download?id=1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x&export=download&confirm=t&uuid=4c1d2e3f\", \"ext\": \"mp3\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/uc?id=1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[GoogleDrive] Extracting URL: https://drive.google.com/uc?id=1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x",
+    "[GoogleDrive] 1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x: Downloading video webpage",
+    "[GoogleDrive] 1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x: Requesting source file",
+    "[GoogleDrive] 1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x: Requesting confirmed source file",
+    "[info] Available formats for 1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x:",
+    "ID     EXT RESOLUTION | FILESIZE PROTO | VCODEC     ACODEC",
+    "----------------------------------------------------------",
+    "50     mp3 audio only |  2.82MiB https | audio only mp3",
+    "source mp3 unknown    |          https | unknown    mp3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/uc?id=1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x",
+   "args": [
+    "--no-progress",
+    "-f",
+    "source",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[GoogleDrive] Extracting URL: https://drive.google.com/uc?id=1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x",
+    "[GoogleDrive] 1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x: Downloading video webpage",
+    "[GoogleDrive] 1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x: Requesting source file",
+    "[GoogleDrive] 1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x: Requesting confirmed source file",
+    "[info] 1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x: Downloading 1 format(s): source",
+    "[download] Destination: 1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x.mp3": 38
+   }
+  },
+  {
+   "url": "https://drive.google.com/file/d/1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE/view",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE\", \"title\": \"test.mp4\", \"duration\": 9.999, \"thumbnails\": [{\"url\": \"https://lh3.googleusercontent.com/drive-storage/test-thumb\", \"ext\": \"png\", \"width\": 1920, \"height\": 1080, \"id\": \"0\", \"resolution\": \"1920x1080\"}], \"formats\": [{\"url\": \"https://rr3---sn-test.c.drive.google.com/videoplayback?id=test&itag=22&source=webdrive\", \"format_id\": \"22\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"fps\": 30, \"vcodec\": \"avc1.64001F\", \"acodec\": \"mp4a.40.2\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"22 - 1280x720\"}], \"subtitles\": {}, \"webpage_url\": \"https://drive.google.com/file/d/1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE/view\", \"original_url\": \"https://drive.google.com/file/d/1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE/view\", \"webpage_url_basename\": \"view\", \"webpage_url_domain\": \"drive.google.com\", \"extractor\": \"GoogleDrive\", \"extractor_key\": \"GoogleDrive\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://lh3.googleusercontent.com/drive-storage/test-thumb\", \"display_id\": \"1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE\", \"fulltitle\": \"test.mp4\", \"duration_string\": \"9\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://rr3---sn-test.c.drive.google.com/videoplayback?id=test&itag=22&source=webdrive\", \"format_id\": \"22\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"fps\": 30, \"vcodec\": \"avc1.64001F\", \"acodec\": \"mp4a.40.2\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"22 - 1280x720\", \"_filename\": \"test.mp4 [1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE].mp4\", \"filename\": \"test.mp4 [1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE].mp4\", \"__write_download_archive\": false}], \"url\": \"https://rr3---sn-test.c.drive.google.com/videoplayback?id=test&itag=22&source=webdrive\", \"format_id\": \"22\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"fps\": 30, \"vcodec\": \"avc1.64001F\", \"acodec\": \"mp4a.40.2\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"22 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [GoogleDrive] Too many users have viewed or downloaded this file recently. Please try accessing the file again later. If the file you are trying to access is particularly large or is shared with many people, it may take up to 24 hours to be able to view or download the file."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/file/d/1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE/view",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[GoogleDrive] Extracting URL: https://drive.google.com/file/d/1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE/view",
+    "[GoogleDrive] 1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE: Downloading video webpage",
+    "[GoogleDrive] 1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE: Requesting source file",
+    "1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE has no subtitles"
+   ],
+   "stderr": [
+    "WARNING: [GoogleDrive] Too many users have viewed or downloaded this file recently. Please try accessing the file again later. If the file you are trying to access is particularly large or is shared with many people, it may take up to 24 hours to be able to view or download the file."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://drive.usercontent.google.com/download?id=1Prvv9-mtDDfN_gkJgtt1OFvIULK8c3Ev",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [GoogleDrive] 1Prvv9-mtDDfN_gkJgtt1OFvIULK8c3Ev: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/open?id=1ENcQ_jeCuj7y19s66_Ou9dRP4GKGsodiDQ",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [GoogleDrive] 1ENcQ_jeCuj7y19s66_Ou9dRP4GKGsodiDQ: Unable to request source file: HTTP Error 404: Not Found",
+    "ERROR: [GoogleDrive] 1ENcQ_jeCuj7y19s66_Ou9dRP4GKGsodiDQ: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/open?id=1ENcQ_jeCuj7y19s66_Ou9dRP4GKGsodiDQ",
+   "args": [
+    "-J",
+    "--ignore-no-formats-error"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1ENcQ_jeCuj7y19s66_Ou9dRP4GKGsodiDQ\", \"title\": \"processing.mov\", \"duration\": 3723, \"formats\": [], \"subtitles\": {}, \"webpage_url\": \"https://drive.google.com/open?id=1ENcQ_jeCuj7y19s66_Ou9dRP4GKGsodiDQ\", \"original_url\": \"https://drive.google.com/open?id=1ENcQ_jeCuj7y19s66_Ou9dRP4GKGsodiDQ\", \"webpage_url_basename\": \"open\", \"webpage_url_domain\": \"drive.google.com\", \"extractor\": \"GoogleDrive\", \"extractor_key\": \"GoogleDrive\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1ENcQ_jeCuj7y19s66_Ou9dRP4GKGsodiDQ\", \"fulltitle\": \"processing.mov\", \"duration_string\": \"1:02:03\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"_filename\": \"processing.mov [1ENcQ_jeCuj7y19s66_Ou9dRP4GKGsodiDQ].NA\", \"filename\": \"processing.mov [1ENcQ_jeCuj7y19s66_Ou9dRP4GKGsodiDQ].NA\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [GoogleDrive] 1ENcQ_jeCuj7y19s66_Ou9dRP4GKGsodiDQ: Unable to request source file: HTTP Error 404: Not Found",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/drive/folders/1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI\", \"title\": \"Forrest\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"GoogleDrive\", \"_type\": \"url\", \"url\": \"https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"GoogleDrive\", \"_type\": \"url\", \"url\": \"https://drive.google.com/file/d/1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://drive.google.com/drive/folders/1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI\", \"original_url\": \"https://drive.google.com/drive/folders/1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI\", \"webpage_url_basename\": \"1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI\", \"webpage_url_domain\": \"drive.google.com\", \"extractor\": \"GoogleDrive:Folder\", \"extractor_key\": \"GoogleDriveFolder\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/drive/folders/1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI",
+   "args": [
+    "--print",
+    "%(playlist_index)s|%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s|%(original_url)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI|Forrest|0ByeS4oOUV-49Zzh4R1J6R09zazQ|Big Buck Bunny.mp4|https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ|https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ",
+    "2|1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI|Forrest|1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x|My Buddy - Henry Burr - Gus Kahn - Walter Donaldson.MP3|https://drive.google.com/file/d/1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x|https://drive.google.com/file/d/1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/drive/folders/1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI\", \"title\": \"Forrest\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"0ByeS4oOUV-49Zzh4R1J6R09zazQ\", \"title\": \"Big Buck Bunny.mp4\", \"duration\": 45.069, \"thumbnails\": [{\"url\": \"https://lh3.googleusercontent.com/drive-storage/bunny-thumb=w320\", \"ext\": \"webp\", \"id\": \"0\"}, {\"url\": \"https://lh3.googleusercontent.com/drive-storage/bunny-thumb=w1280\", \"ext\": \"jpg\", \"width\": 1280, \"height\": 720, \"id\": \"1\", \"resolution\": \"1280x720\"}], \"formats\": [{\"url\": \"https://rr1---sn-test.c.drive.google.com/videoplayback?id=bunny&itag=140&source=webdrive\", \"ext\": \"m4a\", \"filesize\": 730114, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}, {\"url\": \"https://rr1---sn-test.c.drive.google.com/videoplayback?id=bunny&itag=18&source=webdrive\", \"format_id\": \"18\", \"ext\": \"mp4\", \"width\": 640, \"height\": 360, \"fps\": 24, \"filesize\": 2900000, \"vcodec\": \"avc1.42001E\", \"acodec\": \"mp4a.40.2\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"18 - 640x360\"}, {\"url\": \"https://rr1---sn-test.c.drive.google.com/videoplayback?id=bunny&itag=136&source=webdrive\", \"format_id\": \"136\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"fps\": 24, \"filesize\": 5824091, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"136 - 1280x720\"}, {\"url\": \"https://doc-0s-3g-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l/bunny?e=download&uuid=1a2b\", \"ext\": \"mp4\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\"}], \"subtitles\": {}, \"webpage_url\": \"https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ\", \"original_url\": \"https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ\", \"webpage_url_basename\": \"0ByeS4oOUV-49Zzh4R1J6R09zazQ\", \"webpage_url_domain\": \"drive.google.com\", \"extractor\": \"GoogleDrive\", \"extractor_key\": \"GoogleDrive\", \"playlist_count\": 2, \"playlist\": \"Forrest\", \"playlist_id\": \"1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI\", \"playlist_title\": \"Forrest\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://drive.google.com/drive/folders/1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI\", \"n_entries\": 2, \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"thumbnail\": \"https://lh3.googleusercontent.com/drive-storage/bunny-thumb=w1280\", \"display_id\": \"0ByeS4oOUV-49Zzh4R1J6R09zazQ\", \"fulltitle\": \"Big Buck Bunny.mp4\", \"duration_string\": \"45\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://doc-0s-3g-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l/bunny?e=download&uuid=1a2b\", \"ext\": \"mp4\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\", \"_filename\": \"Big Buck Bunny.mp4 [0ByeS4oOUV-49Zzh4R1J6R09zazQ].mp4\", \"filename\": \"Big Buck Bunny.mp4 [0ByeS4oOUV-49Zzh4R1J6R09zazQ].mp4\", \"__write_download_archive\": false}], \"url\": \"https://doc-0s-3g-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l/bunny?e=download&uuid=1a2b\", \"ext\": \"mp4\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\"}, {\"id\": \"1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x\", \"title\": \"My Buddy - Henry Burr - Gus Kahn - Walter Donaldson.MP3\", \"duration\": 184.68, \"formats\": [{\"url\": \"https://rr2---sn-test.c.drive.google.com/videoplayback?id=buddy&itag=50&source=webdrive\", \"format_id\": \"50\", \"ext\": \"mp3\", \"filesize\": 2954240, \"vcodec\": \"none\", \"acodec\": \"mp3\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"50 - audio only\"}, {\"url\": \"https://drive.usercontent.google.com/download?id=1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x&export=download&confirm=t&uuid=4c1d2e3f\", \"ext\": \"mp3\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\"}], \"subtitles\": {}, \"webpage_url\": \"https://drive.google.com/file/d/1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x\", \"original_url\": \"https://drive.google.com/file/d/1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x\", \"webpage_url_basename\": \"1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x\", \"webpage_url_domain\": \"drive.google.com\", \"extractor\": \"GoogleDrive\", \"extractor_key\": \"GoogleDrive\", \"playlist_count\": 2, \"playlist\": \"Forrest\", \"playlist_id\": \"1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI\", \"playlist_title\": \"Forrest\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://drive.google.com/drive/folders/1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI\", \"n_entries\": 2, \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"display_id\": \"1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x\", \"fulltitle\": \"My Buddy - Henry Burr - Gus Kahn - Walter Donaldson.MP3\", \"duration_string\": \"3:04\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://drive.usercontent.google.com/download?id=1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x&export=download&confirm=t&uuid=4c1d2e3f\", \"ext\": \"mp3\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"acodec\": \"mp3\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\", \"_filename\": \"My Buddy - Henry Burr - Gus Kahn - Walter Donaldson.MP3 [1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x].mp3\", \"filename\": \"My Buddy - Henry Burr - Gus Kahn - Walter Donaldson.MP3 [1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x].mp3\", \"__write_download_archive\": false}], \"url\": \"https://drive.usercontent.google.com/download?id=1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x&export=download&confirm=t&uuid=4c1d2e3f\", \"ext\": \"mp3\", \"format_id\": \"source\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\"}], \"webpage_url\": \"https://drive.google.com/drive/folders/1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI\", \"original_url\": \"https://drive.google.com/drive/folders/1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI\", \"webpage_url_basename\": \"1dQ4sx0-__Nvg65rxTSgQrl7VyW_FZ9QI\", \"webpage_url_domain\": \"drive.google.com\", \"extractor\": \"GoogleDrive:Folder\", \"extractor_key\": \"GoogleDriveFolder\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/drive/folders/1hHnoTitleFolder000000000000000",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1hHnoTitleFolder000000000000000\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://drive.google.com/drive/folders/1hHnoTitleFolder000000000000000\", \"original_url\": \"https://drive.google.com/drive/folders/1hHnoTitleFolder000000000000000\", \"webpage_url_basename\": \"1hHnoTitleFolder000000000000000\", \"webpage_url_domain\": \"drive.google.com\", \"extractor\": \"GoogleDrive:Folder\", \"extractor_key\": \"GoogleDriveFolder\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [GoogleDrive:Folder] unable to extract api response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://drive.google.com/drive/folders/1kNoKeyFolder00000000000000000",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [GoogleDrive:Folder] 1kNoKeyFolder00000000000000000: Unable to extract key; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/drive-embed.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE\", \"title\": \"test.mp4\", \"duration\": 9.999, \"thumbnails\": [{\"url\": \"https://lh3.googleusercontent.com/drive-storage/test-thumb\", \"ext\": \"png\", \"width\": 1920, \"height\": 1080, \"id\": \"0\", \"resolution\": \"1920x1080\"}], \"formats\": [{\"url\": \"https://rr3---sn-test.c.drive.google.com/videoplayback?id=test&itag=22&source=webdrive\", \"format_id\": \"22\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"fps\": 30, \"vcodec\": \"avc1.64001F\", \"acodec\": \"mp4a.40.2\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"22 - 1280x720\"}], \"subtitles\": {}, \"original_url\": \"https://blog.example.test/drive-embed.html\", \"webpage_url\": \"https://drive.google.com/file/d/1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE\", \"webpage_url_basename\": \"1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE\", \"webpage_url_domain\": \"drive.google.com\", \"extractor\": \"GoogleDrive\", \"extractor_key\": \"GoogleDrive\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://lh3.googleusercontent.com/drive-storage/test-thumb\", \"display_id\": \"1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE\", \"fulltitle\": \"test.mp4\", \"duration_string\": \"9\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://rr3---sn-test.c.drive.google.com/videoplayback?id=test&itag=22&source=webdrive\", \"format_id\": \"22\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"fps\": 30, \"vcodec\": \"avc1.64001F\", \"acodec\": \"mp4a.40.2\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"22 - 1280x720\", \"_filename\": \"test.mp4 [1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE].mp4\", \"filename\": \"test.mp4 [1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE].mp4\", \"__write_download_archive\": false}], \"url\": \"https://rr3---sn-test.c.drive.google.com/videoplayback?id=test&itag=22&source=webdrive\", \"format_id\": \"22\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"fps\": 30, \"vcodec\": \"avc1.64001F\", \"acodec\": \"mp4a.40.2\", \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"22 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [GoogleDrive] Too many users have viewed or downloaded this file recently. Please try accessing the file again later. If the file you are trying to access is particularly large or is shared with many people, it may take up to 24 hours to be able to view or download the file."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/drive-embed.html",
+   "args": [
+    "--print",
+    "%(original_url)s|%(webpage_url)s|%(extractor)s|%(id)s|%(title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "https://blog.example.test/drive-embed.html|https://drive.google.com/file/d/1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE|GoogleDrive|1RAGWRgzn85TXCaCk4gxnwF6TGUaZatzE|test.mp4"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [GoogleDrive] Too many users have viewed or downloaded this file recently. Please try accessing the file again later. If the file you are trying to access is particularly large or is shared with many people, it may take up to 24 hours to be able to view or download the file."
+   ],
+   "files": {}
+  }
+ ]
+}

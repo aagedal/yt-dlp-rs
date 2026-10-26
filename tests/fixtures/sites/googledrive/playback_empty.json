@@ -1,0 +1,12 @@
+{
+  "mediaMetadata": {
+    "title": "processing.mov",
+    "duration": "1:02:03"
+  },
+  "thumbnails": [
+    {
+      "mimeType": "image/jpeg",
+      "width": 320
+    }
+  ]
+}

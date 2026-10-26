@@ -1,0 +1,32 @@
+{
+  "mediaStreamingData": {
+    "formatStreamingData": {
+      "progressiveTranscodes": [
+        {
+          "itag": 22,
+          "url": "https://rr3---sn-test.c.drive.google.com/videoplayback?id=test&itag=22&source=webdrive",
+          "transcodeMetadata": {
+            "mimeType": "video/mp4; codecs=\"avc1.64001F, mp4a.40.2\"",
+            "videoCodecString": "avc1.64001F",
+            "audioCodecString": "mp4a.40.2",
+            "width": 1280,
+            "height": 720,
+            "videoFps": 30
+          }
+        }
+      ]
+    }
+  },
+  "mediaMetadata": {
+    "title": "test.mp4",
+    "duration": "9.999s"
+  },
+  "thumbnails": [
+    {
+      "url": "https://lh3.googleusercontent.com/drive-storage/test-thumb",
+      "mimeType": "image/png",
+      "width": 1920,
+      "height": 1080
+    }
+  ]
+}

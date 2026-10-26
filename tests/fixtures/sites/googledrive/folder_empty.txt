@@ -1,0 +1,14 @@
+--batch_7Kd0zCq3d
+Content-Type: application/http
+Content-ID: <response-8yx5e>
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=UTF-8
+
+{
+ "kind": "drive#fileList",
+ "incompleteSearch": false,
+ "items": []
+}
+
+--batch_7Kd0zCq3d--
