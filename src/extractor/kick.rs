@@ -6,6 +6,10 @@
 //! (the playback endpoint, with the channel's video list for metadata),
 //! clips, and a channel's video and clip lists, their HLS (or direct)
 //! formats and metadata.
+//!
+//! The channel lists are upstream's `_entries` generators: pending entries
+//! (the video list request, the clip cursor pages) fetched while the
+//! playlist is processed, only as far as the selection needs.
 use super::Extractor;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
@@ -635,18 +639,21 @@ fn entry(raw: Map<String, Value>, ie_key: &str, extractor: &str) -> Result<Video
     Ok(info)
 }
 
+/// `playlist_result(self._entries(...), channel_slug, title)`: the entries
+/// come from a generator, fetched (from the pending `state`) as the playlist
+/// is processed; its count is unknown unless a selection reads past its end.
 fn playlist(
     page: &Url,
     name: &str,
     key: &str,
     id: String,
     title: String,
-    entries: Vec<VideoInfo>,
+    state: Value,
 ) -> ExtractResult {
     let mut extra = Map::new();
     extra.insert(
         crate::info_order::INFO_SHAPE.into(),
-        "playlist-dict;id,title".into(),
+        format!("playlist-dict;id,title{}", crate::info_order::GENERATOR).into(),
     );
     ExtractResult::Playlist(PlaylistInfo {
         id,
@@ -655,8 +662,8 @@ fn playlist(
         extractor: name.into(),
         extractor_key: key.into(),
         nested: Vec::new(),
-        pending: None,
-        entries,
+        pending: Some(crate::PendingEntries { state }),
+        entries: Vec::new(),
         extra,
     })
 }
@@ -904,61 +911,22 @@ impl Extractor for KickVideos {
             username.as_deref().unwrap_or(&slug),
             if by_views { "Views" } else { "Date" }
         );
-        let path = format!("v1/channels/{creator_id}/videos");
-        let videos = call_api(client, VIDEOS, ApiCall::new(&path, &slug))?;
-        let mut data: Vec<Value> = videos
-            .get("data")
-            .and_then(Value::as_array)
-            .cloned()
-            .unwrap_or_default();
-        if by_views {
-            // `sort(key=lambda v: v['viewer_count'], reverse=True)`.
-            let mut keyed = Vec::new();
-            for video in data {
-                let count = video
-                    .get("viewer_count")
-                    .and_then(Value::as_f64)
-                    .ok_or_else(|| {
-                        bug(
-                            VIDEOS,
-                            &temp_id,
-                            "An extractor error has occurred. (caused by KeyError('viewer_count'))",
-                        )
-                    })?;
-                keyed.push((count, video));
-            }
-            keyed.sort_by(|a, b| b.0.total_cmp(&a.0));
-            data = keyed.into_iter().map(|(_, video)| video).collect();
-        }
-        let mut entries = Vec::new();
-        for video_data in &data {
-            let Some(video_id) = video_data
-                .get("id")
-                .filter(|id| !id.is_null())
-                .and_then(py_str)
-                .filter(|id| !id.is_empty())
-            else {
-                continue;
-            };
-            let metadata = vod_metadata(video_data);
-            let target = smuggle(
-                &format!("{BASE_URL}/{slug}/videos/{video_id}"),
-                &json!({"availability": metadata["availability"]}),
-            );
-            let mut raw = metadata;
-            raw.insert("ie_key".into(), "KickVOD".into());
-            raw.insert("id".into(), video_data["id"].clone());
-            raw.insert("_type".into(), "url_transparent".into());
-            raw.insert("url".into(), target.into());
-            entries.push(entry(raw, "KickVOD", VOD)?);
-        }
+        let state = json!({
+            "kind": "kick",
+            "list": "videos",
+            "creator_id": creator_id,
+            "slug": slug,
+            "temp_id": temp_id,
+            "by_views": by_views,
+            "videos": null,
+        });
         Ok(Some(playlist(
             page,
             VIDEOS,
             "KickVideos",
             slug,
             title,
-            entries,
+            state,
         )))
     }
 }
@@ -995,59 +963,176 @@ impl Extractor for KickClips {
                 _ => "Last Week",
             }
         );
-        let path = format!("v1/channels/{creator_id}/clips");
-        let sort = if by_views { "views" } else { "date" };
-        let mut cursor: Option<String> = None;
-        let mut entries = Vec::new();
-        for page_number in 1.. {
-            let note = format!("Downloading page {page_number}");
-            let mut query = vec![("sort", sort), ("time", range.as_str())];
-            if let Some(cursor) = cursor.as_deref() {
-                query.push(("cursor", cursor));
+        let state = json!({
+            "kind": "kick",
+            "list": "clips",
+            "creator_id": creator_id,
+            "slug": slug,
+            "sort": if by_views { "views" } else { "date" },
+            "range": range,
+            "page": 1,
+            "cursor": null,
+        });
+        Ok(Some(playlist(page, CLIPS, "KickClips", slug, title, state)))
+    }
+}
+
+/// Whether a playlist's pending state is a Kick channel list's.
+pub(crate) fn is_pending_state(state: &Value) -> bool {
+    state["kind"] == "kick"
+}
+
+/// The pending entries of a Kick channel list (upstream's `_entries`
+/// generators), appended in order until `limit` entries exist.
+pub(crate) fn fetch_entries(
+    client: &Client,
+    state: Value,
+    limit: Option<usize>,
+    entries: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    if state["list"] == "clips" {
+        fetch_clips(client, state, limit, entries)
+    } else {
+        fetch_videos(client, state, limit, entries)
+    }
+}
+
+fn state_str(state: &Value, key: &str) -> String {
+    state[key].as_str().unwrap_or_default().to_owned()
+}
+
+/// `KickVideosIE._entries`: the channel's video list (one request, made
+/// when the first entry is wanted), optionally sorted by views, as
+/// `url_transparent` entries.
+fn fetch_videos(
+    client: &Client,
+    mut state: Value,
+    limit: Option<usize>,
+    entries: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let slug = state_str(&state, "slug");
+    let mut videos: std::collections::VecDeque<Value> = match state["videos"].take() {
+        Value::Array(videos) => videos.into(),
+        _ => {
+            if limit.is_some_and(|limit| entries.len() >= limit) {
+                return Ok(Some(state));
             }
-            let mut call = ApiCall::new(&path, &slug);
-            call.note = &note;
-            call.query = &query;
-            let clips = call_api(client, CLIPS, call)?;
-            for clip_data in at(&clips, &["data", "clips"])
+            let path = format!("v1/channels/{}/videos", state_str(&state, "creator_id"));
+            let response = call_api(client, VIDEOS, ApiCall::new(&path, &slug))?;
+            let mut data: Vec<Value> = response
+                .get("data")
                 .and_then(Value::as_array)
-                .into_iter()
-                .flatten()
-            {
-                let Some(clip_id) = clip_data
-                    .get("id")
-                    .filter(|id| !id.is_null())
-                    .and_then(py_str)
-                    .filter(|id| !id.is_empty())
-                else {
-                    continue;
-                };
-                let mut raw = clip_metadata(clip_data);
-                raw.insert("ie_key".into(), "KickClip".into());
-                raw.insert("id".into(), clip_data["id"].clone());
-                raw.insert("_type".into(), "url".into());
-                raw.insert(
-                    "url".into(),
-                    format!("{BASE_URL}/{slug}/clips/{clip_id}").into(),
-                );
-                entries.push(entry(raw, "KickClip", CLIP)?);
+                .cloned()
+                .unwrap_or_default();
+            if state["by_views"] == true {
+                // `sort(key=lambda v: v['viewer_count'], reverse=True)`.
+                let mut keyed = Vec::new();
+                for video in data {
+                    let count = video
+                        .get("viewer_count")
+                        .and_then(Value::as_f64)
+                        .ok_or_else(|| {
+                            bug(
+                                VIDEOS,
+                                &state_str(&state, "temp_id"),
+                                "An extractor error has occurred. (caused by KeyError('viewer_count'))",
+                            )
+                        })?;
+                    keyed.push((count, video));
+                }
+                keyed.sort_by(|a, b| b.0.total_cmp(&a.0));
+                data = keyed.into_iter().map(|(_, video)| video).collect();
             }
-            cursor = at(&clips, &["data", "cursor"])
-                .and_then(Value::as_str)
-                .filter(|cursor| !cursor.is_empty())
-                .map(str::to_owned);
-            if cursor.is_none() {
-                break;
-            }
+            data.into()
         }
-        Ok(Some(playlist(
-            page,
-            CLIPS,
-            "KickClips",
-            slug,
-            title,
-            entries,
-        )))
+    };
+    while let Some(video_data) = videos.pop_front() {
+        if limit.is_some_and(|limit| entries.len() >= limit) {
+            videos.push_front(video_data);
+            state["videos"] = Value::Array(videos.into());
+            return Ok(Some(state));
+        }
+        let Some(video_id) = video_data
+            .get("id")
+            .filter(|id| !id.is_null())
+            .and_then(py_str)
+            .filter(|id| !id.is_empty())
+        else {
+            continue;
+        };
+        let metadata = vod_metadata(&video_data);
+        let target = smuggle(
+            &format!("{BASE_URL}/{slug}/videos/{video_id}"),
+            &json!({"availability": metadata["availability"]}),
+        );
+        let mut raw = metadata;
+        raw.insert("ie_key".into(), "KickVOD".into());
+        raw.insert("id".into(), video_data["id"].clone());
+        raw.insert("_type".into(), "url_transparent".into());
+        raw.insert("url".into(), target.into());
+        entries.push(entry(raw, "KickVOD", VOD)?);
+    }
+    Ok(None)
+}
+
+/// `KickClipsIE._entries`: the channel's clip pages, following `cursor`,
+/// one page at a time until `limit` entries exist.
+fn fetch_clips(
+    client: &Client,
+    mut state: Value,
+    limit: Option<usize>,
+    entries: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let slug = state_str(&state, "slug");
+    let path = format!("v1/channels/{}/clips", state_str(&state, "creator_id"));
+    let sort = state_str(&state, "sort");
+    let range = state_str(&state, "range");
+    loop {
+        if limit.is_some_and(|limit| entries.len() >= limit) {
+            return Ok(Some(state));
+        }
+        let page_number = state["page"].as_u64().unwrap_or(1);
+        let cursor = state["cursor"].as_str().map(str::to_owned);
+        let note = format!("Downloading page {page_number}");
+        let mut query = vec![("sort", sort.as_str()), ("time", range.as_str())];
+        if let Some(cursor) = cursor.as_deref() {
+            query.push(("cursor", cursor));
+        }
+        let mut call = ApiCall::new(&path, &slug);
+        call.note = &note;
+        call.query = &query;
+        let clips = call_api(client, CLIPS, call)?;
+        for clip_data in at(&clips, &["data", "clips"])
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+        {
+            let Some(clip_id) = clip_data
+                .get("id")
+                .filter(|id| !id.is_null())
+                .and_then(py_str)
+                .filter(|id| !id.is_empty())
+            else {
+                continue;
+            };
+            let mut raw = clip_metadata(clip_data);
+            raw.insert("ie_key".into(), "KickClip".into());
+            raw.insert("id".into(), clip_data["id"].clone());
+            raw.insert("_type".into(), "url".into());
+            raw.insert(
+                "url".into(),
+                format!("{BASE_URL}/{slug}/clips/{clip_id}").into(),
+            );
+            entries.push(entry(raw, "KickClip", CLIP)?);
+        }
+        let Some(next) = at(&clips, &["data", "cursor"])
+            .and_then(Value::as_str)
+            .filter(|cursor| !cursor.is_empty())
+        else {
+            return Ok(None);
+        };
+        state["cursor"] = next.into();
+        state["page"] = (page_number + 1).into();
     }
 }
 
