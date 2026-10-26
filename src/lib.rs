@@ -507,6 +507,14 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Netzkino",
     "Newsy",
     "niconico",
+    "niconico:history",
+    "niconico:playlist",
+    "niconico:series",
+    "niconico:tag",
+    "NiconicoUser",
+    "nicovideo:search",
+    "nicovideo:search:date",
+    "nicovideo:search_url",
     "NobelPrize",
     "NRK",
     "NRKPlaylist",
@@ -961,7 +969,15 @@ impl YoutubeDl {
                 Box::new(extractor::VkPlayLive),
                 Box::new(extractor::VkUserVideos),
                 Box::new(extractor::VkWallPost),
+                Box::new(extractor::NiconicoHistory),
                 Box::new(extractor::Niconico),
+                Box::new(extractor::NiconicoPlaylist),
+                Box::new(extractor::NiconicoSeries),
+                Box::new(extractor::NiconicoUser),
+                Box::new(extractor::NicovideoSearchDate),
+                Box::new(extractor::NicovideoSearch),
+                Box::new(extractor::NicovideoSearchUrl),
+                Box::new(extractor::NicovideoTagUrl),
                 Box::new(extractor::Weibo),
                 Box::new(extractor::WeiboVideo),
                 Box::new(extractor::TedEmbed),
@@ -1906,6 +1922,8 @@ impl YoutubeDl {
                 extractor::fetch_lbry_pages
             } else if extractor::bitchute_pending_state(&pending.state) {
                 extractor::fetch_bitchute_pages
+            } else if extractor::niconico_pending_state(&pending.state) {
+                extractor::fetch_niconico_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };

@@ -129,7 +129,7 @@ fn days_in_month(year: i64, month: i64) -> i64 {
 }
 
 /// Days since 1970-01-01 for a proleptic Gregorian date.
-fn days_from_civil(year: i64, month: i64, day: i64) -> i64 {
+pub(crate) fn days_from_civil(year: i64, month: i64, day: i64) -> i64 {
     let year = if month <= 2 { year - 1 } else { year };
     let era = year.div_euclid(400);
     let year_of_era = year - era * 400;
@@ -139,7 +139,8 @@ fn days_from_civil(year: i64, month: i64, day: i64) -> i64 {
     era * 146_097 + day_of_era - 719_468
 }
 
-fn civil_from_days(days: i64) -> (i64, i64, i64) {
+/// The proleptic Gregorian `(year, month, day)` of days since 1970-01-01.
+pub(crate) fn civil_from_days(days: i64) -> (i64, i64, i64) {
     let days = days + 719_468;
     let era = days.div_euclid(146_097);
     let day_of_era = days - era * 146_097;
@@ -1032,6 +1033,15 @@ pub fn local_now_minutes() -> String {
         seconds / 3600,
         seconds % 3600 / 60
     )
+}
+
+/// `datetime.now().date()` in local time (UTC where the C library's
+/// `localtime_r` is unavailable), as days since 1970-01-01.
+pub fn local_today() -> i64 {
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0, |elapsed| elapsed.as_secs() as i64);
+    (now + local_offset(now).unwrap_or(0)).div_euclid(86_400)
 }
 
 /// The local UTC offset in seconds at `time` (`tm_gmtoff`).
