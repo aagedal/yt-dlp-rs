@@ -104,7 +104,12 @@ impl Extractor for Odnoklassniki {
     }
 
     fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
-        let Some(found) = VALID_URL.captures(page.as_str()) else {
+        let (bare, smuggled) = super::brightcove::unsmuggle(page.as_str());
+        let referrer = smuggled
+            .get("referrer")
+            .and_then(Value::as_str)
+            .filter(|referrer| !referrer.is_empty());
+        let Some(found) = VALID_URL.captures(&bare) else {
             return Ok(None);
         };
         let start_time = page
@@ -123,20 +128,34 @@ impl Extractor for Odnoklassniki {
             crate::screen::extracting_url(page.as_str())
         ));
         let url = Url::parse(&format!("https://ok.ru/{mode}/{video_id}"))?;
-        let webpage = super::download_webpage(client, &url, NAME, &video_id)?;
+        let headers: Vec<(&str, &str)> = referrer.map(|r| ("Referer", r)).into_iter().collect();
+        let webpage = super::download_webpage_note_headers(
+            client,
+            &url,
+            NAME,
+            &video_id,
+            "Downloading webpage",
+            &headers,
+        )?;
         let stub =
             crate::html_elements::elements_text_and_html_by_class("vp_video_stub_txt", &webpage)
                 .ok()
                 .and_then(|elements| elements.into_iter().next())
                 .map(|(text, _)| text);
         if let Some(error) = stub.filter(|error| !error.is_empty()) {
+            // A direct link from boosty: retried with boosty as the referrer
+            // (upstream fa98866).
             if error == "The author of this video has not been found or is blocked"
+                && referrer.is_none()
                 && mode == "videoembed"
             {
-                // Upstream calls a missing `_extract_desktop` here.
-                return Err(Error::Reported(
-                    "'OdnoklassnikiIE' object has no attribute '_extract_desktop'".into(),
-                ));
+                let target =
+                    super::brightcove::smuggle(&bare, &json!({"referrer": "https://boosty.to"}));
+                let mut follow = super::direct::build_at(page.clone(), page, String::new());
+                follow.formats.clear();
+                follow.direct = None;
+                follow.extra.insert(crate::FOLLOW_URL.into(), target.into());
+                return Ok(Some(ExtractResult::Video(follow)));
             }
             return Err(fail(&video_id, &error));
         }

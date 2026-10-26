@@ -1,0 +1,201 @@
+{
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
+ "cases": [
+  {
+   "url": "http://www.tv2.no/v/1791207/",
+   "args": [
+    "--no-geo-bypass",
+    "-J",
+    "-f",
+    "dash-mp4"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1791207\", \"url\": \"https://tv2-vod.test/1791207/progressive.mp4\", \"title\": \"Her kolliderer romsonden med asteroiden\", \"description\": \"Romsonden traff.\", \"thumbnails\": [{\"id\": \"16:9\", \"url\": \"https://tv2.test/16x9.jpg\"}, {\"id\": \"1:1\", \"url\": \"https://tv2.test/1x1.jpg\"}], \"timestamp\": 1664269200, \"duration\": 44.5, \"view_count\": 1234, \"categories\": [\"nyheter\", \"romfart\"], \"formats\": [{\"format_id\": \"dash-dash-a1\", \"manifest_url\": \"https://tv2-vod.test/1791207/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"en\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://tv2-vod.test/1791207/audio_128.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-dash-a1 - audio only (DASH audio)\"}, {\"url\": \"https://tv2-vod.test/1791207/progressive.mp4\", \"format_id\": \"dash-mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-mp4 - unknown\"}, {\"format_id\": \"hls-hls-900\", \"format_index\": null, \"url\": \"https://tv2-vod.test/1791207/hls-360.m3u8\", \"manifest_url\": \"https://tv2-vod.test/1791207/master.m3u8\", \"tbr\": 900.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-hls-900 - 640x360\"}, {\"format_id\": \"dash-hds-1500\", \"url\": \"https://tv2-vod.test/1791207/manifest.f4m\", \"manifest_url\": \"https://tv2-vod.test/1791207/manifest.f4m\", \"ext\": \"flv\", \"protocol\": \"f4m\", \"tbr\": 1500, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-hds-1500 - 1280x720\"}, {\"format_id\": \"dash-dash-v1\", \"manifest_url\": \"https://tv2-vod.test/1791207/manifest.mpd\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1000.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://tv2-vod.test/1791207/video_720.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1000.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-dash-v1 - 1280x720 (DASH video)\"}], \"is_live\": false, \"webpage_url\": \"http://www.tv2.no/v/1791207/\", \"original_url\": \"http://www.tv2.no/v/1791207/\", \"webpage_url_basename\": \"1791207\", \"webpage_url_domain\": \"tv2.no\", \"extractor\": \"TV2\", \"extractor_key\": \"TV2\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://tv2.test/1x1.jpg\", \"display_id\": \"1791207\", \"fulltitle\": \"Her kolliderer romsonden med asteroiden\", \"duration_string\": \"44\", \"upload_date\": \"20220927\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://tv2-vod.test/1791207/progressive.mp4\", \"format_id\": \"dash-mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-mp4 - unknown\", \"_filename\": \"Her kolliderer romsonden med asteroiden [1791207].mp4\", \"filename\": \"Her kolliderer romsonden med asteroiden [1791207].mp4\", \"__write_download_archive\": false}], \"format_id\": \"dash-mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-mp4 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.tv2.no/v/1791207/",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1791207\", \"url\": \"https://tv2-vod.test/1791207/stream.ism/Manifest\", \"title\": \"Her kolliderer romsonden med asteroiden\", \"description\": \"Romsonden traff.\", \"thumbnails\": [{\"id\": \"16:9\", \"url\": \"https://tv2.test/16x9.jpg\"}, {\"id\": \"1:1\", \"url\": \"https://tv2.test/1x1.jpg\"}], \"timestamp\": 1664269200, \"duration\": 44.5, \"view_count\": 1234, \"categories\": [\"nyheter\", \"romfart\"], \"formats\": [{\"format_id\": \"dash-dash-a1\", \"manifest_url\": \"https://tv2-vod.test/1791207/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"en\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://tv2-vod.test/1791207/audio_128.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-dash-a1 - audio only (DASH audio)\"}, {\"url\": \"https://tv2-vod.test/1791207/progressive.mp4\", \"format_id\": \"dash-mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-mp4 - unknown\"}, {\"format_id\": \"hls-hls-900\", \"format_index\": null, \"url\": \"https://tv2-vod.test/1791207/hls-360.m3u8\", \"manifest_url\": \"https://tv2-vod.test/1791207/master.m3u8\", \"tbr\": 900.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-hls-900 - 640x360\"}, {\"format_id\": \"dash-hds-1500\", \"url\": \"https://tv2-vod.test/1791207/manifest.f4m\", \"manifest_url\": \"https://tv2-vod.test/1791207/manifest.f4m\", \"ext\": \"flv\", \"protocol\": \"f4m\", \"tbr\": 1500, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-hds-1500 - 1280x720\"}, {\"format_id\": \"dash-dash-v1\", \"manifest_url\": \"https://tv2-vod.test/1791207/manifest.mpd\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1000.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://tv2-vod.test/1791207/video_720.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1000.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-dash-v1 - 1280x720 (DASH video)\"}], \"is_live\": false, \"webpage_url\": \"http://www.tv2.no/v/1791207/\", \"original_url\": \"http://www.tv2.no/v/1791207/\", \"webpage_url_basename\": \"1791207\", \"webpage_url_domain\": \"tv2.no\", \"extractor\": \"TV2\", \"extractor_key\": \"TV2\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://tv2.test/1x1.jpg\", \"display_id\": \"1791207\", \"fulltitle\": \"Her kolliderer romsonden med asteroiden\", \"duration_string\": \"44\", \"upload_date\": \"20220927\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"requested_formats\": [{\"format_id\": \"dash-dash-v1\", \"manifest_url\": \"https://tv2-vod.test/1791207/manifest.mpd\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1000.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://tv2-vod.test/1791207/video_720.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1000.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-dash-v1 - 1280x720 (DASH video)\"}, {\"format_id\": \"dash-dash-a1\", \"manifest_url\": \"https://tv2-vod.test/1791207/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"en\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://tv2-vod.test/1791207/audio_128.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-dash-a1 - audio only (DASH audio)\"}], \"format\": \"dash-dash-v1 - 1280x720 (DASH video)+dash-dash-a1 - audio only (DASH audio)\", \"format_id\": \"dash-dash-v1+dash-dash-a1\", \"ext\": \"mp4\", \"protocol\": \"https+https\", \"language\": \"en\", \"format_note\": \"DASH video+DASH audio\", \"tbr\": 1128.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.4d401f\", \"vbr\": 1000.0, \"aspect_ratio\": 1.78, \"acodec\": \"mp4a.40.2\", \"abr\": 128.0, \"asr\": 48000, \"_filename\": \"Her kolliderer romsonden med asteroiden [1791207].mp4\", \"filename\": \"Her kolliderer romsonden med asteroiden [1791207].mp4\", \"__write_download_archive\": false}], \"requested_formats\": [{\"format_id\": \"dash-dash-v1\", \"manifest_url\": \"https://tv2-vod.test/1791207/manifest.mpd\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1000.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://tv2-vod.test/1791207/video_720.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1000.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-dash-v1 - 1280x720 (DASH video)\"}, {\"format_id\": \"dash-dash-a1\", \"manifest_url\": \"https://tv2-vod.test/1791207/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"en\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://tv2-vod.test/1791207/audio_128.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-dash-a1 - audio only (DASH audio)\"}], \"format\": \"dash-dash-v1 - 1280x720 (DASH video)+dash-dash-a1 - audio only (DASH audio)\", \"format_id\": \"dash-dash-v1+dash-dash-a1\", \"ext\": \"mp4\", \"protocol\": \"https+https\", \"language\": \"en\", \"format_note\": \"DASH video+DASH audio\", \"filesize_approx\": null, \"tbr\": 1128.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"fps\": null, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.4d401f\", \"vbr\": 1000.0, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": \"mp4a.40.2\", \"abr\": 128.0, \"asr\": 48000, \"audio_channels\": null, \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.tv2.no/v/1791207/",
+   "args": [
+    "--no-geo-bypass",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[TV2] Extracting URL: http://www.tv2.no/v/1791207/",
+    "[TV2] 1791207: Downloading metadata JSON",
+    "[TV2] 1791207: Downloading playabck JSON",
+    "[TV2] 1791207: Checking hls-hls URL",
+    "[TV2] 1791207: Downloading m3u8 information",
+    "[TV2] 1791207: Downloading playabck JSON",
+    "[TV2] 1791207: Checking dash-dash URL",
+    "[TV2] 1791207: Downloading MPD manifest",
+    "[TV2] 1791207: Checking dash-hds URL",
+    "[TV2] 1791207: Downloading f4m manifest",
+    "[TV2] 1791207: Checking dash-mp4 URL",
+    "[TV2] 1791207: Checking dash-ism URL",
+    "[TV2] 1791207: dash-ism URL is invalid, skipping: HTTP Error 404: Not Found",
+    "[info] Available formats for 1791207:",
+    "ID            EXT RESOLUTION |   FILESIZE   TBR PROTO | VCODEC        VBR ACODEC      ABR ASR MORE INFO",
+    "-----------------------------------------------------------------------------------------------------------------------",
+    "dash-dash-a1  m4a audio only | ~695.31KiB  128k https | audio only        mp4a.40.2  128k 48k [en] DASH audio, m4a_dash",
+    "dash-mp4      mp4 unknown    |                  https | unknown           unknown",
+    "hls-hls-900   mp4 640x360    | ~  4.77MiB  900k m3u8  | unknown           unknown",
+    "dash-hds-1500 flv 1280x720   | ~  7.96MiB 1500k f4m   | unknown           unknown",
+    "dash-dash-v1  mp4 1280x720   | ~  5.30MiB 1000k https | avc1.4d401f 1000k video only          DASH video, mp4_dash"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.tv2.no/v/1791207/",
+   "args": [
+    "--no-geo-bypass",
+    "--no-progress",
+    "-f",
+    "dash-mp4",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[TV2] Extracting URL: http://www.tv2.no/v/1791207/",
+    "[TV2] 1791207: Downloading metadata JSON",
+    "[TV2] 1791207: Downloading playabck JSON",
+    "[TV2] 1791207: Checking hls-hls URL",
+    "[TV2] 1791207: Downloading m3u8 information",
+    "[TV2] 1791207: Downloading playabck JSON",
+    "[TV2] 1791207: Checking dash-dash URL",
+    "[TV2] 1791207: Downloading MPD manifest",
+    "[TV2] 1791207: Checking dash-hds URL",
+    "[TV2] 1791207: Downloading f4m manifest",
+    "[TV2] 1791207: Checking dash-mp4 URL",
+    "[TV2] 1791207: Checking dash-ism URL",
+    "[TV2] 1791207: dash-ism URL is invalid, skipping: HTTP Error 404: Not Found",
+    "[info] 1791207: Downloading 1 format(s): dash-mp4",
+    "[download] Destination: 1791207.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "1791207.mp4": 17
+   }
+  },
+  {
+   "url": "https://www.tv2.no/v2/sport/222",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [TV2] 222: This video is not available from your location due to geo restriction"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tv2.no/video/x/333",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [TV2] 333: This video is only available for registered users. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tv2.no/v/444",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [TV2] 444: Kunne ikke spille av; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tv2.no/v/555",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [TV2] 555: This video is DRM protected"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tv2.no/v/666",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: cannot access local variable 'video_url' where it is not associated with a value"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tv2.no/a/6930542",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6930542\", \"title\": \"Romsonden traff\", \"description\": \"Se videoene\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"TV2\", \"_type\": \"url\", \"url\": \"http://www.tv2.no/v/1791207\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"TV2\", \"_type\": \"url\", \"url\": \"http://www.tv2.no/v/1791208\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.tv2.no/a/6930542\", \"original_url\": \"https://www.tv2.no/a/6930542\", \"webpage_url_basename\": \"6930542\", \"webpage_url_domain\": \"tv2.no\", \"extractor\": \"TV2Article\", \"extractor_key\": \"TV2Article\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.tv2.no/nyheter/innenriks/6930543",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6930543\", \"title\": \"Ny side\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"TV2\", \"_type\": \"url\", \"url\": \"http://www.tv2.no/v/1791209\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.tv2.no/nyheter/innenriks/6930543\", \"original_url\": \"https://www.tv2.no/nyheter/innenriks/6930543\", \"webpage_url_basename\": \"6930543\", \"webpage_url_domain\": \"tv2.no\", \"extractor\": \"TV2Article\", \"extractor_key\": \"TV2Article\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [TV2Article] 6930543: Failed to parse JSON: Expecting value in 'broken\": [}': line 1 column 13 (char 12)",
+    "WARNING: [TV2Article] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,262 @@
+{
+ "routes": [
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/pages/ard/item/Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0?embedded=false&mcV6=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "item-main.json"
+  },
+  {
+   "url": "https://ardmediathek-vod.example/mdr/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://ardmediathek-vod.example/mdr/liebe_dgs.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://ardmediathek-vod.example/mdr/liebe_1280x720.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/pages/ard/item/EP1?embedded=false&mcV6=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "item-EP1.json"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/pages/ard/item/EP2?embedded=false&mcV6=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "item-EP2.json"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/pages/ard/item/EP3?embedded=false&mcV6=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "item-EP3.json"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/pages/ard/item/EP4?embedded=false&mcV6=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "item-EP4.json"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/pages/ard/item/EP5?embedded=false&mcV6=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "item-EP5.json"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/pages/ard/item/EP6?embedded=false&mcV6=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "item-EP6.json"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/pages/ard/item/Y3JpZDovL21kci5kZS9saXZlc3RyZWFtL21kci1zYWNoc2Vu?embedded=false&mcV6=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "item-live.json"
+  },
+  {
+   "url": "https://mdr-live.example/live/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "live.m3u8"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/pages/ard/item/FSKBLOCKED?embedded=false&mcV6=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "item-fsk.json"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/pages/ard/item/NOFORMATS?embedded=false&mcV6=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "item-noformats.json"
+  },
+  {
+   "url": "https://ardmediathek-vod.example/broken/master.m3u8",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "gone"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/pages/ard/item/NOPLAYER?embedded=false&mcV6=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "item-noplayer.json"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/pages/ard/item/MISSING?embedded=false&mcV6=true",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"message\": \"not found\"}"
+  },
+  {
+   "url": "https://sso.ardmediathek.de/sso/token",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"idToken\": \"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJzdWIiOiAidXNlci0xMjM0IiwgImFnZV9yYXRpbmciOiAxNn0.c2lnbmF0dXJl\"}"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/pages/ard/item/EP5?embedded=false&mcV6=true&userId=user-1234",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "item-EP2.json",
+   "request_headers": {
+    "x-authorization": "Bearer eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJzdWIiOiAidXNlci0xMjM0IiwgImFnZV9yYXRpbmciOiAxNn0.c2lnbmF0dXJl"
+   }
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/widgets/ard/asset/Y3JpZDovL3dkci5kZS9vbmUvcXVpeg?pageNumber=0&pageSize=100&seasoned=true&seasonNumber=1&withOriginalversion=true&withAudiodescription=false",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "asset-quiz.json"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/widgets/ard/asset/Y3JpZDovL2Rhc2Vyc3RlLmRlL2JhYnlsb24tYmVybGlu?pageNumber=0&pageSize=100&seasoned=true&seasonNumber=4&withOriginalversion=false&withAudiodescription=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "asset-babylon.json"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/widgets/ard/asset/Y3JpZDovL2Rhc2Vyc3RlLmRlL2JhYnlsb24tYmVybGlu?pageNumber=0&pageSize=100&seasoned=true&seasonNumber=1&withOriginalversion=false&withAudiodescription=false",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": null, \"teasers\": []}"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/widgets/ard/asset/Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA?pageNumber=0&pageSize=100",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "asset-tatort-0.json"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/widgets/ard/asset/Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA?pageNumber=1&pageSize=100",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "asset-tatort-1.json"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/compilations/ard/5eOHzt8XB2sqeFXbIoJlg2?pageNumber=0&pageSize=100",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "compilation-kirche.json"
+  },
+  {
+   "url": "https://api.ardmediathek.de/page-gateway/compilations/ard/GONE?pageNumber=0&pageSize=100",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://api.ardaudiothek.de/graphql",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "audio-episode.json",
+   "request_body": [
+    "urn:ard:episode:eabead1add170e93",
+    "item(id: $id)"
+   ]
+  },
+  {
+   "url": "https://wdrmedien-a.akamaihd.net/medp/podcast/caiman_club_s04e04.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://api.ardaudiothek.de/graphql",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "audio-section.json",
+   "request_body": [
+    "urn:ard:section:855c7a53dac72e0a",
+    "item(id: $id)"
+   ]
+  },
+  {
+   "url": "https://api.ardaudiothek.de/graphql",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"item\": null}}",
+   "request_body": [
+    "urn:ard:extra:0000000000000000"
+   ]
+  },
+  {
+   "url": "https://api.ardaudiothek.de/graphql",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"errors\": [{\"message\": \"boom\"}]}",
+   "request_body": [
+    "urn:ard:extra:1111111111111111"
+   ]
+  },
+  {
+   "url": "https://api.ardaudiothek.de/graphql",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "audio-show.json",
+   "request_body": [
+    "urn:ard:show:c405aa26d9a4060a",
+    "show(id: $id)"
+   ]
+  },
+  {
+   "url": "https://api.ardaudiothek.de/graphql",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"show\": {\"title\": null, \"items\": {\"nodes\": []}}}}",
+   "request_body": [
+    "urn:ard:show:4d248e0806ce37bc"
+   ]
+  }
+ ]
+}

@@ -1,5 +1,5 @@
 {
- "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
  "cases": [
   {
    "url": "https://www.nicovideo.jp/watch/sm9",
@@ -125,6 +125,463 @@
    "stderr": [
     "ERROR: [niconico] sm400: This video is not available from your location due to geo restriction"
    ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/mylist/27411728",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"uploader\": \"\\u306e\\u3063\\u304f\", \"uploader_id\": \"805442\", \"id\": \"27411728\", \"title\": \"AKB48\\u306e\\u30aa\\u30fc\\u30eb\\u30ca\\u30a4\\u30c8\\u30cb\\u30c3\\u30dd\\u30f3\", \"description\": \"AKB48\\u306eANN\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"id\": \"sm1001\", \"title\": \"AKB48\\u306eANN #1\", \"url\": \"https://www.nicovideo.jp/watch/sm1001\", \"description\": \"\\u7b2c1\\u56de\", \"duration\": 3600, \"view_count\": 1234, \"comment_count\": 56, \"thumbnail\": [\"https://nicovideo.cdn.nimg.jp/thumbnails/1001/1001.HD\", \"https://nicovideo.cdn.nimg.jp/thumbnails/1001/1001.L\", \"https://nicovideo.cdn.nimg.jp/thumbnails/1001/1001\"], \"ie_key\": \"Niconico\", \"uploader\": \"\\u306e\\u3063\\u304f\", \"uploader_id\": \"805442\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"so1002\", \"title\": \"AKB48\\u306eANN #2\", \"url\": \"https://www.nicovideo.jp/watch/so1002\", \"description\": null, \"duration\": null, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": \"Channel\", \"uploader_id\": null, \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.nicovideo.jp/mylist/27411728\", \"original_url\": \"https://www.nicovideo.jp/mylist/27411728\", \"webpage_url_basename\": \"27411728\", \"webpage_url_domain\": \"nicovideo.jp\", \"extractor\": \"niconico:playlist\", \"extractor_key\": \"NiconicoPlaylist\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/mylist/27411728",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(thumbnail)s|%(duration)s|%(comment_count)s|%(uploader)s|%(uploader_id)s|%(playlist_uploader)s|%(playlist_uploader_id)s|%(playlist_title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "sm1001|AKB48のANN #1|['https://nicovideo.cdn.nimg.jp/thumbnails/1001/1001.HD', 'https://nicovideo.cdn.nimg.jp/thumbnails/1001/1001.L', 'https://nicovideo.cdn.nimg.jp/thumbnails/1001/1001']|3600|56|のっく|805442|のっく|805442|AKB48のオールナイトニッポン",
+    "so1002|AKB48のANN #2|[]|NA|NA|Channel|NA|のっく|805442|AKB48のオールナイトニッポン"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/my/mylist/#/27411728",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[niconico:playlist] Extracting URL: https://www.nicovideo.jp/my/mylist/#/27411728",
+    "[niconico:playlist] 27411728: Downloading list",
+    "[download] Downloading playlist: AKB48のオールナイトニッポン",
+    "[niconico:playlist] 27411728: Downloading page 1",
+    "[niconico:playlist] Playlist AKB48のオールナイトニッポン: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: AKB48のオールナイトニッポン"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/mylist/404",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [niconico:playlist] 404: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/user/44113208/series/110226",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"uploader\": \"\\u30a2\\u30eb\\u30d5\\u30a1\\u308b\\u3075\\u3041\", \"uploader_id\": null, \"id\": \"110226\", \"title\": \"\\u3054\\u7acb\\u6d3e\\u30a1\\uff01\\u306e\\u30b7\\u30ea\\u30fc\\u30ba\", \"description\": \"\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"id\": \"sm2001\", \"title\": \"Part 1\", \"url\": \"https://www.nicovideo.jp/watch/sm2001\", \"description\": null, \"duration\": 61, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2002\", \"title\": \"Part 2\", \"url\": \"https://www.nicovideo.jp/watch/sm2002\", \"description\": null, \"duration\": 62, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2003\", \"title\": \"Part 3\", \"url\": \"https://www.nicovideo.jp/watch/sm2003\", \"description\": null, \"duration\": 63, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2004\", \"title\": \"Part 4\", \"url\": \"https://www.nicovideo.jp/watch/sm2004\", \"description\": null, \"duration\": 64, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2005\", \"title\": \"Part 5\", \"url\": \"https://www.nicovideo.jp/watch/sm2005\", \"description\": null, \"duration\": 65, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2006\", \"title\": \"Part 6\", \"url\": \"https://www.nicovideo.jp/watch/sm2006\", \"description\": null, \"duration\": 66, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2007\", \"title\": \"Part 7\", \"url\": \"https://www.nicovideo.jp/watch/sm2007\", \"description\": null, \"duration\": 67, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2008\", \"title\": \"Part 8\", \"url\": \"https://www.nicovideo.jp/watch/sm2008\", \"description\": null, \"duration\": 68, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2009\", \"title\": \"Part 9\", \"url\": \"https://www.nicovideo.jp/watch/sm2009\", \"description\": null, \"duration\": 69, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2010\", \"title\": \"Part 10\", \"url\": \"https://www.nicovideo.jp/watch/sm2010\", \"description\": null, \"duration\": 70, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2011\", \"title\": \"Part 11\", \"url\": \"https://www.nicovideo.jp/watch/sm2011\", \"description\": null, \"duration\": 71, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2012\", \"title\": \"Part 12\", \"url\": \"https://www.nicovideo.jp/watch/sm2012\", \"description\": null, \"duration\": 72, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2013\", \"title\": \"Part 13\", \"url\": \"https://www.nicovideo.jp/watch/sm2013\", \"description\": null, \"duration\": 73, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2014\", \"title\": \"Part 14\", \"url\": \"https://www.nicovideo.jp/watch/sm2014\", \"description\": null, \"duration\": 74, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2015\", \"title\": \"Part 15\", \"url\": \"https://www.nicovideo.jp/watch/sm2015\", \"description\": null, \"duration\": 75, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2016\", \"title\": \"Part 16\", \"url\": \"https://www.nicovideo.jp/watch/sm2016\", \"description\": null, \"duration\": 76, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2017\", \"title\": \"Part 17\", \"url\": \"https://www.nicovideo.jp/watch/sm2017\", \"description\": null, \"duration\": 77, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2018\", \"title\": \"Part 18\", \"url\": \"https://www.nicovideo.jp/watch/sm2018\", \"description\": null, \"duration\": 78, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2019\", \"title\": \"Part 19\", \"url\": \"https://www.nicovideo.jp/watch/sm2019\", \"description\": null, \"duration\": 79, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2020\", \"title\": \"Part 20\", \"url\": \"https://www.nicovideo.jp/watch/sm2020\", \"description\": null, \"duration\": 80, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2021\", \"title\": \"Part 21\", \"url\": \"https://www.nicovideo.jp/watch/sm2021\", \"description\": null, \"duration\": 81, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2022\", \"title\": \"Part 22\", \"url\": \"https://www.nicovideo.jp/watch/sm2022\", \"description\": null, \"duration\": 82, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2023\", \"title\": \"Part 23\", \"url\": \"https://www.nicovideo.jp/watch/sm2023\", \"description\": null, \"duration\": 83, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2024\", \"title\": \"Part 24\", \"url\": \"https://www.nicovideo.jp/watch/sm2024\", \"description\": null, \"duration\": 84, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2025\", \"title\": \"Part 25\", \"url\": \"https://www.nicovideo.jp/watch/sm2025\", \"description\": null, \"duration\": 85, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2026\", \"title\": \"Part 26\", \"url\": \"https://www.nicovideo.jp/watch/sm2026\", \"description\": null, \"duration\": 86, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2027\", \"title\": \"Part 27\", \"url\": \"https://www.nicovideo.jp/watch/sm2027\", \"description\": null, \"duration\": 87, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2028\", \"title\": \"Part 28\", \"url\": \"https://www.nicovideo.jp/watch/sm2028\", \"description\": null, \"duration\": 88, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2029\", \"title\": \"Part 29\", \"url\": \"https://www.nicovideo.jp/watch/sm2029\", \"description\": null, \"duration\": 89, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2030\", \"title\": \"Part 30\", \"url\": \"https://www.nicovideo.jp/watch/sm2030\", \"description\": null, \"duration\": 90, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2031\", \"title\": \"Part 31\", \"url\": \"https://www.nicovideo.jp/watch/sm2031\", \"description\": null, \"duration\": 91, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2032\", \"title\": \"Part 32\", \"url\": \"https://www.nicovideo.jp/watch/sm2032\", \"description\": null, \"duration\": 92, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2033\", \"title\": \"Part 33\", \"url\": \"https://www.nicovideo.jp/watch/sm2033\", \"description\": null, \"duration\": 93, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2034\", \"title\": \"Part 34\", \"url\": \"https://www.nicovideo.jp/watch/sm2034\", \"description\": null, \"duration\": 94, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2035\", \"title\": \"Part 35\", \"url\": \"https://www.nicovideo.jp/watch/sm2035\", \"description\": null, \"duration\": 95, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2036\", \"title\": \"Part 36\", \"url\": \"https://www.nicovideo.jp/watch/sm2036\", \"description\": null, \"duration\": 96, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2037\", \"title\": \"Part 37\", \"url\": \"https://www.nicovideo.jp/watch/sm2037\", \"description\": null, \"duration\": 97, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2038\", \"title\": \"Part 38\", \"url\": \"https://www.nicovideo.jp/watch/sm2038\", \"description\": null, \"duration\": 98, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2039\", \"title\": \"Part 39\", \"url\": \"https://www.nicovideo.jp/watch/sm2039\", \"description\": null, \"duration\": 99, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2040\", \"title\": \"Part 40\", \"url\": \"https://www.nicovideo.jp/watch/sm2040\", \"description\": null, \"duration\": 100, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2041\", \"title\": \"Part 41\", \"url\": \"https://www.nicovideo.jp/watch/sm2041\", \"description\": null, \"duration\": 101, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2042\", \"title\": \"Part 42\", \"url\": \"https://www.nicovideo.jp/watch/sm2042\", \"description\": null, \"duration\": 102, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2043\", \"title\": \"Part 43\", \"url\": \"https://www.nicovideo.jp/watch/sm2043\", \"description\": null, \"duration\": 103, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2044\", \"title\": \"Part 44\", \"url\": \"https://www.nicovideo.jp/watch/sm2044\", \"description\": null, \"duration\": 104, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2045\", \"title\": \"Part 45\", \"url\": \"https://www.nicovideo.jp/watch/sm2045\", \"description\": null, \"duration\": 105, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2046\", \"title\": \"Part 46\", \"url\": \"https://www.nicovideo.jp/watch/sm2046\", \"description\": null, \"duration\": 106, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2047\", \"title\": \"Part 47\", \"url\": \"https://www.nicovideo.jp/watch/sm2047\", \"description\": null, \"duration\": 107, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2048\", \"title\": \"Part 48\", \"url\": \"https://www.nicovideo.jp/watch/sm2048\", \"description\": null, \"duration\": 108, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2049\", \"title\": \"Part 49\", \"url\": \"https://www.nicovideo.jp/watch/sm2049\", \"description\": null, \"duration\": 109, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2050\", \"title\": \"Part 50\", \"url\": \"https://www.nicovideo.jp/watch/sm2050\", \"description\": null, \"duration\": 110, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2051\", \"title\": \"Part 51\", \"url\": \"https://www.nicovideo.jp/watch/sm2051\", \"description\": null, \"duration\": 111, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2052\", \"title\": \"Part 52\", \"url\": \"https://www.nicovideo.jp/watch/sm2052\", \"description\": null, \"duration\": 112, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2053\", \"title\": \"Part 53\", \"url\": \"https://www.nicovideo.jp/watch/sm2053\", \"description\": null, \"duration\": 113, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2054\", \"title\": \"Part 54\", \"url\": \"https://www.nicovideo.jp/watch/sm2054\", \"description\": null, \"duration\": 114, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2055\", \"title\": \"Part 55\", \"url\": \"https://www.nicovideo.jp/watch/sm2055\", \"description\": null, \"duration\": 115, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2056\", \"title\": \"Part 56\", \"url\": \"https://www.nicovideo.jp/watch/sm2056\", \"description\": null, \"duration\": 116, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2057\", \"title\": \"Part 57\", \"url\": \"https://www.nicovideo.jp/watch/sm2057\", \"description\": null, \"duration\": 117, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2058\", \"title\": \"Part 58\", \"url\": \"https://www.nicovideo.jp/watch/sm2058\", \"description\": null, \"duration\": 118, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2059\", \"title\": \"Part 59\", \"url\": \"https://www.nicovideo.jp/watch/sm2059\", \"description\": null, \"duration\": 119, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2060\", \"title\": \"Part 60\", \"url\": \"https://www.nicovideo.jp/watch/sm2060\", \"description\": null, \"duration\": 120, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2061\", \"title\": \"Part 61\", \"url\": \"https://www.nicovideo.jp/watch/sm2061\", \"description\": null, \"duration\": 121, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2062\", \"title\": \"Part 62\", \"url\": \"https://www.nicovideo.jp/watch/sm2062\", \"description\": null, \"duration\": 122, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2063\", \"title\": \"Part 63\", \"url\": \"https://www.nicovideo.jp/watch/sm2063\", \"description\": null, \"duration\": 123, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2064\", \"title\": \"Part 64\", \"url\": \"https://www.nicovideo.jp/watch/sm2064\", \"description\": null, \"duration\": 124, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2065\", \"title\": \"Part 65\", \"url\": \"https://www.nicovideo.jp/watch/sm2065\", \"description\": null, \"duration\": 125, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2066\", \"title\": \"Part 66\", \"url\": \"https://www.nicovideo.jp/watch/sm2066\", \"description\": null, \"duration\": 126, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2067\", \"title\": \"Part 67\", \"url\": \"https://www.nicovideo.jp/watch/sm2067\", \"description\": null, \"duration\": 127, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2068\", \"title\": \"Part 68\", \"url\": \"https://www.nicovideo.jp/watch/sm2068\", \"description\": null, \"duration\": 128, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2069\", \"title\": \"Part 69\", \"url\": \"https://www.nicovideo.jp/watch/sm2069\", \"description\": null, \"duration\": 129, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2070\", \"title\": \"Part 70\", \"url\": \"https://www.nicovideo.jp/watch/sm2070\", \"description\": null, \"duration\": 130, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2071\", \"title\": \"Part 71\", \"url\": \"https://www.nicovideo.jp/watch/sm2071\", \"description\": null, \"duration\": 131, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2072\", \"title\": \"Part 72\", \"url\": \"https://www.nicovideo.jp/watch/sm2072\", \"description\": null, \"duration\": 132, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2073\", \"title\": \"Part 73\", \"url\": \"https://www.nicovideo.jp/watch/sm2073\", \"description\": null, \"duration\": 133, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2074\", \"title\": \"Part 74\", \"url\": \"https://www.nicovideo.jp/watch/sm2074\", \"description\": null, \"duration\": 134, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2075\", \"title\": \"Part 75\", \"url\": \"https://www.nicovideo.jp/watch/sm2075\", \"description\": null, \"duration\": 135, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2076\", \"title\": \"Part 76\", \"url\": \"https://www.nicovideo.jp/watch/sm2076\", \"description\": null, \"duration\": 136, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2077\", \"title\": \"Part 77\", \"url\": \"https://www.nicovideo.jp/watch/sm2077\", \"description\": null, \"duration\": 137, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2078\", \"title\": \"Part 78\", \"url\": \"https://www.nicovideo.jp/watch/sm2078\", \"description\": null, \"duration\": 138, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2079\", \"title\": \"Part 79\", \"url\": \"https://www.nicovideo.jp/watch/sm2079\", \"description\": null, \"duration\": 139, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2080\", \"title\": \"Part 80\", \"url\": \"https://www.nicovideo.jp/watch/sm2080\", \"description\": null, \"duration\": 140, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2081\", \"title\": \"Part 81\", \"url\": \"https://www.nicovideo.jp/watch/sm2081\", \"description\": null, \"duration\": 141, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2082\", \"title\": \"Part 82\", \"url\": \"https://www.nicovideo.jp/watch/sm2082\", \"description\": null, \"duration\": 142, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2083\", \"title\": \"Part 83\", \"url\": \"https://www.nicovideo.jp/watch/sm2083\", \"description\": null, \"duration\": 143, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2084\", \"title\": \"Part 84\", \"url\": \"https://www.nicovideo.jp/watch/sm2084\", \"description\": null, \"duration\": 144, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2085\", \"title\": \"Part 85\", \"url\": \"https://www.nicovideo.jp/watch/sm2085\", \"description\": null, \"duration\": 145, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2086\", \"title\": \"Part 86\", \"url\": \"https://www.nicovideo.jp/watch/sm2086\", \"description\": null, \"duration\": 146, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2087\", \"title\": \"Part 87\", \"url\": \"https://www.nicovideo.jp/watch/sm2087\", \"description\": null, \"duration\": 147, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2088\", \"title\": \"Part 88\", \"url\": \"https://www.nicovideo.jp/watch/sm2088\", \"description\": null, \"duration\": 148, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2089\", \"title\": \"Part 89\", \"url\": \"https://www.nicovideo.jp/watch/sm2089\", \"description\": null, \"duration\": 149, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2090\", \"title\": \"Part 90\", \"url\": \"https://www.nicovideo.jp/watch/sm2090\", \"description\": null, \"duration\": 150, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2091\", \"title\": \"Part 91\", \"url\": \"https://www.nicovideo.jp/watch/sm2091\", \"description\": null, \"duration\": 151, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2092\", \"title\": \"Part 92\", \"url\": \"https://www.nicovideo.jp/watch/sm2092\", \"description\": null, \"duration\": 152, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2093\", \"title\": \"Part 93\", \"url\": \"https://www.nicovideo.jp/watch/sm2093\", \"description\": null, \"duration\": 153, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2094\", \"title\": \"Part 94\", \"url\": \"https://www.nicovideo.jp/watch/sm2094\", \"description\": null, \"duration\": 154, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2095\", \"title\": \"Part 95\", \"url\": \"https://www.nicovideo.jp/watch/sm2095\", \"description\": null, \"duration\": 155, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2096\", \"title\": \"Part 96\", \"url\": \"https://www.nicovideo.jp/watch/sm2096\", \"description\": null, \"duration\": 156, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2097\", \"title\": \"Part 97\", \"url\": \"https://www.nicovideo.jp/watch/sm2097\", \"description\": null, \"duration\": 157, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2098\", \"title\": \"Part 98\", \"url\": \"https://www.nicovideo.jp/watch/sm2098\", \"description\": null, \"duration\": 158, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2099\", \"title\": \"Part 99\", \"url\": \"https://www.nicovideo.jp/watch/sm2099\", \"description\": null, \"duration\": 159, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2100\", \"title\": \"Part 100\", \"url\": \"https://www.nicovideo.jp/watch/sm2100\", \"description\": null, \"duration\": 160, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2101\", \"title\": \"Part 101\", \"url\": \"https://www.nicovideo.jp/watch/sm2101\", \"description\": null, \"duration\": 161, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2102\", \"title\": \"Part 102\", \"url\": \"https://www.nicovideo.jp/watch/sm2102\", \"description\": null, \"duration\": 162, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2103\", \"title\": \"Part 103\", \"url\": \"https://www.nicovideo.jp/watch/sm2103\", \"description\": null, \"duration\": 163, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2104\", \"title\": \"Part 104\", \"url\": \"https://www.nicovideo.jp/watch/sm2104\", \"description\": null, \"duration\": 164, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2105\", \"title\": \"Part 105\", \"url\": \"https://www.nicovideo.jp/watch/sm2105\", \"description\": null, \"duration\": 165, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2106\", \"title\": \"Part 106\", \"url\": \"https://www.nicovideo.jp/watch/sm2106\", \"description\": null, \"duration\": 166, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2107\", \"title\": \"Part 107\", \"url\": \"https://www.nicovideo.jp/watch/sm2107\", \"description\": null, \"duration\": 167, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2108\", \"title\": \"Part 108\", \"url\": \"https://www.nicovideo.jp/watch/sm2108\", \"description\": null, \"duration\": 168, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2109\", \"title\": \"Part 109\", \"url\": \"https://www.nicovideo.jp/watch/sm2109\", \"description\": null, \"duration\": 169, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2110\", \"title\": \"Part 110\", \"url\": \"https://www.nicovideo.jp/watch/sm2110\", \"description\": null, \"duration\": 170, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2111\", \"title\": \"Part 111\", \"url\": \"https://www.nicovideo.jp/watch/sm2111\", \"description\": null, \"duration\": 171, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2112\", \"title\": \"Part 112\", \"url\": \"https://www.nicovideo.jp/watch/sm2112\", \"description\": null, \"duration\": 172, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2113\", \"title\": \"Part 113\", \"url\": \"https://www.nicovideo.jp/watch/sm2113\", \"description\": null, \"duration\": 173, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2114\", \"title\": \"Part 114\", \"url\": \"https://www.nicovideo.jp/watch/sm2114\", \"description\": null, \"duration\": 174, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2115\", \"title\": \"Part 115\", \"url\": \"https://www.nicovideo.jp/watch/sm2115\", \"description\": null, \"duration\": 175, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2116\", \"title\": \"Part 116\", \"url\": \"https://www.nicovideo.jp/watch/sm2116\", \"description\": null, \"duration\": 176, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2117\", \"title\": \"Part 117\", \"url\": \"https://www.nicovideo.jp/watch/sm2117\", \"description\": null, \"duration\": 177, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2118\", \"title\": \"Part 118\", \"url\": \"https://www.nicovideo.jp/watch/sm2118\", \"description\": null, \"duration\": 178, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2119\", \"title\": \"Part 119\", \"url\": \"https://www.nicovideo.jp/watch/sm2119\", \"description\": null, \"duration\": 179, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2120\", \"title\": \"Part 120\", \"url\": \"https://www.nicovideo.jp/watch/sm2120\", \"description\": null, \"duration\": 180, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2121\", \"title\": \"Part 121\", \"url\": \"https://www.nicovideo.jp/watch/sm2121\", \"description\": null, \"duration\": 181, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2122\", \"title\": \"Part 122\", \"url\": \"https://www.nicovideo.jp/watch/sm2122\", \"description\": null, \"duration\": 182, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2123\", \"title\": \"Part 123\", \"url\": \"https://www.nicovideo.jp/watch/sm2123\", \"description\": null, \"duration\": 183, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2124\", \"title\": \"Part 124\", \"url\": \"https://www.nicovideo.jp/watch/sm2124\", \"description\": null, \"duration\": 184, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2125\", \"title\": \"Part 125\", \"url\": \"https://www.nicovideo.jp/watch/sm2125\", \"description\": null, \"duration\": 185, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2126\", \"title\": \"Part 126\", \"url\": \"https://www.nicovideo.jp/watch/sm2126\", \"description\": null, \"duration\": 186, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2127\", \"title\": \"Part 127\", \"url\": \"https://www.nicovideo.jp/watch/sm2127\", \"description\": null, \"duration\": 187, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2128\", \"title\": \"Part 128\", \"url\": \"https://www.nicovideo.jp/watch/sm2128\", \"description\": null, \"duration\": 188, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2129\", \"title\": \"Part 129\", \"url\": \"https://www.nicovideo.jp/watch/sm2129\", \"description\": null, \"duration\": 189, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm2130\", \"title\": \"Part 130\", \"url\": \"https://www.nicovideo.jp/watch/sm2130\", \"description\": null, \"duration\": 190, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.nicovideo.jp/user/44113208/series/110226\", \"original_url\": \"https://www.nicovideo.jp/user/44113208/series/110226\", \"webpage_url_basename\": \"110226\", \"webpage_url_domain\": \"nicovideo.jp\", \"extractor\": \"niconico:series\", \"extractor_key\": \"NiconicoSeries\", \"release_year\": null, \"playlist_count\": 130, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/user/44113208/series/110226",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[niconico:series] Extracting URL: https://www.nicovideo.jp/user/44113208/series/110226",
+    "[niconico:series] 110226: Downloading list",
+    "[download] Downloading playlist: ご立派ァ！のシリーズ",
+    "[niconico:series] 110226: Downloading page 1",
+    "[niconico:series] Playlist ご立派ァ！のシリーズ: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: ご立派ァ！のシリーズ"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/user/44113208/series/110226",
+   "args": [
+    "-I",
+    "101,1",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[niconico:series] Extracting URL: https://www.nicovideo.jp/user/44113208/series/110226",
+    "[niconico:series] 110226: Downloading list",
+    "[download] Downloading playlist: ご立派ァ！のシリーズ",
+    "[niconico:series] 110226: Downloading page 2",
+    "[niconico:series] 110226: Downloading page 1",
+    "[niconico:series] Playlist ご立派ァ！のシリーズ: Downloading 2 items",
+    "[download] Downloading item 1 of 2",
+    "[download] Downloading item 2 of 2",
+    "[download] Finished downloading playlist: ご立派ァ！のシリーズ"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/user/44113208/series/110226",
+   "args": [
+    "-I",
+    "101,1",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "101|sm2101|NA",
+    "001|sm2001|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/user/44113208/series/110226",
+   "args": [
+    "-I",
+    "2:3",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2|sm2002|NA",
+    "3|sm2003|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/user/44113208/series/110226",
+   "args": [
+    "-I",
+    "131",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/user/44113208/series/110226",
+   "args": [
+    "-I",
+    "-1",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "130|sm2130|130"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://nico.ms/series/12312",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 12312: Unable to download JSON metadata: HTTP Error 500: OK (caused by <HTTPError 500: OK>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/my/history",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [niconico:history] history: You have to be logged in to get your history. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://sp.nicovideo.jp/my/history/like",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"uploader\": null, \"uploader_id\": null, \"id\": \"history/like\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"id\": \"sm9\", \"title\": \"\\u65b0\\u30fb\\u8c6a\\u8840\\u5bfa\\u4e00\\u65cf\", \"url\": \"https://www.nicovideo.jp/watch/sm9\", \"description\": null, \"duration\": 320, \"view_count\": 1, \"comment_count\": 2, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": \"\\u4e2d\\u306e\", \"uploader_id\": \"4\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"sm10\", \"title\": \"Second\", \"url\": \"https://www.nicovideo.jp/watch/sm10\", \"description\": null, \"duration\": null, \"view_count\": null, \"comment_count\": null, \"thumbnail\": [], \"ie_key\": \"Niconico\", \"uploader\": null, \"uploader_id\": null, \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://sp.nicovideo.jp/my/history/like\", \"original_url\": \"https://sp.nicovideo.jp/my/history/like\", \"webpage_url_basename\": \"like\", \"webpage_url_domain\": \"sp.nicovideo.jp\", \"extractor\": \"niconico:history\", \"extractor_key\": \"NiconicoHistory\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/my/history/like",
+   "args": [
+    "-u",
+    "user@example.com",
+    "-p",
+    "pw",
+    "--flat-playlist",
+    "--print",
+    "id"
+   ],
+   "exit": 0,
+   "stdout": [
+    "sm9",
+    "sm10"
+   ],
+   "stderr": [
+    "WARNING: [niconico:history] Login with password is not supported for this website. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/user/419948",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"419948\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Niconico\", \"_type\": \"url\", \"url\": \"https://www.nicovideo.jp/watch/sm31\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Niconico\", \"_type\": \"url\", \"url\": \"https://www.nicovideo.jp/watch/sm32\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Niconico\", \"_type\": \"url\", \"url\": \"https://www.nicovideo.jp/watch/so33\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.nicovideo.jp/user/419948\", \"original_url\": \"https://www.nicovideo.jp/user/419948\", \"webpage_url_basename\": \"419948\", \"webpage_url_domain\": \"nicovideo.jp\", \"extractor\": \"NiconicoUser\", \"extractor_key\": \"NiconicoUser\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/user/419948",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[NiconicoUser] Extracting URL: https://www.nicovideo.jp/user/419948",
+    "[download] Downloading playlist: 419948",
+    "[NiconicoUser] 419948: Downloading JSON metadata",
+    "[NiconicoUser] Playlist 419948: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: 419948"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/user/419948",
+   "args": [
+    "-I",
+    "3,1",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "3|so33|NA",
+    "1|sm31|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "nicosearch3:cats",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"cats\", \"title\": \"cats\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Niconico\", \"id\": \"sm41\", \"_type\": \"url\", \"url\": \"https://www.nicovideo.jp/watch/sm41\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Niconico\", \"id\": \"sm42\", \"_type\": \"url\", \"url\": \"https://www.nicovideo.jp/watch/sm42\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Niconico\", \"id\": \"sm43\", \"_type\": \"url\", \"url\": \"https://www.nicovideo.jp/watch/sm43\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"nicosearch3:cats\", \"original_url\": \"nicosearch3:cats\", \"webpage_url_basename\": \"cats\", \"webpage_url_domain\": null, \"extractor\": \"nicovideo:search\", \"extractor_key\": \"NicovideoSearch\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "nicosearch:cats",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[nicovideo:search] Extracting URL: nicosearch:cats",
+    "[download] Downloading playlist: cats",
+    "[nicovideo:search] cats: Downloading page 1",
+    "[nicovideo:search] Playlist cats: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: cats"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "nicosearchall:cats",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|sm41|4",
+    "2|sm42|4",
+    "3|sm43|4",
+    "4|so44|4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "nicosearchall:cats",
+   "args": [
+    "-I",
+    "2:3",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[nicovideo:search] Extracting URL: nicosearchall:cats",
+    "[download] Downloading playlist: cats",
+    "[nicovideo:search] cats: Downloading page 1",
+    "[nicovideo:search] cats: Downloading page 2",
+    "[nicovideo:search] Playlist cats: Downloading 2 items",
+    "[download] Downloading item 1 of 2",
+    "[download] Downloading item 2 of 2",
+    "[download] Finished downloading playlist: cats"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/search/sm9?sort=h&order=d",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"sm9\", \"title\": \"sm9\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Niconico\", \"id\": \"sm9\", \"_type\": \"url\", \"url\": \"https://www.nicovideo.jp/watch/sm9\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Niconico\", \"id\": \"sm51\", \"_type\": \"url\", \"url\": \"https://www.nicovideo.jp/watch/sm51\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.nicovideo.jp/search/sm9?sort=h&order=d\", \"original_url\": \"https://www.nicovideo.jp/search/sm9?sort=h&order=d\", \"webpage_url_basename\": \"sm9\", \"webpage_url_domain\": \"nicovideo.jp\", \"extractor\": \"nicovideo:search_url\", \"extractor_key\": \"NicovideoSearchURL\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/search/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.nicovideo.jp/search/\", \"original_url\": \"https://www.nicovideo.jp/search/\", \"webpage_url_basename\": \"search\", \"webpage_url_domain\": \"nicovideo.jp\", \"extractor\": \"nicovideo:search_url\", \"extractor_key\": \"NicovideoSearchURL\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/tag/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%82%BF%E3%83%AA%E3%83%BC%E6%B7%AB%E5%A4%A2",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%82%BF%E3%83%AA%E3%83%BC%E6%B7%AB%E5%A4%A2\", \"title\": \"%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%82%BF%E3%83%AA%E3%83%BC%E6%B7%AB%E5%A4%A2\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Niconico\", \"id\": \"sm61\", \"_type\": \"url\", \"url\": \"https://www.nicovideo.jp/watch/sm61\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.nicovideo.jp/tag/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%82%BF%E3%83%AA%E3%83%BC%E6%B7%AB%E5%A4%A2\", \"original_url\": \"https://www.nicovideo.jp/tag/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%82%BF%E3%83%AA%E3%83%BC%E6%B7%AB%E5%A4%A2\", \"webpage_url_basename\": \"%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%82%BF%E3%83%AA%E3%83%BC%E6%B7%AB%E5%A4%A2\", \"webpage_url_domain\": \"nicovideo.jp\", \"extractor\": \"niconico:tag\", \"extractor_key\": \"NicovideoTagURL\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "nicosearchdateall:cat",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"cat\", \"title\": \"cat\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Niconico\", \"id\": \"sm71\", \"_type\": \"url\", \"url\": \"https://www.nicovideo.jp/watch/sm71\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Niconico\", \"id\": \"sm72\", \"_type\": \"url\", \"url\": \"https://www.nicovideo.jp/watch/sm72\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"nicosearchdateall:cat\", \"original_url\": \"nicosearchdateall:cat\", \"webpage_url_basename\": \"cat\", \"webpage_url_domain\": null, \"extractor\": \"nicovideo:search:date\", \"extractor_key\": \"NicovideoSearchDate\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "nicosearch:missing",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/user/1",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 1: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "nicosearchdate2:cat",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|sm71|2",
+    "2|sm72|2"
+   ],
+   "stderr": [],
    "files": {}
   }
  ]

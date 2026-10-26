@@ -244,10 +244,10 @@ fn filename_errors_only_fail_templates_that_use_filename() {
 }
 
 #[test]
-fn unsupported_print_stages_and_templates_fail_before_requests() {
+fn invalid_print_templates_fail_before_requests() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
-    for spec in ["pre_process:id", "after_filter:id", "%(id)z", "%(id+)s"] {
+    for spec in ["%(id)z", "%(id+)s"] {
         let output = server.cli(&["/page.html"], &["-O", spec], directory.path());
         assert!(!output.status.success(), "{spec}");
         assert!(output.stdout.is_empty(), "{spec}");

@@ -1,0 +1,23 @@
+{
+ "data": {
+  "ongoing_ondemand": {
+   "title": {
+    "fin": "Värityspäivä"
+   },
+   "description": {
+    "fin": "Murun ja Paukun värityspäivä."
+   },
+   "series": {
+    "title": {
+     "fin": "Murun ja Paukun ikioma kaupunki"
+    }
+   },
+   "episode_number": 1,
+   "start_time": "2024-06-07T08:00:00+03:00",
+   "duration": {
+    "duration_in_seconds": 442
+   },
+   "media_url": "https://yleawodamd.akamaized.net/audio/1-71022852.mp3"
+  }
+ }
+}

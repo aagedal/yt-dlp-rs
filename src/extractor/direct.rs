@@ -72,6 +72,30 @@ pub(crate) fn head_with_headers(
     crate::retry::check_response(response?)
 }
 
+/// [`head_with_headers`] that also accepts the `expected` error statuses
+/// (`HEADRequest` with `expected_status=`).
+pub(crate) fn head_expecting(
+    client: &Client,
+    url: &Url,
+    headers: &[(&str, &str)],
+    expected: &[u16],
+) -> Result<Response> {
+    crate::screen::before_extraction_request();
+    let mut request = client.head(url.clone());
+    for (name, value) in headers {
+        request = request.header(*name, *value);
+    }
+    request = crate::geo::add_header(request, headers);
+    crate::screen::load_cookies()?;
+    let response = crate::impersonate::send(request);
+    crate::screen::flush_traffic();
+    let response = response?;
+    if expected.contains(&response.status().as_u16()) {
+        return Ok(response);
+    }
+    crate::retry::check_response(response)
+}
+
 /// An extractor's POST request with a body (`data=`) and headers.
 pub(crate) fn post(
     client: &Client,
@@ -180,6 +204,7 @@ fn mime_extension(mime: &str) -> Option<&'static str> {
         "video/quicktime" => Some("mov"),
         "video/x-msvideo" => Some("avi"),
         "video/x-flv" => Some("flv"),
+        "video/mpeg" => Some("mpg"),
         "audio/mpeg" => Some("mp3"),
         "audio/mp4" | "audio/x-m4a" => Some("m4a"),
         "audio/aac" => Some("aac"),
@@ -410,7 +435,7 @@ pub(crate) fn mimetype2ext_or(mime: &str, default: Option<&str>) -> String {
 
 /// Upstream `disposition_filename`: the Content-Disposition `filename*`
 /// (RFC 2231/5987) or `filename` parameter.
-fn disposition_filename(response: &Response) -> Option<String> {
+pub(crate) fn disposition_filename(response: &Response) -> Option<String> {
     let header = response
         .headers()
         .get(reqwest::header::CONTENT_DISPOSITION)?;

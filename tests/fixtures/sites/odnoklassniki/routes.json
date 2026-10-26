@@ -15,6 +15,30 @@
    "body": "<html><head></head><body><div data-module=\"OKVideo\" data-options=\"{&quot;flashvars&quot;: {&quot;metadataUrl&quot;: &quot;https%3A%2F%2Fok.ru%2Fdk%3Fcmd%3DvideoPlayerMetadata%26mid%3D555&quot;, &quot;location&quot;: &quot;AUTOPLAY&quot;}, &quot;movieId&quot;: &quot;555-1&quot;}\" data-x=\"1\"></div></body></html>"
   },
   {
+   "url": "https://ok.ru/videoembed/4242",
+   "request_headers": {
+    "Referer": "https://boosty.to"
+   },
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><div data-module=\"OKVideo\" data-options=\"{&quot;flashvars&quot;: {&quot;metadata&quot;: {&quot;provider&quot;: &quot;UPLOADED_ODKL&quot;, &quot;movie&quot;: {&quot;title&quot;: &quot;Boosty clip&quot;, &quot;poster&quot;: &quot;https://iv.okcdn.test/boosty.jpg&quot;, &quot;duration&quot;: &quot;42&quot;}, &quot;author&quot;: {&quot;id&quot;: &quot;4242&quot;, &quot;name&quot;: &quot;boosty author&quot;}, &quot;videos&quot;: [{&quot;name&quot;: &quot;hd&quot;, &quot;url&quot;: &quot;https://vd.mycdn.test/?expires=1&amp;type=3&amp;id=4242&quot;}]}}, &quot;movieId&quot;: &quot;4242&quot;}\" data-x=\"1\"></div></body></html>"
+  },
+  {
+   "url": "https://ok.ru/videoembed/4242",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><div class=\"vp_video_stub_txt\">The author of this video has not been found or is blocked</div></html>"
+  },
+  {
+   "url": "https://ok.ru/videoembed/4343",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><div class=\"vp_video_stub_txt\">The author of this video has not been found or is blocked</div></html>"
+  },
+  {
    "url": "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=555",
    "request_body": [
     "st.location=AUTOPLAY"

@@ -1,0 +1,113 @@
+{
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
+ "cases": [
+  {
+   "url": "https://www.imdb.com/video/imdb/vi2524815897",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2524815897\", \"title\": \"No. 2\", \"alt_title\": null, \"formats\": [{\"format_id\": \"SD\", \"url\": \"https://imdb-video.media-imdb.test/sd.mp4\", \"ext\": \"mp4\", \"quality\": 0, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"SD - unknown\"}, {\"format_id\": \"1080p\", \"url\": \"https://imdb-video.media-imdb.test/1080.mp4\", \"ext\": \"mp4\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080p - unknown\"}, {\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://imdb-video.media-imdb.test/360.m3u8\", \"manifest_url\": \"https://imdb-video.media-imdb.test/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360\"}, {\"format_id\": \"hls-2000\", \"format_index\": null, \"url\": \"https://imdb-video.media-imdb.test/720.m3u8\", \"manifest_url\": \"https://imdb-video.media-imdb.test/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2000 - 1280x720\"}], \"description\": \"A trailer &amp; more\", \"thumbnail\": \"https://m.media-amazon.test/thumb.jpg\", \"duration\": 125, \"subtitles\": {\"en\": [{\"url\": \"https://imdb-video.media-imdb.test/subs.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"webpage_url\": \"https://www.imdb.com/video/imdb/vi2524815897\", \"original_url\": \"https://www.imdb.com/video/imdb/vi2524815897\", \"webpage_url_basename\": \"vi2524815897\", \"webpage_url_domain\": \"imdb.com\", \"extractor\": \"imdb\", \"extractor_key\": \"Imdb\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://m.media-amazon.test/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"2524815897\", \"fulltitle\": \"No. 2\", \"duration_string\": \"2:05\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-2000\", \"url\": \"https://imdb-video.media-imdb.test/720.m3u8\", \"manifest_url\": \"https://imdb-video.media-imdb.test/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": 1, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2000 - 1280x720\", \"_filename\": \"No. 2 [2524815897].mp4\", \"filename\": \"No. 2 [2524815897].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-2000\", \"format_index\": null, \"url\": \"https://imdb-video.media-imdb.test/720.m3u8\", \"manifest_url\": \"https://imdb-video.media-imdb.test/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": 1, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2000 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.imdb.com/video/imdb/vi2524815897",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[imdb] Extracting URL: https://www.imdb.com/video/imdb/vi2524815897",
+    "[imdb] 2524815897: Downloading webpage",
+    "[imdb] 2524815897: Downloading m3u8 information",
+    "[info] Available formats for 2524815897:",
+    "ID       EXT RESOLUTION |  FILESIZE   TBR PROTO | VCODEC  ACODEC",
+    "-----------------------------------------------------------------",
+    "SD       mp4 unknown    |                 https | unknown unknown",
+    "1080p    mp4 unknown    |                 https | unknown unknown",
+    "hls-800  mp4 640x360    | ~11.92MiB  800k m3u8  | unknown unknown",
+    "hls-2000 mp4 1280x720   | ~29.80MiB 2000k m3u8  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.imdb.com/video/imdb/vi2524815897",
+   "args": [
+    "--no-progress",
+    "-f",
+    "1080p",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[imdb] Extracting URL: https://www.imdb.com/video/imdb/vi2524815897",
+    "[imdb] 2524815897: Downloading webpage",
+    "[imdb] 2524815897: Downloading m3u8 information",
+    "[info] 2524815897: Downloading 1 format(s): 1080p",
+    "[download] Destination: 2524815897.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "2524815897.mp4": 18
+   }
+  },
+  {
+   "url": "https://m.imdb.com/title/tt0000001/videoplayer/vi3516832537",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3516832537\", \"title\": \"Legacy & Co\", \"alt_title\": null, \"formats\": [{\"format_id\": \"480p\", \"url\": \"https://imdb-video.media-imdb.test/480.mp4\", \"ext\": \"mp4\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"480p - unknown\"}, {\"format_id\": \"720p\", \"url\": \"https://imdb-video.media-imdb.test/720.webm\", \"ext\": \"webm\", \"quality\": 2, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - unknown\"}], \"description\": null, \"thumbnail\": null, \"subtitles\": {}, \"webpage_url\": \"https://m.imdb.com/title/tt0000001/videoplayer/vi3516832537\", \"original_url\": \"https://m.imdb.com/title/tt0000001/videoplayer/vi3516832537\", \"webpage_url_basename\": \"vi3516832537\", \"webpage_url_domain\": \"m.imdb.com\", \"extractor\": \"imdb\", \"extractor_key\": \"Imdb\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"3516832537\", \"fulltitle\": \"Legacy & Co\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"720p\", \"url\": \"https://imdb-video.media-imdb.test/720.webm\", \"ext\": \"webm\", \"quality\": 2, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - unknown\", \"_filename\": \"Legacy & Co [3516832537].webm\", \"filename\": \"Legacy & Co [3516832537].webm\", \"__write_download_archive\": false}], \"format_id\": \"720p\", \"url\": \"https://imdb-video.media-imdb.test/720.webm\", \"ext\": \"webm\", \"quality\": 2, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.imdb.com/video/vi1111111111",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 'NoneType' object is not iterable"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.imdb.com/list/ls009921623/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"009921623\", \"title\": \"Nice & trailers\", \"description\": \"Some videos\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Imdb\", \"_type\": \"url\", \"url\": \"http://www.imdb.com/list/ls009921623/videoplayer/vi260482329?ref=x\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Imdb\", \"_type\": \"url\", \"url\": \"http://www.imdb.com/list/ls009921623/videoplayer/vi351236121\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.imdb.com/list/ls009921623/\", \"original_url\": \"https://www.imdb.com/list/ls009921623/\", \"webpage_url_basename\": \"ls009921623\", \"webpage_url_domain\": \"imdb.com\", \"extractor\": \"imdb:list\", \"extractor_key\": \"ImdbList\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.imdb.com/list/ls123456789/",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [imdb:list] 123456789: Unable to extract list description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

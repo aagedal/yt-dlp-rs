@@ -1,0 +1,15 @@
+{
+ "video": {
+  "format": "mp4-hd",
+  "url": "https://media.ftven.fr/NI_657393/video.mp4",
+  "duration": 76.5,
+  "is_live": false
+ },
+ "meta": {
+  "title": "Journal 20h00",
+  "additional_title": "",
+  "pre_title": "Épisode spécial",
+  "image_url": "https://media.ftven.fr/NI_657393/poster.jpg",
+  "broadcasted_at": "2021-04-21T18:08:38Z"
+ }
+}

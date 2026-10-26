@@ -1,0 +1,51 @@
+{
+ "id": "x",
+ "title": "MDR Fernsehen live",
+ "tracking": {
+  "atiCustomVars": {
+   "contentId": 4711,
+   "clipTitle": "MDR Fernsehen live"
+  }
+ },
+ "widgets": [
+  {
+   "type": "teaser_lane",
+   "title": "Mehr"
+  },
+  {
+   "id": "p",
+   "type": "player_live",
+   "title": "MDR Fernsehen live",
+   "mediaCollection": {
+    "embedded": {
+     "meta": {
+      "title": "MDR Fernsehen",
+      "clipSourceName": "MDR",
+      "images": [
+       {
+        "url": "not a url"
+       }
+      ]
+     },
+     "streams": [
+      {
+       "kind": "main",
+       "media": [
+        {
+         "url": "https://mdr-live.example/live/master.m3u8",
+         "audios": [
+          {
+           "kind": "standard",
+           "languageCode": "deu"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    "href": "https://api.ardmediathek.de/x"
+   }
+  }
+ ]
+}

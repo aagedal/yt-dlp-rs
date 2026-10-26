@@ -13,6 +13,8 @@ pub(crate) const NO_FORMATS: &str = "__yt_dlp_rs_no_formats";
 /// upstream's info dict has `formats: []` and none of a format's fields
 /// (this port's top-level URL and extension are placeholders).
 pub(crate) const FORMATS_IGNORED: &str = "__yt_dlp_rs_formats_ignored";
+/// The keys a format selection would add (see [`VideoInfo::mark_unselected`]).
+pub(crate) const UNSELECTED: &str = "__yt_dlp_rs_unselected";
 
 /// The top-level format fields a result without formats does not have.
 pub(crate) const FORMAT_FIELDS: [&str; 30] = [
@@ -165,6 +167,17 @@ impl ExtractResult {
 #[derive(Debug, Clone)]
 pub struct PendingEntries {
     pub(crate) state: serde_json::Value,
+}
+
+impl PendingEntries {
+    /// A random-access paged list (upstream `PagedList`) reads only the
+    /// pages of the selection's entries, in request order; other pending
+    /// entries are fetched as a prefix and ignore this.
+    pub fn request_entries(&mut self, selection: &crate::PlaylistSelection) {
+        if self.state["random_access"] == true {
+            self.state["requests"] = selection.entry_requests().into();
+        }
+    }
 }
 
 /// A list field's `None` (`chapters: null`) as an empty list; the `null`
@@ -849,6 +862,38 @@ impl VideoInfo {
         self.extra.contains_key(FORMATS_IGNORED)
     }
 
+    /// Before format selection (`pre_process`/`after_filter` prints): the
+    /// `ext` and `url` keys the extractor's own dict did not set are
+    /// missing, as they come from the selected format.
+    pub fn mark_unselected(&mut self) {
+        let shape = self
+            .extra
+            .get(crate::info_order::INFO_SHAPE)
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or_default();
+        let own: Vec<&str> = shape
+            .strip_prefix("dict;")
+            .or_else(|| shape.strip_prefix("dict-untitled;"))
+            .and_then(|rest| rest.split(';').next())
+            .map(|keys| keys.split(',').collect())
+            .unwrap_or_default();
+        let missing: Vec<serde_json::Value> = ["ext", "url"]
+            .into_iter()
+            .filter(|key| !own.contains(key))
+            .map(serde_json::Value::from)
+            .collect();
+        self.extra.insert(UNSELECTED.into(), missing.into());
+    }
+
+    /// Whether `key` is missing before format selection (see
+    /// [`VideoInfo::mark_unselected`]).
+    pub fn unselected(&self, key: &str) -> bool {
+        self.extra
+            .get(UNSELECTED)
+            .and_then(serde_json::Value::as_array)
+            .is_some_and(|keys| keys.iter().any(|missing| missing == key))
+    }
+
     /// This result narrowed to one of its formats (upstream
     /// `new_info.update(fmt)` for a requested format's download).
     pub fn with_selected_format(&self, format: &VideoFormat) -> VideoInfo {
@@ -1383,9 +1428,12 @@ fn fill_description(format: &mut VideoFormat) {
             format.aspect_ratio = format!("{ratio:.2}").parse().ok();
         }
         if format.format.is_none() {
+            // `format_field(f, 'format_note', ' (%s)')`: an empty note is
+            // left out.
             let note = format
                 .format_note
                 .as_deref()
+                .filter(|note| !note.is_empty())
                 .map_or_else(String::new, |note| format!(" ({note})"));
             format.format = Some(format!(
                 "{} - {}{note}",

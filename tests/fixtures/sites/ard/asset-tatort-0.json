@@ -1,0 +1,1106 @@
+{
+ "title": "Tatort",
+ "synopsis": null,
+ "teasers": [
+  {
+   "id": "tatort-000",
+   "longTitle": "Tatort 0",
+   "duration": 5400,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-000"
+    }
+   }
+  },
+  {
+   "id": "tatort-001",
+   "longTitle": "Tatort 1",
+   "duration": 5401,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-001"
+    }
+   }
+  },
+  {
+   "id": "tatort-002",
+   "longTitle": "Tatort 2",
+   "duration": 5402,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-002"
+    }
+   }
+  },
+  {
+   "id": "tatort-003",
+   "longTitle": "Tatort 3",
+   "duration": 5403,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-003"
+    }
+   }
+  },
+  {
+   "id": "tatort-004",
+   "longTitle": "Tatort 4",
+   "duration": 5404,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-004"
+    }
+   }
+  },
+  {
+   "id": "tatort-005",
+   "longTitle": "Tatort 5",
+   "duration": 5405,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-005"
+    }
+   }
+  },
+  {
+   "id": "tatort-006",
+   "longTitle": "Tatort 6",
+   "duration": 5406,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-006"
+    }
+   }
+  },
+  {
+   "id": "tatort-007",
+   "longTitle": "Tatort 7",
+   "duration": 5407,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-007"
+    }
+   }
+  },
+  {
+   "id": "tatort-008",
+   "longTitle": "Tatort 8",
+   "duration": 5408,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-008"
+    }
+   }
+  },
+  {
+   "id": "tatort-009",
+   "longTitle": "Tatort 9",
+   "duration": 5409,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-009"
+    }
+   }
+  },
+  {
+   "id": "tatort-010",
+   "longTitle": "Tatort 10",
+   "duration": 5410,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-010"
+    }
+   }
+  },
+  {
+   "id": "tatort-011",
+   "longTitle": "Tatort 11",
+   "duration": 5411,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-011"
+    }
+   }
+  },
+  {
+   "id": "tatort-012",
+   "longTitle": "Tatort 12",
+   "duration": 5412,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-012"
+    }
+   }
+  },
+  {
+   "id": "tatort-013",
+   "longTitle": "Tatort 13",
+   "duration": 5413,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-013"
+    }
+   }
+  },
+  {
+   "id": "tatort-014",
+   "longTitle": "Tatort 14",
+   "duration": 5414,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-014"
+    }
+   }
+  },
+  {
+   "id": "tatort-015",
+   "longTitle": "Tatort 15",
+   "duration": 5415,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-015"
+    }
+   }
+  },
+  {
+   "id": "tatort-016",
+   "longTitle": "Tatort 16",
+   "duration": 5416,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-016"
+    }
+   }
+  },
+  {
+   "id": "tatort-017",
+   "longTitle": "Tatort 17",
+   "duration": 5417,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-017"
+    }
+   }
+  },
+  {
+   "id": "tatort-018",
+   "longTitle": "Tatort 18",
+   "duration": 5418,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-018"
+    }
+   }
+  },
+  {
+   "id": "tatort-019",
+   "longTitle": "Tatort 19",
+   "duration": 5419,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-019"
+    }
+   }
+  },
+  {
+   "id": "tatort-020",
+   "longTitle": "Tatort 20",
+   "duration": 5420,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-020"
+    }
+   }
+  },
+  {
+   "id": "tatort-021",
+   "longTitle": "Tatort 21",
+   "duration": 5421,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-021"
+    }
+   }
+  },
+  {
+   "id": "tatort-022",
+   "longTitle": "Tatort 22",
+   "duration": 5422,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-022"
+    }
+   }
+  },
+  {
+   "id": "tatort-023",
+   "longTitle": "Tatort 23",
+   "duration": 5423,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-023"
+    }
+   }
+  },
+  {
+   "id": "tatort-024",
+   "longTitle": "Tatort 24",
+   "duration": 5424,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-024"
+    }
+   }
+  },
+  {
+   "id": "tatort-025",
+   "longTitle": "Tatort 25",
+   "duration": 5425,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-025"
+    }
+   }
+  },
+  {
+   "id": "tatort-026",
+   "longTitle": "Tatort 26",
+   "duration": 5426,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-026"
+    }
+   }
+  },
+  {
+   "id": "tatort-027",
+   "longTitle": "Tatort 27",
+   "duration": 5427,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-027"
+    }
+   }
+  },
+  {
+   "id": "tatort-028",
+   "longTitle": "Tatort 28",
+   "duration": 5428,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-028"
+    }
+   }
+  },
+  {
+   "id": "tatort-029",
+   "longTitle": "Tatort 29",
+   "duration": 5429,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-029"
+    }
+   }
+  },
+  {
+   "id": "tatort-030",
+   "longTitle": "Tatort 30",
+   "duration": 5430,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-030"
+    }
+   }
+  },
+  {
+   "id": "tatort-031",
+   "longTitle": "Tatort 31",
+   "duration": 5431,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-031"
+    }
+   }
+  },
+  {
+   "id": "tatort-032",
+   "longTitle": "Tatort 32",
+   "duration": 5432,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-032"
+    }
+   }
+  },
+  {
+   "id": "tatort-033",
+   "longTitle": "Tatort 33",
+   "duration": 5433,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-033"
+    }
+   }
+  },
+  {
+   "id": "tatort-034",
+   "longTitle": "Tatort 34",
+   "duration": 5434,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-034"
+    }
+   }
+  },
+  {
+   "id": "tatort-035",
+   "longTitle": "Tatort 35",
+   "duration": 5435,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-035"
+    }
+   }
+  },
+  {
+   "id": "tatort-036",
+   "longTitle": "Tatort 36",
+   "duration": 5436,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-036"
+    }
+   }
+  },
+  {
+   "id": "tatort-037",
+   "longTitle": "Tatort 37",
+   "duration": 5437,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-037"
+    }
+   }
+  },
+  {
+   "id": "tatort-038",
+   "longTitle": "Tatort 38",
+   "duration": 5438,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-038"
+    }
+   }
+  },
+  {
+   "id": "tatort-039",
+   "longTitle": "Tatort 39",
+   "duration": 5439,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-039"
+    }
+   }
+  },
+  {
+   "id": "tatort-040",
+   "longTitle": "Tatort 40",
+   "duration": 5440,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-040"
+    }
+   }
+  },
+  {
+   "id": "tatort-041",
+   "longTitle": "Tatort 41",
+   "duration": 5441,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-041"
+    }
+   }
+  },
+  {
+   "id": "tatort-042",
+   "longTitle": "Tatort 42",
+   "duration": 5442,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-042"
+    }
+   }
+  },
+  {
+   "id": "tatort-043",
+   "longTitle": "Tatort 43",
+   "duration": 5443,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-043"
+    }
+   }
+  },
+  {
+   "id": "tatort-044",
+   "longTitle": "Tatort 44",
+   "duration": 5444,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-044"
+    }
+   }
+  },
+  {
+   "id": "tatort-045",
+   "longTitle": "Tatort 45",
+   "duration": 5445,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-045"
+    }
+   }
+  },
+  {
+   "id": "tatort-046",
+   "longTitle": "Tatort 46",
+   "duration": 5446,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-046"
+    }
+   }
+  },
+  {
+   "id": "tatort-047",
+   "longTitle": "Tatort 47",
+   "duration": 5447,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-047"
+    }
+   }
+  },
+  {
+   "id": "tatort-048",
+   "longTitle": "Tatort 48",
+   "duration": 5448,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-048"
+    }
+   }
+  },
+  {
+   "id": "tatort-049",
+   "longTitle": "Tatort 49",
+   "duration": 5449,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-049"
+    }
+   }
+  },
+  {
+   "id": "tatort-050",
+   "longTitle": "Tatort 50",
+   "duration": 5450,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-050"
+    }
+   }
+  },
+  {
+   "id": "tatort-051",
+   "longTitle": "Tatort 51",
+   "duration": 5451,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-051"
+    }
+   }
+  },
+  {
+   "id": "tatort-052",
+   "longTitle": "Tatort 52",
+   "duration": 5452,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-052"
+    }
+   }
+  },
+  {
+   "id": "tatort-053",
+   "longTitle": "Tatort 53",
+   "duration": 5453,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-053"
+    }
+   }
+  },
+  {
+   "id": "tatort-054",
+   "longTitle": "Tatort 54",
+   "duration": 5454,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-054"
+    }
+   }
+  },
+  {
+   "id": "tatort-055",
+   "longTitle": "Tatort 55",
+   "duration": 5455,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-055"
+    }
+   }
+  },
+  {
+   "id": "tatort-056",
+   "longTitle": "Tatort 56",
+   "duration": 5456,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-056"
+    }
+   }
+  },
+  {
+   "id": "tatort-057",
+   "longTitle": "Tatort 57",
+   "duration": 5457,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-057"
+    }
+   }
+  },
+  {
+   "id": "tatort-058",
+   "longTitle": "Tatort 58",
+   "duration": 5458,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-058"
+    }
+   }
+  },
+  {
+   "id": "tatort-059",
+   "longTitle": "Tatort 59",
+   "duration": 5459,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-059"
+    }
+   }
+  },
+  {
+   "id": "tatort-060",
+   "longTitle": "Tatort 60",
+   "duration": 5460,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-060"
+    }
+   }
+  },
+  {
+   "id": "tatort-061",
+   "longTitle": "Tatort 61",
+   "duration": 5461,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-061"
+    }
+   }
+  },
+  {
+   "id": "tatort-062",
+   "longTitle": "Tatort 62",
+   "duration": 5462,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-062"
+    }
+   }
+  },
+  {
+   "id": "tatort-063",
+   "longTitle": "Tatort 63",
+   "duration": 5463,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-063"
+    }
+   }
+  },
+  {
+   "id": "tatort-064",
+   "longTitle": "Tatort 64",
+   "duration": 5464,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-064"
+    }
+   }
+  },
+  {
+   "id": "tatort-065",
+   "longTitle": "Tatort 65",
+   "duration": 5465,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-065"
+    }
+   }
+  },
+  {
+   "id": "tatort-066",
+   "longTitle": "Tatort 66",
+   "duration": 5466,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-066"
+    }
+   }
+  },
+  {
+   "id": "tatort-067",
+   "longTitle": "Tatort 67",
+   "duration": 5467,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-067"
+    }
+   }
+  },
+  {
+   "id": "tatort-068",
+   "longTitle": "Tatort 68",
+   "duration": 5468,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-068"
+    }
+   }
+  },
+  {
+   "id": "tatort-069",
+   "longTitle": "Tatort 69",
+   "duration": 5469,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-069"
+    }
+   }
+  },
+  {
+   "id": "tatort-070",
+   "longTitle": "Tatort 70",
+   "duration": 5470,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-070"
+    }
+   }
+  },
+  {
+   "id": "tatort-071",
+   "longTitle": "Tatort 71",
+   "duration": 5471,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-071"
+    }
+   }
+  },
+  {
+   "id": "tatort-072",
+   "longTitle": "Tatort 72",
+   "duration": 5472,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-072"
+    }
+   }
+  },
+  {
+   "id": "tatort-073",
+   "longTitle": "Tatort 73",
+   "duration": 5473,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-073"
+    }
+   }
+  },
+  {
+   "id": "tatort-074",
+   "longTitle": "Tatort 74",
+   "duration": 5474,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-074"
+    }
+   }
+  },
+  {
+   "id": "tatort-075",
+   "longTitle": "Tatort 75",
+   "duration": 5475,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-075"
+    }
+   }
+  },
+  {
+   "id": "tatort-076",
+   "longTitle": "Tatort 76",
+   "duration": 5476,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-076"
+    }
+   }
+  },
+  {
+   "id": "tatort-077",
+   "longTitle": "Tatort 77",
+   "duration": 5477,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-077"
+    }
+   }
+  },
+  {
+   "id": "tatort-078",
+   "longTitle": "Tatort 78",
+   "duration": 5478,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-078"
+    }
+   }
+  },
+  {
+   "id": "tatort-079",
+   "longTitle": "Tatort 79",
+   "duration": 5479,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-079"
+    }
+   }
+  },
+  {
+   "id": "tatort-080",
+   "longTitle": "Tatort 80",
+   "duration": 5480,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-080"
+    }
+   }
+  },
+  {
+   "id": "tatort-081",
+   "longTitle": "Tatort 81",
+   "duration": 5481,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-081"
+    }
+   }
+  },
+  {
+   "id": "tatort-082",
+   "longTitle": "Tatort 82",
+   "duration": 5482,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-082"
+    }
+   }
+  },
+  {
+   "id": "tatort-083",
+   "longTitle": "Tatort 83",
+   "duration": 5483,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-083"
+    }
+   }
+  },
+  {
+   "id": "tatort-084",
+   "longTitle": "Tatort 84",
+   "duration": 5484,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-084"
+    }
+   }
+  },
+  {
+   "id": "tatort-085",
+   "longTitle": "Tatort 85",
+   "duration": 5485,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-085"
+    }
+   }
+  },
+  {
+   "id": "tatort-086",
+   "longTitle": "Tatort 86",
+   "duration": 5486,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-086"
+    }
+   }
+  },
+  {
+   "id": "tatort-087",
+   "longTitle": "Tatort 87",
+   "duration": 5487,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-087"
+    }
+   }
+  },
+  {
+   "id": "tatort-088",
+   "longTitle": "Tatort 88",
+   "duration": 5488,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-088"
+    }
+   }
+  },
+  {
+   "id": "tatort-089",
+   "longTitle": "Tatort 89",
+   "duration": 5489,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-089"
+    }
+   }
+  },
+  {
+   "id": "tatort-090",
+   "longTitle": "Tatort 90",
+   "duration": 5490,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-090"
+    }
+   }
+  },
+  {
+   "id": "tatort-091",
+   "longTitle": "Tatort 91",
+   "duration": 5491,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-091"
+    }
+   }
+  },
+  {
+   "id": "tatort-092",
+   "longTitle": "Tatort 92",
+   "duration": 5492,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-092"
+    }
+   }
+  },
+  {
+   "id": "tatort-093",
+   "longTitle": "Tatort 93",
+   "duration": 5493,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-093"
+    }
+   }
+  },
+  {
+   "id": "tatort-094",
+   "longTitle": "Tatort 94",
+   "duration": 5494,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-094"
+    }
+   }
+  },
+  {
+   "id": "tatort-095",
+   "longTitle": "Tatort 95",
+   "duration": 5495,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-095"
+    }
+   }
+  },
+  {
+   "id": "tatort-096",
+   "longTitle": "Tatort 96",
+   "duration": 5496,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-096"
+    }
+   }
+  },
+  {
+   "id": "tatort-097",
+   "longTitle": "Tatort 97",
+   "duration": 5497,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-097"
+    }
+   }
+  },
+  {
+   "id": "tatort-098",
+   "longTitle": "Tatort 98",
+   "duration": 5498,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-098"
+    }
+   }
+  },
+  {
+   "id": "tatort-099",
+   "longTitle": "Tatort 99",
+   "duration": 5499,
+   "broadcastedOn": "2024-01-07T20:15:00+01:00",
+   "links": {
+    "target": {
+     "urlId": "tatort-099"
+    }
+   }
+  }
+ ]
+}

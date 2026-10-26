@@ -1,5 +1,5 @@
 {
- "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
  "cases": [
   {
    "url": "https://www.bitchute.com/video/UGlrF9o9b-Q/",
@@ -80,6 +80,171 @@
    "files": {
     "UGlrF9o9b-Q.mp4": 17
    }
+  },
+  {
+   "url": "https://www.bitchute.com/channel/testchan/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Test Channel\", \"description\": \"A synthetic & channel\", \"playlist_count\": 27, \"id\": \"testchan\", \"_type\": \"playlist\", \"entries\": [{\"title\": \"Video & 61\", \"description\": \"About 61\\nMore\", \"duration\": 61, \"view_count\": 61100, \"ie_key\": \"BitChute\", \"id\": \"UGlrF9o9b-Q\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/UGlrF9o9b-Q\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 62\", \"description\": \"About 62\\nMore\", \"duration\": 62, \"view_count\": 62200, \"ie_key\": \"BitChute\", \"id\": \"vid002\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid002\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 63\", \"description\": \"About 63\\nMore\", \"duration\": 63, \"view_count\": 63300, \"ie_key\": \"BitChute\", \"id\": \"vid003\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid003\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 64\", \"description\": \"About 64\\nMore\", \"duration\": 64, \"view_count\": 64400, \"ie_key\": \"BitChute\", \"id\": \"vid004\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid004\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 65\", \"description\": \"About 65\\nMore\", \"duration\": 65, \"view_count\": 65500, \"ie_key\": \"BitChute\", \"id\": \"vid005\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid005\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 66\", \"description\": \"About 66\\nMore\", \"duration\": 66, \"view_count\": 66600, \"ie_key\": \"BitChute\", \"id\": \"vid006\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid006\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 67\", \"description\": \"About 67\\nMore\", \"duration\": 67, \"view_count\": 67700, \"ie_key\": \"BitChute\", \"id\": \"vid007\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid007\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 68\", \"description\": \"About 68\\nMore\", \"duration\": 68, \"view_count\": 68800, \"ie_key\": \"BitChute\", \"id\": \"vid008\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid008\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 69\", \"description\": \"About 69\\nMore\", \"duration\": 69, \"view_count\": 69900, \"ie_key\": \"BitChute\", \"id\": \"vid009\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid009\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 70\", \"description\": \"About 70\\nMore\", \"duration\": 70, \"view_count\": 70000, \"ie_key\": \"BitChute\", \"id\": \"vid010\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid010\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 71\", \"description\": \"About 71\\nMore\", \"duration\": 71, \"view_count\": 71100, \"ie_key\": \"BitChute\", \"id\": \"vid011\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid011\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 72\", \"description\": \"About 72\\nMore\", \"duration\": 72, \"view_count\": 72200, \"ie_key\": \"BitChute\", \"id\": \"vid012\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid012\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 73\", \"description\": \"About 73\\nMore\", \"duration\": 73, \"view_count\": 73300, \"ie_key\": \"BitChute\", \"id\": \"vid013\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid013\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 74\", \"description\": \"About 74\\nMore\", \"duration\": 74, \"view_count\": 74400, \"ie_key\": \"BitChute\", \"id\": \"vid014\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid014\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 75\", \"description\": \"About 75\\nMore\", \"duration\": 75, \"view_count\": 75500, \"ie_key\": \"BitChute\", \"id\": \"vid015\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid015\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 76\", \"description\": \"About 76\\nMore\", \"duration\": 76, \"view_count\": 76600, \"ie_key\": \"BitChute\", \"id\": \"vid016\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid016\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 77\", \"description\": \"About 77\\nMore\", \"duration\": 77, \"view_count\": 77700, \"ie_key\": \"BitChute\", \"id\": \"vid017\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid017\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 78\", \"description\": \"About 78\\nMore\", \"duration\": 78, \"view_count\": 78800, \"ie_key\": \"BitChute\", \"id\": \"vid018\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid018\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 79\", \"description\": \"About 79\\nMore\", \"duration\": 79, \"view_count\": 79900, \"ie_key\": \"BitChute\", \"id\": \"vid019\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid019\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 80\", \"description\": \"About 80\\nMore\", \"duration\": 80, \"view_count\": 80000, \"ie_key\": \"BitChute\", \"id\": \"vid020\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid020\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 81\", \"description\": \"About 81\\nMore\", \"duration\": 81, \"view_count\": 81100, \"ie_key\": \"BitChute\", \"id\": \"vid021\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid021\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 82\", \"description\": \"About 82\\nMore\", \"duration\": 82, \"view_count\": 82200, \"ie_key\": \"BitChute\", \"id\": \"vid022\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid022\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 83\", \"description\": \"About 83\\nMore\", \"duration\": 83, \"view_count\": 83300, \"ie_key\": \"BitChute\", \"id\": \"vid023\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid023\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 84\", \"description\": \"About 84\\nMore\", \"duration\": 84, \"view_count\": 84400, \"ie_key\": \"BitChute\", \"id\": \"vid024\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid024\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 85\", \"description\": \"About 85\\nMore\", \"duration\": 85, \"view_count\": 85500, \"ie_key\": \"BitChute\", \"id\": \"vid025\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid025\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 3601\", \"description\": \"About 3601\\nMore\", \"duration\": 3601, \"view_count\": 3601100, \"ie_key\": \"BitChute\", \"id\": \"vid026\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid026\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Video & 5\", \"description\": \"About 5\\nMore\", \"duration\": 5, \"view_count\": 5500, \"ie_key\": \"BitChute\", \"id\": \"vid027\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/vid027\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.bitchute.com/channel/testchan/\", \"original_url\": \"https://www.bitchute.com/channel/testchan/\", \"webpage_url_basename\": \"testchan\", \"webpage_url_domain\": \"bitchute.com\", \"extractor\": \"BitChuteChannel\", \"extractor_key\": \"BitChuteChannel\", \"release_year\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bitchute.com/channel/testchan/",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "26,2,27",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(title)s|%(duration)s|%(view_count)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "26|vid026|Video & 3601|3601|3601100|27",
+    "02|vid002|Video & 62|62|62200|27",
+    "27|vid027|Video & 5|5|5500|27"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bitchute.com/channel/testchan/",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "24:30",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "24|vid024|27",
+    "25|vid025|27",
+    "26|vid026|27",
+    "27|vid027|27"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bitchute.com/channel/testchan/",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[BitChuteChannel] Extracting URL: https://www.bitchute.com/channel/testchan/",
+    "[BitChuteChannel] testchan: Downloading webpage",
+    "[download] Downloading playlist: Test Channel",
+    "[BitChuteChannel] testchan: Downloading page 0",
+    "[BitChuteChannel] Playlist Test Channel: Downloading 1 items of 27",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Test Channel"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bitchute.com/channel/testchan/",
+   "args": [
+    "-I",
+    "1",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(title)s|%(duration)s|%(view_count)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|UGlrF9o9b-Q|Video & 61|61|61100|27"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://old.bitchute.com/playlist/pl1/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": null, \"description\": \"Playlist text\", \"playlist_count\": 3, \"id\": \"pl1\", \"_type\": \"playlist\", \"entries\": [{\"title\": \"Item 1\", \"description\": null, \"duration\": 61, \"view_count\": 1, \"ie_key\": \"BitChute\", \"id\": \"pv1\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/pv1\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Item 2\", \"description\": null, \"duration\": 62, \"view_count\": 2, \"ie_key\": \"BitChute\", \"id\": \"pv2\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/pv2\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Item 3\", \"description\": null, \"duration\": 63, \"view_count\": 3, \"ie_key\": \"BitChute\", \"id\": \"pv3\", \"_type\": \"url_transparent\", \"url\": \"https://www.bitchute.com/video/pv3\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://old.bitchute.com/playlist/pl1/\", \"original_url\": \"https://old.bitchute.com/playlist/pl1/\", \"webpage_url_basename\": \"pl1\", \"webpage_url_domain\": \"old.bitchute.com\", \"extractor\": \"BitChuteChannel\", \"extractor_key\": \"BitChuteChannel\", \"release_year\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bitchute.com/playlist/pl1",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "2:",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2|pv2|3",
+    "3|pv3|3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bitchute.com/channel/empty/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Empty\", \"description\": null, \"playlist_count\": 1, \"id\": \"empty\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.bitchute.com/channel/empty/\", \"original_url\": \"https://www.bitchute.com/channel/empty/\", \"webpage_url_basename\": \"empty\", \"webpage_url_domain\": \"bitchute.com\", \"extractor\": \"BitChuteChannel\", \"extractor_key\": \"BitChuteChannel\", \"release_year\": null, \"requested_entries\": [], \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bitchute.com/channel/gone/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [BitChuteChannel] gone: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bitchute.com/channel/testchan/",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "26,2"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[BitChuteChannel] Extracting URL: https://www.bitchute.com/channel/testchan/",
+    "[BitChuteChannel] testchan: Downloading webpage",
+    "[download] Downloading playlist: Test Channel",
+    "[BitChuteChannel] testchan: Downloading page 1",
+    "[BitChuteChannel] testchan: Downloading page 0",
+    "[BitChuteChannel] Playlist Test Channel: Downloading 2 items of 27",
+    "[download] Downloading item 1 of 2",
+    "[download] Downloading item 2 of 2",
+    "[download] Finished downloading playlist: Test Channel"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

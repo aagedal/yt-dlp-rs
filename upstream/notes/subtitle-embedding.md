@@ -59,7 +59,7 @@ MP4/MKV/WebM media/subtitle codecs, language/name metadata, cue text and replace
 of existing subtitle tracks. Required tests have no live-site dependency; Linux
 real-media CI runs these checks.
 
-Remaining scope includes manifest/other-site caption acquisition, regex languages,
+Remaining scope includes manifest/other-site caption acquisition,
 additional active input formats, arbitrary postprocessor arguments, broader
 codec/container guarantees and general postprocessing parity. See
 [compatibility details](../../docs/COMPATIBILITY.md#subtitle-embedding) and

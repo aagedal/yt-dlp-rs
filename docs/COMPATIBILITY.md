@@ -19,7 +19,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--dump-pages`, `--write-pages` | Upstream `_webpage_read_content` for the bodies extraction reads: the generic HTML or DASH page (before `Extracting information`), its m3u8 manifest (after `Downloading m3u8 information`) and the `Checking m3u8 live status` playlist, and embedded HTML5 manifests. `--dump-pages` prints `[EXTRACTOR] Dumping request to URL` and the base64 body; `--write-pages` prints `[EXTRACTOR] Saving request to FILE` and writes the body to `_request_dump_filename`'s name in the working directory (`ID_URL.dump`, restricted-sanitized, cut to `--trim-filenames` or 240 characters with a `___MD5` suffix). Direct media and the downloader's own playlist refetches are not dumped, as upstream. YouTube extraction dumps the watch and client-config pages, every InnerTube POST (`player`, `next`, `browse`, ...; named `ID_MD5_URL.dump` with the MD5 of the request body, which is sent byte-identically to upstream's `json.dumps`), the player JS and the iframe API JS; generic `_download_json` bodies are dumped too (`youtube-dumps`, `bild`) |
 | `-v`, `--verbose` | Upstream `write_debug` `[debug] ` lines on stderr: the configuration tree (`Command-line config: [...]`, nested `\| ` locations, `hide_login_info` `PRIVATE` values) and `Batch file urls`, then `print_debug_header`'s `Encodings` (utf-8, `No ANSI`/`dumb` per stream), `exe versions` (`ffmpeg -bsfs` version and `fdk`/`needs_adtstoasc`/`setts` features) and `Proxy map` (`--proxy` or `*_proxy` environment, Python dict) lines, then validation warnings, `Loaded 3 extractors` and `Loading archive file`; during processing `Identified a direct video link`/`M3U playlist`/`DASH manifest`, `Looking for embeds`/`Identified a html5 embed` (`N html5 embeds`), `Sort order given by user`/`by extractor` and `Formats sorted by` (with limits like `hdr:12(7)`), `Default format spec`, `Invoking http`/`hlsnative`/`dashsegments`/`ffmpeg downloader on "URL"` (also for subtitles), `ffmpeg`/`ffprobe command line` for every FFmpeg run (FFmpegFD also switches to `-loglevel verbose` without `-hide_banner`), MetadataParser `Searching for`/`Replacing all` and `Adding to archive`. `Extracting URL` lines are not truncated, quiet-mode screen lines go to stderr and `--no-warnings` warnings print as `[debug] WARNING:`. Verified against pinned upstream except environment lines: the version and system lines describe this port (`yt-dlp-rs version`, `Rust native build`), Python-only lines (lazy extractors, Git HEAD, optional libraries, JS runtimes, request handlers, plugins) are omitted, FFmpeg command lines show the resolved executable and this port's arguments, error tracebacks and failed-FFmpeg stderr dumps are not printed, and `Formats sorted by` is reported when a result is extracted (before, not between, a playlist's entry downloads) |
 | `-s`, `--simulate`, `--no-simulate` | Extract metadata, print screen lines to stdout and diagnostics to stderr, create no media files; `--no-simulate` downloads even with printing/JSON/listing; last flag wins; resolution matches upstream (`tools/compare_simulate.py`) |
-| `-O`, `--print [WHEN:]TEMPLATE` | Print a field list or unsanitized output template per selected video at the `video`, `before_dl`, `post_process`, `after_move` or `after_video` stage, or once per playlist at `playlist` (after its entries, over the playlist dict: `id`, `title`, `playlist_count`, `requested_entries` and the extracted entries); implies quiet, and simulation unless a later stage prints; repeatable; see [print templates](#print-templates) |
+| `-O`, `--print [WHEN:]TEMPLATE` | Print a field list or unsanitized output template per selected video at the `pre_process`, `after_filter`, `video`, `before_dl`, `post_process`, `after_move` or `after_video` stage, or once per playlist at `playlist` (after its entries, over the playlist dict: `id`, `title`, `playlist_count`, `requested_entries` and the extracted entries); implies quiet, and simulation unless a later stage prints; repeatable; see [print templates](#print-templates) |
 | `-e`/`--get-title`, `--get-id`, `-g`/`--get-url`, `--get-thumbnail`, `--get-description`, `--get-filename`, `--get-duration`, `--get-format` | Hidden upstream aliases printing, after `--print` lines and in upstream `__forced_printings` order, title, ID, selected URLs, thumbnail, description, prepared filename, `formatSeconds` duration and `format`; thumbnail, description and duration print only when present; imply quiet simulation |
 | `-f`, `--format` | `-f -` is upstream's interactive selection: the formats table, then `Enter format selector (Press ENTER for default, or Ctrl+C to quit): ` read from stdin until a selector selects something (`ERROR: Requested format is not available` or the syntax error is reported without failing; an empty line is the default; end of input is `ERROR: EOF when reading a line`). A port of upstream `build_format_selector`: atoms, ranks, extensions, IDs, `all`/`mergeall`, filters, groups, `/`, `+` and `,`; see [Format selection](#format-selection); format IDs follow upstream for direct, HLS and DASH results (see below); exactly `-f best` or `-f mp4` prints upstream's common-mistake warning, ordered with the other `validate_options` conflict warnings |
 | `-o`, `--output [TYPES:]TEMPLATE` | Upstream's template keys (traversal, maths, `>` dates, alternates, `&` replacements, defaults) and conversions (`diuoxXeEfFgGcrsa` plus `ljhqBUDS`), flags/width/precision and literal `%%`; upstream metadata sanitization; typed `subtitle`/`infojson`/`pl_infojson` templates (empty skips that file), `~`/`$VAR` template expansion; no overwrite; see [output paths](../upstream/notes/output-paths.md) |
@@ -29,7 +29,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--write-auto-subs`, `--write-automatic-subs` | Select automatic captions independently; manual tracks win shared languages when both writing flags are enabled |
 | `--no-write-auto-subs`, `--no-write-automatic-subs` | Disable automatic writing; last automatic write/no-write flag wins |
 | `--no-write-subs`, `--no-write-srt` | Disable subtitle writing; last write/no-write flag wins |
-| `--sub-langs`, `--srt-langs` | Repeated comma-separated literal tags, `all` and `-` exclusions; trimmed tokens, case-insensitive matching; no regex |
+| `--sub-langs`, `--srt-langs` | Upstream `orderedSet_from_options(..., use_regex=True)`: repeated comma-separated items (stripped, empty ones dropped; only empty items keep the default language), the `all` alias, `-` exclusions and case-insensitive regular expressions that must match a whole language tag; an invalid regex is the per-URL `Wrong regex for subtitlelangs: PATTERN` error once subtitles are available. Regex syntax follows the Rust `regex` crate (no look-around or backreferences, which are reported as invalid); unknown-language (`null`) tracks are matched only by `all` |
 | `--embed-subs`, `--no-embed-subs` | Embed selected sidecars after media processing; implied acquisition and source retention rules below; last flag wins |
 | `--convert-subs`, `--convert-sub`, `--convert-subtitles` | Convert written sidecars to one of srt/vtt/ass/lrc; `none` disables; no implied subtitle writing |
 | `--sub-format` | Ordered `/` preferences, default `best`; last matching format or last available with a warning |
@@ -43,7 +43,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--date`, `--datebefore`, `--dateafter DATE` | Upstream `DateRange` from strict `date_from_str` (`YYYYMMDD` or `now`/`today`/`yesterday` with `-N(day\|week\|month\|year)[s]`, UTC), `--date` overriding the others with upstream warnings, and upstream validation messages (out-of-range dates use the Python 3.13 wording); videos with an `upload_date` outside the range are skipped with `[download] YYYY-MM-DD upload date is not in range START to END` before the match filters; ASCII digits only |
 | `-i`, `--ignore-errors`, `--no-abort-on-error`, `--abort-on-error`, `--no-ignore-errors` | Upstream `ignoreerrors` (last flag wins): by default (`--no-abort-on-error`) a failed input or video is reported, the queue continues and the exit status is 1; `--abort-on-error` stops the queue at the first reported error; `-i` additionally reports a failed postprocessor (`ERROR: …`) and continues the remaining processors with the latest completed file, so the video is published and archived (exit status 1). Merging is not skipped under `-i` |
 | `--mtime`, `--no-mtime` | Upstream `try_utime`: with `--mtime` (off by default, last flag wins) whole-file media and subtitle downloads take their modification time from the final response's `Last-Modified` via ported `timeconvert` (`parsedate_tz` with zone offsets; the epoch is ignored), and fragmented downloads from the latest fragment carrying one; thumbnails are unaffected. Independently of `--mtime`, every FFmpeg output (merge, audio/video conversion, subtitle/metadata/thumbnail embedding) takes the oldest input modification time; timestamp failures are ignored |
-| `--exec [WHEN:]CMD`, `--no-exec` | Upstream `ExecPP` on POSIX (`/bin/sh -c`; rejected on Windows): case-insensitive `WHEN:` prefixes `video`, `before_dl`, `post_process`, `after_move` (default) and `after_video` run at upstream's points (`video` and `after_video` also when simulating; `before_dl` also with `--skip-download`; `post_process`/`after_move` also for an already-downloaded file); `playlist` commands run once after a playlist's entries (also when simulating) over the playlist dict, unchanged when they have no fields; `pre_process` and `after_filter` are rejected. Templates use output-template fields with only `d`/`i`/`f`/`q` (shell-quoted) conversions plus `filepath` and `_filename`, validated at startup with upstream's unsafe-conversion/default/placeholder errors (exit 1); without fields, `{}` (appended when absent) becomes the quoted path, absolute after the move. `[Exec] Executing command: CMD` precedes each run; a failing `post_process`/`after_move` command fails the video before archiving (`ERROR: Postprocessing: …`, or reported and skipped under `-i`), and a failing `video`/`before_dl` command is reported as `ERROR: Preprocessing: …` and again after the video. `--no-exec` clears earlier commands; hidden `--exec-before-download` maps to `before_dl` with upstream's conflict warning |
+| `--exec [WHEN:]CMD`, `--no-exec` | Upstream `ExecPP` on POSIX (`/bin/sh -c`; rejected on Windows): case-insensitive `WHEN:` prefixes `video`, `before_dl`, `post_process`, `after_move` (default) and `after_video` run at upstream's points (`video` and `after_video` also when simulating; `before_dl` also with `--skip-download`; `post_process`/`after_move` also for an already-downloaded file); `playlist` commands run once after a playlist's entries (also when simulating) over the playlist dict, unchanged when they have no fields; `pre_process` and `after_filter` commands run at those stages before format selection, a failure being upstream's deferred `Preprocessing:` error. Templates use output-template fields with only `d`/`i`/`f`/`q` (shell-quoted) conversions plus `filepath` and `_filename`, validated at startup with upstream's unsafe-conversion/default/placeholder errors (exit 1); without fields, `{}` (appended when absent) becomes the quoted path, absolute after the move. `[Exec] Executing command: CMD` precedes each run; a failing `post_process`/`after_move` command fails the video before archiving (`ERROR: Postprocessing: …`, or reported and skipped under `-i`), and a failing `video`/`before_dl` command is reported as `ERROR: Preprocessing: …` and again after the video. `--no-exec` clears earlier commands; hidden `--exec-before-download` maps to `before_dl` with upstream's conflict warning |
 | `--use-postprocessor NAME[:ARGS]` | Upstream `get_postprocessor` definitions for the built-in `Exec`/`ExecPP` only: `ARGS` is `;`-separated `NAME=VALUE` with `exec_cmd` and `when` (default `post_process`); the commands run like `--exec` ones and before the `--exec` commands of their stage. Other postprocessor names (plugins and built-ins) and other arguments are native errors |
 | `--concat-playlist POLICY` | Upstream `FFmpegConcatPP` at the `playlist` stage: `always` joins the entries' downloaded files with the FFmpeg concat demuxer (stream copy) into the `pl_video` output template (`ext` from the entries, `mkv` when they differ; upstream's playlist fields), after an ffprobe check that every file has the same stream codecs (`The files have different streams/codecs and cannot be concatenated…`); `[Concat] Concatenating N files; Destination: FILE`, then the parts are deleted unless `-k` (`Deleting original file ABSPATH (pass -k to keep)`); a single entry is moved (`[Concat] Moving "A" to "B"`); a failed entry aborts it (`Aborting concatenation because some downloads failed`); nothing happens when simulating. The default `multi_video` and `never` do nothing, since this port's extractors produce no multi-video results. Runs before `--exec playlist:` commands |
 | `--load-info-json FILE`, `--load-info` | Upstream `download_with_info_file`: FILE (with `~`/`$VAR` expansion) holds one dictionary or a list, each sanitized like the default `clean_infojson` (`None` values, `__` keys, `requested_*`, `entries`, `filepath`/`filename` and similar keys dropped) and processed without extraction: filters, archive checks and format selection run again over the saved `formats`. URLs are ignored with upstream's warning. Because sanitizing removes `entries`, a playlist prints its `Downloading playlist` line and falls back to re-extracting its `webpage_url` with upstream's `There are no entries` warning. Top-level keys this port does not model are kept (for templates, `--print`, JSON output and `stretched_ratio`). Upstream-written dictionaries load when they fit the represented subset (`direct` stays absent unless saved, stream kinds come from `vcodec`/`acodec` `none`, a missing top-level `url` comes from the last format); `m3u8_native` formats need no fragments (HlsFD reads the playlist when downloading: `[hlsnative] Downloading m3u8 manifest`), DASH fragment `path`s resolve against `fragment_base_url` (`byte_range` `start`/`end` too), and formats with other protocols and no saved fragments are rejected. A raised `DownloadError` (a failed subtitle download, or under `--abort-on-error` the first reported error) prints an empty `\r` line and `WARNING: The info failed to download: MESSAGE; trying with URL WEBPAGE_URL` (MESSAGE keeps its `ERROR: ` prefix when it was reported) and processes the webpage URL instead; the failure does not count toward the exit status |
@@ -52,7 +52,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--newline`, `--no-progress`, `--progress`, `--progress-delta SECONDS` | Upstream progress lines and printers (fragmented downloads like FragmentFD's hook: its size estimate over the running total, `ProgressCalculator`'s smoothed speed and ETA, and a line as each fragment finishes); see [download progress](#download-progress-and-cooperative-cancellation) |
 | `--sleep-requests SECONDS` | Upstream `_request_webpage` delay: every extraction request after the run's first one waits, announced as `[EXTRACTOR] Sleeping SECONDS seconds ...` before its `Downloading …` line; this port's extra media/child-playlist probes (plain HTML5 sources, HLS variants, YouTube media) are not delayed, as upstream does not make them; validated with upstream's message |
 | `-c`, `--continue`, `--no-continue`, `--part`, `--no-part` | Upstream `.part` files for whole-file media downloads: the transfer is written to `FILE.part` (kept after a failure) and renamed on success; an existing part file is continued with a plain `Range` request (`[download] Resuming download at byte N`; a full response restarts with `[download] Unable to resume`, and a complete part file fails with the server's 416 like upstream); `--no-continue` restarts it and `--no-part` writes the output directly. Merged, fragmented and postprocessed downloads keep private temporary files, and the library default remains a private temporary file removed on failure |
-| `--age-limit YEARS` | Upstream `age_restricted`: skip videos whose `age_limit` exceeds YEARS (`Skipping "TITLE" because it is age restricted`); unknown ratings pass |
+| `--age-limit YEARS` | Upstream `age_restricted`: skip videos whose `age_limit` exceeds YEARS (`Skipping "TITLE" because it is age restricted`); unknown ratings pass. Extractors see it as the `age_limit` param (Dailymotion's family filter) |
 | `--min-views`, `--max-views`, `--match-title`, `--reject-title`, `--break-on-reject` (hidden upstream) | Upstream `_match_entry` order and messages: case-insensitive title regexes (Rust `regex` syntax, validated at startup), view counts when known, and `--break-on-reject` turning any rejection into the `RejectedVideoReached` cancellation (exit 101) |
 | `--max-downloads NUMBER` | Stop after NUMBER processed videos (simulated, already-downloaded and size-skipped ones count), print upstream's message and exit 101; 0 means unlimited |
 | `-r`, `--limit-rate`, `--rate-limit RATE` | Upstream `slow_down` per whole-file media transfer or fragment request: sleep after each read until the average rate is at most RATE (`parse_bytes`, strictly positive); subtitles are not limited |
@@ -112,7 +112,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--progress-template [TYPES:]TEMPLATE` | Upstream `_report_progress_status`: `download:` (default) templates render over `{'info': ..., 'progress': ...}` with `report_progress`'s fields (`status`, `downloaded_bytes`, `total_bytes`, `eta`, `speed`, `elapsed`, `fragment_index`/`fragment_count`, `filename`, `_percent_str`, `_speed_str`, `_eta_str`, `_total_bytes_str`, `_default_template`, ...) for downloading and finished statuses. `postprocess:` templates render for each postprocessor run's `started` and `finished` hooks (`progress.postprocessor` is upstream's `pp_key()`, e.g. `MetadataParser`, `SponsorBlock`, `SubtitlesConvertor`, `ThumbnailsConvertor`, `Exec`, `FixupM3u8`/`FixupM4a`/`FixupDuplicateMoov`/`FixupStretched`, `Merger`, `ExtractAudio`, `VideoRemuxer`/`VideoConvertor`, `EmbedSubtitle`, `ModifyChapters`, `Metadata`, `EmbedThumbnail`, `SplitChapters`, `XAttrMetadata`, `MoveFiles` and the playlist's `Concat`), in upstream's order and even when quiet (then on stderr), with no `finished` after a failure; `info` is the video's info dict as selected (or as parsed for `MetadataParser`/`SponsorBlock`), not each processor's updated copy. `download-title:`/`postprocess-title:` set the `--console-title` titles |
 | `--compat-options OPTS` | Upstream `_set_from_options_callback`/`orderedSet_from_options` (`all`, `youtube-dl`, `youtube-dlc` and year aliases, `-NAME` removal, `wrong OPTS for --compat-options: …`) and `set_compat_opts`: `abort-on-error`, `no-playlist-metafiles`, `no-clean-infojson`, `no-attach-info-json`, `mtime-by-default`, `filename` (`%(title)s-%(id)s.%(ext)s`), `format-sort` (`FormatSorter.ytdl_default` appended) and `no-keep-subs` change defaults, and an explicitly given option marks the compatibility option `*NAME` in `-v`'s `Compatibility options:` line. The others take effect where upstream reads them: `filename-sanitization` (youtube-dl's `sanitize_filename` with `is_id` from the field name), `allow-unsafe-exec-expansion` (no `--exec` template validation), `allow-unsafe-ext` (upstream's warning, and no unusual-extension check; path separators in an extension stay a native error), `embed-metadata` (`comment` is the description and `synopsis` is dropped), `format-spec` (`bestvideo+bestaudio/best` merge default), `list-formats` (the legacy `-F` layout), `playlist-index` (an entry's index is the one selected at its position before `--playlist-reverse`/`--playlist-random`), `prefer-vp9-sort` (`vcodec:vp9.2` in the default sort unless `format-sort`, and in YouTube's sort fields) and `no-direct-merge` (a partial download without ffmpeg downloads the whole file natively instead of aborting; merges FFmpegFD would download per format are a native error). `no-youtube-channel-redirect` (a channel URL without a tab is read as given, without the `/videos` redirect, tab checks, home-page rejection or conditional regional redirect) and `no-youtube-unavailable-videos` (no playlist reload with unavailable videos) are read by `youtube:tab` (see "YouTube playlists"). `no-certifi`, `prefer-legacy-http-handler`, `no-live-chat`, `no-external-downloader-progress` and `embed-thumbnail-atomicparsley` concern features this port does not have; pinned upstream never reads `no-youtube-prefer-utc-upload-date` or `seperate-video-versions`; and `playlist-match-filter` only affects unresolved (`url`) entries, which this port's playlists do not have. `manifest-filesize-approx` gives manifest formats `filesize_approx` too; `multistreams` enables both multistream options unless given (`*multistreams` when both were). `all` lists the options in this port's table order (upstream's set order varies) |
 | Accepted tuning and environment options | `--file-access-retries`, `--throttled-rate`, `--no-update`, `--no-plugin-dirs`, `--remote-components`, `--prefer-insecure`/`--prefer-unsecure`, `--allow-dynamic-mpd`/`--no-ignore-dynamic-mpd`/`--ignore-dynamic-mpd`/`--no-allow-dynamic-mpd`, `--geo-verification-proxy` are validated with upstream's messages (`buffer size "0" must be positive`, `invalid file access retry count "X" given`, `invalid time range to wait for video "X" given`, ...) and otherwise have no effect; `--wait-for-video` applies to YouTube (see below). `--mark-watched` applies to YouTube when cookies are passed (`--cookies`/`--cookies-from-browser`), like upstream `_mark_watched`: `Marking watched` and `Marking fully watched` requests to the player response's videostats URLs with upstream's query updates (a random `cpn`), `Unable to mark [fully ]watched` warnings otherwise (`youtube-watched`). `--cache-dir DIR`/`--no-cache-dir` (the last wins) and `--rm-cache-dir` follow upstream `Cache` (`src/cache.rs`, `tests/cache.rs`): entries are `SECTION/KEY.json` (the key `quote`d with `%` as `,`) holding upstream's `{"yt-dlp_version": ..., "data": ...}` envelope, written atomically, read with `min_ver` checks (unversioned entries count as 2022.08.19), with upstream's `Saving`/`Loading SECTION.KEY` and `Discarding old cache from version V (needs M)` debug lines and `Cache retrieval from PATH failed (SIZE)` warning (a failed write warns with the OS error instead of a Python traceback). The default directory is `${XDG_CACHE_HOME:-~/.cache}/yt-dlp-rs`, this port's own like its configuration files, so `--rm-cache-dir` never removes upstream's cache; the format is upstream's, so `--cache-dir` may point at an upstream cache. Entries record the pinned upstream version `2026.10.21`. `--rm-cache-dir` prints `Removing cache dir DIR ...` (`..` when missing) and refuses a path without `cache` or `tmp` (`ERROR: Not removing directory DIR - this does not look like a cache dir`, exit 1, where upstream raises). Cached data: the SoundCloud `client_id` (cleared and refreshed after a 401/403), the Brightcove policy key per `ACCOUNT_PLAYER` (an `INVALID_POLICY_KEY` answer to a cached key clears it and extracts a new one) and YouTube's `youtube-sigfuncs` signature specs per player and length (`min_ver` 2025.07.21; an empty signature request still runs when every spec is cached, like upstream). Other upstream cache users (EJS script cache, logins, tokens) belong to unported features. `-U`/`--update`/`--update-to` are errors (no self-update). `--js-runtimes deno|node|quickjs|bun[:PATH]` enable YouTube challenge runtimes (the last value per name; a bare name is looked up on PATH, a directory holds `deno`/`node`/`qjs`/`bun`); the most preferred one (deno, node, quickjs, bun) whose version upstream's `JsRuntime` accepts solves: Deno 2.3+ without permissions, Node.js 22+ under its permission model (`--permission`, or `--experimental-permission --no-warnings=ExperimentalWarning` before 23.5.0), Bun 1.2.11+ as `bun --bun run --no-addons --prefer-offline --no-install -` (with `[jsc:bun] bun support has been deprecated...` once, or upstream's unsupported-version warning after 1.3.14) and QuickJS 2023-12-09+ or QuickJS-ng (version from `qjs --help`) as `qjs --script FILE.js` (with upstream's slow-version warning before 2025-04-26/0.12.0), each with upstream's stderr cleaning. Runtimes run with a cleared environment in a private directory, so Bun's npm auto-install, proxies and `youtube-ejs:jitless` are not supported. `--extractor-args` for extractors other than `generic`, unported YouTube arguments and `youtubetab` arguments other than `skip`/`approximate_date`, `--plugin-dirs`, `--legacy-server-connect` and `--bidi-workaround` warn that they are not supported natively. `--encoding` follows upstream `write_string` for `utf-8`, `ascii`, `latin-1`, `cp1252`, `utf-16-le`/`-be`, `utf-32-le`/`-be` and the BOM codecs `utf-16`/`utf-32` (a little-endian BOM before every message, as CPython writes on little-endian hosts; with Python's aliases): every message, `--print`, JSON and listing line is encoded with `errors='ignore'`, while progress lines, the `[debug] Encodings:` line (whose `pref` names the encoding) and child processes' output are not; other codecs warn and keep UTF-8 (upstream raises `LookupError` for unknown names). `--ap-list-mso` prints upstream's TV provider table |
-| `-u`/`--username`, `-p`/`--password`, `-2`/`--twofactor`, `-n`/`--netrc`, `--netrc-location`, `--netrc-cmd`, `--video-password` | Upstream `validate_options` errors (`.netrc, netrc command and username/password are mutually exclusive options`, `account username missing`) and `Type account password and press [Return]: ` for `-u` without `-p` (read from the terminal without echo through `stty`; without a terminal from stdin after `Warning: Password input may be echoed.`). Extractors follow `InfoExtractor.initialize`: once per extractor per run (a failed login is retried by the next URL) `_initialize_pre_login`, `_perform_login` when `_get_login_info` finds credentials, and `_real_initialize`, before `Extracting URL`. `_get_login_info` takes `--username`/`--password`, else the extractor's netrc machine from `--netrc-cmd` (`{}` replaced by the machine, `Executing command: CMD`, run through `/bin/sh -c` (`%COMSPEC% /c` on Windows), a nonzero exit is `Command returned error code N`) or from `--netrc` with `--netrc-location` (default `~`; a leading `~` or `~/` expands to the home directory, a directory means its `.netrc`), parsed like Python 3.11+'s `netrc` module (`machine`/`default` entries with `login`/`user`, `account` and `password`, `macdef` macros, quoted and backslash-escaped tokens, `#` comments, `NetrcParseError` texts with file and line; like upstream no permission check). Failures are `WARNING: [EXTRACTOR] Failed to parse .netrc: ERR` (Python's `[Errno N] ...: 'PATH'` for unreadable files) and a missing machine without a `default` is `No authenticators for MACHINE`. `_get_tfa_info` uses `--twofactor`, else prompts `Type NOTE and press [Return]: ` like the password. With `--username`, extractors without a netrc machine warn `Login with password is not supported for this website. Use --cookies-from-browser or --cookies for the authentication. ...` once (not the generic, `href.li`, `FacebookRedirectURL` and YouTube ones, like upstream). Logins are implemented for Niconico (form, MFA), Dailymotion (password-grant token), Twitch (all Twitch extractors; form JSON and two-factor token), VK (VK videos, wall posts and user videos; cp1251 form), Tumblr (OAuth password grant), SoundCloud (`--username oauth --password TOKEN` and `oauth_token` cookies) and YouTube (upstream's warning, or its OAuth error), each compared with pinned upstream through `tests/fixtures/sites/*-login/` (request bodies and headers are part of the routes) including wrong-password errors; Vimeo credentials are an unsupported native error (unless a `vimeo` cookie is set) because extraction as the logged-in web client is not ported. `--video-password` is used by the extractors noting it below. Adobe Pass (`--ap-*`, which also reads `-n`/`--netrc-location`/`--netrc-cmd` for the TV provider's machine) is described below; Python's locale-encoding retry for non-UTF-8 netrc files is replaced by lossy UTF-8 decoding, `~user` paths are not expanded and VK credentials outside cp1251 are an explicit error (upstream's `UnicodeEncodeError`) |
+| `-u`/`--username`, `-p`/`--password`, `-2`/`--twofactor`, `-n`/`--netrc`, `--netrc-location`, `--netrc-cmd`, `--video-password` | Upstream `validate_options` errors (`.netrc, netrc command and username/password are mutually exclusive options`, `account username missing`) and `Type account password and press [Return]: ` for `-u` without `-p` (read from the terminal without echo through `stty`; without a terminal from stdin after `Warning: Password input may be echoed.`). Extractors follow `InfoExtractor.initialize`: once per extractor per run (a failed login is retried by the next URL) `_initialize_pre_login`, `_perform_login` when `_get_login_info` finds credentials, and `_real_initialize`, before `Extracting URL`. `_get_login_info` takes `--username`/`--password`, else the extractor's netrc machine from `--netrc-cmd` (`{}` replaced by the machine, `Executing command: CMD`, run through `/bin/sh -c` (`%COMSPEC% /c` on Windows), a nonzero exit is `Command returned error code N`) or from `--netrc` with `--netrc-location` (default `~`; a leading `~` or `~/` expands to the home directory, a directory means its `.netrc`), parsed like Python 3.11+'s `netrc` module (`machine`/`default` entries with `login`/`user`, `account` and `password`, `macdef` macros, quoted and backslash-escaped tokens, `#` comments, `NetrcParseError` texts with file and line; like upstream no permission check). Failures are `WARNING: [EXTRACTOR] Failed to parse .netrc: ERR` (Python's `[Errno N] ...: 'PATH'` for unreadable files) and a missing machine without a `default` is `No authenticators for MACHINE`. `_get_tfa_info` uses `--twofactor`, else prompts `Type NOTE and press [Return]: ` like the password. With `--username`, extractors without a netrc machine warn `Login with password is not supported for this website. Use --cookies-from-browser or --cookies for the authentication. ...` once (not the generic, `href.li`, `FacebookRedirectURL` and YouTube ones, like upstream). Logins are implemented for Niconico (form, MFA), Dailymotion (password-grant token), Twitch (all Twitch extractors; form JSON and two-factor token), VK (VK videos, wall posts and user videos; cp1251 form), Tumblr (OAuth password grant), SoundCloud (`--username oauth --password TOKEN` and `oauth_token` cookies), Vimeo (the viewer's XSRF token posted to `/log_in`, skipped with a `vimeo` cookie; extraction then uses the logged-in `web` API client) and YouTube (upstream's warning, or its OAuth error), each compared with pinned upstream through `tests/fixtures/sites/*-login/` (request bodies and headers are part of the routes) including wrong-password errors. `--video-password` is used by the extractors noting it below. Adobe Pass (`--ap-*`, which also reads `-n`/`--netrc-location`/`--netrc-cmd` for the TV provider's machine) is described below; Python's locale-encoding retry for non-UTF-8 netrc files is replaced by lossy UTF-8 decoding, `~user` paths are not expanded and VK credentials outside cp1251 are an explicit error (upstream's `UnicodeEncodeError`) |
 | `--impersonate CLIENT[:OS]`, `--list-impersonate-targets` | Upstream `ImpersonateTarget` parsing (lowercased; `Invalid impersonate target "X"` usage errors), containment and `str()`. Targets come only from the optional `impersonate` cargo feature (`cargo build --features impersonate`): a `wreq` transport on BoringSSL whose `wreq-util` emulations send the browser's TLS ClientHello, HTTP/2 SETTINGS and default headers (Chrome 145-149 on `windows-10`/`macos`/`linux`/`android`, Edge 146-148 on `windows-10`/`macos`, Firefox 149-151 on `windows-10`/`macos`/`linux`, Safari 18.5-26.4 on `macos` and three iOS Safari profiles; OS versions are left open except where the user agent names one), ordered like `CurlCFFIRH` (desktop first, then `edge < firefox < safari < chrome`, newest version, OS name). `--list-impersonate-targets` renders upstream's table with `wreq` as the Source (least preferred first); without the feature it lists Chrome, Safari, Firefox and Edge as `wreq (unavailable)` (upstream's `tor` row is omitted: no backend of this port provides it). An unavailable `--impersonate` target is upstream's `Impersonate target "TARGET" is not available. ...` error (exit 1); an available one is an error too, since this port cannot impersonate every request like upstream. Extractor requests marked `impersonate=` (`_request_webpage`) use the first available requested target resolved like upstream (`impersonate=True` takes the most preferred target, ignoring `--impersonate`), or warn with upstream's `The extractor is attempting impersonation, but ...` text; `require_impersonation=True` gives upstream's error text. Impersonated requests use the global proxy, `--no-check-certificate`, source address, socket timeout and the session cookie jar, at most 5 redirects (`curl_cffi`'s limit), and drop header values equal to upstream's `std_headers` (the random User-Agent, Accept, Accept-Language, Sec-Fetch-Mode) and this port's `Accept-Encoding: identity`, so the target's headers apply (an explicit `--user-agent` is kept, as upstream). Impersonated: TikTok webpages (the `Impersonation target:` debug line names the resolved target), Kick API calls, Vimeo HTTPS pages, the Mixcloud GraphQL lookup, Mir24Tv pages and Dailymotion's Chrome/Firefox m3u8 retries. Not supported: `--client-certificate` with impersonation (an error), format/download `impersonate` fields, Instagram's and Bandcamp's impersonated requests, Vimeo's `Got HTTP Error N when using impersonate target` mapping and `curl_cffi` target names |
 | `--xff VALUE`, `--geo-bypass`, `--no-geo-bypass`, `--geo-bypass-country CODE`, `--geo-bypass-ip-block IP_BLOCK` | Upstream's shared `geo_bypass` destination (the last option wins) and `validate_options`: `default`, `never`, a two-letter country code (unknown codes give no address, `Using fake IP None (ZZ)`) or a CIDR block read like `inet_aton`/`int`, else `Unsupported --xff "VALUE"`. See "Geo restriction bypass" |
 | `--ignore-no-formats-error`, `--no-ignore-no-formats-error` | Upstream `ignore_no_formats_error`: a result without formats warns `No video formats found!` and `Requested format is not available`, `-j`/`--print`/`-F` (`ID has no formats`) and the info JSON/sidecars use its metadata (`formats: []`, no format fields), and a download then fails with `[EXTRACTOR] ID: No video formats found!`; extractors' expected `raise_no_formats` errors and `raise_geo_restricted(metadata_available=True)` warn instead (see "Geo restriction bypass") |
@@ -180,6 +180,14 @@ Simulation and JSON still make network requests. This inventory does not claim
 upstream equivalence for every option interaction or filename rule.
 
 ## YouTube watch-page subset
+
+The watch page is never fatal: like upstream's
+`_download_webpage_with_retries`, network errors other than HTTP 403/429 are
+retried (`Retrying (N/3)...`), then a warning (`Giving up after 3 retries`)
+leaves extraction to the player API. An InnerTube error body that is not HTML
+is parsed like upstream (`Failed to parse JSON: ...` with Python's decoder
+message, else its `error.message` alert). `tests/fixtures/sites/youtube-watch-404/`
+compares an all-404 site with pinned upstream.
 
 The built-in `Youtube` extractor runs before the generic HTTP fallback and
 takes the URLs of pinned upstream's `YoutubeIE._VALID_URL` (ported with its
@@ -513,6 +521,34 @@ fixtures follow the upstream code's shapes. `tests/fixtures/sites/svt/` is
 compared with pinned upstream output (the video CDN is geo-blocked outside
 Sweden, so its manifests are constructed).
 
+France Télévisions videos (`francetv:ID`, an `@catalog` suffix ignored)
+follow upstream `FranceTVIE`: the `k7.ftven.fr/videos/ID` JSON for desktop
+Chrome and mobile Safari (non-fatal, with the smuggled page hostname, else
+`www.france.tv`, as `domain`; 422 bodies are read), where code 2009 is the
+France-only geo error, codes 2015/2017/2019 mark DRM-only videos (`This video
+is DRM protected` when no response has a video) and other codes are
+`francetv said:` warnings; title, subtitle, thumbnail and timestamp from the
+first response carrying them, while the `pre_title` `S<N> E<N>` season and
+episode numbers are re-read from every response with metadata like upstream.
+Each video URL is replaced by its signed token URL when given, then read as
+non-fatal DASH (`dash` ID by default), master-only HLS (`hls` ID by default,
+audio renditions without a bitrate get the `-audio-NAME-BITRATE` bitrate and
+`mp4a`), RTMP (`flv`) or a plain format checked with a request (`Checking ID
+URL`, skipped when invalid). Audio formats in `qtz`/`qad` get the `audio
+description` note and a lower language preference, spritesheets an `mhtml`
+storyboard format, and when nothing is found a HEAD request's `x-errortype:
+geo` gives the geo error (a warning with `--ignore-no-formats-error`). `f4m`
+(HDS) URLs give non-fatal F4M formats. france.tv pages
+(`FranceTVSiteIE`) take the first Next.js v13 flight data object's
+`options.id`, and franceinfo pages (`FranceTVInfoIE`) the
+`francetv-player-wrapper` element's `id` or upstream's older patterns, as
+`francetv:` `url` results smuggling the page hostname; franceinfo pages with
+Dailymotion embeds (upstream `DailymotionIE` embed, `DM.player` and player
+script patterns) are playlists of Dailymotion `url` results.
+`tests/fixtures/sites/francetv/` is compared with pinned upstream output
+(the API responses and manifests are constructed after the shapes upstream
+parses).
+
 Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
 `StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
 metadata`), its unavailable-status error, `reddit_title`/`title`, every file
@@ -650,6 +686,62 @@ item's dict; several make a playlist. Wayback Machine YouTube captures
 (`web.archive:youtube`) are not supported. `tests/fixtures/sites/archiveorg/`
 is compared with pinned upstream output.
 
+ARD Mediathek videos (`ardmediathek.de/[CHANNEL/]player|live|video/[...]/ID`,
+also `beta.`) follow upstream `ARDBetaMediathekIE` (`ARDMediathek`): with an
+`ams` cookie for `sso.ardmediathek.de`, the non-fatal `sso/token` JSON's
+`idToken` JWT (`user_id`, else `sub`) is sent as `x-authorization` with a
+`userId` query (`Unable to extract token, continuing without authentication`
+and `Account is not verified as 18+` warnings); then the
+`page-gateway/pages/ard/item/ID?embedded=false&mcV6=true` JSON. Its
+`tracking.atiCustomVars.contentId` is the ID (the URL's ID becomes an
+`ardbetamediathek` `_old_archive_ids` entry), else the URL's ID with
+upstream's `Could not extract contentId` warning. The first
+`player_ondemand`/`player_live` widget is required (upstream's
+`'NoneType' object has no attribute 'get'` without one); `blockedByFsk`
+raises the login-required error. Each stream's media with a URL become
+non-fatal HLS formats (`hls-KIND`, master playlist only, live variants for
+`player_live`) or `http-KIND` formats (`forcedLabel` note, resolution, video
+codec), the `main` stream with preference 1, and every format gets the first
+audio's `LANGCODE[-KIND]` language (`deu` by default, `standard` removed) and
+a `language_preference` of 10 for `deu`, else -10. HLS subtitles are merged
+with the `subtitles` sources (`webvtt` as `vtt`, `ebutt` as `ttml`, others by
+URL extension; `deu` by default). Jump-mark chapters with a truthy time, the
+`FSKNN` age limit, `meta` title, synopsis, broadcast timestamp, series, first
+image, duration and clip source channel follow upstream's dict, and the page
+title's season/episode numbers and episode come from upstream's
+`_extract_episode_info` patterns.
+
+ARD Mediathek shows, series seasons and compilations
+(`ardmediathek.de/[CHANNEL/]sendung|serie|sammlung/[SLUG/]ID[/SEASON[/OV|AD]]`)
+follow upstream `ARDMediathekCollectionIE`: the `widgets/ard/asset` (or, for
+`sammlung`, `compilations/ard`) page-gateway JSON with `pageNumber`,
+`pageSize=100` and, for a season, the `seasoned`/`seasonNumber`/
+`withOriginalversion`/`withAudiodescription` query (`Downloading playlist page
+N`); each teaser's `links.target.urlId`/`id` (else its `id`, skipping the
+playlist itself) becomes an `ARDBetaMediathek` (`video/ID`) or, for
+compilations, `ARDMediathekCollection` (`sammlung/ID`) `url` result with the
+teaser's ID, long title, duration and broadcast timestamp. The playlist ID
+joins the ID, season and version with `_`; `display_id`, title and synopsis
+are kept even when `None`, like upstream. Like upstream's
+`OnDemandPagedList`, page 0 is read for the title, then only the pages holding
+the requested entries are fetched (cached, in request order, so `-I 101` reads
+just page 1), reading every page when a selection reads past the end (the
+count is unknown otherwise).
+
+ARD Audiothek episodes (`ardaudiothek.de|ardsounds.de/episode/urn:ard:
+episode|section|extra:HEX`) follow upstream `ARDAudiothekIE`: the POSTed
+GraphQL `item` query (a missing `data` is upstream's `KeyError`; a `null`
+item has no formats), its `audioList` entries with a URL as audio-only
+formats (distribution type ID, int bitrate, codec), and the publisher
+channel, description, duration, show title as series, episode number, square
+image without its query, start-date timestamp and title. Shows
+(`.../sendung/SLUG/urn:ard:show:HEX`) follow `ARDAudiothekPlaylistIE`: the
+GraphQL `show` query's published item URLs as `ARDAudiothek` `url` results
+with the slug as `display_id`, title and description.
+`ARDMediathekBaseIE` (used only by `SRMediathekIE`) is not ported.
+`tests/fixtures/sites/ard/` (synthetic API responses shaped like upstream's
+parsing and tests) is compared with pinned upstream output.
+
 Arte videos (`arte.tv/LANG/videos/ID`, `api.arte.tv/api/player/vN/config/LANG/ID`,
 `arte://program/ID`, including `LIVE`) follow upstream `ArteTVIE`: the player
 config API (`x-validated-age: 18`; an `arte://` URL requests the `None`
@@ -736,7 +828,23 @@ follow upstream `BitChuteIE`: the beta API's `video/media` URL (HLS as live
 formats, or a progressive file HEAD-checked on its own and upstream's
 alternative seed hosts, unchecked with `--no-check-formats`), the `video`
 and `channel` metadata (non-fatal, with upstream's warnings) and the API's
-403 geo-restriction errors. Channel and playlist pages are not supported.
+403 geo-restriction errors.
+BitChute channels and playlists (`[www.|old.]bitchute.com/channel|playlist/ID`)
+follow upstream `BitChuteChannelIE`: the `old.bitchute.com` page gives the
+`<title>`, the `description`/`og:description`/`twitter:description` meta and
+the `<span>N videos</span>` count as `playlist_count` (`None` otherwise, when
+the count comes from reading the entries); the `extend/` form POSTs (upstream's
+CSRF token as field and cookie, `offset` = page × 25, `Downloading page N`
+from 0) give, while `success` is true, each `channel-videos-container` or
+`playlist-video` element's `/video/ID` link as a `url_transparent` BitChute
+entry with its title, description, `video-duration` and `video-views` count
+(an element without a link is skipped; a response that is not `success` ends
+the list). Pages follow upstream's `OnDemandPagedList` read by
+`PlaylistEntries` like PeerTube playlists' (only the pages holding requested
+entries, in request order); a page failing while entries are read is reported
+once without a prefix, its entry is `None` and the list ends there, like
+upstream (see Dailymotion playlists). `success` answers without `html` are
+unsupported errors.
 `tests/fixtures/sites/bitchute/` is compared with pinned upstream output.
 
 Bitmovin streams (`streams.bitmovin.com/ID`) follow upstream `BitmovinIE`:
@@ -828,6 +936,41 @@ page's Next.js `video` data (missing keys are upstream's `KeyError`) as a
 Brightcove players above), overlaid with the page's title, `summury` and
 featured image. `tests/fixtures/sites/drtalks/` is compared with pinned
 upstream output.
+
+DR TV programs (`dr.dk/tv/se[/ondemand]/.../SLUG`,
+`dr.dk|dr-massive.com/drtv/se|episode|program/SLUG`) follow upstream
+`DRTVIE`: once per run an anonymous token (`Downloading anonymous token`, a
+JSON POST to `isl.dr-massive.com`; the first `UserAccount` value, else
+`Unable to get anonymous token`), the page's `window.__data` item (each
+`cache.page` value's `item`, else its first entry's `item`; without one the
+`unable to extract data` warning and the backup `production-cdn` items API
+for the slug's last `_` part), the `customId`'s last `:` part as the ID, and
+the bearer-authorized `account/items/ID/videos` stream list: every stream
+with a URL as non-fatal HLS (master playlist only, `FORMAT[-SERVICE]` IDs,
+preference 1 for `StandardVideo` and -1 for spoken-subtitle, sign-language
+and visually-interpreted streams), its API subtitle links (`SUBTITLE_LANGS`
+names with the service suffix, `mimetype2ext` or `vtt`) or else the
+manifest's deduplicated subtitles; the Denmark-only geo error (no bypass)
+when nothing is found and the season is marked geo-restricted; title,
+contextual title, description, wallpaper thumbnail, `BroadcastTimeDK`
+release timestamp, duration, series, season (title, number, ID), episode
+(name, number) and release year as upstream's `traverse_obj`. DR TV live
+channels (`dr.dk/tv/live/ID`) follow `DRTVLiveIE`: the `mu-online` channel
+JSON (`Title` required), each HLS streaming server's stream paths with a
+`b=` query as live master-playlist formats (`HLS-N`) and each HDS server's
+non-fatal F4M formats (`HDS-N`, `hdcore=3.7.0`; downloading live HDS remains
+unsupported). Season and series pages (`drtv/saeson|serie/SLUG_ID`)
+follow `DRTVSeasonIE`/`DRTVSeriesIE`: the `dr-massive` page API's episodes
+(a missing `path` is upstream's `KeyError`) or seasons (a missing `path`
+gives upstream's `https://www.dr.dk/drtvNone`) as raw `url` results with
+their titles, descriptions and numbers, in a playlist with `display_id`,
+title, contextual title, series (and the season number). None of the four
+is marked `_WORKING = False` upstream. Non-string IDs, titles and paths
+(where upstream would stringify or raise a `TypeError`) are explicit native
+errors; a malformed `window.__data` JSON warns with upstream's text
+(Python's `JSONDecodeError` included). `tests/fixtures/sites/drtv/` (constructed responses:
+the live API is geo-restricted and the old channel API retired) is compared
+with pinned upstream output.
 
 Toronto Star pages (`thestar.com/.../SLUG.html`) follow upstream `TheStarIE`:
 the page's `mainartBrightcoveVideoId` (else upstream's error) as a `url`
@@ -1008,11 +1151,14 @@ non-fatal `/api/v1/TYPE/ID` information (a failed request is upstream's
 description, `createdAt` timestamp, owner account name and ID (else the
 item's own) as `channel`/`channel_id` and the `https://HOST` +
 `thumbnailPath` thumbnail (else `''`); the `/videos?sort=-createdAt` pages of
-30 give `url` entries for `https://HOST/w/SHORT_UUID` with their names. Pages
-are fetched up front until one is shorter than 30 entries; upstream's
-`OnDemandPagedList` fetches only the pages `--playlist-items` needs, so a
-partial selection may make more requests here (the selected entries are the
-same). Not ported: PeerTube detection on other hosts (GenericIE's
+30 give `url` entries for `https://HOST/w/SHORT_UUID` with their names. Like
+upstream's `OnDemandPagedList` read by `PlaylistEntries`, pages are fetched
+while the playlist is processed (after `Downloading playlist`), only those
+holding the requested entries and in request order (`-I 31` reads only page 2,
+`-I 31,1` page 2 then page 1), each once; a negative or reversed open bound,
+or a request past the end, reads every page in order until one is shorter
+than 30 entries. The count is unknown (`NA`) unless a selection reads past the
+end. Not ported: PeerTube detection on other hosts (GenericIE's
 `_EMBED_REGEX` iframes and `og:platform` page check), which stays the
 generic extractor's unsupported-URL path.
 
@@ -1177,8 +1323,33 @@ manifests requested with upstream's randomized headers, then upstream's
 Chrome and Firefox impersonated retries (which need the `impersonate`
 feature; without it, upstream's error text), including
 `PROGRESSIVE-URI` `http-` formats, and progressive H264 URLs with sizes and
-`@60` frame rates, plus subtitles, posters and metadata. Playlist URLs (and
-`?playlist=` without `--no-playlist`) are not supported.
+`@60` frame rates, plus subtitles, posters and metadata. `--age-limit` below
+18 turns the family filter on when there is no `ff` cookie
+(`age_restricted`). A video URL with `?playlist=ID` (or a `player.html?playlist=`
+URL) is, without `--no-playlist`, a `url` result for
+`http://www.dailymotion.com/playlist/ID` followed by the playlist extractor.
+
+Dailymotion playlists (`dailymotion.TLD/playlist/xID`, upstream
+`DailymotionPlaylistIE`), channels (`dailymotion.TLD/[old/]user/NAME` and
+`dailymotion.TLD/NAME`, `DailymotionUserIE`) and video searches
+(`dailymotion.TLD/search/TERM/videos`, `DailymotionSearchIE`, the term
+`unquote_plus`-decoded as ID and title; upstream has no search prefix for it)
+are `OnDemandPagedList`s of Dailymotion `url` results: the GraphQL
+`collection`/`channel` object's `videos(allowExplicit: ..., first: 100,
+page: N)` edges (`allowExplicit: false` with the family filter; a missing
+object is its first error message) and the `SEARCH_QUERY` operation's pages of
+20 (no search data is its error message, else `Could not fetch search data`,
+with upstream's bug report request). The client token is requested with the
+first page, after `Downloading playlist`. Like upstream's `PlaylistEntries`,
+only the pages holding the requested entries are fetched, in request order
+(`-I 101,3` reads page 2 then page 1); reading past the end reads every page,
+and the count is unknown (`NA`) otherwise. Errors while the pages are read are
+upstream's lazy ones (no `[IE]` prefix): the entry being read is `None`
+(`null` with `-J`, reported once, exit code 1) and the failed page ends the
+list (`_pagecount = pagenum - 1`), so the playlist still finishes. Selecting,
+after such a failure, an entry of the failed page that precedes the failed one
+is an explicit native error. Not ported: `DailymotionPlaylistIE`'s jukebox
+widget embeds on generic pages.
 `tests/fixtures/sites/dailymotion/` and `tests/fixtures/sites/dailymotion-login/`
 are compared with pinned upstream output.
 
@@ -1493,10 +1664,8 @@ heights and `bit_rate / 1000` integer VBRs); entries without a URL and
 usable videos is upstream's `No video formats found!`. API values that are not
 objects or lists remain explicit native errors.
 
-Vimeo videos (`vimeo.com/ID`, `player.vimeo.com/video/ID`, channel and
-`user` clip URLs) follow upstream `VimeoIE` as it runs without login
-(`--username`/`--netrc` credentials are an unsupported native error unless a
-`vimeo` cookie is set, as logged-in extraction is not ported) or
+Vimeo videos (`vimeo.com/ID`, `player.vimeo.com/video/ID`, channel, album
+or showcase and `user` clip URLs) follow upstream `VimeoIE` without
 impersonation (HTTPS pages impersonated with the `impersonate` feature,
 else upstream's impersonation warning): player pages'
 `playerConfig`, and vimeo.com pages' clip page config (or a channel page's
@@ -1505,11 +1674,34 @@ else upstream's impersonation warning): player pages'
 qualities from the group ID, per-CDN DASH formats including the `sep`
 variants and `json=1` redirects, text tracks, thumbnails, chapters, live
 status), merged with the page's description, timestamp, counts and license.
-Unlisted-hash URLs and pages without a config need the logged-in API
-client, which is upstream's login-required error; passwords, albums,
-showcases, on-demand, reviews, events and original formats are not
-supported. `tests/fixtures/sites/vimeo/` is compared with pinned upstream
-output.
+Logins follow `VimeoBaseInfoExtractor`: `--username`/`--netrc` credentials
+fetch the viewer info (`/_next/viewer`, reused until its JWT is within two
+minutes of expiry) and post its `xsrft` token with the form to `/log_in`
+(HTTP 404/405/418 is `Unable to log in: bad username or password`, other
+failures `Unable to log in`); a `vimeo` cookie means logged in and skips the
+login. Unlisted-hash URLs and pages without a config use the API client
+(`_extract_from_api`): `vimeo:client` (`web` or `android`, else upstream's
+`Unsupported API client` error), else `web`. The `web` client requires a
+login (upstream's `The web client only works when logged-in` error) and
+requests `api.vimeo.com/videos/ID[:HASH]` with the viewer JWT; its
+`config_url` goes through `_parse_config`, otherwise `_parse_api_response`
+builds formats from the API's `play`/`files`/`download` links (HLS, DASH,
+progressive) with API text tracks when subtitles are requested. A
+password-protected video (`400` naming `password`) is submitted with
+`--video-password` and retried (`Wrong password` on 418), error code 5460 is
+upstream's location login error, and the API's description, license,
+timestamps and counts are added. Logged in, every extraction also looks for
+the original format (`vimeo:original_format_policy`): the download config's
+`source_file` (checked with `Checking ... video URL`), else the `web` API's
+`privacy` and `download` fields. Album and showcase video URLs first check
+the album with the viewer JWT and post `--video-password` for
+password-protected ones (`Wrong password` on 401). The `android` client only
+gives upstream's no-cached-token error (a cached token is an unsupported
+native error), and player-page passwords (`check-password`), rented
+trailers, JSON-LD metadata, on-demand, reviews, events and the album,
+showcase, channel, user, likes, groups and watch-later playlists are not
+supported. `tests/fixtures/sites/vimeo/` and `tests/fixtures/sites/vimeo-login/`
+are compared with pinned upstream output.
 
 VK videos and clips (`vk.com`/`vkvideo.ru` `video|clip` IDs, `?z=` and
 `list=` shapes, `video_ext.php` embeds) follow upstream `VKIE`: the
@@ -1546,8 +1738,10 @@ VK user/club video sections (`vk.com/video/@NAME[/all][?section=S]`,
 `vkvideo.ru/@NAME`) and playlists (`.../playlist/OWNER_ID`) follow upstream
 `VKUserVideosIE`: the page's `newCur` cursor `oid` (or the playlist ID), the
 `VideoInfoPanel__title` playlist title and `al_video.php`'s
-`load_videos_silent` pages as `VKIE` `url` entries. Upstream fetches the
-pages lazily while processing entries; this port fetches them all first.
+`load_videos_silent` pages as `VKIE` `url` entries. Like upstream's
+generator, the pages (including the first) are fetched while processing the
+playlist, so `-I` stops paging early and `playlist_count` is `NA` unless
+the selection read past the end.
 VK Play Live records (`vkplay.live`/`live.vkplay.ru`/`live.vkvideo.ru`
 `USER/record/ID`) and channels follow upstream `VKPlayIE` and
 `VKPlayLiveIE`: `api.vkplay.live`'s `public_video_stream` JSON (a failure is
@@ -1621,6 +1815,66 @@ warning) or one `mp4` format, the `PATH` ID with slashes as dashes, the
 OpenGraph title (else the `<title>` without ` | Yorkshire Film Archive`), and
 the URL-valued preview and integer duration.
 
+ZDF videos (`zdf.de/video|play/.../ID`, legacy `zdf.de/.../ID.html` and the
+`zdfheute.de`/`logo.de` `.../ID.html` sister sites) follow upstream `ZDFIE`:
+an API token from the Android app's `mediathekV2/token` endpoint (`Downloading
+API token`, kept for the run and in the cache under `zdf`/`api-token` until
+its `expires`), the GraphQL `VideoByCanonical` POST (`Api-Auth`, `Downloading
+video metadata`), and each current media node's PTMD document (the
+`{playerId}` template as `android_native_6`, `Downloading PTMD data`, HTTP
+errors as `Failed to download PTMD data`): every track URL once, HLS masters
+as non-fatal `hls` formats (master playlist only, manifest subtitles dropped
+with upstream's warning), `mp4`/`webm` tracks as `http-TYPE` formats with
+`parse_codecs` of the quality's `mimeCodec`, its height, the width from the
+node's aspect ratio, the file size and the URL's `_NNNk_` bitrate, other
+extensions skipped with upstream's warning; German Sign Language nodes add
+`-dgs` formats (`German Sign Language` note, preference -2); every format gets
+the track class as its note (not for audio-only formats), the ISO 639-2
+language and upstream's language preference (audio description -10, German
+main 10, German 5, other main 1). Captions are deduplicated by URL (`deu` by
+default). Metadata: title, lead paragraph (else teaser description), ISO 8601
+editorial date, teaser image thumbnails (`WxH`/`auto` sizes, `original`
+preferred), episode/season numbers, smart collection series and ID, the first
+node's stream anchors as chapters (a zero offset dropped like upstream), the
+PTMD duration, `is_live` (`liveMediaType`) and the PTMD basename as
+`_old_archive_ids`. A `null` GraphQL video falls back to the
+`mediathekV2/document` API (title, description, date, teaser thumbnails, its
+`streamApiUrlAndroid` PTMD; `Unable to extract PTMD URL` without one).
+
+ZDF smart collections (other `www.zdf.de/.../ID` URLs) follow upstream
+`ZDFChannelIE`: the page request for the redirected ID, the persisted
+`GetSmartCollectionByCanonical` GraphQL GET (query encoded like `urlencode`),
+the featured video as a followed `zdf` result when there are no seasons (or
+with `--no-playlist`, with `_yes_playlist`'s messages), `?staffel=N` season
+selection (upstream's not-found error), and the seasons'
+`seasonByCanonical` pages (24 episodes, cursor paging) as `url` results with
+their ID, title, description, timestamp and episode/season numbers, fetched
+lazily like upstream's generator (`-I` stops paging early). Unexpected value
+types for PTMD templates, track classes/languages and stream types, and API
+answers whose `data` is not an object are explicit native errors.
+`tests/fixtures/sites/zdf/` is compared with pinned upstream output; its API
+answers are synthetic, shaped like upstream's parsing and tests.
+
+Yle Areena programmes and podcasts (`areena.yle.fi/[podcastit/]ID`) follow
+upstream `YleAreenaIE` (`_GEO_COUNTRIES = ['FI']`): the page's JSON-LD title
+(parsed with upstream's `K1, J2: EPISODE | SERIES` regex, including its
+top-level alternation) and thumbnails, then the fatal
+`player.api.yle.fi/v1/preview/ID.json` API (`origin`/`referer`/`content-type`
+headers; a missing `data` is upstream's `KeyError`). A podcast URL with an
+`ongoing_ondemand.media_url` is a single-URL result; otherwise an
+`ongoing_event` manifest (live, its duration dropped) or an
+`ongoing_ondemand` manifest gives fatal master-only `hls` formats whose
+subtitles merge into the on-demand SRT tracks (`language` else `und`, `kind`
+as `name`); a `kaltura.id` is a `url_transparent` result of
+`kaltura:1955031:ID` (smuggled `source_url`, extracted like Kaltura above)
+overlaid with the Yle fields; `gone` is `raise_no_formats` (`The content is no
+longer available`), and anything else `Unable to extract content`. Titles,
+descriptions, series, `Kausi N` season numbers, episode numbers, age limits,
+`start_time` and durations keep upstream's key order and `None` values.
+Non-string subtitle languages or kinds, non-string manifest URLs and
+non-absolute media URLs are explicit native errors.
+`tests/fixtures/sites/yle_areena/` is compared with pinned upstream output.
+
 Zhihu videos (`zhihu.com/zvideo/ID`) follow upstream `ZhihuIE`: the zvideos
 API's playlist qualities with a URL (`url` else `play_url`) as formats with
 their sample rate, size, FPS, dimensions and bitrate, the fatal title, the
@@ -1677,6 +1931,36 @@ fetched, as upstream's `live=True`) with `is_live`, and the `traverse_obj`
 title, channel, uploader, proto-relative thumbnail, viewer/follower counts
 and `adult` age limit. A master URL that serves a live media playlist is
 one format, as upstream.
+
+Google Drive files (`drive.google.com/file/d/ID`, `uc?id=`/`open?id=`,
+`drive.usercontent.google.com/download?id=`, `video.google.com/get_player`)
+follow upstream `GoogleDriveIE`: the workspace-video playback API
+(`Downloading video webpage`, HTTP errors fatal) for its adaptive and
+progressive transcodes with URL values (integer `itag` IDs, else processing's
+numbered IDs; `mimetype2ext` extension, size, FPS, file size and codecs with
+`none` for a missing codec; 10 MiB HTTP chunks), the string title,
+`parse_duration` duration and URL-valued thumbnails (`ext` and integer
+dimensions). The source format requests
+`drive.usercontent.google.com/download?id=ID&export=download&confirm=t`
+(`Requesting source file`; HTTP errors are upstream's warning): a response
+with a Content-Disposition is the `source` format at its final (redirected)
+URL, otherwise the virus-scan page's `download-form` action is posted empty
+(`Requesting confirmed source file`) and kept when that answers with a
+Content-Disposition, and a page without the form warns with its
+`uc-error-subcaption`/`uc-error-caption` text (else `unable to extract
+confirmation code`). An untitled file takes the Content-Disposition file name,
+and the source extension is the title's (default `mp4`). With subtitles
+requested, the `timedTextBaseUrl` track list (`Downloading subtitles XML`,
+non-fatal) gives each `track`'s language in every listed `format`, with its
+`lang_original` name and `kind`. Generic pages' first Drive player/file
+`<iframe>` joins the generic embed detection. Folders
+(`drive.google.com/drive/folders/ID`, `GoogleDrive:Folder`) read the page's
+first quoted 39-character API key (missing: upstream's `Unable to extract
+key`), the non-fatal batch folder request's title (no JSON: upstream's
+warning) and every batch listing page (`nextPageToken`) as a playlist of
+de-duplicated `drive.google.com/file/d/ID` URL entries; a failing folder
+request (upstream's `TypeError`) and non-string titles, IDs or page tokens
+are reported as unsupported.
 
 Graspop concerts (`vod.graspop.be/LL/ID/`) follow upstream `GraspopIE`: the
 Proximus festival stream's `source.assetUri` over `http:` as fatal HLS
@@ -1821,8 +2105,11 @@ clip URLs, the API's 404 message as the error), `kick:live` (a channel's live
 HLS stream, or `The channel is not currently live`), `kick:videos`
 (`CHANNEL/videos`, `?sort=views`: `url_transparent` VOD entries smuggling
 their availability) and `kick:clips` (`CHANNEL/clips`, `?sort=view|date`,
-`&range=day|week|month|all`: every cursor page fetched up front, unlike
-upstream's lazy generator). Live downloads have this port's live HLS limits.
+`&range=day|week|month|all`: cursor-paginated clip entries). Both lists are
+upstream's generators: the video list and each clip cursor page are fetched
+while the playlist is processed (after `Downloading playlist`), only as far
+as the `--playlist-items` selection needs, and `playlist_count` is unknown
+(`NA`) unless the selection reads past the end. Live downloads have this port's live HLS limits.
 `--use-extractors` matches every extractor by its upstream name.
 `tests/fixtures/sites/kick/` is compared with upstream output.
 
@@ -1975,8 +2262,11 @@ page's `__NEXT_DATA__` `pageProps.episode` as an untyped MP3 result
 thumbnail URL, timestamp and duration, upstream's next.js/`KeyError` errors and
 the generic title and `No video formats found!` error for bare episodes.
 Channels (`podbay.fm/p/SLUG`) follow `PodbayFMChannelIE`: the podcast API's
-10-episode pages (fetched until a short page) as a playlist with episode page
-URLs built from their timestamps. Episodes without a string ID remain explicit
+10-episode pages as a playlist with episode page URLs built from their
+timestamps. Like upstream's `OnDemandPagedList`, page 1 is read at extraction
+(for the title, and reused) and later pages only when they hold requested
+entries (`-I 11` reads just page 2; the count is unknown unless a selection
+reads past the end). Episodes without a string ID remain explicit
 native errors. `tests/fixtures/sites/podbayfm/` is compared with pinned
 upstream output.
 
@@ -2058,6 +2348,87 @@ progressive formats ranked by `qualities(flv, mobile, tablet, 720p, 1080p)`,
 the `thumb`/`still` stills, duration and kudos/views stats. Non-array item or
 media lists and non-string titles or URIs remain explicit native errors.
 `tests/fixtures/sites/dumpert/` is compared with pinned upstream output.
+
+Flickr videos (`[www.|secure.]flickr.com/photos/USER/ID`) follow upstream
+`FlickrIE`: the API key from `hermes_error_beacon.gne`, the REST API's
+`flickr.photos.getInfo` (a failed `stat` is upstream's unexpected error with
+the API message; a non-video photo is `not a video`) and
+`flickr.video.getStreamInfo` with the photo's secret, streams ranked by
+`qualities(288p, iphone_wifi, 100, 300, 700, 360p, appletv, 720p, 1080p,
+orig)` (a missing type is upstream's `None` format ID), owner, counts, tags,
+duration, upload timestamp and license names. Info fields that are not
+objects, and non-string stream URLs or API messages remain explicit native
+errors. Like other site formats, downloads check that the response is media;
+`video/mpeg` (Flickr's `orig` MPEG files) is recognized as `mpg`.
+`tests/fixtures/sites/flickr/` is compared with pinned upstream output.
+
+9GAG posts (`[www.]9gag.com/gag/ID`) follow upstream `NineGagIE`: the
+`9gag.com/v1/post` API (requested with upstream's impersonation warning; a
+missing `data`/`post` is upstream's `KeyError`), the non-animated
+`The given url does not contain a video` no-formats error (a warning with
+`--ignore-no-formats-error`), `mp4`/`webm` image variants as formats with
+their `vp8`/`vp9`/`h265` URLs (`acodec: none` without audio) and `jpg`/`png`
+variants (plus `webpUrl`) as thumbnails, IDs from upstream's
+`key.strip('image')`, the first duration, creator, counts, NSFW age limit,
+section category and tags. Non-object posts, images or image maps and
+non-string titles remain explicit native errors.
+`tests/fixtures/sites/ninegag/` is compared with pinned upstream output.
+
+IMDb trailers (`www|m.imdb.com/video|title|list...vi<ID>`) follow upstream
+`ImdbIE`: the `video/vi<ID>` page's Next.js `videoPlaybackData` (title from
+`name`, `primaryTitle`, then `og:title`/`twitter:title` and `<title>`), its
+`playbackURLs` or else the legacy `VIDEO_PLAYBACK_DATA` API (base64 JSON key;
+an empty answer is upstream's unwrapped `'NoneType' object is not iterable`),
+non-fatal HLS with `preference` 1 and merged subtitles, and progressive
+encodings ranked by `qualities(SD, 480p, 720p, 1080p)`. `ImdbListIE` turns a
+list page's video player links into `url` entries with the list title and
+description (fatal). Native difference: when a page has both meta titles,
+`og:title` is preferred, where upstream takes whichever comes first.
+`tests/fixtures/sites/imdb/` is compared with pinned upstream output.
+
+XVideos videos (`xvideos[2].com/video[.]ID`, `xvideos.es`, `embedframe` and
+the legacy `xv-player.swf?id_video=` links) follow upstream `XVideosIE`: the
+page's `inlineError` (`XVideos said: ...`), the `<title>`/`setVideoTitle`
+title with the non-fatal OpenGraph fallback, `setThumbUrl`/`setThumbUrl169`
+thumbnails, `og:duration` or the parsed duration `<span>`, the legacy
+`flv_url`, `setVideoUrlLow`/`setVideoUrlHigh` formats and the
+`setVideoHLS` master (read without its media playlists, like upstream), whose
+formats are checked like upstream's `_check_formats`: each variant URL is
+requested (`Checking FORMAT video format URL`) and dropped after an HTTP error
+(`... URL is invalid, skipping: ...`). `XVideosQuickiesIE` profile/channel
+`#quickies/a/ID` links follow the video page. `age_limit` is 18.
+`tests/fixtures/sites/xvideos/` is compared with pinned upstream output.
+
+TV 2 videos (`tv2.no/v|video[N]/.../ID`) follow upstream `TV2IE`: the
+`sumo.tv2.no` asset metadata, then the HLS and DASH playback JSON (POSTed
+like upstream; a 401's error code is the Norway geo restriction, the
+login-required error or the error description), each new stream URL checked
+like `_is_valid_url` (`Checking PROTOCOL-TYPE URL`, dropped after an HTTP
+error), master-only HLS (skipped for DRM-protected playback), DASH with the
+stream's format ID, ISM skipped, other URLs as progressive formats, the DRM
+no-formats error, upstream's unbound `video_url` error without any stream, and
+the last stream URL as the info dict's own `url`. `TV2ArticleIE` article
+pages give their `data-assetid` (or `TV2ContentboxVideo`/`TV2.TV2Video`
+`assetId`) videos as a playlist with the OpenGraph title and description
+(` - TV2.no` removed; an embed whose JSON does not parse warns with
+Python's decoder message). HDS (`f4m`) streams give non-fatal F4M formats. Upstream's Katsomo and MTV Uutiset extractors are marked broken and
+not ported. `tests/fixtures/sites/tv2/` is compared with pinned upstream
+output.
+
+Steam store apps (`store.steampowered.com[/agecheck]/app/ID[/NAME]`) follow
+upstream `SteamIE`: the age-check cookies, the `gamehighlight_desktopcarousel`
+element's `data-props` (app name and trailers with an `id`), each trailer's
+non-fatal master-only HLS and DASH manifests with duplicate formats removed
+(by URL, or by fragment URLs), poster/thumbnail thumbnails with
+`parse_resolution` sizes, as a playlist (`APP-MOVIE` IDs, `APP video MOVIE`
+titles, series fields). Like upstream's generator, trailers are extracted as
+the playlist is processed (`--playlist-items` stops further manifest
+requests).
+`SteamCommunityIE` shared files follow the flashvars' `YOUTUBE_VIDEO_ID` (or
+the `movieFrame modal` element's ID) to the YouTube extractor, else
+`No video found`. `SteamCommunityBroadcastIE` broadcasts give the fatal
+master-only live HLS, view count and uploader. `tests/fixtures/sites/steam/`
+is compared with pinned upstream output.
 
 CloudyCDN and Backscreen embeds (`embed.cloudycdn.services|backscreen.com/SITE/media/ID`)
 follow upstream `CloudyCDNIE`: the `player.DOMAIN/player/SITE/media/ID/`
@@ -2236,8 +2607,28 @@ proxy's `resolve` and `get`, the v3 API's original file (when the answer is
 not an m3u8), the streaming URL's redirect to its HLS master, livestreams
 through `api.odysee.live` (`This stream is not live` otherwise), the
 claim's metadata and channel URL, and upstream's `lbry said: CODE -
-MESSAGE` errors. Channels and playlists are not supported.
-`tests/fixtures/sites/lbry/` is compared with pinned upstream output.
+MESSAGE` errors.
+Odysee/LBRY channels (`@NAME[:CLAIM]` with an optional query, `lbry://@NAME#CLAIM`)
+and playlists (`$/playlist/ID`, `$/list/ID`) follow upstream `LBRYChannelIE`
+and `LBRYPlaylistIE`: the channel's `resolve` (`Downloading channel JSON
+metadata`) gives its claim ID (the playlist's ID) and the `title`/`description`;
+a playlist's first `claim_search` (`claim_ids: [ID]`) gives its item's
+`title`/`description` and the string `value.claims` to search. Entries come
+from `claim_search` pages of 50 (`Downloading page N JSON metadata`, with
+`no_totals`, `fee_amount` (default `>=0`), `order_by` from `order=new|top|trending`,
+`claim_type: stream`, `stream_types` from `content=audio|video`, `duration`
+from `long|short`, `any_languages` from `language` (`en` adds `none`), from
+the URL's query; an unknown `order` or `duration` is upstream's `KeyError`
+report): each item with a `name` and `claim_id` becomes a `url` LBRY entry with
+the claim's metadata and its `https://HOST/NAME:CLAIM` URL. Pages follow
+upstream's `OnDemandPagedList` read by `PlaylistEntries` like PeerTube
+playlists' (only the pages holding requested entries, in request order; the
+count is `NA` unless a selection reads past the end). API errors are
+upstream's `lbry:channel said: CODE - MESSAGE` (`lbry:playlist`), unprefixed
+for a page read while processing; a failing page is reported once, its entry
+is `None` and the list ends there, like upstream (see Dailymotion playlists).
+`tests/fixtures/sites/lbry/` and `tests/fixtures/sites/lbry-pagefail/` are
+compared with pinned upstream output.
 
 LinkedIn posts (`linkedin.com/posts/SLUG-ID-XXXX`,
 `feed/update/urn:li:activity:ID`) follow upstream `LinkedInIE`: the page's
@@ -2415,8 +2806,30 @@ genre, tag and count fields. The comment "subtitles" (inline JSON data)
 are an unsupported error with `--write-subs`/`--list-subs`. Logins follow
 `NiconicoBaseIE._perform_login` (session cookies, the `mail_tel`/`password`
 form, its notice error, the MFA one-time password with its error messages,
-upstream's unexpected-login error). Playlists, series, search, live and user
-pages are not supported. `tests/fixtures/sites/niconico/` and
+upstream's unexpected-login error). Live and channel pages are not
+supported.
+
+Niconico mylists (`[www.|sp.]nicovideo.jp/[user/ID/][my/]mylist/[#/]ID`,
+`nico.ms`), series (`.../[user/ID/]series/ID`) and the logged-in user's
+history and likes (`.../my/history[/like]`) follow upstream
+`NiconicoPlaylistBaseIE`: the `nvapi` list request (`pageSize=1`) for the
+title, description and owner, then 100-entry pages as an `OnDemandPagedList`
+(only the pages of `-I` selections are requested, in request order; the
+count is known only once read past the end), each item's `video` (or the item)
+as an entry dict with upstream's fields (the `thumbnail` list of its branching
+path included). History uses cookies only (no password login: `-u` warns
+like upstream), and a 401 answer is upstream's login-required error. User
+videos (`nicovideo.jp/user/ID[/video]`) follow `NiconicoUserIE`'s generator
+(pages until the first page's `totalCount` is listed). `nicosearch[N|all]:`
+and `nicosearchdate[N|all]:` queries, search URLs (`nicovideo.jp/search/...`)
+and tag URLs (`nicovideo.jp/tag/...`) follow `NicovideoSearchBaseIE`: the
+result pages' `data-video-id` values (upstream's `findall`), pages 1, 2, …
+until one has none, at most `N` results (one without a count); the date search
+checks page 50 of each interval from 2007-01-01 to the local date and splits
+full intervals in two (newer half first). Non-ASCII search/tag URL text is
+matched as the percent-encoded URL (upstream keeps the input text). Errors
+while the entries are read have no `[extractor]` prefix, like upstream's.
+`tests/fixtures/sites/niconico/` and
 `tests/fixtures/sites/niconico-login/` are compared with pinned upstream
 output.
 
@@ -2484,8 +2897,11 @@ page's stub error text and restricted-access login error, the player
 POSTed metadata URL, progressive, HLS, DASH, live HLS and RTMP formats with
 upstream's `type` qualities (CDN cookies cleared after each manifest),
 subtitles, page meta upload date and age limit, and YouTube-hosted videos as
-`url_transparent` results. Inline embedded DASH manifests are an unsupported
-error; upstream's boosty branch calls a missing method and fails the same way.
+`url_transparent` results. A smuggled `referrer` is sent as the page's
+`Referer`; a boosty direct `videoembed` link (the author-not-found stub, no
+referrer) is re-extracted with `https://boosty.to` as the referrer, keeping
+upstream's smuggled `webpage_url` (upstream fa98866). Inline embedded DASH
+manifests are an unsupported error.
 `tests/fixtures/sites/odnoklassniki/` is compared with pinned upstream output.
 
 OnePlace episodes (`oneplace.com/.../listen/SLUG-ID`) follow upstream
@@ -2582,7 +2998,7 @@ information of song ID`) as an untyped `mp3` audio-only result with the artist
 as `uploader`/`uploader_id`, and `thumbnail`/`image` thumbnails ranked like
 `qualities`; a missing `name`/`url` is upstream's `KeyError` extractor error.
 
-On generic pages, the embeds of Blogger, JW Platform, Megaphone, Streamable, Wistia (above) and YouTube
+On generic pages, the embeds of Blogger, Google Drive, JW Platform, Megaphone, Streamable, Wistia (above) and YouTube
 (`YoutubeIE._EMBED_REGEX`: iframe/embed/object/SWFObject/`data-video-url`
 `youtube[-nocookie].com/embed|v|p/ID` URLs and lazy-load watch links, kept when
 this port's YouTube extractor accepts them), in
@@ -2975,7 +3391,7 @@ The per-request timeouts still apply to each attempt; there is no overall
 download deadline. Cooperative download cancellation is described below.
 
 This slice is based on the same pinned revision
-**6ccd977303412151ee23352c6257dd658ffc1987**, specifically
+**fa9886678eb65103303c627b8e013f13f8999b41**, specifically
 `yt_dlp/downloader/http.py`'s `RetryDownload`/`RetryManager` control flow,
 transport-read failures, and Content-Length validation. Its broader 5xx retry
 handling remains outside this slice.
@@ -3042,8 +3458,9 @@ forms. Fixed-clock unit tests cover future/past dates, fractional delays, caps,
 invalid dates, duplicate hints, and independence from the response Date header.
 Local HTTP regressions cover expired-hint recovery and capped future hints on
 exhausted budgets and permanent statuses for extraction and downloads.
-Persistent resume, obsolete HTTP-date Retry-After formats, extraction cancellation,
-and an overall extraction deadline remain unimplemented.
+Obsolete HTTP-date Retry-After formats, extraction cancellation, and an
+overall extraction deadline remain unimplemented (resume across invocations is
+covered under `--continue` and fragment download resume above).
 
 ## Download progress and cooperative cancellation
 
@@ -3108,13 +3525,13 @@ expose cancellation flags.
 
 The library observer is a native extension of the transport milestone, not a
 port of upstream's progress-hook contract or CLI cancellation behavior. The pinned baseline remains
-**6ccd977303412151ee23352c6257dd658ffc1987**. Deterministic local HTTP tests in
+**fa9886678eb65103303c627b8e013f13f8999b41**. Deterministic local HTTP tests in
 `tests/progress.rs` cover observer events, response-derived/unknown totals,
 resumed and restarted counters, cancellation cleanup, and retry-wait polling.
 
 ## Source and differential fixtures
 
-This slice uses the existing baseline, **6ccd977303412151ee23352c6257dd658ffc1987**:
+This slice uses the existing baseline, **fa9886678eb65103303c627b8e013f13f8999b41**:
 
 - `yt_dlp/extractor/generic.py`: response dispatch, HTML embed orchestration, and single-vs-playlist dispatch.
 - `yt_dlp/extractor/genericembeds.py`, `HTML5MediaEmbedIE`: numbered entry metadata for single videos and playlists.
@@ -3165,7 +3582,7 @@ recursive result processing remain unimplemented.
 ## Progressive automatic selection source slice
 
 This slice uses the existing pinned source commit
-**6ccd977303412151ee23352c6257dd658ffc1987** and leaves the global baseline unchanged.
+**fa9886678eb65103303c627b8e013f13f8999b41** and leaves the global baseline unchanged.
 `InfoExtractor._parse_html5_media_entries` in `yt_dlp/extractor/common.py` supplies
 source width/height/res handling; its corresponding dimension examples in
 `test/test_InfoExtractor.py` were reviewed. `FormatSorter` in
@@ -4314,15 +4731,22 @@ source-only cases record unsupported behavior. See
 `-O`/`--print [WHEN:]TEMPLATE` prints at upstream's stages for each selected
 video, including every selected HTML5 playlist entry. A WHEN prefix is
 recognized case-insensitively only when it names an upstream stage before the
-first `:`. `video` (the default) prints after `video`-stage `--exec` commands;
+first `:`. `pre_process` prints right after extraction and `after_filter` after
+`post_extract` (both before their `--parse-metadata` and `--exec` processors and
+before format selection, so `ext`/`url` are missing unless the extractor set them,
+and `filename` renders with them as `NA`); `video` (the default) prints after
+`video`-stage `--exec` commands;
 `before_dl` after sidecars and info JSON (also with `--skip-download`);
 `post_process` after the download but before merging or postprocessing;
 `after_move` with the absolute final path (also for an already-downloaded file);
 and `after_video` after the archive record. `filepath` (from `post_process` on)
 and `_filename` (the prepared media path, through `after_move`) are available
-fields. `pre_process`, `after_filter` and `playlist` are rejected before any
-request instead of printing at the wrong time. Without a recognized prefix the
-whole value is the template.
+fields. `playlist` prints once per playlist (see the CLI table). Native
+difference: the match filter runs before the `pre_process` stage (as for
+`--parse-metadata`), so a filtered-out video prints no `pre_process` lines.
+Without a recognized prefix the whole value is the template.
+`tests/fixtures/sites/print-stages/` compares the early stages with pinned
+upstream.
 
 A value fully matching upstream's shorthand pattern `([\w.:,]|-\d)+` is a
 field list: each comma-separated field prints `%(field)s` on its own line, and a
@@ -4481,7 +4905,7 @@ library equivalent is `YoutubeOptions.include_translated_subtitles`. The upstrea
 `--write-subs` and `--write-auto-subs` independently enable selection. Normal tracks
 win shared language keys. Default selection searches normal exact/prefix English,
 then all exact/prefix English, then first normal/available language. Existing
-literal/all/exclusion and extension preference rules apply to the combined map.
+regex/all/exclusion and extension preference rules apply to the combined map.
 `SubtitleOptions::select_sources` exposes this explicitly to library callers.
 
 `--list-subs` prints automatic captions first when present, then normal subtitles;

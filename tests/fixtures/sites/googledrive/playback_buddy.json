@@ -1,0 +1,20 @@
+{
+  "mediaStreamingData": {
+    "formatStreamingData": {
+      "progressiveTranscodes": [
+        {
+          "itag": 50,
+          "url": "https://rr2---sn-test.c.drive.google.com/videoplayback?id=buddy&itag=50&source=webdrive",
+          "transcodeMetadata": {
+            "mimeType": "audio/mpeg",
+            "audioCodecString": "mp3",
+            "contentLength": "2954240"
+          }
+        }
+      ]
+    }
+  },
+  "mediaMetadata": {
+    "duration": "184.68s"
+  }
+}

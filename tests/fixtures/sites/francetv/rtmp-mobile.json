@@ -1,0 +1,15 @@
+{
+ "video": {
+  "format": "mp4",
+  "url": "https://media.ftven.fr/d12458ee/broken.mp4",
+  "duration": 1638,
+  "is_live": false
+ },
+ "meta": {
+  "title": "Soir 3",
+  "additional_title": "Émission du jeudi 22 août 2019",
+  "pre_title": null,
+  "image_url": null,
+  "broadcasted_at": null
+ }
+}

@@ -1,0 +1,98 @@
+{
+ "routes": [
+  {
+   "url": "https://store.steampowered.com/app/105600/Terraria/",
+   "request_headers": {
+    "Cookie": "wants_mature_content=1; birthtime=946652401; lastagecheckage=1-January-2000"
+   },
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Terraria on Steam</title></head><body><div class=\"gamehighlight_desktopcarousel\" data-props=\"{&quot;appName&quot;: &quot;Terraria &amp;amp; Friends&quot;, &quot;trailers&quot;: [{&quot;id&quot;: 256785003, &quot;poster&quot;: &quot;https://video.akamai.steamstatic.test/store_trailers/105600/movie_max.jpg&quot;, &quot;thumbnail&quot;: &quot;https://video.akamai.steamstatic.test/store_trailers/105600/movie.293x165.jpg&quot;, &quot;hlsManifest&quot;: &quot;https://video.akamai.steamstatic.test/store_trailers/105600/hls_264_master.m3u8&quot;, &quot;dashManifests&quot;: [&quot;https://video.akamai.steamstatic.test/store_trailers/105600/dash_h264.mpd&quot;, &quot;https://video.akamai.steamstatic.test/store_trailers/105600/dash_h264.mpd?copy=1&quot;, &quot;not a url&quot;]}, {&quot;id&quot;: null, &quot;hlsManifest&quot;: &quot;https://video.akamai.steamstatic.test/never.m3u8&quot;}, {&quot;id&quot;: &quot;2028&quot;, &quot;thumbnail&quot;: &quot;https://video.akamai.steamstatic.test/store_trailers/105600/t_720p.jpg&quot;, &quot;hlsManifest&quot;: &quot;https://video.akamai.steamstatic.test/store_trailers/105600/missing.m3u8&quot;}]}\"></div></body></html>"
+  },
+  {
+   "url": "https://store.steampowered.com/app/105600/Terraria/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>age check required</html>"
+  },
+  {
+   "url": "https://video.akamai.steamstatic.test/store_trailers/105600/hls_264_master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1200000,RESOLUTION=1280x720\nhls_264_720.m3u8\n"
+  },
+  {
+   "url": "https://video.akamai.steamstatic.test/store_trailers/105600/dash_h264.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://video.akamai.steamstatic.test/store_trailers/105600/dash_h264.mpd?copy=1",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://store.steampowered.com/app/999/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><title>Nothing</title></html>"
+  },
+  {
+   "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=242472205",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>var rgMovieFlashvars = {\"movie_242472205\": {\"YOUTUBE_VIDEO_ID\": \"BaW_jenozKc\", \"x\": 1}};</script></html>"
+  },
+  {
+   "url": "https://steamcommunity.com/sharedfiles/filedetails/242472206",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><div class=\"movieFrame modal\" id=\"BaW_jenozKc\"></div></html>"
+  },
+  {
+   "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><p>nothing</p></html>"
+  },
+  {
+   "url": "https://steamcommunity.com/broadcast/watch/76561199073851486",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Steam Community :: Broadcast\"><title>Other</title></head></html>"
+  },
+  {
+   "url": "https://steamcommunity.com/broadcast/getbroadcastmpd/?steamid=76561199073851486",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"success\": \"ready\", \"hls_url\": \"https://broadcast.steamcontent.test/broadcast/1/master.m3u8\", \"num_view\": 42}"
+  },
+  {
+   "url": "https://broadcast.steamcontent.test/broadcast/1/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1200000,RESOLUTION=1280x720\nhls_264_720.m3u8\n"
+  },
+  {
+   "url": "https://steamcommunity.com/actions/ajaxresolveusers?steamids=76561199073851486",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"steamid\": \"76561199073851486\", \"accountid\": 1113585758, \"persona_name\": \"Streamer\"}]"
+  }
+ ]
+}

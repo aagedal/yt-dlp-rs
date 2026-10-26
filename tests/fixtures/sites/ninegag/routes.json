@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://9gag.com/v1/post?id=ae5Ag7B",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"meta\": {\"status\": \"Success\"}, \"data\": {\"post\": {\"id\": \"ae5Ag7B\", \"title\": \"Capybara Agility Training\", \"type\": \"Animated\", \"nsfw\": 0, \"upVoteCount\": \"1234\", \"downVoteCount\": 7, \"commentsCount\": \"55\", \"creationTs\": 1622650542, \"postSection\": {\"name\": \"Awesome\"}, \"tags\": [{\"key\": \"capybara\", \"url\": \"/tag/capybara\"}, {\"key\": \"\"}, {\"url\": \"x\"}], \"creator\": {\"username\": \"Fikyo\", \"fullName\": \"Fikyo Name\", \"profileUrl\": \"https://9gag.com/u/Fikyo\"}, \"images\": {\"image700\": {\"width\": 700, \"height\": 394, \"url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_700b.jpg\", \"webpUrl\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_700bwp.webp\"}, \"image460\": {\"width\": 460, \"height\": 258, \"url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_460s.jpg\"}, \"image460sv\": {\"width\": 460, \"height\": 258, \"url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_460sv.mp4\", \"hasAudio\": 0, \"duration\": \"8\", \"vp9Url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_460svvp9.webm\", \"h265Url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_460svh265.mp4\", \"vp8Url\": \"\"}, \"image460svwm\": {\"width\": 460, \"height\": 258, \"url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_460svwm.webm\", \"hasAudio\": 1, \"duration\": 9}, \"imageFbThumbnail\": {\"width\": 220, \"height\": \"x\", \"url\": \"not a url\"}}}}}"
+  },
+  {
+   "url": "https://9gag.com/v1/post?id=aYKBYm9",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"meta\": {\"status\": \"Success\"}, \"data\": {\"post\": {\"id\": \"aYKBYm9\", \"title\": \"I&#039;m &amp; you\", \"type\": \"Animated\", \"nsfw\": true, \"tags\": [], \"images\": {\"image460sv\": {\"url\": \"https://img-9gag-fun.9cache.test/photo/aYKBYm9_460sv.mp4\"}}}}}"
+  },
+  {
+   "url": "https://9gag.com/v1/post?id=photo1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"meta\": {\"status\": \"Success\"}, \"data\": {\"post\": {\"id\": \"photo1\", \"title\": \"Just a photo\", \"type\": \"Photo\", \"images\": {\"image700\": {\"width\": 700, \"height\": 700, \"url\": \"https://img-9gag-fun.9cache.test/photo/photo1_700b.jpg\"}}}}}"
+  },
+  {
+   "url": "https://9gag.com/v1/post?id=nodata",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"meta\": {\"status\": \"Failure\"}}"
+  },
+  {
+   "url": "https://img-9gag-fun.9cache.test/photo/ae5Ag7B_460svh265.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "fixture h265 bytes"
+  }
+ ]
+}

@@ -1,5 +1,5 @@
 {
- "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
  "cases": [
   {
    "url": "https://www.dailymotion.com/video/x8abc",
@@ -126,6 +126,30 @@
     "[info] x8abc: Downloading 1 format(s): http-1080@60"
    ],
    "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/user/someuser",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist",
+    "-u",
+    "user@example.com",
+    "-p",
+    "wrong"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[dailymotion:user] Extracting URL: https://www.dailymotion.com/user/someuser",
+    "[download] Downloading playlist: someuser",
+    "[dailymotion:user] Downloading Access Token",
+    "[dailymotion:user] Playlist someuser: Downloading 1 items",
+    "[download] Finished downloading playlist: someuser"
+   ],
+   "stderr": [
+    "ERROR: Invalid username or password"
+   ],
    "files": {}
   }
  ]

@@ -1,0 +1,9 @@
+[
+ {"url": "https://9gag.com/gag/ae5Ag7B", "args": ["-J"]},
+ {"url": "https://9gag.com/gag/ae5Ag7B", "args": ["-F"]},
+ {"url": "https://9gag.com/gag/ae5Ag7B", "args": ["--no-progress", "-f", "460sv-h265", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.9gag.com/gag/aYKBYm9?ref=fb", "args": ["-J"]},
+ {"url": "https://9gag.com/gag/photo1", "args": ["--print", "id"]},
+ {"url": "https://9gag.com/gag/photo1", "args": ["--ignore-no-formats-error", "--print", "%(id)s|%(title)s|%(thumbnails)j"]},
+ {"url": "https://9gag.com/gag/nodata", "args": ["--print", "id"]}
+]

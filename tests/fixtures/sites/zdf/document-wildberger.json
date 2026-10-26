@@ -1,0 +1,36 @@
+{
+ "document": {
+  "titel": "Minister Wildberger nutzte KI für Texte und Reden",
+  "beschreibung": "Digitalminister Wildberger setzt auf KI.",
+  "date": null,
+  "teaserBild": {
+   "276": {
+    "url": "https://www.zdfheute.de/assets/karsten-wildberger-120~276x155?cb=1",
+    "width": 276,
+    "height": null
+   },
+   "1920": {
+    "url": "https://www.zdfheute.de/assets/karsten-wildberger-120~1920x1080?cb=1",
+    "width": "1920",
+    "height": 1080
+   },
+   "none": {
+    "url": null
+   }
+  },
+  "captions": [
+   {
+    "language": "deu",
+    "uri": "https://utstreaming.zdf.test/mtt/doc.vtt"
+   }
+  ],
+  "streams": [
+   {
+    "streamApiUrlAndroid": "https://api.zdf.de/tmd/2/android_native_6/vod/ptmd/mediathek/260611_mario_voigt_viu"
+   }
+  ]
+ },
+ "meta": {
+  "editorialDate": "2026-06-13T20:05:00.000+02:00"
+ }
+}

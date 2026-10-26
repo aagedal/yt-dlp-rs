@@ -1,0 +1,29 @@
+{
+ "id": "5eOHzt8XB2sqeFXbIoJlg2",
+ "title": "Die Kirche bleibt im Dorf",
+ "synopsis": "Die Kirche bleibt im Dorf",
+ "teasers": [
+  {
+   "id": "K1",
+   "type": "ondemand",
+   "longTitle": "Liebe auf vier Pfoten",
+   "duration": 5222,
+   "broadcastedOn": "2023-11-30T11:30:00Z",
+   "links": {
+    "target": {
+     "urlId": "Y3JpZDovL21kci5kZS9zZW5kdW5nLzI4MjA0MC80MjIwOTEtNDAyNTM0"
+    }
+   }
+  },
+  {
+   "id": "K2",
+   "type": "ondemand",
+   "longTitle": "Fritjof",
+   "links": {
+    "target": {
+     "id": "EP2"
+    }
+   }
+  }
+ ]
+}

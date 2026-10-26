@@ -1,0 +1,23 @@
+{
+ "video": {
+  "workflow": "token-akamai",
+  "format": "dash",
+  "url": "https://cloudingest.ftven.fr/ec217ecc/manifest.mpd",
+  "token": {"akamai": "https://hdfauth.ftven.fr/esi/TA?device=desktop"},
+  "duration": 2580,
+  "is_live": false,
+  "drm": false,
+  "spritesheets": [
+   "https://sprites.ftven.fr/ec217ecc/sprite-0.jpg",
+   "https://sprites.ftven.fr/ec217ecc/sprite-1.jpg"
+  ]
+ },
+ "meta": {
+  "id": "ec217ecc-0733-48cf-ac06-af1347b849d1",
+  "title": "13h15, le dimanche...",
+  "additional_title": "Les mystères de Jésus",
+  "pre_title": "S2 E5",
+  "image_url": "https://www.france.tv/image/ec217ecc.jpg",
+  "broadcasted_at": "2017-08-13T13:25:00+02:00"
+ }
+}

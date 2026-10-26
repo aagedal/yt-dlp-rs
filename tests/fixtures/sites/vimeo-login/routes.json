@@ -1,0 +1,272 @@
+{
+ "routes": [
+  {
+   "url": "https://vimeo.com/_next/viewer",
+   "request_headers": {
+    "Cookie": "vimeo=SESSION",
+    "Accept": "application/json"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"jwt\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQxMDI0NDQ4MDAsInVzZXIiOiJ1c2VyIn0.c2ln\", \"xsrft\": \"XSRF2\", \"user\": {\"id\": 1}}"
+  },
+  {
+   "url": "https://vimeo.com/_next/viewer",
+   "request_headers": {
+    "Accept": "application/json"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"jwt\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQxMDI0NDQ4MDAsInVzZXIiOiJhbm9uIn0.c2ln\", \"xsrft\": \"XSRF1\", \"user\": null}"
+  },
+  {
+   "url": "https://vimeo.com/log_in",
+   "request_headers": {
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Referer": "https://vimeo.com/log_in"
+   },
+   "request_body": [
+    "action=login&email=user%40example.com&password=s3cret%26pw&service=vimeo&token=XSRF1"
+   ],
+   "headers": {
+    "Content-Type": "text/html",
+    "Set-Cookie": "vimeo=SESSION; Domain=.vimeo.com; Path=/"
+   },
+   "body": "<html>welcome</html>"
+  },
+  {
+   "url": "https://vimeo.com/log_in",
+   "request_body": [
+    "password=wrong"
+   ],
+   "status": 418,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "I'm a teapot"
+  },
+  {
+   "url": "https://vimeo.com/log_in",
+   "request_body": [
+    "password=boom"
+   ],
+   "status": 403,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "Forbidden"
+  },
+  {
+   "url": "https://api.vimeo.com/videos/123456789:abcdef0123?fields=config_url%2Ccreated_time%2Cdescription%2Clicense%2Cmetadata.connections.comments.total%2Cmetadata.connections.likes.total%2Crelease_time%2Cstats.plays",
+   "request_headers": {
+    "Authorization": "jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQxMDI0NDQ4MDAsInVzZXIiOiJ1c2VyIn0.c2ln",
+    "Accept": "application/vnd.vimeo.*+json; version=3.4.10",
+    "Accept-Language": "en"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"config_url\": \"https://player.vimeo.com/video/123456789/config?h=abcdef0123\", \"created_time\": \"2024-01-02T03:04:05+00:00\", \"release_time\": \"2024-01-03T00:00:00+00:00\", \"description\": \"Seen by the account\", \"license\": \"by\", \"metadata\": {\"connections\": {\"comments\": {\"total\": 3}, \"likes\": {\"total\": 4}}}, \"stats\": {\"plays\": 99}}"
+  },
+  {
+   "url": "https://player.vimeo.com/video/123456789/config?h=abcdef0123",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"request\": {\"files\": {\"progressive\": [{\"url\": \"https://vod-progressive.akamaized.net/123456789/720.mp4\", \"quality\": \"720p\", \"width\": 1280, \"height\": 720, \"fps\": 30}]}}, \"video\": {\"id\": 123456789, \"title\": \"Unlisted clip\", \"duration\": 62, \"owner\": {\"name\": \"Account Owner\", \"url\": \"https://vimeo.com/accountowner\"}, \"thumbnail_url\": \"https://i.vimeocdn.com/video/123456789-thumb.jpg\"}}"
+  },
+  {
+   "url": "https://vimeo.com/123456789?action=load_download_config&unlisted_hash=abcdef0123",
+   "request_headers": {
+    "Accept": "application/json",
+    "X-Requested-With": "XMLHttpRequest"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"source_file\": {\"download_url\": \"https://vimeo.com/download/123456789/source\", \"extension\": \"MOV\", \"width\": 1920, \"height\": 1080, \"size\": \"1.5 GB\", \"public_name\": \"Original\", \"is_cold\": false, \"is_defrosting\": false}}"
+  },
+  {
+   "url": "https://vimeo.com/download/123456789/source",
+   "headers": {
+    "Content-Type": "video/quicktime"
+   },
+   "body": "0000ftypqt  -source"
+  },
+  {
+   "url": "https://vimeo.com/76979871",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://player.vimeo.com/video/76979871/config?h=abc",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"request\": {\"files\": {\"progressive\": [{\"url\": \"https://vod-progressive.akamaized.net/76979871/720.mp4\", \"quality\": \"720p\", \"width\": 1280, \"height\": 720, \"fps\": 30}]}}, \"video\": {\"id\": 76979871, \"title\": \"Page clip\", \"duration\": 62, \"owner\": {\"name\": \"Account Owner\", \"url\": \"https://vimeo.com/accountowner\"}, \"thumbnail_url\": \"https://i.vimeocdn.com/video/76979871-thumb.jpg\"}}"
+  },
+  {
+   "url": "https://api.vimeo.com/videos/76979871?fields=privacy",
+   "request_headers": {
+    "Authorization": "jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQxMDI0NDQ4MDAsInVzZXIiOiJ1c2VyIn0.c2ln"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"privacy\": {\"download\": true, \"view\": \"anybody\"}}"
+  },
+  {
+   "url": "https://api.vimeo.com/videos/76979871?fields=download",
+   "request_headers": {
+    "Authorization": "jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQxMDI0NDQ4MDAsInVzZXIiOiJ1c2VyIn0.c2ln"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"download\": [{\"quality\": \"hd\", \"link\": \"https://player.vimeo.com/play/76979871/hd?filename=clip.mp4\"}, {\"quality\": \"source\", \"public_name\": \"Source\", \"width\": 3840, \"height\": 2160, \"fps\": 30, \"size\": 123456, \"link\": \"https://player.vimeo.com/play/76979871/source?s=1&filename=Clip.MOV\"}]}"
+  },
+  {
+   "url": "https://vimeo.com/11111111",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "nopage.html"
+  },
+  {
+   "url": "https://api.vimeo.com/videos/11111111?fields=config_url%2Ccreated_time%2Cdescription%2Clicense%2Cmetadata.connections.comments.total%2Cmetadata.connections.likes.total%2Crelease_time%2Cstats.plays",
+   "request_headers": {
+    "Authorization": "jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQxMDI0NDQ4MDAsInVzZXIiOiJ1c2VyIn0.c2ln"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"name\": \"API only clip\", \"duration\": 120, \"user\": {\"name\": \"API User\", \"link\": \"https://vimeo.com/apiuser\"}, \"pictures\": {\"sizes\": [{\"link\": \"https://i.vimeocdn.com/video/11111111-100x75\", \"width\": 100, \"height\": 75}, {\"link\": null, \"width\": 200}]}, \"files\": [{\"quality\": \"hd\", \"rendition\": \"720p\", \"type\": \"video/mp4\", \"codec\": \"H264\", \"width\": 1280, \"height\": 720, \"fps\": 30, \"size\": 15360000, \"link\": \"https://vod.vimeocdn.com/11111111/720.mp4\"}, {\"quality\": \"sd\", \"public_name\": \"360p\", \"type\": \"video/webm\", \"width\": 640, \"height\": 360, \"link\": \"https://vod.vimeocdn.com/11111111/360.webm\"}, {\"quality\": \"sd\", \"link\": \"https://vod.vimeocdn.com/11111111/720.mp4\"}], \"description\": \"Only via API\", \"license\": null, \"created_time\": \"2020-05-06T07:08:09+00:00\", \"release_time\": \"2020-05-07T00:00:00+00:00\", \"stats\": {\"plays\": 5}, \"metadata\": {\"connections\": {\"comments\": {\"total\": 0}, \"likes\": {\"total\": 1}}}, \"live\": {\"status\": \"done\"}}"
+  },
+  {
+   "url": "https://api.vimeo.com/videos/11111111?fields=privacy",
+   "request_headers": {
+    "Authorization": "jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQxMDI0NDQ4MDAsInVzZXIiOiJ1c2VyIn0.c2ln"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"privacy\": {\"download\": false}}"
+  },
+  {
+   "url": "https://vimeo.com/22222222",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "nopage.html"
+  },
+  {
+   "url": "https://api.vimeo.com/videos/22222222?fields=config_url%2Ccreated_time%2Cdescription%2Clicense%2Cmetadata.connections.comments.total%2Cmetadata.connections.likes.total%2Crelease_time%2Cstats.plays",
+   "request_headers": {
+    "Authorization": "jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQxMDI0NDQ4MDAsInVzZXIiOiJ1c2VyIn0.c2ln"
+   },
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \" This video is not available in your country. \", \"error_code\": 5460}"
+  },
+  {
+   "url": "https://vimeo.com/33333333",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "nopage.html"
+  },
+  {
+   "url": "https://api.vimeo.com/videos/33333333?fields=config_url%2Ccreated_time%2Cdescription%2Clicense%2Cmetadata.connections.comments.total%2Cmetadata.connections.likes.total%2Crelease_time%2Cstats.plays",
+   "request_headers": {
+    "Authorization": "jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQxMDI0NDQ4MDAsInVzZXIiOiJ1c2VyIn0.c2ln"
+   },
+   "status": 400,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"Password required\", \"invalid_parameters\": [{\"field\": \"password\"}]}"
+  },
+  {
+   "url": "https://vimeo.com/33333333/password",
+   "request_headers": {
+    "Content-Type": "application/json",
+    "Referer": "https://vimeo.com/33333333"
+   },
+   "request_body": [
+    "{\"password\":\"wrong\",\"token\":\"XSRF2\"}"
+   ],
+   "status": 418,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "I'm a teapot"
+  },
+  {
+   "url": "https://api.vimeo.com/videos/44444444?fields=config_url%2Ccreated_time%2Cdescription%2Clicense%2Cmetadata.connections.comments.total%2Cmetadata.connections.likes.total%2Crelease_time%2Cstats.plays",
+   "request_headers": {
+    "Authorization": "jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQxMDI0NDQ4MDAsInVzZXIiOiJ1c2VyIn0.c2ln"
+   },
+   "status": 500,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"boom\"}"
+  },
+  {
+   "url": "https://vimeo.com/44444444",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "nopage.html"
+  },
+  {
+   "url": "https://api.vimeo.com/albums/555?is_embed=false&referrer=&fields=description%2Cname%2Cprivacy",
+   "request_headers": {
+    "Authorization": "jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQxMDI0NDQ4MDAsInVzZXIiOiJhbm9uIn0.c2ln",
+    "Accept": "application/json"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"name\": \"Showcase\", \"description\": null, \"privacy\": {\"view\": \"password\"}}"
+  },
+  {
+   "url": "https://vimeo.com/showcase/555/auth",
+   "request_headers": {
+    "X-Requested-With": "XMLHttpRequest"
+   },
+   "request_body": [
+    "password=album+pw&token=XSRF1"
+   ],
+   "headers": {
+    "Content-Type": "application/json",
+    "Set-Cookie": "showcase_555=ok; Domain=.vimeo.com; Path=/"
+   },
+   "body": "{\"hashed_pass\": \"HASHED\"}"
+  },
+  {
+   "url": "https://vimeo.com/showcase/555/auth",
+   "request_body": [
+    "password=wrong"
+   ],
+   "status": 401,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://vimeo.com/album/555/video/76979871",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  }
+ ]
+}

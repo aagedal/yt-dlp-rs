@@ -24,6 +24,11 @@ pub(crate) const SECTION_UPDATE: &str = "__yt_dlp_rs_section_update";
 /// result's `original_url` on as extra info, ahead of the default keys.
 pub(crate) const FOLLOWED: &str = "__yt_dlp_rs_followed";
 
+/// An extractor dict's own top-level `url` (next to its `formats`), which
+/// `requested_downloads` are compared with; the typed `url` holds the
+/// selected format's.
+pub(crate) const OWN_URL: &str = "__yt_dlp_rs_own_url";
+
 /// How an upstream step sets a key.
 #[derive(Clone, Copy)]
 enum Set {
@@ -39,6 +44,31 @@ enum Set {
     Codecs,
 }
 use Set::*;
+
+/// An extractor's subtitle track keys (`KEY,KEY`) first, then the others
+/// (processing's `ext`); manifest tracks keep their parser's order.
+fn order_subtitle_tracks(out: &mut Map<String, Value>, subtitle_keys: &str) {
+    for key in ["subtitles", "automatic_captions"] {
+        if let Some(Value::Object(languages)) = out.get_mut(key) {
+            for tracks in languages.values_mut().filter_map(Value::as_array_mut) {
+                for track in tracks
+                    .iter_mut()
+                    .filter_map(Value::as_object_mut)
+                    .filter(|track| !track.contains_key("manifest_url"))
+                {
+                    let mut ordered = Map::new();
+                    for key in subtitle_keys.split(',') {
+                        if let Some(value) = track.shift_remove(key) {
+                            ordered.insert(key.to_owned(), value);
+                        }
+                    }
+                    ordered.append(track);
+                    *track = ordered;
+                }
+            }
+        }
+    }
+}
 
 /// Insertion replay: keys move from this port's dict into upstream order.
 struct Replay {
@@ -200,6 +230,8 @@ impl Replay {
         } else {
             self.take("filesize_approx");
         }
+        // `_calc_headers` sets `cookies` before returning the headers.
+        self.take("cookies");
         self.assign("http_headers");
         self.assign("format_id");
         self.assign("format");
@@ -211,7 +243,10 @@ pub(crate) fn strip_markers(map: &mut Map<String, Value>) {
     map.shift_remove(INFO_SHAPE);
     map.shift_remove(FORMAT_SHAPE);
     map.shift_remove(INT_QUALITY);
+    map.shift_remove(INT_FRAGMENT_DURATIONS);
     map.shift_remove(FOLLOWED);
+    map.shift_remove(OWN_URL);
+    map.shift_remove(crate::PROCESSED_ENTRY);
 }
 
 /// Record the upstream code path that built an info dict.
@@ -332,6 +367,34 @@ pub(crate) fn mark_int_quality(format: &mut crate::VideoFormat) {
     format.extra.insert(INT_QUALITY.into(), Value::Bool(true));
 }
 
+/// A format whose extractor gave int fragment `duration`s (stored as
+/// floats).
+const INT_FRAGMENT_DURATIONS: &str = "__yt_dlp_rs_int_fragment_durations";
+
+/// The format's whole fragment durations are ints.
+pub(crate) fn mark_int_fragment_durations(format: &mut crate::VideoFormat) {
+    format
+        .extra
+        .insert(INT_FRAGMENT_DURATIONS.into(), Value::Bool(true));
+}
+
+/// Whole fragment durations as ints, for a marked dict.
+fn int_fragment_durations(map: &mut Map<String, Value>) {
+    if map.shift_remove(INT_FRAGMENT_DURATIONS).is_none() {
+        return;
+    }
+    let Some(Value::Array(fragments)) = map.get_mut("fragments") else {
+        return;
+    };
+    for fragment in fragments {
+        if let Some(duration) = fragment.get("duration").and_then(Value::as_f64)
+            && duration.fract() == 0.0
+        {
+            fragment["duration"] = (duration as i64).into();
+        }
+    }
+}
+
 /// A format whose `preference` `FormatSorter._fill_sorting_fields` set
 /// (HEVC over FLV), after `video_ext`/`audio_ext`.
 pub(crate) const SORTER_PREFERENCE: &str = "__yt_dlp_rs_sorter_preference";
@@ -339,6 +402,7 @@ pub(crate) const SORTER_PREFERENCE: &str = "__yt_dlp_rs_sorter_preference";
 /// One format dict in upstream order (unmarked formats are unchanged).
 pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     let sorter_preference = map.shift_remove(SORTER_PREFERENCE).is_some();
+    int_fragment_durations(&mut map);
     if map.shift_remove(INT_QUALITY).is_some()
         && let Some(quality) = map.get("quality").and_then(Value::as_f64)
         && quality.fract() == 0.0
@@ -857,6 +921,7 @@ const PROCESSED_FORMAT_KEYS: &[&str] = &[
     "dynamic_range",
     "aspect_ratio",
     "filesize_approx",
+    "cookies",
     "http_headers",
     "format_id",
     "format",
@@ -946,6 +1011,8 @@ const MERGED_AUDIO_KEYS: &[&str] = &["acodec", "abr", "asr", "audio_channels"];
 /// Formats must already be ordered by [`format`].
 pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     map.shift_remove(FORMAT_SHAPE);
+    // The selected format's int fragment durations.
+    int_fragment_durations(&mut map);
     // `--ignore-no-formats-error`: `info_dict['formats'] = []` after
     // `_has_drm`, and no format is merged.
     let no_formats = map.shift_remove(crate::info::FORMATS_IGNORED).is_some();
@@ -960,6 +1027,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     {
         map.insert("quality".into(), (quality as i64).into());
     }
+    let own_url = map.shift_remove(OWN_URL);
+    map.shift_remove(crate::PROCESSED_ENTRY);
     let Some((shape, original)) = shape_of(map.shift_remove(INFO_SHAPE)) else {
         return map;
     };
@@ -1999,9 +2068,15 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // An extractor's own dict that is its own (only) format, built without
     // `None` values (`traverse_obj` dict templates): `untyped-dict;KEYS`.
-    if let Some(keys) = shape.strip_prefix("untyped-dict;") {
+    // (`;subtitle=KEYS` orders the extractor's subtitle track keys.)
+    if let Some(spec) = shape.strip_prefix("untyped-dict;") {
+        let mut parts = spec.split(';');
+        let keys = parts.next().unwrap_or_default();
         for key in keys.split(',').filter(|key| !key.is_empty()) {
             replay.take(key);
+        }
+        if let Some(subtitle_keys) = parts.find_map(|part| part.strip_prefix("subtitle=")) {
+            order_subtitle_tracks(&mut replay.out, subtitle_keys);
         }
     }
     // `AngelIE`: `merge_dicts(info_dict, json_ld)`.
@@ -2130,25 +2205,26 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         }
         // The extractor's subtitle track keys, then processing's `ext`.
         if let Some(subtitle_keys) = subtitle_keys {
-            for key in ["subtitles", "automatic_captions"] {
-                if let Some(Value::Object(languages)) = replay.out.get_mut(key) {
-                    for tracks in languages.values_mut().filter_map(Value::as_array_mut) {
-                        // Manifest tracks keep their parser's order.
-                        for track in tracks
-                            .iter_mut()
-                            .filter_map(Value::as_object_mut)
-                            .filter(|track| !track.contains_key("manifest_url"))
-                        {
-                            let mut ordered = Map::new();
-                            for key in subtitle_keys.split(',') {
-                                if let Some(value) = track.shift_remove(key) {
-                                    ordered.insert(key.to_owned(), value);
-                                }
-                            }
-                            ordered.append(track);
-                            *track = ordered;
+            order_subtitle_tracks(&mut replay.out, subtitle_keys);
+            // `requested_subtitles` holds the same track dicts.
+            if let Some(Value::Object(requested)) = match replay.out.get_mut("requested_subtitles")
+            {
+                Some(requested) => Some(requested),
+                None => replay.ours.get_mut("requested_subtitles"),
+            } {
+                for track in requested
+                    .values_mut()
+                    .filter_map(Value::as_object_mut)
+                    .filter(|track| !track.contains_key("manifest_url"))
+                {
+                    let mut ordered = Map::new();
+                    for key in subtitle_keys.split(',') {
+                        if let Some(value) = track.shift_remove(key) {
+                            ordered.insert(key.to_owned(), value);
                         }
                     }
+                    ordered.append(track);
+                    *track = ordered;
                 }
             }
         }
@@ -2348,6 +2424,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             .map(|(key, value)| {
                 // A loaded dict already held its selected format's values.
                 let value = match original.as_ref().and_then(|original| original.get(key)) {
+                    _ if key == "url" && own_url.is_some() => own_url.clone().unwrap_or_default(),
                     Some(loaded) if selected.contains(key) => loaded.clone(),
                     _ if selected.contains(key) && !own_keys.contains(&key.as_str()) => Value::Null,
                     _ => value.clone(),
@@ -2498,6 +2575,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         {
             out.insert(key.into(), own);
         }
+    }
+    // A merge has no `url` of its own: the extractor's stays.
+    if !requested.is_empty()
+        && let Some(own_url) = own_url
+        && out.get("url").is_some_and(Value::is_null)
+    {
+        out.insert("url".into(), own_url);
     }
     out
 }

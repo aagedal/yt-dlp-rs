@@ -235,10 +235,6 @@ fn simulation_skip_download_validation_and_resets() {
             "echo %(title|a b)q",
             "ERROR: Unsafe default(s) in exec command: 'echo %(title|a b)q'",
         ),
-        (
-            "pre_process:echo",
-            "ERROR: --exec stage \"pre_process\" is unsupported",
-        ),
     ] {
         let output = cli(&["--exec", command, &server.url], directory.path());
         assert_eq!(output.status.code(), Some(1), "{command}");

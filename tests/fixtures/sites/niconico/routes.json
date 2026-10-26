@@ -129,6 +129,200 @@
     "Content-Type": "video/mp2t"
    },
    "body": "segment-video-h264-720p"
+  },
+  {
+   "url": "https://nvapi.nicovideo.jp/v2/mylists/27411728?pageSize=1",
+   "request_headers": {
+    "X-Frontend-ID": "6",
+    "X-Frontend-Version": "0",
+    "X-Niconico-Language": "en-us"
+   },
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"meta\": {\"status\": 200}, \"data\": {\"mylist\": {\"id\": 27411728, \"name\": \"AKB48のオールナイトニッポン\", \"description\": \"AKB48のANN\", \"owner\": {\"ownerType\": \"user\", \"type\": \"user\", \"visibility\": \"visible\", \"id\": \"805442\", \"name\": \"のっく\", \"iconUrl\": \"https://secure-dcdn.cdn.nimg.jp/nicoaccount/usericon/80/805442.jpg\"}, \"totalItemCount\": 2, \"items\": []}}}"
+  },
+  {
+   "url": "https://nvapi.nicovideo.jp/v2/mylists/27411728?page=1&pageSize=100",
+   "request_headers": {
+    "X-Frontend-ID": "6",
+    "X-Frontend-Version": "0",
+    "X-Niconico-Language": "en-us"
+   },
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"meta\": {\"status\": 200}, \"data\": {\"mylist\": {\"id\": 27411728, \"name\": \"AKB48のオールナイトニッポン\", \"description\": \"AKB48のANN\", \"owner\": {\"ownerType\": \"user\", \"type\": \"user\", \"visibility\": \"visible\", \"id\": \"805442\", \"name\": \"のっく\", \"iconUrl\": \"https://secure-dcdn.cdn.nimg.jp/nicoaccount/usericon/80/805442.jpg\"}, \"totalItemCount\": 2, \"items\": [{\"itemId\": 1, \"watchId\": \"sm1001\", \"description\": \"\", \"addedAt\": \"2020-01-01T00:00:00+09:00\", \"status\": \"public\", \"video\": {\"type\": \"essential\", \"id\": \"sm1001\", \"title\": \"AKB48のANN #1\", \"registeredAt\": \"2010-01-01T00:00:00+09:00\", \"count\": {\"view\": 1234, \"comment\": \"56\", \"mylist\": 7, \"like\": 8}, \"thumbnail\": {\"url\": \"https://nicovideo.cdn.nimg.jp/thumbnails/1001/1001\", \"middleUrl\": \"https://nicovideo.cdn.nimg.jp/thumbnails/1001/1001.M\", \"largeUrl\": null, \"listingUrl\": \"https://nicovideo.cdn.nimg.jp/thumbnails/1001/1001.L\", \"nHdUrl\": \"https://nicovideo.cdn.nimg.jp/thumbnails/1001/1001.HD\"}, \"duration\": 3600, \"shortDescription\": \"第1回\", \"owner\": {\"ownerType\": \"user\", \"type\": \"user\", \"id\": \"805442\", \"name\": \"のっく\"}}}, {\"itemId\": 2, \"watchId\": \"so1002\", \"video\": {\"type\": \"essential\", \"id\": \"so1002\", \"title\": \"AKB48のANN #2\", \"count\": null, \"duration\": \"61.5\", \"owner\": {\"ownerType\": \"channel\", \"id\": 2, \"user\": {\"nickname\": \"Channel\"}}}}, {\"itemId\": 3, \"watchId\": \"deleted\", \"video\": {\"id\": \"\", \"title\": \"deleted\"}}]}}}"
+  },
+  {
+   "url": "https://nvapi.nicovideo.jp/v2/mylists/404?pageSize=1",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"meta\": {\"status\": 404, \"errorCode\": \"NOT_FOUND\"}}"
+  },
+  {
+   "url": "https://nvapi.nicovideo.jp/v2/series/110226?pageSize=1",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"meta\": {\"status\": 200}, \"data\": {\"detail\": {\"id\": 110226, \"owner\": {\"type\": \"user\", \"user\": {\"id\": 44113208, \"nickname\": \"アルファるふぁ\"}}, \"title\": \"ご立派ァ！のシリーズ\", \"description\": \"\", \"thumbnailUrl\": null, \"isListed\": true}, \"totalCount\": 130, \"items\": [{\"meta\": {\"id\": \"meta1\"}, \"video\": {\"id\": \"sm2001\", \"title\": \"Part 1\", \"duration\": 61}}]}}"
+  },
+  {
+   "url": "https://nvapi.nicovideo.jp/v2/series/110226?page=1&pageSize=100",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"meta\": {\"status\": 200}, \"data\": {\"detail\": {\"id\": 110226, \"owner\": {\"type\": \"user\", \"user\": {\"id\": 44113208, \"nickname\": \"アルファるふぁ\"}}, \"title\": \"ご立派ァ！のシリーズ\", \"description\": \"\", \"thumbnailUrl\": null, \"isListed\": true}, \"totalCount\": 130, \"items\": [{\"meta\": {\"id\": \"meta1\"}, \"video\": {\"id\": \"sm2001\", \"title\": \"Part 1\", \"duration\": 61}}, {\"meta\": {\"id\": \"meta2\"}, \"video\": {\"id\": \"sm2002\", \"title\": \"Part 2\", \"duration\": 62}}, {\"meta\": {\"id\": \"meta3\"}, \"video\": {\"id\": \"sm2003\", \"title\": \"Part 3\", \"duration\": 63}}, {\"meta\": {\"id\": \"meta4\"}, \"video\": {\"id\": \"sm2004\", \"title\": \"Part 4\", \"duration\": 64}}, {\"meta\": {\"id\": \"meta5\"}, \"video\": {\"id\": \"sm2005\", \"title\": \"Part 5\", \"duration\": 65}}, {\"meta\": {\"id\": \"meta6\"}, \"video\": {\"id\": \"sm2006\", \"title\": \"Part 6\", \"duration\": 66}}, {\"meta\": {\"id\": \"meta7\"}, \"video\": {\"id\": \"sm2007\", \"title\": \"Part 7\", \"duration\": 67}}, {\"meta\": {\"id\": \"meta8\"}, \"video\": {\"id\": \"sm2008\", \"title\": \"Part 8\", \"duration\": 68}}, {\"meta\": {\"id\": \"meta9\"}, \"video\": {\"id\": \"sm2009\", \"title\": \"Part 9\", \"duration\": 69}}, {\"meta\": {\"id\": \"meta10\"}, \"video\": {\"id\": \"sm2010\", \"title\": \"Part 10\", \"duration\": 70}}, {\"meta\": {\"id\": \"meta11\"}, \"video\": {\"id\": \"sm2011\", \"title\": \"Part 11\", \"duration\": 71}}, {\"meta\": {\"id\": \"meta12\"}, \"video\": {\"id\": \"sm2012\", \"title\": \"Part 12\", \"duration\": 72}}, {\"meta\": {\"id\": \"meta13\"}, \"video\": {\"id\": \"sm2013\", \"title\": \"Part 13\", \"duration\": 73}}, {\"meta\": {\"id\": \"meta14\"}, \"video\": {\"id\": \"sm2014\", \"title\": \"Part 14\", \"duration\": 74}}, {\"meta\": {\"id\": \"meta15\"}, \"video\": {\"id\": \"sm2015\", \"title\": \"Part 15\", \"duration\": 75}}, {\"meta\": {\"id\": \"meta16\"}, \"video\": {\"id\": \"sm2016\", \"title\": \"Part 16\", \"duration\": 76}}, {\"meta\": {\"id\": \"meta17\"}, \"video\": {\"id\": \"sm2017\", \"title\": \"Part 17\", \"duration\": 77}}, {\"meta\": {\"id\": \"meta18\"}, \"video\": {\"id\": \"sm2018\", \"title\": \"Part 18\", \"duration\": 78}}, {\"meta\": {\"id\": \"meta19\"}, \"video\": {\"id\": \"sm2019\", \"title\": \"Part 19\", \"duration\": 79}}, {\"meta\": {\"id\": \"meta20\"}, \"video\": {\"id\": \"sm2020\", \"title\": \"Part 20\", \"duration\": 80}}, {\"meta\": {\"id\": \"meta21\"}, \"video\": {\"id\": \"sm2021\", \"title\": \"Part 21\", \"duration\": 81}}, {\"meta\": {\"id\": \"meta22\"}, \"video\": {\"id\": \"sm2022\", \"title\": \"Part 22\", \"duration\": 82}}, {\"meta\": {\"id\": \"meta23\"}, \"video\": {\"id\": \"sm2023\", \"title\": \"Part 23\", \"duration\": 83}}, {\"meta\": {\"id\": \"meta24\"}, \"video\": {\"id\": \"sm2024\", \"title\": \"Part 24\", \"duration\": 84}}, {\"meta\": {\"id\": \"meta25\"}, \"video\": {\"id\": \"sm2025\", \"title\": \"Part 25\", \"duration\": 85}}, {\"meta\": {\"id\": \"meta26\"}, \"video\": {\"id\": \"sm2026\", \"title\": \"Part 26\", \"duration\": 86}}, {\"meta\": {\"id\": \"meta27\"}, \"video\": {\"id\": \"sm2027\", \"title\": \"Part 27\", \"duration\": 87}}, {\"meta\": {\"id\": \"meta28\"}, \"video\": {\"id\": \"sm2028\", \"title\": \"Part 28\", \"duration\": 88}}, {\"meta\": {\"id\": \"meta29\"}, \"video\": {\"id\": \"sm2029\", \"title\": \"Part 29\", \"duration\": 89}}, {\"meta\": {\"id\": \"meta30\"}, \"video\": {\"id\": \"sm2030\", \"title\": \"Part 30\", \"duration\": 90}}, {\"meta\": {\"id\": \"meta31\"}, \"video\": {\"id\": \"sm2031\", \"title\": \"Part 31\", \"duration\": 91}}, {\"meta\": {\"id\": \"meta32\"}, \"video\": {\"id\": \"sm2032\", \"title\": \"Part 32\", \"duration\": 92}}, {\"meta\": {\"id\": \"meta33\"}, \"video\": {\"id\": \"sm2033\", \"title\": \"Part 33\", \"duration\": 93}}, {\"meta\": {\"id\": \"meta34\"}, \"video\": {\"id\": \"sm2034\", \"title\": \"Part 34\", \"duration\": 94}}, {\"meta\": {\"id\": \"meta35\"}, \"video\": {\"id\": \"sm2035\", \"title\": \"Part 35\", \"duration\": 95}}, {\"meta\": {\"id\": \"meta36\"}, \"video\": {\"id\": \"sm2036\", \"title\": \"Part 36\", \"duration\": 96}}, {\"meta\": {\"id\": \"meta37\"}, \"video\": {\"id\": \"sm2037\", \"title\": \"Part 37\", \"duration\": 97}}, {\"meta\": {\"id\": \"meta38\"}, \"video\": {\"id\": \"sm2038\", \"title\": \"Part 38\", \"duration\": 98}}, {\"meta\": {\"id\": \"meta39\"}, \"video\": {\"id\": \"sm2039\", \"title\": \"Part 39\", \"duration\": 99}}, {\"meta\": {\"id\": \"meta40\"}, \"video\": {\"id\": \"sm2040\", \"title\": \"Part 40\", \"duration\": 100}}, {\"meta\": {\"id\": \"meta41\"}, \"video\": {\"id\": \"sm2041\", \"title\": \"Part 41\", \"duration\": 101}}, {\"meta\": {\"id\": \"meta42\"}, \"video\": {\"id\": \"sm2042\", \"title\": \"Part 42\", \"duration\": 102}}, {\"meta\": {\"id\": \"meta43\"}, \"video\": {\"id\": \"sm2043\", \"title\": \"Part 43\", \"duration\": 103}}, {\"meta\": {\"id\": \"meta44\"}, \"video\": {\"id\": \"sm2044\", \"title\": \"Part 44\", \"duration\": 104}}, {\"meta\": {\"id\": \"meta45\"}, \"video\": {\"id\": \"sm2045\", \"title\": \"Part 45\", \"duration\": 105}}, {\"meta\": {\"id\": \"meta46\"}, \"video\": {\"id\": \"sm2046\", \"title\": \"Part 46\", \"duration\": 106}}, {\"meta\": {\"id\": \"meta47\"}, \"video\": {\"id\": \"sm2047\", \"title\": \"Part 47\", \"duration\": 107}}, {\"meta\": {\"id\": \"meta48\"}, \"video\": {\"id\": \"sm2048\", \"title\": \"Part 48\", \"duration\": 108}}, {\"meta\": {\"id\": \"meta49\"}, \"video\": {\"id\": \"sm2049\", \"title\": \"Part 49\", \"duration\": 109}}, {\"meta\": {\"id\": \"meta50\"}, \"video\": {\"id\": \"sm2050\", \"title\": \"Part 50\", \"duration\": 110}}, {\"meta\": {\"id\": \"meta51\"}, \"video\": {\"id\": \"sm2051\", \"title\": \"Part 51\", \"duration\": 111}}, {\"meta\": {\"id\": \"meta52\"}, \"video\": {\"id\": \"sm2052\", \"title\": \"Part 52\", \"duration\": 112}}, {\"meta\": {\"id\": \"meta53\"}, \"video\": {\"id\": \"sm2053\", \"title\": \"Part 53\", \"duration\": 113}}, {\"meta\": {\"id\": \"meta54\"}, \"video\": {\"id\": \"sm2054\", \"title\": \"Part 54\", \"duration\": 114}}, {\"meta\": {\"id\": \"meta55\"}, \"video\": {\"id\": \"sm2055\", \"title\": \"Part 55\", \"duration\": 115}}, {\"meta\": {\"id\": \"meta56\"}, \"video\": {\"id\": \"sm2056\", \"title\": \"Part 56\", \"duration\": 116}}, {\"meta\": {\"id\": \"meta57\"}, \"video\": {\"id\": \"sm2057\", \"title\": \"Part 57\", \"duration\": 117}}, {\"meta\": {\"id\": \"meta58\"}, \"video\": {\"id\": \"sm2058\", \"title\": \"Part 58\", \"duration\": 118}}, {\"meta\": {\"id\": \"meta59\"}, \"video\": {\"id\": \"sm2059\", \"title\": \"Part 59\", \"duration\": 119}}, {\"meta\": {\"id\": \"meta60\"}, \"video\": {\"id\": \"sm2060\", \"title\": \"Part 60\", \"duration\": 120}}, {\"meta\": {\"id\": \"meta61\"}, \"video\": {\"id\": \"sm2061\", \"title\": \"Part 61\", \"duration\": 121}}, {\"meta\": {\"id\": \"meta62\"}, \"video\": {\"id\": \"sm2062\", \"title\": \"Part 62\", \"duration\": 122}}, {\"meta\": {\"id\": \"meta63\"}, \"video\": {\"id\": \"sm2063\", \"title\": \"Part 63\", \"duration\": 123}}, {\"meta\": {\"id\": \"meta64\"}, \"video\": {\"id\": \"sm2064\", \"title\": \"Part 64\", \"duration\": 124}}, {\"meta\": {\"id\": \"meta65\"}, \"video\": {\"id\": \"sm2065\", \"title\": \"Part 65\", \"duration\": 125}}, {\"meta\": {\"id\": \"meta66\"}, \"video\": {\"id\": \"sm2066\", \"title\": \"Part 66\", \"duration\": 126}}, {\"meta\": {\"id\": \"meta67\"}, \"video\": {\"id\": \"sm2067\", \"title\": \"Part 67\", \"duration\": 127}}, {\"meta\": {\"id\": \"meta68\"}, \"video\": {\"id\": \"sm2068\", \"title\": \"Part 68\", \"duration\": 128}}, {\"meta\": {\"id\": \"meta69\"}, \"video\": {\"id\": \"sm2069\", \"title\": \"Part 69\", \"duration\": 129}}, {\"meta\": {\"id\": \"meta70\"}, \"video\": {\"id\": \"sm2070\", \"title\": \"Part 70\", \"duration\": 130}}, {\"meta\": {\"id\": \"meta71\"}, \"video\": {\"id\": \"sm2071\", \"title\": \"Part 71\", \"duration\": 131}}, {\"meta\": {\"id\": \"meta72\"}, \"video\": {\"id\": \"sm2072\", \"title\": \"Part 72\", \"duration\": 132}}, {\"meta\": {\"id\": \"meta73\"}, \"video\": {\"id\": \"sm2073\", \"title\": \"Part 73\", \"duration\": 133}}, {\"meta\": {\"id\": \"meta74\"}, \"video\": {\"id\": \"sm2074\", \"title\": \"Part 74\", \"duration\": 134}}, {\"meta\": {\"id\": \"meta75\"}, \"video\": {\"id\": \"sm2075\", \"title\": \"Part 75\", \"duration\": 135}}, {\"meta\": {\"id\": \"meta76\"}, \"video\": {\"id\": \"sm2076\", \"title\": \"Part 76\", \"duration\": 136}}, {\"meta\": {\"id\": \"meta77\"}, \"video\": {\"id\": \"sm2077\", \"title\": \"Part 77\", \"duration\": 137}}, {\"meta\": {\"id\": \"meta78\"}, \"video\": {\"id\": \"sm2078\", \"title\": \"Part 78\", \"duration\": 138}}, {\"meta\": {\"id\": \"meta79\"}, \"video\": {\"id\": \"sm2079\", \"title\": \"Part 79\", \"duration\": 139}}, {\"meta\": {\"id\": \"meta80\"}, \"video\": {\"id\": \"sm2080\", \"title\": \"Part 80\", \"duration\": 140}}, {\"meta\": {\"id\": \"meta81\"}, \"video\": {\"id\": \"sm2081\", \"title\": \"Part 81\", \"duration\": 141}}, {\"meta\": {\"id\": \"meta82\"}, \"video\": {\"id\": \"sm2082\", \"title\": \"Part 82\", \"duration\": 142}}, {\"meta\": {\"id\": \"meta83\"}, \"video\": {\"id\": \"sm2083\", \"title\": \"Part 83\", \"duration\": 143}}, {\"meta\": {\"id\": \"meta84\"}, \"video\": {\"id\": \"sm2084\", \"title\": \"Part 84\", \"duration\": 144}}, {\"meta\": {\"id\": \"meta85\"}, \"video\": {\"id\": \"sm2085\", \"title\": \"Part 85\", \"duration\": 145}}, {\"meta\": {\"id\": \"meta86\"}, \"video\": {\"id\": \"sm2086\", \"title\": \"Part 86\", \"duration\": 146}}, {\"meta\": {\"id\": \"meta87\"}, \"video\": {\"id\": \"sm2087\", \"title\": \"Part 87\", \"duration\": 147}}, {\"meta\": {\"id\": \"meta88\"}, \"video\": {\"id\": \"sm2088\", \"title\": \"Part 88\", \"duration\": 148}}, {\"meta\": {\"id\": \"meta89\"}, \"video\": {\"id\": \"sm2089\", \"title\": \"Part 89\", \"duration\": 149}}, {\"meta\": {\"id\": \"meta90\"}, \"video\": {\"id\": \"sm2090\", \"title\": \"Part 90\", \"duration\": 150}}, {\"meta\": {\"id\": \"meta91\"}, \"video\": {\"id\": \"sm2091\", \"title\": \"Part 91\", \"duration\": 151}}, {\"meta\": {\"id\": \"meta92\"}, \"video\": {\"id\": \"sm2092\", \"title\": \"Part 92\", \"duration\": 152}}, {\"meta\": {\"id\": \"meta93\"}, \"video\": {\"id\": \"sm2093\", \"title\": \"Part 93\", \"duration\": 153}}, {\"meta\": {\"id\": \"meta94\"}, \"video\": {\"id\": \"sm2094\", \"title\": \"Part 94\", \"duration\": 154}}, {\"meta\": {\"id\": \"meta95\"}, \"video\": {\"id\": \"sm2095\", \"title\": \"Part 95\", \"duration\": 155}}, {\"meta\": {\"id\": \"meta96\"}, \"video\": {\"id\": \"sm2096\", \"title\": \"Part 96\", \"duration\": 156}}, {\"meta\": {\"id\": \"meta97\"}, \"video\": {\"id\": \"sm2097\", \"title\": \"Part 97\", \"duration\": 157}}, {\"meta\": {\"id\": \"meta98\"}, \"video\": {\"id\": \"sm2098\", \"title\": \"Part 98\", \"duration\": 158}}, {\"meta\": {\"id\": \"meta99\"}, \"video\": {\"id\": \"sm2099\", \"title\": \"Part 99\", \"duration\": 159}}, {\"meta\": {\"id\": \"meta100\"}, \"video\": {\"id\": \"sm2100\", \"title\": \"Part 100\", \"duration\": 160}}]}}"
+  },
+  {
+   "url": "https://nvapi.nicovideo.jp/v2/series/110226?page=2&pageSize=100",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"meta\": {\"status\": 200}, \"data\": {\"detail\": {\"id\": 110226, \"owner\": {\"type\": \"user\", \"user\": {\"id\": 44113208, \"nickname\": \"アルファるふぁ\"}}, \"title\": \"ご立派ァ！のシリーズ\", \"description\": \"\", \"thumbnailUrl\": null, \"isListed\": true}, \"totalCount\": 130, \"items\": [{\"meta\": {\"id\": \"meta101\"}, \"video\": {\"id\": \"sm2101\", \"title\": \"Part 101\", \"duration\": 161}}, {\"meta\": {\"id\": \"meta102\"}, \"video\": {\"id\": \"sm2102\", \"title\": \"Part 102\", \"duration\": 162}}, {\"meta\": {\"id\": \"meta103\"}, \"video\": {\"id\": \"sm2103\", \"title\": \"Part 103\", \"duration\": 163}}, {\"meta\": {\"id\": \"meta104\"}, \"video\": {\"id\": \"sm2104\", \"title\": \"Part 104\", \"duration\": 164}}, {\"meta\": {\"id\": \"meta105\"}, \"video\": {\"id\": \"sm2105\", \"title\": \"Part 105\", \"duration\": 165}}, {\"meta\": {\"id\": \"meta106\"}, \"video\": {\"id\": \"sm2106\", \"title\": \"Part 106\", \"duration\": 166}}, {\"meta\": {\"id\": \"meta107\"}, \"video\": {\"id\": \"sm2107\", \"title\": \"Part 107\", \"duration\": 167}}, {\"meta\": {\"id\": \"meta108\"}, \"video\": {\"id\": \"sm2108\", \"title\": \"Part 108\", \"duration\": 168}}, {\"meta\": {\"id\": \"meta109\"}, \"video\": {\"id\": \"sm2109\", \"title\": \"Part 109\", \"duration\": 169}}, {\"meta\": {\"id\": \"meta110\"}, \"video\": {\"id\": \"sm2110\", \"title\": \"Part 110\", \"duration\": 170}}, {\"meta\": {\"id\": \"meta111\"}, \"video\": {\"id\": \"sm2111\", \"title\": \"Part 111\", \"duration\": 171}}, {\"meta\": {\"id\": \"meta112\"}, \"video\": {\"id\": \"sm2112\", \"title\": \"Part 112\", \"duration\": 172}}, {\"meta\": {\"id\": \"meta113\"}, \"video\": {\"id\": \"sm2113\", \"title\": \"Part 113\", \"duration\": 173}}, {\"meta\": {\"id\": \"meta114\"}, \"video\": {\"id\": \"sm2114\", \"title\": \"Part 114\", \"duration\": 174}}, {\"meta\": {\"id\": \"meta115\"}, \"video\": {\"id\": \"sm2115\", \"title\": \"Part 115\", \"duration\": 175}}, {\"meta\": {\"id\": \"meta116\"}, \"video\": {\"id\": \"sm2116\", \"title\": \"Part 116\", \"duration\": 176}}, {\"meta\": {\"id\": \"meta117\"}, \"video\": {\"id\": \"sm2117\", \"title\": \"Part 117\", \"duration\": 177}}, {\"meta\": {\"id\": \"meta118\"}, \"video\": {\"id\": \"sm2118\", \"title\": \"Part 118\", \"duration\": 178}}, {\"meta\": {\"id\": \"meta119\"}, \"video\": {\"id\": \"sm2119\", \"title\": \"Part 119\", \"duration\": 179}}, {\"meta\": {\"id\": \"meta120\"}, \"video\": {\"id\": \"sm2120\", \"title\": \"Part 120\", \"duration\": 180}}, {\"meta\": {\"id\": \"meta121\"}, \"video\": {\"id\": \"sm2121\", \"title\": \"Part 121\", \"duration\": 181}}, {\"meta\": {\"id\": \"meta122\"}, \"video\": {\"id\": \"sm2122\", \"title\": \"Part 122\", \"duration\": 182}}, {\"meta\": {\"id\": \"meta123\"}, \"video\": {\"id\": \"sm2123\", \"title\": \"Part 123\", \"duration\": 183}}, {\"meta\": {\"id\": \"meta124\"}, \"video\": {\"id\": \"sm2124\", \"title\": \"Part 124\", \"duration\": 184}}, {\"meta\": {\"id\": \"meta125\"}, \"video\": {\"id\": \"sm2125\", \"title\": \"Part 125\", \"duration\": 185}}, {\"meta\": {\"id\": \"meta126\"}, \"video\": {\"id\": \"sm2126\", \"title\": \"Part 126\", \"duration\": 186}}, {\"meta\": {\"id\": \"meta127\"}, \"video\": {\"id\": \"sm2127\", \"title\": \"Part 127\", \"duration\": 187}}, {\"meta\": {\"id\": \"meta128\"}, \"video\": {\"id\": \"sm2128\", \"title\": \"Part 128\", \"duration\": 188}}, {\"meta\": {\"id\": \"meta129\"}, \"video\": {\"id\": \"sm2129\", \"title\": \"Part 129\", \"duration\": 189}}, {\"meta\": {\"id\": \"meta130\"}, \"video\": {\"id\": \"sm2130\", \"title\": \"Part 130\", \"duration\": 190}}]}}"
+  },
+  {
+   "url": "https://nvapi.nicovideo.jp/v2/series/12312?pageSize=1",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"meta\": {\"status\": 200}, \"data\": {\"detail\": {\"id\": 12312, \"owner\": {\"type\": \"user\", \"id\": \"2275360\", \"name\": \"野鳥\"}, \"title\": \"バトルスピリッツ\", \"description\": \"d\"}, \"items\": []}}"
+  },
+  {
+   "url": "https://nvapi.nicovideo.jp/v2/series/12312?page=1&pageSize=100",
+   "status": 500,
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"meta\": {\"status\": 500}}"
+  },
+  {
+   "url": "https://nvapi.nicovideo.jp/v1/users/me/watch/history?pageSize=1",
+   "status": 401,
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"meta\": {\"status\": 401, \"errorCode\": \"UNAUTHORIZED\"}}"
+  },
+  {
+   "url": "https://nvapi.nicovideo.jp/v1/users/me/likes?pageSize=1",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"meta\": {\"status\": 200}, \"data\": {\"summary\": {\"hasNext\": false, \"canLike\": true}, \"items\": []}}"
+  },
+  {
+   "url": "https://nvapi.nicovideo.jp/v1/users/me/likes?page=1&pageSize=100",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"meta\": {\"status\": 200}, \"data\": {\"summary\": {\"hasNext\": false, \"canLike\": true}, \"items\": [{\"likedAt\": \"2024-01-01T00:00:00+09:00\", \"thanksMessage\": null, \"video\": {\"id\": \"sm9\", \"title\": \"新・豪血寺一族\", \"duration\": 320, \"count\": {\"view\": 1, \"comment\": 2}, \"owner\": {\"id\": \"4\", \"name\": \"中の\"}}}, {\"likedAt\": \"2024-01-02T00:00:00+09:00\", \"video\": {\"id\": \"sm10\", \"title\": \"Second\"}}]}}"
+  },
+  {
+   "url": "https://nvapi.nicovideo.jp/v2/users/419948/videos?sortKey=registeredAt&sortOrder=desc&pageSize=100&page=1",
+   "request_headers": {
+    "X-Frontend-ID": "6",
+    "X-Frontend-Version": "0"
+   },
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"meta\": {\"status\": 200}, \"data\": {\"totalCount\": 3, \"items\": [{\"series\": null, \"essential\": {\"type\": \"essential\", \"id\": \"sm31\"}}, {\"essential\": {\"id\": \"sm32\"}}]}}"
+  },
+  {
+   "url": "https://nvapi.nicovideo.jp/v2/users/419948/videos?sortKey=registeredAt&sortOrder=desc&pageSize=100&page=2",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"meta\": {\"status\": 200}, \"data\": {\"totalCount\": 3, \"items\": [{\"essential\": {\"id\": \"so33\"}}]}}"
+  },
+  {
+   "url": "https://www.nicovideo.jp/search/cats?page=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><body><ul class=\"list\">\n<li class=\"item\" data-video-item data-video-id=\"sm41\"><a href=\"/watch/sm41\">sm41</a></li>\n<li class=\"item\" data-video-item data-video-id=\"sm42\"><a href=\"/watch/sm42\">sm42</a></li>\n</ul></body></html>\n"
+  },
+  {
+   "url": "https://www.nicovideo.jp/search/cats?page=2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><body><ul class=\"list\">\n<li class=\"item\" data-video-item data-video-id=\"sm43\"><a href=\"/watch/sm43\">sm43</a></li>\n<li class=\"item\" data-video-item data-video-id=\"so44\"><a href=\"/watch/so44\">so44</a></li>\n</ul></body></html>\n"
+  },
+  {
+   "url": "https://www.nicovideo.jp/search/cats?page=3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><body><ul class=\"list\">\n</ul></body></html>\n"
+  },
+  {
+   "url": "https://www.nicovideo.jp/search/sm9?sort=h&order=d&page=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><body><ul class=\"list\">\n<li class=\"item\" data-video-item data-video-id=\"sm9\"><a href=\"/watch/sm9\">sm9</a></li>\n<li class=\"item\" data-video-item data-video-id=\"sm51\"><a href=\"/watch/sm51\">sm51</a></li>\n</ul></body></html>\n"
+  },
+  {
+   "url": "https://www.nicovideo.jp/search/sm9?sort=h&order=d&page=2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><body><ul class=\"list\">\n</ul></body></html>\n"
+  },
+  {
+   "url": "https://www.nicovideo.jp/search/?page=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><body><ul class=\"list\">\n</ul></body></html>\n"
+  },
+  {
+   "url": "https://www.nicovideo.jp/tag/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%82%BF%E3%83%AA%E3%83%BC%E6%B7%AB%E5%A4%A2?page=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><body><ul class=\"list\">\n<li class=\"item\" data-video-item data-video-id=\"sm61\"><a href=\"/watch/sm61\">sm61</a></li>\n</ul></body></html>\n"
+  },
+  {
+   "url": "https://www.nicovideo.jp/tag/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%82%BF%E3%83%AA%E3%83%BC%E6%B7%AB%E5%A4%A2?page=2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><body><ul class=\"list\">\n</ul></body></html>\n"
+  },
+  {
+   "url": "https://www.nicovideo.jp/search/cat?start=2007-01-01&sort=f&order=d&page=50",
+   "ignore_query": [
+    "end"
+   ],
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><body><ul class=\"list\">\n<li class=\"item\" data-video-item data-video-id=\"sm70\"><a href=\"/watch/sm70\">sm70</a></li>\n</ul></body></html>\n"
+  },
+  {
+   "url": "https://www.nicovideo.jp/search/cat?start=2007-01-01&sort=f&order=d&page=1",
+   "ignore_query": [
+    "end"
+   ],
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><body><ul class=\"list\">\n<li class=\"item\" data-video-item data-video-id=\"sm71\"><a href=\"/watch/sm71\">sm71</a></li>\n<li class=\"item\" data-video-item data-video-id=\"sm72\"><a href=\"/watch/sm72\">sm72</a></li>\n</ul></body></html>\n"
+  },
+  {
+   "url": "https://www.nicovideo.jp/search/cat?start=2007-01-01&sort=f&order=d&page=2",
+   "ignore_query": [
+    "end"
+   ],
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><body><ul class=\"list\">\n</ul></body></html>\n"
   }
  ]
 }

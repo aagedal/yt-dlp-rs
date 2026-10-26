@@ -1,5 +1,5 @@
 {
- "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
  "cases": [
   {
    "url": "https://podbay.fm/p/behind-the-bastards/e/1647338400",
@@ -118,6 +118,79 @@
    "exit": 0,
    "stdout": [
     "{\"id\": \"untitled\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://podbay.fm/p/untitled/\", \"original_url\": \"https://podbay.fm/p/untitled/\", \"webpage_url_basename\": \"untitled\", \"webpage_url_domain\": \"podbay.fm\", \"extractor\": \"PodbayFMChannel\", \"extractor_key\": \"PodbayFMChannel\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://podbay.fm/p/multi",
+   "args": [
+    "-I",
+    "11",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[PodbayFMChannel] Extracting URL: https://podbay.fm/p/multi",
+    "[PodbayFMChannel] Downloading channel JSON page 1: multi",
+    "[download] Downloading playlist: Multi show",
+    "[PodbayFMChannel] Downloading channel JSON page 2: multi",
+    "[PodbayFMChannel] Playlist Multi show: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[info] 62306451f4a48e58d0c4d6a8: Downloading 1 format(s): 0",
+    "[download] Finished downloading playlist: Multi show"
+   ],
+   "stderr": [
+    "ERROR: unable to download video data: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://podbay.fm/p/multi",
+   "args": [
+    "-I",
+    "11,1",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "11|62306451f4a48e58d0c4d6a8|NA",
+    "01|62306451f4a48e58d0c4d6a8|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://podbay.fm/p/multi",
+   "args": [
+    "-I",
+    "2",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(title)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2|62306451f4a48e58d0c4d6a8|Multi episode 2|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://podbay.fm/p/multi",
+   "args": [
+    "-I",
+    "10:20",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "10|62306451f4a48e58d0c4d6a8|12",
+    "11|62306451f4a48e58d0c4d6a8|12",
+    "12|62306451f4a48e58d0c4d6a8|12"
    ],
    "stderr": [],
    "files": {}

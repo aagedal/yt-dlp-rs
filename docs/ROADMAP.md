@@ -117,7 +117,7 @@ remain outside the current result contract.
    Windows-host path sanitization remain open. `--print` video-stage field lists/templates and
    the title/ID/URL/filename `--get-*` aliases print unsanitized values with
    quiet simulation; `--print-to-file` appends video-stage lines to output-template
-   destinations without implying simulation. Other print stages remain open.
+   destinations without implying simulation. All upstream print stages are implemented.
    `-a/--batch-file` URL lists follow upstream `get_urls` parsing, and the
    `-w`/`--force-overwrites` modes follow upstream existing-file decisions.
    Full upstream ranking and general selector
@@ -150,16 +150,20 @@ remain outside the current result contract.
    MPEG-TS video and AAC/TS audio. Static single-period DASH templates/timelines/lists/ranges and native
    representation downloads are implemented; explicit FFmpeg merges separate
    tracks. Dynamic/multi-period/SIDX DASH, SAMPLE-AES/DRM and native (non-FFmpeg) live HLS,
-   external video/subtitle renditions, discontinuities,
-   persistent resume across invocations, extraction cancellation, and CLI signal handling remain open.
+   external video/subtitle renditions, discontinuities, extraction cancellation
+   and general CLI signal handling (SIGINT is handled for live FFmpeg downloads
+   and `--wait-for-video`) remain open. `--continue`/`.part` whole-file resume
+   and FragmentFD `.ytdl` fragment resume persist across invocations.
    Global custom headers and User-Agent/Referer options apply across extraction,
    transfers, fragments, keys, subtitles and validated player acquisition with
    request-specific precedence. Shared in-memory cookies and explicit Netscape
-   file persistence now cover the native HTTP clients; browser-cookie extraction,
-   account-specific authentication and broader request configuration remain open.
+   file persistence now cover the native HTTP clients, and
+   `--cookies-from-browser` reads browser cookie stores natively; broader request
+   configuration remains open.
    The `InfoExtractor` login lifecycle (credentials, netrc files and commands,
    two-factor codes) is ported, with logins for the extractors listed in
-   docs/COMPATIBILITY.md; Vimeo and Adobe Pass logins remain open.
+   docs/COMPATIBILITY.md (including Vimeo's login and logged-in web API
+   client), and Adobe Pass TV provider authentication is ported.
    Explicit HTTP/HTTPS/SOCKS proxies and direct overrides now route all native
    clients, including verified HTTPS proxy/CONNECT transport. SOCKS4 user IDs,
    full upstream environment discovery/bypass and per-extractor proxy policies remain open.
@@ -221,7 +225,7 @@ remain outside the current result contract.
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor
    needs. Add sites with deterministic fixtures and a source mapping. Expand
    authentication, cookies, subtitles, archives, and postprocessors explicitly.
-   HTML5 subtitle/caption track discovery, listing, literal language/all/exclusion
+   HTML5 subtitle/caption track discovery, listing, regex language/all/exclusion
    selection, format preferences and native HTTP sidecars are implemented.
    Skip-download permits sidecar-only writes without archive records. The supported
    YouTube WEB response subset also exposes manual/automatic captions, translations,
@@ -231,10 +235,11 @@ remain outside the current result contract.
    tools, no-clobber publication and original/intermediate retention.
    Subtitle embedding now follows audio/video processing for MP4/MOV/M4A/WebM/
    Matroska, preserving source container/language policies and sidecar retention.
-   Other-site/manifest subtitles and regex languages remain open.
+   Other-site/manifest subtitles remain open.
    Video/playlist `--write-info-json` sidecars follow upstream clean filtering,
    naming and ordering for the represented metadata subset, and
-   `--load-info-json` reprocesses saved dictionaries; info JSON embedding remains open.
+   `--load-info-json` reprocesses saved dictionaries; `--embed-info-json`
+   attaches the info JSON to Matroska outputs like upstream.
    Basic download archives are implemented: cached extractor-key/ID membership,
    filtering before selection and recording only after successful final publication.
    Bounded cooperating-writer locks, append rollback and a pinned offline archive
@@ -249,7 +254,9 @@ remain outside the current result contract.
    embedding (FFmpeg paths only) and thumbnail conversion now follow upstream.
    Cover art that upstream embeds through mutagen (MP4 `covr`, FLAC pictures,
    Ogg `METADATA_BLOCK_PICTURE`) is written natively (`src/cover_art.rs`).
-   General postprocessor chains and fixups remain open.
+   `--fixup` policies, `--exec`, `--concat-playlist`, chapter splitting and
+   removal, and SponsorBlock follow upstream's postprocessor order; see
+   docs/COMPATIBILITY.md for each one's covered subset.
 6. **Agent-maintained updates.** Upstream delta reports, bounded implementation
    briefs, differential regression fixtures, reviewable PRs, and staged releases.
    Measure extraction coverage and compatibility before enabling unattended merges.

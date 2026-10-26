@@ -1,0 +1,21 @@
+[
+ {"url": "https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445", "args": ["-j"]},
+ {"url": "https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445", "args": ["--print", "%(id)s|%(title)s|%(alt_title)s|%(release_date)s|%(release_timestamp)s|%(duration)s|%(series)s|%(season)s|%(season_number)s|%(season_id)s|%(episode)s|%(episode_number)s|%(release_year)s|%(format_id)s|%(ext)s"]},
+ {"url": "https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445", "args": ["-F"]},
+ {"url": "https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445", "args": ["--list-subs"]},
+ {"url": "https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445", "args": ["--write-subs", "--all-subs", "--skip-download", "--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.dr.dk/drtv/episode/bonderoeven_71769", "args": ["-j"]},
+ {"url": "https://www.dr.dk/tv/se/boern/ultra/klassen-ultra/klassen-darlig-taber-10", "args": ["-j"]},
+ {"url": "https://www.dr.dk/drtv/se/geo_111", "args": ["-j"]},
+ {"url": "https://www.dr.dk/drtv/se/none_222", "args": ["-j"]},
+ {"url": "https://www.dr.dk/drtv/se/none_222", "args": ["--ignore-no-formats-error", "--print", "%(id)s|%(title)s|%(formats)s"]},
+ {"url": "https://www.dr.dk/tv/live/dr1", "args": ["--no-geo-bypass", "--print", "%(id)s|%(is_live)s|%(live_status)s|%(format_id)s|%(ext)s|%(protocol)s|%(thumbnail)s|%(extractor)s"]},
+ {"url": "https://www.dr.dk/tv/live/dr1", "args": ["--no-geo-bypass", "-F"]},
+ {"url": "https://www.dr.dk/tv/live/notitle", "args": ["--no-geo-bypass", "-j"]},
+ {"url": "https://www.dr.dk/drtv/saeson/frank-and-kastaniegaarden_9008", "args": ["--no-geo-bypass", "-J", "--flat-playlist"]},
+ {"url": "https://www.dr.dk/drtv/saeson/frank-and-kastaniegaarden_9008", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://www.dr.dk/drtv/saeson/brudt_1", "args": ["--no-geo-bypass", "-J", "--flat-playlist"]},
+ {"url": "https://www.dr.dk/drtv/serie/frank-and-kastaniegaarden_6954", "args": ["--no-geo-bypass", "-J", "--flat-playlist"]},
+ {"url": "https://www.dr.dk/drtv/serie/frank-and-kastaniegaarden_6954", "args": ["--no-geo-bypass", "--flat-playlist", "--print", "%(id)s|%(title)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_title)s"]},
+ {"url": "https://www.dr.dk/drtv/episode/klassen-darlig-taber-10", "args": ["--print", "%(id)s|%(title)s"]}
+]

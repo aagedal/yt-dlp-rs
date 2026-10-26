@@ -1,0 +1,44 @@
+{
+ "id": "x",
+ "title": "Fritjof aus Norwegen (2) (AD)",
+ "tracking": {
+  "atiCustomVars": {
+   "contentId": 101,
+   "clipTitle": "Fritjof aus Norwegen (2) (AD)"
+  }
+ },
+ "widgets": [
+  {
+   "type": "teaser_lane",
+   "title": "Mehr"
+  },
+  {
+   "id": "p",
+   "type": "player_ondemand",
+   "title": "Fritjof aus Norwegen (2) (AD)",
+   "mediaCollection": {
+    "embedded": {
+     "streams": [
+      {
+       "kind": "main",
+       "media": [
+        {
+         "url": "https://ardmediathek-vod.example/simple.mp4",
+         "audios": [
+          {
+           "languageCode": "eng"
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "meta": {
+      "title": "Fritjof aus Norwegen (2) (AD)"
+     }
+    },
+    "href": "https://api.ardmediathek.de/x"
+   }
+  }
+ ]
+}

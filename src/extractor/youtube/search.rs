@@ -25,7 +25,7 @@ static URL_RE: LazyLock<Regex> = LazyLock::new(|| {
 
 /// The input text of a `ytsearch` pseudo-URL (the URL parser
 /// percent-encodes non-ASCII characters, which are decoded again).
-pub(super) fn input_text(url: &Url) -> String {
+pub(crate) fn input_text(url: &Url) -> String {
     let text = url.as_str();
     let mut bytes = Vec::with_capacity(text.len());
     let raw = text.as_bytes();

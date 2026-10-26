@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://example.test/page.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Stages page</title></head><body><video src=\"https://example.test/m.mp4\"></video></body></html>"
+  },
+  {
+   "url": "https://example.test/m.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "fixture stage bytes"
+  }
+ ]
+}

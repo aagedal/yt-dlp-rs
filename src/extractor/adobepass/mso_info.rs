@@ -1,5 +1,5 @@
 //! Upstream `MSO_INFO` (`yt_dlp/extractor/adobepass.py`), generated from
-//! the pinned upstream checkout (6ccd977303412151ee23352c6257dd658ffc1987)
+//! the pinned upstream checkout (fa9886678eb65103303c627b8e013f13f8999b41)
 //! by `tools/generate_adobepass_mso_info.py`; do not edit by hand.
 use super::MsoInfo;
 

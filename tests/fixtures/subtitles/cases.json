@@ -1,5 +1,5 @@
 {
-  "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+  "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
   "html_cases": [
     {
       "name": "kind-language-priority",
@@ -2613,6 +2613,486 @@
         "selected": [],
         "warning": false
       }
+    },
+    {
+      "name": "regex-language",
+      "subtitles": [
+        {
+          "language": "fr",
+          "formats": [
+            {
+              "url": "https://example.test/0-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/0-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/0-2.srt",
+              "ext": "srt"
+            }
+          ]
+        },
+        {
+          "language": "en-US",
+          "formats": [
+            {
+              "url": "https://example.test/1-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/1-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/1-2.srt",
+              "ext": "srt"
+            }
+          ]
+        },
+        {
+          "language": "en",
+          "formats": [
+            {
+              "url": "https://example.test/2-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/2-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/2-2.srt",
+              "ext": "srt"
+            }
+          ]
+        }
+      ],
+      "languages": "en.*",
+      "formats": "vtt",
+      "expected": {
+        "selected": [
+          {
+            "language": "en-US",
+            "url": "https://example.test/1-1.vtt",
+            "ext": "vtt"
+          },
+          {
+            "language": "en",
+            "url": "https://example.test/2-1.vtt",
+            "ext": "vtt"
+          }
+        ],
+        "warning": false
+      }
+    },
+    {
+      "name": "regex-alternation",
+      "subtitles": [
+        {
+          "language": "fr",
+          "formats": [
+            {
+              "url": "https://example.test/0-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/0-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/0-2.srt",
+              "ext": "srt"
+            }
+          ]
+        },
+        {
+          "language": "en-US",
+          "formats": [
+            {
+              "url": "https://example.test/1-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/1-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/1-2.srt",
+              "ext": "srt"
+            }
+          ]
+        },
+        {
+          "language": "en",
+          "formats": [
+            {
+              "url": "https://example.test/2-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/2-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/2-2.srt",
+              "ext": "srt"
+            }
+          ]
+        }
+      ],
+      "languages": "de|EN",
+      "formats": "best",
+      "expected": {
+        "selected": [
+          {
+            "language": "en",
+            "url": "https://example.test/2-2.srt",
+            "ext": "srt"
+          }
+        ],
+        "warning": false
+      }
+    },
+    {
+      "name": "regex-exclude",
+      "subtitles": [
+        {
+          "language": "fr",
+          "formats": [
+            {
+              "url": "https://example.test/0-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/0-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/0-2.srt",
+              "ext": "srt"
+            }
+          ]
+        },
+        {
+          "language": "en-US",
+          "formats": [
+            {
+              "url": "https://example.test/1-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/1-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/1-2.srt",
+              "ext": "srt"
+            }
+          ]
+        },
+        {
+          "language": "en",
+          "formats": [
+            {
+              "url": "https://example.test/2-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/2-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/2-2.srt",
+              "ext": "srt"
+            }
+          ]
+        }
+      ],
+      "languages": "all,-en.*",
+      "formats": "best",
+      "expected": {
+        "selected": [
+          {
+            "language": "fr",
+            "url": "https://example.test/0-2.srt",
+            "ext": "srt"
+          }
+        ],
+        "warning": false
+      }
+    },
+    {
+      "name": "regex-no-match",
+      "subtitles": [
+        {
+          "language": "fr",
+          "formats": [
+            {
+              "url": "https://example.test/0-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/0-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/0-2.srt",
+              "ext": "srt"
+            }
+          ]
+        },
+        {
+          "language": "en-US",
+          "formats": [
+            {
+              "url": "https://example.test/1-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/1-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/1-2.srt",
+              "ext": "srt"
+            }
+          ]
+        },
+        {
+          "language": "en",
+          "formats": [
+            {
+              "url": "https://example.test/2-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/2-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/2-2.srt",
+              "ext": "srt"
+            }
+          ]
+        }
+      ],
+      "languages": "e",
+      "formats": "best",
+      "expected": {
+        "selected": [],
+        "warning": false
+      }
+    },
+    {
+      "name": "regex-readd",
+      "subtitles": [
+        {
+          "language": "fr",
+          "formats": [
+            {
+              "url": "https://example.test/0-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/0-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/0-2.srt",
+              "ext": "srt"
+            }
+          ]
+        },
+        {
+          "language": "en-US",
+          "formats": [
+            {
+              "url": "https://example.test/1-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/1-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/1-2.srt",
+              "ext": "srt"
+            }
+          ]
+        },
+        {
+          "language": "en",
+          "formats": [
+            {
+              "url": "https://example.test/2-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/2-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/2-2.srt",
+              "ext": "srt"
+            }
+          ]
+        }
+      ],
+      "languages": "EN.*,-en,en",
+      "formats": "best",
+      "expected": {
+        "selected": [
+          {
+            "language": "en-US",
+            "url": "https://example.test/1-2.srt",
+            "ext": "srt"
+          },
+          {
+            "language": "en",
+            "url": "https://example.test/2-2.srt",
+            "ext": "srt"
+          }
+        ],
+        "warning": false
+      }
+    },
+    {
+      "name": "empty-items",
+      "subtitles": [
+        {
+          "language": "fr",
+          "formats": [
+            {
+              "url": "https://example.test/0-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/0-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/0-2.srt",
+              "ext": "srt"
+            }
+          ]
+        },
+        {
+          "language": "en-US",
+          "formats": [
+            {
+              "url": "https://example.test/1-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/1-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/1-2.srt",
+              "ext": "srt"
+            }
+          ]
+        },
+        {
+          "language": "en",
+          "formats": [
+            {
+              "url": "https://example.test/2-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/2-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/2-2.srt",
+              "ext": "srt"
+            }
+          ]
+        }
+      ],
+      "languages": " de , ,fr ",
+      "formats": "best",
+      "expected": {
+        "selected": [
+          {
+            "language": "fr",
+            "url": "https://example.test/0-2.srt",
+            "ext": "srt"
+          }
+        ],
+        "warning": false
+      }
+    },
+    {
+      "name": "only-empty-items",
+      "subtitles": [
+        {
+          "language": "fr",
+          "formats": [
+            {
+              "url": "https://example.test/0-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/0-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/0-2.srt",
+              "ext": "srt"
+            }
+          ]
+        },
+        {
+          "language": "en-US",
+          "formats": [
+            {
+              "url": "https://example.test/1-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/1-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/1-2.srt",
+              "ext": "srt"
+            }
+          ]
+        },
+        {
+          "language": "en",
+          "formats": [
+            {
+              "url": "https://example.test/2-0.srt",
+              "ext": "srt"
+            },
+            {
+              "url": "https://example.test/2-1.vtt",
+              "ext": "vtt"
+            },
+            {
+              "url": "https://example.test/2-2.srt",
+              "ext": "srt"
+            }
+          ]
+        }
+      ],
+      "languages": " , ",
+      "formats": "best",
+      "expected": {
+        "selected": [
+          {
+            "language": "en",
+            "url": "https://example.test/2-2.srt",
+            "ext": "srt"
+          }
+        ],
+        "warning": false
+      }
     }
   ],
   "filename_cases": [
@@ -2801,80 +3281,6 @@
       "native_policy": "Native explicitly rejects requesting unknown-language subtitles; source errors rather than guessing und",
       "expected": {
         "error": "AttributeError"
-      }
-    },
-    {
-      "name": "regex-language",
-      "subtitles": [
-        {
-          "language": "fr",
-          "formats": [
-            {
-              "url": "https://example.test/0-0.srt",
-              "ext": "srt"
-            },
-            {
-              "url": "https://example.test/0-1.vtt",
-              "ext": "vtt"
-            },
-            {
-              "url": "https://example.test/0-2.srt",
-              "ext": "srt"
-            }
-          ]
-        },
-        {
-          "language": "en-US",
-          "formats": [
-            {
-              "url": "https://example.test/1-0.srt",
-              "ext": "srt"
-            },
-            {
-              "url": "https://example.test/1-1.vtt",
-              "ext": "vtt"
-            },
-            {
-              "url": "https://example.test/1-2.srt",
-              "ext": "srt"
-            }
-          ]
-        },
-        {
-          "language": "en",
-          "formats": [
-            {
-              "url": "https://example.test/2-0.srt",
-              "ext": "srt"
-            },
-            {
-              "url": "https://example.test/2-1.vtt",
-              "ext": "vtt"
-            },
-            {
-              "url": "https://example.test/2-2.srt",
-              "ext": "srt"
-            }
-          ]
-        }
-      ],
-      "languages": "en.*",
-      "formats": "vtt",
-      "native_policy": "Native rejects general regex language expressions",
-      "expected": {
-        "selected": [
-          {
-            "language": "en-US",
-            "url": "https://example.test/1-1.vtt",
-            "ext": "vtt"
-          },
-          {
-            "language": "en",
-            "url": "https://example.test/2-1.vtt",
-            "ext": "vtt"
-          }
-        ],
-        "warning": false
       }
     }
   ]

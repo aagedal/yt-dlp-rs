@@ -1,5 +1,5 @@
 {
- "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
  "cases": [
   {
    "url": "https://framatube.org/videos/watch/9c9de5e8-0a1e-484a-b099-e80766180a6d",
@@ -311,6 +311,218 @@
     "WARNING: [PeerTube:Playlist] missing: Unable to download JSON metadata: HTTP Error 404: Not Found",
     "ERROR: 'bool' object has no attribute 'get'"
    ],
+   "files": {}
+  },
+  {
+   "url": "https://framatube.org/a/framasoft",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[PeerTube:Playlist] Extracting URL: https://framatube.org/a/framasoft",
+    "[PeerTube:Playlist] framasoft: Downloading playlist information",
+    "[download] Downloading playlist: Framasoft",
+    "[PeerTube:Playlist] framasoft: Downloading page 1",
+    "[PeerTube:Playlist] Playlist Framasoft: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Framasoft"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://framatube.org/a/framasoft",
+   "args": [
+    "-I",
+    "2",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2|o1zfWBkmviytA8KjTRM23U|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://framatube.org/a/framasoft",
+   "args": [
+    "-I",
+    "31",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "31|8YydUr4A3uAhm8y8mjydaV|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://framatube.org/a/framasoft",
+   "args": [
+    "-I",
+    "29:40",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "29|eoBPs29b64xahgKN77X6ec|34",
+    "30|1JPWRE2LkTWLAE4nMKn52Y|34",
+    "31|8YydUr4A3uAhm8y8mjydaV|34",
+    "32|cAfag3kKe3PCjxzcZRhGaU|34",
+    "33|ff2EVqgHrQX5WJyJJc7Uax|34",
+    "34|nz8wiz6DoZz4ukN3PmMKnj|34"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://framatube.org/a/framasoft",
+   "args": [
+    "-I",
+    "-1",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "34|nz8wiz6DoZz4ukN3PmMKnj|34"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://framatube.org/a/framasoft",
+   "args": [
+    "-I",
+    "31",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[PeerTube:Playlist] Extracting URL: https://framatube.org/a/framasoft",
+    "[PeerTube:Playlist] framasoft: Downloading playlist information",
+    "[download] Downloading playlist: Framasoft",
+    "[PeerTube:Playlist] framasoft: Downloading page 2",
+    "[PeerTube:Playlist] Playlist Framasoft: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Framasoft"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://framatube.org/a/framasoft",
+   "args": [
+    "-I",
+    "31:40",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[PeerTube:Playlist] Extracting URL: https://framatube.org/a/framasoft",
+    "[PeerTube:Playlist] framasoft: Downloading playlist information",
+    "[download] Downloading playlist: Framasoft",
+    "[PeerTube:Playlist] framasoft: Downloading page 2",
+    "[PeerTube:Playlist] framasoft: Downloading page 1",
+    "[PeerTube:Playlist] Playlist Framasoft: Downloading 4 items of 34",
+    "[download] Downloading item 1 of 4",
+    "[download] Downloading item 2 of 4",
+    "[download] Downloading item 3 of 4",
+    "[download] Downloading item 4 of 4",
+    "[download] Finished downloading playlist: Framasoft"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://framatube.org/a/framasoft",
+   "args": [
+    "-I",
+    "1,61",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[PeerTube:Playlist] Extracting URL: https://framatube.org/a/framasoft",
+    "[PeerTube:Playlist] framasoft: Downloading playlist information",
+    "[download] Downloading playlist: Framasoft",
+    "[PeerTube:Playlist] framasoft: Downloading page 1",
+    "[PeerTube:Playlist] framasoft: Downloading page 3",
+    "[PeerTube:Playlist] framasoft: Downloading page 2",
+    "[PeerTube:Playlist] Playlist Framasoft: Downloading 1 items of 34",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Framasoft"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://framatube.org/a/framasoft",
+   "args": [
+    "-I",
+    "32:29:-1",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[PeerTube:Playlist] Extracting URL: https://framatube.org/a/framasoft",
+    "[PeerTube:Playlist] framasoft: Downloading playlist information",
+    "[download] Downloading playlist: Framasoft",
+    "[PeerTube:Playlist] framasoft: Downloading page 2",
+    "[PeerTube:Playlist] framasoft: Downloading page 1",
+    "[PeerTube:Playlist] Playlist Framasoft: Downloading 4 items",
+    "[download] Downloading item 1 of 4",
+    "[download] Downloading item 2 of 4",
+    "[download] Downloading item 3 of 4",
+    "[download] Downloading item 4 of 4",
+    "[download] Finished downloading playlist: Framasoft"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://framatube.org/a/framasoft",
+   "args": [
+    "-I",
+    "31,2",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "31|8YydUr4A3uAhm8y8mjydaV|NA",
+    "02|o1zfWBkmviytA8KjTRM23U|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://framatube.org/a/framasoft",
+   "args": [
+    "-I",
+    "34",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "34|nz8wiz6DoZz4ukN3PmMKnj|NA"
+   ],
+   "stderr": [],
    "files": {}
   }
  ]

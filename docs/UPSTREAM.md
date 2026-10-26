@@ -2,11 +2,15 @@
 
 Reference repository: https://github.com/yt-dlp/yt-dlp
 
-The source baseline is release `2026.10.21`,
-`6ccd977303412151ee23352c6257dd658ffc1987`. The initial baseline was the
-development commit `897341241f2bfb2439fe0367f4c7c9ccd29a3828` (2026-10-10,
-embedded version `2026.08.19`); the commits between them are classified in
-[upstream/notes/upstream-2026.10.21.md](../upstream/notes/upstream-2026.10.21.md). Upstream is reference material, not a
+The source baseline is the development commit
+`fa9886678eb65103303c627b8e013f13f8999b41` (2026-10-23, after release
+`2026.10.21`). The initial baseline was the development commit
+`897341241f2bfb2439fe0367f4c7c9ccd29a3828` (2026-10-10, embedded version
+`2026.08.19`); the commits up to release `2026.10.21`
+(`6ccd977303412151ee23352c6257dd658ffc1987`) are classified in
+[upstream/notes/upstream-2026.10.21.md](../upstream/notes/upstream-2026.10.21.md),
+and those after it in
+[upstream/notes/upstream-fa98866.md](../upstream/notes/upstream-fa98866.md). Upstream is reference material, not a
 runtime dependency. The source clone is not vendored into this repository.
 
 The first slice was informed by upstream's `GenericIE` direct-response detection,

@@ -84,6 +84,103 @@
     "Content-Type": "video/mp4"
    },
    "body": "0000ftypisom"
+  },
+  {
+   "url": "https://old.bitchute.com/channel/testchan/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Test Channel</title><meta name=\"description\" content=\"A synthetic &amp; channel\"><meta property=\"og:description\" content=\"og text\"></head><body><div class=\"channel-videos-details\"><span>27 videos</span></div></body></html>"
+  },
+  {
+   "url": "https://old.bitchute.com/channel/testchan/extend/",
+   "request_body": [
+    "csrfmiddlewaretoken=zyG6tQcGPE5swyAEFLqKUwMuMMuF6IO2DZ6ZDQjGfsL0e4dcTLwqkTTul05Jdve7",
+    "&name=&",
+    "&offset=0"
+   ],
+   "request_headers": {
+    "X-Requested-With": "XMLHttpRequest",
+    "Referer": "https://old.bitchute.com/channel/testchan/"
+   },
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"success\": true, \"html\": \"<div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/UGlrF9o9b-Q/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:01</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 61.1K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/UGlrF9o9b-Q/\\\">Video &amp; 61</a></div><div class=\\\"channel-videos-text\\\"><p>About 61</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid002/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:02</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 62.2K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid002/\\\">Video &amp; 62</a></div><div class=\\\"channel-videos-text\\\"><p>About 62</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid003/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:03</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 63.3K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid003/\\\">Video &amp; 63</a></div><div class=\\\"channel-videos-text\\\"><p>About 63</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid004/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:04</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 64.4K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid004/\\\">Video &amp; 64</a></div><div class=\\\"channel-videos-text\\\"><p>About 64</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid005/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:05</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 65.5K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid005/\\\">Video &amp; 65</a></div><div class=\\\"channel-videos-text\\\"><p>About 65</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid006/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:06</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 66.6K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid006/\\\">Video &amp; 66</a></div><div class=\\\"channel-videos-text\\\"><p>About 66</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid007/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:07</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 67.7K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid007/\\\">Video &amp; 67</a></div><div class=\\\"channel-videos-text\\\"><p>About 67</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid008/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:08</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 68.8K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid008/\\\">Video &amp; 68</a></div><div class=\\\"channel-videos-text\\\"><p>About 68</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid009/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:09</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 69.9K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid009/\\\">Video &amp; 69</a></div><div class=\\\"channel-videos-text\\\"><p>About 69</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid010/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:10</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 70.0K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid010/\\\">Video &amp; 70</a></div><div class=\\\"channel-videos-text\\\"><p>About 70</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid011/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:11</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 71.1K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid011/\\\">Video &amp; 71</a></div><div class=\\\"channel-videos-text\\\"><p>About 71</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid012/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:12</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 72.2K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid012/\\\">Video &amp; 72</a></div><div class=\\\"channel-videos-text\\\"><p>About 72</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid013/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:13</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 73.3K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid013/\\\">Video &amp; 73</a></div><div class=\\\"channel-videos-text\\\"><p>About 73</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid014/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:14</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 74.4K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid014/\\\">Video &amp; 74</a></div><div class=\\\"channel-videos-text\\\"><p>About 74</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid015/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:15</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 75.5K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid015/\\\">Video &amp; 75</a></div><div class=\\\"channel-videos-text\\\"><p>About 75</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid016/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:16</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 76.6K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid016/\\\">Video &amp; 76</a></div><div class=\\\"channel-videos-text\\\"><p>About 76</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid017/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:17</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 77.7K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid017/\\\">Video &amp; 77</a></div><div class=\\\"channel-videos-text\\\"><p>About 77</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid018/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:18</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 78.8K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid018/\\\">Video &amp; 78</a></div><div class=\\\"channel-videos-text\\\"><p>About 78</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid019/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:19</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 79.9K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid019/\\\">Video &amp; 79</a></div><div class=\\\"channel-videos-text\\\"><p>About 79</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid020/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:20</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 80.0K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid020/\\\">Video &amp; 80</a></div><div class=\\\"channel-videos-text\\\"><p>About 80</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid021/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:21</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 81.1K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid021/\\\">Video &amp; 81</a></div><div class=\\\"channel-videos-text\\\"><p>About 81</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid022/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:22</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 82.2K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid022/\\\">Video &amp; 82</a></div><div class=\\\"channel-videos-text\\\"><p>About 82</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid023/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:23</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 83.3K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid023/\\\">Video &amp; 83</a></div><div class=\\\"channel-videos-text\\\"><p>About 83</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid024/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:24</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 84.4K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid024/\\\">Video &amp; 84</a></div><div class=\\\"channel-videos-text\\\"><p>About 84</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid025/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">1:25</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 85.5K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid025/\\\">Video &amp; 85</a></div><div class=\\\"channel-videos-text\\\"><p>About 85</p><p>More</p></div></div>\"}"
+  },
+  {
+   "url": "https://old.bitchute.com/channel/testchan/extend/",
+   "request_body": [
+    "csrfmiddlewaretoken=zyG6tQcGPE5swyAEFLqKUwMuMMuF6IO2DZ6ZDQjGfsL0e4dcTLwqkTTul05Jdve7",
+    "&name=&",
+    "&offset=25"
+   ],
+   "request_headers": {
+    "X-Requested-With": "XMLHttpRequest",
+    "Referer": "https://old.bitchute.com/channel/testchan/"
+   },
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"success\": true, \"html\": \"<div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid026/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">60:01</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 3601.1K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid026/\\\">Video &amp; 3601</a></div><div class=\\\"channel-videos-text\\\"><p>About 3601</p><p>More</p></div></div><div class=\\\"channel-videos-container\\\">no link</div><div class=\\\"channel-videos-container\\\"><div class=\\\"channel-videos-image-container\\\"><a href=\\\"/video/vid027/\\\"><img src=\\\"x.jpg\\\"></a><span class=\\\"video-duration\\\">0:05</span><span class=\\\"video-views\\\"><i class=\\\"far fa-eye\\\"></i> 5.5K</span></div><div class=\\\"channel-videos-title\\\"><a href=\\\"/video/vid027/\\\">Video &amp; 5</a></div><div class=\\\"channel-videos-text\\\"><p>About 5</p><p>More</p></div></div>\"}"
+  },
+  {
+   "url": "https://old.bitchute.com/playlist/pl1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"twitter:description\" content=\"Playlist text\"></head><body></body></html>"
+  },
+  {
+   "url": "https://old.bitchute.com/playlist/pl1/extend/",
+   "request_body": [
+    "csrfmiddlewaretoken=zyG6tQcGPE5swyAEFLqKUwMuMMuF6IO2DZ6ZDQjGfsL0e4dcTLwqkTTul05Jdve7",
+    "&name=&",
+    "&offset=0"
+   ],
+   "request_headers": {
+    "X-Requested-With": "XMLHttpRequest",
+    "Referer": "https://old.bitchute.com/playlist/pl1/"
+   },
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"success\": true, \"html\": \"<div class=\\\"playlist-video\\\"><a href=\\\"/video/pv1/\\\">x</a><div class=\\\"title\\\"><a href=\\\"/video/pv1/\\\">Item 1</a></div><span class=\\\"video-duration\\\">1:01</span><span class=\\\"video-views\\\">1 views</span></div><div class=\\\"playlist-video\\\"><a href=\\\"/video/pv2/\\\">x</a><div class=\\\"title\\\"><a href=\\\"/video/pv2/\\\">Item 2</a></div><span class=\\\"video-duration\\\">1:02</span><span class=\\\"video-views\\\">2 views</span></div><div class=\\\"playlist-video\\\"><a href=\\\"/video/pv3/\\\">x</a><div class=\\\"title\\\"><a href=\\\"/video/pv3/\\\">Item 3</a></div><span class=\\\"video-duration\\\">1:03</span><span class=\\\"video-views\\\">3 views</span></div>\"}"
+  },
+  {
+   "url": "https://old.bitchute.com/channel/empty/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<title>Empty</title><span>1 video</span>"
+  },
+  {
+   "url": "https://old.bitchute.com/channel/empty/extend/",
+   "request_body": [
+    "csrfmiddlewaretoken=zyG6tQcGPE5swyAEFLqKUwMuMMuF6IO2DZ6ZDQjGfsL0e4dcTLwqkTTul05Jdve7",
+    "&name=&",
+    "&offset=0"
+   ],
+   "request_headers": {
+    "X-Requested-With": "XMLHttpRequest",
+    "Referer": "https://old.bitchute.com/channel/empty/"
+   },
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"success\": false}"
+  },
+  {
+   "url": "https://old.bitchute.com/channel/gone/",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "Not Found"
   }
  ]
 }

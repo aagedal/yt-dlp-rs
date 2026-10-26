@@ -1,0 +1,10 @@
+{
+ "document": {
+  "titel": "Ohne Stream",
+  "streams": [
+   {
+    "streamApiUrlAndroid": "nope"
+   }
+  ]
+ }
+}

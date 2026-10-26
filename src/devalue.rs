@@ -1,4 +1,4 @@
-//! Upstream `yt_dlp.utils.jslib.devalue.parse_iter` (pinned 6ccd977): the
+//! Upstream `yt_dlp.utils.jslib.devalue.parse_iter` (pinned fa98866): the
 //! flat index-referencing array format of Rich Harris's `devalue`, as
 //! Nuxt's `__NUXT_DATA__` payloads use it.
 //!
@@ -10,7 +10,8 @@
 //!
 //! Python values without a JSON equivalent are mapped: `NaN` and the
 //! infinities become `null` (serde_json has no non-finite numbers), a
-//! `Date` stays its ISO 8601 string, a `RegExp` its pattern, and `bytes`
+//! `Date` stays its ISO 8601 string (validated as Python's
+//! `datetime.fromisoformat` does), a `RegExp` its pattern, and `bytes`
 //! (`ArrayBuffer`, `DataView`) an array of byte values. A reference back to
 //! a container still being resolved (a cycle, which Python represents by
 //! object identity) resolves to `null`.
@@ -326,7 +327,7 @@ impl State<'_> {
             "Date" => {
                 let parsed = second
                     .and_then(Value::as_str)
-                    .and_then(crate::dates::parse_iso8601);
+                    .filter(|text| crate::dates::is_py_isoformat_datetime(text));
                 match parsed {
                     Some(_) => second.cloned().unwrap_or(Value::Null),
                     None => {
@@ -738,5 +739,25 @@ mod tests {
             parsed.errors,
             ["list index out of range", "Invalid type at 1: 'nope'"]
         );
+    }
+
+    #[test]
+    fn dates_follow_python_fromisoformat() {
+        // Upstream fa98866 (`datetime.fromisoformat`, from 3d28cf4).
+        for valid in ["2001-09-09", "2001-W01-1", "2001-09-09T009Z"] {
+            let parsed = parse_iter(&json!([["Date", valid]]), &[]).unwrap();
+            assert_eq!((parsed.value, parsed.errors), (json!(valid), vec![]));
+        }
+        for (invalid, error) in [
+            (json!("2001-09-09 "), "invalid date: '2001-09-09 '"),
+            (json!("not a date"), "invalid date: 'not a date'"),
+            (json!(5), "invalid date: 5"),
+        ] {
+            let parsed = parse_iter(&json!([["Date", invalid]]), &[]).unwrap();
+            assert_eq!(
+                (parsed.value, parsed.errors),
+                (Value::Null, vec![error.to_owned()])
+            );
+        }
     }
 }

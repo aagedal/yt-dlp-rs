@@ -74,6 +74,11 @@ fn site_extractors_match_saved_upstream_output() {
             if cfg!(windows) && args.contains(&"--netrc-cmd") {
                 continue;
             }
+            // `--exec` is a native error on Windows (cmd quoting is not
+            // implemented); the captured commands are POSIX shell.
+            if cfg!(windows) && args.contains(&"--exec") {
+                continue;
+            }
             // `copy`: input files (such as a cookies file), not compared.
             let copied: Vec<&str> = case["copy"]
                 .as_array()

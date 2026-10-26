@@ -1,0 +1,18 @@
+--batch_7Kd0zCq3d
+Content-Type: application/http
+Content-ID: <response-8yx5b>
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=UTF-8
+
+{
+ "kind": "drive#fileList",
+ "nextPageToken": "AI9FV7Tq2",
+ "incompleteSearch": false,
+ "items": [
+  {"kind": "drive#file", "id": "0ByeS4oOUV-49Zzh4R1J6R09zazQ", "title": "Big Buck Bunny.mp4", "mimeType": "video/mp4", "fileSize": "5824091"},
+  {"kind": "drive#file", "id": "1IP0o8dHcQrIHGgVyp0Ofvx2cGfLzyO1x", "title": "My Buddy.mp3", "mimeType": "audio/mpeg"}
+ ]
+}
+
+--batch_7Kd0zCq3d--

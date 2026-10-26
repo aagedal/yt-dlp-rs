@@ -1,0 +1,13 @@
+[
+ {"url": "http://www.tv2.no/v/1791207/", "args": ["--no-geo-bypass", "-J", "-f", "dash-mp4"]},
+ {"url": "http://www.tv2.no/v/1791207/", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "http://www.tv2.no/v/1791207/", "args": ["--no-geo-bypass", "-F"]},
+ {"url": "http://www.tv2.no/v/1791207/", "args": ["--no-geo-bypass", "--no-progress", "-f", "dash-mp4", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.tv2.no/v2/sport/222", "args": ["--no-geo-bypass", "--print", "id"]},
+ {"url": "https://www.tv2.no/video/x/333", "args": ["--no-geo-bypass", "--print", "id"]},
+ {"url": "https://www.tv2.no/v/444", "args": ["--no-geo-bypass", "--print", "id"]},
+ {"url": "https://www.tv2.no/v/555", "args": ["--no-geo-bypass", "--print", "id"]},
+ {"url": "https://www.tv2.no/v/666", "args": ["--no-geo-bypass", "--print", "id"]},
+ {"url": "https://www.tv2.no/a/6930542", "args": ["--no-geo-bypass", "--flat-playlist", "-J"]},
+ {"url": "https://www.tv2.no/nyheter/innenriks/6930543", "args": ["--no-geo-bypass", "--flat-playlist", "-J"]}
+]

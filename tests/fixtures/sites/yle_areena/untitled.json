@@ -1,0 +1,10 @@
+{
+ "data": {
+  "ongoing_ondemand": {
+   "duration": {
+    "duration_in_seconds": "60"
+   },
+   "manifest_url": "https://yleawodamd.akamaized.net/i/1-4444/master.m3u8"
+  }
+ }
+}

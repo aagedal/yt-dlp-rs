@@ -120,7 +120,7 @@ Supported today:
   Megaphone players (`player.megaphone.fm/ID`) through their page,
   ReverbNation songs through the song API, Hypem tracks through their page
   and served source, HistoricFilms tapes through their page, Livestreamfails
-  clips through the clip API, Arte videos, embeds, collections and category pages through the player config and programs APIs, Il Post podcast episodes through the podcast endpoint, Kickstarter native project videos through their page, INA videos and audio through the asset API, HSE TV shows and product videos through their Redux data, Gronkh streams through the video API, LNK videos through the video-config API, EbaumsWorld and tv.dfb.de videos through the player XML,
+  clips through the clip API, ARD Mediathek videos, shows and compilations through the page-gateway API, ARD Audiothek episodes and shows through its GraphQL API, Arte videos, embeds, collections and category pages through the player config and programs APIs, Il Post podcast episodes through the podcast endpoint, Kickstarter native project videos through their page, INA videos and audio through the asset API, HSE TV shows and product videos through their Redux data, Gronkh streams through the video API, LNK videos through the video-config API, EbaumsWorld and tv.dfb.de videos through the player XML,
   Glide messages through their share page, GodTube videos through their
   player XML, FC Zenit videos through the player API, BehindKink posts
   QingTing programs, Radio ZET podcasts, OnePlace episodes, SzTV videos, Photobucket media and
@@ -131,12 +131,13 @@ Supported today:
   Prize media, Bild clips, Masters videos, Match TV live, mir24.tv news videos, Mocha videos, Sen videos, Kankanews videos, Kommunetv archives,
   Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, SAPO Vídeos, VideoPress embeds, Vidyard videos, playlists and generic-page embeds through the player JSON, uStudio videos and embeds, 3Speak videos and users, TV Noe programmes, Telegraaf videos, Premiership Rugby videos, PressTV videos, CJSW episodes, PeerTube videos, accounts, channels and playlists on upstream's listed instances (and `peertube:HOST:ID` URLs) through the instance API,
   Player.fm episodes, RTRFM shows, Roya TV live streams, HitRecord records, href.li redirects, Culture Unplugged films,
-  Zhihu videos, CRTVG programmes, Breitbart videos, Brightcove players (and their embeds, including TV Everywhere videos through Adobe Pass TV provider logins), DrTalks videos, Toronto Star videos, The Sun article videos, TVA Nouvelles videos and articles, Wimbledon videos, Wistia media, playlists and channels (and their embeds), Screen9 embeds, The HighWire videos, The Guardian podcast episodes, Sky News Australia videos, European Tour videos, Māori Television shows, Formula 1 videos, NZ On Screen titles, 1News articles, Mediaite articles, Rotten Tomatoes trailers and movie pages, 9News videos and articles, CGTN news videos, JoVE
+  Zhihu videos, CRTVG programmes, Breitbart videos, Brightcove players (and their embeds, including TV Everywhere videos through Adobe Pass TV provider logins), DrTalks videos, DR TV programs, live channels, seasons and series, Toronto Star videos, The Sun article videos, TVA Nouvelles videos and articles, Wimbledon videos, Wistia media, playlists and channels (and their embeds), Screen9 embeds, The HighWire videos, The Guardian podcast episodes, Sky News Australia videos, European Tour videos, Māori Television shows, Formula 1 videos, NZ On Screen titles, 1News articles, Mediaite articles, Rotten Tomatoes trailers and movie pages, 9News videos and articles, CGTN news videos, JoVE
   videos, ParlView videos, The Epoch Times videos, eBay items, Bitmovin
   streams and Crooks and Liars videos (and their embeds), Huajiao lives,
-  ScreenRec shares, Ku6 shows, GoodGame live streams, Fuyin TV videos, GameStar and GamePro videos, Golem videos, Moving Image Archive films, MyVidster links, ETTU TV matches, Erocast tracks, Caltrans traffic cameras, Bigo live rooms, CAM4 live channels, Université de Strasbourg UTV videos, Veo matches, Nobel   Prize media, webcamera.pl and SkylineWebcams live cameras, JoVE   videos, Bitmovin   streams and Crooks and Liars videos (and their embeds), Soundgasm sounds and profiles, StreetVoice songs, SVT Play and Öppet arkiv videos through the videoplayer API (with SVT Play series and svt.se article playlists), Ivoox audios, Amadeus TV library videos, Whyp tracks, TRT Çocuk videos, WorldStarHipHop videos, Xbox clips, HellPorno videos, Toypics videos, MATCHi TV streams, BongaCams live rooms, Daystar clips, Newsy stories, TRT World videos, Pinkbike videos, NTS episodes, Netzkino films, Pear Video videos, Podbay episodes and channels, Rinse FM episodes and shows, Democracy Now! shows and stories, DLive past broadcasts and live streams, Cloudflare Stream videos, CloudyCDN/Backscreen embeds, Dumpert items, Clyp audio clips, Elonet films, Dropbox shared videos, Boston Globe article videos, Beacon TV content, Clipchamp shares, media.ccc.de events, Internazionale videos, Gab posts, iHeartRadio podcast episodes and podcasts, Libsyn episodes, hearthis.at tracks, Freesound sounds, Mux videos, NRK TV and NRK Radio programs, seasons, series and article playlists through the psapi playback API,
+  ScreenRec shares, Ku6 shows, GoodGame live streams, Fuyin TV videos, GameStar and GamePro videos, Golem videos, Moving Image Archive films, MyVidster links, ETTU TV matches, Erocast tracks, Caltrans traffic cameras, Bigo live rooms, CAM4 live channels, Université de Strasbourg UTV videos, Veo matches, Nobel   Prize media, webcamera.pl and SkylineWebcams live cameras, JoVE   videos, Bitmovin   streams and Crooks and Liars videos (and their embeds), Soundgasm sounds and profiles, StreetVoice songs, SVT Play and Öppet arkiv videos through the videoplayer API (with SVT Play series and svt.se article playlists), France Télévisions videos through the k7 player API (francetv: URLs, france.tv pages and franceinfo pages, including franceinfo Dailymotion embeds), Ivoox audios, Amadeus TV library videos, Whyp tracks, TRT Çocuk videos, WorldStarHipHop videos, Xbox clips, HellPorno videos, Toypics videos, MATCHi TV streams, BongaCams live rooms, Daystar clips, Newsy stories, TRT World videos, Pinkbike videos, NTS episodes, Netzkino films, Pear Video videos, Podbay episodes and channels, Rinse FM episodes and shows, Democracy Now! shows and stories, DLive past broadcasts and live streams, Cloudflare Stream videos, CloudyCDN/Backscreen embeds, Dumpert items, Flickr videos, 9GAG posts, IMDb trailers and lists, XVideos videos, TV 2 (tv2.no) videos and articles, Steam store trailers and community broadcasts, Clyp audio clips, Elonet films, Dropbox shared videos, Boston Globe article videos, Beacon TV content, Clipchamp shares, media.ccc.de events, Internazionale videos, Gab posts, iHeartRadio podcast episodes and podcasts, Libsyn episodes, hearthis.at tracks, Freesound sounds, Mux videos, NRK TV and NRK Radio programs, seasons, series and article playlists through the psapi playback API, ZDF Mediathek, zdfheute and logo! videos through the GraphQL and PTMD APIs (with ZDF smart collection season playlists),
   Fathom shares, Maariv players (and their embeds), Harpodeon films,
-  Yorkshire Film Archive pages, GodResource videos, PopcornTV videos, Reddit
+  Yorkshire Film Archive pages, Yle Areena programmes and podcasts, GodResource videos, Google Drive files
+  (and their embeds) and folders, PopcornTV videos, Reddit
   posts (hosted videos, text-post videos and followed links), X/Twitter posts
   (GraphQL, legacy or syndication APIs; videos, multi-video playlists, cards
   including VMAP), X broadcasts and live events, Spaces, `t.co` links,
@@ -150,11 +151,11 @@ Supported today:
   (relay data with DASH, progressive URLs and captions; server JS, pagelet
   and tahoe player pages; watch parties; JSON-LD metadata), Facebook ad
   library ads and `flx/warn` redirects, Vimeo player and
-  clip pages, Dailymotion videos (and the kicker.de videos that embed them), SoundCloud tracks, Twitch VODs, clips, live streams,
+  clip pages, Dailymotion videos (and the kicker.de videos that embed them), playlists, channels and video searches, SoundCloud tracks, Twitch VODs, clips, live streams,
   channel video/clip/collection lists and collections,
   Bandcamp tracks, Rumble videos, Kick VODs, clips, live channels and channel video/clip lists, Bluesky
-  posts, Mixcloud shows, Pinterest pins, Odysee/LBRY streams,
-  Tumblr posts, Imgur media, galleries and albums, Bilibili videos, VK videos, wall posts, user video lists and VK Play Live streams, Niconico videos, Weibo posts, XiaoHongShu (RedNote) video notes, TED talks, playlists and series, Rutube videos, LinkedIn posts, Internet Archive items, BitChute videos, Coub clips, Loom videos, OK.ru videos,
+  posts, Mixcloud shows, Pinterest pins, Odysee/LBRY streams, channels and playlists,
+  Tumblr posts, Imgur media, galleries and albums, Bilibili videos, VK videos, wall posts, user video lists and VK Play Live streams, Niconico videos, mylists, series, history/likes, user videos, searches and tag pages, Weibo posts, XiaoHongShu (RedNote) video notes, TED talks, playlists and series, Rutube videos, LinkedIn posts, Internet Archive items, BitChute videos, Coub clips, Loom videos, OK.ru videos,
   Telegram public posts (multi-video posts as playlists), Snapchat Spotlight
   snaps, plus
   either site's iframe embeds on other pages (one is followed; several form a
@@ -249,8 +250,8 @@ Supported today:
   acquisition unless automatic writing is enabled. Explicit `--write-subs` keeps
   embedded sidecars; embed-only removes eligible sidecars after successful final
   publication. `-k` also keeps them. [Embedding policies](docs/COMPATIBILITY.md#subtitle-embedding)
-  cover automatic tracks, skipped formats and metadata. Regex languages and
-  manifest/other-site subtitles remain unsupported.
+  cover automatic tracks, skipped formats and metadata. Manifest/other-site
+  subtitles remain unsupported.
 - `--write-info-json` writes upstream-cleaned video metadata beside the media
   name (after subtitles, before media) and playlist metadata before entries.
   Names follow upstream extension replacement; existing files follow the

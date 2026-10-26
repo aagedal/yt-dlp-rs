@@ -1,0 +1,9 @@
+[
+ {"url": "https://www.imdb.com/video/imdb/vi2524815897", "args": ["-J"]},
+ {"url": "https://www.imdb.com/video/imdb/vi2524815897", "args": ["-F"]},
+ {"url": "https://www.imdb.com/video/imdb/vi2524815897", "args": ["--no-progress", "-f", "1080p", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://m.imdb.com/title/tt0000001/videoplayer/vi3516832537", "args": ["-J"]},
+ {"url": "https://www.imdb.com/video/vi1111111111", "args": ["--print", "id"]},
+ {"url": "https://www.imdb.com/list/ls009921623/", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.imdb.com/list/ls123456789/", "args": ["--flat-playlist", "--print", "id"]}
+]

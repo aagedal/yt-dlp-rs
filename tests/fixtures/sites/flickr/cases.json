@@ -1,0 +1,8 @@
+[
+ {"url": "https://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/", "args": ["-J"]},
+ {"url": "https://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/", "args": ["-F"]},
+ {"url": "https://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/", "args": ["--no-progress", "-f", "orig", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://secure.flickr.com/photos/99@N01/333", "args": ["-J"]},
+ {"url": "https://www.flickr.com/photos/someone/111", "args": ["--print", "id"]},
+ {"url": "https://www.flickr.com/photos/someone/222", "args": ["--print", "id"]}
+]

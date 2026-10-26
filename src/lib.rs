@@ -333,6 +333,15 @@ pub(crate) const FOLLOW_URL: &str = "__yt_dlp_rs_follow_url";
 
 /// A playlist entry's processing error, reported with that entry.
 pub(crate) const ENTRY_ERROR: &str = "__yt_dlp_rs_entry_error";
+/// A fetched pending entry that was already processed (see
+/// [`YoutubeDl::fetch_pending`]).
+pub(crate) const PROCESSED_ENTRY: &str = "__yt_dlp_rs_processed_entry";
+/// A paged playlist entry whose page failed to download: upstream's `None`
+/// entry after `_handle_extraction_exceptions` reported the error (see
+/// `extractor::paged`).
+pub(crate) const FETCH_ERROR: &str = "__yt_dlp_rs_fetch_error";
+/// The paged list's length once its failed page ended it.
+pub(crate) const FETCH_ERROR_COUNT: &str = "__yt_dlp_rs_fetch_error_count";
 /// An extractor's top-level `url_transparent` result: `{url, fields}`, the
 /// target extracted through the registry and updated with the non-`None`
 /// fields (`process_ie_result`).
@@ -345,10 +354,15 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 /// order (`end` is the unsupported-URL fallback).
 const EXTRACTOR_NAMES: &[&str] = &[
     "1News",
+    "9gag",
     "9News",
     "AmadeusTV",
     "Angel",
     "archive.org",
+    "ARDAudiothek",
+    "ARDAudiothekPlaylist",
+    "ARDMediathek",
+    "ARDMediathekCollection",
     "ArteTVCategory",
     "ArteTVEmbed",
     "ArteTV",
@@ -361,6 +375,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Bild",
     "BiliBili",
     "BitChute",
+    "BitChuteChannel",
     "Bitmovin",
     "blogger.com",
     "Bluesky",
@@ -383,6 +398,9 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Crtvg",
     "CultureUnplugged",
     "dailymotion",
+    "dailymotion:playlist",
+    "dailymotion:search",
+    "dailymotion:user",
     "daystar:clip",
     "democracynow",
     "dlive:stream",
@@ -390,6 +408,10 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Douyin",
     "Dropbox",
     "DrTalks",
+    "drtv",
+    "drtv:live",
+    "drtv:season",
+    "drtv:series",
     "Dumpert",
     "EbaumsWorld",
     "Ebay",
@@ -407,7 +429,11 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Fczenit",
     "FilmArchiv",
     "Filmweb",
+    "Flickr",
     "Formula1",
+    "francetv",
+    "franceinfo",
+    "francetv:site",
     "Freesound",
     "FuyinTV",
     "Gab",
@@ -419,6 +445,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Glide",
     "GodResource",
     "GodTube",
+    "GoogleDrive:Folder",
+    "GoogleDrive",
     "Graspop",
     "Gronkh",
     "Harpodeon",
@@ -434,6 +462,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "iheartradio:podcast",
     "IlPost",
     "Iltalehti",
+    "imdb",
+    "imdb:list",
     "Imgur",
     "imgur:album",
     "imgur:gallery",
@@ -462,6 +492,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "KTH",
     "Ku6",
     "lbry",
+    "lbry:channel",
+    "lbry:playlist",
     "Libsyn",
     "LinkedIn",
     "Livestreamfails",
@@ -484,6 +516,14 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Netzkino",
     "Newsy",
     "niconico",
+    "niconico:history",
+    "niconico:playlist",
+    "niconico:series",
+    "niconico:tag",
+    "NiconicoUser",
+    "nicovideo:search",
+    "nicovideo:search:date",
+    "nicovideo:search_url",
     "NobelPrize",
     "NRK",
     "NRKPlaylist",
@@ -538,6 +578,9 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "soundgasm",
     "soundgasm:profile",
     "Spiegel",
+    "Steam",
+    "SteamCommunity",
+    "SteamCommunityBroadcast",
     "Streamable",
     "StreetVoice",
     "svt:page",
@@ -568,6 +611,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "TrtWorld",
     "Tumblr",
     "tv.dfb.de",
+    "TV2",
+    "TV2Article",
     "TVANouvelles",
     "TVANouvellesArticle",
     "tvnoe",
@@ -613,7 +658,10 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "WorldStarHipHop",
     "XboxClips",
     "XiaoHongShu",
+    "XVideos",
+    "xvideos:quickies",
     "yfanefa",
+    "YleAreena",
     "youtube:clip",
     "youtube:consent",
     "youtube:favorites",
@@ -634,6 +682,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "youtube:watchlater",
     "YoutubeYtBe",
     "youtube:user",
+    "zdf",
+    "zdf:channel",
     "Zhihu",
     "generic",
     "end",
@@ -729,6 +779,10 @@ impl YoutubeDl {
         let cookies = http.cookies.clone().unwrap_or_default();
         cookies::register(&cookies);
         extractor::NO_PLAYLIST.store(youtube.no_playlist, std::sync::atomic::Ordering::Relaxed);
+        extractor::AGE_LIMIT.store(
+            youtube.age_limit.unwrap_or(i64::MIN),
+            std::sync::atomic::Ordering::Relaxed,
+        );
         extractor::GET_COMMENTS.store(youtube.get_comments, std::sync::atomic::Ordering::Relaxed);
         extractor::youtube::live_chat::SKIP_DOWNLOAD
             .store(youtube.skip_download, std::sync::atomic::Ordering::Relaxed);
@@ -824,6 +878,9 @@ impl YoutubeDl {
                 Box::new(extractor::FacebookAds),
                 Box::new(extractor::Vimeo),
                 Box::new(extractor::Dailymotion),
+                Box::new(extractor::DailymotionPlaylist),
+                Box::new(extractor::DailymotionSearch),
+                Box::new(extractor::DailymotionUser),
                 Box::new(extractor::Soundcloud),
                 Box::new(extractor::Soundgasm),
                 Box::new(extractor::SoundgasmProfile),
@@ -846,6 +903,8 @@ impl YoutubeDl {
                 Box::new(extractor::Mixcloud),
                 Box::new(extractor::Pinterest),
                 Box::new(extractor::Lbry),
+                Box::new(extractor::LbryChannel),
+                Box::new(extractor::LbryPlaylist),
                 Box::new(extractor::TrtCocukVideo),
                 Box::new(extractor::Freesound),
                 Box::new(extractor::HearThisAt),
@@ -876,6 +935,7 @@ impl YoutubeDl {
                 Box::new(extractor::DLiveStream),
                 Box::new(extractor::DLiveVod),
                 Box::new(extractor::Mux),
+                Box::new(extractor::NineGag),
                 Box::new(extractor::NineNews),
                 Box::new(extractor::RottenTomatoes),
                 Box::new(extractor::Mediaite),
@@ -884,6 +944,16 @@ impl YoutubeDl {
                 Box::new(extractor::CloudflareStream),
                 Box::new(extractor::CloudyCdn),
                 Box::new(extractor::Dumpert),
+                Box::new(extractor::Steam),
+                Box::new(extractor::SteamCommunity),
+                Box::new(extractor::SteamCommunityBroadcast),
+                Box::new(extractor::Tv2),
+                Box::new(extractor::Tv2Article),
+                Box::new(extractor::XVideosQuickies),
+                Box::new(extractor::XVideos),
+                Box::new(extractor::Imdb),
+                Box::new(extractor::ImdbList),
+                Box::new(extractor::Flickr),
                 Box::new(extractor::Telegraaf),
                 Box::new(extractor::TvNoe),
                 Box::new(extractor::ThreeSpeak),
@@ -915,7 +985,15 @@ impl YoutubeDl {
                 Box::new(extractor::VkPlayLive),
                 Box::new(extractor::VkUserVideos),
                 Box::new(extractor::VkWallPost),
+                Box::new(extractor::NiconicoHistory),
                 Box::new(extractor::Niconico),
+                Box::new(extractor::NiconicoPlaylist),
+                Box::new(extractor::NiconicoSeries),
+                Box::new(extractor::NiconicoUser),
+                Box::new(extractor::NicovideoSearchDate),
+                Box::new(extractor::NicovideoSearch),
+                Box::new(extractor::NicovideoSearchUrl),
+                Box::new(extractor::NicovideoTagUrl),
                 Box::new(extractor::Weibo),
                 Box::new(extractor::WeiboVideo),
                 Box::new(extractor::TedEmbed),
@@ -926,11 +1004,16 @@ impl YoutubeDl {
                 Box::new(extractor::Rutube),
                 Box::new(extractor::LinkedIn),
                 Box::new(extractor::ArchiveOrg),
+                Box::new(extractor::ArdAudiothek),
+                Box::new(extractor::ArdAudiothekPlaylist),
+                Box::new(extractor::ArdMediathek),
+                Box::new(extractor::ArdMediathekCollection),
                 Box::new(extractor::ArteTvCategory),
                 Box::new(extractor::ArteTvEmbed),
                 Box::new(extractor::ArteTv),
                 Box::new(extractor::ArteTvPlaylist),
                 Box::new(extractor::BitChute),
+                Box::new(extractor::BitChuteChannel),
                 Box::new(extractor::Coub),
                 Box::new(extractor::Loom),
                 Box::new(extractor::Odnoklassniki),
@@ -1014,6 +1097,8 @@ impl YoutubeDl {
                 Box::new(extractor::GodTube),
                 Box::new(extractor::Golem),
                 Box::new(extractor::GoodGame),
+                Box::new(extractor::GoogleDriveFolder),
+                Box::new(extractor::GoogleDrive),
                 Box::new(extractor::Graspop),
                 Box::new(extractor::Gronkh),
                 Box::new(extractor::Harpodeon),
@@ -1082,6 +1167,9 @@ impl YoutubeDl {
                 Box::new(extractor::TheIntercept),
                 Box::new(extractor::TheStar),
                 Box::new(extractor::Formula1),
+                Box::new(extractor::FranceTv),
+                Box::new(extractor::FranceTvInfo),
+                Box::new(extractor::FranceTvSite),
                 Box::new(extractor::MaoriTV),
                 Box::new(extractor::EuropeanTour),
                 Box::new(extractor::SkyNewsAU),
@@ -1096,6 +1184,10 @@ impl YoutubeDl {
                 Box::new(extractor::Toypics),
                 Box::new(extractor::Dfb),
                 Box::new(extractor::DrTalks),
+                Box::new(extractor::Drtv),
+                Box::new(extractor::DrtvLive),
+                Box::new(extractor::DrtvSeason),
+                Box::new(extractor::DrtvSeries),
                 Box::new(extractor::Tweakers),
                 Box::new(extractor::TwentyThreeVideo),
                 Box::new(extractor::UmgDe),
@@ -1112,6 +1204,9 @@ impl YoutubeDl {
                 Box::new(extractor::XboxClips),
                 Box::new(extractor::XiaoHongShu),
                 Box::new(extractor::Yfanefa),
+                Box::new(extractor::YleAreena),
+                Box::new(extractor::Zdf),
+                Box::new(extractor::ZdfChannel),
                 Box::new(extractor::Zhihu),
                 Box::new(GenericHttp),
             ],
@@ -1825,11 +1920,66 @@ impl YoutubeDl {
                 extractor::fetch_twitch_pages
             } else if extractor::tiktok_pending_state(&pending.state) {
                 extractor::fetch_tiktok_pages
+            } else if extractor::zdf_pending_state(&pending.state) {
+                extractor::fetch_zdf_pages
+            } else if extractor::steam_pending_state(&pending.state) {
+                extractor::fetch_steam_trailers
+            } else if extractor::ard_pending_state(&pending.state) {
+                extractor::fetch_ard_pages
+            } else if extractor::vk_user_videos_pending_state(&pending.state) {
+                extractor::fetch_vk_user_videos_pages
+            } else if extractor::kick_pending_state(&pending.state) {
+                extractor::fetch_kick_entries
+            } else if extractor::peertube_pending_state(&pending.state) {
+                extractor::fetch_peertube_pages
+            } else if extractor::podbayfm_pending_state(&pending.state) {
+                extractor::fetch_podbayfm_pages
+            } else if extractor::lbry_pending_state(&pending.state) {
+                extractor::fetch_lbry_pages
+            } else if extractor::bitchute_pending_state(&pending.state) {
+                extractor::fetch_bitchute_pages
+            } else if extractor::niconico_pending_state(&pending.state) {
+                extractor::fetch_niconico_pages
+            } else if extractor::dailymotion_pending_state(&pending.state) {
+                extractor::fetch_dailymotion_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };
+            // Steam's generator yields extracted videos (not `url` entries),
+            // processed as they are fetched.
+            // Some generators and paged lists yield extracted videos (not
+            // `url` entries), processed once they are fetched (random-access
+            // pages may fill earlier placeholders).
+            let resolved = extractor::steam_pending_state(&pending.state)
+                || extractor::podbayfm_pending_state(&pending.state);
             playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
                 .map(|state| PendingEntries { state });
+            if resolved {
+                let unprocessed: Vec<usize> = (0..playlist.entries.len())
+                    .filter(|index| !playlist.entries[*index].extra.contains_key(PROCESSED_ENTRY))
+                    .collect();
+                if !unprocessed.is_empty() {
+                    let mut fetched = ExtractResult::Playlist(PlaylistInfo {
+                        entries: unprocessed
+                            .iter()
+                            .map(|index| playlist.entries[*index].clone())
+                            .collect(),
+                        nested: Vec::new(),
+                        pending: None,
+                        extra: serde_json::Map::new(),
+                        ..playlist.clone()
+                    });
+                    self.process_result(&mut fetched)?;
+                    if let ExtractResult::Playlist(fetched) = fetched {
+                        for (index, mut entry) in unprocessed.into_iter().zip(fetched.entries) {
+                            entry
+                                .extra
+                                .insert(PROCESSED_ENTRY.into(), serde_json::Value::Bool(true));
+                            playlist.entries[index] = entry;
+                        }
+                    }
+                }
+            }
         }
         Ok(())
     }
@@ -2935,6 +3085,12 @@ impl YoutubeDl {
             .and_then(serde_json::Value::as_str)
     }
 
+    /// The error of a paged playlist entry whose page failed to download
+    /// (already reported upstream; the entry is `None`).
+    pub fn fetch_error(entry: &VideoInfo) -> Option<&str> {
+        extractor::paged::fetch_error(entry)
+    }
+
     /// Whether `entry` is an unresolved `url_transparent` entry.
     pub fn is_transparent(entry: &VideoInfo) -> bool {
         entry.extra.contains_key(TRANSPARENT)
@@ -3096,8 +3252,14 @@ impl YoutubeDl {
         raw.insert("__x_forwarded_for_ip".into(), Value::Null);
         let mut full = raw.clone();
         if ie_key.is_some() {
-            // `ie.get_temp_id(url)`.
-            full.insert("id".into(), entry.id.clone().into());
+            // `ie.get_temp_id(url)` (`None` when the URL does not match: an
+            // empty ID).
+            let id = if entry.id.is_empty() {
+                Value::Null
+            } else {
+                entry.id.clone().into()
+            };
+            full.insert("id".into(), id);
         }
         full.insert("webpage_url".into(), shown.clone().into());
         full.insert("original_url".into(), shown.clone().into());
@@ -3285,11 +3447,11 @@ impl YoutubeDl {
                     // A followed `url` result passes `original_url` on as
                     // extra info (see `info_order::FOLLOWED`).
                     let followed = |result: &mut ExtractResult| -> Result<()> {
-                        if let ExtractResult::Video(video) = result {
-                            video
-                                .extra
-                                .insert(info_order::FOLLOWED.into(), serde_json::Value::Bool(true));
-                        }
+                        let extra = match result {
+                            ExtractResult::Video(video) => &mut video.extra,
+                            ExtractResult::Playlist(playlist) => &mut playlist.extra,
+                        };
+                        extra.insert(info_order::FOLLOWED.into(), serde_json::Value::Bool(true));
                         before_processing(result)
                     };
                     return self.extract_once_with(&target, &followed);

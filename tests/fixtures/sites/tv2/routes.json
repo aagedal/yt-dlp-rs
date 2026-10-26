@@ -1,0 +1,167 @@
+{
+ "routes": [
+  {
+   "url": "https://sumo.tv2.no/rest/assets/1791207",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 1791207, \"title\": \"Her kolliderer romsonden med asteroiden\", \"description\": \"  Romsonden traff.  \", \"live\": false, \"live_broadcast_time\": null, \"update_time\": \"2022-09-27T09:00:00Z\", \"accurateDuration\": \"44.5\", \"duration\": 44, \"views\": \"1234\", \"tags\": \"nyheter,romfart\", \"images\": {\"16:9\": \"https://tv2.test/16x9.jpg\", \"1:1\": \"https://tv2.test/1x1.jpg\"}}"
+  },
+  {
+   "url": "https://api.sumo.tv2.no/play/1791207?stream=HLS",
+   "request_headers": {
+    "content-type": "application/json"
+   },
+   "request_body": [
+    "\"Nettleser (HTML)\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playback\": {\"drmProtected\": false, \"streams\": [{\"type\": \"hls\", \"url\": \"https://tv2-vod.test/1791207/master.m3u8\"}, {\"type\": \"hls\", \"url\": \"https://tv2-vod.test/1791207/master.m3u8\"}, {\"type\": \"hls\", \"url\": \"\"}]}}"
+  },
+  {
+   "url": "https://api.sumo.tv2.no/play/1791207?stream=DASH",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playback\": {\"drmProtected\": false, \"streams\": [{\"type\": \"dash\", \"url\": \"https://tv2-vod.test/1791207/manifest.mpd\"}, {\"type\": \"hds\", \"url\": \"https://tv2-vod.test/1791207/manifest.f4m\"}, {\"type\": \"mp4\", \"url\": \"https://tv2-vod.test/1791207/progressive.mp4\"}, {\"type\": \"ism\", \"url\": \"https://tv2-vod.test/1791207/stream.ism/Manifest\"}]}}"
+  },
+  {
+   "url": "https://tv2-vod.test/1791207/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=900000,RESOLUTION=640x360\nhls-360.m3u8\n"
+  },
+  {
+   "url": "https://tv2-vod.test/1791207/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://tv2-vod.test/1791207/progressive.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "fixture tv2 bytes"
+  },
+  {
+   "url": "https://sumo.tv2.no/rest/assets/222",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Geo\"}"
+  },
+  {
+   "url": "https://api.sumo.tv2.no/play/222?stream=HLS",
+   "status": 401,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": {\"code\": \"ASSET_PLAYBACK_INVALID_GEO_LOCATION\", \"description\": \"geo\"}}"
+  },
+  {
+   "url": "https://sumo.tv2.no/rest/assets/333",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Login\"}"
+  },
+  {
+   "url": "https://api.sumo.tv2.no/play/333?stream=HLS",
+   "status": 401,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": {\"code\": \"SESSION_NOT_AUTHENTICATED\", \"description\": \"login\"}}"
+  },
+  {
+   "url": "https://sumo.tv2.no/rest/assets/444",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Other\"}"
+  },
+  {
+   "url": "https://api.sumo.tv2.no/play/444?stream=HLS",
+   "status": 401,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": {\"code\": \"SOMETHING_ELSE\", \"description\": \"Kunne ikke spille av\"}}"
+  },
+  {
+   "url": "https://sumo.tv2.no/rest/assets/555",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"DRM\"}"
+  },
+  {
+   "url": "https://api.sumo.tv2.no/play/555?stream=HLS",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playback\": {\"drmProtected\": true, \"streams\": [{\"type\": \"hls\", \"url\": \"https://tv2-vod.test/555/master.m3u8\"}]}}"
+  },
+  {
+   "url": "https://api.sumo.tv2.no/play/555?stream=DASH",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playback\": {\"drmProtected\": true, \"streams\": []}}"
+  },
+  {
+   "url": "https://tv2-vod.test/555/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=900000,RESOLUTION=640x360\nhls-360.m3u8\n"
+  },
+  {
+   "url": "https://sumo.tv2.no/rest/assets/666",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Nothing\"}"
+  },
+  {
+   "url": "https://api.sumo.tv2.no/play/666?stream=HLS",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playback\": {}}"
+  },
+  {
+   "url": "https://api.sumo.tv2.no/play/666?stream=DASH",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playback\": {}}"
+  },
+  {
+   "url": "https://www.tv2.no/a/6930542",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Romsonden traff - TV2.no\"><meta property=\"og:description\" content=\"Se videoene - TV2.no\"></head><body><div data-assetid=\"1791207\"></div><div data-assetid='1791208'></div></body></html>"
+  },
+  {
+   "url": "https://www.tv2.no/nyheter/innenriks/6930543",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Ny side\"></head><body><script>new TV2ContentboxVideo({assetId: 1791209, autoplay: false}); TV2.TV2Video({broken: [}) </script></body></html>"
+  },
+  {
+   "url": "https://tv2-vod.test/1791207/manifest.f4m",
+   "headers": {
+    "Content-Type": "application/f4m+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns=\"http://ns.adobe.com/f4m/1.0\">\n <id>clip</id>\n <streamType>recorded</streamType>\n <duration>44</duration>\n <bootstrapInfo profile=\"named\" id=\"bootstrap0\">AAAA</bootstrapInfo>\n <media streamId=\"hi\" url=\"clip_hi\" bitrate=\"1500\" width=\"1280\" height=\"720\" bootstrapInfoId=\"bootstrap0\"/>\n</manifest>\n"
+  }
+ ]
+}

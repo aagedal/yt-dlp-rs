@@ -3,5 +3,15 @@
  {"url": "https://www.bitchute.com/video/UGlrF9o9b-Q/", "args": ["--no-check-formats", "--print", "%(formats.0.url)s|%(formats.0.filesize)s"]},
  {"url": "https://www.bitchute.com/embed/geo1/", "args": ["--print", "id"]},
  {"url": "https://old.bitchute.com/video/nometa/", "args": ["--print", "%(id)s|%(title)s|%(is_live)s"]},
- {"url": "https://www.bitchute.com/video/UGlrF9o9b-Q/", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]}
+ {"url": "https://www.bitchute.com/video/UGlrF9o9b-Q/", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.bitchute.com/channel/testchan/", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.bitchute.com/channel/testchan/", "args": ["--flat-playlist", "-I", "26,2,27", "--print", "%(playlist_index)s|%(id)s|%(title)s|%(duration)s|%(view_count)s|%(playlist_count)s"]},
+ {"url": "https://www.bitchute.com/channel/testchan/", "args": ["--flat-playlist", "-I", "24:30", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://www.bitchute.com/channel/testchan/", "args": ["--flat-playlist", "-I", "1"]},
+ {"url": "https://www.bitchute.com/channel/testchan/", "args": ["-I", "1", "--print", "%(playlist_index)s|%(id)s|%(title)s|%(duration)s|%(view_count)s|%(playlist_count)s"]},
+ {"url": "https://old.bitchute.com/playlist/pl1/", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.bitchute.com/playlist/pl1", "args": ["--flat-playlist", "-I", "2:", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://www.bitchute.com/channel/empty/", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.bitchute.com/channel/gone/", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.bitchute.com/channel/testchan/", "args": ["--flat-playlist", "-I", "26,2"]}
 ]

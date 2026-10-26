@@ -64,7 +64,10 @@ jobs:
       - run: cargo test --locked --test sites
 
   direct-adaptive-merge:
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-latest (26.04) installs FFmpeg 8.0.1, whose Opus stream
+    # copy of the merge fixtures trips ffprobe ("Error parsing Opus packet
+    # header"); FFmpeg 6.1 (24.04) and 9.0 are clean.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable

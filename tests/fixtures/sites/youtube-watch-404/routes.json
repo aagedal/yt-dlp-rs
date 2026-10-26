@@ -1,0 +1,12 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&bpctr=9999999999&has_verified=1",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "not found"
+  }
+ ]
+}

@@ -27,7 +27,7 @@ repaired before extension completion. URL/query/fragment/trailing-slash quirks,
 kind case sensitivity and empty/missing language distinctions are retained.
 Malformed/nested DOM ownership and unsupported schemes have explicit native bounds.
 
-Pure SubtitleOptions selection handles defaults, literal/all/exclusion languages
+Pure SubtitleOptions selection handles defaults, regex/all/exclusion languages
 and ordered format preferences. Rendering lives separately in output/subtitles.rs;
 transport uses a typed HTTP resource policy shared with media, retaining retries,
 referrers, cancellation and publication while bypassing media MIME inspection for

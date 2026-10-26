@@ -14,7 +14,7 @@ from pathlib import Path
 import subprocess
 import sys
 
-PINNED_UPSTREAM = '6ccd977303412151ee23352c6257dd658ffc1987'
+PINNED_UPSTREAM = 'fa9886678eb65103303c627b8e013f13f8999b41'
 FIXTURE = Path(__file__).resolve().parents[1] / 'tests/fixtures/dates/cases.json'
 UPSTREAM_WORKER = r'''
 import datetime as real, json, socket, subprocess, sys, types
@@ -34,7 +34,7 @@ class PinnedNow(real.datetime):
         return real.datetime.fromtimestamp(ranges['now'], tz)
 
 _utils.dt = types.SimpleNamespace(datetime=PinnedNow, timedelta=real.timedelta,
-                                  timezone=real.timezone, date=real.date)
+                                  timezone=real.timezone, UTC=real.UTC, date=real.date)
 result = {'unified_timestamp': [], 'strftime': [], 'timeconvert': [],
           'ranges': {'now': ranges['now'], 'uploads': ranges['uploads'], 'cases': []}}
 for case in fixture['unified_timestamp']:

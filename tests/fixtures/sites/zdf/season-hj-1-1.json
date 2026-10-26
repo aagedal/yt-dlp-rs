@@ -1,0 +1,35 @@
+{
+ "data": {
+  "smartCollectionByCanonical": {
+   "seasons": {
+    "nodes": [
+     {
+      "number": 2021,
+      "episodes": {
+       "nodes": [
+        {
+         "canonical": "heute-journal-vom-19-12-2021-100",
+         "sharingUrl": "https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-19-12-2021-100",
+         "teaser": {
+          "title": "heute journal vom 19.12.2021",
+          "description": null
+         },
+         "leadParagraph": "Omikron-Welle",
+         "editorialDate": "2021-12-19T21:45:00.000Z",
+         "episodeInfo": {
+          "episodeNumber": 370,
+          "seasonNumber": 2021
+         }
+        }
+       ],
+       "pageInfo": {
+        "hasNextPage": true,
+        "endCursor": ""
+       }
+      }
+     }
+    ]
+   }
+  }
+ }
+}

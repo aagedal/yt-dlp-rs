@@ -26,7 +26,7 @@ import subprocess
 import sys
 from urllib.parse import urlsplit
 
-PINNED_UPSTREAM = "6ccd977303412151ee23352c6257dd658ffc1987"
+PINNED_UPSTREAM = "fa9886678eb65103303c627b8e013f13f8999b41"
 ORIGIN = "http://127.0.0.1:43210"
 FIELDS = ("id", "title", "extractor", "extractor_key", "webpage_url")
 FORMAT_FIELDS = ("format_id", "stream_kind", "url", "width", "height", "tbr", "language")

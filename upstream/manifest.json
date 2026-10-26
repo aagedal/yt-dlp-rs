@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "https://github.com/yt-dlp/yt-dlp.git",
-  "baseline": "6ccd977303412151ee23352c6257dd658ffc1987",
+  "baseline": "fa9886678eb65103303c627b8e013f13f8999b41",
   "upstream_version": "2026.10.21",
   "components": [
     {
@@ -370,7 +370,7 @@
         "src/output/encoding.rs",
         "tests/encoding.rs"
       ],
-      "scope": "Multiple URLs, simulate, per-video NDJSON, sequential HTML5 playlist entry downloads with failure continuation, bounded typed output templates with primitive metadata, alternatives/defaults and selected-context padding, literal HTML5 source-ID or bounded resolution-based default/best/worst selection applied independently to each entry, bounded --retries download option with guarded range recovery and independent opt-in --extractor-retries whole-extraction budget with bounded Retry-After delay-seconds/preferred HTTP-date; upstream report_progress lines/minicurses single-line printer and to_screen lines on stdout (stderr under logtostderr) with --newline/--no-progress/--progress/--progress-delta (actual-fixture formatting; no colors/templates); -R/--retries and --fragment-retries default 10 with inf/infinite and parse_retries errors, RetryManager Got error/Giving up messages, --retry-sleep http/fragment parse_sleep_func delays and --skip-unavailable-fragments/--abort-on-unavailable-fragments fragment skipping (native transient classification for whole-file retries); no CLI cancellation/signal handling or general option parity; bounded audio/video selectors, two-stream + pairs and / fallbacks in upstream FormatSorter order; chained typed numeric/text format predicates with unknown inclusion, quoted delimiters and upstream unit conventions before FormatSorter-ordered selection; parenthesized choices/merges, group input filters, best/worst aliases and bare-filter selectors through a bounded expression AST; positive one-based indexed best/worst aliases after native filtered ranking; upstream best/worst complete-stream and incomplete_formats fallback, starred bv*/ba*/b* and extension selectors, _merge duplicate-stream dropping and bestvideo*+bestaudio/best default with a merger (tests/fixtures/selectors/kinds.json from actual build_format_selector); no regexes, arbitrary metadata filters or multiselection; -F eligible format inventories through unselected extraction, combined -j/-s normal selection, pure bounded native table renderer and selector syntax preflight; no upstream table/sorter parity or no-simulate listing downloads; --print video-stage field lists/templates with unsanitized typed rendering, j conversion, filename/urls and title/id/url/filename --get-* aliases under quiet simulation; --print/--print-to-file at video/before_dl/post_process/after_move/after_video stages with filepath/_filename, print_only simulation rule and repr Writing notices; no pre_process/after_filter/playlist print stages; -a/--batch-file and --no-batch-file with actual upstream get_urls comment/BOM/universal-newline/strip semantics, stdin and ~/$VAR expansion; no ~user expansion or -q; -w/--force-overwrites/--no-force-overwrites media already-downloaded/delete and info JSON/subtitle overwrite decisions from actual process_info; existing media with postprocessing is an explicit error; no final_ext candidates or --no-post-overwrites; --continue/--no-continue/--part/--no-part HttpFD .part files with plain-Range resume, Unable to resume restart and kept parts (whole-file media only); -J/--dump-single-json per-URL object with playlist _type/playlist_count/requested_entries/entries under quiet simulation (native -j field shape); --no-simulate and upstream simulate/list_only/quiet resolution from actual parse_options; --max-downloads processed-video counting with exit 101; --min/max-filesize parse_bytes limits on whole-file HTTP media Content-Length (no fragment checks); -r/--limit-rate upstream slow_down per media transfer/fragment request; --sleep-interval/--max-sleep-interval/--sleep-subtitles with upstream validation messages and --sleep-requests before every extraction request but the first (native probes excluded); --embed-metadata/--add-metadata final FFmpegMetadataPP stage (common tags, id3v1, stream languages; no chapters or info JSON attachment); --list-thumbnails table, --write-thumbnail/--write-all-thumbnails with upstream flag folding, best-first attempts, 404 skips and overwrite rules, HTML5 poster thumbnails and _sanitize_thumbnails; --write-description (video/playlist, overwrite-aware) and --(no-)write-playlist-metafiles; --match-filters/--break-match-filters with resets via actual-match_str fixture, pre-selection format-field incompleteness and post-selection recheck, Rust regex engine; --date/--datebefore/--dateafter via actual-fixture DateRange/date_from_str (pinned now) with report_conflict warnings, --age-limit, hidden --min-views/--max-views/--match-title/--reject-title/--break-on-reject in _match_entry order with upstream messages; RejectedVideoReached fixed message; -i/--no-abort-on-error/--abort-on-error ignoreerrors folding with queue abort on the first reported error and run_pp-style processor skipping under -i; --exec/--no-exec/--exec-before-download ExecPP stages video/before_dl/post_process/after_move/after_video with safe d/i/f/q templates, {} quoting and run_pp/pending error handling (POSIX shell only); --mtime/--no-mtime try_utime via actual-fixture timeconvert for media/subtitle/fragment downloads and oldest-input mtime inheritance for every FFmpeg output; --write-link/--write-url-link/--write-webloc-link/--write-desktop-link _write_link_file with actual-fixture iri_to_uri/LINK_TEMPLATES and upstream overwrite quirk; --load-info-json download_with_info_file with sanitize_info(remove_private_keys) reselection, URL-ignored warning and playlist EntryNotInPlaylist URL fallback; __process_playlist progress lines and process_video_result format-count line (no updated playlist info JSON rewrite); _default_format_spec best/bestvideo+bestaudio without a merger with the ffmpeg-not-found warning and unmerged format-file downloads (abort under --abort-on-error); HLS formats labeled mp4 with FixupM3u8/FixupM4a and --fixup/--hls-use-mpegts (content-sniffed demuxers); get_compatible_ext merge containers with --merge-output-format preferences (avi/flv/mkv/mov/mp4/webm/ts muxers); upstream NAME.fID.EXT merge format files with per-format Destination/Total fragments lines, reuse, [Merger] and Deleting original file messages and standalone -k for unprocessed merges; CLI ffmpeg/ffprobe discovery via PATH and directory/file --ffmpeg-location like _determine_executables (no version probe); validate_options parser.error usage/exit 2 layout and messages for represented options (clap value errors keep clap text); configuration files (portable/home/user/system with yt-dlp-rs names, --config-locations nesting, --ignore-config, shlex port) and optparse-style last-value-wins repeated options; postprocessor progress hooks (--progress-template postprocess/-title) and --console-title escape codes (Unix terminals tested; Windows VT mode and SetConsoleTitleW untested); --encoding for utf-8/ascii/latin-1/cp1252/utf-16/32-le/be codecs and BOM-per-message utf-16/utf-32"
+      "scope": "Multiple URLs, simulate, per-video NDJSON, sequential HTML5 playlist entry downloads with failure continuation, bounded typed output templates with primitive metadata, alternatives/defaults and selected-context padding, literal HTML5 source-ID or bounded resolution-based default/best/worst selection applied independently to each entry, bounded --retries download option with guarded range recovery and independent opt-in --extractor-retries whole-extraction budget with bounded Retry-After delay-seconds/preferred HTTP-date; upstream report_progress lines/minicurses single-line printer and to_screen lines on stdout (stderr under logtostderr) with --newline/--no-progress/--progress/--progress-delta (actual-fixture formatting; no colors/templates); -R/--retries and --fragment-retries default 10 with inf/infinite and parse_retries errors, RetryManager Got error/Giving up messages, --retry-sleep http/fragment parse_sleep_func delays and --skip-unavailable-fragments/--abort-on-unavailable-fragments fragment skipping (native transient classification for whole-file retries); no CLI cancellation/signal handling or general option parity; bounded audio/video selectors, two-stream + pairs and / fallbacks in upstream FormatSorter order; chained typed numeric/text format predicates with unknown inclusion, quoted delimiters and upstream unit conventions before FormatSorter-ordered selection; parenthesized choices/merges, group input filters, best/worst aliases and bare-filter selectors through a bounded expression AST; positive one-based indexed best/worst aliases after native filtered ranking; upstream best/worst complete-stream and incomplete_formats fallback, starred bv*/ba*/b* and extension selectors, _merge duplicate-stream dropping and bestvideo*+bestaudio/best default with a merger (tests/fixtures/selectors/kinds.json from actual build_format_selector); no regexes, arbitrary metadata filters or multiselection; -F eligible format inventories through unselected extraction, combined -j/-s normal selection, pure bounded native table renderer and selector syntax preflight; no upstream table/sorter parity or no-simulate listing downloads; --print video-stage field lists/templates with unsanitized typed rendering, j conversion, filename/urls and title/id/url/filename --get-* aliases under quiet simulation; --print/--print-to-file at video/before_dl/post_process/after_move/after_video stages with filepath/_filename, print_only simulation rule and repr Writing notices; pre_process/after_filter print and ExecPP stages before format selection (tests/fixtures/sites/print-stages) and playlist print stages; -a/--batch-file and --no-batch-file with actual upstream get_urls comment/BOM/universal-newline/strip semantics, stdin and ~/$VAR expansion; no ~user expansion or -q; -w/--force-overwrites/--no-force-overwrites media already-downloaded/delete and info JSON/subtitle overwrite decisions from actual process_info; existing media with postprocessing is an explicit error; no final_ext candidates or --no-post-overwrites; --continue/--no-continue/--part/--no-part HttpFD .part files with plain-Range resume, Unable to resume restart and kept parts (whole-file media only); -J/--dump-single-json per-URL object with playlist _type/playlist_count/requested_entries/entries under quiet simulation (native -j field shape); --no-simulate and upstream simulate/list_only/quiet resolution from actual parse_options; --max-downloads processed-video counting with exit 101; --min/max-filesize parse_bytes limits on whole-file HTTP media Content-Length (no fragment checks); -r/--limit-rate upstream slow_down per media transfer/fragment request; --sleep-interval/--max-sleep-interval/--sleep-subtitles with upstream validation messages and --sleep-requests before every extraction request but the first (native probes excluded); --embed-metadata/--add-metadata final FFmpegMetadataPP stage (common tags, id3v1, stream languages; no chapters or info JSON attachment); --list-thumbnails table, --write-thumbnail/--write-all-thumbnails with upstream flag folding, best-first attempts, 404 skips and overwrite rules, HTML5 poster thumbnails and _sanitize_thumbnails; --write-description (video/playlist, overwrite-aware) and --(no-)write-playlist-metafiles; --match-filters/--break-match-filters with resets via actual-match_str fixture, pre-selection format-field incompleteness and post-selection recheck, Rust regex engine; --date/--datebefore/--dateafter via actual-fixture DateRange/date_from_str (pinned now) with report_conflict warnings, --age-limit, hidden --min-views/--max-views/--match-title/--reject-title/--break-on-reject in _match_entry order with upstream messages; RejectedVideoReached fixed message; -i/--no-abort-on-error/--abort-on-error ignoreerrors folding with queue abort on the first reported error and run_pp-style processor skipping under -i; --exec/--no-exec/--exec-before-download ExecPP stages pre_process/after_filter/video/before_dl/post_process/after_move/after_video with safe d/i/f/q templates, {} quoting and run_pp/pending error handling (POSIX shell only); --mtime/--no-mtime try_utime via actual-fixture timeconvert for media/subtitle/fragment downloads and oldest-input mtime inheritance for every FFmpeg output; --write-link/--write-url-link/--write-webloc-link/--write-desktop-link _write_link_file with actual-fixture iri_to_uri/LINK_TEMPLATES and upstream overwrite quirk; --load-info-json download_with_info_file with sanitize_info(remove_private_keys) reselection, URL-ignored warning and playlist EntryNotInPlaylist URL fallback; __process_playlist progress lines and process_video_result format-count line (no updated playlist info JSON rewrite); _default_format_spec best/bestvideo+bestaudio without a merger with the ffmpeg-not-found warning and unmerged format-file downloads (abort under --abort-on-error); HLS formats labeled mp4 with FixupM3u8/FixupM4a and --fixup/--hls-use-mpegts (content-sniffed demuxers); get_compatible_ext merge containers with --merge-output-format preferences (avi/flv/mkv/mov/mp4/webm/ts muxers); upstream NAME.fID.EXT merge format files with per-format Destination/Total fragments lines, reuse, [Merger] and Deleting original file messages and standalone -k for unprocessed merges; CLI ffmpeg/ffprobe discovery via PATH and directory/file --ffmpeg-location like _determine_executables (no version probe); validate_options parser.error usage/exit 2 layout and messages for represented options (clap value errors keep clap text); configuration files (portable/home/user/system with yt-dlp-rs names, --config-locations nesting, --ignore-config, shlex port) and optparse-style last-value-wins repeated options; postprocessor progress hooks (--progress-template postprocess/-title) and --console-title escape codes (Unix terminals tested; Windows VT mode and SetConsoleTitleW untested); --encoding for utf-8/ascii/latin-1/cp1252/utf-16/32-le/be codecs and BOM-per-message utf-16/utf-32"
     },
     {
       "name": "adobepass",
@@ -424,6 +424,18 @@
         "tests/fixtures/sites/archiveorg/"
       ],
       "scope": "ArchiveOrgIE embed playlist, metadata API item/file fields, known-extension formats, thumbnails, reviews and playlists; no YoutubeWebArchiveIE; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "ard",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ard.py"
+      ],
+      "rust": [
+        "src/extractor/ard.rs",
+        "tests/fixtures/sites/ard/"
+      ],
+      "scope": "ARDBetaMediathekIE (ARDMediathek: page-gateway item JSON with the optional ams-cookie sso token (x-authorization header, userId query, its warnings), contentId as ID with the ardbetamediathek _old_archive_ids or the missing-contentId warning, player_ondemand/player_live widget (AttributeError text without one), blockedByFsk login error, stream media as non-fatal HLS (hls-KIND, live master playlists) and http-KIND formats with main-stream preference, audio language/kind language and language_preference, forcedLabel/resolution/codec, HLS subtitles merged with webvtt/ebutt subtitle sources, truthy jump-mark chapters, fskRating age_limit, meta title/synopsis/timestamp/series/thumbnail/duration/channel and _extract_episode_info season/episode numbers), ARDMediathekCollectionIE (sendung/serie/sammlung widgets/asset or compilations API with season/OV/AD queries, teasers as ARDBetaMediathek/ARDMediathekCollection url results with id/title/duration/timestamp, page size 100 OnDemandPagedList paging (random-access pending pages through the shared extractor/paged.rs), display_id/title/description playlist), ARDAudiothekIE (GraphQL item: audioList formats, channel, description, duration, series, episode number, query-less thumbnail, timestamp, title; KeyError/no-formats paths) and ARDAudiothekPlaylistIE (GraphQL show nodes as ARDAudiothek url results). ARDMediathekBaseIE (used only by SRMediathekIE) is not ported; values of unexpected types are explicit native errors. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "arte",
@@ -532,7 +544,7 @@
         "src/extractor/bitchute.rs",
         "tests/fixtures/sites/bitchute/"
       ],
-      "scope": "BitChuteIE beta API media URL with seed-host checks, video/channel metadata and geo errors; no BitChuteChannelIE; compared with pinned upstream output through the fixture proxy"
+      "scope": "BitChuteIE beta API media URL with seed-host checks, video/channel metadata and geo errors; BitChuteChannelIE channel/playlist pages and extend/ pages as random-access OnDemandPagedList url_transparent entries (a failing page is reported once, unprefixed, and ends the list like upstream); compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "bitmovin",
@@ -809,7 +821,7 @@
         "tests/fixtures/sites/dailymotion/",
         "tests/fixtures/sites/dailymotion-login/"
       ],
-      "scope": "DailymotionIE token, GraphQL media and player metadata, randomized-header HLS with PROGRESSIVE-URI formats, progressive H264 formats, subtitles, thumbnails and metadata, geo/API errors; no playlists; compared with pinned upstream output through the fixture proxy; account tokens through _get_login_info (password grant, 400 error_description) compared with pinned upstream through tests/fixtures/sites/dailymotion-login/"
+      "scope": "DailymotionIE token, GraphQL media and player metadata, randomized-header HLS with PROGRESSIVE-URI formats, progressive H264 formats, subtitles, thumbnails and metadata, geo/API errors, the family filter from the ff cookie or --age-limit, ?playlist= url results for DailymotionPlaylist (_yes_playlist); DailymotionPlaylistIE, DailymotionUserIE and DailymotionSearchIE (DailymotionPlaylistBaseIE) GraphQL collection/channel video pages of 100 and SEARCH_QUERY pages of 20 as OnDemandPagedList url playlists (random-access pending pages through the shared extractor/paged.rs, including upstream lazy page errors: the read entry None and the list ended before the failed page), their API error messages; not ported: DailymotionPlaylistIE jukebox embeds on generic pages; compared with pinned upstream output through the fixture proxy; account tokens through _get_login_info (password grant, 400 error_description) compared with pinned upstream through tests/fixtures/sites/dailymotion-login/"
     },
     {
       "name": "daystar",
@@ -884,6 +896,18 @@
       "scope": "DrTalksIE Next.js video data as a url_transparent BrightcoveNew result overlaid with title, summary and featured image, and the KeyError path, compared with pinned upstream output through the fixture proxy; non-Brightcove links are unsupported"
     },
     {
+      "name": "drtv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/drtv.py"
+      ],
+      "rust": [
+        "src/extractor/drtv.rs",
+        "tests/fixtures/sites/drtv/"
+      ],
+      "scope": "DRTVIE (dr.dk/tv/se and dr.dk|dr-massive.com/drtv/se|episode|program URLs: the anonymous-sso token POST once per run with the Unable to get anonymous token error, the window.__data page item (each cache.page value's item, else its first entry's item) or the backup items API with the data warning, the customId video ID, the bearer-authorized account videos API, each stream with a URL as a non-fatal master-only HLS extraction with access-service format IDs, preferences and subtitle suffixes, API subtitle tracks with SUBTITLE_LANGS names and mimetype2ext extensions or else the manifests' deduplicated subtitles, the Denmark geo error (no bypass) and traverse_obj metadata), DRTVLiveIE (mu-online channel API HLS streaming servers as live master-only formats with the b= query, the Title KeyError) and DRTVSeasonIE/DRTVSeriesIE (dr-massive page API episodes/seasons as raw url results with their fields, the path KeyError and upstream's drtvNone URL for a missing season path). non-string IDs/titles/paths and Python TypeError paths are explicit native errors; a malformed window.__data JSON warns with upstream's JSONDecodeError text. None of the four is marked _WORKING = False upstream. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "dumpert",
       "status": "partial",
       "upstream": [
@@ -894,6 +918,81 @@
         "tests/fixtures/sites/dumpert/"
       ],
       "scope": "DumpertIE mobile_api info JSON, the first item's VIDEO media variants (fatal HLS with version ids or progressive URLs, qualities ranking), stills thumbnails, stats, duration and KeyError/IndexError/StopIteration paths compared with pinned upstream output through the fixture proxy; non-array item/media lists and non-string titles or URIs remain explicit native errors"
+    },
+    {
+      "name": "steam",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/steam.py"
+      ],
+      "rust": [
+        "src/extractor/steam.rs",
+        "tests/fixtures/sites/steam/"
+      ],
+      "scope": "SteamIE age-check cookies, carousel data-props trailers as a lazily extracted playlist (pending entries processed as fetched) (master-only HLS, DASH, duplicate removal, parse_resolution thumbnails), SteamCommunityIE YouTube follows and No video found, and SteamCommunityBroadcastIE live HLS with uploader fields compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "tv2",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tv2.py"
+      ],
+      "rust": [
+        "src/extractor/tv2.rs",
+        "src/extractor/mod.rs",
+        "src/info_order.rs",
+        "tests/fixtures/sites/tv2/"
+      ],
+      "scope": "TV2IE asset metadata, POSTed HLS/DASH playback with 401 geo/login/description errors, _is_valid_url stream checks, master-only HLS, DASH, progressive and skipped ISM streams, DRM and unbound video_url errors, the leftover own url (kept in -J for merged and single selections through info_order OWN_URL), and TV2ArticleIE asset playlists compared with pinned upstream output through the fixture proxy; HDS (f4m) streams follow the shared non-fatal extract_f4m_optional, and KatsomoIE/MTVUutisetArticleIE (broken upstream) are not ported"
+    },
+    {
+      "name": "xvideos",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/xvideos.py"
+      ],
+      "rust": [
+        "src/extractor/xvideos.rs",
+        "src/extractor/mod.rs",
+        "tests/fixtures/sites/xvideos/"
+      ],
+      "scope": "XVideosIE inline errors, title/thumbnail/duration fallbacks, flv_url and low/high formats, the master-only HLS playlist with upstream _check_formats (shared is_valid_url/check_formats helpers), and XVideosQuickiesIE links compared with pinned upstream output through the fixture proxy; only HTTP errors make a checked URL invalid (other request failures stay errors)"
+    },
+    {
+      "name": "imdb",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/imdb.py"
+      ],
+      "rust": [
+        "src/extractor/imdb.rs",
+        "tests/fixtures/sites/imdb/"
+      ],
+      "scope": "ImdbIE Next.js videoPlaybackData or legacy VIDEO_PLAYBACK_DATA encodings (non-fatal HLS with preference and subtitles, qualities-ranked progressive formats), title fallbacks, description/thumbnail/duration, and ImdbListIE video player links with fatal title/description compared with pinned upstream output through the fixture proxy; og:title is preferred over twitter:title regardless of document order"
+    },
+    {
+      "name": "ninegag",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ninegag.py"
+      ],
+      "rust": [
+        "src/extractor/ninegag.rs",
+        "tests/fixtures/sites/ninegag/"
+      ],
+      "scope": "NineGagIE v1/post API with the impersonation warning, the non-animated no-formats error, mp4/webm variants and per-codec URLs as formats, jpg/png/webp thumbnails, creator, counts, age limit, section and tags compared with pinned upstream output through the fixture proxy; non-object posts/images/image maps and non-string titles remain explicit native errors"
+    },
+    {
+      "name": "flickr",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/flickr.py"
+      ],
+      "rust": [
+        "src/extractor/flickr.rs",
+        "tests/fixtures/sites/flickr/"
+      ],
+      "scope": "FlickrIE API key beacon, photos.getInfo (stat failures, non-video photos) and video.getStreamInfo with the secret, qualities-ranked stream formats, owner/uploader URL, counts, tags, duration, timestamp and license names compared with pinned upstream output through the fixture proxy; info fields that are not objects and non-string stream URLs or API messages remain explicit native errors"
     },
     {
       "name": "ebaumsworld",
@@ -1111,6 +1210,18 @@
         "tests/fixtures/sites/goodgame/"
       ],
       "scope": "GoodGameIE stream API, offline error and live master HLS playlist (a live media-only playlist is one format) with traverse_obj channel fields compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "googledrive",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/googledrive.py"
+      ],
+      "rust": [
+        "src/extractor/googledrive.rs",
+        "tests/fixtures/sites/googledrive/"
+      ],
+      "scope": "GoogleDriveIE playback API transcodes, title, duration and thumbnails, the source file with its redirect URL, virus-scan confirmation form POST and error-caption warning, Content-Disposition titles, timed-text subtitle lists and generic-page iframe embeds; GoogleDriveFolderIE API key, batch folder title and paginated listing as de-duplicated file URL entries. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "graspop",
@@ -1387,7 +1498,7 @@
         "src/extractor/kick.rs",
         "tests/fixtures/sites/kick/"
       ],
-      "scope": "Reworked kick.py (fe84bef3969de96ceb39ca988425fdd3895bbfb1, release 2026.10.21): KickIE (v2 channel API, plain HLS IDs), KickVODIE (web.kick.com playback POST, channel video list metadata, smuggled availability, subscription check), KickClipIE (v2 clip API with 404 messages, HLS or direct sources), KickVideosIE (url_transparent VOD entries, date/views sort) and KickClipsIE (cursor-paginated clip entries, sort/range); compared with upstream output through the fixture proxy. Impersonated with the impersonate feature, else upstream's warning"
+      "scope": "Reworked kick.py (fe84bef3969de96ceb39ca988425fdd3895bbfb1, release 2026.10.21): KickIE (v2 channel API, plain HLS IDs), KickVODIE (web.kick.com playback POST, channel video list metadata, smuggled availability, subscription check), KickClipIE (v2 clip API with 404 messages, HLS or direct sources), KickVideosIE (url_transparent VOD entries, date/views sort) and KickClipsIE (cursor-paginated clip entries, sort/range), both lazy generator playlists (list request and cursor pages fetched while processing, as far as --playlist-items needs; playlist_count unknown until exhausted); compared with upstream output through the fixture proxy. Impersonated with the impersonate feature, else upstream's warning"
     },
     {
       "name": "kicker",
@@ -1457,9 +1568,10 @@
       ],
       "rust": [
         "src/extractor/lbry.rs",
-        "tests/fixtures/sites/lbry/"
+        "tests/fixtures/sites/lbry/",
+        "tests/fixtures/sites/lbry-pagefail/"
       ],
-      "scope": "LBRYIE resolve/get API proxy, original files, streaming-redirect HLS formats, livestreams, claim metadata and API errors; no channels or playlists; compared with pinned upstream output through the fixture proxy"
+      "scope": "LBRYIE resolve/get API proxy, original files, streaming-redirect HLS formats, livestreams, claim metadata and API errors; LBRYChannelIE/LBRYPlaylistIE resolve or claim_search metadata, query filters and claim_search pages as random-access OnDemandPagedList url entries (a failing page is reported once, unprefixed, and ends the list like upstream); compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "linkedin",
@@ -1654,7 +1766,7 @@
         "tests/fixtures/sites/niconico/",
         "tests/fixtures/sites/niconico-login/"
       ],
-      "scope": "NiconicoIE watch API with its errors, domand access-rights HLS formats, thumbnails and metadata; NiconicoBaseIE login (session cookies, mail_tel/password form, notice errors, MFA one-time password with formError/error-code messages, unexpected-login error) with a user_session cookie switching to the v3 API; no comment subtitles, playlists, series, search, live or user pages; compared with pinned upstream output through the fixture proxy"
+      "scope": "NiconicoIE watch API with its errors, domand access-rights HLS formats, thumbnails and metadata; NiconicoBaseIE login (session cookies, mail_tel/password form, notice errors, MFA one-time password with formError/error-code messages, unexpected-login error) with a user_session cookie switching to the v3 API; NiconicoPlaylistBaseIE mylists, series and history/likes (NiconicoHistoryIE cookies only, its 401 login-required error) as random-access OnDemandPagedList pages (src/extractor/paged.rs), NiconicoUserIE's totalCount generator, NicovideoSearchBaseIE page generators for nicosearch/nicosearchdate prefixes (SearchInfoExtractor counts; the date search's last-page check and interval bisection from the local date), search and tag URLs (non-ASCII input text is matched percent-encoded); no comment subtitles, live or channel pages; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "nobelprize",
@@ -1690,7 +1802,7 @@
         "src/extractor/odnoklassniki.rs",
         "tests/fixtures/sites/odnoklassniki/"
       ],
-      "scope": "OdnoklassnikiIE player options, flashvars or POSTed metadata, progressive/HLS/DASH/RTMP formats, subtitles, errors and url/url_transparent results; no embedded DASH manifests; compared with pinned upstream output through the fixture proxy"
+      "scope": "OdnoklassnikiIE player options, flashvars or POSTed metadata, progressive/HLS/DASH/RTMP formats, subtitles, errors and url/url_transparent results, the smuggled referrer as Referer and the boosty direct-link retry; no embedded DASH manifests; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "onefootball",
@@ -1752,7 +1864,7 @@
         "tools/generate_peertube_instances.py",
         "tests/fixtures/sites/peertube/"
       ],
-      "scope": "PeerTubeIE _VALID_URL with the generated _INSTANCES_RE host list and peertube:HOST:ID URLs, the videos API JSON (live-style non-fatal HLS master formats, files and streaming-playlist files with parse_resolution/filesize/fps or 0p audio-only), long-description and captions endpoints, metadata, is_live and --video-password headers; PeerTubePlaylistIE accounts, video channels and video playlists as paged url playlists (pages fetched eagerly). Not ported: _EMBED_REGEX/og:platform detection on generic pages. Compared with pinned upstream output through the fixture proxy"
+      "scope": "PeerTubeIE _VALID_URL with the generated _INSTANCES_RE host list and peertube:HOST:ID URLs, the videos API JSON (live-style non-fatal HLS master formats, files and streaming-playlist files with parse_resolution/filesize/fps or 0p audio-only), long-description and captions endpoints, metadata, is_live and --video-password headers; PeerTubePlaylistIE accounts, video channels and video playlists as paged url playlists (OnDemandPagedList pages fetched lazily: only the pages of the requested entries, in request order, every page once a selection reads past the end). Not ported: _EMBED_REGEX/og:platform detection on generic pages. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "peertv",
@@ -1824,7 +1936,7 @@
         "src/extractor/podbayfm.rs",
         "tests/fixtures/sites/podbayfm/"
       ],
-      "scope": "PodbayFMIE __NEXT_DATA__ episode as an untyped MP3 result (clean_html description, JWT image thumbnail, timestamp, duration), next.js/KeyError/no-formats errors and generic title, and PodbayFMChannelIE paged podcast API playlists with timestamp-based episode webpage_url compared with pinned upstream output through the fixture proxy; episodes without a string id remain explicit native errors"
+      "scope": "PodbayFMIE __NEXT_DATA__ episode as an untyped MP3 result (clean_html description, JWT image thumbnail, timestamp, duration), next.js/KeyError/no-formats errors and generic title, and PodbayFMChannelIE random-access OnDemandPagedList podcast API playlists (pending resolved entries) with timestamp-based episode webpage_url compared with pinned upstream output through the fixture proxy; episodes without a string id remain explicit native errors"
     },
     {
       "name": "popcorntv",
@@ -2136,7 +2248,7 @@
         "src/devalue.rs",
         "src/extractor/nuxt.rs"
       ],
-      "scope": "InfoExtractor._search_nuxt_data (window.__NUXT__ pure-function payloads through js_to_json with vars), _resolve_nuxt_array and _search_nuxt_json (devalue.parse_iter with the Nuxt revivers), unit-tested against upstream's test_search_nuxt_json, test_js_to_json_vars_strings and test_devalue cases; cycles resolve to null, NaN/Infinity to null, Date/RegExp to their strings and bytes to byte arrays; payloads that fail to parse as JSON are explicit native errors"
+      "scope": "InfoExtractor._search_nuxt_data (window.__NUXT__ pure-function payloads through js_to_json with vars), _resolve_nuxt_array and _search_nuxt_json (devalue.parse_iter with the Nuxt revivers), unit-tested against upstream's test_search_nuxt_json, test_js_to_json_vars_strings and test_devalue cases; cycles resolve to null, NaN/Infinity to null, Date (validated like CPython's C datetime.fromisoformat, dates::is_py_isoformat_datetime)/RegExp to their strings and bytes to byte arrays; payloads that fail to parse as JSON are explicit native errors"
     },
     {
       "name": "streetvoice",
@@ -2330,6 +2442,18 @@
         "tests/fixtures/sites/formula1/"
       ],
       "scope": "Formula1IE URL Brightcove ID as a url result of the BrightcoveNew player template, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "francetv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/francetv.py"
+      ],
+      "rust": [
+        "src/extractor/francetv.rs",
+        "tests/fixtures/sites/francetv/"
+      ],
+      "scope": "FranceTVIE (francetv:ID pseudo-URLs with the smuggled hostname: desktop/mobile k7 video JSON with 422 bodies, the 2009 geo error, 2015/2017/2019 DRM report and other codes' warnings, metadata from the first responses with upstream's per-response season/episode reset, signed token URLs, non-fatal DASH and master-only HLS with the audio bitrate fixup, RTMP, checked plain URLs, the qtz/qad audio description preference, the spritesheet storyboard and the HEAD x-errortype geo check), FranceTVSiteIE (france.tv pages' Next.js v13 flight data options.id as a smuggled francetv: url result) and FranceTVInfoIE (player wrapper ids and the older regex patterns as francetv: url results; Dailymotion embeds through DailymotionIE's embed patterns as a playlist of url results), compared with pinned upstream output through the fixture proxy; f4m (HDS) video URLs use the shared non-fatal extract_f4m_optional"
     },
     {
       "name": "thisamericanlife",
@@ -2585,9 +2709,10 @@
       "rust": [
         "src/extractor/vimeo.rs",
         "tests/fixtures/sites/vimeo/",
+        "tests/fixtures/sites/vimeo-login/",
         "tests/login.rs"
       ],
-      "scope": "VimeoIE without login (--username/--netrc credentials are an unsupported native error unless a vimeo cookie is present): player page playerConfig and clip page config through _parse_config (progressive, per-CDN HLS/DASH incl. sep variants, text tracks, thumbnails, chapters, live status) merged with page metadata; API-only URLs are the login-required error; no passwords, albums, on-demand, events or original formats; compared with pinned upstream output through the fixture proxy"
+      "scope": "VimeoIE: player page playerConfig and clip page config through _parse_config (progressive, per-CDN HLS/DASH incl. sep variants, text tracks, thumbnails, chapters, live status) merged with page metadata; VimeoBaseInfoExtractor login (_fetch_viewer_info with _jwt_is_expired, the xsrft token posted to /log_in, 404/405/418 bad-credential and generic Unable to log in errors, skipped with a vimeo cookie), _real_initialize, _get_requested_client (vimeo:client, Unsupported API client error), _call_videos_api for the web client (REQUIRES_AUTH login-required error, jwt viewer authorization, client headers and fields), _extract_from_api (config_url through _parse_config else _parse_api_response with API text tracks, video password 400 retry through _verify_video_password, 5460 location error, API metadata), _extract_original_format (download config source_file, privacy/download API fields, vimeo:original_format_policy) and album/showcase video password checks (_get_album_data_and_hashed_pass with the viewer JWT); the android client is only upstream's no-cached-token error (a cached token is an unsupported native error); player check-password, VimeoAlbumIE/ChannelIE/UserIE/WatchLaterIE/LikesIE/GroupsIE/ReviewIE/ProIE/OndemandIE/EventIE, rented trailers and JSON-LD merging are not ported; compared with pinned upstream output through the fixture proxy (tests/fixtures/sites/vimeo/ and vimeo-login/)"
     },
     {
       "name": "jsinterp",
@@ -2616,7 +2741,7 @@
         "tests/fixtures/sites/vk/",
         "tests/fixtures/sites/vk-login/"
       ],
-      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; VKWallPostIE wkview payload as a playlist of data-audio tracks and linked videos; VKUserVideosIE sections and playlists through load_videos_silent pages (fetched eagerly); VKPlayIE records and VKPlayLiveIE streams from the API or the initial-state script; the JS challenge (challenge.html salt function run by the native JSInterpreter, md5 key submission and the request repeated with its cookie; missing hash/salt and interpreter errors); no other embeds; compared with pinned upstream output through the fixture proxy; VKBaseIE login (home page hidden inputs, cp1251 email/pass, first remixlhk Set-Cookie, onLoginFailed error) for VKIE, VKWallPostIE and VKUserVideosIE, compared with pinned upstream through tests/fixtures/sites/vk-login/"
+      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; VKWallPostIE wkview payload as a playlist of data-audio tracks and linked videos; VKUserVideosIE sections and playlists through load_videos_silent pages (fetched lazily like the upstream generator; playlist_count unknown unless exhausted); VKPlayIE records and VKPlayLiveIE streams from the API or the initial-state script; the JS challenge (challenge.html salt function run by the native JSInterpreter, md5 key submission and the request repeated with its cookie; missing hash/salt and interpreter errors); no other embeds; compared with pinned upstream output through the fixture proxy; VKBaseIE login (home page hidden inputs, cp1251 email/pass, first remixlhk Set-Cookie, onLoginFailed error) for VKIE, VKWallPostIE and VKUserVideosIE, compared with pinned upstream through tests/fixtures/sites/vk-login/"
     },
     {
       "name": "vocaroo",
@@ -2739,6 +2864,18 @@
       "scope": "YfanefaIE player options (signed URL as HLS or mp4 formats), title fallback, preview/duration and KeyError/player errors compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "yle_areena",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/yle_areena.py"
+      ],
+      "rust": [
+        "src/extractor/yle_areena.rs",
+        "tests/fixtures/sites/yle_areena/"
+      ],
+      "scope": "YleAreenaIE (_GEO_COUNTRIES FI): page JSON-LD title/thumbnails and upstream's K/J title regex, the player preview API JSON (origin/referer headers, KeyError('data')), podcast media_url results, ongoing_event live HLS (duration dropped), on-demand master-only HLS formats with merged manifest subtitles, the url_transparent kaltura:1955031 delegation with smuggled source_url, the gone notice (raise_no_formats) and 'Unable to extract content'; SRT subtitles and metadata fields in upstream key order. Non-string subtitle languages/kinds, non-string manifest URLs and relative media URLs are explicit native errors. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "zhihu",
       "status": "partial",
       "upstream": [
@@ -2749,6 +2886,18 @@
         "tests/fixtures/sites/zhihu/"
       ],
       "scope": "ZhihuIE zvideos API playlist formats, author/count metadata, format_field uploader URL and KeyError/no-formats errors compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "zdf",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/zdf.py"
+      ],
+      "rust": [
+        "src/extractor/zdf.rs",
+        "tests/fixtures/sites/zdf/"
+      ],
+      "scope": "ZDFBaseIE API token (mediathekV2/token, in-run and cache storage until expiry), PTMD extraction (HLS masters as non-fatal hls formats with upstream's ignored-subtitles warning, mp4/webm http-TYPE formats with parse_codecs, aspect-ratio width, filesize and _NNNk_ tbr, unsupported-extension warnings, DGS variants, class/language notes and language preferences, deduplicated captions), GraphQL thumbnails and chapters; ZDFIE (zdf.de video/play, legacy .html, zdfheute.de/logo.de URLs) via the VideoByCanonical GraphQL query with title/description/timestamp/series/season/episode/is_live/_old_archive_ids and the mediathekV2/document fallback (PTMD URL required); ZDFChannelIE smart collections (redirected ID, featured video url result with _yes_playlist, staffel season selection and its not-found error, lazily paged seasonByCanonical episodes as url results). Synthetic API fixtures compared with pinned upstream output through the fixture proxy; unexpected value types (PTMD templates, track classes/languages, stream types, non-object GraphQL data) are explicit native errors. DreiSatIE/PhoenixIE (other ZDFBaseIE users) are not ported"
     },
     {
       "name": "youtube",
@@ -2844,7 +2993,9 @@
         "src/mhtml.rs",
         "tests/youtube_live.rs",
         "src/data/iso3166.txt",
-        "tests/fixtures/sites/youtube-login/"
+        "tests/fixtures/sites/youtube-login/",
+        "tests/fixtures/sites/youtube-watch-404/",
+        "src/json.rs"
       ],
       "scope": "Upstream YoutubeIE._real_extract over the InnerTube client flow (watch page, ytcfg, per-client player API requests, default tv_samsung/visionos/web clients with a JS runtime, visionos only without, age-gate and authenticated cookie clients), _extract_formats_and_subtitles (https, HLS/DASH manifests, dashy, multi-audio/DRC, storyboards with MhtmlFD), JS challenge solving through the vendored EJS solver under Deno/Node, captions/automatic captions, live chat (YoutubeLiveChatFD), live, upcoming, post-live and --live-from-start (DashSegmentsFD generator) streams, multifeed, --mark-watched, the documented youtube/youtubetab extractor arguments including configured PO tokens (no PO token provider plugins), title/duration/geo/trailer fallbacks and the full info dict in upstream key order; YoutubeTabIE playlists, mixes, channel tabs (nested multi-tab channels), feeds, hashtags, posts and shelves with browse API continuations; the redirect, feed-keyword, truncated, consent, playlist, YtBe, user, notification and music search extractors and the full YoutubeIE._VALID_URL; YoutubeSearchIE and YoutubeSearchURLIE; YoutubeIE._EMBED_REGEX embeds on generic pages; saved site fixtures tests/fixtures/sites/youtube*/ compared against pinned upstream output. SABR streaming is not supported; YoutubeBaseInfoExtractor._perform_login once per extractor (password logins warn, oauth usernames are the no-longer-supported error), compared with pinned upstream through tests/fixtures/sites/youtube-login/"
     },
@@ -3064,11 +3215,12 @@
         "src/error.rs",
         "tests/subtitles.rs",
         "tests/fixtures/subtitles/",
+        "tests/fixtures/sites/html5-sub-langs/",
         "tools/compare_subtitles.py",
         "tools/test_compare_subtitles.py",
         "upstream/notes/html5-subtitles.md"
       ],
-      "scope": "Direct-child HTML5 subtitle/caption track metadata with ordered optional-language groups, pinned URL sanitation/extension completion; native listing, literal/all/exclusion language selection and ordered format preferences; sidecar-only skip-download and native HTTP identity-byte sidecars with referrers/retries/cancellation/no-clobber publication before media; sanitized collision-safe paths and explicit unknown-language errors; normal/automatic source selection with manual precedence and independent automatic write flags; no general regex, other-site/manifest subtitles, conversion/embedding, decompression or full filename/timing parity"
+      "scope": "Direct-child HTML5 subtitle/caption track metadata with ordered optional-language groups, pinned URL sanitation/extension completion; native listing, regex/all/exclusion language selection (upstream orderedSet_from_options with case-insensitive fullmatch, Rust regex syntax) and ordered format preferences; sidecar-only skip-download and native HTTP identity-byte sidecars with referrers/retries/cancellation/no-clobber publication before media; sanitized collision-safe paths and explicit unknown-language errors; normal/automatic source selection with manual precedence and independent automatic write flags; no other-site/manifest subtitles, conversion/embedding, decompression or full filename/timing parity; tests/fixtures/sites/html5-sub-langs compares --sub-langs regexes with pinned upstream"
     },
     {
       "name": "youtube-captions",

@@ -1,0 +1,216 @@
+{
+ "routes": [
+  {
+   "url": "https://isl.dr-massive.com/api/authorization/anonymous-sso?device=phone_android&lang=da&supportFallbackToken=true",
+   "request_headers": {
+    "Content-Type": "application/json"
+   },
+   "request_body": [
+    "\"scopes\": [\"Catalog\"]",
+    "\"optout\": true",
+    "\"deviceId\": \""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "token.json"
+  },
+  {
+   "url": "https://www.dr.dk/drtv/episode/klassen-darlig-taber-10",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>window.__data = {\"cache\": {\"page\": [}, \"x\": 1};</script></html>"
+  },
+  {
+   "url": "https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "price.html"
+  },
+  {
+   "url": "https://www.dr.dk/drtv/episode/bonderoeven_71769",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "bonderoeven.html"
+  },
+  {
+   "url": "https://www.dr.dk/tv/se/boern/ultra/klassen-ultra/klassen-darlig-taber-10",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "klassen.html"
+  },
+  {
+   "url": "https://www.dr.dk/drtv/se/geo_111",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "geo.html"
+  },
+  {
+   "url": "https://www.dr.dk/drtv/se/none_222",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "none.html"
+  },
+  {
+   "url": "https://production-cdn.dr-massive.com/api/items/klassen-darlig-taber-10?device=web_browser&expand=all&ff=idp%2Cldp%2Crpt&geoLocation=dk&isDeviceAbroad=false&lang=da&segments=drtv%2Coptedout&sub=Anonymous",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "klassen_item.json"
+  },
+  {
+   "url": "https://production.dr-massive.com/api/account/items/397445/videos?delivery=stream&device=web_browser&ff=idp%2Cldp%2Crpt&lang=da&resolution=HD-1080&sub=Anonymous",
+   "request_headers": {
+    "authorization": "Bearer fixture-token"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "price_videos.json"
+  },
+  {
+   "url": "https://production.dr-massive.com/api/account/items/71769/videos?delivery=stream&device=web_browser&ff=idp%2Cldp%2Crpt&lang=da&resolution=HD-1080&sub=Anonymous",
+   "request_headers": {
+    "authorization": "Bearer fixture-token"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "bonde_videos.json"
+  },
+  {
+   "url": "https://production.dr-massive.com/api/account/items/klassen-darlig-taber-10/videos?delivery=stream&device=web_browser&ff=idp%2Cldp%2Crpt&lang=da&resolution=HD-1080&sub=Anonymous",
+   "request_headers": {
+    "authorization": "Bearer fixture-token"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "klassen_videos.json"
+  },
+  {
+   "url": "https://production.dr-massive.com/api/account/items/111/videos?delivery=stream&device=web_browser&ff=idp%2Cldp%2Crpt&lang=da&resolution=HD-1080&sub=Anonymous",
+   "request_headers": {
+    "authorization": "Bearer fixture-token"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[]"
+  },
+  {
+   "url": "https://production.dr-massive.com/api/account/items/222/videos?delivery=stream&device=web_browser&ff=idp%2Cldp%2Crpt&lang=da&resolution=HD-1080&sub=Anonymous",
+   "request_headers": {
+    "authorization": "Bearer fixture-token"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "none_videos.json"
+  },
+  {
+   "url": "https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/sign/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://drod01-vh.akamaihd.net/i/all/clear/streaming/bonde/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "subs_master.m3u8"
+  },
+  {
+   "url": "https://drod01-vh.akamaihd.net/i/all/clear/streaming/klassen/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/subs/da.vtt",
+   "headers": {
+    "Content-Type": "text/vtt"
+   },
+   "body_file": "da.vtt"
+  },
+  {
+   "url": "https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/subs/foreign.vtt",
+   "headers": {
+    "Content-Type": "text/vtt"
+   },
+   "body_file": "foreign.vtt"
+  },
+  {
+   "url": "https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/subs/sign.srt",
+   "headers": {
+    "Content-Type": "application/x-subrip"
+   },
+   "body_file": "sign.srt"
+  },
+  {
+   "url": "https://www.dr.dk/mu-online/api/1.0/channel/dr1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "dr1.json"
+  },
+  {
+   "url": "https://www.dr.dk/mu-online/api/1.0/channel/notitle",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"StreamingServers\": []}"
+  },
+  {
+   "url": "https://drlive01hls.akamaized.net/hls/live/572636/drlive01/master.m3u8?b=",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "live.m3u8"
+  },
+  {
+   "url": "https://production-cdn.dr-massive.com/api/page?device=web_browser&item_detail_expand=all&lang=da&max_list_prefetch=3&path=/saeson/frank-and-kastaniegaarden_9008",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "season.json"
+  },
+  {
+   "url": "https://production-cdn.dr-massive.com/api/page?device=web_browser&item_detail_expand=all&lang=da&max_list_prefetch=3&path=/saeson/brudt_1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "season_broken.json"
+  },
+  {
+   "url": "https://production-cdn.dr-massive.com/api/page?device=web_browser&item_detail_expand=all&lang=da&max_list_prefetch=3&path=/serie/frank-and-kastaniegaarden_6954",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "series.json"
+  },
+  {
+   "url": "https://drlive01hds.akamaihd.test/z/drlive_01@460595/manifest.f4m?hdcore=3.7.0",
+   "headers": {
+    "Content-Type": "application/f4m+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns=\"http://ns.adobe.com/f4m/1.0\">\n <id>drlive01</id>\n <streamType>live</streamType>\n <bootstrapInfo profile=\"named\" id=\"bootstrap0\">AAAA</bootstrapInfo>\n <media streamId=\"hi\" url=\"drlive01_hi\" bitrate=\"2500\" width=\"1280\" height=\"720\" bootstrapInfoId=\"bootstrap0\"/>\n</manifest>\n"
+  }
+ ]
+}

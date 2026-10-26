@@ -1,0 +1,110 @@
+{
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
+ "cases": [
+  {
+   "url": "https://www.xvideos.com/video4588838/biker_takes_his_girl",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4588838\", \"formats\": [{\"url\": \"https://video-hw.xvideos-cdn.test/low.mp4?e=1\", \"format_id\": \"mp4-low\", \"quality\": -2, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-low - unknown\"}, {\"url\": \"https://video-hw.xvideos-cdn.test/video.flv\", \"format_id\": \"flv\", \"protocol\": \"https\", \"ext\": \"flv\", \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flv - unknown\"}, {\"url\": \"https://video-hw.xvideos-cdn.test/high.mp4?e=1\", \"format_id\": \"mp4-high\", \"quality\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-high - unknown\"}, {\"format_id\": \"hls-500\", \"format_index\": null, \"url\": \"https://hls-hw.xvideos-cdn.test/hls-360p.m3u8\", \"manifest_url\": \"https://hls-hw.xvideos-cdn.test/hls.m3u8\", \"tbr\": 500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-500 - 640x360\"}], \"title\": \"Fixture & Video\", \"duration\": 1238, \"thumbnails\": [{\"url\": \"https://img-hw.xvideos-cdn.test/thumbs/1.jpg\", \"preference\": 0, \"id\": \"0\"}, {\"url\": \"https://img-hw.xvideos-cdn.test/thumbs169/1.jpg\", \"preference\": 1, \"id\": \"1\"}], \"age_limit\": 18, \"webpage_url\": \"https://www.xvideos.com/video4588838/biker_takes_his_girl\", \"original_url\": \"https://www.xvideos.com/video4588838/biker_takes_his_girl\", \"webpage_url_basename\": \"biker_takes_his_girl\", \"webpage_url_domain\": \"xvideos.com\", \"extractor\": \"XVideos\", \"extractor_key\": \"XVideos\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://img-hw.xvideos-cdn.test/thumbs169/1.jpg\", \"display_id\": \"4588838\", \"fulltitle\": \"Fixture & Video\", \"duration_string\": \"20:38\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-500\", \"url\": \"https://hls-hw.xvideos-cdn.test/hls-360p.m3u8\", \"manifest_url\": \"https://hls-hw.xvideos-cdn.test/hls.m3u8\", \"tbr\": 500.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-500 - 640x360\", \"_filename\": \"Fixture & Video [4588838].mp4\", \"filename\": \"Fixture & Video [4588838].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-500\", \"format_index\": null, \"url\": \"https://hls-hw.xvideos-cdn.test/hls-360p.m3u8\", \"manifest_url\": \"https://hls-hw.xvideos-cdn.test/hls.m3u8\", \"tbr\": 500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-500 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.xvideos.com/video4588838/biker_takes_his_girl",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[XVideos] Extracting URL: https://www.xvideos.com/video4588838/biker_takes_his_girl",
+    "[XVideos] 4588838: Downloading webpage",
+    "[XVideos] 4588838: Downloading m3u8 information",
+    "[XVideos] 4588838: Checking hls-500 video format URL",
+    "[XVideos] 4588838: Checking hls-1500 video format URL",
+    "[XVideos] 4588838: hls-1500 video format URL is invalid, skipping: HTTP Error 404: Not Found",
+    "[info] Available formats for 4588838:",
+    "ID       EXT RESOLUTION |  FILESIZE  TBR PROTO | VCODEC  ACODEC",
+    "----------------------------------------------------------------",
+    "mp4-low  mp4 unknown    |                https | unknown unknown",
+    "flv      flv unknown    |                https | unknown unknown",
+    "mp4-high mp4 unknown    |                https | unknown unknown",
+    "hls-500  mp4 640x360    | ~73.79MiB 500k m3u8  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.xvideos.com/video4588838/biker_takes_his_girl",
+   "args": [
+    "--no-progress",
+    "-f",
+    "mp4-high",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[XVideos] Extracting URL: https://www.xvideos.com/video4588838/biker_takes_his_girl",
+    "[XVideos] 4588838: Downloading webpage",
+    "[XVideos] 4588838: Downloading m3u8 information",
+    "[XVideos] 4588838: Checking hls-500 video format URL",
+    "[XVideos] 4588838: Checking hls-1500 video format URL",
+    "[XVideos] 4588838: hls-1500 video format URL is invalid, skipping: HTTP Error 404: Not Found",
+    "[info] 4588838: Downloading 1 format(s): mp4-high",
+    "[download] Destination: 4588838.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "4588838.mp4": 18
+   }
+  },
+  {
+   "url": "https://www.xvideos.com/profiles/someone#quickies/a/ufkkd1d1",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ufkkd1d1\", \"formats\": [{\"url\": \"https://video-hw.xvideos-cdn.test/m.webm\", \"format_id\": \"webm-high\", \"quality\": null, \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"webm-high - unknown\"}], \"title\": \"Double \\\"quoted\\\"\", \"thumbnails\": [], \"age_limit\": 18, \"original_url\": \"https://www.xvideos.com/profiles/someone#quickies/a/ufkkd1d1\", \"webpage_url\": \"https://www.xvideos.com/video.ufkkd1d1/_\", \"webpage_url_basename\": \"_\", \"webpage_url_domain\": \"xvideos.com\", \"extractor\": \"XVideos\", \"extractor_key\": \"XVideos\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"ufkkd1d1\", \"fulltitle\": \"Double \\\"quoted\\\"\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://video-hw.xvideos-cdn.test/m.webm\", \"format_id\": \"webm-high\", \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"webm-high - unknown\", \"_filename\": \"Double \\uff02quoted\\uff02 [ufkkd1d1].webm\", \"filename\": \"Double \\uff02quoted\\uff02 [ufkkd1d1].webm\", \"__write_download_archive\": false}], \"url\": \"https://video-hw.xvideos-cdn.test/m.webm\", \"format_id\": \"webm-high\", \"quality\": null, \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"webm-high - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [XVideos] unable to extract duration; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.xvideos.com/video42/x",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [XVideos] 42: XVideos said: Sorry, this video has been deleted"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.xvideos.com/video43/x",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [XVideos] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [XVideos] unable to extract duration; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [XVideos] 43: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

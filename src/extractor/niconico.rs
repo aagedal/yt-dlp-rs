@@ -4,6 +4,10 @@
 //! its HLS audio/video formats (audio fields from the API, video IDs from
 //! the URLs and rates net of the lowest audio bitrate), thumbnails and
 //! metadata. The comment "subtitles" (inline JSON data) are unsupported.
+//!
+//! Also the playlist-type extractors: `NiconicoPlaylistIE`,
+//! `NiconicoSeriesIE`, `NiconicoHistoryIE` (`OnDemandPagedList` pages),
+//! `NiconicoUserIE` and the `NicovideoSearchBaseIE` searches (generators).
 use super::Extractor;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
@@ -772,9 +776,1109 @@ impl Extractor for Niconico {
     }
 }
 
+// Upstream's playlist-type extractors: `NiconicoPlaylistBaseIE` (mylists,
+// series, the logged-in user's history and likes) as `OnDemandPagedList`s,
+// `NiconicoUserIE`'s generator, and the `NicovideoSearchBaseIE` page
+// generators (searches, search and tag URLs, the date-bisecting search).
+
+const PLAYLIST_NAME: &str = "niconico:playlist";
+const SERIES_NAME: &str = "niconico:series";
+const HISTORY_NAME: &str = "niconico:history";
+const USER_NAME: &str = "NiconicoUser";
+const SEARCH_NAME: &str = "nicovideo:search";
+const SEARCH_URL_NAME: &str = "nicovideo:search_url";
+const SEARCH_DATE_NAME: &str = "nicovideo:search:date";
+const TAG_NAME: &str = "niconico:tag";
+/// `NiconicoPlaylistBaseIE._PAGE_SIZE` (and `NiconicoUserIE._PAGE_SIZE`).
+const PAGE_SIZE: usize = 100;
+/// `NiconicoPlaylistBaseIE._API_HEADERS`.
+const PLAYLIST_API_HEADERS: [(&str, &str); 3] = [
+    ("X-Frontend-ID", "6"),
+    ("X-Frontend-Version", "0"),
+    ("X-Niconico-Language", "en-us"),
+];
+/// `NicovideoSearchDateIE`: `_START_DATE`, `_RESULTS_PER_PAGE`, `_MAX_PAGES`.
+const SEARCH_START_DATE: (i64, i64, i64) = (2007, 1, 1);
+const RESULTS_PER_PAGE: usize = 32;
+const MAX_PAGES: u64 = 50;
+
+static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:(?:www\.|sp\.)?nicovideo\.jp|nico\.ms)/(?:user/\d+/)?(?:my/)?mylist/(?:#/)?(?P<id>\d+)").unwrap()
+});
+static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        r"^https?://(?:(?:www\.|sp\.)?nicovideo\.jp(?:/user/\d+)?|nico\.ms)/series/(?P<id>\d+)",
+    )
+    .unwrap()
+});
+static HISTORY_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:www\.|sp\.)?nicovideo\.jp/my/(?P<id>history(?:/like)?)").unwrap()
+});
+static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:www\.)?nicovideo\.jp/user/(?P<id>\d+)(?:/video)?/?(?:$|[#?])")
+        .unwrap()
+});
+static SEARCH_RE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^nicosearch(?P<prefix>|[1-9][0-9]*|all):(?P<query>[\s\S]+)").unwrap()
+});
+static SEARCH_DATE_RE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^nicosearchdate(?P<prefix>|[1-9][0-9]*|all):(?P<query>[\s\S]+)").unwrap()
+});
+static SEARCH_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:www\.)?nicovideo\.jp/search/(?P<id>[^?#&]+)?").unwrap()
+});
+static TAG_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:www\.)?nicovideo\.jp/tag/(?P<id>[^?#&]+)?").unwrap()
+});
+
+/// `NiconicoPlaylistIE.suitable`.
+pub fn playlist_suitable(url: &str) -> bool {
+    PLAYLIST_URL.is_match(url)
+}
+
+/// `NiconicoSeriesIE.suitable`.
+pub fn series_suitable(url: &str) -> bool {
+    SERIES_URL.is_match(url)
+}
+
+/// `NiconicoHistoryIE.suitable`.
+pub fn history_suitable(url: &str) -> bool {
+    HISTORY_URL.is_match(url)
+}
+
+/// `NiconicoUserIE.suitable`.
+pub fn user_suitable(url: &str) -> bool {
+    USER_URL.is_match(url)
+}
+
+/// `NicovideoSearchIE.suitable` (`nicosearch[N|all]:QUERY`).
+pub fn search_suitable(url: &str) -> bool {
+    SEARCH_RE.is_match(url)
+}
+
+/// `NicovideoSearchDateIE.suitable` (`nicosearchdate[N|all]:QUERY`).
+pub fn search_date_suitable(url: &str) -> bool {
+    SEARCH_DATE_RE.is_match(url)
+}
+
+/// `NicovideoSearchURLIE.suitable`.
+pub fn search_url_suitable(url: &str) -> bool {
+    SEARCH_URL.is_match(url)
+}
+
+/// `NicovideoTagURLIE.suitable`.
+pub fn tag_suitable(url: &str) -> bool {
+    TAG_URL.is_match(url)
+}
+
+fn announce(name: &'static str, text: &str) {
+    crate::screen::set_extractor(name);
+    crate::screen::screen(&format!(
+        "[{name}] Extracting URL: {}",
+        crate::screen::extracting_url(text)
+    ));
+}
+
+/// An `[EXTRACTOR] ID: An extractor error has occurred.` error.
+fn bug_as(name: &str, id: &str, cause: &str) -> Error {
+    Error::Reported(format!(
+        "[{name}] {id}: An extractor error has occurred. (caused by {cause}); {}",
+        crate::BUG_REPORTS_MESSAGE
+    ))
+}
+
+/// A playlist entry: an entry dict (`_type: url`) for `NiconicoIE`, its ID
+/// from the dict or else `NiconicoIE`'s `_VALID_URL` (`get_temp_id`).
+fn url_entry(target: &str, entry: Map<String, Value>) -> Result<VideoInfo> {
+    let url = super::target_url(target)?;
+    let mut info = super::direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    info.id = match entry.get("id") {
+        Some(id) => str_or_none(Some(id)).unwrap_or_default(),
+        None => VALID_URL
+            .captures(target)
+            .map(|found| found["id"].to_owned())
+            .unwrap_or_default(),
+    };
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": {},
+            "ie_key": KEY,
+            "extractor": NAME,
+            "entry": Value::Object(entry),
+        }),
+    );
+    Ok(info)
+}
+
+/// `url_result(url, 'Niconico', video_id)` (`video_id=None`: no `id` key).
+fn watch_result(video_id: Option<&str>, target: &str) -> Result<VideoInfo> {
+    let mut entry = Map::new();
+    entry.insert("ie_key".into(), KEY.into());
+    if let Some(id) = video_id {
+        entry.insert("id".into(), id.into());
+    }
+    entry.insert("_type".into(), "url".into());
+    entry.insert("url".into(), target.into());
+    url_entry(target, entry)
+}
+
+/// `playlist_result(entries, playlist_id, title, description, **kwargs)`
+/// whose entries are fetched while the playlist is processed (a generator
+/// or an `OnDemandPagedList`, whose full count is unknown unless a
+/// selection reads past its end).
+fn pending_playlist(
+    page: &Url,
+    (extractor, key): (&'static str, &'static str),
+    (id, title, description): (Option<String>, Option<String>, Option<Value>),
+    kwargs: Vec<(&str, Value)>,
+    state: Value,
+) -> ExtractResult {
+    let mut keys: Vec<&str> = kwargs.iter().map(|(key, _)| *key).collect();
+    let mut extra = Map::new();
+    for (key, value) in kwargs {
+        extra.insert(key.into(), value);
+    }
+    if id.is_some() {
+        keys.push("id");
+    } else {
+        extra.insert("id".into(), Value::Null);
+    }
+    let title = title.filter(|title| !title.is_empty());
+    if title.is_some() {
+        keys.push("title");
+    }
+    if let Some(description) = description {
+        keys.push("description");
+        extra.insert("description".into(), description);
+    }
+    extra.insert(
+        crate::info_order::INFO_SHAPE.into(),
+        format!(
+            "playlist-dict;{}{}",
+            keys.join(","),
+            crate::info_order::GENERATOR
+        )
+        .into(),
+    );
+    ExtractResult::Playlist(crate::PlaylistInfo {
+        id: id.unwrap_or_default(),
+        title: title.unwrap_or_default(),
+        webpage_url: page.clone(),
+        extractor: extractor.into(),
+        extractor_key: key.into(),
+        nested: Vec::new(),
+        pending: Some(crate::PendingEntries { state }),
+        entries: Vec::new(),
+        extra,
+    })
+}
+
+/// The HTTP status of a failed request (`e.cause.status`).
+fn http_status(error: &Error) -> Option<u16> {
+    match error {
+        Error::ExtractorRequest { source, .. } => http_status(source),
+        Error::Http(source) | Error::HttpRetryAfter { source, .. } => {
+            source.status().map(|status| status.as_u16())
+        }
+        _ => None,
+    }
+}
+
+/// Which `NiconicoPlaylistBaseIE` subclass a list is.
+#[derive(Clone, Copy, PartialEq)]
+enum ListKind {
+    Mylist,
+    Series,
+    History,
+}
+
+impl ListKind {
+    fn from_name(name: &str) -> Self {
+        match name {
+            "series" => Self::Series,
+            "history" => Self::History,
+            _ => Self::Mylist,
+        }
+    }
+
+    fn name(self) -> &'static str {
+        match self {
+            Self::Mylist => "mylist",
+            Self::Series => "series",
+            Self::History => "history",
+        }
+    }
+
+    fn extractor(self) -> (&'static str, &'static str) {
+        match self {
+            Self::Mylist => (PLAYLIST_NAME, "NiconicoPlaylist"),
+            Self::Series => (SERIES_NAME, "NiconicoSeries"),
+            Self::History => (HISTORY_NAME, "NiconicoHistory"),
+        }
+    }
+
+    /// `_call_api(list_id, resource, query)`.
+    fn call_api(
+        self,
+        client: &Client,
+        list_id: &str,
+        resource: &str,
+        query: &[(&str, &str)],
+    ) -> Result<Value> {
+        let (name, _) = self.extractor();
+        let base = match self {
+            Self::Mylist => format!("{API_BASE}/v2/mylists/{list_id}"),
+            Self::Series => format!("{API_BASE}/v2/series/{list_id}"),
+            Self::History if list_id == "history/like" => format!("{API_BASE}/v1/users/me/likes"),
+            Self::History => format!("{API_BASE}/v1/users/me/watch/history"),
+        };
+        let url = super::update_url_query(&Url::parse(&base)?, query);
+        let response = super::download_json_note_headers(
+            client,
+            &url,
+            name,
+            list_id,
+            &format!("Downloading {resource}"),
+            &PLAYLIST_API_HEADERS,
+        )?;
+        let Some(data) = response.get("data") else {
+            return Err(bug_as(name, list_id, "KeyError('data')"));
+        };
+        if self == Self::Mylist {
+            return data
+                .get("mylist")
+                .cloned()
+                .ok_or_else(|| bug_as(name, list_id, "KeyError('mylist')"));
+        }
+        Ok(data.clone())
+    }
+}
+
+/// `NiconicoPlaylistBaseIE._parse_owner(item)`.
+fn parse_owner(item: &Value) -> Vec<(&'static str, Value)> {
+    let owner = item.get("owner");
+    let uploader = owner
+        .and_then(|owner| {
+            [owner.get("name"), owner.pointer("/user/nickname")]
+                .into_iter()
+                .flatten()
+                .find(|value| value.is_string())
+        })
+        .cloned()
+        .unwrap_or(Value::Null);
+    let uploader_id = owner
+        .and_then(|owner| owner.get("id"))
+        .filter(|id| id.is_string())
+        .cloned()
+        .unwrap_or(Value::Null);
+    vec![("uploader", uploader), ("uploader_id", uploader_id)]
+}
+
+/// `NiconicoPlaylistBaseIE._fetch_page(list_id, page)`.
+fn fetch_list_page(
+    client: &Client,
+    kind: ListKind,
+    list_id: &str,
+    page: usize,
+) -> Result<Vec<VideoInfo>> {
+    let page = (page + 1).to_string();
+    let size = PAGE_SIZE.to_string();
+    let resp = kind.call_api(
+        client,
+        list_id,
+        &format!("page {page}"),
+        &[("page", &page), ("pageSize", &size)],
+    )?;
+    // `traverse_obj(resp, ('items', ..., ('video', None)))`: each item's
+    // `video`, then the item itself (mylists and users).
+    let items: Vec<&Value> = match resp.get("items") {
+        Some(Value::Array(items)) => items.iter().collect(),
+        Some(Value::Object(items)) => items.values().collect(),
+        _ => Vec::new(),
+    };
+    let mut entries = Vec::new();
+    for item in items {
+        let candidates = [
+            item.as_object().and_then(|item| item.get("video")),
+            Some(item),
+        ];
+        for video in candidates.into_iter().flatten() {
+            if video.is_null() {
+                continue;
+            }
+            let Some(video) = video.as_object() else {
+                return Err(Error::UnsupportedHtml5(
+                    "Niconico list items that are not objects are not supported natively".into(),
+                ));
+            };
+            let Some(id) = video.get("id").filter(|id| truthy(Some(id))) else {
+                continue;
+            };
+            let Some(id_text) = str_or_none(Some(id)) else {
+                return Err(Error::UnsupportedHtml5(
+                    "Niconico video IDs that are not strings or numbers are not supported natively"
+                        .into(),
+                ));
+            };
+            let count = video
+                .get("count")
+                .filter(|count| truthy(Some(count)))
+                .cloned()
+                .unwrap_or(json!({}));
+            let get_count = |key: &str| int(count.get(key)).map_or(Value::Null, Value::from);
+            // A branching path: every non-`None` value, as a (maybe empty)
+            // list.
+            let thumbnail: Vec<Value> = ["nHdUrl", "largeUrl", "listingUrl", "url"]
+                .iter()
+                .filter_map(|key| video.get("thumbnail")?.get(*key))
+                .filter(|value| !value.is_null())
+                .cloned()
+                .collect();
+            let target = format!("{BASE_URL}/watch/{id_text}");
+            let field = |key: &str| video.get(key).cloned().unwrap_or(Value::Null);
+            let mut entry = Map::new();
+            entry.insert("_type".into(), "url".into());
+            entry.insert("id".into(), id.clone());
+            entry.insert("title".into(), field("title"));
+            entry.insert("url".into(), target.clone().into());
+            entry.insert("description".into(), field("shortDescription"));
+            entry.insert(
+                "duration".into(),
+                int(video.get("duration")).map_or(Value::Null, Value::from),
+            );
+            entry.insert("view_count".into(), get_count("view"));
+            entry.insert("comment_count".into(), get_count("comment"));
+            entry.insert("thumbnail".into(), Value::Array(thumbnail));
+            entry.insert("ie_key".into(), KEY.into());
+            for (key, value) in parse_owner(&Value::Object(video.clone())) {
+                entry.insert(key.into(), value);
+            }
+            entries.push(url_entry(&target, entry)?);
+        }
+    }
+    Ok(entries)
+}
+
+/// Whether a playlist's pending state is a Niconico list's or search's.
+pub(crate) fn is_pending_state(state: &Value) -> bool {
+    matches!(
+        state["kind"].as_str(),
+        Some("niconico_list" | "niconico_user" | "niconico_search" | "niconico_search_date")
+    )
+}
+
+/// The pending entries of a Niconico list (`OnDemandPagedList(fetch_page,
+/// 100)` read by upstream's `PlaylistEntries`, see [`super::paged`]), user
+/// or search (generators, read in order until `limit` entries exist).
+pub(crate) fn fetch_pages(
+    client: &Client,
+    state: Value,
+    limit: Option<usize>,
+    entries: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let kind = ListKind::from_name(state["list"].as_str().unwrap_or_default());
+    let (name, result) = match state["kind"].as_str() {
+        Some("niconico_user") => (USER_NAME, fetch_user_pages(client, state, limit, entries)),
+        Some("niconico_search") => (
+            search_extractor(&state),
+            fetch_search_pages(client, state, limit, entries),
+        ),
+        Some("niconico_search_date") => (
+            SEARCH_DATE_NAME,
+            fetch_search_date_pages(client, state, limit, entries),
+        ),
+        _ => {
+            let list_id = state["list_id"].as_str().unwrap_or_default().to_owned();
+            let mut fetch = |page| fetch_list_page(client, kind, &list_id, page);
+            let placeholder = || watch_result(None, &format!("{BASE_URL}/watch/None"));
+            let result = super::paged::fetch_requested(
+                state,
+                limit,
+                entries,
+                PAGE_SIZE,
+                &mut fetch,
+                &placeholder,
+            );
+            (kind.extractor().0, result)
+        }
+    };
+    // An `ExtractorError` raised while the entries are read (outside
+    // `extract()`) has no `[EXTRACTOR]` prefix.
+    result.map_err(|error| match error {
+        Error::ExtractorRequest { .. } | Error::Reported(_) => {
+            let text = error.to_string();
+            match text.strip_prefix(&format!("[{name}] ")) {
+                Some(rest) => Error::Reported(rest.to_owned()),
+                None => error,
+            }
+        }
+        error => error,
+    })
+}
+
+/// `NiconicoPlaylistIE`.
+pub struct NiconicoPlaylist;
+/// `NiconicoSeriesIE`.
+pub struct NiconicoSeries;
+/// `NiconicoHistoryIE` (cookies only: it has no password login).
+pub struct NiconicoHistory;
+
+/// `_real_extract` of a `NiconicoPlaylistBaseIE` subclass.
+fn extract_list(
+    client: &Client,
+    page: &Url,
+    kind: ListKind,
+    pattern: &Regex,
+) -> Result<Option<ExtractResult>> {
+    let Some(found) = pattern.captures(page.as_str()) else {
+        return Ok(None);
+    };
+    let list_id = found["id"].to_owned();
+    let (name, _) = kind.extractor();
+    announce(name, page.as_str());
+    let info = match kind.call_api(client, &list_id, "list", &[("pageSize", "1")]) {
+        Ok(info) => info,
+        Err(error) if kind == ListKind::History && http_status(&error) == Some(401) => {
+            // `raise_login_required(...)` of an extractor without logins.
+            return Err(Error::Reported(format!(
+                "[{name}] {list_id}: You have to be logged in to get your history. {}",
+                super::login::login_hint(None, Some(super::login::Hint::Cookies))
+            )));
+        }
+        Err(error) => return Err(error),
+    };
+    let (title, description, owner_of) = match kind {
+        ListKind::Mylist => (info.get("name"), info.get("description"), &info),
+        ListKind::Series => {
+            let Some(detail) = info.get("detail") else {
+                return Err(bug_as(name, &list_id, "KeyError('detail')"));
+            };
+            (detail.get("title"), detail.get("description"), detail)
+        }
+        ListKind::History => (None, None, &info),
+    };
+    let title = match title {
+        None | Some(Value::Null) => None,
+        Some(Value::String(title)) => Some(title.clone()),
+        Some(_) => {
+            return Err(Error::UnsupportedHtml5(
+                "Niconico list titles that are not strings are not supported natively".into(),
+            ));
+        }
+    };
+    let description = description.filter(|value| !value.is_null()).cloned();
+    let state = json!({
+        "kind": "niconico_list",
+        "list": kind.name(),
+        "list_id": list_id,
+        "random_access": true,
+    });
+    Ok(Some(pending_playlist(
+        page,
+        kind.extractor(),
+        (Some(list_id), title, description),
+        parse_owner(owner_of),
+        state,
+    )))
+}
+
+impl Extractor for NiconicoPlaylist {
+    fn key(&self) -> &'static str {
+        PLAYLIST_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        extract_list(client, url, ListKind::Mylist, &PLAYLIST_URL)
+    }
+}
+
+impl Extractor for NiconicoSeries {
+    fn key(&self) -> &'static str {
+        SERIES_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        extract_list(client, url, ListKind::Series, &SERIES_URL)
+    }
+}
+
+impl Extractor for NiconicoHistory {
+    fn key(&self) -> &'static str {
+        HISTORY_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        extract_list(client, url, ListKind::History, &HISTORY_URL)
+    }
+}
+
+/// `NiconicoUserIE`.
+pub struct NiconicoUser;
+
+impl Extractor for NiconicoUser {
+    fn key(&self) -> &'static str {
+        USER_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = USER_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let list_id = found["id"].to_owned();
+        announce(USER_NAME, url.as_str());
+        let state = json!({
+            "kind": "niconico_user",
+            "list_id": list_id,
+            "page_num": 0,
+            "count": 0,
+            "total": 1,
+        });
+        Ok(Some(pending_playlist(
+            url,
+            (USER_NAME, USER_NAME),
+            (Some(list_id), None, None),
+            Vec::new(),
+            state,
+        )))
+    }
+}
+
+/// `NiconicoUserIE._entries(list_id)`: the `v2/users/ID/videos` pages, in
+/// order, while fewer than `totalCount` (of the first page) were listed.
+fn fetch_user_pages(
+    client: &Client,
+    mut state: Value,
+    limit: Option<usize>,
+    entries: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let list_id = state["list_id"].as_str().unwrap_or_default().to_owned();
+    loop {
+        if limit.is_some_and(|limit| entries.len() >= limit) {
+            return Ok(Some(state));
+        }
+        let page_num = state["page_num"].as_u64().unwrap_or(0);
+        let mut count = state["count"].as_u64().unwrap_or(0);
+        // `while count < total_count` (`int_or_none(totalCount)`).
+        match state["total"].as_i64() {
+            Some(total) if (count as i64) < total => {}
+            Some(_) => return Ok(None),
+            None => {
+                return Err(Error::Reported(format!(
+                    "[{USER_NAME}] {list_id}: TypeError(\"'<' not supported between instances of 'int' and 'NoneType'\")"
+                )));
+            }
+        }
+        let url = Url::parse(&format!(
+            "{API_BASE}/v2/users/{list_id}/videos?sortKey=registeredAt&sortOrder=desc&pageSize={PAGE_SIZE}&page={}",
+            page_num + 1
+        ))?;
+        let note = if page_num == 0 {
+            "Downloading JSON metadata".to_owned()
+        } else {
+            format!("Downloading JSON metadata page {page_num}")
+        };
+        let parsed =
+            super::download_json_note_headers(client, &url, USER_NAME, &list_id, &note, &HEADERS)?;
+        let Some(data) = parsed.get("data") else {
+            return Err(bug_as(USER_NAME, &list_id, "KeyError('data')"));
+        };
+        if page_num == 0 {
+            state["total"] = int(data.get("totalCount")).into();
+        }
+        let items = match data.get("items") {
+            Some(Value::Array(items)) => items.clone(),
+            Some(_) => {
+                return Err(Error::UnsupportedHtml5(
+                    "Niconico user video lists that are not arrays are not supported natively"
+                        .into(),
+                ));
+            }
+            None => return Err(bug_as(USER_NAME, &list_id, "KeyError('items')")),
+        };
+        for item in &items {
+            let Some(essential) = item.get("essential") else {
+                return Err(bug_as(USER_NAME, &list_id, "KeyError('essential')"));
+            };
+            let Some(id) = essential.get("id") else {
+                return Err(bug_as(USER_NAME, &list_id, "KeyError('id')"));
+            };
+            let Some(id) = str_or_none(Some(id)) else {
+                return Err(Error::UnsupportedHtml5(
+                    "Niconico video IDs that are not strings or numbers are not supported natively"
+                        .into(),
+                ));
+            };
+            count += 1;
+            entries.push(watch_result(None, &format!("{BASE_URL}/watch/{id}"))?);
+        }
+        state["count"] = count.into();
+        state["page_num"] = (page_num + 1).into();
+    }
+}
+
+/// `re.findall(r'(?<=data-video-id=)["\']?(?P<videoid>.*?)(?=["\'])', page)`.
+fn video_ids(page: &str) -> Vec<String> {
+    const MARK: &[u8] = b"data-video-id=";
+    let bytes = page.as_bytes();
+    let quote = |byte: u8| byte == b'"' || byte == b'\'';
+    // The first quote at or after `from` with no line break before it.
+    let closing = |from: usize| {
+        bytes[from.min(bytes.len())..]
+            .iter()
+            .position(|byte| quote(*byte) || *byte == b'\n')
+            .map(|offset| from + offset)
+            .filter(|index| quote(bytes[*index]))
+    };
+    let mut ids = Vec::new();
+    let mut pos = 0;
+    while pos <= bytes.len() {
+        // The next position at or after `pos` that follows the mark.
+        let start = pos.saturating_sub(MARK.len());
+        let Some(offset) = bytes[start..]
+            .windows(MARK.len())
+            .position(|window| window == MARK)
+        else {
+            break;
+        };
+        let at = start + offset + MARK.len();
+        if at < bytes.len() && quote(bytes[at]) {
+            match closing(at + 1) {
+                Some(end) => {
+                    ids.push(String::from_utf8_lossy(&bytes[at + 1..end]).into_owned());
+                    pos = end;
+                }
+                None => {
+                    // The quote itself is the lookahead: an empty match.
+                    ids.push(String::new());
+                    pos = at + 1;
+                }
+            }
+        } else {
+            match closing(at) {
+                Some(end) => {
+                    ids.push(String::from_utf8_lossy(&bytes[at..end]).into_owned());
+                    pos = end;
+                }
+                None => pos = at + 1,
+            }
+        }
+    }
+    ids
+}
+
+/// One `NicovideoSearchBaseIE._entries` page: `url` with the `query`
+/// (`_download_webpage(url, item_id, query=query, note=note)`), its video
+/// IDs.
+fn search_page(
+    client: &Client,
+    extractor: &'static str,
+    url: &Url,
+    item_id: Option<&str>,
+    query: &[(String, String)],
+    note: &str,
+) -> Result<Vec<String>> {
+    let pairs: Vec<(&str, &str)> = query
+        .iter()
+        .map(|(key, value)| (key.as_str(), value.as_str()))
+        .collect();
+    let url = super::update_url_query(url, &pairs);
+    crate::screen::screen(&match item_id {
+        Some(id) => format!("[{extractor}] {id}: {note}"),
+        None => format!("[{extractor}] {note}"),
+    });
+    let webpage = super::download_webpage_quiet(client, &url, extractor, item_id.unwrap_or(""))?;
+    Ok(video_ids(&webpage))
+}
+
+fn search_extractor(state: &Value) -> &'static str {
+    match state["extractor"].as_str() {
+        Some(SEARCH_URL_NAME) => SEARCH_URL_NAME,
+        Some(TAG_NAME) => TAG_NAME,
+        _ => SEARCH_NAME,
+    }
+}
+
+/// Whether the search's `max` results (`islice`) were read.
+fn search_done(state: &Value) -> bool {
+    state["max"]
+        .as_u64()
+        .is_some_and(|max| state["count"].as_u64().unwrap_or(0) >= max)
+}
+
+/// Pushes a page's results (`url_result(watch URL, 'Niconico', item)`),
+/// up to the search's `max`.
+fn push_results(ids: &[String], state: &mut Value, entries: &mut Vec<VideoInfo>) -> Result<()> {
+    let max = state["max"].as_u64();
+    let mut count = state["count"].as_u64().unwrap_or(0);
+    for id in ids {
+        if max.is_some_and(|max| count >= max) {
+            break;
+        }
+        entries.push(watch_result(Some(id), &format!("{BASE_URL}/watch/{id}"))?);
+        count += 1;
+    }
+    state["count"] = count.into();
+    Ok(())
+}
+
+/// `NicovideoSearchBaseIE._entries(url, item_id)`: pages 1, 2, … until one
+/// has no results (optionally `islice`d to `max` results).
+fn fetch_search_pages(
+    client: &Client,
+    mut state: Value,
+    limit: Option<usize>,
+    entries: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let extractor = search_extractor(&state);
+    let url = Url::parse(state["url"].as_str().unwrap_or_default())?;
+    let item_id = state["item_id"].as_str().map(str::to_owned);
+    loop {
+        if search_done(&state) {
+            return Ok(None);
+        }
+        if limit.is_some_and(|limit| entries.len() >= limit) {
+            return Ok(Some(state));
+        }
+        let page = state["page"].as_u64().unwrap_or(1);
+        let ids = search_page(
+            client,
+            extractor,
+            &url,
+            item_id.as_deref(),
+            &[("page".into(), page.to_string())],
+            &format!("Downloading page {page}"),
+        )?;
+        if ids.is_empty() {
+            return Ok(None);
+        }
+        push_results(&ids, &mut state, entries)?;
+        state["page"] = (page + 1).into();
+    }
+}
+
+fn date_text(days: i64) -> String {
+    let (year, month, day) = crate::dates::civil_from_days(days);
+    format!("{year:04}-{month:02}-{day:02}")
+}
+
+/// `_get_entries_for_date`'s query for `start`..`end`.
+fn date_query(start: i64, end: i64, page: u64) -> Vec<(String, String)> {
+    vec![
+        ("start".into(), date_text(start)),
+        ("end".into(), date_text(end)),
+        ("sort".into(), "f".into()),
+        ("order".into(), "d".into()),
+        ("page".into(), page.to_string()),
+    ]
+}
+
+/// `start_date + ((end_date - start_date) // 2)` (a date plus a
+/// `timedelta` ignores its part of a day).
+fn midpoint(start: i64, end: i64) -> i64 {
+    start + (end - start).div_euclid(2)
+}
+
+/// `NicovideoSearchDateIE._entries(url, item_id)`: an interval whose last
+/// page (50) is full is split in two (newer half first); the others list
+/// their pages 1, 2, … until one has no results.
+fn fetch_search_date_pages(
+    client: &Client,
+    mut state: Value,
+    limit: Option<usize>,
+    entries: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let url = Url::parse(state["url"].as_str().unwrap_or_default())?;
+    let item_id = state["item_id"].as_str().unwrap_or_default().to_owned();
+    if state["intervals"].is_null() {
+        // `start_date or self._START_DATE, end_date or now().date()`.
+        let (year, month, day) = SEARCH_START_DATE;
+        let start = crate::dates::days_from_civil(year, month, day);
+        state["intervals"] = json!([[start, crate::dates::local_today()]]);
+    }
+    loop {
+        if search_done(&state) {
+            return Ok(None);
+        }
+        if limit.is_some_and(|limit| entries.len() >= limit) {
+            return Ok(Some(state));
+        }
+        if let Some(current) = state["current"].as_array().cloned() {
+            let start = current[0].as_i64().unwrap_or_default();
+            let end = current[1].as_i64().unwrap_or_default();
+            let page = current[2].as_u64().unwrap_or(1);
+            let ids = search_page(
+                client,
+                SEARCH_DATE_NAME,
+                &url,
+                Some(&item_id),
+                &date_query(start, end, page),
+                &format!("    Downloading page {page}"),
+            )?;
+            push_results(&ids, &mut state, entries)?;
+            state["current"] = if ids.is_empty() {
+                Value::Null
+            } else {
+                json!([start, end, page + 1])
+            };
+            continue;
+        }
+        let mut intervals = state["intervals"].as_array().cloned().unwrap_or_default();
+        if intervals.is_empty() {
+            return Ok(None);
+        }
+        let interval = intervals.remove(0);
+        let start = interval[0].as_i64().unwrap_or_default();
+        let end = interval[1].as_i64().unwrap_or_default();
+        let (start_text, end_text) = (date_text(start), date_text(end));
+        let last_page = search_page(
+            client,
+            SEARCH_DATE_NAME,
+            &url,
+            Some(&item_id),
+            &date_query(start, end, MAX_PAGES),
+            &format!("Checking number of videos from {start_text} to {end_text}"),
+        )?;
+        if last_page.len() == RESULTS_PER_PAGE && start != end {
+            let mid = midpoint(start, end);
+            intervals.insert(0, json!([start, mid]));
+            intervals.insert(0, json!([mid, end]));
+        } else {
+            crate::screen::screen(&format!(
+                "[{SEARCH_DATE_NAME}] {item_id}: Downloading results from {start_text} to {end_text}"
+            ));
+            state["current"] = json!([start, end, 1]);
+        }
+        state["intervals"] = Value::Array(intervals);
+    }
+}
+
+/// `NicovideoSearchIE` and `NicovideoSearchDateIE`
+/// (`SearchInfoExtractor._real_extract`, `_MAX_RESULTS` unbounded).
+fn extract_search(url: &Url, date: bool) -> Result<Option<ExtractResult>> {
+    let text = super::youtube::search::input_text(url);
+    let (pattern, name, key) = if date {
+        (&*SEARCH_DATE_RE, SEARCH_DATE_NAME, "NicovideoSearchDate")
+    } else {
+        (&*SEARCH_RE, SEARCH_NAME, "NicovideoSearch")
+    };
+    let Some(found) = pattern.captures(&text) else {
+        return Ok(None);
+    };
+    announce(name, &text);
+    let query = found["query"].to_owned();
+    let max = match &found["prefix"] {
+        "" => Some(1),
+        "all" => None,
+        count => Some(count.parse::<u64>().unwrap_or(u64::MAX)),
+    };
+    // `_search_results(query)`: `//www.nicovideo.jp/search/QUERY`.
+    let target = Url::parse(&format!("{BASE_URL}/search/{query}"))?;
+    let state = json!({
+        "kind": if date { "niconico_search_date" } else { "niconico_search" },
+        "extractor": name,
+        "url": target.as_str(),
+        "item_id": query,
+        "max": max,
+        "count": 0,
+        "page": 1,
+        "intervals": null,
+        "current": null,
+    });
+    Ok(Some(pending_playlist(
+        url,
+        (name, key),
+        (Some(query.clone()), Some(query), None),
+        Vec::new(),
+        state,
+    )))
+}
+
+/// `NicovideoSearchURLIE` and `NicovideoTagURLIE`: the URL's pages.
+fn extract_search_url(url: &Url, tag: bool) -> Result<Option<ExtractResult>> {
+    let (pattern, name, key) = if tag {
+        (&*TAG_URL, TAG_NAME, "NicovideoTagURL")
+    } else {
+        (&*SEARCH_URL, SEARCH_URL_NAME, "NicovideoSearchURL")
+    };
+    // The URL as parsed: non-ASCII input text is percent-encoded (upstream
+    // keeps it as given).
+    let Some(found) = pattern.captures(url.as_str()) else {
+        return Ok(None);
+    };
+    announce(name, url.as_str());
+    let query = found.name("id").map(|id| id.as_str().to_owned());
+    let state = json!({
+        "kind": "niconico_search",
+        "extractor": name,
+        "url": url.as_str(),
+        "item_id": query,
+        "max": null,
+        "count": 0,
+        "page": 1,
+    });
+    Ok(Some(pending_playlist(
+        url,
+        (name, key),
+        (query.clone(), query, None),
+        Vec::new(),
+        state,
+    )))
+}
+
+/// `NicovideoSearchIE`.
+pub struct NicovideoSearch;
+/// `NicovideoSearchDateIE`.
+pub struct NicovideoSearchDate;
+/// `NicovideoSearchURLIE`.
+pub struct NicovideoSearchUrl;
+/// `NicovideoTagURLIE`.
+pub struct NicovideoTagUrl;
+
+impl Extractor for NicovideoSearch {
+    fn key(&self) -> &'static str {
+        SEARCH_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        extract_search(url, false)
+    }
+}
+
+impl Extractor for NicovideoSearchDate {
+    fn key(&self) -> &'static str {
+        SEARCH_DATE_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        extract_search(url, true)
+    }
+}
+
+impl Extractor for NicovideoSearchUrl {
+    fn key(&self) -> &'static str {
+        SEARCH_URL_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        extract_search_url(url, false)
+    }
+}
+
+impl Extractor for NicovideoTagUrl {
+    fn key(&self) -> &'static str {
+        TAG_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        extract_search_url(url, true)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn playlist_urls_follow_upstream_valid_urls() {
+        assert!(playlist_suitable("http://www.nicovideo.jp/mylist/27411728"));
+        assert!(playlist_suitable(
+            "https://www.nicovideo.jp/user/805442/mylist/27411728"
+        ));
+        assert!(playlist_suitable(
+            "https://www.nicovideo.jp/my/mylist/#/68048635"
+        ));
+        assert!(series_suitable(
+            "https://www.nicovideo.jp/user/44113208/series/110226"
+        ));
+        assert!(series_suitable("https://nico.ms/series/203559"));
+        assert!(history_suitable("https://sp.nicovideo.jp/my/history/video"));
+        assert!(history_suitable("https://www.nicovideo.jp/my/history/like"));
+        assert!(user_suitable("https://www.nicovideo.jp/user/419948"));
+        assert!(user_suitable(
+            "https://www.nicovideo.jp/user/419948/video?x"
+        ));
+        assert!(!user_suitable(
+            "https://www.nicovideo.jp/user/419948/mylist/1"
+        ));
+        assert!(search_suitable("nicosearch10:slithering pythons"));
+        assert!(search_suitable("nicosearchall:a"));
+        assert!(!search_suitable("nicosearch0:a"));
+        assert!(!search_suitable("nicosearchdate:a"));
+        assert!(search_date_suitable("nicosearchdateall:a"));
+        assert!(search_url_suitable("http://www.nicovideo.jp/search/sm9"));
+        assert!(search_url_suitable("https://www.nicovideo.jp/search/"));
+        assert!(tag_suitable("https://www.nicovideo.jp/tag/a"));
+    }
+
+    #[test]
+    fn video_ids_follow_upstream_findall() {
+        assert_eq!(
+            video_ids(r#"<a data-video-id="sm1"> <a data-video-id='so2'>"#),
+            ["sm1", "so2"]
+        );
+        // Unquoted: up to the next quote on the line.
+        assert_eq!(
+            video_ids("data-video-id=sm1 data-video-id=\"sm2\""),
+            ["sm1 data-video-id=", "sm2"]
+        );
+        // An opening quote without a closing one is an empty match.
+        assert_eq!(video_ids("data-video-id=\"sm1\nx\""), [""]);
+        assert_eq!(video_ids("data-video-id=sm1\n"), Vec::<String>::new());
+        assert_eq!(video_ids(r#"data-video-id="""#), [""]);
+    }
+
+    #[test]
+    fn date_search_splits_like_upstream() {
+        let start = crate::dates::days_from_civil(2007, 1, 1);
+        assert_eq!(date_text(start), "2007-01-01");
+        assert_eq!(midpoint(start, start + 3), start + 1);
+        assert_eq!(midpoint(start, start + 1), start);
+        assert_eq!(
+            date_query(start, start + 9, 50)
+                .iter()
+                .map(|(key, value)| format!("{key}={value}"))
+                .collect::<Vec<_>>()
+                .join("&"),
+            "start=2007-01-01&end=2007-01-10&sort=f&order=d&page=50"
+        );
+    }
 
     #[test]
     fn urls_follow_upstream_valid_url() {

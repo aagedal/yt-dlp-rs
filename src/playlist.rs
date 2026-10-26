@@ -134,6 +134,40 @@ impl PlaylistSelection {
         Some(limit)
     }
 
+    /// Upstream `PlaylistEntries.__getitem__`'s reads from a random-access
+    /// paged list (`PagedList`), segment by segment in order:
+    /// `{"start", "stop", "step"}` with zero-based positions (`stop`
+    /// exclusive, `null` unbounded; negative positions are skipped), or
+    /// `"all"` once a bound needs the full length (`len(self)` reads every
+    /// entry, after which nothing else is fetched).
+    pub fn entry_requests(&self) -> Vec<serde_json::Value> {
+        let mut requests = Vec::new();
+        for segment in &self.segments {
+            let step = segment.step;
+            let start = match segment.start {
+                None if step > 0 => 0,
+                Some(start) if start >= 0 => start - 1,
+                _ => {
+                    requests.push("all".into());
+                    break;
+                }
+            };
+            let stop = match segment.end {
+                Endpoint::Index(end) if end >= 0 => Some(if step > 0 { end } else { end - 2 }),
+                Endpoint::Index(_) => {
+                    requests.push("all".into());
+                    break;
+                }
+                Endpoint::Open | Endpoint::Infinite if step > 0 => None,
+                Endpoint::Open => Some(-1),
+                // `frange(start, inf, step < 0)` is empty.
+                Endpoint::Infinite => continue,
+            };
+            requests.push(serde_json::json!({"start": start, "stop": stop, "step": step}));
+        }
+        requests
+    }
+
     /// Return zero-based positions, removing duplicates before optional reversal.
     pub fn indices(&self, len: usize) -> Vec<usize> {
         let mut indices = Vec::new();
@@ -272,7 +306,10 @@ impl PlaylistSelection {
             .and_then(serde_json::Value::as_u64)
             .filter(|count| *count != 0)
             .map(|count| count as usize)
-            .or((playlist.pending.is_none() && !unexhausted).then_some(count));
+            .or((playlist.pending.is_none() && !unexhausted).then(|| {
+                // A failed page ended a paged list: its entry is not counted.
+                crate::extractor::paged::fetch_error_count(&playlist.entries).unwrap_or(count)
+            }));
         let indices = self.indices(count);
         let requested = if self.selection_index && !self.lazy {
             Self {
@@ -437,6 +474,49 @@ mod tests {
                 .unwrap()
                 .fetch_limit(),
             None
+        );
+    }
+
+    #[test]
+    fn entry_requests_follow_playlist_entries_getitem() {
+        let requests = |items: &str| {
+            serde_json::Value::from(
+                PlaylistSelection::new(Some(items), 1, None, false)
+                    .unwrap()
+                    .entry_requests(),
+            )
+        };
+        assert_eq!(
+            requests("31,1:3"),
+            json!([
+                {"start": 30, "stop": 31, "step": 1},
+                {"start": 0, "stop": 3, "step": 1}
+            ])
+        );
+        assert_eq!(
+            requests("3:,8:2:-2,5::-1"),
+            json!([
+                {"start": 2, "stop": null, "step": 1},
+                {"start": 7, "stop": 0, "step": -2},
+                {"start": 4, "stop": -1, "step": -1}
+            ])
+        );
+        // `inf` with a negative step reads nothing; a negative bound or a
+        // reversed open start needs `len(self)`.
+        assert_eq!(
+            requests("5:inf:-1,2"),
+            json!([{"start": 1, "stop": 2, "step": 1}])
+        );
+        assert_eq!(
+            requests("2,-1,3"),
+            json!([{"start": 1, "stop": 2, "step": 1}, "all"])
+        );
+        assert_eq!(requests("1:-2"), json!(["all"]));
+        assert_eq!(requests("::-1"), json!(["all"]));
+        let range = PlaylistSelection::new(None, 3, Some(7), false).unwrap();
+        assert_eq!(
+            serde_json::Value::from(range.entry_requests()),
+            json!([{"start": 2, "stop": 7, "step": 1}])
         );
     }
 

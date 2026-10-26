@@ -2,6 +2,7 @@ pub mod adobepass;
 mod amadeustv;
 mod angel;
 mod archiveorg;
+mod ard;
 mod arte;
 mod audioboom;
 mod bandcamp;
@@ -42,6 +43,7 @@ pub(crate) mod direct;
 mod dlive;
 mod dropbox;
 mod drtalks;
+mod drtv;
 mod dumpert;
 mod ebaumsworld;
 mod ebay;
@@ -56,7 +58,9 @@ mod fathom;
 mod fczenit;
 mod filmarchiv;
 mod filmweb;
+mod flickr;
 mod formula1;
+mod francetv;
 mod freesound;
 mod fuyintv;
 mod gab;
@@ -67,6 +71,7 @@ mod godresource;
 mod godtube;
 mod golem;
 mod goodgame;
+mod googledrive;
 mod graspop;
 mod gronkh;
 mod harpodeon;
@@ -83,6 +88,7 @@ mod hypem;
 mod iheart;
 mod ilpost;
 mod iltalehti;
+mod imdb;
 mod imgur;
 mod ina;
 mod inc;
@@ -127,6 +133,7 @@ mod myvidster;
 mod netzkino;
 mod newsy;
 mod niconico;
+mod ninegag;
 mod ninenews;
 mod nobelprize;
 mod nrk;
@@ -137,6 +144,7 @@ mod odnoklassniki;
 mod onefootball;
 mod onenewsnz;
 mod oneplace;
+pub(crate) mod paged;
 mod parlview;
 mod pearvideo;
 mod peertube;
@@ -173,6 +181,7 @@ mod snapchat;
 mod soundcloud;
 mod soundgasm;
 mod spiegel;
+mod steam;
 mod streamable;
 mod streetvoice;
 mod svt;
@@ -193,6 +202,7 @@ mod toypics;
 mod trtcocuk;
 mod trtworld;
 mod tumblr;
+mod tv2;
 mod tvanouvelles;
 mod tvnoe;
 mod tweakers;
@@ -219,13 +229,23 @@ mod worldstarhiphop;
 mod xboxclips;
 mod xiaohongshu;
 mod xspf;
+mod xvideos;
 mod yfanefa;
+mod yle_areena;
 pub(crate) mod youtube;
+mod zdf;
 mod zhihu;
 
 pub use amadeustv::{AmadeusTv, suitable as amadeustv_suitable};
 pub use angel::{Angel, suitable as angel_suitable};
 pub use archiveorg::{ArchiveOrg, suitable as archiveorg_suitable};
+pub use ard::{
+    ArdAudiothek, ArdAudiothekPlaylist, ArdMediathek, ArdMediathekCollection,
+    audiothek_playlist_suitable as ard_audiothek_playlist_suitable,
+    audiothek_suitable as ard_audiothek_suitable, collection_suitable as ard_collection_suitable,
+    suitable as ard_suitable,
+};
+pub(crate) use ard::{fetch_pages as fetch_ard_pages, is_pending_state as ard_pending_state};
 pub use arte::{
     ArteTv, ArteTvCategory, ArteTvEmbed, ArteTvPlaylist,
     category_suitable as artetv_category_suitable, embed_suitable as artetv_embed_suitable,
@@ -238,7 +258,13 @@ pub use behindkink::{BehindKink, suitable as behindkink_suitable};
 pub use bigo::{Bigo, suitable as bigo_suitable};
 pub use bild::{Bild, suitable as bild_suitable};
 pub use bilibili::{BiliBili, suitable as bilibili_suitable};
-pub use bitchute::{BitChute, suitable as bitchute_suitable};
+pub use bitchute::{
+    BitChute, BitChuteChannel, channel_suitable as bitchute_channel_suitable,
+    suitable as bitchute_suitable,
+};
+pub(crate) use bitchute::{
+    fetch_pages as fetch_bitchute_pages, is_pending_state as bitchute_pending_state,
+};
 pub use bitmovin::{Bitmovin, suitable as bitmovin_suitable};
 pub use blogger::{Blogger, suitable as blogger_suitable};
 pub use bluesky::{Bluesky, suitable as bluesky_suitable};
@@ -261,7 +287,15 @@ pub use cozytv::{CozyTv, suitable as cozytv_suitable};
 pub use crooksandliars::{CrooksAndLiars, suitable as crooksandliars_suitable};
 pub use crtvg::{Crtvg, suitable as crtvg_suitable};
 pub use cultureunplugged::{CultureUnplugged, suitable as cultureunplugged_suitable};
-pub use dailymotion::{Dailymotion, suitable as dailymotion_suitable};
+pub use dailymotion::{
+    Dailymotion, DailymotionPlaylist, DailymotionSearch, DailymotionUser,
+    playlist_suitable as dailymotion_playlist_suitable,
+    search_suitable as dailymotion_search_suitable, suitable as dailymotion_suitable,
+    user_suitable as dailymotion_user_suitable,
+};
+pub(crate) use dailymotion::{
+    fetch_pages as fetch_dailymotion_pages, is_pending_state as dailymotion_pending_state,
+};
 pub use daystar::{DaystarClip, suitable as daystar_suitable};
 pub use democracynow::{Democracynow, suitable as democracynow_suitable};
 pub use dfb::{Dfb, suitable as dfb_suitable};
@@ -273,6 +307,11 @@ pub use dlive::{
 };
 pub use dropbox::{Dropbox, suitable as dropbox_suitable};
 pub use drtalks::{DrTalks, suitable as drtalks_suitable};
+pub use drtv::{
+    Drtv, DrtvLive, DrtvSeason, DrtvSeries, live_suitable as drtv_live_suitable,
+    season_suitable as drtv_season_suitable, series_suitable as drtv_series_suitable,
+    suitable as drtv_suitable,
+};
 pub use dumpert::{Dumpert, suitable as dumpert_suitable};
 pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
 pub use ebay::{Ebay, suitable as ebay_suitable};
@@ -292,7 +331,12 @@ pub use fathom::{Fathom, suitable as fathom_suitable};
 pub use fczenit::{Fczenit, suitable as fczenit_suitable};
 pub use filmarchiv::{FilmArchiv, suitable as filmarchiv_suitable};
 pub use filmweb::{Filmweb, suitable as filmweb_suitable};
+pub use flickr::{Flickr, suitable as flickr_suitable};
 pub use formula1::{Formula1, suitable as formula1_suitable};
+pub use francetv::{
+    FranceTv, FranceTvInfo, FranceTvSite, info_suitable as francetv_info_suitable,
+    site_suitable as francetv_site_suitable, suitable as francetv_suitable,
+};
 pub use freesound::{Freesound, suitable as freesound_suitable};
 pub use fuyintv::{FuyinTv, suitable as fuyintv_suitable};
 pub use gab::{Gab, suitable as gab_suitable};
@@ -302,6 +346,10 @@ pub use godresource::{GodResource, suitable as godresource_suitable};
 pub use godtube::{GodTube, suitable as godtube_suitable};
 pub use golem::{Golem, suitable as golem_suitable};
 pub use goodgame::{GoodGame, suitable as goodgame_suitable};
+pub use googledrive::{
+    GoogleDrive, GoogleDriveFolder, folder_suitable as googledrive_folder_suitable,
+    suitable as googledrive_suitable,
+};
 pub use graspop::{Graspop, suitable as graspop_suitable};
 pub use gronkh::{Gronkh, suitable as gronkh_suitable};
 pub use harpodeon::{Harpodeon, suitable as harpodeon_suitable};
@@ -324,6 +372,7 @@ pub use iheart::{
 };
 pub use ilpost::{IlPost, suitable as ilpost_suitable};
 pub use iltalehti::{Iltalehti, suitable as iltalehti_suitable};
+pub use imdb::{Imdb, ImdbList, list_suitable as imdb_list_suitable, suitable as imdb_suitable};
 pub use imgur::{
     Imgur, ImgurAlbum, ImgurGallery, album_suitable as imgur_album_suitable,
     gallery_suitable as imgur_gallery_suitable, suitable as imgur_suitable,
@@ -349,12 +398,19 @@ pub use kick::{
     clips_suitable as kick_clips_suitable, live_suitable as kick_live_suitable,
     videos_suitable as kick_videos_suitable, vod_suitable as kick_vod_suitable,
 };
+pub(crate) use kick::{
+    fetch_entries as fetch_kick_entries, is_pending_state as kick_pending_state,
+};
 pub use kicker::{Kicker, suitable as kicker_suitable};
 pub use kickstarter::{KickStarter, suitable as kickstarter_suitable};
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use kth::{Kth, suitable as kth_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
-pub use lbry::{Lbry, suitable as lbry_suitable};
+pub use lbry::{
+    Lbry, LbryChannel, LbryPlaylist, channel_suitable as lbry_channel_suitable,
+    playlist_suitable as lbry_playlist_suitable, suitable as lbry_suitable,
+};
+pub(crate) use lbry::{fetch_pages as fetch_lbry_pages, is_pending_state as lbry_pending_state};
 pub use libsyn::{Libsyn, suitable as libsyn_suitable};
 pub use linkedin::{LinkedIn, suitable as linkedin_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
@@ -375,7 +431,20 @@ pub use mux::{Mux, suitable as mux_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
 pub use netzkino::{Netzkino, suitable as netzkino_suitable};
 pub use newsy::{Newsy, suitable as newsy_suitable};
-pub use niconico::{Niconico, suitable as niconico_suitable};
+pub use niconico::{
+    Niconico, NiconicoHistory, NiconicoPlaylist, NiconicoSeries, NiconicoUser, NicovideoSearch,
+    NicovideoSearchDate, NicovideoSearchUrl, NicovideoTagUrl,
+    history_suitable as niconico_history_suitable, playlist_suitable as niconico_playlist_suitable,
+    search_date_suitable as nicovideo_search_date_suitable,
+    search_suitable as nicovideo_search_suitable,
+    search_url_suitable as nicovideo_search_url_suitable,
+    series_suitable as niconico_series_suitable, suitable as niconico_suitable,
+    tag_suitable as niconico_tag_suitable, user_suitable as niconico_user_suitable,
+};
+pub(crate) use niconico::{
+    fetch_pages as fetch_niconico_pages, is_pending_state as niconico_pending_state,
+};
+pub use ninegag::{NineGag, suitable as ninegag_suitable};
 pub use ninenews::{NineNews, suitable as ninenews_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use nrk::{
@@ -397,6 +466,9 @@ pub use peertube::{
     PeerTube, PeerTubePlaylist, playlist_suitable as peertube_playlist_suitable,
     suitable as peertube_suitable,
 };
+pub(crate) use peertube::{
+    fetch_pages as fetch_peertube_pages, is_pending_state as peertube_pending_state,
+};
 pub use peertv::{PeerTv, suitable as peertv_suitable};
 pub use periscope::{Periscope, suitable as periscope_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
@@ -405,6 +477,9 @@ pub use pinterest::{Pinterest, suitable as pinterest_suitable};
 pub use playerfm::{PlayerFm, suitable as playerfm_suitable};
 pub use podbayfm::{PodbayFm, suitable as podbayfm_suitable};
 pub use podbayfm::{PodbayFmChannel, channel_suitable as podbayfm_channel_suitable};
+pub(crate) use podbayfm::{
+    fetch_pages as fetch_podbayfm_pages, is_pending_state as podbayfm_pending_state,
+};
 pub use popcorntv::{PopcornTv, suitable as popcorntv_suitable};
 pub use premiershiprugby::{PremiershipRugby, suitable as premiershiprugby_suitable};
 pub use presstv::{PressTv, suitable as presstv_suitable};
@@ -437,6 +512,13 @@ pub use soundgasm::{
     suitable as soundgasm_suitable,
 };
 pub use spiegel::{Spiegel, suitable as spiegel_suitable};
+pub use steam::{
+    Steam, SteamCommunity, SteamCommunityBroadcast, broadcast_suitable as steam_broadcast_suitable,
+    community_suitable as steam_community_suitable, suitable as steam_suitable,
+};
+pub(crate) use steam::{
+    fetch_trailers as fetch_steam_trailers, is_pending_state as steam_pending_state,
+};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use streetvoice::{StreetVoice, suitable as streetvoice_suitable};
 pub use svt::{
@@ -473,6 +555,9 @@ pub use toypics::{Toypics, suitable as toypics_suitable};
 pub use trtcocuk::{TrtCocukVideo, suitable as trtcocuk_suitable};
 pub use trtworld::{TrtWorld, suitable as trtworld_suitable};
 pub use tumblr::{Tumblr, suitable as tumblr_suitable};
+pub use tv2::{
+    Tv2, Tv2Article, article_suitable as tv2_article_suitable, suitable as tv2_suitable,
+};
 pub use tvanouvelles::{
     TvaNouvelles, TvaNouvellesArticle, article_suitable as tvanouvelles_article_suitable,
     suitable as tvanouvelles_suitable,
@@ -510,6 +595,9 @@ pub use vk::{
     Vk, VkUserVideos, VkWallPost, suitable as vk_suitable,
     user_videos_suitable as vk_user_videos_suitable, wall_post_suitable as vk_wall_post_suitable,
 };
+pub(crate) use vk::{
+    fetch_pages as fetch_vk_user_videos_pages, is_pending_state as vk_user_videos_pending_state,
+};
 pub use vkplay::{
     VkPlay, VkPlayLive, live_suitable as vkplay_live_suitable, suitable as vkplay_suitable,
 };
@@ -527,7 +615,12 @@ pub use wistia::{
 pub use worldstarhiphop::{WorldStarHipHop, suitable as worldstarhiphop_suitable};
 pub use xboxclips::{XboxClips, suitable as xboxclips_suitable};
 pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};
+pub use xvideos::{
+    XVideos, XVideosQuickies, quickies_suitable as xvideos_quickies_suitable,
+    suitable as xvideos_suitable,
+};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
+pub use yle_areena::{YleAreena, suitable as yle_areena_suitable};
 pub(crate) use youtube::YoutubeUnsupported;
 pub(crate) use youtube::clip::YoutubeClip;
 pub(crate) use youtube::comments::post_extract as youtube_comments;
@@ -545,6 +638,10 @@ pub use youtube::{
     JsRuntime, JsRuntimeName, WaitForVideo, Youtube, YoutubeOptions,
     extractor_suitable as youtube_extractor_suitable, js_runtimes, suitable as youtube_suitable,
 };
+pub use zdf::{
+    Zdf, ZdfChannel, channel_suitable as zdf_channel_suitable, suitable as zdf_suitable,
+};
+pub(crate) use zdf::{fetch_pages as fetch_zdf_pages, is_pending_state as zdf_pending_state};
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
 
 use crate::{ExtractResult, Result, VideoInfo};
@@ -1509,6 +1606,30 @@ pub(crate) fn search_json_with(
     )
 }
 
+/// [`search_json_with`] keeping a parse failure's text: `Err` holds
+/// Python's `JSONDecodeError` text for the candidate (see
+/// [`crate::json::python_raw_decode_error_text`]), when it has one.
+pub(crate) fn search_json_detailed(
+    start: &regex::Regex,
+    html: &str,
+    transform: &dyn Fn(&str) -> String,
+) -> Option<std::result::Result<serde_json::Value, Option<String>>> {
+    let found = start.find(html)?;
+    let trimmed = html[found.end()..].trim_start();
+    if !trimmed.starts_with('{') {
+        return None;
+    }
+    let end = trimmed.rfind('}')?;
+    let text = transform(&trimmed[..=end]);
+    Some(
+        serde_json::Deserializer::from_str(&crate::json::replace_lone_surrogates(&text))
+            .into_iter::<serde_json::Value>()
+            .next()
+            .and_then(std::result::Result::ok)
+            .ok_or_else(|| crate::json::python_raw_decode_error_text(&text)),
+    )
+}
+
 /// `_search_nextjs_data(webpage, video_id)` (fatal): the `__NEXT_DATA__`
 /// script's JSON (greedy to the last `}` before a `</script>`).
 pub(crate) fn search_nextjs_data(
@@ -1539,15 +1660,137 @@ pub(crate) fn search_nextjs_data(
         })
 }
 
+/// `_search_nextjs_v13_data(webpage, video_id)` (fatal): the Next.js app
+/// router flight data's hydration objects by their hex keys, in insertion
+/// order (a repeated key keeps its first position, like a `dict`).
+pub(crate) fn search_nextjs_v13_data(
+    html: &str,
+    extractor: &str,
+    id: &str,
+) -> crate::Result<serde_json::Map<String, serde_json::Value>> {
+    use serde_json::Value;
+    static SEGMENT: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r"<script\b[^>]*>self\.__next_f\.push\((\[.+?\])\)</script>")
+            .expect("static pattern")
+    });
+    static NAME: std::sync::LazyLock<regex::Regex> =
+        std::sync::LazyLock::new(|| regex::Regex::new(r"^\$L[0-9a-f]+$").expect("static pattern"));
+    static PREFIX: std::sync::LazyLock<regex::Regex> =
+        std::sync::LazyLock::new(|| regex::Regex::new(r"^[0-9a-f]+$").expect("static pattern"));
+
+    fn flatten(flight: Value, data: &mut serde_json::Map<String, Value>) {
+        let Value::Array(items) = flight else {
+            return;
+        };
+        if items.len() == 4 && items[0] == "$" {
+            let mut items = items;
+            let Value::Object(mut object) = items.pop().expect("four items") else {
+                return;
+            };
+            let children = object.shift_remove("children");
+            if !object.is_empty()
+                && let Some(name) = items[1].as_str()
+                && NAME.is_match(name)
+            {
+                data.insert(name[2..].to_owned(), Value::Object(object));
+            }
+            if let Some(children) = children {
+                flatten(children, data);
+            }
+            return;
+        }
+        for item in items {
+            flatten(item, data);
+        }
+    }
+
+    let mut flight_text = String::new();
+    for found in SEGMENT.captures_iter(html) {
+        let segment: Value = serde_json::from_str(&found[1]).map_err(|error| {
+            crate::Error::Reported(format!(
+                "[{extractor}] {id}: Failed to parse JSON  (caused by {error}); {}",
+                crate::BUG_REPORTS_MESSAGE
+            ))
+        })?;
+        // Only two-item segments of the data payload type (1).
+        if let Value::Array(items) = &segment
+            && items.len() == 2
+            && items[0].as_i64() == Some(1)
+            && let Some(chunk) = items[1].as_str()
+        {
+            flight_text.push_str(chunk);
+        }
+    }
+
+    let mut data = serde_json::Map::new();
+    for line in py_splitlines(&flight_text) {
+        let (prefix, body) = line
+            .trim_start()
+            .split_once(':')
+            .unwrap_or((line.trim_start(), ""));
+        if !PREFIX.is_match(prefix) {
+            continue;
+        }
+        if body.starts_with('[') && body.ends_with(']') {
+            if let Ok(parsed) = serde_json::from_str::<Value>(body) {
+                flatten(parsed, &mut data);
+            }
+        } else if body.starts_with('{')
+            && body.ends_with('}')
+            && let Ok(parsed) = serde_json::from_str::<Value>(body)
+        {
+            data.insert(prefix.to_owned(), parsed);
+        }
+    }
+    Ok(data)
+}
+
+/// Python's `str.splitlines()`: lines split at any line boundary (`\r\n`
+/// as one), without their terminators.
+fn py_splitlines(text: &str) -> Vec<&str> {
+    let mut lines = Vec::new();
+    let mut start = 0;
+    let mut chars = text.char_indices().peekable();
+    while let Some((index, c)) = chars.next() {
+        if matches!(
+            c,
+            '\n' | '\r'
+                | '\u{0b}'
+                | '\u{0c}'
+                | '\u{1c}'
+                | '\u{1d}'
+                | '\u{1e}'
+                | '\u{85}'
+                | '\u{2028}'
+                | '\u{2029}'
+        ) {
+            lines.push(&text[start..index]);
+            let mut end = index + c.len_utf8();
+            if c == '\r' && chars.peek().is_some_and(|(_, next)| *next == '\n') {
+                chars.next();
+                end += 1;
+            }
+            start = end;
+        }
+    }
+    if start < text.len() {
+        lines.push(&text[start..]);
+    }
+    lines
+}
+
 /// Whether an extractor's `_VALID_URL` takes this non-HTTP pseudo-URL.
 pub fn pseudo_url(url: &str) -> bool {
     (url.starts_with("jwplatform:") && jwplatform::suitable(url))
         || (url.starts_with("kaltura:") && kaltura::suitable(url))
         || youtube::search::suitable(url)
+        || (url.starts_with("nicosearch")
+            && (niconico::search_suitable(url) || niconico::search_date_suitable(url)))
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("arte://") && arte::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || (url.starts_with("francetv:") && francetv::suitable(url))
         || (url.starts_with("nrk:") && nrk::suitable(url))
         || (url.starts_with("peertube:") && peertube::suitable(url))
         || (url.starts_with("svt:") && svt::suitable(url))
@@ -1674,6 +1917,18 @@ pub(crate) fn no_playlist() -> bool {
     NO_PLAYLIST.load(std::sync::atomic::Ordering::Relaxed)
 }
 
+/// Upstream `age_limit` (`--age-limit`; `i64::MIN` without one), for
+/// [`age_restricted`].
+pub(crate) static AGE_LIMIT: std::sync::atomic::AtomicI64 =
+    std::sync::atomic::AtomicI64::new(i64::MIN);
+
+/// Upstream `age_restricted(content_limit, self.get_param('age_limit'))`:
+/// whether `--age-limit` is below the content's limit.
+pub(crate) fn age_restricted(content_limit: i64) -> bool {
+    let age_limit = AGE_LIMIT.load(std::sync::atomic::Ordering::Relaxed);
+    age_limit != i64::MIN && age_limit < content_limit
+}
+
 /// Upstream `getcomments` (`--write-comments`), for `extract_comments`.
 pub(crate) static GET_COMMENTS: std::sync::atomic::AtomicBool =
     std::sync::atomic::AtomicBool::new(false);
@@ -1698,6 +1953,116 @@ pub(crate) fn search_warning(extractor: &str, name: &str) {
         "[{extractor}] unable to extract {name}; {}",
         crate::BUG_REPORTS_MESSAGE
     ));
+}
+
+/// `_extract_f4m_formats(url, video_id, f4m_id=F4M_ID, fatal=False)`: an
+/// HTTP error is the `Unable to download f4m manifest` warning (no formats).
+/// Manifests that are not F4M, or whose media are nested manifests, are
+/// unsupported errors.
+pub(crate) fn extract_f4m_optional(
+    client: &Client,
+    extractor: &str,
+    manifest: &Url,
+    id: &str,
+    f4m_id: Option<&str>,
+) -> Result<Vec<crate::VideoFormat>> {
+    use crate::Error;
+    crate::screen::screen(&format!("[{extractor}] {id}: Downloading f4m manifest"));
+    let body = direct::request(client, manifest, None).and_then(|response| {
+        let final_url = response.url().clone();
+        Ok((final_url, response.text().map_err(Error::Http)?))
+    });
+    let (final_url, body) = match body {
+        Ok(found) => found,
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+            crate::screen::warning(&format!(
+                "[{extractor}] {id}: Unable to download f4m manifest: {}",
+                crate::upstream_error_text(&error)
+            ));
+            return Ok(Vec::new());
+        }
+        Err(error) => return Err(error),
+    };
+    let formats = match f4m::parse(&body, final_url.as_str(), f4m_id) {
+        Some(f4m::Manifest::Formats(formats)) => formats,
+        Some(f4m::Manifest::Nested) => {
+            return Err(Error::UnsupportedHtml5(
+                "F4M manifests referring to nested manifests are not supported natively".into(),
+            ));
+        }
+        None => {
+            return Err(Error::UnsupportedHtml5(
+                "non-F4M or malformed HDS manifests are not supported natively".into(),
+            ));
+        }
+    };
+    formats
+        .into_iter()
+        .map(|mut value| {
+            let ext = value["ext"].as_str().map(str::to_owned).unwrap_or_else(|| {
+                direct::determine_ext(value["url"].as_str().unwrap_or_default())
+                    .unwrap_or_else(|| "unknown_video".into())
+            });
+            value["ext"] = ext.into();
+            let mut format: crate::VideoFormat = serde_json::from_value(value)
+                .map_err(|error| Error::UnsupportedHtml5(format!("F4M media: {error}")))?;
+            format.protocol = Some("f4m".into());
+            crate::info_order::mark_format(&mut format, "f4m");
+            Ok(format)
+        })
+        .collect()
+}
+
+/// `_is_valid_url(url, video_id, item)`: a `Checking ITEM URL` request;
+/// an HTTP error is reported as `ITEM URL is invalid, skipping` and the URL
+/// is invalid. Non-HTTP URLs are valid without a request.
+pub(crate) fn is_valid_url(
+    client: &Client,
+    url: &str,
+    extractor: &str,
+    id: &str,
+    item: &str,
+) -> Result<bool> {
+    let url = proto_relative_http(url);
+    if !(url.starts_with("http://") || url.starts_with("https://")) {
+        return Ok(true);
+    }
+    let parsed = Url::parse(&url)?;
+    crate::screen::screen(&format!("[{extractor}] {id}: Checking {item} URL"));
+    match direct::request_with_headers(client, &parsed, None, &[]) {
+        Ok(_) => Ok(true),
+        Err(error @ (crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. })) => {
+            crate::screen::screen(&format!(
+                "[{extractor}] {id}: {item} URL is invalid, skipping: {}",
+                crate::upstream_error_text(&error)
+            ));
+            Ok(false)
+        }
+        Err(error) => Err(error),
+    }
+}
+
+/// `_check_formats(formats, video_id)`: formats whose URL is not valid
+/// (see [`is_valid_url`]) are dropped, in order.
+pub(crate) fn check_formats(
+    client: &Client,
+    formats: &mut Vec<crate::VideoFormat>,
+    extractor: &str,
+    id: &str,
+) -> Result<()> {
+    let mut kept = Vec::with_capacity(formats.len());
+    for format in formats.drain(..) {
+        let item = if format.format_id.is_empty() {
+            "video".to_owned()
+        } else {
+            format!("{} video format", format.format_id)
+        };
+        if is_valid_url(client, format.url.as_str(), extractor, id, &item)? {
+            kept.push(format);
+        }
+    }
+    *formats = kept;
+    Ok(())
 }
 
 /// `self._proto_relative_url(url, scheme='http:')`.
@@ -1795,6 +2160,11 @@ pub(crate) fn dict_info(
             "formats" => {}
             // The caller's `info.subtitles`.
             "subtitles" if value.is_null() => {}
+            "url" => {
+                info.extra
+                    .insert(crate::info_order::OWN_URL.into(), value.clone());
+                crate::metadata_parser::set_field(&mut info, name, value);
+            }
             _ => crate::metadata_parser::set_field(&mut info, name, value),
         }
     }
@@ -1841,6 +2211,21 @@ mod tests {
         assert_eq!(decode_webpage(&utf16, &HeaderMap::new()), "hi");
         let unknown = headers(&[(CONTENT_TYPE, "text/html; charset=x-unknown")]);
         assert_eq!(decode_webpage(b"ok \xff", &unknown), "ok \u{FFFD}");
+    }
+
+    #[test]
+    fn nextjs_v13_flight_data_keeps_hydration_objects_in_order() {
+        let html = concat!(
+            r#"<script>self.__next_f.push([0,"x"])</script>"#,
+            r#"<script>self.__next_f.push([1,"2:{\"a\":1}\r\n0:[\"$\",\"$L1b\",null,"#,
+            r#"{\"b\":2,\"children\":[\"$\",\"$L1c\",null,{\"c\":3}]}] zz:{\"d\":4}"])</script>"#,
+        );
+        let data = search_nextjs_v13_data(html, "test", "id").unwrap();
+        assert_eq!(
+            serde_json::Value::Object(data),
+            serde_json::json!({"2": {"a": 1}, "1b": {"b": 2}, "1c": {"c": 3}})
+        );
+        assert_eq!(py_splitlines("a\r\nb\rc\n"), ["a", "b", "c"]);
     }
 
     #[test]

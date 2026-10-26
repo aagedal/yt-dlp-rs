@@ -1,0 +1,126 @@
+{
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
+ "cases": [
+  {
+   "url": "https://9gag.com/gag/ae5Ag7B",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ae5Ag7B\", \"title\": \"Capybara Agility Training\", \"timestamp\": 1622650542, \"duration\": 8, \"uploader\": \"Fikyo Name\", \"uploader_id\": \"Fikyo\", \"uploader_url\": \"https://9gag.com/u/Fikyo\", \"formats\": [{\"url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_460sv.mp4\", \"width\": 460, \"height\": 258, \"acodec\": \"none\", \"ext\": \"mp4\", \"format_id\": \"460sv\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": null, \"tbr\": null, \"resolution\": \"460x258\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"460sv - 460x258\"}, {\"url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_460svwm.webm\", \"width\": 460, \"height\": 258, \"acodec\": null, \"ext\": \"webm\", \"format_id\": \"460svw\", \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"460x258\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"460svw - 460x258\"}, {\"url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_460svh265.mp4\", \"width\": 460, \"height\": 258, \"acodec\": \"none\", \"format_id\": \"460sv-h265\", \"vcodec\": \"h265\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": null, \"tbr\": null, \"resolution\": \"460x258\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"460sv-h265 - 460x258\"}, {\"url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_460svvp9.webm\", \"width\": 460, \"height\": 258, \"acodec\": \"none\", \"format_id\": \"460sv-vp9\", \"vcodec\": \"vp9\", \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": null, \"tbr\": null, \"resolution\": \"460x258\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"460sv-vp9 - 460x258\"}], \"thumbnails\": [{\"url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_460s.jpg\", \"width\": 460, \"height\": 258, \"id\": \"460\", \"ext\": \"jpg\", \"resolution\": \"460x258\"}, {\"url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_700b.jpg\", \"width\": 700, \"height\": 394, \"id\": \"700\", \"ext\": \"jpg\", \"resolution\": \"700x394\"}, {\"url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_700bwp.webp\", \"width\": 700, \"height\": 394, \"id\": \"700-webp\", \"resolution\": \"700x394\"}], \"like_count\": 1234, \"dislike_count\": 7, \"comment_count\": 55, \"age_limit\": null, \"categories\": [\"Awesome\"], \"tags\": [\"capybara\"], \"webpage_url\": \"https://9gag.com/gag/ae5Ag7B\", \"original_url\": \"https://9gag.com/gag/ae5Ag7B\", \"webpage_url_basename\": \"ae5Ag7B\", \"webpage_url_domain\": \"9gag.com\", \"extractor\": \"9gag\", \"extractor_key\": \"NineGag\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_700bwp.webp\", \"display_id\": \"ae5Ag7B\", \"fulltitle\": \"Capybara Agility Training\", \"duration_string\": \"8\", \"upload_date\": \"20210602\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_460svwm.webm\", \"width\": 460, \"height\": 258, \"ext\": \"webm\", \"format_id\": \"460svw\", \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"resolution\": \"460x258\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"460svw - 460x258\", \"_filename\": \"Capybara Agility Training [ae5Ag7B].webm\", \"filename\": \"Capybara Agility Training [ae5Ag7B].webm\", \"__write_download_archive\": false}], \"url\": \"https://img-9gag-fun.9cache.test/photo/ae5Ag7B_460svwm.webm\", \"width\": 460, \"height\": 258, \"acodec\": null, \"ext\": \"webm\", \"format_id\": \"460svw\", \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"460x258\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"460svw - 460x258\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [9gag] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://9gag.com/gag/ae5Ag7B",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[9gag] Extracting URL: https://9gag.com/gag/ae5Ag7B",
+    "[9gag] ae5Ag7B: Downloading JSON metadata",
+    "[info] Available formats for ae5Ag7B:",
+    "ID         EXT  RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------------------",
+    "460sv      mp4  460x258    | https | unknown video only",
+    "460svw     webm 460x258    | https | unknown unknown",
+    "460sv-h265 mp4  460x258    | https | h265    video only",
+    "460sv-vp9  webm 460x258    | https | vp9     video only"
+   ],
+   "stderr": [
+    "WARNING: [9gag] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://9gag.com/gag/ae5Ag7B",
+   "args": [
+    "--no-progress",
+    "-f",
+    "460sv-h265",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[9gag] Extracting URL: https://9gag.com/gag/ae5Ag7B",
+    "[9gag] ae5Ag7B: Downloading JSON metadata",
+    "[info] ae5Ag7B: Downloading 1 format(s): 460sv-h265",
+    "[download] Destination: ae5Ag7B.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [9gag] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {
+    "ae5Ag7B.mp4": 18
+   }
+  },
+  {
+   "url": "https://www.9gag.com/gag/aYKBYm9?ref=fb",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"aYKBYm9\", \"title\": \"I'm & you\", \"timestamp\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"formats\": [{\"url\": \"https://img-9gag-fun.9cache.test/photo/aYKBYm9_460sv.mp4\", \"width\": null, \"height\": null, \"acodec\": null, \"ext\": \"mp4\", \"format_id\": \"460sv\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"460sv - unknown\"}], \"thumbnails\": [], \"like_count\": null, \"dislike_count\": null, \"comment_count\": null, \"age_limit\": 18, \"categories\": null, \"tags\": null, \"webpage_url\": \"https://www.9gag.com/gag/aYKBYm9?ref=fb\", \"original_url\": \"https://www.9gag.com/gag/aYKBYm9?ref=fb\", \"webpage_url_basename\": \"aYKBYm9\", \"webpage_url_domain\": \"9gag.com\", \"extractor\": \"9gag\", \"extractor_key\": \"NineGag\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"aYKBYm9\", \"fulltitle\": \"I'm & you\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://img-9gag-fun.9cache.test/photo/aYKBYm9_460sv.mp4\", \"ext\": \"mp4\", \"format_id\": \"460sv\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"460sv - unknown\", \"_filename\": \"I'm & you [aYKBYm9].mp4\", \"filename\": \"I'm & you [aYKBYm9].mp4\", \"__write_download_archive\": false}], \"url\": \"https://img-9gag-fun.9cache.test/photo/aYKBYm9_460sv.mp4\", \"width\": null, \"height\": null, \"acodec\": null, \"ext\": \"mp4\", \"format_id\": \"460sv\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"460sv - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [9gag] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://9gag.com/gag/photo1",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [9gag] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [9gag] photo1: The given url does not contain a video"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://9gag.com/gag/photo1",
+   "args": [
+    "--ignore-no-formats-error",
+    "--print",
+    "%(id)s|%(title)s|%(thumbnails)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "photo1|Just a photo|[{\"url\": \"https://img-9gag-fun.9cache.test/photo/photo1_700b.jpg\", \"width\": 700, \"height\": 700, \"id\": \"700\", \"ext\": \"jpg\", \"resolution\": \"700x700\"}]"
+   ],
+   "stderr": [
+    "WARNING: [9gag] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "WARNING: [9gag] The given url does not contain a video",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://9gag.com/gag/nodata",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [9gag] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: nodata: An extractor error has occurred. (caused by KeyError('data')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

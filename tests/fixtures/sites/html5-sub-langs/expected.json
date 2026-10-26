@@ -1,0 +1,151 @@
+{
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
+ "cases": [
+  {
+   "url": "https://example.test/page.html",
+   "args": [
+    "--skip-download",
+    "--write-subs",
+    "--sub-langs",
+    "en.*",
+    "--print",
+    "%(requested_subtitles)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"en\": {\"url\": \"https://example.test/en.vtt\", \"ext\": \"vtt\"}, \"en-US\": {\"url\": \"https://example.test/enus.vtt\", \"ext\": \"vtt\"}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://example.test/page.html",
+   "args": [
+    "--skip-download",
+    "--write-subs",
+    "--sub-langs",
+    "EN.*,-en",
+    "--print",
+    "%(requested_subtitles)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"en-US\": {\"url\": \"https://example.test/enus.vtt\", \"ext\": \"vtt\"}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://example.test/page.html",
+   "args": [
+    "--skip-download",
+    "--write-subs",
+    "--sub-langs",
+    "all,-en.*",
+    "--print",
+    "%(requested_subtitles)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"fr\": {\"url\": \"https://example.test/fr.vtt\", \"ext\": \"vtt\"}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://example.test/page.html",
+   "args": [
+    "--skip-download",
+    "--write-subs",
+    "--sub-langs",
+    " fr , ,en ",
+    "--print",
+    "%(requested_subtitles)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"fr\": {\"url\": \"https://example.test/fr.vtt\", \"ext\": \"vtt\"}, \"en\": {\"url\": \"https://example.test/en.vtt\", \"ext\": \"vtt\"}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://example.test/page.html",
+   "args": [
+    "--skip-download",
+    "--write-subs",
+    "--sub-langs",
+    "fr|en",
+    "--print",
+    "%(requested_subtitles)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"en\": {\"url\": \"https://example.test/en.vtt\", \"ext\": \"vtt\"}, \"fr\": {\"url\": \"https://example.test/fr.vtt\", \"ext\": \"vtt\"}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://example.test/page.html",
+   "args": [
+    "--skip-download",
+    "--write-subs",
+    "--sub-langs",
+    "(",
+    "--print",
+    "%(requested_subtitles)j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "ERROR: Wrong regex for subtitlelangs: ("
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://example.test/page.html",
+   "args": [
+    "--no-progress",
+    "--skip-download",
+    "--write-subs",
+    "--sub-langs",
+    "en.*",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[generic] Extracting URL: https://example.test/page.html",
+    "[generic] page: Downloading webpage",
+    "[generic] page: Extracting information",
+    "[info] page-1: Downloading subtitles: en, en-US",
+    "[info] page-1: Downloading 1 format(s): 0",
+    "[info] Writing video subtitles to: page-1.en.vtt",
+    "[download] Destination: page-1.en.vtt",
+    "[download] Download completed",
+    "[info] Writing video subtitles to: page-1.en-US.vtt",
+    "[download] Destination: page-1.en-US.vtt",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {
+    "page-1.en-US.vtt": 37,
+    "page-1.en.vtt": 35
+   }
+  }
+ ]
+}

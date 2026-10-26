@@ -938,12 +938,27 @@ impl<'a> ApiRequest<'a> {
         };
         if let Err(source) = response.error_for_status_ref() {
             let body = response.bytes().unwrap_or_default();
-            if !is_html(&body)
-                && let Some(message) = serde_json::from_slice::<Value>(&body)
+            if !is_html(&body[..body.len().min(512)]) {
+                // `_parse_json(content or '{}', item_id, fatal=False)`.
+                let text = String::from_utf8_lossy(&body);
+                let text = if text.is_empty() { "{}".into() } else { text };
+                if let Some(error) = crate::json::python_decode_error_text(&text) {
+                    let prefix = if item_id.is_empty() {
+                        String::new()
+                    } else {
+                        format!("{item_id}: ")
+                    };
+                    crate::screen::warning(&format!(
+                        "[{extractor}] {prefix}Failed to parse JSON: {error}"
+                    ));
+                } else if let Some(message) = serde_json::from_slice::<Value>(&body)
                     .ok()
                     .and_then(|value| value.pointer("/error/message")?.as_str().map(str::to_owned))
-            {
-                crate::screen::warning(&format!("[{extractor}] YouTube said: ERROR - {message}"));
+                {
+                    crate::screen::warning(&format!(
+                        "[{extractor}] YouTube said: ERROR - {message}"
+                    ));
+                }
             }
             return Err(failure(Error::Http(source)));
         }
@@ -1437,15 +1452,52 @@ fn download_initial_webpage(
         .map(|user_agent| ("User-Agent", user_agent))
         .into_iter()
         .collect();
-    super::super::download_webpage_note_headers(
-        client,
-        &url,
-        "youtube",
-        video_id,
-        "Downloading webpage",
-        &headers,
-    )
-    .map(Some)
+    // `_download_webpage_with_retries`: network errors other than HTTP 403
+    // and 429 are retried; the page is never fatal.
+    for attempt in 1..=API_RETRIES + 1 {
+        let error = match super::super::download_webpage_note_headers(
+            client,
+            &url,
+            "youtube",
+            video_id,
+            "Downloading webpage",
+            &headers,
+        ) {
+            Ok(webpage) => return Ok(Some(webpage)),
+            Err(error) => error,
+        };
+        let cause = match &error {
+            Error::ExtractorRequest { source, .. } => match source.as_ref() {
+                source @ (Error::Http(http) | Error::HttpRetryAfter { source: http, .. })
+                    if http
+                        .status()
+                        .is_none_or(|status| !matches!(status.as_u16(), 403 | 429)) =>
+                {
+                    Some(crate::upstream_error_text(source))
+                }
+                _ => None,
+            },
+            _ => None,
+        };
+        if let Some(cause) = &cause
+            && attempt <= API_RETRIES
+        {
+            crate::screen::warning(&format!(
+                "[youtube] {cause}. Retrying ({attempt}/{API_RETRIES})..."
+            ));
+            continue;
+        }
+        if !matches!(error, Error::ExtractorRequest { .. }) {
+            return Err(error);
+        }
+        let mut text = crate::upstream_error_text(&error);
+        if cause.is_some() {
+            text.push_str(&format!(". Giving up after {API_RETRIES} retries"));
+        }
+        crate::screen::warning(&text);
+        break;
+    }
+    Ok(None)
 }
 
 /// `_download_initial_data`: the webpage's initial data (unless

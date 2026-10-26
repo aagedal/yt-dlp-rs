@@ -114,13 +114,17 @@ fn error(message: impl Into<String>) -> Error {
 }
 
 impl SubtitleOptions {
-    /// Language expressions support comma-separated literal tags, all and exclusions.
-    /// Regular expressions are deliberately unsupported. Formats are ordered slash
-    /// preferences; an empty query remains a valid request for the fallback format.
+    /// Language expressions are comma-separated case-insensitive regular
+    /// expressions (fully matching a language tag), `all` and `-` exclusions;
+    /// without any non-empty item the default language is chosen. Formats are
+    /// ordered slash preferences; an empty query remains a valid request for
+    /// the fallback format.
     pub fn new(languages: Option<&str>, format: &str) -> Result<Self> {
         validate_options(languages, format)?;
         Ok(Self {
-            languages: languages.map(str::to_owned),
+            languages: languages
+                .filter(|languages| language_tokens(languages).next().is_some())
+                .map(str::to_owned),
             format: format.into(),
         })
     }
@@ -169,23 +173,48 @@ impl SubtitleOptions {
     ) -> Result<SubtitleSelection> {
         let mut requested = Vec::new();
         if let Some(languages) = &self.languages {
-            for token in languages.split(',') {
-                let token = token.trim();
-                let (exclude, tag) = token
+            if subtitles.is_empty() {
+                return Ok(SubtitleSelection {
+                    requested: RequestedSubtitles::default(),
+                    warnings: Vec::new(),
+                });
+            }
+            // Upstream `orderedSet_from_options(..., {'all': ...}, use_regex=True)`.
+            let update = |requested: &mut Vec<usize>, index: usize, discard: bool| {
+                if discard {
+                    requested.retain(|current| *current != index);
+                } else if !requested.contains(&index) {
+                    requested.push(index);
+                }
+            };
+            for token in language_tokens(languages) {
+                let (discard, value) = token
                     .strip_prefix('-')
-                    .map_or((false, token), |tag| (true, tag));
-                for (index, (language, _)) in subtitles.entries.iter().enumerate() {
-                    if tag != "all"
-                        && !language
-                            .as_deref()
-                            .is_some_and(|language| same_tag(language, tag))
-                    {
-                        continue;
+                    .map_or((false, token), |value| (true, value));
+                if value == "all" {
+                    for index in 0..subtitles.entries.len() {
+                        update(&mut requested, index, discard);
                     }
-                    if exclude {
-                        requested.retain(|current| *current != index);
-                    } else if !requested.contains(&index) {
-                        requested.push(index);
+                    continue;
+                }
+                // `re.compile(value, re.I).fullmatch`; the bare value is checked
+                // first so that wrapping cannot balance an invalid pattern.
+                let compile = |pattern: &str| {
+                    regex::RegexBuilder::new(pattern)
+                        .case_insensitive(true)
+                        .build()
+                        .map_err(|_| {
+                            Error::Reported(format!("Wrong regex for subtitlelangs: {value}"))
+                        })
+                };
+                compile(value)?;
+                let pattern = compile(&format!("^(?:{value})$"))?;
+                for (index, (language, _)) in subtitles.entries.iter().enumerate() {
+                    if language
+                        .as_deref()
+                        .is_some_and(|language| pattern.is_match(language))
+                    {
+                        update(&mut requested, index, discard);
                     }
                 }
             }
@@ -255,21 +284,16 @@ fn validate_options(languages: Option<&str>, format: &str) -> Result<()> {
             }
         }
     }
-    if let Some(languages) = languages {
-        for token in languages.split(',') {
-            let token = token.trim();
-            let tag = token.strip_prefix('-').unwrap_or(token);
-            if tag.is_empty() || tag.chars().any(|c| ".[]{}()*+?|^$\\".contains(c)) {
-                return Err(error(format!(
-                    "unsupported subtitle language expression {token:?}; use literal tags or all"
-                )));
-            }
-        }
-    }
     Ok(())
 }
-fn same_tag(left: &str, right: &str) -> bool {
-    left.to_lowercase() == right.to_lowercase()
+
+/// The `--sub-langs` items: stripped, empty ones dropped (upstream
+/// `_list_from_options_callback`).
+fn language_tokens(languages: &str) -> impl Iterator<Item = &str> {
+    languages
+        .split(',')
+        .map(str::trim)
+        .filter(|token| !token.is_empty())
 }
 
 /// Plan every sidecar name before writing. Components use the native filename
@@ -521,7 +545,14 @@ mod tests {
             .select(&subs)
             .unwrap();
         assert_eq!(requested_tags(&literal), vec![Some("en")]);
-        assert!(SubtitleOptions::new(Some("en,   ,fr"), "best").is_err());
+        // Empty items are dropped; only empty items choose the default.
+        let empty = SubtitleOptions::new(Some("en,   ,fr"), "best").unwrap();
+        assert_eq!(
+            requested_tags(&empty.select(&subs).unwrap()),
+            vec![Some("en"), Some("fr")]
+        );
+        let none = SubtitleOptions::new(Some(" , "), "best").unwrap();
+        assert_eq!(none.languages, None);
         assert!(SubtitleOptions::new(Some("en,\tfr"), "best").is_err());
         let controlled = subtitles(&[Some("en\u{1b}[31m")]);
         let warning = SubtitleOptions::new(Some("all"), "missing")
@@ -587,15 +618,42 @@ mod tests {
     }
 
     #[test]
-    fn unsupported_languages_controls_and_option_limits_are_preflight_errors() {
-        for language in [
-            "", "-", "en,", ",en", "en.*", "en|fr", "en[US]", "en\\fr", "en\n",
+    fn languages_are_case_insensitive_full_match_regexes() {
+        // Selections of upstream fa98866 (`--sub-langs` through the CLI).
+        let subs = subtitles(&[Some("en"), Some("en-US"), Some("fr"), None]);
+        for (languages, expected) in [
+            ("en.*", vec![Some("en"), Some("en-US")]),
+            ("EN.*,-en", vec![Some("en-US")]),
+            ("f", vec![]),
+            ("all,-en.*", vec![Some("fr"), None]),
+            (" fr , ,en ", vec![Some("fr"), Some("en")]),
+            ("-", vec![]),
+            ("fr|en", vec![Some("en"), Some("fr")]),
+            ("en-us", vec![Some("en-US")]),
+            ("all,-all,fr", vec![Some("fr")]),
+            ("-fr,fr", vec![Some("fr")]),
+            ("en.*,en", vec![Some("en"), Some("en-US")]),
         ] {
-            assert!(
-                SubtitleOptions::new(Some(language), "best").is_err(),
-                "{language}"
+            let options = SubtitleOptions::new(Some(languages), "best").unwrap();
+            assert_eq!(
+                requested_tags(&options.select(&subs).unwrap()),
+                expected,
+                "{languages}"
             );
         }
+        for invalid in ["(", "e[n", "a)|(b", "-("] {
+            let options = SubtitleOptions::new(Some(invalid), "best").unwrap();
+            let error = options.select(&subs).unwrap_err().to_string();
+            let pattern = invalid.trim_start_matches('-');
+            assert_eq!(error, format!("Wrong regex for subtitlelangs: {pattern}"));
+            // Without subtitles upstream returns before compiling.
+            assert!(options.select(&Subtitles::default()).is_ok());
+        }
+    }
+
+    #[test]
+    fn controls_and_option_limits_are_preflight_errors() {
+        assert!(SubtitleOptions::new(Some("en\n"), "best").is_err());
         assert!(SubtitleOptions::new(None, "vtt\n").is_err());
         assert!(SubtitleOptions::new(Some(&"x".repeat(16 * 1024 + 1)), "best").is_err());
         assert!(SubtitleOptions::new(Some(&vec!["en"; 1025].join(",")), "best").is_err());

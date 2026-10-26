@@ -1,5 +1,5 @@
 {
- "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
  "cases": [
   {
    "url": "https://kick.com/xqc/videos/8dd97a8d-e17f-48fb-8bc3-565f88dbc9ea",
@@ -381,6 +381,142 @@
    ],
    "stderr": [
     "WARNING: [kick:clips] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://kick.com/xqc/clips",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[kick:clips] Extracting URL: https://kick.com/xqc/clips",
+    "[kick:clips] xqc: Downloading creator info",
+    "[download] Downloading playlist: xQc - Clips sorted by Views (Last Week)",
+    "[kick:clips] xqc: Downloading page 1",
+    "[kick:clips] Playlist xQc - Clips sorted by Views (Last Week): Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: xQc - Clips sorted by Views (Last Week)"
+   ],
+   "stderr": [
+    "WARNING: [kick:clips] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://kick.com/xqc/clips",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|clip_01GYXVB5Y8PWAPWCWMSBCFB05X|NA"
+   ],
+   "stderr": [
+    "WARNING: [kick:clips] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://kick.com/xqc/clips",
+   "args": [
+    "-I",
+    "2",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2|clip_01H9SKET879NE7N9RJRRDS98J3|NA"
+   ],
+   "stderr": [
+    "WARNING: [kick:clips] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://kick.com/xqc/clips",
+   "args": [
+    "-I",
+    "1:3",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|clip_01GYXVB5Y8PWAPWCWMSBCFB05X|2",
+    "2|clip_01H9SKET879NE7N9RJRRDS98J3|2"
+   ],
+   "stderr": [
+    "WARNING: [kick:clips] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://kick.com/xqc/videos",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[kick:videos] Extracting URL: https://kick.com/xqc/videos",
+    "[kick:videos] xqc: Downloading creator info",
+    "[download] Downloading playlist: xQc - Videos sorted by Date",
+    "[kick:videos] xqc: Downloading API JSON",
+    "[kick:videos] Playlist xQc - Videos sorted by Date: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: xQc - Videos sorted by Date"
+   ],
+   "stderr": [
+    "WARNING: [kick:videos] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://kick.com/xqc/videos",
+   "args": [
+    "-I",
+    "2",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2|01a0251f-ef48-702d-9289-d66922da0e84|NA"
+   ],
+   "stderr": [
+    "WARNING: [kick:videos] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://kick.com/xqc/videos",
+   "args": [
+    "-I",
+    "2:4",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2|01a0251f-ef48-702d-9289-d66922da0e84|3",
+    "3|ffffffff-0000-1111-2222-333333333333|3"
+   ],
+   "stderr": [
+    "WARNING: [kick:videos] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
    ],
    "files": {}
   }

@@ -26,6 +26,10 @@ const UNSAFE_DEFAULT_CHARS: &str = "\"' \n\t;&|^$%*<>{}()[]`#\\";
 /// in processing order.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Stage {
+    /// After extraction, before the match filter and format selection.
+    PreProcess,
+    /// After the match filter, before format selection.
+    AfterFilter,
     /// After format selection, before printing (also when simulating).
     Video,
     /// After sidecars and info JSON, before the media download.
@@ -54,6 +58,8 @@ impl Stage {
 
     pub(super) fn parse(when: &str) -> Result<Self> {
         Ok(match when {
+            "pre_process" => Self::PreProcess,
+            "after_filter" => Self::AfterFilter,
             "video" => Self::Video,
             "before_dl" => Self::BeforeDownload,
             "post_process" => Self::PostProcess,

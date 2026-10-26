@@ -1,7 +1,7 @@
 # Saved video remux/recode plans
 
 Source: official yt-dlp checkout at
-`6ccd977303412151ee23352c6257dd658ffc1987` (2026.10.21).
+`fa9886678eb65103303c627b8e013f13f8999b41` (2026.10.21).
 
 `cases.json` records actual `parse_options` results and actual
 `FFmpegVideoRemuxerPP.run` / `FFmpegVideoConvertorPP.run` behavior from

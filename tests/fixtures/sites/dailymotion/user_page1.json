@@ -1,0 +1,28 @@
+{
+ "data": {
+  "channel": {
+   "videos": {
+    "edges": [
+     {
+      "node": {
+       "xid": "x8u001",
+       "url": "https://www.dailymotion.com/video/x8u001"
+      }
+     },
+     {
+      "node": {
+       "xid": "x8u002",
+       "url": "https://www.dailymotion.com/video/x8u002"
+      }
+     },
+     {
+      "node": {
+       "xid": "x8u003",
+       "url": "https://www.dailymotion.com/video/x8u003"
+      }
+     }
+    ]
+   }
+  }
+ }
+}
