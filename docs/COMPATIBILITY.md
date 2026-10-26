@@ -1621,6 +1621,46 @@ warning) or one `mp4` format, the `PATH` ID with slashes as dashes, the
 OpenGraph title (else the `<title>` without ` | Yorkshire Film Archive`), and
 the URL-valued preview and integer duration.
 
+ZDF videos (`zdf.de/video|play/.../ID`, legacy `zdf.de/.../ID.html` and the
+`zdfheute.de`/`logo.de` `.../ID.html` sister sites) follow upstream `ZDFIE`:
+an API token from the Android app's `mediathekV2/token` endpoint (`Downloading
+API token`, kept for the run and in the cache under `zdf`/`api-token` until
+its `expires`), the GraphQL `VideoByCanonical` POST (`Api-Auth`, `Downloading
+video metadata`), and each current media node's PTMD document (the
+`{playerId}` template as `android_native_6`, `Downloading PTMD data`, HTTP
+errors as `Failed to download PTMD data`): every track URL once, HLS masters
+as non-fatal `hls` formats (master playlist only, manifest subtitles dropped
+with upstream's warning), `mp4`/`webm` tracks as `http-TYPE` formats with
+`parse_codecs` of the quality's `mimeCodec`, its height, the width from the
+node's aspect ratio, the file size and the URL's `_NNNk_` bitrate, other
+extensions skipped with upstream's warning; German Sign Language nodes add
+`-dgs` formats (`German Sign Language` note, preference -2); every format gets
+the track class as its note (not for audio-only formats), the ISO 639-2
+language and upstream's language preference (audio description -10, German
+main 10, German 5, other main 1). Captions are deduplicated by URL (`deu` by
+default). Metadata: title, lead paragraph (else teaser description), ISO 8601
+editorial date, teaser image thumbnails (`WxH`/`auto` sizes, `original`
+preferred), episode/season numbers, smart collection series and ID, the first
+node's stream anchors as chapters (a zero offset dropped like upstream), the
+PTMD duration, `is_live` (`liveMediaType`) and the PTMD basename as
+`_old_archive_ids`. A `null` GraphQL video falls back to the
+`mediathekV2/document` API (title, description, date, teaser thumbnails, its
+`streamApiUrlAndroid` PTMD; `Unable to extract PTMD URL` without one).
+
+ZDF smart collections (other `www.zdf.de/.../ID` URLs) follow upstream
+`ZDFChannelIE`: the page request for the redirected ID, the persisted
+`GetSmartCollectionByCanonical` GraphQL GET (query encoded like `urlencode`),
+the featured video as a followed `zdf` result when there are no seasons (or
+with `--no-playlist`, with `_yes_playlist`'s messages), `?staffel=N` season
+selection (upstream's not-found error), and the seasons'
+`seasonByCanonical` pages (24 episodes, cursor paging) as `url` results with
+their ID, title, description, timestamp and episode/season numbers, fetched
+lazily like upstream's generator (`-I` stops paging early). Unexpected value
+types for PTMD templates, track classes/languages and stream types, and API
+answers whose `data` is not an object are explicit native errors.
+`tests/fixtures/sites/zdf/` is compared with pinned upstream output; its API
+answers are synthetic, shaped like upstream's parsing and tests.
+
 Zhihu videos (`zhihu.com/zvideo/ID`) follow upstream `ZhihuIE`: the zvideos
 API's playlist qualities with a URL (`url` else `play_url`) as formats with
 their sample rate, size, FPS, dimensions and bitrate, the fatal title, the

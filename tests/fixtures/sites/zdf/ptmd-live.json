@@ -1,0 +1,26 @@
+{
+ "captions": [],
+ "priorityList": [
+  {
+   "formitaeten": [
+    {
+     "type": "h264_aac_ts_http_m3u8_http",
+     "qualities": [
+      {
+       "quality": "auto",
+       "audio": {
+        "tracks": [
+         {
+          "class": "main",
+          "language": "deu",
+          "uri": "https://media.zdf.test/live/master.m3u8"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

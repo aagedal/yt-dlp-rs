@@ -1,0 +1,38 @@
+{
+ "attributes": {
+  "duration": {
+   "value": 30000
+  }
+ },
+ "captions": [
+  {
+   "language": "deu",
+   "uri": "https://utstreaming.zdf.test/mtt/260611_mario_voigt_viu.vtt"
+  }
+ ],
+ "priorityList": [
+  {
+   "formitaeten": [
+    {
+     "type": "h264_aac_mp4_http_na_na",
+     "qualities": [
+      {
+       "quality": "veryhigh",
+       "mimeCodec": "avc1.4d401f, mp4a.40.2",
+       "highestVerticalResolution": 720,
+       "audio": {
+        "tracks": [
+         {
+          "class": "main",
+          "language": "deu",
+          "uri": "https://media.zdf.test/heute/260611_mario_voigt_viu_1628k_p13v17.mp4"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

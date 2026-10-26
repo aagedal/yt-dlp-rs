@@ -226,6 +226,7 @@ mod xspf;
 mod xvideos;
 mod yfanefa;
 pub(crate) mod youtube;
+mod zdf;
 mod zhihu;
 
 pub use amadeustv::{AmadeusTv, suitable as amadeustv_suitable};
@@ -560,6 +561,10 @@ pub use youtube::{
     JsRuntime, JsRuntimeName, WaitForVideo, Youtube, YoutubeOptions,
     extractor_suitable as youtube_extractor_suitable, js_runtimes, suitable as youtube_suitable,
 };
+pub use zdf::{
+    Zdf, ZdfChannel, channel_suitable as zdf_channel_suitable, suitable as zdf_suitable,
+};
+pub(crate) use zdf::{fetch_pages as fetch_zdf_pages, is_pending_state as zdf_pending_state};
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
 
 use crate::{ExtractResult, Result, VideoInfo};

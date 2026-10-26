@@ -1,0 +1,52 @@
+{
+ "basename": "211219_sendung_hjo_dgs",
+ "captions": [
+  {
+   "language": "deu",
+   "class": "hoh",
+   "uri": "https://utstreaming.zdf.test/mtt/211219_sendung_hjo.xml"
+  }
+ ],
+ "priorityList": [
+  {
+   "formitaeten": [
+    {
+     "type": "h264_aac_mp4_http_na_na",
+     "qualities": [
+      {
+       "quality": "veryhigh",
+       "mimeCodec": "avc1.4d401f, mp4a.40.2",
+       "highestVerticalResolution": 720,
+       "audio": {
+        "tracks": [
+         {
+          "class": "main",
+          "language": "deu",
+          "uri": "https://media.zdf.test/hjo/211219_sendung_hjo_dgs_1628k_p13v15.mp4"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "type": "h264_aac_ts_http_m3u8_http",
+     "qualities": [
+      {
+       "quality": "auto",
+       "audio": {
+        "tracks": [
+         {
+          "class": "main",
+          "language": "deu",
+          "uri": "https://media.zdf.test/hjo/dgs.m3u8"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,15 @@
+{
+ "data": {
+  "videoByCanonical": {
+   "canonical": "kaputt-100",
+   "title": "Kaputt",
+   "currentMedia": {
+    "nodes": [
+     {
+      "ptmdTemplate": "/tmd/2/{playerId}/vod/ptmd/mediathek/kaputt/1"
+     }
+    ]
+   }
+  }
+ }
+}

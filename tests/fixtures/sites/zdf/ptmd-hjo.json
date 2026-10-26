@@ -1,0 +1,161 @@
+{
+ "basename": "211219_sendung_hjo",
+ "attributes": {
+  "duration": {
+   "value": 1770000
+  }
+ },
+ "captions": [
+  {
+   "language": "deu",
+   "class": "hoh",
+   "format": "ebu-tt-d-basic-de",
+   "uri": "https://utstreaming.zdf.test/mtt/211219_sendung_hjo.xml"
+  },
+  {
+   "language": "deu",
+   "class": "hoh",
+   "format": "webvtt",
+   "uri": "https://utstreaming.zdf.test/mtt/211219_sendung_hjo.vtt"
+  },
+  {
+   "class": "hoh",
+   "format": "ebu-tt-d-basic-de",
+   "uri": "https://utstreaming.zdf.test/mtt/211219_sendung_hjo.xml"
+  },
+  {
+   "class": "hoh",
+   "format": "webvtt",
+   "uri": "https://utstreaming.zdf.test/mtt/nolang.vtt"
+  },
+  {
+   "language": "eng",
+   "format": "webvtt",
+   "uri": "https://utstreaming.zdf.test/mtt/211219_eng.vtt"
+  },
+  {
+   "language": "eng",
+   "uri": "not a url"
+  }
+ ],
+ "priorityList": [
+  {
+   "formitaeten": [
+    {
+     "type": "h264_aac_mp4_http_na_na",
+     "mimeType": "video/mp4",
+     "qualities": [
+      {
+       "quality": "fhd",
+       "mimeCodec": "avc1.640028, mp4a.40.2",
+       "highestVerticalResolution": 1080,
+       "audio": {
+        "tracks": [
+         {
+          "class": "main",
+          "language": "deu",
+          "filesize": 744000000,
+          "uri": "https://media.zdf.test/hjo/211219_sendung_hjo_3360k_p36v15.mp4"
+         },
+         {
+          "class": "ad",
+          "language": "deu",
+          "filesize": "745000000",
+          "uri": "https://media.zdf.test/hjo/211219_sendung_hjo_ad_3360k_p36v15.mp4"
+         }
+        ]
+       }
+      },
+      {
+       "quality": "high",
+       "mimeCodec": "avc1.4d401f, mp4a.40.2",
+       "highestVerticalResolution": "360",
+       "audio": {
+        "tracks": [
+         {
+          "class": "main",
+          "language": "deu",
+          "uri": "https://media.zdf.test/hjo/211219_sendung_hjo_808k_p11v15.mp4"
+         },
+         {
+          "class": "main",
+          "language": "deu",
+          "uri": null
+         }
+        ]
+       }
+      },
+      {
+       "quality": "audio",
+       "mimeCodec": "mp4a.40.2",
+       "audio": {
+        "tracks": [
+         {
+          "class": "main",
+          "language": "eng",
+          "uri": "https://media.zdf.test/hjo/211219_sendung_hjo_eng_a.mp4"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "type": "h264_aac_ts_http_m3u8_http",
+     "mimeType": "application/x-mpegURL",
+     "qualities": [
+      {
+       "quality": "auto",
+       "audio": {
+        "tracks": [
+         {
+          "class": "main",
+          "language": "deu",
+          "uri": "https://media.zdf.test/hjo/master.m3u8"
+         },
+         {
+          "class": "ot",
+          "language": "eng",
+          "uri": "https://media.zdf.test/hjo/eng.m3u8"
+         }
+        ]
+       }
+      },
+      {
+       "quality": "auto",
+       "audio": {
+        "tracks": [
+         {
+          "class": "main",
+          "language": "deu",
+          "uri": "https://media.zdf.test/hjo/master.m3u8"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "formitaeten": [
+    {
+     "type": "dash",
+     "qualities": [
+      {
+       "audio": {
+        "tracks": [
+         {
+          "class": "main",
+          "language": "deu",
+          "uri": "https://media.zdf.test/hjo/manifest.mpd"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

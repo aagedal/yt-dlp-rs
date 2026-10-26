@@ -1,0 +1,44 @@
+{
+ "data": {
+  "smartCollectionByCanonical": {
+   "seasons": {
+    "nodes": [
+     {
+      "episodes": {
+       "nodes": [
+        {
+         "canonical": "xy-1-100",
+         "sharingUrl": "https://www.zdf.de/video/show/aktenzeichen-xy-ungeloest-110/xy-1-100",
+         "teaser": {
+          "title": "Aktenzeichen XY vom 8. Januar 2025",
+          "description": null
+         },
+         "leadParagraph": null,
+         "editorialDate": "2025-01-08T20:15:00+01:00",
+         "episodeInfo": {
+          "episodeNumber": 1,
+          "seasonNumber": 2025
+         }
+        },
+        {
+         "canonical": "xy-2-100",
+         "sharingUrl": "https://www.zdf.de/video/show/aktenzeichen-xy-ungeloest-110/xy-2-100",
+         "teaser": {
+          "title": "Aktenzeichen XY vom 5. Februar 2025",
+          "description": null
+         },
+         "leadParagraph": null,
+         "editorialDate": "2025-02-05T20:15:00+01:00",
+         "episodeInfo": {
+          "episodeNumber": 2,
+          "seasonNumber": 2025
+         }
+        }
+       ]
+      }
+     }
+    ]
+   }
+  }
+ }
+}

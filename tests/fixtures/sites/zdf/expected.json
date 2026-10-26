@@ -1,0 +1,441 @@
+{
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
+ "cases": [
+  {
+   "url": "https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-19-12-2021-100",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"heute journal vom 19.12.2021\", \"description\": \"Omikron-Welle: Bund und L\\u00e4nder beraten \\u00fcber neue Ma\\u00dfnahmen.\", \"timestamp\": 1639950300, \"thumbnails\": [{\"id\": \"autoX720\", \"url\": \"https://www.zdf.de/assets/hjo-100~autoX720?cb=1639946700000\", \"preference\": 0, \"height\": 720}, {\"id\": \"768x432\", \"url\": \"https://www.zdf.de/assets/hjo-100~768x432?cb=1639946700000\", \"preference\": 0, \"width\": 768, \"height\": 432, \"resolution\": \"768x432\"}, {\"id\": \"2400x1350\", \"url\": \"https://epg-image.zdf.de/fotobase-webdelivery/images/273e5545?layout=2400x1350\", \"preference\": 0, \"width\": 2400, \"height\": 1350, \"resolution\": \"2400x1350\"}, {\"id\": \"original\", \"url\": \"https://www.zdf.de/assets/hjo-100~original?cb=1639946700000\", \"preference\": 1}], \"episode_number\": 370, \"season_number\": 2021, \"series\": \"heute journal\", \"series_id\": \"heute-journal-104\", \"chapters\": [{\"start_time\": 0, \"end_time\": 61.5, \"title\": \"<Untitled Chapter 1>\"}, {\"start_time\": 61.5, \"title\": \"Omikron\", \"end_time\": 300.0}, {\"start_time\": 300.0, \"title\": \"Impfpflicht\", \"end_time\": 1200.0}, {\"start_time\": 1200.0, \"end_time\": 1770.0, \"title\": \"<Untitled Chapter 4>\"}], \"duration\": 1770.0, \"formats\": [{\"format_id\": \"hls-aud-Audiodeskription\", \"format_note\": \"Audiodeskription\", \"format_index\": null, \"url\": \"https://media.zdf.test/hjo/audio-ad.m3u8\", \"manifest_url\": \"https://media.zdf.test/hjo/master.m3u8\", \"language\": \"deu\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": -2, \"language_preference\": -10, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-aud-Audiodeskription - audio only (Audiodeskription)\"}, {\"url\": \"https://media.zdf.test/hjo/211219_sendung_hjo_eng_a.mp4\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"height\": null, \"width\": null, \"filesize\": null, \"format_id\": \"http-h264_aac_mp4_http_na_na-0\", \"tbr\": null, \"format_note\": \"\", \"preference\": -1, \"language\": \"eng\", \"language_preference\": 1, \"protocol\": \"https\", \"ext\": \"mp4\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na-0 - audio only\"}, {\"format_id\": \"hls-aud-Deutsch\", \"format_note\": \"Deutsch\", \"format_index\": null, \"url\": \"https://media.zdf.test/hjo/audio-de.m3u8\", \"manifest_url\": \"https://media.zdf.test/hjo/master.m3u8\", \"language\": \"deu\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"language_preference\": 10, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-aud-Deutsch - audio only (Deutsch)\"}, {\"format_id\": \"hls-2000-dgs\", \"format_index\": null, \"url\": \"https://media.zdf.test/hjo/dgs720.m3u8\", \"manifest_url\": \"https://media.zdf.test/hjo/dgs.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": -2, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"format_note\": \"main, German Sign Language\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2000-dgs - 1280x720 (main, German Sign Language)\"}, {\"url\": \"https://media.zdf.test/hjo/211219_sendung_hjo_dgs_1628k_p13v15.mp4\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 720, \"width\": 1280, \"filesize\": null, \"format_id\": \"http-h264_aac_mp4_http_na_na-dgs\", \"tbr\": 1628, \"format_note\": \"main, German Sign Language\", \"preference\": -2, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"filesize_approx\": 360195000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na-dgs - 1280x720 (main, German Sign Language)\"}, {\"url\": \"https://media.zdf.test/hjo/211219_sendung_hjo_ad_3360k_p36v15.mp4\", \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 1080, \"width\": 1920, \"filesize\": 745000000, \"format_id\": \"http-h264_aac_mp4_http_na_na-1\", \"tbr\": 3360, \"format_note\": \"ad\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na-1 - 1920x1080 (ad)\"}, {\"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://media.zdf.test/hjo/eng.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"format_note\": \"ot\", \"language\": \"eng\", \"language_preference\": -1, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - unknown (ot)\"}, {\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://media.zdf.test/hjo/v360.m3u8\", \"manifest_url\": \"https://media.zdf.test/hjo/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"format_note\": \"main\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 800.0, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360 (main)\"}, {\"url\": \"https://media.zdf.test/hjo/211219_sendung_hjo_808k_p11v15.mp4\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 360, \"width\": 640, \"filesize\": null, \"format_id\": \"http-h264_aac_mp4_http_na_na-2\", \"tbr\": 808, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"filesize_approx\": 178770000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na-2 - 640x360 (main)\"}, {\"format_id\": \"hls-3200\", \"format_index\": null, \"url\": \"https://media.zdf.test/hjo/v720.m3u8\", \"manifest_url\": \"https://media.zdf.test/hjo/master.m3u8\", \"tbr\": 3200.0, \"ext\": \"mp4\", \"fps\": 50.0, \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"format_note\": \"main\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 3200.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3200 - 1280x720 (main)\"}, {\"url\": \"https://media.zdf.test/hjo/211219_sendung_hjo_3360k_p36v15.mp4\", \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 1080, \"width\": 1920, \"filesize\": 744000000, \"format_id\": \"http-h264_aac_mp4_http_na_na-3\", \"tbr\": 3360, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na-3 - 1920x1080 (main)\"}], \"subtitles\": {\"deu\": [{\"url\": \"https://utstreaming.zdf.test/mtt/211219_sendung_hjo.xml\", \"ext\": \"xml\"}, {\"url\": \"https://utstreaming.zdf.test/mtt/211219_sendung_hjo.vtt\", \"ext\": \"vtt\"}, {\"url\": \"https://utstreaming.zdf.test/mtt/nolang.vtt\", \"ext\": \"vtt\"}], \"eng\": [{\"url\": \"https://utstreaming.zdf.test/mtt/211219_eng.vtt\", \"ext\": \"vtt\"}]}, \"_old_archive_ids\": [\"zdf 211219_sendung_hjo\"], \"is_live\": false, \"id\": \"heute-journal-vom-19-12-2021-100\", \"webpage_url\": \"https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-19-12-2021-100\", \"original_url\": \"https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-19-12-2021-100\", \"webpage_url_basename\": \"heute-journal-vom-19-12-2021-100\", \"webpage_url_domain\": \"zdf.de\", \"extractor\": \"zdf\", \"extractor_key\": \"ZDF\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://www.zdf.de/assets/hjo-100~original?cb=1639946700000\", \"display_id\": \"heute-journal-vom-19-12-2021-100\", \"fulltitle\": \"heute journal vom 19.12.2021\", \"duration_string\": \"29:30\", \"upload_date\": \"20211219\", \"release_year\": null, \"season\": \"Season 2021\", \"episode\": \"Episode 370\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://media.zdf.test/hjo/211219_sendung_hjo_3360k_p36v15.mp4\", \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 1080, \"width\": 1920, \"filesize\": 744000000, \"format_id\": \"http-h264_aac_mp4_http_na_na-3\", \"tbr\": 3360, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na-3 - 1920x1080 (main)\", \"_filename\": \"heute journal vom 19.12.2021 [heute-journal-vom-19-12-2021-100].mp4\", \"filename\": \"heute journal vom 19.12.2021 [heute-journal-vom-19-12-2021-100].mp4\", \"__write_download_archive\": false}], \"url\": \"https://media.zdf.test/hjo/211219_sendung_hjo_3360k_p36v15.mp4\", \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 1080, \"width\": 1920, \"filesize\": 744000000, \"format_id\": \"http-h264_aac_mp4_http_na_na-3\", \"tbr\": 3360, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na-3 - 1920x1080 (main)\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [zdf] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [zdf] heute-journal-vom-19-12-2021-100: Skipping unsupported extension \"mpd\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-19-12-2021-100",
+   "args": [
+    "--no-geo-bypass",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[zdf] Extracting URL: https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-19-12-2021-100",
+    "[zdf] Downloading API token",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading video metadata",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading PTMD data",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading m3u8 information",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading m3u8 information",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading PTMD data",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading m3u8 information",
+    "[info] Available formats for heute-journal-vom-19-12-2021-100:",
+    "ID                               EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC        VBR ACODEC     MORE INFO",
+    "--------------------------------------------------------------------------------------------------------------------------------------------",
+    "hls-aud-Audiodeskription         mp4 audio only     |                  m3u8  | audio only        unknown    [deu] Audiodeskription",
+    "http-h264_aac_mp4_http_na_na-0   mp4 audio only     |                  https | audio only        mp4a.40.2  [eng]",
+    "hls-aud-Deutsch                  mp4 audio only     |                  m3u8  | audio only        unknown    [deu] Deutsch",
+    "hls-2000-dgs                     mp4 1280x720       | ~422.00MiB 2000k m3u8  | avc1.64001f       mp4a.40.2  [deu] main, German Sign Language",
+    "http-h264_aac_mp4_http_na_na-dgs mp4 1280x720       | ≈343.51MiB 1628k https | avc1.4d401f       mp4a.40.2  [deu] main, German Sign Language",
+    "http-h264_aac_mp4_http_na_na-1   mp4 1920x1080      |  710.49MiB 3360k https | avc1.640028       mp4a.40.2  [deu] ad",
+    "hls                              mp4 unknown        |                  m3u8  | unknown           unknown    [eng] ot",
+    "hls-800                          mp4 640x360        | ~168.80MiB  800k m3u8  | avc1.4d401e  800k video only [deu] main",
+    "http-h264_aac_mp4_http_na_na-2   mp4 640x360        | ≈170.49MiB  808k https | avc1.4d401f       mp4a.40.2  [deu] main",
+    "hls-3200                         mp4 1280x720    50 | ~675.20MiB 3200k m3u8  | avc1.64001f 3200k video only [deu] main",
+    "http-h264_aac_mp4_http_na_na-3   mp4 1920x1080      |  709.53MiB 3360k https | avc1.640028       mp4a.40.2  [deu] main"
+   ],
+   "stderr": [
+    "WARNING: [zdf] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [zdf] heute-journal-vom-19-12-2021-100: Skipping unsupported extension \"mpd\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-19-12-2021-100",
+   "args": [
+    "--no-geo-bypass",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[zdf] Extracting URL: https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-19-12-2021-100",
+    "[zdf] Downloading API token",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading video metadata",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading PTMD data",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading m3u8 information",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading m3u8 information",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading PTMD data",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading m3u8 information",
+    "[info] Available subtitles for heute-journal-vom-19-12-2021-100:",
+    "Language Formats",
+    "deu      vtt, vtt, xml",
+    "eng      vtt"
+   ],
+   "stderr": [
+    "WARNING: [zdf] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [zdf] heute-journal-vom-19-12-2021-100: Skipping unsupported extension \"mpd\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/play/magazine/heute-journal-104/heute-journal-vom-19-12-2021-100",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "%(id)s|%(title)s|%(series)s|%(series_id)s|%(season)s|%(season_number)s|%(episode)s|%(episode_number)s|%(timestamp)s|%(upload_date)s|%(duration)s|%(is_live)s|%(format_id)s|%(_old_archive_ids)s|%(thumbnail)s|%(chapters)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "heute-journal-vom-19-12-2021-100|heute journal vom 19.12.2021|heute journal|heute-journal-104|Season 2021|2021|Episode 370|370|1639950300|20211219|1770.0|False|http-h264_aac_mp4_http_na_na-3|['zdf 211219_sendung_hjo']|https://www.zdf.de/assets/hjo-100~original?cb=1639946700000|[{'start_time': 0, 'end_time': 61.5, 'title': '<Untitled Chapter 1>'}, {'start_time': 61.5, 'title': 'Omikron', 'end_time': 300.0}, {'start_time': 300.0, 'title': 'Impfpflicht', 'end_time': 1200.0}, {'start_time': 1200.0, 'end_time': 1770.0, 'title': '<Untitled Chapter 4>'}]"
+   ],
+   "stderr": [
+    "WARNING: [zdf] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [zdf] heute-journal-vom-19-12-2021-100: Skipping unsupported extension \"mpd\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/video/dokus/ein-tag-im-juli---ahrtalflut-2021-movie-100/terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Ein Tag im Juli - Ahrtalflut 2021\", \"description\": \"Die Flut im Ahrtal.\", \"timestamp\": 1779214500, \"thumbnails\": [{\"id\": \"1280x720\", \"url\": \"https://www.zdf.de/assets/terra-x-102~1280x720?cb=1779214500000\", \"preference\": 0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\"}, {\"id\": \"original\", \"url\": \"https://www.zdf.de/assets/terra-x-102~original?cb=1779214500000\", \"preference\": 1}], \"series\": \"Ein Tag im Juli - Ahrtalflut 2021\", \"series_id\": \"ein-tag-im-juli---ahrtalflut-2021-movie-100\", \"duration\": 5304.0, \"formats\": [{\"url\": \"https://media.zdf.test/terra/260519_2015_sendung_his_1628k_p13v17.mp4\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 720, \"width\": null, \"filesize\": 792, \"format_id\": \"http-h264_aac_mp4_http_na_na\", \"tbr\": 1628, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720p\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na - 720p (main)\"}, {\"url\": \"https://media.zdf.test/terra/260519_2015_sendung_his_4692k_p37v17.webm\", \"vcodec\": \"vp9\", \"acodec\": \"opus\", \"dynamic_range\": \"SDR\", \"height\": 1080, \"width\": null, \"filesize\": null, \"format_id\": \"http-vp9_opus_webm_http_na_na\", \"tbr\": 4692, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1080p\", \"aspect_ratio\": null, \"filesize_approx\": 3110796000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-vp9_opus_webm_http_na_na - 1080p (main)\"}], \"subtitles\": {}, \"_old_archive_ids\": [\"zdf 260519_2015_sendung_his\"], \"is_live\": false, \"id\": \"terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100\", \"webpage_url\": \"https://www.zdf.de/video/dokus/ein-tag-im-juli---ahrtalflut-2021-movie-100/terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100\", \"original_url\": \"https://www.zdf.de/video/dokus/ein-tag-im-juli---ahrtalflut-2021-movie-100/terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100\", \"webpage_url_basename\": \"terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100\", \"webpage_url_domain\": \"zdf.de\", \"extractor\": \"zdf\", \"extractor_key\": \"ZDF\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://www.zdf.de/assets/terra-x-102~original?cb=1779214500000\", \"display_id\": \"terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100\", \"fulltitle\": \"Ein Tag im Juli - Ahrtalflut 2021\", \"duration_string\": \"1:28:24\", \"upload_date\": \"20260519\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://media.zdf.test/terra/260519_2015_sendung_his_4692k_p37v17.webm\", \"vcodec\": \"vp9\", \"acodec\": \"opus\", \"dynamic_range\": \"SDR\", \"height\": 1080, \"format_id\": \"http-vp9_opus_webm_http_na_na\", \"tbr\": 4692, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"resolution\": \"1080p\", \"filesize_approx\": 3110796000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-vp9_opus_webm_http_na_na - 1080p (main)\", \"_filename\": \"Ein Tag im Juli - Ahrtalflut 2021 [terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100].webm\", \"filename\": \"Ein Tag im Juli - Ahrtalflut 2021 [terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100].webm\", \"__write_download_archive\": false}], \"url\": \"https://media.zdf.test/terra/260519_2015_sendung_his_4692k_p37v17.webm\", \"vcodec\": \"vp9\", \"acodec\": \"opus\", \"dynamic_range\": \"SDR\", \"height\": 1080, \"width\": null, \"filesize\": null, \"format_id\": \"http-vp9_opus_webm_http_na_na\", \"tbr\": 4692, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1080p\", \"aspect_ratio\": null, \"filesize_approx\": 3110796000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-vp9_opus_webm_http_na_na - 1080p (main)\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-19-12-2021-100",
+   "args": [
+    "--no-geo-bypass",
+    "--write-subs",
+    "--sub-langs",
+    "eng",
+    "--skip-download",
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[zdf] Extracting URL: https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-19-12-2021-100",
+    "[zdf] Downloading API token",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading video metadata",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading PTMD data",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading m3u8 information",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading m3u8 information",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading PTMD data",
+    "[zdf] heute-journal-vom-19-12-2021-100: Downloading m3u8 information",
+    "[info] heute-journal-vom-19-12-2021-100: Downloading subtitles: eng",
+    "[info] heute-journal-vom-19-12-2021-100: Downloading 1 format(s): http-h264_aac_mp4_http_na_na-3",
+    "[info] Writing video subtitles to: heute-journal-vom-19-12-2021-100.eng.vtt",
+    "[download] Destination: heute-journal-vom-19-12-2021-100.eng.vtt",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [zdf] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [zdf] heute-journal-vom-19-12-2021-100: Skipping unsupported extension \"mpd\""
+   ],
+   "files": {
+    "heute-journal-vom-19-12-2021-100.eng.vtt": 52
+   }
+  },
+  {
+   "url": "https://www.zdf.de/dokumentation/dokumentation-sonstige/terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100.html",
+   "args": [
+    "--no-geo-bypass",
+    "--no-progress",
+    "-f",
+    "http-h264_aac_mp4_http_na_na",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[zdf] Extracting URL: https://www.zdf.de/dokumentation/dokumentation-sonstige/terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100.html",
+    "[zdf] Downloading API token",
+    "[zdf] terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100: Downloading video metadata",
+    "[zdf] terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100: Downloading PTMD data",
+    "[info] terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100: Downloading 1 format(s): http-h264_aac_mp4_http_na_na",
+    "[download] Destination: terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100.mp4": 792
+   }
+  },
+  {
+   "url": "https://www.zdf.de/play/live-tv/sender/zdf-live-beitrag-100",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "%(id)s|%(is_live)s|%(live_status)s|%(format_id)s|%(protocol)s|%(ext)s|%(_old_archive_ids)s|%(description)s|%(timestamp)s|%(thumbnail)s|%(language)s|%(format_note)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "zdf-live-beitrag-100|True|is_live|hls-3000|m3u8_native|mp4|['zdf zdf-live-beitrag-100']|Das ZDF-Programm live.|1740787200|https://www.zdf.de/assets/2400-zdf-100~original?cb=1|deu|main"
+   ],
+   "stderr": [
+    "WARNING: [zdf] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/play/live-tv/sender/zdf-live-beitrag-100",
+   "args": [
+    "--no-geo-bypass",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[zdf] Extracting URL: https://www.zdf.de/play/live-tv/sender/zdf-live-beitrag-100",
+    "[zdf] Downloading API token",
+    "[zdf] zdf-live-beitrag-100: Downloading video metadata",
+    "[zdf] zdf-live-beitrag-100: Downloading PTMD data",
+    "[zdf] zdf-live-beitrag-100: Downloading m3u8 information",
+    "[info] Available formats for zdf-live-beitrag-100:",
+    "ID       EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC    MORE INFO",
+    "------------------------------------------------------------------------",
+    "hls-1500 mp4 960x540    | 1500k m3u8  | avc1.4d401f mp4a.40.2 [deu] main",
+    "hls-3000 mp4 1280x720   | 3000k m3u8  | avc1.64001f mp4a.40.2 [deu] main"
+   ],
+   "stderr": [
+    "WARNING: [zdf] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdfheute.de/politik/deutschland/wildberger-ki-einsatz-rede-texte-100.html",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"thumbnails\": [{\"url\": \"https://www.zdfheute.de/assets/karsten-wildberger-120~276x155?cb=1\", \"id\": \"276\", \"width\": 276, \"height\": null}, {\"url\": \"https://www.zdfheute.de/assets/karsten-wildberger-120~1920x1080?cb=1\", \"id\": \"1920\", \"width\": 1920, \"height\": 1080, \"resolution\": \"1920x1080\"}], \"title\": \"Minister Wildberger nutzte KI f\\u00fcr Texte und Reden\", \"description\": \"Digitalminister Wildberger setzt auf KI.\", \"timestamp\": 1781373900, \"subtitles\": {\"deu\": [{\"url\": \"https://utstreaming.zdf.test/mtt/260611_mario_voigt_viu.vtt\", \"ext\": \"vtt\"}]}, \"duration\": 30.0, \"formats\": [{\"url\": \"https://media.zdf.test/heute/260611_mario_voigt_viu_1628k_p13v17.mp4\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 720, \"width\": null, \"filesize\": null, \"format_id\": \"http-h264_aac_mp4_http_na_na\", \"tbr\": 1628, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720p\", \"aspect_ratio\": null, \"filesize_approx\": 6105000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na - 720p (main)\"}], \"_old_archive_ids\": [\"zdf 260611_mario_voigt_viu\"], \"id\": \"wildberger-ki-einsatz-rede-texte-100\", \"webpage_url\": \"https://www.zdfheute.de/politik/deutschland/wildberger-ki-einsatz-rede-texte-100.html\", \"original_url\": \"https://www.zdfheute.de/politik/deutschland/wildberger-ki-einsatz-rede-texte-100.html\", \"webpage_url_basename\": \"wildberger-ki-einsatz-rede-texte-100.html\", \"webpage_url_domain\": \"zdfheute.de\", \"extractor\": \"zdf\", \"extractor_key\": \"ZDF\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://www.zdfheute.de/assets/karsten-wildberger-120~1920x1080?cb=1\", \"display_id\": \"wildberger-ki-einsatz-rede-texte-100\", \"fulltitle\": \"Minister Wildberger nutzte KI f\\u00fcr Texte und Reden\", \"duration_string\": \"30\", \"upload_date\": \"20260613\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://media.zdf.test/heute/260611_mario_voigt_viu_1628k_p13v17.mp4\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 720, \"format_id\": \"http-h264_aac_mp4_http_na_na\", \"tbr\": 1628, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720p\", \"filesize_approx\": 6105000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na - 720p (main)\", \"_filename\": \"Minister Wildberger nutzte KI f\\u00fcr Texte und Reden [wildberger-ki-einsatz-rede-texte-100].mp4\", \"filename\": \"Minister Wildberger nutzte KI f\\u00fcr Texte und Reden [wildberger-ki-einsatz-rede-texte-100].mp4\", \"__write_download_archive\": false}], \"url\": \"https://media.zdf.test/heute/260611_mario_voigt_viu_1628k_p13v17.mp4\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 720, \"width\": null, \"filesize\": null, \"format_id\": \"http-h264_aac_mp4_http_na_na\", \"tbr\": 1628, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720p\", \"aspect_ratio\": null, \"filesize_approx\": 6105000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na - 720p (main)\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.logo.de/kinderreporter-ohne-stream-100.html",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [zdf] kinderreporter-ohne-stream-100: Unable to extract PTMD URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/video/magazine/kaputt-100",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [zdf] kaputt-100: Failed to download PTMD data: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/magazine/heute-journal-104",
+   "args": [
+    "--no-geo-bypass",
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"heute-journal-104\", \"title\": \"heute journal\", \"description\": \"Das Nachrichtenmagazin am Abend.\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"heute-journal-vom-31-12-2020-100\", \"title\": \"heute journal vom 31.12.2020\", \"description\": \"Jahresr\\u00fcckblick\", \"timestamp\": 1609451100, \"episode_number\": 366, \"season_number\": 2020, \"ie_key\": \"ZDF\", \"_type\": \"url\", \"url\": \"https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-31-12-2020-100\", \"__x_forwarded_for_ip\": null}, {\"id\": \"heute-journal-vom-30-12-2020-100\", \"title\": \"heute journal vom 30.12.2020\", \"description\": \"Nur Teaser\", \"episode_number\": 365, \"season_number\": 2020, \"ie_key\": \"ZDF\", \"_type\": \"url\", \"url\": \"https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-30-12-2020-100\", \"__x_forwarded_for_ip\": null}, {\"id\": \"heute-journal-vom-19-12-2021-100\", \"title\": \"heute journal vom 19.12.2021\", \"description\": \"Omikron-Welle\", \"timestamp\": 1639950300, \"episode_number\": 370, \"season_number\": 2021, \"ie_key\": \"ZDF\", \"_type\": \"url\", \"url\": \"https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-19-12-2021-100\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.zdf.de/magazine/heute-journal-104\", \"original_url\": \"https://www.zdf.de/magazine/heute-journal-104\", \"webpage_url_basename\": \"heute-journal-104\", \"webpage_url_domain\": \"zdf.de\", \"extractor\": \"zdf:channel\", \"extractor_key\": \"ZDFChannel\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/magazine/heute-journal-104",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[zdf:channel] Extracting URL: https://www.zdf.de/magazine/heute-journal-104",
+    "[zdf:channel] heute-journal-104: Downloading webpage",
+    "[zdf:channel] Downloading API token",
+    "[zdf:channel] heute-journal-104: Downloading smart collection data",
+    "[download] Downloading playlist: heute journal",
+    "[zdf:channel] heute-journal-104: Downloading season 2020 page 1 JSON",
+    "[zdf:channel] heute-journal-104: Downloading season 2020 page 2 JSON",
+    "[zdf:channel] heute-journal-104: Downloading season 2021 page 1 JSON",
+    "[zdf:channel] Playlist heute journal: Downloading 3 items of 3",
+    "[download] Downloading item 1 of 3",
+    "[download] Downloading item 2 of 3",
+    "[download] Downloading item 3 of 3",
+    "[download] Finished downloading playlist: heute journal"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/magazine/heute-journal-104",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[zdf:channel] Extracting URL: https://www.zdf.de/magazine/heute-journal-104",
+    "[zdf:channel] heute-journal-104: Downloading webpage",
+    "[zdf:channel] Downloading API token",
+    "[zdf:channel] heute-journal-104: Downloading smart collection data",
+    "[download] Downloading playlist: heute journal",
+    "[zdf:channel] heute-journal-104: Downloading season 2020 page 1 JSON",
+    "[zdf:channel] Playlist heute journal: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: heute journal"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/magazine/heute-journal-104?staffel=2021",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"heute-journal-104-s2021\", \"title\": \"heute journal - Season 2021\", \"description\": \"Das Nachrichtenmagazin am Abend.\", \"_type\": \"playlist\", \"entries\": [{\"title\": \"heute journal vom 19.12.2021\", \"description\": \"Omikron-Welle: Bund und L\\u00e4nder beraten \\u00fcber neue Ma\\u00dfnahmen.\", \"timestamp\": 1639950300, \"thumbnails\": [{\"id\": \"autoX720\", \"url\": \"https://www.zdf.de/assets/hjo-100~autoX720?cb=1639946700000\", \"preference\": 0, \"height\": 720}, {\"id\": \"768x432\", \"url\": \"https://www.zdf.de/assets/hjo-100~768x432?cb=1639946700000\", \"preference\": 0, \"width\": 768, \"height\": 432, \"resolution\": \"768x432\"}, {\"id\": \"2400x1350\", \"url\": \"https://epg-image.zdf.de/fotobase-webdelivery/images/273e5545?layout=2400x1350\", \"preference\": 0, \"width\": 2400, \"height\": 1350, \"resolution\": \"2400x1350\"}, {\"id\": \"original\", \"url\": \"https://www.zdf.de/assets/hjo-100~original?cb=1639946700000\", \"preference\": 1}], \"episode_number\": 370, \"season_number\": 2021, \"series\": \"heute journal\", \"series_id\": \"heute-journal-104\", \"chapters\": [{\"start_time\": 0, \"end_time\": 61.5, \"title\": \"<Untitled Chapter 1>\"}, {\"start_time\": 61.5, \"title\": \"Omikron\", \"end_time\": 300.0}, {\"start_time\": 300.0, \"title\": \"Impfpflicht\", \"end_time\": 1200.0}, {\"start_time\": 1200.0, \"end_time\": 1770.0, \"title\": \"<Untitled Chapter 4>\"}], \"duration\": 1770.0, \"formats\": [{\"format_id\": \"hls-aud-Audiodeskription\", \"format_note\": \"Audiodeskription\", \"format_index\": null, \"url\": \"https://media.zdf.test/hjo/audio-ad.m3u8\", \"manifest_url\": \"https://media.zdf.test/hjo/master.m3u8\", \"language\": \"deu\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": -2, \"language_preference\": -10, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-aud-Audiodeskription - audio only (Audiodeskription)\"}, {\"url\": \"https://media.zdf.test/hjo/211219_sendung_hjo_eng_a.mp4\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"height\": null, \"width\": null, \"filesize\": null, \"format_id\": \"http-h264_aac_mp4_http_na_na-0\", \"tbr\": null, \"format_note\": \"\", \"preference\": -1, \"language\": \"eng\", \"language_preference\": 1, \"protocol\": \"https\", \"ext\": \"mp4\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na-0 - audio only\"}, {\"format_id\": \"hls-aud-Deutsch\", \"format_note\": \"Deutsch\", \"format_index\": null, \"url\": \"https://media.zdf.test/hjo/audio-de.m3u8\", \"manifest_url\": \"https://media.zdf.test/hjo/master.m3u8\", \"language\": \"deu\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"language_preference\": 10, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-aud-Deutsch - audio only (Deutsch)\"}, {\"format_id\": \"hls-2000-dgs\", \"format_index\": null, \"url\": \"https://media.zdf.test/hjo/dgs720.m3u8\", \"manifest_url\": \"https://media.zdf.test/hjo/dgs.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": -2, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"format_note\": \"main, German Sign Language\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2000-dgs - 1280x720 (main, German Sign Language)\"}, {\"url\": \"https://media.zdf.test/hjo/211219_sendung_hjo_dgs_1628k_p13v15.mp4\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 720, \"width\": 1280, \"filesize\": null, \"format_id\": \"http-h264_aac_mp4_http_na_na-dgs\", \"tbr\": 1628, \"format_note\": \"main, German Sign Language\", \"preference\": -2, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"filesize_approx\": 360195000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na-dgs - 1280x720 (main, German Sign Language)\"}, {\"url\": \"https://media.zdf.test/hjo/211219_sendung_hjo_ad_3360k_p36v15.mp4\", \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 1080, \"width\": 1920, \"filesize\": 745000000, \"format_id\": \"http-h264_aac_mp4_http_na_na-1\", \"tbr\": 3360, \"format_note\": \"ad\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na-1 - 1920x1080 (ad)\"}, {\"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://media.zdf.test/hjo/eng.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"format_note\": \"ot\", \"language\": \"eng\", \"language_preference\": -1, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - unknown (ot)\"}, {\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://media.zdf.test/hjo/v360.m3u8\", \"manifest_url\": \"https://media.zdf.test/hjo/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"format_note\": \"main\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 800.0, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360 (main)\"}, {\"url\": \"https://media.zdf.test/hjo/211219_sendung_hjo_808k_p11v15.mp4\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 360, \"width\": 640, \"filesize\": null, \"format_id\": \"http-h264_aac_mp4_http_na_na-2\", \"tbr\": 808, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"filesize_approx\": 178770000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na-2 - 640x360 (main)\"}, {\"format_id\": \"hls-3200\", \"format_index\": null, \"url\": \"https://media.zdf.test/hjo/v720.m3u8\", \"manifest_url\": \"https://media.zdf.test/hjo/master.m3u8\", \"tbr\": 3200.0, \"ext\": \"mp4\", \"fps\": 50.0, \"protocol\": \"m3u8_native\", \"preference\": -1, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"format_note\": \"main\", \"language\": \"deu\", \"language_preference\": 10, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 3200.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3200 - 1280x720 (main)\"}, {\"url\": \"https://media.zdf.test/hjo/211219_sendung_hjo_3360k_p36v15.mp4\", \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 1080, \"width\": 1920, \"filesize\": 744000000, \"format_id\": \"http-h264_aac_mp4_http_na_na-3\", \"tbr\": 3360, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na-3 - 1920x1080 (main)\"}], \"subtitles\": {\"deu\": [{\"url\": \"https://utstreaming.zdf.test/mtt/211219_sendung_hjo.xml\", \"ext\": \"xml\"}, {\"url\": \"https://utstreaming.zdf.test/mtt/211219_sendung_hjo.vtt\", \"ext\": \"vtt\"}, {\"url\": \"https://utstreaming.zdf.test/mtt/nolang.vtt\", \"ext\": \"vtt\"}], \"eng\": [{\"url\": \"https://utstreaming.zdf.test/mtt/211219_eng.vtt\", \"ext\": \"vtt\"}]}, \"_old_archive_ids\": [\"zdf 211219_sendung_hjo\"], \"is_live\": false, \"id\": \"heute-journal-vom-19-12-2021-100\", \"webpage_url\": \"https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-19-12-2021-100\", \"original_url\": \"https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-19-12-2021-100\", \"webpage_url_basename\": \"heute-journal-vom-19-12-2021-100\", \"webpage_url_domain\": \"zdf.de\", \"extractor\": \"zdf\", \"extractor_key\": \"ZDF\", \"playlist_count\": 1, \"playlist\": \"heute journal - Season 2021\", \"playlist_id\": \"heute-journal-104-s2021\", \"playlist_title\": \"heute journal - Season 2021\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.zdf.de/magazine/heute-journal-104?staffel=2021\", \"n_entries\": 1, \"playlist_index\": 1, \"__last_playlist_index\": 1, \"playlist_autonumber\": 1, \"thumbnail\": \"https://www.zdf.de/assets/hjo-100~original?cb=1639946700000\", \"display_id\": \"heute-journal-vom-19-12-2021-100\", \"fulltitle\": \"heute journal vom 19.12.2021\", \"duration_string\": \"29:30\", \"upload_date\": \"20211219\", \"release_year\": null, \"season\": \"Season 2021\", \"episode\": \"Episode 370\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://media.zdf.test/hjo/211219_sendung_hjo_3360k_p36v15.mp4\", \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 1080, \"width\": 1920, \"filesize\": 744000000, \"format_id\": \"http-h264_aac_mp4_http_na_na-3\", \"tbr\": 3360, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na-3 - 1920x1080 (main)\", \"_filename\": \"heute journal vom 19.12.2021 [heute-journal-vom-19-12-2021-100].mp4\", \"filename\": \"heute journal vom 19.12.2021 [heute-journal-vom-19-12-2021-100].mp4\", \"__write_download_archive\": false}], \"url\": \"https://media.zdf.test/hjo/211219_sendung_hjo_3360k_p36v15.mp4\", \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"height\": 1080, \"width\": 1920, \"filesize\": 744000000, \"format_id\": \"http-h264_aac_mp4_http_na_na-3\", \"tbr\": 3360, \"format_note\": \"main\", \"preference\": -1, \"language\": \"deu\", \"language_preference\": 10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-h264_aac_mp4_http_na_na-3 - 1920x1080 (main)\"}], \"webpage_url\": \"https://www.zdf.de/magazine/heute-journal-104?staffel=2021\", \"original_url\": \"https://www.zdf.de/magazine/heute-journal-104?staffel=2021\", \"webpage_url_basename\": \"heute-journal-104\", \"webpage_url_domain\": \"zdf.de\", \"extractor\": \"zdf:channel\", \"extractor_key\": \"ZDFChannel\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [zdf] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [zdf] heute-journal-vom-19-12-2021-100: Skipping unsupported extension \"mpd\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/magazine/heute-journal-104?staffel=1999",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [zdf:channel] heute-journal-104: Season 1999 was not found in the collection data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/sport/das-aktuelle-sportstudio",
+   "args": [
+    "--no-geo-bypass",
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"das-aktuelle-sportstudio-220\", \"title\": \"das aktuelle sportstudio\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.zdf.de/sport/das-aktuelle-sportstudio\", \"original_url\": \"https://www.zdf.de/sport/das-aktuelle-sportstudio\", \"webpage_url_basename\": \"das-aktuelle-sportstudio\", \"webpage_url_domain\": \"zdf.de\", \"extractor\": \"zdf:channel\", \"extractor_key\": \"ZDFChannel\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/dokus/ein-tag-im-juli---ahrtalflut-2021-movie-100",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100|Ein Tag im Juli - Ahrtalflut 2021|zdf|https://www.zdf.de/video/dokus/ein-tag-im-juli---ahrtalflut-2021-movie-100/terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/gesellschaft/aktenzeichen-xy-ungeloest-110",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[zdf:channel] Extracting URL: https://www.zdf.de/gesellschaft/aktenzeichen-xy-ungeloest-110",
+    "[zdf:channel] aktenzeichen-xy-ungeloest-110: Downloading webpage",
+    "[zdf:channel] Downloading API token",
+    "[zdf:channel] aktenzeichen-xy-ungeloest-110: Downloading smart collection data",
+    "[zdf:channel] Downloading playlist aktenzeichen-xy-ungeloest-110 - add --no-playlist to download just the video terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100",
+    "[download] Downloading playlist: Aktenzeichen XY... Ungelöst",
+    "[zdf:channel] aktenzeichen-xy-ungeloest-110: Downloading season 2025 page 1 JSON",
+    "[zdf:channel] Playlist Aktenzeichen XY... Ungelöst: Downloading 2 items of 2",
+    "[download] Downloading item 1 of 2",
+    "[download] Downloading item 2 of 2",
+    "[download] Finished downloading playlist: Aktenzeichen XY... Ungelöst"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/gesellschaft/aktenzeichen-xy-ungeloest-110",
+   "args": [
+    "--no-geo-bypass",
+    "--no-playlist",
+    "--simulate"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[zdf:channel] Extracting URL: https://www.zdf.de/gesellschaft/aktenzeichen-xy-ungeloest-110",
+    "[zdf:channel] aktenzeichen-xy-ungeloest-110: Downloading webpage",
+    "[zdf:channel] Downloading API token",
+    "[zdf:channel] aktenzeichen-xy-ungeloest-110: Downloading smart collection data",
+    "[zdf:channel] Downloading just the video terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100 because of --no-playlist",
+    "[zdf] Extracting URL: https://www.zdf.de/video/dokus/ein-tag-im-juli---ahrtalflut-2021-movie-100/terra-x-history-ein-ta...-ahrtalflut-2021-100",
+    "[zdf] terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100: Downloading video metadata",
+    "[zdf] terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100: Downloading PTMD data",
+    "[info] terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100: Downloading 1 format(s): http-vp9_opus_webm_http_na_na"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.zdf.de/gesellschaft/aktenzeichen-xy-ungeloest-110",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(timestamp)s|%(episode_number)s|%(season_number)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "xy-1-100|Aktenzeichen XY vom 8. Januar 2025|NA|1736363700|1|2025|https://www.zdf.de/video/show/aktenzeichen-xy-ungeloest-110/xy-1-100",
+    "xy-2-100|Aktenzeichen XY vom 5. Februar 2025|NA|1738782900|2|2025|https://www.zdf.de/video/show/aktenzeichen-xy-ungeloest-110/xy-2-100"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}
