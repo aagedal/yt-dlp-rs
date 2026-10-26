@@ -2038,8 +2038,11 @@ clip URLs, the API's 404 message as the error), `kick:live` (a channel's live
 HLS stream, or `The channel is not currently live`), `kick:videos`
 (`CHANNEL/videos`, `?sort=views`: `url_transparent` VOD entries smuggling
 their availability) and `kick:clips` (`CHANNEL/clips`, `?sort=view|date`,
-`&range=day|week|month|all`: every cursor page fetched up front, unlike
-upstream's lazy generator). Live downloads have this port's live HLS limits.
+`&range=day|week|month|all`: cursor-paginated clip entries). Both lists are
+upstream's generators: the video list and each clip cursor page are fetched
+while the playlist is processed (after `Downloading playlist`), only as far
+as the `--playlist-items` selection needs, and `playlist_count` is unknown
+(`NA`) unless the selection reads past the end. Live downloads have this port's live HLS limits.
 `--use-extractors` matches every extractor by its upstream name.
 `tests/fixtures/sites/kick/` is compared with upstream output.
 

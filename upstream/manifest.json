@@ -1498,7 +1498,7 @@
         "src/extractor/kick.rs",
         "tests/fixtures/sites/kick/"
       ],
-      "scope": "Reworked kick.py (fe84bef3969de96ceb39ca988425fdd3895bbfb1, release 2026.10.21): KickIE (v2 channel API, plain HLS IDs), KickVODIE (web.kick.com playback POST, channel video list metadata, smuggled availability, subscription check), KickClipIE (v2 clip API with 404 messages, HLS or direct sources), KickVideosIE (url_transparent VOD entries, date/views sort) and KickClipsIE (cursor-paginated clip entries, sort/range); compared with upstream output through the fixture proxy. Impersonated with the impersonate feature, else upstream's warning"
+      "scope": "Reworked kick.py (fe84bef3969de96ceb39ca988425fdd3895bbfb1, release 2026.10.21): KickIE (v2 channel API, plain HLS IDs), KickVODIE (web.kick.com playback POST, channel video list metadata, smuggled availability, subscription check), KickClipIE (v2 clip API with 404 messages, HLS or direct sources), KickVideosIE (url_transparent VOD entries, date/views sort) and KickClipsIE (cursor-paginated clip entries, sort/range), both lazy generator playlists (list request and cursor pages fetched while processing, as far as --playlist-items needs; playlist_count unknown until exhausted); compared with upstream output through the fixture proxy. Impersonated with the impersonate feature, else upstream's warning"
     },
     {
       "name": "kicker",

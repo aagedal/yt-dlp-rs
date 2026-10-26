@@ -383,6 +383,9 @@ pub use kick::{
     clips_suitable as kick_clips_suitable, live_suitable as kick_live_suitable,
     videos_suitable as kick_videos_suitable, vod_suitable as kick_vod_suitable,
 };
+pub(crate) use kick::{
+    fetch_entries as fetch_kick_entries, is_pending_state as kick_pending_state,
+};
 pub use kicker::{Kicker, suitable as kicker_suitable};
 pub use kickstarter::{KickStarter, suitable as kickstarter_suitable};
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};

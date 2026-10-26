@@ -24,5 +24,12 @@
  {"url": "https://kick.com/xqc/clips", "args": ["--flat-playlist", "-J"]},
  {"url": "https://kick.com/xqc/clips?sort=date&range=day", "args": ["-J"]},
  {"url": "https://kick.com/xqc/clips?sort=bogus&range=all#x", "args": ["--flat-playlist", "-J"]},
- {"url": "https://kick.com/xqc/clips/", "args": ["--flat-playlist", "--print", "%(playlist_title)s|%(id)s|%(url)s|%(title)s|%(channel_id)s|%(like_count)s|%(view_count)s"]}
+ {"url": "https://kick.com/xqc/clips/", "args": ["--flat-playlist", "--print", "%(playlist_title)s|%(id)s|%(url)s|%(title)s|%(channel_id)s|%(like_count)s|%(view_count)s"]},
+ {"url": "https://kick.com/xqc/clips", "args": ["-I", "1", "--flat-playlist"]},
+ {"url": "https://kick.com/xqc/clips", "args": ["-I", "1", "--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://kick.com/xqc/clips", "args": ["-I", "2", "--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://kick.com/xqc/clips", "args": ["-I", "1:3", "--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://kick.com/xqc/videos", "args": ["-I", "1", "--flat-playlist"]},
+ {"url": "https://kick.com/xqc/videos", "args": ["-I", "2", "--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://kick.com/xqc/videos", "args": ["-I", "2:4", "--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]}
 ]

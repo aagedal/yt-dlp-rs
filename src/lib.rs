@@ -1885,6 +1885,8 @@ impl YoutubeDl {
                 extractor::fetch_steam_trailers
             } else if extractor::ard_pending_state(&pending.state) {
                 extractor::fetch_ard_pages
+            } else if extractor::kick_pending_state(&pending.state) {
+                extractor::fetch_kick_entries
             } else {
                 extractor::fetch_youtube_tab_pages
             };
