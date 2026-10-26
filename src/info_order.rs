@@ -230,6 +230,8 @@ impl Replay {
         } else {
             self.take("filesize_approx");
         }
+        // `_calc_headers` sets `cookies` before returning the headers.
+        self.take("cookies");
         self.assign("http_headers");
         self.assign("format_id");
         self.assign("format");
@@ -918,6 +920,7 @@ const PROCESSED_FORMAT_KEYS: &[&str] = &[
     "dynamic_range",
     "aspect_ratio",
     "filesize_approx",
+    "cookies",
     "http_headers",
     "format_id",
     "format",

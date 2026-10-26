@@ -1,0 +1,358 @@
+{
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
+ "cases": [
+  {
+   "url": "https://vimeo.com/123456789/abcdef0123",
+   "args": [
+    "-J",
+    "-u",
+    "user@example.com",
+    "-p",
+    "s3cret&pw"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"123456789\", \"title\": \"Unlisted clip\", \"uploader\": \"Account Owner\", \"uploader_id\": \"accountowner\", \"uploader_url\": \"https://vimeo.com/accountowner\", \"thumbnails\": [{\"url\": \"https://i.vimeocdn.com/video/123456789-thumb.jpg\", \"id\": \"0\"}], \"duration\": 62, \"chapters\": null, \"formats\": [{\"url\": \"https://vod-progressive.akamaized.net/123456789/720.mp4\", \"format_id\": \"http-720p\", \"source_preference\": 10, \"width\": 1280, \"height\": 720, \"fps\": 30, \"tbr\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-720p - 1280x720\"}, {\"url\": \"https://vimeo.com/download/123456789/source\", \"ext\": \"mov\", \"width\": 1920, \"height\": 1080, \"filesize\": 1500000000, \"format_id\": \"Original\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"cookies\": \"vimeo=SESSION; Domain=.vimeo.com; Path=/\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"Original - 1920x1080\"}], \"subtitles\": {}, \"live_status\": null, \"release_timestamp\": 1704240000, \"_format_sort_fields\": [\"quality\", \"res\", \"fps\", \"hdr:12\", \"source\"], \"description\": \"Seen by the account\", \"license\": \"by\", \"timestamp\": 1704164645, \"view_count\": 99, \"comment_count\": 3, \"like_count\": 4, \"webpage_url\": \"https://vimeo.com/123456789/abcdef0123\", \"original_url\": \"https://vimeo.com/123456789/abcdef0123\", \"webpage_url_basename\": \"abcdef0123\", \"webpage_url_domain\": \"vimeo.com\", \"extractor\": \"vimeo\", \"extractor_key\": \"Vimeo\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://i.vimeocdn.com/video/123456789-thumb.jpg\", \"display_id\": \"123456789\", \"fulltitle\": \"Unlisted clip\", \"duration_string\": \"1:02\", \"upload_date\": \"20240102\", \"release_date\": \"20240103\", \"release_year\": 2024, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://vimeo.com/download/123456789/source\", \"ext\": \"mov\", \"width\": 1920, \"height\": 1080, \"filesize\": 1500000000, \"format_id\": \"Original\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"cookies\": \"vimeo=SESSION; Domain=.vimeo.com; Path=/\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"Original - 1920x1080\", \"_filename\": \"Unlisted clip [123456789].mov\", \"filename\": \"Unlisted clip [123456789].mov\", \"__write_download_archive\": false}], \"url\": \"https://vimeo.com/download/123456789/source\", \"ext\": \"mov\", \"width\": 1920, \"height\": 1080, \"filesize\": 1500000000, \"format_id\": \"Original\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"cookies\": \"vimeo=SESSION; Domain=.vimeo.com; Path=/\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"Original - 1920x1080\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/123456789/abcdef0123",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(view_count)s|%(like_count)s|%(comment_count)s|%(timestamp)s|%(format_id)s",
+    "--netrc-cmd",
+    "printf 'machine vimeo login user@example.com password s3cret&pw'"
+   ],
+   "exit": 0,
+   "stdout": [
+    "123456789|Unlisted clip|Seen by the account|99|4|3|1704164645|Original"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/123456789/abcdef0123",
+   "args": [
+    "-s",
+    "-u",
+    "user@example.com",
+    "-p",
+    "wrong"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[vimeo] Downloading web token info",
+    "[vimeo] Logging in"
+   ],
+   "stderr": [
+    "ERROR: [vimeo] 123456789: Unable to log in: bad username or password"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/76979871",
+   "args": [
+    "-s",
+    "-u",
+    "user@example.com",
+    "-p",
+    "boom"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[vimeo] Downloading web token info",
+    "[vimeo] Logging in"
+   ],
+   "stderr": [
+    "ERROR: [vimeo] 76979871: Unable to log in; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/76979871",
+   "args": [
+    "-J",
+    "--cookies",
+    "cookies.txt",
+    "-u",
+    "user@example.com",
+    "-p",
+    "s3cret&pw"
+   ],
+   "copy": [
+    "cookies.txt"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_format_sort_fields\": [\"quality\", \"res\", \"fps\", \"hdr:12\", \"source\"], \"formats\": [{\"url\": \"https://vod-progressive.akamaized.net/76979871/720.mp4\", \"format_id\": \"http-720p\", \"source_preference\": 10, \"width\": 1280, \"height\": 720, \"fps\": 30, \"tbr\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-720p - 1280x720\"}, {\"url\": \"https://player.vimeo.com/play/76979871/source?s=1&filename=Clip.MOV\", \"ext\": \"mov\", \"format_id\": \"Source\", \"width\": 3840, \"height\": 2160, \"fps\": 30, \"filesize\": 123456, \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"3840x2160\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"cookies\": \"vimeo=SESSION; Domain=.vimeo.com; Path=/; Secure; Expires=4102444800\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"Source - 3840x2160\"}], \"timestamp\": 1381846109, \"description\": \"A page description\", \"webpage_url\": \"https://vimeo.com/76979871\", \"view_count\": 1234, \"like_count\": 56, \"comment_count\": 7, \"license\": \"by-nc\", \"id\": \"76979871\", \"title\": \"Page clip\", \"uploader\": \"Account Owner\", \"uploader_id\": \"accountowner\", \"uploader_url\": \"https://vimeo.com/accountowner\", \"thumbnails\": [{\"url\": \"https://i.vimeocdn.com/video/76979871-thumb.jpg\", \"id\": \"0\"}], \"duration\": 62, \"subtitles\": {}, \"original_url\": \"https://vimeo.com/76979871\", \"webpage_url_basename\": \"76979871\", \"webpage_url_domain\": \"vimeo.com\", \"extractor\": \"vimeo\", \"extractor_key\": \"Vimeo\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://i.vimeocdn.com/video/76979871-thumb.jpg\", \"display_id\": \"76979871\", \"fulltitle\": \"Page clip\", \"duration_string\": \"1:02\", \"upload_date\": \"20131015\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://player.vimeo.com/play/76979871/source?s=1&filename=Clip.MOV\", \"ext\": \"mov\", \"format_id\": \"Source\", \"width\": 3840, \"height\": 2160, \"fps\": 30, \"filesize\": 123456, \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"resolution\": \"3840x2160\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"cookies\": \"vimeo=SESSION; Domain=.vimeo.com; Path=/; Secure; Expires=4102444800\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"Source - 3840x2160\", \"_filename\": \"Page clip [76979871].mov\", \"filename\": \"Page clip [76979871].mov\", \"__write_download_archive\": false}], \"url\": \"https://player.vimeo.com/play/76979871/source?s=1&filename=Clip.MOV\", \"ext\": \"mov\", \"format_id\": \"Source\", \"width\": 3840, \"height\": 2160, \"fps\": 30, \"filesize\": 123456, \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"3840x2160\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"cookies\": \"vimeo=SESSION; Domain=.vimeo.com; Path=/; Secure; Expires=4102444800\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"Source - 3840x2160\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [vimeo] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/11111111",
+   "args": [
+    "-J",
+    "--cookies",
+    "cookies.txt"
+   ],
+   "copy": [
+    "cookies.txt"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"API only clip\", \"uploader\": \"API User\", \"uploader_id\": \"apiuser\", \"uploader_url\": \"https://vimeo.com/apiuser\", \"thumbnails\": [{\"url\": \"https://i.vimeocdn.com/video/11111111-100x75\", \"width\": 100, \"height\": 75, \"id\": \"0\", \"resolution\": \"100x75\"}], \"id\": \"11111111\", \"duration\": 120, \"formats\": [{\"ext\": \"webm\", \"width\": 640, \"height\": 360, \"url\": \"https://vod.vimeocdn.com/11111111/360.webm\", \"format_id\": \"http-360p-sd\", \"tbr\": null, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-360p-sd - 640x360\"}, {\"ext\": \"mp4\", \"vcodec\": \"h264\", \"width\": 1280, \"height\": 720, \"filesize\": 15360000, \"fps\": 30, \"url\": \"https://vod.vimeocdn.com/11111111/720.mp4\", \"format_id\": \"http-720p-hd\", \"tbr\": 1000.0, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-720p-hd - 1280x720\"}], \"subtitles\": {}, \"live_status\": \"was_live\", \"description\": \"Only via API\", \"license\": null, \"release_timestamp\": 1588809600, \"timestamp\": 1588748889, \"view_count\": 5, \"comment_count\": 0, \"like_count\": 1, \"webpage_url\": \"https://vimeo.com/11111111\", \"original_url\": \"https://vimeo.com/11111111\", \"webpage_url_basename\": \"11111111\", \"webpage_url_domain\": \"vimeo.com\", \"extractor\": \"vimeo\", \"extractor_key\": \"Vimeo\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://i.vimeocdn.com/video/11111111-100x75\", \"display_id\": \"11111111\", \"fulltitle\": \"API only clip\", \"duration_string\": \"2:00\", \"upload_date\": \"20200506\", \"release_date\": \"20200507\", \"release_year\": 2020, \"is_live\": false, \"was_live\": true, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"ext\": \"mp4\", \"vcodec\": \"h264\", \"width\": 1280, \"height\": 720, \"filesize\": 15360000, \"fps\": 30, \"url\": \"https://vod.vimeocdn.com/11111111/720.mp4\", \"format_id\": \"http-720p-hd\", \"tbr\": 1000.0, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-720p-hd - 1280x720\", \"_filename\": \"API only clip [11111111].mp4\", \"filename\": \"API only clip [11111111].mp4\", \"__write_download_archive\": false}], \"ext\": \"mp4\", \"vcodec\": \"h264\", \"width\": 1280, \"height\": 720, \"filesize\": 15360000, \"fps\": 30, \"url\": \"https://vod.vimeocdn.com/11111111/720.mp4\", \"format_id\": \"http-720p-hd\", \"tbr\": 1000.0, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-720p-hd - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [vimeo] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/123456789/abcdef0123",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(view_count)s|%(like_count)s|%(comment_count)s|%(timestamp)s|%(format_id)s",
+    "--cookies",
+    "cookies.txt",
+    "--extractor-args",
+    "vimeo:original_format_policy=never"
+   ],
+   "copy": [
+    "cookies.txt"
+   ],
+   "exit": 0,
+   "stdout": [
+    "123456789|Unlisted clip|Seen by the account|99|4|3|1704164645|http-720p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/22222222",
+   "args": [
+    "-s",
+    "--cookies",
+    "cookies.txt"
+   ],
+   "copy": [
+    "cookies.txt"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[vimeo] Extracting URL: https://vimeo.com/22222222",
+    "[vimeo] 22222222: Downloading webpage",
+    "[vimeo] Downloading web token info",
+    "[vimeo] 22222222: Downloading web API JSON"
+   ],
+   "stderr": [
+    "WARNING: [vimeo] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [vimeo] 22222222: This video is not available in your country. Authentication may be needed due to your location. If your IP address is located in Europe you could try using a VPN/proxy, or else use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vimeo) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/33333333",
+   "args": [
+    "-s",
+    "--cookies",
+    "cookies.txt"
+   ],
+   "copy": [
+    "cookies.txt"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[vimeo] Extracting URL: https://vimeo.com/33333333",
+    "[vimeo] 33333333: Downloading webpage",
+    "[vimeo] Downloading web token info",
+    "[vimeo] 33333333: Downloading web API JSON"
+   ],
+   "stderr": [
+    "WARNING: [vimeo] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [vimeo] 33333333: This video is protected by a password, use the --video-password option"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/33333333",
+   "args": [
+    "-s",
+    "--cookies",
+    "cookies.txt",
+    "--video-password",
+    "wrong"
+   ],
+   "copy": [
+    "cookies.txt"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[vimeo] Extracting URL: https://vimeo.com/33333333",
+    "[vimeo] 33333333: Downloading webpage",
+    "[vimeo] Downloading web token info",
+    "[vimeo] 33333333: Downloading web API JSON",
+    "[vimeo] 33333333: Submitting video password"
+   ],
+   "stderr": [
+    "WARNING: [vimeo] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [vimeo] 33333333: Wrong password"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/44444444",
+   "args": [
+    "-s",
+    "--cookies",
+    "cookies.txt"
+   ],
+   "copy": [
+    "cookies.txt"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[vimeo] Extracting URL: https://vimeo.com/44444444",
+    "[vimeo] 44444444: Downloading webpage",
+    "[vimeo] Downloading web token info",
+    "[vimeo] 44444444: Downloading web API JSON"
+   ],
+   "stderr": [
+    "WARNING: [vimeo] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [vimeo] 44444444: Unable to download web API JSON: HTTP Error 500: OK (caused by <HTTPError 500: OK>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/11111111",
+   "args": [
+    "-s",
+    "--extractor-args",
+    "vimeo:client=web"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[vimeo] Extracting URL: https://vimeo.com/11111111",
+    "[vimeo] 11111111: Downloading webpage"
+   ],
+   "stderr": [
+    "WARNING: [vimeo] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [vimeo] 11111111: The web client only works when logged-in. Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vimeo) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/123456789/abcdef0123",
+   "args": [
+    "-s",
+    "--extractor-args",
+    "vimeo:client=web"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[vimeo] Extracting URL: https://vimeo.com/123456789/abcdef0123"
+   ],
+   "stderr": [
+    "ERROR: [vimeo] 123456789: The web client only works when logged-in. Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vimeo) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/11111111",
+   "args": [
+    "-s",
+    "--extractor-args",
+    "vimeo:client=android"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[vimeo] Extracting URL: https://vimeo.com/11111111",
+    "[vimeo] 11111111: Downloading webpage"
+   ],
+   "stderr": [
+    "WARNING: [vimeo] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [vimeo] 11111111: The android client is unable to fetch new OAuth tokens and is only intended for use with previously cached tokens"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/11111111",
+   "args": [
+    "-s",
+    "--cookies",
+    "cookies.txt",
+    "--extractor-args",
+    "vimeo:client=Bogus"
+   ],
+   "copy": [
+    "cookies.txt"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[vimeo] Extracting URL: https://vimeo.com/11111111",
+    "[vimeo] 11111111: Downloading webpage"
+   ],
+   "stderr": [
+    "WARNING: [vimeo] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [vimeo] 11111111: Unsupported API client \"bogus\" requested. Supported clients are: android, web"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/album/555/video/76979871",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s",
+    "--video-password",
+    "album pw"
+   ],
+   "exit": 0,
+   "stdout": [
+    "76979871|Page clip"
+   ],
+   "stderr": [
+    "WARNING: [vimeo] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/album/555/video/76979871",
+   "args": [
+    "-s",
+    "--video-password",
+    "wrong"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[vimeo] Extracting URL: https://vimeo.com/album/555/video/76979871",
+    "[vimeo] 555: Downloading web token info",
+    "[vimeo] 555: Downloading JSON metadata",
+    "[vimeo] 555: Verifying the password"
+   ],
+   "stderr": [
+    "ERROR: [vimeo] 76979871: Wrong password"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/album/555/video/76979871",
+   "args": [
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[vimeo] Extracting URL: https://vimeo.com/album/555/video/76979871",
+    "[vimeo] 555: Downloading web token info",
+    "[vimeo] 555: Downloading JSON metadata"
+   ],
+   "stderr": [
+    "ERROR: [vimeo] 76979871: This album is protected by a password, use the --video-password option"
+   ],
+   "files": {}
+  }
+ ]
+}

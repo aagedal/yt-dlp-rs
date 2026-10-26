@@ -1,0 +1,3 @@
+# Netscape HTTP Cookie File
+
+.vimeo.com	TRUE	/	TRUE	4102444800	vimeo	SESSION

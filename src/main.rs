@@ -1658,7 +1658,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         args.ignore_no_formats_error,
         args.wait_for_video.is_some() && !args.no_wait_for_video,
     );
-    // `--extractor-args`: GenericIE's, YouTube's, YoutubeTabIE's and TwitterIE's ported
+    // `--extractor-args`: GenericIE's, YouTube's, YoutubeTabIE's, TwitterIE's and VimeoIE's ported
     // arguments are used; other extractors' are not.
     let extractor_args =
         yt_dlp_rs::manifest_args::parse_extractor_args(&args.extractor_args).map_err(UsageError)?;
@@ -1702,6 +1702,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 for name in values.keys().filter(|name| name.as_str() != "api") {
                     warning!(
                         "WARNING: extractor argument twitter:{name} is not supported natively and is ignored"
+                    );
+                }
+            }
+            "vimeo" => {
+                for name in values
+                    .keys()
+                    .filter(|name| !matches!(name.as_str(), "client" | "original_format_policy"))
+                {
+                    warning!(
+                        "WARNING: extractor argument vimeo:{name} is not supported natively and is ignored"
                     );
                 }
             }
