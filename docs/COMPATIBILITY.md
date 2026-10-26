@@ -3343,8 +3343,9 @@ forms. Fixed-clock unit tests cover future/past dates, fractional delays, caps,
 invalid dates, duplicate hints, and independence from the response Date header.
 Local HTTP regressions cover expired-hint recovery and capped future hints on
 exhausted budgets and permanent statuses for extraction and downloads.
-Persistent resume, obsolete HTTP-date Retry-After formats, extraction cancellation,
-and an overall extraction deadline remain unimplemented.
+Obsolete HTTP-date Retry-After formats, extraction cancellation, and an
+overall extraction deadline remain unimplemented (resume across invocations is
+covered under `--continue` and fragment download resume above).
 
 ## Download progress and cooperative cancellation
 
