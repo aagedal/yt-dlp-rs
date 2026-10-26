@@ -84,6 +84,7 @@ mod hypem;
 mod iheart;
 mod ilpost;
 mod iltalehti;
+mod imdb;
 mod imgur;
 mod ina;
 mod inc;
@@ -327,6 +328,7 @@ pub use iheart::{
 };
 pub use ilpost::{IlPost, suitable as ilpost_suitable};
 pub use iltalehti::{Iltalehti, suitable as iltalehti_suitable};
+pub use imdb::{Imdb, ImdbList, list_suitable as imdb_list_suitable, suitable as imdb_suitable};
 pub use imgur::{
     Imgur, ImgurAlbum, ImgurGallery, album_suitable as imgur_album_suitable,
     gallery_suitable as imgur_gallery_suitable, suitable as imgur_suitable,

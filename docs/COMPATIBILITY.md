@@ -2084,6 +2084,18 @@ section category and tags. Non-object posts, images or image maps and
 non-string titles remain explicit native errors.
 `tests/fixtures/sites/ninegag/` is compared with pinned upstream output.
 
+IMDb trailers (`www|m.imdb.com/video|title|list...vi<ID>`) follow upstream
+`ImdbIE`: the `video/vi<ID>` page's Next.js `videoPlaybackData` (title from
+`name`, `primaryTitle`, then `og:title`/`twitter:title` and `<title>`), its
+`playbackURLs` or else the legacy `VIDEO_PLAYBACK_DATA` API (base64 JSON key;
+an empty answer is upstream's unwrapped `'NoneType' object is not iterable`),
+non-fatal HLS with `preference` 1 and merged subtitles, and progressive
+encodings ranked by `qualities(SD, 480p, 720p, 1080p)`. `ImdbListIE` turns a
+list page's video player links into `url` entries with the list title and
+description (fatal). Native difference: when a page has both meta titles,
+`og:title` is preferred, where upstream takes whichever comes first.
+`tests/fixtures/sites/imdb/` is compared with pinned upstream output.
+
 CloudyCDN and Backscreen embeds (`embed.cloudycdn.services|backscreen.com/SITE/media/ID`)
 follow upstream `CloudyCDNIE`: the `player.DOMAIN/player/SITE/media/ID/`
 JSON form POST (`version=6.4.0`, `referer`), each `source.sources[].src` URL

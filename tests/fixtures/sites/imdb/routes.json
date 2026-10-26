@@ -1,0 +1,88 @@
+{
+ "routes": [
+  {
+   "url": "https://www.imdb.com/video/vi2524815897",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>IMDb Video Page</title></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"videoPlaybackData\": {\"video\": {\"name\": {\"value\": \"No. 2\"}, \"description\": {\"value\": \"A trailer &amp; more\"}, \"thumbnail\": {\"url\": \"https://m.media-amazon.test/thumb.jpg\"}, \"runtime\": {\"value\": \"125\"}, \"playbackURLs\": [{\"displayName\": {\"value\": \"AUTO\"}, \"mimeType\": \"application/x-mpegURL\", \"url\": \"https://imdb-video.media-imdb.test/master.m3u8\"}, {\"displayName\": {\"value\": \"1080p\"}, \"mimeType\": \"video/mp4\", \"url\": \"https://imdb-video.media-imdb.test/1080.mp4\"}, {\"definition\": \"SD\", \"url\": \"https://imdb-video.media-imdb.test/sd.mp4\"}, {}, \"junk\", {\"url\": \"not a url\"}]}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://imdb-video.media-imdb.test/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID=\"subs\",NAME=\"English\",LANGUAGE=\"en\",URI=\"subs.m3u8\"\n#EXT-X-STREAM-INF:BANDWIDTH=800000,RESOLUTION=640x360,SUBTITLES=\"subs\"\n360.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=2000000,RESOLUTION=1280x720,SUBTITLES=\"subs\"\n720.m3u8\n"
+  },
+  {
+   "url": "https://imdb-video.media-imdb.test/360.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXTINF:10.0,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://imdb-video.media-imdb.test/720.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXTINF:10.0,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://imdb-video.media-imdb.test/subs.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXTINF:10.0,\nsubs0.vtt\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://www.imdb.com/video/vi3516832537",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Legacy &amp; Co\"><meta name=\"twitter:title\" content=\"Twitter title\"><title>IMDb Video Page</title></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"videoPlaybackData\": {\"video\": {\"primaryTitle\": {\"titleText\": {}}}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://www.imdb.com/ve/data/VIDEO_PLAYBACK_DATA?key=eyJ0eXBlIjogIlZJREVPX1BMQVlFUiIsICJzdWJUeXBlIjogIkZPUkNFX0xFR0FDWSIsICJpZCI6ICJ2aTM1MTY4MzI1MzcifQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"videoLegacyEncodings\": [{\"definition\": \"480p\", \"mimeType\": \"video/mp4\", \"url\": \"https://imdb-video.media-imdb.test/480.mp4\"}, {\"definition\": \"720p\", \"url\": \"https://imdb-video.media-imdb.test/720.webm\"}]}]"
+  },
+  {
+   "url": "https://www.imdb.com/video/vi1111111111",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>IMDb Video Page</title></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {}}}</script></body></html>"
+  },
+  {
+   "url": "https://www.imdb.com/ve/data/VIDEO_PLAYBACK_DATA?key=eyJ0eXBlIjogIlZJREVPX1BMQVlFUiIsICJzdWJUeXBlIjogIkZPUkNFX0xFR0FDWSIsICJpZCI6ICJ2aTExMTExMTExMTEifQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[]"
+  },
+  {
+   "url": "https://www.imdb.com/list/ls009921623/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><h1 class=\"list-header\">Nice &amp; trailers</h1><div class=\"list-description\"><p>Some <b>videos</b></p></div><a href=\"/list/ls009921623/videoplayer/vi260482329?ref=x\">a</a><a href=\"/list/ls009921623/videoplayer/vi351236121\">b</a><a href=\"/list/ls000000000/videoplayer/vi1\">c</a></html>"
+  },
+  {
+   "url": "https://www.imdb.com/list/ls123456789/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><h1 class=\"header\">Only title</h1></html>"
+  },
+  {
+   "url": "https://imdb-video.media-imdb.test/1080.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "fixture 1080 bytes"
+  }
+ ]
+}
