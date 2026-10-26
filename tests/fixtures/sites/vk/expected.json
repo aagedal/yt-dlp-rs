@@ -236,6 +236,116 @@
    "files": {}
   },
   {
+   "url": "https://vk.com/video/@mobidevices",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[vk:uservideos] Extracting URL: https://vk.com/video/@mobidevices",
+    "[vk:uservideos] @mobidevices: Downloading webpage",
+    "[download] Downloading playlist: Mobi&Devices videos",
+    "[vk:uservideos] -17892518: Downloading JSON metadata",
+    "[vk:uservideos] Playlist Mobi&Devices videos: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Mobi&Devices videos"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vk.com/video/@mobidevices",
+   "args": [
+    "-I",
+    "2",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2|-17892518_456239002|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vk.com/video/@mobidevices",
+   "args": [
+    "-I",
+    "3",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "3|-77521_162222515|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vk.com/video/@mobidevices",
+   "args": [
+    "-I",
+    "2:4",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2|-17892518_456239002|3",
+    "3|-77521_162222515|3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vk.com/video/@mobidevices?section=uploaded",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[vk:uservideos] Extracting URL: https://vk.com/video/@mobidevices?section=uploaded",
+    "[vk:uservideos] @mobidevices: Downloading webpage",
+    "[download] Downloading playlist: -17892518_uploaded",
+    "[vk:uservideos] -17892518: Downloading JSON metadata",
+    "[vk:uservideos] Playlist -17892518_uploaded: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: -17892518_uploaded"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vk.com/video/@mobidevices?section=uploaded",
+   "args": [
+    "-I",
+    "2",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[vk:uservideos] Extracting URL: https://vk.com/video/@mobidevices?section=uploaded",
+    "[vk:uservideos] @mobidevices: Downloading webpage",
+    "[download] Downloading playlist: -17892518_uploaded",
+    "[vk:uservideos] -17892518: Downloading JSON metadata",
+    "[vk:uservideos] -17892518: Downloading JSON metadata",
+    "[vk:uservideos] -17892518: Skipping 2 unavailable videos",
+    "[vk:uservideos] Playlist -17892518_uploaded: Downloading 0 items of 1",
+    "[download] Finished downloading playlist: -17892518_uploaded"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
    "url": "https://vk.com/video/@nocursor",
    "args": [
     "--print",

@@ -555,6 +555,9 @@ pub use vk::{
     Vk, VkUserVideos, VkWallPost, suitable as vk_suitable,
     user_videos_suitable as vk_user_videos_suitable, wall_post_suitable as vk_wall_post_suitable,
 };
+pub(crate) use vk::{
+    fetch_pages as fetch_vk_user_videos_pages, is_pending_state as vk_user_videos_pending_state,
+};
 pub use vkplay::{
     VkPlay, VkPlayLive, live_suitable as vkplay_live_suitable, suitable as vkplay_suitable,
 };
