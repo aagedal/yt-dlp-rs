@@ -58,6 +58,54 @@
    "files": {}
   },
   {
+   "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=242472205",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] BaW_jenozKc: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>). Giving up after 3 retries",
+    "WARNING: [youtube] BaW_jenozKc: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] BaW_jenozKc: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] BaW_jenozKc: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] BaW_jenozKc: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "ERROR: [youtube] BaW_jenozKc: Unable to download API page: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://steamcommunity.com/sharedfiles/filedetails/242472206",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] BaW_jenozKc: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>). Giving up after 3 retries",
+    "WARNING: [youtube] BaW_jenozKc: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] BaW_jenozKc: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] BaW_jenozKc: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] BaW_jenozKc: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "ERROR: [youtube] BaW_jenozKc: Unable to download API page: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
    "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1",
    "args": [
     "--print",

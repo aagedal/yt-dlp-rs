@@ -915,10 +915,9 @@
       ],
       "rust": [
         "src/extractor/steam.rs",
-        "tests/fixtures/sites/steam/",
-        "tests/sites.rs"
+        "tests/fixtures/sites/steam/"
       ],
-      "scope": "SteamIE age-check cookies, carousel data-props trailers as an eagerly extracted playlist (master-only HLS, DASH, duplicate removal, parse_resolution thumbnails), SteamCommunityIE YouTube follows and No video found, and SteamCommunityBroadcastIE live HLS with uploader fields compared with pinned upstream output through the fixture proxy (the YouTube follow by its watch-page request)"
+      "scope": "SteamIE age-check cookies, carousel data-props trailers as an eagerly extracted playlist (master-only HLS, DASH, duplicate removal, parse_resolution thumbnails), SteamCommunityIE YouTube follows and No video found, and SteamCommunityBroadcastIE live HLS with uploader fields compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "tv2",
@@ -932,7 +931,7 @@
         "src/info_order.rs",
         "tests/fixtures/sites/tv2/"
       ],
-      "scope": "TV2IE asset metadata, POSTed HLS/DASH playback with 401 geo/login/description errors, _is_valid_url stream checks, master-only HLS, DASH, progressive and skipped ISM streams, DRM and unbound video_url errors, the leftover own url (kept in -J for merged and single selections through info_order OWN_URL), and TV2ArticleIE asset playlists compared with pinned upstream output through the fixture proxy; f4m streams are unsupported, unparsable embed JSON warns without Python's decoder message, and KatsomoIE/MTVUutisetArticleIE (broken upstream) are not ported"
+      "scope": "TV2IE asset metadata, POSTed HLS/DASH playback with 401 geo/login/description errors, _is_valid_url stream checks, master-only HLS, DASH, progressive and skipped ISM streams, DRM and unbound video_url errors, the leftover own url (kept in -J for merged and single selections through info_order OWN_URL), and TV2ArticleIE asset playlists compared with pinned upstream output through the fixture proxy; f4m streams are unsupported, and KatsomoIE/MTVUutisetArticleIE (broken upstream) are not ported"
     },
     {
       "name": "xvideos",
@@ -2956,7 +2955,9 @@
         "src/mhtml.rs",
         "tests/youtube_live.rs",
         "src/data/iso3166.txt",
-        "tests/fixtures/sites/youtube-login/"
+        "tests/fixtures/sites/youtube-login/",
+        "tests/fixtures/sites/youtube-watch-404/",
+        "src/json.rs"
       ],
       "scope": "Upstream YoutubeIE._real_extract over the InnerTube client flow (watch page, ytcfg, per-client player API requests, default tv_samsung/visionos/web clients with a JS runtime, visionos only without, age-gate and authenticated cookie clients), _extract_formats_and_subtitles (https, HLS/DASH manifests, dashy, multi-audio/DRC, storyboards with MhtmlFD), JS challenge solving through the vendored EJS solver under Deno/Node, captions/automatic captions, live chat (YoutubeLiveChatFD), live, upcoming, post-live and --live-from-start (DashSegmentsFD generator) streams, multifeed, --mark-watched, the documented youtube/youtubetab extractor arguments including configured PO tokens (no PO token provider plugins), title/duration/geo/trailer fallbacks and the full info dict in upstream key order; YoutubeTabIE playlists, mixes, channel tabs (nested multi-tab channels), feeds, hashtags, posts and shelves with browse API continuations; the redirect, feed-keyword, truncated, consent, playlist, YtBe, user, notification and music search extractors and the full YoutubeIE._VALID_URL; YoutubeSearchIE and YoutubeSearchURLIE; YoutubeIE._EMBED_REGEX embeds on generic pages; saved site fixtures tests/fixtures/sites/youtube*/ compared against pinned upstream output. SABR streaming is not supported; YoutubeBaseInfoExtractor._perform_login once per extractor (password logins warn, oauth usernames are the no-longer-supported error), compared with pinned upstream through tests/fixtures/sites/youtube-login/"
     },

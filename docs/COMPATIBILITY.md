@@ -181,9 +181,13 @@ upstream equivalence for every option interaction or filename rule.
 
 ## YouTube watch-page subset
 
-Known gap: when the watch page answers HTTP 404, upstream retries it
-(`HTTP Error 404: Not Found. Retrying (N/3)...`), then continues with the
-player API; this port reports the watch page error at once.
+The watch page is never fatal: like upstream's
+`_download_webpage_with_retries`, network errors other than HTTP 403/429 are
+retried (`Retrying (N/3)...`), then a warning (`Giving up after 3 retries`)
+leaves extraction to the player API. An InnerTube error body that is not HTML
+is parsed like upstream (`Failed to parse JSON: ...` with Python's decoder
+message, else its `error.message` alert). `tests/fixtures/sites/youtube-watch-404/`
+compares an all-404 site with pinned upstream.
 
 The built-in `Youtube` extractor runs before the generic HTTP fallback and
 takes the URLs of pinned upstream's `YoutubeIE._VALID_URL` (ported with its
@@ -2248,9 +2252,8 @@ no-formats error, upstream's unbound `video_url` error without any stream, and
 the last stream URL as the info dict's own `url`. `TV2ArticleIE` article
 pages give their `data-assetid` (or `TV2ContentboxVideo`/`TV2.TV2Video`
 `assetId`) videos as a playlist with the OpenGraph title and description
-(` - TV2.no` removed). HDS (`f4m`) streams are an unsupported error, and an
-embed whose JSON does not parse warns without upstream's Python decoder
-message. Upstream's Katsomo and MTV Uutiset extractors are marked broken and
+(` - TV2.no` removed; an embed whose JSON does not parse warns with
+Python's decoder message). HDS (`f4m`) streams are an unsupported error. Upstream's Katsomo and MTV Uutiset extractors are marked broken and
 not ported. `tests/fixtures/sites/tv2/` is compared with pinned upstream
 output.
 
@@ -2266,8 +2269,7 @@ are extracted eagerly, so their manifest messages precede the playlist's.
 the `movieFrame modal` element's ID) to the YouTube extractor, else
 `No video found`. `SteamCommunityBroadcastIE` broadcasts give the fatal
 master-only live HLS, view count and uploader. `tests/fixtures/sites/steam/`
-is compared with pinned upstream output (the YouTube follow is checked by
-the request it makes).
+is compared with pinned upstream output.
 
 CloudyCDN and Backscreen embeds (`embed.cloudycdn.services|backscreen.com/SITE/media/ID`)
 follow upstream `CloudyCDNIE`: the `player.DOMAIN/player/SITE/media/ID/`

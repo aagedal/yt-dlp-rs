@@ -187,6 +187,7 @@
     "{\"id\": \"6930543\", \"title\": \"Ny side\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"TV2\", \"_type\": \"url\", \"url\": \"http://www.tv2.no/v/1791209\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.tv2.no/nyheter/innenriks/6930543\", \"original_url\": \"https://www.tv2.no/nyheter/innenriks/6930543\", \"webpage_url_basename\": \"6930543\", \"webpage_url_domain\": \"tv2.no\", \"extractor\": \"TV2Article\", \"extractor_key\": \"TV2Article\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
    ],
    "stderr": [
+    "WARNING: [TV2Article] 6930543: Failed to parse JSON: Expecting value in 'broken\": [}': line 1 column 13 (char 12)",
     "WARNING: [TV2Article] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
    ],
    "files": {}

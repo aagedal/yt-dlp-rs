@@ -3,6 +3,8 @@
  {"url": "https://store.steampowered.com/app/105600/Terraria/", "args": ["--print", "%(id)s|%(title)s|%(series)s|%(series_id)s|%(thumbnails)j|%(format_id)s"]},
  {"url": "https://store.steampowered.com/app/105600/Terraria/", "args": ["-I", "1", "--print", "%(id)s|%(format_id)s|%(playlist_index)s|%(playlist_count)s"]},
  {"url": "https://store.steampowered.com/app/999/", "args": ["-J"]},
+ {"url": "https://steamcommunity.com/sharedfiles/filedetails/?id=242472205", "args": ["--print", "id"]},
+ {"url": "https://steamcommunity.com/sharedfiles/filedetails/242472206", "args": ["--print", "id"]},
  {"url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1", "args": ["--print", "id"]},
  {"url": "https://steamcommunity.com/broadcast/watch/76561199073851486", "args": ["--print", "%(id)s|%(live_status)s|%(view_count)s|%(uploader)s|%(uploader_id)s|%(format_id)s|%(protocol)s"]}
 ]

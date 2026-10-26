@@ -351,12 +351,15 @@ impl Extractor for Tv2Article {
             .collect();
         if assets.is_empty() {
             for found in CONTENTBOX.captures_iter(&webpage) {
-                let Ok(video) =
-                    crate::json::from_str::<Value>(&crate::js_to_json::js_to_json(&found[1]))
-                else {
+                let source = crate::js_to_json::js_to_json(&found[1]);
+                // `_parse_json(..., fatal=False)`: Python's decoder message.
+                if let Some(error) = crate::json::python_decode_error_text(&source) {
                     crate::screen::warning(&format!(
-                        "[{ARTICLE_NAME}] {playlist_id}: Failed to parse JSON"
+                        "[{ARTICLE_NAME}] {playlist_id}: Failed to parse JSON: {error}"
                     ));
+                    continue;
+                }
+                let Ok(video) = crate::json::from_str::<Value>(&source) else {
                     continue;
                 };
                 match video.get("assetId") {
