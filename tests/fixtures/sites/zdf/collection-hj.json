@@ -1,0 +1,23 @@
+{
+ "data": {
+  "smartCollectionByCanonical": {
+   "canonical": "heute-journal-104",
+   "title": "heute journal",
+   "infoText": "Das Nachrichtenmagazin am Abend.",
+   "video": null,
+   "seasons": {
+    "seasons": [
+     {
+      "number": 2020
+     },
+     {
+      "number": 2021
+     },
+     {
+      "number": null
+     }
+    ]
+   }
+  }
+ }
+}

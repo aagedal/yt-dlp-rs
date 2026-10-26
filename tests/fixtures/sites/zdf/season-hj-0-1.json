@@ -1,0 +1,42 @@
+{
+ "data": {
+  "smartCollectionByCanonical": {
+   "seasons": {
+    "nodes": [
+     {
+      "number": 2020,
+      "episodes": {
+       "nodes": [
+        {
+         "canonical": "heute-journal-vom-31-12-2020-100",
+         "sharingUrl": "https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-31-12-2020-100",
+         "teaser": {
+          "title": "heute journal vom 31.12.2020",
+          "description": null
+         },
+         "leadParagraph": "Jahresrückblick",
+         "editorialDate": "2020-12-31T21:45:00Z",
+         "episodeInfo": {
+          "episodeNumber": 366,
+          "seasonNumber": 2020
+         }
+        },
+        {
+         "canonical": "ohne-link-100",
+         "sharingUrl": null,
+         "teaser": {
+          "title": "Ohne Link"
+         }
+        }
+       ],
+       "pageInfo": {
+        "hasNextPage": true,
+        "endCursor": "cursor-1"
+       }
+      }
+     }
+    ]
+   }
+  }
+ }
+}

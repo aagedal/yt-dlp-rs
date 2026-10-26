@@ -1,0 +1,39 @@
+{
+ "data": {
+  "videoByCanonical": {
+   "canonical": "terra-x-history-ein-tag-im-juli-ahrtalflut-2021-100",
+   "title": "Ein Tag im Juli - Ahrtalflut 2021",
+   "leadParagraph": null,
+   "editorialDate": "2026-05-19T20:15:00+02:00",
+   "teaser": {
+    "description": "Die Flut im Ahrtal.",
+    "image": {
+     "list": {
+      "original": "https://www.zdf.de/assets/terra-x-102~original?cb=1779214500000",
+      "1280x720": "https://www.zdf.de/assets/terra-x-102~1280x720?cb=1779214500000"
+     }
+    }
+   },
+   "episodeInfo": null,
+   "smartCollection": {
+    "canonical": "ein-tag-im-juli---ahrtalflut-2021-movie-100",
+    "title": "Ein Tag im Juli - Ahrtalflut 2021"
+   },
+   "currentMedia": {
+    "nodes": [
+     {
+      "ptmdTemplate": "/tmd/2/{playerId}/vod/ptmd/mediathek/260519_2015_sendung_his/2",
+      "duration": 5304,
+      "aspectRatio": null,
+      "streamAnchorTags": {
+       "nodes": []
+      },
+      "vodMediaType": "DEFAULT",
+      "label": "Standard",
+      "id": "n"
+     }
+    ]
+   }
+  }
+ }
+}

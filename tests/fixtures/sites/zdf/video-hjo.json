@@ -1,0 +1,78 @@
+{
+ "data": {
+  "videoByCanonical": {
+   "canonical": "heute-journal-vom-19-12-2021-100",
+   "title": "heute journal vom 19.12.2021",
+   "leadParagraph": "Omikron-Welle: Bund und Länder beraten über neue Maßnahmen.",
+   "editorialDate": "2021-12-19T21:45:00.000Z",
+   "teaser": {
+    "description": "Teaser-Text",
+    "image": {
+     "list": {
+      "original": "https://www.zdf.de/assets/hjo-100~original?cb=1639946700000",
+      "768x432": "https://www.zdf.de/assets/hjo-100~768x432?cb=1639946700000",
+      "2400x1350": "https://epg-image.zdf.de/fotobase-webdelivery/images/273e5545?layout=2400x1350",
+      "autoX720": "https://www.zdf.de/assets/hjo-100~autoX720?cb=1639946700000",
+      "broken": null,
+      "relative": "/assets/hjo-100~relative"
+     }
+    }
+   },
+   "episodeInfo": {
+    "episodeNumber": 370,
+    "seasonNumber": "2021"
+   },
+   "smartCollection": {
+    "canonical": "heute-journal-104",
+    "title": "heute journal"
+   },
+   "currentMedia": {
+    "nodes": [
+     {
+      "ptmdTemplate": "/tmd/2/{playerId}/vod/ptmd/mediathek/211219_sendung_hjo/3",
+      "duration": 1770,
+      "aspectRatio": "16:9",
+      "streamAnchorTags": {
+       "nodes": [
+        {
+         "anchorOffset": 0,
+         "anchorLabel": "Begrüßung"
+        },
+        {
+         "anchorOffset": 61.5,
+         "anchorLabel": "Omikron"
+        },
+        {
+         "anchorOffset": 300,
+         "anchorLabel": "Impfpflicht"
+        },
+        {
+         "anchorOffset": 1200,
+         "anchorLabel": null
+        }
+       ]
+      },
+      "vodMediaType": "DEFAULT",
+      "label": "Standard",
+      "id": "node-1"
+     },
+     {
+      "ptmdTemplate": "/tmd/2/{playerId}/vod/ptmd/mediathek/211219_sendung_hjo_dgs/1",
+      "duration": 1770,
+      "aspectRatio": "16:9",
+      "streamAnchorTags": {
+       "nodes": []
+      },
+      "vodMediaType": "DGS",
+      "label": "Gebärdensprache",
+      "id": "node-2"
+     },
+     {
+      "ptmdTemplate": null,
+      "id": "node-3"
+     }
+    ]
+   }
+  }
+ }
+}

@@ -634,6 +634,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "youtube:watchlater",
     "YoutubeYtBe",
     "youtube:user",
+    "zdf",
+    "zdf:channel",
     "Zhihu",
     "generic",
     "end",
@@ -1112,6 +1114,8 @@ impl YoutubeDl {
                 Box::new(extractor::XboxClips),
                 Box::new(extractor::XiaoHongShu),
                 Box::new(extractor::Yfanefa),
+                Box::new(extractor::Zdf),
+                Box::new(extractor::ZdfChannel),
                 Box::new(extractor::Zhihu),
                 Box::new(GenericHttp),
             ],
@@ -1825,6 +1829,8 @@ impl YoutubeDl {
                 extractor::fetch_twitch_pages
             } else if extractor::tiktok_pending_state(&pending.state) {
                 extractor::fetch_tiktok_pages
+            } else if extractor::zdf_pending_state(&pending.state) {
+                extractor::fetch_zdf_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };

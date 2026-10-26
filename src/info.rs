@@ -1383,9 +1383,12 @@ fn fill_description(format: &mut VideoFormat) {
             format.aspect_ratio = format!("{ratio:.2}").parse().ok();
         }
         if format.format.is_none() {
+            // `format_field(f, 'format_note', ' (%s)')`: an empty note is
+            // left out.
             let note = format
                 .format_note
                 .as_deref()
+                .filter(|note| !note.is_empty())
                 .map_or_else(String::new, |note| format!(" ({note})"));
             format.format = Some(format!(
                 "{} - {}{note}",

@@ -1,0 +1,54 @@
+{
+ "basename": "260519_2015_sendung_his",
+ "attributes": {
+  "duration": {
+   "value": 5304000
+  }
+ },
+ "captions": [],
+ "priorityList": [
+  {
+   "formitaeten": [
+    {
+     "type": "h264_aac_mp4_http_na_na",
+     "qualities": [
+      {
+       "quality": "veryhigh",
+       "mimeCodec": "avc1.4d401f, mp4a.40.2",
+       "highestVerticalResolution": 720,
+       "audio": {
+        "tracks": [
+         {
+          "class": "main",
+          "language": "deu",
+          "filesize": 792,
+          "uri": "https://media.zdf.test/terra/260519_2015_sendung_his_1628k_p13v17.mp4"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "type": "vp9_opus_webm_http_na_na",
+     "qualities": [
+      {
+       "quality": "hd",
+       "mimeCodec": "vp9, opus",
+       "highestVerticalResolution": 1080,
+       "audio": {
+        "tracks": [
+         {
+          "class": "main",
+          "language": "de",
+          "uri": "https://media.zdf.test/terra/260519_2015_sendung_his_4692k_p37v17.webm"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

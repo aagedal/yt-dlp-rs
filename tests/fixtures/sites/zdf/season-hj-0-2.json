@@ -1,0 +1,35 @@
+{
+ "data": {
+  "smartCollectionByCanonical": {
+   "seasons": {
+    "nodes": [
+     {
+      "number": 2020,
+      "episodes": {
+       "nodes": [
+        {
+         "canonical": "heute-journal-vom-30-12-2020-100",
+         "sharingUrl": "https://www.zdf.de/video/magazine/heute-journal-104/heute-journal-vom-30-12-2020-100",
+         "teaser": {
+          "title": "heute journal vom 30.12.2020",
+          "description": "Nur Teaser"
+         },
+         "leadParagraph": null,
+         "editorialDate": "kein Datum",
+         "episodeInfo": {
+          "episodeNumber": "365",
+          "seasonNumber": 2020
+         }
+        }
+       ],
+       "pageInfo": {
+        "hasNextPage": false,
+        "endCursor": null
+       }
+      }
+     }
+    ]
+   }
+  }
+ }
+}

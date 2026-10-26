@@ -2751,6 +2751,18 @@
       "scope": "ZhihuIE zvideos API playlist formats, author/count metadata, format_field uploader URL and KeyError/no-formats errors compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "zdf",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/zdf.py"
+      ],
+      "rust": [
+        "src/extractor/zdf.rs",
+        "tests/fixtures/sites/zdf/"
+      ],
+      "scope": "ZDFBaseIE API token (mediathekV2/token, in-run and cache storage until expiry), PTMD extraction (HLS masters as non-fatal hls formats with upstream's ignored-subtitles warning, mp4/webm http-TYPE formats with parse_codecs, aspect-ratio width, filesize and _NNNk_ tbr, unsupported-extension warnings, DGS variants, class/language notes and language preferences, deduplicated captions), GraphQL thumbnails and chapters; ZDFIE (zdf.de video/play, legacy .html, zdfheute.de/logo.de URLs) via the VideoByCanonical GraphQL query with title/description/timestamp/series/season/episode/is_live/_old_archive_ids and the mediathekV2/document fallback (PTMD URL required); ZDFChannelIE smart collections (redirected ID, featured video url result with _yes_playlist, staffel season selection and its not-found error, lazily paged seasonByCanonical episodes as url results). Synthetic API fixtures compared with pinned upstream output through the fixture proxy; unexpected value types (PTMD templates, track classes/languages, stream types, non-object GraphQL data) are explicit native errors. DreiSatIE/PhoenixIE (other ZDFBaseIE users) are not ported"
+    },
+    {
       "name": "youtube",
       "status": "partial",
       "upstream": [

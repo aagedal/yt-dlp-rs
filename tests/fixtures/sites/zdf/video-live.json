@@ -1,0 +1,33 @@
+{
+ "data": {
+  "videoByCanonical": {
+   "canonical": "zdf-live-beitrag-100",
+   "title": "ZDF Livestream",
+   "leadParagraph": "Das ZDF-Programm live.",
+   "editorialDate": "2025-03-01T00:00:00Z",
+   "teaser": {
+    "description": null,
+    "image": {
+     "list": {
+      "original": "https://www.zdf.de/assets/2400-zdf-100~original?cb=1"
+     }
+    }
+   },
+   "episodeInfo": null,
+   "smartCollection": null,
+   "currentMedia": {
+    "nodes": [
+     {
+      "ptmdTemplate": "/tmd/2/{playerId}/live/ptmd/LIVE_ZDF",
+      "start": "2025-03-01T00:00:00Z",
+      "stop": null,
+      "encryption": "CLEAR",
+      "liveMediaType": "LIVE",
+      "label": "ZDF",
+      "id": "live"
+     }
+    ]
+   }
+  }
+ }
+}
