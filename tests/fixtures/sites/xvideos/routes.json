@@ -1,0 +1,53 @@
+{
+ "routes": [
+  {
+   "url": "https://www.xvideos.com/video4588838/biker_takes_his_girl",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Fixture &amp; Video - XVIDEOS.COM</title><meta property=\"og:title\" content=\"OG title\"><meta property=\"og:duration\" content=\"1238\"></head><body>\n<span class=\"duration\">20 min</span>\n<script>html5player.setVideoTitle('Script title');\nhtml5player.setThumbUrl('https://img-hw.xvideos-cdn.test/thumbs/1.jpg');\nhtml5player.setThumbUrl169(\"https://img-hw.xvideos-cdn.test/thumbs169/1.jpg\");\nhtml5player.setVideoUrlLow('https://video-hw.xvideos-cdn.test/low.mp4?e=1');\nhtml5player.setVideoUrlHigh('https://video-hw.xvideos-cdn.test/high.mp4?e=1');\nhtml5player.setVideoHLS('https://hls-hw.xvideos-cdn.test/hls.m3u8');\nhtml5player.setVideoOther(\"https://video-hw.xvideos-cdn.test/other.mp4\");\n</script><embed flashvars=\"flv_url=https%3A%2F%2Fvideo-hw.xvideos-cdn.test%2Fvideo.flv&amp;x=1\"></body></html>"
+  },
+  {
+   "url": "https://hls-hw.xvideos-cdn.test/hls.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=500000,RESOLUTION=640x360\nhls-360p.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=1500000,RESOLUTION=1280x720\nhls-720p.m3u8\n"
+  },
+  {
+   "url": "https://hls-hw.xvideos-cdn.test/hls-360p.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXTINF:10.0,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://www.xvideos.com/video.ufkkd1d1/_",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Only OG\"></head><body><script>html5player.setVideoTitle(\"Double &quot;quoted&quot;\");html5player.setVideoUrlHigh('https://video-hw.xvideos-cdn.test/m.webm');</script></body></html>"
+  },
+  {
+   "url": "https://www.xvideos.com/video42/x",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><h1 class=\"inlineError\">Sorry, this video has been <b>deleted</b></h1></html>"
+  },
+  {
+   "url": "https://www.xvideos.com/video43/x",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body>nothing</body></html>"
+  },
+  {
+   "url": "https://video-hw.xvideos-cdn.test/high.mp4?e=1",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "fixture high bytes"
+  }
+ ]
+}

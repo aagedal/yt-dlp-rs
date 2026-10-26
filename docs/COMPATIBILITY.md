@@ -2096,6 +2096,19 @@ description (fatal). Native difference: when a page has both meta titles,
 `og:title` is preferred, where upstream takes whichever comes first.
 `tests/fixtures/sites/imdb/` is compared with pinned upstream output.
 
+XVideos videos (`xvideos[2].com/video[.]ID`, `xvideos.es`, `embedframe` and
+the legacy `xv-player.swf?id_video=` links) follow upstream `XVideosIE`: the
+page's `inlineError` (`XVideos said: ...`), the `<title>`/`setVideoTitle`
+title with the non-fatal OpenGraph fallback, `setThumbUrl`/`setThumbUrl169`
+thumbnails, `og:duration` or the parsed duration `<span>`, the legacy
+`flv_url`, `setVideoUrlLow`/`setVideoUrlHigh` formats and the
+`setVideoHLS` master (read without its media playlists, like upstream), whose
+formats are checked like upstream's `_check_formats`: each variant URL is
+requested (`Checking FORMAT video format URL`) and dropped after an HTTP error
+(`... URL is invalid, skipping: ...`). `XVideosQuickiesIE` profile/channel
+`#quickies/a/ID` links follow the video page. `age_limit` is 18.
+`tests/fixtures/sites/xvideos/` is compared with pinned upstream output.
+
 CloudyCDN and Backscreen embeds (`embed.cloudycdn.services|backscreen.com/SITE/media/ID`)
 follow upstream `CloudyCDNIE`: the `player.DOMAIN/player/SITE/media/ID/`
 JSON form POST (`version=6.4.0`, `referer`), each `source.sources[].src` URL

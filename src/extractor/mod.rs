@@ -222,6 +222,7 @@ mod worldstarhiphop;
 mod xboxclips;
 mod xiaohongshu;
 mod xspf;
+mod xvideos;
 mod yfanefa;
 pub(crate) mod youtube;
 mod zhihu;
@@ -533,6 +534,10 @@ pub use wistia::{
 pub use worldstarhiphop::{WorldStarHipHop, suitable as worldstarhiphop_suitable};
 pub use xboxclips::{XboxClips, suitable as xboxclips_suitable};
 pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};
+pub use xvideos::{
+    XVideos, XVideosQuickies, quickies_suitable as xvideos_quickies_suitable,
+    suitable as xvideos_suitable,
+};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub(crate) use youtube::YoutubeUnsupported;
 pub(crate) use youtube::clip::YoutubeClip;
@@ -1704,6 +1709,58 @@ pub(crate) fn search_warning(extractor: &str, name: &str) {
         "[{extractor}] unable to extract {name}; {}",
         crate::BUG_REPORTS_MESSAGE
     ));
+}
+
+/// `_is_valid_url(url, video_id, item)`: a `Checking ITEM URL` request;
+/// an HTTP error is reported as `ITEM URL is invalid, skipping` and the URL
+/// is invalid. Non-HTTP URLs are valid without a request.
+pub(crate) fn is_valid_url(
+    client: &Client,
+    url: &str,
+    extractor: &str,
+    id: &str,
+    item: &str,
+) -> Result<bool> {
+    let url = proto_relative_http(url);
+    if !(url.starts_with("http://") || url.starts_with("https://")) {
+        return Ok(true);
+    }
+    let parsed = Url::parse(&url)?;
+    crate::screen::screen(&format!("[{extractor}] {id}: Checking {item} URL"));
+    match direct::request_with_headers(client, &parsed, None, &[]) {
+        Ok(_) => Ok(true),
+        Err(error @ (crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. })) => {
+            crate::screen::screen(&format!(
+                "[{extractor}] {id}: {item} URL is invalid, skipping: {}",
+                crate::upstream_error_text(&error)
+            ));
+            Ok(false)
+        }
+        Err(error) => Err(error),
+    }
+}
+
+/// `_check_formats(formats, video_id)`: formats whose URL is not valid
+/// (see [`is_valid_url`]) are dropped, in order.
+pub(crate) fn check_formats(
+    client: &Client,
+    formats: &mut Vec<crate::VideoFormat>,
+    extractor: &str,
+    id: &str,
+) -> Result<()> {
+    let mut kept = Vec::with_capacity(formats.len());
+    for format in formats.drain(..) {
+        let item = if format.format_id.is_empty() {
+            "video".to_owned()
+        } else {
+            format!("{} video format", format.format_id)
+        };
+        if is_valid_url(client, format.url.as_str(), extractor, id, &item)? {
+            kept.push(format);
+        }
+    }
+    *formats = kept;
+    Ok(())
 }
 
 /// `self._proto_relative_url(url, scheme='http:')`.

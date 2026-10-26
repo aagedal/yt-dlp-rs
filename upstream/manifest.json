@@ -896,6 +896,19 @@
       "scope": "DumpertIE mobile_api info JSON, the first item's VIDEO media variants (fatal HLS with version ids or progressive URLs, qualities ranking), stills thumbnails, stats, duration and KeyError/IndexError/StopIteration paths compared with pinned upstream output through the fixture proxy; non-array item/media lists and non-string titles or URIs remain explicit native errors"
     },
     {
+      "name": "xvideos",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/xvideos.py"
+      ],
+      "rust": [
+        "src/extractor/xvideos.rs",
+        "src/extractor/mod.rs",
+        "tests/fixtures/sites/xvideos/"
+      ],
+      "scope": "XVideosIE inline errors, title/thumbnail/duration fallbacks, flv_url and low/high formats, the master-only HLS playlist with upstream _check_formats (shared is_valid_url/check_formats helpers), and XVideosQuickiesIE links compared with pinned upstream output through the fixture proxy; only HTTP errors make a checked URL invalid (other request failures stay errors)"
+    },
+    {
       "name": "imdb",
       "status": "partial",
       "upstream": [
