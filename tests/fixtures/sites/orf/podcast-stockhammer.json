@@ -1,0 +1,16 @@
+{
+ "payload": {
+  "title": "Nicolas Stockhammer (15.10.2023)",
+  "description": "<p>Ein <i>Gespräch</i>.</p>",
+  "duration": 3396000,
+  "podcast": {
+   "title": "Frühstück bei mir"
+  },
+  "enclosures": [
+   {
+    "url": "https://podcast.orf.example.test/oe3/fbm/stockhammer.mp3",
+    "type": "audio/mpeg"
+   }
+  ]
+ }
+}

@@ -8,8 +8,9 @@
 //! segments, extracted as the playlist is processed like upstream's
 //! generator (see [`fetch_segments`]).
 //!
-//! Not ported: the `orf:radio`, `orf:podcast`, `orf:iptv` and
-//! `orf:fm4:story` extractors.
+//! Also `ORFRadioIE` (a station's broadcast as a playlist of its loop
+//! streams) and `ORFPodcastIE` (a `sound.orf.at` podcast episode). Not
+//! ported: `orf:iptv` and `orf:fm4:story`.
 use super::{Extractor, dict_info, download_json, extract_m3u8_master_optional};
 use crate::{Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoInfo};
 use base64::Engine;
@@ -20,6 +21,8 @@ use std::sync::LazyLock;
 use url::Url;
 
 pub struct OrfOn;
+pub struct OrfRadio;
+pub struct OrfPodcast;
 
 const NAME: &str = "orf:on";
 const KEY: &str = "ORFON";
@@ -28,9 +31,87 @@ static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://on\.orf\.at/video/(?P<id>\d+)(?:/(?P<segment>\d+))?").unwrap()
 });
 
+/// `ORFRadioIE.STATION_INFO`: the station's API name, loop channel and
+/// old extractor key.
+const STATIONS: [(&str, (&str, &str, &str)); 12] = [
+    ("fm4", ("fm4", "fm4", "orffm4")),
+    ("noe", ("noe", "oe2n", "orfnoe")),
+    ("wien", ("wie", "oe2w", "orfwie")),
+    ("burgenland", ("bgl", "oe2b", "orfbgl")),
+    ("ooe", ("ooe", "oe2o", "orfooe")),
+    ("steiermark", ("stm", "oe2st", "orfstm")),
+    ("kaernten", ("ktn", "oe2k", "orfktn")),
+    ("salzburg", ("sbg", "oe2s", "orfsbg")),
+    ("tirol", ("tir", "oe2t", "orftir")),
+    ("vorarlberg", ("vbg", "oe2v", "orfvbg")),
+    ("oe3", ("oe3", "oe3", "orfoe3")),
+    ("oe1", ("oe1", "oe1", "orfoe1")),
+];
+const RADIO_NAME: &str = "orf:radio";
+const RADIO_KEY: &str = "ORFRadio";
+const PODCAST_NAME: &str = "orf:podcast";
+const PODCAST_KEY: &str = "ORFPodcast";
+
+static RADIO_URL: LazyLock<Regex> = LazyLock::new(|| {
+    let stations = STATIONS.map(|(name, _)| name).join("|");
+    Regex::new(&format!(
+        r"^https?://(?:(?P<station>{stations})\.orf\.at/player|radiothek\.orf\.at/(?P<station2>{stations}))/(?P<date>[0-9]+)/(?P<show>\w+)"
+    ))
+    .unwrap()
+});
+static PODCAST_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://sound\.orf\.at/podcast/(?P<station>bgl|fm4|ktn|noe|oe1|oe3|ooe|sbg|stm|tir|tv|vbg|wie)/(?P<show>[\w-]+)/(?P<id>[\w-]+)").unwrap()
+});
+
 /// `_match_valid_url`.
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
+}
+
+/// `ORFRadioIE._match_valid_url`.
+pub fn radio_suitable(url: &str) -> bool {
+    RADIO_URL.is_match(url)
+}
+
+/// `ORFPodcastIE._match_valid_url`.
+pub fn podcast_suitable(url: &str) -> bool {
+    PODCAST_URL.is_match(url)
+}
+
+fn announce(name: &'static str, url: &Url) {
+    crate::screen::set_extractor(name);
+    crate::screen::screen(&format!(
+        "[{name}] Extracting URL: {}",
+        crate::screen::extracting_url(url.as_str())
+    ));
+}
+
+/// `clean_html(value)` of a string (`None` otherwise).
+fn clean_text(value: Option<&Value>) -> Value {
+    value
+        .and_then(Value::as_str)
+        .map_or(Value::Null, |text| crate::html::clean_html(text).into())
+}
+
+/// A dict that is its own format (`{'url': ..., ...}`), in its key order.
+fn url_dict(
+    page: &Url,
+    names: (&'static str, &'static str),
+    fields: Vec<(&str, Value)>,
+    format: crate::VideoFormat,
+) -> VideoInfo {
+    let keys: Vec<&str> = fields.iter().map(|(key, _)| *key).collect();
+    let shape = format!("untyped-dict;{}", keys.join(","));
+    crate::info_order::mark_info(dict_info(page, names, fields, vec![format]), &shape)
+}
+
+/// A `{'url': ..., 'ext': ...}` result's single format.
+fn url_format(url: &str, ext: &str, id: &str) -> Result<crate::VideoFormat> {
+    let mut format: crate::VideoFormat =
+        serde_json::from_value(json!({"format_id": "", "url": url, "ext": ext}))
+            .map_err(|error| Error::Reported(format!("{id}: {error}")))?;
+    crate::info_order::mark_format(&mut format, "url-only");
+    Ok(format)
 }
 
 fn unsupported(what: &str) -> Error {
@@ -388,6 +469,215 @@ pub(crate) fn fetch_segments(
     }
     state.insert("segments".into(), Value::Array(segments.into()));
     Ok(Some(Value::Object(state)))
+}
+
+impl Extractor for OrfRadio {
+    fn key(&self) -> &'static str {
+        RADIO_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = RADIO_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let station = found
+            .name("station")
+            .or_else(|| found.name("station2"))
+            .map_or("", |station| station.as_str());
+        let (api_station, loop_station, old_ie) = STATIONS
+            .iter()
+            .find(|(name, _)| *name == station)
+            .map(|(_, info)| *info)
+            .expect("matched station");
+        let show_id = found["show"].to_owned();
+        announce(RADIO_NAME, url);
+        let api = Url::parse(&format!(
+            "http://audioapi.orf.at/{api_station}/api/json/current/broadcast/{show_id}/{}",
+            &found["date"]
+        ))?;
+        let data = download_json(client, &api, RADIO_NAME, &show_id)?;
+        let text = |key: &str| data.get(key).filter(|value| !value.is_null()).cloned();
+        let title = text("title");
+        let description = clean_text(data.get("subtitle"));
+        // `_entries(data, station)`: `data['streams']`.
+        let streams = match data.get("streams") {
+            None => {
+                return Err(Error::Reported(format!(
+                    "{show_id}: An extractor error has occurred. (caused by KeyError('streams')); {}",
+                    crate::BUG_REPORTS_MESSAGE
+                )));
+            }
+            Some(streams) => branch(streams),
+        };
+        let mut entries = Vec::new();
+        for stream in streams {
+            let Some(item_id) = stream
+                .get("loopStreamId")
+                .filter(|id| super::nuxt::truthy(id))
+            else {
+                continue;
+            };
+            let Some(item_id) = item_id.as_str() else {
+                return Err(unsupported("loop stream IDs that are not strings"));
+            };
+            let video_id = item_id.replace(".mp3", "");
+            let stream_url =
+                format!("https://loopstream01.apa.at/?channel={loop_station}&id={item_id}");
+            let start = stream.get("start").and_then(Value::as_f64);
+            // `try_call(lambda: (info['end'] - info['start']) / 1000)`.
+            let duration = match (stream.get("end").and_then(Value::as_f64), start) {
+                (Some(end), Some(start)) => json!((end - start) / 1000.0),
+                _ => Value::Null,
+            };
+            // `int_or_none(start, scale=1000)`.
+            let timestamp = stream
+                .get("start")
+                .and_then(Value::as_i64)
+                .map_or(Value::Null, |start| start.div_euclid(1000).into());
+            let format = url_format(&stream_url, "mp3", &video_id)?;
+            entries.push(url_dict(
+                url,
+                (RADIO_NAME, RADIO_KEY),
+                vec![
+                    ("id", Value::from(video_id.as_str())),
+                    ("ext", "mp3".into()),
+                    ("url", stream_url.into()),
+                    ("_old_archive_ids", json!([format!("{old_ie} {video_id}")])),
+                    ("title", title.clone().unwrap_or(Value::Null)),
+                    ("description", description.clone()),
+                    ("duration", duration),
+                    ("timestamp", timestamp),
+                    ("series", text("programTitle").unwrap_or(Value::Null)),
+                ],
+                format,
+            ));
+        }
+        // `playlist_result(entries, show_id, title, description)`.
+        let title_text = title
+            .as_ref()
+            .and_then(Value::as_str)
+            .filter(|title| !title.is_empty())
+            .map(str::to_owned);
+        let mut keys = vec!["id"];
+        if title_text.is_some() {
+            keys.push("title");
+        }
+        let mut extra = Map::new();
+        if !description.is_null() {
+            keys.push("description");
+            extra.insert("description".into(), description);
+        }
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            format!(
+                "playlist-dict;{}{}",
+                keys.join(","),
+                crate::info_order::GENERATOR
+            )
+            .into(),
+        );
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: show_id,
+            title: title_text.unwrap_or_default(),
+            webpage_url: url.clone(),
+            extractor: RADIO_NAME.into(),
+            extractor_key: RADIO_KEY.into(),
+            nested: Vec::new(),
+            pending: None,
+            entries,
+            extra,
+        })))
+    }
+}
+
+impl Extractor for OrfPodcast {
+    fn key(&self) -> &'static str {
+        PODCAST_KEY
+    }
+
+    fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        let Some(found) = PODCAST_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let show_id = found["id"].to_owned();
+        announce(PODCAST_NAME, url);
+        let api = Url::parse(&format!(
+            "https://audioapi.orf.at/radiothek/api/2.0/podcast/{}/{}/{show_id}",
+            &found["station"], &found["show"]
+        ))?;
+        let data = download_json(client, &api, PODCAST_NAME, &show_id)?;
+        let empty = Value::Null;
+        let payload = data.get("payload").unwrap_or(&empty);
+        let enclosure = path(payload, &["enclosures"])
+            .and_then(Value::as_array)
+            .and_then(|enclosures| enclosures.first());
+        let media_url = enclosure
+            .and_then(|enclosure| enclosure.get("url"))
+            .cloned();
+        let ext =
+            super::vidyard::mimetype2ext(enclosure.and_then(|enclosure| enclosure.get("type")));
+        let duration = match payload.get("duration") {
+            Some(Value::Number(number)) => number.as_f64(),
+            Some(Value::String(text)) => text.trim().parse::<f64>().ok(),
+            _ => None,
+        }
+        .map(|duration| json!(duration / 1000.0));
+        let mut fields = vec![
+            ("id", Value::from(show_id.as_str())),
+            ("ext", "mp3".into()),
+            ("vcodec", "none".into()),
+        ];
+        // `traverse_obj(data, ('payload', {...}))`: the present values.
+        for (key, value) in [
+            ("url", media_url.clone().filter(|url| !url.is_null())),
+            ("ext", Some(ext.clone()).filter(|ext| !ext.is_null())),
+            (
+                "title",
+                payload
+                    .get("title")
+                    .filter(|title| !title.is_null())
+                    .cloned(),
+            ),
+            (
+                "description",
+                Some(clean_text(payload.get("description"))).filter(|text| !text.is_null()),
+            ),
+            ("duration", duration),
+            (
+                "series",
+                path(payload, &["podcast", "title"])
+                    .filter(|title| !title.is_null())
+                    .cloned(),
+            ),
+        ] {
+            match (value, fields.iter_mut().find(|(known, _)| *known == key)) {
+                (Some(value), Some(field)) => field.1 = value,
+                (Some(value), None) => fields.push((key, value)),
+                (None, _) => {}
+            }
+        }
+        let Some(media_url) = media_url.as_ref().and_then(Value::as_str) else {
+            return Ok(Some(dict_info(
+                url,
+                (PODCAST_NAME, PODCAST_KEY),
+                fields,
+                Vec::new(),
+            )));
+        };
+        let ext = ext.as_str().unwrap_or("mp3").to_owned();
+        let mut format = url_format(media_url, &ext, &show_id)?;
+        format.vcodec = Some("none".into());
+        Ok(Some(url_dict(
+            url,
+            (PODCAST_NAME, PODCAST_KEY),
+            fields,
+            format,
+        )))
+    }
 }
 
 #[cfg(test)]

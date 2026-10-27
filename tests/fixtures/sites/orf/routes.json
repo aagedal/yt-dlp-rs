@@ -139,6 +139,41 @@
     "Content-Type": "video/mp2t"
    },
    "body": "segment-17600002"
+  },
+  {
+   "url": "http://audioapi.orf.at/ooe/api/json/current/broadcast/OGMO/20220801",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "radio-OGMO.json"
+  },
+  {
+   "url": "http://audioapi.orf.at/oe3/api/json/current/broadcast/3WEK/20200424",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"streams\": []}"
+  },
+  {
+   "url": "https://audioapi.orf.at/radiothek/api/2.0/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "podcast-stockhammer.json"
+  },
+  {
+   "url": "https://audioapi.orf.at/radiothek/api/2.0/podcast/fm4/show/leer",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": {\"title\": \"Leer\"}}"
+  },
+  {
+   "url": "https://podcast.orf.example.test/oe3/fbm/stockhammer.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "orf-podcast-audio"
   }
  ]
 }

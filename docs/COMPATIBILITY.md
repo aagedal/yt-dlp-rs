@@ -2981,9 +2981,18 @@ Episodes without a combined version, and `--extractor-args
 orfon:prefer_segments_playlist`, are a `multi_video` playlist of the
 segments (the episode metadata in upstream's key order), each extracted as
 the playlist is processed like upstream's generator; the default
-`--concat-playlist multi_video` joins the downloaded segments. The
-`orf:radio`, `orf:podcast`, `orf:iptv` and `orf:fm4:story` extractors are not
-ported. `tests/fixtures/sites/orf/` is compared with pinned upstream output
+`--concat-playlist multi_video` joins the downloaded segments. ORF radio broadcasts (`STATION.orf.at/player/DATE/SHOW` and
+`radiothek.orf.at/STATION/DATE/SHOW` for the twelve stations) follow
+`ORFRadioIE`: the station's `audioapi.orf.at` broadcast JSON (its `streams`
+are required, upstream's `KeyError` otherwise), as a playlist (show ID, title
+and cleaned subtitle) of each stream with a `loopStreamId`: the
+`loopstream01.apa.at` MP3 URL, the old station archive ID, title,
+description, millisecond duration and start timestamp, and series. ORF
+podcast episodes (`sound.orf.at/podcast/STATION/SHOW/ID`) follow
+`ORFPodcastIE`: the radiothek 2.0 podcast JSON's first enclosure URL and MIME
+type (`mp3` by default), title, cleaned description, duration and podcast
+title as an audio-only result. The `orf:iptv` and `orf:fm4:story` extractors
+are not ported. `tests/fixtures/sites/orf/` is compared with pinned upstream output
 (the API is geo-restricted, so the responses follow the upstream code's
 shapes).
 

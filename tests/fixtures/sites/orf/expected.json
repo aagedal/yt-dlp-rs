@@ -263,6 +263,88 @@
     "ERROR: Command returned error code 1"
    ],
    "files": {}
+  },
+  {
+   "url": "https://radiothek.orf.at/ooe/20220801/OGMO",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"OGMO\", \"title\": \"Guten Morgen O\\u00d6\", \"description\": \"Mit Musik und Nachrichten.\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"2022-08-01_0459_tl_66_7DaysMon1_319062\", \"ext\": \"mp3\", \"url\": \"https://loopstream01.apa.at/?channel=oe2o&id=2022-08-01_0459_tl_66_7DaysMon1_319062.mp3\", \"_old_archive_ids\": [\"orfooe 2022-08-01_0459_tl_66_7DaysMon1_319062\"], \"title\": \"Guten Morgen O\\u00d6\", \"description\": \"Mit Musik und Nachrichten.\", \"duration\": 18000.0, \"timestamp\": 1659322789, \"series\": \"Guten Morgen\", \"playlist_count\": 2, \"playlist\": \"Guten Morgen O\\u00d6\", \"playlist_id\": \"OGMO\", \"playlist_title\": \"Guten Morgen O\\u00d6\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://radiothek.orf.at/ooe/20220801/OGMO\", \"n_entries\": 2, \"webpage_url\": \"https://radiothek.orf.at/ooe/20220801/OGMO\", \"webpage_url_basename\": \"OGMO\", \"webpage_url_domain\": \"radiothek.orf.at\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"orf:radio\", \"extractor_key\": \"ORFRadio\", \"playlist_autonumber\": 1, \"display_id\": \"2022-08-01_0459_tl_66_7DaysMon1_319062\", \"fulltitle\": \"Guten Morgen O\\u00d6\", \"duration_string\": \"5:00:00\", \"upload_date\": \"20220801\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Guten Morgen O\\u00d6 [2022-08-01_0459_tl_66_7DaysMon1_319062].mp3\", \"filename\": \"Guten Morgen O\\u00d6 [2022-08-01_0459_tl_66_7DaysMon1_319062].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"2022-08-01_0959_tl_66_7DaysMon1_319063\", \"ext\": \"mp3\", \"url\": \"https://loopstream01.apa.at/?channel=oe2o&id=2022-08-01_0959_tl_66_7DaysMon1_319063.mp3\", \"_old_archive_ids\": [\"orfooe 2022-08-01_0959_tl_66_7DaysMon1_319063\"], \"title\": \"Guten Morgen O\\u00d6\", \"description\": \"Mit Musik und Nachrichten.\", \"timestamp\": 1659340789, \"series\": \"Guten Morgen\", \"playlist_count\": 2, \"playlist\": \"Guten Morgen O\\u00d6\", \"playlist_id\": \"OGMO\", \"playlist_title\": \"Guten Morgen O\\u00d6\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://radiothek.orf.at/ooe/20220801/OGMO\", \"n_entries\": 2, \"webpage_url\": \"https://radiothek.orf.at/ooe/20220801/OGMO\", \"webpage_url_basename\": \"OGMO\", \"webpage_url_domain\": \"radiothek.orf.at\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"orf:radio\", \"extractor_key\": \"ORFRadio\", \"playlist_autonumber\": 2, \"display_id\": \"2022-08-01_0959_tl_66_7DaysMon1_319063\", \"fulltitle\": \"Guten Morgen O\\u00d6\", \"upload_date\": \"20220801\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Guten Morgen O\\u00d6 [2022-08-01_0959_tl_66_7DaysMon1_319063].mp3\", \"filename\": \"Guten Morgen O\\u00d6 [2022-08-01_0959_tl_66_7DaysMon1_319063].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://radiothek.orf.at/ooe/20220801/OGMO\", \"original_url\": \"https://radiothek.orf.at/ooe/20220801/OGMO\", \"webpage_url_basename\": \"OGMO\", \"webpage_url_domain\": \"radiothek.orf.at\", \"extractor\": \"orf:radio\", \"extractor_key\": \"ORFRadio\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://ooe.orf.at/player/20220801/OGMO",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(duration)s|%(timestamp)s|%(series)s|%(ext)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2022-08-01_0459_tl_66_7DaysMon1_319062|Guten Morgen OÖ|Mit Musik und Nachrichten.|18000.0|1659322789|Guten Morgen|mp3|https://loopstream01.apa.at/?channel=oe2o&id=2022-08-01_0459_tl_66_7DaysMon1_319062.mp3",
+    "2022-08-01_0959_tl_66_7DaysMon1_319063|Guten Morgen OÖ|Mit Musik und Nachrichten.|NA|1659340789|Guten Morgen|mp3|https://loopstream01.apa.at/?channel=oe2o&id=2022-08-01_0959_tl_66_7DaysMon1_319063.mp3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://oe3.orf.at/player/20200424/3WEK",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3WEK\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://oe3.orf.at/player/20200424/3WEK\", \"original_url\": \"https://oe3.orf.at/player/20200424/3WEK\", \"webpage_url_basename\": \"3WEK\", \"webpage_url_domain\": \"oe3.orf.at\", \"extractor\": \"orf:radio\", \"extractor_key\": \"ORFRadio\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://sound.orf.at/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"nicolas-stockhammer-15102023\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"url\": \"https://podcast.orf.example.test/oe3/fbm/stockhammer.mp3\", \"title\": \"Nicolas Stockhammer (15.10.2023)\", \"description\": \"Ein Gespr\\u00e4ch.\", \"duration\": 3396.0, \"series\": \"Fr\\u00fchst\\u00fcck bei mir\", \"webpage_url\": \"https://sound.orf.at/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023\", \"original_url\": \"https://sound.orf.at/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023\", \"webpage_url_basename\": \"nicolas-stockhammer-15102023\", \"webpage_url_domain\": \"sound.orf.at\", \"extractor\": \"orf:podcast\", \"extractor_key\": \"ORFPodcast\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"nicolas-stockhammer-15102023\", \"fulltitle\": \"Nicolas Stockhammer (15.10.2023)\", \"duration_string\": \"56:36\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Nicolas Stockhammer (15.10.2023) [nicolas-stockhammer-15102023].mp3\", \"filename\": \"Nicolas Stockhammer (15.10.2023) [nicolas-stockhammer-15102023].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://sound.orf.at/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[orf:podcast] Extracting URL: https://sound.orf.at/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023",
+    "[orf:podcast] nicolas-stockhammer-15102023: Downloading JSON metadata",
+    "[info] nicolas-stockhammer-15102023: Downloading 1 format(s): 0",
+    "[download] Destination: nicolas-stockhammer-15102023.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "nicolas-stockhammer-15102023.mp3": 17
+   }
+  },
+  {
+   "url": "https://sound.orf.at/podcast/fm4/show/leer",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [orf:podcast] leer: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
   }
  ]
 }

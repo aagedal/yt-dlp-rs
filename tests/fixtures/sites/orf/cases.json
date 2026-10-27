@@ -116,5 +116,44 @@
    "--exec",
    "playlist:false"
   ]
+ },
+ {
+  "url": "https://radiothek.orf.at/ooe/20220801/OGMO",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://ooe.orf.at/player/20220801/OGMO",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(description)s|%(duration)s|%(timestamp)s|%(series)s|%(ext)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://oe3.orf.at/player/20200424/3WEK",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://sound.orf.at/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://sound.orf.at/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023",
+  "args": [
+   "--no-progress",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://sound.orf.at/podcast/fm4/show/leer",
+  "args": [
+   "-j"
+  ]
  }
 ]
