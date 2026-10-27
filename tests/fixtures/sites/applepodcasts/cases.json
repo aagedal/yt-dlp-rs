@@ -1,0 +1,58 @@
+[
+ {
+  "url": "https://podcasts.apple.com/us/podcast/urbana-podcast-724-by-david-penn/id1531349107?i=1000748574256",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://podcasts.apple.com/us/podcast/urbana-podcast-724-by-david-penn/id1531349107?i=1000748574256",
+  "args": [
+   "--no-progress",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://podcasts.apple.com/us/podcast/207-whitney-webb-returns/id1135137367?i=1000482637777",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://podcasts.apple.com/podcast/id1?i=1000000000001",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://podcasts.apple.com/gb/podcast/expired/id2?i=1000000000002",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://podcasts.apple.com/podcast/no-assets?i=1000000000003",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://podcasts.apple.com/podcast/empty/id4?i=1000000000004",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://podcasts.apple.com/de/podcast/ep5/id5?foo=1&i=1000000000005",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://podcasts.apple.com/podcast/missing/id6?i=1000000000006",
+  "args": [
+   "-j"
+  ]
+ }
+]

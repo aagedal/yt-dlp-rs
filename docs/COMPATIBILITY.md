@@ -744,6 +744,20 @@ follow upstream `AngelIE`: the page's JSON-LD `url` as a fatal HLS manifest
 image (Cloudinary transformations removed), then `merge_dicts` with the
 remaining JSON-LD fields after the extractor's own.
 
+Apple Podcasts episodes (`podcasts.apple.com/[COUNTRY/]podcast/...?i=ID`)
+follow upstream `ApplePodcastsIE`: the page (also when it answers 500) and
+its `serialized-server-data` share item (`EpisodeLockup` model: title,
+cleaned summary, cleaned stream URL, release date, duration, episode number,
+show title, and the OpenGraph image with upstream's warning when missing);
+without one, the amp-api catalog episode (the country group keeps its slash,
+like upstream's `catalog/us//...`), authorized by the ES256 JSON Web Token
+found in the page's `/assets/index~HASH.js` (cached per process; an expired
+token is upstream's error), with its cleaned asset URL forced to HTTPS and
+its artwork template formatted with `f`, `h` and `w` (no thumbnail when a
+field is missing). Artwork templates with format specifications are
+explicit native errors. `tests/fixtures/sites/applepodcasts/` is compared
+with pinned upstream output.
+
 Internet Archive items (`archive.org/details|embed/ID[/FILE]`) follow
 upstream `ArchiveOrgIE`: the embed page's `<play-av>` playlist (one entry
 when the URL names a file; subtitle tracks stored under their labels, as

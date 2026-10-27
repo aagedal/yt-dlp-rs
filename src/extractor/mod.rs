@@ -1,6 +1,7 @@
 pub mod adobepass;
 mod amadeustv;
 mod angel;
+mod applepodcasts;
 mod archiveorg;
 mod ard;
 mod arte;
@@ -248,6 +249,7 @@ mod zhihu;
 
 pub use amadeustv::{AmadeusTv, suitable as amadeustv_suitable};
 pub use angel::{Angel, suitable as angel_suitable};
+pub use applepodcasts::{ApplePodcasts, suitable as applepodcasts_suitable};
 pub use archiveorg::{ArchiveOrg, suitable as archiveorg_suitable};
 pub use ard::{
     ArdAudiothek, ArdAudiothekPlaylist, ArdMediathek, ArdMediathekCollection,

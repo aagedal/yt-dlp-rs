@@ -426,6 +426,18 @@
       "scope": "AngelIE JSON-LD HLS stream, OpenGraph fields, Cloudinary thumbnail rewrite and merge_dicts with JSON-LD compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "applepodcasts",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/applepodcasts.py"
+      ],
+      "rust": [
+        "src/extractor/applepodcasts.rs",
+        "tests/fixtures/sites/applepodcasts/"
+      ],
+      "scope": "ApplePodcastsIE page (expected_status=500) serialized-server-data EpisodeLockup share item with OpenGraph thumbnail, else the amp-api catalog episode with AppleBaseIE's JS-asset JWT (process cache, expiry error), HTTPS asset URL and artwork template thumbnail, compared with pinned upstream output through the fixture proxy; AppleConnectIE (appleconnect.py) is not ported"
+    },
+    {
       "name": "archiveorg",
       "status": "partial",
       "upstream": [
