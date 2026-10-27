@@ -174,9 +174,10 @@ Supported today:
   as upstream's `available_at` does. Age-restricted videos use the
   `web_embedded` fallback; account cookies (`--cookies`, `--cookies-from-browser`)
   switch to upstream's authenticated clients and SAPISIDHASH headers. Live
-  streams download through FFmpeg (Ctrl+C finishes the recording), or from the
-  start with `--live-from-start` through the native DASH generator; upcoming
-  ones report their start. Playlists (`/playlist?list=`, `watch?v=…&list=`,
+  streams download through FFmpeg (Ctrl+C or SIGTERM finishes the recording),
+  or from the start with `--live-from-start` through the native DASH generator,
+  where `--download-sections` selects a clip (a port extension, e.g.
+  `*-10:00-inf` for the last ten minutes); upcoming ones report their start. Playlists (`/playlist?list=`, `watch?v=…&list=`,
   mixes), channel tabs (`/@NAME/videos`, `/shorts`, ...), hashtag and feed pages
   are extracted like upstream's `youtube:tab`, with continuation pages fetched as
   the selection needs them; a channel URL without a tab is a playlist of its

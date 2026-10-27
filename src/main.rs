@@ -2616,6 +2616,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         } else {
                             !QUIET.load(Ordering::Relaxed)
                         },
+                        newline: args.newline,
                     }
                 }),
         },
@@ -5357,7 +5358,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     )
                                     .into());
                                 }
-                                if partial && !downloader.has_ffmpeg() && !no_direct_merge {
+                                // Port extension: a section of a stream downloaded
+                                // from the start is selected by its fragments.
+                                if partial
+                                    && !downloader.has_ffmpeg()
+                                    && !no_direct_merge
+                                    && !yt_dlp_rs::live_generated(&info)
+                                {
                                     return Err(yt_dlp_rs::Error::Reported(
                                 "You have requested downloading the video partially, but ffmpeg is not installed. Aborting"
                                     .into(),

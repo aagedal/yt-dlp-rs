@@ -348,6 +348,11 @@ pub(crate) fn download_piped(
     )
 }
 
+/// How long FFmpeg may take to quit after `q` before it is terminated.
+const QUIT_TIMEOUT: Duration = Duration::from_secs(10);
+/// How long a terminated FFmpeg may take before it is killed.
+const TERMINATE_TIMEOUT: Duration = Duration::from_secs(5);
+
 #[allow(clippy::too_many_arguments)]
 fn run(
     ffmpeg: &Path,
@@ -469,6 +474,10 @@ fn run(
         });
     }
     let mut interrupted = false;
+    // Port extension: when FFmpeg was asked to quit, how long it may take
+    // before it is terminated, then killed (upstream waits indefinitely; a
+    // stalled input or a full output pipe could then hang the download).
+    let mut quitting: Option<(std::time::Instant, u8)> = None;
     let status = loop {
         if let Some(status) = child.try_wait()? {
             break status;
@@ -485,9 +494,31 @@ fn run(
         } else if !piped && !interrupted && signalled {
             // `proc.communicate_or_kill(b'q')`: FFmpeg finishes the file.
             interrupted = true;
+            quitting = Some((std::time::Instant::now(), 0));
             if let Some(mut input) = stdin.take() {
                 use std::io::Write;
                 let _ = input.write_all(b"q");
+            }
+        }
+        if let Some((since, escalations)) = &mut quitting {
+            let limit = if *escalations == 0 {
+                QUIT_TIMEOUT
+            } else {
+                TERMINATE_TIMEOUT
+            };
+            if since.elapsed() >= limit {
+                if *escalations == 0 {
+                    crate::screen::warning(&format!(
+                        "[ffmpeg] FFmpeg did not quit within {} seconds; terminating it",
+                        QUIT_TIMEOUT.as_secs()
+                    ));
+                    crate::interrupt::terminate(&mut child);
+                } else {
+                    crate::screen::warning("[ffmpeg] FFmpeg did not terminate; killing it");
+                    let _ = child.kill();
+                }
+                *since = std::time::Instant::now();
+                *escalations = escalations.saturating_add(1);
             }
         }
         if callback(progress(DownloadPhase::Downloading, 0)).is_break() {

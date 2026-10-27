@@ -153,8 +153,8 @@ remain outside the current result contract.
    representation downloads are implemented; explicit FFmpeg merges separate
    tracks. Dynamic/multi-period/SIDX DASH, SAMPLE-AES/DRM and native (non-FFmpeg) live HLS,
    external video/subtitle renditions, discontinuities, extraction cancellation
-   and general CLI signal handling (SIGINT is handled for live FFmpeg downloads
-   and `--wait-for-video`) remain open. `--continue`/`.part` whole-file resume
+   and general CLI signal handling (SIGINT and SIGTERM are handled for live
+   FFmpeg downloads and `--wait-for-video`) remain open. `--continue`/`.part` whole-file resume
    and FragmentFD `.ytdl` fragment resume persist across invocations.
    Global custom headers and User-Agent/Referer options apply across extraction,
    transfers, fragments, keys, subtitles and validated player acquisition with
