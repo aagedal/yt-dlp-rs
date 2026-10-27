@@ -72,6 +72,10 @@ pub struct WaitForVideo {
     pub min: f64,
     pub max: Option<f64>,
     pub progress: bool,
+    /// Port extension: `--newline` ends each progress line with a newline
+    /// (upstream returns the carriage), so line-reading hosts see the
+    /// countdown live.
+    pub newline: bool,
 }
 
 struct ConfiguredYoutube {
@@ -472,7 +476,12 @@ fn wait_for_video(wait: &WaitForVideo, release_timestamp: Option<i64>, upcoming:
     ));
     let mut last = String::new();
     let mut progress = |message: &str| {
-        let line = if wait.progress {
+        let line = if wait.progress && wait.newline {
+            if message.is_empty() {
+                return;
+            }
+            format!("{message}\n")
+        } else if wait.progress {
             let padding = " ".repeat(last.chars().count().saturating_sub(message.chars().count()));
             format!("{message}{padding}\r")
         } else if last.is_empty() {
@@ -1479,10 +1488,12 @@ fn extract_clients(
         }
     }
     if formats.is_empty() {
-        let reason = unplayable_reason(id, &acquired.player_responses, &acquired.webpage, wait);
-        if wait {
-            // `raise_no_formats(expected=True)` warns while waiting for videos
-            // (only `report_drm` passes the video ID).
+        // `raise_no_formats(expected=True)` warns while waiting for videos
+        // and with `--ignore-no-formats-error`, whose result has no formats.
+        let ignored = wait || crate::no_formats::ignore();
+        let reason = unplayable_reason(id, &acquired.player_responses, &acquired.webpage, ignored);
+        if ignored {
+            // Only `report_drm` passes the video ID.
             if let Some(reason) = &reason {
                 let text = reason.to_string();
                 let prefix = format!("[youtube] {id}: ");
@@ -1493,6 +1504,8 @@ fn extract_clients(
                     _ => crate::screen::warning(&text),
                 }
             }
+        }
+        if wait {
             let release_timestamp = acquired.player_responses.iter().find_map(|response| {
                 response
                     .pointer("/microformat/playerMicroformatRenderer/liveBroadcastDetails/startTimestamp")
@@ -1504,7 +1517,9 @@ fn extract_clients(
                 upcoming: live_status == Some("is_upcoming"),
             });
         }
-        return Err(reason.unwrap_or_else(|| no_formats(id)));
+        if !ignored {
+            return Err(reason.unwrap_or_else(|| no_formats(id)));
+        }
     }
     // `get_first(video_details, 'keywords', list) or [og:video:tag...]`.
     let mut keywords: Vec<String> = all_details
@@ -1586,8 +1601,16 @@ fn extract_clients(
         }
     }
     let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
-    let first_format = &formats[0];
-    let mut info = direct::build_at(first_format.url.clone(), &page, first_format.ext.clone());
+    let mut info = match formats.first() {
+        Some(first) => direct::build_at(first.url.clone(), &page, first.ext.clone()),
+        None => {
+            // `process_video_result`'s `raise_no_formats` follows.
+            let mut info = direct::build_at(page.clone(), &page, String::new());
+            info.extra
+                .insert(crate::info::NO_FORMATS.into(), Value::Bool(true));
+            info
+        }
+    };
     info.direct = None;
     info.id = id.into();
     info.title = title;

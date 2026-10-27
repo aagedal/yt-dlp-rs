@@ -405,6 +405,40 @@ pub(crate) struct LiveFragments {
     should_iterate: bool,
     lack_early_segments: bool,
     pending: std::collections::VecDeque<Fragment>,
+    /// The requested `--download-sections` range, resolved to sequence
+    /// numbers once the live edge is known.
+    range: Option<LiveRange>,
+    /// The sequence number after the range (exclusive).
+    end: Option<i64>,
+}
+
+/// Port extension: a `--download-sections` time range of a stream
+/// downloaded from the start. Positive times count from the stream's start
+/// (sequence 0), negative ones back from the live edge when the download
+/// starts; an open end is that live edge. Times map to whole fragments of
+/// the format's `target_duration`.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub(crate) struct LiveRange {
+    pub start: f64,
+    pub end: Option<f64>,
+}
+
+impl LiveRange {
+    /// The `[start, end)` sequence numbers for `edge` (the sequence number
+    /// after the newest fragment) and fragments of `duration` seconds.
+    fn resolve(self, edge: i64, duration: f64) -> (i64, i64) {
+        let index = |time: f64, round: fn(f64) -> f64| {
+            let fragments = round(time / duration) as i64;
+            if time < 0.0 || (time == 0.0 && time.is_sign_negative()) {
+                edge.saturating_add(fragments)
+            } else {
+                fragments
+            }
+        };
+        let start = index(self.start, f64::floor).max(0);
+        let end = self.end.map_or(edge, |end| index(end, f64::ceil)).max(0);
+        (start, end)
+    }
 }
 
 impl LiveFragments {
@@ -413,7 +447,15 @@ impl LiveFragments {
         feed: std::sync::Arc<LiveFeed>,
         extra: &serde_json::Map<String, Value>,
         url: &url::Url,
-    ) -> Self {
+        range: Option<LiveRange>,
+    ) -> Result<Self> {
+        let target_duration = extra.get("target_duration").and_then(Value::as_f64);
+        if range.is_some() && !target_duration.is_some_and(|duration| duration > 0.0) {
+            return Err(crate::Error::Reported(format!(
+                "[youtube] {}: Cannot download a section of this live stream, as its fragment duration is unknown",
+                feed.video_id
+            )));
+        }
         let start = now();
         let lack_early_segments =
             start - feed.live_start_time.map_or(start, |time| time as f64) > MAX_DURATION;
@@ -429,10 +471,10 @@ impl LiveFragments {
             feed.video_id,
             source.itag.as_deref().unwrap_or("None")
         ));
-        Self {
+        Ok(Self {
             itag: source.itag,
             client_name: source.client,
-            target_duration: extra.get("target_duration").and_then(Value::as_f64),
+            target_duration,
             base_url: source.url,
             feed,
             known: 0,
@@ -440,7 +482,9 @@ impl LiveFragments {
             should_iterate: true,
             lack_early_segments,
             pending: Default::default(),
-        }
+            range,
+            end: None,
+        })
     }
 
     /// The next fragment, `None` once the generator returns. `stop` is
@@ -450,7 +494,11 @@ impl LiveFragments {
             if let Some(fragment) = self.pending.pop_front() {
                 return Ok(Some(fragment));
             }
-            if !self.should_iterate || stop() || self.score > 30 {
+            if !self.should_iterate
+                || stop()
+                || self.score > 30
+                || self.end.is_some_and(|end| self.known >= end)
+            {
                 return Ok(None);
             }
             let fetch_time = now();
@@ -477,8 +525,29 @@ impl LiveFragments {
                 self.score += 2;
                 continue;
             };
+            if let Some(range) = self.range.take() {
+                let duration = self.target_duration.unwrap_or(1.0);
+                let (start, end) = range.resolve(last_seq + 1, duration);
+                crate::screen::debug(&format!(
+                    "[youtube] [{}] Downloading fragments {start} to {} of format {} (live edge {})",
+                    self.feed.video_id,
+                    end - 1,
+                    self.itag.as_deref().unwrap_or("None"),
+                    last_seq + 1
+                ));
+                self.known = start;
+                self.end = Some(end);
+            }
+            if self.end.is_some_and(|end| self.known >= end) {
+                return Ok(None);
+            }
+            // A range starting after the live edge waits for its fragments
+            // (only a stalled stream counts towards giving up).
+            let ahead = self.end.is_some() && self.known > last_seq + 1;
             if self.known > last_seq {
-                self.score += 5;
+                if !ahead {
+                    self.score += 5;
+                }
                 if self.should_iterate {
                     let until = fetch_time + FETCH_SPAN as f64;
                     while now() < until && !stop() {
@@ -498,6 +567,7 @@ impl LiveFragments {
             let Ok(base) = url::Url::parse(&base_url) else {
                 return Ok(None);
             };
+            let last_seq = self.end.map_or(last_seq, |end| last_seq.min(end));
             for index in self.known..last_seq {
                 self.pending.push_back(Fragment {
                     encryption: None,
@@ -515,5 +585,26 @@ impl LiveFragments {
             }
             self.known = last_seq;
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::LiveRange;
+
+    #[test]
+    fn live_ranges_resolve_to_fragment_numbers() {
+        let range = |start, end| LiveRange { start, end };
+        // The last 10 minutes of 2s fragments, up to the live edge (sq 1000).
+        assert_eq!(range(-600.0, None).resolve(1000, 2.0), (700, 1000));
+        // Minutes 10 to 20 from the start (partial fragments included).
+        assert_eq!(range(600.0, Some(1200.0)).resolve(1000, 2.0), (300, 600));
+        assert_eq!(range(3.0, Some(7.0)).resolve(1000, 2.0), (1, 4));
+        // From 10 to 5 minutes before the edge; a start before the stream's
+        // is its first fragment.
+        assert_eq!(range(-600.0, Some(-300.0)).resolve(1000, 2.0), (700, 850));
+        assert_eq!(range(-6000.0, None).resolve(1000, 2.0), (0, 1000));
+        // A range after the edge waits for its fragments.
+        assert_eq!(range(3000.0, Some(3010.0)).resolve(1000, 2.0), (1500, 1505));
     }
 }

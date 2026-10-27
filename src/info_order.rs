@@ -1977,7 +1977,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     // without formats, they are assigned after `_has_drm` unless the
     // extractor's dict has them).
     let own_formats = extractor.iter().any(|(key, _)| *key == "formats")
-        || ["dict;", "untyped-dict;"].iter().any(|prefix| {
+        || ["dict;", "untyped-dict;", "youtube;"].iter().any(|prefix| {
             shape
                 .strip_prefix(prefix)
                 .and_then(|spec| spec.split(';').next())

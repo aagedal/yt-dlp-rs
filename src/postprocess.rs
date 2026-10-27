@@ -319,13 +319,12 @@ pub(crate) fn download(
         .filter(|path| !path.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
     fs::create_dir_all(parent)?;
-    let workspace = tempfile::Builder::new()
-        .prefix(".yt-dlp-rs-process-")
-        .tempdir_in(parent)?;
-    let input = workspace.path().join(format!(
-        "source.{}",
-        crate::output::safe_component(&info.ext)
-    ));
+    let workspace = || {
+        tempfile::Builder::new()
+            .prefix(".yt-dlp-rs-process-")
+            .tempdir_in(parent)
+    };
+    let source = format!("source.{}", crate::output::safe_component(&info.ext));
     // Upstream merges selected formats from `NAME.fID.EXT` files beside the
     // destination (printing their downloads and the merge) before the
     // processors run; the merged file then becomes the private source.
@@ -333,19 +332,40 @@ pub(crate) fn download(
         && !info.requested_formats.is_empty()
         && matches!(options.merge_files, crate::MergeFiles::Upstream { .. })
         && !downloader.uses_ffmpeg_fd(info);
-    let bytes = if let Some(existing) = existing {
+    // A live recording is written beside the destination (`NAME.EXT.part`)
+    // like upstream's, so a recording that is killed (and cannot finish)
+    // stays discoverable; the workspace only exists while processing.
+    let live = existing.is_none() && !upstream_merge && crate::is_live(info);
+    let (workspace, bytes) = if let Some(existing) = existing {
+        let workspace = workspace()?;
+        let input = workspace.path().join(&source);
         // A private link (or copy) of the existing file is the source.
         if fs::hard_link(existing, &input).is_err() {
             fs::copy(existing, &input)?;
         }
-        fs::metadata(&input)?.len()
+        let bytes = fs::metadata(&input)?.len();
+        (workspace, bytes)
     } else if upstream_merge {
         // Each stream's download reports its own completion.
         let bytes =
             downloader.download_with_progress(info, destination, options, &mut *callback)?;
-        fs::rename(destination, &input)?;
-        bytes
+        let workspace = workspace()?;
+        fs::rename(destination, workspace.path().join(&source))?;
+        (workspace, bytes)
+    } else if live {
+        let bytes = downloader.download_with_progress(info, destination, options, |progress| {
+            if progress.phase == DownloadPhase::Publishing {
+                ControlFlow::Continue(())
+            } else {
+                callback(progress)
+            }
+        })?;
+        let workspace = workspace()?;
+        fs::rename(destination, workspace.path().join(&source))?;
+        (workspace, bytes)
     } else {
+        let workspace = workspace()?;
+        let input = workspace.path().join(&source);
         // The workspace source is private; part files apply to unprocessed
         // media only.
         let options = DownloadOptions {
@@ -353,14 +373,16 @@ pub(crate) fn download(
             merge_files: crate::MergeFiles::Private,
             ..options
         };
-        downloader.download_with_progress(info, &input, options, |progress| {
+        let bytes = downloader.download_with_progress(info, &input, options, |progress| {
             if progress.phase == DownloadPhase::Publishing {
                 ControlFlow::Continue(())
             } else {
                 callback(progress)
             }
-        })?
+        })?;
+        (workspace, bytes)
     };
+    let input = workspace.path().join(&source);
     // Upstream `process_info` fixes the download (after its progress ends)
     // before `post_process` and its prints.
     // Like upstream's default policy, existing files are not fixed again.

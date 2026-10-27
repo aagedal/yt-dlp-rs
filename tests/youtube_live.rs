@@ -201,3 +201,30 @@ fn an_interrupted_live_from_start_download_is_completed() {
     assert_eq!(text_file.into_bytes(), expected("140", count - 1));
     assert!(!part.exists());
 }
+
+/// Port extension: `--download-sections` of a stream downloaded from the
+/// start selects its fragments (2s each here): negative times count back
+/// from the live edge, an open end stops there, and positive times count
+/// from the stream's start.
+#[test]
+fn a_section_of_a_live_stream_downloads_its_fragments() {
+    let proxy = proxy(Arc::new(|| 9), Duration::ZERO);
+    for (section, first, last) in [("*-6-inf", 7, 9), ("*4-10", 2, 4)] {
+        let work = tempfile::tempdir().unwrap();
+        let output = command(&proxy, work.path())
+            .args(["-f", "140", "--download-sections", section])
+            .arg("https://www.youtube.com/watch?v=LiveStart01")
+            .output()
+            .unwrap();
+        assert!(output.status.success(), "{}", text(&output));
+        let expected: Vec<u8> = (first..=last)
+            .flat_map(|sq| format!("140:{sq};").into_bytes())
+            .collect();
+        assert_eq!(
+            std::fs::read(work.path().join("LiveStart01.m4a")).unwrap(),
+            expected,
+            "{section}: {}",
+            text(&output)
+        );
+    }
+}

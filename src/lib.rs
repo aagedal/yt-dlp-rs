@@ -203,6 +203,19 @@ pub(crate) fn is_live(info: &VideoInfo) -> bool {
     info.metadata.live_status.as_deref() == Some("is_live")
 }
 
+/// Whether every selected format is generated from the start of a live
+/// stream (`http_dash_segments_generator`, YouTube `--live-from-start`).
+pub fn live_generated(info: &VideoInfo) -> bool {
+    const GENERATED: &str = "http_dash_segments_generator";
+    if info.requested_formats.is_empty() {
+        info.protocol.as_deref() == Some(GENERATED)
+    } else {
+        info.requested_formats
+            .iter()
+            .all(|format| format.determine_protocol() == GENERATED)
+    }
+}
+
 /// A transport error as urllib words it: `[Errno N] TEXT` for an OS error.
 /// HlsFD's `Total fragments` for `info` after `refresh_hls`: the whole
 /// playlist's fragments even when only a discontinuity section downloads.
@@ -1932,6 +1945,11 @@ impl YoutubeDl {
                 )
             },
         )?;
+        // Port extension: `--download-sections` selects the fragments.
+        let range = sections::is_partial(info).then(|| extractor::LiveRange {
+            start: info.section_start.map_or(0.0, |start| start.as_f64()),
+            end: info.section_end.map(|end| end.as_f64()),
+        });
         let mut jobs = Vec::new();
         for (stream, path) in streams {
             screen::screen("[dashsegments] Total fragments: unknown (live)");
@@ -1939,7 +1957,12 @@ impl YoutubeDl {
                 screen::screen(&format!("[download] Destination: {}", path.display()));
             }
             jobs.push(live_dash::Job {
-                fragments: extractor::LiveFragments::new(feed.clone(), &stream.extra, &stream.url),
+                fragments: extractor::LiveFragments::new(
+                    feed.clone(),
+                    &stream.extra,
+                    &stream.url,
+                    range,
+                )?,
                 info: stream.clone(),
                 destination: path.clone(),
             });
@@ -2189,7 +2212,9 @@ impl YoutubeDl {
         if self.ffmpeg.is_none() {
             return false;
         }
-        if sections::is_partial(info) {
+        // Port extension: a live stream downloaded from the start selects a
+        // section's fragments instead.
+        if sections::is_partial(info) && !live_generated(info) {
             return true;
         }
         // `PROTOCOL_MAP['m3u8']`: the non-native HLS protocol is FFmpeg's.

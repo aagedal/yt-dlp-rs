@@ -665,7 +665,7 @@ pub(crate) use youtube::YoutubeUnsupported;
 pub(crate) use youtube::clip::YoutubeClip;
 pub(crate) use youtube::comments::post_extract as youtube_comments;
 pub(crate) use youtube::live::prepare_fragments as youtube_live_fragments;
-pub(crate) use youtube::live::{LiveFeed, LiveFragments};
+pub(crate) use youtube::live::{LiveFeed, LiveFragments, LiveRange};
 pub(crate) use youtube::notifications::YoutubeNotifications;
 pub(crate) use youtube::redirect::{Kind as YoutubeRedirectKind, YoutubeRedirect};
 pub(crate) use youtube::search::{YoutubeMusicSearchUrl, YoutubeSearch, YoutubeSearchUrl};

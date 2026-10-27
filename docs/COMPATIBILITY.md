@@ -3275,13 +3275,26 @@ video's formats are parsed like upstream's `live=True`, its title gets the local
 through FFmpeg like upstream's FFmpegFD; on Unix an interrupt (SIGINT) asks
 FFmpeg to quit, prints `[ffmpeg] Interrupted by user` and completes the
 download (publication and post-processing) as upstream does for live
-streams. An upcoming video reports its playability reason (`This live event
-will begin in …`); with `--wait-for-video MIN[-MAX]` that reason is a
-warning, and like `_wait_for_video` the extractor waits until the release time
+streams. Port extensions for hosts that stop recordings: SIGTERM is handled
+like SIGINT wherever SIGINT is (live FFmpeg, RTMP and `--live-from-start`
+downloads, `--wait-for-video`); an FFmpeg that has not quit 10 seconds after
+`q` is sent SIGTERM (`[ffmpeg] FFmpeg did not quit within 10 seconds;
+terminating it`) and killed 5 seconds later, and the download completes with
+what it wrote (live HLS is written as MPEG-TS); and a post-processed live
+recording is written beside its destination (`NAME.EXT.part`, as upstream),
+the private processing directory only existing after the recording ends, so a
+killed recording leaves upstream's discoverable partial file
+(`tests/live_interrupt.rs`). An upcoming video reports its playability reason (`This live event
+will begin in …`); with `--wait-for-video MIN[-MAX]` or
+`--ignore-no-formats-error` that reason is a warning; the latter gives the
+metadata without formats (`-j` prints `title`, `thumbnail`,
+`release_timestamp`, ..., compared with pinned upstream in `youtube-live`).
+Like `_wait_for_video` the extractor waits until the release time
 (bounded by MIN/MAX; `Release time of video is not known` or `Video should
 already be available according to extracted info` otherwise), showing `[wait]
-Remaining time until next attempt: HH:MM:SS` (one line with `--no-progress`),
-then extracts again (`[wait] Wait period ended; Re-extracting data`; on Unix
+Remaining time until next attempt: HH:MM:SS` (one line with `--no-progress`;
+port extension: `--newline` ends each countdown line with a newline instead
+of returning the carriage, so line-reading hosts see it live), then extracts again (`[wait] Wait period ended; Re-extracting data`; on Unix
 Ctrl+C retries at once). A live video's remaining HTTPS formats get upstream's
 `(incomplete)` note and -20 preference.
 
@@ -3320,6 +3333,16 @@ per-format multiline status, and `-j` omits the generator (upstream prints its
 `tests/youtube_live.rs` covers downloads, merging and interrupts against a
 local server with a changing `X-Head-Seqnum`. The refetch does not reuse
 upstream's `--extractor-retries` value (always 3).
+Port extension: `--download-sections "*START-END"` with `--live-from-start`
+downloads a clip of the stream by selecting its fragments (whole fragments of
+the format's `target_duration`, so ends are rounded outwards to a fragment)
+instead of FFmpeg's `-ss`/`-t` (upstream ignores sections for these
+formats). Positive times count from the stream's start, negative ones back
+from the live edge when the download starts, and an open (`inf`) end is that
+live edge: `*-10:00-inf` is the last ten minutes, `*10:00-20:00` minutes 10
+to 20 of the stream, and a range beyond the live edge waits for its fragments
+(an interrupt still completes what was downloaded). It needs no FFmpeg for a
+single format.
 Like upstream's anonymous `_extract_player_responses`, an age-gated response
 adds the `web_embedded` client (and a "made for kids" video the
 android_vr/visionos clients cannot play adds it given a JS runtime), with its
