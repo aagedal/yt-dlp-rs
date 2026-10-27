@@ -3007,6 +3007,19 @@ ID is upstream's `Unsupported URL`), the `mediaplayer.nobelprize.org` page's
 fatal JSON-LD as an untyped result overlaid with the `caption` meta title, the
 `itemprop="description"` span and the `duration` meta.
 
+NOS articles and videos (`nos.nl/[SECTION/]artikel/ID-SLUG`,
+`nos.nl/video/ID-SLUG`) follow upstream `NOSNLArticleIE`: the page's fatal
+Next.js `pageProps.data` as a playlist of its `items` (or its one `video` on
+video pages): `video` items as their HLS master playlist (fatal, subtitles
+kept), title, description, ISO 8601 duration and the first ratio's thumbnails
+(the first URL with width and height), `audio` items as their `media.src` MP3
+URL; other item types are skipped. The playlist has the page ID, title and
+description (else the `title`/`description` metas), keywords as tags, the
+`modifiedAt`/`publishedAt` timestamps, the share image (else `og:image`) and
+the category labels, `None` values kept like upstream. Errors carry no
+`ID: ` prefix, as `_VALID_URL` has no `id` group.
+`tests/fixtures/sites/nosnl/` is compared with pinned upstream output.
+
 NRK programs, clips, podcast episodes and channels (`nrk:ID`,
 `nrk:KIND/ID`, `nrk.no/video/PS*ID`, `nrk.no/video/SLUG_ID`,
 `v8[-.]psapi.nrk.no/mediaelement/ID`) follow upstream `NRKIE`: psapi

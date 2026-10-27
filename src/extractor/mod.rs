@@ -140,6 +140,7 @@ mod niconico;
 mod ninegag;
 mod ninenews;
 mod nobelprize;
+mod nosnl;
 mod nrk;
 mod nts;
 pub mod nuxt;
@@ -471,6 +472,7 @@ pub(crate) use niconico::{
 pub use ninegag::{NineGag, suitable as ninegag_suitable};
 pub use ninenews::{NineNews, suitable as ninenews_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
+pub use nosnl::{NosNlArticle, suitable as nosnl_suitable};
 pub use nrk::{
     Nrk, NrkPlaylist, NrkRadioPodkast, NrkTv, NrkTvDirekte, NrkTvEpisode, NrkTvSeason, NrkTvSeries,
     direkte_suitable as nrk_tv_direkte_suitable, episode_suitable as nrk_tv_episode_suitable,

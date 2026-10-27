@@ -1853,6 +1853,18 @@
       "scope": "NobelPrizeIE query ID, JSON-LD untyped result and meta/description overlay compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "nosnl",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nosnl.py"
+      ],
+      "rust": [
+        "src/extractor/nosnl.rs",
+        "tests/fixtures/sites/nosnl/"
+      ],
+      "scope": "NOSNLArticleIE Next.js article/video playlists of HLS video and MP3 audio items with page metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "nrk",
       "status": "partial",
       "upstream": [
