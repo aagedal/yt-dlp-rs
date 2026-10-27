@@ -1,0 +1,38 @@
+[
+ {
+  "url": "http://www.rte.ie/player/ie/show/iwitness-862/10478715/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://www.rte.ie/player/ie/show/iwitness-862/10478715/",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "http://www.rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=16:10507902:2414:27-12-2015:",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=b16_3250678_8861_06-04-2012_",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.rte.ie/player/ie/show/missing/999",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://www.rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=b16_998_1_01-01-2020_",
+  "args": [
+   "-j"
+  ]
+ }
+]

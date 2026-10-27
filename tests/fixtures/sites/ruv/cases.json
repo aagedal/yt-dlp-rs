@@ -1,0 +1,50 @@
+[
+ {
+  "url": "http://ruv.is/sarpurinn/ruv-aukaras/fh-valur/20170516",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://ruv.is/sarpurinn/ras-2/morgunutvarpid/20170619",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://www.ruv.is/node/1151854",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://ruv.is/sarpurinn/klippa/no-video",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.ruv.is/sjonvarp/spila/ithrottir/30657/9jcnd4",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.ruv.is/sjonvarp/spila/ithrottir/30657/9jcnd4",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://www.ruv.is/utvarp/spila/i-ljosi-sogunnar/23795/7hqkre",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.ruv.is/ungruv/spila/ungruv/28046/nope00",
+  "args": [
+   "-j"
+  ]
+ }
+]

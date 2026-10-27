@@ -396,6 +396,21 @@ and `thumbnail` finalization (no `--check-formats` URL testing). These
 fields appear in JSON, info JSON, match filters and (scalar ones) output
 templates; see [the source slice](../upstream/notes/youtube-metadata.md).
 
+RTÉ Player shows (`rte.ie/player/CC/show/SLUG/ID`, `rte`) and radio player
+recordings (`rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=...`, old
+and new specifiers, `rte:radio`) follow upstream `RteBaseIE`: both the IPTV
+(`feeds.rasset.ie`) and web (`www.rte.ie/rteavgen/getplaylist`) feeds are
+read; the first show found gives the unescaped title and description,
+thumbnail, `published` timestamp and millisecond duration, and every show's
+first `media:group` adds an RTMP(E) `mp4:` format (`flv`, `rtmp`), non-fatal
+HLS (`hls`, master only) and HDS (`hds`, from `hds_server` and from
+`rte:server`) formats. A failing IPTV feed is skipped silently; a failing web
+feed without formats is fatal, and its 404 JSON body's `message` becomes
+upstream's `IE_NAME said: MESSAGE` error (an unparsable body warns with
+Python's JSONDecodeError text before the HTTP error). Feeds without any show
+are an unsupported error. `tests/fixtures/sites/rte/` is compared with
+pinned upstream output.
+
 RTRFM shows (`rtrfm.com.au/shows|show-episode/ID`) follow upstream `RTRFMIE`:
 the page's fatal `playShow[From]` show, date and title, the restream API's
 `u` MP3 URL (`Downloading MP3 URL`) as an untyped result, upstream's expected
@@ -454,6 +469,22 @@ HLS streams and captions (`ru` without a code). Numeric embeds
 `extractor_key` `Rutube`. F4M balancer entries are an unsupported error;
 channels, playlists, tags, people and movies are not supported.
 `tests/fixtures/sites/rutube/` is compared with pinned upstream output.
+
+RÚV Sarpurinn pages (`ruv.is/sarpurinn/CHANNEL/ID[/DATE]`, `ruv.is/node/ID`)
+follow upstream `RuvIE`: the OpenGraph title (fatal), the page's `video.src`
+(fatal) as HLS (`hls`, master only), an `mp3` audio format or a direct URL,
+the `www.ruv.is/node/ID` link's ID (else the URL's), the OpenGraph
+description, and the OpenGraph image, else upstream's `video.poster` match
+(whose first group is the opening quote, as upstream returns it) or its
+warning, and the `article:published_time` timestamp with its warning. RÚV
+Spila episodes (`ruv.is/{sjonvarp,utvarp,krakkaruv,ungruv}/spila/.../SERIES/ID`,
+`ruv.is:spila`) follow `RuvSpilaIE`: the `ruv.is/gql/` GraphQL program's first
+episode (an empty list is Python's `list index out of range`), its HLS
+(master only) or direct file, named VTT subtitles, clips as chapters, the
+episode or program title and description, the `$$IMAGESIZE$$` thumbnail, the
+`firstrun` timestamp and the rating as `age_limit`. Clips without a parseable
+time are an unsupported error (processing would fill their `None` start).
+`tests/fixtures/sites/ruv/` is compared with pinned upstream output.
 
 ScreenRec shares (`screenrec.com/share/ID`) follow upstream `ScreenRecIE`: the
 page's fatal `customUrl` manifest as HLS formats (subtitles ignored with
