@@ -1,0 +1,117 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://sverigesradio.se/sida/artikel.aspx?programid=83&artikel=7038546",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"7038546\", \"formats\": [{\"abr\": 96, \"acodec\": \"aac\", \"ext\": \"m4a\", \"format_id\": \"13\", \"vcodec\": \"none\", \"url\": \"https://lyssna-cdn.sr.test/topsy/ljudfil/srse/7038546_a96.m4a\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 1584000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"13 - audio only\"}, {\"abr\": 192, \"acodec\": \"aac\", \"ext\": \"m4a\", \"format_id\": \"11\", \"vcodec\": \"none\", \"url\": \"https://lyssna-cdn.sr.test/topsy/ljudfil/srse/7038546_a192.m4a\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 192, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 3168000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"11 - audio only\"}], \"title\": \"Esa Teittinen: Sanningen har inte kommit fram\", \"series\": \"Nyheter (Ekot)\", \"duration\": 132, \"thumbnail\": \"https://static-cdn.sr.test/images/83/2789.jpg?preset=api-default-square\", \"description\": \"Esa Teittinen kommenterar.\", \"webpage_url\": \"https://sverigesradio.se/sida/artikel.aspx?programid=83&artikel=7038546\", \"original_url\": \"https://sverigesradio.se/sida/artikel.aspx?programid=83&artikel=7038546\", \"webpage_url_basename\": \"artikel.aspx\", \"webpage_url_domain\": \"sverigesradio.se\", \"extractor\": \"sverigesradio:publication\", \"extractor_key\": \"SverigesRadioPublication\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://static-cdn.sr.test/images/83/2789.jpg?preset=api-default-square\", \"id\": \"0\"}], \"display_id\": \"7038546\", \"fulltitle\": \"Esa Teittinen: Sanningen har inte kommit fram\", \"duration_string\": \"2:12\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"abr\": 192, \"acodec\": \"aac\", \"ext\": \"m4a\", \"format_id\": \"11\", \"vcodec\": \"none\", \"url\": \"https://lyssna-cdn.sr.test/topsy/ljudfil/srse/7038546_a192.m4a\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 192, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 3168000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"11 - audio only\", \"_filename\": \"Esa Teittinen\\uff1a Sanningen har inte kommit fram [7038546].m4a\", \"filename\": \"Esa Teittinen\\uff1a Sanningen har inte kommit fram [7038546].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://sverigesradio.se/sida/artikel.aspx?programid=83&artikel=7038546",
+   "args": [
+    "--no-progress",
+    "-f",
+    "13",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[sverigesradio:publication] Extracting URL: https://sverigesradio.se/sida/artikel.aspx?programid=83&artikel=7038546",
+    "[sverigesradio:publication] 7038546: Downloading audio JSON metadata",
+    "[sverigesradio:publication] 7038546: Downloading low format JSON metadata",
+    "[sverigesradio:publication] 7038546: Downloading medium format JSON metadata",
+    "[sverigesradio:publication] 7038546: Downloading high format JSON metadata",
+    "[info] 7038546: Downloading 1 format(s): 13",
+    "[download] Destination: 7038546.m4a",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "7038546.m4a": 6
+   }
+  },
+  {
+   "url": "https://sverigesradio.se/artikel/tysk-fotbollsfeber-bayern-munchens-10-ariga-segersvit-kan-brytas",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"8360345\", \"formats\": [{\"abr\": 128, \"acodec\": \"mp3\", \"ext\": \"mp3\", \"format_id\": \"5\", \"vcodec\": \"none\", \"url\": \"https://lyssna-cdn.sr.test/topsy/ljudfil/srse/8360345.mp3\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 1152000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"5 - audio only\"}], \"title\": \"Tysk fotbollsfeber n\\u00e4r Bayern M\\u00fcnchens 10-\\u00e5riga segersvit kan brytas\", \"series\": \"Radiosporten\", \"duration\": 72, \"thumbnail\": \"https://static-cdn.sr.test/images/179/radiosporten.jpg\", \"webpage_url\": \"https://sverigesradio.se/artikel/tysk-fotbollsfeber-bayern-munchens-10-ariga-segersvit-kan-brytas\", \"original_url\": \"https://sverigesradio.se/artikel/tysk-fotbollsfeber-bayern-munchens-10-ariga-segersvit-kan-brytas\", \"webpage_url_basename\": \"tysk-fotbollsfeber-bayern-munchens-10-ariga-segersvit-kan-brytas\", \"webpage_url_domain\": \"sverigesradio.se\", \"extractor\": \"sverigesradio:publication\", \"extractor_key\": \"SverigesRadioPublication\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://static-cdn.sr.test/images/179/radiosporten.jpg\", \"id\": \"0\"}], \"display_id\": \"8360345\", \"fulltitle\": \"Tysk fotbollsfeber n\\u00e4r Bayern M\\u00fcnchens 10-\\u00e5riga segersvit kan brytas\", \"duration_string\": \"1:12\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"abr\": 128, \"acodec\": \"mp3\", \"ext\": \"mp3\", \"format_id\": \"5\", \"vcodec\": \"none\", \"url\": \"https://lyssna-cdn.sr.test/topsy/ljudfil/srse/8360345.mp3\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 1152000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"5 - audio only\", \"_filename\": \"Tysk fotbollsfeber n\\u00e4r Bayern M\\u00fcnchens 10-\\u00e5riga segersvit kan brytas [8360345].mp3\", \"filename\": \"Tysk fotbollsfeber n\\u00e4r Bayern M\\u00fcnchens 10-\\u00e5riga segersvit kan brytas [8360345].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [sverigesradio:publication] 8360345: Unable to download JSON metadata: HTTP Error 500: OK"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://sverigesradio.se/avsnitt/p4-live-med-first-aid-kit-scandinavium-mars-2023",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2160416\", \"formats\": [{\"abr\": 32, \"acodec\": \"mp3\", \"ext\": \"mp3\", \"format_id\": \"12\", \"vcodec\": \"none\", \"url\": \"https://lyssna-cdn.sr.test/2160416_low.mp3\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 32, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 22560000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"12 - audio only\"}, {\"abr\": null, \"acodec\": \"aac\", \"ext\": \"m4a\", \"format_id\": \"1\", \"vcodec\": \"none\", \"url\": \"https://lyssna-cdn.sr.test/2160416_high.m4a\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1 - audio only\"}, {\"abr\": null, \"acodec\": \"aac\", \"ext\": \"m4a\", \"format_id\": \"7\", \"vcodec\": \"none\", \"url\": \"https://lyssna-cdn.sr.test/2160416_a0.m4a\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"7 - audio only\"}], \"title\": \"P4 Live med First Aid Kit\", \"series\": \"P4 Live\", \"duration\": 5640, \"webpage_url\": \"https://sverigesradio.se/avsnitt/p4-live-med-first-aid-kit-scandinavium-mars-2023\", \"original_url\": \"https://sverigesradio.se/avsnitt/p4-live-med-first-aid-kit-scandinavium-mars-2023\", \"webpage_url_basename\": \"p4-live-med-first-aid-kit-scandinavium-mars-2023\", \"webpage_url_domain\": \"sverigesradio.se\", \"extractor\": \"sverigesradio:episode\", \"extractor_key\": \"SverigesRadioEpisode\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2160416\", \"fulltitle\": \"P4 Live med First Aid Kit\", \"duration_string\": \"1:34:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"abr\": null, \"acodec\": \"aac\", \"ext\": \"m4a\", \"format_id\": \"7\", \"vcodec\": \"none\", \"url\": \"https://lyssna-cdn.sr.test/2160416_a0.m4a\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"7 - audio only\", \"_filename\": \"P4 Live med First Aid Kit [2160416].m4a\", \"filename\": \"P4 Live med First Aid Kit [2160416].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: \"id\" field is not a string - forcing string conversion, there is an error in extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://sverigesradio.se/avsnitt/1140922?programid=1300",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[sverigesradio:episode] Extracting URL: https://sverigesradio.se/avsnitt/1140922?programid=1300",
+    "[sverigesradio:episode] 1140922: Downloading audio JSON metadata",
+    "[sverigesradio:episode] 1140922: Downloading low format JSON metadata",
+    "[sverigesradio:episode] 1140922: Downloading medium format JSON metadata",
+    "[sverigesradio:episode] 1140922: Downloading high format JSON metadata",
+    "[info] 1140922: Downloading 1 format(s): 5",
+    "[download] Destination: 1140922.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "1140922.mp3": 6
+   }
+  },
+  {
+   "url": "https://sverigesradio.se/avsnitt/saknas",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: An extractor error has occurred. (caused by KeyError('pageId')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://sverigesradio.se/artikel.aspx?artikel=9999",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 9999: An extractor error has occurred. (caused by KeyError('items')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

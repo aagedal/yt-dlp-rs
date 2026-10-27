@@ -2396,6 +2396,18 @@
       "scope": "SubstackIE window._preloads JSON.parse data, custom-domain canonical URLs, podcast URLs with HEAD-resolved extensions, video posts' non-fatal HLS and MP4 sources, the unsupported page type error and post metadata; _extract_embed_urls (generic custom-domain detection) is not ported. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "sverigesradio",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/sverigesradio.py"
+      ],
+      "rust": [
+        "src/extractor/sverigesradio.rs",
+        "tests/fixtures/sites/sverigesradio/"
+      ],
+      "scope": "SverigesRadioPublicationIE and SverigesRadioEpisodeIE audio IDs (URL, audio-button attributes or gtm-metadata pageId), playerajax audiometadata fields and non-fatal getaudiourl formats per quality, with the KeyError paths. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "svt",
       "status": "partial",
       "upstream": [

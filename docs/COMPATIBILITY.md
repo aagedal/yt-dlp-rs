@@ -547,6 +547,23 @@ pages are not detected by the generic extractor (`_extract_embed_urls` is not
 ported). `tests/fixtures/sites/substack/` is compared with pinned upstream
 output.
 
+Sveriges Radio publications (`sverigesradio.se/[sida/]artikel|gruppsida.aspx?...
+artikel=ID`, `.../artikel|gruppsida/SLUG`) and episodes
+(`sverigesradio.se/[sida/]avsnitt/ID|SLUG`) follow upstream
+`SverigesRadioPublicationIE` and `SverigesRadioEpisodeIE`: a slug URL's page
+gives the first `audio-button` element's `data-audio-id` (else
+`data-publication-id`), else the `gtm-metadata` JSON's `pageId` (a missing key
+is upstream's `KeyError`; an integer ID gets processing's string-conversion
+warning). The `playerajax/audiometadata` item (a missing `items` is a
+`KeyError`) gives the title (`subtitle`), series, duration, thumbnail and
+description; the `getaudiourl` responses for the `low`, `medium` and `high`
+qualities (non-fatal: HTTP errors are warnings) give one format per distinct
+`audioUrl`, with the `_aNNN.m4a` (else `codingFormat`) bitrate, the codec of
+`mp3`/`m4a` files and the coding format as format ID. Pages without either
+element, unparsable `gtm-metadata`, and `getaudiourl` responses that are not
+JSON (upstream warns) are not supported. `tests/fixtures/sites/sverigesradio/`
+is compared with pinned upstream output.
+
 SVT Play and Öppet arkiv videos (`svtplay.se`/`oppetarkiv.se`
 `/video|klipp|kanaler/ID[...?modalId=|id=SVT_ID]`, Barnplay
 `svt.se/barnkanalen/barnplay/SLUG/SVT_ID`) follow upstream `SVTPlayIE`: the
