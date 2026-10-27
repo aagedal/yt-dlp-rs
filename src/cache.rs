@@ -13,7 +13,7 @@ use std::path::PathBuf;
 use std::sync::RwLock;
 
 /// The pinned upstream `yt_dlp.version.__version__`.
-pub const UPSTREAM_VERSION: &str = "2026.10.21";
+pub const UPSTREAM_VERSION: &str = "2026.10.26";
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 enum Setting {
@@ -243,7 +243,7 @@ mod tests {
                 std::fs::read_to_string(root.join("youtube-sigfuncs/abc-main-3.json")).unwrap();
             assert_eq!(
                 text,
-                r#"{"yt-dlp_version": "2026.10.21", "data": [2, 0, 1]}"#
+                r#"{"yt-dlp_version": "2026.10.26", "data": [2, 0, 1]}"#
             );
             assert_eq!(
                 load("youtube-sigfuncs", "abc-main-3", Some("2025.07.21")),

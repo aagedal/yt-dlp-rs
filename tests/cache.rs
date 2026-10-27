@@ -59,7 +59,7 @@ fn soundcloud_client_id_is_read_from_the_cache_on_the_second_run() {
     // Upstream's file format: `json.dump` of the versioned envelope.
     assert_eq!(
         std::fs::read_to_string(cache.join("soundcloud/client_id.json")).unwrap(),
-        r#"{"yt-dlp_version": "2026.10.21", "data": "aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB"}"#
+        r#"{"yt-dlp_version": "2026.10.26", "data": "aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB"}"#
     );
     let second = run(&proxy, &cache, &["-v", "-s"], SOUNDCLOUD);
     assert!(second.status.success(), "{}", text(&second.stderr));
@@ -142,7 +142,7 @@ fn brightcove_policy_key_is_cached_and_a_stale_key_is_replaced() {
     );
     assert_eq!(
         std::fs::read_to_string(&entry).unwrap(),
-        r#"{"yt-dlp_version": "2026.10.21", "data": "BCpkFIXTUREKEY1"}"#
+        r#"{"yt-dlp_version": "2026.10.26", "data": "BCpkFIXTUREKEY1"}"#
     );
     // Only the Playback API, with the cached key.
     let second = run(&proxy, &cache, &["-v", "-s"], BRIGHTCOVE);
@@ -155,7 +155,7 @@ fn brightcove_policy_key_is_cached_and_a_stale_key_is_replaced() {
     // `INVALID_POLICY_KEY` for a cached key: cleared, extracted, stored.
     std::fs::write(
         &entry,
-        r#"{"yt-dlp_version": "2026.10.21", "data": "BCpkSTALEKEY"}"#,
+        r#"{"yt-dlp_version": "2026.10.26", "data": "BCpkSTALEKEY"}"#,
     )
     .unwrap();
     let stale = run(&proxy, &cache, &["-v", "-s"], BRIGHTCOVE);
@@ -206,7 +206,7 @@ fn youtube_signature_specs_are_read_from_the_cache_on_the_second_run() {
         &std::fs::read_to_string(cache.join("youtube-sigfuncs/74edf1a3-main-110.json")).unwrap(),
     )
     .unwrap();
-    assert_eq!(entry["yt-dlp_version"], "2026.10.21");
+    assert_eq!(entry["yt-dlp_version"], "2026.10.26");
     assert_eq!(entry["data"].as_array().unwrap().len(), 110);
     let second = run(&proxy, &cache, &args, url);
     assert!(second.status.success(), "{}", text(&second.stderr));

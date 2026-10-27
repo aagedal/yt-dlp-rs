@@ -5,7 +5,7 @@ predicate cases with expected matching IDs in declaration order. Native Rust
 predicate tests consume the same cases as `tools/compare_filters.py`.
 
 Reference: official yt-dlp commit
-`fa9886678eb65103303c627b8e013f13f8999b41`:
+`f264a6cbd1f630894da0f368df00f8aae50140e0`:
 
 - `yt_dlp/YoutubeDL.py:2203`, `_build_format_filter`: numeric comparisons,
   optional missing-value inclusion, text operators, negation and quoting.

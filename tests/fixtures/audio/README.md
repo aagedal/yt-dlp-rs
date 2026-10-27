@@ -1,6 +1,6 @@
 # Saved extract-audio postprocessor plans
 
-Official pinned yt-dlp: `fa9886678eb65103303c627b8e013f13f8999b41`.
+Official pinned yt-dlp: `f264a6cbd1f630894da0f368df00f8aae50140e0`.
 Run `python3 tools/compare_audio.py --upstream /path/to/pinned/yt-dlp`.
 
 `cases.json` contains 73 supported source plans, five explicitly source-only

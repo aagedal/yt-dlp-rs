@@ -1,6 +1,6 @@
 # Saved HTTP request-header references
 
-Official pinned source: `fa9886678eb65103303c627b8e013f13f8999b41`.
+Official pinned source: `f264a6cbd1f630894da0f368df00f8aae50140e0`.
 Run `python3 tools/compare_headers.py --upstream /path/to/pinned/yt-dlp`.
 The worker calls actual `parse_options`, `HTTPHeaderDict` and
 `YoutubeDL._calc_headers`, with sockets, downloads and subprocesses forbidden.

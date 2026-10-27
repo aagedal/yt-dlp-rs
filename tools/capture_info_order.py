@@ -20,7 +20,7 @@ import subprocess
 import sys
 import threading
 
-PINNED_UPSTREAM = 'fa9886678eb65103303c627b8e013f13f8999b41'
+PINNED_UPSTREAM = 'f264a6cbd1f630894da0f368df00f8aae50140e0'
 ROOT = Path(__file__).resolve().parents[1] / 'tests/fixtures/info_order'
 LAST_MODIFIED = 'Mon, 01 Jan 2024 00:00:00 GMT'
 CONTENT_TYPES = {

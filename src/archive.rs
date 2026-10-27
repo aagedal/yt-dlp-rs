@@ -607,7 +607,7 @@ mod tests {
             serde_json::from_str(include_str!("../tests/fixtures/archive/cases.json")).unwrap();
         assert_eq!(
             fixture["upstream_commit"],
-            "fa9886678eb65103303c627b8e013f13f8999b41"
+            "f264a6cbd1f630894da0f368df00f8aae50140e0"
         );
         let directory = tempfile::tempdir().unwrap();
         let path = directory.path().join("archive");

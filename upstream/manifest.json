@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "repository": "https://github.com/yt-dlp/yt-dlp.git",
-  "baseline": "fa9886678eb65103303c627b8e013f13f8999b41",
-  "upstream_version": "2026.10.21",
+  "baseline": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+  "upstream_version": "2026.10.26",
   "components": [
     {
       "name": "freesound",

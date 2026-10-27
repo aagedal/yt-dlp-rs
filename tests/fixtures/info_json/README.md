@@ -1,6 +1,6 @@
 # Saved info JSON reference cases
 
-Pinned official yt-dlp: `fa9886678eb65103303c627b8e013f13f8999b41`.
+Pinned official yt-dlp: `f264a6cbd1f630894da0f368df00f8aae50140e0`.
 
 `cases.json` was generated from actual pinned upstream helpers and is checked by
 `python3 tools/compare_info_json.py --upstream /path/to/pinned/yt-dlp`:

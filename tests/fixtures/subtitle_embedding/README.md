@@ -1,7 +1,7 @@
 # Saved subtitle embedding plans
 
 Source: official yt-dlp checkout at
-`fa9886678eb65103303c627b8e013f13f8999b41` (2026.10.21).
+`f264a6cbd1f630894da0f368df00f8aae50140e0` (2026.10.21).
 
 The reference runs actual `parse_options`, `FFmpegEmbedSubtitlePP.run`,
 `ISO639Utils.short2long`, and `YoutubeDL.run_pp`. Input files exist only in an

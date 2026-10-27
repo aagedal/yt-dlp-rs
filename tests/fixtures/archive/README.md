@@ -13,7 +13,7 @@ The append fixture starts from a file ending in a newline; logical records are
 compared rather than platform-specific newline bytes.
 
 Reference: official yt-dlp commit
-`fa9886678eb65103303c627b8e013f13f8999b41`:
+`f264a6cbd1f630894da0f368df00f8aae50140e0`:
 
 - `yt_dlp/YoutubeDL.py:842`: preload with `locked_file` and `line.strip()`.
 - `yt_dlp/YoutubeDL.py:1649`: archive check in entry matching before selection.
