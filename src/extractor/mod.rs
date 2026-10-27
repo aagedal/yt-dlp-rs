@@ -170,6 +170,7 @@ mod rottentomatoes;
 mod roya;
 mod rss;
 mod rtrfm;
+mod rtve;
 mod rumble;
 mod rutube;
 mod sapo;
@@ -504,6 +505,11 @@ pub use rinsefm::{RinseFmArtistPlaylist, playlist_suitable as rinsefm_playlist_s
 pub use rottentomatoes::{RottenTomatoes, suitable as rottentomatoes_suitable};
 pub use roya::{RoyaLive, suitable as roya_suitable};
 pub use rtrfm::{Rtrfm, suitable as rtrfm_suitable};
+pub use rtve::{
+    RtveALaCarta, RtveAudio, RtveLive, RtveTelevision, alacarta_suitable as rtve_alacarta_suitable,
+    audio_suitable as rtve_audio_suitable, live_suitable as rtve_live_suitable,
+    television_suitable as rtve_television_suitable,
+};
 pub use rumble::{
     Rumble, RumbleEmbed, embed_suitable as rumble_embed_suitable, suitable as rumble_suitable,
 };

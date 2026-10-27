@@ -1,0 +1,218 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3088905\", \"formats\": [{\"format_id\": \"dash-audio=128000\", \"manifest_url\": \"https://rtve-dash.example.test/resources/3088905/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"sv\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://rtve-dash.example.test/resources/3088905/manifest.mpd\", \"fragment_base_url\": \"https://rtve-dash.example.test/resources/3088905/\", \"fragments\": [{\"path\": \"dash/audio=128000/init.mp4\"}, {\"path\": \"dash/audio=128000/1.m4s\", \"duration\": 4.0}, {\"path\": \"dash/audio=128000/2.m4s\", \"duration\": 4.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 1, \"is_dash_periods\": true, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-audio=128000 - audio only (DASH audio)\"}, {\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://rtve-hls.example.test/resources/3088905/360/index.m3u8\", \"manifest_url\": \"https://rtve-hls.example.test/resources/3088905/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"dash-video=1300000\", \"manifest_url\": \"https://rtve-dash.example.test/resources/3088905/manifest.mpd\", \"ext\": \"mp4\", \"width\": 960, \"height\": 540, \"tbr\": 1300.0, \"asr\": null, \"fps\": 25, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://rtve-dash.example.test/resources/3088905/manifest.mpd\", \"fragment_base_url\": \"https://rtve-dash.example.test/resources/3088905/\", \"fragments\": [{\"path\": \"dash/video=1300000/init.mp4\"}, {\"path\": \"dash/video=1300000/1.m4s\", \"duration\": 4.0}, {\"path\": \"dash/video=1300000/2.m4s\", \"duration\": 4.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1300.0, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-video=1300000 - 960x540 (DASH video)\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://rtve-hls.example.test/resources/3088905/720/index.m3u8\", \"manifest_url\": \"https://rtve-hls.example.test/resources/3088905/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}, {\"format_id\": \"Alta\", \"quality\": 1, \"url\": \"https://rtve-mediavod.example.test/resources/3088905_Alta.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"Alta - unknown\"}, {\"format_id\": \"HD_FULL\", \"quality\": 4, \"url\": \"https://rtve-mediavod.example.test/resources/3088905_HD_FULL.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HD_FULL - unknown\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://rtve-hls.example.test/resources/3088905/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"title\": \"En torno a la silla\", \"alt_title\": \"Silla\", \"description\": \"Programa educativo\", \"release_timestamp\": 1479810600, \"modified_timestamp\": 1479812400, \"thumbnail\": \"https://img2.rtve.test/v/aventura_3088905.png\", \"duration\": 1216.981, \"is_live\": false, \"series\": \"La aventura del Saber\", \"_old_archive_ids\": null, \"webpage_url\": \"http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/\", \"original_url\": \"http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/\", \"webpage_url_basename\": \"3088905\", \"webpage_url_domain\": \"rtve.es\", \"extractor\": \"rtve.es:alacarta\", \"extractor_key\": \"RTVEALaCarta\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img2.rtve.test/v/aventura_3088905.png\", \"id\": \"0\"}], \"display_id\": \"3088905\", \"fulltitle\": \"En torno a la silla\", \"duration_string\": \"20:16\", \"release_date\": \"20161122\", \"modified_date\": \"20161122\", \"release_year\": 2016, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"HD_FULL\", \"quality\": 4, \"url\": \"https://rtve-mediavod.example.test/resources/3088905_HD_FULL.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HD_FULL - unknown\", \"_filename\": \"En torno a la silla [3088905].mp4\", \"filename\": \"En torno a la silla [3088905].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [rtve.es:alacarta] 3088905: Unable to download webpage: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[rtve.es:alacarta] Extracting URL: http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/",
+    "[rtve.es:alacarta] 3088905: Downloading JSON metadata",
+    "[rtve.es:alacarta] 3088905: Downloading url information",
+    "[rtve.es:alacarta] 3088905: Downloading m3u8 information",
+    "[rtve.es:alacarta] 3088905: Downloading MPD manifest",
+    "[rtve.es:alacarta] 3088905: Downloading url information",
+    "[info] Available formats for 3088905:",
+    "ID                 EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC        VBR ACODEC      ABR ASR MORE INFO",
+    "--------------------------------------------------------------------------------------------------------------------------------",
+    "dash-audio=128000  m4a audio only     | ~ 18.57MiB  128k dash  | audio only        mp4a.40.2  128k 48k [sv] DASH audio, m4a_dash",
+    "hls-921            mp4 640x360     25 | ~133.61MiB  921k m3u8  | avc1.4d401e       mp4a.40.2",
+    "dash-video=1300000 mp4 960x540     25 | ~188.60MiB 1300k dash  | avc1.4d401f 1300k video only          DASH video, mp4_dash",
+    "hls-3121           mp4 1280x720    25 | ~452.78MiB 3121k m3u8  | avc1.4d401f       mp4a.40.2",
+    "Alta               mp4 unknown        |                  https | unknown           unknown",
+    "HD_FULL            mp4 unknown        |                  https | unknown           unknown"
+   ],
+   "stderr": [
+    "WARNING: [rtve.es:alacarta] 3088905: Unable to download webpage: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[rtve.es:alacarta] Extracting URL: http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/",
+    "[rtve.es:alacarta] 3088905: Downloading JSON metadata",
+    "[rtve.es:alacarta] 3088905: Downloading url information",
+    "[rtve.es:alacarta] 3088905: Downloading m3u8 information",
+    "[rtve.es:alacarta] 3088905: Downloading MPD manifest",
+    "[rtve.es:alacarta] 3088905: Downloading url information",
+    "[rtve.es:alacarta] 3088905: Downloading subtitles info",
+    "[info] Available subtitles for 3088905:",
+    "Language Formats",
+    "sv       vtt",
+    "es       vtt, vtt",
+    "en       vtt"
+   ],
+   "stderr": [
+    "WARNING: [rtve.es:alacarta] 3088905: Unable to download webpage: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(alt_title)s|%(description)s|%(timestamp)s|%(release_timestamp)s|%(modified_timestamp)s|%(thumbnail)s|%(duration)s|%(is_live)s|%(series)s|%(_old_archive_ids)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "3088905|En torno a la silla|Silla|Programa educativo|NA|1479810600|1479812400|https://img2.rtve.test/v/aventura_3088905.png|1216.981|False|La aventura del Saber|NA"
+   ],
+   "stderr": [
+    "WARNING: [rtve.es:alacarta] 3088905: Unable to download webpage: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/",
+   "args": [
+    "--no-progress",
+    "-f",
+    "HD_FULL",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[rtve.es:alacarta] Extracting URL: http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/",
+    "[rtve.es:alacarta] 3088905: Downloading JSON metadata",
+    "[rtve.es:alacarta] 3088905: Downloading url information",
+    "[rtve.es:alacarta] 3088905: Downloading m3u8 information",
+    "[rtve.es:alacarta] 3088905: Downloading MPD manifest",
+    "[rtve.es:alacarta] 3088905: Downloading url information",
+    "[info] 3088905: Downloading 1 format(s): HD_FULL",
+    "[download] Destination: 3088905.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [rtve.es:alacarta] 3088905: Unable to download webpage: HTTP Error 404: Not Found"
+   ],
+   "files": {
+    "3088905.mp4": 12
+   }
+  },
+  {
+   "url": "https://www.rtve.es/infantil/serie/dino-ranch/video/pequeno-gran-ayudante/6868808/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [rtve.es:alacarta] 6868808: The video is no longer available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.rtve.es/play/videos/x/y/111/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 111: An extractor error has occurred. (caused by KeyError('state')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.rtve.es/filmoteca/x/y/222/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.rtve.es/play/audios/crims/crims-ca-mercadal/6766574/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6766574\", \"formats\": [{\"format_id\": \"Media\", \"quality\": 0, \"url\": \"https://rtve-mediavod.example.test/audios/6766574.mp3\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"Media - unknown\"}], \"subtitles\": {}, \"title\": \"Crims - Ca Mercadal\", \"thumbnail\": \"https://img.rtve.test/crims.jpg\", \"duration\": 1813.0, \"series\": \"Crims\", \"webpage_url\": \"https://www.rtve.es/play/audios/crims/crims-ca-mercadal/6766574/\", \"original_url\": \"https://www.rtve.es/play/audios/crims/crims-ca-mercadal/6766574/\", \"webpage_url_basename\": \"6766574\", \"webpage_url_domain\": \"rtve.es\", \"extractor\": \"rtve.es:audio\", \"extractor_key\": \"RTVEAudio\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.rtve.test/crims.jpg\", \"id\": \"0\"}], \"display_id\": \"6766574\", \"fulltitle\": \"Crims - Ca Mercadal\", \"duration_string\": \"30:13\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"Media\", \"quality\": 0, \"url\": \"https://rtve-mediavod.example.test/audios/6766574.mp3\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"Media - unknown\", \"_filename\": \"Crims - Ca Mercadal [6766574].mp3\", \"filename\": \"Crims - Ca Mercadal [6766574].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.rtve.es/play/videos/directo/canales-lineales/la-1/",
+   "args": [
+    "--print",
+    "%(id)s|%(is_live)s|%(description)s|%(timestamp)s|%(thumbnail)s|%(format_id)s|%(protocol)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "la-1|True|Directo de La 1|1577833200|https://img.rtve.test/la1.jpg|hls-3121|m3u8_native"
+   ],
+   "stderr": [
+    "WARNING: [rtve.es:live] 1688877: Unable to download webpage: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.rtve.es/directo/sin-setup/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [rtve.es:live] sin-setup: Unable to extract data_setup; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.rtve.es/television/20091103/video-inedito/299020.shtml",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "3088905|En torno a la silla|rtve.es:alacarta|http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/"
+   ],
+   "stderr": [
+    "WARNING: [rtve.es:alacarta] 3088905: Unable to download webpage: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.rtve.es/television/20091103/sin-video/299021.shtml",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [rtve.es:television] unable to extract contentUrl; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [rtve.es:television] 299021: The webpage doesn't contain any video"
+   ],
+   "files": {}
+  }
+ ]
+}

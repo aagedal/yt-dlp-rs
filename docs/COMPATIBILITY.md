@@ -403,6 +403,32 @@ the page's fatal `playShow[From]` show, date and title, the restream API's
 ID, `TITLE DATE` title, series, release date (and the `release_year`
 processing derives from it) and OpenGraph description.
 
+RTVE Play videos (`rtve.es/play|alacarta/videos/.../ID`, `filmoteca`,
+`infantil/serie/.../video/.../ID`) follow upstream `RTVEALaCartaIE`: the
+`api/videos/ID/config/alacarta_videos.json` first item (upstream's
+`KeyError`, and the bare `list index out of range` of an empty list), the
+`The video is no longer available` error for state `DESPU`, and
+`RTVEBaseIE`'s media URLs: the non-fatal `rtveplayw` and `default`
+`ztnr/movil/thumbnail` base64 PNGs, each `tEXt` chunk decoded like
+`_decrypt_url` (alphabet and digit-encoded URL; malformed images are explicit
+errors) into non-fatal HLS (`hls`), DASH (`dash`) or progressive formats
+ranked Media < Alta < HQ < HD_READY < HD_FULL. With `--write-subs`/
+`--list-subs`, the `api2.rtve.es` subtitle list (`es` without a language).
+Metadata follows `_parse_metadata` (stripped title and alternative title,
+cleaned description, space-delimited ISO 8601 emission/publication/
+modification timestamps, the first thumbnail URL, millisecond duration, live
+flag, cleaned series), with the `rtveinfantil` old archive ID for infantil
+URLs. Audios (`rtve.es/play|alacarta/audios/.../ID`, `RTVEAudioIE`) use the
+`api/audios/ID.json` item and the `audios` images; live channels
+(`rtve.es/directo/ID`, `rtve.es/play/videos/directo/.../ID`, `RTVELiveIE`) the
+page's `videoPlayer` `data-setup` asset (fatal), its non-fatal JSON-LD and
+the page title (with upstream's live date suffix); television pages
+(`rtve.es/television/.../ID.shtml`, `RTVETelevisionIE`) follow the
+`contentUrl` meta to the a la carta extractor. Program pages
+(`RTVEProgramIE`) are not ported. `tests/fixtures/sites/rtve/` is compared
+with pinned upstream output; `tools/generate_rtve_fixtures.py` encodes its
+media URL images.
+
 Roya TV live streams (`[en.]roya.tv/live-stream/ID`) follow upstream
 `RoyaLiveIE`: the ticket API's `data.secured_url` (missing keys are
 upstream's wrapped `KeyError`) as live `hls` HLS formats, the non-fatal
