@@ -505,6 +505,22 @@ formats (`m3u8_native` for HLS; `.mp3.NNNk` URLs give the ABR/TBR). Format
 responses whose body is not empty but fails to parse remain explicit native
 errors, since this port does not reproduce Python's `JSONDecodeError` text.
 
+Substack posts (`SUB.substack.com/p/SLUG`) follow upstream `SubstackIE`: the
+page's `window._preloads = JSON.parse("...")` literal (`Unable to extract
+json string` without it; decoded with `js_to_json`, then parsed), the
+custom domain (`domainInfo.customDomain`) as the canonical `webpage_url`, and
+by `post.type` (upstream's `KeyError`s for a missing post, type, podcast URL
+or upload ID): a podcast's `podcast_url` (its extension from a `Resolving
+podcast file extension` HEAD request's final URL when the URL has none,
+`Podcast URL is invalid` on an HTTP error), a video's non-fatal HLS playlist
+and MP4 source under `/api/v1/video/upload/ID/src` on the canonical domain,
+and `Page type "TYPE" is not supported` for others (raised even with
+`--ignore-no-formats-error`, like upstream). The post ID, title,
+description, cover image, publication name and ID follow. Custom-domain
+pages are not detected by the generic extractor (`_extract_embed_urls` is not
+ported). `tests/fixtures/sites/substack/` is compared with pinned upstream
+output.
+
 SVT Play and Öppet arkiv videos (`svtplay.se`/`oppetarkiv.se`
 `/video|klipp|kanaler/ID[...?modalId=|id=SVT_ID]`, Barnplay
 `svt.se/barnkanalen/barnplay/SLUG/SVT_ID`) follow upstream `SVTPlayIE`: the

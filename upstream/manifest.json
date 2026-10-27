@@ -2311,6 +2311,18 @@
       "scope": "StreetVoiceIE v4 song API metadata and non-fatal POSTed HLS/HTTP/original file URLs as mp3 formats, with KeyError, HTTP warning and empty-body warning paths compared with pinned upstream output through the fixture proxy; other unparsable format responses remain explicit native errors"
     },
     {
+      "name": "substack",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/substack.py"
+      ],
+      "rust": [
+        "src/extractor/substack.rs",
+        "tests/fixtures/sites/substack/"
+      ],
+      "scope": "SubstackIE window._preloads JSON.parse data, custom-domain canonical URLs, podcast URLs with HEAD-resolved extensions, video posts' non-fatal HLS and MP4 sources, the unsupported page type error and post metadata; _extract_embed_urls (generic custom-domain detection) is not ported. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "svt",
       "status": "partial",
       "upstream": [

@@ -187,6 +187,7 @@ mod srgssr;
 mod steam;
 mod streamable;
 mod streetvoice;
+mod substack;
 mod svt;
 mod sztvhu;
 mod ted;
@@ -534,6 +535,7 @@ pub(crate) use steam::{
 };
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use streetvoice::{StreetVoice, suitable as streetvoice_suitable};
+pub use substack::{Substack, suitable as substack_suitable};
 pub use svt::{
     SvtPage, SvtPlay, SvtSeries, page_suitable as svt_page_suitable,
     series_suitable as svt_series_suitable, suitable as svt_suitable,
