@@ -2520,6 +2520,17 @@ from webpage` when absent); otherwise the page is a playlist
 `tests/fixtures/sites/rottentomatoes/` is compared with pinned upstream
 output.
 
+Medal.tv clips (`medal.tv/games/GAME/clips/ID`) follow upstream `MedalTVIE`:
+the `medal.tv/api/content/ID` JSON (`Accept: application/json`; fatal), its
+`contentUrlHls` playlist as fatal `hls` formats (master playlist only,
+subtitles dropped with upstream's warning) and `contentUrl` as the
+`http-source` format (quality 1), without privacy-protected guest URLs; with
+no format, the `socialVideoUrl` redirect's final URL as `social-video`
+(quality -1) after upstream's warning. The present title, description,
+millisecond `created` timestamp, duration, view/like/comment counts, poster
+name, ID and profile URL, string tags and thumbnail follow.
+`tests/fixtures/sites/medaltv/` is compared with pinned upstream output.
+
 Mediaite articles (`mediaite.com/SECTION/SLUG`, not `/category`) follow
 upstream `MediaiteIE`: the page's `cdn.jwplayer.com/players/ID` (else
 `data-video-id`) media ID, its `cdn.jwplayer.com/v2/media/ID` JSON parsed

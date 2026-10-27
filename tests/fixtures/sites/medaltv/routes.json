@@ -1,0 +1,54 @@
+{
+ "routes": [
+  {
+   "url": "https://medal.tv/api/content/jTBFnLKdLy15K",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "content-jTBFnLKdLy15K.json"
+  },
+  {
+   "url": "https://medal.tv/api/content/guest1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "content-guest1.json"
+  },
+  {
+   "url": "https://medal.tv/api/content/bare1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "content-bare1.json"
+  },
+  {
+   "url": "https://cdn.medal.test/clips/jTBF/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://medal.tv/api/content/guest1/socialVideoUrl",
+   "status": 302,
+   "headers": {
+    "Location": "https://social.medal.test/guest1.mp4"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://social.medal.test/guest1.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "medal-social-video"
+  },
+  {
+   "url": "https://cdn.medal.test/clips/bare/source.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "medal-source"
+  }
+ ]
+}

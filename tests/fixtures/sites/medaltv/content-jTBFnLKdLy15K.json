@@ -1,0 +1,22 @@
+{
+ "contentId": "cid1",
+ "contentTitle": "Mornu's clutch",
+ "contentDescription": "",
+ "created": 1651628243123,
+ "videoLengthSeconds": 13,
+ "views": 212,
+ "likes": 3,
+ "comments": "1",
+ "poster": {
+  "displayName": "Aciel",
+  "userId": "38286"
+ },
+ "tags": [
+  "valorant",
+  7,
+  "clutch"
+ ],
+ "thumbnailUrl": "https://cdn.medal.test/thumb.jpg",
+ "contentUrlHls": "https://cdn.medal.test/clips/jTBF/master.m3u8",
+ "contentUrl": "https://cdn.medal.test/clips/jTBF/source.mp4"
+}
