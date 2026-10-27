@@ -172,6 +172,7 @@ mod rinsefm;
 mod rottentomatoes;
 mod roya;
 mod rss;
+mod rte;
 mod rtrfm;
 mod rtve;
 mod rumble;
@@ -522,6 +523,7 @@ pub use rinsefm::{RinseFm, suitable as rinsefm_suitable};
 pub use rinsefm::{RinseFmArtistPlaylist, playlist_suitable as rinsefm_playlist_suitable};
 pub use rottentomatoes::{RottenTomatoes, suitable as rottentomatoes_suitable};
 pub use roya::{RoyaLive, suitable as roya_suitable};
+pub use rte::{Rte, RteRadio, radio_suitable as rte_radio_suitable, suitable as rte_suitable};
 pub use rtrfm::{Rtrfm, suitable as rtrfm_suitable};
 pub use rtve::{
     RtveALaCarta, RtveAudio, RtveLive, RtveTelevision, alacarta_suitable as rtve_alacarta_suitable,

@@ -2156,6 +2156,18 @@
       "scope": "RoyaLiveIE ticket API secured URL as live HLS formats (live variant IDs), KeyError messages, non-fatal schedule channel title (generic-title fallback) and is_live compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "rte",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rte.py"
+      ],
+      "rust": [
+        "src/extractor/rte.rs",
+        "tests/fixtures/sites/rte/"
+      ],
+      "scope": "RteIE and RteRadioIE through RteBaseIE: both playlist feeds, first-show metadata, RTMP(E)/HLS/HDS formats from every show, the web feed's 404 'said:' error and JSON parse warning; feeds without a show are an unsupported error. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "rtrfm",
       "status": "partial",
       "upstream": [

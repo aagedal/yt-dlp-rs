@@ -1,0 +1,94 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.rte.ie/player/ie/show/iwitness-862/10478715/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"10478715\", \"title\": \"iWitness & friends\", \"description\": \"The spirit of Ireland, one voice and one minute at a time.\", \"thumbnail\": \"https://img.rasset.ie/0009a1b2.jpg\", \"timestamp\": 1444690560, \"duration\": 60.046, \"formats\": [{\"url\": \"rtmpe://fmsod.rte.ie/rtevod\", \"app\": \"rtevod\", \"play_path\": \"mp4:2015/1012/iwitness_c1.mp4\", \"player_url\": \"http://www.rte.ie/player/ie/show/iwitness-862/10478715/\", \"ext\": \"flv\", \"format_id\": \"rtmp\", \"protocol\": \"rtmp\", \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"rtmp - unknown\"}, {\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://cdn.rasset.ie/hls-vod/ieonly/360/index.m3u8\", \"manifest_url\": \"https://cdn.rasset.ie/hls-vod/ieonly/10478715.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hds-1200\", \"url\": \"https://cdn.rasset.ie/hds-vod/ieonly/10478715.f4m\", \"manifest_url\": \"https://cdn.rasset.ie/hds-vod/ieonly/10478715.f4m\", \"ext\": \"flv\", \"protocol\": \"f4m\", \"tbr\": 1200, \"width\": 1024, \"height\": 576, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1024x576\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-1200 - 1024x576\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://cdn.rasset.ie/hls-vod/ieonly/720/index.m3u8\", \"manifest_url\": \"https://cdn.rasset.ie/hls-vod/ieonly/10478715.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"webpage_url\": \"http://www.rte.ie/player/ie/show/iwitness-862/10478715/\", \"original_url\": \"http://www.rte.ie/player/ie/show/iwitness-862/10478715/\", \"webpage_url_basename\": \"10478715\", \"webpage_url_domain\": \"rte.ie\", \"extractor\": \"rte\", \"extractor_key\": \"Rte\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.rasset.ie/0009a1b2.jpg\", \"id\": \"0\"}], \"display_id\": \"10478715\", \"fulltitle\": \"iWitness & friends\", \"duration_string\": \"1:00\", \"upload_date\": \"20151012\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://cdn.rasset.ie/hls-vod/ieonly/720/index.m3u8\", \"manifest_url\": \"https://cdn.rasset.ie/hls-vod/ieonly/10478715.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"iWitness & friends [10478715].mp4\", \"filename\": \"iWitness & friends [10478715].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [rte] 10478715: Unable to download f4m manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.rte.ie/player/ie/show/iwitness-862/10478715/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[rte] Extracting URL: http://www.rte.ie/player/ie/show/iwitness-862/10478715/",
+    "[rte] 10478715: Downloading JSON metadata",
+    "[rte] 10478715: Downloading m3u8 information",
+    "[rte] 10478715: Downloading f4m manifest",
+    "[rte] 10478715: Downloading JSON metadata",
+    "[rte] 10478715: Downloading f4m manifest",
+    "[info] Available formats for 10478715:",
+    "ID       EXT RESOLUTION FPS |  FILESIZE   TBR PROTO | VCODEC      ACODEC",
+    "---------------------------------------------------------------------------",
+    "rtmp     flv unknown        |                 rtmp  | unknown     unknown",
+    "hls-921  mp4 640x360     25 | ~ 6.59MiB  921k m3u8  | avc1.4d401e mp4a.40.2",
+    "hds-1200 flv 1024x576       | ~ 8.59MiB 1200k f4m   | unknown     unknown",
+    "hls-3121 mp4 1280x720    25 | ~22.34MiB 3121k m3u8  | avc1.4d401f mp4a.40.2"
+   ],
+   "stderr": [
+    "WARNING: [rte] 10478715: Unable to download f4m manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=16:10507902:2414:27-12-2015:",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"10507902\", \"title\": \"Gloria\", \"description\": \"Sacred music 'live' from the RT\\u00c9 archive.\", \"thumbnail\": \"https://img.rasset.ie/gloria.jpg\", \"timestamp\": 1451203200, \"duration\": 7230.0, \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://cdn.rasset.ie/hls-radio/360/index.m3u8\", \"manifest_url\": \"https://cdn.rasset.ie/hls-radio/10507902.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://cdn.rasset.ie/hls-radio/720/index.m3u8\", \"manifest_url\": \"https://cdn.rasset.ie/hls-radio/10507902.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"webpage_url\": \"http://www.rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=16:10507902:2414:27-12-2015:\", \"original_url\": \"http://www.rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=16:10507902:2414:27-12-2015:\", \"webpage_url_basename\": \"rteradioweb.html\", \"webpage_url_domain\": \"rte.ie\", \"extractor\": \"rte:radio\", \"extractor_key\": \"RteRadio\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.rasset.ie/gloria.jpg\", \"id\": \"0\"}], \"display_id\": \"10507902\", \"fulltitle\": \"Gloria\", \"duration_string\": \"2:00:30\", \"upload_date\": \"20151227\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://cdn.rasset.ie/hls-radio/720/index.m3u8\", \"manifest_url\": \"https://cdn.rasset.ie/hls-radio/10507902.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Gloria [10507902].mp4\", \"filename\": \"Gloria [10507902].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=b16_3250678_8861_06-04-2012_",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3250678\", \"title\": \"The Lyric Concert with Paul Herriott\", \"description\": \"\", \"thumbnail\": \"https://img.rasset.ie/lyric.jpg\", \"timestamp\": 1333742400, \"duration\": 7199.016, \"formats\": [{\"url\": \"rtmpe://fmsod.rte.ie/rtevod\", \"app\": \"rtevod\", \"play_path\": \"mp4:2012/0406/lyric.mp4\", \"player_url\": \"http://rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=b16_3250678_8861_06-04-2012_\", \"ext\": \"flv\", \"format_id\": \"rtmp\", \"protocol\": \"rtmp\", \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"rtmp - unknown\"}], \"webpage_url\": \"http://rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=b16_3250678_8861_06-04-2012_\", \"original_url\": \"http://rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=b16_3250678_8861_06-04-2012_\", \"webpage_url_basename\": \"rteradioweb.html\", \"webpage_url_domain\": \"rte.ie\", \"extractor\": \"rte:radio\", \"extractor_key\": \"RteRadio\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.rasset.ie/lyric.jpg\", \"id\": \"0\"}], \"display_id\": \"3250678\", \"fulltitle\": \"The Lyric Concert with Paul Herriott\", \"duration_string\": \"1:59:59\", \"upload_date\": \"20120406\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"rtmpe://fmsod.rte.ie/rtevod\", \"app\": \"rtevod\", \"play_path\": \"mp4:2012/0406/lyric.mp4\", \"player_url\": \"http://rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=b16_3250678_8861_06-04-2012_\", \"ext\": \"flv\", \"format_id\": \"rtmp\", \"protocol\": \"rtmp\", \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"rtmp - unknown\", \"_filename\": \"The Lyric Concert with Paul Herriott [3250678].flv\", \"filename\": \"The Lyric Concert with Paul Herriott [3250678].flv\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.rte.ie/player/ie/show/missing/999",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [rte] 999: rte said: Show not found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=b16_998_1_01-01-2020_",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [rte:radio] 998: Failed to parse JSON: Expecting value in '': line 1 column 1 (char 0)",
+    "ERROR: [rte:radio] 998: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}
