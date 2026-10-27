@@ -2328,6 +2328,18 @@
       "scope": "SpiegelIE _VALID_URL and the page mediaId as a url_transparent jwplatform: result with display_id and og:title compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "spreaker",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/spreaker.py"
+      ],
+      "rust": [
+        "src/extractor/spreaker.rs",
+        "tests/fixtures/sites/spreaker/"
+      ],
+      "scope": "SpreakerIE api.spreaker.com v2 episode JSON (URL key query, KeyError messages) through _extract_episode (permalink display ID, unified_timestamp, author/show strings, millisecond duration or length, count or stats counters, valid image thumbnails, the fixed MPEG Layer 3 mp3 format fields, Spreaker extractor_key) and SpreakerShowIE paged episode lists (page/max_per_page/key query, pager/results/last_page stops, non-dict results skipped) as a lazy generator, including a generator KeyError reported as a None entry, compared with pinned upstream output through the fixture proxy; non-string titles, download URLs, descriptions and dates remain explicit native errors"
+    },
+    {
       "name": "srgssr",
       "status": "partial",
       "upstream": [

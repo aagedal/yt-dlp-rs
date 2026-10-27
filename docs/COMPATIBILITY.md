@@ -686,6 +686,27 @@ else upstream's `Unable to extract media id`) as a `url_transparent` result of
 `jwplatform:MEDIA` overlaid with the URL ID as `display_id` and the
 `og:title` when present.
 
+Spreaker episodes (`api.spreaker.com/[download/]episode/ID`,
+`api.spreaker.com/v2/episodes/ID`, `[www.]spreaker.com/episode/[SLUG-]ID`)
+follow upstream `SpreakerIE`: the `api.spreaker.com/v2/episodes/ID` JSON
+(with the URL's `key` query) `response.episode` as an untyped result with
+the permalink display ID, raw description, `unified_timestamp` publish date,
+author full name (uploader and `creator`), author ID, `duration` (else
+`length`) in milliseconds, play/like/message counts (`*_count`, else
+`stats`), the original/medium/plain image URLs as thumbnails, the show title
+as series and upstream's fixed `mp3` format fields (`MPEG Layer 3`,
+`container`); missing `response`/`episode`/`title`/`download_url` keys are
+upstream's `KeyError` extractor errors. Shows (`api.spreaker.com/show/ID`,
+`spreaker.com/podcast/SLUG--ID`, `spreaker.com/show/ID/episodes/feed`)
+follow `SpreakerShowIE`: `show/ID/episodes` pages (`page`, `max_per_page=100`,
+`key`) read like upstream's generator, stopping without a pager or results
+or at `last_page`, with dict results as the same episode dicts
+(`extractor_key` `Spreaker`); an episode's `KeyError` there is reported
+while reading the entries and ends the playlist with a `None` entry, like
+upstream's default `--no-abort-on-error`. Non-string titles, download URLs,
+descriptions and dates remain explicit native errors.
+`tests/fixtures/sites/spreaker/` is compared with pinned upstream output.
+
 OneFootball videos (`onefootball.com/LL/video/SLUG-ID`) follow upstream
 `OneFootballIE`: the page's fatal `cdn.jwplayer.com/manifests/ID.m3u8` URL as
 a `url_transparent` result (extracted by the JW Platform extractor) overlaid

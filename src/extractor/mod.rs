@@ -188,6 +188,7 @@ mod snapchat;
 mod soundcloud;
 mod soundgasm;
 mod spiegel;
+mod spreaker;
 mod srgssr;
 mod steam;
 mod streamable;
@@ -550,6 +551,12 @@ pub use soundgasm::{
     suitable as soundgasm_suitable,
 };
 pub use spiegel::{Spiegel, suitable as spiegel_suitable};
+pub use spreaker::{
+    Spreaker, SpreakerShow, show_suitable as spreaker_show_suitable, suitable as spreaker_suitable,
+};
+pub(crate) use spreaker::{
+    fetch_episodes as fetch_spreaker_episodes, is_pending_state as spreaker_pending_state,
+};
 pub use srgssr::{
     SrgSsr, SrgSsrPlay, play_suitable as srgssr_play_suitable, suitable as srgssr_suitable,
 };

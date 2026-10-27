@@ -597,6 +597,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "soundgasm",
     "soundgasm:profile",
     "Spiegel",
+    "Spreaker",
+    "SpreakerShow",
     "SRGSSR",
     "SRGSSRPlay",
     "Steam",
@@ -938,6 +940,8 @@ impl YoutubeDl {
                 Box::new(extractor::LrtVod),
                 Box::new(extractor::ACast),
                 Box::new(extractor::ACastChannel),
+                Box::new(extractor::Spreaker),
+                Box::new(extractor::SpreakerShow),
                 Box::new(extractor::IHeartRadio),
                 Box::new(extractor::IHeartRadioPodcast),
                 Box::new(extractor::Gab),
@@ -1974,6 +1978,8 @@ impl YoutubeDl {
                 extractor::fetch_orf_segments
             } else if extractor::nhk_pending_state(&pending.state) {
                 extractor::fetch_nhk_episodes
+            } else if extractor::spreaker_pending_state(&pending.state) {
+                extractor::fetch_spreaker_episodes
             } else if extractor::ard_pending_state(&pending.state) {
                 extractor::fetch_ard_pages
             } else if extractor::vk_user_videos_pending_state(&pending.state) {
@@ -2003,6 +2009,7 @@ impl YoutubeDl {
             let resolved = extractor::steam_pending_state(&pending.state)
                 || extractor::orf_pending_state(&pending.state)
                 || extractor::nhk_pending_state(&pending.state)
+                || extractor::spreaker_pending_state(&pending.state)
                 || extractor::podbayfm_pending_state(&pending.state);
             playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
                 .map(|state| PendingEntries { state });
