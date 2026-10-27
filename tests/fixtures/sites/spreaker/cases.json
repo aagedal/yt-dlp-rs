@@ -1,0 +1,20 @@
+[
+ {"url": "https://api.spreaker.com/episode/12534508", "args": ["-j"]},
+ {"url": "https://www.spreaker.com/episode/grunge-music-origins-the-raw-sound-that-defined-a-generation--60269615?key=secret", "args": ["-j"]},
+ {"url": "https://api.spreaker.com/download/episode/12534508/swm_ep15_how_to_market_your_music_part_2.mp3", "args": ["--print", "%(id)s|%(display_id)s|%(title)s|%(timestamp)s|%(upload_date)s|%(uploader)s|%(uploader_id)s|%(creators)s|%(duration)s|%(view_count)s|%(like_count)s|%(comment_count)s|%(series)s|%(thumbnail)s|%(format)s|%(format_id)s|%(ext)s"]},
+ {"url": "https://api.spreaker.com/v2/episodes/12534508?export=episode_segments", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://api.spreaker.com/v2/episodes/12534508", "args": ["-F"]},
+ {"url": "https://www.spreaker.com/episode/111", "args": ["-j"]},
+ {"url": "https://api.spreaker.com/episode/222", "args": ["-j"]},
+ {"url": "https://api.spreaker.com/episode/333", "args": ["-j"]},
+ {"url": "https://api.spreaker.com/show/4652058", "args": ["-J"]},
+ {"url": "https://api.spreaker.com/show/4652058", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://api.spreaker.com/show/4652058", "args": ["--print", "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(duration)s|%(extractor)s|%(extractor_key)s|%(webpage_url)s"]},
+ {"url": "https://api.spreaker.com/show/4652058", "args": ["--no-progress", "-o", "%(playlist_index)s-%(id)s.%(ext)s"]},
+ {"url": "https://api.spreaker.com/show/4652058", "args": ["-I", "1", "-J"]},
+ {"url": "https://www.spreaker.com/podcast/health-wealth--5918323?key=k", "args": ["-J"]},
+ {"url": "https://www.spreaker.com/show/5887186/episodes/feed", "args": ["-J"]},
+ {"url": "https://api.spreaker.com/show/777", "args": ["--print", "%(id)s|%(title)s"]},
+ {"url": "https://api.spreaker.com/show/777", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://api.spreaker.com/show/777", "args": ["-J"]}
+]

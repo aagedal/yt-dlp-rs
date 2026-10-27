@@ -1,0 +1,283 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://api.spreaker.com/episode/12534508",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"12534508\", \"url\": \"https://api.spreaker.com/download/episode/12534508/swm_ep15.mp3\", \"display_id\": \"swm-ep15-how-to-market-your-music-part-2\", \"title\": \"EP:15 | Music Marketing (Likes) - Part 2\", \"description\": \"In this <b>episode</b> we talk.\", \"timestamp\": 1502250336, \"uploader\": \"SWM\", \"uploader_id\": \"9780658\", \"creator\": \"SWM\", \"duration\": 1063.42, \"view_count\": 1200, \"like_count\": 7, \"comment_count\": 2, \"format\": \"MPEG Layer 3\", \"format_id\": \"mp3\", \"container\": \"mp3\", \"ext\": \"mp3\", \"thumbnails\": [{\"url\": \"https://d3wo5wojvuv7l.cloudfront.net/images.spreaker.com/original/777ce4f96b71b0e1b7c09a5e625210e3.jpg\", \"id\": \"0\"}, {\"url\": \"https://d3wo5wojvuv7l.cloudfront.net/t_square_limited_160/images.spreaker.com/original/777ce4f96b71b0e1b7c09a5e625210e3.jpg\", \"id\": \"1\"}], \"series\": \"Success With Music | SWM\", \"extractor_key\": \"Spreaker\", \"webpage_url\": \"https://api.spreaker.com/episode/12534508\", \"original_url\": \"https://api.spreaker.com/episode/12534508\", \"webpage_url_basename\": \"12534508\", \"webpage_url_domain\": \"api.spreaker.com\", \"extractor\": \"Spreaker\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://d3wo5wojvuv7l.cloudfront.net/t_square_limited_160/images.spreaker.com/original/777ce4f96b71b0e1b7c09a5e625210e3.jpg\", \"fulltitle\": \"EP:15 | Music Marketing (Likes) - Part 2\", \"duration_string\": \"17:43\", \"upload_date\": \"20170809\", \"release_year\": null, \"creators\": [\"SWM\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"_filename\": \"EP\\uff1a15 \\uff5c Music Marketing (Likes) - Part 2 [12534508].mp3\", \"filename\": \"EP\\uff1a15 \\uff5c Music Marketing (Likes) - Part 2 [12534508].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.spreaker.com/episode/grunge-music-origins-the-raw-sound-that-defined-a-generation--60269615?key=secret",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"60269615\", \"url\": \"https://api.spreaker.com/download/episode/60269615/grunge.mp3\", \"display_id\": \"grunge-music-origins-the-raw-sound-that-\", \"title\": \"Grunge Music Origins\", \"description\": null, \"timestamp\": 1717468905, \"uploader\": null, \"uploader_id\": \"17733249\", \"creator\": null, \"duration\": 818.83, \"view_count\": 33, \"like_count\": 4, \"comment_count\": null, \"format\": \"MPEG Layer 3\", \"format_id\": \"mp3\", \"container\": \"mp3\", \"ext\": \"mp3\", \"thumbnails\": [{\"url\": \"https://images.example.test/grunge.jpg\", \"id\": \"0\"}], \"series\": \"90s Grunge\", \"extractor_key\": \"Spreaker\", \"webpage_url\": \"https://www.spreaker.com/episode/grunge-music-origins-the-raw-sound-that-defined-a-generation--60269615?key=secret\", \"original_url\": \"https://www.spreaker.com/episode/grunge-music-origins-the-raw-sound-that-defined-a-generation--60269615?key=secret\", \"webpage_url_basename\": \"grunge-music-origins-the-raw-sound-that-defined-a-generation--60269615\", \"webpage_url_domain\": \"spreaker.com\", \"extractor\": \"Spreaker\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://images.example.test/grunge.jpg\", \"fulltitle\": \"Grunge Music Origins\", \"duration_string\": \"13:38\", \"upload_date\": \"20240604\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"_filename\": \"Grunge Music Origins [60269615].mp3\", \"filename\": \"Grunge Music Origins [60269615].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://api.spreaker.com/download/episode/12534508/swm_ep15_how_to_market_your_music_part_2.mp3",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(timestamp)s|%(upload_date)s|%(uploader)s|%(uploader_id)s|%(creators)s|%(duration)s|%(view_count)s|%(like_count)s|%(comment_count)s|%(series)s|%(thumbnail)s|%(format)s|%(format_id)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "12534508|swm-ep15-how-to-market-your-music-part-2|EP:15 | Music Marketing (Likes) - Part 2|1502250336|20170809|SWM|9780658|['SWM']|1063.42|1200|7|2|Success With Music | SWM|https://d3wo5wojvuv7l.cloudfront.net/t_square_limited_160/images.spreaker.com/original/777ce4f96b71b0e1b7c09a5e625210e3.jpg|MPEG Layer 3|mp3|mp3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://api.spreaker.com/v2/episodes/12534508?export=episode_segments",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Spreaker] Extracting URL: https://api.spreaker.com/v2/episodes/12534508?export=episode_segments",
+    "[Spreaker] 12534508: Downloading JSON metadata",
+    "[info] 12534508: Downloading 1 format(s): mp3",
+    "[download] Destination: 12534508.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "12534508.mp3": 10
+   }
+  },
+  {
+   "url": "https://api.spreaker.com/v2/episodes/12534508",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Spreaker] Extracting URL: https://api.spreaker.com/v2/episodes/12534508",
+    "[Spreaker] 12534508: Downloading JSON metadata",
+    "[info] Available formats for 12534508:",
+    "ID  EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "mp3 mp3 unknown    | https | unknown mp3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.spreaker.com/episode/111",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 111: An extractor error has occurred. (caused by KeyError('download_url')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://api.spreaker.com/episode/222",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Spreaker] 222: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://api.spreaker.com/episode/333",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 333: An extractor error has occurred. (caused by KeyError('episode')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://api.spreaker.com/show/4652058",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4652058\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"101\", \"url\": \"https://api.spreaker.com/download/episode/101/one.mp3\", \"display_id\": \"101\", \"title\": \"Show one\", \"description\": null, \"timestamp\": 1577934245, \"uploader\": \"Host\", \"uploader_id\": null, \"creator\": \"Host\", \"duration\": 60.0, \"view_count\": 1, \"like_count\": null, \"comment_count\": null, \"format\": \"MPEG Layer 3\", \"format_id\": \"mp3\", \"container\": \"mp3\", \"ext\": \"mp3\", \"thumbnails\": [], \"series\": \"The Show\", \"extractor_key\": \"Spreaker\", \"playlist_count\": 3, \"playlist\": \"4652058\", \"playlist_id\": \"4652058\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://api.spreaker.com/show/4652058\", \"n_entries\": 3, \"webpage_url\": \"https://api.spreaker.com/show/4652058\", \"webpage_url_basename\": \"4652058\", \"webpage_url_domain\": \"api.spreaker.com\", \"playlist_index\": 1, \"__last_playlist_index\": 3, \"extractor\": \"SpreakerShow\", \"playlist_autonumber\": 1, \"fulltitle\": \"Show one\", \"duration_string\": \"1:00\", \"upload_date\": \"20200102\", \"release_year\": null, \"creators\": [\"Host\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"requested_downloads\": [{\"_filename\": \"Show one [101].mp3\", \"filename\": \"Show one [101].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"102\", \"url\": \"https://api.spreaker.com/download/episode/102/two.mp3\", \"display_id\": \"two\", \"title\": \"Show two\", \"description\": null, \"timestamp\": null, \"uploader\": null, \"uploader_id\": null, \"creator\": null, \"duration\": 1.5, \"view_count\": null, \"like_count\": null, \"comment_count\": null, \"format\": \"MPEG Layer 3\", \"format_id\": \"mp3\", \"container\": \"mp3\", \"ext\": \"mp3\", \"thumbnails\": [], \"series\": null, \"extractor_key\": \"Spreaker\", \"playlist_count\": 3, \"playlist\": \"4652058\", \"playlist_id\": \"4652058\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://api.spreaker.com/show/4652058\", \"n_entries\": 3, \"webpage_url\": \"https://api.spreaker.com/show/4652058\", \"webpage_url_basename\": \"4652058\", \"webpage_url_domain\": \"api.spreaker.com\", \"playlist_index\": 2, \"__last_playlist_index\": 3, \"extractor\": \"SpreakerShow\", \"playlist_autonumber\": 2, \"fulltitle\": \"Show two\", \"duration_string\": \"1\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"requested_downloads\": [{\"_filename\": \"Show two [102].mp3\", \"filename\": \"Show two [102].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"103\", \"url\": \"https://api.spreaker.com/download/episode/103/three.mp3\", \"display_id\": \"103\", \"title\": \"Show three\", \"description\": null, \"timestamp\": null, \"uploader\": null, \"uploader_id\": null, \"creator\": null, \"view_count\": null, \"like_count\": null, \"comment_count\": null, \"format\": \"MPEG Layer 3\", \"format_id\": \"mp3\", \"container\": \"mp3\", \"ext\": \"mp3\", \"thumbnails\": [], \"series\": null, \"extractor_key\": \"Spreaker\", \"playlist_count\": 3, \"playlist\": \"4652058\", \"playlist_id\": \"4652058\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://api.spreaker.com/show/4652058\", \"n_entries\": 3, \"webpage_url\": \"https://api.spreaker.com/show/4652058\", \"webpage_url_basename\": \"4652058\", \"webpage_url_domain\": \"api.spreaker.com\", \"playlist_index\": 3, \"__last_playlist_index\": 3, \"extractor\": \"SpreakerShow\", \"playlist_autonumber\": 3, \"fulltitle\": \"Show three\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"requested_downloads\": [{\"_filename\": \"Show three [103].mp3\", \"filename\": \"Show three [103].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://api.spreaker.com/show/4652058\", \"original_url\": \"https://api.spreaker.com/show/4652058\", \"webpage_url_basename\": \"4652058\", \"webpage_url_domain\": \"api.spreaker.com\", \"extractor\": \"SpreakerShow\", \"extractor_key\": \"SpreakerShow\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://api.spreaker.com/show/4652058",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4652058\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"101\", \"url\": \"https://api.spreaker.com/download/episode/101/one.mp3\", \"display_id\": \"101\", \"title\": \"Show one\", \"description\": null, \"timestamp\": 1577934245, \"uploader\": \"Host\", \"uploader_id\": null, \"creator\": \"Host\", \"duration\": 60.0, \"view_count\": 1, \"like_count\": null, \"comment_count\": null, \"format\": \"MPEG Layer 3\", \"format_id\": \"mp3\", \"container\": \"mp3\", \"ext\": \"mp3\", \"thumbnails\": [], \"series\": \"The Show\", \"extractor_key\": \"Spreaker\", \"playlist_count\": 3, \"playlist\": \"4652058\", \"playlist_id\": \"4652058\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://api.spreaker.com/show/4652058\", \"n_entries\": 3, \"webpage_url\": \"https://api.spreaker.com/show/4652058\", \"webpage_url_basename\": \"4652058\", \"webpage_url_domain\": \"api.spreaker.com\", \"playlist_index\": 1, \"__last_playlist_index\": 3, \"extractor\": \"SpreakerShow\", \"playlist_autonumber\": 1, \"fulltitle\": \"Show one\", \"duration_string\": \"1:00\", \"upload_date\": \"20200102\", \"release_year\": null, \"creators\": [\"Host\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"requested_downloads\": [{\"_filename\": \"Show one [101].mp3\", \"filename\": \"Show one [101].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"102\", \"url\": \"https://api.spreaker.com/download/episode/102/two.mp3\", \"display_id\": \"two\", \"title\": \"Show two\", \"description\": null, \"timestamp\": null, \"uploader\": null, \"uploader_id\": null, \"creator\": null, \"duration\": 1.5, \"view_count\": null, \"like_count\": null, \"comment_count\": null, \"format\": \"MPEG Layer 3\", \"format_id\": \"mp3\", \"container\": \"mp3\", \"ext\": \"mp3\", \"thumbnails\": [], \"series\": null, \"extractor_key\": \"Spreaker\", \"playlist_count\": 3, \"playlist\": \"4652058\", \"playlist_id\": \"4652058\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://api.spreaker.com/show/4652058\", \"n_entries\": 3, \"webpage_url\": \"https://api.spreaker.com/show/4652058\", \"webpage_url_basename\": \"4652058\", \"webpage_url_domain\": \"api.spreaker.com\", \"playlist_index\": 2, \"__last_playlist_index\": 3, \"extractor\": \"SpreakerShow\", \"playlist_autonumber\": 2, \"fulltitle\": \"Show two\", \"duration_string\": \"1\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"requested_downloads\": [{\"_filename\": \"Show two [102].mp3\", \"filename\": \"Show two [102].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"103\", \"url\": \"https://api.spreaker.com/download/episode/103/three.mp3\", \"display_id\": \"103\", \"title\": \"Show three\", \"description\": null, \"timestamp\": null, \"uploader\": null, \"uploader_id\": null, \"creator\": null, \"view_count\": null, \"like_count\": null, \"comment_count\": null, \"format\": \"MPEG Layer 3\", \"format_id\": \"mp3\", \"container\": \"mp3\", \"ext\": \"mp3\", \"thumbnails\": [], \"series\": null, \"extractor_key\": \"Spreaker\", \"playlist_count\": 3, \"playlist\": \"4652058\", \"playlist_id\": \"4652058\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://api.spreaker.com/show/4652058\", \"n_entries\": 3, \"webpage_url\": \"https://api.spreaker.com/show/4652058\", \"webpage_url_basename\": \"4652058\", \"webpage_url_domain\": \"api.spreaker.com\", \"playlist_index\": 3, \"__last_playlist_index\": 3, \"extractor\": \"SpreakerShow\", \"playlist_autonumber\": 3, \"fulltitle\": \"Show three\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"requested_downloads\": [{\"_filename\": \"Show three [103].mp3\", \"filename\": \"Show three [103].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://api.spreaker.com/show/4652058\", \"original_url\": \"https://api.spreaker.com/show/4652058\", \"webpage_url_basename\": \"4652058\", \"webpage_url_domain\": \"api.spreaker.com\", \"extractor\": \"SpreakerShow\", \"extractor_key\": \"SpreakerShow\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://api.spreaker.com/show/4652058",
+   "args": [
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(duration)s|%(extractor)s|%(extractor_key)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "4652058|NA|1|101|Show one|60.0|SpreakerShow|Spreaker|https://api.spreaker.com/show/4652058",
+    "4652058|NA|2|102|Show two|1.5|SpreakerShow|Spreaker|https://api.spreaker.com/show/4652058",
+    "4652058|NA|3|103|Show three|NA|SpreakerShow|Spreaker|https://api.spreaker.com/show/4652058"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://api.spreaker.com/show/4652058",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(playlist_index)s-%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[SpreakerShow] Extracting URL: https://api.spreaker.com/show/4652058",
+    "[download] Downloading playlist: 4652058",
+    "[SpreakerShow] 4652058: Downloading JSON page 1",
+    "[SpreakerShow] 4652058: Downloading JSON page 2",
+    "[SpreakerShow] Playlist 4652058: Downloading 3 items of 3",
+    "[download] Downloading item 1 of 3",
+    "[info] 101: Downloading 1 format(s): mp3",
+    "[download] Destination: 1-101.mp3",
+    "[download] Download completed",
+    "[download] Downloading item 2 of 3",
+    "[info] 102: Downloading 1 format(s): mp3",
+    "[download] Destination: 2-102.mp3",
+    "[download] Download completed",
+    "[download] Downloading item 3 of 3",
+    "[info] 103: Downloading 1 format(s): mp3",
+    "[download] Destination: 3-103.mp3",
+    "[download] Download completed",
+    "[download] Finished downloading playlist: 4652058"
+   ],
+   "stderr": [],
+   "files": {
+    "1-101.mp3": 6,
+    "2-102.mp3": 6,
+    "3-103.mp3": 8
+   }
+  },
+  {
+   "url": "https://api.spreaker.com/show/4652058",
+   "args": [
+    "-I",
+    "1",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4652058\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"101\", \"url\": \"https://api.spreaker.com/download/episode/101/one.mp3\", \"display_id\": \"101\", \"title\": \"Show one\", \"description\": null, \"timestamp\": 1577934245, \"uploader\": \"Host\", \"uploader_id\": null, \"creator\": \"Host\", \"duration\": 60.0, \"view_count\": 1, \"like_count\": null, \"comment_count\": null, \"format\": \"MPEG Layer 3\", \"format_id\": \"mp3\", \"container\": \"mp3\", \"ext\": \"mp3\", \"thumbnails\": [], \"series\": \"The Show\", \"extractor_key\": \"Spreaker\", \"playlist_count\": null, \"playlist\": \"4652058\", \"playlist_id\": \"4652058\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://api.spreaker.com/show/4652058\", \"n_entries\": 1, \"webpage_url\": \"https://api.spreaker.com/show/4652058\", \"webpage_url_basename\": \"4652058\", \"webpage_url_domain\": \"api.spreaker.com\", \"playlist_index\": 1, \"__last_playlist_index\": 1, \"extractor\": \"SpreakerShow\", \"playlist_autonumber\": 1, \"fulltitle\": \"Show one\", \"duration_string\": \"1:00\", \"upload_date\": \"20200102\", \"release_year\": null, \"creators\": [\"Host\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"requested_downloads\": [{\"_filename\": \"Show one [101].mp3\", \"filename\": \"Show one [101].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://api.spreaker.com/show/4652058\", \"original_url\": \"https://api.spreaker.com/show/4652058\", \"webpage_url_basename\": \"4652058\", \"webpage_url_domain\": \"api.spreaker.com\", \"extractor\": \"SpreakerShow\", \"extractor_key\": \"SpreakerShow\", \"release_year\": null, \"requested_entries\": [1], \"playlist_count\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.spreaker.com/podcast/health-wealth--5918323?key=k",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5918323\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.spreaker.com/podcast/health-wealth--5918323?key=k\", \"original_url\": \"https://www.spreaker.com/podcast/health-wealth--5918323?key=k\", \"webpage_url_basename\": \"health-wealth--5918323\", \"webpage_url_domain\": \"spreaker.com\", \"extractor\": \"SpreakerShow\", \"extractor_key\": \"SpreakerShow\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.spreaker.com/show/5887186/episodes/feed",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5887186\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"102\", \"url\": \"https://api.spreaker.com/download/episode/102/two.mp3\", \"display_id\": \"two\", \"title\": \"Show two\", \"description\": null, \"timestamp\": null, \"uploader\": null, \"uploader_id\": null, \"creator\": null, \"duration\": 1.5, \"view_count\": null, \"like_count\": null, \"comment_count\": null, \"format\": \"MPEG Layer 3\", \"format_id\": \"mp3\", \"container\": \"mp3\", \"ext\": \"mp3\", \"thumbnails\": [], \"series\": null, \"extractor_key\": \"Spreaker\", \"playlist_count\": 1, \"playlist\": \"5887186\", \"playlist_id\": \"5887186\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.spreaker.com/show/5887186/episodes/feed\", \"n_entries\": 1, \"webpage_url\": \"https://www.spreaker.com/show/5887186/episodes/feed\", \"webpage_url_basename\": \"feed\", \"webpage_url_domain\": \"spreaker.com\", \"playlist_index\": 1, \"__last_playlist_index\": 1, \"extractor\": \"SpreakerShow\", \"playlist_autonumber\": 1, \"fulltitle\": \"Show two\", \"duration_string\": \"1\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"requested_downloads\": [{\"_filename\": \"Show two [102].mp3\", \"filename\": \"Show two [102].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://www.spreaker.com/show/5887186/episodes/feed\", \"original_url\": \"https://www.spreaker.com/show/5887186/episodes/feed\", \"webpage_url_basename\": \"feed\", \"webpage_url_domain\": \"spreaker.com\", \"extractor\": \"SpreakerShow\", \"extractor_key\": \"SpreakerShow\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://api.spreaker.com/show/777",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "101|Show one"
+   ],
+   "stderr": [
+    "ERROR: 'title'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://api.spreaker.com/show/777",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[SpreakerShow] Extracting URL: https://api.spreaker.com/show/777",
+    "[download] Downloading playlist: 777",
+    "[SpreakerShow] 777: Downloading JSON page 1",
+    "[SpreakerShow] Playlist 777: Downloading 2 items of 1",
+    "[download] Downloading item 1 of 2",
+    "[info] 101: Downloading 1 format(s): mp3",
+    "[download] Destination: 101.mp3",
+    "[download] Download completed",
+    "[download] Finished downloading playlist: 777"
+   ],
+   "stderr": [
+    "ERROR: 'title'"
+   ],
+   "files": {
+    "101.mp3": 6
+   }
+  },
+  {
+   "url": "https://api.spreaker.com/show/777",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "{\"id\": \"777\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"101\", \"url\": \"https://api.spreaker.com/download/episode/101/one.mp3\", \"display_id\": \"101\", \"title\": \"Show one\", \"description\": null, \"timestamp\": 1577934245, \"uploader\": \"Host\", \"uploader_id\": null, \"creator\": \"Host\", \"duration\": 60.0, \"view_count\": 1, \"like_count\": null, \"comment_count\": null, \"format\": \"MPEG Layer 3\", \"format_id\": \"mp3\", \"container\": \"mp3\", \"ext\": \"mp3\", \"thumbnails\": [], \"series\": \"The Show\", \"extractor_key\": \"Spreaker\", \"playlist_count\": 1, \"playlist\": \"777\", \"playlist_id\": \"777\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://api.spreaker.com/show/777\", \"n_entries\": 2, \"webpage_url\": \"https://api.spreaker.com/show/777\", \"webpage_url_basename\": \"777\", \"webpage_url_domain\": \"api.spreaker.com\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"SpreakerShow\", \"playlist_autonumber\": 1, \"fulltitle\": \"Show one\", \"duration_string\": \"1:00\", \"upload_date\": \"20200102\", \"release_year\": null, \"creators\": [\"Host\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"requested_downloads\": [{\"_filename\": \"Show one [101].mp3\", \"filename\": \"Show one [101].mp3\", \"__write_download_archive\": false}]}, null], \"webpage_url\": \"https://api.spreaker.com/show/777\", \"original_url\": \"https://api.spreaker.com/show/777\", \"webpage_url_basename\": \"777\", \"webpage_url_domain\": \"api.spreaker.com\", \"extractor\": \"SpreakerShow\", \"extractor_key\": \"SpreakerShow\", \"release_year\": null, \"requested_entries\": [1, 2], \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "ERROR: 'title'"
+   ],
+   "files": {}
+  }
+ ]
+}
