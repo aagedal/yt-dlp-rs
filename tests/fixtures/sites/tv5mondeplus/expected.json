@@ -1,0 +1,111 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.tv5monde.com/tv/video/65931-baudouin",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Baudouin, l'h\\u00e9ritage d'un roi\", \"episode\": \"BAUDOUIN, L'HERITAGE D'UN ROI\", \"series\": \"Baudouin, l'h\\u00e9ritage d'un roi\", \"timestamp\": 1706641242, \"duration\": 4842, \"id\": \"3FPa7JMu21_6D4BA7b\", \"display_id\": \"65931-baudouin\", \"description\": \"Un documentaire.\", \"thumbnail\": \"https://psi.tv5monde.test/baudouin.jpg\", \"formats\": [{\"url\": \"https://dl.tv5monde.test/65931.mp4\", \"format_id\": \"mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\"}, {\"format_id\": \"hls-921-0\", \"format_index\": null, \"url\": \"https://hls.tv5monde.test/65931/360/index.m3u8\", \"manifest_url\": \"https://hls.tv5monde.test/65931/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921-0 - 640x360\"}, {\"format_id\": \"hls-921-1\", \"format_index\": null, \"url\": \"https://cdn.tv5monde.test/materials/3FPa7JMu21_6D4BA7b/hls/360/index.m3u8\", \"manifest_url\": \"https://cdn.tv5monde.test/materials/3FPa7JMu21_6D4BA7b/hls/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921-1 - 640x360\"}, {\"format_id\": \"hls-921-2\", \"format_index\": null, \"url\": \"https://cdn.tv5monde.test/materials/3FPa7JMu21_6D4BA7b/hls/360/index.m3u8\", \"manifest_url\": \"https://cdn.tv5monde.test/materials/3FPa7JMu21_6D4BA7b/hls/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921-2 - 640x360\"}, {\"format_id\": \"hls-3121-0\", \"format_index\": null, \"url\": \"https://hls.tv5monde.test/65931/720/index.m3u8\", \"manifest_url\": \"https://hls.tv5monde.test/65931/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121-0 - 1280x720\"}, {\"format_id\": \"hls-3121-1\", \"format_index\": null, \"url\": \"https://cdn.tv5monde.test/materials/3FPa7JMu21_6D4BA7b/hls/720/index.m3u8\", \"manifest_url\": \"https://cdn.tv5monde.test/materials/3FPa7JMu21_6D4BA7b/hls/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121-1 - 1280x720\"}, {\"format_id\": \"hls-3121-2\", \"format_index\": null, \"url\": \"https://cdn.tv5monde.test/materials/3FPa7JMu21_6D4BA7b/hls/720/index.m3u8\", \"manifest_url\": \"https://cdn.tv5monde.test/materials/3FPa7JMu21_6D4BA7b/hls/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121-2 - 1280x720\"}], \"subtitles\": {\"fra\": [{\"url\": \"https://sub.tv5monde.test/65931_fr.vtt\", \"ext\": \"vtt\"}], \"English\": [{\"url\": \"https://sub.tv5monde.test/65931_en.vtt\", \"ext\": \"vtt\"}]}, \"webpage_url\": \"https://www.tv5monde.com/tv/video/65931-baudouin\", \"original_url\": \"https://www.tv5monde.com/tv/video/65931-baudouin\", \"webpage_url_basename\": \"65931-baudouin\", \"webpage_url_domain\": \"tv5monde.com\", \"extractor\": \"TV5MONDE\", \"extractor_key\": \"TV5MondePlus\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://psi.tv5monde.test/baudouin.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Baudouin, l'h\\u00e9ritage d'un roi\", \"duration_string\": \"1:20:42\", \"upload_date\": \"20240130\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121-2\", \"format_index\": null, \"url\": \"https://cdn.tv5monde.test/materials/3FPa7JMu21_6D4BA7b/hls/720/index.m3u8\", \"manifest_url\": \"https://cdn.tv5monde.test/materials/3FPa7JMu21_6D4BA7b/hls/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121-2 - 1280x720\", \"_filename\": \"Baudouin, l'h\\u00e9ritage d'un roi [3FPa7JMu21_6D4BA7b].mp4\", \"filename\": \"Baudouin, l'h\\u00e9ritage d'un roi [3FPa7JMu21_6D4BA7b].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [TV5MONDE] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "WARNING: [TV5MONDE] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tv5monde.com/tv/video/65931-baudouin",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[TV5MONDE] Extracting URL: https://www.tv5monde.com/tv/video/65931-baudouin",
+    "[TV5MONDE] 65931-baudouin: Downloading webpage",
+    "[TV5MONDE] 65931-baudouin: Downloading m3u8 information",
+    "[TV5MONDE] 65931-baudouin: Downloading deferred info",
+    "[TV5MONDE] 65931-baudouin: Downloading m3u8 information",
+    "[TV5MONDE] 65931-baudouin: Downloading m3u8 information",
+    "[info] Available subtitles for 3FPa7JMu21_6D4BA7b:",
+    "Language Formats",
+    "fra      vtt",
+    "English  vtt"
+   ],
+   "stderr": [
+    "WARNING: [TV5MONDE] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "WARNING: [TV5MONDE] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tv5monde.com/tv/video/65931-baudouin",
+   "args": [
+    "--no-progress",
+    "-f",
+    "unknown_video",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[TV5MONDE] Extracting URL: https://www.tv5monde.com/tv/video/65931-baudouin",
+    "[TV5MONDE] 65931-baudouin: Downloading webpage",
+    "[TV5MONDE] 65931-baudouin: Downloading m3u8 information",
+    "[TV5MONDE] 65931-baudouin: Downloading deferred info",
+    "[TV5MONDE] 65931-baudouin: Downloading m3u8 information",
+    "[TV5MONDE] 65931-baudouin: Downloading m3u8 information"
+   ],
+   "stderr": [
+    "WARNING: [TV5MONDE] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "WARNING: [TV5MONDE] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [TV5MONDE] 3FPa7JMu21_6D4BA7b: Requested format is not available. Use --list-formats for a list of available formats"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tv5monde.com/tv/video/52952-toute-la-vie",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0b0b0b0b-1111-2222-3333-444444444444\", \"display_id\": \"52952-toute-la-vie\", \"title\": \"TV5MONDE video #0b0b0b0b-1111-2222-3333-444444444444\", \"description\": null, \"thumbnail\": null, \"formats\": [{\"url\": \"https://dl.tv5monde.test/52952.mp4\", \"format_id\": \"mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.tv5monde.com/tv/video/52952-toute-la-vie\", \"original_url\": \"https://www.tv5monde.com/tv/video/52952-toute-la-vie\", \"webpage_url_basename\": \"52952-toute-la-vie\", \"webpage_url_domain\": \"tv5monde.com\", \"extractor\": \"TV5MONDE\", \"extractor_key\": \"TV5MondePlus\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://dl.tv5monde.test/52952.mp4\", \"format_id\": \"mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\", \"_filename\": \"TV5MONDE video #0b0b0b0b-1111-2222-3333-444444444444 [0b0b0b0b-1111-2222-3333-444444444444].mp4\", \"filename\": \"TV5MONDE video #0b0b0b0b-1111-2222-3333-444444444444 [0b0b0b0b-1111-2222-3333-444444444444].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [TV5MONDE] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "WARNING: [TV5MONDE] 52952-toute-la-vie: Failed to parse JSON: Expecting property name enclosed in double quotes in '{bad': line 1 column 2 (char 1)",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tv5monde.com/tv/video/1-geo",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [TV5MONDE] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [TV5MONDE] 1-geo: This video is not available from your location due to geo restriction"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tv5monde.com/tv/video/2-vide",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [TV5MONDE] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [TV5MONDE] 2-vide: Unable to extract video player loader; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

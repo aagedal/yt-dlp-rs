@@ -1,0 +1,64 @@
+[
+ {
+  "url": "https://www.tv4play.se/program/nyheterna/avsnitt/13315940",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.tv4play.se/program/nyheterna/avsnitt/13315940",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.tv4play.se/program/nyheterna/avsnitt/13315940",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "http://www.tv4play.se/program/farang/3922081",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://www.tv4play.se/program/farang/3922081",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(timestamp)s|%(duration)s|%(thumbnail)s|%(is_live)s|%(series)s|%(season_number)s|%(episode)s|%(episode_number)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "http://www.tv4.se/kalla-fakta/klipp/kalla-fakta-5-english-subtitles-2491650",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://www.tv4play.se/iframe/video/3054113",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://www.tv4play.se/sport/3060959",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "http://www.tv4play.se/film/2378136",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://www.tv4play.se/barn/looney-tunes?video_id=3062412",
+  "args": [
+   "-j"
+  ]
+ }
+]

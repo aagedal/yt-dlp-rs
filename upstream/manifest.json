@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "repository": "https://github.com/yt-dlp/yt-dlp.git",
-  "baseline": "fa9886678eb65103303c627b8e013f13f8999b41",
-  "upstream_version": "2026.10.21",
+  "baseline": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+  "upstream_version": "2026.10.26",
   "components": [
     {
       "name": "freesound",
@@ -164,6 +164,18 @@
         "tests/existing_media.rs"
       ],
       "scope": "Streaming whole-file transfers, page referrers for HTML5 media, no-clobber publication, bounded download retries for HTTP 5xx statuses and transport/body failures (HttpFD), upstream download error reporting, in-invocation range resume guarded by strong ETags, known lengths and response validation; shared transient HTTP classification/backoff with extraction; bounded Retry-After delay-seconds/preferred HTTP-date shared with extraction; byte-progress observers and cooperative cancellation checkpoints including retry-wait polling; FILE.part resume across invocations; no Last-Modified validators or obsolete HTTP-date Retry-After formats"
+    },
+    {
+      "name": "medaltv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/medaltv.py"
+      ],
+      "rust": [
+        "src/extractor/medaltv.rs",
+        "tests/fixtures/sites/medaltv/"
+      ],
+      "scope": "MedalTVIE content API JSON, fatal HLS and http-source formats without privacy-protected guest URLs, the socialVideoUrl fallback with its warning, and the traverse_obj metadata. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "mediaite",
@@ -532,7 +544,7 @@
         "src/extractor/bilibili.rs",
         "tests/fixtures/sites/bilibili/"
       ],
-      "scope": "BiliBiliIE initial state, anthology playlists and parts, WBI-signed playurl DASH and legacy durl formats, chapters, danmaku subtitles and errors; no interactive videos, multi-part FLV, SRT subtitles, comments or other Bilibili extractors; compared with pinned upstream output through the fixture proxy"
+      "scope": "BiliBiliIE initial state, anthology playlists and parts, WBI-signed playurl DASH and legacy durl formats, chapters, danmaku subtitles, multi-part FLV multi_video results and errors; no interactive videos, prefer_multi_flv, SRT subtitles, comments or other Bilibili extractors; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "bitchute",
@@ -944,6 +956,30 @@
         "tests/fixtures/sites/tv2/"
       ],
       "scope": "TV2IE asset metadata, POSTed HLS/DASH playback with 401 geo/login/description errors, _is_valid_url stream checks, master-only HLS, DASH, progressive and skipped ISM streams, DRM and unbound video_url errors, the leftover own url (kept in -J for merged and single selections through info_order OWN_URL), and TV2ArticleIE asset playlists compared with pinned upstream output through the fixture proxy; HDS (f4m) streams follow the shared non-fatal extract_f4m_optional, and KatsomoIE/MTVUutisetArticleIE (broken upstream) are not ported"
+    },
+    {
+      "name": "tv4",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tv4.py"
+      ],
+      "rust": [
+        "src/extractor/tv4.rs",
+        "tests/fixtures/sites/tv4/"
+      ],
+      "scope": "TV4IE playback2.a2d.tv asset metadata and play manifestUrl (KeyError and fatal API errors), the manifest's non-fatal HLS, DASH, HDS and Smooth Streaming siblings (_extract_ism_formats_and_subtitles with expat-compatible Failed to parse XML warnings for non-XML bodies), merged subtitles, the Sweden-only geo error and the traverse_obj metadata fields. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "tv5mondeplus",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tv5mondeplus.py"
+      ],
+      "rust": [
+        "src/extractor/tv5mondeplus.rs",
+        "tests/fixtures/sites/tv5mondeplus/"
+      ],
+      "scope": "TV5MondePlusIE impersonated page, geo error, video_player_loader broadcast files with deferred bearer-token resolution, HLS/DASH/direct formats, metadata, captions and page title/summary. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "xvideos",
@@ -1622,6 +1658,30 @@
       "scope": "LoomIE GraphQL metadata, source and chapters, session URL formats (HLS/DASH/progressive) and transcript subtitles; no LoomFolderIE; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "err",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/err.py"
+      ],
+      "rust": [
+        "src/extractor/err.rs",
+        "tests/fixtures/sites/err/"
+      ],
+      "scope": "ERRJupiterIE getContentPageData media sources (first-seen order instead of set order), DRM error, metadata and episode fields; ERRArhiivIE content/video sources and info metadata. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "lrt",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/lrt.py"
+      ],
+      "rust": [
+        "src/extractor/lrt.rs",
+        "tests/fixtures/sites/lrt/"
+      ],
+      "scope": "LRTStreamIE live HLS from the escaped get_streams_url, LRTVODIE media_info JW Player items merged with API metadata (content/canonical URL fallback), LRTRadioIE rest-api media HLS and metadata. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "maariv",
       "status": "partial",
       "upstream": [
@@ -1756,6 +1816,18 @@
       "scope": "NewsyIE data-video-player attribute via js_to_json, fatal HLS formats and subtitles from a truthy stream, KeyError/Unable to extract data paths and the player metadata merged under the page JSON-LD (merge_dicts, missing-JSON-LD warning) compared with pinned upstream output through the fixture proxy; JSON-LD media URLs/formats/IDs/subtitles remain explicit native errors"
     },
     {
+      "name": "nhk",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nhk.py"
+      ],
+      "rust": [
+        "src/extractor/nhk.rs",
+        "tests/fixtures/sites/nhk/"
+      ],
+      "scope": "NhkVodIE showsapi episodes and clips via _extract_episode_info (video/audio HLS, expired-stream error, metadata, thumbnails) and NhkVodProgramIE generator playlists with page titles; the NHK for School and Radiru extractors are not ported. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "niconico",
       "status": "partial",
       "upstream": [
@@ -1827,6 +1899,18 @@
         "tests/fixtures/sites/oneplace/"
       ],
       "scope": "OnePlacePodcastIE page media URL, title fallbacks and description as an untyped mp3 result compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "orf",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/orf.py"
+      ],
+      "rust": [
+        "src/extractor/orf.rs",
+        "tests/fixtures/sites/orf/"
+      ],
+      "scope": "ORFONIE episode/encrypted API (obfuscated ID), DRM error, non-fatal hls/dash sources, _embedded.subtitle de tracks, orftvthek old archive IDs, the traverse_obj metadata and --no-playlist segment selection with the _yes_playlist messages; segment-only episodes and orfon:prefer_segments_playlist as multi_video playlists of generator-extracted segments (concatenated by the default --concat-playlist multi_video); ORFRadioIE broadcast playlists of loop streams and ORFPodcastIE episodes; ORFIPTVIE and ORFFM4StoryIE are not ported. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "parlview",
@@ -2084,6 +2168,19 @@
       "scope": "RTRFMIE playShow details, restream MP3 URL as an untyped result, expired-episode/details/KeyError errors and release_year processing compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "rtve",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rtve.py"
+      ],
+      "rust": [
+        "src/extractor/rtve.rs",
+        "tests/fixtures/sites/rtve/",
+        "tools/generate_rtve_fixtures.py"
+      ],
+      "scope": "RTVEALaCartaIE, RTVEAudioIE, RTVELiveIE and RTVETelevisionIE: API metadata and errors, RTVEBaseIE's base64 PNG media URL decoding (rtveplayw and default managers, non-fatal), HLS/DASH/progressive formats with qualities, API subtitles, _parse_metadata, live data-setup assets with JSON-LD, television contentUrl url results. RTVEProgramIE is not ported. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "rumble",
       "status": "partial",
       "upstream": [
@@ -2218,6 +2315,18 @@
       "scope": "SpiegelIE _VALID_URL and the page mediaId as a url_transparent jwplatform: result with display_id and og:title compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "srgssr",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/srgssr.py"
+      ],
+      "rust": [
+        "src/extractor/srgssr.rs",
+        "tests/fixtures/sites/srgssr/"
+      ],
+      "scope": "SRGSSRIE mediaComposition chapters (onlyChapters for videos) with the No media information found, KeyError, geo (CH, no bypass) and SRGSSR said block-reason errors; HTTP(S) resources ranked by qualities(SD, HD), non-fatal plain HLS, AKAMAI HLS/HDS via the non-fatal akahd token and _extract_akamai_formats_and_subtitles without hosts (hds formats with extra_param_to_segment_url, hls formats, packaging parameters stripped from unsigned URLs), position-0 podcast formats, subtitleList tracks with the business-unit default language, title/description/timestamp/thumbnail/duration; SRGSSRPlayIE play-site URLs as srgssr: url results. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "streamable",
       "status": "partial",
       "upstream": [
@@ -2261,6 +2370,18 @@
         "tests/fixtures/sites/streetvoice/"
       ],
       "scope": "StreetVoiceIE v4 song API metadata and non-fatal POSTed HLS/HTTP/original file URLs as mp3 formats, with KeyError, HTTP warning and empty-body warning paths compared with pinned upstream output through the fixture proxy; other unparsable format responses remain explicit native errors"
+    },
+    {
+      "name": "substack",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/substack.py"
+      ],
+      "rust": [
+        "src/extractor/substack.rs",
+        "tests/fixtures/sites/substack/"
+      ],
+      "scope": "SubstackIE window._preloads JSON.parse data, custom-domain canonical URLs, podcast URLs with HEAD-resolved extensions, video posts' non-fatal HLS and MP4 sources, the unsupported page type error and post metadata; _extract_embed_urls (generic custom-domain detection) is not ported. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "svt",

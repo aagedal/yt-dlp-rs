@@ -1,4 +1,4 @@
-//! Upstream `yt_dlp.utils.jslib.devalue.parse_iter` (pinned fa98866): the
+//! Upstream `yt_dlp.utils.jslib.devalue.parse_iter` (pinned f264a6c): the
 //! flat index-referencing array format of Rich Harris's `devalue`, as
 //! Nuxt's `__NUXT_DATA__` payloads use it.
 //!

@@ -1,0 +1,89 @@
+{
+ "routes": [
+  {
+   "url": "https://haleynahman.substack.com/p/i-made-a-vlog?s=r",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><head><title>Substack</title><script src=\"https://substackcdn.com/bundle/main.js\"></script></head><body><script>window._preloads        = JSON.parse(\"{\\\"pub\\\": {\\\"name\\\": \\\"Maybe Baby\\\"}, \\\"post\\\": {\\\"id\\\": 47591, \\\"type\\\": \\\"video\\\", \\\"title\\\": \\\"I made a vlog\\\", \\\"description\\\": \\\"My first vlog \\u2014 ever.\\\", \\\"cover_image\\\": \\\"https://substackcdn.test/cover.jpg\\\", \\\"publication_id\\\": 1273, \\\"videoUpload\\\": {\\\"id\\\": \\\"5ad2b1a8-vlog\\\"}}}\")</script><script>window._analyticsConfig = JSON.parse(\"{}\")</script></body></html>"
+  },
+  {
+   "url": "https://persuasion1.substack.com/p/summers",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><head><title>Substack</title><script src=\"https://substackcdn.com/bundle/main.js\"></script></head><body><script>window._preloads        = JSON.parse(\"{\\\"pub\\\": {\\\"name\\\": \\\"Persuasion\\\"}, \\\"post\\\": {\\\"id\\\": \\\"p1\\\", \\\"type\\\": \\\"podcast\\\", \\\"title\\\": \\\"Summers\\\", \\\"podcast_url\\\": \\\"https://api.substack.test/feed/podcast/1234/audio\\\", \\\"publication_id\\\": null}}\")</script><script>window._analyticsConfig = JSON.parse(\"{}\")</script></body></html>"
+  },
+  {
+   "url": "https://andrewzimmern.substack.com/p/mussels",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><head><title>Substack</title><script src=\"https://substackcdn.com/bundle/main.js\"></script></head><body><script>window._preloads        = JSON.parse(\"{\\\"post\\\": {\\\"id\\\": 2, \\\"type\\\": \\\"podcast\\\", \\\"podcast_url\\\": \\\"https://cdn.substack.test/mussels.m4a\\\"}}\")</script><script>window._analyticsConfig = JSON.parse(\"{}\")</script></body></html>"
+  },
+  {
+   "url": "https://mollymovieclub.substack.com/p/interstellar",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><head><title>Substack</title><script src=\"https://substackcdn.com/bundle/main.js\"></script></head><body><script>window._preloads        = JSON.parse(\"{\\\"domainInfo\\\": {\\\"customDomain\\\": \\\"www.mollymovieclub.com\\\"}, \\\"pub\\\": {\\\"name\\\": \\\"Molly Movie Club\\\"}, \\\"post\\\": {\\\"id\\\": 3, \\\"type\\\": \\\"video\\\", \\\"title\\\": \\\"Interstellar\\\", \\\"videoUpload\\\": {\\\"id\\\": \\\"vid3\\\"}}}\")</script><script>window._analyticsConfig = JSON.parse(\"{}\")</script></body></html>"
+  },
+  {
+   "url": "https://news.substack.com/p/letter",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><head><title>Substack</title><script src=\"https://substackcdn.com/bundle/main.js\"></script></head><body><script>window._preloads        = JSON.parse(\"{\\\"post\\\": {\\\"id\\\": 4, \\\"type\\\": \\\"newsletter\\\", \\\"title\\\": \\\"Letter\\\"}}\")</script><script>window._analyticsConfig = JSON.parse(\"{}\")</script></body></html>"
+  },
+  {
+   "url": "https://news.substack.com/p/untyped",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><head><title>Substack</title><script src=\"https://substackcdn.com/bundle/main.js\"></script></head><body><script>window._preloads        = JSON.parse(\"{\\\"post\\\": {\\\"id\\\": 5}}\")</script><script>window._analyticsConfig = JSON.parse(\"{}\")</script></body></html>"
+  },
+  {
+   "url": "https://news.substack.com/p/plain",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>no preloads</body></html>"
+  },
+  {
+   "url": "https://haleynahman.substack.com/api/v1/video/upload/5ad2b1a8-vlog/src?type=hls",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://haleynahman.substack.com/api/v1/video/upload/5ad2b1a8-vlog/src?type=mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "substack-mp4"
+  },
+  {
+   "url": "https://api.substack.test/feed/podcast/1234/audio",
+   "status": 302,
+   "headers": {
+    "Location": "https://cdn.substack.test/podcast/summers.mp3?Expires=1"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://cdn.substack.test/podcast/summers.mp3?Expires=1",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "substack-podcast"
+  },
+  {
+   "url": "https://www.mollymovieclub.com/api/v1/video/upload/vid3/src?type=hls",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  }
+ ]
+}

@@ -102,7 +102,7 @@ fn unsupported(what: &str) -> Error {
 }
 
 /// `mimetype2ext(mime, default=None)`.
-fn mimetype2ext(mime: Option<&Value>) -> Value {
+pub(crate) fn mimetype2ext(mime: Option<&Value>) -> Value {
     const MISSING: &str = "\u{0}";
     match mime {
         Some(Value::String(mime)) => {

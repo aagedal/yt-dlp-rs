@@ -2,9 +2,9 @@
 //! `__INITIAL_STATE__`, anthologies (playlists of their parts, or one part
 //! with `?p=N`), the WBI-signed `playurl` API's DASH and legacy `durl`
 //! formats (other `accept_quality` values requested one by one), chapters,
-//! the danmaku subtitle track and upstream's errors. Interactive videos,
-//! multi-part FLV results, inline SRT subtitles and bangumi redirects are
-//! reported as unsupported.
+//! the danmaku subtitle track, multi-part FLV `multi_video` results and
+//! upstream's errors. Interactive videos, inline SRT subtitles and bangumi
+//! redirects are reported as unsupported.
 use super::Extractor;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
@@ -1101,9 +1101,21 @@ impl Extractor for BiliBili {
             .first()
             .is_some_and(|format| truthy(format.get("fragments")))
         {
-            return Err(Error::UnsupportedHtml5(
-                "Bilibili multi-part FLV videos are not supported natively".into(),
-            ));
+            // FLV parts carry their own timestamps, which binary
+            // concatenation corrupts: upstream's `multi_video` workaround.
+            let duration = float(
+                play_info.as_ref().and_then(|info| info.get("timelength")),
+                1000.0,
+            );
+            return multi_part_flv(
+                client,
+                page,
+                dict,
+                &formats[0],
+                duration,
+                (&video_id, &cid_text),
+            )
+            .map(Some);
         }
         dict.insert("formats".into(), json!([]));
         dict.insert(
@@ -1207,6 +1219,101 @@ impl Extractor for BiliBili {
             ),
         ))))
     }
+}
+
+/// `{**metainfo, '_type': 'multi_video', 'entries': [...], 'duration'}`:
+/// one entry per FLV part of the first format (its subtitles on the first
+/// entry only).
+fn multi_part_flv(
+    client: &Client,
+    page: &Url,
+    mut metainfo: Map<String, Value>,
+    format: &Map<String, Value>,
+    duration: Option<f64>,
+    (video_id, cid): (&str, &str),
+) -> Result<ExtractResult> {
+    let id = metainfo
+        .shift_remove("id")
+        .and_then(|id| id.as_str().map(str::to_owned))
+        .unwrap_or_default();
+    let title = metainfo.get("title").cloned().unwrap_or(Value::Null);
+    let headers = metainfo.get("http_headers").cloned().unwrap_or(Value::Null);
+    let format_id = format.get("format_id").cloned().unwrap_or(Value::Null);
+    let parts = format
+        .get("fragments")
+        .and_then(Value::as_array)
+        .cloned()
+        .unwrap_or_default();
+    let mut entries = Vec::new();
+    for (index, part) in parts.iter().enumerate() {
+        let entry_id = format!("{id}_{index}");
+        let mut fields: Vec<(&str, Value)> = part
+            .as_object()
+            .into_iter()
+            .flatten()
+            .map(|(key, value)| (key.as_str(), value.clone()))
+            .collect();
+        fields.push(("format_id", format_id.clone()));
+        let part_format = super::dict_format(fields, NAME, &entry_id)?;
+        let subtitles = if index == 0 {
+            if super::subtitles_requested() {
+                subtitles(client, video_id, cid)?
+            } else {
+                json!({})
+            }
+        } else {
+            Value::Null
+        };
+        let none = subtitles.is_null();
+        let mut entry = super::dict_info(
+            page,
+            (NAME, NAME),
+            vec![
+                ("id", Value::from(entry_id.as_str())),
+                ("title", title.clone()),
+                ("http_headers", headers.clone()),
+                ("formats", Value::Null),
+                ("subtitles", subtitles),
+            ],
+            vec![part_format],
+        );
+        if none {
+            // `'subtitles': None` stays in the dict.
+            entry.extra.insert("subtitles".into(), Value::Null);
+        }
+        entries.push(entry);
+    }
+    let mut keys: Vec<String> = metainfo.keys().cloned().collect();
+    keys.insert(
+        keys.iter()
+            .position(|key| key == "_old_archive_ids")
+            .unwrap_or(keys.len()),
+        "id".into(),
+    );
+    let title = metainfo
+        .shift_remove("title")
+        .and_then(|title| title.as_str().map(str::to_owned))
+        .unwrap_or_default();
+    metainfo.insert(
+        "duration".into(),
+        duration.map_or(Value::Null, |d| json!(d)),
+    );
+    metainfo.insert(
+        crate::info_order::INFO_SHAPE.into(),
+        format!("playlist-dict;{};after=duration", keys.join(",")).into(),
+    );
+    metainfo.insert(crate::info::MULTI_VIDEO.into(), Value::Bool(true));
+    Ok(ExtractResult::Playlist(PlaylistInfo {
+        id,
+        title,
+        webpage_url: page.clone(),
+        extractor: NAME.into(),
+        extractor_key: NAME.into(),
+        nested: Vec::new(),
+        pending: None,
+        entries,
+        extra: metainfo,
+    }))
 }
 
 /// `_get_subtitles(video_id, cid)`: the danmaku XML and the player's tracks.

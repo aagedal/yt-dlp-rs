@@ -1,0 +1,159 @@
+[
+ {
+  "url": "https://on.orf.at/video/14210000/school-of-champions-48",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14210000/school-of-champions-48",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14226549/15639808/jugendbande-einbrueche-aus-langeweile",
+  "args": [
+   "--no-playlist",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14226549/15639808/jugendbande-einbrueche-aus-langeweile",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(description)s|%(media_type)s|%(duration)s|%(age_limit)s|%(timestamp)s|%(release_timestamp)s|%(modified_timestamp)s|%(thumbnail)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14226549/99/unbekannt",
+  "args": [
+   "--no-playlist",
+   "--print",
+   "%(id)s|%(title)s|%(description)s|%(media_type)s|%(duration)s|%(age_limit)s|%(timestamp)s|%(release_timestamp)s|%(modified_timestamp)s|%(thumbnail)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/3220355",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227000",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227000",
+  "args": [
+   "--ignore-no-formats-error",
+   "--print",
+   "%(id)s|%(title)s|%(formats)s"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/404",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+  "args": [
+   "--print",
+   "playlist:%(_type)s|%(id)s|%(title)s|%(playlist_count)s|%(duration)s|%(media_type)s",
+   "--print",
+   "%(id)s|%(playlist_index)s|%(title)s|%(webpage_url)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+  "args": [
+   "--playlist-items",
+   "2",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14226549",
+  "args": [
+   "--extractor-args",
+   "orfon:prefer_segments_playlist",
+   "--print",
+   "playlist:%(_type)s|%(id)s|%(title)s",
+   "--print",
+   "%(id)s|%(title)s"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+  "args": [
+   "--simulate",
+   "--exec",
+   "playlist:false"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+  "args": [
+   "-i",
+   "--simulate",
+   "--exec",
+   "playlist:false"
+  ]
+ },
+ {
+  "url": "https://radiothek.orf.at/ooe/20220801/OGMO",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://ooe.orf.at/player/20220801/OGMO",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(description)s|%(duration)s|%(timestamp)s|%(series)s|%(ext)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://oe3.orf.at/player/20200424/3WEK",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://sound.orf.at/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://sound.orf.at/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023",
+  "args": [
+   "--no-progress",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://sound.orf.at/podcast/fm4/show/leer",
+  "args": [
+   "-j"
+  ]
+ }
+]

@@ -1,0 +1,81 @@
+{
+ "routes": [
+  {
+   "url": "https://services.err.ee/api/v2/vodContent/getContentPageData?contentId=1211107",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "content-1211107.json"
+  },
+  {
+   "url": "https://services.err.ee/api/v2/vodContent/getContentPageData?contentId=1609145945",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "content-1609145945.json"
+  },
+  {
+   "url": "https://services.err.ee/api/v2/vodContent/getContentPageData?contentId=5",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "content-5.json"
+  },
+  {
+   "url": "https://services.err.ee/api/v2/vodContent/getContentPageData?contentId=6",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {}}"
+  },
+  {
+   "url": "https://vod.err.test/1211107/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://vod.err.test/1609145945/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://vod.err.test/1211107/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://vod.err.test/1211107/file.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "err-file"
+  },
+  {
+   "url": "https://arhiiv.err.ee/api/v1/content/video/kontsertpalad",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"media\": {\"src\": {\"hls\": \"https://vod.err.test/arhiiv/kontsertpalad/master.m3u8\"}}, \"info\": {\"title\": \"Kontsertpalad: 255\", \"seriesTitle\": \"Kontsertpalad\", \"seriesId\": \"\", \"episode\": \"255\", \"synopsis\": \"Beethoven\", \"uploadDate\": \"2022-10-19T04:02:42Z\", \"dateModified\": \"2024-06-17T10:43:02Z\", \"year\": 1970}}"
+  },
+  {
+   "url": "https://vod.err.test/arhiiv/kontsertpalad/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://arhiiv.err.ee/api/v1/content/video/tuhi",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"info\": {\"title\": \"Tühi\"}}"
+  }
+ ]
+}

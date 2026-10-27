@@ -1,0 +1,104 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://medal.tv/games/valorant/clips/jTBFnLKdLy15K",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"jTBFnLKdLy15K\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://cdn.medal.test/clips/jTBF/360/index.m3u8\", \"manifest_url\": \"https://cdn.medal.test/clips/jTBF/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://cdn.medal.test/clips/jTBF/720/index.m3u8\", \"manifest_url\": \"https://cdn.medal.test/clips/jTBF/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}, {\"url\": \"https://cdn.medal.test/clips/jTBF/source.mp4\", \"format_id\": \"http-source\", \"ext\": \"mp4\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-source - unknown\"}], \"title\": \"Mornu's clutch\", \"description\": \"\", \"timestamp\": 1651628243, \"duration\": 13, \"view_count\": 212, \"like_count\": 3, \"comment_count\": 1, \"uploader\": \"Aciel\", \"uploader_id\": \"38286\", \"uploader_url\": \"https://medal.tv/users/38286\", \"tags\": [\"valorant\", \"clutch\"], \"thumbnail\": \"https://cdn.medal.test/thumb.jpg\", \"webpage_url\": \"https://medal.tv/games/valorant/clips/jTBFnLKdLy15K\", \"original_url\": \"https://medal.tv/games/valorant/clips/jTBFnLKdLy15K\", \"webpage_url_basename\": \"jTBFnLKdLy15K\", \"webpage_url_domain\": \"medal.tv\", \"extractor\": \"MedalTV\", \"extractor_key\": \"MedalTV\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.medal.test/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"jTBFnLKdLy15K\", \"fulltitle\": \"Mornu's clutch\", \"duration_string\": \"13\", \"upload_date\": \"20220504\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.medal.test/clips/jTBF/source.mp4\", \"format_id\": \"http-source\", \"ext\": \"mp4\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-source - unknown\", \"_filename\": \"Mornu's clutch [jTBFnLKdLy15K].mp4\", \"filename\": \"Mornu's clutch [jTBFnLKdLy15K].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [MedalTV] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://medal.tv/games/valorant/clips/jTBFnLKdLy15K",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[MedalTV] Extracting URL: https://medal.tv/games/valorant/clips/jTBFnLKdLy15K",
+    "[MedalTV] jTBFnLKdLy15K: Downloading JSON metadata",
+    "[MedalTV] jTBFnLKdLy15K: Downloading m3u8 information",
+    "[info] Available formats for jTBFnLKdLy15K:",
+    "ID          EXT RESOLUTION FPS | FILESIZE   TBR PROTO | VCODEC      ACODEC",
+    "-----------------------------------------------------------------------------",
+    "hls-921     mp4 640x360     25 | ~1.43MiB  921k m3u8  | avc1.4d401e mp4a.40.2",
+    "hls-3121    mp4 1280x720    25 | ~4.84MiB 3121k m3u8  | avc1.4d401f mp4a.40.2",
+    "http-source mp4 unknown        |                https | unknown     unknown"
+   ],
+   "stderr": [
+    "WARNING: [MedalTV] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://medal.tv/games/valorant/clips/guest1",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"guest1\", \"formats\": [{\"url\": \"https://social.medal.test/guest1.mp4\", \"format_id\": \"social-video\", \"ext\": \"mp4\", \"quality\": -1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"social-video - unknown\"}], \"title\": \"Guest only\", \"uploader_id\": \"\", \"webpage_url\": \"https://medal.tv/games/valorant/clips/guest1\", \"original_url\": \"https://medal.tv/games/valorant/clips/guest1\", \"webpage_url_basename\": \"guest1\", \"webpage_url_domain\": \"medal.tv\", \"extractor\": \"MedalTV\", \"extractor_key\": \"MedalTV\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"guest1\", \"fulltitle\": \"Guest only\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://social.medal.test/guest1.mp4\", \"format_id\": \"social-video\", \"ext\": \"mp4\", \"quality\": -1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"social-video - unknown\", \"_filename\": \"Guest only [guest1].mp4\", \"filename\": \"Guest only [guest1].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [MedalTV] Video formats are not available through API, falling back to social video URL"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://medal.tv/games/valorant/clips/guest1",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[MedalTV] Extracting URL: https://medal.tv/games/valorant/clips/guest1",
+    "[MedalTV] guest1: Downloading JSON metadata",
+    "[MedalTV] guest1: Checking social video URL",
+    "[info] guest1: Downloading 1 format(s): social-video",
+    "[download] Destination: guest1.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [MedalTV] Video formats are not available through API, falling back to social video URL"
+   ],
+   "files": {
+    "guest1.mp4": 18
+   }
+  },
+  {
+   "url": "https://www.medal.tv/games/x/clips/bare1?theater=true",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"bare1\", \"formats\": [{\"url\": \"https://cdn.medal.test/clips/bare/source.mp4\", \"format_id\": \"http-source\", \"ext\": \"mp4\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-source - unknown\"}], \"webpage_url\": \"https://www.medal.tv/games/x/clips/bare1?theater=true\", \"original_url\": \"https://www.medal.tv/games/x/clips/bare1?theater=true\", \"webpage_url_basename\": \"bare1\", \"webpage_url_domain\": \"medal.tv\", \"extractor\": \"MedalTV\", \"extractor_key\": \"MedalTV\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"bare1\", \"fulltitle\": null, \"title\": \"MedalTV video #bare1\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.medal.test/clips/bare/source.mp4\", \"format_id\": \"http-source\", \"ext\": \"mp4\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-source - unknown\", \"_filename\": \"MedalTV video #bare1 [bare1].mp4\", \"filename\": \"MedalTV video #bare1 [bare1].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://medal.tv/games/x/clips/missing",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [MedalTV] missing: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

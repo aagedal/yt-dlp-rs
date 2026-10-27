@@ -1,0 +1,81 @@
+{
+ "chapterList": [
+  {
+   "id": "6348259",
+   "title": "Autre sujet"
+  },
+  {
+   "id": "6348260",
+   "title": "Le 19h30",
+   "description": "Le journal du soir",
+   "date": "2014-12-01T19:30:00+01:00",
+   "imageUrl": "https://www.rts.ch/2014/12/01/19/30/6348260.image",
+   "duration": 1796760,
+   "position": 1,
+   "podcastHdUrl": "https://download-media.srf.ch/ignored.mp4",
+   "resourceList": [
+    {
+     "url": "https://rts-vod.example.test/http/6348260-sd.mp4",
+     "protocol": "HTTPS",
+     "encoding": "H264",
+     "quality": "SD"
+    },
+    {
+     "url": "https://rts-vod.example.test/http/6348260-hd.mp4",
+     "protocol": "HTTPS",
+     "encoding": "H264",
+     "quality": "HD"
+    },
+    {
+     "url": "https://rts-vod.example.test/hls/6348260/master.m3u8",
+     "protocol": "HLS",
+     "encoding": "H264",
+     "quality": "HD"
+    },
+    {
+     "url": "https://srgssr-vh.akamaihd.net/i/rts/2014/12/01/le19h30,_,1200,2000,.mp4.csmil/master.m3u8?__b__=800&b=500-1000&__a__=off",
+     "protocol": "HLS",
+     "quality": "HD",
+     "tokenType": "AKAMAI"
+    },
+    {
+     "url": "rtmp://rts-vod.example.test/6348260",
+     "protocol": "RTMP",
+     "quality": "SD"
+    },
+    {
+     "url": "https://rts-vod.example.test/hds/6348260/manifest.f4m",
+     "protocol": "HDS",
+     "quality": "SD"
+    },
+    {
+     "url": "",
+     "protocol": "HTTP"
+    },
+    {
+     "url": "http://rts-vod.example.test/http/6348260-unknown.mp4",
+     "protocol": "HTTP"
+    }
+   ],
+   "subtitleList": [
+    {
+     "url": "https://rts-subs.example.test/6348260/fr.vtt",
+     "locale": "fr",
+     "format": "VTT"
+    },
+    {
+     "url": "https://rts-subs.example.test/6348260/default.xml",
+     "format": "TTML"
+    },
+    {
+     "url": "https://rts-subs.example.test/6348260/fr.xml",
+     "locale": "fr",
+     "format": "TTML"
+    },
+    {
+     "locale": "it"
+    }
+   ]
+  }
+ ]
+}

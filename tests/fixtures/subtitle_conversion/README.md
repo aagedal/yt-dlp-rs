@@ -1,7 +1,7 @@
 # Saved subtitle conversion plans and exact TTML text
 
 Source: official yt-dlp checkout at
-`fa9886678eb65103303c627b8e013f13f8999b41` (2026.10.21).
+`f264a6cbd1f630894da0f368df00f8aae50140e0` (2026.10.21).
 
 The corpus exercises actual `parse_options`,
 `FFmpegSubtitlesConvertorPP.run` from `yt_dlp/postprocessor/ffmpeg.py`, and

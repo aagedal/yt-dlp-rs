@@ -1,0 +1,56 @@
+[
+ {
+  "url": "https://jupiter.err.ee/1211107/siin-me-oleme",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://jupiter.err.ee/1211107/siin-me-oleme",
+  "args": [
+   "--no-progress",
+   "-f",
+   "http",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://jupiter.err.ee/1609145945/impulss",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://jupiterpluss.err.ee/5/kaitstud",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://jupiterpluss.err.ee/5/kaitstud",
+  "args": [
+   "--ignore-no-formats-error",
+   "--print",
+   "%(id)s|%(title)s|%(formats)s"
+  ]
+ },
+ {
+  "url": "https://lasteekraan.err.ee/6/x",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://arhiiv.err.ee/video/kontsertpalad",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://arhiiv.err.ee/video/vaata/tuhi",
+  "args": [
+   "-j"
+  ]
+ }
+]

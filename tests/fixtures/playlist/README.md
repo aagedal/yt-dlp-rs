@@ -7,7 +7,7 @@ Native Rust tests consume the same cases. Two separate source-only Unicode-digit
 cases demonstrate accepted upstream grammar that native explicitly rejects.
 
 Reference: official yt-dlp commit
-`fa9886678eb65103303c627b8e013f13f8999b41`:
+`f264a6cbd1f630894da0f368df00f8aae50140e0`:
 
 - `yt_dlp/utils/_utils.py:2418`: `PlaylistEntries`; around 2446 grammar/parser,
   2468 legacy bounds/override warning, 2520 inclusive index/slice iteration.

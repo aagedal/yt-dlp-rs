@@ -1,0 +1,20 @@
+{
+ "title": "Guten Morgen OÖ",
+ "subtitle": "<p>Mit <b>Musik</b> und Nachrichten.</p>",
+ "programTitle": "Guten Morgen",
+ "streams": [
+  {
+   "loopStreamId": "2022-08-01_0459_tl_66_7DaysMon1_319062.mp3",
+   "start": 1659322789123,
+   "end": 1659340789123
+  },
+  {
+   "loopStreamId": null,
+   "start": 1
+  },
+  {
+   "loopStreamId": "2022-08-01_0959_tl_66_7DaysMon1_319063.mp3",
+   "start": 1659340789000
+  }
+ ]
+}

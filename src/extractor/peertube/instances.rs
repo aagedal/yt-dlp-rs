@@ -1,5 +1,5 @@
 //! Upstream `PeerTubeIE._INSTANCES_RE` (`yt_dlp/extractor/peertube.py`),
-//! generated from the pinned upstream checkout (fa9886678eb65103303c627b8e013f13f8999b41)
+//! generated from the pinned upstream checkout (f264a6cbd1f630894da0f368df00f8aae50140e0)
 //! by `tools/generate_peertube_instances.py`; do not edit by hand.
 
 /// The instance host patterns (regex escaped), in upstream order.

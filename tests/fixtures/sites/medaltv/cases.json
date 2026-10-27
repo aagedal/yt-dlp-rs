@@ -1,0 +1,40 @@
+[
+ {
+  "url": "https://medal.tv/games/valorant/clips/jTBFnLKdLy15K",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://medal.tv/games/valorant/clips/jTBFnLKdLy15K",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://medal.tv/games/valorant/clips/guest1",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://medal.tv/games/valorant/clips/guest1",
+  "args": [
+   "--no-progress",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://www.medal.tv/games/x/clips/bare1?theater=true",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://medal.tv/games/x/clips/missing",
+  "args": [
+   "-j"
+  ]
+ }
+]

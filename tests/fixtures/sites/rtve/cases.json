@@ -1,0 +1,87 @@
+[
+ {
+  "url": "http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(alt_title)s|%(description)s|%(timestamp)s|%(release_timestamp)s|%(modified_timestamp)s|%(thumbnail)s|%(duration)s|%(is_live)s|%(series)s|%(_old_archive_ids)s"
+  ]
+ },
+ {
+  "url": "http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/",
+  "args": [
+   "--no-progress",
+   "-f",
+   "HD_FULL",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://www.rtve.es/infantil/serie/dino-ranch/video/pequeno-gran-ayudante/6868808/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.rtve.es/play/videos/x/y/111/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.rtve.es/filmoteca/x/y/222/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.rtve.es/play/audios/crims/crims-ca-mercadal/6766574/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.rtve.es/play/videos/directo/canales-lineales/la-1/",
+  "args": [
+   "--print",
+   "%(id)s|%(is_live)s|%(description)s|%(timestamp)s|%(thumbnail)s|%(format_id)s|%(protocol)s"
+  ]
+ },
+ {
+  "url": "https://www.rtve.es/directo/sin-setup/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.rtve.es/television/20091103/video-inedito/299020.shtml",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s"
+  ]
+ },
+ {
+  "url": "https://www.rtve.es/television/20091103/sin-video/299021.shtml",
+  "args": [
+   "-j"
+  ]
+ }
+]

@@ -1,0 +1,130 @@
+{
+ "routes": [
+  {
+   "url": "http://www.rtve.es/api/videos/3088905/config/alacarta_videos.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"page\": {\"items\": [{\"id\": \"3088905\", \"state\": \"EMIT\", \"title\": \" En torno a la silla \", \"alt\": \"Silla\", \"description\": \"<p>Programa <b>educativo</b></p>\", \"dateOfEmission\": \"22-11-2016 00:00:00\", \"publicationDate\": \"2016-11-22 10:30:00\", \"modificationDate\": \"2016-11-22 11:00:00\", \"thumbnail\": \"not a url\", \"image\": \"https://img2.rtve.test/v/aventura_3088905.png\", \"duration\": 1216981, \"live\": false, \"programInfo\": {\"title\": \"La aventura del <i>Saber</i>\"}}]}}"
+  },
+  {
+   "url": "http://www.rtve.es/api/videos/6868808/config/alacarta_videos.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"page\": {\"items\": [{\"state\": \"DESPU\", \"title\": \"Pequeño gran ayudante\"}]}}"
+  },
+  {
+   "url": "http://www.rtve.es/api/videos/111/config/alacarta_videos.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"page\": {\"items\": [{\"title\": \"Sin estado\"}]}}"
+  },
+  {
+   "url": "http://www.rtve.es/api/videos/222/config/alacarta_videos.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"page\": {\"items\": []}}"
+  },
+  {
+   "url": "http://www.rtve.es/ztnr/movil/thumbnail/rtveplayw/videos/3088905.png?q=v2",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body_file": "video-3088905.png.txt"
+  },
+  {
+   "url": "https://rtve-hls.example.test/resources/3088905/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://rtve-dash.example.test/resources/3088905/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://rtve-mediavod.example.test/resources/3088905_HD_FULL.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "rtve-hd-full"
+  },
+  {
+   "url": "https://api2.rtve.es/api/videos/3088905/subtitulos.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"page\": {\"items\": [{\"lang\": \"es\", \"src\": \"https://www.rtve.test/resources/subs/3088905_es.vtt\"}, {\"src\": \"https://www.rtve.test/resources/subs/3088905_x.vtt\"}, {\"lang\": \"en\", \"src\": \"https://www.rtve.test/resources/subs/3088905_en.vtt\"}, {\"lang\": \"ca\"}]}}"
+  },
+  {
+   "url": "https://www.rtve.es/api/audios/6766574.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"page\": {\"items\": [{\"title\": \"Crims - Ca Mercadal\", \"programTitle\": \"<b>Crims</b>\", \"duration\": \"1813000\", \"imageSEO\": \"https://img.rtve.test/crims.jpg\"}]}}"
+  },
+  {
+   "url": "http://www.rtve.es/ztnr/movil/thumbnail/rtveplayw/audios/6766574.png?q=v2",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": ""
+  },
+  {
+   "url": "http://www.rtve.es/ztnr/movil/thumbnail/default/audios/6766574.png?q=v2",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body_file": "audio-6766574.png.txt"
+  },
+  {
+   "url": "https://www.rtve.es/play/videos/directo/canales-lineales/la-1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><head><title>La 1 en directo - RTVE.es</title>\n<script type=\"application/ld+json\">{\"@context\": \"https://schema.org\", \"@type\": \"VideoObject\", \"name\": \"La 1\", \"description\": \"Directo de La 1\", \"thumbnailUrl\": \"https://img.rtve.test/la1.jpg\", \"uploadDate\": \"2020-01-01T00:00:00+01:00\"}</script></head>\n<body><div class=\"videoPlayer liveplayer\" data-setup='{\"idAsset\": 1688877, \"isLive\": true}'></div></body></html>"
+  },
+  {
+   "url": "http://www.rtve.es/ztnr/movil/thumbnail/rtveplayw/videos/1688877.png?q=v2",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body_file": "video-1688877.png.txt"
+  },
+  {
+   "url": "https://rtve-live.example.test/la1/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.rtve.es/directo/sin-setup/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>x</title></head></html>"
+  },
+  {
+   "url": "https://www.rtve.es/television/20091103/video-inedito/299020.shtml",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta itemprop=\"contentUrl\" content=\"http://www.rtve.es/alacarta/videos/la-aventura-del-saber/aventuraentornosilla/3088905/\"></head></html>"
+  },
+  {
+   "url": "https://www.rtve.es/television/20091103/sin-video/299021.shtml",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Sin vídeo</title></head></html>"
+  }
+ ]
+}

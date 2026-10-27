@@ -1,0 +1,70 @@
+[
+ {
+  "url": "https://haleynahman.substack.com/p/i-made-a-vlog?s=r",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://haleynahman.substack.com/p/i-made-a-vlog?s=r",
+  "args": [
+   "--no-progress",
+   "-f",
+   "best[protocol=https]",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://persuasion1.substack.com/p/summers",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://persuasion1.substack.com/p/summers",
+  "args": [
+   "--no-progress",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://andrewzimmern.substack.com/p/mussels",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://mollymovieclub.substack.com/p/interstellar",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://news.substack.com/p/letter",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://news.substack.com/p/letter",
+  "args": [
+   "--ignore-no-formats-error",
+   "--print",
+   "%(id)s|%(title)s|%(formats)s"
+  ]
+ },
+ {
+  "url": "https://news.substack.com/p/untyped",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://news.substack.com/p/plain",
+  "args": [
+   "-j"
+  ]
+ }
+]

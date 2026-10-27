@@ -1,0 +1,149 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://haleynahman.substack.com/p/i-made-a-vlog?s=r",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"47591\", \"formats\": [{\"url\": \"https://haleynahman.substack.com/api/v1/video/upload/5ad2b1a8-vlog/src?type=mp4\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}, {\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://haleynahman.substack.com/api/v1/video/upload/5ad2b1a8-vlog/360/index.m3u8\", \"manifest_url\": \"https://haleynahman.substack.com/api/v1/video/upload/5ad2b1a8-vlog/src?type=hls\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}, {\"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://haleynahman.substack.com/api/v1/video/upload/5ad2b1a8-vlog/720/index.m3u8\", \"manifest_url\": \"https://haleynahman.substack.com/api/v1/video/upload/5ad2b1a8-vlog/src?type=hls\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://haleynahman.substack.com/api/v1/video/upload/5ad2b1a8-vlog/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"title\": \"I made a vlog\", \"description\": \"My first vlog \\u2014 ever.\", \"thumbnail\": \"https://substackcdn.test/cover.jpg\", \"uploader\": \"Maybe Baby\", \"uploader_id\": \"1273\", \"webpage_url\": \"https://haleynahman.substack.com/p/i-made-a-vlog?s=r\", \"original_url\": \"https://haleynahman.substack.com/p/i-made-a-vlog?s=r\", \"webpage_url_basename\": \"i-made-a-vlog\", \"webpage_url_domain\": \"haleynahman.substack.com\", \"extractor\": \"Substack\", \"extractor_key\": \"Substack\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://substackcdn.test/cover.jpg\", \"id\": \"0\"}], \"display_id\": \"47591\", \"fulltitle\": \"I made a vlog\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://haleynahman.substack.com/api/v1/video/upload/5ad2b1a8-vlog/720/index.m3u8\", \"manifest_url\": \"https://haleynahman.substack.com/api/v1/video/upload/5ad2b1a8-vlog/src?type=hls\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\", \"_filename\": \"I made a vlog [47591].mp4\", \"filename\": \"I made a vlog [47591].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://haleynahman.substack.com/p/i-made-a-vlog?s=r",
+   "args": [
+    "--no-progress",
+    "-f",
+    "best[protocol=https]",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Substack] Extracting URL: https://haleynahman.substack.com/p/i-made-a-vlog?s=r",
+    "[Substack] i-made-a-vlog: Downloading webpage",
+    "[Substack] 5ad2b1a8-vlog: Downloading m3u8 information",
+    "[info] 47591: Downloading 1 format(s): 0",
+    "[download] Destination: 47591.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "47591.mp4": 12
+   }
+  },
+  {
+   "url": "https://persuasion1.substack.com/p/summers",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"p1\", \"formats\": [{\"url\": \"https://api.substack.test/feed/podcast/1234/audio\", \"ext\": \"mp3\", \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"title\": \"Summers\", \"description\": null, \"thumbnail\": null, \"uploader\": \"Persuasion\", \"uploader_id\": null, \"webpage_url\": \"https://persuasion1.substack.com/p/summers\", \"original_url\": \"https://persuasion1.substack.com/p/summers\", \"webpage_url_basename\": \"summers\", \"webpage_url_domain\": \"persuasion1.substack.com\", \"extractor\": \"Substack\", \"extractor_key\": \"Substack\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"p1\", \"fulltitle\": \"Summers\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://api.substack.test/feed/podcast/1234/audio\", \"ext\": \"mp3\", \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Summers [p1].mp3\", \"filename\": \"Summers [p1].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://persuasion1.substack.com/p/summers",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Substack] Extracting URL: https://persuasion1.substack.com/p/summers",
+    "[Substack] summers: Downloading webpage",
+    "[Substack] summers: Resolving podcast file extension",
+    "[info] p1: Downloading 1 format(s): 0",
+    "[download] Destination: p1.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "p1.mp3": 16
+   }
+  },
+  {
+   "url": "https://andrewzimmern.substack.com/p/mussels",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2\", \"formats\": [{\"url\": \"https://cdn.substack.test/mussels.m4a\", \"protocol\": \"https\", \"ext\": \"m4a\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"title\": \"Substack video #2\", \"description\": null, \"thumbnail\": null, \"uploader\": null, \"uploader_id\": null, \"webpage_url\": \"https://andrewzimmern.substack.com/p/mussels\", \"original_url\": \"https://andrewzimmern.substack.com/p/mussels\", \"webpage_url_basename\": \"mussels\", \"webpage_url_domain\": \"andrewzimmern.substack.com\", \"extractor\": \"Substack\", \"extractor_key\": \"Substack\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2\", \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.substack.test/mussels.m4a\", \"protocol\": \"https\", \"ext\": \"m4a\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Substack video #2 [2].m4a\", \"filename\": \"Substack video #2 [2].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://mollymovieclub.substack.com/p/interstellar",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3\", \"formats\": [{\"url\": \"https://www.mollymovieclub.com/api/v1/video/upload/vid3/src?type=mp4\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}, {\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://www.mollymovieclub.com/api/v1/video/upload/vid3/360/index.m3u8\", \"manifest_url\": \"https://www.mollymovieclub.com/api/v1/video/upload/vid3/src?type=hls\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}, {\"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://www.mollymovieclub.com/api/v1/video/upload/vid3/720/index.m3u8\", \"manifest_url\": \"https://www.mollymovieclub.com/api/v1/video/upload/vid3/src?type=hls\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://www.mollymovieclub.com/api/v1/video/upload/vid3/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"title\": \"Interstellar\", \"description\": null, \"thumbnail\": null, \"uploader\": \"Molly Movie Club\", \"uploader_id\": null, \"webpage_url\": \"https://www.mollymovieclub.com/p/interstellar\", \"original_url\": \"https://mollymovieclub.substack.com/p/interstellar\", \"webpage_url_basename\": \"interstellar\", \"webpage_url_domain\": \"mollymovieclub.com\", \"extractor\": \"Substack\", \"extractor_key\": \"Substack\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"3\", \"fulltitle\": \"Interstellar\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://www.mollymovieclub.com/api/v1/video/upload/vid3/720/index.m3u8\", \"manifest_url\": \"https://www.mollymovieclub.com/api/v1/video/upload/vid3/src?type=hls\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\", \"_filename\": \"Interstellar [3].mp4\", \"filename\": \"Interstellar [3].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://news.substack.com/p/letter",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Substack] letter: Page type \"newsletter\" is not supported; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://news.substack.com/p/letter",
+   "args": [
+    "--ignore-no-formats-error",
+    "--print",
+    "%(id)s|%(title)s|%(formats)s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Substack] letter: Page type \"newsletter\" is not supported; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://news.substack.com/p/untyped",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: untyped: An extractor error has occurred. (caused by KeyError('type')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://news.substack.com/p/plain",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Substack] plain: Unable to extract json string; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

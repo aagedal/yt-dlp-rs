@@ -1,0 +1,50 @@
+[
+ {
+  "url": "https://www3.nhk.or.jp/nhkworld/en/shows/2049165/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www3.nhk.or.jp/nhkworld/en/shows/2049166/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www3.nhk.or.jp/nhkworld/en/shows/2049166/",
+  "args": [
+   "--ignore-no-formats-error",
+   "--print",
+   "%(id)s|%(title)s|%(formats)s"
+  ]
+ },
+ {
+  "url": "https://www3.nhk.or.jp/nhkworld/en/shows/audio/livinginjapan-20240901-1/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www3.nhk.or.jp/nhkworld/en/shows/9999o80/",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(series)s|%(episode)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "https://www3.nhk.or.jp/nhkworld/en/shows/japanrailway/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www3.nhk.or.jp/nhkworld/en/shows/japanrailway/",
+  "args": [
+   "--playlist-items",
+   "2",
+   "--print",
+   "%(id)s|%(title)s|%(playlist_count)s|%(webpage_url)s"
+  ]
+ }
+]

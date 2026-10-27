@@ -50,6 +50,7 @@ mod ebay;
 mod elonet;
 mod epoch;
 mod erocast;
+mod err;
 mod ettutv;
 mod europeantour;
 mod f4m;
@@ -117,11 +118,13 @@ mod livestreamfails;
 mod lnk;
 pub mod login;
 mod loom;
+mod lrt;
 mod maariv;
 mod maoritv;
 mod masters;
 mod matchitv;
 mod matchtv;
+mod medaltv;
 mod mediaite;
 mod megaphone;
 mod mir24tv;
@@ -132,6 +135,7 @@ mod mux;
 mod myvidster;
 mod netzkino;
 mod newsy;
+mod nhk;
 mod niconico;
 mod ninegag;
 mod ninenews;
@@ -144,6 +148,7 @@ mod odnoklassniki;
 mod onefootball;
 mod onenewsnz;
 mod oneplace;
+mod orf;
 pub(crate) mod paged;
 mod parlview;
 mod pearvideo;
@@ -168,6 +173,7 @@ mod rottentomatoes;
 mod roya;
 mod rss;
 mod rtrfm;
+mod rtve;
 mod rumble;
 mod rutube;
 mod sapo;
@@ -181,9 +187,11 @@ mod snapchat;
 mod soundcloud;
 mod soundgasm;
 mod spiegel;
+mod srgssr;
 mod steam;
 mod streamable;
 mod streetvoice;
+mod substack;
 mod svt;
 mod sztvhu;
 mod ted;
@@ -203,6 +211,8 @@ mod trtcocuk;
 mod trtworld;
 mod tumblr;
 mod tv2;
+mod tv4;
+mod tv5mondeplus;
 mod tvanouvelles;
 mod tvnoe;
 mod tweakers;
@@ -318,6 +328,10 @@ pub use ebay::{Ebay, suitable as ebay_suitable};
 pub use elonet::{Elonet, suitable as elonet_suitable};
 pub use epoch::{Epoch, suitable as epoch_suitable};
 pub use erocast::{Erocast, suitable as erocast_suitable};
+pub use err::{
+    ErrArhiiv, ErrJupiter, arhiiv_suitable as err_arhiiv_suitable,
+    jupiter_suitable as err_jupiter_suitable,
+};
 pub use ettutv::{EttuTv, suitable as ettutv_suitable};
 pub use europeantour::{EuropeanTour, suitable as europeantour_suitable};
 pub(crate) use f4m::fix_ampersands as fix_xml_ampersands;
@@ -416,11 +430,16 @@ pub use linkedin::{LinkedIn, suitable as linkedin_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
 pub use lnk::{Lnk, suitable as lnk_suitable};
 pub use loom::{Loom, suitable as loom_suitable};
+pub use lrt::{
+    LrtRadio, LrtStream, LrtVod, radio_suitable as lrt_radio_suitable,
+    stream_suitable as lrt_stream_suitable, vod_suitable as lrt_vod_suitable,
+};
 pub use maariv::{Maariv, suitable as maariv_suitable};
 pub use maoritv::{MaoriTV, suitable as maoritv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};
 pub use matchitv::{MatchiTv, suitable as matchitv_suitable};
 pub use matchtv::{MatchTv, suitable as matchtv_suitable};
+pub use medaltv::{MedalTv, suitable as medaltv_suitable};
 pub use mediaite::{Mediaite, suitable as mediaite_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
 pub use mir24tv::{Mir24Tv, suitable as mir24tv_suitable};
@@ -431,6 +450,11 @@ pub use mux::{Mux, suitable as mux_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
 pub use netzkino::{Netzkino, suitable as netzkino_suitable};
 pub use newsy::{Newsy, suitable as newsy_suitable};
+pub use nhk::{
+    NhkVod, NhkVodProgram, program_suitable as nhk_program_suitable,
+    vod_suitable as nhk_vod_suitable,
+};
+pub(crate) use nhk::{fetch_episodes as fetch_nhk_episodes, is_pending_state as nhk_pending_state};
 pub use niconico::{
     Niconico, NiconicoHistory, NiconicoPlaylist, NiconicoSeries, NiconicoUser, NicovideoSearch,
     NicovideoSearchDate, NicovideoSearchUrl, NicovideoTagUrl,
@@ -460,6 +484,11 @@ pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
 pub use onefootball::{OneFootball, suitable as onefootball_suitable};
 pub use onenewsnz::{OneNewsNz, suitable as onenewsnz_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
+pub use orf::{
+    OrfOn, OrfPodcast, OrfRadio, podcast_suitable as orf_podcast_suitable,
+    radio_suitable as orf_radio_suitable, suitable as orf_on_suitable,
+};
+pub(crate) use orf::{fetch_segments as fetch_orf_segments, is_pending_state as orf_pending_state};
 pub use parlview::{Parlview, suitable as parlview_suitable};
 pub use pearvideo::{PearVideo, suitable as pearvideo_suitable};
 pub use peertube::{
@@ -493,6 +522,11 @@ pub use rinsefm::{RinseFmArtistPlaylist, playlist_suitable as rinsefm_playlist_s
 pub use rottentomatoes::{RottenTomatoes, suitable as rottentomatoes_suitable};
 pub use roya::{RoyaLive, suitable as roya_suitable};
 pub use rtrfm::{Rtrfm, suitable as rtrfm_suitable};
+pub use rtve::{
+    RtveALaCarta, RtveAudio, RtveLive, RtveTelevision, alacarta_suitable as rtve_alacarta_suitable,
+    audio_suitable as rtve_audio_suitable, live_suitable as rtve_live_suitable,
+    television_suitable as rtve_television_suitable,
+};
 pub use rumble::{
     Rumble, RumbleEmbed, embed_suitable as rumble_embed_suitable, suitable as rumble_suitable,
 };
@@ -512,6 +546,9 @@ pub use soundgasm::{
     suitable as soundgasm_suitable,
 };
 pub use spiegel::{Spiegel, suitable as spiegel_suitable};
+pub use srgssr::{
+    SrgSsr, SrgSsrPlay, play_suitable as srgssr_play_suitable, suitable as srgssr_suitable,
+};
 pub use steam::{
     Steam, SteamCommunity, SteamCommunityBroadcast, broadcast_suitable as steam_broadcast_suitable,
     community_suitable as steam_community_suitable, suitable as steam_suitable,
@@ -521,6 +558,7 @@ pub(crate) use steam::{
 };
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use streetvoice::{StreetVoice, suitable as streetvoice_suitable};
+pub use substack::{Substack, suitable as substack_suitable};
 pub use svt::{
     SvtPage, SvtPlay, SvtSeries, page_suitable as svt_page_suitable,
     series_suitable as svt_series_suitable, suitable as svt_suitable,
@@ -558,6 +596,8 @@ pub use tumblr::{Tumblr, suitable as tumblr_suitable};
 pub use tv2::{
     Tv2, Tv2Article, article_suitable as tv2_article_suitable, suitable as tv2_suitable,
 };
+pub use tv4::{Tv4, suitable as tv4_suitable};
+pub use tv5mondeplus::{Tv5MondePlus, suitable as tv5mondeplus_suitable};
 pub use tvanouvelles::{
     TvaNouvelles, TvaNouvellesArticle, article_suitable as tvanouvelles_article_suitable,
     suitable as tvanouvelles_suitable,
@@ -1794,6 +1834,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("nrk:") && nrk::suitable(url))
         || (url.starts_with("peertube:") && peertube::suitable(url))
         || (url.starts_with("svt:") && svt::suitable(url))
+        || (url.starts_with("srgssr:") && srgssr::suitable(url))
         || (url.starts_with("iheartradio:") && iheart::suitable(url))
         || instagram::ios_suitable(url)
         || (url.starts_with("tco:") && twitter::shortener_suitable(url))
@@ -2013,6 +2054,105 @@ pub(crate) fn extract_f4m_optional(
         .collect()
 }
 
+/// The `xml.etree.ElementTree.ParseError` text (expat's) of a document that
+/// is not XML, for the inputs this port classifies: an empty or
+/// whitespace-only body (`no element found`), or a first token that is a
+/// name or `#name` (no `:`) followed by whitespace or the end (`syntax
+/// error`, like any M3U8 playlist). Other malformed documents are `None`.
+/// Checked against CPython on randomly generated documents.
+pub(crate) fn expat_error(text: &str) -> Option<String> {
+    let bytes = text.as_bytes();
+    let (mut line, mut column, mut index) = (1, 0, 0);
+    // Expat counts a byte order mark as a column.
+    if text.starts_with('\u{feff}') {
+        column = 1;
+        index = '\u{feff}'.len_utf8();
+    }
+    while index < bytes.len() && matches!(bytes[index], b' ' | b'\t' | b'\r' | b'\n') {
+        match bytes[index] {
+            b'\r' => {
+                (line, column) = (line + 1, 0);
+                if bytes.get(index + 1) == Some(&b'\n') {
+                    index += 1;
+                }
+            }
+            b'\n' => (line, column) = (line + 1, 0),
+            _ => column += 1,
+        }
+        index += 1;
+    }
+    if index == bytes.len() {
+        return Some(format!("no element found: line {line}, column {column}"));
+    }
+    let name = |byte: u8| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'-' | b'.');
+    let mut end = index;
+    if bytes[end] == b'#' {
+        end += 1;
+        if !bytes
+            .get(end)
+            .is_some_and(|byte| byte.is_ascii_alphabetic() || *byte == b'_')
+        {
+            return None;
+        }
+    } else if !name(bytes[end]) {
+        return None;
+    }
+    while end < bytes.len() && name(bytes[end]) {
+        end += 1;
+    }
+    if end < bytes.len() && !matches!(bytes[end], b' ' | b'\t' | b'\r' | b'\n') {
+        return None;
+    }
+    Some(format!("syntax error: line {line}, column {column}"))
+}
+
+/// `_extract_ism_formats_and_subtitles(url, video_id, ism_id=ISM_ID,
+/// fatal=False)`: `Downloading ISM manifest`; an HTTP error is a `Failed
+/// to download ISM manifest` warning and a body that is not XML (see
+/// [`expat_error`]) a `Failed to parse XML` one (no formats). Other malformed documents, and XML that
+/// is not a Smooth Streaming manifest (upstream's `KeyError`), are explicit
+/// errors.
+pub(crate) fn extract_ism_optional(
+    client: &Client,
+    extractor: &str,
+    manifest: &Url,
+    id: &str,
+    ism_id: Option<&str>,
+) -> Result<(Vec<crate::VideoFormat>, crate::Subtitles)> {
+    use crate::Error;
+    use std::io::Read;
+    crate::screen::screen(&format!("[{extractor}] {id}: Downloading ISM manifest"));
+    let mut response = match direct::request(client, manifest, None) {
+        Ok(response) => response,
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+            crate::screen::warning(&format!(
+                "[{extractor}] {id}: Failed to download ISM manifest: {}",
+                crate::upstream_error_text(&error)
+            ));
+            return Ok(Default::default());
+        }
+        Err(error) => return Err(error),
+    };
+    let final_url = response.url().clone();
+    let mut body = Vec::new();
+    response
+        .read_to_end(&mut body)
+        .map_err(Error::ExtractionRead)?;
+    let body = decode_content(response.headers(), body).map_err(Error::ExtractionRead)?;
+    let text = decode_webpage(&body, response.headers());
+    if let Some(error) = expat_error(&text) {
+        crate::screen::warning(&format!("[{extractor}] {id}: Failed to parse XML: {error}"));
+        return Ok(Default::default());
+    }
+    match ism::parse(&text, &final_url, ism_id) {
+        Some(parsed) => parsed.map(|parsed| (parsed.formats, parsed.subtitles)),
+        None => Err(Error::UnsupportedHtml5(
+            "ISM manifests that are malformed or not Smooth Streaming documents are not supported natively"
+                .into(),
+        )),
+    }
+}
+
 /// `_is_valid_url(url, video_id, item)`: a `Checking ITEM URL` request;
 /// an HTTP error is reported as `ITEM URL is invalid, skipping` and the URL
 /// is invalid. Non-HTTP URLs are valid without a request.
@@ -2196,6 +2336,42 @@ mod tests {
             map.append(name, HeaderValue::from_static(value));
         }
         map
+    }
+
+    #[test]
+    fn non_xml_documents_get_cpythons_parse_errors() {
+        // `str(ParseError)` from CPython's `ElementTree.fromstring`.
+        for (text, expected) in [
+            (
+                "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-STREAM-INF:BANDWIDTH=1,CODECS=\"a\"\nx.m3u8?a=b&c",
+                "syntax error: line 1, column 0",
+            ),
+            ("", "no element found: line 1, column 0"),
+            ("  \n ", "no element found: line 2, column 1"),
+            ("\r\n\r\nX", "syntax error: line 3, column 0"),
+            ("\r#EXT\t&", "syntax error: line 2, column 0"),
+            ("\u{feff}#EXTM3U", "syntax error: line 1, column 1"),
+            ("\n\n  hello world", "syntax error: line 3, column 2"),
+            ("1", "syntax error: line 1, column 0"),
+            ("-x\n<", "syntax error: line 1, column 0"),
+            ("\t#ab_-.9 {", "syntax error: line 1, column 1"),
+        ] {
+            assert_eq!(expat_error(text).as_deref(), Some(expected), "{text:?}");
+        }
+        // Not classified: invalid or unclosed tokens, colons, non-ASCII
+        // names and XML.
+        for text in [
+            "{\"a\":1}",
+            "b.&",
+            "EXTM3U:",
+            "#:b",
+            "#",
+            "%",
+            "<a/>",
+            "\u{e9}x",
+        ] {
+            assert_eq!(expat_error(text), None, "{text:?}");
+        }
     }
 
     #[test]

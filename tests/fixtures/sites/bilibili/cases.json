@@ -1,9 +1,75 @@
 [
- {"url": "https://www.bilibili.com/video/BV1xx411c7mD/", "args": ["-J"]},
- {"url": "https://www.bilibili.com/video/BV1an1", "args": ["--flat-playlist", "-J"]},
- {"url": "https://www.bilibili.com/video/BV1an1?p=2", "args": ["-J"]},
- {"url": "https://www.bilibili.com/video/BV1gone", "args": ["--print", "id"]},
- {"url": "https://www.bilibili.com/video/av404", "args": ["--print", "id"]},
- {"url": "https://www.bilibili.com/video/BV1xx411c7mD/", "args": ["--list-subs"]},
- {"url": "https://www.bilibili.com/video/BV1xx411c7mD/", "args": ["--no-progress", "-f", "30280", "-o", "%(id)s.%(ext)s"]}
+ {
+  "url": "https://www.bilibili.com/video/BV1xx411c7mD/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/video/BV1an1",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/video/BV1an1?p=2",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/video/BV1gone",
+  "args": [
+   "--print",
+   "id"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/video/av404",
+  "args": [
+   "--print",
+   "id"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/video/BV1xx411c7mD/",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/video/BV1xx411c7mD/",
+  "args": [
+   "--no-progress",
+   "-f",
+   "30280",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/video/BV1flv",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/video/BV1flv",
+  "args": [
+   "--print",
+   "playlist:%(_type)s|%(id)s|%(title)s|%(duration)s|%(uploader)s|%(playlist_count)s",
+   "--print",
+   "%(id)s|%(title)s|%(format_id)s|%(duration)s|%(filesize)s|%(url)s",
+   "--concat-playlist",
+   "never",
+   "-s"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/video/BV1flv",
+  "args": [
+   "--list-subs"
+  ]
+ }
 ]

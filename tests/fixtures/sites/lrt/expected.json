@@ -1,0 +1,96 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.lrt.lt/mediateka/tiesiogiai/lrt-opus",
+   "args": [
+    "--print",
+    "%(id)s|%(is_live)s|%(live_status)s|%(format_id)s|%(protocol)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "lrt-opus|True|is_live|hls-1|m3u8_native"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.lrt.lt/mediateka/irasas/2000127261/greita-ir-gardu",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2000127261\", \"title\": \"Greita ir gardu\", \"description\": \"Sicilijos makaronai\", \"thumbnail\": \"https://lrt-vod.test/img.jpg\", \"timestamp\": 1709644860, \"duration\": 1512.0, \"subtitles\": {}, \"alt_title\": null, \"genre\": null, \"channel\": null, \"season_number\": null, \"episode_number\": null, \"release_year\": null, \"age_limit\": null, \"formats\": [{\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://lrt-vod.test/vod/2000127261/360/index.m3u8\", \"manifest_url\": \"https://lrt-vod.test/vod/2000127261/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}, {\"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://lrt-vod.test/vod/2000127261/720/index.m3u8\", \"manifest_url\": \"https://lrt-vod.test/vod/2000127261/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\"}], \"tags\": [\"maistas\"], \"webpage_url\": \"https://www.lrt.lt/mediateka/irasas/2000127261/greita-ir-gardu\", \"original_url\": \"https://www.lrt.lt/mediateka/irasas/2000127261/greita-ir-gardu\", \"webpage_url_basename\": \"greita-ir-gardu\", \"webpage_url_domain\": \"lrt.lt\", \"extractor\": \"LRTVOD\", \"extractor_key\": \"LRTVOD\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://lrt-vod.test/img.jpg\", \"id\": \"0\"}], \"display_id\": \"2000127261\", \"fulltitle\": \"Greita ir gardu\", \"duration_string\": \"25:12\", \"upload_date\": \"20240305\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://lrt-vod.test/vod/2000127261/720/index.m3u8\", \"manifest_url\": \"https://lrt-vod.test/vod/2000127261/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\", \"_filename\": \"Greita ir gardu [2000127261].mp4\", \"filename\": \"Greita ir gardu [2000127261].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [LRTVOD] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.lrt.lt/mediateka/irasas/1013074524/kita-tema",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1013074524\", \"title\": \"Kita tema\", \"description\": null, \"thumbnail\": null, \"timestamp\": null, \"subtitles\": {}, \"alt_title\": null, \"genre\": null, \"channel\": null, \"season_number\": null, \"episode_number\": null, \"release_year\": null, \"age_limit\": null, \"formats\": [{\"url\": \"https://lrt-vod.test/audio/kita-tema.mp3\", \"vcodec\": \"none\", \"ext\": \"mp3\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}], \"webpage_url\": \"https://www.lrt.lt/mediateka/irasas/1013074524/kita-tema\", \"original_url\": \"https://www.lrt.lt/mediateka/irasas/1013074524/kita-tema\", \"webpage_url_basename\": \"kita-tema\", \"webpage_url_domain\": \"lrt.lt\", \"extractor\": \"LRTVOD\", \"extractor_key\": \"LRTVOD\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1013074524\", \"fulltitle\": \"Kita tema\", \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://lrt-vod.test/audio/kita-tema.mp3\", \"vcodec\": \"none\", \"ext\": \"mp3\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Kita tema [1013074524].mp3\", \"filename\": \"Kita tema [1013074524].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [LRTVOD] unable to extract content URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.lrt.lt/mediateka/irasas/1013074524/kita-tema",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[LRTVOD] Extracting URL: https://www.lrt.lt/mediateka/irasas/1013074524/kita-tema",
+    "[LRTVOD] 1013074524: Downloading webpage",
+    "[LRTVOD] 1013074524: Downloading JSON metadata",
+    "[info] 1013074524: Downloading 1 format(s): 0",
+    "[download] Destination: 1013074524.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [LRTVOD] unable to extract content URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {
+    "1013074524.mp3": 13
+   }
+  },
+  {
+   "url": "https://www.lrt.lt/mediateka/irasas/1/tuscias",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [LRTVOD] unable to extract content URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [LRTVOD] 1: Unable to extract canonical URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.lrt.lt/radioteka/irasas/2000359728/nemarios-eiles",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2000359728\", \"formats\": [{\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://lrt-vod.test/radio/2000359728/360/index.m3u8\", \"manifest_url\": \"https://lrt-vod.test/radio/2000359728/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}, {\"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://lrt-vod.test/radio/2000359728/720/index.m3u8\", \"manifest_url\": \"https://lrt-vod.test/radio/2000359728/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\"}], \"title\": \"Nemarios eil\\u0117s\", \"tags\": [\"poezija\"], \"categories\": [\"Kult\\u016bra\"], \"description\": \"Apie pragarus\", \"timestamp\": 1719867600, \"thumbnail\": \"https://www.lrt.lt/img/2024/07/nemarios.jpg\", \"webpage_url\": \"https://www.lrt.lt/radioteka/irasas/2000359728/nemarios-eiles\", \"original_url\": \"https://www.lrt.lt/radioteka/irasas/2000359728/nemarios-eiles\", \"webpage_url_basename\": \"nemarios-eiles\", \"webpage_url_domain\": \"lrt.lt\", \"extractor\": \"LRTRadio\", \"extractor_key\": \"LRTRadio\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://www.lrt.lt/img/2024/07/nemarios.jpg\", \"id\": \"0\"}], \"display_id\": \"2000359728\", \"fulltitle\": \"Nemarios eil\\u0117s\", \"upload_date\": \"20240701\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://lrt-vod.test/radio/2000359728/720/index.m3u8\", \"manifest_url\": \"https://lrt-vod.test/radio/2000359728/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\", \"_filename\": \"Nemarios eil\\u0117s [2000359728].mp4\", \"filename\": \"Nemarios eil\\u0117s [2000359728].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [LRTRadio] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

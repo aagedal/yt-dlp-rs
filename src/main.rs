@@ -364,7 +364,7 @@ struct Args {
     /// Do not force keyframes around the chapters before cutting (default)
     #[arg(long, overrides_with_all = ["force_keyframes_at_cuts", "no_force_keyframes_at_cuts"])]
     no_force_keyframes_at_cuts: bool,
-    /// Concatenate playlist entries' videos: never, always, or multi_video (default; only multi-video results, which this port's extractors do not produce)
+    /// Concatenate playlist entries' videos: never, always, or multi_video (default; only multi-video results)
     #[arg(long, value_name = "POLICY", default_value = "multi_video", value_parser = ["never", "always", "multi_video"])]
     concat_playlist: String,
     /// Split video into multiple files based on internal chapters (the "chapter" output template)
@@ -1197,7 +1197,7 @@ fn single_json(
                 .as_object_mut()
                 .expect("playlist serializes to an object");
             let entries = object.shift_remove("entries");
-            object.insert("_type".into(), "playlist".into());
+            object.insert("_type".into(), playlist.result_type().into());
             if let Some(counts) = counts {
                 object.insert("playlist_count".into(), counts.playlist_count.into());
             }
@@ -1255,11 +1255,27 @@ struct PlaylistStage {
     /// `FFmpegConcatPP` runs (`--concat-playlist` is not `never`).
     concat_pp: bool,
     keep: bool,
+    /// `ignoreerrors is True` (`-i`): `run_pp` reports a processor's error
+    /// and the stage continues.
+    ignore_errors: bool,
+}
+
+/// How [`run_playlist_stage`] ended.
+#[derive(PartialEq)]
+enum StageOutcome {
+    Done,
+    /// A processor failed under `-i`: reported, and the stage went on.
+    Failed,
+    /// A processor's `PostProcessingError` left `__process_playlist` (no
+    /// `Finished downloading playlist` or `-J` output): reported by
+    /// `_handle_extraction_exceptions`.
+    Aborted,
 }
 
 /// Upstream `run_all_pps('playlist', ...)` after the entries: playlist
-/// `--print` lines, then `FFmpegConcatPP` (`--concat-playlist always`) and
-/// `--exec playlist:` commands. Returns false after a reported failure.
+/// `--print` lines, then `FFmpegConcatPP` (`--concat-playlist always`, or
+/// `multi_video` for a `multi_video` result) and `--exec playlist:`
+/// commands.
 #[allow(clippy::too_many_arguments)]
 fn run_playlist_stage(
     dict: &serde_json::Value,
@@ -1272,7 +1288,7 @@ fn run_playlist_stage(
     downloader: &YoutubeDl,
     stage: PlaylistStage,
     metadata_actions: &yt_dlp_rs::metadata_parser::MetadataActions,
-) -> Result<bool, Box<dyn std::error::Error>> {
+) -> Result<StageOutcome, Box<dyn std::error::Error>> {
     let lines = print_templates
         .iter()
         .filter(|template| template.stage() == Stage::Playlist)
@@ -1299,10 +1315,16 @@ fn run_playlist_stage(
         }
         if let Err(error) = metadata_actions.run_reported("playlist", &mut parsed, options) {
             report_error!("ERROR: {error}");
-            return Ok(false);
+            return Ok(StageOutcome::Aborted);
         }
     }
     let dict = &parsed;
+    // `FFmpegConcatPP(only_multi_video=True)` for `--concat-playlist
+    // multi_video`.
+    let concat = stage.concat
+        || (stage.concat_pp
+            && dict.get("_type").and_then(|kind| kind.as_str()) == Some("multi_video"));
+    let mut outcome = StageOutcome::Done;
     if stage.concat_pp {
         postprocess_progress("Concat", "started");
     }
@@ -1313,7 +1335,7 @@ fn run_playlist_stage(
             postprocess_progress("Concat", "finished");
         }
     };
-    if stage.concat && !stage.simulate && !files.is_empty() {
+    if concat && !stage.simulate && !files.is_empty() {
         let concat = (|| -> yt_dlp_rs::Result<()> {
             let Some(inputs) = files.iter().cloned().collect::<Option<Vec<PathBuf>>>() else {
                 return Err(yt_dlp_rs::Error::Postprocess(
@@ -1399,12 +1421,22 @@ fn run_playlist_stage(
             }
             Ok(())
         })();
+        // `str(PostProcessingError)`, by `run_pp` under `-i`, else by
+        // `_handle_extraction_exceptions`.
         if let Err(error) = concat {
-            report_error!("ERROR: Postprocessing: {error}");
-            return Ok(false);
+            match error {
+                yt_dlp_rs::Error::Postprocess(message) => report_error!("ERROR: {message}"),
+                error => report_error!("ERROR: {error}"),
+            }
+            if !stage.ignore_errors {
+                return Ok(StageOutcome::Aborted);
+            }
+            outcome = StageOutcome::Failed;
         }
     }
-    finish_concat();
+    if outcome == StageOutcome::Done {
+        finish_concat();
+    }
     // One `ExecPP` runs the stage's commands.
     let has_exec = exec.stage(Stage::Playlist).next().is_some();
     if has_exec {
@@ -1414,14 +1446,17 @@ fn run_playlist_stage(
         let command = command.render_dict(dict, options)?;
         screen!("[Exec] Executing command: {command}");
         if let Err(error) = ExecCommand::run(&command) {
-            report_error!("ERROR: Postprocessing: {error}");
-            return Ok(false);
+            report_error!("ERROR: {error}");
+            if !stage.ignore_errors {
+                return Ok(StageOutcome::Aborted);
+            }
+            return Ok(StageOutcome::Failed);
         }
     }
     if has_exec {
         postprocess_progress("Exec", "finished");
     }
-    Ok(true)
+    Ok(outcome)
 }
 
 /// Python `str(float)` for ordinary values (`1.0`, `0.5`, `nan`, `inf`).
@@ -1658,8 +1693,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         args.ignore_no_formats_error,
         args.wait_for_video.is_some() && !args.no_wait_for_video,
     );
-    // `--extractor-args`: GenericIE's, YouTube's, YoutubeTabIE's, TwitterIE's and VimeoIE's ported
-    // arguments are used; other extractors' are not.
+    // `--extractor-args`: GenericIE's, YouTube's, YoutubeTabIE's, TwitterIE's, VimeoIE's and
+    // ORFONIE's ported arguments are used; other extractors' are not.
     let extractor_args =
         yt_dlp_rs::manifest_args::parse_extractor_args(&args.extractor_args).map_err(UsageError)?;
     for (key, values) in &extractor_args {
@@ -1712,6 +1747,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 {
                     warning!(
                         "WARNING: extractor argument vimeo:{name} is not supported natively and is ignored"
+                    );
+                }
+            }
+            "orfon" => {
+                for name in values
+                    .keys()
+                    .filter(|name| name.as_str() != "prefer_segments_playlist")
+                {
+                    warning!(
+                        "WARNING: extractor argument orfon:{name} is not supported natively and is ignored"
                     );
                 }
             }
@@ -3277,6 +3322,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("Elonet", yt_dlp_rs::extractor::elonet_suitable),
             ("Epoch", yt_dlp_rs::extractor::epoch_suitable),
             ("Erocast", yt_dlp_rs::extractor::erocast_suitable),
+            ("ERRArhiiv", yt_dlp_rs::extractor::err_arhiiv_suitable),
+            ("ERRJupiter", yt_dlp_rs::extractor::err_jupiter_suitable),
             ("EttuTv", yt_dlp_rs::extractor::ettutv_suitable),
             ("EuropeanTour", yt_dlp_rs::extractor::europeantour_suitable),
             ("facebook", yt_dlp_rs::extractor::facebook_suitable),
@@ -3411,11 +3458,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ("Lnk", yt_dlp_rs::extractor::lnk_suitable),
             ("loom", yt_dlp_rs::extractor::loom_suitable),
+            ("LRTRadio", yt_dlp_rs::extractor::lrt_radio_suitable),
+            ("LRTStream", yt_dlp_rs::extractor::lrt_stream_suitable),
+            ("LRTVOD", yt_dlp_rs::extractor::lrt_vod_suitable),
             ("maariv.co.il", yt_dlp_rs::extractor::maariv_suitable),
             ("MaoriTV", yt_dlp_rs::extractor::maoritv_suitable),
             ("Masters", yt_dlp_rs::extractor::masters_suitable),
             ("MatchiTV", yt_dlp_rs::extractor::matchitv_suitable),
             ("MatchTV", yt_dlp_rs::extractor::matchtv_suitable),
+            ("MedalTV", yt_dlp_rs::extractor::medaltv_suitable),
             ("media.ccc.de", yt_dlp_rs::extractor::ccc_suitable),
             ("Mediaite", yt_dlp_rs::extractor::mediaite_suitable),
             ("megaphone.fm", yt_dlp_rs::extractor::megaphone_suitable),
@@ -3427,6 +3478,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("MyVidster", yt_dlp_rs::extractor::myvidster_suitable),
             ("Netzkino", yt_dlp_rs::extractor::netzkino_suitable),
             ("Newsy", yt_dlp_rs::extractor::newsy_suitable),
+            ("NhkVod", yt_dlp_rs::extractor::nhk_vod_suitable),
+            ("NhkVodProgram", yt_dlp_rs::extractor::nhk_program_suitable),
             ("niconico", yt_dlp_rs::extractor::niconico_suitable),
             (
                 "niconico:history",
@@ -3480,6 +3533,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ("OneFootball", yt_dlp_rs::extractor::onefootball_suitable),
             ("OnePlacePodcast", yt_dlp_rs::extractor::oneplace_suitable),
+            ("orf:on", yt_dlp_rs::extractor::orf_on_suitable),
+            ("orf:podcast", yt_dlp_rs::extractor::orf_podcast_suitable),
+            ("orf:radio", yt_dlp_rs::extractor::orf_radio_suitable),
             ("Parlview", yt_dlp_rs::extractor::parlview_suitable),
             ("PearVideo", yt_dlp_rs::extractor::pearvideo_suitable),
             ("peer.tv", yt_dlp_rs::extractor::peertv_suitable),
@@ -3523,6 +3579,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ("RoyaLive", yt_dlp_rs::extractor::roya_suitable),
             ("RTRFM", yt_dlp_rs::extractor::rtrfm_suitable),
+            (
+                "rtve.es:alacarta",
+                yt_dlp_rs::extractor::rtve_alacarta_suitable,
+            ),
+            ("rtve.es:audio", yt_dlp_rs::extractor::rtve_audio_suitable),
+            ("rtve.es:live", yt_dlp_rs::extractor::rtve_live_suitable),
+            (
+                "rtve.es:television",
+                yt_dlp_rs::extractor::rtve_television_suitable,
+            ),
             ("Rumble", yt_dlp_rs::extractor::rumble_suitable),
             ("RumbleEmbed", yt_dlp_rs::extractor::rumble_embed_suitable),
             ("rutube", yt_dlp_rs::extractor::rutube_suitable),
@@ -3544,6 +3610,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 yt_dlp_rs::extractor::soundgasm_profile_suitable,
             ),
             ("Spiegel", yt_dlp_rs::extractor::spiegel_suitable),
+            ("SRGSSR", yt_dlp_rs::extractor::srgssr_suitable),
+            ("SRGSSRPlay", yt_dlp_rs::extractor::srgssr_play_suitable),
             ("Steam", yt_dlp_rs::extractor::steam_suitable),
             (
                 "SteamCommunity",
@@ -3555,6 +3623,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ("Streamable", yt_dlp_rs::extractor::streamable_suitable),
             ("StreetVoice", yt_dlp_rs::extractor::streetvoice_suitable),
+            ("Substack", yt_dlp_rs::extractor::substack_suitable),
             ("svt:page", yt_dlp_rs::extractor::svt_page_suitable),
             ("svt:play", yt_dlp_rs::extractor::svt_suitable),
             ("svt:play:series", yt_dlp_rs::extractor::svt_series_suitable),
@@ -3603,6 +3672,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("tv.dfb.de", yt_dlp_rs::extractor::dfb_suitable),
             ("TV2", yt_dlp_rs::extractor::tv2_suitable),
             ("TV2Article", yt_dlp_rs::extractor::tv2_article_suitable),
+            ("TV4", yt_dlp_rs::extractor::tv4_suitable),
+            ("TV5MONDE", yt_dlp_rs::extractor::tv5mondeplus_suitable),
             ("TVANouvelles", yt_dlp_rs::extractor::tvanouvelles_suitable),
             (
                 "TVANouvellesArticle",
@@ -3808,7 +3879,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "1News\n23video\n9gag: 9GAG\n9News\nAmadeusTV\nAngel\narchive.org: archive.org video and audio\nARDAudiothek\nARDAudiothekPlaylist\nARDMediathek\nARDMediathekCollection\nArteTV\nArteTVCategory\nArteTVEmbed\nArteTVPlaylist\nAudioBoom\nBandcamp\nBeaconTv\nBigo\nBild\nBiliBili\nBitChute\nBitChuteChannel\nBitmovin\nblogger.com\nBluesky\nBongaCams\nBostonGlobe\nBreitBart\nbrightcove:new\nBundesliga\nCaltrans\nCAM4\nCGTN\nCJSW\nClipchamp\nCloudflareStream\nCloudyCDN\nClyp\nCoub\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\ndailymotion:playlist: [dailymotion]\ndailymotion:search: [dailymotion]\ndailymotion:user: [dailymotion]\ndaystar:clip\ndemocracynow\ndlive:stream\ndlive:vod\nDouyin\nDropbox\nDrTalks\ndrtv\ndrtv:live\ndrtv:season\ndrtv:series\nDumpert\nEbaumsWorld\nEbay\nElonet\nEpoch\nErocast\nEttuTv\nEuropeanTour\nfacebook\nfacebook:ads\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmArchiv: FILMARCHIV ON\nFilmweb\nFlickr\nFormula1\nfranceinfo: franceinfo.fr (formerly francetvinfo.fr)\nfrancetv\nfrancetv:site\nFreesound\nFuyinTV\nGab\nGameStar\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGolem\ngoodgame:stream\nGoogleDrive\nGoogleDrive:Folder\nGraspop\nGronkh\nHarpodeon\nHearThisAt\nHellPorno\nHistoricFilms\nHitRecord\nHSEProduct\nHSEShow\nhtml5\nHuajiao: 花椒直播\nHypem\niheartradio\niheartradio:podcast\nIlPost\nIltalehti\nimdb: Internet Movie Database trailers\nimdb:list: Internet Movie Database lists\nImgur\nimgur:album\nimgur:gallery\nIna\nInc\nInstagram\ninstagram:story\ninstagram:tag: Instagram hashtag search URLs\nInstagramIOS: IOS instagram:// URL\nInternazionale\nIsraelNationalNews\nIvoox\nJove\nJWPlatform\nKaltura\nkick:clip\nkick:clips\nkick:live\nkick:videos\nkick:vod\nKicker\nKickStarter\nKommunetv\nKTH\nKu6\nlbry: odysee.com\nlbry:channel: odysee.com channels\nlbry:playlist: odysee.com playlists\nLibsyn\nLinkedIn\nLivestreamfails\nLnk\nloom\nmaariv.co.il\nMaoriTV\nMasters\nMatchiTV\nMatchTV\nmedia.ccc.de\nMediaite\nmegaphone.fm: megaphone.fm embedded players\nmir24.tv\nmixcloud\nMochaVideo\nMovingImage\nMux\nMyVidster\nNetzkino\nNewsy\nniconico: [niconico] ニコニコ動画\nniconico:history: NicoNico user history or likes. Requires cookies.\nniconico:playlist\nniconico:series\nniconico:tag: NicoNico video tag URLs\nNiconicoUser\nnicovideo:search: Nico video search; \"nicosearch:\" prefix (e.g. \"nicosearch{count1}:{example1}\")\nnicovideo:search:date: Nico video search, newest first; \"nicosearchdate:\" prefix (e.g. \"nicosearchdate{count2}:{example2}\")\nnicovideo:search_url: Nico video search URLs\nNobelPrize\nNRK\nNRKPlaylist\nNRKRadioPodkast\nNRKTV: NRK TV and NRK Radio\nNRKTVDirekte: NRK TV Direkte and NRK Radio Direkte\nNRKTVEpisode\nNRKTVSeason\nNRKTVSeries\nnts.live\nNZOnScreen\nOdnoklassniki\nOneFootball\nOnePlacePodcast\nParlview\nPearVideo\npeer.tv\nPeerTube\nPeerTube:Playlist\nperiscope: Periscope\nPhotobucket\nPinkbike\nPinterest\nPlayerFm\nPodbayFM\nPodbayFMChannel\nPopcornTV\nPremiershipRugby\nPressTV\nQingTing\nRadioZetPodcast\nReddit\nReverbNation\nRinseFM\nRinseFMArtistPlaylist\nRottenTomatoes\nRoyaLive\nRTRFM\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nSapo: SAPO Vídeos\nScreen9\nScreenRec\nSen\nSkyNewsAU\nSnapchatSpotlight\nsoundcloud: [soundcloud]\nsoundgasm\nsoundgasm:profile\nSpiegel\nSteam\nSteamCommunity\nSteamCommunityBroadcast\nStreamable\nStreetVoice\nsvt:page\nsvt:play: SVT Play and Öppet arkiv\nsvt:play:series\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\nTelegraaf\ntelegram:embed\nTheGuardianPodcast\nTheHighWire\nTheIntercept\nTheStar\nTheSun\nThisAmericanLife\nThreeSpeak\nThreeSpeakUser\nTikTok\ntiktok:collection\ntiktok:live\ntiktok:user\nTrtCocukVideo\nTrtWorld\nTumblr: [tumblr]\ntv.dfb.de\nTV2\nTV2Article\nTVANouvelles\nTVANouvellesArticle\ntvnoe: Televize Noe\nTweakers\ntwitch:clips: [twitch]\ntwitch:collection: [twitch]\ntwitch:stream: [twitch]\ntwitch:videos: [twitch]\ntwitch:videos:clips: [twitch]\ntwitch:videos:collections: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:amplify\ntwitter:broadcast\ntwitter:card\ntwitter:shortener\ntwitter:spaces\numg:de: Universal Music Deutschland\nUnistra\nUnitedNationsWebTv\nustudio\nustudio:embed\nVeo\nVideoPress\nVidyard\nvimeo: [vimeo]\nvk: [vk] VK\nvk:uservideos: [vk] VK - User's Videos\nvk:wallpost: [vk]\nVKPlay\nVKPlayLive\nvm.tiktok\nVocaroo\nWebcamerapl\nWeibo\nWeiboVideo\nWhyp\nWimbledon\nWistia\nWistiaChannel\nWistiaPlaylist\nWorldStarHipHop\nXboxClips\nXiaoHongShu: 小红书\nXVideos\nxvideos:quickies\nyfanefa\nYleAreena\nyoutube: [youtube] YouTube\nyoutube:clip: [youtube]\nyoutube:favorites: [youtube] YouTube liked videos; \":ytfav\" keyword (requires cookies)\nyoutube:history: [youtube] Youtube watch history; \":ythis\" keyword (requires cookies)\nyoutube:music:search_url: [youtube] YouTube music search URLs with selectable sections, e.g. #songs\nyoutube:notif: [youtube] YouTube notifications; \":ytnotif\" keyword (requires cookies)\nyoutube:playlist: [youtube] YouTube playlists\nyoutube:recommended: [youtube] YouTube recommended videos; \":ytrec\" keyword\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:shorts:pivot:audio: [youtube] YouTube Shorts audio pivot (Shorts using audio of a given video)\nyoutube:subscriptions: [youtube] YouTube subscriptions feed; \":ytsubs\" keyword (requires cookies)\nyoutube:tab: [youtube] YouTube Tabs\nyoutube:user: [youtube] YouTube user videos; \"ytuser:\" prefix\nyoutube:watchlater: [youtube] Youtube watch later list; \":ytwatchlater\" keyword (requires cookies)\nYoutubeLivestreamEmbed: [youtube] YouTube livestream embeds\nYoutubeYtBe: [youtube] youtu.be\nzdf\nzdf:channel\nZhihu\ngeneric: Generic downloader that works on some sites"
+            "1News\n23video\n9gag: 9GAG\n9News\nAmadeusTV\nAngel\narchive.org: archive.org video and audio\nARDAudiothek\nARDAudiothekPlaylist\nARDMediathek\nARDMediathekCollection\nArteTV\nArteTVCategory\nArteTVEmbed\nArteTVPlaylist\nAudioBoom\nBandcamp\nBeaconTv\nBigo\nBild\nBiliBili\nBitChute\nBitChuteChannel\nBitmovin\nblogger.com\nBluesky\nBongaCams\nBostonGlobe\nBreitBart\nbrightcove:new\nBundesliga\nCaltrans\nCAM4\nCGTN\nCJSW\nClipchamp\nCloudflareStream\nCloudyCDN\nClyp\nCoub\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\ndailymotion:playlist: [dailymotion]\ndailymotion:search: [dailymotion]\ndailymotion:user: [dailymotion]\ndaystar:clip\ndemocracynow\ndlive:stream\ndlive:vod\nDouyin\nDropbox\nDrTalks\ndrtv\ndrtv:live\ndrtv:season\ndrtv:series\nDumpert\nEbaumsWorld\nEbay\nElonet\nEpoch\nErocast\nERRArhiiv\nERRJupiter\nEttuTv\nEuropeanTour\nfacebook\nfacebook:ads\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmArchiv: FILMARCHIV ON\nFilmweb\nFlickr\nFormula1\nfranceinfo: franceinfo.fr (formerly francetvinfo.fr)\nfrancetv\nfrancetv:site\nFreesound\nFuyinTV\nGab\nGameStar\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGolem\ngoodgame:stream\nGoogleDrive\nGoogleDrive:Folder\nGraspop\nGronkh\nHarpodeon\nHearThisAt\nHellPorno\nHistoricFilms\nHitRecord\nHSEProduct\nHSEShow\nhtml5\nHuajiao: 花椒直播\nHypem\niheartradio\niheartradio:podcast\nIlPost\nIltalehti\nimdb: Internet Movie Database trailers\nimdb:list: Internet Movie Database lists\nImgur\nimgur:album\nimgur:gallery\nIna\nInc\nInstagram\ninstagram:story\ninstagram:tag: Instagram hashtag search URLs\nInstagramIOS: IOS instagram:// URL\nInternazionale\nIsraelNationalNews\nIvoox\nJove\nJWPlatform\nKaltura\nkick:clip\nkick:clips\nkick:live\nkick:videos\nkick:vod\nKicker\nKickStarter\nKommunetv\nKTH\nKu6\nlbry: odysee.com\nlbry:channel: odysee.com channels\nlbry:playlist: odysee.com playlists\nLibsyn\nLinkedIn\nLivestreamfails\nLnk\nloom\nLRTRadio\nLRTStream\nLRTVOD\nmaariv.co.il\nMaoriTV\nMasters\nMatchiTV\nMatchTV\nMedalTV\nmedia.ccc.de\nMediaite\nmegaphone.fm: megaphone.fm embedded players\nmir24.tv\nmixcloud\nMochaVideo\nMovingImage\nMux\nMyVidster\nNetzkino\nNewsy\nNhkVod\nNhkVodProgram\nniconico: [niconico] ニコニコ動画\nniconico:history: NicoNico user history or likes. Requires cookies.\nniconico:playlist\nniconico:series\nniconico:tag: NicoNico video tag URLs\nNiconicoUser\nnicovideo:search: Nico video search; \"nicosearch:\" prefix (e.g. \"nicosearch{count1}:{example1}\")\nnicovideo:search:date: Nico video search, newest first; \"nicosearchdate:\" prefix (e.g. \"nicosearchdate{count2}:{example2}\")\nnicovideo:search_url: Nico video search URLs\nNobelPrize\nNRK\nNRKPlaylist\nNRKRadioPodkast\nNRKTV: NRK TV and NRK Radio\nNRKTVDirekte: NRK TV Direkte and NRK Radio Direkte\nNRKTVEpisode\nNRKTVSeason\nNRKTVSeries\nnts.live\nNZOnScreen\nOdnoklassniki\nOneFootball\nOnePlacePodcast\norf:on\norf:podcast\norf:radio\nParlview\nPearVideo\npeer.tv\nPeerTube\nPeerTube:Playlist\nperiscope: Periscope\nPhotobucket\nPinkbike\nPinterest\nPlayerFm\nPodbayFM\nPodbayFMChannel\nPopcornTV\nPremiershipRugby\nPressTV\nQingTing\nRadioZetPodcast\nReddit\nReverbNation\nRinseFM\nRinseFMArtistPlaylist\nRottenTomatoes\nRoyaLive\nRTRFM\nrtve.es:alacarta: RTVE a la carta and Play\nrtve.es:audio: RTVE audio\nrtve.es:live: RTVE.es live streams\nrtve.es:television\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nSapo: SAPO Vídeos\nScreen9\nScreenRec\nSen\nSkyNewsAU\nSnapchatSpotlight\nsoundcloud: [soundcloud]\nsoundgasm\nsoundgasm:profile\nSpiegel\nSRGSSR\nSRGSSRPlay: srf.ch, rts.ch, rsi.ch, rtr.ch and swissinfo.ch play sites\nSteam\nSteamCommunity\nSteamCommunityBroadcast\nStreamable\nStreetVoice\nSubstack\nsvt:page\nsvt:play: SVT Play and Öppet arkiv\nsvt:play:series\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\nTelegraaf\ntelegram:embed\nTheGuardianPodcast\nTheHighWire\nTheIntercept\nTheStar\nTheSun\nThisAmericanLife\nThreeSpeak\nThreeSpeakUser\nTikTok\ntiktok:collection\ntiktok:live\ntiktok:user\nTrtCocukVideo\nTrtWorld\nTumblr: [tumblr]\ntv.dfb.de\nTV2\nTV2Article\nTV4: tv4.se and tv4play.se\nTV5MONDE\nTVANouvelles\nTVANouvellesArticle\ntvnoe: Televize Noe\nTweakers\ntwitch:clips: [twitch]\ntwitch:collection: [twitch]\ntwitch:stream: [twitch]\ntwitch:videos: [twitch]\ntwitch:videos:clips: [twitch]\ntwitch:videos:collections: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:amplify\ntwitter:broadcast\ntwitter:card\ntwitter:shortener\ntwitter:spaces\numg:de: Universal Music Deutschland\nUnistra\nUnitedNationsWebTv\nustudio\nustudio:embed\nVeo\nVideoPress\nVidyard\nvimeo: [vimeo]\nvk: [vk] VK\nvk:uservideos: [vk] VK - User's Videos\nvk:wallpost: [vk]\nVKPlay\nVKPlayLive\nvm.tiktok\nVocaroo\nWebcamerapl\nWeibo\nWeiboVideo\nWhyp\nWimbledon\nWistia\nWistiaChannel\nWistiaPlaylist\nWorldStarHipHop\nXboxClips\nXiaoHongShu: 小红书\nXVideos\nxvideos:quickies\nyfanefa\nYleAreena\nyoutube: [youtube] YouTube\nyoutube:clip: [youtube]\nyoutube:favorites: [youtube] YouTube liked videos; \":ytfav\" keyword (requires cookies)\nyoutube:history: [youtube] Youtube watch history; \":ythis\" keyword (requires cookies)\nyoutube:music:search_url: [youtube] YouTube music search URLs with selectable sections, e.g. #songs\nyoutube:notif: [youtube] YouTube notifications; \":ytnotif\" keyword (requires cookies)\nyoutube:playlist: [youtube] YouTube playlists\nyoutube:recommended: [youtube] YouTube recommended videos; \":ytrec\" keyword\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:shorts:pivot:audio: [youtube] YouTube Shorts audio pivot (Shorts using audio of a given video)\nyoutube:subscriptions: [youtube] YouTube subscriptions feed; \":ytsubs\" keyword (requires cookies)\nyoutube:tab: [youtube] YouTube Tabs\nyoutube:user: [youtube] YouTube user videos; \"ytuser:\" prefix\nyoutube:watchlater: [youtube] Youtube watch later list; \":ytwatchlater\" keyword (requires cookies)\nYoutubeLivestreamEmbed: [youtube] YouTube livestream embeds\nYoutubeYtBe: [youtube] youtu.be\nzdf\nzdf:channel\nZhihu\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }
@@ -3880,8 +3951,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         }
                     }
                 }
-                if let Some(dict) = &outer.dict
-                    && !run_playlist_stage(
+                let outcome = match &outer.dict {
+                    Some(dict) => run_playlist_stage(
                         dict,
                         &vec![None; outer.entry_count],
                         &print_templates,
@@ -3895,11 +3966,20 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             concat: args.concat_playlist == "always",
                             concat_pp: args.concat_playlist != "never",
                             keep: args.keep_video,
+                            ignore_errors: error_mode == ErrorMode::Ignore,
                         },
                         &metadata_actions,
-                    )?
-                {
+                    )?,
+                    None => StageOutcome::Done,
+                };
+                if outcome != StageOutcome::Done {
                     failed = true;
+                }
+                if outcome == StageOutcome::Aborted {
+                    if abort_on_error {
+                        break;
+                    }
+                    continue;
                 }
                 screen!("[download] Finished downloading playlist: {}", outer.title);
                 if let Some(mut value) = outer.single_json {
@@ -3937,7 +4017,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 .into_iter()
                                 .find(|text| !text.is_empty())
                                 .map_or("<Untitled>", |text| text.as_str());
-                            screen!("[download] Downloading playlist: {title}");
+                            screen!("[download] Downloading {}: {title}", playlist.result_type());
                             warning!(
                                 "WARNING: The info failed to download: There are no entries; trying with URL {}",
                                 playlist.webpage_url
@@ -3960,7 +4040,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         .into_iter()
                         .find(|text| !text.is_empty())
                         .map_or("<Untitled>", |text| text.as_str());
-                    screen!("[download] Downloading playlist: {title}");
+                    screen!("[download] Downloading {}: {title}", playlist.result_type());
                     header_printed = true;
                     if let Some(pending) = &mut playlist.pending {
                         pending.request_entries(&playlist_selection);
@@ -4076,8 +4156,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ExtractResult::Video(_) => None,
         };
-        if let Some(title) = playlist_title.as_ref().filter(|_| !header_printed) {
-            screen!("[download] Downloading playlist: {title}");
+        if let (Some(title), ExtractResult::Playlist(playlist)) = (&playlist_title, &extracted)
+            && !header_printed
+        {
+            screen!("[download] Downloading {}: {title}", playlist.result_type());
         }
         // The playlist info JSON written before the entries, rewritten after
         // them (`_infojson_written is True`).
@@ -4153,9 +4235,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     .map_or_else(String::new, |count| format!(" of {count}"))
             );
             // Upstream keeps resolved entries unless `extract_flat` became
-            // `discard`/`discard_in_playlist` (nothing needs the playlist's
-            // entries but the default multi-video concatenation).
+            // `discard`/`discard_in_playlist` (which keeps a `multi_video`'s).
             let keeps_entries = args.flat_playlist
+                || playlist.result_type() == "multi_video"
                 || args.dump_single_json
                 || prints_stage(Stage::Playlist)
                 || (args.write_info_json && args.no_clean_info_json && playlist_files)
@@ -6055,8 +6137,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
             }
         }
-        if let Some(dict) = &playlist_dict
-            && !run_playlist_stage(
+        let outcome = match &playlist_dict {
+            Some(dict) => run_playlist_stage(
                 dict,
                 &entry_files.borrow(),
                 &print_templates,
@@ -6070,11 +6152,20 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     concat: args.concat_playlist == "always",
                     concat_pp: args.concat_playlist != "never",
                     keep: args.keep_video,
+                    ignore_errors: error_mode == ErrorMode::Ignore,
                 },
                 &metadata_actions,
-            )?
-        {
+            )?,
+            None => StageOutcome::Done,
+        };
+        if outcome != StageOutcome::Done {
             failed = true;
+        }
+        if outcome == StageOutcome::Aborted {
+            if abort_on_error {
+                break;
+            }
+            continue;
         }
         if let Some(title) = &playlist_title {
             screen!("[download] Finished downloading playlist: {title}");

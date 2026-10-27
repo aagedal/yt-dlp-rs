@@ -1,0 +1,12 @@
+{
+ "id": 14227000,
+ "title": "Geschützt",
+ "is_drm_protected": true,
+ "sources": {
+  "dash": [
+   {
+    "src": "https://apasfiis.sf.apa.at/dash/gp/14227000/manifest.mpd"
+   }
+  ]
+ }
+}

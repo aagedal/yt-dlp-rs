@@ -57,7 +57,7 @@ fn random_birthday() -> (String, String, String) {
 }
 
 /// `parse_age_limit(s)`.
-fn parse_age_limit(value: Option<&Value>) -> Value {
+pub(crate) fn parse_age_limit(value: Option<&Value>) -> Value {
     static AGE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^(\d{1,2})\+?$").unwrap());
     static TV: LazyLock<Regex> =
         LazyLock::new(|| Regex::new(r"^TV[_-]?(Y|Y7|G|PG|14|MA)$").unwrap());

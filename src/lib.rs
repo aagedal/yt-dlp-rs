@@ -91,7 +91,9 @@ pub use info::{
     ByteIndex, ByteRange, Chapter, DownloaderOptions, ExtractResult, Fragment, HlsAes128, Metadata,
     PlaylistInfo, PyNumber, StreamKind, Thumbnail, VideoFormat, VideoInfo,
 };
-pub use info::{COMPAT_FORMAT_SPEC, COMPAT_MANIFEST_FILESIZE_APPROX, NESTED_INDEX, PendingEntries};
+pub use info::{
+    COMPAT_FORMAT_SPEC, COMPAT_MANIFEST_FILESIZE_APPROX, MULTI_VIDEO, NESTED_INDEX, PendingEntries,
+};
 pub use info_json::{
     InfoJsonWrite, info_json_path, info_value, load_info_json, playlist_info_json,
     playlist_info_json_with, to_python_json, upstream_shape, video_info_json, video_info_json_with,
@@ -418,6 +420,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Elonet",
     "Epoch",
     "Erocast",
+    "ERRArhiiv",
+    "ERRJupiter",
     "EttuTv",
     "EuropeanTour",
     "facebook:ads",
@@ -499,11 +503,15 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Livestreamfails",
     "Lnk",
     "loom",
+    "LRTRadio",
+    "LRTStream",
+    "LRTVOD",
     "maariv.co.il",
     "MaoriTV",
     "Masters",
     "MatchiTV",
     "MatchTV",
+    "MedalTV",
     "media.ccc.de",
     "Mediaite",
     "megaphone.fm",
@@ -515,6 +523,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "MyVidster",
     "Netzkino",
     "Newsy",
+    "NhkVod",
+    "NhkVodProgram",
     "niconico",
     "niconico:history",
     "niconico:playlist",
@@ -538,6 +548,9 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Odnoklassniki",
     "OneFootball",
     "OnePlacePodcast",
+    "orf:on",
+    "orf:podcast",
+    "orf:radio",
     "Parlview",
     "PearVideo",
     "PeerTube",
@@ -563,6 +576,10 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "RottenTomatoes",
     "RoyaLive",
     "RTRFM",
+    "rtve.es:alacarta",
+    "rtve.es:audio",
+    "rtve.es:live",
+    "rtve.es:television",
     "Rumble",
     "RumbleEmbed",
     "rutube",
@@ -578,11 +595,14 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "soundgasm",
     "soundgasm:profile",
     "Spiegel",
+    "SRGSSR",
+    "SRGSSRPlay",
     "Steam",
     "SteamCommunity",
     "SteamCommunityBroadcast",
     "Streamable",
     "StreetVoice",
+    "Substack",
     "svt:page",
     "svt:play",
     "svt:play:series",
@@ -613,6 +633,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "tv.dfb.de",
     "TV2",
     "TV2Article",
+    "TV4",
+    "TV5MONDE",
     "TVANouvelles",
     "TVANouvellesArticle",
     "tvnoe",
@@ -909,6 +931,9 @@ impl YoutubeDl {
                 Box::new(extractor::Freesound),
                 Box::new(extractor::HearThisAt),
                 Box::new(extractor::Libsyn),
+                Box::new(extractor::LrtRadio),
+                Box::new(extractor::LrtStream),
+                Box::new(extractor::LrtVod),
                 Box::new(extractor::IHeartRadio),
                 Box::new(extractor::IHeartRadioPodcast),
                 Box::new(extractor::Gab),
@@ -949,6 +974,8 @@ impl YoutubeDl {
                 Box::new(extractor::SteamCommunityBroadcast),
                 Box::new(extractor::Tv2),
                 Box::new(extractor::Tv2Article),
+                Box::new(extractor::Tv4),
+                Box::new(extractor::Tv5MondePlus),
                 Box::new(extractor::XVideosQuickies),
                 Box::new(extractor::XVideos),
                 Box::new(extractor::Imdb),
@@ -972,6 +999,8 @@ impl YoutubeDl {
                 Box::new(extractor::Ccc),
                 Box::new(extractor::DaystarClip),
                 Box::new(extractor::Newsy),
+                Box::new(extractor::NhkVod),
+                Box::new(extractor::NhkVodProgram),
                 Box::new(extractor::TrtWorld),
                 Box::new(extractor::Tumblr),
                 Box::new(extractor::Iltalehti),
@@ -1074,6 +1103,8 @@ impl YoutubeDl {
                 Box::new(extractor::Bundesliga),
                 Box::new(extractor::EttuTv),
                 Box::new(extractor::Erocast),
+                Box::new(extractor::ErrArhiiv),
+                Box::new(extractor::ErrJupiter),
                 Box::new(extractor::Caltrans),
                 Box::new(extractor::Bigo),
                 Box::new(extractor::Cam4),
@@ -1127,6 +1158,7 @@ impl YoutubeDl {
                 Box::new(extractor::Lnk),
                 Box::new(extractor::Maariv),
                 Box::new(extractor::Masters),
+                Box::new(extractor::MedalTv),
                 Box::new(extractor::MatchTv),
                 Box::new(extractor::Megaphone),
                 Box::new(extractor::Mir24Tv),
@@ -1136,6 +1168,9 @@ impl YoutubeDl {
                 Box::new(extractor::NobelPrize),
                 Box::new(extractor::OneFootball),
                 Box::new(extractor::OnePlacePodcast),
+                Box::new(extractor::OrfOn),
+                Box::new(extractor::OrfPodcast),
+                Box::new(extractor::OrfRadio),
                 Box::new(extractor::Parlview),
                 Box::new(extractor::PeerTube),
                 Box::new(extractor::PeerTubePlaylist),
@@ -1151,13 +1186,20 @@ impl YoutubeDl {
                 Box::new(extractor::ReverbNation),
                 Box::new(extractor::RoyaLive),
                 Box::new(extractor::Rtrfm),
+                Box::new(extractor::RtveALaCarta),
+                Box::new(extractor::RtveAudio),
+                Box::new(extractor::RtveLive),
+                Box::new(extractor::RtveTelevision),
                 Box::new(extractor::ScreenRec),
                 Box::new(extractor::Sen),
                 Box::new(extractor::SkylineWebcams),
                 Box::new(extractor::SnapchatSpotlight),
                 Box::new(extractor::Spiegel),
+                Box::new(extractor::SrgSsr),
+                Box::new(extractor::SrgSsrPlay),
                 Box::new(extractor::Streamable),
                 Box::new(extractor::StreetVoice),
+                Box::new(extractor::Substack),
                 Box::new(extractor::SvtPage),
                 Box::new(extractor::SvtPlay),
                 Box::new(extractor::SvtSeries),
@@ -1924,6 +1966,10 @@ impl YoutubeDl {
                 extractor::fetch_zdf_pages
             } else if extractor::steam_pending_state(&pending.state) {
                 extractor::fetch_steam_trailers
+            } else if extractor::orf_pending_state(&pending.state) {
+                extractor::fetch_orf_segments
+            } else if extractor::nhk_pending_state(&pending.state) {
+                extractor::fetch_nhk_episodes
             } else if extractor::ard_pending_state(&pending.state) {
                 extractor::fetch_ard_pages
             } else if extractor::vk_user_videos_pending_state(&pending.state) {
@@ -1951,6 +1997,8 @@ impl YoutubeDl {
             // `url` entries), processed once they are fetched (random-access
             // pages may fill earlier placeholders).
             let resolved = extractor::steam_pending_state(&pending.state)
+                || extractor::orf_pending_state(&pending.state)
+                || extractor::nhk_pending_state(&pending.state)
                 || extractor::podbayfm_pending_state(&pending.state);
             playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
                 .map(|state| PendingEntries { state });
@@ -2267,16 +2315,44 @@ impl YoutubeDl {
         }
         // A playlist's entries report their sort order as each is processed.
         let playlist = matches!(result, ExtractResult::Playlist(_));
-        // `_fill_common_fields(final=False)`: a playlist's `upload_date`.
-        if let ExtractResult::Playlist(playlist) = result
-            && !playlist.extra.contains_key("upload_date")
-            && let Some(date) = playlist
-                .extra
-                .get("timestamp")
-                .and_then(serde_json::Value::as_f64)
-                .and_then(|timestamp| dates::strftime_date(timestamp.floor() as i64))
-        {
-            playlist.extra.insert("upload_date".into(), date.into());
+        // `_fill_common_fields(final=False)`: a playlist's duration string,
+        // dates from timestamps and release year.
+        if let ExtractResult::Playlist(playlist) = result {
+            let extra = &mut playlist.extra;
+            if let Some(duration) = extra.get("duration").and_then(serde_json::Value::as_f64) {
+                extra.insert(
+                    "duration_string".into(),
+                    info::format_seconds(duration.max(0.0) as u64).into(),
+                );
+            }
+            for (timestamp, date) in [
+                ("timestamp", "upload_date"),
+                ("release_timestamp", "release_date"),
+                ("modified_timestamp", "modified_date"),
+            ] {
+                if extra.get(date).is_none_or(serde_json::Value::is_null)
+                    && let Some(day) = extra
+                        .get(timestamp)
+                        .and_then(serde_json::Value::as_f64)
+                        .and_then(|value| dates::strftime_date(value.floor() as i64))
+                {
+                    extra.insert(date.into(), day.into());
+                }
+            }
+            let year_set = extra.get("release_year").is_some_and(|year| match year {
+                serde_json::Value::Null | serde_json::Value::Bool(false) => false,
+                serde_json::Value::Number(number) => number.as_f64() != Some(0.0),
+                serde_json::Value::String(text) => !text.is_empty(),
+                _ => true,
+            });
+            if !year_set
+                && let Some(year) = extra
+                    .get("release_date")
+                    .and_then(serde_json::Value::as_str)
+                    .and_then(|date| dates::py_int(&date.chars().take(4).collect::<String>()))
+            {
+                extra.insert("release_year".into(), year.into());
+            }
         }
         // `_fill_common_fields(final=False)`: the deprecated multivalue fields.
         if let ExtractResult::Playlist(playlist) = result {

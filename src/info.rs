@@ -15,6 +15,10 @@ pub(crate) const NO_FORMATS: &str = "__yt_dlp_rs_no_formats";
 pub(crate) const FORMATS_IGNORED: &str = "__yt_dlp_rs_formats_ignored";
 /// The keys a format selection would add (see [`VideoInfo::mark_unselected`]).
 pub(crate) const UNSELECTED: &str = "__yt_dlp_rs_unselected";
+/// A playlist result upstream returns as `_type: multi_video`
+/// (`playlist_result(..., multi_video=True)`): several videos forming one
+/// show, concatenated by the default `--concat-playlist multi_video`.
+pub const MULTI_VIDEO: &str = "__yt_dlp_rs_multi_video";
 
 /// The top-level format fields a result without formats does not have.
 pub(crate) const FORMAT_FIELDS: [&str; 30] = [
@@ -195,6 +199,15 @@ where
 pub const NESTED_INDEX: &str = "__yt_dlp_rs_nested_index";
 
 impl PlaylistInfo {
+    /// Upstream `_type`: `multi_video` (see [`MULTI_VIDEO`]) or `playlist`.
+    pub fn result_type(&self) -> &'static str {
+        if self.extra.get(MULTI_VIDEO) == Some(&serde_json::Value::Bool(true)) {
+            "multi_video"
+        } else {
+            "playlist"
+        }
+    }
+
     /// Placeholder `entries` for the `nested` playlists, so entry selection
     /// (`--playlist-items`, reverse, random) applies to them; each carries
     /// [`NESTED_INDEX`]. Entries already present (`url` entries following

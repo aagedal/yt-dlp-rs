@@ -2640,7 +2640,8 @@ pub(crate) fn jwplayer_entry_info(
                 if dash {
                     dash::from_response(response, &manifest, true)
                 } else {
-                    hls::from_response(client, response, &manifest, None, true, None)
+                    // Only the master playlist, like `_extract_m3u8_formats`.
+                    hls::from_response_with(client, response, &manifest, None, true, None, true)
                 }
             });
             crate::screen::clear_page();

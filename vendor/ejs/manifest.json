@@ -3,8 +3,8 @@
   "project": "https://github.com/yt-dlp/ejs",
   "version": "0.8.0",
   "license": "Unlicense; bundled dependency notices retained in yt.solver.lib.js",
-  "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
-  "verification_source": "https://github.com/yt-dlp/yt-dlp/blob/fa9886678eb65103303c627b8e013f13f8999b41/yt_dlp/extractor/youtube/jsc/_builtin/vendor/_info.py",
+  "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+  "verification_source": "https://github.com/yt-dlp/yt-dlp/blob/f264a6cbd1f630894da0f368df00f8aae50140e0/yt_dlp/extractor/youtube/jsc/_builtin/vendor/_info.py",
   "files": {
     "yt.solver.lib.js": {
       "sha3_512": "1ee3753a8222fc855f5c39db30a9ccbb7967dbe1fb810e86dc9a89aa073a0907f294c720e9b65427d560a35aa1ce6af19ef854d9126a05ca00afe03f72047733",

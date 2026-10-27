@@ -1,0 +1,72 @@
+{
+ "id": 14226549,
+ "title": "ZIB 2",
+ "video_type": "episode",
+ "exact_duration": 1800000,
+ "sources": {
+  "hls": [
+   {
+    "src": "https://apasfiis.sf.apa.at/ipad/gp/14226549/playlist.m3u8"
+   }
+  ]
+ },
+ "_embedded": {
+  "segments": [
+   {
+    "id": 15639807,
+    "title": "Wetter",
+    "description": "Segment 15639807",
+    "video_type": "segment",
+    "exact_duration": 97707,
+    "date": "2024-05-15T19:00:00+02:00",
+    "updated_at": "2024-05-15T19:33:14+02:00",
+    "_embedded": {
+     "image": {
+      "public_urls": {
+       "highlight_teaser": {
+        "url": "https://api-tvthek.orf.at/assets/segments/15639807.jpg"
+       }
+      }
+     }
+    },
+    "sources": {
+     "hls": [
+      {
+       "src": "https://apasfiis.sf.apa.at/ipad/gp/15639807/playlist.m3u8",
+       "quality": "QXB"
+      }
+     ]
+    }
+   },
+   {
+    "id": 15639808,
+    "title": "Jugendbande: Einbrüche aus Langeweile",
+    "description": "Segment 15639808",
+    "video_type": "segment",
+    "exact_duration": 97707,
+    "date": "2024-05-15T19:00:00+02:00",
+    "updated_at": "2024-05-15T19:33:14+02:00",
+    "_embedded": {
+     "image": {
+      "public_urls": {
+       "highlight_teaser": {
+        "url": "https://api-tvthek.orf.at/assets/segments/15639808.jpg"
+       }
+      }
+     }
+    },
+    "sources": {
+     "hls": [
+      {
+       "src": "https://apasfiis.sf.apa.at/ipad/gp/15639808/playlist.m3u8",
+       "quality": "QXB"
+      }
+     ]
+    }
+   },
+   {
+    "title": "kein id"
+   }
+  ]
+ }
+}

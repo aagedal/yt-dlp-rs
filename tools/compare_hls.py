@@ -40,7 +40,7 @@ import tempfile
 import threading
 from urllib.parse import urlsplit
 
-PINNED_UPSTREAM = "fa9886678eb65103303c627b8e013f13f8999b41"
+PINNED_UPSTREAM = "f264a6cbd1f630894da0f368df00f8aae50140e0"
 KEY_PREFIX = "/hls/aes-keys/"
 PLAYLISTS = ("ts", "fmp4", "range", "aes-ts", "aes-fmp4", "aes-range")
 # Built only from saved resources: implicit IVs 7 and 8 match aes-ts generation.

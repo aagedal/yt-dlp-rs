@@ -1,0 +1,26 @@
+{
+ "chapterList": [
+  {
+   "id": "63cb0778-27f8-49af-9284-8c7a8c6d15fc",
+   "title": "Saira: Tujetsch - tuttina cuntinuar cun Sedrun Mustér Turissem",
+   "date": "2015-10-13T06:06:00+02:00",
+   "duration": 336816,
+   "position": 0,
+   "podcastSdUrl": "https://rtr-audio.example.test/podcast/63cb0778-sd.mp3",
+   "podcastHdUrl": "https://rtr-audio.example.test/podcast/63cb0778-hd.mp3",
+   "resourceList": [
+    {
+     "url": "https://rtr-audio.example.test/63cb0778.mp3",
+     "protocol": "HTTP",
+     "encoding": "MP3",
+     "quality": "HQ"
+    }
+   ],
+   "subtitleList": [
+    {
+     "url": "https://rtr-audio.example.test/ignored.vtt"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,350 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://on.orf.at/video/14210000/school-of-champions-48",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"14210000\", \"formats\": [{\"format_id\": \"dash-audio=128000\", \"manifest_url\": \"https://apasfiis.sf.apa.at/dash/gp/14210000/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"sv\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://apasfiis.sf.apa.at/dash/gp/14210000/manifest.mpd\", \"fragment_base_url\": \"https://apasfiis.sf.apa.at/dash/gp/14210000/\", \"fragments\": [{\"path\": \"dash/audio=128000/init.mp4\"}, {\"path\": \"dash/audio=128000/1.m4s\", \"duration\": 4.0}, {\"path\": \"dash/audio=128000/2.m4s\", \"duration\": 4.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 1, \"is_dash_periods\": true, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-audio=128000 - audio only (DASH audio)\"}, {\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/14210000/360/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/14210000/playlist.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"dash-video=1300000\", \"manifest_url\": \"https://apasfiis.sf.apa.at/dash/gp/14210000/manifest.mpd\", \"ext\": \"mp4\", \"width\": 960, \"height\": 540, \"tbr\": 1300.0, \"asr\": null, \"fps\": 25, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://apasfiis.sf.apa.at/dash/gp/14210000/manifest.mpd\", \"fragment_base_url\": \"https://apasfiis.sf.apa.at/dash/gp/14210000/\", \"fragments\": [{\"path\": \"dash/video=1300000/init.mp4\"}, {\"path\": \"dash/video=1300000/1.m4s\", \"duration\": 4.0}, {\"path\": \"dash/video=1300000/2.m4s\", \"duration\": 4.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1300.0, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-video=1300000 - 960x540 (DASH video)\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/14210000/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/14210000/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://apasfiis.sf.apa.at/ipad/gp/14210000/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"de\": [{\"url\": \"https://api-tvthek.orf.at/assets/subtitles/0167/14210000.xml\", \"ext\": \"xml\"}, {\"url\": \"https://api-tvthek.orf.at/assets/subtitles/0167/14210000.srt\", \"ext\": \"srt\"}, {\"url\": \"https://api-tvthek.orf.at/assets/subtitles/0167/14210000.vtt\", \"ext\": \"vtt\"}]}, \"_old_archive_ids\": [\"orftvthek 14210000\"], \"age_limit\": 12, \"duration\": 2651.08, \"title\": \"School of Champions (4/8)\", \"description\": \"Die Skischule.\", \"media_type\": \"episode\", \"thumbnail\": \"https://api-tvthek.orf.at/assets/segments/0167/98/thumb_16697671_segments_highlight_teaser.jpeg\", \"timestamp\": 1706558922, \"release_timestamp\": 1706472362, \"modified_timestamp\": 1712756663, \"webpage_url\": \"https://on.orf.at/video/14210000/school-of-champions-48\", \"original_url\": \"https://on.orf.at/video/14210000/school-of-champions-48\", \"webpage_url_basename\": \"school-of-champions-48\", \"webpage_url_domain\": \"on.orf.at\", \"extractor\": \"orf:on\", \"extractor_key\": \"ORFON\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://api-tvthek.orf.at/assets/segments/0167/98/thumb_16697671_segments_highlight_teaser.jpeg\", \"id\": \"0\"}], \"display_id\": \"14210000\", \"fulltitle\": \"School of Champions (4/8)\", \"duration_string\": \"44:11\", \"upload_date\": \"20240129\", \"release_date\": \"20240128\", \"modified_date\": \"20240410\", \"release_year\": 2024, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/14210000/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/14210000/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"School of Champions (4\\u29f88) [14210000].mp4\", \"filename\": \"School of Champions (4\\u29f88) [14210000].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14210000/school-of-champions-48",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[orf:on] Extracting URL: https://on.orf.at/video/14210000/school-of-champions-48",
+    "[orf:on] 14210000: Downloading JSON metadata",
+    "[orf:on] 14210000: Downloading m3u8 information",
+    "[orf:on] 14210000: Downloading MPD manifest",
+    "[info] Available subtitles for 14210000:",
+    "Language Formats",
+    "sv       vtt",
+    "de       vtt, srt, xml"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14226549/15639808/jugendbande-einbrueche-aus-langeweile",
+   "args": [
+    "--no-playlist",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"15639808\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/15639808/360/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/15639808/playlist.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/15639808/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/15639808/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://apasfiis.sf.apa.at/ipad/gp/15639808/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"_old_archive_ids\": [\"orftvthek 15639808\"], \"duration\": 97.707, \"title\": \"Jugendbande: Einbr\\u00fcche aus Langeweile\", \"description\": \"Segment 15639808\", \"media_type\": \"segment\", \"thumbnail\": \"https://api-tvthek.orf.at/assets/segments/15639808.jpg\", \"timestamp\": 1715792400, \"modified_timestamp\": 1715794394, \"webpage_url\": \"https://on.orf.at/video/14226549/15639808/jugendbande-einbrueche-aus-langeweile\", \"original_url\": \"https://on.orf.at/video/14226549/15639808/jugendbande-einbrueche-aus-langeweile\", \"webpage_url_basename\": \"jugendbande-einbrueche-aus-langeweile\", \"webpage_url_domain\": \"on.orf.at\", \"extractor\": \"orf:on\", \"extractor_key\": \"ORFON\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://api-tvthek.orf.at/assets/segments/15639808.jpg\", \"id\": \"0\"}], \"display_id\": \"15639808\", \"fulltitle\": \"Jugendbande: Einbr\\u00fcche aus Langeweile\", \"duration_string\": \"1:37\", \"upload_date\": \"20240515\", \"modified_date\": \"20240515\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/15639808/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/15639808/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Jugendbande\\uff1a Einbr\\u00fcche aus Langeweile [15639808].mp4\", \"filename\": \"Jugendbande\\uff1a Einbr\\u00fcche aus Langeweile [15639808].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14226549/15639808/jugendbande-einbrueche-aus-langeweile",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(media_type)s|%(duration)s|%(age_limit)s|%(timestamp)s|%(release_timestamp)s|%(modified_timestamp)s|%(thumbnail)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "14226549|ZIB 2|NA|episode|1800.0|NA|NA|NA|NA|NA|hls-3121"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14226549/99/unbekannt",
+   "args": [
+    "--no-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(media_type)s|%(duration)s|%(age_limit)s|%(timestamp)s|%(release_timestamp)s|%(modified_timestamp)s|%(thumbnail)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "14226549|ZIB 2|NA|episode|1800.0|NA|NA|NA|NA|NA|hls-3121"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/3220355",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3220355\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/3220355/360/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/3220355/playlist.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/3220355/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/3220355/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://apasfiis.sf.apa.at/ipad/gp/3220355/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"_old_archive_ids\": [\"orftvthek 3220355\"], \"duration\": 445.04, \"title\": \"50 Jahre Burgenland: Der Festumzug\", \"description\": \"Der Festumzug 1971.\", \"media_type\": \"episode\", \"timestamp\": 52912800, \"webpage_url\": \"https://on.orf.at/video/3220355\", \"original_url\": \"https://on.orf.at/video/3220355\", \"webpage_url_basename\": \"3220355\", \"webpage_url_domain\": \"on.orf.at\", \"extractor\": \"orf:on\", \"extractor_key\": \"ORFON\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"3220355\", \"fulltitle\": \"50 Jahre Burgenland: Der Festumzug\", \"duration_string\": \"7:25\", \"upload_date\": \"19710905\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/3220355/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/3220355/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"50 Jahre Burgenland\\uff1a Der Festumzug [3220355].mp4\", \"filename\": \"50 Jahre Burgenland\\uff1a Der Festumzug [3220355].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14227000",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [orf:on] 14227000: This video is DRM protected"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14227000",
+   "args": [
+    "--ignore-no-formats-error",
+    "--print",
+    "%(id)s|%(title)s|%(formats)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "14227000|Geschützt|[]"
+   ],
+   "stderr": [
+    "WARNING: [orf:on] 14227000: This video is DRM protected",
+    "WARNING: [orf:on] 14227000: Failed to download MPD manifest: HTTP Error 404: Not Found",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/404",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [orf:on] 404: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"14227864\", \"duration\": 18410.52, \"title\": \"Formel 1: Gro\\u00dfer Preis von Monaco 2024\", \"description\": \"Das Rennen.\", \"media_type\": \"episode\", \"timestamp\": 1716721200, \"release_timestamp\": 1716721802, \"modified_timestamp\": 1716967501, \"_type\": \"multi_video\", \"entries\": [{\"id\": \"17503881\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/360/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/playlist.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"de\": [{\"url\": \"https://api-tvthek.orf.at/assets/subtitles/17503881.vtt\", \"ext\": \"vtt\"}]}, \"_old_archive_ids\": [\"orftvthek 17503881\"], \"duration\": 120.0, \"title\": \"Start\", \"media_type\": \"segment\", \"playlist_count\": 2, \"playlist\": \"Formel 1: Gro\\u00dfer Preis von Monaco 2024\", \"playlist_id\": \"14227864\", \"playlist_title\": \"Formel 1: Gro\\u00dfer Preis von Monaco 2024\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024\", \"n_entries\": 2, \"webpage_url\": \"https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024\", \"webpage_url_basename\": \"formel-1-grosser-preis-von-monaco-2024\", \"webpage_url_domain\": \"on.orf.at\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"orf:on\", \"extractor_key\": \"ORFON\", \"playlist_autonumber\": 1, \"display_id\": \"17503881\", \"fulltitle\": \"Start\", \"duration_string\": \"2:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-3121\", \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Start [17503881].mp4\", \"filename\": \"Start [17503881].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}, {\"id\": \"17503882\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/360/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/playlist.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"_old_archive_ids\": [\"orftvthek 17503882\"], \"duration\": 60.0, \"title\": \"Ziel\", \"playlist_count\": 2, \"playlist\": \"Formel 1: Gro\\u00dfer Preis von Monaco 2024\", \"playlist_id\": \"14227864\", \"playlist_title\": \"Formel 1: Gro\\u00dfer Preis von Monaco 2024\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024\", \"n_entries\": 2, \"webpage_url\": \"https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024\", \"webpage_url_basename\": \"formel-1-grosser-preis-von-monaco-2024\", \"webpage_url_domain\": \"on.orf.at\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"orf:on\", \"extractor_key\": \"ORFON\", \"playlist_autonumber\": 2, \"display_id\": \"17503882\", \"fulltitle\": \"Ziel\", \"duration_string\": \"1:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-3121\", \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Ziel [17503882].mp4\", \"filename\": \"Ziel [17503882].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"webpage_url\": \"https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024\", \"original_url\": \"https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024\", \"webpage_url_basename\": \"formel-1-grosser-preis-von-monaco-2024\", \"webpage_url_domain\": \"on.orf.at\", \"extractor\": \"orf:on\", \"extractor_key\": \"ORFON\", \"duration_string\": \"5:06:50\", \"upload_date\": \"20240526\", \"release_date\": \"20240526\", \"modified_date\": \"20240529\", \"release_year\": 2024, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+   "args": [
+    "--print",
+    "playlist:%(_type)s|%(id)s|%(title)s|%(playlist_count)s|%(duration)s|%(media_type)s",
+    "--print",
+    "%(id)s|%(playlist_index)s|%(title)s|%(webpage_url)s|%(format_id)s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "17503881|1|Start|https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024|hls-3121",
+    "17503882|2|Ziel|https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024|hls-3121",
+    "multi_video|14227864|Formel 1: Großer Preis von Monaco 2024|2|18410.52|episode"
+   ],
+   "stderr": [
+    "ERROR: unable to download video data: HTTP Error 404: Not Found",
+    "ERROR: unable to download video data: HTTP Error 404: Not Found",
+    "ERROR: Aborting concatenation because some downloads failed"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"14227864\", \"duration\": 18410.52, \"title\": \"Formel 1: Gro\\u00dfer Preis von Monaco 2024\", \"description\": \"Das Rennen.\", \"media_type\": \"episode\", \"timestamp\": 1716721200, \"release_timestamp\": 1716721802, \"modified_timestamp\": 1716967501, \"_type\": \"multi_video\", \"entries\": [{\"id\": \"17503881\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/360/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/playlist.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"de\": [{\"url\": \"https://api-tvthek.orf.at/assets/subtitles/17503881.vtt\", \"ext\": \"vtt\"}]}, \"_old_archive_ids\": [\"orftvthek 17503881\"], \"duration\": 120.0, \"title\": \"Start\", \"media_type\": \"segment\", \"playlist_count\": 2, \"playlist\": \"Formel 1: Gro\\u00dfer Preis von Monaco 2024\", \"playlist_id\": \"14227864\", \"playlist_title\": \"Formel 1: Gro\\u00dfer Preis von Monaco 2024\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024\", \"n_entries\": 2, \"webpage_url\": \"https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024\", \"webpage_url_basename\": \"formel-1-grosser-preis-von-monaco-2024\", \"webpage_url_domain\": \"on.orf.at\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"orf:on\", \"extractor_key\": \"ORFON\", \"playlist_autonumber\": 1, \"display_id\": \"17503881\", \"fulltitle\": \"Start\", \"duration_string\": \"2:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-3121\", \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Start [17503881].mp4\", \"filename\": \"Start [17503881].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503881/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}, {\"id\": \"17503882\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/360/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/playlist.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"_old_archive_ids\": [\"orftvthek 17503882\"], \"duration\": 60.0, \"title\": \"Ziel\", \"playlist_count\": 2, \"playlist\": \"Formel 1: Gro\\u00dfer Preis von Monaco 2024\", \"playlist_id\": \"14227864\", \"playlist_title\": \"Formel 1: Gro\\u00dfer Preis von Monaco 2024\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024\", \"n_entries\": 2, \"webpage_url\": \"https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024\", \"webpage_url_basename\": \"formel-1-grosser-preis-von-monaco-2024\", \"webpage_url_domain\": \"on.orf.at\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"orf:on\", \"extractor_key\": \"ORFON\", \"playlist_autonumber\": 2, \"display_id\": \"17503882\", \"fulltitle\": \"Ziel\", \"duration_string\": \"1:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-3121\", \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Ziel [17503882].mp4\", \"filename\": \"Ziel [17503882].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"webpage_url\": \"https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024\", \"original_url\": \"https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024\", \"webpage_url_basename\": \"formel-1-grosser-preis-von-monaco-2024\", \"webpage_url_domain\": \"on.orf.at\", \"extractor\": \"orf:on\", \"extractor_key\": \"ORFON\", \"duration_string\": \"5:06:50\", \"upload_date\": \"20240526\", \"release_date\": \"20240526\", \"modified_date\": \"20240529\", \"release_year\": 2024, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+   "args": [
+    "--playlist-items",
+    "2",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"17503882\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/360/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/playlist.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"_old_archive_ids\": [\"orftvthek 17503882\"], \"duration\": 60.0, \"title\": \"Ziel\", \"playlist_count\": null, \"playlist\": \"Formel 1: Gro\\u00dfer Preis von Monaco 2024\", \"playlist_id\": \"14227864\", \"playlist_title\": \"Formel 1: Gro\\u00dfer Preis von Monaco 2024\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024\", \"n_entries\": 1, \"webpage_url\": \"https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024\", \"webpage_url_basename\": \"formel-1-grosser-preis-von-monaco-2024\", \"webpage_url_domain\": \"on.orf.at\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"orf:on\", \"extractor_key\": \"ORFON\", \"playlist_autonumber\": 1, \"display_id\": \"17503882\", \"fulltitle\": \"Ziel\", \"duration_string\": \"1:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/17503882/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Ziel [17503882].mp4\", \"filename\": \"Ziel [17503882].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14226549",
+   "args": [
+    "--extractor-args",
+    "orfon:prefer_segments_playlist",
+    "--print",
+    "playlist:%(_type)s|%(id)s|%(title)s",
+    "--print",
+    "%(id)s|%(title)s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "15639807|Wetter",
+    "15639808|Jugendbande: Einbrüche aus Langeweile",
+    "multi_video|14226549|ZIB 2"
+   ],
+   "stderr": [
+    "ERROR: unable to download video data: HTTP Error 404: Not Found",
+    "ERROR: unable to download video data: HTTP Error 404: Not Found",
+    "ERROR: Aborting concatenation because some downloads failed"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+   "args": [
+    "--simulate",
+    "--exec",
+    "playlist:false"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[orf:on] Extracting URL: https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+    "[orf:on] 14227864: Downloading JSON metadata",
+    "[download] Downloading multi_video: Formel 1: Großer Preis von Monaco 2024",
+    "[orf:on] 17503881: Downloading m3u8 information",
+    "[orf:on] 17503882: Downloading m3u8 information",
+    "[orf:on] Playlist Formel 1: Großer Preis von Monaco 2024: Downloading 2 items of 2",
+    "[download] Downloading item 1 of 2",
+    "[info] 17503881: Downloading 1 format(s): hls-3121",
+    "[download] Downloading item 2 of 2",
+    "[info] 17503882: Downloading 1 format(s): hls-3121",
+    "[Exec] Executing command: false"
+   ],
+   "stderr": [
+    "ERROR: Command returned error code 1"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+   "args": [
+    "-i",
+    "--simulate",
+    "--exec",
+    "playlist:false"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[orf:on] Extracting URL: https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+    "[orf:on] 14227864: Downloading JSON metadata",
+    "[download] Downloading multi_video: Formel 1: Großer Preis von Monaco 2024",
+    "[orf:on] 17503881: Downloading m3u8 information",
+    "[orf:on] 17503882: Downloading m3u8 information",
+    "[orf:on] Playlist Formel 1: Großer Preis von Monaco 2024: Downloading 2 items of 2",
+    "[download] Downloading item 1 of 2",
+    "[info] 17503881: Downloading 1 format(s): hls-3121",
+    "[download] Downloading item 2 of 2",
+    "[info] 17503882: Downloading 1 format(s): hls-3121",
+    "[Exec] Executing command: false",
+    "[download] Finished downloading playlist: Formel 1: Großer Preis von Monaco 2024"
+   ],
+   "stderr": [
+    "ERROR: Command returned error code 1"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://radiothek.orf.at/ooe/20220801/OGMO",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"OGMO\", \"title\": \"Guten Morgen O\\u00d6\", \"description\": \"Mit Musik und Nachrichten.\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"2022-08-01_0459_tl_66_7DaysMon1_319062\", \"ext\": \"mp3\", \"url\": \"https://loopstream01.apa.at/?channel=oe2o&id=2022-08-01_0459_tl_66_7DaysMon1_319062.mp3\", \"_old_archive_ids\": [\"orfooe 2022-08-01_0459_tl_66_7DaysMon1_319062\"], \"title\": \"Guten Morgen O\\u00d6\", \"description\": \"Mit Musik und Nachrichten.\", \"duration\": 18000.0, \"timestamp\": 1659322789, \"series\": \"Guten Morgen\", \"playlist_count\": 2, \"playlist\": \"Guten Morgen O\\u00d6\", \"playlist_id\": \"OGMO\", \"playlist_title\": \"Guten Morgen O\\u00d6\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://radiothek.orf.at/ooe/20220801/OGMO\", \"n_entries\": 2, \"webpage_url\": \"https://radiothek.orf.at/ooe/20220801/OGMO\", \"webpage_url_basename\": \"OGMO\", \"webpage_url_domain\": \"radiothek.orf.at\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"orf:radio\", \"extractor_key\": \"ORFRadio\", \"playlist_autonumber\": 1, \"display_id\": \"2022-08-01_0459_tl_66_7DaysMon1_319062\", \"fulltitle\": \"Guten Morgen O\\u00d6\", \"duration_string\": \"5:00:00\", \"upload_date\": \"20220801\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Guten Morgen O\\u00d6 [2022-08-01_0459_tl_66_7DaysMon1_319062].mp3\", \"filename\": \"Guten Morgen O\\u00d6 [2022-08-01_0459_tl_66_7DaysMon1_319062].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"2022-08-01_0959_tl_66_7DaysMon1_319063\", \"ext\": \"mp3\", \"url\": \"https://loopstream01.apa.at/?channel=oe2o&id=2022-08-01_0959_tl_66_7DaysMon1_319063.mp3\", \"_old_archive_ids\": [\"orfooe 2022-08-01_0959_tl_66_7DaysMon1_319063\"], \"title\": \"Guten Morgen O\\u00d6\", \"description\": \"Mit Musik und Nachrichten.\", \"timestamp\": 1659340789, \"series\": \"Guten Morgen\", \"playlist_count\": 2, \"playlist\": \"Guten Morgen O\\u00d6\", \"playlist_id\": \"OGMO\", \"playlist_title\": \"Guten Morgen O\\u00d6\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://radiothek.orf.at/ooe/20220801/OGMO\", \"n_entries\": 2, \"webpage_url\": \"https://radiothek.orf.at/ooe/20220801/OGMO\", \"webpage_url_basename\": \"OGMO\", \"webpage_url_domain\": \"radiothek.orf.at\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"orf:radio\", \"extractor_key\": \"ORFRadio\", \"playlist_autonumber\": 2, \"display_id\": \"2022-08-01_0959_tl_66_7DaysMon1_319063\", \"fulltitle\": \"Guten Morgen O\\u00d6\", \"upload_date\": \"20220801\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Guten Morgen O\\u00d6 [2022-08-01_0959_tl_66_7DaysMon1_319063].mp3\", \"filename\": \"Guten Morgen O\\u00d6 [2022-08-01_0959_tl_66_7DaysMon1_319063].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://radiothek.orf.at/ooe/20220801/OGMO\", \"original_url\": \"https://radiothek.orf.at/ooe/20220801/OGMO\", \"webpage_url_basename\": \"OGMO\", \"webpage_url_domain\": \"radiothek.orf.at\", \"extractor\": \"orf:radio\", \"extractor_key\": \"ORFRadio\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://ooe.orf.at/player/20220801/OGMO",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(duration)s|%(timestamp)s|%(series)s|%(ext)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2022-08-01_0459_tl_66_7DaysMon1_319062|Guten Morgen OÖ|Mit Musik und Nachrichten.|18000.0|1659322789|Guten Morgen|mp3|https://loopstream01.apa.at/?channel=oe2o&id=2022-08-01_0459_tl_66_7DaysMon1_319062.mp3",
+    "2022-08-01_0959_tl_66_7DaysMon1_319063|Guten Morgen OÖ|Mit Musik und Nachrichten.|NA|1659340789|Guten Morgen|mp3|https://loopstream01.apa.at/?channel=oe2o&id=2022-08-01_0959_tl_66_7DaysMon1_319063.mp3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://oe3.orf.at/player/20200424/3WEK",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3WEK\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://oe3.orf.at/player/20200424/3WEK\", \"original_url\": \"https://oe3.orf.at/player/20200424/3WEK\", \"webpage_url_basename\": \"3WEK\", \"webpage_url_domain\": \"oe3.orf.at\", \"extractor\": \"orf:radio\", \"extractor_key\": \"ORFRadio\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://sound.orf.at/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"nicolas-stockhammer-15102023\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"url\": \"https://podcast.orf.example.test/oe3/fbm/stockhammer.mp3\", \"title\": \"Nicolas Stockhammer (15.10.2023)\", \"description\": \"Ein Gespr\\u00e4ch.\", \"duration\": 3396.0, \"series\": \"Fr\\u00fchst\\u00fcck bei mir\", \"webpage_url\": \"https://sound.orf.at/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023\", \"original_url\": \"https://sound.orf.at/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023\", \"webpage_url_basename\": \"nicolas-stockhammer-15102023\", \"webpage_url_domain\": \"sound.orf.at\", \"extractor\": \"orf:podcast\", \"extractor_key\": \"ORFPodcast\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"nicolas-stockhammer-15102023\", \"fulltitle\": \"Nicolas Stockhammer (15.10.2023)\", \"duration_string\": \"56:36\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Nicolas Stockhammer (15.10.2023) [nicolas-stockhammer-15102023].mp3\", \"filename\": \"Nicolas Stockhammer (15.10.2023) [nicolas-stockhammer-15102023].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://sound.orf.at/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[orf:podcast] Extracting URL: https://sound.orf.at/podcast/oe3/fruehstueck-bei-mir/nicolas-stockhammer-15102023",
+    "[orf:podcast] nicolas-stockhammer-15102023: Downloading JSON metadata",
+    "[info] nicolas-stockhammer-15102023: Downloading 1 format(s): 0",
+    "[download] Destination: nicolas-stockhammer-15102023.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "nicolas-stockhammer-15102023.mp3": 17
+   }
+  },
+  {
+   "url": "https://sound.orf.at/podcast/fm4/show/leer",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [orf:podcast] leer: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

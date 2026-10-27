@@ -1,0 +1,49 @@
+{
+ "id": 14210000,
+ "title": "School of Champions (4/8)",
+ "description": "Die Skischule.",
+ "video_type": "episode",
+ "age_classification": "12",
+ "exact_duration": 2651080,
+ "date": "2024-01-29T21:08:42+01:00",
+ "release_date": "2024-01-28T21:06:02+01:00",
+ "updated_at": "2024-04-10T15:44:23+02:00",
+ "is_drm_protected": false,
+ "sources": {
+  "hls": [
+   {
+    "src": "https://apasfiis.sf.apa.at/ipad/gp/14210000/playlist.m3u8",
+    "quality": "QXB"
+   },
+   {
+    "src": "not a url"
+   }
+  ],
+  "dash": [
+   {
+    "src": "https://apasfiis.sf.apa.at/dash/gp/14210000/manifest.mpd"
+   }
+  ],
+  "progressive_download": [
+   {
+    "src": "https://apasfiis.sf.apa.at/ipad/gp/14210000_Q8C.mp4"
+   }
+  ]
+ },
+ "_embedded": {
+  "image": {
+   "public_urls": {
+    "highlight_teaser": {
+     "url": "https://api-tvthek.orf.at/assets/segments/0167/98/thumb_16697671_segments_highlight_teaser.jpeg"
+    }
+   }
+  },
+  "subtitle": {
+   "xml_url": "https://api-tvthek.orf.at/assets/subtitles/0167/14210000.xml",
+   "srt_url": "https://api-tvthek.orf.at/assets/subtitles/0167/14210000.srt",
+   "vtt_url": "https://api-tvthek.orf.at/assets/subtitles/0167/14210000.vtt",
+   "sami_url": null,
+   "ttml_url": "https://api-tvthek.orf.at/assets/subtitles/0167/14210000.xml"
+  }
+ }
+}

@@ -1,0 +1,101 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www3.nhk.or.jp/nhkworld/en/shows/2049165/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2049165-en\", \"title\": \"Japan Railway Journal - Hokuriku Shinkansen\", \"series\": \"Japan Railway Journal\", \"episode\": \"Hokuriku Shinkansen\", \"description\": \"The new line.\", \"release_timestamp\": 1733391000, \"categories\": [\"Travel\"], \"thumbnails\": [{\"url\": \"https://www3.nhk.or.jp/nhkworld/upld/thumbnails/2049165.jpg\", \"width\": 640, \"height\": 360, \"id\": \"0\", \"resolution\": \"640x360\"}], \"webpage_url\": \"https://www3.nhk.or.jp/nhkworld/en/shows/2049165/\", \"extractor_key\": \"NhkVod\", \"extractor\": \"NhkVod\", \"formats\": [{\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://media-stream.nhk.test/2049165/360/index.m3u8\", \"manifest_url\": \"https://media-stream.nhk.test/2049165/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}, {\"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://media-stream.nhk.test/2049165/720/index.m3u8\", \"manifest_url\": \"https://media-stream.nhk.test/2049165/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://media-stream.nhk.test/2049165/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"duration\": 1740, \"timestamp\": 1733392800, \"original_url\": \"https://www3.nhk.or.jp/nhkworld/en/shows/2049165/\", \"webpage_url_basename\": \"2049165\", \"webpage_url_domain\": \"www3.nhk.or.jp\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://www3.nhk.or.jp/nhkworld/upld/thumbnails/2049165.jpg\", \"display_id\": \"2049165-en\", \"fulltitle\": \"Japan Railway Journal - Hokuriku Shinkansen\", \"duration_string\": \"29:00\", \"upload_date\": \"20241205\", \"release_date\": \"20241205\", \"release_year\": 2024, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://media-stream.nhk.test/2049165/720/index.m3u8\", \"manifest_url\": \"https://media-stream.nhk.test/2049165/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\", \"_filename\": \"Japan Railway Journal - Hokuriku Shinkansen [2049165-en].mp4\", \"filename\": \"Japan Railway Journal - Hokuriku Shinkansen [2049165-en].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www3.nhk.or.jp/nhkworld/en/shows/2049166/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [NhkVod] 2049166: Stream not found; it has most likely expired"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www3.nhk.or.jp/nhkworld/en/shows/2049166/",
+   "args": [
+    "--ignore-no-formats-error",
+    "--print",
+    "%(id)s|%(title)s|%(formats)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2049166-en|Gone|[]"
+   ],
+   "stderr": [
+    "WARNING: [NhkVod] Stream not found; it has most likely expired",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www3.nhk.or.jp/nhkworld/en/shows/audio/livinginjapan-20240901-1/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"livinginjapan-20240901-1-en\", \"title\": \"Living in Japan - At the station\", \"series\": \"Living in Japan\", \"episode\": \"At the station\", \"extractor_key\": \"NhkVod\", \"extractor\": \"NhkVod\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://vod-stream.nhk.jp/nhkworld/rj/podcast/livinginjapan-20240901-1/360/index.m3u8\", \"manifest_url\": \"https://vod-stream.nhk.jp/nhkworld/rj/podcast/livinginjapan-20240901-1/index.m3u8\", \"tbr\": 921.0, \"ext\": \"m4a\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"en\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://vod-stream.nhk.jp/nhkworld/rj/podcast/livinginjapan-20240901-1/720/index.m3u8\", \"manifest_url\": \"https://vod-stream.nhk.jp/nhkworld/rj/podcast/livinginjapan-20240901-1/index.m3u8\", \"tbr\": 3121.0, \"ext\": \"m4a\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"en\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"webpage_url\": \"https://www3.nhk.or.jp/nhkworld/en/shows/audio/livinginjapan-20240901-1/\", \"original_url\": \"https://www3.nhk.or.jp/nhkworld/en/shows/audio/livinginjapan-20240901-1/\", \"webpage_url_basename\": \"livinginjapan-20240901-1\", \"webpage_url_domain\": \"www3.nhk.or.jp\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"livinginjapan-20240901-1-en\", \"fulltitle\": \"Living in Japan - At the station\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://vod-stream.nhk.jp/nhkworld/rj/podcast/livinginjapan-20240901-1/720/index.m3u8\", \"manifest_url\": \"https://vod-stream.nhk.jp/nhkworld/rj/podcast/livinginjapan-20240901-1/index.m3u8\", \"tbr\": 3121.0, \"ext\": \"m4a\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"language\": \"en\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Living in Japan - At the station [livinginjapan-20240901-1-en].m4a\", \"filename\": \"Living in Japan - At the station [livinginjapan-20240901-1-en].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [NhkVod] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www3.nhk.or.jp/nhkworld/en/shows/9999o80/",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(series)s|%(episode)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "9999o80-en|A clip|NA|NA|3121"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www3.nhk.or.jp/nhkworld/en/shows/japanrailway/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"series\": \"Japan Railway Journal\", \"id\": \"japanrailway\", \"title\": \"Japan Railway Journal\", \"description\": \"Trains.\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"2049165-en\", \"title\": \"Japan Railway Journal - Hokuriku Shinkansen\", \"series\": \"Japan Railway Journal\", \"episode\": \"Hokuriku Shinkansen\", \"description\": \"The new line.\", \"release_timestamp\": 1733391000, \"categories\": [\"Travel\"], \"thumbnails\": [{\"url\": \"https://www3.nhk.or.jp/nhkworld/upld/thumbnails/2049165.jpg\", \"width\": 640, \"height\": 360, \"id\": \"0\", \"resolution\": \"640x360\"}], \"webpage_url\": \"https://www3.nhk.or.jp/nhkworld/en/shows/2049165/\", \"extractor_key\": \"NhkVod\", \"extractor\": \"NhkVod\", \"formats\": [{\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://media-stream.nhk.test/2049165/360/index.m3u8\", \"manifest_url\": \"https://media-stream.nhk.test/2049165/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}, {\"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://media-stream.nhk.test/2049165/720/index.m3u8\", \"manifest_url\": \"https://media-stream.nhk.test/2049165/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://media-stream.nhk.test/2049165/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"duration\": 1740, \"timestamp\": 1733392800, \"playlist_count\": 2, \"playlist\": \"Japan Railway Journal\", \"playlist_id\": \"japanrailway\", \"playlist_title\": \"Japan Railway Journal\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www3.nhk.or.jp/nhkworld/en/shows/japanrailway/\", \"n_entries\": 2, \"webpage_url_basename\": \"japanrailway\", \"webpage_url_domain\": \"www3.nhk.or.jp\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"thumbnail\": \"https://www3.nhk.or.jp/nhkworld/upld/thumbnails/2049165.jpg\", \"display_id\": \"2049165-en\", \"fulltitle\": \"Japan Railway Journal - Hokuriku Shinkansen\", \"duration_string\": \"29:00\", \"upload_date\": \"20241205\", \"release_date\": \"20241205\", \"release_year\": 2024, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"3121\", \"url\": \"https://media-stream.nhk.test/2049165/720/index.m3u8\", \"manifest_url\": \"https://media-stream.nhk.test/2049165/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\", \"_filename\": \"Japan Railway Journal - Hokuriku Shinkansen [2049165-en].mp4\", \"filename\": \"Japan Railway Journal - Hokuriku Shinkansen [2049165-en].mp4\", \"__write_download_archive\": false}], \"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://media-stream.nhk.test/2049165/720/index.m3u8\", \"manifest_url\": \"https://media-stream.nhk.test/2049165/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\"}, {\"id\": \"2049170-en\", \"title\": \"Japan Railway Journal - Shinkansen 60\", \"series\": \"Japan Railway Journal\", \"episode\": \"Shinkansen 60\", \"webpage_url\": \"https://www3.nhk.or.jp/nhkworld/en/shows/2049170/\", \"extractor_key\": \"NhkVod\", \"extractor\": \"NhkVod\", \"formats\": [{\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://media-stream.nhk.test/2049165/360/index.m3u8\", \"manifest_url\": \"https://media-stream.nhk.test/2049165/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}, {\"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://media-stream.nhk.test/2049165/720/index.m3u8\", \"manifest_url\": \"https://media-stream.nhk.test/2049165/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://media-stream.nhk.test/2049165/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"playlist_count\": 2, \"playlist\": \"Japan Railway Journal\", \"playlist_id\": \"japanrailway\", \"playlist_title\": \"Japan Railway Journal\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www3.nhk.or.jp/nhkworld/en/shows/japanrailway/\", \"n_entries\": 2, \"webpage_url_basename\": \"japanrailway\", \"webpage_url_domain\": \"www3.nhk.or.jp\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"display_id\": \"2049170-en\", \"fulltitle\": \"Japan Railway Journal - Shinkansen 60\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"3121\", \"url\": \"https://media-stream.nhk.test/2049165/720/index.m3u8\", \"manifest_url\": \"https://media-stream.nhk.test/2049165/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\", \"_filename\": \"Japan Railway Journal - Shinkansen 60 [2049170-en].mp4\", \"filename\": \"Japan Railway Journal - Shinkansen 60 [2049170-en].mp4\", \"__write_download_archive\": false}], \"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://media-stream.nhk.test/2049165/720/index.m3u8\", \"manifest_url\": \"https://media-stream.nhk.test/2049165/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\"}], \"webpage_url\": \"https://www3.nhk.or.jp/nhkworld/en/shows/japanrailway/\", \"original_url\": \"https://www3.nhk.or.jp/nhkworld/en/shows/japanrailway/\", \"webpage_url_basename\": \"japanrailway\", \"webpage_url_domain\": \"www3.nhk.or.jp\", \"extractor\": \"NhkVodProgram\", \"extractor_key\": \"NhkVodProgram\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www3.nhk.or.jp/nhkworld/en/shows/japanrailway/",
+   "args": [
+    "--playlist-items",
+    "2",
+    "--print",
+    "%(id)s|%(title)s|%(playlist_count)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2049170-en|Japan Railway Journal - Shinkansen 60|NA|https://www3.nhk.or.jp/nhkworld/en/shows/2049170/"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}
