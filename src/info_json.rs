@@ -91,7 +91,7 @@ pub fn playlist_info_json_with(
     if let Value::Object(map) = &mut value {
         map.insert("playlist_count".into(), counts.playlist_count.into());
     }
-    finish(value, "playlist", epoch, clean)
+    finish(value, info.result_type(), epoch, clean)
 }
 
 fn raw_value(value: impl serde::Serialize) -> Result<Value> {
@@ -715,8 +715,11 @@ pub fn load_info_json(path: &std::path::Path) -> Result<Vec<crate::ExtractResult
                     info.metadata.sanitize_thumbnails();
                     Ok(crate::ExtractResult::Video(info))
                 }
-                "playlist" => {
+                "playlist" | "multi_video" => {
                     map.insert("entries".into(), Value::Array(Vec::new()));
+                    if kind == "multi_video" {
+                        map.insert(crate::info::MULTI_VIDEO.into(), Value::Bool(true));
+                    }
                     serde_json::from_value(Value::Object(map))
                         .map(crate::ExtractResult::Playlist)
                         .map_err(|error| Error::InfoJson(error.to_string()))

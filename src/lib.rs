@@ -91,7 +91,9 @@ pub use info::{
     ByteIndex, ByteRange, Chapter, DownloaderOptions, ExtractResult, Fragment, HlsAes128, Metadata,
     PlaylistInfo, PyNumber, StreamKind, Thumbnail, VideoFormat, VideoInfo,
 };
-pub use info::{COMPAT_FORMAT_SPEC, COMPAT_MANIFEST_FILESIZE_APPROX, NESTED_INDEX, PendingEntries};
+pub use info::{
+    COMPAT_FORMAT_SPEC, COMPAT_MANIFEST_FILESIZE_APPROX, MULTI_VIDEO, NESTED_INDEX, PendingEntries,
+};
 pub use info_json::{
     InfoJsonWrite, info_json_path, info_value, load_info_json, playlist_info_json,
     playlist_info_json_with, to_python_json, upstream_shape, video_info_json, video_info_json_with,
@@ -1932,6 +1934,8 @@ impl YoutubeDl {
                 extractor::fetch_zdf_pages
             } else if extractor::steam_pending_state(&pending.state) {
                 extractor::fetch_steam_trailers
+            } else if extractor::orf_pending_state(&pending.state) {
+                extractor::fetch_orf_segments
             } else if extractor::ard_pending_state(&pending.state) {
                 extractor::fetch_ard_pages
             } else if extractor::vk_user_videos_pending_state(&pending.state) {
@@ -1959,6 +1963,7 @@ impl YoutubeDl {
             // `url` entries), processed once they are fetched (random-access
             // pages may fill earlier placeholders).
             let resolved = extractor::steam_pending_state(&pending.state)
+                || extractor::orf_pending_state(&pending.state)
                 || extractor::podbayfm_pending_state(&pending.state);
             playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
                 .map(|state| PendingEntries { state });
@@ -2275,16 +2280,44 @@ impl YoutubeDl {
         }
         // A playlist's entries report their sort order as each is processed.
         let playlist = matches!(result, ExtractResult::Playlist(_));
-        // `_fill_common_fields(final=False)`: a playlist's `upload_date`.
-        if let ExtractResult::Playlist(playlist) = result
-            && !playlist.extra.contains_key("upload_date")
-            && let Some(date) = playlist
-                .extra
-                .get("timestamp")
-                .and_then(serde_json::Value::as_f64)
-                .and_then(|timestamp| dates::strftime_date(timestamp.floor() as i64))
-        {
-            playlist.extra.insert("upload_date".into(), date.into());
+        // `_fill_common_fields(final=False)`: a playlist's duration string,
+        // dates from timestamps and release year.
+        if let ExtractResult::Playlist(playlist) = result {
+            let extra = &mut playlist.extra;
+            if let Some(duration) = extra.get("duration").and_then(serde_json::Value::as_f64) {
+                extra.insert(
+                    "duration_string".into(),
+                    info::format_seconds(duration.max(0.0) as u64).into(),
+                );
+            }
+            for (timestamp, date) in [
+                ("timestamp", "upload_date"),
+                ("release_timestamp", "release_date"),
+                ("modified_timestamp", "modified_date"),
+            ] {
+                if extra.get(date).is_none_or(serde_json::Value::is_null)
+                    && let Some(day) = extra
+                        .get(timestamp)
+                        .and_then(serde_json::Value::as_f64)
+                        .and_then(|value| dates::strftime_date(value.floor() as i64))
+                {
+                    extra.insert(date.into(), day.into());
+                }
+            }
+            let year_set = extra.get("release_year").is_some_and(|year| match year {
+                serde_json::Value::Null | serde_json::Value::Bool(false) => false,
+                serde_json::Value::Number(number) => number.as_f64() != Some(0.0),
+                serde_json::Value::String(text) => !text.is_empty(),
+                _ => true,
+            });
+            if !year_set
+                && let Some(year) = extra
+                    .get("release_date")
+                    .and_then(serde_json::Value::as_str)
+                    .and_then(|date| dates::py_int(&date.chars().take(4).collect::<String>()))
+            {
+                extra.insert("release_year".into(), year.into());
+            }
         }
         // `_fill_common_fields(final=False)`: the deprecated multivalue fields.
         if let ExtractResult::Playlist(playlist) = result {

@@ -58,5 +58,63 @@
   "args": [
    "-j"
   ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+  "args": [
+   "--print",
+   "playlist:%(_type)s|%(id)s|%(title)s|%(playlist_count)s|%(duration)s|%(media_type)s",
+   "--print",
+   "%(id)s|%(playlist_index)s|%(title)s|%(webpage_url)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+  "args": [
+   "--playlist-items",
+   "2",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14226549",
+  "args": [
+   "--extractor-args",
+   "orfon:prefer_segments_playlist",
+   "--print",
+   "playlist:%(_type)s|%(id)s|%(title)s",
+   "--print",
+   "%(id)s|%(title)s"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+  "args": [
+   "--simulate",
+   "--exec",
+   "playlist:false"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227864/formel-1-grosser-preis-von-monaco-2024",
+  "args": [
+   "-i",
+   "--simulate",
+   "--exec",
+   "playlist:false"
+  ]
  }
 ]

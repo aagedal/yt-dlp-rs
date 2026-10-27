@@ -1850,7 +1850,7 @@
         "src/extractor/orf.rs",
         "tests/fixtures/sites/orf/"
       ],
-      "scope": "ORFONIE episode/encrypted API (obfuscated ID), DRM error, non-fatal hls/dash sources, _embedded.subtitle de tracks, orftvthek old archive IDs, the traverse_obj metadata and --no-playlist segment selection with the _yes_playlist messages. Segment-only episodes and orfon:prefer_segments_playlist (upstream multi_video playlists) are explicit native errors; ORFRadioIE, ORFPodcastIE, ORFIPTVIE and ORFFM4StoryIE are not ported. Compared with pinned upstream output through the fixture proxy"
+      "scope": "ORFONIE episode/encrypted API (obfuscated ID), DRM error, non-fatal hls/dash sources, _embedded.subtitle de tracks, orftvthek old archive IDs, the traverse_obj metadata and --no-playlist segment selection with the _yes_playlist messages; segment-only episodes and orfon:prefer_segments_playlist as multi_video playlists of generator-extracted segments (concatenated by the default --concat-playlist multi_video); ORFRadioIE, ORFPodcastIE, ORFIPTVIE and ORFFM4StoryIE are not ported. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "parlview",

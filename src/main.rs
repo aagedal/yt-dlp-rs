@@ -364,7 +364,7 @@ struct Args {
     /// Do not force keyframes around the chapters before cutting (default)
     #[arg(long, overrides_with_all = ["force_keyframes_at_cuts", "no_force_keyframes_at_cuts"])]
     no_force_keyframes_at_cuts: bool,
-    /// Concatenate playlist entries' videos: never, always, or multi_video (default; only multi-video results, which this port's extractors do not produce)
+    /// Concatenate playlist entries' videos: never, always, or multi_video (default; only multi-video results)
     #[arg(long, value_name = "POLICY", default_value = "multi_video", value_parser = ["never", "always", "multi_video"])]
     concat_playlist: String,
     /// Split video into multiple files based on internal chapters (the "chapter" output template)
@@ -1197,7 +1197,7 @@ fn single_json(
                 .as_object_mut()
                 .expect("playlist serializes to an object");
             let entries = object.shift_remove("entries");
-            object.insert("_type".into(), "playlist".into());
+            object.insert("_type".into(), playlist.result_type().into());
             if let Some(counts) = counts {
                 object.insert("playlist_count".into(), counts.playlist_count.into());
             }
@@ -1255,11 +1255,27 @@ struct PlaylistStage {
     /// `FFmpegConcatPP` runs (`--concat-playlist` is not `never`).
     concat_pp: bool,
     keep: bool,
+    /// `ignoreerrors is True` (`-i`): `run_pp` reports a processor's error
+    /// and the stage continues.
+    ignore_errors: bool,
+}
+
+/// How [`run_playlist_stage`] ended.
+#[derive(PartialEq)]
+enum StageOutcome {
+    Done,
+    /// A processor failed under `-i`: reported, and the stage went on.
+    Failed,
+    /// A processor's `PostProcessingError` left `__process_playlist` (no
+    /// `Finished downloading playlist` or `-J` output): reported by
+    /// `_handle_extraction_exceptions`.
+    Aborted,
 }
 
 /// Upstream `run_all_pps('playlist', ...)` after the entries: playlist
-/// `--print` lines, then `FFmpegConcatPP` (`--concat-playlist always`) and
-/// `--exec playlist:` commands. Returns false after a reported failure.
+/// `--print` lines, then `FFmpegConcatPP` (`--concat-playlist always`, or
+/// `multi_video` for a `multi_video` result) and `--exec playlist:`
+/// commands.
 #[allow(clippy::too_many_arguments)]
 fn run_playlist_stage(
     dict: &serde_json::Value,
@@ -1272,7 +1288,7 @@ fn run_playlist_stage(
     downloader: &YoutubeDl,
     stage: PlaylistStage,
     metadata_actions: &yt_dlp_rs::metadata_parser::MetadataActions,
-) -> Result<bool, Box<dyn std::error::Error>> {
+) -> Result<StageOutcome, Box<dyn std::error::Error>> {
     let lines = print_templates
         .iter()
         .filter(|template| template.stage() == Stage::Playlist)
@@ -1299,10 +1315,16 @@ fn run_playlist_stage(
         }
         if let Err(error) = metadata_actions.run_reported("playlist", &mut parsed, options) {
             report_error!("ERROR: {error}");
-            return Ok(false);
+            return Ok(StageOutcome::Aborted);
         }
     }
     let dict = &parsed;
+    // `FFmpegConcatPP(only_multi_video=True)` for `--concat-playlist
+    // multi_video`.
+    let concat = stage.concat
+        || (stage.concat_pp
+            && dict.get("_type").and_then(|kind| kind.as_str()) == Some("multi_video"));
+    let mut outcome = StageOutcome::Done;
     if stage.concat_pp {
         postprocess_progress("Concat", "started");
     }
@@ -1313,7 +1335,7 @@ fn run_playlist_stage(
             postprocess_progress("Concat", "finished");
         }
     };
-    if stage.concat && !stage.simulate && !files.is_empty() {
+    if concat && !stage.simulate && !files.is_empty() {
         let concat = (|| -> yt_dlp_rs::Result<()> {
             let Some(inputs) = files.iter().cloned().collect::<Option<Vec<PathBuf>>>() else {
                 return Err(yt_dlp_rs::Error::Postprocess(
@@ -1399,12 +1421,22 @@ fn run_playlist_stage(
             }
             Ok(())
         })();
+        // `str(PostProcessingError)`, by `run_pp` under `-i`, else by
+        // `_handle_extraction_exceptions`.
         if let Err(error) = concat {
-            report_error!("ERROR: Postprocessing: {error}");
-            return Ok(false);
+            match error {
+                yt_dlp_rs::Error::Postprocess(message) => report_error!("ERROR: {message}"),
+                error => report_error!("ERROR: {error}"),
+            }
+            if !stage.ignore_errors {
+                return Ok(StageOutcome::Aborted);
+            }
+            outcome = StageOutcome::Failed;
         }
     }
-    finish_concat();
+    if outcome == StageOutcome::Done {
+        finish_concat();
+    }
     // One `ExecPP` runs the stage's commands.
     let has_exec = exec.stage(Stage::Playlist).next().is_some();
     if has_exec {
@@ -1414,14 +1446,17 @@ fn run_playlist_stage(
         let command = command.render_dict(dict, options)?;
         screen!("[Exec] Executing command: {command}");
         if let Err(error) = ExecCommand::run(&command) {
-            report_error!("ERROR: Postprocessing: {error}");
-            return Ok(false);
+            report_error!("ERROR: {error}");
+            if !stage.ignore_errors {
+                return Ok(StageOutcome::Aborted);
+            }
+            return Ok(StageOutcome::Failed);
         }
     }
     if has_exec {
         postprocess_progress("Exec", "finished");
     }
-    Ok(true)
+    Ok(outcome)
 }
 
 /// Python `str(float)` for ordinary values (`1.0`, `0.5`, `nan`, `inf`).
@@ -3894,8 +3929,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         }
                     }
                 }
-                if let Some(dict) = &outer.dict
-                    && !run_playlist_stage(
+                let outcome = match &outer.dict {
+                    Some(dict) => run_playlist_stage(
                         dict,
                         &vec![None; outer.entry_count],
                         &print_templates,
@@ -3909,11 +3944,20 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             concat: args.concat_playlist == "always",
                             concat_pp: args.concat_playlist != "never",
                             keep: args.keep_video,
+                            ignore_errors: error_mode == ErrorMode::Ignore,
                         },
                         &metadata_actions,
-                    )?
-                {
+                    )?,
+                    None => StageOutcome::Done,
+                };
+                if outcome != StageOutcome::Done {
                     failed = true;
+                }
+                if outcome == StageOutcome::Aborted {
+                    if abort_on_error {
+                        break;
+                    }
+                    continue;
                 }
                 screen!("[download] Finished downloading playlist: {}", outer.title);
                 if let Some(mut value) = outer.single_json {
@@ -3951,7 +3995,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 .into_iter()
                                 .find(|text| !text.is_empty())
                                 .map_or("<Untitled>", |text| text.as_str());
-                            screen!("[download] Downloading playlist: {title}");
+                            screen!("[download] Downloading {}: {title}", playlist.result_type());
                             warning!(
                                 "WARNING: The info failed to download: There are no entries; trying with URL {}",
                                 playlist.webpage_url
@@ -3974,7 +4018,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         .into_iter()
                         .find(|text| !text.is_empty())
                         .map_or("<Untitled>", |text| text.as_str());
-                    screen!("[download] Downloading playlist: {title}");
+                    screen!("[download] Downloading {}: {title}", playlist.result_type());
                     header_printed = true;
                     if let Some(pending) = &mut playlist.pending {
                         pending.request_entries(&playlist_selection);
@@ -4090,8 +4134,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ExtractResult::Video(_) => None,
         };
-        if let Some(title) = playlist_title.as_ref().filter(|_| !header_printed) {
-            screen!("[download] Downloading playlist: {title}");
+        if let (Some(title), ExtractResult::Playlist(playlist)) = (&playlist_title, &extracted)
+            && !header_printed
+        {
+            screen!("[download] Downloading {}: {title}", playlist.result_type());
         }
         // The playlist info JSON written before the entries, rewritten after
         // them (`_infojson_written is True`).
@@ -4167,9 +4213,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     .map_or_else(String::new, |count| format!(" of {count}"))
             );
             // Upstream keeps resolved entries unless `extract_flat` became
-            // `discard`/`discard_in_playlist` (nothing needs the playlist's
-            // entries but the default multi-video concatenation).
+            // `discard`/`discard_in_playlist` (which keeps a `multi_video`'s).
             let keeps_entries = args.flat_playlist
+                || playlist.result_type() == "multi_video"
                 || args.dump_single_json
                 || prints_stage(Stage::Playlist)
                 || (args.write_info_json && args.no_clean_info_json && playlist_files)
@@ -6069,8 +6115,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
             }
         }
-        if let Some(dict) = &playlist_dict
-            && !run_playlist_stage(
+        let outcome = match &playlist_dict {
+            Some(dict) => run_playlist_stage(
                 dict,
                 &entry_files.borrow(),
                 &print_templates,
@@ -6084,11 +6130,20 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     concat: args.concat_playlist == "always",
                     concat_pp: args.concat_playlist != "never",
                     keep: args.keep_video,
+                    ignore_errors: error_mode == ErrorMode::Ignore,
                 },
                 &metadata_actions,
-            )?
-        {
+            )?,
+            None => StageOutcome::Done,
+        };
+        if outcome != StageOutcome::Done {
             failed = true;
+        }
+        if outcome == StageOutcome::Aborted {
+            if abort_on_error {
+                break;
+            }
+            continue;
         }
         if let Some(title) = &playlist_title {
             screen!("[download] Finished downloading playlist: {title}");

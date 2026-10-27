@@ -464,6 +464,7 @@ pub use onefootball::{OneFootball, suitable as onefootball_suitable};
 pub use onenewsnz::{OneNewsNz, suitable as onenewsnz_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
 pub use orf::{OrfOn, suitable as orf_on_suitable};
+pub(crate) use orf::{fetch_segments as fetch_orf_segments, is_pending_state as orf_pending_state};
 pub use parlview::{Parlview, suitable as parlview_suitable};
 pub use pearvideo::{PearVideo, suitable as pearvideo_suitable};
 pub use peertube::{

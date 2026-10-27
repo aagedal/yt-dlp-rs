@@ -191,6 +191,79 @@ fn hds_downloads_assemble_flv_like_upstream_f4mfd() {
     assert_eq!(std::fs::read(work.path().join("o.flv")).unwrap(), expected);
 }
 
+#[cfg(unix)]
+#[test]
+fn multi_video_results_are_concatenated_by_default() {
+    // ORF ON's segment playlist is upstream's `multi_video`: the default
+    // `--concat-playlist multi_video` joins its entries (FFmpegConcatPP)
+    // and `never` keeps them. FFmpeg/ffprobe are recording stand-ins.
+    use std::os::unix::fs::PermissionsExt;
+    let proxy = site_proxy::SiteProxy::start("orf");
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffmpeg version test'; exit 0; fi\n\
+        for a in \"$@\"; do last=\"$a\"; done\nprintf 'joined' > \"$last\"\n";
+    let ffprobe = "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffprobe version test'; exit 0; fi\n\
+        printf '{\"streams\": [{\"codec_name\": \"h264\"}, {\"codec_name\": \"aac\"}]}'\n";
+    for (name, script) in [("ffmpeg", ffmpeg), ("ffprobe", ffprobe)] {
+        let path = tools.path().join(name);
+        std::fs::write(&path, script).unwrap();
+        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    }
+    let run = |args: &[&str]| {
+        let work = tempfile::tempdir().unwrap();
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args([
+                "--ignore-config",
+                "--proxy",
+                &proxy.url,
+                "--no-check-certificate",
+                "--no-progress",
+                "--fixup",
+                "never",
+                "-o",
+                "%(title)s.%(ext)s",
+            ])
+            .arg("--ffmpeg-location")
+            .arg(tools.path())
+            .args(args)
+            .arg("https://on.orf.at/video/14227999")
+            .current_dir(work.path())
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let mut files: Vec<String> = std::fs::read_dir(work.path())
+            .unwrap()
+            .map(|entry| entry.unwrap().file_name().to_string_lossy().into_owned())
+            .collect();
+        files.sort();
+        let joined = std::fs::read(work.path().join("Monaco.mp4")).ok();
+        (
+            String::from_utf8_lossy(&output.stdout).into_owned(),
+            files,
+            joined,
+        )
+    };
+    let (stdout, files, joined) = run(&[]);
+    assert!(
+        stdout.contains("[download] Downloading multi_video: Monaco"),
+        "{stdout}"
+    );
+    assert!(
+        stdout.contains("[Concat] Concatenating 2 files; Destination: Monaco.mp4"),
+        "{stdout}"
+    );
+    assert_eq!(files, ["Monaco.mp4"]);
+    assert_eq!(joined.as_deref(), Some(&b"joined"[..]));
+    let (stdout, files, joined) = run(&["--concat-playlist", "never"]);
+    assert!(!stdout.contains("[Concat]"), "{stdout}");
+    assert_eq!(files, ["Teil 1.mp4", "Teil 2.mp4"]);
+    assert_eq!(joined, None);
+}
+
 /// The MIME boundary of an MHTML document.
 fn mhtml_boundary(document: &[u8]) -> String {
     let text = String::from_utf8_lossy(document);

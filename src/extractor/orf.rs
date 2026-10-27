@@ -3,12 +3,15 @@
 //! base64 ID), with its HLS/DASH `sources`, `_embedded.subtitle` URLs,
 //! metadata, the DRM error and `--no-playlist` segment selection.
 //!
-//! Not supported natively: episodes without a combined version (and
-//! `orfon:prefer_segments_playlist`), which upstream returns as a
-//! `multi_video` playlist of their segments (an explicit error); the
-//! `orf:radio`, `orf:podcast`, `orf:iptv` and `orf:fm4:story` extractors.
+//! Episodes without a combined version (or with
+//! `orfon:prefer_segments_playlist`) are a `multi_video` playlist of their
+//! segments, extracted as the playlist is processed like upstream's
+//! generator (see [`fetch_segments`]).
+//!
+//! Not ported: the `orf:radio`, `orf:podcast`, `orf:iptv` and
+//! `orf:fm4:story` extractors.
 use super::{Extractor, dict_info, download_json, extract_m3u8_master_optional};
-use crate::{Error, Result, SubtitleFormat, Subtitles, VideoInfo};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoInfo};
 use base64::Engine;
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -219,7 +222,11 @@ impl Extractor for OrfOn {
         KEY
     }
 
-    fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         let Some(found) = VALID_URL.captures(url.as_str()) else {
             return Ok(None);
         };
@@ -267,7 +274,8 @@ impl Extractor for OrfOn {
                 crate::screen::screen(&format!(
                     "[{NAME}] Downloading just the segment {segment_id} because of --no-playlist"
                 ));
-                return extract_video_info(client, url, segment_id, selected).map(Some);
+                return extract_video_info(client, url, segment_id, selected)
+                    .map(|info| Some(ExtractResult::Video(info)));
             }
             crate::screen::screen(&format!(
                 "[{NAME}] Downloading episode {video_id} - add --no-playlist to download just the segment {segment_id}"
@@ -285,12 +293,101 @@ impl Extractor for OrfOn {
             crate::manifest_args::configuration_arg("orfon", "prefer_segments_playlist", false)
                 .is_some_and(|values| !values.is_empty());
         if prefer_segments || !has_sources {
-            return Err(Error::UnsupportedHtml5(
-                "ORF ON segment playlists (multi_video results) are not supported natively".into(),
-            ));
+            return Ok(Some(segments_playlist(url, &video_id, &api, segments)));
         }
-        extract_video_info(client, url, &video_id, &api).map(Some)
+        extract_video_info(client, url, &video_id, &api)
+            .map(|info| Some(ExtractResult::Video(info)))
     }
+}
+
+/// `playlist_result((_extract_video_info(...) for segment in segments),
+/// video_id, **_parse_metadata(api_json), multi_video=True)`.
+fn segments_playlist(
+    url: &Url,
+    video_id: &str,
+    api: &Value,
+    segments: Vec<&Value>,
+) -> ExtractResult {
+    let metadata = parse_metadata(api);
+    let mut keys: Vec<&str> = metadata.iter().map(|(key, _)| *key).collect();
+    if !keys.contains(&"id") {
+        keys.push("id");
+    }
+    let mut extra = Map::new();
+    let mut title = String::new();
+    for (key, value) in metadata {
+        match key {
+            "id" => {}
+            "title" => title = value.as_str().unwrap_or_default().to_owned(),
+            _ => {
+                extra.insert(key.into(), value);
+            }
+        }
+    }
+    extra.insert(
+        crate::info_order::INFO_SHAPE.into(),
+        format!(
+            "playlist-dict;{}{}",
+            keys.join(","),
+            crate::info_order::GENERATOR
+        )
+        .into(),
+    );
+    extra.insert(crate::info::MULTI_VIDEO.into(), Value::Bool(true));
+    let state = json!({
+        "kind": NAME,
+        "url": url.as_str(),
+        "segments": segments,
+    });
+    ExtractResult::Playlist(PlaylistInfo {
+        id: video_id.to_owned(),
+        title,
+        webpage_url: url.clone(),
+        extractor: NAME.into(),
+        extractor_key: KEY.into(),
+        nested: Vec::new(),
+        pending: Some(crate::PendingEntries { state }),
+        entries: Vec::new(),
+        extra,
+    })
+}
+
+/// Whether a playlist's pending state is an ORF ON episode's segments.
+pub(crate) fn is_pending_state(state: &Value) -> bool {
+    state["kind"] == NAME
+}
+
+/// The segments generator: each segment's `_extract_video_info`, up to
+/// `limit` entries.
+pub(crate) fn fetch_segments(
+    client: &Client,
+    state: Value,
+    limit: Option<usize>,
+    entries: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let Value::Object(mut state) = state else {
+        return Ok(None);
+    };
+    let url = Url::parse(state["url"].as_str().unwrap_or_default())?;
+    let mut segments: std::collections::VecDeque<Value> = match state.shift_remove("segments") {
+        Some(Value::Array(segments)) => segments.into(),
+        _ => Default::default(),
+    };
+    while let Some(segment) = segments.pop_front() {
+        if limit.is_some_and(|limit| entries.len() >= limit) {
+            segments.push_front(segment);
+            break;
+        }
+        // `str(segment['id'])`.
+        let id = &segment["id"];
+        let id = id.as_str().map_or_else(|| id.to_string(), str::to_owned);
+        entries.push(extract_video_info(client, &url, &id, &segment)?);
+    }
+    if segments.is_empty() {
+        return Ok(None);
+    }
+    state.insert("segments".into(), Value::Array(segments.into()));
+    Ok(Some(Value::Object(state)))
 }
 
 #[cfg(test)]

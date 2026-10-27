@@ -2283,7 +2283,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     // `ChainMap(entry extras, _playlist_infodict(...))` keys.
     if entry {
         for (key, always) in [
-            ("playlist_count", Take),
+            // `ie_result.get('playlist_count')`: `None` until known.
+            ("playlist_count", Assign),
             ("playlist", Assign),
             ("playlist_id", Assign),
             ("playlist_title", Assign),
@@ -2650,7 +2651,9 @@ fn youtube_tab_playlist(
         replay.take(key);
     }
     // `_fill_common_fields(final=False)`.
-    replay.take("upload_date");
+    for key in PLAYLIST_COMMON_FIELDS {
+        replay.take(key);
+    }
     replay.assign("release_year");
     for (old, new) in crate::info::MULTIVALUE_FIELDS {
         replay.take(old);
@@ -2687,7 +2690,18 @@ pub(crate) fn playlist(mut map: Map<String, Value>) -> Map<String, Value> {
     out
 }
 
+/// The fields a playlist's `_fill_common_fields(final=False)` adds before
+/// `release_year`, in its order (see `YoutubeDl::process_result`).
+const PLAYLIST_COMMON_FIELDS: [&str; 4] = [
+    "duration_string",
+    "upload_date",
+    "release_date",
+    "modified_date",
+];
+
 fn shaped_playlist(mut map: Map<String, Value>) -> Map<String, Value> {
+    // Its `_type` (see `PlaylistInfo::result_type`).
+    map.shift_remove(crate::info::MULTI_VIDEO);
     let Some(Value::String(shape)) = map.shift_remove(INFO_SHAPE) else {
         return map;
     };
@@ -2745,14 +2759,13 @@ fn shaped_playlist(mut map: Map<String, Value>) -> Map<String, Value> {
         "webpage_url_domain",
         "extractor",
         "extractor_key",
-        "upload_date",
         "release_year",
         "playlist_count",
         "requested_entries",
         "epoch",
         "_version",
     ];
-    replay.rest_except(&|key| late.contains(&key));
+    replay.rest_except(&|key| late.contains(&key) || PLAYLIST_COMMON_FIELDS.contains(&key));
     for key in [
         "webpage_url",
         "original_url",
@@ -2760,11 +2773,13 @@ fn shaped_playlist(mut map: Map<String, Value>) -> Map<String, Value> {
         "webpage_url_domain",
         "extractor",
         "extractor_key",
-        "upload_date",
     ] {
         replay.take(key);
     }
     // `_fill_common_fields(final=False)`.
+    for key in PLAYLIST_COMMON_FIELDS {
+        replay.take(key);
+    }
     replay.assign("release_year");
     for key in ["playlist_count", "requested_entries", "epoch"] {
         replay.take(key);

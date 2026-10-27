@@ -1,0 +1,32 @@
+{
+ "id": 14227999,
+ "title": "Monaco",
+ "video_type": "episode",
+ "exact_duration": 8000,
+ "_embedded": {
+  "segments": [
+   {
+    "id": 17600001,
+    "title": "Teil 1",
+    "sources": {
+     "hls": [
+      {
+       "src": "https://apasfiis.sf.apa.at/ipad/gp/17600001/playlist.m3u8"
+      }
+     ]
+    }
+   },
+   {
+    "id": 17600002,
+    "title": "Teil 2",
+    "sources": {
+     "hls": [
+      {
+       "src": "https://apasfiis.sf.apa.at/ipad/gp/17600002/playlist.m3u8"
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

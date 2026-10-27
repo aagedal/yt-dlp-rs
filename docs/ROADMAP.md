@@ -88,6 +88,8 @@ by the smaller known dimension, with declaration-order ties; it does not reprodu
 upstream's full sorter. `ExtractResult` distinguishes a video from a fully extracted HTML5
 `PlaylistInfo`; nested playlists (`PlaylistInfo::nested`, YouTube channel tabs) and
 deferred entry pages (`PlaylistInfo::pending`) are processed by the CLI's input queue;
+a `MULTI_VIDEO` marker makes a playlist upstream's `_type: multi_video`
+(`PlaylistInfo::result_type`), which the default `--concat-playlist` joins;
 unresolved URL results resolving to playlists, and other site playlists
 remain outside the current result contract.
 
