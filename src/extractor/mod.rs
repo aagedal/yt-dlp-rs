@@ -1,3 +1,4 @@
+mod acast;
 pub mod adobepass;
 mod amadeustv;
 mod angel;
@@ -246,6 +247,9 @@ pub(crate) mod youtube;
 mod zdf;
 mod zhihu;
 
+pub use acast::{
+    ACast, ACastChannel, channel_suitable as acast_channel_suitable, suitable as acast_suitable,
+};
 pub use amadeustv::{AmadeusTv, suitable as amadeustv_suitable};
 pub use angel::{Angel, suitable as angel_suitable};
 pub use archiveorg::{ArchiveOrg, suitable as archiveorg_suitable};

@@ -727,6 +727,24 @@ upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 proto-relative as `https:` as the single format, raw `duration`; missing keys are
 upstream's `KeyError` extractor errors).
 
+Acast episodes (`[www.|shows.|embed.]acast.com/SHOW/[episodes/]EPISODE`,
+`play.acast.com/s/SHOW/EPISODE`, `acast`) follow upstream `ACastIE`: the
+`feeder.acast.com/api/v1/shows/SHOW/episodes/EPISODE?showInfo=true` JSON
+as an untyped result with the episode ID, `episodeUrl` display ID,
+`clean_podcast_url` media URL, title (also the episode), the cleaned
+description (else summary), image, ISO 8601 publish date, integer
+duration, content length (`filesize`), season and episode numbers, and the
+show's author and title as `creator` (`creators`) and `series`; missing
+`title`/`id`/`url` keys are upstream's `KeyError` extractor errors. Acast
+iframes on other pages are followed as generic-page embeds, first in
+extractor order. Shows (`[www.|shows.]acast.com/SHOW`,
+`play.acast.com/s/SHOW`, `acast:channel`, never an episode URL) follow
+`ACastChannelIE`: the show JSON's episodes as a playlist of the same
+episode dicts, with the show ID, title and description (an ID-less show has
+no `id` key). Non-string IDs, titles, media URLs, descriptions, images and
+dates remain explicit native errors. `tests/fixtures/sites/acast/` is
+compared with pinned upstream output.
+
 Amadeus TV library videos (`[www.]amadeus.tv/library/HEX`) follow upstream
 `AmadeusTVIE`: the page's `window.__NUXT__` fetch data (`_search_nuxt_data`,
 `fetch['0']`), the item's Tencent Cloud video ID (else upstream's `Unable to
