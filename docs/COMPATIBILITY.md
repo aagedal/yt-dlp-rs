@@ -2840,6 +2840,20 @@ and the transcript subtitles with `--write-subs`/`--list-subs`. Folders are
 not supported. `tests/fixtures/sites/loom/` is compared with pinned upstream
 output.
 
+ERR (Estonian public broadcaster) content follows upstream `err.py`:
+Jupiter, Jupiter+ and Lasteekraan pages (`jupiter[pluss]|lasteekraan.err.ee/ID`,
+`ERRJupiterIE`) the `vodContent/getContentPageData` API's `data.mainContent`
+(upstream's `KeyError`s), its first media's DRM error (a warning with
+`--ignore-no-formats-error`), distinct `hls`/`hls2`/`hlsNew` and
+`dash`/`dashNew` URLs as non-fatal `hls`/`dash` formats (first-seen order,
+where upstream iterates a hash-ordered `set`) and the `file` URL as `http`,
+then the heading, sub-heading, first non-empty cleaned lead or body, created,
+updated, schedule/public start timestamps and year, plus the series, episode,
+season/episode numbers and IDs of `episode` content. Archive videos
+(`arhiiv.err.ee/video/[vaata/]ID`, `ERRArhiivIE`) use the `content/video`
+API's HLS/DASH sources and `info` metadata. `tests/fixtures/sites/err/` is
+compared with pinned upstream output.
+
 LRT (Lithuanian public broadcaster) pages follow upstream `lrt.py`: live
 channels (`lrt.lt/mediateka/tiesiogiai/ID`, `LRTStreamIE`) the page's escaped
 `get_streams_url` (fatal), each `response.data` `content*` URL as fatal live

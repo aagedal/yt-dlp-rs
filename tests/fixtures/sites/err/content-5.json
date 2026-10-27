@@ -1,0 +1,16 @@
+{
+ "data": {
+  "mainContent": {
+   "id": 5,
+   "heading": "Kaitstud",
+   "medias": [
+    {
+     "src": {},
+     "restrictions": {
+      "drm": true
+     }
+    }
+   ]
+  }
+ }
+}

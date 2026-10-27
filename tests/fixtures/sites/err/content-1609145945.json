@@ -1,0 +1,25 @@
+{
+ "data": {
+  "mainContent": {
+   "id": 1609145945,
+   "type": "episode",
+   "heading": "Impulss",
+   "subHeading": "Loteriipilet hooldekodusse",
+   "lead": "<p>Lead</p>",
+   "created": 1698327601,
+   "scheduleStart": 1699380000,
+   "year": "2023",
+   "rootContentId": 1609108187,
+   "season": 1,
+   "episode": "6",
+   "medias": [
+    {
+     "src": {
+      "hlsNew": "https://vod.err.test/1609145945/master.m3u8",
+      "hls": "https://vod.err.test/1609145945/master.m3u8"
+     }
+    }
+   ]
+  }
+ }
+}

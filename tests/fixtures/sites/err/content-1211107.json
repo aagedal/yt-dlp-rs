@@ -1,0 +1,31 @@
+{
+ "data": {
+  "mainContent": {
+   "id": 1211107,
+   "type": "movie",
+   "heading": "Siin me oleme!",
+   "subHeading": "",
+   "lead": "",
+   "body": "<p>Komöödia <b>1978</b></p>",
+   "created": 1608210000,
+   "updated": "1608220800",
+   "scheduleStart": null,
+   "publicStart": 1703577600,
+   "year": 1978,
+   "medias": [
+    "x",
+    {
+     "src": {
+      "hls": "https://vod.err.test/1211107/master.m3u8",
+      "hls2": "https://vod.err.test/1211107/master.m3u8",
+      "dash": "https://vod.err.test/1211107/manifest.mpd",
+      "file": "https://vod.err.test/1211107/file.mp4"
+     },
+     "restrictions": {
+      "drm": false
+     }
+    }
+   ]
+  }
+ }
+}

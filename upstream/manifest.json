@@ -1646,6 +1646,18 @@
       "scope": "LoomIE GraphQL metadata, source and chapters, session URL formats (HLS/DASH/progressive) and transcript subtitles; no LoomFolderIE; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "err",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/err.py"
+      ],
+      "rust": [
+        "src/extractor/err.rs",
+        "tests/fixtures/sites/err/"
+      ],
+      "scope": "ERRJupiterIE getContentPageData media sources (first-seen order instead of set order), DRM error, metadata and episode fields; ERRArhiivIE content/video sources and info metadata. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "lrt",
       "status": "partial",
       "upstream": [

@@ -1,0 +1,119 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://jupiter.err.ee/1211107/siin-me-oleme",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1211107\", \"formats\": [{\"format_id\": \"dash-audio=128000\", \"manifest_url\": \"https://vod.err.test/1211107/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"sv\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://vod.err.test/1211107/manifest.mpd\", \"fragment_base_url\": \"https://vod.err.test/1211107/\", \"fragments\": [{\"path\": \"dash/audio=128000/init.mp4\"}, {\"path\": \"dash/audio=128000/1.m4s\", \"duration\": 4.0}, {\"path\": \"dash/audio=128000/2.m4s\", \"duration\": 4.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 1, \"is_dash_periods\": true, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-audio=128000 - audio only (DASH audio)\"}, {\"url\": \"https://vod.err.test/1211107/file.mp4\", \"format_id\": \"http\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\"}, {\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://vod.err.test/1211107/360/index.m3u8\", \"manifest_url\": \"https://vod.err.test/1211107/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"dash-video=1300000\", \"manifest_url\": \"https://vod.err.test/1211107/manifest.mpd\", \"ext\": \"mp4\", \"width\": 960, \"height\": 540, \"tbr\": 1300.0, \"asr\": null, \"fps\": 25, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://vod.err.test/1211107/manifest.mpd\", \"fragment_base_url\": \"https://vod.err.test/1211107/\", \"fragments\": [{\"path\": \"dash/video=1300000/init.mp4\"}, {\"path\": \"dash/video=1300000/1.m4s\", \"duration\": 4.0}, {\"path\": \"dash/video=1300000/2.m4s\", \"duration\": 4.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1300.0, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-video=1300000 - 960x540 (DASH video)\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://vod.err.test/1211107/720/index.m3u8\", \"manifest_url\": \"https://vod.err.test/1211107/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://vod.err.test/1211107/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"title\": \"Siin me oleme!\", \"alt_title\": \"\", \"description\": \"Kom\\u00f6\\u00f6dia 1978\", \"timestamp\": 1608210000, \"modified_timestamp\": 1608220800, \"release_timestamp\": 1703577600, \"release_year\": 1978, \"webpage_url\": \"https://jupiter.err.ee/1211107/siin-me-oleme\", \"original_url\": \"https://jupiter.err.ee/1211107/siin-me-oleme\", \"webpage_url_basename\": \"siin-me-oleme\", \"webpage_url_domain\": \"jupiter.err.ee\", \"extractor\": \"ERRJupiter\", \"extractor_key\": \"ERRJupiter\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1211107\", \"fulltitle\": \"Siin me oleme!\", \"upload_date\": \"20201217\", \"release_date\": \"20231226\", \"modified_date\": \"20201217\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://vod.err.test/1211107/720/index.m3u8\", \"manifest_url\": \"https://vod.err.test/1211107/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Siin me oleme! [1211107].mp4\", \"filename\": \"Siin me oleme! [1211107].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://jupiter.err.ee/1211107/siin-me-oleme",
+   "args": [
+    "--no-progress",
+    "-f",
+    "http",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ERRJupiter] Extracting URL: https://jupiter.err.ee/1211107/siin-me-oleme",
+    "[ERRJupiter] 1211107: Downloading JSON metadata",
+    "[ERRJupiter] 1211107: Downloading m3u8 information",
+    "[ERRJupiter] 1211107: Downloading MPD manifest",
+    "[info] 1211107: Downloading 1 format(s): http",
+    "[download] Destination: 1211107.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "1211107.mp4": 8
+   }
+  },
+  {
+   "url": "https://jupiter.err.ee/1609145945/impulss",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1609145945\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://vod.err.test/1609145945/360/index.m3u8\", \"manifest_url\": \"https://vod.err.test/1609145945/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://vod.err.test/1609145945/720/index.m3u8\", \"manifest_url\": \"https://vod.err.test/1609145945/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://vod.err.test/1609145945/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"title\": \"Impulss\", \"alt_title\": \"Loteriipilet hooldekodusse\", \"description\": \"Lead\", \"timestamp\": 1698327601, \"release_timestamp\": 1699380000, \"release_year\": 2023, \"series\": \"Impulss\", \"series_id\": \"1609108187\", \"episode\": \"Loteriipilet hooldekodusse\", \"season_number\": 1, \"episode_number\": 6, \"episode_id\": \"1609145945\", \"webpage_url\": \"https://jupiter.err.ee/1609145945/impulss\", \"original_url\": \"https://jupiter.err.ee/1609145945/impulss\", \"webpage_url_basename\": \"impulss\", \"webpage_url_domain\": \"jupiter.err.ee\", \"extractor\": \"ERRJupiter\", \"extractor_key\": \"ERRJupiter\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1609145945\", \"fulltitle\": \"Impulss\", \"upload_date\": \"20231026\", \"release_date\": \"20231107\", \"season\": \"Season 1\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://vod.err.test/1609145945/720/index.m3u8\", \"manifest_url\": \"https://vod.err.test/1609145945/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Impulss [1609145945].mp4\", \"filename\": \"Impulss [1609145945].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://jupiterpluss.err.ee/5/kaitstud",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [ERRJupiter] 5: This video is DRM protected"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://jupiterpluss.err.ee/5/kaitstud",
+   "args": [
+    "--ignore-no-formats-error",
+    "--print",
+    "%(id)s|%(title)s|%(formats)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "5|Kaitstud|[]"
+   ],
+   "stderr": [
+    "WARNING: [ERRJupiter] 5: This video is DRM protected",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://lasteekraan.err.ee/6/x",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 6: An extractor error has occurred. (caused by KeyError('mainContent')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://arhiiv.err.ee/video/kontsertpalad",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"kontsertpalad\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://vod.err.test/arhiiv/kontsertpalad/360/index.m3u8\", \"manifest_url\": \"https://vod.err.test/arhiiv/kontsertpalad/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://vod.err.test/arhiiv/kontsertpalad/720/index.m3u8\", \"manifest_url\": \"https://vod.err.test/arhiiv/kontsertpalad/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://vod.err.test/arhiiv/kontsertpalad/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"title\": \"Kontsertpalad: 255\", \"series\": \"Kontsertpalad\", \"episode_id\": \"255\", \"description\": \"Beethoven\", \"timestamp\": 1666152162, \"modified_timestamp\": 1718620982, \"release_year\": 1970, \"webpage_url\": \"https://arhiiv.err.ee/video/kontsertpalad\", \"original_url\": \"https://arhiiv.err.ee/video/kontsertpalad\", \"webpage_url_basename\": \"kontsertpalad\", \"webpage_url_domain\": \"arhiiv.err.ee\", \"extractor\": \"ERRArhiiv\", \"extractor_key\": \"ERRArhiiv\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"kontsertpalad\", \"fulltitle\": \"Kontsertpalad: 255\", \"upload_date\": \"20221019\", \"modified_date\": \"20240617\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://vod.err.test/arhiiv/kontsertpalad/720/index.m3u8\", \"manifest_url\": \"https://vod.err.test/arhiiv/kontsertpalad/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Kontsertpalad\\uff1a 255 [kontsertpalad].mp4\", \"filename\": \"Kontsertpalad\\uff1a 255 [kontsertpalad].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://arhiiv.err.ee/video/vaata/tuhi",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [ERRArhiiv] tuhi: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
