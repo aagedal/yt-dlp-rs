@@ -2443,6 +2443,27 @@ Python's decoder message). HDS (`f4m`) streams give non-fatal F4M formats. Upstr
 not ported. `tests/fixtures/sites/tv2/` is compared with pinned upstream
 output.
 
+TV4 videos (`tv4.se/PROGRAM/klipp/...-ID`, `tv4play.se/program|barn/...ID`,
+`?video_id=ID`, `/iframe/video/ID`, `/film/ID`, `/sport/ID` and
+`tv4play.se/ID`) follow upstream `TV4IE`: the `playback2.a2d.tv` `asset`
+API (`service=tv4`, `device=browser`, `protocol=hls,dash`, `drm=widevine`)
+for its `metadata` object, the `play` API's `playbackItem.manifestUrl`
+(missing keys are upstream's `KeyError`; both requests are fatal), and that
+manifest's non-fatal HLS (`hls`), `.mpd` DASH (`dash`), `.f4m` HDS (`hds`)
+and `.ism/Manifest` Smooth Streaming (`mss`) siblings, subtitles merged
+without duplicates. A manifest URL without `.ism/` makes the Smooth
+Streaming request fetch the HLS playlist again; its `Failed to parse XML`
+warning carries CPython's expat text, which this port reproduces for
+whitespace-only bodies and documents whose first token is a name or
+`#name` (every M3U8 playlist; `extractor::expat_error`), while other
+malformed ISM documents are explicit native errors. With no format and
+`is_geo_restricted` set, the Sweden-only geo error (no fake-IP bypass).
+Present `{str}`/`int_or_none`/`url_or_none`/`bool_or_none` metadata fields
+follow: title, description, the first parseable `broadcast_date_time` or
+`broadcastDateTime`, duration, image, `isLive`, series, season and episode.
+`--geo-verification-proxy` headers are not sent (the option has no
+effect). `tests/fixtures/sites/tv4/` is compared with pinned upstream output.
+
 Steam store apps (`store.steampowered.com[/agecheck]/app/ID[/NAME]`) follow
 upstream `SteamIE`: the age-check cookies, the `gamehighlight_desktopcarousel`
 element's `data-props` (app name and trailers with an `id`), each trailer's

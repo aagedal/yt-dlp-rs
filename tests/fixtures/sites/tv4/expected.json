@@ -1,0 +1,174 @@
+{
+ "upstream_commit": "fa9886678eb65103303c627b8e013f13f8999b41",
+ "cases": [
+  {
+   "url": "https://www.tv4play.se/program/nyheterna/avsnitt/13315940",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"13315940\", \"formats\": [{\"format_id\": \"dash-audio=128000\", \"manifest_url\": \"https://tv4-vod.example.test/vod/13315940.ism/hls/master.mpd?t=abc\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"sv\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://tv4-vod.example.test/vod/13315940.ism/hls/master.mpd?t=abc\", \"fragment_base_url\": \"https://tv4-vod.example.test/vod/13315940.ism/hls/\", \"fragments\": [{\"path\": \"dash/audio=128000/init.mp4\"}, {\"path\": \"dash/audio=128000/1.m4s\", \"duration\": 4.0}, {\"path\": \"dash/audio=128000/2.m4s\", \"duration\": 4.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 1, \"is_dash_periods\": true, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-audio=128000 - audio only (DASH audio)\"}, {\"format_id\": \"mss-audio_swe-128\", \"url\": \"https://tv4-vod.example.test/vod/13315940.ism/Manifest?t=abc\", \"manifest_url\": \"https://tv4-vod.example.test/vod/13315940.ism/Manifest?t=abc\", \"ext\": \"isma\", \"width\": null, \"height\": null, \"tbr\": 128, \"asr\": 44100, \"vcodec\": \"none\", \"acodec\": \"AACL\", \"protocol\": \"ism\", \"fragments\": [{\"url\": \"https://tv4-vod.example.test/vod/13315940.ism/QualityLevels(128000)/Fragments(audio_swe=0)\", \"duration\": 2.0}, {\"url\": \"https://tv4-vod.example.test/vod/13315940.ism/QualityLevels(128000)/Fragments(audio_swe=88200)\", \"duration\": 905.0294784580499}], \"has_drm\": false, \"language\": \"swe\", \"audio_channels\": 2, \"_download_params\": {\"stream_type\": \"audio\", \"duration\": 40000000, \"timescale\": 44100, \"width\": 0, \"height\": 0, \"fourcc\": \"AACL\", \"language\": \"swe\", \"codec_private_data\": \"1210\", \"sampling_rate\": 44100, \"channels\": 2, \"bits_per_sample\": 16, \"nal_unit_length_field\": 4}, \"audio_ext\": \"isma\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mss-audio_swe-128 - audio only\"}, {\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://tv4-vod.example.test/vod/13315940.ism/hls/360/index.m3u8\", \"manifest_url\": \"https://tv4-vod.example.test/vod/13315940.ism/hls/master.m3u8?t=abc\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"dash-video=1300000\", \"manifest_url\": \"https://tv4-vod.example.test/vod/13315940.ism/hls/master.mpd?t=abc\", \"ext\": \"mp4\", \"width\": 960, \"height\": 540, \"tbr\": 1300.0, \"asr\": null, \"fps\": 25, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://tv4-vod.example.test/vod/13315940.ism/hls/master.mpd?t=abc\", \"fragment_base_url\": \"https://tv4-vod.example.test/vod/13315940.ism/hls/\", \"fragments\": [{\"path\": \"dash/video=1300000/init.mp4\"}, {\"path\": \"dash/video=1300000/1.m4s\", \"duration\": 4.0}, {\"path\": \"dash/video=1300000/2.m4s\", \"duration\": 4.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1300.0, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-video=1300000 - 960x540 (DASH video)\"}, {\"format_id\": \"mss-video-1500\", \"url\": \"https://tv4-vod.example.test/vod/13315940.ism/Manifest?t=abc\", \"manifest_url\": \"https://tv4-vod.example.test/vod/13315940.ism/Manifest?t=abc\", \"ext\": \"ismv\", \"width\": 1280, \"height\": 720, \"tbr\": 1500, \"asr\": null, \"vcodec\": \"H264\", \"acodec\": \"none\", \"protocol\": \"ism\", \"fragments\": [{\"url\": \"https://tv4-vod.example.test/vod/13315940.ism/QualityLevels(1500000)/Fragments(video=0)\", \"duration\": 2.0}, {\"url\": \"https://tv4-vod.example.test/vod/13315940.ism/QualityLevels(1500000)/Fragments(video=20000000)\", \"duration\": 2.0}], \"has_drm\": false, \"language\": \"und\", \"audio_channels\": null, \"_download_params\": {\"stream_type\": \"video\", \"duration\": 40000000, \"timescale\": 10000000, \"width\": 1280, \"height\": 720, \"fourcc\": \"H264\", \"language\": \"und\", \"codec_private_data\": \"000000016742C01FDA014016E8400000FA40003A98238C19500000000168CE3C80\", \"sampling_rate\": null, \"channels\": 2, \"bits_per_sample\": 16, \"nal_unit_length_field\": 4}, \"video_ext\": \"ismv\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1500, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mss-video-1500 - 1280x720\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://tv4-vod.example.test/vod/13315940.ism/hls/720/index.m3u8\", \"manifest_url\": \"https://tv4-vod.example.test/vod/13315940.ism/hls/master.m3u8?t=abc\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://tv4-vod.example.test/vod/13315940.ism/hls/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"title\": \"Nyheterna 12.00\", \"description\": \"Senaste nytt.\", \"timestamp\": 1792497600, \"duration\": 1200, \"thumbnail\": \"https://img.tv4.example.test/13315940.jpg\", \"is_live\": false, \"series\": \"Nyheterna\", \"season_number\": 26, \"episode\": \"Avsnitt 12\", \"episode_number\": 12, \"webpage_url\": \"https://www.tv4play.se/program/nyheterna/avsnitt/13315940\", \"original_url\": \"https://www.tv4play.se/program/nyheterna/avsnitt/13315940\", \"webpage_url_basename\": \"13315940\", \"webpage_url_domain\": \"tv4play.se\", \"extractor\": \"TV4\", \"extractor_key\": \"TV4\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.tv4.example.test/13315940.jpg\", \"id\": \"0\"}], \"display_id\": \"13315940\", \"fulltitle\": \"Nyheterna 12.00\", \"duration_string\": \"20:00\", \"upload_date\": \"20261020\", \"release_year\": null, \"season\": \"Season 26\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://tv4-vod.example.test/vod/13315940.ism/hls/720/index.m3u8\", \"manifest_url\": \"https://tv4-vod.example.test/vod/13315940.ism/hls/master.m3u8?t=abc\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Nyheterna 12.00 [13315940].mp4\", \"filename\": \"Nyheterna 12.00 [13315940].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [TV4] 13315940: Unable to download f4m manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tv4play.se/program/nyheterna/avsnitt/13315940",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[TV4] Extracting URL: https://www.tv4play.se/program/nyheterna/avsnitt/13315940",
+    "[TV4] 13315940: Downloading asset API JSON",
+    "[TV4] 13315940: Downloading play API JSON",
+    "[TV4] 13315940: Downloading m3u8 information",
+    "[TV4] 13315940: Downloading MPD manifest",
+    "[TV4] 13315940: Downloading f4m manifest",
+    "[TV4] 13315940: Downloading ISM manifest",
+    "[info] Available formats for 13315940:",
+    "ID                 EXT  RESOLUTION FPS CH |   FILESIZE   TBR PROTO | VCODEC        VBR ACODEC      ABR ASR MORE INFO",
+    "------------------------------------------------------------------------------------------------------------------------------------",
+    "dash-audio=128000  m4a  audio only        | ~ 18.31MiB  128k dash  | audio only        mp4a.40.2  128k 48k [sv] DASH audio, m4a_dash",
+    "mss-audio_swe-128  isma audio only      2 | ~ 18.31MiB  128k ism   | audio only        AACL       128k 44k [swe]",
+    "hls-921            mp4  640x360     25    | ~131.75MiB  921k m3u8  | avc1.4d401e       mp4a.40.2",
+    "dash-video=1300000 mp4  960x540     25    | ~185.97MiB 1300k dash  | avc1.4d401f 1300k video only          DASH video, mp4_dash",
+    "mss-video-1500     ismv 1280x720          | ~214.58MiB 1500k ism   | H264        1500k video only          [und]",
+    "hls-3121           mp4  1280x720    25    | ~446.46MiB 3121k m3u8  | avc1.4d401f       mp4a.40.2"
+   ],
+   "stderr": [
+    "WARNING: [TV4] 13315940: Unable to download f4m manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tv4play.se/program/nyheterna/avsnitt/13315940",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[TV4] Extracting URL: https://www.tv4play.se/program/nyheterna/avsnitt/13315940",
+    "[TV4] 13315940: Downloading asset API JSON",
+    "[TV4] 13315940: Downloading play API JSON",
+    "[TV4] 13315940: Downloading m3u8 information",
+    "[TV4] 13315940: Downloading MPD manifest",
+    "[TV4] 13315940: Downloading f4m manifest",
+    "[TV4] 13315940: Downloading ISM manifest",
+    "[info] Available subtitles for 13315940:",
+    "Language Formats",
+    "sv       vtt"
+   ],
+   "stderr": [
+    "WARNING: [TV4] 13315940: Unable to download f4m manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.tv4play.se/program/farang/3922081",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3922081\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://tv4-vod.example.test/vod/3922081/360/index.m3u8\", \"manifest_url\": \"https://tv4-vod.example.test/vod/3922081/index.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://tv4-vod.example.test/vod/3922081/720/index.m3u8\", \"manifest_url\": \"https://tv4-vod.example.test/vod/3922081/index.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://tv4-vod.example.test/vod/3922081/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"title\": \"Farang\", \"timestamp\": 1483387200, \"season_number\": 1, \"webpage_url\": \"http://www.tv4play.se/program/farang/3922081\", \"original_url\": \"http://www.tv4play.se/program/farang/3922081\", \"webpage_url_basename\": \"3922081\", \"webpage_url_domain\": \"tv4play.se\", \"extractor\": \"TV4\", \"extractor_key\": \"TV4\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"3922081\", \"fulltitle\": \"Farang\", \"upload_date\": \"20170102\", \"release_year\": null, \"season\": \"Season 1\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://tv4-vod.example.test/vod/3922081/720/index.m3u8\", \"manifest_url\": \"https://tv4-vod.example.test/vod/3922081/index.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Farang [3922081].mp4\", \"filename\": \"Farang [3922081].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [TV4] 3922081: Failed to download MPD manifest: HTTP Error 404: Not Found",
+    "WARNING: [TV4] 3922081: Unable to download f4m manifest: HTTP Error 404: Not Found",
+    "WARNING: [TV4] 3922081: Failed to parse XML: syntax error: line 1, column 0"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.tv4play.se/program/farang/3922081",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(timestamp)s|%(duration)s|%(thumbnail)s|%(is_live)s|%(series)s|%(season_number)s|%(episode)s|%(episode_number)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "3922081|Farang|1483387200|NA|NA|NA|NA|1|NA|NA|hls-3121"
+   ],
+   "stderr": [
+    "WARNING: [TV4] 3922081: Failed to download MPD manifest: HTTP Error 404: Not Found",
+    "WARNING: [TV4] 3922081: Unable to download f4m manifest: HTTP Error 404: Not Found",
+    "WARNING: [TV4] 3922081: Failed to parse XML: syntax error: line 1, column 0"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.tv4.se/kalla-fakta/klipp/kalla-fakta-5-english-subtitles-2491650",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [TV4] 2491650: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [TV4] 2491650: Failed to download MPD manifest: HTTP Error 404: Not Found",
+    "WARNING: [TV4] 2491650: Unable to download f4m manifest: HTTP Error 404: Not Found",
+    "WARNING: [TV4] 2491650: Failed to download ISM manifest: HTTP Error 404: Not Found",
+    "ERROR: [TV4] 2491650: This video is not available from your location due to geo-restriction, or not being authenticated"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.tv4play.se/iframe/video/3054113",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 3054113: An extractor error has occurred. (caused by KeyError('playbackItem')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.tv4play.se/sport/3060959",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "3060959|TV4 video #3060959|hls-3121"
+   ],
+   "stderr": [
+    "WARNING: [TV4] 3060959: Failed to download MPD manifest: HTTP Error 404: Not Found",
+    "WARNING: [TV4] 3060959: Unable to download f4m manifest: HTTP Error 404: Not Found",
+    "WARNING: [TV4] 3060959: Failed to parse XML: syntax error: line 1, column 0",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.tv4play.se/film/2378136",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [TV4] 2378136: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.tv4play.se/barn/looney-tunes?video_id=3062412",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [TV4] 3062412: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

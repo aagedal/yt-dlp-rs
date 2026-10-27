@@ -1,0 +1,124 @@
+{
+ "routes": [
+  {
+   "url": "https://playback2.a2d.tv/asset/13315940?service=tv4&device=browser&protocol=hls%2Cdash&drm=widevine",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "asset-13315940.json"
+  },
+  {
+   "url": "https://playback2.a2d.tv/asset/3922081?service=tv4&device=browser&protocol=hls%2Cdash&drm=widevine",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "asset-3922081.json"
+  },
+  {
+   "url": "https://playback2.a2d.tv/asset/2491650?service=tv4&device=browser&protocol=hls%2Cdash&drm=widevine",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "asset-2491650.json"
+  },
+  {
+   "url": "https://playback2.a2d.tv/asset/3054113?service=tv4&device=browser&protocol=hls%2Cdash&drm=widevine",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "asset-3054113.json"
+  },
+  {
+   "url": "https://playback2.a2d.tv/asset/3060959?service=tv4&device=browser&protocol=hls%2Cdash&drm=widevine",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "asset-3060959.json"
+  },
+  {
+   "url": "https://playback2.a2d.tv/asset/2378136?service=tv4&device=browser&protocol=hls%2Cdash&drm=widevine",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "asset-2378136.json"
+  },
+  {
+   "url": "https://playback2.a2d.tv/play/13315940?service=tv4&device=browser&protocol=hls",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "play-13315940.json"
+  },
+  {
+   "url": "https://playback2.a2d.tv/play/3922081?service=tv4&device=browser&protocol=hls",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "play-3922081.json"
+  },
+  {
+   "url": "https://playback2.a2d.tv/play/2491650?service=tv4&device=browser&protocol=hls",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "play-2491650.json"
+  },
+  {
+   "url": "https://playback2.a2d.tv/play/3054113?service=tv4&device=browser&protocol=hls",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "play-3054113.json"
+  },
+  {
+   "url": "https://playback2.a2d.tv/play/3060959?service=tv4&device=browser&protocol=hls",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "play-3060959.json"
+  },
+  {
+   "url": "https://playback2.a2d.tv/play/2378136?service=tv4&device=browser&protocol=hls",
+   "status": 403,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"errorCode\": \"SESSION_NOT_AUTHENTICATED\"}"
+  },
+  {
+   "url": "https://tv4-vod.example.test/vod/13315940.ism/hls/master.m3u8?t=abc",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://tv4-vod.example.test/vod/3922081/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://tv4-vod.example.test/vod/3060959/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://tv4-vod.example.test/vod/13315940.ism/hls/master.mpd?t=abc",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://tv4-vod.example.test/vod/13315940.ism/Manifest?t=abc",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body_file": "manifest.ism.xml"
+  }
+ ]
+}

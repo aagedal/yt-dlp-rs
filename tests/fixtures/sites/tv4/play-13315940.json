@@ -1,0 +1,6 @@
+{
+ "playbackItem": {
+  "type": "hls",
+  "manifestUrl": "https://tv4-vod.example.test/vod/13315940.ism/hls/master.m3u8?t=abc"
+ }
+}

@@ -1,0 +1,15 @@
+{
+ "metadata": {
+  "title": "Nyheterna 12.00",
+  "description": "Senaste nytt.",
+  "broadcastDateTime": "2026-10-20T12:00:00.000Z",
+  "duration": 1200,
+  "image": "https://img.tv4.example.test/13315940.jpg",
+  "isLive": false,
+  "seriesTitle": "Nyheterna",
+  "seasonNumber": "26",
+  "episodeTitle": "Avsnitt 12",
+  "episodeNumber": 12,
+  "is_geo_restricted": false
+ }
+}

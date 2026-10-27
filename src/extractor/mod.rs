@@ -204,6 +204,7 @@ mod trtcocuk;
 mod trtworld;
 mod tumblr;
 mod tv2;
+mod tv4;
 mod tvanouvelles;
 mod tvnoe;
 mod tweakers;
@@ -562,6 +563,7 @@ pub use tumblr::{Tumblr, suitable as tumblr_suitable};
 pub use tv2::{
     Tv2, Tv2Article, article_suitable as tv2_article_suitable, suitable as tv2_suitable,
 };
+pub use tv4::{Tv4, suitable as tv4_suitable};
 pub use tvanouvelles::{
     TvaNouvelles, TvaNouvellesArticle, article_suitable as tvanouvelles_article_suitable,
     suitable as tvanouvelles_suitable,
@@ -2018,6 +2020,105 @@ pub(crate) fn extract_f4m_optional(
         .collect()
 }
 
+/// The `xml.etree.ElementTree.ParseError` text (expat's) of a document that
+/// is not XML, for the inputs this port classifies: an empty or
+/// whitespace-only body (`no element found`), or a first token that is a
+/// name or `#name` (no `:`) followed by whitespace or the end (`syntax
+/// error`, like any M3U8 playlist). Other malformed documents are `None`.
+/// Checked against CPython on randomly generated documents.
+pub(crate) fn expat_error(text: &str) -> Option<String> {
+    let bytes = text.as_bytes();
+    let (mut line, mut column, mut index) = (1, 0, 0);
+    // Expat counts a byte order mark as a column.
+    if text.starts_with('\u{feff}') {
+        column = 1;
+        index = '\u{feff}'.len_utf8();
+    }
+    while index < bytes.len() && matches!(bytes[index], b' ' | b'\t' | b'\r' | b'\n') {
+        match bytes[index] {
+            b'\r' => {
+                (line, column) = (line + 1, 0);
+                if bytes.get(index + 1) == Some(&b'\n') {
+                    index += 1;
+                }
+            }
+            b'\n' => (line, column) = (line + 1, 0),
+            _ => column += 1,
+        }
+        index += 1;
+    }
+    if index == bytes.len() {
+        return Some(format!("no element found: line {line}, column {column}"));
+    }
+    let name = |byte: u8| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'-' | b'.');
+    let mut end = index;
+    if bytes[end] == b'#' {
+        end += 1;
+        if !bytes
+            .get(end)
+            .is_some_and(|byte| byte.is_ascii_alphabetic() || *byte == b'_')
+        {
+            return None;
+        }
+    } else if !name(bytes[end]) {
+        return None;
+    }
+    while end < bytes.len() && name(bytes[end]) {
+        end += 1;
+    }
+    if end < bytes.len() && !matches!(bytes[end], b' ' | b'\t' | b'\r' | b'\n') {
+        return None;
+    }
+    Some(format!("syntax error: line {line}, column {column}"))
+}
+
+/// `_extract_ism_formats_and_subtitles(url, video_id, ism_id=ISM_ID,
+/// fatal=False)`: `Downloading ISM manifest`; an HTTP error is a `Failed
+/// to download ISM manifest` warning and a body that is not XML (see
+/// [`expat_error`]) a `Failed to parse XML` one (no formats). Other malformed documents, and XML that
+/// is not a Smooth Streaming manifest (upstream's `KeyError`), are explicit
+/// errors.
+pub(crate) fn extract_ism_optional(
+    client: &Client,
+    extractor: &str,
+    manifest: &Url,
+    id: &str,
+    ism_id: Option<&str>,
+) -> Result<(Vec<crate::VideoFormat>, crate::Subtitles)> {
+    use crate::Error;
+    use std::io::Read;
+    crate::screen::screen(&format!("[{extractor}] {id}: Downloading ISM manifest"));
+    let mut response = match direct::request(client, manifest, None) {
+        Ok(response) => response,
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+            crate::screen::warning(&format!(
+                "[{extractor}] {id}: Failed to download ISM manifest: {}",
+                crate::upstream_error_text(&error)
+            ));
+            return Ok(Default::default());
+        }
+        Err(error) => return Err(error),
+    };
+    let final_url = response.url().clone();
+    let mut body = Vec::new();
+    response
+        .read_to_end(&mut body)
+        .map_err(Error::ExtractionRead)?;
+    let body = decode_content(response.headers(), body).map_err(Error::ExtractionRead)?;
+    let text = decode_webpage(&body, response.headers());
+    if let Some(error) = expat_error(&text) {
+        crate::screen::warning(&format!("[{extractor}] {id}: Failed to parse XML: {error}"));
+        return Ok(Default::default());
+    }
+    match ism::parse(&text, &final_url, ism_id) {
+        Some(parsed) => parsed.map(|parsed| (parsed.formats, parsed.subtitles)),
+        None => Err(Error::UnsupportedHtml5(
+            "ISM manifests that are malformed or not Smooth Streaming documents are not supported natively"
+                .into(),
+        )),
+    }
+}
+
 /// `_is_valid_url(url, video_id, item)`: a `Checking ITEM URL` request;
 /// an HTTP error is reported as `ITEM URL is invalid, skipping` and the URL
 /// is invalid. Non-HTTP URLs are valid without a request.
@@ -2201,6 +2302,42 @@ mod tests {
             map.append(name, HeaderValue::from_static(value));
         }
         map
+    }
+
+    #[test]
+    fn non_xml_documents_get_cpythons_parse_errors() {
+        // `str(ParseError)` from CPython's `ElementTree.fromstring`.
+        for (text, expected) in [
+            (
+                "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-STREAM-INF:BANDWIDTH=1,CODECS=\"a\"\nx.m3u8?a=b&c",
+                "syntax error: line 1, column 0",
+            ),
+            ("", "no element found: line 1, column 0"),
+            ("  \n ", "no element found: line 2, column 1"),
+            ("\r\n\r\nX", "syntax error: line 3, column 0"),
+            ("\r#EXT\t&", "syntax error: line 2, column 0"),
+            ("\u{feff}#EXTM3U", "syntax error: line 1, column 1"),
+            ("\n\n  hello world", "syntax error: line 3, column 2"),
+            ("1", "syntax error: line 1, column 0"),
+            ("-x\n<", "syntax error: line 1, column 0"),
+            ("\t#ab_-.9 {", "syntax error: line 1, column 1"),
+        ] {
+            assert_eq!(expat_error(text).as_deref(), Some(expected), "{text:?}");
+        }
+        // Not classified: invalid or unclosed tokens, colons, non-ASCII
+        // names and XML.
+        for text in [
+            "{\"a\":1}",
+            "b.&",
+            "EXTM3U:",
+            "#:b",
+            "#",
+            "%",
+            "<a/>",
+            "\u{e9}x",
+        ] {
+            assert_eq!(expat_error(text), None, "{text:?}");
+        }
     }
 
     #[test]
