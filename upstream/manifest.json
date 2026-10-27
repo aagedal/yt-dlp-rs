@@ -1646,6 +1646,18 @@
       "scope": "LoomIE GraphQL metadata, source and chapters, session URL formats (HLS/DASH/progressive) and transcript subtitles; no LoomFolderIE; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "lrt",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/lrt.py"
+      ],
+      "rust": [
+        "src/extractor/lrt.rs",
+        "tests/fixtures/sites/lrt/"
+      ],
+      "scope": "LRTStreamIE live HLS from the escaped get_streams_url, LRTVODIE media_info JW Player items merged with API metadata (content/canonical URL fallback), LRTRadioIE rest-api media HLS and metadata. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "maariv",
       "status": "partial",
       "upstream": [

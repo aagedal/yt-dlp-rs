@@ -1,0 +1,88 @@
+{
+ "routes": [
+  {
+   "url": "https://www.lrt.lt/mediateka/tiesiogiai/lrt-opus",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"LRT Opus - Tiesiogiai\"></head><body><script>self.__next_f.push([1,\"{\\\"get_streams_url\\\":\\\"https://get.lrt.test/clients/live/lrt-opus\\\"}\"])</script></body></html>"
+  },
+  {
+   "url": "https://get.lrt.test/clients/live/lrt-opus",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"data\": {\"content\": \"https://lrt-live.test/opus/master.m3u8\", \"content2\": \"not a url\", \"other\": \"https://lrt-live.test/x.m3u8\"}}}"
+  },
+  {
+   "url": "https://lrt-live.test/opus/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.lrt.lt/mediateka/irasas/2000127261/greita-ir-gardu",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script>self.__next_f.push([1,\"{\\\"article\\\":{\\\"id\\\":2000127261,\\\"url\\\":\\\"/mediateka/irasas/2000127261/greita-ir-gardu\\\"}}\"])</script></body></html>"
+  },
+  {
+   "url": "https://www.lrt.lt/servisai/stream_url/vod/media_info/?url=%2Fmediateka%2Firasas%2F2000127261%2Fgreita-ir-gardu",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"2000127261\", \"title\": \"Greita ir gardu\", \"content\": \"<p>Sicilijos <b>makaronai</b></p>\", \"date\": \"2024.03.05 13:21\", \"tags\": [{\"name\": \"maistas\"}, {\"name\": 3}, {\"x\": 1}], \"playlist_item\": {\"file\": \"https://lrt-vod.test/vod/2000127261/master.m3u8\", \"title\": \"JW title\", \"image\": \"https://lrt-vod.test/img.jpg\", \"duration\": 1512}}"
+  },
+  {
+   "url": "https://lrt-vod.test/vod/2000127261/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.lrt.lt/mediateka/irasas/1013074524/kita-tema",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><link rel=\"canonical\" href=\"/mediateka/irasas/1013074524/kita-tema\"></head></html>"
+  },
+  {
+   "url": "https://www.lrt.lt/servisai/stream_url/vod/media_info/?url=%2Fmediateka%2Firasas%2F1013074524%2Fkita-tema",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Kita tema\", \"date\": \"bad date\", \"playlist_item\": {\"file\": \"https://lrt-vod.test/audio/kita-tema.mp3\", \"title\": \"Kita tema (JW)\"}}"
+  },
+  {
+   "url": "https://lrt-vod.test/audio/kita-tema.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "lrt-kita-tema"
+  },
+  {
+   "url": "https://www.lrt.lt/mediateka/irasas/1/tuscias",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html></html>"
+  },
+  {
+   "url": "https://www.lrt.lt/rest-api/media?url=%2Fmediateka%2Firasas%2F2000359728%2Fnemarios-eiles",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Nemarios eilės\", \"content\": \"<p>Apie <i>pragarus</i></p>\", \"date\": \"2024.07.01 21:00\", \"tags\": [{\"name\": \"poezija\"}], \"playlist_item\": {\"file\": \"https://lrt-vod.test/radio/2000359728/master.m3u8\", \"category\": \"Kultūra\", \"image\": \"/img/2024/07/nemarios.jpg\"}}"
+  },
+  {
+   "url": "https://lrt-vod.test/radio/2000359728/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  }
+ ]
+}

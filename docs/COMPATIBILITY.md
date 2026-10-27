@@ -2840,6 +2840,20 @@ and the transcript subtitles with `--write-subs`/`--list-subs`. Folders are
 not supported. `tests/fixtures/sites/loom/` is compared with pinned upstream
 output.
 
+LRT (Lithuanian public broadcaster) pages follow upstream `lrt.py`: live
+channels (`lrt.lt/mediateka/tiesiogiai/ID`, `LRTStreamIE`) the page's escaped
+`get_streams_url` (fatal), each `response.data` `content*` URL as fatal live
+HLS (`hls`) and the OpenGraph title (a warning when missing); mediateka
+videos (`lrt.lt/mediateka/irasas/ID`, `.../video/...?episode=ID`, also
+`archyvai.lrt.lt`, `LRTVODIE`) the page's escaped article/data URL (else,
+after upstream's warning, the canonical link; fatal), the VOD `media_info`
+API's `playlist_item` through `_parse_jwplayer_data` (its title required)
+merged with the API's ID, title, cleaned content, dotted `date` timestamp and
+tag names; radioteka items (`lrt.lt/radioteka/irasas/ID/PATH`,
+`LRTRadioIE`) the `rest-api/media` item's fatal HLS playlist, title, tags,
+category, cleaned content, timestamp and site-relative image.
+`tests/fixtures/sites/lrt/` is compared with pinned upstream output.
+
 Maariv players (`player.maariv.co.il/public/player.html?...media=ID`) follow
 upstream `MaarivIE` (`maariv.co.il`): the Walla media API's URL-valued
 `video.url` as non-fatal `hls` formats (subtitles ignored with upstream's

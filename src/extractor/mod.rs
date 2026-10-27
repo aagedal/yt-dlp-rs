@@ -117,6 +117,7 @@ mod livestreamfails;
 mod lnk;
 pub mod login;
 mod loom;
+mod lrt;
 mod maariv;
 mod maoritv;
 mod masters;
@@ -422,6 +423,10 @@ pub use linkedin::{LinkedIn, suitable as linkedin_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
 pub use lnk::{Lnk, suitable as lnk_suitable};
 pub use loom::{Loom, suitable as loom_suitable};
+pub use lrt::{
+    LrtRadio, LrtStream, LrtVod, radio_suitable as lrt_radio_suitable,
+    stream_suitable as lrt_stream_suitable, vod_suitable as lrt_vod_suitable,
+};
 pub use maariv::{Maariv, suitable as maariv_suitable};
 pub use maoritv::{MaoriTV, suitable as maoritv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};

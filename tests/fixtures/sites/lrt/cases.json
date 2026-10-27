@@ -1,0 +1,41 @@
+[
+ {
+  "url": "https://www.lrt.lt/mediateka/tiesiogiai/lrt-opus",
+  "args": [
+   "--print",
+   "%(id)s|%(is_live)s|%(live_status)s|%(format_id)s|%(protocol)s"
+  ]
+ },
+ {
+  "url": "https://www.lrt.lt/mediateka/irasas/2000127261/greita-ir-gardu",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.lrt.lt/mediateka/irasas/1013074524/kita-tema",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.lrt.lt/mediateka/irasas/1013074524/kita-tema",
+  "args": [
+   "--no-progress",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://www.lrt.lt/mediateka/irasas/1/tuscias",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.lrt.lt/radioteka/irasas/2000359728/nemarios-eiles",
+  "args": [
+   "-j"
+  ]
+ }
+]
