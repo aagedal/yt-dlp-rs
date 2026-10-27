@@ -212,6 +212,7 @@ mod trtcocuk;
 mod trtworld;
 mod tumblr;
 mod tv2;
+mod tv2dk;
 mod tv4;
 mod tv5mondeplus;
 mod tvanouvelles;
@@ -597,6 +598,10 @@ pub use trtworld::{TrtWorld, suitable as trtworld_suitable};
 pub use tumblr::{Tumblr, suitable as tumblr_suitable};
 pub use tv2::{
     Tv2, Tv2Article, article_suitable as tv2_article_suitable, suitable as tv2_suitable,
+};
+pub use tv2dk::{
+    Tv2Dk, Tv2DkBornholmPlay, bornholm_suitable as tv2dk_bornholm_suitable,
+    suitable as tv2dk_suitable,
 };
 pub use tv4::{Tv4, suitable as tv4_suitable};
 pub use tv5mondeplus::{Tv5MondePlus, suitable as tv5mondeplus_suitable};

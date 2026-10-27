@@ -35,7 +35,7 @@ fn branch(value: Option<&Value>) -> Vec<&Value> {
 }
 
 /// `url_result('jwplatform:ID', 'JWPlatform')`.
-fn jwplatform_entry(target: &str) -> Result<VideoInfo> {
+pub(crate) fn jwplatform_entry(target: &str) -> Result<VideoInfo> {
     let url = Url::parse(target)?;
     let mut info = super::direct::build_at(url.clone(), &url, String::new());
     info.formats.clear();

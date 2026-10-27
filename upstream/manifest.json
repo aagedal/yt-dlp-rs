@@ -958,6 +958,18 @@
       "scope": "TV2IE asset metadata, POSTed HLS/DASH playback with 401 geo/login/description errors, _is_valid_url stream checks, master-only HLS, DASH, progressive and skipped ISM streams, DRM and unbound video_url errors, the leftover own url (kept in -J for merged and single selections through info_order OWN_URL), and TV2ArticleIE asset playlists compared with pinned upstream output through the fixture proxy; HDS (f4m) streams follow the shared non-fatal extract_f4m_optional, and KatsomoIE/MTVUutisetArticleIE (broken upstream) are not ported"
     },
     {
+      "name": "tv2dk",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tv2dk.py"
+      ],
+      "rust": [
+        "src/extractor/tv2dk.rs",
+        "tests/fixtures/sites/tv2dk/"
+      ],
+      "scope": "TV2DKIE article player x-data JW Player playlists and TV2DKBornholmPlayIE specifikVideo flowplayer HLS/DASH/direct sources, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "tv4",
       "status": "partial",
       "upstream": [

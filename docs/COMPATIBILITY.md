@@ -2507,6 +2507,19 @@ Python's decoder message). HDS (`f4m`) streams give non-fatal F4M formats. Upstr
 not ported. `tests/fixtures/sites/tv2/` is compared with pinned upstream
 output.
 
+TV 2 regional sites (`tvsyd`, `tv2ostjylland`, `tvmidtvest`, `tv2fyn`,
+`tv2east`, `tv2lorry`, `tv2nord` and `tv2kosmopol.dk/.../SLUG`) follow upstream
+`TV2DKIE`: the `video_player(...)`/`simple_player(...)` `x-data` objects
+(through `js_to_json`; unparsable ones skipped) inside the first `<article>`
+(the whole page when there is none or it is empty), their string
+`jwpMediaId` then `videoId`, as a playlist of deduplicated `jwplatform:ID`
+results with the slug as its ID. TV 2 Bornholm Play (`play.tv2bornholm.dk/?...id=ID`)
+follows `TV2DKBornholmPlayIE`: the `specifikVideo` JSON POST, its `d`
+flowplayer script's title (fatal) and `sources` (through `js_to_json`), each
+distinct URL as non-fatal HLS (`hls`, master only), non-fatal DASH (`dash`)
+or a direct format. `tests/fixtures/sites/tv2dk/` is compared with pinned
+upstream output.
+
 TV4 videos (`tv4.se/PROGRAM/klipp/...-ID`, `tv4play.se/program|barn/...ID`,
 `?video_id=ID`, `/iframe/video/ID`, `/film/ID`, `/sport/ID` and
 `tv4play.se/ID`) follow upstream `TV4IE`: the `playback2.a2d.tv` `asset`

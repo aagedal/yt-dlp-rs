@@ -1,0 +1,66 @@
+{
+ "routes": [
+  {
+   "url": "https://www.tvsyd.dk/haderslev/x-factor-brodre",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div x-data=\"video_player({jwpMediaId: 'outside1'})\"></div><article class=\"a\"><h1>Brødre</h1><div x-data=\"video_player({jwpMediaId: 'sPp5z21q', autoplay: true})\"></div><p>tekst</p><div x-data=\"simple_player({videoId: 'oD9cyq0m', jwpMediaId: 'sPp5z21q'})\"></div><div x-data=\"video_player({broken: )\"></div><div x-data=\"simple_player({videoId: 42})\"></div></article></body></html>"
+  },
+  {
+   "url": "https://www.tv2lorry.dk/gadekamp/gadekamp-6",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div x-data=\"simple_player({'videoId': 'oD9cyq0m'})\"></div></body></html>"
+  },
+  {
+   "url": "https://www.tv2nord.dk/artikel/ingen-video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><article></article><p>intet</p></body></html>"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/v2/media/sPp5z21q",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"19:30 - 28. okt. 2019\", \"playlist\": [{\"title\": \"19:30 - 28. okt. 2019\", \"mediaid\": \"sPp5z21q\", \"description\": \"\", \"duration\": 95, \"pubdate\": 1572287400, \"image\": \"https://cdn.jwplayer.com/v2/media/sPp5z21q/poster.jpg?width=720\", \"sources\": [{\"file\": \"https://cdn.jwplayer.com/videos/sPp5z21q-1.mp4\", \"type\": \"video/mp4\", \"height\": 720, \"width\": 1280, \"label\": \"720p\"}]}]}"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/v2/media/oD9cyq0m",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Gadekamp #6\", \"playlist\": [{\"title\": \"Gadekamp #6\", \"mediaid\": \"oD9cyq0m\", \"description\": \"\", \"duration\": 95, \"pubdate\": 1572287400, \"image\": \"https://cdn.jwplayer.com/v2/media/oD9cyq0m/poster.jpg?width=720\", \"sources\": [{\"file\": \"https://cdn.jwplayer.com/videos/oD9cyq0m-1.mp4\", \"type\": \"video/mp4\", \"height\": 360, \"width\": 640, \"label\": \"360p\"}]}]}"
+  },
+  {
+   "url": "https://play.tv2bornholm.dk/controls/AJAX.aspx/specifikVideo",
+   "request_body": [
+    "\"playlist_id\": \"781021\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"d\": \"<script>flowplayer('#p', { clip: { title: '12Nyheder-27.11.19', poster: 'x.jpg' }, sources: [ { type: 'application/x-mpegurl', src: 'https://bornholm-hls.test/781021/master.m3u8' }, { src: 'https://bornholm-hls.test/781021/master.m3u8' }, { type: 'video/mp4', src: 'https://bornholm.test/781021.mp4' }, { src: 'nope' } ], autoplay: false });</script>\"}"
+  },
+  {
+   "url": "https://play.tv2bornholm.dk/controls/AJAX.aspx/specifikVideo",
+   "request_body": [
+    "\"playlist_id\": \"5\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"d\": \"<p>no player</p>\"}"
+  },
+  {
+   "url": "https://bornholm-hls.test/781021/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  }
+ ]
+}
