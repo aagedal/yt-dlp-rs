@@ -1853,6 +1853,18 @@
       "scope": "NobelPrizeIE query ID, JSON-LD untyped result and meta/description overlay compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "npr",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/npr.py"
+      ],
+      "rust": [
+        "src/extractor/npr.rs",
+        "tests/fixtures/sites/npr/"
+      ],
+      "scope": "NprIE story API playlist of audio/multimedia items with HLS, SMIL (RTMP base rewritten, _check_formats) and direct format files, hlsUrl streams, the JSON-LD subjectOf HLS fallback and the KeyError for a missing list. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "nrk",
       "status": "partial",
       "upstream": [
