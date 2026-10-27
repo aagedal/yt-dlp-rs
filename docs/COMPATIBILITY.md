@@ -2511,6 +2511,22 @@ follow: title, description, the first parseable `broadcast_date_time` or
 `--geo-verification-proxy` headers are not sent (the option has no
 effect). `tests/fixtures/sites/tv4/` is compared with pinned upstream output.
 
+TV5MONDE videos (`tv5monde.com/tv/video/SLUG`) follow upstream
+`TV5MondePlusIE`: the page (requested with impersonation, with upstream's
+warning when no target is available), the France-only geo error (no fake-IP
+bypass), the `video_player_loader` element (fatal) and its `data-broadcast`
+files: deferred files resolved through `api.tv5monde.com/player/asset/.../
+resolve` with their bearer token (non-fatal; the material ID becomes the
+video ID, and the resolved list is processed before the resolved URL itself,
+like upstream), HLS (`hls`, master only, subtitles dropped), DASH and direct
+files by `format` or extension. The `data-metadata` content ID, title (also
+the episode), series, timestamp and duration come first, then the video ID
+(else the page's `data-guid`/`id_contenu`, else the slug), slug, cleaned
+`main-title`, `ep-summary` text, `data-image` and `data-captions` tracks
+(`fra` without a label); unparsable metadata and captions warn with Python's
+`JSONDecodeError` text. `tests/fixtures/sites/tv5mondeplus/` is compared with
+pinned upstream output.
+
 Steam store apps (`store.steampowered.com[/agecheck]/app/ID[/NAME]`) follow
 upstream `SteamIE`: the age-check cookies, the `gamehighlight_desktopcarousel`
 element's `data-props` (app name and trailers with an `id`), each trailer's

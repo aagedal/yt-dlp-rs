@@ -970,6 +970,18 @@
       "scope": "TV4IE playback2.a2d.tv asset metadata and play manifestUrl (KeyError and fatal API errors), the manifest's non-fatal HLS, DASH, HDS and Smooth Streaming siblings (_extract_ism_formats_and_subtitles with expat-compatible Failed to parse XML warnings for non-XML bodies), merged subtitles, the Sweden-only geo error and the traverse_obj metadata fields. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "tv5mondeplus",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tv5mondeplus.py"
+      ],
+      "rust": [
+        "src/extractor/tv5mondeplus.rs",
+        "tests/fixtures/sites/tv5mondeplus/"
+      ],
+      "scope": "TV5MondePlusIE impersonated page, geo error, video_player_loader broadcast files with deferred bearer-token resolution, HLS/DASH/direct formats, metadata, captions and page title/summary. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "xvideos",
       "status": "partial",
       "upstream": [

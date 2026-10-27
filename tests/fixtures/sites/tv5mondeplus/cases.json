@@ -1,0 +1,42 @@
+[
+ {
+  "url": "https://www.tv5monde.com/tv/video/65931-baudouin",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.tv5monde.com/tv/video/65931-baudouin",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://www.tv5monde.com/tv/video/65931-baudouin",
+  "args": [
+   "--no-progress",
+   "-f",
+   "unknown_video",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://www.tv5monde.com/tv/video/52952-toute-la-vie",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.tv5monde.com/tv/video/1-geo",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.tv5monde.com/tv/video/2-vide",
+  "args": [
+   "-j"
+  ]
+ }
+]

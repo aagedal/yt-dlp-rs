@@ -1,0 +1,63 @@
+{
+ "routes": [
+  {
+   "url": "https://www.tv5monde.com/tv/video/65931-baudouin",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><h1 class=\"main-title\">Baudouin, <i>l'héritage</i> d'un roi</h1>\n<div class=\"ep-summary\"><p class=\"text\">Un <b>documentaire</b>.</p></div>\n<div class=\"video_player_loader\" data-broadcast=\"[{&quot;url&quot;: &quot;https://hls.tv5monde.test/65931/master.m3u8&quot;, &quot;type&quot;: &quot;application/x-mpegURL&quot;, &quot;format&quot;: &quot;m3u8&quot;}, {&quot;url&quot;: &quot;asset/65931 v2&quot;, &quot;type&quot;: &quot;application/deferred&quot;, &quot;token&quot;: &quot;tok-123&quot;}, {&quot;url&quot;: &quot;&quot;}, {&quot;url&quot;: &quot;https://dl.tv5monde.test/65931.mp4&quot;}]\" data-metadata=\"{&quot;content&quot;: {&quot;id&quot;: 7, &quot;title&quot;: &quot;BAUDOUIN, L&#x27;HERITAGE D&#x27;UN ROI&quot;, &quot;series&quot;: &quot;Baudouin, l&#x27;héritage d&#x27;un roi&quot;, &quot;publishDate_ts&quot;: &quot;1706641242&quot;, &quot;duration&quot;: 4842}}\" data-captions=\"{&quot;files&quot;: [{&quot;file&quot;: &quot;https://sub.tv5monde.test/65931_fr.vtt&quot;, &quot;label&quot;: &quot;&quot;}, {&quot;file&quot;: &quot;https://sub.tv5monde.test/65931_en.vtt&quot;, &quot;label&quot;: &quot;English&quot;}, {&quot;file&quot;: &quot;nope&quot;}]}\" data-image=\"https://psi.tv5monde.test/baudouin.jpg\" data-guid=\"0b0b0b0b-1111-2222-3333-444444444444\"></div></body></html>"
+  },
+  {
+   "url": "https://api.tv5monde.com/player/asset/asset/65931%20v2/resolve?condenseKS=true",
+   "request_headers": {
+    "Authorization": "Bearer tok-123"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"url\": \"https://cdn.tv5monde.test/materials/3FPa7JMu21_6D4BA7b/hls/master.m3u8\", \"format\": \"m3u8\"}]"
+  },
+  {
+   "url": "https://hls.tv5monde.test/65931/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://cdn.tv5monde.test/materials/3FPa7JMu21_6D4BA7b/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://dl.tv5monde.test/65931.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "tv5-file"
+  },
+  {
+   "url": "https://www.tv5monde.com/tv/video/52952-toute-la-vie",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"video_player_loader\" data-broadcast=\"[{&quot;url&quot;: &quot;x&quot;, &quot;type&quot;: &quot;application/deferred&quot;}, {&quot;url&quot;: &quot;https://dl.tv5monde.test/52952.mp4&quot;, &quot;format&quot;: &quot;mp4&quot;}]\" data-metadata=\"{bad\" data-guid=\"0b0b0b0b-1111-2222-3333-444444444444\"></div></body></html>"
+  },
+  {
+   "url": "https://www.tv5monde.com/tv/video/1-geo",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><p>Ce programme n'est malheureusement pas disponible pour votre zone géographique.</p></html>"
+  },
+  {
+   "url": "https://www.tv5monde.com/tv/video/2-vide",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>rien</body></html>"
+  }
+ ]
+}

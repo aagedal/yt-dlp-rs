@@ -211,6 +211,7 @@ mod trtworld;
 mod tumblr;
 mod tv2;
 mod tv4;
+mod tv5mondeplus;
 mod tvanouvelles;
 mod tvnoe;
 mod tweakers;
@@ -590,6 +591,7 @@ pub use tv2::{
     Tv2, Tv2Article, article_suitable as tv2_article_suitable, suitable as tv2_suitable,
 };
 pub use tv4::{Tv4, suitable as tv4_suitable};
+pub use tv5mondeplus::{Tv5MondePlus, suitable as tv5mondeplus_suitable};
 pub use tvanouvelles::{
     TvaNouvelles, TvaNouvellesArticle, article_suitable as tvanouvelles_article_suitable,
     suitable as tvanouvelles_suitable,
