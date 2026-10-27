@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "https://api-tvthek.orf.at/api/v4.3/public/episode/encrypted/M2RTbGZlazAzbnNMS2RqNEpzZDE0MjEwMDAw",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "episode-14210000.json"
+  },
+  {
+   "url": "https://api-tvthek.orf.at/api/v4.3/public/episode/encrypted/M2RTbGZlazAzbnNMS2RqNEpzZDE0MjI2NTQ5",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "episode-14226549.json"
+  },
+  {
+   "url": "https://api-tvthek.orf.at/api/v4.3/public/episode/encrypted/M2RTbGZlazAzbnNMS2RqNEpzZDMyMjAzNTU=",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "episode-3220355.json"
+  },
+  {
+   "url": "https://api-tvthek.orf.at/api/v4.3/public/episode/encrypted/M2RTbGZlazAzbnNMS2RqNEpzZDE0MjI3MDAw",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "episode-14227000.json"
+  },
+  {
+   "url": "https://apasfiis.sf.apa.at/ipad/gp/14210000/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://apasfiis.sf.apa.at/ipad/gp/14226549/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://apasfiis.sf.apa.at/ipad/gp/15639808/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://apasfiis.sf.apa.at/ipad/gp/3220355/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://apasfiis.sf.apa.at/dash/gp/14210000/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  }
+ ]
+}

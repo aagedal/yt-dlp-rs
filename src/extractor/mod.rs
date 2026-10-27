@@ -144,6 +144,7 @@ mod odnoklassniki;
 mod onefootball;
 mod onenewsnz;
 mod oneplace;
+mod orf;
 pub(crate) mod paged;
 mod parlview;
 mod pearvideo;
@@ -462,6 +463,7 @@ pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
 pub use onefootball::{OneFootball, suitable as onefootball_suitable};
 pub use onenewsnz::{OneNewsNz, suitable as onenewsnz_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
+pub use orf::{OrfOn, suitable as orf_on_suitable};
 pub use parlview::{Parlview, suitable as parlview_suitable};
 pub use pearvideo::{PearVideo, suitable as pearvideo_suitable};
 pub use peertube::{

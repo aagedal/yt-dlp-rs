@@ -1,0 +1,131 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://on.orf.at/video/14210000/school-of-champions-48",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"14210000\", \"formats\": [{\"format_id\": \"dash-audio=128000\", \"manifest_url\": \"https://apasfiis.sf.apa.at/dash/gp/14210000/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"sv\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://apasfiis.sf.apa.at/dash/gp/14210000/manifest.mpd\", \"fragment_base_url\": \"https://apasfiis.sf.apa.at/dash/gp/14210000/\", \"fragments\": [{\"path\": \"dash/audio=128000/init.mp4\"}, {\"path\": \"dash/audio=128000/1.m4s\", \"duration\": 4.0}, {\"path\": \"dash/audio=128000/2.m4s\", \"duration\": 4.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 1, \"is_dash_periods\": true, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-audio=128000 - audio only (DASH audio)\"}, {\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/14210000/360/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/14210000/playlist.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"dash-video=1300000\", \"manifest_url\": \"https://apasfiis.sf.apa.at/dash/gp/14210000/manifest.mpd\", \"ext\": \"mp4\", \"width\": 960, \"height\": 540, \"tbr\": 1300.0, \"asr\": null, \"fps\": 25, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://apasfiis.sf.apa.at/dash/gp/14210000/manifest.mpd\", \"fragment_base_url\": \"https://apasfiis.sf.apa.at/dash/gp/14210000/\", \"fragments\": [{\"path\": \"dash/video=1300000/init.mp4\"}, {\"path\": \"dash/video=1300000/1.m4s\", \"duration\": 4.0}, {\"path\": \"dash/video=1300000/2.m4s\", \"duration\": 4.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1300.0, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-video=1300000 - 960x540 (DASH video)\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/14210000/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/14210000/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://apasfiis.sf.apa.at/ipad/gp/14210000/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"de\": [{\"url\": \"https://api-tvthek.orf.at/assets/subtitles/0167/14210000.xml\", \"ext\": \"xml\"}, {\"url\": \"https://api-tvthek.orf.at/assets/subtitles/0167/14210000.srt\", \"ext\": \"srt\"}, {\"url\": \"https://api-tvthek.orf.at/assets/subtitles/0167/14210000.vtt\", \"ext\": \"vtt\"}]}, \"_old_archive_ids\": [\"orftvthek 14210000\"], \"age_limit\": 12, \"duration\": 2651.08, \"title\": \"School of Champions (4/8)\", \"description\": \"Die Skischule.\", \"media_type\": \"episode\", \"thumbnail\": \"https://api-tvthek.orf.at/assets/segments/0167/98/thumb_16697671_segments_highlight_teaser.jpeg\", \"timestamp\": 1706558922, \"release_timestamp\": 1706472362, \"modified_timestamp\": 1712756663, \"webpage_url\": \"https://on.orf.at/video/14210000/school-of-champions-48\", \"original_url\": \"https://on.orf.at/video/14210000/school-of-champions-48\", \"webpage_url_basename\": \"school-of-champions-48\", \"webpage_url_domain\": \"on.orf.at\", \"extractor\": \"orf:on\", \"extractor_key\": \"ORFON\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://api-tvthek.orf.at/assets/segments/0167/98/thumb_16697671_segments_highlight_teaser.jpeg\", \"id\": \"0\"}], \"display_id\": \"14210000\", \"fulltitle\": \"School of Champions (4/8)\", \"duration_string\": \"44:11\", \"upload_date\": \"20240129\", \"release_date\": \"20240128\", \"modified_date\": \"20240410\", \"release_year\": 2024, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/14210000/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/14210000/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"School of Champions (4\\u29f88) [14210000].mp4\", \"filename\": \"School of Champions (4\\u29f88) [14210000].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14210000/school-of-champions-48",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[orf:on] Extracting URL: https://on.orf.at/video/14210000/school-of-champions-48",
+    "[orf:on] 14210000: Downloading JSON metadata",
+    "[orf:on] 14210000: Downloading m3u8 information",
+    "[orf:on] 14210000: Downloading MPD manifest",
+    "[info] Available subtitles for 14210000:",
+    "Language Formats",
+    "sv       vtt",
+    "de       vtt, srt, xml"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14226549/15639808/jugendbande-einbrueche-aus-langeweile",
+   "args": [
+    "--no-playlist",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"15639808\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/15639808/360/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/15639808/playlist.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/15639808/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/15639808/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://apasfiis.sf.apa.at/ipad/gp/15639808/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"_old_archive_ids\": [\"orftvthek 15639808\"], \"duration\": 97.707, \"title\": \"Jugendbande: Einbr\\u00fcche aus Langeweile\", \"description\": \"Segment 15639808\", \"media_type\": \"segment\", \"thumbnail\": \"https://api-tvthek.orf.at/assets/segments/15639808.jpg\", \"timestamp\": 1715792400, \"modified_timestamp\": 1715794394, \"webpage_url\": \"https://on.orf.at/video/14226549/15639808/jugendbande-einbrueche-aus-langeweile\", \"original_url\": \"https://on.orf.at/video/14226549/15639808/jugendbande-einbrueche-aus-langeweile\", \"webpage_url_basename\": \"jugendbande-einbrueche-aus-langeweile\", \"webpage_url_domain\": \"on.orf.at\", \"extractor\": \"orf:on\", \"extractor_key\": \"ORFON\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://api-tvthek.orf.at/assets/segments/15639808.jpg\", \"id\": \"0\"}], \"display_id\": \"15639808\", \"fulltitle\": \"Jugendbande: Einbr\\u00fcche aus Langeweile\", \"duration_string\": \"1:37\", \"upload_date\": \"20240515\", \"modified_date\": \"20240515\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/15639808/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/15639808/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Jugendbande\\uff1a Einbr\\u00fcche aus Langeweile [15639808].mp4\", \"filename\": \"Jugendbande\\uff1a Einbr\\u00fcche aus Langeweile [15639808].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14226549/15639808/jugendbande-einbrueche-aus-langeweile",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(media_type)s|%(duration)s|%(age_limit)s|%(timestamp)s|%(release_timestamp)s|%(modified_timestamp)s|%(thumbnail)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "14226549|ZIB 2|NA|episode|1800.0|NA|NA|NA|NA|NA|hls-3121"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14226549/99/unbekannt",
+   "args": [
+    "--no-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(media_type)s|%(duration)s|%(age_limit)s|%(timestamp)s|%(release_timestamp)s|%(modified_timestamp)s|%(thumbnail)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "14226549|ZIB 2|NA|episode|1800.0|NA|NA|NA|NA|NA|hls-3121"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/3220355",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3220355\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/3220355/360/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/3220355/playlist.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/3220355/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/3220355/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"https://apasfiis.sf.apa.at/ipad/gp/3220355/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"_old_archive_ids\": [\"orftvthek 3220355\"], \"duration\": 445.04, \"title\": \"50 Jahre Burgenland: Der Festumzug\", \"description\": \"Der Festumzug 1971.\", \"media_type\": \"episode\", \"timestamp\": 52912800, \"webpage_url\": \"https://on.orf.at/video/3220355\", \"original_url\": \"https://on.orf.at/video/3220355\", \"webpage_url_basename\": \"3220355\", \"webpage_url_domain\": \"on.orf.at\", \"extractor\": \"orf:on\", \"extractor_key\": \"ORFON\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"3220355\", \"fulltitle\": \"50 Jahre Burgenland: Der Festumzug\", \"duration_string\": \"7:25\", \"upload_date\": \"19710905\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://apasfiis.sf.apa.at/ipad/gp/3220355/720/index.m3u8\", \"manifest_url\": \"https://apasfiis.sf.apa.at/ipad/gp/3220355/playlist.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"50 Jahre Burgenland\\uff1a Der Festumzug [3220355].mp4\", \"filename\": \"50 Jahre Burgenland\\uff1a Der Festumzug [3220355].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14227000",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [orf:on] 14227000: This video is DRM protected"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/14227000",
+   "args": [
+    "--ignore-no-formats-error",
+    "--print",
+    "%(id)s|%(title)s|%(formats)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "14227000|Geschützt|[]"
+   ],
+   "stderr": [
+    "WARNING: [orf:on] 14227000: This video is DRM protected",
+    "WARNING: [orf:on] 14227000: Failed to download MPD manifest: HTTP Error 404: Not Found",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://on.orf.at/video/404",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [orf:on] 404: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

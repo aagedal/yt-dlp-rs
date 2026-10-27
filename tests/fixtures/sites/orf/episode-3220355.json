@@ -1,0 +1,16 @@
+{
+ "id": "3220355",
+ "headline": "50 Jahre Burgenland: Der Festumzug",
+ "teaser_text": "Der Festumzug 1971.",
+ "video_type": "episode",
+ "exact_duration": "445040",
+ "episode_date": "1971-09-05T11:00:00+01:00",
+ "age_classification": "Unbedenklich",
+ "sources": {
+  "hls": {
+   "a": {
+    "src": "https://apasfiis.sf.apa.at/ipad/gp/3220355/playlist.m3u8"
+   }
+  }
+ }
+}

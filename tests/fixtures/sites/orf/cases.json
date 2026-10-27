@@ -1,0 +1,62 @@
+[
+ {
+  "url": "https://on.orf.at/video/14210000/school-of-champions-48",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14210000/school-of-champions-48",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14226549/15639808/jugendbande-einbrueche-aus-langeweile",
+  "args": [
+   "--no-playlist",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14226549/15639808/jugendbande-einbrueche-aus-langeweile",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(description)s|%(media_type)s|%(duration)s|%(age_limit)s|%(timestamp)s|%(release_timestamp)s|%(modified_timestamp)s|%(thumbnail)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14226549/99/unbekannt",
+  "args": [
+   "--no-playlist",
+   "--print",
+   "%(id)s|%(title)s|%(description)s|%(media_type)s|%(duration)s|%(age_limit)s|%(timestamp)s|%(release_timestamp)s|%(modified_timestamp)s|%(thumbnail)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/3220355",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227000",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/14227000",
+  "args": [
+   "--ignore-no-formats-error",
+   "--print",
+   "%(id)s|%(title)s|%(formats)s"
+  ]
+ },
+ {
+  "url": "https://on.orf.at/video/404",
+  "args": [
+   "-j"
+  ]
+ }
+]
