@@ -523,6 +523,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "MyVidster",
     "Netzkino",
     "Newsy",
+    "NhkVod",
+    "NhkVodProgram",
     "niconico",
     "niconico:history",
     "niconico:playlist",
@@ -997,6 +999,8 @@ impl YoutubeDl {
                 Box::new(extractor::Ccc),
                 Box::new(extractor::DaystarClip),
                 Box::new(extractor::Newsy),
+                Box::new(extractor::NhkVod),
+                Box::new(extractor::NhkVodProgram),
                 Box::new(extractor::TrtWorld),
                 Box::new(extractor::Tumblr),
                 Box::new(extractor::Iltalehti),
@@ -1964,6 +1968,8 @@ impl YoutubeDl {
                 extractor::fetch_steam_trailers
             } else if extractor::orf_pending_state(&pending.state) {
                 extractor::fetch_orf_segments
+            } else if extractor::nhk_pending_state(&pending.state) {
+                extractor::fetch_nhk_episodes
             } else if extractor::ard_pending_state(&pending.state) {
                 extractor::fetch_ard_pages
             } else if extractor::vk_user_videos_pending_state(&pending.state) {
@@ -1992,6 +1998,7 @@ impl YoutubeDl {
             // pages may fill earlier placeholders).
             let resolved = extractor::steam_pending_state(&pending.state)
                 || extractor::orf_pending_state(&pending.state)
+                || extractor::nhk_pending_state(&pending.state)
                 || extractor::podbayfm_pending_state(&pending.state);
             playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
                 .map(|state| PendingEntries { state });

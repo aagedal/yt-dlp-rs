@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "https://api.nhkworld.jp/showsapi/v1/en/video_episodes/2049165",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"2049165\", \"lang\": \"en\", \"title\": \"Hokuriku Shinkansen\", \"video_program\": {\"title\": \"Japan Railway Journal\"}, \"description\": \"The new line.\", \"first_broadcasted_at\": \"2024-12-05T09:30:00Z\", \"categories\": [{\"name\": \"Travel\"}, {\"name\": 5}], \"tags\": [], \"images\": [{\"url\": \"/nhkworld/upld/thumbnails/2049165.jpg\", \"width\": 640, \"height\": \"360\"}, {\"url\": \"\"}], \"url\": \"/nhkworld/en/shows/2049165/\", \"video\": {\"url\": \"https://media-stream.nhk.test/2049165/master.m3u8\", \"duration\": \"1740\", \"published_at\": \"2024-12-05T10:00:00Z\"}}"
+  },
+  {
+   "url": "https://api.nhkworld.jp/showsapi/v1/en/video_episodes/2049166",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 2049166, \"lang\": \"en\", \"title\": \"Gone\", \"video\": {}}"
+  },
+  {
+   "url": "https://api.nhkworld.jp/showsapi/v1/en/audio_episodes/livinginjapan-20240901-1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"livinginjapan-20240901-1\", \"lang\": \"en\", \"title\": \"At the station\", \"audio_program\": {\"title\": \"Living in Japan\"}, \"audio\": {\"url\": \"/nhkworld/rj/podcast/livinginjapan-20240901-1.m4a\"}}"
+  },
+  {
+   "url": "https://api.nhkworld.jp/showsapi/v1/en/video_clips/9999o80",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"9999o80\", \"lang\": \"en\", \"title\": \"A clip\", \"video\": {\"url\": \"https://media-stream.nhk.test/9999o80/master.m3u8\"}}"
+  },
+  {
+   "url": "https://media-stream.nhk.test/2049165/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://media-stream.nhk.test/9999o80/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://vod-stream.nhk.jp/nhkworld/rj/podcast/livinginjapan-20240901-1/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://api.nhkworld.jp/showsapi/v1/en/video_programs/japanrailway/video_episodes",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"items\": [{\"id\": \"2049165\", \"lang\": \"en\", \"title\": \"Hokuriku Shinkansen\", \"video_program\": {\"title\": \"Japan Railway Journal\"}, \"description\": \"The new line.\", \"first_broadcasted_at\": \"2024-12-05T09:30:00Z\", \"categories\": [{\"name\": \"Travel\"}, {\"name\": 5}], \"tags\": [], \"images\": [{\"url\": \"/nhkworld/upld/thumbnails/2049165.jpg\", \"width\": 640, \"height\": \"360\"}, {\"url\": \"\"}], \"url\": \"/nhkworld/en/shows/2049165/\", \"video\": {\"url\": \"https://media-stream.nhk.test/2049165/master.m3u8\", \"duration\": \"1740\", \"published_at\": \"2024-12-05T10:00:00Z\"}}, {\"url\": \"\"}, {\"id\": \"2049170\", \"lang\": \"en\", \"title\": \"Shinkansen 60\", \"video_program\": {\"title\": \"Japan Railway Journal\"}, \"url\": \"/nhkworld/en/shows/2049170/\", \"video\": {\"url\": \"https://media-stream.nhk.test/2049165/master.m3u8\"}}]}"
+  },
+  {
+   "url": "https://www3.nhk.or.jp/nhkworld/en/shows/japanrailway/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"pProgramHero__logoText\">Japan <b>Railway</b> Journal</div><p class=\"pProgramHero__description\">Trains.</p></body></html>"
+  }
+ ]
+}

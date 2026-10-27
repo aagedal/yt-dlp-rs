@@ -135,6 +135,7 @@ mod mux;
 mod myvidster;
 mod netzkino;
 mod newsy;
+mod nhk;
 mod niconico;
 mod ninegag;
 mod ninenews;
@@ -449,6 +450,11 @@ pub use mux::{Mux, suitable as mux_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
 pub use netzkino::{Netzkino, suitable as netzkino_suitable};
 pub use newsy::{Newsy, suitable as newsy_suitable};
+pub use nhk::{
+    NhkVod, NhkVodProgram, program_suitable as nhk_program_suitable,
+    vod_suitable as nhk_vod_suitable,
+};
+pub(crate) use nhk::{fetch_episodes as fetch_nhk_episodes, is_pending_state as nhk_pending_state};
 pub use niconico::{
     Niconico, NiconicoHistory, NiconicoPlaylist, NiconicoSeries, NiconicoUser, NicovideoSearch,
     NicovideoSearchDate, NicovideoSearchUrl, NicovideoTagUrl,

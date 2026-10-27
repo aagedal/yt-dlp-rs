@@ -2258,6 +2258,23 @@ win; a missing JSON-LD is upstream's warning). JSON-LD carrying media URLs,
 formats, IDs or subtitles remains an explicit native error.
 `tests/fixtures/sites/newsy/` is compared with pinned upstream output.
 
+NHK World on-demand episodes and clips (`www3.nhk.or.jp/nhkworld/LANG/shows/ID`,
+`shows/audio/ID`, the deprecated `ondemand/video/ID`) follow upstream
+`NhkVodIE`: the `api.nhkworld.jp/showsapi/v1` episode or clip (`9999...`
+IDs) JSON and `_extract_episode_info`: the `ID-LANG` ID, `SERIES - TITLE`
+(the series alone without a title), series and episode, description, first
+broadcast timestamp, category and tag names, site-relative thumbnails with
+sizes and the canonical `webpage_url`; a video stream's fatal HLS formats
+(master only) with duration and publication timestamp, an audio stream's
+non-fatal `vod-stream.nhk.jp/.../index.m3u8` `m4a` formats in the page
+language, and the expired-stream error (a warning with
+`--ignore-no-formats-error`). Program pages (`shows|tv/[audio/programs/]ID`,
+`?type=clip`, `NhkVodProgramIE`) are playlists of the API's episode or clip
+items, extracted as the playlist is processed like upstream's generator,
+titled by the page's program title and description classes. The NHK for
+School and Radiru extractors are not ported. `tests/fixtures/sites/nhk/` is
+compared with pinned upstream output.
+
 Daystar clips (`player.daystar.tv/ID`) follow upstream `DaystarClipIE`: the
 player page's first `<iframe src>` (its absence is upstream's `Unable to
 extract src iframe` error), that URL's `config2.php` configuration requested
