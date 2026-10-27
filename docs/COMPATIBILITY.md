@@ -455,6 +455,22 @@ HLS streams and captions (`ru` without a code). Numeric embeds
 channels, playlists, tags, people and movies are not supported.
 `tests/fixtures/sites/rutube/` is compared with pinned upstream output.
 
+RÚV Sarpurinn pages (`ruv.is/sarpurinn/CHANNEL/ID[/DATE]`, `ruv.is/node/ID`)
+follow upstream `RuvIE`: the OpenGraph title (fatal), the page's `video.src`
+(fatal) as HLS (`hls`, master only), an `mp3` audio format or a direct URL,
+the `www.ruv.is/node/ID` link's ID (else the URL's), the OpenGraph
+description, and the OpenGraph image, else upstream's `video.poster` match
+(whose first group is the opening quote, as upstream returns it) or its
+warning, and the `article:published_time` timestamp with its warning. RÚV
+Spila episodes (`ruv.is/{sjonvarp,utvarp,krakkaruv,ungruv}/spila/.../SERIES/ID`,
+`ruv.is:spila`) follow `RuvSpilaIE`: the `ruv.is/gql/` GraphQL program's first
+episode (an empty list is Python's `list index out of range`), its HLS
+(master only) or direct file, named VTT subtitles, clips as chapters, the
+episode or program title and description, the `$$IMAGESIZE$$` thumbnail, the
+`firstrun` timestamp and the rating as `age_limit`. Clips without a parseable
+time are an unsupported error (processing would fill their `None` start).
+`tests/fixtures/sites/ruv/` is compared with pinned upstream output.
+
 ScreenRec shares (`screenrec.com/share/ID`) follow upstream `ScreenRecIE`: the
 page's fatal `customUrl` manifest as HLS formats (subtitles ignored with
 upstream's warning), the OpenGraph title (else the `<title>` text) and the

@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "http://ruv.is/sarpurinn/ruv-aukaras/fh-valur/20170516",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head>\n<meta property=\"og:title\" content=\"FH - Valur\" />\n<meta property=\"og:description\" content=\"Bein útsending frá 3. leik FH og Vals í úrslitum Olísdeildar karla í handbolta.\" />\n<meta property=\"og:image\" content=\"https://www.ruv.is/files/fh-valur.jpg\" />\n<meta property=\"article:published_time\" content=\"2017-05-16T19:40:00+00:00\" />\n<link rel=\"shortlink\" href=\"https://www.ruv.is/node/1144499\" />\n</head><body><script>\nvideo.src = 'https://ruv-vod.example.com/fh-valur/master.m3u8';\nvideo.poster = \"https://www.ruv.is/files/poster.jpg\";\n</script></body></html>"
+  },
+  {
+   "url": "http://ruv.is/sarpurinn/ras-2/morgunutvarpid/20170619",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head>\n<meta property=\"og:title\" content=\"Morgunútvarpið\" />\n<meta property=\"og:description\" content=\"Fréttir &amp; dægurmál.\" />\n<meta property=\"article:published_time\" content=\"2017-06-19T06:50:00+00:00\" />\n<link rel=\"canonical\" href=\"http://www.ruv.is/node/1153630\" />\n</head><body><script>\nvideo.src = \"https://ruv-audio.example.com/morgunutvarpid.mp3\";\nvideo.poster = \"https://www.ruv.is/files/morgunutvarpid.jpg\";\n</script></body></html>"
+  },
+  {
+   "url": "http://www.ruv.is/node/1151854",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head>\n<meta property=\"og:title\" content=\"Klippa\" />\n</head><body><script>\nvideo.src = \"https://ruv-vod.example.com/klippa.mp4?token=1\";\n</script></body></html>"
+  },
+  {
+   "url": "http://ruv.is/sarpurinn/klippa/no-video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head>\n<meta property=\"og:title\" content=\"Engin klippa\" />\n</head><body><p>Ekkert myndband.</p></body></html>"
+  },
+  {
+   "url": "https://ruv-vod.example.com/fh-valur/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://ruv-vod.example.com/9jcnd4/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.ruv.is/gql/?query=%7B%0A++++++++++++++++Program%28id%3A+30657%29%7B%0A++++++++++++++++++++title+image+description+short_description%0A++++++++++++++++++++episodes%28id%3A+%7Bvalue%3A+%229jcnd4%22%7D%29+%7B%0A++++++++++++++++++++++++rating+title+duration+file+image+firstrun+description%0A++++++++++++++++++++++++clips+%7B%0A++++++++++++++++++++++++++++time+text%0A++++++++++++++++++++++++%7D%0A++++++++++++++++++++++++subtitles+%7B%0A++++++++++++++++++++++++++++name+value%0A++++++++++++++++++++++++%7D%0A++++++++++++++++++++%7D%0A++++++++++++++++%7D%0A++++++++++++%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"Program\": {\"title\": \"Íþróttir\", \"image\": \"https://d38kdhuogyllre.cloudfront.net/fit-in/$$IMAGESIZE$$x/hd_posters/program.jpg\", \"description\": \"Íþróttafréttir dagsins.\", \"short_description\": null, \"episodes\": [{\"rating\": 0, \"title\": \"01.02.2022\", \"duration\": 600, \"file\": \"https://ruv-vod.example.com/9jcnd4/master.m3u8\", \"image\": \"https://d38kdhuogyllre.cloudfront.net/fit-in/$$IMAGESIZE$$x/filters:quality(65)/hd_posters/94boog-iti3jg.jpg\", \"firstrun\": \"2022-02-01T19:25:00\", \"description\": \"Íþróttafréttir.\", \"clips\": [{\"time\": \"00:00:00\", \"text\": \"Inngangur\"}, {\"time\": \"00:01:30\", \"text\": \"Handbolti\"}, {\"time\": \"05:10\", \"text\": \"Fótbolti\"}, {\"time\": \"9:58\", \"text\": null}], \"subtitles\": [{\"name\": \"is\", \"value\": \"https://ruv-vod.example.com/9jcnd4/is.vtt\"}, {\"name\": \"en\", \"value\": null}, {\"name\": \"is\", \"value\": \"https://ruv-vod.example.com/9jcnd4/is2.vtt\"}]}]}}}"
+  },
+  {
+   "url": "https://www.ruv.is/gql/?query=%7B%0A++++++++++++++++Program%28id%3A+23795%29%7B%0A++++++++++++++++++++title+image+description+short_description%0A++++++++++++++++++++episodes%28id%3A+%7Bvalue%3A+%227hqkre%22%7D%29+%7B%0A++++++++++++++++++++++++rating+title+duration+file+image+firstrun+description%0A++++++++++++++++++++++++clips+%7B%0A++++++++++++++++++++++++++++time+text%0A++++++++++++++++++++++++%7D%0A++++++++++++++++++++++++subtitles+%7B%0A++++++++++++++++++++++++++++name+value%0A++++++++++++++++++++++++%7D%0A++++++++++++++++++++%7D%0A++++++++++++++++%7D%0A++++++++++++%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"Program\": {\"title\": \"Í ljósi sögunnar\", \"image\": null, \"description\": \"\", \"short_description\": \"Vera Illugadóttir fjallar um sögulega atburði.\", \"episodes\": [{\"rating\": null, \"title\": null, \"duration\": 2400, \"file\": \"https://ruv-audio.example.com/7hqkre.mp3\", \"image\": \"\", \"firstrun\": \"2022-02-04 09:05:00\", \"description\": \"\", \"clips\": [], \"subtitles\": []}]}}}"
+  },
+  {
+   "url": "https://www.ruv.is/gql/?query=%7B%0A++++++++++++++++Program%28id%3A+28046%29%7B%0A++++++++++++++++++++title+image+description+short_description%0A++++++++++++++++++++episodes%28id%3A+%7Bvalue%3A+%22nope00%22%7D%29+%7B%0A++++++++++++++++++++++++rating+title+duration+file+image+firstrun+description%0A++++++++++++++++++++++++clips+%7B%0A++++++++++++++++++++++++++++time+text%0A++++++++++++++++++++++++%7D%0A++++++++++++++++++++++++subtitles+%7B%0A++++++++++++++++++++++++++++name+value%0A++++++++++++++++++++++++%7D%0A++++++++++++++++++++%7D%0A++++++++++++++++%7D%0A++++++++++++%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"Program\": {\"title\": \"UngRÚV\", \"episodes\": []}}}"
+  }
+ ]
+}

@@ -1,0 +1,109 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://ruv.is/sarpurinn/ruv-aukaras/fh-valur/20170516",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1144499\", \"display_id\": \"fh-valur/20170516\", \"title\": \"FH - Valur\", \"description\": \"Bein \\u00fatsending fr\\u00e1 3. leik FH og Vals \\u00ed \\u00farslitum Ol\\u00edsdeildar karla \\u00ed handbolta.\", \"thumbnail\": \"https://www.ruv.is/files/fh-valur.jpg\", \"timestamp\": 1494963600, \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://ruv-vod.example.com/fh-valur/360/index.m3u8\", \"manifest_url\": \"https://ruv-vod.example.com/fh-valur/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://ruv-vod.example.com/fh-valur/720/index.m3u8\", \"manifest_url\": \"https://ruv-vod.example.com/fh-valur/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"webpage_url\": \"http://ruv.is/sarpurinn/ruv-aukaras/fh-valur/20170516\", \"original_url\": \"http://ruv.is/sarpurinn/ruv-aukaras/fh-valur/20170516\", \"webpage_url_basename\": \"20170516\", \"webpage_url_domain\": \"ruv.is\", \"extractor\": \"Ruv\", \"extractor_key\": \"Ruv\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://www.ruv.is/files/fh-valur.jpg\", \"id\": \"0\"}], \"fulltitle\": \"FH - Valur\", \"upload_date\": \"20170516\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://ruv-vod.example.com/fh-valur/720/index.m3u8\", \"manifest_url\": \"https://ruv-vod.example.com/fh-valur/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"FH - Valur [1144499].mp4\", \"filename\": \"FH - Valur [1144499].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://ruv.is/sarpurinn/ras-2/morgunutvarpid/20170619",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1153630\", \"display_id\": \"morgunutvarpid/20170619\", \"title\": \"Morgun\\u00fatvarpi\\u00f0\", \"description\": \"Fr\\u00e9ttir & d\\u00e6gurm\\u00e1l.\", \"thumbnail\": \"\\\"\", \"timestamp\": 1497855000, \"formats\": [{\"format_id\": \"mp3\", \"url\": \"https://ruv-audio.example.com/morgunutvarpid.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\"}], \"webpage_url\": \"http://ruv.is/sarpurinn/ras-2/morgunutvarpid/20170619\", \"original_url\": \"http://ruv.is/sarpurinn/ras-2/morgunutvarpid/20170619\", \"webpage_url_basename\": \"20170619\", \"webpage_url_domain\": \"ruv.is\", \"extractor\": \"Ruv\", \"extractor_key\": \"Ruv\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"\\\"\", \"id\": \"0\"}], \"fulltitle\": \"Morgun\\u00fatvarpi\\u00f0\", \"upload_date\": \"20170619\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"mp3\", \"url\": \"https://ruv-audio.example.com/morgunutvarpid.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\", \"_filename\": \"Morgun\\u00fatvarpi\\u00f0 [1153630].mp3\", \"filename\": \"Morgun\\u00fatvarpi\\u00f0 [1153630].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.ruv.is/node/1151854",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1151854\", \"display_id\": \"1151854\", \"title\": \"Klippa\", \"description\": null, \"thumbnail\": null, \"timestamp\": null, \"formats\": [{\"url\": \"https://ruv-vod.example.com/klippa.mp4?token=1\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"webpage_url\": \"http://www.ruv.is/node/1151854\", \"original_url\": \"http://www.ruv.is/node/1151854\", \"webpage_url_basename\": \"1151854\", \"webpage_url_domain\": \"ruv.is\", \"extractor\": \"Ruv\", \"extractor_key\": \"Ruv\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Klippa\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://ruv-vod.example.com/klippa.mp4?token=1\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Klippa [1151854].mp4\", \"filename\": \"Klippa [1151854].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Ruv] unable to extract thumbnail; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Ruv] unable to extract timestamp; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://ruv.is/sarpurinn/klippa/no-video",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Ruv] no-video: Unable to extract video URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ruv.is/sjonvarp/spila/ithrottir/30657/9jcnd4",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"9jcnd4\", \"title\": \"01.02.2022\", \"description\": \"\\u00cd\\u00fer\\u00f3ttafr\\u00e9ttir.\", \"subtitles\": {\"is\": [{\"url\": \"https://ruv-vod.example.com/9jcnd4/is.vtt\", \"ext\": \"vtt\"}, {\"url\": \"https://ruv-vod.example.com/9jcnd4/is2.vtt\", \"ext\": \"vtt\"}]}, \"thumbnail\": \"https://d38kdhuogyllre.cloudfront.net/fit-in/1960x/filters:quality(65)/hd_posters/94boog-iti3jg.jpg\", \"timestamp\": 1643743500, \"formats\": [{\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://ruv-vod.example.com/9jcnd4/360/index.m3u8\", \"manifest_url\": \"https://ruv-vod.example.com/9jcnd4/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}, {\"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://ruv-vod.example.com/9jcnd4/720/index.m3u8\", \"manifest_url\": \"https://ruv-vod.example.com/9jcnd4/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\"}], \"age_limit\": 0, \"chapters\": [{\"start_time\": 0, \"title\": \"Inngangur\", \"end_time\": 90}, {\"start_time\": 90, \"title\": \"Handbolti\", \"end_time\": 310}, {\"start_time\": 310, \"title\": \"F\\u00f3tbolti\", \"end_time\": 598}, {\"start_time\": 598, \"title\": \"<Untitled Chapter 4>\", \"end_time\": null}], \"webpage_url\": \"https://www.ruv.is/sjonvarp/spila/ithrottir/30657/9jcnd4\", \"original_url\": \"https://www.ruv.is/sjonvarp/spila/ithrottir/30657/9jcnd4\", \"webpage_url_basename\": \"9jcnd4\", \"webpage_url_domain\": \"ruv.is\", \"extractor\": \"ruv.is:spila\", \"extractor_key\": \"RuvSpila\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://d38kdhuogyllre.cloudfront.net/fit-in/1960x/filters:quality(65)/hd_posters/94boog-iti3jg.jpg\", \"id\": \"0\"}], \"display_id\": \"9jcnd4\", \"fulltitle\": \"01.02.2022\", \"upload_date\": \"20220201\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"3121\", \"format_index\": null, \"url\": \"https://ruv-vod.example.com/9jcnd4/720/index.m3u8\", \"manifest_url\": \"https://ruv-vod.example.com/9jcnd4/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3121 - 1280x720\", \"_filename\": \"01.02.2022 [9jcnd4].mp4\", \"filename\": \"01.02.2022 [9jcnd4].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ruv.is/sjonvarp/spila/ithrottir/30657/9jcnd4",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ruv.is:spila] Extracting URL: https://www.ruv.is/sjonvarp/spila/ithrottir/30657/9jcnd4",
+    "[ruv.is:spila] 9jcnd4: Downloading JSON metadata",
+    "[ruv.is:spila] 9jcnd4: Downloading m3u8 information",
+    "[info] Available subtitles for 9jcnd4:",
+    "Language Formats",
+    "is       vtt, vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ruv.is/utvarp/spila/i-ljosi-sogunnar/23795/7hqkre",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"7hqkre\", \"title\": \"\\u00cd lj\\u00f3si s\\u00f6gunnar\", \"description\": \"Vera Illugad\\u00f3ttir fjallar um s\\u00f6gulega atbur\\u00f0i.\", \"subtitles\": {}, \"thumbnail\": null, \"timestamp\": 1643965500, \"formats\": [{\"url\": \"https://ruv-audio.example.com/7hqkre.mp3\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"age_limit\": null, \"chapters\": [], \"webpage_url\": \"https://www.ruv.is/utvarp/spila/i-ljosi-sogunnar/23795/7hqkre\", \"original_url\": \"https://www.ruv.is/utvarp/spila/i-ljosi-sogunnar/23795/7hqkre\", \"webpage_url_basename\": \"7hqkre\", \"webpage_url_domain\": \"ruv.is\", \"extractor\": \"ruv.is:spila\", \"extractor_key\": \"RuvSpila\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"7hqkre\", \"fulltitle\": \"\\u00cd lj\\u00f3si s\\u00f6gunnar\", \"upload_date\": \"20220204\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://ruv-audio.example.com/7hqkre.mp3\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"\\u00cd lj\\u00f3si s\\u00f6gunnar [7hqkre].mp3\", \"filename\": \"\\u00cd lj\\u00f3si s\\u00f6gunnar [7hqkre].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ruv.is/ungruv/spila/ungruv/28046/nope00",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  }
+ ]
+}

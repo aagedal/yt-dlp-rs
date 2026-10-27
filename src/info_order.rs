@@ -2149,9 +2149,14 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         let mut thumbnail_all_set = false;
         let mut subtitle_keys = None;
         let mut chapter_keys = None;
+        let mut chapter_all_set = false;
         for part in parts {
             if let Some(found) = part.strip_prefix("chapter=") {
                 chapter_keys = Some(found);
+            } else if let Some(found) = part.strip_prefix("chapter!=") {
+                // Every listed key is set, so a `None` title keeps its place.
+                chapter_keys = Some(found);
+                chapter_all_set = true;
             }
             if let Some(found) = part.strip_prefix("thumbnail=") {
                 thumbnail_keys = Some(found);
@@ -2189,7 +2194,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                     .is_some_and(|title| title.as_str() == Some(untitled.as_str()));
                 let mut ordered = Map::new();
                 for key in chapter_keys.split(',') {
-                    if generated && key == "title" {
+                    if generated && key == "title" && !chapter_all_set {
                         continue;
                     }
                     if let Some(value) = chapter.shift_remove(key) {
@@ -2197,7 +2202,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                     }
                 }
                 ordered.append(chapter);
-                if generated && let Some(title) = ordered.shift_remove("title") {
+                // Processing always sets `end_time` (`None` for a last
+                // chapter without a duration).
+                ordered.entry("end_time").or_insert(Value::Null);
+                if generated
+                    && !chapter_all_set
+                    && let Some(title) = ordered.shift_remove("title")
+                {
                     ordered.insert("title".into(), title);
                 }
                 *chapter = ordered;
