@@ -1,0 +1,22 @@
+{
+ "chapterList": [
+  {
+   "id": "42960270",
+   "title": "Why people were against tax reforms",
+   "date": "2017-02-15T16:46:00+01:00",
+   "duration": 94000,
+   "resourceList": [
+    {
+     "url": "https://swi-vod.example.test/42960270.mp4",
+     "protocol": "HTTPS",
+     "quality": "SD"
+    }
+   ],
+   "subtitleList": [
+    {
+     "url": "https://swi-subs.example.test/42960270.vtt"
+    }
+   ]
+  }
+ ]
+}

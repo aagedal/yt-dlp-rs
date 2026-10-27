@@ -2218,6 +2218,18 @@
       "scope": "SpiegelIE _VALID_URL and the page mediaId as a url_transparent jwplatform: result with display_id and og:title compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "srgssr",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/srgssr.py"
+      ],
+      "rust": [
+        "src/extractor/srgssr.rs",
+        "tests/fixtures/sites/srgssr/"
+      ],
+      "scope": "SRGSSRIE mediaComposition chapters (onlyChapters for videos) with the No media information found, KeyError, geo (CH, no bypass) and SRGSSR said block-reason errors; HTTP(S) resources ranked by qualities(SD, HD), non-fatal plain HLS, AKAMAI HLS/HDS via the non-fatal akahd token and _extract_akamai_formats_and_subtitles without hosts (hds formats with extra_param_to_segment_url, hls formats, packaging parameters stripped from unsigned URLs), position-0 podcast formats, subtitleList tracks with the business-unit default language, title/description/timestamp/thumbnail/duration; SRGSSRPlayIE play-site URLs as srgssr: url results. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "streamable",
       "status": "partial",
       "upstream": [

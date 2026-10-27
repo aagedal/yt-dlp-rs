@@ -1,0 +1,17 @@
+{
+ "chapterList": [
+  {
+   "id": "1234567",
+   "title": "Senza formati",
+   "duration": "12000",
+   "resourceList": [
+    {
+     "url": "https://srgssr-vh.akamaihd.net/z/rsi/1234567/,1200,.mp4.csmil/manifest.f4m",
+     "protocol": "HDS",
+     "tokenType": "AKAMAI",
+     "quality": "HD"
+    }
+   ]
+  }
+ ]
+}

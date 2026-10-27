@@ -467,6 +467,34 @@ and search are not supported. `tests/fixtures/sites/soundcloud/` and
 `tests/fixtures/sites/soundcloud-login/` are compared with pinned upstream
 output.
 
+SRG SSR media (`srgssr:BU:[...:]video|audio:ID` for `srf`, `rts`, `rsi`,
+`rtr` and `swi`, and `tp.srgssr.ch/p/...?urn=urn:...` player URLs) follow
+upstream `SRGSSRIE`: the integration layer's `mediaComposition` JSON
+(`onlyChapters=True` for videos), the chapter whose `id` is the media ID
+(`No media information found` otherwise, a missing `chapterList` or `title`
+is upstream's `KeyError`), the `blockReason` errors (`GEOBLOCK` as the
+Switzerland-only geo error without a fake-IP bypass, the others as `SRGSSR
+said: ...`; unknown reasons such as `ENDDATE` fall through to `No video
+formats found!`), and each `resourceList` entry with a URL as a
+`PROTOCOL-ENCODING-QUALITY` format: HTTP(S) URLs ranked SD < HD (other
+qualities -1), plain HLS as non-fatal `mp4` master playlists (manifest
+subtitles merged), and `AKAMAI` HLS/HDS through the non-fatal `akahd` token
+(`Downloading ID token`, its `authparams` appended) and
+`_extract_akamai_formats_and_subtitles` without host overrides: the
+`hdcore=3.7.0` HDS manifest (`hds`, each format's
+`extra_param_to_segment_url`) and the `/i/.../master.m3u8` HLS playlist
+(`hls`), with Akamai's packaging parameters removed from unsigned URLs.
+Plain HDS and other protocols are skipped, like upstream. A chapter at
+position 0 adds its `PODCAST-SD`/`PODCAST-HD` URLs; videos add
+`subtitleList` tracks (the business unit's language without a `locale`).
+Title, description, ISO 8601 timestamp, thumbnail and millisecond duration
+follow. Play-site URLs (`srf.ch`, `rts.ch`, `rsi.ch`, `rtr.ch`,
+`swissinfo.ch` `/play/tv|radio/...?id=` or `?urn=`) follow `SRGSSRPlayIE` as
+`srgssr:` `url` results. Fields of unexpected types are explicit native
+errors. `tests/fixtures/sites/srgssr/` is compared with pinned upstream
+output (the services are geo-blocked outside Switzerland, so the responses
+are constructed from the upstream code's shapes).
+
 StreetVoice songs (`[SUB.]streetvoice.com/USER/songs/ID`) follow upstream
 `StreetVoiceIE`: the v4 song API's metadata (the `name` is required, else
 upstream's `KeyError`; synopsis, image, length, ISO 8601 creation time, user

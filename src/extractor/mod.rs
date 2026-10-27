@@ -181,6 +181,7 @@ mod snapchat;
 mod soundcloud;
 mod soundgasm;
 mod spiegel;
+mod srgssr;
 mod steam;
 mod streamable;
 mod streetvoice;
@@ -512,6 +513,9 @@ pub use soundgasm::{
     suitable as soundgasm_suitable,
 };
 pub use spiegel::{Spiegel, suitable as spiegel_suitable};
+pub use srgssr::{
+    SrgSsr, SrgSsrPlay, play_suitable as srgssr_play_suitable, suitable as srgssr_suitable,
+};
 pub use steam::{
     Steam, SteamCommunity, SteamCommunityBroadcast, broadcast_suitable as steam_broadcast_suitable,
     community_suitable as steam_community_suitable, suitable as steam_suitable,
@@ -1794,6 +1798,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("nrk:") && nrk::suitable(url))
         || (url.starts_with("peertube:") && peertube::suitable(url))
         || (url.starts_with("svt:") && svt::suitable(url))
+        || (url.starts_with("srgssr:") && srgssr::suitable(url))
         || (url.starts_with("iheartradio:") && iheart::suitable(url))
         || instagram::ios_suitable(url)
         || (url.starts_with("tco:") && twitter::shortener_suitable(url))
