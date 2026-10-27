@@ -224,6 +224,7 @@ mod twitter;
 mod umg;
 mod unistra;
 mod unitednations;
+mod urplay;
 mod ustudio;
 mod veo;
 mod videopress;
@@ -632,6 +633,7 @@ pub use twitter::{
 pub use umg::{UmgDe, suitable as umg_suitable};
 pub use unistra::{Unistra, suitable as unistra_suitable};
 pub use unitednations::{UnitedNationsWebTv, suitable as unitednations_suitable};
+pub use urplay::{UrPlay, suitable as urplay_suitable};
 pub use ustudio::{Ustudio, suitable as ustudio_suitable};
 pub use ustudio::{UstudioEmbed, embed_suitable as ustudio_embed_suitable};
 pub use veo::{Veo, suitable as veo_suitable};

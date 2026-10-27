@@ -2798,6 +2798,18 @@
       "scope": "UnitedNationsWebTvIE page partnerId and kentryID as a kaltura: url result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "urplay",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/urplay.py"
+      ],
+      "rust": [
+        "src/extractor/urplay.rs",
+        "tests/fixtures/sites/urplay/"
+      ],
+      "scope": "URPlayIE Next.js product data (legacy React props fallback), media API HLS, streaming-info subtitles with ISO 639 codes, series/episode metadata, thumbnails and age limit, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "ustudio",
       "status": "partial",
       "upstream": [

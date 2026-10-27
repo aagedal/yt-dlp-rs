@@ -659,6 +659,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "umg:de",
     "Unistra",
     "UnitedNationsWebTv",
+    "URPlay",
     "ustudio",
     "ustudio:embed",
     "Veo",
@@ -875,6 +876,7 @@ impl YoutubeDl {
                 Box::new(extractor::YoutubeTab {
                     no_playlist: youtube.no_playlist,
                 }),
+                Box::new(extractor::UrPlay),
                 Box::new(extractor::YoutubeSearchUrl),
                 Box::new(extractor::YoutubeClip),
                 Box::new(extractor::Reddit),

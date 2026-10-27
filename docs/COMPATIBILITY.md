@@ -1315,6 +1315,23 @@ warning) and `ipfs` HLS master playlists with subtitles, the original
 date. User pages (`3speak.tv/user/USER`) follow `ThreeSpeakUserIE`: each
 `data-payout` video as a `ThreeSpeak` URL entry.
 
+UR Play and UR Skola programs (`urplay.se/program/ID...`,
+`urskola.se/Produkter/ID...`, fetched as `urplay.se/program/`) follow upstream
+`URPlayIE`: the Next.js `productData` (a missing one is `Unable to parse
+__NEXT_DATA__`; without Next.js data, after upstream's warning, the legacy
+`ProgramContainer` React props' accessible episode with the URL's numeric
+ID), the media API's `sources.hls` URL (required) as a fatal HLS master
+playlist (`hls`, subtitles kept), then each streaming info subtitle track
+(not `sd`/`hd`) as `{ext: KIND, url}` under its ISO 639-2 language (a
+two-letter code converted with `ISO639Utils`; unknown languages skipped).
+Metadata: `SERIES : EPISODE` titles (series from `series.seriesTitle|title`,
+else `seriesTitle|mainTitle`), description, `WxH` image thumbnails,
+timestamp, duration, categories, keywords as tags, season label, episode
+number and the lowest age range's age limit (no age ranges is upstream's
+`min() iterable argument is empty` error). HLS subtitle renditions keep
+their manifest key order (`order_subtitle_tracks`). `tests/fixtures/sites/urplay/`
+is compared with pinned upstream output.
+
 uStudio videos (`ustudio.com/video/ID/DISPLAY_ID`) follow upstream
 `UstudioIE`: the `v1.ustudio.com` `config.xml` `qualities/quality/video` and
 `image` entries with a `url` (unescaped again, with integer width/height) as

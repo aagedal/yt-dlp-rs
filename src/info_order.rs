@@ -46,7 +46,8 @@ enum Set {
 use Set::*;
 
 /// An extractor's subtitle track keys (`KEY,KEY`) first, then the others
-/// (processing's `ext`); manifest tracks keep their parser's order.
+/// (processing's `ext`); manifest tracks (DASH tracks' `manifest_url`, HLS
+/// renditions' `m3u8_native` protocol) keep their parser's order.
 fn order_subtitle_tracks(out: &mut Map<String, Value>, subtitle_keys: &str) {
     for key in ["subtitles", "automatic_captions"] {
         if let Some(Value::Object(languages)) = out.get_mut(key) {
@@ -54,7 +55,10 @@ fn order_subtitle_tracks(out: &mut Map<String, Value>, subtitle_keys: &str) {
                 for track in tracks
                     .iter_mut()
                     .filter_map(Value::as_object_mut)
-                    .filter(|track| !track.contains_key("manifest_url"))
+                    .filter(|track| {
+                        !track.contains_key("manifest_url")
+                            && track.get("protocol").and_then(Value::as_str) != Some("m3u8_native")
+                    })
                 {
                     let mut ordered = Map::new();
                     for key in subtitle_keys.split(',') {
