@@ -2540,6 +2540,18 @@
       "scope": "MochaVideoIE detail API (resolution HLS formats and subtitles, original MP4, raw metadata, scaled timestamp, string-key channel traversal, generic-title fallback, KeyError and AttributeError messages) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "huffpost",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/huffpost.py"
+      ],
+      "rust": [
+        "src/extractor/huffpost.rs",
+        "tests/fixtures/sites/huffpost/"
+      ],
+      "scope": "HuffPostIE segments API sources and metadata, and embeds, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "hypergryph",
       "status": "partial",
       "upstream": [

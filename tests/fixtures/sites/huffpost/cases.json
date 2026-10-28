@@ -1,0 +1,21 @@
+[
+ {
+  "url": "http://live.huffingtonpost.com/r/segment/legalese-it/52dd3e4b02a7602131000677",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://live.huffingtonpost.com/r/segment/x/abc",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://hp-host.test/post",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(extractor)s|%(format_id)s|%(upload_date)s"
+  ]
+ }
+]

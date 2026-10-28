@@ -127,6 +127,7 @@ mod hrefli;
 mod hse;
 pub(crate) mod html5;
 mod huajiao;
+mod huffpost;
 mod hypem;
 mod hypergryph;
 mod iheart;
@@ -572,6 +573,7 @@ pub use hse::{
 };
 pub use html5::GenericHttp;
 pub use huajiao::{Huajiao, suitable as huajiao_suitable};
+pub use huffpost::{HuffPost, suitable as huffpost_suitable};
 pub use hypem::{Hypem, suitable as hypem_suitable};
 pub use hypergryph::{MonsterSirenHypergryphMusic, suitable as hypergryph_suitable};
 pub use iheart::{

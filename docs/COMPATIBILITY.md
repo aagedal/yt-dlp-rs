@@ -948,6 +948,14 @@ Bundesliga videos (`bundesliga.com/LL/bundesliga/videos[/...]?vid=ID`) follow
 upstream `BundesligaIE`: a `url` result of `jwplatform:ID`, extracted by the
 JW Platform extractor (so its `webpage_url` is the `jwplatform:` URL).
 
+HuffPost Live segments (`[embed.]live.huffingtonpost.com/r/segment/SLUG/ID`,
+`.../HPLEmbedPlayer/?segmentId=ID`) follow upstream `HuffPostIE`: the
+segments API's live and live-again sources (HLS and HDS non-fatal, else
+direct files keeping their source key as `format`), title, description,
+running time, start date and `-WxH.` images. HuffPost Live embed iframes on
+generic pages are embeds. `tests/fixtures/sites/huffpost/` is compared with
+pinned upstream output.
+
 Ivideon TV cameras (`ivideon.com/tv/.../camera/SERVER/CAMERA`, `ivideon`)
 follow upstream `IvideonIE` as live demo-session FLV streams (`low`, `mid`,
 `hi` with their qualities), named from the camera page's config (the page is

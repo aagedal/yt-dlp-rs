@@ -2068,7 +2068,7 @@ pub(crate) struct EmbedSite {
     temp_id: fn(&str) -> Option<String>,
 }
 
-static EMBED_SITES: [EmbedSite; 32] = [
+static EMBED_SITES: [EmbedSite; 33] = [
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
@@ -2152,6 +2152,13 @@ static EMBED_SITES: [EmbedSite; 32] = [
         extractor: Some(&super::googledrive::GoogleDrive),
         embed_urls: super::googledrive::embed_urls,
         temp_id: super::googledrive::temp_id,
+    },
+    EmbedSite {
+        name: super::huffpost::NAME,
+        key: super::huffpost::KEY,
+        extractor: Some(&super::huffpost::HuffPost),
+        embed_urls: super::huffpost::embed_urls,
+        temp_id: super::huffpost::temp_id,
     },
     EmbedSite {
         name: "JWPlatform",

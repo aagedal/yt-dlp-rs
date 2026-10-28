@@ -1,0 +1,46 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://live.huffingtonpost.com/r/segment/legalese-it/52dd3e4b02a7602131000677",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"52dd3e4b02a7602131000677\", \"title\": \"Legalese It! with @MikeSacksHP\", \"description\": \"Desc\", \"formats\": [{\"format\": \"audio/mp3\", \"format_id\": \"audio.mp3\", \"ext\": \"mp4\", \"url\": \"https://hpl.test/a.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}}, {\"format\": \"video/mp4_600\", \"format_id\": \"video.mp4_600\", \"ext\": \"mp4\", \"url\": \"https://hpl.test/v600.mp4\", \"vcodec\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}}, {\"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://hpl.test/360.m3u8\", \"manifest_url\": \"https://hpl.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 640x360\"}], \"duration\": 1526, \"upload_date\": \"20140120\", \"thumbnails\": [{\"url\": \"https://hpl.test/img-1280x720.jpg\", \"resolution\": \"1280x720\", \"id\": \"0\"}], \"webpage_url\": \"http://live.huffingtonpost.com/r/segment/legalese-it/52dd3e4b02a7602131000677\", \"original_url\": \"http://live.huffingtonpost.com/r/segment/legalese-it/52dd3e4b02a7602131000677\", \"webpage_url_basename\": \"52dd3e4b02a7602131000677\", \"webpage_url_domain\": \"live.huffingtonpost.com\", \"extractor\": \"HuffPost\", \"extractor_key\": \"HuffPost\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://hpl.test/img-1280x720.jpg\", \"display_id\": \"52dd3e4b02a7602131000677\", \"fulltitle\": \"Legalese It! with @MikeSacksHP\", \"duration_string\": \"25:26\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1000\", \"url\": \"https://hpl.test/360.m3u8\", \"manifest_url\": \"https://hpl.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 640x360\", \"_filename\": \"Legalese It! with @MikeSacksHP [52dd3e4b02a7602131000677].mp4\", \"filename\": \"Legalese It! with @MikeSacksHP [52dd3e4b02a7602131000677].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://hpl.test/360.m3u8\", \"manifest_url\": \"https://hpl.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://live.huffingtonpost.com/r/segment/x/abc",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: abc: An extractor error has occurred. (caused by KeyError('images')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://hp-host.test/post",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(format_id)s|%(upload_date)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "52dd3e4b02a7602131000677|Legalese It! with @MikeSacksHP|HuffPost|hls-1000|20140120"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  }
+ ]
+}
