@@ -130,6 +130,7 @@ mod mediaite;
 mod megaphone;
 mod mir24tv;
 mod mixcloud;
+mod mixlr;
 mod mocha;
 mod movingimage;
 mod mux;
@@ -454,6 +455,10 @@ pub use mediaite::{Mediaite, suitable as mediaite_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
 pub use mir24tv::{Mir24Tv, suitable as mir24tv_suitable};
 pub use mixcloud::{Mixcloud, suitable as mixcloud_suitable};
+pub use mixlr::{
+    Mixlr, MixlrRecording, recording_suitable as mixlr_recording_suitable,
+    suitable as mixlr_suitable,
+};
 pub use mocha::{MochaVideo, suitable as mocha_suitable};
 pub use movingimage::{MovingImage, suitable as movingimage_suitable};
 pub use mux::{Mux, suitable as mux_suitable};

@@ -1,0 +1,85 @@
+[
+ {
+  "url": "https://suncity-104-9fm.mixlr.com/events/4387115",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(uploader)s|%(uploader_id)s|%(description)s|%(timestamp)s|%(release_timestamp)s|%(concurrent_view_count)s|%(like_count)s|%(thumbnail)s|%(format_id)s|%(ext)s|%(vcodec)s|%(acodec)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://www.brcountdown.mixlr.com/events/4395480",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://brcountdown.mixlr.com/events/4395480",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://octet.mixlr.com/events/100",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(uploader)s|%(uploader_id)s|%(description)s|%(timestamp)s|%(release_timestamp)s|%(concurrent_view_count)s|%(like_count)s|%(thumbnail)s|%(format_id)s|%(ext)s|%(vcodec)s|%(acodec)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://upcoming.mixlr.com/events/200",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://upcoming.mixlr.com/events/200",
+  "args": [
+   "--ignore-no-formats-error",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://gone.mixlr.com/events/300",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://empty.mixlr.com/events/400",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://biblewayng.mixlr.com/recordings/2375193",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://biblewayng.mixlr.com/recordings/2375193",
+  "args": [
+   "--no-progress",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://noformat.mixlr.com/recordings/9",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://nourl.mixlr.com/recordings/10",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://missing.mixlr.com/recordings/11",
+  "args": [
+   "-j"
+  ]
+ }
+]

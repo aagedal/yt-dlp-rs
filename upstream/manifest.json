@@ -1793,6 +1793,18 @@
       "scope": "MixcloudIE GraphQL cloudcast lookup, XOR-decrypted progressive/HLS/DASH stream URLs, restriction errors, comments and metadata; no user, playlist or favorites lists; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "mixlr",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mixlr.py"
+      ],
+      "rust": [
+        "src/extractor/mixlr.rs",
+        "tests/fixtures/sites/mixlr/"
+      ],
+      "scope": "MixlrIE channel event API JSON with the HEAD-checked progressive stream (urlhandle_detect_ext, octet-stream mp3 warning), upcoming-event no-formats error, live status and event/broadcast metadata, and MixlrRecoringIE recording API JSON as an untyped result, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "mocha",
       "status": "partial",
       "upstream": [

@@ -779,6 +779,23 @@ upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 proto-relative as `https:` as the single format, raw `duration`; missing keys are
 upstream's `KeyError` extractor errors).
 
+Mixlr events (`[www.]USER.mixlr.com/events/ID`) follow upstream `MixlrIE`:
+the `api.mixlr.com/v3/channels/USER/events/ID` JSON's first included
+broadcast `progressive_stream_url`, checked with a non-fatal `HEAD` request
+(`Checking stream`; an HTTP error is upstream's warning) and kept on a 200
+as the single audio-only format with `urlhandle_detect_ext`'s extension
+(`octet-stream` is upstream's warning and `mp3`). Without formats, an
+event's `starts_at` is upstream's expected `This event will start at DATE`
+error (a warning with `--ignore-no-formats-error`). Metadata: the username
+as uploader, `starts_at` as release timestamp, and the broadcast's then the
+event's title, description, start time, viewer and heart counts, live flag,
+artwork and broadcaster ID. Recordings (`USER.mixlr.com/recordings/ID`)
+follow `MixlrRecoringIE`: the recording API JSON's URL, file format,
+title, description, creation time, integer duration, artwork and user ID as
+an untyped result. A stream without a detectable extension remains an
+explicit native error. `tests/fixtures/sites/mixlr/` is compared with
+pinned upstream output.
+
 Acast episodes (`[www.|shows.|embed.]acast.com/SHOW/[episodes/]EPISODE`,
 `play.acast.com/s/SHOW/EPISODE`, `acast`) follow upstream `ACastIE`: the
 `feeder.acast.com/api/v1/shows/SHOW/episodes/EPISODE?showInfo=true` JSON
