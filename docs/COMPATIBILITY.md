@@ -3331,6 +3331,17 @@ view/comment counters, with upstream's warnings, its `NoneType` error when
 both title and description are missing and `No video formats found!`.
 `tests/fixtures/sites/pinkbike/` is compared with pinned upstream output.
 
+n-tv.de Mediathek videos (`[www.]n-tv.de/mediathek/videos|magazine/SECTION/SLUG-articleID.html`)
+follow upstream `NTVDeIE`: the page's `article:` object (fatal, `js_to_json`)
+gives the headline, intro, kicker and publication time, and the
+`$("#playerwrapper").data("player", ...)` object (fatal, `ivw:` values removed
+before `js_to_json`; a parse failure keeps upstream's `JSONDecodeError` text)
+its `setup.source` (missing keys are upstream's `KeyError`): the `progressive`
+file (`http`), the non-fatal HLS master playlist (`hls`) and DASH manifest
+(`dash`, subtitles ignored), the poster and the length. Non-string article
+fields and non-string manifest URLs are explicit native errors.
+`tests/fixtures/sites/ntvde/` is compared with pinned upstream output.
+
 NTS episodes (`nts.live/shows/SHOW/episodes/SLUG`) follow upstream
 `NTSLiveIE`: the page's `window._REACT_STATE_` episode, whose first valid
 `audio_sources` URL is followed as a `url_transparent` result (Mixcloud pages

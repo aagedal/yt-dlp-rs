@@ -225,6 +225,7 @@ mod nowcanal;
 mod npr;
 mod nrk;
 mod nts;
+mod ntvde;
 pub mod nuxt;
 mod nzonscreen;
 mod odnoklassniki;
@@ -761,6 +762,7 @@ pub use nrk::{
     suitable as nrk_suitable, tv_suitable as nrk_tv_suitable,
 };
 pub use nts::{NtsLive, suitable as nts_suitable};
+pub use ntvde::{NtvDe, suitable as ntvde_suitable};
 pub use nzonscreen::{NzOnScreen, suitable as nzonscreen_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
 pub use olympics::{OlympicsReplay, suitable as olympics_suitable};
