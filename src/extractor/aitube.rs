@@ -73,14 +73,14 @@ impl Extractor for AitubeKzVideo {
         for key in ["props", "pageProps", "videoInfo"] {
             data = data.get(key).ok_or_else(|| key_error(&video_id, key))?;
         }
-        // `_search_json_ld(webpage, video_id)` (fatal).
-        if super::json_ld::yield_json_ld(&webpage).is_empty() {
+        // `_search_json_ld(webpage, video_id)` (fatal): no fields is an error.
+        let json_ld = super::json_ld::search(&webpage);
+        if json_ld.is_empty() {
             return Err(Error::Reported(format!(
                 "[{NAME}] {video_id}: Unable to extract JSON-LD; {}",
                 crate::BUG_REPORTS_MESSAGE
             )));
         }
-        let json_ld = super::json_ld::search(&webpage);
         let manifest = Url::parse(&format!(
             "https://api-http.aitube.kz/kz.aitudala.aitube.staticaccess/video/{video_id}/video"
         ))?;

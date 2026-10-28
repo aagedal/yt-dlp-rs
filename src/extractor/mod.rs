@@ -96,6 +96,7 @@ mod filmweb;
 mod flickr;
 mod footyroom;
 mod formula1;
+mod francaisfacile;
 mod francetv;
 mod freesound;
 mod freespeech;
@@ -517,6 +518,7 @@ pub use filmweb::{Filmweb, suitable as filmweb_suitable};
 pub use flickr::{Flickr, suitable as flickr_suitable};
 pub use footyroom::{FootyRoom, suitable as footyroom_suitable};
 pub use formula1::{Formula1, suitable as formula1_suitable};
+pub use francaisfacile::{FrancaisFacile, suitable as francaisfacile_suitable};
 pub use francetv::{
     FranceTv, FranceTvInfo, FranceTvSite, info_suitable as francetv_info_suitable,
     site_suitable as francetv_site_suitable, suitable as francetv_suitable,

@@ -1,0 +1,20 @@
+[
+ {
+  "url": "https://francaisfacile.rfi.fr/fr/podcasts/journal-en-fran%C3%A7ais-facile/20250127-journal",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://francaisfacile.rfi.fr/fr/podcasts/journal-en-fran%C3%A7ais-facile/no-ld",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://francaisfacile.rfi.fr/fr/podcasts/journal-en-fran%C3%A7ais-facile/no-data",
+  "args": [
+   "-J"
+  ]
+ }
+]

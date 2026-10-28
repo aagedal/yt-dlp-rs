@@ -1,0 +1,49 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://francaisfacile.rfi.fr/fr/podcasts/journal-en-fran%C3%A7ais-facile/20250127-journal",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1b0d9b02\", \"display_id\": \"20250127-journal\", \"vcodec\": \"none\", \"title\": \"Journal en fran\\u00e7ais facile 20h00 GMT\", \"timestamp\": 1738008000, \"description\": \"LD desc\", \"url\": \"https://aod-rfi.test/fra/a.mp3\", \"duration\": 600.5, \"webpage_url\": \"https://francaisfacile.rfi.fr/fr/podcasts/journal-en-fran%C3%A7ais-facile/20250127-journal\", \"original_url\": \"https://francaisfacile.rfi.fr/fr/podcasts/journal-en-fran%C3%A7ais-facile/20250127-journal\", \"webpage_url_basename\": \"20250127-journal\", \"webpage_url_domain\": \"francaisfacile.rfi.fr\", \"extractor\": \"FrancaisFacile\", \"extractor_key\": \"FrancaisFacile\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Journal en fran\\u00e7ais facile 20h00 GMT\", \"duration_string\": \"10:00\", \"upload_date\": \"20250127\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"Journal en fran\\u00e7ais facile 20h00 GMT [1b0d9b02].mp3\", \"filename\": \"Journal en fran\\u00e7ais facile 20h00 GMT [1b0d9b02].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://francaisfacile.rfi.fr/fr/podcasts/journal-en-fran%C3%A7ais-facile/no-ld",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [FrancaisFacile] unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [FrancaisFacile] unable to extract JSON-LD ; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: \"id\" field is not a string - forcing string conversion, there is an error in extractor",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [FrancaisFacile] 7: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://francaisfacile.rfi.fr/fr/podcasts/journal-en-fran%C3%A7ais-facile/no-data",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [FrancaisFacile] no-data: Unable to extract audio data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

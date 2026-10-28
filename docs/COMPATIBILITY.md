@@ -686,6 +686,14 @@ fixtures follow the upstream code's shapes. `tests/fixtures/sites/svt/` is
 compared with pinned upstream output (the video CDN is geo-blocked outside
 Sweden, so its manifests are constructed).
 
+RFI Français facile audio (`francaisfacile.rfi.fr/LL/actualit%C3%A9|podcasts/SHOW/SLUG`)
+follows upstream `FrancaisFacileIE`: the page's `data-media-id` JSON (fatal;
+a missing `mediaId` is upstream's `KeyError`), the page title, the JSON-LD
+fields (non-fatal, with upstream's warning) and the JSON's title, first
+valid source URL and duration, as an audio-only URL result.
+`tests/fixtures/sites/francaisfacile/` is compared with pinned upstream
+output.
+
 France Télévisions videos (`francetv:ID`, an `@catalog` suffix ignored)
 follow upstream `FranceTVIE`: the `k7.ftven.fr/videos/ID` JSON for desktop
 Chrome and mobile Safari (non-fatal, with the smuggled page hostname, else

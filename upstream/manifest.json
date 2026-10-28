@@ -3640,6 +3640,18 @@
       "scope": "Formula1IE URL Brightcove ID as a url result of the BrightcoveNew player template, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "francaisfacile",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/francaisfacile.py"
+      ],
+      "rust": [
+        "src/extractor/francaisfacile.rs",
+        "tests/fixtures/sites/francaisfacile/"
+      ],
+      "scope": "FrancaisFacileIE audio data JSON, page title and JSON-LD, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "francetv",
       "status": "partial",
       "upstream": [
