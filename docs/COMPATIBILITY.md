@@ -3816,6 +3816,17 @@ extension, then the download links with resolution, file size and
 `tests/fixtures/sites/massengeschmacktv/` is compared with pinned upstream
 output.
 
+MBN (매일방송) VOD previews (`[www.]mbn.co.kr/vod/programContents/preview[list]/N/N/ID`)
+follow upstream `MBNIE`: the page's `content_cls_cd` (non-fatal, default
+`20`), the `mbnVodPlayer_2020.mbn` player JSON (fatal) and, for each
+`movie_list` URL (`chunklist`/`playlist[_pdN].m3u8` rewritten to
+`manifest.m3u8`), the fatal `mbnStreamAuth_new_vod.mbn` request whose text is
+the authenticated playlist URL (a non-URL text is upstream's `Failed to obtain
+m3u8 URL` warning), read as a non-fatal HLS master playlist. The title, play
+time, broadcast date (dots removed), image, programme and episode number are
+taken when they have the expected types. `tests/fixtures/sites/mbn/` is
+compared with pinned upstream output.
+
 MDR.DE videos and audio (`mdr.de/.../NAME-ID[_...].html`) follow upstream
 `MDRIE` (geo countries `DE`): the page's `dataURL`/`playerXml` `-avCustom.xml`
 URL (fatal; `\/` unescaped, joined with the page URL) and that XML document's

@@ -1,0 +1,33 @@
+[
+ {
+  "url": "https://mbn.co.kr/vod/programContents/previewlist/861/5433/1276155",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.mbn.co.kr/vod/programContents/preview/952/6088/1054797?next=1",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.mbn.co.kr/vod/programContents/preview/952/6088/1054797?next=1",
+  "args": [
+   "-J",
+   "--ignore-no-formats-error"
+  ]
+ },
+ {
+  "url": "https://www.mbn.co.kr/vod/programContents/preview/1/2/3",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.mbn.co.kr/vod/programContents/preview/1/2/4",
+  "args": [
+   "-J"
+  ]
+ }
+]

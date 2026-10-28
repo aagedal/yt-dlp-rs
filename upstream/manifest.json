@@ -2562,6 +2562,18 @@
       "scope": "MassengeschmackTVIE MEDIA sources (non-fatal HLS or direct files), download links with size/resolution, title and POSTER thumbnail, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "mbn",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mbn.py"
+      ],
+      "rust": [
+        "src/extractor/mbn.rs",
+        "tests/fixtures/sites/mbn/"
+      ],
+      "scope": "MBNIE player JSON, authenticated stream URLs as non-fatal HLS master playlists, title/duration/release date/thumbnail/series/episode number and the content cls cd / m3u8 URL warnings and fatal download errors, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "masters",
       "status": "partial",
       "upstream": [

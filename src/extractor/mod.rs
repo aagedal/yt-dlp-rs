@@ -192,6 +192,7 @@ mod massengeschmacktv;
 mod masters;
 mod matchitv;
 mod matchtv;
+mod mbn;
 mod mdr;
 mod medaltv;
 mod mediaite;
@@ -699,6 +700,7 @@ pub use massengeschmacktv::{MassengeschmackTv, suitable as massengeschmacktv_sui
 pub use masters::{Masters, suitable as masters_suitable};
 pub use matchitv::{MatchiTv, suitable as matchitv_suitable};
 pub use matchtv::{MatchTv, suitable as matchtv_suitable};
+pub use mbn::{Mbn, suitable as mbn_suitable};
 pub use mdr::{Mdr, suitable as mdr_suitable};
 pub use medaltv::{MedalTv, suitable as medaltv_suitable};
 pub use mediaite::{Mediaite, suitable as mediaite_suitable};
