@@ -520,6 +520,15 @@ episode or program title and description, the `$$IMAGESIZE$$` thumbnail, the
 time are an unsupported error (processing would fill their `None` start).
 `tests/fixtures/sites/ruv/` is compared with pinned upstream output.
 
+Screencastify videos (`watch.screencastify.com/v/ID`,
+`app.screencastify.com/v2|v3/watch/ID`) follow upstream `ScreencastifyIE`:
+the umbrella service's watch JSON (title, description, uploader), its DASH
+(`dash`) and HLS (`hls`) manifests (both non-fatal, master playlist only)
+requested with the manifest's `auth.query` parsed like `parse_qs`, which is
+also added to every format URL and kept as the top-level
+`extra_param_to_segment_url`. `tests/fixtures/sites/screencastify/` is
+compared with pinned upstream output.
+
 ScreenRec shares (`screenrec.com/share/ID`) follow upstream `ScreenRecIE`: the
 page's fatal `customUrl` manifest as HLS formats (subtitles ignored with
 upstream's warning), the OpenGraph title (else the `<title>` text) and the

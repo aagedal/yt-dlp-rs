@@ -255,6 +255,7 @@ mod s4c;
 mod sapo;
 mod sbs;
 mod screen9;
+mod screencastify;
 mod screenrec;
 mod sen;
 mod servus;
@@ -778,6 +779,7 @@ pub use s4c::{S4c, S4cSeries, series_suitable as s4c_series_suitable, suitable a
 pub use sapo::{Sapo, suitable as sapo_suitable};
 pub use sbs::{Sbs, suitable as sbs_suitable};
 pub use screen9::{Screen9, suitable as screen9_suitable};
+pub use screencastify::{Screencastify, suitable as screencastify_suitable};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
 pub use servus::{Servus, suitable as servus_suitable};
@@ -1866,6 +1868,15 @@ fn post_json_with(
 /// Upstream `update_url_query(url, query)`: the query decoded, updated and
 /// re-encoded like `urlencode` (`quote_plus`: `~` kept, `*` escaped).
 pub(crate) fn update_url_query(url: &Url, updates: &[(&str, &str)]) -> Url {
+    let updates: Vec<(&str, Vec<&str>)> = updates
+        .iter()
+        .map(|(key, value)| (*key, vec![*value]))
+        .collect();
+    update_url_query_lists(url, &updates)
+}
+
+/// [`update_url_query`] with `parse_qs`-style list values (`doseq`).
+pub(crate) fn update_url_query_lists(url: &Url, updates: &[(&str, Vec<&str>)]) -> Url {
     // `parse_qs` (blank values dropped, repeated keys grouped) and
     // `dict.update` (an updated key keeps its place).
     let mut groups: Vec<(String, Vec<String>)> = Vec::new();
@@ -1879,9 +1890,10 @@ pub(crate) fn update_url_query(url: &Url, updates: &[(&str, &str)]) -> Url {
         }
     }
     for (key, value) in updates {
+        let value: Vec<String> = value.iter().map(|value| (*value).to_owned()).collect();
         match groups.iter_mut().find(|(existing, _)| existing == key) {
-            Some((_, values)) => *values = vec![(*value).to_owned()],
-            None => groups.push(((*key).to_owned(), vec![(*value).to_owned()])),
+            Some((_, values)) => *values = value,
+            None => groups.push(((*key).to_owned(), value)),
         }
     }
     let pairs: Vec<(&str, &str)> = groups

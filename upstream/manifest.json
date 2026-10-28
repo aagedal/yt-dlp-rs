@@ -3171,6 +3171,18 @@
       "scope": "ScreenRecIE customUrl HLS formats, OpenGraph/<title> fallback and warnings compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "screencastify",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/screencastify.py"
+      ],
+      "rust": [
+        "src/extractor/screencastify.rs",
+        "tests/fixtures/sites/screencastify/"
+      ],
+      "scope": "ScreencastifyIE umbrella watch JSON with non-fatal DASH and HLS manifests, the auth query on manifests and format URLs and extra_param_to_segment_url, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "sen",
       "status": "partial",
       "upstream": [
