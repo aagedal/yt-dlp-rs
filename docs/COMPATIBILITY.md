@@ -562,6 +562,19 @@ formats (`m3u8_native` for HLS; `.mp3.NNNk` URLs give the ABR/TBR). Format
 responses whose body is not empty but fails to parse remain explicit native
 errors, since this port does not reproduce Python's `JSONDecodeError` text.
 
+STV Player videos and episodes (`player.stv.tv/video|episode/ID`) follow
+upstream `STVPlayerIE`: the page is downloaded non-fatally (a failure warns
+without its cause), its Next.js `playerApiCache` `/episodes/` or
+`/shortform/` result is used, else `player.api.stv.tv/v1/episodes|shortform/ID`
+(the page's `episodeId` first; a missing `results` is upstream's
+`KeyError`); `drmEnabled` programmes raise upstream's DRM error. The result
+is a `url_transparent` BrightcoveNew player URL (account `1486976045`,
+smuggled `geo_countries` `GB`) overlaid with the summary, the `length`
+duration in seconds, the `_subtitles` tracks as `en` subtitles (an empty
+dict still replaces Brightcove's, like upstream), the view count and the
+programme name. `tests/fixtures/sites/stv/` is compared with pinned upstream
+output (`--no-geo-bypass`).
+
 Substack posts (`SUB.substack.com/p/SLUG`) follow upstream `SubstackIE`: the
 page's `window._preloads = JSON.parse("...")` literal (`Unable to extract
 json string` without it; decoded with `js_to_json`, then parsed), the

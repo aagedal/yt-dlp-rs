@@ -213,6 +213,7 @@ mod srgssr;
 mod steam;
 mod streamable;
 mod streetvoice;
+mod stv;
 mod substack;
 mod sverigesradio;
 mod svt;
@@ -647,6 +648,7 @@ pub(crate) use steam::{
 };
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use streetvoice::{StreetVoice, suitable as streetvoice_suitable};
+pub use stv::{StvPlayer, suitable as stv_player_suitable};
 pub use substack::{Substack, suitable as substack_suitable};
 pub use sverigesradio::{
     SverigesRadioEpisode, SverigesRadioPublication,

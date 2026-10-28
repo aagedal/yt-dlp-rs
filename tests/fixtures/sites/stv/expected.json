@@ -1,0 +1,77 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://player.stv.tv/video/4gwd/emmerdale/60-seconds-on-set-with-laura-norton/",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5333973339001\", \"thumbnails\": null, \"duration\": 61.5, \"formats\": [{\"tbr\": 1500.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://brightcove.stv.test/5333973339001.mp4\", \"format_id\": \"http-1500k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkSTVKEY\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 11531250, \"format\": \"http-1500k-720p - 1280x720\"}], \"subtitles\": {\"en\": [{\"ext\": \"vtt\", \"url\": \"https://subs.stv.test/5333973339001.vtt\"}, {\"ext\": \"srt\", \"url\": \"https://subs.stv.test/5333973339001.srt\"}]}, \"is_live\": false, \"title\": \"60 seconds on set with Laura Norton\", \"description\": \"How many questions can Laura answer in 60 seconds?\", \"timestamp\": 1488388054, \"uploader_id\": \"1486976045\", \"original_url\": \"https://player.stv.tv/video/4gwd/emmerdale/60-seconds-on-set-with-laura-norton/\", \"webpage_url\": \"https://player.stv.tv/video/4gwd/emmerdale/60-seconds-on-set-with-laura-norton/\", \"webpage_url_basename\": \"60-seconds-on-set-with-laura-norton\", \"webpage_url_domain\": \"player.stv.tv\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"view_count\": 1234, \"series\": \"Emmerdale\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"5333973339001\", \"fulltitle\": \"60 seconds on set with Laura Norton\", \"duration_string\": \"1:01\", \"upload_date\": \"20170301\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"tbr\": 1500.0, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://brightcove.stv.test/5333973339001.mp4\", \"format_id\": \"http-1500k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkSTVKEY\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 11531250, \"format\": \"http-1500k-720p - 1280x720\", \"_filename\": \"60 seconds on set with Laura Norton [5333973339001].mp4\", \"filename\": \"60 seconds on set with Laura Norton [5333973339001].mp4\", \"__write_download_archive\": false}], \"tbr\": 1500.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://brightcove.stv.test/5333973339001.mp4\", \"format_id\": \"http-1500k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkSTVKEY\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 11531250, \"format\": \"http-1500k-720p - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.stv.tv/video/4gwd/emmerdale/60-seconds-on-set-with-laura-norton/",
+   "args": [
+    "--no-geo-bypass",
+    "-q",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [],
+   "stderr": [],
+   "files": {
+    "5333973339001.mp4": 11
+   }
+  },
+  {
+   "url": "https://player.stv.tv/episode/4125/jennifer-saunders-memory-lane",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6300000000777\", \"thumbnails\": null, \"duration\": 61.0, \"formats\": [{\"tbr\": 1500.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://brightcove.stv.test/6300000000777.mp4\", \"format_id\": \"http-1500k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkSTVKEY\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 11437500, \"format\": \"http-1500k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"Memory Lane\", \"description\": \"Brightcove description\", \"timestamp\": 1488388054, \"uploader_id\": \"1486976045\", \"original_url\": \"https://player.stv.tv/episode/4125/jennifer-saunders-memory-lane\", \"webpage_url\": \"https://player.stv.tv/episode/4125/jennifer-saunders-memory-lane\", \"webpage_url_basename\": \"jennifer-saunders-memory-lane\", \"webpage_url_domain\": \"player.stv.tv\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"series\": \"Jennifer Saunders' Memory Lane\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"6300000000777\", \"fulltitle\": \"Memory Lane\", \"duration_string\": \"1:01\", \"upload_date\": \"20170301\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"tbr\": 1500.0, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://brightcove.stv.test/6300000000777.mp4\", \"format_id\": \"http-1500k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkSTVKEY\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 11437500, \"format\": \"http-1500k-720p - 1280x720\", \"_filename\": \"Memory Lane [6300000000777].mp4\", \"filename\": \"Memory Lane [6300000000777].mp4\", \"__write_download_archive\": false}], \"tbr\": 1500.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://brightcove.stv.test/6300000000777.mp4\", \"format_id\": \"http-1500k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkSTVKEY\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 11437500, \"format\": \"http-1500k-720p - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.stv.tv/episode/4126/missing",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [stv:player] 4126: Unable to download webpage: HTTP Error 404: Not Found",
+    "ERROR: [stv:player] 6300000000888: This video is DRM protected"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.stv.tv/video/4127/gone",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 4127: An extractor error has occurred. (caused by KeyError('results')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

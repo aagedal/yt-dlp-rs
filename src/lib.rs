@@ -639,6 +639,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "SteamCommunityBroadcast",
     "Streamable",
     "StreetVoice",
+    "stv:player",
     "Substack",
     "sverigesradio:episode",
     "sverigesradio:publication",
@@ -934,6 +935,7 @@ impl YoutubeDl {
                 Box::new(extractor::Monstercat),
                 Box::new(extractor::MuseScore),
                 Box::new(extractor::Servus),
+                Box::new(extractor::StvPlayer),
                 Box::new(extractor::Tf1),
                 Box::new(extractor::UrPlay),
                 Box::new(extractor::Wat),
@@ -3589,10 +3591,23 @@ impl YoutubeDl {
                                 "url_transparent playlists are not supported natively".into(),
                             ));
                         };
-                        let inner_shape = match inner.extra.get(info_order::INFO_SHAPE) {
+                        let mut inner_shape = match inner.extra.get(info_order::INFO_SHAPE) {
                             Some(serde_json::Value::String(shape)) => shape.clone(),
                             _ => String::new(),
                         };
+                        // Overriding `subtitles` tracks keep the outer
+                        // extractor's key order (`subtitle_keys`), not the
+                        // inner one's.
+                        if let Some(keys) = marker["subtitle_keys"].as_str()
+                            && fields.iter().any(|(key, _)| key == "subtitles")
+                        {
+                            inner_shape = inner_shape
+                                .split(';')
+                                .filter(|part| !part.starts_with("subtitle="))
+                                .collect::<Vec<_>>()
+                                .join(";");
+                            inner_shape.push_str(&format!(";subtitle={keys}"));
+                        }
                         for (key, value) in &fields {
                             match key.as_str() {
                                 "title" => {
