@@ -1,0 +1,66 @@
+[
+ {
+  "url": "https://player.pia-live.jp/stream/KEY-ok_1",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.pia-live.jp/stream/KEY-ok_1",
+  "args": [
+   "-j",
+   "--write-comments"
+  ]
+ },
+ {
+  "url": "https://player.pia-live.jp/stream/KEY-notitle",
+  "args": [
+   "--write-comments",
+   "--print",
+   "%(id)s|%(title)s|%(display_id)s|%(comment_count)s"
+  ]
+ },
+ {
+  "url": "https://player.pia-live.jp/stream/KEY-ended",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.pia-live.jp/stream/KEY-upcoming",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.pia-live.jp/stream/KEY-upcoming",
+  "args": [
+   "-j",
+   "--ignore-no-formats-error"
+  ]
+ },
+ {
+  "url": "https://player.pia-live.jp/stream/KEY-badstart",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.pia-live.jp/stream/KEY-novar",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.pia-live.jp/stream/KEY-notag",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.pia-live.jp/stream/KEY-nosrc",
+  "args": [
+   "-j"
+  ]
+ }
+]

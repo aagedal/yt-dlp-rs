@@ -762,6 +762,16 @@ not a video) is an unsupported error here; upstream warns that the extractor
 returned nothing. `tests/fixtures/sites/telegram/` is compared with pinned
 upstream output.
 
+Telewebion episodes (`telewebion.ir/episode/ID`, decimal IDs as `0x...`)
+follow upstream `TelewebionIE`: the `graph.telewebion.ir/graphql`
+`getEpisodeDetail` query (a JSON POST; GraphQL `errors` messages, or
+`Unknown GraphQL API error`, as errors under the URL's ID), the first
+`queryEpisode`'s title, view count, duration, tags, start and creation
+times, program and channel, the channel's `/live/DESCRIPTOR` URL and the
+`episodeImages` thumbnail, and the channel's episode HLS (`hls`; without a
+string descriptor upstream's `Failed to obtain m3u8 URL`).
+`tests/fixtures/sites/telewebion/` is compared with pinned upstream output.
+
 The Intercept Field of Vision posts (`theintercept.com/fieldofvision/SLUG`)
 follow upstream `TheInterceptIE`: the page's `initialStoreTree` post with the
 slug, as a `url_transparent` result of `jwplatform:VIDEO` (extracted by the
@@ -1966,6 +1976,18 @@ feature; without it, upstream's error text), including
 (`age_restricted`). A video URL with `?playlist=ID` (or a `player.html?playlist=`
 URL) is, without `--no-playlist`, a `url` result for
 `http://www.dailymotion.com/playlist/ID` followed by the playlist extractor.
+
+DAM★とも karaoke movies and posts (`clubdam.com/app/damtomo/[SP/]karaokeMovie/StreamingDkm.do?karaokeMovieId=ID`,
+`.../karaokePost/StreamingKrk.do?karaokeContributeId=ID`) follow upstream
+`DamtomoVideoIE` and `DamtomoRecordIE`: the canonical page decoded like
+Python's strict `sjis` codec (JIS X 0208 only, U+FFFD for other rows), a
+redirect to `/sorry/` and the server-side error heading as upstream's
+errors, the public comment, profile ID and the page's `<p|div class>` texts
+(song title as title and track, artist, singer without `さん`, date, view and
+like counts; upstream's `KeyError`s for a missing singer or count), and the
+stream XML's namespaced `streamingUrl` HLS (`Failed to obtain m3u8 URL`
+without it). `tests/fixtures/sites/damtomo/` is compared with pinned upstream
+output.
 
 Dailymotion playlists (`dailymotion.TLD/playlist/xID`, upstream
 `DailymotionPlaylistIE`), channels (`dailymotion.TLD/[old/]user/NAME` and
@@ -3649,6 +3671,19 @@ thumbnail, channel, `nlp_entities` cast, channel URL and channel ID.
 Pages without a toolbar element remain an explicit native error.
 `tests/fixtures/sites/listennotes/` is compared with pinned upstream output.
 
+LiTV pages (`litv.tv/TYPE/watch/ID`, `litv.tv/vod/TYPE/content.do?content_id=ID`)
+follow upstream `LiTVIE` (countries `TW`): the Next.js `pageProps`, a
+`seriesTree` with a `series_id` as a playlist (series ID and title) of each
+season's episodes as smuggled `force_noplaylist` URLs unless `--no-playlist`,
+otherwise the first asset (`vod`) or the live `content_id`/`content_type`
+posted to `api/get-urls` with a `PUID` cookie (else `get-urls-no-auth` with a
+random `puid`). API errors are upstream's (`OutsideRegionError` as a geo
+restriction, `LiTV said: ...`, `Unexpected error from LiTV`; an empty URL
+list is the bare `list index out of range`). The first asset URL's HLS
+(`hls`, `Accept-Encoding: identity`), the joined title and secondary mark,
+description, thumbnail, genres and episode number.
+`tests/fixtures/sites/litv/` is compared with pinned upstream output.
+
 Libsyn episodes (`html5-player.libsyn.com/embed/episode/id/ID`) follow
 upstream `LibsynIE`: the player page (requested without the URL's trailing
 options) and its fatal `playlistItem` JSON, the item, `episode-title`,
@@ -4164,6 +4199,19 @@ Photobucket media (`photobucket.com/..._ID.mp4|flv`) follow upstream
 `PhotobucketIE`: the page's `Pb.Data.Shared.MEDIA` JSON (`Extracting
 information`) with the embed code's unquoted `file=` URL, username, creation
 date, title and thumbnail as an untyped result with the URL's extension.
+
+PIA LIVE STREAM players (`player.pia-live.jp/stream/KEY`) follow upstream
+`PiaLiveIE`: the page's `programCode`/`articleCode` variables (fatal), the
+`<title>` (non-fatal), a `play-end` element as `The video is no longer
+available`, a `play-waiting__date` start as upstream's expected no-formats
+error (with `--ignore-no-formats-error`, an `is_upcoming` result with its
+`+09:00` release time; an unparsed date is upstream's bare unpack
+`TypeError`), and otherwise the `player-tag-list` API (a multipart POST with
+a random boundary) whose `movie_one_tag` iframe source is followed as a
+`url_transparent` result with the page title and program code as
+`display_id`. With `--write-comments` the `chat-tag-list` API's chat room
+page `_history` rows become `comments` (each request non-fatal).
+`tests/fixtures/sites/pialive/` is compared with pinned upstream output.
 
 Pinterest pins (`pinterest.TLD/pin/[SLUG--]ID`) follow upstream
 `PinterestIE`: the Pin resource API, the pin's video list (HLS with the

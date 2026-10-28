@@ -426,6 +426,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "dailymotion:playlist",
     "dailymotion:search",
     "dailymotion:user",
+    "damtomo:record",
+    "damtomo:video",
     "daystar:clip",
     "democracynow",
     "Digiteka",
@@ -553,6 +555,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Libsyn",
     "LinkedIn",
     "ListenNotes",
+    "LiTV",
     "Livestreamfails",
     "Lnk",
     "loc",
@@ -627,6 +630,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "periscope",
     "PGATour",
     "Photobucket",
+    "PiaLive",
     "picarto",
     "picarto:vod",
     "Pinkbike",
@@ -711,6 +715,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Telegraaf",
     "telegram:embed",
     "TeleTask",
+    "Telewebion",
     "TF1",
     "TheGuardianPodcast",
     "TheHighWire",
@@ -1063,6 +1068,11 @@ impl YoutubeDl {
                 Box::new(extractor::StreamCz),
                 Box::new(extractor::MuseScore),
                 Box::new(extractor::StvPlayer),
+                Box::new(extractor::Telewebion),
+                Box::new(extractor::PiaLive),
+                Box::new(extractor::LiTv),
+                Box::new(extractor::DamtomoRecord),
+                Box::new(extractor::DamtomoVideo),
                 Box::new(extractor::Tf1),
                 Box::new(extractor::TruNews),
                 Box::new(extractor::Tvigle),
@@ -2151,6 +2161,7 @@ impl YoutubeDl {
     /// filters (YouTube's comments with `getcomments`).
     pub fn post_extract(&self, info: &mut VideoInfo) -> Result<()> {
         extractor::youtube_comments(&self.client, info)?;
+        extractor::pialive_comments(&self.client, info)?;
         extractor::instagram_comments(&self.client, info)
     }
 

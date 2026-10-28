@@ -1,0 +1,96 @@
+{
+ "routes": [
+  {
+   "url": "https://dam-hls.test/m/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=800000,RESOLUTION=640x360\n360.m3u8\n"
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokeMovie/StreamingDkm.do?karaokeMovieId=2414316",
+   "headers": {
+    "Content-Type": "text/html; charset=Shift_JIS"
+   },
+   "body_file": "video.html"
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokeMovie/GetStreamingDkmUrlXML.do?movieSelectFlg=2&karaokeMovieId=2414316",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body_file": "video.xml"
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokePost/StreamingKrk.do?karaokeContributeId=27489418",
+   "headers": {
+    "Content-Type": "text/html; charset=Shift_JIS"
+   },
+   "body_file": "record.html"
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokePost/GetStreamingKrkUrlXML.do?karaokeContributeId=27489418",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body_file": "record.xml"
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokePost/StreamingKrk.do?karaokeContributeId=1",
+   "status": 302,
+   "headers": {
+    "Location": "https://www.clubdam.com/sorry/"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://www.clubdam.com/sorry/",
+   "headers": {
+    "Content-Type": "text/html; charset=Shift_JIS"
+   },
+   "body": "<html>sorry</html>"
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokePost/StreamingKrk.do?karaokeContributeId=2",
+   "headers": {
+    "Content-Type": "text/html; charset=Shift_JIS"
+   },
+   "body_file": "error.html"
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokePost/StreamingKrk.do?karaokeContributeId=3",
+   "headers": {
+    "Content-Type": "text/html; charset=Shift_JIS"
+   },
+   "body_file": "nouser.html"
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokeMovie/StreamingDkm.do?karaokeMovieId=4",
+   "headers": {
+    "Content-Type": "text/html; charset=Shift_JIS"
+   },
+   "body_file": "nourl.html"
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokeMovie/GetStreamingDkmUrlXML.do?movieSelectFlg=2&karaokeMovieId=4",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body_file": "nourl.xml"
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokeMovie/StreamingDkm.do?karaokeMovieId=5",
+   "headers": {
+    "Content-Type": "text/html; charset=Shift_JIS"
+   },
+   "body_file": "noaudience.html"
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokeMovie/GetStreamingDkmUrlXML.do?movieSelectFlg=2&karaokeMovieId=5",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body_file": "noaudience.xml"
+  }
+ ]
+}

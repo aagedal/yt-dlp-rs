@@ -53,6 +53,7 @@ mod crtvg;
 mod cultureunplugged;
 mod dailymail;
 mod dailymotion;
+mod damtomo;
 mod dash;
 mod daystar;
 mod democracynow;
@@ -155,6 +156,7 @@ mod libraryofcongress;
 mod libsyn;
 mod linkedin;
 mod listennotes;
+mod litv;
 mod livestreamfails;
 mod lnk;
 pub mod login;
@@ -211,6 +213,7 @@ mod peertv;
 mod periscope;
 mod pgatour;
 mod photobucket;
+mod pialive;
 mod picarto;
 mod pinkbike;
 mod pinterest;
@@ -269,6 +272,7 @@ mod ted;
 mod telegraaf;
 mod telegram;
 mod teletask;
+mod telewebion;
 mod tf1;
 mod theguardian;
 mod thehighwire;
@@ -427,6 +431,10 @@ pub use dailymotion::{
 };
 pub(crate) use dailymotion::{
     fetch_pages as fetch_dailymotion_pages, is_pending_state as dailymotion_pending_state,
+};
+pub use damtomo::{
+    DamtomoRecord, DamtomoVideo, record_suitable as damtomo_record_suitable,
+    video_suitable as damtomo_video_suitable,
 };
 pub use daystar::{DaystarClip, suitable as daystar_suitable};
 pub use democracynow::{Democracynow, suitable as democracynow_suitable};
@@ -600,6 +608,7 @@ pub use libraryofcongress::{LibraryOfCongress, suitable as libraryofcongress_sui
 pub use libsyn::{Libsyn, suitable as libsyn_suitable};
 pub use linkedin::{LinkedIn, suitable as linkedin_suitable};
 pub use listennotes::{ListenNotes, suitable as listennotes_suitable};
+pub use litv::{LiTv, suitable as litv_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
 pub use lnk::{Lnk, suitable as lnk_suitable};
 pub use loom::{Loom, suitable as loom_suitable};
@@ -694,6 +703,8 @@ pub use peertv::{PeerTv, suitable as peertv_suitable};
 pub use periscope::{Periscope, suitable as periscope_suitable};
 pub use pgatour::{PgaTour, suitable as pgatour_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
+pub(crate) use pialive::post_extract as pialive_comments;
+pub use pialive::{PiaLive, suitable as pialive_suitable};
 pub use picarto::{
     Picarto, PicartoVod, suitable as picarto_suitable, vod_suitable as picarto_vod_suitable,
 };
@@ -805,6 +816,7 @@ pub use ted::{
 pub use telegraaf::{Telegraaf, suitable as telegraaf_suitable};
 pub use telegram::{TelegramEmbed, suitable as telegram_suitable};
 pub use teletask::{TeleTask, suitable as teletask_suitable};
+pub use telewebion::{Telewebion, suitable as telewebion_suitable};
 pub use tf1::{Tf1, suitable as tf1_suitable};
 pub use theguardian::{TheGuardianPodcast, suitable as theguardian_suitable};
 pub use thehighwire::{TheHighWire, suitable as thehighwire_suitable};
@@ -1704,6 +1716,103 @@ fn download_json_with(
     crate::screen::page_read(&page_url, &body)?;
     let text = transform(&decode_webpage(&body, response.headers()))?;
     crate::json::from_str(&text).map_err(|error| {
+        crate::Error::Reported(format!(
+            "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
+        ))
+    })
+}
+
+/// Upstream `_download_json(url, video_id, note, data=BODY, headers=...)`:
+/// [`download_json_note_headers`] as a POST of `body`.
+pub(crate) fn post_json_note_headers(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    note: &str,
+    headers: &[(&str, &str)],
+    body: String,
+) -> Result<serde_json::Value> {
+    post_json_with(client, url, (extractor, id), (note, None), headers, body)
+}
+
+/// [`post_json_note_headers`] with `errnote=` (`[EXTRACTOR] ID: ERRNOTE:
+/// ...` for HTTP errors).
+pub(crate) fn post_json_errnote(
+    client: &Client,
+    url: &Url,
+    (extractor, id): (&'static str, &str),
+    (note, errnote): (&str, &str),
+    headers: &[(&str, &str)],
+    body: String,
+) -> Result<serde_json::Value> {
+    post_json_with(
+        client,
+        url,
+        (extractor, id),
+        (note, Some(errnote)),
+        headers,
+        body,
+    )
+}
+
+/// [`post_json_errnote`] with `fatal=False`: an HTTP error is a warning and
+/// `None`.
+pub(crate) fn post_json_errnote_optional(
+    client: &Client,
+    url: &Url,
+    (extractor, id): (&'static str, &str),
+    (note, errnote): (&str, &str),
+    headers: &[(&str, &str)],
+    body: String,
+) -> Result<Option<serde_json::Value>> {
+    match post_json_with(client, url, (extractor, id), (note, None), headers, body) {
+        Ok(value) => Ok(Some(value)),
+        Err(crate::Error::ExtractorRequest { source, .. }) => {
+            crate::screen::warning(&format!(
+                "[{extractor}] {id}: {errnote}: {}",
+                crate::upstream_error_text(&source)
+            ));
+            Ok(None)
+        }
+        Err(error) => Err(error),
+    }
+}
+
+fn post_json_with(
+    client: &Client,
+    url: &Url,
+    (extractor, id): (&'static str, &str),
+    (note, errnote): (&str, Option<&str>),
+    headers: &[(&str, &str)],
+    body: String,
+) -> Result<serde_json::Value> {
+    use std::io::Read;
+    crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
+    let data = body.clone();
+    let mut response = direct::post(client, url, headers, body).map_err(|error| match error {
+        crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => match errnote {
+            Some(errnote) => {
+                crate::Error::Reported(request_errnote_text(extractor, id, errnote, &error))
+            }
+            None => crate::Error::ExtractorRequest {
+                extractor,
+                id: id.to_owned(),
+                what: "JSON metadata",
+                source: Box::new(error),
+            },
+        },
+        error => error,
+    })?;
+    let page_url = response.url().clone();
+    let mut body = Vec::new();
+    response
+        .read_to_end(&mut body)
+        .map_err(crate::Error::ExtractionRead)?;
+    let body = decode_content(response.headers(), body).map_err(crate::Error::ExtractionRead)?;
+    crate::screen::expect_post_page(id, data.as_bytes());
+    crate::screen::page_read(&page_url, &body)?;
+    crate::json::from_str(&decode_webpage(&body, response.headers())).map_err(|error| {
         crate::Error::Reported(format!(
             "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
         ))

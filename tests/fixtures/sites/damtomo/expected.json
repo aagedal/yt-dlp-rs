@@ -1,0 +1,102 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokeMovie/StreamingDkm.do?karaokeMovieId=2414316",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2414316\", \"title\": \"Get Wild\", \"uploader_id\": \"ODk5NTQwMzQ\", \"description\": null, \"uploader\": \"\\uff2b\\u30c9\\u30ed\\u30f3\", \"upload_date\": \"20201226\", \"view_count\": 12, \"like_count\": 3, \"track\": \"Get Wild\", \"artist\": \"TM NETWORK(TMN)\", \"formats\": [{\"format_id\": \"800\", \"format_index\": null, \"url\": \"https://dam-hls.test/m/360.m3u8\", \"manifest_url\": \"https://dam-hls.test/m/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 640x360\"}], \"webpage_url\": \"https://www.clubdam.com/app/damtomo/karaokeMovie/StreamingDkm.do?karaokeMovieId=2414316\", \"original_url\": \"https://www.clubdam.com/app/damtomo/karaokeMovie/StreamingDkm.do?karaokeMovieId=2414316\", \"webpage_url_basename\": \"StreamingDkm.do\", \"webpage_url_domain\": \"clubdam.com\", \"extractor\": \"damtomo:video\", \"extractor_key\": \"DamtomoVideo\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2414316\", \"fulltitle\": \"Get Wild\", \"release_year\": null, \"artists\": [\"TM NETWORK(TMN)\"], \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"800\", \"format_index\": null, \"url\": \"https://dam-hls.test/m/360.m3u8\", \"manifest_url\": \"https://dam-hls.test/m/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 640x360\", \"_filename\": \"Get Wild [2414316].mp4\", \"filename\": \"Get Wild [2414316].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokePost/StreamingKrk.do?karaokeContributeId=27489418",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"27489418\", \"title\": \"\\u5fc3\\u307f\\u3060\\u308c\\u3066\\u301csay it with flowers\\u301c(\\u751f\\u97f3)\", \"uploader_id\": \"NjI1MjI2MjU\", \"description\": \"\\u3084\\u3063\\u3071\\u308a\\u30ad\\u30fc\\u3092\\u4e0b\\u3052\\u3066\\u6b63\\u89e3\\u3060\\u3063\\u305f\\u611f\\u3058\\u3002\\u30ea\\u30d9\\u30f3\\u30b8\\u6210\\u529f\\u3068\\u3044\\u3046\\u3053\\u3068\\u3067\\u3002\", \"uploader\": \"\\u7bb1\\u306e\\u300c\\u4e2d\\u306e\\u4eba\\u300d\", \"upload_date\": \"20210815\", \"view_count\": 5, \"like_count\": 3, \"track\": \"\\u5fc3\\u307f\\u3060\\u308c\\u3066\\u301csay it with flowers\\u301c(\\u751f\\u97f3)\", \"artist\": \"\\u5c0f\\u6797\\u660e\\u5b50\", \"formats\": [{\"format_id\": \"800\", \"format_index\": null, \"url\": \"https://dam-hls.test/m/360.m3u8\", \"manifest_url\": \"https://dam-hls.test/m/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 640x360\"}], \"webpage_url\": \"https://www.clubdam.com/app/damtomo/karaokePost/StreamingKrk.do?karaokeContributeId=27489418\", \"original_url\": \"https://www.clubdam.com/app/damtomo/karaokePost/StreamingKrk.do?karaokeContributeId=27489418\", \"webpage_url_basename\": \"StreamingKrk.do\", \"webpage_url_domain\": \"clubdam.com\", \"extractor\": \"damtomo:record\", \"extractor_key\": \"DamtomoRecord\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"27489418\", \"fulltitle\": \"\\u5fc3\\u307f\\u3060\\u308c\\u3066\\u301csay it with flowers\\u301c(\\u751f\\u97f3)\", \"release_year\": null, \"artists\": [\"\\u5c0f\\u6797\\u660e\\u5b50\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"800\", \"url\": \"https://dam-hls.test/m/360.m3u8\", \"manifest_url\": \"https://dam-hls.test/m/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 640x360\", \"_filename\": \"\\u5fc3\\u307f\\u3060\\u308c\\u3066\\u301csay it with flowers\\u301c(\\u751f\\u97f3) [27489418].mp4\", \"filename\": \"\\u5fc3\\u307f\\u3060\\u308c\\u3066\\u301csay it with flowers\\u301c(\\u751f\\u97f3) [27489418].mp4\", \"__write_download_archive\": false}], \"format_id\": \"800\", \"format_index\": null, \"url\": \"https://dam-hls.test/m/360.m3u8\", \"manifest_url\": \"https://dam-hls.test/m/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/SP/karaokePost/StreamingKrk.do?karaokeContributeId=27489418",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(uploader)s|%(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "27489418|心みだれて〜say it with flowers〜(生音)|箱の「中の人」|damtomo:record"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokePost/StreamingKrk.do?karaokeContributeId=1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [damtomo:record] 1: You are rate-limited. Try again later."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokePost/StreamingKrk.do?karaokeContributeId=2",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [damtomo:record] 2: There is an error on server-side. Try again later."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokePost/StreamingKrk.do?karaokeContributeId=3",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 3: An extractor error has occurred. (caused by KeyError('user_name')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokeMovie/StreamingDkm.do?karaokeMovieId=4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [damtomo:video] 4: Failed to obtain m3u8 URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.clubdam.com/app/damtomo/karaokeMovie/StreamingDkm.do?karaokeMovieId=5",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 5: An extractor error has occurred. (caused by KeyError('audience')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

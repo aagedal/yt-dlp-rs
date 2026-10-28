@@ -1,0 +1,51 @@
+[
+ {
+  "url": "https://www.clubdam.com/app/damtomo/karaokeMovie/StreamingDkm.do?karaokeMovieId=2414316",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.clubdam.com/app/damtomo/karaokePost/StreamingKrk.do?karaokeContributeId=27489418",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.clubdam.com/app/damtomo/SP/karaokePost/StreamingKrk.do?karaokeContributeId=27489418",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(uploader)s|%(extractor)s"
+  ]
+ },
+ {
+  "url": "https://www.clubdam.com/app/damtomo/karaokePost/StreamingKrk.do?karaokeContributeId=1",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.clubdam.com/app/damtomo/karaokePost/StreamingKrk.do?karaokeContributeId=2",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.clubdam.com/app/damtomo/karaokePost/StreamingKrk.do?karaokeContributeId=3",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.clubdam.com/app/damtomo/karaokeMovie/StreamingDkm.do?karaokeMovieId=4",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.clubdam.com/app/damtomo/karaokeMovie/StreamingDkm.do?karaokeMovieId=5",
+  "args": [
+   "-j"
+  ]
+ }
+]
