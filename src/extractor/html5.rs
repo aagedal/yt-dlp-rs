@@ -2068,13 +2068,20 @@ pub(crate) struct EmbedSite {
     temp_id: fn(&str) -> Option<String>,
 }
 
-static EMBED_SITES: [EmbedSite; 31] = [
+static EMBED_SITES: [EmbedSite; 32] = [
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
         extractor: Some(&super::acast::ACast),
         embed_urls: super::acast::embed_urls,
         temp_id: super::acast::temp_id,
+    },
+    EmbedSite {
+        name: super::apa::NAME,
+        key: super::apa::KEY,
+        extractor: Some(&super::apa::Apa),
+        embed_urls: super::apa::embed_urls,
+        temp_id: super::apa::temp_id,
     },
     EmbedSite {
         name: super::arcpublishing::NAME,

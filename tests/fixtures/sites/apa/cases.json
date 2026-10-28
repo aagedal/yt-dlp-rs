@@ -1,0 +1,21 @@
+[
+ {
+  "url": "http://uvp.apa.at/embed/293f6d17-692a-44e3-9fd5-7b178f3a1029",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://uvp-rma.sf.apa.at/embed/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.apa-host.test/artikel",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(extractor)s|%(format_id)s"
+  ]
+ }
+]

@@ -1105,6 +1105,13 @@ follow upstream `AngelIE`: the page's JSON-LD `url` as a fatal HLS manifest
 image (Cloudinary transformations removed), then `merge_dicts` with the
 remaining JSON-LD fields after the extractor's own.
 
+APA video embeds (`SUB.apa.at/embed/UUID`) follow upstream `APAIE`: the
+player page's JW Platform media ID as a `url` result for `jwplatform:ID`,
+else its `title`, `description`, `poster`, `hls` (non-fatal) and
+`progressive` (height from the file name) fields. APA embed iframes on
+generic pages are embeds. `tests/fixtures/sites/apa/` is compared with
+pinned upstream output.
+
 Apple Podcasts episodes (`podcasts.apple.com/[COUNTRY/]podcast/...?i=ID`)
 follow upstream `ApplePodcastsIE`: the page (also when it answers 500) and
 its `serialized-server-data` share item (`EpisodeLockup` model: title,

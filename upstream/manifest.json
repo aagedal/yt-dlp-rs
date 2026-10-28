@@ -643,6 +643,18 @@
       "scope": "AngelIE JSON-LD HLS stream, OpenGraph fields, Cloudinary thumbnail rewrite and merge_dicts with JSON-LD compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "apa",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/apa.py"
+      ],
+      "rust": [
+        "src/extractor/apa.rs",
+        "tests/fixtures/sites/apa/"
+      ],
+      "scope": "APAIE player JW Platform hand-off or HLS/progressive sources, and embeds, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "applepodcasts",
       "status": "partial",
       "upstream": [
