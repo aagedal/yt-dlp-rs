@@ -172,6 +172,7 @@ mod niconico;
 mod ninegag;
 mod ninenews;
 mod nobelprize;
+mod noice;
 mod nosnl;
 mod npr;
 mod nrk;
@@ -610,6 +611,7 @@ pub(crate) use niconico::{
 pub use ninegag::{NineGag, suitable as ninegag_suitable};
 pub use ninenews::{NineNews, suitable as ninenews_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
+pub use noice::{NoicePodcast, suitable as noice_suitable};
 pub use nosnl::{NosNlArticle, suitable as nosnl_suitable};
 pub use npr::{Npr, suitable as npr_suitable};
 pub use nrk::{

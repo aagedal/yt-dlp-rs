@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://open.noice.id/content/aaaa1111-0000-0000-0000-000000000001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"contentDetails\": {\"id\": \"aaaa1111-0000-0000-0000-000000000001\", \"title\": \"Eps 1\", \"rawContentUrl\": \"https://noice-cdn.test/a/master.m3u8\", \"url\": \"https://noice-cdn.test/a/raw.mp3\", \"description\": \"\", \"htmlDescription\": \"<p>Hello <b>there</b></p>\", \"image\": \"https://noice-img.test/a.jpg\", \"createdAt\": \"2022-11-15T07:17:22.000Z\", \"publishedAt\": \"2022-11-15T07:17:22Z\", \"updatedAt\": \"2022-11-21T11:37:27.000Z\", \"duration\": \"3567\", \"genres\": [{\"name\": \"Bisnis\"}, {\"x\": 1}], \"seasonName\": \"Season 1\", \"seasonNumber\": 1, \"catalog\": {\"title\": \"Space Talks\", \"id\": \"cat-1\"}, \"meta\": {\"aggregations\": {\"likes\": 5, \"dislikes\": 0, \"comments\": null, \"followers\": 9}}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://noice-cdn.test/a/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://open.noice.id/content/bbbb2222-0000-0000-0000-000000000002",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Meta title\"><meta name=\"description\" content=\"Meta desc\"><meta property=\"og:image\" content=\"https://noice-img.test/b.jpg\"><meta property=\"og:updated_time\" content=\"2023-01-02T03:04:05+00:00\"></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"contentDetails\": {\"id\": \"\", \"title\": \"\", \"url\": \"https://noice-cdn.test/b.mp3\", \"catalogId\": \"cat-2\", \"genres\": []}}}}</script></body></html>"
+  },
+  {
+   "url": "https://open.noice.id/content/cccc3333-0000-0000-0000-000000000003",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {}}}</script>"
+  },
+  {
+   "url": "https://open.noice.id/content/dddd4444-0000-0000-0000-000000000004",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"contentDetails\": {\"title\": \"Nothing\"}}}}</script></body></html>"
+  }
+ ]
+}

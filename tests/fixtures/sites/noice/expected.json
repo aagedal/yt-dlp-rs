@@ -1,0 +1,60 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://open.noice.id/content/aaaa1111-0000-0000-0000-000000000001",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"aaaa1111-0000-0000-0000-000000000001\", \"title\": \"Eps 1\", \"formats\": [{\"url\": \"https://noice-cdn.test/a/raw.mp3\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"acodec\": \"mp3\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}, {\"format_id\": \"128\", \"format_index\": null, \"url\": \"https://noice-cdn.test/a/audio.m3u8\", \"manifest_url\": \"https://noice-cdn.test/a/master.m3u8\", \"tbr\": 128.0, \"ext\": \"m4a\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"128 - audio only\"}], \"subtitles\": {}, \"description\": \"Hello there\", \"thumbnail\": \"https://noice-img.test/a.jpg\", \"timestamp\": 1668496642, \"release_timestamp\": 1668496642, \"modified_timestamp\": 1669030647, \"duration\": 3567, \"categories\": [\"Bisnis\"], \"season\": \"Season 1\", \"season_number\": 1, \"channel\": \"Space Talks\", \"channel_id\": \"cat-1\", \"like_count\": 5, \"dislike_count\": 0, \"channel_follower_count\": 9, \"webpage_url\": \"https://open.noice.id/content/aaaa1111-0000-0000-0000-000000000001\", \"original_url\": \"https://open.noice.id/content/aaaa1111-0000-0000-0000-000000000001\", \"webpage_url_basename\": \"aaaa1111-0000-0000-0000-000000000001\", \"webpage_url_domain\": \"open.noice.id\", \"extractor\": \"NoicePodcast\", \"extractor_key\": \"NoicePodcast\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://noice-img.test/a.jpg\", \"id\": \"0\"}], \"display_id\": \"aaaa1111-0000-0000-0000-000000000001\", \"fulltitle\": \"Eps 1\", \"duration_string\": \"59:27\", \"upload_date\": \"20221115\", \"release_date\": \"20221115\", \"modified_date\": \"20221121\", \"release_year\": 2022, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"128\", \"url\": \"https://noice-cdn.test/a/audio.m3u8\", \"manifest_url\": \"https://noice-cdn.test/a/master.m3u8\", \"tbr\": 128.0, \"ext\": \"m4a\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"128 - audio only\", \"_filename\": \"Eps 1 [aaaa1111-0000-0000-0000-000000000001].m4a\", \"filename\": \"Eps 1 [aaaa1111-0000-0000-0000-000000000001].m4a\", \"__write_download_archive\": false}], \"format_id\": \"128\", \"format_index\": null, \"url\": \"https://noice-cdn.test/a/audio.m3u8\", \"manifest_url\": \"https://noice-cdn.test/a/master.m3u8\", \"tbr\": 128.0, \"ext\": \"m4a\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"128 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://open.noice.id/content/bbbb2222-0000-0000-0000-000000000002",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"bbbb2222-0000-0000-0000-000000000002\", \"title\": \"Meta title\", \"formats\": [{\"url\": \"https://noice-cdn.test/b.mp3\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"acodec\": \"mp3\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}], \"subtitles\": {}, \"description\": \"Meta desc\", \"thumbnail\": \"https://noice-img.test/b.jpg\", \"timestamp\": null, \"release_timestamp\": null, \"modified_timestamp\": 1672628645, \"categories\": [], \"season\": null, \"season_number\": null, \"channel\": null, \"channel_id\": \"cat-2\", \"webpage_url\": \"https://open.noice.id/content/bbbb2222-0000-0000-0000-000000000002\", \"original_url\": \"https://open.noice.id/content/bbbb2222-0000-0000-0000-000000000002\", \"webpage_url_basename\": \"bbbb2222-0000-0000-0000-000000000002\", \"webpage_url_domain\": \"open.noice.id\", \"extractor\": \"NoicePodcast\", \"extractor_key\": \"NoicePodcast\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://noice-img.test/b.jpg\", \"id\": \"0\"}], \"display_id\": \"bbbb2222-0000-0000-0000-000000000002\", \"fulltitle\": \"Meta title\", \"modified_date\": \"20230102\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://noice-cdn.test/b.mp3\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"acodec\": \"mp3\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Meta title [bbbb2222-0000-0000-0000-000000000002].mp3\", \"filename\": \"Meta title [bbbb2222-0000-0000-0000-000000000002].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://open.noice.id/content/cccc3333-0000-0000-0000-000000000003",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: cccc3333-0000-0000-0000-000000000003: An extractor error has occurred. (caused by KeyError('contentDetails')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://open.noice.id/content/dddd4444-0000-0000-0000-000000000004",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [NoicePodcast] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [NoicePodcast] unable to extract og:image; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [NoicePodcast] unable to extract og:updated_time; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [NoicePodcast] dddd4444-0000-0000-0000-000000000004: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

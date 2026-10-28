@@ -1,0 +1,26 @@
+[
+ {
+  "url": "https://open.noice.id/content/aaaa1111-0000-0000-0000-000000000001",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://open.noice.id/content/bbbb2222-0000-0000-0000-000000000002",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://open.noice.id/content/cccc3333-0000-0000-0000-000000000003",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://open.noice.id/content/dddd4444-0000-0000-0000-000000000004",
+  "args": [
+   "-J"
+  ]
+ }
+]

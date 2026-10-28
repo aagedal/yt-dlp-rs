@@ -3839,6 +3839,15 @@ ID is upstream's `Unsupported URL`), the `mediaplayer.nobelprize.org` page's
 fatal JSON-LD as an untyped result overlaid with the `caption` meta title, the
 `itemprop="description"` span and the `duration` meta.
 
+Noice podcast episodes (`open.noice.id/content/UUID`) follow upstream
+`NoicePodcastIE`: the Next.js `contentDetails` raw content and content URLs
+(fatal HLS playlists, else MP3 files), the episode's ID, title, description
+(else cleaned HTML description), image, created/published/updated
+timestamps, duration, genres, season, catalog and like, dislike, comment
+and follower counts, with the page's meta tags as fallbacks (warning when
+missing). `tests/fixtures/sites/noice/` is compared with pinned upstream
+output.
+
 NOS articles and videos (`nos.nl/[SECTION/]artikel/ID-SLUG`,
 `nos.nl/video/ID-SLUG`) follow upstream `NOSNLArticleIE`: the page's fatal
 Next.js `pageProps.data` as a playlist of its `items` (or its one `video` on

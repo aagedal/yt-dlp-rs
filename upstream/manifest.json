@@ -2239,6 +2239,18 @@
       "scope": "NobelPrizeIE query ID, JSON-LD untyped result and meta/description overlay compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "noice",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/noice.py"
+      ],
+      "rust": [
+        "src/extractor/noice.rs",
+        "tests/fixtures/sites/noice/"
+      ],
+      "scope": "NoicePodcastIE Next.js content details with HLS or MP3 media and meta-tag fallbacks, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "nosnl",
       "status": "partial",
       "upstream": [
