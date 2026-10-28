@@ -3315,6 +3315,18 @@
       "scope": "TedTalkIE Next.js video data formats, external url results and metadata; TedPlaylistIE, TedSeriesIE and TedEmbedIE; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "telebruxelles",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/telebruxelles.py"
+      ],
+      "rust": [
+        "src/extractor/telebruxelles.rs",
+        "tests/fixtures/sites/telebruxelles/"
+      ],
+      "scope": "TeleBruxellesIE player RTMP URL (concatenated VOD paths, misspelled live scheme) as Wowza HLS/HDS/DASH/RTMP formats, article ID, h1/Open Graph title and description compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "telegraaf",
       "status": "partial",
       "upstream": [

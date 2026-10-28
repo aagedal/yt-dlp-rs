@@ -762,6 +762,18 @@ not a video) is an unsupported error here; upstream warns that the extractor
 returned nothing. `tests/fixtures/sites/telegram/` is compared with pinned
 upstream output.
 
+BX1 (formerly Télé Bruxelles) articles and live streams (`bx1.be/...` and
+`telebruxelles.be/...` pages) follow upstream `TeleBruxellesIE`: the page's
+player `file` RTMP URL (VOD paths joined from their JavaScript string
+concatenation, the live stream's misspelled `rmtp` scheme corrected) as
+upstream's Wowza formats (non-fatal `playlist.m3u8`, `manifest.f4m` and
+`manifest.mpd` beside `rtmp`; SMIL streams remain an unsupported error),
+the `post-ID` article ID (else the URL's display ID), the first `<h1>`
+(else Open Graph) title and the Open Graph description; `stream/live` URLs
+are live. A page without the player URL is upstream's `Unable to extract
+RTMP url`. `tests/fixtures/sites/telebruxelles/` is compared with pinned
+upstream output.
+
 Telewebion episodes (`telewebion.ir/episode/ID`, decimal IDs as `0x...`)
 follow upstream `TelewebionIE`: the `graph.telewebion.ir/graphql`
 `getEpisodeDetail` query (a JSON POST; GraphQL `errors` messages, or

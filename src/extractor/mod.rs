@@ -271,6 +271,7 @@ mod sverigesradio;
 mod svt;
 mod sztvhu;
 mod ted;
+mod telebruxelles;
 mod telegraaf;
 mod telegram;
 mod teletask;
@@ -819,6 +820,7 @@ pub use ted::{
     playlist_suitable as ted_playlist_suitable, series_suitable as ted_series_suitable,
     talk_suitable as ted_talk_suitable,
 };
+pub use telebruxelles::{TeleBruxelles, suitable as telebruxelles_suitable};
 pub use telegraaf::{Telegraaf, suitable as telegraaf_suitable};
 pub use telegram::{TelegramEmbed, suitable as telegram_suitable};
 pub use teletask::{TeleTask, suitable as teletask_suitable};
