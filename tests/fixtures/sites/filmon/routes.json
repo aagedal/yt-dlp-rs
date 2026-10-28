@@ -1,0 +1,63 @@
+{
+ "routes": [
+  {
+   "url": "https://www.filmon.com/api/vod/movie?id=24869",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"title\": \"Plan 9 From Outer Space\", \"description\": \"  Dead human, zombies and vampires \\n\", \"type_id\": 2, \"streams\": {\"low\": {\"url\": \"https://vod.filmon.test/24869/low.m3u8\", \"quality\": \"low\"}, \"high\": {\"url\": \"https://vod.filmon.test/24869/high.m3u8\", \"quality\": \"high\"}, \"none\": {\"url\": \"\"}}, \"poster\": {\"url\": \"https://static.filmon.test/p.jpg\", \"width\": \"300\", \"height\": 450, \"thumbs\": {\"small\": {\"url\": \"https://static.filmon.test/s.jpg\", \"width\": 100, \"height\": \"150\"}, \"poster\": {\"url\": \"https://static.filmon.test/old.jpg\"}, \"empty\": {}}}}}"
+  },
+  {
+   "url": "https://www.filmon.com/api/vod/movie?id=2825",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"title\": \"Popeye Series 1\", \"description\": \"The original series of Popeye.\", \"type_id\": 1, \"episodes\": [\"24869\", \"3000\"]}}"
+  },
+  {
+   "url": "https://www.filmon.com/api/vod/movie?id=3000",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"reason\": \"Movie not found\", \"code\": 404}"
+  },
+  {
+   "url": "https://www.filmon.com/api/vod/movie?id=3001",
+   "status": 500,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"x\"}"
+  },
+  {
+   "url": "http://www.filmon.com/api-v2/channel/sports-haters",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"id\": 4190, \"alias\": \"sports-haters\", \"title\": \"Sports Haters\", \"description\": \"Sports talk\", \"is_vod\": true, \"is_vox\": false, \"streams\": [{\"url\": \"http://vod.filmon.test/vodlive/_definst_/mp4:4190.mp4/playlist.m3u8\", \"quality\": \"high\"}, {\"url\": null}]}}"
+  },
+  {
+   "url": "http://vod.filmon.test/vodlive/_definst_/mp4:4190.mp4/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "http://www.filmon.com/api-v2/channel/filmon-sports",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"id\": \"55\", \"alias\": \"filmon-sports\", \"title\": \"FilmOn Sports\", \"is_vod\": false, \"is_vox\": 0, \"streams\": [{\"url\": \"https://live.filmon.test/55/low.m3u8\", \"quality\": \"low\"}, {\"url\": \"https://live.filmon.test/55/high.m3u8\", \"quality\": \"high\"}]}}"
+  },
+  {
+   "url": "http://www.filmon.com/api-v2/channel/missing",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"message\": \"Channel not found\"}"
+  }
+ ]
+}

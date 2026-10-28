@@ -462,8 +462,9 @@ recording timestamps, duration (else the parsed length), genre tags and the
 show name and ID. Shows (`365|4d.rtvslo.si/oddaja/SLUG/ID`,
 `RTVSLOShowIE`) are playlists of the page's deduplicated `/arhiv/` links
 with the page title and OpenGraph description and image (upstream's
-warnings when missing). The shared Wowza helper returns an unsupported
-error for callers that do not skip HDS, DASH or SMIL.
+warnings when missing). The shared Wowza helper reads a non-skipped
+`manifest.f4m` as non-fatal HDS (`hds`) formats and returns an unsupported
+error for callers that do not skip DASH or SMIL.
 `tests/fixtures/sites/rtvslo/` is compared with pinned upstream output.
 
 Roya TV live streams (`[en.]roya.tv/live-stream/ID`) follow upstream
@@ -2017,6 +2018,19 @@ the cleaned `<title-div>` content (else a generic title), the first cleaned
 `div.prose` inside a `div` whose class matches `.*\bborder-base-content\b`
 (regex `find_elements`; a parse error is no match, like `try_call`) and the
 CDN `poster.jpg` thumbnail.
+
+FilmOn VOD titles (`filmon.com/vod/view/ID...`, `filmon:ID`) follow upstream
+`FilmOnIE`: the `api/vod/movie` response (an HTTP error's JSON `reason` as
+`filmon said: ...`, upstream's `KeyError` without one), its `m3u8_native`
+streams with low/high quality, the stripped description and the poster and
+its `thumbs` as `{id, url, width, height}` thumbnails; series (`type_id` 1)
+are playlists of `filmon:ID` episode `url` results. Channels
+(`filmon.com/tv|channel/ID`, `FilmOnChannelIE`) read the `api-v2/channel`
+data (errors as `filmon:channel said: ...` from its `message`): live channels'
+streams as plain quality formats, VOD channels' through the shared Wowza
+helper (HLS and HDS, DASH and RTMP skipped), the three logo thumbnails and
+the alias as `display_id`. `tests/fixtures/sites/filmon/` is compared with
+pinned upstream output.
 
 TikTok videos (`www.tiktok[v].com/@USER/video/ID`, `/embed/ID`,
 `/share/video/ID`) follow upstream `TikTokIE`'s webpage path (no app API

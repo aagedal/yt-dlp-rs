@@ -1430,6 +1430,18 @@
       "scope": "FilmArchivIE CDN playlist from the media ID as fatal HLS formats and subtitles (no forced ext), title-div title, regex find_elements border-base-content/prose description and poster thumbnail compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "filmon",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/filmon.py"
+      ],
+      "rust": [
+        "src/extractor/filmon.rs",
+        "tests/fixtures/sites/filmon/"
+      ],
+      "scope": "FilmOnIE VOD streams, poster thumbnails and series url playlists and FilmOnChannelIE live streams or Wowza (HLS/HDS) VOD formats with the APIs' error messages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "filmweb",
       "status": "partial",
       "upstream": [
