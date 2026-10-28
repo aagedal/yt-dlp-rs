@@ -3605,6 +3605,11 @@ impl YoutubeDl {
             number(entry.playlist_autonumber),
         );
         for key in &own {
+            // `if ie and not ie_result.get('id')`: a falsy own ID gives way to
+            // the temporary one.
+            if key == "id" && ie_key.is_some() && !extractor::nuxt::truthy(&raw[key]) {
+                continue;
+            }
             full.insert(key.clone(), raw[key].clone());
         }
         full.insert("epoch".into(), epoch.into());
