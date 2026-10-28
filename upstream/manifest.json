@@ -524,6 +524,18 @@
       "scope": "BeaconTvIE Apollo Content entry, JSON-encoded JW Player video/podcast data with content title, description and timestamp, and upstream's content/members errors. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "bfmtv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bfmtv.py"
+      ],
+      "rust": [
+        "src/extractor/bfmtv.rs",
+        "tests/fixtures/sites/bfmtv/"
+      ],
+      "scope": "BFMTVIE, BFMTVLiveIE and BFMTVArticleIE data-video-id blocks as Brightcove url results and article playlists, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "behindkink",
       "status": "partial",
       "upstream": [

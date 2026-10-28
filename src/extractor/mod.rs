@@ -9,6 +9,7 @@ mod audioboom;
 mod bandcamp;
 mod beacon;
 mod behindkink;
+mod bfmtv;
 mod bigo;
 mod bild;
 mod bilibili;
@@ -280,6 +281,10 @@ pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
 pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use beacon::{BeaconTv, suitable as beacon_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};
+pub use bfmtv::{
+    Bfmtv, BfmtvArticle, BfmtvLive, article_suitable as bfmtv_article_suitable,
+    live_suitable as bfmtv_live_suitable, suitable as bfmtv_suitable,
+};
 pub use bigo::{Bigo, suitable as bigo_suitable};
 pub use bild::{Bild, suitable as bild_suitable};
 pub use bilibili::{BiliBili, suitable as bilibili_suitable};

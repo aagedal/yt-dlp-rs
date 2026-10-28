@@ -1,0 +1,96 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.bfmtv.com/politique/emmanuel-macron_VN-202010020146.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6196747868001\", \"thumbnails\": [{\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/160x90/match/image.jpg\", \"width\": 160, \"height\": 90, \"id\": \"0\", \"resolution\": \"160x90\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/320x180/match/image.jpg\", \"width\": 320, \"height\": 180, \"id\": \"1\", \"resolution\": \"320x180\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/480x720/match/image.jpg\", \"width\": 480, \"height\": 720, \"id\": \"2\", \"resolution\": \"480x720\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/640x360/match/image.jpg\", \"width\": 640, \"height\": 360, \"id\": \"3\", \"resolution\": \"640x360\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/768x432/match/image.jpg\", \"width\": 768, \"height\": 432, \"id\": \"4\", \"resolution\": \"768x432\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1024x576/match/image.jpg\", \"width\": 1024, \"height\": 576, \"id\": \"5\", \"resolution\": \"1024x576\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1280x720/match/image.jpg\", \"width\": 1280, \"height\": 720, \"id\": \"6\", \"resolution\": \"1280x720\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1366x768/match/image.jpg\", \"width\": 1366, \"height\": 768, \"id\": \"7\", \"resolution\": \"1366x768\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1920x1080/match/image.jpg\", \"width\": 1920, \"height\": 1080, \"id\": \"8\", \"resolution\": \"1920x1080\"}], \"duration\": 44.757, \"formats\": [{\"tbr\": 2000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://bfm-pd.test/6196747868001.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk876450610001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-2000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"Emmanuel Macron\", \"description\": \"Description\", \"tags\": [\"bfmactu\", \"politique\"], \"timestamp\": 1601629620, \"uploader_id\": \"876450610001\", \"original_url\": \"https://www.bfmtv.com/politique/emmanuel-macron_VN-202010020146.html\", \"webpage_url\": \"http://players.brightcove.net/876450610001/default_default/index.html?videoId=6196747868001\", \"webpage_url_basename\": \"index.html\", \"webpage_url_domain\": \"players.brightcove.net\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1920x1080/match/image.jpg\", \"display_id\": \"6196747868001\", \"fulltitle\": \"Emmanuel Macron\", \"duration_string\": \"44\", \"upload_date\": \"20201002\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 2000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://bfm-pd.test/6196747868001.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk876450610001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-2000k-720p - 1280x720\", \"_filename\": \"Emmanuel Macron [6196747868001].mp4\", \"filename\": \"Emmanuel Macron [6196747868001].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bfmtv.com/politique/emmanuel-macron_VN-202010020146.html",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6196747868001\", \"thumbnails\": [{\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/160x90/match/image.jpg\", \"width\": 160, \"height\": 90, \"id\": \"0\", \"resolution\": \"160x90\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/320x180/match/image.jpg\", \"width\": 320, \"height\": 180, \"id\": \"1\", \"resolution\": \"320x180\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/480x720/match/image.jpg\", \"width\": 480, \"height\": 720, \"id\": \"2\", \"resolution\": \"480x720\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/640x360/match/image.jpg\", \"width\": 640, \"height\": 360, \"id\": \"3\", \"resolution\": \"640x360\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/768x432/match/image.jpg\", \"width\": 768, \"height\": 432, \"id\": \"4\", \"resolution\": \"768x432\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1024x576/match/image.jpg\", \"width\": 1024, \"height\": 576, \"id\": \"5\", \"resolution\": \"1024x576\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1280x720/match/image.jpg\", \"width\": 1280, \"height\": 720, \"id\": \"6\", \"resolution\": \"1280x720\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1366x768/match/image.jpg\", \"width\": 1366, \"height\": 768, \"id\": \"7\", \"resolution\": \"1366x768\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1920x1080/match/image.jpg\", \"width\": 1920, \"height\": 1080, \"id\": \"8\", \"resolution\": \"1920x1080\"}], \"duration\": 44.757, \"formats\": [{\"tbr\": 2000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://bfm-pd.test/6196747868001.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk876450610001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-2000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"Emmanuel Macron\", \"description\": \"Description\", \"tags\": [\"bfmactu\", \"politique\"], \"timestamp\": 1601629620, \"uploader_id\": \"876450610001\", \"original_url\": \"https://www.bfmtv.com/politique/emmanuel-macron_VN-202010020146.html\", \"webpage_url\": \"http://players.brightcove.net/876450610001/default_default/index.html?videoId=6196747868001\", \"webpage_url_basename\": \"index.html\", \"webpage_url_domain\": \"players.brightcove.net\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1920x1080/match/image.jpg\", \"display_id\": \"6196747868001\", \"fulltitle\": \"Emmanuel Macron\", \"duration_string\": \"44\", \"upload_date\": \"20201002\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"tbr\": 2000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://bfm-pd.test/6196747868001.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk876450610001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-2000k-720p - 1280x720\", \"_filename\": \"Emmanuel Macron [6196747868001].mp4\", \"filename\": \"Emmanuel Macron [6196747868001].mp4\", \"__write_download_archive\": false}], \"tbr\": 2000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://bfm-pd.test/6196747868001.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk876450610001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-2000k-720p - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bfmtv.com/en-direct/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6346069778112\", \"thumbnails\": [{\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/160x90/match/image.jpg\", \"width\": 160, \"height\": 90, \"id\": \"0\", \"resolution\": \"160x90\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/320x180/match/image.jpg\", \"width\": 320, \"height\": 180, \"id\": \"1\", \"resolution\": \"320x180\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/480x720/match/image.jpg\", \"width\": 480, \"height\": 720, \"id\": \"2\", \"resolution\": \"480x720\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/640x360/match/image.jpg\", \"width\": 640, \"height\": 360, \"id\": \"3\", \"resolution\": \"640x360\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/768x432/match/image.jpg\", \"width\": 768, \"height\": 432, \"id\": \"4\", \"resolution\": \"768x432\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1024x576/match/image.jpg\", \"width\": 1024, \"height\": 576, \"id\": \"5\", \"resolution\": \"1024x576\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1280x720/match/image.jpg\", \"width\": 1280, \"height\": 720, \"id\": \"6\", \"resolution\": \"1280x720\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1366x768/match/image.jpg\", \"width\": 1366, \"height\": 768, \"id\": \"7\", \"resolution\": \"1366x768\"}, {\"url\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1920x1080/match/image.jpg\", \"width\": 1920, \"height\": 1080, \"id\": \"8\", \"resolution\": \"1920x1080\"}], \"duration\": 44.757, \"formats\": [{\"tbr\": 2000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://bfm-pd.test/6346069778112.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk876450610001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-2000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"Le Live BFM TV\", \"description\": \"Description\", \"tags\": [\"bfmactu\", \"politique\"], \"timestamp\": 1601629620, \"uploader_id\": \"876450610001\", \"original_url\": \"https://www.bfmtv.com/en-direct/\", \"webpage_url\": \"http://players.brightcove.net/876450610001/live_default/index.html?videoId=6346069778112\", \"webpage_url_basename\": \"index.html\", \"webpage_url_domain\": \"players.brightcove.net\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://cf-images.eu-west-1.prod.boltdns.net/v1/static/876450610001/p/1920x1080/match/image.jpg\", \"display_id\": \"6346069778112\", \"fulltitle\": \"Le Live BFM TV\", \"duration_string\": \"44\", \"upload_date\": \"20201002\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 2000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://bfm-pd.test/6346069778112.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk876450610001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-2000k-720p - 1280x720\", \"_filename\": \"Le Live BFM TV [6346069778112].mp4\", \"filename\": \"Le Live BFM TV [6346069778112].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bfmtv.com/sante/covid-19-pasteur_AV-202101060198.html",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"202101060198\", \"title\": \"Covid-19: Pasteur\", \"description\": \"Article desc\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"BrightcoveNew\", \"id\": \"6223\", \"_type\": \"url\", \"url\": \"http://players.brightcove.net/876450612001/default_default/index.html?videoId=6223\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BrightcoveNew\", \"id\": \"6224\", \"_type\": \"url\", \"url\": \"http://players.brightcove.net/876630703001/default_default/index.html?videoId=6224\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.bfmtv.com/sante/covid-19-pasteur_AV-202101060198.html\", \"original_url\": \"https://www.bfmtv.com/sante/covid-19-pasteur_AV-202101060198.html\", \"webpage_url_basename\": \"covid-19-pasteur_AV-202101060198.html\", \"webpage_url_domain\": \"bfmtv.com\", \"extractor\": \"bfmtv:article\", \"extractor_key\": \"BFMTVArticle\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [bfmtv:article] Unable to extract Brightcove video id"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bfmtv.com/x/sans-titre_AN-202101060275.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"202101060275\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.bfmtv.com/x/sans-titre_AN-202101060275.html\", \"original_url\": \"https://www.bfmtv.com/x/sans-titre_AN-202101060275.html\", \"webpage_url_basename\": \"sans-titre_AN-202101060275.html\", \"webpage_url_domain\": \"bfmtv.com\", \"extractor\": \"bfmtv:article\", \"extractor_key\": \"BFMTVArticle\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [bfmtv:article] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [bfmtv:article] unable to extract og:description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bfmtv.com/x/pas-de-bloc_VN-202101060276.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [bfmtv] 202101060276: Unable to extract video block; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bfmtv.com/x/bloc-vide_VN-202101060277.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [bfmtv] 202101060277: Unable to extract Brightcove video id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -2525,6 +2525,19 @@ the non-fatal `dash`/`hls` manifests with the `parentOrigin` query, plus the
 creator's name as `uploader`, project name, creation timestamp and thumbnail.
 `tests/fixtures/sites/clipchamp/` is compared with pinned upstream output.
 
+BFM TV and RMC videos, live pages and articles (`[www.|rmc.]bfmtv.com/..._VX-ID.html`,
+`.../[SECTION/]en-direct`, `..._AX-ID.html`) follow upstream `BFMTVIE`,
+`BFMTVLiveIE` and `BFMTVArticleIE`: the first single-line
+`<div ... data-video-id=...>...</div>` block (fatal for videos and live
+pages, with upstream's video block and Brightcove ID errors) as a `url`
+result of `players.brightcove.net/ACCOUNT/PLAYER_default/index.html?videoId=ID`
+(account `876450612001` and player `default` unless the block names them),
+followed by `brightcove:new`; articles return every block's result as a
+playlist (blocks without an ID warn and are skipped) with the OpenGraph
+title and `og:description`/`description` meta, each missing one warning like
+upstream. `tests/fixtures/sites/bfmtv/` is compared with pinned upstream
+output.
+
 Beacon TV content (`[www.]beacon.tv/content/SLUG`) follows upstream
 `BeaconTvIE`: the next.js Apollo state's `Content:` entry with the slug
 (upstream's `Failed to extract content data`), its JSON-encoded JW Player
