@@ -1040,6 +1040,18 @@
       "scope": "CCCIE event data-id, public events JSON recordings as formats (language/folder IDs, codecs, MiB filesize) with title, creator, description, thumbnail, timestamp, duration, view count and tags; CCCPlaylistIE is not ported. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "canalalpha",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/canalalpha.py"
+      ],
+      "rust": [
+        "src/extractor/canalalpha.rs",
+        "tests/fixtures/sites/canalalpha/"
+      ],
+      "scope": "CanalAlphaIE server state MP4, HLS and DASH formats with metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "cellebrite",
       "status": "partial",
       "upstream": [

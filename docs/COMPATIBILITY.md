@@ -1994,6 +1994,13 @@ view and comment counts, rating, category and search-link tags, each optional
 regex warning like upstream when missing. `tests/fixtures/sites/vidlii/` is
 compared with pinned upstream output.
 
+Canal Alpha videos (`canalalpha.ch/play/SHOW/TYPE/ID/...`) follow upstream
+`CanalAlphaIE`: the page's `__SERVER_STATE__` (its `1.data.data`; missing
+keys are upstream's `KeyError`s), MP4 files with their size, non-fatal HLS
+and DASH manifests, the stripped title, cleaned long (else short)
+description, poster, first publication date and duration.
+`tests/fixtures/sites/canalalpha/` is compared with pinned upstream output.
+
 Cellebrite pages (`cellebrite.com/[LL]/SLUG`) follow upstream `CellebriteIE`:
 the page's first Vidyard embed (else `No Vidyard video embeds found on
 page`), whose player JSON's first chapter is processed like `VidyardIE`'s
