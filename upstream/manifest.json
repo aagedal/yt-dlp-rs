@@ -2264,6 +2264,18 @@
       "scope": "PhotobucketIE page MEDIA JSON and embed file= URL as an untyped result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "picarto",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/picarto.py"
+      ],
+      "rust": [
+        "src/extractor/picarto.rs",
+        "tests/fixtures/sites/picarto/"
+      ],
+      "scope": "PicartoIE live channel GraphQL and load balancer sources, and PicartoVodIE recording HLS, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "pinkbike",
       "status": "partial",
       "upstream": [

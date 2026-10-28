@@ -179,6 +179,7 @@ mod peertube;
 mod peertv;
 mod periscope;
 mod photobucket;
+mod picarto;
 mod pinkbike;
 mod pinterest;
 mod playerfm;
@@ -588,6 +589,9 @@ pub(crate) use peertube::{
 pub use peertv::{PeerTv, suitable as peertv_suitable};
 pub use periscope::{Periscope, suitable as periscope_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
+pub use picarto::{
+    Picarto, PicartoVod, suitable as picarto_suitable, vod_suitable as picarto_vod_suitable,
+};
 pub use pinkbike::{Pinkbike, suitable as pinkbike_suitable};
 pub use pinterest::{Pinterest, suitable as pinterest_suitable};
 pub use playerfm::{PlayerFm, suitable as playerfm_suitable};

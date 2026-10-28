@@ -1,0 +1,53 @@
+{
+ "routes": [
+  {
+   "url": "https://ptvintern.picarto.tv/ptvapi?query=%7B%0A++channel%28name%3A+%22Setz%22%29+%7B%0A++++adult%0A++++id%0A++++online%0A++++stream_name%0A++++title%0A++%7D%0A++getLoadBalancerUrl%28channel_name%3A+%22Setz%22%29+%7B%0A++++url%0A++%7D%0A%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"channel\": {\"adult\": true, \"id\": 12345, \"online\": 1, \"stream_name\": \"golive+Setz\", \"title\": \"  Drawing  \"}, \"getLoadBalancerUrl\": {\"url\": \"http://edge1-us.picarto.test\"}}}"
+  },
+  {
+   "url": "https://edge1-us.picarto.test/stream/json_golive+Setz.js",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"source\": [{\"type\": \"html5/application/vnd.apple.mpegurl\", \"url\": \"https://edge1-us.picarto.test/stream/hls/Setz/index.m3u8\"}, {\"type\": \"html5/video/mp4\", \"url\": \"https://edge1-us.picarto.test/stream/Setz.mp4\"}, {\"type\": \"html5/video/mp4\"}]}"
+  },
+  {
+   "url": "https://edge1-us.picarto.test/stream/hls/Setz/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://ptvintern.picarto.tv/ptvapi?query=%7B%0A++channel%28name%3A+%22Sleepy%22%29+%7B%0A++++adult%0A++++id%0A++++online%0A++++stream_name%0A++++title%0A++%7D%0A++getLoadBalancerUrl%28channel_name%3A+%22Sleepy%22%29+%7B%0A++++url%0A++%7D%0A%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"channel\": {\"online\": false, \"stream_name\": \"x\"}, \"getLoadBalancerUrl\": {\"url\": \"x\"}}}"
+  },
+  {
+   "url": "https://ptvintern.picarto.tv/ptvapi?query=%7B%0A++video%28id%3A+%22771008%22%29+%7B%0A++++id%0A++++title%0A++++adult%0A++++file_name%0A++++video_recording_image_url%0A++++channel+%7B%0A++++++name%0A++++%7D%0A++%7D%0A%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"video\": {\"id\": 771008, \"title\": \" Art of Zod \", \"adult\": true, \"file_name\": \"ArtofZod_2017.flv\", \"video_recording_image_url\": \"https://recording-eu-1.picarto.test/a/b/thumb.jpg\", \"channel\": {\"name\": \"ArtofZod\"}}}}"
+  },
+  {
+   "url": "https://recording-eu-1.picarto.test/stream/hls/ArtofZod_2017.flv/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://ptvintern.picarto.tv/ptvapi?query=%7B%0A++video%28id%3A+%221%22%29+%7B%0A++++id%0A++++title%0A++++adult%0A++++file_name%0A++++video_recording_image_url%0A++++channel+%7B%0A++++++name%0A++++%7D%0A++%7D%0A%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"video\": {\"title\": \"x\"}}}"
+  }
+ ]
+}

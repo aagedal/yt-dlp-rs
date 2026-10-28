@@ -2748,6 +2748,17 @@ thumbnail and the fatal `streams.padelgo.tv` HLS playlist (`m3u8_id='hls'`,
 `mp4`). Non-string court descriptions remain explicit native errors.
 `tests/fixtures/sites/matchitv/` is compared with pinned upstream output.
 
+Picarto channels (`picarto.tv/CHANNEL`) follow upstream `PicartoIE`: the
+`ptvapi` GraphQL channel and load balancer (`online == 0`, also `false`, is
+`Stream is offline`), the balancer's `stream/json_NAME.js` sources as
+non-fatal HLS (`hls`) or MP4 formats, live, with the stripped title, channel
+ID and URL and the `adult` age limit. Recorded videos
+(`picarto.tv/videopopout/ID`, `.../[profile/]videos/ID`) follow
+`PicartoVodIE`: the API's video, its recording host's
+`stream/hls/FILE/index.m3u8` (fatal) and its ID, title, image, channel and
+age limit. `tests/fixtures/sites/picarto/` is compared with pinned upstream
+output (live titles through `fulltitle`, as processing adds the time).
+
 Pinkbike videos (`pinkbike.com/video/ID` and the old
 `es.pinkbike.org/i/kvid/kvid-y5.swf?id=ID` player) follow upstream
 `PinkbikeIE`: the `http://www.pinkbike.com/video/ID` page's
