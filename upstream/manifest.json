@@ -3063,6 +3063,18 @@
       "scope": "URPlayIE Next.js product data (legacy React props fallback), media API HLS, streaming-info subtitles with ISO 639 codes, series/episode metadata, thumbnails and age limit, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "usatoday",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/usatoday.py"
+      ],
+      "rust": [
+        "src/extractor/usatoday.rs",
+        "tests/fixtures/sites/usatoday/"
+      ],
+      "scope": "USATodayIE ui-video-data JSON as url_transparent BrightcoveNew results with the page metadata overlaid and the no-video error, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "ustudio",
       "status": "partial",
       "upstream": [

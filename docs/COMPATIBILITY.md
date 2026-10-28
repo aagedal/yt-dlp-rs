@@ -1570,6 +1570,16 @@ number and the lowest age range's age limit (no age ranges is upstream's
 their manifest key order (`order_subtitle_tracks`). `tests/fixtures/sites/urplay/`
 is compared with pinned upstream output.
 
+USA Today pages (`usatoday.com/.../SLUG`) follow upstream `USATodayIE`: the
+`?ajax=true` page's `ui-video-data` element JSON (else upstream's expected
+`no video on the webpage` error) as a `url_transparent` result of its
+Brightcove player (the item's `brightcoveaccount`, default `29906170001`,
+and `brightcoveid`, else the `brightcove_id`), overlaid with the title,
+thumbnail, description and parsed `length`; the page `id` is required but,
+as upstream's `process_ie_result` drops a forced `id`, the Brightcove ID
+stays. `tests/fixtures/sites/usatoday/` is compared with pinned upstream
+output.
+
 uStudio videos (`ustudio.com/video/ID/DISPLAY_ID`) follow upstream
 `UstudioIE`: the `v1.ustudio.com` `config.xml` `qualities/quality/video` and
 `image` entries with a `url` (unescaped again, with integer width/height) as

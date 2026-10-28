@@ -1,0 +1,73 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.usatoday.com/media/cinematic/video/81729424/us-france-warn-syrian-regime-ahead-of-new-peace-talks/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4799374959001\", \"thumbnails\": [{\"url\": \"https://usat.test/thumb.jpg\", \"id\": \"0\"}], \"duration\": 95, \"formats\": [{\"tbr\": 1000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://usat-pd.test/4799374959001.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk29906170001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-1000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"US, France warn Syrian regime ahead of new peace talks\", \"description\": \"Secretary of State John Kerry & France's foreign minister\", \"timestamp\": 1457891045, \"uploader_id\": \"29906170001\", \"original_url\": \"http://www.usatoday.com/media/cinematic/video/81729424/us-france-warn-syrian-regime-ahead-of-new-peace-talks/\", \"webpage_url\": \"http://www.usatoday.com/media/cinematic/video/81729424/us-france-warn-syrian-regime-ahead-of-new-peace-talks/\", \"webpage_url_basename\": \"us-france-warn-syrian-regime-ahead-of-new-peace-talks\", \"webpage_url_domain\": \"usatoday.com\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"thumbnail\": \"https://usat.test/thumb.jpg\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"4799374959001\", \"fulltitle\": \"US, France warn Syrian regime ahead of new peace talks\", \"duration_string\": \"1:35\", \"upload_date\": \"20160313\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 1000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://usat-pd.test/4799374959001.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk29906170001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-1000k-720p - 1280x720\", \"_filename\": \"US, France warn Syrian regime ahead of new peace talks [4799374959001].mp4\", \"filename\": \"US, France warn Syrian regime ahead of new peace talks [4799374959001].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.usatoday.com/story/tech/science/2018/08/21/yellowstone/973633002/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5824495846001\", \"thumbnails\": null, \"duration\": 62.5, \"formats\": [{\"tbr\": 1000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://usat-pd.test/5824495846001.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk28911775001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-1000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"Yellowstone more likely to crack rather than explode\", \"description\": \"Brightcove description\", \"timestamp\": 1457891045, \"uploader_id\": \"28911775001\", \"original_url\": \"https://www.usatoday.com/story/tech/science/2018/08/21/yellowstone/973633002/\", \"webpage_url\": \"https://www.usatoday.com/story/tech/science/2018/08/21/yellowstone/973633002/\", \"webpage_url_basename\": \"973633002\", \"webpage_url_domain\": \"usatoday.com\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"5824495846001\", \"fulltitle\": \"Yellowstone more likely to crack rather than explode\", \"duration_string\": \"1:02\", \"upload_date\": \"20160313\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 1000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://usat-pd.test/5824495846001.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk28911775001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-1000k-720p - 1280x720\", \"_filename\": \"Yellowstone more likely to crack rather than explode [5824495846001].mp4\", \"filename\": \"Yellowstone more likely to crack rather than explode [5824495846001].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.usatoday.com/story/tech/science/2018/08/21/yellowstone/973633002/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[USAToday] Extracting URL: https://www.usatoday.com/story/tech/science/2018/08/21/yellowstone/973633002/",
+    "[USAToday] 973633002: Downloading webpage",
+    "[brightcove:new] Extracting URL: http://players.brightcove.net/28911775001/default_default/index.html?videoId=5824495846001",
+    "[brightcove:new] 5824495846001: Downloading JSON metadata",
+    "[brightcove:new] 5824495846001: Downloading JSON metadata",
+    "[info] Available formats for 5824495846001:",
+    "ID              EXT RESOLUTION |  FILESIZE   TBR PROTO | VCODEC ACODEC  MORE INFO",
+    "---------------------------------------------------------------------------------",
+    "http-1000k-720p mp4 1280x720   |  1000.00B 1000k https | H264   unknown MP4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.usatoday.com/story/news/no-video/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [USAToday] no-video: no video on the webpage"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.usatoday.com/story/news/no-id/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: no-id: An extractor error has occurred. (caused by KeyError('id')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

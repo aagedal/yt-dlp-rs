@@ -695,6 +695,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Unistra",
     "UnitedNationsWebTv",
     "URPlay",
+    "USAToday",
     "ustudio",
     "ustudio:embed",
     "Veo",
@@ -930,6 +931,7 @@ impl YoutubeDl {
                 Box::new(extractor::Servus),
                 Box::new(extractor::Tf1),
                 Box::new(extractor::UrPlay),
+                Box::new(extractor::UsaToday),
                 Box::new(extractor::WashingtonPost),
                 Box::new(extractor::WashingtonPostArticle),
                 Box::new(extractor::Wat),
@@ -3594,6 +3596,16 @@ impl YoutubeDl {
                                 }
                                 _ => metadata_parser::set_field(inner, key, value.clone()),
                             }
+                        }
+                        // `_sanitize_thumbnails` builds a `None` `thumbnails`
+                        // from the forced `thumbnail`.
+                        if fields.iter().any(|(key, _)| key == "thumbnail")
+                            && inner
+                                .extra
+                                .get("thumbnails")
+                                .is_some_and(serde_json::Value::is_null)
+                        {
+                            inner.extra.shift_remove("thumbnails");
                         }
                         inner.webpage_url = outer.clone();
                         if let Some(ip) = &outer_ip {
