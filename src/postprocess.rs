@@ -198,6 +198,7 @@ fn checkpoint(
         fragment_index: None,
         fragment_count: None,
         fragment: None,
+        recorded_ms: None,
     })
 }
 fn probe_path(downloader: &YoutubeDl) -> Result<PathBuf> {
@@ -333,13 +334,16 @@ pub(crate) fn download(
         && !info.requested_formats.is_empty()
         && matches!(options.merge_files, crate::MergeFiles::Upstream { .. })
         && !downloader.uses_ffmpeg_fd(info);
+    // A growing file (`--growing-file`) is recorded at its final name, so
+    // editors can import it; the processors then replace it.
+    let growing = existing.is_none() && downloader.grows(info);
     let bytes = if let Some(existing) = existing {
         // A private link (or copy) of the existing file is the source.
         if fs::hard_link(existing, &input).is_err() {
             fs::copy(existing, &input)?;
         }
         fs::metadata(&input)?.len()
-    } else if upstream_merge {
+    } else if upstream_merge || growing {
         // Each stream's download reports its own completion.
         let bytes =
             downloader.download_with_progress(info, destination, options, &mut *callback)?;

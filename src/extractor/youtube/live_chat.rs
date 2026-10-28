@@ -355,6 +355,7 @@ pub(crate) fn download(
             fragment_index: Some(fragment),
             fragment_count: None,
             fragment: None,
+            recorded_ms: None,
         })
     };
     let failed = || Error::Subtitle("live chat download failed".into());
@@ -487,6 +488,7 @@ pub(crate) fn download(
         fragment_index: None,
         fragment_count: None,
         fragment: None,
+        recorded_ms: None,
     })
     .is_break()
     {

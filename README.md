@@ -176,7 +176,19 @@ Supported today:
   switch to upstream's authenticated clients and SAPISIDHASH headers. Live
   streams download through FFmpeg (Ctrl+C finishes the recording), or from the
   start with `--live-from-start` through the native DASH generator; upcoming
-  ones report their start. Playlists (`/playlist?list=`, `watch?v=…&list=`,
+  ones report their start. `--growing-file` (a port extension) records a live
+  stream into one fragmented QuickTime `.mov` at its final name instead of
+  `.part`/format files and a merge, so editors can import it while it grows:
+  FFmpeg muxes the live URL (or, with `--live-from-start`, named pipes the
+  native fragment downloads feed), adds a time-of-day timecode track (the
+  stream's start with `--live-from-start`, when known), and its `-progress`
+  reports add the recorded duration to the progress line (`, recorded
+  HH:MM:SS`; `progress.recorded_seconds` in `--progress-template`). On macOS
+  the file carries Blackmagic's `com.blackmagicdesign.metadata:recording`
+  attribute while it grows, which DaVinci Resolve reads at import to treat it
+  as a recording clip; the attribute is removed when the recording ends,
+  including at SIGINT or SIGTERM (which finish the file), but not if the
+  process is killed. H.264/AAC formats are preferred after any `-S` fields. Playlists (`/playlist?list=`, `watch?v=…&list=`,
   mixes), channel tabs (`/@NAME/videos`, `/shorts`, ...), hashtag and feed pages
   are extracted like upstream's `youtube:tab`, with continuation pages fetched as
   the selection needs them; a channel URL without a tab is a playlist of its

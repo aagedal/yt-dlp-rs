@@ -11,7 +11,7 @@ use crate::{
 use reqwest::blocking::Client;
 use std::{
     fs,
-    io::Write,
+    io::{Read, Write},
     ops::ControlFlow,
     path::{Path, PathBuf},
     sync::{
@@ -26,6 +26,8 @@ pub(crate) struct Job {
     pub info: VideoInfo,
     pub destination: PathBuf,
     pub fragments: LiveFragments,
+    /// `destination` is a named pipe FFmpeg reads (`--growing-file`).
+    pub pipe: bool,
 }
 
 /// A worker's report to the calling thread, which may hold the output
@@ -93,6 +95,7 @@ pub(crate) fn download(
                 fragment_index: None,
                 fragment_count: None,
                 fragment: None,
+                recorded_ms: None,
             };
             if callback(progress).is_break() {
                 stop.store(true, Ordering::SeqCst);
@@ -123,6 +126,7 @@ pub(crate) fn download(
             fragment_index: None,
             fragment_count: None,
             fragment: None,
+            recorded_ms: None,
         };
         if callback(finished).is_break() {
             return Err(Error::DownloadCancelled);
@@ -141,6 +145,9 @@ fn run(
     stop: &AtomicBool,
     progress: &mut dyn FnMut(u64),
 ) -> Result<u64> {
+    if job.pipe {
+        return feed(client, job, options, stop, progress);
+    }
     let destination = job.destination.as_path();
     crate::download::check_destination(destination, options)?;
     let parent = destination
@@ -228,6 +235,71 @@ fn run(
             }
         }
         _ => {}
+    }
+    Ok(stored)
+}
+
+/// `--growing-file` (port extension): each fragment is downloaded into a
+/// scratch file (a failed attempt is truncated away) and then written whole
+/// to the named pipe FFmpeg reads. The pipe closes at the end, or when
+/// interrupted, which lets FFmpeg finish the file.
+fn feed(
+    client: &Client,
+    mut job: Job,
+    options: &DownloadOptions,
+    stop: &AtomicBool,
+    progress: &mut dyn FnMut(u64),
+) -> Result<u64> {
+    // Blocks until FFmpeg opens this input.
+    let mut pipe = fs::OpenOptions::new().write(true).open(&job.destination)?;
+    let parent = job
+        .destination
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+        .unwrap_or(Path::new("."));
+    let mut scratch = tempfile::tempfile_in(parent)?;
+    let halted = || stop.load(Ordering::SeqCst) || crate::interrupt::interrupted();
+    let mut stored = 0_u64;
+    let mut index = 0_usize;
+    while let Some(fragment) = job.fragments.next(&halted)? {
+        let mut forward = |event: DownloadProgress| {
+            progress(stored + event.downloaded_bytes);
+            if halted() {
+                ControlFlow::Break(())
+            } else {
+                ControlFlow::Continue(())
+            }
+        };
+        let mut size = 0_u64;
+        match crate::fragment::append_live(
+            client,
+            &job.info,
+            index,
+            &fragment,
+            options,
+            &mut scratch,
+            &mut size,
+            &mut forward,
+        ) {
+            Ok(_) => {}
+            Err(Error::DownloadCancelled) if crate::interrupt::interrupted() => break,
+            Err(error) => return Err(error),
+        }
+        use std::io::{Seek, SeekFrom};
+        scratch.seek(SeekFrom::Start(0))?;
+        match std::io::copy(&mut (&mut scratch).take(size), &mut pipe) {
+            Ok(_) => {}
+            // FFmpeg has stopped reading (an interrupt, or it ended); its
+            // own result decides the download's.
+            Err(error) if error.kind() == std::io::ErrorKind::BrokenPipe => break,
+            Err(error) => return Err(error.into()),
+        }
+        stored += size;
+        progress(stored);
+        index += 1;
+    }
+    if stop.load(Ordering::SeqCst) && !crate::interrupt::interrupted() {
+        return Err(Error::DownloadCancelled);
     }
     Ok(stored)
 }

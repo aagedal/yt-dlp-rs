@@ -188,14 +188,16 @@ fn muxer<'a>(settings: &Settings, info: &'a VideoInfo, protocol: &str) -> &'a st
 }
 
 /// `FFmpegFD._call_downloader` arguments, without the executable; `local`
-/// replaces the inputs' URLs and `timecode` adds `-timecode` (both port
-/// extensions).
+/// replaces the inputs' URLs, `timecode` adds `-timecode` and `growing`
+/// (its timecode) writes a growing QuickTime file (all port extensions).
+#[allow(clippy::too_many_arguments)]
 fn arguments(
     network: &Network<'_>,
     settings: &Settings,
     info: &VideoInfo,
     local: Option<&[LocalInput]>,
     timecode: Option<&str>,
+    growing: Option<&str>,
     temporary: &Path,
     piped: bool,
 ) -> Result<Vec<OsString>> {
@@ -272,10 +274,14 @@ fn arguments(
             crate::download::TEST_FILE_SIZE.to_string().into(),
         ]);
     }
-    if let Some(timecode) = timecode {
-        args.extend(["-timecode".into(), timecode.into()]);
+    if let Some(timecode) = growing {
+        args.extend(crate::growing::output_args(timecode));
+    } else {
+        if let Some(timecode) = timecode {
+            args.extend(["-timecode".into(), timecode.into()]);
+        }
+        args.extend(["-f".into(), muxer(settings, info, &protocol).into()]);
     }
-    args.extend(["-f".into(), muxer(settings, info, &protocol).into()]);
     // `_configuration_args(('_o1', '_o', ''))` (with `default`).
     let keys = ["ffmpeg_o1", "ffmpeg_o", "ffmpeg", "default"].map(String::from);
     args.extend(configured(settings, &keys).iter().map(OsString::from));
@@ -314,6 +320,47 @@ pub(crate) fn download(
         destination,
         options,
         None,
+        None,
+        callback,
+    )
+}
+
+/// A growing-file download (`--growing-file`, port extension).
+pub(crate) struct Growing {
+    /// The `-timecode` of the recording's start.
+    pub timecode: String,
+    /// The inputs are named pipes the native downloader feeds (`local`):
+    /// FFmpeg finishes at their end instead of being asked to quit.
+    pub pipes: bool,
+}
+
+/// FFmpegFD writing a live stream into a growing QuickTime file at
+/// `destination` itself (no temporary name, so an editor importing it keeps
+/// a valid path), tagged as recording while FFmpeg runs, with FFmpeg's
+/// `-progress` as the reported size and recorded time.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn download_growing(
+    ffmpeg: &Path,
+    network: &Network<'_>,
+    settings: &Settings,
+    info: &VideoInfo,
+    local: Option<&[LocalInput]>,
+    growing: &Growing,
+    destination: &Path,
+    options: &DownloadOptions,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<u64> {
+    run(
+        ffmpeg,
+        network,
+        settings,
+        info,
+        local,
+        None,
+        destination,
+        options,
+        None,
+        Some(growing),
         callback,
     )
 }
@@ -344,6 +391,7 @@ pub(crate) fn download_piped(
         destination,
         options,
         Some(connection),
+        None,
         callback,
     )
 }
@@ -359,6 +407,7 @@ fn run(
     destination: &Path,
     options: &DownloadOptions,
     connection: Option<Connection>,
+    growing: Option<&Growing>,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
     use std::sync::{
@@ -373,6 +422,8 @@ fn run(
     std::fs::create_dir_all(parent)?;
     let mut private = None;
     let temporary: PathBuf = match options.part_files {
+        // A growing file is written (and imported) at its final name.
+        _ if growing.is_some() => destination.to_owned(),
         PartFiles::NoPart { .. } => destination.to_owned(),
         PartFiles::Part { .. } => {
             let mut name = destination.as_os_str().to_owned();
@@ -421,6 +472,7 @@ fn run(
         info,
         local,
         timecode.as_deref(),
+        growing.map(|growing| growing.timecode.as_str()),
         &temporary,
         piped,
     )?;
@@ -435,6 +487,7 @@ fn run(
         fragment_index: None,
         fragment_count: None,
         fragment: None,
+        recorded_ms: None,
     };
     if callback(progress(DownloadPhase::Downloading, 0)).is_break() {
         return Err(Error::DownloadCancelled);
@@ -442,6 +495,27 @@ fn run(
     crate::screen::debug_command(ffmpeg, &args);
     let mut command = Command::new(ffmpeg);
     command.args(&args).stdin(Stdio::piped());
+    // The growing file exists (and is tagged) before FFmpeg opens it;
+    // its truncating open keeps the attribute.
+    let mut tag = None;
+    if growing.is_some() {
+        std::fs::File::create(&temporary)?;
+        tag = Some(crate::growing::RecordingTag::set(&temporary));
+        command.stdout(Stdio::piped());
+    }
+    let recorded = Arc::new(crate::growing::Progress::default());
+    let mut reported = 0;
+    // One status per `-progress` report.
+    let report = |reported: &mut u64| {
+        let (reports, recorded_ms, bytes) = recorded.snapshot();
+        (reports != *reported).then(|| {
+            *reported = reports;
+            DownloadProgress {
+                recorded_ms: Some(recorded_ms),
+                ..progress(DownloadPhase::Downloading, bytes)
+            }
+        })
+    };
     if let Some(proxy) = network.proxy.filter(|proxy| !proxy.is_empty()) {
         let proxy = if proxy.contains("://") {
             proxy.to_owned()
@@ -452,8 +526,16 @@ fn run(
     }
     // Upstream `real_download`: interrupting a live download completes it
     // (FFmpegSinkFD always handles the interrupt its connection raises).
-    let interrupt = (crate::is_live(info) || piped).then(crate::interrupt::Guard::install);
+    let interrupt = if growing.is_some() {
+        Some(crate::interrupt::Guard::install_with_terminate())
+    } else {
+        (crate::is_live(info) || piped).then(crate::interrupt::Guard::install)
+    };
     let mut child = command.spawn()?;
+    let follower = child
+        .stdout
+        .take()
+        .map(|output| Arc::clone(&recorded).follow(output));
     // Upstream keeps FFmpeg's stdin open (a pipe) so it never reads the terminal.
     let mut stdin = child.stdin.take();
     // `on_process_started`: the connection writes FFmpeg's stdin.
@@ -482,6 +564,9 @@ fn run(
             let _ = child.kill();
         } else if piped && ended.load(Ordering::SeqCst) {
             interrupted = true;
+        } else if growing.is_some_and(|growing| growing.pipes) {
+            // The pipes' writers stop at the interrupt; FFmpeg reads to their end.
+            interrupted |= signalled;
         } else if !piped && !interrupted && signalled {
             // `proc.communicate_or_kill(b'q')`: FFmpeg finishes the file.
             interrupted = true;
@@ -490,15 +575,39 @@ fn run(
                 let _ = input.write_all(b"q");
             }
         }
-        if callback(progress(DownloadPhase::Downloading, 0)).is_break() {
+        let event = if growing.is_some() {
+            report(&mut reported)
+        } else {
+            Some(progress(DownloadPhase::Downloading, 0))
+        };
+        if event.is_some_and(|event| callback(event).is_break()) {
             let _ = child.kill();
             let _ = child.wait();
-            let _ = std::fs::remove_file(&temporary);
+            drop(tag);
+            // A growing file may already be in use; it stays.
+            if growing.is_none() {
+                let _ = std::fs::remove_file(&temporary);
+            }
             return Err(Error::DownloadCancelled);
         }
         std::thread::sleep(Duration::from_millis(50));
     };
+    // A signal to the whole process group (how apps stop a recording) may
+    // end FFmpeg before the loop sees it.
+    interrupted |= growing.is_some()
+        && interrupt
+            .as_ref()
+            .is_some_and(crate::interrupt::Guard::interrupted);
     drop(interrupt);
+    // The recording has ended either way.
+    drop(tag);
+    // FFmpeg's final report (`progress=end`).
+    if let Some(follower) = follower {
+        let _ = follower.join();
+        if let Some(event) = report(&mut reported) {
+            let _ = callback(event);
+        }
+    }
     // The connection may end while FFmpeg exits.
     interrupted |= piped && ended.load(Ordering::SeqCst);
     if interrupted && !crate::is_live(info) {
@@ -516,6 +625,10 @@ fn run(
         crate::screen::screen("[ffmpeg] Interrupted by user");
     } else if !status.success() {
         if private.is_some() {
+            let _ = std::fs::remove_file(&temporary);
+        }
+        // A growing file keeps what was recorded (unless nothing was).
+        if growing.is_some() && std::fs::metadata(&temporary).is_ok_and(|file| file.len() == 0) {
             let _ = std::fs::remove_file(&temporary);
         }
         crate::output::encoding::write_message(true, "\n\n");
@@ -565,6 +678,7 @@ mod tests {
             &info,
             None,
             None,
+            None,
             Path::new("o.mp4.part"),
             false,
         )
@@ -608,6 +722,7 @@ mod tests {
             &info,
             None,
             None,
+            None,
             Path::new("o"),
             false,
         )
@@ -646,6 +761,7 @@ mod tests {
             &network,
             &settings,
             &info,
+            None,
             None,
             None,
             Path::new("o"),
@@ -687,6 +803,7 @@ mod tests {
                 &network,
                 &Settings::default(),
                 info,
+                None,
                 None,
                 None,
                 Path::new("o"),

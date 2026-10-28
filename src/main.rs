@@ -588,6 +588,13 @@ struct Args {
     /// result, e.g. with --remux-video mp4; yt-dlp-rs extension)
     #[arg(long)]
     section_timecode: bool,
+    /// Record live streams into one growing QuickTime (.mov) file that
+    /// editors can import while it is written, with a time-of-day timecode
+    /// and the recorded duration in the progress; on macOS, DaVinci Resolve
+    /// shows it as a recording clip. Prefers H.264/AAC formats after any
+    /// --format-sort fields (needs ffmpeg; yt-dlp-rs extension)
+    #[arg(long)]
+    growing_file: bool,
     /// Containers that may be used when merging formats, separated by "/",
     /// e.g. "mp4/mkv"; ignored if no merge is required (currently supported:
     /// avi, flv, mkv, mov, mp4, webm)
@@ -2658,6 +2665,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if args.section_timecode {
         downloader = downloader.with_section_timecode(processors.video.clone());
     }
+    downloader = downloader.with_growing_file(args.growing_file);
     if let Some(formats) = &args.merge_output_format {
         downloader =
             downloader.with_merge_output_format(formats.split('/').map(str::to_owned).collect());
@@ -8493,6 +8501,7 @@ impl<'a> ProgressReporter<'a> {
                 eta: state.calculator.eta(),
                 fragment_index: Some(state.index),
                 fragment_count: Some(count),
+                recorded: None,
             };
             return self.downloading(&status);
         }
@@ -8531,6 +8540,9 @@ impl<'a> ProgressReporter<'a> {
             eta,
             fragment_index,
             fragment_count: progress.fragment_count,
+            recorded: progress
+                .recorded_ms
+                .map(|recorded| recorded as f64 / 1000.0),
         };
         self.downloading(&status);
     }

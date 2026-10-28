@@ -211,6 +211,8 @@ pub struct ProgressStatus {
     /// Completed fragments and their count, for fragmented downloads.
     pub fragment_index: Option<u32>,
     pub fragment_count: Option<u32>,
+    /// Seconds of media in a growing file (`--growing-file`, a port extension).
+    pub recorded: Option<f64>,
 }
 
 fn bytes(value: Option<f64>) -> String {
@@ -257,6 +259,9 @@ pub fn downloading_line(status: &ProgressStatus) -> String {
         (Some(index), None) => line.push_str(&format!(" (frag {index})")),
         _ => {}
     }
+    if let Some(recorded) = status.recorded {
+        line.push_str(&format!(", recorded {}", format_seconds(Some(recorded))));
+    }
     line
 }
 
@@ -292,6 +297,13 @@ pub fn downloading_dict(status: &ProgressStatus, filename: Option<&str>) -> serd
     }
     if let Some(count) = status.fragment_count {
         object.insert("fragment_count".into(), count.into());
+    }
+    if let Some(recorded) = status.recorded {
+        object.insert("recorded_seconds".into(), recorded.into());
+        object.insert(
+            "_recorded_str".into(),
+            format_seconds(Some(recorded)).into(),
+        );
     }
     for (key, value) in [
         ("_eta_str", format_eta(status.eta).trim().to_owned()),
@@ -440,6 +452,7 @@ mod tests {
                 eta: get("eta"),
                 fragment_index: case["status"]["fragment_index"].as_u64().map(|n| n as u32),
                 fragment_count: case["status"]["fragment_count"].as_u64().map(|n| n as u32),
+                recorded: None,
             };
             let line = if case["status"]["status"] == "finished" {
                 finished_line(status.total_bytes.unwrap(), status.elapsed)
@@ -448,6 +461,24 @@ mod tests {
             };
             assert_eq!(line, case["line"].as_str().unwrap(), "{case}");
         }
+    }
+
+    #[test]
+    fn growing_files_report_the_recorded_time() {
+        let status = ProgressStatus {
+            downloaded_bytes: 12_939_428,
+            elapsed: Some(42.5),
+            speed: Some(304_457.0),
+            recorded: Some(65.4),
+            ..Default::default()
+        };
+        assert_eq!(
+            downloading_line(&status),
+            "  12.34MiB at  297.32KiB/s (00:00:42), recorded 00:01:05"
+        );
+        let dict = downloading_dict(&status, Some("live.mov"));
+        assert_eq!(dict["recorded_seconds"], 65.4);
+        assert_eq!(dict["_recorded_str"], "00:01:05");
     }
 
     #[test]
