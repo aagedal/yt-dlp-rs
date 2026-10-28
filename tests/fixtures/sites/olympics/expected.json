@@ -1,0 +1,108 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://olympics.com/en/paris-2024/videos/vod-one",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://ocs.test/vod/abc/360/index.m3u8\", \"manifest_url\": \"https://ocs.test/vod/abc/master.m3u8?token=t1\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"subtitles\": {\"en\": [{\"url\": \"https://ocs.test/vod/abc/subs/en.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"is_live\": false, \"id\": \"3d96db23-8eee-4b7c-8ef5-488a0361026c\", \"title\": \"Men's Preliminaries | Hockey\", \"timestamp\": 1722066600, \"webpage_url\": \"https://olympics.com/en/paris-2024/videos/vod-one\", \"original_url\": \"https://olympics.com/en/paris-2024/videos/vod-one\", \"webpage_url_basename\": \"vod-one\", \"webpage_url_domain\": \"olympics.com\", \"extractor\": \"OlympicsReplay\", \"extractor_key\": \"OlympicsReplay\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"3d96db23-8eee-4b7c-8ef5-488a0361026c\", \"fulltitle\": \"Men's Preliminaries | Hockey\", \"upload_date\": \"20240727\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-921\", \"url\": \"https://ocs.test/vod/abc/360/index.m3u8\", \"manifest_url\": \"https://ocs.test/vod/abc/master.m3u8?token=t1\", \"tbr\": 921.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"Men's Preliminaries \\uff5c Hockey [3d96db23-8eee-4b7c-8ef5-488a0361026c].mp4\", \"filename\": \"Men's Preliminaries \\uff5c Hockey [3d96db23-8eee-4b7c-8ef5-488a0361026c].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://ocs.test/vod/abc/360/index.m3u8\", \"manifest_url\": \"https://ocs.test/vod/abc/master.m3u8?token=t1\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://olympics.com/en/paris-2024/videos/vod-one",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[OlympicsReplay] Extracting URL: https://olympics.com/en/paris-2024/videos/vod-one",
+    "[OlympicsReplay] vod-one: Downloading webpage",
+    "[OlympicsReplay] vod-one: Downloading tokenized m3u8 url",
+    "[OlympicsReplay] vod-one: Downloading m3u8 information",
+    "[info] Available subtitles for 3d96db23-8eee-4b7c-8ef5-488a0361026c:",
+    "Language Formats",
+    "en       vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://olympics.com/en/paris-2024/videos/live-two",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(format_id)s|%(manifest_url)s|%(subtitles.en.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "a42f37ab|Live final|True|is_live|hls-921|https://ocs.test/live/xyz/master.m3u8?token=t2|https://ocs.test/live/xyz/subs/en.m3u8"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://olympics.com/en/paris-2024/videos/geo-three",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [OlympicsReplay] geo-three: This video is not available from your location due to geo restriction"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://olympics.com/en/paris-2024/videos/nojwt-four",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: nojwt-four: An extractor error has occurred. (caused by KeyError('jwtToken')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://olympics.com/fr/video/men-s-109kg-legacy",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"f6a0753c-8e6f-4b7d-a435-027054a4f8e9\", \"title\": \"+109kg (H) Groupe A | Replay\", \"thumbnails\": [{\"url\": \"https://img.olympics.com/images/image/private/t_16-9_640/primary/ld\", \"id\": \"0\"}], \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://ocs.test/legacy/360/index.m3u8\", \"manifest_url\": \"https://ocs.test/legacy/abc.m3u8?hdnts=tok\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"subtitles\": {\"en\": [{\"url\": \"https://ocs.test/legacy/subs/en.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"description\": \"Halt\\u00e9rophilie.\", \"duration\": 7017, \"timestamp\": 1627797600, \"webpage_url\": \"https://olympics.com/fr/video/men-s-109kg-legacy\", \"original_url\": \"https://olympics.com/fr/video/men-s-109kg-legacy\", \"webpage_url_basename\": \"men-s-109kg-legacy\", \"webpage_url_domain\": \"olympics.com\", \"extractor\": \"OlympicsReplay\", \"extractor_key\": \"OlympicsReplay\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://img.olympics.com/images/image/private/t_16-9_640/primary/ld\", \"display_id\": \"f6a0753c-8e6f-4b7d-a435-027054a4f8e9\", \"fulltitle\": \"+109kg (H) Groupe A | Replay\", \"duration_string\": \"1:56:57\", \"upload_date\": \"20210801\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://ocs.test/legacy/360/index.m3u8\", \"manifest_url\": \"https://ocs.test/legacy/abc.m3u8?hdnts=tok\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"+109kg (H) Groupe A \\uff5c Replay [f6a0753c-8e6f-4b7d-a435-027054a4f8e9].mp4\", \"filename\": \"+109kg (H) Groupe A \\uff5c Replay [f6a0753c-8e6f-4b7d-a435-027054a4f8e9].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://olympics.com/en/original-series/episode/b-girl-legacy",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"32633650\", \"title\": \"Nicka article\", \"thumbnails\": [{\"url\": \"https://x.test/plain.jpg\", \"width\": null, \"height\": null, \"id\": \"0\"}, {\"url\": \"https://img.olympics.com/images/image/private/t_16-9_640/primary/z\", \"width\": 640, \"height\": 360, \"id\": \"1\", \"resolution\": \"640x360\"}, {\"url\": \"https://img.olympics.com/images/image/private/t_1-1_1280/primary/a3j9\", \"width\": 1280, \"height\": 1280, \"id\": \"2\", \"resolution\": \"1280x1280\"}], \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://ocs.test/legacy/360/index.m3u8\", \"manifest_url\": \"https://ocs.test/legacy/abc.m3u8?hdnts=tok\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"subtitles\": {\"en\": [{\"url\": \"https://ocs.test/legacy/subs/en.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"description\": \"Breaking.\", \"webpage_url\": \"https://olympics.com/en/original-series/episode/b-girl-legacy\", \"original_url\": \"https://olympics.com/en/original-series/episode/b-girl-legacy\", \"webpage_url_basename\": \"b-girl-legacy\", \"webpage_url_domain\": \"olympics.com\", \"extractor\": \"OlympicsReplay\", \"extractor_key\": \"OlympicsReplay\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://img.olympics.com/images/image/private/t_1-1_1280/primary/a3j9\", \"display_id\": \"32633650\", \"fulltitle\": \"Nicka article\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://ocs.test/legacy/360/index.m3u8\", \"manifest_url\": \"https://ocs.test/legacy/abc.m3u8?hdnts=tok\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"Nicka article [32633650].mp4\", \"filename\": \"Nicka article [32633650].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://olympics.com/en/replay/no-ld",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [OlympicsReplay] no-ld: Unable to extract JSON-LD; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

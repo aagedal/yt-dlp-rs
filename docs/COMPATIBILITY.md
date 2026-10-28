@@ -777,6 +777,24 @@ upstream's default `--no-abort-on-error`. Non-string titles, download URLs,
 descriptions and dates remain explicit native errors.
 `tests/fixtures/sites/spreaker/` is compared with pinned upstream output.
 
+Olympics videos (`olympics.com/LL/[paris-2024/]replay|video|videos|
+original-series/episode/SLUG`) follow upstream `OlympicsReplayIE`: the
+Next.js `videoPlaylist` item's `currentVideo` (upstream's geo restriction
+with its countries when `geoRestrictedVideo`; geo bypass is off), its
+`videoUrl` (else the required `streamUrl`) tokenized through
+`metering.olympics.com/tokengenerator` with the URL's own query, the
+`vod`/`live` service and the required `jwtToken`, read as a fatal HLS master
+playlist (subtitles kept; an HTTP error whose reason contains
+`georestricted` is the geo error), `is_live` from `streamingStatus`, and the
+video ID, title and ISO 8601 date. Without that item the legacy page's
+`title`/`og:title`/`twitter:title`, `episode_uid` and `video_url` meta tags
+(upstream's warnings when missing; a missing UID or URL is an unsupported
+error here), the required JSON-LD (upstream's fatal error), the `image`
+list's thumbnails with the `t_W-H_WIDTH` width and derived height, and the
+`tokenGenerator` URL's HLS playlist, with the JSON-LD fields merged over
+them. `tests/fixtures/sites/olympics/` is compared with pinned upstream
+output.
+
 OneFootball videos (`onefootball.com/LL/video/SLUG-ID`) follow upstream
 `OneFootballIE`: the page's fatal `cdn.jwplayer.com/manifests/ID.m3u8` URL as
 a `url_transparent` result (extracted by the JW Platform extractor) overlaid

@@ -1,0 +1,51 @@
+[
+ {
+  "url": "https://olympics.com/en/paris-2024/videos/vod-one",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://olympics.com/en/paris-2024/videos/vod-one",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://olympics.com/en/paris-2024/videos/live-two",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(format_id)s|%(manifest_url)s|%(subtitles.en.0.url)s"
+  ]
+ },
+ {
+  "url": "https://olympics.com/en/paris-2024/videos/geo-three",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://olympics.com/en/paris-2024/videos/nojwt-four",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://olympics.com/fr/video/men-s-109kg-legacy",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://olympics.com/en/original-series/episode/b-girl-legacy",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://olympics.com/en/replay/no-ld",
+  "args": [
+   "-j"
+  ]
+ }
+]

@@ -151,6 +151,7 @@ mod nts;
 pub mod nuxt;
 mod nzonscreen;
 mod odnoklassniki;
+mod olympics;
 mod onefootball;
 mod onenewsnz;
 mod oneplace;
@@ -511,6 +512,7 @@ pub use nrk::{
 pub use nts::{NtsLive, suitable as nts_suitable};
 pub use nzonscreen::{NzOnScreen, suitable as nzonscreen_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
+pub use olympics::{OlympicsReplay, suitable as olympics_suitable};
 pub use onefootball::{OneFootball, suitable as onefootball_suitable};
 pub use onenewsnz::{OneNewsNz, suitable as onenewsnz_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};

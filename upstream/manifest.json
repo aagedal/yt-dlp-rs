@@ -1962,6 +1962,18 @@
       "scope": "OdnoklassnikiIE player options, flashvars or POSTed metadata, progressive/HLS/DASH/RTMP formats, subtitles, errors and url/url_transparent results, the smuggled referrer as Referer and the boosty direct-link retry; no embedded DASH manifests; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "olympics",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/olympics.py"
+      ],
+      "rust": [
+        "src/extractor/olympics.rs",
+        "tests/fixtures/sites/olympics/"
+      ],
+      "scope": "OlympicsReplayIE Next.js videoPlaylist videos (geo restriction, metering tokenized HLS master playlists, live status) and legacy meta/tokenGenerator/JSON-LD pages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "onefootball",
       "status": "partial",
       "upstream": [
