@@ -1303,6 +1303,20 @@ master playlist, saved collection and season responses, and synthetic
 multi-stream, playlist and category responses) is compared with pinned
 upstream output.
 
+Audi MediaCenter videos (`[www.]audi-mediacenter.com/en|de/audimediatv/[video/]ID`)
+follow upstream `AudiMediaIE`: the page's `amtv-embed` payload (fatal; the
+first of upstream's five patterns that matches, split into exactly four
+`-` parts like upstream's unpacking, whose `ValueError` text is reported
+bare) and the audimedia.tv video API (`embed[]` `video_versions` and
+`thumbnail_image`; a missing `results` is the `KeyError` error) for the
+non-fatal HLS master playlist (`hls`) and HDS manifest (`hds`,
+`?hdcore=3.4.0`), the video versions' download or stream URLs with size and
+`int_or_none` bitrates (`http-BITRATE` IDs from a `NNNk` URL part), the title,
+subtitle as description, thumbnail, ISO 8601 timestamp, duration and view
+count. Live and ended live streams (stage modes `s` and `e`), for which
+upstream returns nothing, are an unsupported error.
+`tests/fixtures/sites/audimedia/` is compared with pinned upstream output.
+
 AudioBoom posts (`audioboom.com/posts|boos/ID`) follow upstream `AudioBoomIE`:
 the post page's `V5DetailPagePlayer` React props (`_search_json` with
 `unescapeHTML`) for the clip URL, title, description (else its cleaned
@@ -1326,6 +1340,15 @@ the first `album_id`/`album_title` seen as its ID and title (neither when
 absent). Non-object responses and non-string or relative media URLs remain
 explicit native errors. `tests/fixtures/sites/audiomack/` is compared with
 pinned upstream output.
+
+Beatport tracks (`[www.|pro.]beatport.com/track/SLUG/ID`) follow upstream
+`BeatportIE`: the page's `window.Playables` JSON (fatal) and its track with
+the URL's numeric ID (none is upstream's `StopIteration` error; missing keys
+are `KeyError` errors), the artists, name and mix as the title, each preview
+file named by its extension (`vcodec: none`; MP3 and AAC with 96 kbit/s and
+44.1 kHz), the images except `dynamic` as thumbnails, and the track's slug
+as `display_id`. Playables that are not plain JSON are an unsupported error.
+`tests/fixtures/sites/beatport/` is compared with pinned upstream output.
 
 BehindKink posts (`behindkink.com/YYYY/MM/DD/SLUG`, marked broken upstream with
 its warning) follow upstream `BehindKinkIE`: the fatal `<source>` URL (its
@@ -1858,6 +1881,20 @@ PGA Tour videos (`pgatour.com/video/SECTION/[T]ID`) follow upstream
 account and player for `T` IDs). `tests/fixtures/sites/pgatour/` is compared
 with pinned upstream output.
 
+Parti recordings (`[www.]parti.com/video/ID`) follow upstream
+`PartiVideoIE`: the profile API's `get_livestream_channel_info/recent/ID`
+(with upstream's `Origin`/`Referer` headers; a missing `livestream_recording`
+is the `KeyError` error) for the recording's fatal HLS master playlist
+(joined with `https://media.parti.com/`, `mp4`), the event title, channel,
+`url_or_none` thumbnail, category list (empty without a category) and
+`int_or_none` start timestamp. Parti channels (`[www.]parti.com/SLUG`, not
+`video/`) follow `PartiLivestreamIE`: the user ID from `user_id_from_name`
+(`/` encoded as `%23`), the channel info (`The channel is not currently
+live` unless `channel.is_live` is `true`) and the fatal live HLS master
+playlist, with the event name, description, preview thumbnail, ISO 8601
+start time and viewer count. `tests/fixtures/sites/parti/` is compared with
+pinned upstream output.
+
 PeerTube videos follow upstream `PeerTubeIE` on its listed instances
 (`_INSTANCES_RE`, generated into `src/extractor/peertube/instances.rs` from
 the pinned checkout by `tools/generate_peertube_instances.py`; matched
@@ -2083,6 +2120,17 @@ formats and thumbnails, then the page's OpenGraph title and description,
 `config.json` video's `name` (else a `KeyError`), `transcodes` as
 `EXT[-HEIGHTp]` formats, image thumbnails, description, duration, keywords and
 the URL's uploader ID.
+
+Arnes Video videos (`video.arnes.si/[LANG/]watch|embed|api/asset|api/public/video/ID`)
+follow upstream `ArnesIE` (`video.arnes.si`): the public video API's `data`
+(a missing `data` or `title` is the `KeyError` error) for its media files
+(the API base URL prefixed, `FORMAT_` removed from the format ID, the format
+translation as note, size), the prefixed thumbnail (a missing one is
+upstream's bare `TypeError` text), description, license, author as creator,
+ISO 8601 creation time, channel name, ID and URL (empty without an ID, like
+`format_field`), duration in seconds, views, hashtags and the URL's `t`
+query value as `start_time`. `tests/fixtures/sites/arnes/` is compared with
+pinned upstream output.
 
 VideoPress embeds (`videopress.com|video.wordpress.com/embed/ID`) follow
 upstream `VideoPressIE`: the `public-api.wordpress.com/rest/v1.1/videos/ID`

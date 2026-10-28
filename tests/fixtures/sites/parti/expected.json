@@ -1,0 +1,120 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://parti.com/video/66284",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"66284\", \"formats\": [{\"format_id\": \"800\", \"format_index\": null, \"url\": \"https://media.parti.com/recordings/66284/480.m3u8\", \"manifest_url\": \"https://media.parti.com/recordings/66284/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 854, \"height\": 480, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"854x480\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 854x480\"}, {\"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://media.parti.com/recordings/66284/1080.m3u8\", \"manifest_url\": \"https://media.parti.com/recordings/66284/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1920x1080\"}], \"title\": \"NOW LIVE \", \"channel\": \"ItZTMGG\", \"thumbnail\": \"https://media.parti.com/351424.png\", \"categories\": [\"Gaming\"], \"timestamp\": 1743044379, \"webpage_url\": \"https://parti.com/video/66284\", \"original_url\": \"https://parti.com/video/66284\", \"webpage_url_basename\": \"66284\", \"webpage_url_domain\": \"parti.com\", \"extractor\": \"parti:video\", \"extractor_key\": \"PartiVideo\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://media.parti.com/351424.png\", \"id\": \"0\"}], \"display_id\": \"66284\", \"fulltitle\": \"NOW LIVE \", \"upload_date\": \"20250327\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"2000\", \"url\": \"https://media.parti.com/recordings/66284/1080.m3u8\", \"manifest_url\": \"https://media.parti.com/recordings/66284/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1920x1080\", \"_filename\": \"NOW LIVE  [66284].mp4\", \"filename\": \"NOW LIVE  [66284].mp4\", \"__write_download_archive\": false}], \"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://media.parti.com/recordings/66284/1080.m3u8\", \"manifest_url\": \"https://media.parti.com/recordings/66284/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1920x1080\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.parti.com/video/2",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://cdn.parti.test/2/index.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"categories\": [], \"timestamp\": 17, \"webpage_url\": \"https://www.parti.com/video/2\", \"original_url\": \"https://www.parti.com/video/2\", \"webpage_url_basename\": \"2\", \"webpage_url_domain\": \"parti.com\", \"extractor\": \"parti:video\", \"extractor_key\": \"PartiVideo\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2\", \"fulltitle\": null, \"title\": \"parti-video video #2\", \"upload_date\": \"19700101\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"0\", \"url\": \"https://cdn.parti.test/2/index.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"parti-video video #2 [2].mp4\", \"filename\": \"parti-video video #2 [2].mp4\", \"__write_download_archive\": false}], \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://cdn.parti.test/2/index.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://parti.com/video/3",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 3: An extractor error has occurred. (caused by KeyError('livestream_recording')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://parti.com/video/4",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [parti:video] 4: Failed to download m3u8 information: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://parti.com/creator/parti/Capt_Robs",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(description)s|%(thumbnail)s|%(timestamp)s|%(view_count)s|%(format_id)s|%(ext)s|%(protocol)s|%(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "creator/parti/Capt_Robs|I'm Live on Parti|True|is_live|Streaming now|https://media.parti.com/stream-screenshots/123.png|1743046779|42|1|mp4|m3u8_native|parti:livestream"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://parti.com/creator/parti/Capt_Robs",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[parti:livestream] Extracting URL: https://parti.com/creator/parti/Capt_Robs",
+    "[parti:livestream] creator/parti/Capt_Robs: Fetching user ID",
+    "[parti:livestream] 123: Fetching user profile feed",
+    "[parti:livestream] creator/parti/Capt_Robs: Downloading m3u8 information",
+    "[info] Available formats for creator/parti/Capt_Robs:",
+    "ID EXT RESOLUTION |   TBR PROTO | VCODEC  ACODEC",
+    "-------------------------------------------------",
+    "0  mp4 854x480    |  800k m3u8  | unknown unknown",
+    "1  mp4 1920x1080  | 2000k m3u8  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://parti.com/offline",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [parti:livestream] u9: The channel is not currently live"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://parti.com/nouser",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: nouser: An extractor error has occurred. (caused by KeyError('user_id')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

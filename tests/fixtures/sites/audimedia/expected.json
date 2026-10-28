@@ -1,0 +1,100 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.audi-mediacenter.com/en/audimediatv/60-seconds-of-audi-sport-104-2015-wec-bahrain-rookie-test-1467",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1565\", \"title\": \"60 Seconds of Audi Sport 104/2015 - WEC Bahrain, Rookie Test\", \"description\": \"Rookie test in Bahrain\", \"thumbnail\": \"https://cdn.audimedia.test/1565/thumb.jpg\", \"timestamp\": 1448354940, \"duration\": 74022, \"view_count\": 1234, \"formats\": [{\"url\": \"https://cdn.audimedia.test/1565/video.webm\", \"width\": null, \"height\": null, \"abr\": null, \"vbr\": null, \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}, {\"url\": \"https://cdn.audimedia.test/1565/audio_96k.m4a\", \"width\": null, \"height\": null, \"abr\": 96, \"vbr\": null, \"format_id\": \"http-96\", \"protocol\": \"https\", \"ext\": \"m4a\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-96 - unknown\"}, {\"format_id\": \"hls-500\", \"format_index\": null, \"url\": \"https://cdn.audimedia.test/1565/360.m3u8\", \"manifest_url\": \"https://cdn.audimedia.test/1565/master.m3u8\", \"tbr\": 500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-500 - 640x360\"}, {\"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://cdn.audimedia.test/1565/720.m3u8\", \"manifest_url\": \"https://cdn.audimedia.test/1565/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\"}, {\"format_id\": \"hds-1500\", \"url\": \"https://cdn.audimedia.test/1565/manifest.f4m?hdcore=3.4.0\", \"manifest_url\": \"https://cdn.audimedia.test/1565/manifest.f4m?hdcore=3.4.0\", \"ext\": \"flv\", \"protocol\": \"f4m\", \"tbr\": 1500, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-1500 - 1280x720\"}, {\"url\": \"https://cdn.audimedia.test/1565/video_1500k.mp4\", \"width\": 1280, \"height\": 720, \"abr\": 128, \"vbr\": 1500, \"format_id\": \"http-1500\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"tbr\": 1628, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 15063477000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-1500 - 1280x720\"}], \"webpage_url\": \"https://www.audi-mediacenter.com/en/audimediatv/60-seconds-of-audi-sport-104-2015-wec-bahrain-rookie-test-1467\", \"original_url\": \"https://www.audi-mediacenter.com/en/audimediatv/60-seconds-of-audi-sport-104-2015-wec-bahrain-rookie-test-1467\", \"webpage_url_basename\": \"60-seconds-of-audi-sport-104-2015-wec-bahrain-rookie-test-1467\", \"webpage_url_domain\": \"audi-mediacenter.com\", \"extractor\": \"AudiMedia\", \"extractor_key\": \"AudiMedia\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.audimedia.test/1565/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"1565\", \"fulltitle\": \"60 Seconds of Audi Sport 104/2015 - WEC Bahrain, Rookie Test\", \"duration_string\": \"20:33:42\", \"upload_date\": \"20151124\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cdn.audimedia.test/1565/video_1500k.mp4\", \"width\": 1280, \"height\": 720, \"abr\": 128, \"vbr\": 1500, \"format_id\": \"http-1500\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"tbr\": 1628, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 15063477000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-1500 - 1280x720\", \"_filename\": \"60 Seconds of Audi Sport 104\\u29f82015 - WEC Bahrain, Rookie Test [1565].mp4\", \"filename\": \"60 Seconds of Audi Sport 104\\u29f82015 - WEC Bahrain, Rookie Test [1565].mp4\", \"__write_download_archive\": false}], \"url\": \"https://cdn.audimedia.test/1565/video_1500k.mp4\", \"width\": 1280, \"height\": 720, \"abr\": 128, \"vbr\": 1500, \"format_id\": \"http-1500\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"tbr\": 1628, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 15063477000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-1500 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.audi-mediacenter.com/en/audimediatv/60-seconds-of-audi-sport-104-2015-wec-bahrain-rookie-test-1467",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[AudiMedia] Extracting URL: https://www.audi-mediacenter.com/en/audimediatv/60-seconds-of-audi-sport-104-2015-wec-bahrain-rookie-test-1467",
+    "[AudiMedia] 60-seconds-of-audi-sport-104-2015-wec-bahrain-rookie-test-1467: Downloading webpage",
+    "[AudiMedia] 1565: Downloading JSON metadata",
+    "[AudiMedia] 1565: Downloading m3u8 information",
+    "[AudiMedia] 1565: Downloading f4m manifest",
+    "[info] Available formats for 1565:",
+    "ID        EXT  RESOLUTION |  FILESIZE   TBR PROTO | VCODEC    VBR ACODEC   ABR",
+    "------------------------------------------------------------------------------",
+    "0         webm unknown    |                 https | unknown       unknown",
+    "http-96   m4a  unknown    |                 https | unknown       unknown  96k",
+    "hls-500   mp4  640x360    | ~ 4.31GiB  500k m3u8  | unknown       unknown",
+    "hls-1000  mp4  1280x720   | ~ 8.62GiB 1000k m3u8  | unknown       unknown",
+    "hds-1500  flv  1280x720   | ~12.93GiB 1500k f4m   | unknown       unknown",
+    "http-1500 mp4  1280x720   | ≈14.03GiB 1628k https | unknown 1500k unknown 128k"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.audi-mediacenter.com/en/audimediatv/video/escaped-2991",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [AudiMedia] 2991: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [AudiMedia] 2991: Unable to download f4m manifest: HTTP Error 404: Not Found",
+    "ERROR: [AudiMedia] 2991: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.audi-mediacenter.com/en/audimediatv/nothing",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [AudiMedia] nothing: Unable to extract raw payload; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.audi-mediacenter.com/en/audimediatv/noresults",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: noresults: An extractor error has occurred. (caused by KeyError('results')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.audi-mediacenter.com/en/audimediatv/short",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: not enough values to unpack (expected 4, got 2)"
+   ],
+   "files": {}
+  }
+ ]
+}

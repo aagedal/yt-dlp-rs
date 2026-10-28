@@ -13,13 +13,16 @@ mod applepodcasts;
 mod archiveorg;
 mod arcpublishing;
 mod ard;
+mod arnes;
 mod arte;
+mod audimedia;
 mod audioboom;
 mod audiomack;
 mod azmedien;
 mod baidu;
 mod bandcamp;
 mod beacon;
+mod beatport;
 mod beeg;
 mod behindkink;
 mod berufetv;
@@ -251,6 +254,7 @@ mod orf;
 mod outsidetv;
 pub(crate) mod paged;
 mod parlview;
+mod parti;
 mod pearvideo;
 mod peertube;
 mod peertv;
@@ -424,11 +428,13 @@ pub use ard::{
     suitable as ard_suitable,
 };
 pub(crate) use ard::{fetch_pages as fetch_ard_pages, is_pending_state as ard_pending_state};
+pub use arnes::{Arnes, suitable as arnes_suitable};
 pub use arte::{
     ArteTv, ArteTvCategory, ArteTvEmbed, ArteTvPlaylist,
     category_suitable as artetv_category_suitable, embed_suitable as artetv_embed_suitable,
     playlist_suitable as artetv_playlist_suitable, suitable as artetv_suitable,
 };
+pub use audimedia::{AudiMedia, suitable as audimedia_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
 pub use audiomack::{
     Audiomack, AudiomackAlbum, album_suitable as audiomack_album_suitable,
@@ -438,6 +444,7 @@ pub use azmedien::{AzMedien, suitable as azmedien_suitable};
 pub use baidu::{BaiduVideo, suitable as baidu_suitable};
 pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use beacon::{BeaconTv, suitable as beacon_suitable};
+pub use beatport::{Beatport, suitable as beatport_suitable};
 pub use beeg::{Beeg, suitable as beeg_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};
 pub use berufetv::{BerufeTv, suitable as berufetv_suitable};
@@ -818,6 +825,10 @@ pub use orf::{
 pub(crate) use orf::{fetch_segments as fetch_orf_segments, is_pending_state as orf_pending_state};
 pub use outsidetv::{OutsideTv, suitable as outsidetv_suitable};
 pub use parlview::{Parlview, suitable as parlview_suitable};
+pub use parti::{
+    PartiLivestream, PartiVideo, livestream_suitable as parti_livestream_suitable,
+    video_suitable as parti_video_suitable,
+};
 pub use pearvideo::{PearVideo, suitable as pearvideo_suitable};
 pub use peertube::{
     PeerTube, PeerTubePlaylist, playlist_suitable as peertube_playlist_suitable,

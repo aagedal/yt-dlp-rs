@@ -740,6 +740,18 @@
       "scope": "ArteTVIE _VALID_URL (arte.tv videos, api.arte.tv player config and arte://program URLs) with the x-validated-age config request, geoblocking and broadcast-rights errors, HLS master playlists (non-fatal, m3u8_id = version code) and HTTPS/RTMP streams with the version-label format_note and the version-code language_preference, cc/OGsub streams last, the unknown-protocol warning, -acc/-forced subtitle locales with URL-deduplicated merging, duplicate-format removal, metadata, thumbnails and chapters; ArteTVEmbedIE json_url followed as a url result; ArteTVPlaylistIE season items as url_transparent entries (title, alt_title, duration, age_limit) and show videos as ArteTV url entries; ArteTVCategoryIE linked video and collection URLs. Not ported: the fake X-Forwarded-For retry on geo restriction (the error is reported without the retry warning) and generic-page _EMBED_REGEX detection. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "audimedia",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/audimedia.py"
+      ],
+      "rust": [
+        "src/extractor/audimedia.rs",
+        "tests/fixtures/sites/audimedia/"
+      ],
+      "scope": "AudiMediaIE amtv-embed payload, audimedia.tv video API with non-fatal HLS/HDS manifests and video version files, metadata, payload unpacking and KeyError errors, compared with pinned upstream output through the fixture proxy; live (s/e stage mode) payloads, for which upstream returns nothing, are an unsupported error"
+    },
+    {
       "name": "audioboom",
       "status": "partial",
       "upstream": [
@@ -811,6 +823,18 @@
         "tests/fixtures/sites/bfmtv/"
       ],
       "scope": "BFMTVIE, BFMTVLiveIE and BFMTVArticleIE data-video-id blocks as Brightcove url results and article playlists, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "beatport",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/beatport.py"
+      ],
+      "rust": [
+        "src/extractor/beatport.rs",
+        "tests/fixtures/sites/beatport/"
+      ],
+      "scope": "BeatportIE window.Playables track lookup, preview formats, title, image thumbnails, StopIteration/KeyError errors, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "behindkink",
@@ -3154,6 +3178,18 @@
       "scope": "ParlviewIE API file as fatal HLS formats and subtitles, metadata traversal (title fallback, duration, ISO 8601 timestamp, thumbnail) and KeyError messages compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "parti",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/parti.py"
+      ],
+      "rust": [
+        "src/extractor/parti.rs",
+        "tests/fixtures/sites/parti/"
+      ],
+      "scope": "PartiVideoIE recording API with the fatal HLS master playlist and traversed metadata, PartiLivestreamIE user ID and channel info lookups, UserNotLive and live HLS master playlist, KeyError errors, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "pearvideo",
       "status": "partial",
       "upstream": [
@@ -4496,6 +4532,18 @@
         "tests/fixtures/sites/veo/"
       ],
       "scope": "VeoIE match API metadata and video list formats (mp2t and URL-less entries skipped, panorama URLs checked) and the no-formats error compared with pinned upstream output through the fixture proxy; non-object API values remain explicit native errors"
+    },
+    {
+      "name": "arnes",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/arnes.py"
+      ],
+      "rust": [
+        "src/extractor/arnes.rs",
+        "tests/fixtures/sites/arnes/"
+      ],
+      "scope": "ArnesIE public video API media files, metadata, channel URL, start time from the t query parameter, KeyError and missing-thumbnail TypeError errors, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "videopress",

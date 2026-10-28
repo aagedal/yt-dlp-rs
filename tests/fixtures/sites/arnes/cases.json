@@ -1,0 +1,45 @@
+[
+ {
+  "url": "https://video.arnes.si/watch/a1qrWTOQfVoU?t=10",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.arnes.si/watch/a1qrWTOQfVoU?t=10",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://video.arnes.si/en/embed/s1YjnV7hadlC?t=abc&hideRelated=1",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.arnes.si/en/embed/s1YjnV7hadlC?t=abc&hideRelated=1",
+  "args": [
+   "-J",
+   "--ignore-no-formats-error"
+  ]
+ },
+ {
+  "url": "https://video.arnes.si/api/public/video/noThumbnail1",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.arnes.si/embed/missingData1",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.arnes.si/watch/notFound0001",
+  "args": [
+   "-J"
+  ]
+ }
+]

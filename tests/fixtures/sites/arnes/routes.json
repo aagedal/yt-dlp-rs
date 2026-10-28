@@ -1,0 +1,38 @@
+{
+ "routes": [
+  {
+   "url": "https://video.arnes.si/api/public/video/a1qrWTOQfVoU",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"title\": \"Linearna neodvisnost, definicija\", \"description\": \"Linearna neodvisnost, definicija\", \"license\": \"PRIVATE\", \"author\": \"Polona Oblak\", \"creationTime\": \"2020-03-24T15:28:45.000Z\", \"channel\": {\"name\": \"Polona Oblak\", \"url\": \"q6pc04hw24cj\"}, \"duration\": 596750, \"views\": \"117\", \"hashtags\": [\"linearna_algebra\"], \"thumbnailUrl\": \"/api/public/video/a1qrWTOQfVoU/thumbnail\", \"media\": [{\"url\": \"/api/public/video/a1qrWTOQfVoU/play.mp4?q=720\", \"format\": \"FORMAT_MP4_720P\", \"formatTranslation\": \"720p\", \"width\": 1280, \"height\": \"720\"}, {\"url\": \"/api/public/video/a1qrWTOQfVoU/play.webm\", \"format\": \"WEBM\", \"width\": null}, {\"url\": \"\", \"format\": \"FORMAT_SKIP\"}, {\"url\": \"/api/public/video/a1qrWTOQfVoU/audio.m4a\"}]}}"
+  },
+  {
+   "url": "https://video.arnes.si/api/public/video/s1YjnV7hadlC",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"title\": \"Bare\", \"thumbnailUrl\": \"/thumb.jpg\", \"media\": null, \"channel\": null, \"duration\": \"1000\"}}"
+  },
+  {
+   "url": "https://video.arnes.si/api/public/video/noThumbnail1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"title\": \"No thumbnail\", \"media\": []}}"
+  },
+  {
+   "url": "https://video.arnes.si/api/public/video/missingData1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"not found\"}"
+  },
+  {
+   "url": "https://video.arnes.si/api/public/video/notFound0001",
+   "status": 404,
+   "headers": {},
+   "body": ""
+  }
+ ]
+}
