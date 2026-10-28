@@ -1294,6 +1294,18 @@
       "scope": "DBTVIE transparent YouTube/JWPlatform url results and embeds; the JW Platform path is compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "deuxm",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/deuxm.py"
+      ],
+      "rust": [
+        "src/extractor/deuxm.rs",
+        "tests/fixtures/sites/deuxm/"
+      ],
+      "scope": "DeuxMIE and DeuxMNewsIE API media URLs with metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "digiteka",
       "status": "partial",
       "upstream": [

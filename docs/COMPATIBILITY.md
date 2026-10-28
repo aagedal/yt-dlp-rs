@@ -3676,6 +3676,13 @@ Dagbladet videos (`dagbladet.no/video/[embed|SLUG/]ID`) follow upstream
 for `jwplatform:ID`. Dagbladet embed iframes on generic pages are embeds.
 `tests/fixtures/sites/dbtv/` is compared with pinned upstream output.
 
+2M replays and news (`2m.ma/LL/replay/single/ID`, `2m.ma/LL/news/SLUG`) follow
+upstream `DeuxMIE` and `DeuxMNewsIE`: the watch-detail API's `News` media URL
+and the articles-by-URL API's first article (an empty list is a bare
+`IndexError`) with its first image as the media URL, each with its title,
+description and thumbnail (missing keys are upstream's `KeyError`s).
+`tests/fixtures/sites/deuxm/` is compared with pinned upstream output.
+
 Digiteka and Ultimedia videos (`digiteka.net|ultimedia.com/deliver/generic|musique/.../src|article/ID`,
 `.../default/index/videogeneric|music/id/ID`) follow upstream `DigitekaIE`:
 the `ultimedia.com/player/getConf/01836272/1/ID` JSON's `video` (required),

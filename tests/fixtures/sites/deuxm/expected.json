@@ -1,0 +1,57 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://2m.ma/fr/replay/single/6351d439b15e1a613b3debe8",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6351d439b15e1a613b3debe8\", \"title\": \"Grand Angle\", \"url\": \"https://2m-vod.test/a/video.mp4\", \"description\": \"Desc\", \"thumbnail\": \"https://2m-img.test/a.png\", \"webpage_url\": \"https://2m.ma/fr/replay/single/6351d439b15e1a613b3debe8\", \"original_url\": \"https://2m.ma/fr/replay/single/6351d439b15e1a613b3debe8\", \"webpage_url_basename\": \"6351d439b15e1a613b3debe8\", \"webpage_url_domain\": \"2m.ma\", \"extractor\": \"DeuxM\", \"extractor_key\": \"DeuxM\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://2m-img.test/a.png\", \"id\": \"0\"}], \"display_id\": \"6351d439b15e1a613b3debe8\", \"fulltitle\": \"Grand Angle\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Grand Angle [6351d439b15e1a613b3debe8].mp4\", \"filename\": \"Grand Angle [6351d439b15e1a613b3debe8].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://2m.ma/fr/replay/single/nourl",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: nourl: An extractor error has occurred. (caused by KeyError('url')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://2m.ma/fr/news/Kan-Ya-Mkan-20221028",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"635c5d1233b83834e35b282e\", \"title\": \"Kan Ya Mkan\", \"url\": \"https://2m-vod.test/b/video.mp4\", \"description\": \"<p>c</p>\", \"thumbnail\": null, \"webpage_url\": \"https://2m.ma/fr/news/Kan-Ya-Mkan-20221028\", \"original_url\": \"https://2m.ma/fr/news/Kan-Ya-Mkan-20221028\", \"webpage_url_basename\": \"Kan-Ya-Mkan-20221028\", \"webpage_url_domain\": \"2m.ma\", \"extractor\": \"DeuxMNews\", \"extractor_key\": \"DeuxMNews\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"635c5d1233b83834e35b282e\", \"fulltitle\": \"Kan Ya Mkan\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Kan Ya Mkan [635c5d1233b83834e35b282e].mp4\", \"filename\": \"Kan Ya Mkan [635c5d1233b83834e35b282e].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://2m.ma/ar/news/empty",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  }
+ ]
+}

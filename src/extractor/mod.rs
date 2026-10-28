@@ -62,6 +62,7 @@ mod dash;
 mod daystar;
 mod dbtv;
 mod democracynow;
+mod deuxm;
 mod dfb;
 mod digiteka;
 pub(crate) mod direct;
@@ -458,6 +459,9 @@ pub use damtomo::{
 pub use daystar::{DaystarClip, suitable as daystar_suitable};
 pub use dbtv::{Dbtv, suitable as dbtv_suitable};
 pub use democracynow::{Democracynow, suitable as democracynow_suitable};
+pub use deuxm::{
+    DeuxM, DeuxMNews, news_suitable as deuxm_news_suitable, suitable as deuxm_suitable,
+};
 pub use dfb::{Dfb, suitable as dfb_suitable};
 pub use digiteka::{Digiteka, suitable as digiteka_suitable};
 pub use direct::DirectHttp;
