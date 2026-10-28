@@ -1115,6 +1115,18 @@
       "scope": "TV5MondePlusIE impersonated page, geo error, video_player_loader broadcast files with deferred bearer-token resolution, HLS/DASH/direct formats, metadata, captions and page title/summary. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "xnxx",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/xnxx.py"
+      ],
+      "rust": [
+        "src/extractor/xnxx.rs",
+        "tests/fixtures/sites/xnxx/"
+      ],
+      "scope": "XNXXIE setVideoUrlLow/High and setVideoHLS formats (HLS quality 1), OpenGraph or player title and thumbnail, fatal OpenGraph duration, view count and age limit, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "xvideos",
       "status": "partial",
       "upstream": [

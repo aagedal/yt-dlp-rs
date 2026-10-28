@@ -274,6 +274,7 @@ mod wistia;
 mod worldstarhiphop;
 mod xboxclips;
 mod xiaohongshu;
+mod xnxx;
 mod xspf;
 mod xvideos;
 mod yfanefa;
@@ -776,6 +777,7 @@ pub use wistia::{
 pub use worldstarhiphop::{WorldStarHipHop, suitable as worldstarhiphop_suitable};
 pub use xboxclips::{XboxClips, suitable as xboxclips_suitable};
 pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};
+pub use xnxx::{Xnxx, suitable as xnxx_suitable};
 pub use xvideos::{
     XVideos, XVideosQuickies, quickies_suitable as xvideos_quickies_suitable,
     suitable as xvideos_suitable,

@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "http://www.xnxx.com/video-55awb78/skyrim_test_video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Fixture &amp; Test Video\">\n<meta property=\"og:duration\" content=\"469\">\n<meta property=\"og:image\" content=\"https://thumbs.xnxx.test/55awb78.jpg\"></head><body>\n<span id=\"nb-views-number\" class=\"n\">1,234,567</span>\n<script>\nhtml5player.setVideoTitle('Player title');\nhtml5player.setVideoUrlLow('https://cdn.xnxx.test/55awb78/low.mp4?e=1');\nhtml5player.setVideoUrlHigh(\"https://cdn.xnxx.test/55awb78/high.mp4?e=1\");\nhtml5player.setVideoHLS('https://cdn.xnxx.test/55awb78/hls.m3u8');\nhtml5player.setThumbUrl('https://thumbs.xnxx.test/small.jpg');\n</script></body></html>"
+  },
+  {
+   "url": "https://cdn.xnxx.test/55awb78/hls.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1500000,RESOLUTION=1280x720,CODECS=\"avc1.64001f,mp4a.40.2\"\nhls-720p.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=500000,RESOLUTION=640x360,CODECS=\"avc1.4d401e,mp4a.40.2\"\nhls-360p.m3u8\n"
+  },
+  {
+   "url": "http://video.xnxx.com/video1135332/lida_naked_funny_actress_5_",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:duration\" content=\" 30 \"></head><body>\n<script>\nhtml5player.setVideoTitle(\"Second &amp; title\");\nhtml5player.setVideoUrlHigh('https://cdn.xnxx.test/1135332/high.mp4');\nhtml5player.setVideoHLS('https://cdn.xnxx.test/1135332/plain.mp4');\nhtml5player.setThumbUrl169('https://thumbs.xnxx.test/169.jpg');\n</script></body></html>"
+  },
+  {
+   "url": "http://www.xnxx3.com/video-nodur/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"No duration\"></head></html>"
+  },
+  {
+   "url": "http://www.xnxx.com/video-notitle/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:duration\" content=\"12\"></head></html>"
+  }
+ ]
+}

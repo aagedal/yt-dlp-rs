@@ -2924,6 +2924,16 @@ title, non-fatal `hls` master playlists and HTTP(S) MP4 sources with their
 with the `duration` meta, `cinemaviews1` view count and `age_limit` 18.
 `tests/fixtures/sites/eporner/` is compared with pinned upstream output.
 
+XNXX videos (`video|www.xnxx[3].com/video[-]ID/`) follow upstream `XNXXIE`:
+the OpenGraph title (else the page's fatal `setVideoTitle`), each
+`setVideoUrlLow`/`setVideoUrlHigh` call as a progressive format (`low` has
+quality -1, others 0) and `setVideoHLS` as a non-fatal `hls` master playlist
+with quality 1 (a non-`m3u8` URL is a progressive format without an ID),
+the OpenGraph image or `setThumbUrl`/`setThumbUrl169` thumbnail (warning
+like upstream when missing), the fatal `og:duration`, the `nb-views-number`
+view count and `age_limit` 18. `tests/fixtures/sites/xnxx/` is compared with
+pinned upstream output.
+
 TV 2 videos (`tv2.no/v|video[N]/.../ID`) follow upstream `TV2IE`: the
 `sumo.tv2.no` asset metadata, then the HLS and DASH playback JSON (POSTed
 like upstream; a 401's error code is the Norway geo restriction, the
