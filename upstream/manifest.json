@@ -860,6 +860,18 @@
       "scope": "BloggerIE VIDEO_CONFIG (unicode_escape) streams as formats and _EMBED_REGEX iframes on generic pages compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "bloomberg",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bloomberg.py"
+      ],
+      "rust": [
+        "src/extractor/bloomberg.rs",
+        "tests/fixtures/sites/bloomberg/"
+      ],
+      "scope": "BloombergIE bmmrId/videoId/data-bmmrid/BPlayer video IDs, the multimedia embed API's TS (HLS) and HDS streams and OpenGraph metadata compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "bluesky",
       "status": "partial",
       "upstream": [
@@ -1814,6 +1826,18 @@
       "scope": "FilmwebIE trailer embed JSON as a url_transparent 23video result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "funker530",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/funker530.py"
+      ],
+      "rust": [
+        "src/extractor/funker530.rs",
+        "tests/fixtures/sites/funker530/"
+      ],
+      "scope": "Funker530IE url_transparent hand-off to the first Rumble (else YouTube) embed with the page description before About the Author, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "fuyintv",
       "status": "partial",
       "upstream": [
@@ -1824,6 +1848,18 @@
         "tests/fixtures/sites/fuyintv/"
       ],
       "scope": "FuyinTVIE movie API URL as an untyped mp4 result, non-fatal webpage description and the escaped TypeError after a failed page compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "gamespot",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/gamespot.py"
+      ],
+      "rust": [
+        "src/extractor/gamespot.rs",
+        "tests/fixtures/sites/gamespot/"
+      ],
+      "scope": "GameSpotIE data-video JSON, adaptive HLS formats with their http- MP4 copies, DASH formats and page metadata compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "gamestar",
@@ -2572,6 +2608,18 @@
         "tests/fixtures/sites/massengeschmacktv/"
       ],
       "scope": "MassengeschmackTVIE MEDIA sources (non-fatal HLS or direct files), download links with size/resolution, title and POSTER thumbnail, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "mangomolo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mangomolo.py"
+      ],
+      "rust": [
+        "src/extractor/mangomolo.rs",
+        "tests/fixtures/sites/mangomolo/"
+      ],
+      "scope": "MangomoloVideoIE and MangomoloLiveIE player pages as Wowza formats (base64 live channel IDs with Python's errors) and _EMBED_REGEX iframes as url_transparent embeds with ID and uploader on generic pages, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "masters",

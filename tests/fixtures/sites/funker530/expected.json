@@ -1,0 +1,72 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://funker530.com/video/azov-patrol-caught-in-open/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"vb0ofn\", \"title\": \"Winter-loving dog helps girls dig a snow fort & more\", \"formats\": [{\"acodec\": \"aac\", \"vcodec\": \"none\", \"url\": \"https://sp.rmbl.ws/s8/2/audio.aac\", \"format_id\": \"audio\", \"format_note\": null, \"fps\": null, \"tbr\": 96, \"protocol\": \"https\", \"ext\": \"aac\", \"audio_ext\": \"aac\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 1236000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"audio - audio only\"}, {\"acodec\": \"none\", \"vcodec\": null, \"url\": \"https://sp.rmbl.ws/s8/2/timeline.mp4\", \"format_id\": \"timeline-180p\", \"format_note\": \"Timeline\", \"fps\": null, \"tbr\": 100, \"width\": 320, \"height\": 180, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 100, \"resolution\": \"320x180\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 1287500, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"timeline-180p - 320x180 (Timeline)\"}, {\"acodec\": null, \"vcodec\": null, \"url\": \"https://sp.rmbl.ws/s8/2/360.mp4\", \"format_id\": \"mp4-360p\", \"format_note\": null, \"fps\": 29.97, \"tbr\": 650, \"filesize\": 8000000, \"width\": 640, \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-360p - 640x360\"}, {\"acodec\": null, \"vcodec\": null, \"url\": \"https://sp.rmbl.ws/s8/2/720.mp4\", \"format_id\": \"mp4-720p\", \"format_note\": null, \"fps\": 29.97, \"tbr\": 2000, \"filesize\": 26000000, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-720p - 1280x720\"}], \"subtitles\": {\"en\": [{\"url\": \"https://rumble.com/cc/en.vtt\", \"name\": \"English\", \"ext\": \"vtt\"}]}, \"thumbnails\": [{\"url\": \"https://sp.rmbl.ws/s8/1/thumb.jpg\", \"width\": 1280, \"height\": 720, \"id\": \"0\", \"resolution\": \"1280x720\"}], \"timestamp\": 1612662578, \"channel\": \"LovingMontana\", \"channel_url\": \"https://rumble.com/c/c-546523\", \"duration\": 103, \"uploader\": \"LovingMontana\", \"live_status\": \"not_live\", \"original_url\": \"https://funker530.com/video/azov-patrol-caught-in-open/\", \"webpage_url\": \"https://funker530.com/video/azov-patrol-caught-in-open/\", \"webpage_url_basename\": \"azov-patrol-caught-in-open\", \"webpage_url_domain\": \"funker530.com\", \"extractor\": \"RumbleEmbed\", \"extractor_key\": \"RumbleEmbed\", \"description\": \"Azov patrol & friends.\\nSecond line.\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://sp.rmbl.ws/s8/1/thumb.jpg\", \"display_id\": \"vb0ofn\", \"fulltitle\": \"Winter-loving dog helps girls dig a snow fort & more\", \"duration_string\": \"1:43\", \"upload_date\": \"20210207\", \"release_year\": null, \"is_live\": false, \"was_live\": false, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://sp.rmbl.ws/s8/2/720.mp4\", \"format_id\": \"mp4-720p\", \"fps\": 29.97, \"tbr\": 2000, \"filesize\": 26000000, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-720p - 1280x720\", \"_filename\": \"Winter-loving dog helps girls dig a snow fort & more [vb0ofn].mp4\", \"filename\": \"Winter-loving dog helps girls dig a snow fort & more [vb0ofn].mp4\", \"__write_download_archive\": false}], \"acodec\": null, \"vcodec\": null, \"url\": \"https://sp.rmbl.ws/s8/2/720.mp4\", \"format_id\": \"mp4-720p\", \"format_note\": null, \"fps\": 29.97, \"tbr\": 2000, \"filesize\": 26000000, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-720p - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.funker530.com/video/rumble-play-script",
+   "args": [
+    "--print",
+    "%(id)s|%(extractor)s|%(title)s|%(description)s|%(webpage_url)s|%(display_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "vb0ofn|RumbleEmbed|Winter-loving dog helps girls dig a snow fort & more|NA|https://www.funker530.com/video/rumble-play-script|vb0ofn"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://funker530.com/video/my-friends-joined-the-russians-civdiv/",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(title)s|%(description)s|%(webpage_url)s|%(display_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|youtube-dl test video \"'/\\ä↭𝕐|Civ Div talks.|https://funker530.com/video/my-friends-joined-the-russians-civdiv/|BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://funker530.com/video/no-video/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Funker530] no-video: No videos found on webpage"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://funker530.com/video/no-description/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"vb0ofn\", \"title\": \"Winter-loving dog helps girls dig a snow fort & more\", \"formats\": [{\"acodec\": \"aac\", \"vcodec\": \"none\", \"url\": \"https://sp.rmbl.ws/s8/2/audio.aac\", \"format_id\": \"audio\", \"format_note\": null, \"fps\": null, \"tbr\": 96, \"protocol\": \"https\", \"ext\": \"aac\", \"audio_ext\": \"aac\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 1236000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"audio - audio only\"}, {\"acodec\": \"none\", \"vcodec\": null, \"url\": \"https://sp.rmbl.ws/s8/2/timeline.mp4\", \"format_id\": \"timeline-180p\", \"format_note\": \"Timeline\", \"fps\": null, \"tbr\": 100, \"width\": 320, \"height\": 180, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 100, \"resolution\": \"320x180\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 1287500, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"timeline-180p - 320x180 (Timeline)\"}, {\"acodec\": null, \"vcodec\": null, \"url\": \"https://sp.rmbl.ws/s8/2/360.mp4\", \"format_id\": \"mp4-360p\", \"format_note\": null, \"fps\": 29.97, \"tbr\": 650, \"filesize\": 8000000, \"width\": 640, \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-360p - 640x360\"}, {\"acodec\": null, \"vcodec\": null, \"url\": \"https://sp.rmbl.ws/s8/2/720.mp4\", \"format_id\": \"mp4-720p\", \"format_note\": null, \"fps\": 29.97, \"tbr\": 2000, \"filesize\": 26000000, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-720p - 1280x720\"}], \"subtitles\": {\"en\": [{\"url\": \"https://rumble.com/cc/en.vtt\", \"name\": \"English\", \"ext\": \"vtt\"}]}, \"thumbnails\": [{\"url\": \"https://sp.rmbl.ws/s8/1/thumb.jpg\", \"width\": 1280, \"height\": 720, \"id\": \"0\", \"resolution\": \"1280x720\"}], \"timestamp\": 1612662578, \"channel\": \"LovingMontana\", \"channel_url\": \"https://rumble.com/c/c-546523\", \"duration\": 103, \"uploader\": \"LovingMontana\", \"live_status\": \"not_live\", \"original_url\": \"https://funker530.com/video/no-description/\", \"webpage_url\": \"https://funker530.com/video/no-description/\", \"webpage_url_basename\": \"no-description\", \"webpage_url_domain\": \"funker530.com\", \"extractor\": \"RumbleEmbed\", \"extractor_key\": \"RumbleEmbed\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://sp.rmbl.ws/s8/1/thumb.jpg\", \"display_id\": \"vb0ofn\", \"fulltitle\": \"Winter-loving dog helps girls dig a snow fort & more\", \"duration_string\": \"1:43\", \"upload_date\": \"20210207\", \"release_year\": null, \"is_live\": false, \"was_live\": false, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://sp.rmbl.ws/s8/2/720.mp4\", \"format_id\": \"mp4-720p\", \"fps\": 29.97, \"tbr\": 2000, \"filesize\": 26000000, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-720p - 1280x720\", \"_filename\": \"Winter-loving dog helps girls dig a snow fort & more [vb0ofn].mp4\", \"filename\": \"Winter-loving dog helps girls dig a snow fort & more [vb0ofn].mp4\", \"__write_download_archive\": false}], \"acodec\": null, \"vcodec\": null, \"url\": \"https://sp.rmbl.ws/s8/2/720.mp4\", \"format_id\": \"mp4-720p\", \"format_note\": null, \"fps\": 29.97, \"tbr\": 2000, \"filesize\": 26000000, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-720p - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

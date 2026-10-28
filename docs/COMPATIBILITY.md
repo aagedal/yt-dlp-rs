@@ -1391,6 +1391,16 @@ upstream `BloggerIE`: the page's `VIDEO_CONFIG` line decoded like Python's
 format IDs), the iframe ID as ID and title, the thumbnail and the first
 stream's `dur`; its `_EMBED_REGEX` iframes join the generic embed detection.
 
+Bloomberg pages (`bloomberg.com/.../NAME`) follow upstream `BloombergIE`:
+the first of the page's `bmmrId`, `videoId` and `data-bmmrid` values (else
+the `BPlayer(null, {...});` data's `id`, with upstream's `Unable to extract
+id`, JSON and `KeyError` failures), then the multimedia embed API's streams
+with a URL: `TS` ones as HLS (`hls`), others as HDS (`hds`), both non-fatal.
+The OpenGraph title loses a final `: Video`; a page without one fails like
+upstream (`expected string or bytes-like object`). The OpenGraph description
+and thumbnail warn when missing. `tests/fixtures/sites/bloomberg/` is
+compared with pinned upstream output.
+
 Bluesky posts (`bsky.app/profile/HANDLE/post/ID`, `main.bsky.dev`, and
 `at://HANDLE/app.bsky.feed.post/ID`) follow upstream `BlueskyIE`: the
 public API's post thread, each video embed's HLS playlist plus its PDS blob
@@ -2880,11 +2890,29 @@ episode. Player scripts on other pages are followed like upstream's
 `_EMBED_REGEX`. `tests/fixtures/sites/zype/` is compared with pinned upstream
 output.
 
+Funker530 videos (`funker530.com/video/SLUG`) follow upstream `Funker530IE`:
+a `url_transparent` result of the page's first Rumble embed (`_EMBED_REGEX`,
+else a `Rumble("play", {video: ID})` script) or else its first YouTube embed,
+with the `video-desc-paragraph` element's cleaned text before `About the
+Author` as description (none without the element or the marker). A page
+without either embed is upstream's `No videos found on webpage`.
+`tests/fixtures/sites/funker530/` is compared with pinned upstream output.
+
 Fuyin TV videos (`fuyin.tv/html/N/ID.html`) follow upstream `FuyinTVIE`: the
 movie API's `data.url` as an untyped `mp4` result with its title (else the
 generic title) and the non-fatal page's description meta (with its warning);
 a failed page download warns and then fails with upstream's escaped
 `TypeError` text.
+
+GameSpot videos, articles and reviews (`gamespot.com/videos|articles|reviews/.../NNNN-ID`,
+`gamespot.com/videos/embed/ID`) follow upstream `GameSpotIE`: the page's
+`data-video` JSON (fatal, HTML-cleaned) with its percent-unquoted title, the
+adaptive HLS stream's formats (non-fatal), each followed by an `http-` copy
+whose URL ends in `.mp4` instead of `.m3u8` (a media playlist without a
+`manifest_url` is upstream's `KeyError`), and the adaptive DASH manifest's
+formats; the `guid` (else the page ID) as ID, the page ID as display ID and
+the description meta and OpenGraph thumbnail with upstream's warnings.
+`tests/fixtures/sites/gamespot/` is compared with pinned upstream output.
 
 GameStar and GamePro videos (`gamestar.de|gamepro.de/videos/...,ID.html`)
 follow upstream `GameStarIE`: the first `application/ld+json` script
@@ -4342,6 +4370,23 @@ size, the title (else the generic title, after `fulltitle`), integer
 duration and `unified_timestamp` upload date; a result without formats fails
 in processing. Its iframe embeds on generic pages follow JW Platform's in the
 embed order.
+
+Mangomolo players (`player.mangomolo.com/v1/video?...id=ID`,
+`player.mangomolo.com/v1/live|index?...channelid=BASE64`, and the
+`admin.mangomolo.com/analytics/index.php/customers/embed/` paths) follow
+upstream `MangomoloVideoIE` and `MangomoloLiveIE`: live channel IDs are
+percent-unquoted and base64-decoded with Python's errors (`Incorrect
+padding`, data-character counts, UTF-8 decoding), then the
+`player.mangomolo.com/v1/video|live` page for the URL's query gives the
+`playlist.m3u8` URL (fatal) as Wowza formats with SMIL skipped (HLS, HDS,
+DASH and `rtmp:`; live HLS entries use the `m3u8` protocol), the ID as
+title, the hidden `userid` as `uploader_id`, the hidden `duration` as an
+integer, and `is_live`. Their iframes on generic pages are embeds (live
+first) yielding upstream's `url_transparent` results with the slug's ID and
+the page URL's host as `uploader`: a single embed also takes the generic
+page's title, description, thumbnail and age limit; several form a playlist
+of those entries. `tests/fixtures/sites/mangomolo/` is compared with pinned
+upstream output.
 
 Masters videos (`masters.com/en_US/watch/YYYY-MM-DD/ID`) follow upstream
 `MastersIE`: the related-content API's fatal HLS manifest (with its subtitle

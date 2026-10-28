@@ -1,0 +1,82 @@
+{
+ "routes": [
+  {
+   "url": "http://www.gamespot.com/videos/the-witcher-3-now-playing/2300-6424837/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"description\" content=\"Join us as we take a look &amp; more.\"><meta property=\"og:image\" content=\"https://gs-img.test/witcher.jpg\"></head><body><div class=\"js-video-player\" data-video=\"{&quot;title&quot;: &quot;Now%20Playing%20-%20The%20Witcher%203%3A%20Wild%20Hunt&quot;, &quot;guid&quot;: &quot;gs-2300-6424837&quot;, &quot;videoStreams&quot;: {&quot;adaptive_stream&quot;: &quot;https://gs-media.test/witcher/master.m3u8&quot;, &quot;adaptive_dash&quot;: &quot;https://gs-media.test/witcher/manifest.mpd&quot;, &quot;f4m_stream&quot;: &quot;https://gs-media.test/x.f4m&quot;}}\"></div></body></html>"
+  },
+  {
+   "url": "https://gs-media.test/witcher/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1800000,RESOLUTION=1280x720,CODECS=\"avc1.64001f,mp4a.40.2\"\nhls_1800/index.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=700000,RESOLUTION=640x360,CODECS=\"avc1.42001e,mp4a.40.2\"\nhls_700/index.m3u8\n"
+  },
+  {
+   "url": "https://gs-media.test/witcher/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" type=\"static\" mediaPresentationDuration=\"PT30S\" minBufferTime=\"PT2S\" profiles=\"urn:mpeg:dash:profile:isoff-live:2011\">\n <Period id=\"0\" start=\"PT0S\">\n  <AdaptationSet mimeType=\"video/mp4\" segmentAlignment=\"true\">\n   <Representation id=\"v1\" bandwidth=\"800000\" codecs=\"avc1.4d401f\" width=\"640\" height=\"360\">\n    <SegmentTemplate media=\"chunk_$Number$.m4s\" initialization=\"init.mp4\" duration=\"10\" timescale=\"1\" startNumber=\"1\"/>\n   </Representation>\n  </AdaptationSet>\n </Period>\n</MPD>\n"
+  },
+  {
+   "url": "https://www.gamespot.com/videos/embed/6439218/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div data-video='{&quot;title&quot;: &quot;Embed%E2%80%99s video&quot;, &quot;guid&quot;: &quot;&quot;, &quot;videoStreams&quot;: {&quot;adaptive_stream&quot;: &quot;&quot;, &quot;adaptive_dash&quot;: &quot;https://gs-media.test/embed/manifest.mpd&quot;}}'></div></body></html>"
+  },
+  {
+   "url": "https://gs-media.test/embed/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" type=\"static\" mediaPresentationDuration=\"PT30S\" minBufferTime=\"PT2S\" profiles=\"urn:mpeg:dash:profile:isoff-live:2011\">\n <Period id=\"0\" start=\"PT0S\">\n  <AdaptationSet mimeType=\"video/mp4\" segmentAlignment=\"true\">\n   <Representation id=\"v1\" bandwidth=\"800000\" codecs=\"avc1.4d401f\" width=\"640\" height=\"360\">\n    <SegmentTemplate media=\"chunk_$Number$.m4s\" initialization=\"init.mp4\" duration=\"10\" timescale=\"1\" startNumber=\"1\"/>\n   </Representation>\n  </AdaptationSet>\n </Period>\n</MPD>\n"
+  },
+  {
+   "url": "https://www.gamespot.com/articles/the-last-of-us-2-trailer/1100-6454469/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div data-video=\"{&quot;title&quot;: &quot;Media&quot;, &quot;videoStreams&quot;: {&quot;adaptive_stream&quot;: &quot;https://gs-media.test/media/index.m3u8&quot;}}\"></div></body></html>"
+  },
+  {
+   "url": "https://gs-media.test/media/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXTINF:10,\nseg1.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://www.gamespot.com/reviews/gears-of-war-review/1900-6161188/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Review</title></head><body>No video</body></html>"
+  },
+  {
+   "url": "https://www.gamespot.com/videos/no-streams/2300-1000001/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div data-video=\"{&quot;title&quot;: &quot;No streams&quot;}\"></div></body></html>"
+  },
+  {
+   "url": "https://www.gamespot.com/videos/missing-manifest/2300-1000002/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"description\" content=\"Gone\"></head><body><div data-video=\"{&quot;title&quot;: &quot;Gone&quot;, &quot;videoStreams&quot;: {&quot;adaptive_stream&quot;: &quot;https://gs-media.test/gone/master.m3u8&quot;}}\"></div></body></html>"
+  },
+  {
+   "url": "https://gs-media.test/gone/master.m3u8",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "no"
+  }
+ ]
+}

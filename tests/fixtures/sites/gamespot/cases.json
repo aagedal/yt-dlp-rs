@@ -1,0 +1,44 @@
+[
+ {
+  "url": "http://www.gamespot.com/videos/the-witcher-3-now-playing/2300-6424837/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.gamespot.com/videos/the-witcher-3-now-playing/2300-6424837/",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.gamespot.com/videos/embed/6439218/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.gamespot.com/articles/the-last-of-us-2-trailer/1100-6454469/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.gamespot.com/reviews/gears-of-war-review/1900-6161188/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.gamespot.com/videos/no-streams/2300-1000001/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.gamespot.com/videos/missing-manifest/2300-1000002/",
+  "args": [
+   "-J"
+  ]
+ }
+]

@@ -28,6 +28,7 @@ mod bilibili;
 pub(crate) mod bitchute;
 mod bitmovin;
 mod blogger;
+mod bloomberg;
 mod bluesky;
 mod bongacams;
 mod bostonglobe;
@@ -105,8 +106,10 @@ mod francetv;
 mod freesound;
 mod freespeech;
 mod freetv;
+mod funker530;
 mod fuyintv;
 mod gab;
+mod gamespot;
 mod gamestar;
 mod gaskrank;
 mod generic_urls;
@@ -188,6 +191,7 @@ mod loom;
 mod lrt;
 mod maariv;
 mod magellantv;
+mod mangomolo;
 mod maoritv;
 mod massengeschmacktv;
 mod masters;
@@ -441,6 +445,7 @@ pub(crate) use bitchute::{
 };
 pub use bitmovin::{Bitmovin, suitable as bitmovin_suitable};
 pub use blogger::{Blogger, suitable as blogger_suitable};
+pub use bloomberg::{Bloomberg, suitable as bloomberg_suitable};
 pub use bluesky::{Bluesky, suitable as bluesky_suitable};
 pub use bongacams::{BongaCams, suitable as bongacams_suitable};
 pub use bostonglobe::{BostonGlobe, suitable as bostonglobe_suitable};
@@ -567,8 +572,10 @@ pub use freetv::{
 pub(crate) use freetv::{
     fetch_episodes as fetch_freetv_episodes, is_pending_state as freetv_pending_state,
 };
+pub use funker530::{Funker530, suitable as funker530_suitable};
 pub use fuyintv::{FuyinTv, suitable as fuyintv_suitable};
 pub use gab::{Gab, suitable as gab_suitable};
+pub use gamespot::{GameSpot, suitable as gamespot_suitable};
 pub use gamestar::{GameStar, suitable as gamestar_suitable};
 pub use gaskrank::{Gaskrank, suitable as gaskrank_suitable};
 pub use genius::{
@@ -705,6 +712,10 @@ pub use lrt::{
 };
 pub use maariv::{Maariv, suitable as maariv_suitable};
 pub use magellantv::{MagellanTv, suitable as magellantv_suitable};
+pub use mangomolo::{
+    MangomoloLive, MangomoloVideo, live_suitable as mangomolo_live_suitable,
+    video_suitable as mangomolo_video_suitable,
+};
 pub use maoritv::{MaoriTV, suitable as maoritv_suitable};
 pub use massengeschmacktv::{MassengeschmackTv, suitable as massengeschmacktv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};

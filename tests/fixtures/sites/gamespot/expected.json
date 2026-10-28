@@ -1,0 +1,113 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.gamespot.com/videos/the-witcher-3-now-playing/2300-6424837/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"gs-2300-6424837\", \"display_id\": \"6424837\", \"title\": \"Now Playing - The Witcher 3: Wild Hunt\", \"formats\": [{\"format_id\": \"dash-v1\", \"manifest_url\": \"https://gs-media.test/witcher/manifest.mpd\", \"ext\": \"mp4\", \"width\": 640, \"height\": 360, \"tbr\": 800.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://gs-media.test/witcher/manifest.mpd\", \"fragment_base_url\": \"https://gs-media.test/witcher/\", \"fragments\": [{\"path\": \"init.mp4\"}, {\"path\": \"chunk_1.m4s\", \"duration\": 10.0}, {\"path\": \"chunk_2.m4s\", \"duration\": 10.0}, {\"path\": \"chunk_3.m4s\", \"duration\": 10.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 800.0, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-v1 - 640x360 (DASH video)\"}, {\"format_id\": \"hls-700\", \"format_index\": null, \"url\": \"https://gs-media.test/witcher/hls_700/index.m3u8\", \"manifest_url\": \"https://gs-media.test/witcher/master.m3u8\", \"tbr\": 700.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42001e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-700 - 640x360\"}, {\"format_id\": \"http-700\", \"format_index\": null, \"url\": \"https://gs-media.test/witcher/hls_700/index.mp4\", \"tbr\": 700.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"http\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42001e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-700 - 640x360\"}, {\"format_id\": \"hls-1800\", \"format_index\": null, \"url\": \"https://gs-media.test/witcher/hls_1800/index.m3u8\", \"manifest_url\": \"https://gs-media.test/witcher/master.m3u8\", \"tbr\": 1800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1800 - 1280x720\"}, {\"format_id\": \"http-1800\", \"format_index\": null, \"url\": \"https://gs-media.test/witcher/hls_1800/index.mp4\", \"tbr\": 1800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"http\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-1800 - 1280x720\"}], \"description\": \"Join us as we take a look & more.\", \"thumbnail\": \"https://gs-img.test/witcher.jpg\", \"webpage_url\": \"http://www.gamespot.com/videos/the-witcher-3-now-playing/2300-6424837/\", \"original_url\": \"http://www.gamespot.com/videos/the-witcher-3-now-playing/2300-6424837/\", \"webpage_url_basename\": \"2300-6424837\", \"webpage_url_domain\": \"gamespot.com\", \"extractor\": \"GameSpot\", \"extractor_key\": \"GameSpot\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://gs-img.test/witcher.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Now Playing - The Witcher 3: Wild Hunt\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"http-1800\", \"url\": \"https://gs-media.test/witcher/hls_1800/index.mp4\", \"tbr\": 1800.0, \"ext\": \"mp4\", \"protocol\": \"http\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-1800 - 1280x720\", \"_filename\": \"Now Playing - The Witcher 3\\uff1a Wild Hunt [gs-2300-6424837].mp4\", \"filename\": \"Now Playing - The Witcher 3\\uff1a Wild Hunt [gs-2300-6424837].mp4\", \"__write_download_archive\": false}], \"format_id\": \"http-1800\", \"format_index\": null, \"url\": \"https://gs-media.test/witcher/hls_1800/index.mp4\", \"tbr\": 1800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"http\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-1800 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.gamespot.com/videos/the-witcher-3-now-playing/2300-6424837/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[GameSpot] Extracting URL: http://www.gamespot.com/videos/the-witcher-3-now-playing/2300-6424837/",
+    "[GameSpot] 6424837: Downloading webpage",
+    "[GameSpot] 6424837: Downloading m3u8 information",
+    "[GameSpot] 6424837: Downloading MPD manifest",
+    "[info] Available formats for gs-2300-6424837:",
+    "ID        EXT RESOLUTION |   TBR PROTO | VCODEC       VBR ACODEC     MORE INFO",
+    "-----------------------------------------------------------------------------------------",
+    "dash-v1   mp4 640x360    |  800k dash  | avc1.4d401f 800k video only DASH video, mp4_dash",
+    "hls-700   mp4 640x360    |  700k m3u8  | avc1.42001e      mp4a.40.2",
+    "http-700  mp4 640x360    |  700k http  | avc1.42001e      mp4a.40.2",
+    "hls-1800  mp4 1280x720   | 1800k m3u8  | avc1.64001f      mp4a.40.2",
+    "http-1800 mp4 1280x720   | 1800k http  | avc1.64001f      mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.gamespot.com/videos/embed/6439218/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6439218\", \"display_id\": \"6439218\", \"title\": \"Embed\\u2019s video\", \"formats\": [{\"format_id\": \"dash-v1\", \"manifest_url\": \"https://gs-media.test/embed/manifest.mpd\", \"ext\": \"mp4\", \"width\": 640, \"height\": 360, \"tbr\": 800.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://gs-media.test/embed/manifest.mpd\", \"fragment_base_url\": \"https://gs-media.test/embed/\", \"fragments\": [{\"path\": \"init.mp4\"}, {\"path\": \"chunk_1.m4s\", \"duration\": 10.0}, {\"path\": \"chunk_2.m4s\", \"duration\": 10.0}, {\"path\": \"chunk_3.m4s\", \"duration\": 10.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 800.0, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-v1 - 640x360 (DASH video)\"}], \"description\": null, \"thumbnail\": null, \"webpage_url\": \"https://www.gamespot.com/videos/embed/6439218/\", \"original_url\": \"https://www.gamespot.com/videos/embed/6439218/\", \"webpage_url_basename\": \"6439218\", \"webpage_url_domain\": \"gamespot.com\", \"extractor\": \"GameSpot\", \"extractor_key\": \"GameSpot\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Embed\\u2019s video\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"dash-v1\", \"manifest_url\": \"https://gs-media.test/embed/manifest.mpd\", \"ext\": \"mp4\", \"width\": 640, \"height\": 360, \"tbr\": 800.0, \"format_note\": \"DASH video\", \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://gs-media.test/embed/manifest.mpd\", \"fragment_base_url\": \"https://gs-media.test/embed/\", \"fragments\": [{\"path\": \"init.mp4\"}, {\"path\": \"chunk_1.m4s\", \"duration\": 10.0}, {\"path\": \"chunk_2.m4s\", \"duration\": 10.0}, {\"path\": \"chunk_3.m4s\", \"duration\": 10.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 800.0, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-v1 - 640x360 (DASH video)\", \"_filename\": \"Embed\\u2019s video [6439218].mp4\", \"filename\": \"Embed\\u2019s video [6439218].mp4\", \"__write_download_archive\": false}], \"format_id\": \"dash-v1\", \"manifest_url\": \"https://gs-media.test/embed/manifest.mpd\", \"ext\": \"mp4\", \"width\": 640, \"height\": 360, \"tbr\": 800.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://gs-media.test/embed/manifest.mpd\", \"fragment_base_url\": \"https://gs-media.test/embed/\", \"fragments\": [{\"path\": \"init.mp4\"}, {\"path\": \"chunk_1.m4s\", \"duration\": 10.0}, {\"path\": \"chunk_2.m4s\", \"duration\": 10.0}, {\"path\": \"chunk_3.m4s\", \"duration\": 10.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 800.0, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-v1 - 640x360 (DASH video)\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [GameSpot] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [GameSpot] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.gamespot.com/articles/the-last-of-us-2-trailer/1100-6454469/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 6454469: An extractor error has occurred. (caused by KeyError('manifest_url')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.gamespot.com/reviews/gears-of-war-review/1900-6161188/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [GameSpot] 6161188: Unable to extract video data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.gamespot.com/videos/no-streams/2300-1000001/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 1000001: An extractor error has occurred. (caused by KeyError('videoStreams')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.gamespot.com/videos/missing-manifest/2300-1000002/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [GameSpot] 1000002: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [GameSpot] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [GameSpot] 1000002: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

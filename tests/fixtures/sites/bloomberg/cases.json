@@ -1,0 +1,50 @@
+[
+ {
+  "url": "https://www.bloomberg.com/news/videos/2021-09-14/apple-unveils-video",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bloomberg.com/news/videos/2021-09-14/apple-unveils-video",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "http://www.bloomberg.com/features/2016-hello-world-new-zealand/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bloomberg.com/politics/articles/2017-02-08/no-video",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bloomberg.com/politics/articles/2017-02-08/untitled",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bloomberg.com/news/articles/2015-11-12/no-streams",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bloomberg.com/politics/videos/2015-11-25/bad-player",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bloomberg.com/news/videos/2015-11-25/no-muxing",
+  "args": [
+   "-J"
+  ]
+ }
+]

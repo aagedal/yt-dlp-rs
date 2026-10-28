@@ -1,0 +1,35 @@
+[
+ {
+  "url": "https://funker530.com/video/azov-patrol-caught-in-open/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.funker530.com/video/rumble-play-script",
+  "args": [
+   "--print",
+   "%(id)s|%(extractor)s|%(title)s|%(description)s|%(webpage_url)s|%(display_id)s"
+  ]
+ },
+ {
+  "url": "https://funker530.com/video/my-friends-joined-the-russians-civdiv/",
+  "args": [
+   "--no-js-runtimes",
+   "--print",
+   "%(id)s|%(extractor)s|%(title)s|%(description)s|%(webpage_url)s|%(display_id)s"
+  ]
+ },
+ {
+  "url": "https://funker530.com/video/no-video/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://funker530.com/video/no-description/",
+  "args": [
+   "-J"
+  ]
+ }
+]

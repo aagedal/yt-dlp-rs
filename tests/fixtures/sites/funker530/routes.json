@@ -1,0 +1,98 @@
+{
+ "routes": [
+  {
+   "url": "https://funker530.com/video/azov-patrol-caught-in-open/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><iframe src=\"https://rumble.com/embed/vb0ofn/?pub=4\"></iframe><div class=\"video-desc-paragraph\"><p>Azov patrol &amp; friends.</p>\n<p>Second   line.</p><h3>About the Author</h3><p>Funker</p></div></body></html>"
+  },
+  {
+   "url": "https://rumble.com/embedJS/u3/?request=video&ver=2&v=vb0ofn",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "rumble-embed.json"
+  },
+  {
+   "url": "https://www.funker530.com/video/rumble-play-script",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script>Rumble(\"play\", {\"video\":\"vb0ofn\",\"div\":\"p\"});</script><p class=\"lead video-desc-paragraph\">No author section here.</p></body></html>"
+  },
+  {
+   "url": "https://funker530.com/video/my-friends-joined-the-russians-civdiv/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><iframe width=\"560\" src=\"https://www.youtube.com/embed/BaW_jenozKc\"></iframe><div class=\"video-desc-paragraph\">  Civ Div talks.  About the Author  Someone</div></body></html>"
+  },
+  {
+   "url": "https://funker530.com/video/no-video/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"video-desc-paragraph\">Text</div></body></html>"
+  },
+  {
+   "url": "https://funker530.com/video/no-description/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><iframe src=\"https://rumble.com/embed/vb0ofn/\"></iframe></body></html>"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "visionos.json"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=18&client=visionos",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=137&client=visionos",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=136&client=visionos",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=140&client=visionos",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body_file": "a.m4a"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=251&client=visionos",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body_file": "a.m4a"
+  }
+ ]
+}
