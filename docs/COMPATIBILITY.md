@@ -966,6 +966,20 @@ field is missing). Artwork templates with format specifications are
 explicit native errors. `tests/fixtures/sites/applepodcasts/` is compared
 with pinned upstream output.
 
+Arc Publishing videos (`arcpublishing:ORG:UUID`) follow upstream
+`ArcPublishingIE`: the organization's `ansvideos/findByUuid` API (upstream's
+`_POWA_DEFAULTS` hosts; `wapo` as `washpost`) and its first video (an empty
+list is upstream's bare `list index out of range`), with the required
+headline, the `streams` by unique URL: `smil` files (non-fatal; HTTP and HLS
+sources, RTMP sources are explicit native errors), `ts`/`hls` manifests
+(non-fatal, `live` for live videos, skipped when every format is video-only,
+with the int `vbr` from a `[_x]HEIGHT[_-]VBR` URL) and other streams as
+`TYPE-BITRATE` formats with quality -10; English subtitle URLs, promo image,
+subheadline, centisecond duration, creation date and live status. `powa`
+player divs with a `data-org` and `data-uuid` on other pages are followed
+like upstream's `_extract_embed_urls`. `tests/fixtures/sites/arcpublishing/`
+is compared with pinned upstream output.
+
 Internet Archive items (`archive.org/details|embed/ID[/FILE]`) follow
 upstream `ArchiveOrgIE`: the embed page's `<play-av>` playlist (one entry
 when the URL names a file; subtitle tracks stored under their labels, as
@@ -1556,6 +1570,19 @@ without a forced extension, with the cleaned `<h1>` title (no-break spaces
 replaced) and `og:description`/`description` and `og:image`/`image` meta
 values, each warning when absent.
 
+Washington Post videos (`washingtonpost:UUID`,
+`washingtonpost.com/video|posttv/.../UUID`) follow upstream
+`WashingtonPostIE` as `url` results of `arcpublishing:wapo:UUID` (see Arc
+Publishing); `washingtonpost.com/video/c/embed/UUID` iframes on other pages
+are followed like upstream's `_EMBED_REGEX`. Other `washingtonpost.com`
+pages follow `WashingtonPostArticleIE`: the OpenGraph title (upstream's
+warning when missing), the `posttv-video-embed`/`data-video-uuid` UUIDs, else
+the Next.js `globalContent.content_elements` videos (fatal Next.js data; a
+missing list is upstream's bare `'NoneType' object is not iterable`), as a
+playlist of `washingtonpost:UUID` results.
+`tests/fixtures/sites/washingtonpost/` is compared with pinned upstream
+output.
+
 WAT media (`wat:ID`, `wat.tv/video/...-ID`; base-36 IDs converted unless
 they are more than six digits) follow upstream `WatIE` (no geo bypass): the
 `mediainfo.tf1.fr/mediainfocombo/ID?pver=5010000` JSON, its error
@@ -1664,6 +1691,16 @@ number and the lowest age range's age limit (no age ranges is upstream's
 `min() iterable argument is empty` error). HLS subtitle renditions keep
 their manifest key order (`order_subtitle_tracks`). `tests/fixtures/sites/urplay/`
 is compared with pinned upstream output.
+
+USA Today pages (`usatoday.com/.../SLUG`) follow upstream `USATodayIE`: the
+`?ajax=true` page's `ui-video-data` element JSON (else upstream's expected
+`no video on the webpage` error) as a `url_transparent` result of its
+Brightcove player (the item's `brightcoveaccount`, default `29906170001`,
+and `brightcoveid`, else the `brightcove_id`), overlaid with the title,
+thumbnail, description and parsed `length`; the page `id` is required but,
+as upstream's `process_ie_result` drops a forced `id`, the Brightcove ID
+stays. `tests/fixtures/sites/usatoday/` is compared with pinned upstream
+output.
 
 uStudio videos (`ustudio.com/video/ID/DISPLAY_ID`) follow upstream
 `UstudioIE`: the `v1.ustudio.com` `config.xml` `qualities/quality/video` and

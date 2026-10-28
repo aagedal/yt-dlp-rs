@@ -1,0 +1,32 @@
+[
+ {
+  "url": "http://www.usatoday.com/media/cinematic/video/81729424/us-france-warn-syrian-regime-ahead-of-new-peace-talks/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.usatoday.com/story/tech/science/2018/08/21/yellowstone/973633002/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.usatoday.com/story/tech/science/2018/08/21/yellowstone/973633002/",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.usatoday.com/story/news/no-video/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.usatoday.com/story/news/no-id/",
+  "args": [
+   "-j"
+  ]
+ }
+]

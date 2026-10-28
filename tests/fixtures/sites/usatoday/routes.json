@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "http://www.usatoday.com/media/cinematic/video/81729424/us-france-warn-syrian-regime-ahead-of-new-peace-talks/?ajax=true",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"ui-video-data\" style=\"display:none\">{\"id\": 81729424, \"title\": \"US, France warn Syrian regime ahead of new peace talks\", \"thumbnail\": \"https://usat.test/thumb.jpg\", \"description\": \"Secretary of State John Kerry &amp; France's foreign minister\", \"length\": \"1:35\", \"brightcove_id\": \"4799374959001\"}</div></body></html>"
+  },
+  {
+   "url": "https://players.brightcove.net/29906170001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_cloud\": {\"policy_key\": \"BCpk29906170001\"}}"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/29906170001/videos/4799374959001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"4799374959001\", \"account_id\": \"29906170001\", \"name\": \"Brightcove name\", \"description\": \"Brightcove description\", \"published_at\": \"2016-03-13T17:44:05.000Z\", \"duration\": 95000, \"sources\": [{\"container\": \"MP4\", \"type\": \"video/mp4\", \"src\": \"https://usat-pd.test/4799374959001.mp4\", \"avg_bitrate\": 1000000, \"width\": 1280, \"height\": 720, \"codec\": \"H264\", \"size\": 1000}]}"
+  },
+  {
+   "url": "https://www.usatoday.com/story/tech/science/2018/08/21/yellowstone/973633002/?ajax=true",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"ui-video-data\" style=\"display:none\">{\"id\": \"973633002\", \"title\": \"Yellowstone more likely to crack rather than explode\", \"length\": \"00:01:02.5\", \"brightcove_id\": \"1\", \"asset_metadata\": {\"items\": {\"brightcoveaccount\": \"28911775001\", \"brightcoveid\": \"5824495846001\"}}}</div></body></html>"
+  },
+  {
+   "url": "https://players.brightcove.net/28911775001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_cloud\": {\"policy_key\": \"BCpk28911775001\"}}"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/28911775001/videos/5824495846001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"5824495846001\", \"account_id\": \"28911775001\", \"name\": \"Yellowstone BC\", \"description\": \"Brightcove description\", \"published_at\": \"2016-03-13T17:44:05.000Z\", \"duration\": 95000, \"sources\": [{\"container\": \"MP4\", \"type\": \"video/mp4\", \"src\": \"https://usat-pd.test/5824495846001.mp4\", \"avg_bitrate\": 1000000, \"width\": 1280, \"height\": 720, \"codec\": \"H264\", \"size\": 1000}]}"
+  },
+  {
+   "url": "https://www.usatoday.com/story/news/no-video/?ajax=true",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><p>No video here</p></body></html>"
+  },
+  {
+   "url": "https://www.usatoday.com/story/news/no-id/?ajax=true",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"ui-video-data\" style=\"display:none\">{\"title\": \"x\", \"brightcove_id\": \"1\"}</div></body></html>"
+  }
+ ]
+}

@@ -2068,13 +2068,20 @@ pub(crate) struct EmbedSite {
     temp_id: fn(&str) -> Option<String>,
 }
 
-static EMBED_SITES: [EmbedSite; 24] = [
+static EMBED_SITES: [EmbedSite; 26] = [
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
         extractor: Some(&super::acast::ACast),
         embed_urls: super::acast::embed_urls,
         temp_id: super::acast::temp_id,
+    },
+    EmbedSite {
+        name: super::arcpublishing::NAME,
+        key: super::arcpublishing::KEY,
+        extractor: Some(&super::arcpublishing::ArcPublishing),
+        embed_urls: super::arcpublishing::embed_urls,
+        temp_id: super::arcpublishing::temp_id,
     },
     EmbedSite {
         name: super::bitmovin::NAME,
@@ -2208,6 +2215,13 @@ static EMBED_SITES: [EmbedSite; 24] = [
         extractor: None,
         embed_urls: super::visir::embed_urls,
         temp_id: super::visir::temp_id,
+    },
+    EmbedSite {
+        name: super::washingtonpost::NAME,
+        key: super::washingtonpost::KEY,
+        extractor: Some(&super::washingtonpost::WashingtonPost),
+        embed_urls: super::washingtonpost::embed_urls,
+        temp_id: super::washingtonpost::temp_id,
     },
     EmbedSite {
         name: super::wistia::CHANNEL_NAME,

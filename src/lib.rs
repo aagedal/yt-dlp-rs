@@ -365,6 +365,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Angel",
     "apple:podcasts",
     "archive.org",
+    "ArcPublishing",
     "ARDAudiothek",
     "ARDAudiothekPlaylist",
     "ARDMediathek",
@@ -721,6 +722,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Unistra",
     "UnitedNationsWebTv",
     "URPlay",
+    "USAToday",
     "ustudio",
     "ustudio:embed",
     "Vbox7",
@@ -739,6 +741,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Vocaroo",
     "VTV",
     "VTVGo",
+    "washingtonpost",
+    "washingtonpost:article",
     "wat.tv",
     "Webcamerapl",
     "Weibo",
@@ -950,6 +954,7 @@ impl YoutubeDl {
                     no_playlist: youtube.no_playlist,
                 }),
                 Box::new(extractor::AlJazeera),
+                Box::new(extractor::ArcPublishing),
                 Box::new(extractor::Bfmtv),
                 Box::new(extractor::BfmtvArticle),
                 Box::new(extractor::BfmtvLive),
@@ -995,6 +1000,9 @@ impl YoutubeDl {
                 Box::new(extractor::Visir),
                 Box::new(extractor::Vtv),
                 Box::new(extractor::VtvGo),
+                Box::new(extractor::UsaToday),
+                Box::new(extractor::WashingtonPost),
+                Box::new(extractor::WashingtonPostArticle),
                 Box::new(extractor::Wat),
                 Box::new(extractor::Wsj),
                 Box::new(extractor::WsjArticle),
@@ -3667,6 +3675,16 @@ impl YoutubeDl {
                                 }
                                 _ => metadata_parser::set_field(inner, key, value.clone()),
                             }
+                        }
+                        // `_sanitize_thumbnails` builds a `None` `thumbnails`
+                        // from the forced `thumbnail`.
+                        if fields.iter().any(|(key, _)| key == "thumbnail")
+                            && inner
+                                .extra
+                                .get("thumbnails")
+                                .is_some_and(serde_json::Value::is_null)
+                        {
+                            inner.extra.shift_remove("thumbnails");
                         }
                         inner.webpage_url = outer.clone();
                         if let Some(ip) = &outer_ip {

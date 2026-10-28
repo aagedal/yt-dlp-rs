@@ -1,0 +1,137 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.washingtonpost.com/video/c/video/480ba4ee-1ec7-11e6-82c2-a7dcb313287d",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"480ba4ee-1ec7-11e6-82c2-a7dcb313287d\", \"title\": \"Egypt finds belongings, debris from plane crash\", \"thumbnail\": \"https://wapo-images.test/egypt.jpg\", \"description\": \"Egypt finds belongings, debris from plane crash description\", \"formats\": [{\"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"filesize\": null, \"url\": \"https://wapo-mp4.test/egypt_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\"}], \"duration\": 1290, \"timestamp\": 1395440416, \"subtitles\": {}, \"is_live\": false, \"original_url\": \"https://www.washingtonpost.com/video/c/video/480ba4ee-1ec7-11e6-82c2-a7dcb313287d\", \"webpage_url\": \"arcpublishing:wapo:480ba4ee-1ec7-11e6-82c2-a7dcb313287d\", \"webpage_url_basename\": \"wapo:480ba4ee-1ec7-11e6-82c2-a7dcb313287d\", \"webpage_url_domain\": null, \"extractor\": \"ArcPublishing\", \"extractor_key\": \"ArcPublishing\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://wapo-images.test/egypt.jpg\", \"id\": \"0\"}], \"display_id\": \"480ba4ee-1ec7-11e6-82c2-a7dcb313287d\", \"fulltitle\": \"Egypt finds belongings, debris from plane crash\", \"duration_string\": \"21:30\", \"upload_date\": \"20140321\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"filesize\": null, \"url\": \"https://wapo-mp4.test/egypt_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\", \"_filename\": \"Egypt finds belongings, debris from plane crash [480ba4ee-1ec7-11e6-82c2-a7dcb313287d].mp4\", \"filename\": \"Egypt finds belongings, debris from plane crash [480ba4ee-1ec7-11e6-82c2-a7dcb313287d].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.washingtonpost.com/video/world/egypt-finds-belongings-debris-from-plane-crash/2016/05/20/480ba4ee-1ec7-11e6-82c2-a7dcb313287d_video.html",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(webpage_url)s|%(original_url)s|%(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "480ba4ee-1ec7-11e6-82c2-a7dcb313287d|Egypt finds belongings, debris from plane crash|arcpublishing:wapo:480ba4ee-1ec7-11e6-82c2-a7dcb313287d|https://www.washingtonpost.com/video/world/egypt-finds-belongings-debris-from-plane-crash/2016/05/20/480ba4ee-1ec7-11e6-82c2-a7dcb313287d_video.html|ArcPublishing"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "washingtonpost:480ba4ee-1ec7-11e6-82c2-a7dcb313287d",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[washingtonpost] Extracting URL: washingtonpost:480ba4ee-1ec7-11e6-82c2-a7dcb313287d",
+    "[ArcPublishing] Extracting URL: arcpublishing:wapo:480ba4ee-1ec7-11e6-82c2-a7dcb313287d",
+    "[ArcPublishing] 480ba4ee-1ec7-11e6-82c2-a7dcb313287d: Downloading JSON metadata",
+    "[info] Available formats for 480ba4ee-1ec7-11e6-82c2-a7dcb313287d:",
+    "ID       EXT RESOLUTION | PROTO | VCODEC    VBR ACODEC",
+    "-------------------------------------------------------",
+    "mp4-1200 mp4 640x360    | https | unknown 1200k unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.washingtonpost.com/sf/national/2014/03/22/sinkhole-of-bureaucracy/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"entries\": [{\"id\": \"fc433c38-b146-11e3-b8b3-44b1d1cd4c1f\", \"title\": \"Breaking Points: The Paper Mine\", \"thumbnail\": \"https://wapo-images.test/papermine.jpg\", \"description\": \"Breaking Points: The Paper Mine description\", \"formats\": [{\"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"filesize\": null, \"url\": \"https://wapo-mp4.test/papermine_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\"}], \"duration\": 1290, \"timestamp\": 1395440416, \"subtitles\": {}, \"is_live\": false, \"original_url\": \"washingtonpost:fc433c38-b146-11e3-b8b3-44b1d1cd4c1f\", \"webpage_url\": \"arcpublishing:wapo:fc433c38-b146-11e3-b8b3-44b1d1cd4c1f\", \"webpage_url_basename\": \"wapo:fc433c38-b146-11e3-b8b3-44b1d1cd4c1f\", \"webpage_url_domain\": null, \"extractor\": \"ArcPublishing\", \"extractor_key\": \"ArcPublishing\", \"playlist_count\": 2, \"playlist\": \"Sinkhole of bureaucracy\", \"playlist_id\": \"sinkhole-of-bureaucracy\", \"playlist_title\": \"Sinkhole of bureaucracy\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://www.washingtonpost.com/sf/national/2014/03/22/sinkhole-of-bureaucracy/\", \"n_entries\": 2, \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://wapo-images.test/papermine.jpg\", \"id\": \"0\"}], \"display_id\": \"fc433c38-b146-11e3-b8b3-44b1d1cd4c1f\", \"fulltitle\": \"Breaking Points: The Paper Mine\", \"duration_string\": \"21:30\", \"upload_date\": \"20140321\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"url\": \"https://wapo-mp4.test/papermine_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\", \"_filename\": \"Breaking Points\\uff1a The Paper Mine [fc433c38-b146-11e3-b8b3-44b1d1cd4c1f].mp4\", \"filename\": \"Breaking Points\\uff1a The Paper Mine [fc433c38-b146-11e3-b8b3-44b1d1cd4c1f].mp4\", \"__write_download_archive\": false}], \"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"filesize\": null, \"url\": \"https://wapo-mp4.test/papermine_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\"}, {\"id\": \"41255e28-b14a-11e3-b8b3-44b1d1cd4c1f\", \"title\": \"The town bureaucracy sustains\", \"thumbnail\": \"https://wapo-images.test/boyers.jpg\", \"description\": \"The town bureaucracy sustains description\", \"formats\": [{\"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"filesize\": null, \"url\": \"https://wapo-mp4.test/boyers_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\"}], \"duration\": 1290, \"timestamp\": 1395440416, \"subtitles\": {}, \"is_live\": false, \"original_url\": \"washingtonpost:41255e28-b14a-11e3-b8b3-44b1d1cd4c1f\", \"webpage_url\": \"arcpublishing:wapo:41255e28-b14a-11e3-b8b3-44b1d1cd4c1f\", \"webpage_url_basename\": \"wapo:41255e28-b14a-11e3-b8b3-44b1d1cd4c1f\", \"webpage_url_domain\": null, \"extractor\": \"ArcPublishing\", \"extractor_key\": \"ArcPublishing\", \"playlist_count\": 2, \"playlist\": \"Sinkhole of bureaucracy\", \"playlist_id\": \"sinkhole-of-bureaucracy\", \"playlist_title\": \"Sinkhole of bureaucracy\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://www.washingtonpost.com/sf/national/2014/03/22/sinkhole-of-bureaucracy/\", \"n_entries\": 2, \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"thumbnails\": [{\"url\": \"https://wapo-images.test/boyers.jpg\", \"id\": \"0\"}], \"display_id\": \"41255e28-b14a-11e3-b8b3-44b1d1cd4c1f\", \"fulltitle\": \"The town bureaucracy sustains\", \"duration_string\": \"21:30\", \"upload_date\": \"20140321\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"url\": \"https://wapo-mp4.test/boyers_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\", \"_filename\": \"The town bureaucracy sustains [41255e28-b14a-11e3-b8b3-44b1d1cd4c1f].mp4\", \"filename\": \"The town bureaucracy sustains [41255e28-b14a-11e3-b8b3-44b1d1cd4c1f].mp4\", \"__write_download_archive\": false}], \"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"filesize\": null, \"url\": \"https://wapo-mp4.test/boyers_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\"}], \"id\": \"sinkhole-of-bureaucracy\", \"title\": \"Sinkhole of bureaucracy\", \"webpage_url\": \"http://www.washingtonpost.com/sf/national/2014/03/22/sinkhole-of-bureaucracy/\", \"original_url\": \"http://www.washingtonpost.com/sf/national/2014/03/22/sinkhole-of-bureaucracy/\", \"webpage_url_basename\": \"sinkhole-of-bureaucracy\", \"webpage_url_domain\": \"washingtonpost.com\", \"extractor\": \"washingtonpost:article\", \"extractor_key\": \"WashingtonPostArticle\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.washingtonpost.com/sf/national/2014/03/22/sinkhole-of-bureaucracy/",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"WashingtonPost\", \"id\": \"fc433c38-b146-11e3-b8b3-44b1d1cd4c1f\", \"_type\": \"url\", \"url\": \"washingtonpost:fc433c38-b146-11e3-b8b3-44b1d1cd4c1f\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"WashingtonPost\", \"id\": \"41255e28-b14a-11e3-b8b3-44b1d1cd4c1f\", \"_type\": \"url\", \"url\": \"washingtonpost:41255e28-b14a-11e3-b8b3-44b1d1cd4c1f\", \"__x_forwarded_for_ip\": null}], \"id\": \"sinkhole-of-bureaucracy\", \"title\": \"Sinkhole of bureaucracy\", \"webpage_url\": \"http://www.washingtonpost.com/sf/national/2014/03/22/sinkhole-of-bureaucracy/\", \"original_url\": \"http://www.washingtonpost.com/sf/national/2014/03/22/sinkhole-of-bureaucracy/\", \"webpage_url_basename\": \"sinkhole-of-bureaucracy\", \"webpage_url_domain\": \"washingtonpost.com\", \"extractor\": \"washingtonpost:article\", \"extractor_key\": \"WashingtonPostArticle\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.washingtonpost.com/nation/2021/08/05/dixie-river-fire-california-climate/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0e4bb54c-9065-11e4-a66f-0ca5037a597d\", \"title\": \"Why black boxes don\\u2019t transmit data in real time\", \"thumbnail\": \"https://wapo-images.test/blackbox.jpg\", \"description\": \"Why black boxes don\\u2019t transmit data in real time description\", \"formats\": [{\"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"filesize\": null, \"url\": \"https://wapo-mp4.test/blackbox_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\"}], \"duration\": 1290, \"timestamp\": 1395440416, \"subtitles\": {}, \"is_live\": false, \"original_url\": \"washingtonpost:0e4bb54c-9065-11e4-a66f-0ca5037a597d\", \"webpage_url\": \"arcpublishing:wapo:0e4bb54c-9065-11e4-a66f-0ca5037a597d\", \"webpage_url_basename\": \"wapo:0e4bb54c-9065-11e4-a66f-0ca5037a597d\", \"webpage_url_domain\": null, \"extractor\": \"ArcPublishing\", \"extractor_key\": \"ArcPublishing\", \"playlist_count\": 1, \"playlist\": \"One airline figured out how\", \"playlist_id\": \"dixie-river-fire-california-climate\", \"playlist_title\": \"One airline figured out how\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.washingtonpost.com/nation/2021/08/05/dixie-river-fire-california-climate/\", \"n_entries\": 1, \"playlist_index\": 1, \"__last_playlist_index\": 1, \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://wapo-images.test/blackbox.jpg\", \"id\": \"0\"}], \"display_id\": \"0e4bb54c-9065-11e4-a66f-0ca5037a597d\", \"fulltitle\": \"Why black boxes don\\u2019t transmit data in real time\", \"duration_string\": \"21:30\", \"upload_date\": \"20140321\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"filesize\": null, \"url\": \"https://wapo-mp4.test/blackbox_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\", \"_filename\": \"Why black boxes don\\u2019t transmit data in real time [0e4bb54c-9065-11e4-a66f-0ca5037a597d].mp4\", \"filename\": \"Why black boxes don\\u2019t transmit data in real time [0e4bb54c-9065-11e4-a66f-0ca5037a597d].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.washingtonpost.com/nation/2021/08/06/no-title/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"entries\": [{\"id\": \"480ba4ee-1ec7-11e6-82c2-a7dcb313287d\", \"title\": \"Egypt finds belongings, debris from plane crash\", \"thumbnail\": \"https://wapo-images.test/egypt.jpg\", \"description\": \"Egypt finds belongings, debris from plane crash description\", \"formats\": [{\"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"filesize\": null, \"url\": \"https://wapo-mp4.test/egypt_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\"}], \"duration\": 1290, \"timestamp\": 1395440416, \"subtitles\": {}, \"is_live\": false, \"original_url\": \"washingtonpost:480ba4ee-1ec7-11e6-82c2-a7dcb313287d\", \"webpage_url\": \"arcpublishing:wapo:480ba4ee-1ec7-11e6-82c2-a7dcb313287d\", \"webpage_url_basename\": \"wapo:480ba4ee-1ec7-11e6-82c2-a7dcb313287d\", \"webpage_url_domain\": null, \"extractor\": \"ArcPublishing\", \"extractor_key\": \"ArcPublishing\", \"playlist_count\": 1, \"playlist\": \"no-title\", \"playlist_id\": \"no-title\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.washingtonpost.com/nation/2021/08/06/no-title/\", \"n_entries\": 1, \"playlist_index\": 1, \"__last_playlist_index\": 1, \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://wapo-images.test/egypt.jpg\", \"id\": \"0\"}], \"display_id\": \"480ba4ee-1ec7-11e6-82c2-a7dcb313287d\", \"fulltitle\": \"Egypt finds belongings, debris from plane crash\", \"duration_string\": \"21:30\", \"upload_date\": \"20140321\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"url\": \"https://wapo-mp4.test/egypt_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\", \"_filename\": \"Egypt finds belongings, debris from plane crash [480ba4ee-1ec7-11e6-82c2-a7dcb313287d].mp4\", \"filename\": \"Egypt finds belongings, debris from plane crash [480ba4ee-1ec7-11e6-82c2-a7dcb313287d].mp4\", \"__write_download_archive\": false}], \"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"filesize\": null, \"url\": \"https://wapo-mp4.test/egypt_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\"}], \"id\": \"no-title\", \"title\": null, \"webpage_url\": \"https://www.washingtonpost.com/nation/2021/08/06/no-title/\", \"original_url\": \"https://www.washingtonpost.com/nation/2021/08/06/no-title/\", \"webpage_url_basename\": \"no-title\", \"webpage_url_domain\": \"washingtonpost.com\", \"extractor\": \"washingtonpost:article\", \"extractor_key\": \"WashingtonPostArticle\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [washingtonpost:article] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.washingtonpost.com/nation/2021/08/07/no-video/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [washingtonpost:article] no-video: Unable to extract next.js data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.wapo-embed.test/story/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"480ba4ee-1ec7-11e6-82c2-a7dcb313287d\", \"title\": \"Egypt finds belongings, debris from plane crash\", \"thumbnail\": \"https://wapo-images.test/egypt.jpg\", \"description\": \"Egypt finds belongings, debris from plane crash description\", \"formats\": [{\"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"filesize\": null, \"url\": \"https://wapo-mp4.test/egypt_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\"}], \"duration\": 1290, \"timestamp\": 1395440416, \"subtitles\": {}, \"is_live\": false, \"original_url\": \"https://www.wapo-embed.test/story/\", \"webpage_url\": \"arcpublishing:wapo:480ba4ee-1ec7-11e6-82c2-a7dcb313287d\", \"webpage_url_basename\": \"wapo:480ba4ee-1ec7-11e6-82c2-a7dcb313287d\", \"webpage_url_domain\": null, \"extractor\": \"ArcPublishing\", \"extractor_key\": \"ArcPublishing\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://wapo-images.test/egypt.jpg\", \"id\": \"0\"}], \"display_id\": \"480ba4ee-1ec7-11e6-82c2-a7dcb313287d\", \"fulltitle\": \"Egypt finds belongings, debris from plane crash\", \"duration_string\": \"21:30\", \"upload_date\": \"20140321\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"mp4-1200\", \"vbr\": 1200, \"width\": 640, \"height\": 360, \"filesize\": null, \"url\": \"https://wapo-mp4.test/egypt_1200.mp4\", \"quality\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 640x360\", \"_filename\": \"Egypt finds belongings, debris from plane crash [480ba4ee-1ec7-11e6-82c2-a7dcb313287d].mp4\", \"filename\": \"Egypt finds belongings, debris from plane crash [480ba4ee-1ec7-11e6-82c2-a7dcb313287d].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.washingtonpost.com/nation/2021/08/08/no-elements/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 'NoneType' object is not iterable"
+   ],
+   "files": {}
+  }
+ ]
+}
