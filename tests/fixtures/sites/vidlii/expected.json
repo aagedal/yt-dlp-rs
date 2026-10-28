@@ -1,0 +1,50 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.vidlii.com/watch?v=tJluaH4BJ3v",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"tJluaH4BJ3v\", \"title\": \"Vidlii is against me\", \"description\": \"Meta desc\", \"thumbnail\": \"https://www.vidlii.com/usfi/thmp/tJluaH4BJ3v.jpg\", \"uploader\": \"APPle5auc31995\", \"formats\": [{\"url\": \"https://www.vidlii.com/vsrc/tJluaH4BJ3v.mp4\", \"format_id\": \"360p\", \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 360p\"}, {\"url\": \"https://cdn.vidlii.test/tJluaH4BJ3v_720.mp4\", \"format_id\": \"720p\", \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\"}], \"uploader_url\": \"https://www.vidlii.com/user/APPle5auc31995\", \"upload_date\": \"20190605\", \"duration\": 149, \"view_count\": 1234, \"comment_count\": 12, \"average_rating\": 4.5, \"categories\": [\"Film & Animation\"], \"tags\": [\"vidlii\", \"funny\"], \"webpage_url\": \"https://www.vidlii.com/watch?v=tJluaH4BJ3v\", \"original_url\": \"https://www.vidlii.com/watch?v=tJluaH4BJ3v\", \"webpage_url_basename\": \"watch\", \"webpage_url_domain\": \"vidlii.com\", \"extractor\": \"VidLii\", \"extractor_key\": \"VidLii\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://www.vidlii.com/usfi/thmp/tJluaH4BJ3v.jpg\", \"id\": \"0\"}], \"display_id\": \"tJluaH4BJ3v\", \"fulltitle\": \"Vidlii is against me\", \"duration_string\": \"2:29\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cdn.vidlii.test/tJluaH4BJ3v_720.mp4\", \"format_id\": \"720p\", \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\", \"_filename\": \"Vidlii is against me [tJluaH4BJ3v].mp4\", \"filename\": \"Vidlii is against me [tJluaH4BJ3v].mp4\", \"__write_download_archive\": false}], \"url\": \"https://cdn.vidlii.test/tJluaH4BJ3v_720.mp4\", \"format_id\": \"720p\", \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.vidlii.com/embed?v=AAAAAAAAAAA&a=0",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"AAAAAAAAAAA\", \"title\": \"Bare\", \"description\": \"Des text\", \"thumbnail\": null, \"uploader\": null, \"formats\": [{\"url\": \"https://www.vidlii.com/vsrc/AAAAAAAAAAA.mp4\", \"format_id\": \"360p\", \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 360p\"}], \"uploader_url\": \"\", \"upload_date\": null, \"view_count\": null, \"comment_count\": null, \"average_rating\": null, \"categories\": null, \"tags\": null, \"webpage_url\": \"https://www.vidlii.com/embed?v=AAAAAAAAAAA&a=0\", \"original_url\": \"https://www.vidlii.com/embed?v=AAAAAAAAAAA&a=0\", \"webpage_url_basename\": \"embed\", \"webpage_url_domain\": \"vidlii.com\", \"extractor\": \"VidLii\", \"extractor_key\": \"VidLii\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"AAAAAAAAAAA\", \"fulltitle\": \"Bare\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://www.vidlii.com/vsrc/AAAAAAAAAAA.mp4\", \"format_id\": \"360p\", \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 360p\", \"_filename\": \"Bare [AAAAAAAAAAA].mp4\", \"filename\": \"Bare [AAAAAAAAAAA].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [VidLii] unable to extract thumbnail; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [VidLii] unable to extract uploader; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [VidLii] unable to extract upload date; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [VidLii] unable to extract duration; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [VidLii] unable to extract view count; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [VidLii] unable to extract comment count; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [VidLii] unable to extract average rating; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [VidLii] unable to extract category; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.vidlii.com/watch?v=BBBBBBBBBBB",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [VidLii] BBBBBBBBBBB: Unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

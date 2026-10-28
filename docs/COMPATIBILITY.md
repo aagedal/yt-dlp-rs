@@ -1649,6 +1649,16 @@ std < dvd < hd, the `original` upload (quality 3, width/height), and the title
 (else a `KeyError`), description, poster, millisecond duration, upload
 timestamp and `parse_age_limit` rating.
 
+VidLii videos (`vidlii.com/watch|embed?...v=ID`) follow upstream `VidLiiIE`:
+the watch page's player `src` URLs (joined with the input URL) that answer a
+silent HEAD check (`Checking NNNp url`, height from `NNN.mp4`, else 360), the
+fatal `<h1>`/`<title>` title, the description meta (else `des_text`), the
+`twitter:image` meta (else the player `img`), uploader and its URL (an empty
+string without one, like upstream's `format_field`), the date, duration,
+view and comment counts, rating, category and search-link tags, each optional
+regex warning like upstream when missing. `tests/fixtures/sites/vidlii/` is
+compared with pinned upstream output.
+
 Vidyard videos (`*.vidyard.com|*.hubs.vidyard.com/watch/ID`,
 `embed|share.vidyard.com/share/ID`, `play.vidyard.com/[player/]ID`) follow
 upstream `VidyardIE`: the `play.vidyard.com/player/ID.json` `payload` (missing

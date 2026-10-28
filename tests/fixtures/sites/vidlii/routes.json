@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://www.vidlii.com/watch?v=tJluaH4BJ3v",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Vidlii is against me - VidLii</title><meta name=\"description\" content=\"Meta desc\"><meta itemprop=\"datePublished\" content=\"2019-06-05\"><meta property=\"video:duration\" content=\"149\"></head><body><h1>Vidlii is against me</h1><script>var player = { src: \"/vsrc/tJluaH4BJ3v.mp4\", sources: [ {src: 'https://cdn.vidlii.test/tJluaH4BJ3v_720.mp4'}, {src: \"https://cdn.vidlii.test/missing_1080.mp4\"} ], img: \"/usfi/thmp/tJluaH4BJ3v.jpg\", rating: 4.5 };</script><div class=\"wt_person\"><a href=\"/user/APPle5auc31995\">APPle5auc31995</a></div><strong>1,234</strong> views <span id=\"cmt_num\">12</span><div>Category: </div><div><a href=\"/c\">Film &amp; Animation</a></div><a href=\"/results?q=vidlii\">vidlii</a><a href=\"/results?q=x&q=y\"> </a><a href=\"/results?q=funny\">funny </a></body></html>"
+  },
+  {
+   "url": "https://www.vidlii.com/vsrc/tJluaH4BJ3v.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "x"
+  },
+  {
+   "url": "https://cdn.vidlii.test/tJluaH4BJ3v_720.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "x"
+  },
+  {
+   "url": "https://www.vidlii.com/watch?v=AAAAAAAAAAA",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><h1>Bare</h1><div id=\"des_text\">  Des text  </div><script>src: \"/vsrc/AAAAAAAAAAA.mp4\"</script></body></html>"
+  },
+  {
+   "url": "https://www.vidlii.com/watch?v=BBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>nothing</html>"
+  },
+  {
+   "url": "https://www.vidlii.com/vsrc/AAAAAAAAAAA.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "x"
+  }
+ ]
+}

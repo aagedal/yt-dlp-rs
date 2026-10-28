@@ -3269,6 +3269,18 @@
       "scope": "VideoPressIE public-api.wordpress.com video JSON (random birthday query ignored by the fixture route), MP4/Ogg files joined to file_url_base with qualities, original upload, duration, timestamp and parse_age_limit rating compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "vidlii",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/vidlii.py"
+      ],
+      "rust": [
+        "src/extractor/vidlii.rs",
+        "tests/fixtures/sites/vidlii/"
+      ],
+      "scope": "VidLiiIE HEAD-checked player sources and page metadata with upstream's optional-field warnings, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "vidyard",
       "status": "partial",
       "upstream": [
