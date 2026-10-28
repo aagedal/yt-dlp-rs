@@ -134,6 +134,7 @@ mod ku6;
 mod kvs;
 mod lastfm;
 mod lbry;
+mod lefigaro;
 mod lego;
 mod libraryofcongress;
 mod libsyn;
@@ -539,6 +540,13 @@ pub use lbry::{
     playlist_suitable as lbry_playlist_suitable, suitable as lbry_suitable,
 };
 pub(crate) use lbry::{fetch_pages as fetch_lbry_pages, is_pending_state as lbry_pending_state};
+pub use lefigaro::{
+    LeFigaroVideoEmbed, LeFigaroVideoSection, embed_suitable as lefigaro_embed_suitable,
+    section_suitable as lefigaro_section_suitable,
+};
+pub(crate) use lefigaro::{
+    fetch_pages as fetch_lefigaro_pages, is_pending_state as lefigaro_pending_state,
+};
 pub use lego::{Lego, suitable as lego_suitable};
 pub use libraryofcongress::{LibraryOfCongress, suitable as libraryofcongress_suitable};
 pub use libsyn::{Libsyn, suitable as libsyn_suitable};

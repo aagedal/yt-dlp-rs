@@ -1,0 +1,74 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://video.lefigaro.fr/embed/figaro/video/les-francais/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"g9j7Eovo\", \"title\": \"Les Fran\\u00e7ais ne veulent-ils plus travailler ?\", \"description\": \"JW desc\", \"thumbnail\": null, \"timestamp\": 1676581615, \"duration\": 3076.0, \"subtitles\": {}, \"alt_title\": null, \"genre\": null, \"channel\": null, \"season_number\": null, \"episode_number\": null, \"release_year\": null, \"age_limit\": null, \"formats\": [{\"url\": \"https://cdn.jwplayer.com/videos/g9j7Eovo-1.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": null, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\"}], \"original_url\": \"https://video.lefigaro.fr/embed/figaro/video/les-francais/\", \"webpage_url\": \"jwplatform:g9j7Eovo\", \"webpage_url_basename\": \"g9j7Eovo\", \"webpage_url_domain\": null, \"extractor\": \"JWPlatform\", \"extractor_key\": \"JWPlatform\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"g9j7Eovo\", \"fulltitle\": \"Les Fran\\u00e7ais ne veulent-ils plus travailler ?\", \"duration_string\": \"51:16\", \"upload_date\": \"20230216\", \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.jwplayer.com/videos/g9j7Eovo-1.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": null, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\", \"_filename\": \"Les Fran\\u00e7ais ne veulent-ils plus travailler \\uff1f [g9j7Eovo].mp4\", \"filename\": \"Les Fran\\u00e7ais ne veulent-ils plus travailler \\uff1f [g9j7Eovo].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://video.lefigaro.fr/figaro/le-club/",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"le-club\", \"title\": \"Le Club Le Figaro Id\\u00e9es\", \"_type\": \"playlist\", \"entries\": [{\"title\": \"Vid\\u00e9o 0\", \"description\": \"d0\", \"thumbnail\": \"https://lefigaro.test/0.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v0/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 1\", \"description\": \"d1\", \"thumbnail\": \"https://lefigaro.test/1.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v1/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 2\", \"description\": \"d2\", \"thumbnail\": \"https://lefigaro.test/2.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v2/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 3\", \"description\": \"d3\", \"thumbnail\": \"https://lefigaro.test/3.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v3/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 4\", \"description\": \"d4\", \"thumbnail\": \"https://lefigaro.test/4.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v4/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 5\", \"description\": \"d5\", \"thumbnail\": \"https://lefigaro.test/5.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v5/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 6\", \"description\": \"d6\", \"thumbnail\": \"https://lefigaro.test/6.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v6/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 7\", \"description\": \"d7\", \"thumbnail\": \"https://lefigaro.test/7.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v7/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 8\", \"description\": \"d8\", \"thumbnail\": \"https://lefigaro.test/8.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v8/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 9\", \"description\": \"d9\", \"thumbnail\": \"https://lefigaro.test/9.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v9/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 10\", \"description\": \"d10\", \"thumbnail\": \"https://lefigaro.test/10.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v10/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 11\", \"description\": \"d11\", \"thumbnail\": \"https://lefigaro.test/11.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v11/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 12\", \"description\": \"d12\", \"thumbnail\": \"https://lefigaro.test/12.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v12/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 13\", \"description\": \"d13\", \"thumbnail\": \"https://lefigaro.test/13.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v13/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 14\", \"description\": \"d14\", \"thumbnail\": \"https://lefigaro.test/14.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v14/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 15\", \"description\": \"d15\", \"thumbnail\": \"https://lefigaro.test/15.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v15/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 16\", \"description\": \"d16\", \"thumbnail\": \"https://lefigaro.test/16.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v16/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 17\", \"description\": \"d17\", \"thumbnail\": \"https://lefigaro.test/17.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v17/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 18\", \"description\": \"d18\", \"thumbnail\": \"https://lefigaro.test/18.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v18/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 19\", \"description\": \"d19\", \"thumbnail\": \"https://lefigaro.test/19.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v19/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 20\", \"description\": \"d20\", \"thumbnail\": \"https://lefigaro.test/20.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v20/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 21\", \"description\": \"d21\", \"thumbnail\": \"https://lefigaro.test/21.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v21/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 22\", \"description\": \"d22\", \"thumbnail\": \"https://lefigaro.test/22.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v22/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 23\", \"description\": \"d23\", \"thumbnail\": \"https://lefigaro.test/23.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v23/\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Vid\\u00e9o 24\", \"description\": \"d24\", \"thumbnail\": \"https://lefigaro.test/24.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v24/\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://video.lefigaro.fr/figaro/le-club/\", \"original_url\": \"https://video.lefigaro.fr/figaro/le-club/\", \"webpage_url_basename\": \"le-club\", \"webpage_url_domain\": \"video.lefigaro.fr\", \"extractor\": \"LeFigaroVideoSection\", \"extractor_key\": \"LeFigaroVideoSection\", \"release_year\": null, \"playlist_count\": 25, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://video.lefigaro.fr/figaro/le-club/",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "21:22",
+    "--print",
+    "%(id)s|%(title)s|%(playlist_index)s|%(n_entries)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "v20|Vidéo 20|21|2|NA",
+    "v21|Vidéo 21|22|2|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://video.lefigaro.fr/figaro/le-club/",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "2",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"le-club\", \"title\": \"Le Club Le Figaro Id\\u00e9es\", \"_type\": \"playlist\", \"entries\": [{\"title\": \"Vid\\u00e9o 1\", \"description\": \"d1\", \"thumbnail\": \"https://lefigaro.test/1.jpg\", \"ie_key\": \"LeFigaroVideoEmbed\", \"_type\": \"url\", \"url\": \"https://video.lefigaro.fr/embed/figaro/video/v1/\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://video.lefigaro.fr/figaro/le-club/\", \"original_url\": \"https://video.lefigaro.fr/figaro/le-club/\", \"webpage_url_basename\": \"le-club\", \"webpage_url_domain\": \"video.lefigaro.fr\", \"extractor\": \"LeFigaroVideoSection\", \"extractor_key\": \"LeFigaroVideoSection\", \"release_year\": null, \"requested_entries\": [2], \"playlist_count\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://video.lefigaro.fr/embed/figaro/video/vide/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: vide: An extractor error has occurred. (caused by KeyError('videoId')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

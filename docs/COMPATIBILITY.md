@@ -3405,6 +3405,17 @@ higher) as audio formats. Non-string IDs, user names or thumbnails and
 missing users or download file names remain explicit native errors.
 `tests/fixtures/sites/hearthisat/` is compared with pinned upstream output.
 
+Le Figaro embeds (`video.lefigaro.fr/embed/.../SLUG`) follow upstream
+`LeFigaroVideoEmbedIE`: the Next.js `playerData.videoId` (required) as a
+`url` result of `jwplatform:ID` (its title, description and poster are not
+merged, like any `url` result). Video sections (`video.lefigaro.fr/figaro/SLUG`)
+follow `LeFigaroVideoSectionIE`: the GraphQL `UpdateListPage` playlist's
+title and `videoCount`, then an `InAdvancePagedList` of 20-video pages
+(only the pages a selection needs are fetched) whose JSON-LD items are `url`
+results of their embed URLs with name, description and thumbnail (flat IDs
+from the embed URL, like upstream's temporary ID). `tests/fixtures/sites/lefigaro/`
+is compared with pinned upstream output.
+
 LEGO videos (`lego.com/LL-CC/.../videos/.../SLUG-HEX32`) follow upstream
 `LEGOIE`: geo bypass initialized with the URL's country (upstream's
 `_initialize_geo_bypass`), the Slingshot `mediaplayer/v2?videoId=UUID_LOCALE`

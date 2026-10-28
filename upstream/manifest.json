@@ -310,6 +310,18 @@
       "scope": "InternazionaleIE data-video-title (or non-fatal og:title) title, fatal data-job-id/data-video-path, available_abroad host choice, non-fatal HLS (hls ids, mp4) and DASH (dash- ids) manifests, article:published_time timestamp and og thumbnail/description warnings, the generic title and no-formats error compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "lefigaro",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/lefigaro.py"
+      ],
+      "rust": [
+        "src/extractor/lefigaro.rs",
+        "tests/fixtures/sites/lefigaro/"
+      ],
+      "scope": "LeFigaroVideoEmbedIE Next.js jwplatform results and LeFigaroVideoSectionIE GraphQL pages as a paged list, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "lego",
       "status": "partial",
       "upstream": [

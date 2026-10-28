@@ -531,6 +531,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "lbry",
     "lbry:channel",
     "lbry:playlist",
+    "LeFigaroVideoEmbed",
+    "LeFigaroVideoSection",
     "LEGO",
     "Libsyn",
     "LinkedIn",
@@ -985,6 +987,8 @@ impl YoutubeDl {
                 Box::new(extractor::IndavideoEmbed),
                 Box::new(extractor::Kika),
                 Box::new(extractor::KikaPlaylist),
+                Box::new(extractor::LeFigaroVideoEmbed),
+                Box::new(extractor::LeFigaroVideoSection),
                 Box::new(extractor::Lego),
                 Box::new(extractor::LibraryOfCongress),
                 Box::new(extractor::LastFm),
@@ -2172,6 +2176,8 @@ impl YoutubeDl {
                 extractor::fetch_podbayfm_pages
             } else if extractor::yappy_pending_state(&pending.state) {
                 extractor::fetch_yappy_pages
+            } else if extractor::lefigaro_pending_state(&pending.state) {
+                extractor::fetch_lefigaro_pages
             } else if extractor::lbry_pending_state(&pending.state) {
                 extractor::fetch_lbry_pages
             } else if extractor::bitchute_pending_state(&pending.state) {

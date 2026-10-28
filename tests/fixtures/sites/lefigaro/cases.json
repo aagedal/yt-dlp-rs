@@ -1,0 +1,40 @@
+[
+ {
+  "url": "https://video.lefigaro.fr/embed/figaro/video/les-francais/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://video.lefigaro.fr/figaro/le-club/",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.lefigaro.fr/figaro/le-club/",
+  "args": [
+   "--flat-playlist",
+   "-I",
+   "21:22",
+   "--print",
+   "%(id)s|%(title)s|%(playlist_index)s|%(n_entries)s|%(playlist_count)s"
+  ]
+ },
+ {
+  "url": "https://video.lefigaro.fr/figaro/le-club/",
+  "args": [
+   "--flat-playlist",
+   "-I",
+   "2",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.lefigaro.fr/embed/figaro/video/vide/",
+  "args": [
+   "-j"
+  ]
+ }
+]
