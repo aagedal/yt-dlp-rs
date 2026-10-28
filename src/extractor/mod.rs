@@ -82,6 +82,7 @@ mod ebaumsworld;
 mod ebay;
 mod egghead;
 mod elonet;
+mod elpais;
 mod eltrecetv;
 mod epoch;
 mod eporner;
@@ -531,6 +532,7 @@ pub use egghead::{
     lesson_suitable as egghead_lesson_suitable,
 };
 pub use elonet::{Elonet, suitable as elonet_suitable};
+pub use elpais::{ElPais, suitable as elpais_suitable};
 pub use eltrecetv::{ElTreceTv, suitable as eltrecetv_suitable};
 pub use epoch::{Epoch, suitable as epoch_suitable};
 pub use eporner::{Eporner, suitable as eporner_suitable};

@@ -1669,6 +1669,18 @@
       "scope": "EggheadCourseIE lesson url-result playlists with course metadata and EggheadLessonIE HLS/DASH/direct media, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "elpais",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/elpais.py"
+      ],
+      "rust": [
+        "src/extractor/elpais.rs",
+        "tests/fixtures/sites/elpais/"
+      ],
+      "scope": "ElPaisIE url_cache prefix with JSONP or page media paths and page metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "eltrecetv",
       "status": "partial",
       "upstream": [

@@ -3537,6 +3537,14 @@ without `--video-password` keep upstream's error; the password flow (cookie
 and POST) is not ported.
 `tests/fixtures/sites/dropbox/` is compared with pinned upstream output.
 
+El País videos (`[SUB.]elpais.com/.../SLUG.html`) follow upstream `ElPaisIE`:
+the page's `url_cache` prefix (fatal) joined with the multimedia JSONP's
+`mp4` path (else the page's media-file variable, fatal), the still (else the
+OpenGraph image), the title variable or heading (else the OpenGraph title),
+the header date (else `datePublished`) and the OpenGraph description, with
+upstream's warnings. `tests/fixtures/sites/elpais/` is compared with pinned
+upstream output.
+
 El Trece TV episodes (`eltrecetv.com.ar/SHOW/capitulos/temporada-N/SLUG`)
 follow upstream `ElTreceTVIE`: the page's `Fusion.globalContent` player
 config (fatal; missing keys are upstream's `KeyError`s), its HLS playlist

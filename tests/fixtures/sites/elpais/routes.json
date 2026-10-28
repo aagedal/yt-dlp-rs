@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://elpais.com/elpais/2017/01/26/ciencia/1485456786_417876.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:description\" content=\"Ciencia\"></head><script>var url_cache = \"http://ep01.epimg.test/\";\nvar id_multimedia = '1485456786_417876';\nURLMediaStill = url_cache + 'stills/1.jpg';\ntituloVideo = 'Hallado un barco';</script><p class=\"date-header date-int updated\" title=\"2017-01-26\">x</p></html>"
+  },
+  {
+   "url": "http://elpais.com/vdpep/1/?pepid=1485456786_417876",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body": "callback({\"mp4\": \"videos/1485456786.mp4\"});"
+  },
+  {
+   "url": "http://blogs.elpais.com/la-voz/2014/02/tiempo.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"OG\"><meta property=\"og:image\" content=\"https://ep.test/og.jpg\"></head><script>var url_cache = \"http://ep02.epimg.test/\";\nurlVideo_1 = url_cache + 'v/clip.mp4';</script></html>"
+  },
+  {
+   "url": "https://elpais.com/x/none.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html></html>"
+  }
+ ]
+}
