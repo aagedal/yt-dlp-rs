@@ -3796,6 +3796,14 @@ detected natively, and undecodable tokens remain explicit native errors.
 `tests/fixtures/sites/cloudflarestream/` is compared with pinned upstream
 output.
 
+Gaskrank.tv videos (`gaskrank.tv/tv/CATEGORY/SLUG.htm`) follow upstream
+`GaskrankIE`: the page's first HTML5 media entry (none is a bare
+`IndexError`) with the OpenGraph (else `title` meta) title, the URL's
+category, the uploader and date line, homepage, tags, views and the fatal
+rating; a page without the uploader line fails like upstream's unbound
+local. `tests/fixtures/sites/gaskrank/` is compared with pinned upstream
+output.
+
 Groupon deals (`groupon.com/deals/SLUG`) follow upstream `GrouponIE`: the
 page's `payload` JSON (fatal) as a playlist of YouTube `url` results for its
 carousel's deal videos with a provider and media ID, with the OpenGraph title

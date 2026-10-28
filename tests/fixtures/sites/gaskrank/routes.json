@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "http://www.gaskrank.tv/tv/motorrad-fun/strike.htm",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Strike! Einparken\"></head><body>\n<p>Video von: Bikefun | vom: 22.10.2015</p><p>Homepage: <a href=\"x\">http://www.bikefun.test</a></p>\n<a href=\"/tv/tags/crash/\">Crash<</a> <a href=\"/tv/tags/fun/\">Fun<</a>\n<span class=\"gkRight\"><i class=\"icon-eye-open\"></i> 1.234</span><span itemprop=\"ratingValue\">3,5</span>\n<video poster=\"/p.jpg\"><source src=\"https://movies.gaskrank.tv/abc123-720.mp4\" type=\"video/mp4\"></video></body></html>"
+  },
+  {
+   "url": "http://www.gaskrank.tv/tv/motorrad-fun/plain.htm",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"title\" content=\"T\"></head><p>Video von: X | vom: 01.01.2020</p><span itemprop=\"ratingValue\">4</span><video src=\"https://gaskrank.test/a.mp4\"></video></html>"
+  },
+  {
+   "url": "http://www.gaskrank.tv/tv/motorrad-fun/bare.htm",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"T\"></head></html>"
+  },
+  {
+   "url": "http://www.gaskrank.tv/tv/motorrad-fun/nouploader.htm",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"T\"></head><span itemprop=\"ratingValue\">4</span><video src=\"https://gaskrank.test/a.mp4\"></video></html>"
+  }
+ ]
+}

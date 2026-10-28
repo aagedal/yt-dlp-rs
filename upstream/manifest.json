@@ -1814,6 +1814,18 @@
       "scope": "GameStarIE first VideoObject JSON-LD script, site title suffix, interactionCount, comment count and portal video URL compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "gaskrank",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/gaskrank.py"
+      ],
+      "rust": [
+        "src/extractor/gaskrank.rs",
+        "tests/fixtures/sites/gaskrank/"
+      ],
+      "scope": "GaskrankIE HTML5 media entry with page metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "genius",
       "status": "partial",
       "upstream": [
