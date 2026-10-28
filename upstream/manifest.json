@@ -920,6 +920,19 @@
       "scope": "ClypIE api.clyp.it JSON (with the URL's token), Ogg/MP3 and secure audio URLs, the page's wavStreamUrl, title KeyError, description/duration/timestamp compared with pinned upstream output through the fixture proxy; non-string titles remain explicit native errors"
     },
     {
+      "name": "cnbc",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/cnbc.py"
+      ],
+      "rust": [
+        "src/extractor/cnbc.rs",
+        "src/extractor/akamai.rs",
+        "tests/fixtures/sites/cnbc/"
+      ],
+      "scope": "CNBCVideoIE window.__s_data clipPlayer module with Akamai HDS/HLS formats (shared _extract_akamai_formats, subtitles ignored), the page's non-fatal JSON-LD overlaid by the player metadata, and upstream's regex, TypeError and KeyError messages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "coub",
       "status": "partial",
       "upstream": [
@@ -2604,6 +2617,18 @@
       "scope": "RuvIE page OpenGraph metadata and video.src HLS/MP3/direct formats with upstream's poster and timestamp fallbacks; RuvSpilaIE GraphQL episode HLS/direct formats, VTT subtitles, clip chapters and metadata (clips without a parseable time are an unsupported error). Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "s4c",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/s4c.py"
+      ],
+      "rust": [
+        "src/extractor/s4c.rs",
+        "tests/fixtures/sites/s4c/"
+      ],
+      "scope": "S4CIE player configuration subtitles and poster, UK/WW streaming-URL HLS formats, non-fatal programme details and KeyError messages; S4CSeriesIE series details as programme url-result playlists. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "sapo",
       "status": "partial",
       "upstream": [
@@ -2614,6 +2639,18 @@
         "tests/fixtures/sites/sapo/"
       ],
       "scope": "SapoIE rd3.videos.sapo.pt RSS item (MRSS synopsis, thumbnail, duration, author, date, counts, tags, m18) with SD and HD MP4 formats compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "sbs",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/sbs.py"
+      ],
+      "rust": [
+        "src/extractor/sbs.rs",
+        "tests/fixtures/sites/sbs/"
+      ],
+      "scope": "SBSIE player API SMIL formats and subtitles (forced-track renaming), the HEAD x-error-reason geo check and unexpected no-formats error, non-fatal video_stream metadata merged with the catalogue JSON, and the generic-page embed regex, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "screen9",
@@ -2769,6 +2806,7 @@
       ],
       "rust": [
         "src/extractor/srgssr.rs",
+        "src/extractor/akamai.rs",
         "tests/fixtures/sites/srgssr/"
       ],
       "scope": "SRGSSRIE mediaComposition chapters (onlyChapters for videos) with the No media information found, KeyError, geo (CH, no bypass) and SRGSSR said block-reason errors; HTTP(S) resources ranked by qualities(SD, HD), non-fatal plain HLS, AKAMAI HLS/HDS via the non-fatal akahd token and _extract_akamai_formats_and_subtitles without hosts (hds formats with extra_param_to_segment_url, hls formats, packaging parameters stripped from unsigned URLs), position-0 podcast formats, subtitleList tracks with the business-unit default language, title/description/timestamp/thumbnail/duration; SRGSSRPlayIE play-site URLs as srgssr: url results. Compared with pinned upstream output through the fixture proxy"

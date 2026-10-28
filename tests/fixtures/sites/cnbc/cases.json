@@ -1,0 +1,44 @@
+[
+ {
+  "url": "https://www.cnbc.com/video/2023/12/07/mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.cnbc.com/video/2023/12/07/mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand.html",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.cnbc.com/video/2023/12/08/jim-cramer-shares-his-take-on-seattles-tech-scene.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.cnbc.com/video/2023/12/08/the-epicenter-of-ai-is-in-seattle-says-jim-cramer.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.cnbc.com/video/2023/12/09/no-player.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.cnbc.com/video/2023/12/09/no-playback.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.cnbc.com/video/2023/12/09/no-data.html",
+  "args": [
+   "-J"
+  ]
+ }
+]

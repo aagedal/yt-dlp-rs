@@ -1,0 +1,138 @@
+{
+ "routes": [
+  {
+   "url": "https://www.s4c.cymru/df/full_prog_details?lang=e&programme_id=893068169",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"full_prog_details\": [{\"programme_title\": \"Uchafbwyntiau\", \"series_title\": \"Pride Cymru 2024\", \"full_billing\": \"  Uchafbwyntiau o Pride Cymru.\\n\", \"duration\": \"15\", \"clic_aired\": \"01/07/2024 18:00\", \"last_tx\": \"2024-07-17\", \"series_id\": 893067960}]}"
+  },
+  {
+   "url": "https://player-api.s4c-cdn.co.uk/player-configuration/prod?programme_id=893068169&signed=0&lang=en&mode=od&appId=clic&streamName=",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"filename\": \"Pride_2024S4C-P11_Uchafbwyntiau.mp4\", \"application\": \"s4c\", \"poster\": \"https://www.s4c.cymru/amg/1920x1080/Pride_2024S4C-P11_Uchafbwyntiau-0608.jpg\", \"subtitles\": [{\"0\": \"https://cdn.s4c.test/subs/893068169_cy.vtt\", \"1\": \"Cymraeg\", \"3\": \"cy\"}, {\"0\": \"https://cdn.s4c.test/subs/893068169_en.vtt\", \"1\": \"English\"}, {\"0\": \"not a url\", \"1\": \"x\"}]}"
+  },
+  {
+   "url": "https://player-api.s4c-cdn.co.uk/streaming-urls/prod?mode=od&application=clic&region=WW&extra=false&thirdParty=false&filename=Pride_2024S4C-P11_Uchafbwyntiau.mp4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"hls\": \"https://vod.s4c.test/893068169/master.m3u8\"}"
+  },
+  {
+   "url": "https://vod.s4c.test/893068169/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.s4c.cymru/df/full_prog_details?lang=e&programme_id=947426692",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"full_prog_details\": [{\"programme_title\": null, \"series_title\": \"3 Can\", \"full_billing\": \"Bwyd a Diod\", \"duration\": 23, \"clic_aired\": \"2026-05-13\", \"last_tx\": \"bad\", \"series_id\": \"\"}]}"
+  },
+  {
+   "url": "https://player-api.s4c-cdn.co.uk/player-configuration/prod?programme_id=947426692&signed=0&lang=en&mode=od&appId=clic&streamName=",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"filename\": \"3can_2026.mp4\", \"application\": \"s4chttpl\", \"poster\": \"not a url\"}"
+  },
+  {
+   "url": "https://player-api.s4c-cdn.co.uk/streaming-urls/prod?mode=od&application=clic&region=UK&extra=false&thirdParty=false&filename=3can_2026.mp4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"hls\": \"https://vod.s4c.test/947426692/master.m3u8\"}"
+  },
+  {
+   "url": "https://vod.s4c.test/947426692/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.s4c.cymru/df/full_prog_details?lang=e&programme_id=876045439",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "gone"
+  },
+  {
+   "url": "https://player-api.s4c-cdn.co.uk/player-configuration/prod?programme_id=876045439&signed=0&lang=en&mode=od&appId=clic&streamName=",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"filename\": \"ffa.mp4\"}"
+  },
+  {
+   "url": "https://player-api.s4c-cdn.co.uk/streaming-urls/prod?mode=od&application=clic&region=WW&extra=false&thirdParty=false&filename=ffa.mp4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"hls\": \"https://vod.s4c.test/876045439/master.m3u8\"}"
+  },
+  {
+   "url": "https://vod.s4c.test/876045439/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.s4c.cymru/df/full_prog_details?lang=e&programme_id=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"full_prog_details\": []}"
+  },
+  {
+   "url": "https://player-api.s4c-cdn.co.uk/player-configuration/prod?programme_id=1&signed=0&lang=en&mode=od&appId=clic&streamName=",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"poster\": null}"
+  },
+  {
+   "url": "https://www.s4c.cymru/df/full_prog_details?lang=e&programme_id=2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://player-api.s4c-cdn.co.uk/player-configuration/prod?programme_id=2&signed=0&lang=en&mode=od&appId=clic&streamName=",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"filename\": \"two.mp4\"}"
+  },
+  {
+   "url": "https://player-api.s4c-cdn.co.uk/streaming-urls/prod?mode=od&application=clic&region=WW&extra=false&thirdParty=false&filename=two.mp4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"dash\": \"x\"}"
+  },
+  {
+   "url": "https://www.s4c.cymru/df/series_details?lang=e&series_id=864982911&show_prog_in_series=Y",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"full_prog_details\": [{\"series_title\": \"Iaith ar Daith\"}], \"other_progs_in_series\": [{\"id\": \"864982913\"}, {\"id\": 864982915}, {\"title\": \"no id\"}]}"
+  },
+  {
+   "url": "https://www.s4c.cymru/df/series_details?lang=e&series_id=866852587&show_prog_in_series=Y",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"other_progs_in_series\": []}"
+  }
+ ]
+}

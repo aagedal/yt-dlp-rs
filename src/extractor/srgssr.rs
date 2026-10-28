@@ -6,10 +6,7 @@
 //! `_extract_akamai_formats_and_subtitles` without host overrides), full
 //! episode podcast URLs, subtitles and metadata; play-site URLs of srf.ch,
 //! rts.ch, rsi.ch, rtr.ch and swissinfo.ch are `srgssr:` `url` results.
-use super::{
-    Extractor, dict_format, dict_info, download_json, extract_f4m_optional,
-    extract_m3u8_master_optional,
-};
+use super::{Extractor, dict_format, dict_info, download_json, extract_m3u8_master_optional};
 use crate::{Error, ExtractResult, Result, SubtitleFormat, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -35,15 +32,6 @@ static PLAY_URL: LazyLock<Regex> = LazyLock::new(|| {
     )
     .unwrap()
 });
-/// Akamai's stream packaging parameters, removed from unsigned URLs.
-static AKAMAI_PARAMS: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"(?:b=[\d,-]+|(?:__a__|attributes)=off|__b__=\d+)&?").unwrap());
-static AKAMAI_HLS_PATH: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"(https?://[^/]+)/i/").unwrap());
-static AKAMAI_HDS_PATH: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"(https?://[^/]+)/z/").unwrap());
-
-const HDCORE_SIGN: &str = "hdcore=3.7.0";
 
 /// `_ERRORS`.
 fn block_message(reason: &str) -> Option<&'static str> {
@@ -168,51 +156,6 @@ fn auth_params(client: &Client, id: &str, format_id: &str) -> Result<Option<Stri
     }
 }
 
-/// `_extract_akamai_formats_and_subtitles(manifest_url, video_id)` without
-/// `hosts`: the HDS formats (with `hdcore`) and the HLS formats.
-fn akamai_formats(
-    client: &Client,
-    manifest_url: &str,
-    id: &str,
-    formats: &mut Vec<crate::VideoFormat>,
-    subtitles: &mut Subtitles,
-) -> Result<()> {
-    let manifest_url = if manifest_url.contains("hdnea=") {
-        manifest_url.to_owned()
-    } else {
-        AKAMAI_PARAMS
-            .replace_all(manifest_url, "")
-            .trim_matches('?')
-            .to_owned()
-    };
-    let mut f4m_url = AKAMAI_HLS_PATH
-        .replace(&manifest_url, "${1}/z/")
-        .replace("/master.m3u8", "/manifest.f4m");
-    if !f4m_url.contains("hdcore=") {
-        f4m_url.push(if f4m_url.contains('?') { '&' } else { '?' });
-        f4m_url.push_str(HDCORE_SIGN);
-    }
-    let f4m_url = Url::parse(&f4m_url)?;
-    for mut format in extract_f4m_optional(client, NAME, &f4m_url, id, Some("hds"))? {
-        format
-            .extra
-            .insert("extra_param_to_segment_url".into(), HDCORE_SIGN.into());
-        crate::info_order::mark_format_update(&mut format, "extra_param_to_segment_url");
-        formats.push(format);
-    }
-    let m3u8_url = AKAMAI_HDS_PATH
-        .replace(&manifest_url, "${1}/i/")
-        .replace("/manifest.f4m", "/master.m3u8");
-    let m3u8_url = Url::parse(&m3u8_url)?;
-    if let Some(stream) =
-        extract_m3u8_master_optional(client, &m3u8_url, NAME, id, Some("hls"), true, false)
-    {
-        formats.extend(stream.formats);
-        super::svt::merge_subtitles(subtitles, stream.subtitles);
-    }
-    Ok(())
-}
-
 /// `_get_media_data(bu, media_type, media_id)`.
 fn media_data(client: &Client, bu: &str, media_type: &str, id: &str) -> Result<Value> {
     let mut url = Url::parse(&format!(
@@ -334,7 +277,10 @@ impl Extractor for SrgSsr {
                             tokenized.push(if tokenized.contains('?') { '&' } else { '?' });
                             tokenized.push_str(&params);
                         }
-                        akamai_formats(client, &tokenized, &id, &mut formats, &mut subtitles)?;
+                        let (found, found_subtitles) =
+                            super::akamai::formats_and_subtitles(client, &tokenized, NAME, &id)?;
+                        formats.extend(found);
+                        super::svt::merge_subtitles(&mut subtitles, found_subtitles);
                     } else if protocol.as_deref() == Some("HLS") {
                         let manifest = Url::parse(format_url)?;
                         if let Some(stream) = extract_m3u8_master_optional(
@@ -520,16 +466,5 @@ mod tests {
             "http://play.swissinfo.ch/play/tv/business/video/why-people-were-against-tax-reforms?id=42960270"
         ));
         assert!(!play_suitable("https://www.srf.ch/play/tv/sendung/10vor10"));
-    }
-
-    #[test]
-    fn akamai_parameters_are_removed_from_unsigned_urls() {
-        let url =
-            "https://x.akamaihd.net/i/a/,b,c,.mp4.csmil/master.m3u8?__b__=800&b=500-1000&__a__=off";
-        let stripped = AKAMAI_PARAMS.replace_all(url, "");
-        assert_eq!(
-            stripped.trim_matches('?'),
-            "https://x.akamaihd.net/i/a/,b,c,.mp4.csmil/master.m3u8"
-        );
     }
 }

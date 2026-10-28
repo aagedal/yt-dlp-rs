@@ -1765,6 +1765,45 @@ the `videoFile` as the `sd` MP4 (`videoSize` width/height) and, when `HD` is
 `true`, its `/mov/39` variant as the 1280x720 `hd` MP4. Items missing an
 element upstream reads are explicit native errors.
 
+S4C Clic programmes (`[www.]s4c.cymru/clic/programme/ID`) follow upstream
+`S4CIE`: the non-fatal `df/full_prog_details` JSON, the fatal player
+configuration JSON (its `subtitles` entries with a URL `0`, name `1` and
+language `3`, default `en`, and its `poster` URL), the fatal streaming-URL
+JSON for its `filename` (region `UK` for the `s4chttpl` application, else
+`WW`) and its `hls` URL as fatal `hls` formats (subtitles ignored), with
+upstream's `KeyError` messages for a missing `filename` or `hls`. The first
+programme detail gives the programme (else series) title, stripped billing,
+minutes duration, `unified_strdate` upload and release dates, and truthy
+series and series ID. Subtitle entries without a name (a `None` track name
+upstream) are explicit native errors. Series (`.../clic/series/ID`) follow
+upstream `S4CSeriesIE`: the fatal `df/series_details` JSON's
+`other_progs_in_series` IDs as `S4C` `url` results titled by the series
+title. `tests/fixtures/sites/s4c/` is compared with pinned upstream output.
+
+SBS On Demand and SBS News videos (`sbs.com.au/ondemand/...ID`,
+`sbs.com.au/news/[embeds/]video/ID`) follow upstream `SBSIE` (geo countries
+`AU`): the player API's `video_smil?id=ID` SMIL document (fatal, a warning
+with `--ignore-no-formats-error`) through the shared SMIL parser (HLS, DASH
+and HTTP sources, text stream subtitles; variant playlists are read like the
+generic SMIL path), with subtitle tracks whose URL ends in `_fe.vtt`
+(case-insensitive) moved to `LANG-forced`. Without formats, the
+`Checking geo-restriction` HEAD request to `sbs-vod-prod-01.akamaized.net`
+(403 accepted, other HTTP errors a warning) gives the geo-restriction error
+when an `x-error-reason` header is `geo-blocked`, else upstream's unexpected
+`No formats are available` error (also with `--ignore-no-formats-error`).
+The non-fatal `video_stream` JSON's `video_object` is updated with the MPX
+catalogue JSON (fatal only when that object is empty), and upstream's
+`traverse_obj` metadata follows, including its branch semantics: `categories`
+are the string `taxonomy`, `genre.subgenre` and `name` values of the
+`genres` value and of every media value, a non-empty `partOfSeries` replaces
+`epName` with the catalogue `title`, `duration` tries `float_or_none` then
+`parse_duration`, and the age limit maps `classificationID`/`contentRating`
+through upstream's Australian guidelines. Generic pages embed it only through
+upstream's `_EMBED_REGEX`, including the literal `]` it requires before the
+`og:video` meta or iframe. Thumbnails without a `name` keep the port's key
+order (`url` first) rather than upstream's. `tests/fixtures/sites/sbs/` is
+compared with pinned upstream output.
+
 Crooks and Liars embeds (`embed.crooksandliars.com/embed|v/ID`) follow upstream
 `CrooksAndLiarsIE`: the `http:` embed page's fatal `var manifest` JSON, its
 `video/` flavors as formats ranked by `qualities(webm_low, mp4_low, webm_high,
@@ -2987,6 +3026,23 @@ player and embed attributes as `players.brightcove.net` URLs handed to
 OpenGraph title). Pages without such videos (upstream's generic-extractor
 fallback) remain explicit native errors.
 `tests/fixtures/sites/bostonglobe/` is compared with pinned upstream output.
+
+CNBC videos (`[www.]cnbc.com/video/.../NAME.html`) follow upstream
+`CNBCVideoIE`: the page's fatal `window.__s_data=` JSON and its first
+`page.page.layout[].columns[].modules[]` `clipPlayer` module's `data` dict
+(upstream's unprefixed `TypeError` without one, its `KeyError` without
+`playbackURL`). The `playbackURL` goes through the shared
+`_extract_akamai_formats` port (`src/extractor/akamai.rs`, also used by
+`SRGSSRIE`): packaging parameters stripped from unsigned URLs, non-fatal
+`hds` formats with `extra_param_to_segment_url`, non-fatal `hls` master
+playlist formats, and subtitles ignored with upstream's `akamai` warning.
+The info is `id`, `display_id` and formats, then the page's non-fatal
+JSON-LD (upstream's `unable to extract JSON-LD` warning without one), then
+the player's string ID, title, description, author names as creators, ISO
+8601 published/upload/last-published timestamps, thumbnail URL, integer
+duration and section title as channel, in upstream's merge order. JSON-LD
+media URLs remain explicit native errors. `tests/fixtures/sites/cnbc/` is
+compared with pinned upstream output.
 
 Dropbox shared files (`[www.]dropbox.com/s|sh|scl/fi|scl/fo|e/scl/...`)
 follow upstream `DropboxIE`: the URL basename (unquoted, extension removed)

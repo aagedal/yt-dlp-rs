@@ -1,0 +1,150 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.sbs.com.au/ondemand/video/single/320403011771/?source=drupal&vertical=thefeed",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"320403011771\", \"title\": \"Dingo Conservation (The Feed)\", \"description\": \"The dingo is Australia's apex predator.\", \"channel\": \"SBS VICELAND\", \"series\": \"The Feed\", \"series_id\": \"the-feed-uuid\", \"season_number\": 2, \"episode\": \"Dingo Conservation\", \"episode_number\": 5, \"timestamp\": 1408613220, \"release_year\": 2014, \"duration\": 308.0, \"is_live\": false, \"age_limit\": 14, \"categories\": [\"The Feed\"], \"tags\": [\"Coarse language\", \"Violence\"], \"thumbnails\": [{\"id\": \"thumbnail-small\", \"url\": \"https://sbs.test/img/dingo.jpg\"}, {\"id\": \"thumbnail-16x9\", \"url\": \"https://sbs.test/img/dingo_16x9.jpg\", \"width\": 1920, \"height\": 1080, \"resolution\": \"1920x1080\"}], \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/360/index.m3u8\", \"manifest_url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/720/index.m3u8\", \"manifest_url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"en\": [{\"url\": \"https://sbsvod.test/subs/320403011771_en.vtt\", \"ext\": \"vtt\"}], \"en-forced\": [{\"url\": \"https://sbsvod.test/subs/320403011771_EN_FE.VTT\", \"ext\": \"vtt\"}], \"zh\": [{\"url\": \"https://sbsvod.test/subs/320403011771_zh.vtt\", \"ext\": \"vtt\"}]}, \"uploader\": \"SBSC\", \"webpage_url\": \"http://www.sbs.com.au/ondemand/video/single/320403011771/?source=drupal&vertical=thefeed\", \"original_url\": \"http://www.sbs.com.au/ondemand/video/single/320403011771/?source=drupal&vertical=thefeed\", \"webpage_url_basename\": \"320403011771\", \"webpage_url_domain\": \"sbs.com.au\", \"extractor\": \"SBS\", \"extractor_key\": \"SBS\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://sbs.test/img/dingo_16x9.jpg\", \"display_id\": \"320403011771\", \"fulltitle\": \"Dingo Conservation (The Feed)\", \"duration_string\": \"5:08\", \"upload_date\": \"20140821\", \"season\": \"Season 2\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-3121\", \"url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/720/index.m3u8\", \"manifest_url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Dingo Conservation (The Feed) [320403011771].mp4\", \"filename\": \"Dingo Conservation (The Feed) [320403011771].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/720/index.m3u8\", \"manifest_url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.sbs.com.au/ondemand/video/single/320403011771/?source=drupal&vertical=thefeed",
+   "args": [
+    "--no-geo-bypass",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[SBS] Extracting URL: http://www.sbs.com.au/ondemand/video/single/320403011771/?source=drupal&vertical=thefeed",
+    "[SBS] 320403011771: Downloading SMIL file",
+    "[SBS] 320403011771: Downloading m3u8 information",
+    "[SBS] 320403011771: Downloading JSON metadata",
+    "[SBS] 320403011771: Downloading JSON metadata",
+    "[info] Available subtitles for 320403011771:",
+    "Language  Formats",
+    "en        vtt",
+    "en-forced vtt",
+    "zh        vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.sbs.com.au/news/video/471395907773/The-Feed-July-9",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"471395907773\", \"title\": \"The Feed July 9\", \"series\": \"The Feed\", \"series_id\": \"feed1\", \"episode\": \"Episode 9\", \"timestamp\": 1436400000, \"duration\": 1350, \"age_limit\": 15, \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://sbs-vod-prod-01.akamaized.net/471395907773/360/index.m3u8\", \"manifest_url\": \"https://sbs-vod-prod-01.akamaized.net/471395907773/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://sbs-vod-prod-01.akamaized.net/471395907773/720/index.m3u8\", \"manifest_url\": \"https://sbs-vod-prod-01.akamaized.net/471395907773/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {}, \"uploader\": \"SBSC\", \"webpage_url\": \"http://www.sbs.com.au/news/video/471395907773/The-Feed-July-9\", \"original_url\": \"http://www.sbs.com.au/news/video/471395907773/The-Feed-July-9\", \"webpage_url_basename\": \"The-Feed-July-9\", \"webpage_url_domain\": \"sbs.com.au\", \"extractor\": \"SBS\", \"extractor_key\": \"SBS\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"471395907773\", \"fulltitle\": \"The Feed July 9\", \"duration_string\": \"22:30\", \"upload_date\": \"20150709\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-3121\", \"url\": \"https://sbs-vod-prod-01.akamaized.net/471395907773/720/index.m3u8\", \"manifest_url\": \"https://sbs-vod-prod-01.akamaized.net/471395907773/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"The Feed July 9 [471395907773].mp4\", \"filename\": \"The Feed July 9 [471395907773].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://sbs-vod-prod-01.akamaized.net/471395907773/720/index.m3u8\", \"manifest_url\": \"https://sbs-vod-prod-01.akamaized.net/471395907773/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [SBS] 471395907773: Unable to download JSON metadata: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.sbs.com.au/ondemand/?play=1836638787723",
+   "args": [
+    "--no-geo-bypass",
+    "--add-header",
+    "x-sbs-case:geo",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [SBS] 1836638787723: This video is not available from your location due to geo restriction"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.sbs.com.au/ondemand/?play=1836638787723",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [SBS] 1836638787723: Unable to download webpage: HTTP Error 404: Not Found",
+    "ERROR: [SBS] 1836638787723: No formats are available; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.sbs.com.au/ondemand/?play=1836638787723",
+   "args": [
+    "--no-geo-bypass",
+    "--ignore-no-formats-error",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [SBS] 1836638787723: Unable to download webpage: HTTP Error 404: Not Found",
+    "ERROR: [SBS] 1836638787723: No formats are available; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.sbs.com.au/news/embeds/video/1840778819866",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [SBS] 1840778819866: Unable to download SMIL file: HTTP Error 500: OK (caused by <HTTPError 500: OK>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.sbs.com.au/ondemand/watch/1698704451971",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [SBS] 1698704451971: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.sbs-embed.test/thefeed/blog/dingo-conservation",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"320403011771\", \"title\": \"Dingo Conservation (The Feed)\", \"description\": \"The dingo is Australia's apex predator.\", \"channel\": \"SBS VICELAND\", \"series\": \"The Feed\", \"series_id\": \"the-feed-uuid\", \"season_number\": 2, \"episode\": \"Dingo Conservation\", \"episode_number\": 5, \"timestamp\": 1408613220, \"release_year\": 2014, \"duration\": 308.0, \"is_live\": false, \"age_limit\": 14, \"categories\": [\"The Feed\"], \"tags\": [\"Coarse language\", \"Violence\"], \"thumbnails\": [{\"id\": \"thumbnail-small\", \"url\": \"https://sbs.test/img/dingo.jpg\"}, {\"id\": \"thumbnail-16x9\", \"url\": \"https://sbs.test/img/dingo_16x9.jpg\", \"width\": 1920, \"height\": 1080, \"resolution\": \"1920x1080\"}], \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/360/index.m3u8\", \"manifest_url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/720/index.m3u8\", \"manifest_url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"en\": [{\"url\": \"https://sbsvod.test/subs/320403011771_en.vtt\", \"ext\": \"vtt\"}], \"en-forced\": [{\"url\": \"https://sbsvod.test/subs/320403011771_EN_FE.VTT\", \"ext\": \"vtt\"}], \"zh\": [{\"url\": \"https://sbsvod.test/subs/320403011771_zh.vtt\", \"ext\": \"vtt\"}]}, \"uploader\": \"SBSC\", \"original_url\": \"https://www.sbs-embed.test/thefeed/blog/dingo-conservation\", \"webpage_url\": \"https://www.sbs.com.au/ondemand/video/320403011771/Dingo-Conservation-The-Feed\", \"webpage_url_basename\": \"Dingo-Conservation-The-Feed\", \"webpage_url_domain\": \"sbs.com.au\", \"extractor\": \"SBS\", \"extractor_key\": \"SBS\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://sbs.test/img/dingo_16x9.jpg\", \"display_id\": \"320403011771\", \"fulltitle\": \"Dingo Conservation (The Feed)\", \"duration_string\": \"5:08\", \"upload_date\": \"20140821\", \"season\": \"Season 2\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-3121\", \"url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/720/index.m3u8\", \"manifest_url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Dingo Conservation (The Feed) [320403011771].mp4\", \"filename\": \"Dingo Conservation (The Feed) [320403011771].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/720/index.m3u8\", \"manifest_url\": \"https://sbs-vod-prod-01.akamaized.net/320403011771/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  }
+ ]
+}

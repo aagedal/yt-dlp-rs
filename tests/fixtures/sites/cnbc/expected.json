@@ -1,0 +1,114 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.cnbc.com/video/2023/12/07/mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"107344774\", \"display_id\": \"mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://cnbcmedia-vh.akamaihd.net/i/mp4/VCPS/Y2023/M12D07/107344774/,1080p,720p,.mp4.csmil/360/index.m3u8\", \"manifest_url\": \"https://cnbcmedia-vh.akamaihd.net/i/mp4/VCPS/Y2023/M12D07/107344774/,1080p,720p,.mp4.csmil/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://cnbcmedia-vh.akamaihd.net/i/mp4/VCPS/Y2023/M12D07/107344774/,1080p,720p,.mp4.csmil/720/index.m3u8\", \"manifest_url\": \"https://cnbcmedia-vh.akamaihd.net/i/mp4/VCPS/Y2023/M12D07/107344774/,1080p,720p,.mp4.csmil/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"title\": \"Here's a first look at McDonald's new spinoff brand, CosMc's\", \"description\": \"McDonald's unveiled CosMc's.\", \"thumbnails\": [{\"url\": \"https://image.cnbcfm.com/api/v1/image/ld.jpg\", \"id\": \"0\"}], \"duration\": 65, \"timestamp\": 1701977810, \"tags\": [\"food\", \" fast food\"], \"creators\": [\"Sean Conlon\"], \"release_timestamp\": 1701977375, \"modified_timestamp\": 1702053483, \"thumbnail\": \"https://image.cnbcfm.com/api/v1/image/107344192-hero.jpg?v=1701894855\", \"channel\": \"News Videos\", \"webpage_url\": \"https://www.cnbc.com/video/2023/12/07/mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand.html\", \"original_url\": \"https://www.cnbc.com/video/2023/12/07/mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand.html\", \"webpage_url_basename\": \"mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand.html\", \"webpage_url_domain\": \"cnbc.com\", \"extractor\": \"CNBCVideo\", \"extractor_key\": \"CNBCVideo\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Here's a first look at McDonald's new spinoff brand, CosMc's\", \"duration_string\": \"1:05\", \"upload_date\": \"20231207\", \"release_date\": \"20231207\", \"modified_date\": \"20231208\", \"release_year\": 2023, \"creator\": \"Sean Conlon\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-3121\", \"url\": \"https://cnbcmedia-vh.akamaihd.net/i/mp4/VCPS/Y2023/M12D07/107344774/,1080p,720p,.mp4.csmil/720/index.m3u8\", \"manifest_url\": \"https://cnbcmedia-vh.akamaihd.net/i/mp4/VCPS/Y2023/M12D07/107344774/,1080p,720p,.mp4.csmil/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Here's a first look at McDonald's new spinoff brand, CosMc's [107344774].mp4\", \"filename\": \"Here's a first look at McDonald's new spinoff brand, CosMc's [107344774].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://cnbcmedia-vh.akamaihd.net/i/mp4/VCPS/Y2023/M12D07/107344774/,1080p,720p,.mp4.csmil/720/index.m3u8\", \"manifest_url\": \"https://cnbcmedia-vh.akamaihd.net/i/mp4/VCPS/Y2023/M12D07/107344774/,1080p,720p,.mp4.csmil/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [CNBCVideo] mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand: Unable to download f4m manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.cnbc.com/video/2023/12/07/mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand.html",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[CNBCVideo] Extracting URL: https://www.cnbc.com/video/2023/12/07/mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand.html",
+    "[CNBCVideo] mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand: Downloading webpage",
+    "[CNBCVideo] mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand: Downloading f4m manifest",
+    "[CNBCVideo] mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand: Downloading m3u8 information",
+    "[info] Available formats for 107344774:",
+    "ID       EXT RESOLUTION |  FILESIZE   TBR PROTO | VCODEC      ACODEC",
+    "-----------------------------------------------------------------------",
+    "hls-921  mp4 640x360    | ~ 7.14MiB  921k m3u8  | avc1.4d401e mp4a.40.2",
+    "hls-3121 mp4 1280x720   | ~24.18MiB 3121k m3u8  | avc1.4d401f mp4a.40.2"
+   ],
+   "stderr": [
+    "WARNING: [CNBCVideo] mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand: Unable to download f4m manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.cnbc.com/video/2023/12/08/jim-cramer-shares-his-take-on-seattles-tech-scene.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"107345451\", \"display_id\": \"jim-cramer-shares-his-take-on-seattles-tech-scene\", \"formats\": [{\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://cnbcmedia-vh.akamaihd.net/i/mp4/VCPS/Y2023/M12D08/107345451/,720p,.mp4.csmil/540/index.m3u8\", \"manifest_url\": \"https://cnbcmedia-vh.akamaihd.net/i/mp4/VCPS/Y2023/M12D08/107345451/,720p,.mp4.csmil/master.m3u8?token=abc\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 960x540\"}, {\"format_id\": \"hds-1500\", \"url\": \"https://cnbcmedia-vh.akamaihd.net/z/mp4/VCPS/Y2023/M12D08/107345451/,720p,.mp4.csmil/hds_720\", \"manifest_url\": \"https://cnbcmedia-vh.akamaihd.net/z/mp4/VCPS/Y2023/M12D08/107345451/,720p,.mp4.csmil/hds_720\", \"ext\": \"unknown_video\", \"protocol\": \"f4m\", \"tbr\": 1500, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"preference\": null, \"quality\": null, \"extra_param_to_segment_url\": \"hdcore=3.7.0\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-1500 - 1280x720\"}], \"title\": \"Jim Cramer shares his take on Seattle's tech scene\", \"thumbnails\": [{\"url\": \"https://image.cnbcfm.com/api/v1/image/107345481.jpg\", \"id\": \"0\"}], \"duration\": 299, \"creators\": [\"Jim Cramer\"], \"timestamp\": 1702080139, \"channel\": \"Mad Money with Jim Cramer\", \"webpage_url\": \"https://www.cnbc.com/video/2023/12/08/jim-cramer-shares-his-take-on-seattles-tech-scene.html\", \"original_url\": \"https://www.cnbc.com/video/2023/12/08/jim-cramer-shares-his-take-on-seattles-tech-scene.html\", \"webpage_url_basename\": \"jim-cramer-shares-his-take-on-seattles-tech-scene.html\", \"webpage_url_domain\": \"cnbc.com\", \"extractor\": \"CNBCVideo\", \"extractor_key\": \"CNBCVideo\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://image.cnbcfm.com/api/v1/image/107345481.jpg\", \"fulltitle\": \"Jim Cramer shares his take on Seattle's tech scene\", \"duration_string\": \"4:59\", \"upload_date\": \"20231209\", \"release_year\": null, \"creator\": \"Jim Cramer\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hds-1500\", \"url\": \"https://cnbcmedia-vh.akamaihd.net/z/mp4/VCPS/Y2023/M12D08/107345451/,720p,.mp4.csmil/hds_720\", \"manifest_url\": \"https://cnbcmedia-vh.akamaihd.net/z/mp4/VCPS/Y2023/M12D08/107345451/,720p,.mp4.csmil/hds_720\", \"ext\": \"unknown_video\", \"protocol\": \"f4m\", \"tbr\": 1500, \"width\": 1280, \"height\": 720, \"extra_param_to_segment_url\": \"hdcore=3.7.0\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-1500 - 1280x720\", \"_filename\": \"Jim Cramer shares his take on Seattle's tech scene [107345451].unknown_video\", \"filename\": \"Jim Cramer shares his take on Seattle's tech scene [107345451].unknown_video\", \"__write_download_archive\": false}], \"format_id\": \"hds-1500\", \"url\": \"https://cnbcmedia-vh.akamaihd.net/z/mp4/VCPS/Y2023/M12D08/107345451/,720p,.mp4.csmil/hds_720\", \"manifest_url\": \"https://cnbcmedia-vh.akamaihd.net/z/mp4/VCPS/Y2023/M12D08/107345451/,720p,.mp4.csmil/hds_720\", \"ext\": \"unknown_video\", \"protocol\": \"f4m\", \"tbr\": 1500, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"preference\": null, \"quality\": null, \"extra_param_to_segment_url\": \"hdcore=3.7.0\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-1500 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [CNBCVideo] Ignoring subtitle tracks found in the akamai manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.cnbc.com/video/2023/12/08/the-epicenter-of-ai-is-in-seattle-says-jim-cramer.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [CNBCVideo] the-epicenter-of-ai-is-in-seattle-says-jim-cramer: Unable to download f4m manifest: HTTP Error 404: Not Found",
+    "WARNING: [CNBCVideo] the-epicenter-of-ai-is-in-seattle-says-jim-cramer: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [CNBCVideo] unable to extract JSON-LD ; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [CNBCVideo] the-epicenter-of-ai-is-in-seattle-says-jim-cramer: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.cnbc.com/video/2023/12/09/no-player.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 'NoneType' object is not subscriptable"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.cnbc.com/video/2023/12/09/no-playback.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: no-playback: An extractor error has occurred. (caused by KeyError('playbackURL')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.cnbc.com/video/2023/12/09/no-data.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [CNBCVideo] no-data: Unable to extract video data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

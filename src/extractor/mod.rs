@@ -1,5 +1,6 @@
 mod acast;
 pub mod adobepass;
+mod akamai;
 mod aljazeera;
 mod amadeustv;
 mod angel;
@@ -37,6 +38,7 @@ mod clipchamp;
 mod cloudflarestream;
 mod cloudycdn;
 mod clyp;
+mod cnbc;
 mod coub;
 mod cozytv;
 mod cpac;
@@ -208,7 +210,9 @@ mod rtvslo;
 mod rumble;
 mod rutube;
 mod ruv;
+mod s4c;
 mod sapo;
+mod sbs;
 mod screen9;
 mod screenrec;
 mod sen;
@@ -362,6 +366,7 @@ pub use clipchamp::{Clipchamp, suitable as clipchamp_suitable};
 pub use cloudflarestream::{CloudflareStream, suitable as cloudflarestream_suitable};
 pub use cloudycdn::{CloudyCdn, suitable as cloudycdn_suitable};
 pub use clyp::{Clyp, suitable as clyp_suitable};
+pub use cnbc::{CnbcVideo, suitable as cnbc_suitable};
 pub use coub::{Coub, suitable as coub_suitable};
 pub use cozytv::{CozyTv, suitable as cozytv_suitable};
 pub use cpac::{
@@ -654,7 +659,9 @@ pub use rutube::{
     Rutube, RutubeEmbed, embed_suitable as rutube_embed_suitable, suitable as rutube_suitable,
 };
 pub use ruv::{Ruv, RuvSpila, spila_suitable as ruv_spila_suitable, suitable as ruv_suitable};
+pub use s4c::{S4c, S4cSeries, series_suitable as s4c_series_suitable, suitable as s4c_suitable};
 pub use sapo::{Sapo, suitable as sapo_suitable};
+pub use sbs::{Sbs, suitable as sbs_suitable};
 pub use screen9::{Screen9, suitable as screen9_suitable};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
