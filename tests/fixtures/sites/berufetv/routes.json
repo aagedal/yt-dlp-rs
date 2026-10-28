@@ -1,0 +1,42 @@
+{
+ "routes": [
+  {
+   "url": "https://rest.arbeitsagentur.de/infosysbub/berufetv/pc/v1/film-metadata",
+   "request_headers": {
+    "X-API-Key": "79089773-4892-4386-86e6-e8503669f426"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"metadaten\": [{\"miId\": \"other\"}, {\"miId\": \"DvKC3DUpMKvUZ_6fEnfg3u\", \"titel\": \"Volkswirtschaft\", \"beschreibung\": \"Desc\", \"kategorie\": \"Studienberufe\", \"themengebiete\": [\"Wirtschaft\"]}]}"
+  },
+  {
+   "url": "https://d.video-cdn.net/play/player/8YRzUk6pTzmBdrsLe9Y88W/video/DvKC3DUpMKvUZ_6fEnfg3u",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"duration\": 220000, \"videoSources\": {\"html\": {\"auto\": [{\"source\": \"https://vcdn.test/master.m3u8\", \"mimeType\": \"application/x-mpegURL\"}], \"720\": [{\"source\": \"https://vcdn.test/720.mp4\", \"mimeType\": \"video/mp4\"}]}}, \"videoTracks\": [{\"type\": \"SUBTITLES\", \"language\": \"de\", \"source\": \"https://vcdn.test/de.vtt\", \"label\": \"Deutsch\"}, {\"type\": \"AUDIO\"}], \"videoMetaData\": {\"title\": \"VMD\"}}"
+  },
+  {
+   "url": "https://vcdn.test/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://d.video-cdn.net/play/player/8YRzUk6pTzmBdrsLe9Y88W/video/other2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"duration\": 1000, \"videoSources\": {\"html\": {\"360\": [{\"source\": \"https://vcdn.test/360.mp4\", \"mimeType\": \"video/mp4\"}]}}, \"videoMetaData\": {\"title\": \"Fallback\"}}"
+  },
+  {
+   "url": "https://d.video-cdn.net/play/player/8YRzUk6pTzmBdrsLe9Y88W/video/broken",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  }
+ ]
+}

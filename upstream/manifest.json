@@ -764,6 +764,18 @@
       "scope": "BeaconTvIE Apollo Content entry, JSON-encoded JW Player video/podcast data with content title, description and timestamp, and upstream's content/members errors. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "berufetv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/berufetv.py"
+      ],
+      "rust": [
+        "src/extractor/berufetv.rs",
+        "tests/fixtures/sites/berufetv/"
+      ],
+      "scope": "BerufeTVIE movingimage player sources and subtitle tracks with film metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "bfmtv",
       "status": "partial",
       "upstream": [

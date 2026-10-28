@@ -927,6 +927,15 @@ that matches (else `Unable to extract jwplatform id`) as a `url` result for
 `jwplatform:ID`. `tests/fixtures/sites/businessinsider/` is compared with
 pinned upstream output.
 
+BerufeTV films (`web.arbeitsagentur.de/berufetv/.../film;filmId=ID`) follow
+upstream `BerufeTVIE`: the movingimage player JSON's `auto` HLS playlist
+(fatal; its subtitles replace earlier ones) and progressive sources, and its
+subtitle tracks as VTT, with the film metadata API's matching entry
+(non-fatal) for the title (else the player's), description, thumbnail (else
+the CDN default), category and topics. `webpage_url_basename` drops the last
+path segment's `;params`, like Python's `urlparse`.
+`tests/fixtures/sites/berufetv/` is compared with pinned upstream output.
+
 BoxCast broadcasts (`boxcast.tv/view-embed/ID`, `channel/CH?...b=ID`,
 `video-portal/A/B/ID`) follow upstream `BoxCastVideoIE`: the page's
 `BOXCAST_PRELOAD` broadcast and view data (else the broadcasts API, its view

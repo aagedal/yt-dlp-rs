@@ -21,6 +21,7 @@ mod bandcamp;
 mod beacon;
 mod beeg;
 mod behindkink;
+mod berufetv;
 mod bfmtv;
 mod bigo;
 mod bild;
@@ -431,6 +432,7 @@ pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use beacon::{BeaconTv, suitable as beacon_suitable};
 pub use beeg::{Beeg, suitable as beeg_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};
+pub use berufetv::{BerufeTv, suitable as berufetv_suitable};
 pub use bfmtv::{
     Bfmtv, BfmtvArticle, BfmtvLive, article_suitable as bfmtv_article_suitable,
     live_suitable as bfmtv_live_suitable, suitable as bfmtv_suitable,
