@@ -315,6 +315,7 @@ mod trtworld;
 mod trunews;
 mod tumblr;
 mod tv2;
+mod tv24ua;
 mod tv2dk;
 mod tv4;
 mod tv5mondeplus;
@@ -913,6 +914,7 @@ pub use tv2dk::{
 };
 pub use tv4::{Tv4, suitable as tv4_suitable};
 pub use tv5mondeplus::{Tv5MondePlus, suitable as tv5mondeplus_suitable};
+pub use tv24ua::{Tv24UaVideo, suitable as tv24ua_suitable};
 pub use tva::{Tva, suitable as tva_suitable};
 pub use tvanouvelles::{
     TvaNouvelles, TvaNouvellesArticle, article_suitable as tvanouvelles_article_suitable,

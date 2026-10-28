@@ -2108,7 +2108,7 @@ enum Embed {
     Info(WebpageEntry),
 }
 
-static EMBED_SITES: [EmbedSite; 34] = [
+static EMBED_SITES: [EmbedSite; 35] = [
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
@@ -2291,6 +2291,14 @@ static EMBED_SITES: [EmbedSite; 34] = [
         extractor: Some(&super::streamable::Streamable),
         embed_urls: super::streamable::embed_urls,
         temp_id: super::streamable::temp_id,
+        webpage: None,
+    },
+    EmbedSite {
+        name: super::tv24ua::NAME,
+        key: super::tv24ua::KEY,
+        extractor: Some(&super::tv24ua::Tv24UaVideo),
+        embed_urls: super::tv24ua::embed_urls,
+        temp_id: super::tv24ua::temp_id,
         webpage: None,
     },
     EmbedSite {

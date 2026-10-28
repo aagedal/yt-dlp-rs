@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://24tv.ua/news/showPlayer.do?objectId=2074790&videoUrl=2022/07/2074790&w=640&h=360",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"\u0420\u043e\u0441\u0456\u044f\u043d\u0438\"><meta property=\"og:description\" content=\"\u041e\u043f\u0438\u0441\"></head><script>\nvar vPlayConfig = {poster: 'https://24tv.test/p.jpg', autoplay: false};\nvPlayConfig.sources = [{src: 'https://24tv.test/v/master.m3u8', type: 'application/x-mpegURL'}, {src: 'https://24tv.test/v/a.mp4', type: 'video/mp4'}];\n</script></html>"
+  },
+  {
+   "url": "https://24tv.test/v/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://24tv.ua/news/showPlayer.do?objectId=2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Only title</title><meta property=\"og:image\" content=\"https://24tv.test/og.jpg\"></head><script>vPlayConfig.sources = [{src: \"https://24tv.test/v/b.mp4\"}]</script></html>"
+  },
+  {
+   "url": "https://24tv.ua/news/showPlayer.do?objectId=3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html></html>"
+  },
+  {
+   "url": "https://24tv.test/article",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Article</title></head><body><iframe src=\"https://24tv.ua/news/showPlayer.do?objectId=2&w=1\"></iframe></body></html>"
+  }
+ ]
+}

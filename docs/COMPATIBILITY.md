@@ -3549,6 +3549,13 @@ range`), the runtime, uploader and the RTA age limit. Encodings that are not
 JSON or lack a name (upstream `TypeError`s) are unsupported errors.
 `tests/fixtures/sites/youjizz/` is compared with pinned upstream output.
 
+24 Kanal player pages (`24tv.ua/news/showPlayer.do?...objectId=ID`, `24tv.ua`)
+follow upstream `TV24UAVideoIE`: every `vPlayConfig.sources` list (HLS
+playlists fatal, else direct files), the config's poster (else the OpenGraph
+image, warning when missing), the generic page title and the OpenGraph
+description. 24tv.ua player iframes on generic pages are embeds.
+`tests/fixtures/sites/tv24ua/` is compared with pinned upstream output.
+
 TVA+ episodes (`tvaplus.ca/.../SLUG-ID`, `tvaplus`) follow upstream `TVAIE` as
 transparent `url` results of their Brightcove video smuggled with the `CA`
 geo countries: the Next.js `staticEntity` video ID (missing keys are

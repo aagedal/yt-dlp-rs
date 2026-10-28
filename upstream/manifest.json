@@ -3894,6 +3894,18 @@
       "scope": "TumblrIE anonymous API token, post page and permalink API, iframe/post-media video formats, provider embeds as url results and post metadata; OAuth password-grant login with the API token (tfa_token, tfa_required retry, API errors, non-fatal Login failed warnings); compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "tv24ua",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tv24ua.py"
+      ],
+      "rust": [
+        "src/extractor/tv24ua.rs",
+        "tests/fixtures/sites/tv24ua/"
+      ],
+      "scope": "TV24UAVideoIE vPlayConfig sources, poster and page metadata, and embeds, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "tva",
       "status": "partial",
       "upstream": [
