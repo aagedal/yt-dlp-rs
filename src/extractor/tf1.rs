@@ -37,22 +37,6 @@ fn unsupported(what: &str) -> Error {
     Error::UnsupportedHtml5(format!("TF1 {what} are not supported natively"))
 }
 
-/// `json.dumps(text)` (`ensure_ascii=True`).
-fn dumps_str(text: &str) -> String {
-    let mut out = String::new();
-    for unit in serde_json::to_string(text).unwrap_or_default().chars() {
-        if unit.is_ascii() {
-            out.push(unit);
-        } else {
-            let mut buffer = [0u16; 2];
-            for code in unit.encode_utf16(&mut buffer) {
-                out.push_str(&format!("\\u{code:04x}"));
-            }
-        }
-    }
-    out
-}
-
 fn int_or_none(value: Option<&Value>) -> Option<i64> {
     match value? {
         Value::Number(number) => number
@@ -85,11 +69,8 @@ impl Extractor for Tf1 {
         ));
         let mut api = Url::parse("https://www.tf1.fr/graphql/web")?;
         // `json.dumps`' default separators.
-        let variables = format!(
-            "{{\"programSlug\": {}, \"slug\": {}}}",
-            dumps_str(&program_slug),
-            dumps_str(&slug)
-        );
+        let variables =
+            crate::output::python_json_dumps(&json!({"programSlug": program_slug, "slug": slug}));
         api.query_pairs_mut()
             .append_pair(
                 "id",

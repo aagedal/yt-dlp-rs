@@ -47,22 +47,6 @@ fn py_str(value: &Value) -> Result<String> {
     }
 }
 
-/// `json.dumps(text)` (`ensure_ascii=True`).
-fn dumps_str(text: &str) -> String {
-    let mut out = String::new();
-    for unit in serde_json::to_string(text).unwrap_or_default().chars() {
-        if unit.is_ascii() {
-            out.push(unit);
-        } else {
-            let mut buffer = [0u16; 2];
-            for code in unit.encode_utf16(&mut buffer) {
-                out.push_str(&format!("\\u{code:04x}"));
-            }
-        }
-    }
-    out
-}
-
 impl Extractor for AlJazeera {
     fn key(&self) -> &'static str {
         NAME
@@ -114,10 +98,8 @@ impl Extractor for AlJazeera {
             .append_pair("operationName", "ArchipelagoSingleArticleQuery")
             .append_pair(
                 "variables",
-                &format!(
-                    "{{\"name\": {}, \"postType\": {}}}",
-                    dumps_str(&display_id),
-                    dumps_str(post_type)
+                &crate::output::python_json_dumps(
+                    &json!({"name": display_id, "postType": post_type}),
                 ),
             );
         let data = download_json_headers(client, &api, NAME, &display_id, &[("wp-site", wp)])?;
@@ -185,10 +167,5 @@ mod tests {
         assert!(!suitable("https://www.aljazeera.com/2021/11/6/x"));
         assert!(suitable("https://www.aljazeera.com//2021/11/6/x"));
         assert!(!suitable("https://www.aljazeera.com/videos/"));
-    }
-
-    #[test]
-    fn variables_follow_json_dumps() {
-        assert_eq!(dumps_str("đoković"), "\"\\u0111okovi\\u0107\"");
     }
 }
