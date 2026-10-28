@@ -1,0 +1,89 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://pyvideo.org/pycon-us-2013/become-a-logging-expert.html",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"become-a-logging-expert\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=24KrjbT1hwk\", \"__x_forwarded_for_ip\": null}, {\"id\": \"2542\", \"url\": \"https://media.pyvideo.test/logging.mp4\", \"title\": \"Become a Logging Expert\", \"description\": \"Logging talk summary\", \"thumbnail\": \"https://i.ytimg.test/logging.jpg\", \"duration\": 1834, \"playlist_count\": 3, \"playlist\": \"become-a-logging-expert\", \"playlist_id\": \"become-a-logging-expert\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://pyvideo.org/pycon-us-2013/become-a-logging-expert.html\", \"n_entries\": 3, \"webpage_url\": \"http://pyvideo.org/pycon-us-2013/become-a-logging-expert.html\", \"webpage_url_basename\": \"become-a-logging-expert.html\", \"webpage_url_domain\": \"pyvideo.org\", \"playlist_index\": 2, \"__last_playlist_index\": 3, \"extractor\": \"Pyvideo\", \"extractor_key\": \"Pyvideo\", \"playlist_autonumber\": 2, \"thumbnails\": [{\"url\": \"https://i.ytimg.test/logging.jpg\", \"id\": \"0\"}], \"display_id\": \"2542\", \"fulltitle\": \"Become a Logging Expert\", \"duration_string\": \"30:34\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Become a Logging Expert [2542].mp4\", \"filename\": \"Become a Logging Expert [2542].mp4\", \"__write_download_archive\": false}]}, {\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://vimeo.test/123456\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"http://pyvideo.org/pycon-us-2013/become-a-logging-expert.html\", \"original_url\": \"http://pyvideo.org/pycon-us-2013/become-a-logging-expert.html\", \"webpage_url_basename\": \"become-a-logging-expert.html\", \"webpage_url_domain\": \"pyvideo.org\", \"extractor\": \"Pyvideo\", \"extractor_key\": \"Pyvideo\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://pyvideo.org/pycon-us-2013/become-a-logging-expert.html",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(url)s|%(duration)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "24KrjbT1hwk|NA|https://www.youtube.com/watch?v=24KrjbT1hwk|NA",
+    "2542|Become a Logging Expert|https://media.pyvideo.test/logging.mp4|1834",
+    "NA|NA|https://vimeo.test/123456|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://pyvideo.org/pygotham-2012/spotify-talk.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"spotify-talk\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"spotify-talk\", \"url\": \"https://media.pyvideo.test/gloriajw-spotify.m4v\", \"title\": \"Spotify With Erik\", \"description\": \"Erik talks\", \"thumbnail\": null, \"duration\": 93, \"playlist_count\": 1, \"playlist\": \"spotify-talk\", \"playlist_id\": \"spotify-talk\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://pyvideo.org/pygotham-2012/spotify-talk.html\", \"n_entries\": 1, \"webpage_url\": \"http://pyvideo.org/pygotham-2012/spotify-talk.html\", \"webpage_url_basename\": \"spotify-talk.html\", \"webpage_url_domain\": \"pyvideo.org\", \"playlist_index\": 1, \"__last_playlist_index\": 1, \"extractor\": \"Pyvideo\", \"extractor_key\": \"Pyvideo\", \"playlist_autonumber\": 1, \"display_id\": \"spotify-talk\", \"fulltitle\": \"Spotify With Erik\", \"duration_string\": \"1:33\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4v\", \"video_ext\": \"m4v\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Spotify With Erik [spotify-talk].m4v\", \"filename\": \"Spotify With Erik [spotify-talk].m4v\", \"__write_download_archive\": false}]}], \"webpage_url\": \"http://pyvideo.org/pygotham-2012/spotify-talk.html\", \"original_url\": \"http://pyvideo.org/pygotham-2012/spotify-talk.html\", \"webpage_url_basename\": \"spotify-talk.html\", \"webpage_url_domain\": \"pyvideo.org\", \"extractor\": \"Pyvideo\", \"extractor_key\": \"Pyvideo\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://pyvideo.org/pycon-2014/empty-data.html",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"empty-data\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=BaW_jenozKc\", \"__x_forwarded_for_ip\": null}, {\"id\": \"empty-data\", \"url\": \"https://media.pyvideo.test/fallback.webm\", \"title\": \"Fallback & Talk\", \"playlist_count\": 2, \"playlist\": \"empty-data\", \"playlist_id\": \"empty-data\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://pyvideo.org/pycon-2014/empty-data.html\", \"n_entries\": 2, \"webpage_url\": \"https://pyvideo.org/pycon-2014/empty-data.html\", \"webpage_url_basename\": \"empty-data.html\", \"webpage_url_domain\": \"pyvideo.org\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"Pyvideo\", \"extractor_key\": \"Pyvideo\", \"playlist_autonumber\": 2, \"display_id\": \"empty-data\", \"fulltitle\": \"Fallback & Talk\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Fallback & Talk [empty-data].webm\", \"filename\": \"Fallback & Talk [empty-data].webm\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://pyvideo.org/pycon-2014/empty-data.html\", \"original_url\": \"https://pyvideo.org/pycon-2014/empty-data.html\", \"webpage_url_basename\": \"empty-data.html\", \"webpage_url_domain\": \"pyvideo.org\", \"extractor\": \"Pyvideo\", \"extractor_key\": \"Pyvideo\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://pyvideo.org/pycon-2015/no-media.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [Pyvideo] no-media: Unable to download JSON metadata: HTTP Error 404: Not Found",
+    "WARNING: [Pyvideo] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [Pyvideo] no-media: Unable to extract media urls; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://pyvideo.org/pycon-2014/no-videos",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: no-videos: An extractor error has occurred. (caused by KeyError('videos')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

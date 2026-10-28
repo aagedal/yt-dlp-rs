@@ -2723,6 +2723,18 @@
       "scope": "PinkbikeIE data-quality/src formats (plain and escaped quotes, heights), OpenGraph title/description/thumbnail, video:duration, uploader, upload date, location and view/comment counts with upstream warnings, NoneType/no-formats errors compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "pyvideo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/pyvideo.py"
+      ],
+      "rust": [
+        "src/extractor/pyvideo.rs",
+        "tests/fixtures/sites/pyvideo/"
+      ],
+      "scope": "PyvideoIE pyvideo/data JSON playlists (YouTube url results and direct media with id/title/description/thumbnail/duration) and the webpage Media URL fallback after a non-fatal JSON failure, with KeyError and missing-media-urls errors, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "pinterest",
       "status": "partial",
       "upstream": [

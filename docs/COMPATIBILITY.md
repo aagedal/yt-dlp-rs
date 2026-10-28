@@ -1619,6 +1619,18 @@ CozyTV replays (`cozy.tv/USER/replays/ID`) follow upstream `CozyTVIE`: the
 (else the URL user) uploader, `unified_strdate` date, raw duration and
 `was_live`, with the CDN `index.m3u8` as fatal HLS formats and subtitles.
 
+PyVideo talks (`pyvideo.org/CATEGORY/ID`) follow upstream `PyvideoIE`: the
+`pyvideo/data` repository's `CATEGORY/videos/ID.json` (non-fatal; a failed
+request or parse warns) as a playlist of its videos with a URL: `youtube`
+types as `url` results for YouTube, others as direct-media entries with the
+talk's ID (else the URL ID), title (a missing one is upstream's `KeyError`),
+description or summary, thumbnail and integer duration. An empty or failed
+JSON falls back to the page's `Media URL:` links (else `Unable to extract
+media urls`) with its non-fatal OpenGraph title, YouTube watch links again as
+`url` results. Video lists that are not arrays and non-string fields stay
+explicit native errors. `tests/fixtures/sites/pyvideo/` is compared with
+pinned upstream output.
+
 PGA Tour videos (`pgatour.com/video/SECTION/[T]ID`) follow upstream
 `PGATourIE` as `url` results for their Brightcove player (the TOURCast
 account and player for `T` IDs). `tests/fixtures/sites/pgatour/` is compared
