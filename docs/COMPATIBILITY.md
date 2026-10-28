@@ -584,6 +584,19 @@ formats (`m3u8_native` for HLS; `.mp3.NNNk` URLs give the ABR/TBR). Format
 responses whose body is not empty but fails to parse remain explicit native
 errors, since this port does not reproduce Python's `JSONDecodeError` text.
 
+STV Player videos and episodes (`player.stv.tv/video|episode/ID`) follow
+upstream `STVPlayerIE`: the page is downloaded non-fatally (a failure warns
+without its cause), its Next.js `playerApiCache` `/episodes/` or
+`/shortform/` result is used, else `player.api.stv.tv/v1/episodes|shortform/ID`
+(the page's `episodeId` first; a missing `results` is upstream's
+`KeyError`); `drmEnabled` programmes raise upstream's DRM error. The result
+is a `url_transparent` BrightcoveNew player URL (account `1486976045`,
+smuggled `geo_countries` `GB`) overlaid with the summary, the `length`
+duration in seconds, the `_subtitles` tracks as `en` subtitles (an empty
+dict still replaces Brightcove's, like upstream), the view count and the
+programme name. `tests/fixtures/sites/stv/` is compared with pinned upstream
+output (`--no-geo-bypass`).
+
 Substack posts (`SUB.substack.com/p/SLUG`) follow upstream `SubstackIE`: the
 page's `window._preloads = JSON.parse("...")` literal (`Unable to extract
 json string` without it; decoded with `js_to_json`, then parsed), the
@@ -3415,6 +3428,30 @@ view count, English TTML captions and OpenGraph image. An empty derivative
 list is upstream's bare `list index out of range`. `tests/fixtures/sites/libraryofcongress/`
 is compared with pinned upstream output.
 
+Last.fm pages follow upstream `lastfm.py`. Track pages
+(`last.fm/music/ARTIST/ALBUM/TRACK`, `LastFMIE`) follow the fatal
+`header-new-playlink` link as a YouTube `url` result. Artist and tag pages
+(`last.fm/music|tag/ID[/PATH]`, `LastFMPlaylistIE`) and user playlists
+(`last.fm/user/USER/playlists/ID`, `LastFMUserIE`) are read as a generator:
+the URL with `page=N` from 1 (`Downloading page N`) until a page has no
+`data-youtube-url` links, or only the URL's own `page` (`int_or_none`) page;
+each link's first occurrence is a YouTube `url` result, and pages are only
+requested as entries are needed (`-I 1` reads one page). YouTube resolution
+is the native YouTube extractor's. `tests/fixtures/sites/lastfm/` is compared
+with pinned upstream output (`--flat-playlist` for playlists).
+
+Listen Notes episodes (`listennotes.com/podcasts/SHOW/SLUG-ID/`) follow
+upstream `ListenNotesIE`: the fatal `original-content` JSON updated with the
+`episode-play-button-toolbar`/`episode-no-play-button-toolbar` element's
+attributes, the `audio` URL (a missing one is upstream's `KeyError`), the
+`data-title`, first `<h1>` or `og:title` title, the cleaned `ln-text-p`
+description (paragraph breaks as blank lines) or the `DURATION - TEXT`
+description meta's text (with upstream's warnings when missing), the
+`audio_length`/`data-duration` or meta duration, the episode UUID,
+thumbnail, channel, `nlp_entities` cast, channel URL and channel ID.
+Pages without a toolbar element remain an explicit native error.
+`tests/fixtures/sites/listennotes/` is compared with pinned upstream output.
+
 Libsyn episodes (`html5-player.libsyn.com/embed/episode/id/ID`) follow
 upstream `LibsynIE`: the player page (requested without the URL's trailing
 options) and its fatal `playlistItem` JSON, the item, `episode-title`,
@@ -3707,6 +3744,18 @@ entries are requested): each row's play button `data-track-id` and
 the row's title, track number and artists; rows without both IDs warn
 `Skipping track N, ID(s) not found` when reached. `tests/fixtures/sites/monstercat/`
 is compared with pinned upstream output.
+
+MuseScore scores (`musescore.com/user/N/scores/ID`, `musescore.com/USER/SLUG`)
+follow upstream `MuseScoreIE`: the page (downloaded without an ID), its
+fatal `og:url` (an empty one keeps the input URL) for the score ID, the
+`api/jmuse?id=ID&index=0&type=mp3` JSON requested with the
+`md5(ID + 'mp30gs')[:4]` authorization header, and its `info.url` MP3 as
+the only format (`vcodec` `none`; missing keys are upstream's `KeyError`),
+with the `og:title`, cleaned `description` meta, `og:image`,
+`musescore:author` and `musescore:composer` (as `creator`) fields, each
+missing one warning like upstream. An `og:url` that is not a score URL
+remains an explicit native error. `tests/fixtures/sites/musescore/` is
+compared with pinned upstream output.
 
 Moving Image Archive films (`movingimage.nls.uk/film/ID`) follow upstream
 `MovingImageIE`: the player's fatal `file` manifest as HLS formats (subtitles

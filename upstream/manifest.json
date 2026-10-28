@@ -226,6 +226,18 @@
       "scope": "MediaiteIE jwplayer player/data-video-id media ID and its cdn.jwplayer.com/v2/media JSON parsed like JWPlatform (single-item playlists only). Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "musescore",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/musescore.py"
+      ],
+      "rust": [
+        "src/extractor/musescore.rs",
+        "tests/fixtures/sites/musescore/"
+      ],
+      "scope": "MuseScoreIE score pages (fatal og:url score ID, jmuse MP3 URL with the MD5 authorization token, OpenGraph and musescore: meta fields with upstream's warnings, KeyError message) compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "mux",
       "status": "partial",
       "upstream": [
@@ -1899,6 +1911,18 @@
       "scope": "Ku6IE heading title and player JSON URL as an untyped result with KeyError/title errors compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "lastfm",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/lastfm.py"
+      ],
+      "rust": [
+        "src/extractor/lastfm.rs",
+        "tests/fixtures/sites/lastfm/"
+      ],
+      "scope": "LastFMIE track pages' YouTube player link as a url result, LastFMPlaylistIE and LastFMUserIE pages read lazily page by page as deduplicated YouTube url results (single-page `page` queries), compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "lbry",
       "status": "partial",
       "upstream": [
@@ -1922,6 +1946,18 @@
         "tests/fixtures/sites/linkedin/"
       ],
       "scope": "LinkedInIE public post video sources, captions and metadata; no LinkedIn Learning or events; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "listennotes",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/listennotes.py"
+      ],
+      "rust": [
+        "src/extractor/listennotes.rs",
+        "tests/fixtures/sites/listennotes/"
+      ],
+      "scope": "ListenNotesIE episode pages (original-content JSON merged with the play button toolbar attributes, description meta duration fallback, ln-text-p description, cast, KeyError message) compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "livestreamfails",
@@ -2867,6 +2903,18 @@
         "tests/fixtures/sites/streetvoice/"
       ],
       "scope": "StreetVoiceIE v4 song API metadata and non-fatal POSTed HLS/HTTP/original file URLs as mp3 formats, with KeyError, HTTP warning and empty-body warning paths compared with pinned upstream output through the fixture proxy; other unparsable format responses remain explicit native errors"
+    },
+    {
+      "name": "stv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/stv.py"
+      ],
+      "rust": [
+        "src/extractor/stv.rs",
+        "tests/fixtures/sites/stv/"
+      ],
+      "scope": "STVPlayerIE pages (non-fatal webpage, Next.js playerApiCache or player API results, subtitles, DRM error, KeyError messages) as url_transparent BrightcoveNew results smuggled with GB geo countries, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "substack",

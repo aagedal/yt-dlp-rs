@@ -1,0 +1,119 @@
+{
+ "routes": [
+  {
+   "url": "https://www.last.fm/music/Oasis?page=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><table class=\"chartlist\"><tr class=\"chartlist-row\"><td class=\"chartlist-play\"><a class=\"chartlist-play-button\" href=\"https://www.youtube.com/watch?v=6hzrDeceEKc\" data-playlink-affiliate data-youtube-url=\"https://www.youtube.com/watch?v=6hzrDeceEKc\" data-youtube-id=\"6hzrDeceEKc\">Play</a></td></tr><tr class=\"chartlist-row\"><td class=\"chartlist-play\"><a class=\"chartlist-play-button\" href=\"https://www.youtube.com/watch?v=cmpRLQZkTb8\" data-playlink-affiliate data-youtube-url=\"https://www.youtube.com/watch?v=cmpRLQZkTb8\" data-youtube-id=\"cmpRLQZkTb8\">Play</a></td></tr><tr class=\"chartlist-row\"><td class=\"chartlist-play\"><a class=\"chartlist-play-button\" href=\"https://www.youtube.com/watch?v=6hzrDeceEKc\" data-playlink-affiliate data-youtube-url=\"https://www.youtube.com/watch?v=6hzrDeceEKc\" data-youtube-id=\"6hzrDeceEKc\">Play</a></td></tr><tr class=\"chartlist-row\"><td class=\"chartlist-play\"><a class=\"chartlist-play-button\" href=\"https://www.youtube.com/watch?v=r8OipmKFDeM\" data-playlink-affiliate data-youtube-url=\"https://www.youtube.com/watch?v=r8OipmKFDeM\" data-youtube-id=\"r8OipmKFDeM\">Play</a></td></tr></table></body></html>"
+  },
+  {
+   "url": "https://www.last.fm/music/Oasis?page=2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><table class=\"chartlist\"><tr class=\"chartlist-row\"><td class=\"chartlist-play\"><a class=\"chartlist-play-button\" href=\"https://www.youtube.com/watch?v=cmpRLQZkTb8\" data-playlink-affiliate data-youtube-url=\"https://www.youtube.com/watch?v=cmpRLQZkTb8\" data-youtube-id=\"cmpRLQZkTb8\">Play</a></td></tr><tr class=\"chartlist-row\"><td class=\"chartlist-play\"><a class=\"chartlist-play-button\" href=\"https://www.youtube.com/watch?v=bx1Bh8ZvH84\" data-playlink-affiliate data-youtube-url=\"https://www.youtube.com/watch?v=bx1Bh8ZvH84\" data-youtube-id=\"bx1Bh8ZvH84\">Play</a></td></tr></table></body></html>"
+  },
+  {
+   "url": "https://www.last.fm/music/Oasis?page=3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><table class=\"chartlist\"></table></body></html>"
+  },
+  {
+   "url": "https://www.last.fm/music/Oasis/+tracks?page=2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><table class=\"chartlist\"><tr class=\"chartlist-row\"><td class=\"chartlist-play\"><a class=\"chartlist-play-button\" href=\"https://www.youtube.com/watch?v=bx1Bh8ZvH84\" data-playlink-affiliate data-youtube-url=\"https://www.youtube.com/watch?v=bx1Bh8ZvH84\" data-youtube-id=\"bx1Bh8ZvH84\">Play</a></td></tr><tr class=\"chartlist-row\"><td class=\"chartlist-play\"><a class=\"chartlist-play-button\" href=\"https://www.youtube.com/watch?v=r8OipmKFDeM\" data-playlink-affiliate data-youtube-url=\"https://www.youtube.com/watch?v=r8OipmKFDeM\" data-youtube-id=\"r8OipmKFDeM\">Play</a></td></tr></table></body></html>"
+  },
+  {
+   "url": "https://www.last.fm/tag/rock/tracks?date_preset=LAST_90_DAYS&page=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><table class=\"chartlist\"></table></body></html>"
+  },
+  {
+   "url": "https://www.last.fm/user/mehq/playlists/12319471?page=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><table class=\"chartlist\"><tr class=\"chartlist-row\"><td class=\"chartlist-play\"><a class=\"chartlist-play-button\" href=\"https://www.youtube.com/watch?v=r8OipmKFDeM\" data-playlink-affiliate data-youtube-url=\"https://www.youtube.com/watch?v=r8OipmKFDeM\" data-youtube-id=\"r8OipmKFDeM\">Play</a></td></tr><tr class=\"chartlist-row\"><td class=\"chartlist-play\"><a class=\"chartlist-play-button\" href=\"https://www.youtube.com/watch?v=6hzrDeceEKc\" data-playlink-affiliate data-youtube-url=\"https://www.youtube.com/watch?v=6hzrDeceEKc\" data-youtube-id=\"6hzrDeceEKc\">Play</a></td></tr></table></body></html>"
+  },
+  {
+   "url": "https://www.last.fm/user/mehq/playlists/12319471?page=2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><table class=\"chartlist\"></table></body></html>"
+  },
+  {
+   "url": "https://www.last.fm/music/Oasis/_/Wonderwall",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"header-new-playlink-wrap\"><a class=\"header-new-playlink\"\n   href=\"https://www.youtube.com/watch?v=BaW_jenozKc\" data-playlink-affiliate>Play track</a></div></body></html>"
+  },
+  {
+   "url": "https://www.last.fm/music/Oasis/_/Champagne+Supernova",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><h1>Champagne Supernova</h1><p>No playlinks</p></body></html>"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../youtube/watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "../youtube/visionos.json"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=18&client=visionos",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "../youtube/a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=137&client=visionos",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "../youtube/a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=136&client=visionos",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "../youtube/a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=140&client=visionos",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body_file": "../youtube/a.m4a"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=251&client=visionos",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body_file": "../youtube/a.m4a"
+  }
+ ]
+}

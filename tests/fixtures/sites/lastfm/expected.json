@@ -1,0 +1,138 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.last.fm/music/Oasis",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"Oasis\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=6hzrDeceEKc\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=cmpRLQZkTb8\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=r8OipmKFDeM\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=bx1Bh8ZvH84\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.last.fm/music/Oasis\", \"original_url\": \"https://www.last.fm/music/Oasis\", \"webpage_url_basename\": \"Oasis\", \"webpage_url_domain\": \"last.fm\", \"extractor\": \"LastFMPlaylist\", \"extractor_key\": \"LastFMPlaylist\", \"release_year\": null, \"playlist_count\": 4, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.last.fm/music/Oasis",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_index)s|%(n_entries)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "6hzrDeceEKc|https://www.youtube.com/watch?v=6hzrDeceEKc|Youtube|Oasis|1|4",
+    "cmpRLQZkTb8|https://www.youtube.com/watch?v=cmpRLQZkTb8|Youtube|Oasis|2|4",
+    "r8OipmKFDeM|https://www.youtube.com/watch?v=r8OipmKFDeM|Youtube|Oasis|3|4",
+    "bx1Bh8ZvH84|https://www.youtube.com/watch?v=bx1Bh8ZvH84|Youtube|Oasis|4|4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.last.fm/music/Oasis",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "1",
+    "--print",
+    "%(id)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_index)s|%(n_entries)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "6hzrDeceEKc|https://www.youtube.com/watch?v=6hzrDeceEKc|Youtube|Oasis|1|1"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.last.fm/music/Oasis",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "4",
+    "--print",
+    "%(id)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_index)s|%(n_entries)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "bx1Bh8ZvH84|https://www.youtube.com/watch?v=bx1Bh8ZvH84|Youtube|Oasis|4|1"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.last.fm/music/Oasis/+tracks?page=2",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"Oasis\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=bx1Bh8ZvH84\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=r8OipmKFDeM\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.last.fm/music/Oasis/+tracks?page=2\", \"original_url\": \"https://www.last.fm/music/Oasis/+tracks?page=2\", \"webpage_url_basename\": \"+tracks\", \"webpage_url_domain\": \"last.fm\", \"extractor\": \"LastFMPlaylist\", \"extractor_key\": \"LastFMPlaylist\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.last.fm/tag/rock/tracks?date_preset=LAST_90_DAYS#top-tracks",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"rock\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.last.fm/tag/rock/tracks?date_preset=LAST_90_DAYS#top-tracks\", \"original_url\": \"https://www.last.fm/tag/rock/tracks?date_preset=LAST_90_DAYS#top-tracks\", \"webpage_url_basename\": \"tracks\", \"webpage_url_domain\": \"last.fm\", \"extractor\": \"LastFMPlaylist\", \"extractor_key\": \"LastFMPlaylist\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.last.fm/user/mehq/playlists/12319471",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_index)s|%(n_entries)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "r8OipmKFDeM|https://www.youtube.com/watch?v=r8OipmKFDeM|Youtube|12319471|1|2",
+    "6hzrDeceEKc|https://www.youtube.com/watch?v=6hzrDeceEKc|Youtube|12319471|2|2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.last.fm/music/Oasis/_/Wonderwall",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube-dl test video \"'/\\ä↭𝕐|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://www.last.fm/music/Oasis/_/Wonderwall"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.last.fm/music/Oasis/_/Champagne+Supernova",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [LastFM] Champagne+Supernova: Unable to extract player_url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

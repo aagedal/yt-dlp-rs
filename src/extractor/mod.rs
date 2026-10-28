@@ -132,11 +132,13 @@ mod kommunetv;
 mod kth;
 mod ku6;
 mod kvs;
+mod lastfm;
 mod lbry;
 mod lego;
 mod libraryofcongress;
 mod libsyn;
 mod linkedin;
+mod listennotes;
 mod livestreamfails;
 mod lnk;
 pub mod login;
@@ -158,6 +160,7 @@ mod mixlr;
 mod mocha;
 mod monstercat;
 mod movingimage;
+mod musescore;
 mod mux;
 mod myvidster;
 mod netzkino;
@@ -233,6 +236,7 @@ mod steam;
 mod streamable;
 mod streamcz;
 mod streetvoice;
+mod stv;
 mod substack;
 mod sverigesradio;
 mod svt;
@@ -523,6 +527,13 @@ pub(crate) use kika::{fetch_pages as fetch_kika_pages, is_pending_state as kika_
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use kth::{Kth, suitable as kth_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
+pub use lastfm::{
+    LastFm, LastFmPlaylist, LastFmUser, playlist_suitable as lastfm_playlist_suitable,
+    suitable as lastfm_suitable, user_suitable as lastfm_user_suitable,
+};
+pub(crate) use lastfm::{
+    fetch_pages as fetch_lastfm_pages, is_pending_state as lastfm_pending_state,
+};
 pub use lbry::{
     Lbry, LbryChannel, LbryPlaylist, channel_suitable as lbry_channel_suitable,
     playlist_suitable as lbry_playlist_suitable, suitable as lbry_suitable,
@@ -532,6 +543,7 @@ pub use lego::{Lego, suitable as lego_suitable};
 pub use libraryofcongress::{LibraryOfCongress, suitable as libraryofcongress_suitable};
 pub use libsyn::{Libsyn, suitable as libsyn_suitable};
 pub use linkedin::{LinkedIn, suitable as linkedin_suitable};
+pub use listennotes::{ListenNotes, suitable as listennotes_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
 pub use lnk::{Lnk, suitable as lnk_suitable};
 pub use loom::{Loom, suitable as loom_suitable};
@@ -561,6 +573,7 @@ pub(crate) use monstercat::{
     fetch_tracks as fetch_monstercat_tracks, is_pending_state as monstercat_pending_state,
 };
 pub use movingimage::{MovingImage, suitable as movingimage_suitable};
+pub use musescore::{MuseScore, suitable as musescore_suitable};
 pub use mux::{Mux, suitable as mux_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
 pub use netzkino::{Netzkino, suitable as netzkino_suitable};
@@ -708,6 +721,7 @@ pub(crate) use steam::{
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use streamcz::{StreamCz, suitable as streamcz_suitable};
 pub use streetvoice::{StreetVoice, suitable as streetvoice_suitable};
+pub use stv::{StvPlayer, suitable as stv_player_suitable};
 pub use substack::{Substack, suitable as substack_suitable};
 pub use sverigesradio::{
     SverigesRadioEpisode, SverigesRadioPublication,

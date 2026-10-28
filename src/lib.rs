@@ -525,12 +525,16 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Kommunetv",
     "KTH",
     "Ku6",
+    "LastFM",
+    "LastFMPlaylist",
+    "LastFMUser",
     "lbry",
     "lbry:channel",
     "lbry:playlist",
     "LEGO",
     "Libsyn",
     "LinkedIn",
+    "ListenNotes",
     "Livestreamfails",
     "Lnk",
     "loc",
@@ -556,6 +560,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "MochaVideo",
     "Monstercat",
     "MovingImage",
+    "MuseScore",
     "Mux",
     "MyVidster",
     "Netzkino",
@@ -665,6 +670,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Streamable",
     "StreamCZ",
     "StreetVoice",
+    "stv:player",
     "Substack",
     "sverigesradio:episode",
     "sverigesradio:publication",
@@ -981,6 +987,10 @@ impl YoutubeDl {
                 Box::new(extractor::KikaPlaylist),
                 Box::new(extractor::Lego),
                 Box::new(extractor::LibraryOfCongress),
+                Box::new(extractor::LastFm),
+                Box::new(extractor::LastFmPlaylist),
+                Box::new(extractor::LastFmUser),
+                Box::new(extractor::ListenNotes),
                 Box::new(extractor::Mdr),
                 Box::new(extractor::MediaKlikk),
                 Box::new(extractor::Monstercat),
@@ -996,6 +1006,8 @@ impl YoutubeDl {
                 Box::new(extractor::SkySports),
                 Box::new(extractor::SkySportsNews),
                 Box::new(extractor::StreamCz),
+                Box::new(extractor::MuseScore),
+                Box::new(extractor::StvPlayer),
                 Box::new(extractor::Tf1),
                 Box::new(extractor::Tvigle),
                 Box::new(extractor::UrPlay),
@@ -2170,6 +2182,8 @@ impl YoutubeDl {
                 extractor::fetch_dailymotion_pages
             } else if extractor::kika_pending_state(&pending.state) {
                 extractor::fetch_kika_pages
+            } else if extractor::lastfm_pending_state(&pending.state) {
+                extractor::fetch_lastfm_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };
@@ -3672,10 +3686,23 @@ impl YoutubeDl {
                                 "url_transparent playlists are not supported natively".into(),
                             ));
                         };
-                        let inner_shape = match inner.extra.get(info_order::INFO_SHAPE) {
+                        let mut inner_shape = match inner.extra.get(info_order::INFO_SHAPE) {
                             Some(serde_json::Value::String(shape)) => shape.clone(),
                             _ => String::new(),
                         };
+                        // Overriding `subtitles` tracks keep the outer
+                        // extractor's key order (`subtitle_keys`), not the
+                        // inner one's.
+                        if let Some(keys) = marker["subtitle_keys"].as_str()
+                            && fields.iter().any(|(key, _)| key == "subtitles")
+                        {
+                            inner_shape = inner_shape
+                                .split(';')
+                                .filter(|part| !part.starts_with("subtitle="))
+                                .collect::<Vec<_>>()
+                                .join(";");
+                            inner_shape.push_str(&format!(";subtitle={keys}"));
+                        }
                         for (key, value) in &fields {
                             match key.as_str() {
                                 "title" => {

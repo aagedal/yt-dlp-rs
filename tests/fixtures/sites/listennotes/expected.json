@@ -1,0 +1,87 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.listennotes.com/podcasts/thriving-on-overload/tim-oreilly-on-noticing-KrDgvNb_u1n/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"KrDgvNb_u1n\", \"url\": \"https://www.listennotes.com/e/p/e1312583fa7b4e24acfbb5131050be00/\", \"title\": \"Tim O\\u2019Reilly on noticing things & more\", \"description\": \"\\u2018\\u2019We shape reality by what we notice and choose to respond to.\\u2019\\u2019\\n\\nSecond paragraph & link\\n\\nThird\", \"duration\": 2215, \"episode_id\": \"e1312583fa7b4e24acfbb5131050be00\", \"thumbnail\": \"https://cdn-images-3.listennotes.com/podcasts/amplifying-cognition-ross-dawson-Iemft4Gdr0k-ed84wITivxF.300x300.jpg\", \"channel\": \"Amplifying Cognition\", \"cast\": [\"Tim O\\u2019Reilly\", \"Cookie Monster\"], \"channel_url\": \"https://www.listennotes.com/podcasts/amplifying-cognition-ross-dawson-ed84wITivxF/\", \"channel_id\": \"ed84wITivxF\", \"webpage_url\": \"https://www.listennotes.com/podcasts/thriving-on-overload/tim-oreilly-on-noticing-KrDgvNb_u1n/\", \"original_url\": \"https://www.listennotes.com/podcasts/thriving-on-overload/tim-oreilly-on-noticing-KrDgvNb_u1n/\", \"webpage_url_basename\": \"tim-oreilly-on-noticing-KrDgvNb_u1n\", \"webpage_url_domain\": \"listennotes.com\", \"extractor\": \"ListenNotes\", \"extractor_key\": \"ListenNotes\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn-images-3.listennotes.com/podcasts/amplifying-cognition-ross-dawson-Iemft4Gdr0k-ed84wITivxF.300x300.jpg\", \"id\": \"0\"}], \"display_id\": \"KrDgvNb_u1n\", \"fulltitle\": \"Tim O\\u2019Reilly on noticing things & more\", \"duration_string\": \"36:55\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"unknown_video\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Tim O\\u2019Reilly on noticing things & more [KrDgvNb_u1n].unknown_video\", \"filename\": \"Tim O\\u2019Reilly on noticing things & more [KrDgvNb_u1n].unknown_video\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.listennotes.com/podcasts/thriving-on-overload/tim-oreilly-on-noticing-KrDgvNb_u1n/",
+   "args": [
+    "-q",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [],
+   "stderr": [],
+   "files": {
+    "KrDgvNb_u1n.unknown_video": 14
+   }
+  },
+  {
+   "url": "https://www.listennotes.com/podcasts/ask-noah-show/episode-177-wireguard-with-lwEA3154JzG/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"lwEA3154JzG\", \"url\": \"https://www.listennotes.com/e/p/8c8954b95e0b4859ad1eecec8bf6d3a4/episode.mp3\", \"title\": \"Episode 177: WireGuard with Jason Donenfeld\", \"description\": \"Jason Donenfeld lead developer joins us this hour to discuss WireGuard.\", \"duration\": 3861, \"episode_id\": \"8c8954b95e0b4859ad1eecec8bf6d3a4\", \"channel\": \"Ask Noah Show\", \"channel_url\": \"https://www.listennotes.com/podcasts/ask-noah-show-noah-j-chelliah-4DQTzdS5-j7/\", \"webpage_url\": \"https://www.listennotes.com/podcasts/ask-noah-show/episode-177-wireguard-with-lwEA3154JzG/\", \"original_url\": \"https://www.listennotes.com/podcasts/ask-noah-show/episode-177-wireguard-with-lwEA3154JzG/\", \"webpage_url_basename\": \"episode-177-wireguard-with-lwEA3154JzG\", \"webpage_url_domain\": \"listennotes.com\", \"extractor\": \"ListenNotes\", \"extractor_key\": \"ListenNotes\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"lwEA3154JzG\", \"fulltitle\": \"Episode 177: WireGuard with Jason Donenfeld\", \"duration_string\": \"1:04:21\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Episode 177\\uff1a WireGuard with Jason Donenfeld [lwEA3154JzG].mp3\", \"filename\": \"Episode 177\\uff1a WireGuard with Jason Donenfeld [lwEA3154JzG].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.listennotes.com/podcasts/some-show/only-og-title-ep-Abc123/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"Abc123\", \"url\": \"https://cdn.listennotes.test/a.m4a\", \"title\": \"Only OG title\", \"description\": null, \"episode_id\": null, \"webpage_url\": \"https://www.listennotes.com/podcasts/some-show/only-og-title-ep-Abc123/\", \"original_url\": \"https://www.listennotes.com/podcasts/some-show/only-og-title-ep-Abc123/\", \"webpage_url_basename\": \"only-og-title-ep-Abc123\", \"webpage_url_domain\": \"listennotes.com\", \"extractor\": \"ListenNotes\", \"extractor_key\": \"ListenNotes\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"Abc123\", \"fulltitle\": \"Only OG title\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Only OG title [Abc123].m4a\", \"filename\": \"Only OG title [Abc123].m4a\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [ListenNotes] unable to extract og:description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ListenNotes] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.listennotes.com/podcasts/some-show/no-audio-ep-NoAudio1/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [ListenNotes] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: NoAudio1: An extractor error has occurred. (caused by KeyError('audio')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.listennotes.com/podcasts/some-show/missing-content-ep-Gone1/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [ListenNotes] Gone1: Unable to extract content; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
