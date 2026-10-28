@@ -1,0 +1,34 @@
+[
+ {
+  "url": "http://www.meipai.com/media/531697625",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.meipai.com/media/585526361",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://meipai.com/media/700",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.meipai.com/media/800",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.meipai.com/media/800",
+  "args": [
+   "--ignore-no-formats-error",
+   "--print",
+   "%(id)s|%(title)s|%(tags)j|%(creators)j|%(view_count)s|%(duration)s"
+  ]
+ }
+]

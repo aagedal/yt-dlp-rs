@@ -2696,6 +2696,18 @@
       "scope": "MegaphoneIE _VALID_URL/_EMBED_REGEX and page extraction (fatal og:audio:title/artist, og:image thumbnail warning, js_to_json episode object, KeyError messages) compared with pinned upstream output through the fixture proxy; generic-page embeds in extractor order with Streamable; _fill_common_fields deprecated multivalue fields (no deprecation warning)"
     },
     {
+      "name": "meipai",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/meipai.py"
+      ],
+      "rust": [
+        "src/extractor/meipai.rs",
+        "tests/fixtures/sites/meipai/"
+      ],
+      "scope": "MeipaiIE live-recording non-fatal HLS, data-video HTTP fallback, OpenGraph and meta metadata with their warnings, and processing-time no-formats error compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "mir24tv",
       "status": "partial",
       "upstream": [

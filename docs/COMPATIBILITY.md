@@ -1051,6 +1051,17 @@ upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 proto-relative as `https:` as the single format, raw `duration`; missing keys are
 upstream's `KeyError` extractor errors).
 
+美拍 videos (`meipai.com/media/ID`) follow upstream `MeipaiIE`: the generic
+title (`og:title`, else `<title>`, else processing's `Meipai video #ID`), the
+live recording's `encodeURIComponent` HLS URL as non-fatal `hls` formats, else
+the `data-video` URL (as written) as the single `http` format, and the
+non-fatal `og:video:release_date` (`unified_timestamp`), `og:video:tag` split
+on commas (missing is upstream's `[""]`), `interactionCount` and `duration`
+`<meta>` values, `og:video:director` as `creator`, `og:description` and
+`og:image`, each with upstream's warning when missing; a result without
+formats fails in processing. Relative HLS or video URLs are explicit errors.
+`tests/fixtures/sites/meipai/` is compared with pinned upstream output.
+
 Mixlr events (`[www.]USER.mixlr.com/events/ID`) follow upstream `MixlrIE`:
 the `api.mixlr.com/v3/channels/USER/events/ID` JSON's first included
 broadcast `progressive_stream_url`, checked with a non-fatal `HEAD` request
