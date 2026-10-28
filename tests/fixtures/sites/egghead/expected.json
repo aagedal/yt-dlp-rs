@@ -1,0 +1,59 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://egghead.io/lessons/javascript-linear-data-flow",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1196\", \"display_id\": \"javascript-linear-data-flow\", \"title\": \"Linear Data Flow with Container Style Types (Box)\", \"description\": \"We spot a few bugs\", \"thumbnail\": \"https://egghead.test/thumb.png\", \"timestamp\": 1480985182, \"duration\": 304, \"view_count\": 12, \"tags\": [\"javascript\"], \"series\": \"Professor Frisby\", \"formats\": [{\"url\": \"https://egghead-pd.test/1196.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}, {\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://egghead-hls.test/1196/360/index.m3u8\", \"manifest_url\": \"https://egghead-hls.test/1196/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"webpage_url\": \"https://egghead.io/lessons/javascript-linear-data-flow\", \"original_url\": \"https://egghead.io/lessons/javascript-linear-data-flow\", \"webpage_url_basename\": \"javascript-linear-data-flow\", \"webpage_url_domain\": \"egghead.io\", \"extractor\": \"egghead:lesson\", \"extractor_key\": \"EggheadLesson\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://egghead.test/thumb.png\", \"id\": \"0\"}], \"fulltitle\": \"Linear Data Flow with Container Style Types (Box)\", \"duration_string\": \"5:04\", \"upload_date\": \"20161206\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-921\", \"url\": \"https://egghead-hls.test/1196/360/index.m3u8\", \"manifest_url\": \"https://egghead-hls.test/1196/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"Linear Data Flow with Container Style Types (Box) [1196].mp4\", \"filename\": \"Linear Data Flow with Container Style Types (Box) [1196].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://egghead-hls.test/1196/360/index.m3u8\", \"manifest_url\": \"https://egghead-hls.test/1196/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [egghead:lesson] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [egghead:lesson] 1196: Failed to download MPD manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://egghead.io/courses/frisby",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"219\", \"title\": \"Professor Frisby Introduces Composable Functional JavaScript\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"EggheadLesson\", \"id\": \"1196\", \"_type\": \"url\", \"url\": \"https://egghead.io/lessons/javascript-linear-data-flow\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"EggheadLesson\", \"id\": 0, \"_type\": \"url\", \"url\": \"https://egghead.io/lessons/other\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://egghead.io/courses/frisby\", \"original_url\": \"https://egghead.io/courses/frisby\", \"webpage_url_basename\": \"frisby\", \"webpage_url_domain\": \"egghead.io\", \"extractor\": \"egghead:course\", \"extractor_key\": \"EggheadCourse\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://app.egghead.io/playlists/nometa",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://app.egghead.io/playlists/nometa\", \"original_url\": \"https://app.egghead.io/playlists/nometa\", \"webpage_url_basename\": \"nometa\", \"webpage_url_domain\": \"app.egghead.io\", \"extractor\": \"egghead:course\", \"extractor_key\": \"EggheadCourse\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [egghead:course] nometa: Unable to download JSON metadata: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://egghead.io/api/v1/lessons/broken",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: broken: An extractor error has occurred. (caused by KeyError('title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1176,6 +1176,18 @@
       "scope": "EbayIE video JSON playlist map (non-fatal HLS/DASH formats, unsupported-key warnings, title, processing-time no-formats error) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "egghead",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/egghead.py"
+      ],
+      "rust": [
+        "src/extractor/egghead.rs",
+        "tests/fixtures/sites/egghead/"
+      ],
+      "scope": "EggheadCourseIE lesson url-result playlists with course metadata and EggheadLessonIE HLS/DASH/direct media, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "elonet",
       "status": "partial",
       "upstream": [

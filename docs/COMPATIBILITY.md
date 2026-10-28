@@ -1719,6 +1719,17 @@ the title (else a generic one), `unified_strdate` upload date and the
 wrapped `KeyError`, a missing element its bare `AttributeError` text. F4M
 manifests with nested manifests or non-F4M documents are explicit native errors.
 
+egghead.io courses (`[app.]egghead.io/courses|playlists/ID`) follow upstream
+`EggheadCourseIE`: the `api/v1/series/ID/lessons` list's lessons with an
+`http_url` as `url` results of `egghead:lesson` (truthy IDs as strings), with
+the non-fatal `series/ID` course's ID, title and description. Lessons
+(`[app.]egghead.io/[api/v1/]lessons/ID`) follow `EggheadLessonIE`: the
+`api/v1/lessons/ID` JSON's media URLs as non-fatal HLS (`hls`) and DASH
+(`dash`) manifests (subtitles dropped with upstream's warnings) or direct
+formats, with the summary, thumbnail, timestamp, duration, play count, tags
+and series title. `tests/fixtures/sites/egghead/` is compared with pinned
+upstream output.
+
 eBay items (`ebay.com/itm/ID`) follow upstream `EbayIE`: the page's fatal
 `"video":` JSON `playlistMap`, its `HLS` (without an `ext`) and `DASH`
 manifests as non-fatal formats (subtitles ignored with upstream's warnings),

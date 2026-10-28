@@ -55,6 +55,7 @@ mod drtv;
 mod dumpert;
 mod ebaumsworld;
 mod ebay;
+mod egghead;
 mod elonet;
 mod epoch;
 mod erocast;
@@ -371,6 +372,10 @@ pub use drtv::{
 pub use dumpert::{Dumpert, suitable as dumpert_suitable};
 pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
 pub use ebay::{Ebay, suitable as ebay_suitable};
+pub use egghead::{
+    EggheadCourse, EggheadLesson, course_suitable as egghead_course_suitable,
+    lesson_suitable as egghead_lesson_suitable,
+};
 pub use elonet::{Elonet, suitable as elonet_suitable};
 pub use epoch::{Epoch, suitable as epoch_suitable};
 pub use erocast::{Erocast, suitable as erocast_suitable};
