@@ -1,0 +1,61 @@
+{
+ "routes": [
+  {
+   "url": "http://vod-platform.net/embed/AAA",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Title &amp;amp; more\"><meta property=\"og:image\" content=\"https://vod-img.test/og.jpg\"></head><body>\n<input type=\"hidden\" id=\"HiddenmyhHlsLink\" value=\"https://wowza.vod.test/vod/_definst_/mp4:a.mp4/playlist.m3u8?token=x\">\n<input type=\"hidden\" id=\"HiddenThumbnail\" value=\"https://vod-img.test/t.jpg\"></body></html>"
+  },
+  {
+   "url": "https://wowza.vod.test/vod/_definst_/mp4:a.mp4/playlist.m3u8?token=x",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "playlist.m3u8"
+  },
+  {
+   "url": "https://wowza.vod.test/vod/_definst_/mp4:a.mp4/manifest.mpd?token=x",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://embed.kwikmotion.com/Embed/BBB",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><input type=\"hidden\" name=\"HiddenmyhHlsLink\" value=\"\"><input type=\"hidden\" name=\"HiddenmyDashLink\" value=\"https://wowza.vod.test/vod/_definst_/mp4:b.mp4/manifest.mpd\"></body></html>"
+  },
+  {
+   "url": "https://wowza.vod.test/vod/_definst_/mp4:b.mp4/playlist.m3u8",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "no"
+  },
+  {
+   "url": "https://wowza.vod.test/vod/_definst_/mp4:b.mp4/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "http://vod-platform.net/embed/CCC",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Nothing\"></head></html>"
+  },
+  {
+   "url": "https://news.vod-host.test/story",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Story</title></head><body><iframe src=\"//embed.kwikmotion.com/Embed/BBB\"></iframe></body></html>"
+  }
+ ]
+}

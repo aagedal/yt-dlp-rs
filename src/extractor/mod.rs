@@ -291,6 +291,7 @@ mod visir;
 mod vk;
 mod vkplay;
 mod vocaroo;
+mod vodplatform;
 mod vtv;
 mod washingtonpost;
 mod wat;
@@ -840,6 +841,7 @@ pub use vkplay::{
     VkPlay, VkPlayLive, live_suitable as vkplay_live_suitable, suitable as vkplay_suitable,
 };
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
+pub use vodplatform::{VodPlatform, suitable as vodplatform_suitable};
 pub use vtv::{Vtv, VtvGo, go_suitable as vtv_go_suitable, suitable as vtv_suitable};
 pub use washingtonpost::{
     WashingtonPost, WashingtonPostArticle, article_suitable as washingtonpost_article_suitable,
@@ -1258,10 +1260,10 @@ pub(crate) fn extract_m3u8_master_optional(
 }
 
 /// `_extract_wowza_formats(url, video_id, skip_protocols=SKIP)`: the
-/// stream's `playlist.m3u8` master playlist (`hls`, non-fatal) and its
-/// `rtmp:` format. The HDS, DASH and SMIL manifests are not supported
-/// natively, so a caller that does not skip them gets an error before any
-/// request.
+/// stream's `playlist.m3u8` master playlist (`hls`) and `manifest.mpd`
+/// (`dash`), both non-fatal, and its `rtmp:` format. The HDS and SMIL
+/// manifests are not supported natively, so a caller that does not skip
+/// them gets an error before any request.
 pub(crate) fn extract_wowza_formats(
     client: &Client,
     url: &str,
@@ -1292,10 +1294,8 @@ pub(crate) fn extract_wowza_formats(
         .ok_or_else(|| unsupported("stream URLs without a host"))?;
     let url_base = found["url"].to_owned();
     let smil = SMIL.is_match(&url_base);
-    for (protocol, what) in [("f4m", "HDS manifests"), ("dash", "DASH manifests")] {
-        if !skip_protocols.contains(&protocol) {
-            return Err(unsupported(what));
-        }
+    if !skip_protocols.contains(&"f4m") {
+        return Err(unsupported("HDS manifests"));
     }
     if smil && !skip_protocols.contains(&"smil") {
         return Err(unsupported("SMIL manifests"));
@@ -1320,6 +1320,25 @@ pub(crate) fn extract_wowza_formats(
                 Some("hls"),
                 false,
                 false,
+            )
+        }) {
+            formats.extend(stream.formats);
+        }
+    }
+    if !skip_protocols.contains(&"dash") {
+        let mut manifest = format!("{http_base_url}/manifest.mpd");
+        if !query.is_empty() {
+            manifest.push('?');
+            manifest.push_str(query);
+        }
+        if let Some(stream) = Url::parse(&manifest).ok().and_then(|manifest| {
+            extract_mpd_optional_note(
+                client,
+                &manifest,
+                extractor,
+                video_id,
+                Some("dash"),
+                "Downloading MPD manifest",
             )
         }) {
             formats.extend(stream.formats);
@@ -2736,12 +2755,10 @@ mod tests {
     fn wowza_manifests_without_native_support_are_errors_before_requests() {
         let client = Client::new();
         let url = "https://wowza.invalid/vod/_definst_/mp4:a.mp4/playlist.m3u8";
-        for skip in [&["smil", "dash"][..], &["smil", "f4m"][..]] {
-            assert!(matches!(
-                extract_wowza_formats(&client, url, "test", "id", skip),
-                Err(crate::Error::UnsupportedHtml5(_))
-            ));
-        }
+        assert!(matches!(
+            extract_wowza_formats(&client, url, "test", "id", &["smil", "dash"]),
+            Err(crate::Error::UnsupportedHtml5(_))
+        ));
         let smil = "https://wowza.invalid/vod/smil:a.smil/playlist.m3u8";
         assert!(matches!(
             extract_wowza_formats(&client, smil, "test", "id", &["f4m", "dash"]),

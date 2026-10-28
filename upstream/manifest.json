@@ -3602,6 +3602,18 @@
       "scope": "VocarooIE media URL HEAD request, upload timestamp header, Referer headers and empty title compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "vodplatform",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/vodplatform.py"
+      ],
+      "rust": [
+        "src/extractor/vodplatform.rs",
+        "tests/fixtures/sites/vodplatform/"
+      ],
+      "scope": "VODPlatformIE hidden HLS/DASH links as Wowza formats with OpenGraph metadata and iframe embeds, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "vtv",
       "status": "partial",
       "upstream": [

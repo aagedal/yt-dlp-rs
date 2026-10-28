@@ -1,0 +1,26 @@
+[
+ {
+  "url": "http://vod-platform.net/embed/AAA",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://embed.kwikmotion.com/Embed/BBB",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://vod-platform.net/embed/CCC",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://news.vod-host.test/story",
+  "args": [
+   "-J"
+  ]
+ }
+]

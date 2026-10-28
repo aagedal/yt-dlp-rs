@@ -462,8 +462,9 @@ recording timestamps, duration (else the parsed length), genre tags and the
 show name and ID. Shows (`365|4d.rtvslo.si/oddaja/SLUG/ID`,
 `RTVSLOShowIE`) are playlists of the page's deduplicated `/arhiv/` links
 with the page title and OpenGraph description and image (upstream's
-warnings when missing). The shared Wowza helper returns an unsupported
-error for callers that do not skip HDS, DASH or SMIL.
+warnings when missing). The shared Wowza helper also reads a non-fatal
+`manifest.mpd` (`dash`) for callers that do not skip DASH, and returns an
+unsupported error for callers that do not skip HDS or SMIL.
 `tests/fixtures/sites/rtvslo/` is compared with pinned upstream output.
 
 Roya TV live streams (`[en.]roya.tv/live-stream/ID`) follow upstream
@@ -2390,6 +2391,14 @@ extension, and the page ID, display ID, title, timestamp, cleaned
 description, uploader, duration, license and categories. Timed text tracks
 without a type are explicit native errors. `tests/fixtures/sites/wikimedia/`
 is compared with pinned upstream output.
+
+VOD Platform and KwikMotion embeds (`vod-platform.net/embed/ID`,
+`embed.kwikmotion.com/Embed/ID`) follow upstream `VODPlatformIE`: the
+page's hidden `HiddenmyhHlsLink` (else `HiddenmyDashLink`) as Wowza formats
+with HDS and SMIL skipped (HLS, DASH and `rtmp:`), the twice-unescaped
+OpenGraph title and the hidden (else OpenGraph) thumbnail, with upstream's
+warnings. Their iframes on generic pages are embeds.
+`tests/fixtures/sites/vodplatform/` is compared with pinned upstream output.
 
 VTVGo videos (`vtvgo.vn/kho-video|tin-tuc/...ID[.html]`, `vtvgo.vn/digital/detail.php?...content_id=ID`)
 follow upstream `VTVGoIE`: the page's `var link`/`addPlayer(` `index.m3u8`
