@@ -2025,6 +2025,17 @@ follows this port's HLS downloader selection rather than upstream's forced
 FFmpeg. `tests/fixtures/sites/twitter/` is compared with pinned upstream
 output.
 
+Vbox7 videos (`[SUB.]vbox7.com/play:ID`, `.../emb/external.php?...vid=ID`,
+`.../player/ext.swf?...vid=ID`) follow upstream `Vbox7IE` (geo countries
+`BG`): the `aj/player/item/options` JSON's `src` (missing or `blank` is
+`Video is unavailable`; a `vn` base is a geo restriction), the non-fatal
+`BASE.m3u8` master playlist (`hls`) and each non-zero integer resolution's
+`BASE_RES.mp4`, merged with the non-fatal `play:ID` page's JSON-LD (warning
+like upstream without any) and overlaid with the options' title, uploader
+and duration. Player iframes on other pages are followed like upstream's
+`_EMBED_REGEX`. `tests/fixtures/sites/vbox7/` is compared with pinned
+upstream output.
+
 Veo matches (`app.veo.co/matches/ID`) follow upstream `VeoIE`: the match
 API's title, thumbnail, `created` timestamp, view count and duration, and the
 `videos` list as formats (`RENDER-HEIGHTp` IDs, MIME-type extensions, widths,
