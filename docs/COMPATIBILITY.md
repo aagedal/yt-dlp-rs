@@ -767,6 +767,20 @@ first description text, upper-cased category, publication time, English
 subtitle file, query-less poster and the series from the header tab.
 `tests/fixtures/sites/startrek/` is compared with pinned upstream output.
 
+Star TV videos (`startv.com.tr/dizi|program/SHOW/bolumler|fragmanlar|ekstralar/ID`,
+`startv.com.tr/video/arsiv/dizi|program/SHOW/ID`, `startv`) follow upstream
+`StarTVIE`: the page's fatal `videoUrl` API URL (`Unable to extract video info
+url`), its JSON `data` object (missing or empty is upstream's `Failed to
+extract API data`), `str()` of its `id`, the title (else `og:title` with its
+warning), the `clean_html` description (else `og:description`), the
+`og:image` thumbnail made protocol-relative `http:` (with upstream's warning
+when missing), `int_or_none` `release_date` as `timestamp`, and the
+`flavors.hls` manifest as non-fatal `hls` formats (none is upstream's `Failed
+to obtain m3u8 URL` warning; a result without formats fails in processing).
+API IDs, titles or descriptions that are not scalars or strings and relative
+API or manifest URLs are explicit errors. `tests/fixtures/sites/startv/` is
+compared with pinned upstream output.
+
 Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
 `StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
 metadata`), its unavailable-status error, `reddit_title`/`title`, every file

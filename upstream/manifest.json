@@ -1498,6 +1498,18 @@
       "scope": "StarTrekIE Next.js video data as a direct URL with metadata (YouTube hand-off not fixtured), compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "startv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/startv.py"
+      ],
+      "rust": [
+        "src/extractor/startv.rs",
+        "tests/fixtures/sites/startv/"
+      ],
+      "scope": "StarTVIE videoUrl API data, non-fatal HLS flavor, OpenGraph fallbacks, processing-time no-formats error and missing-data errors compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "steam",
       "status": "partial",
       "upstream": [

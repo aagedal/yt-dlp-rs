@@ -301,6 +301,7 @@ mod sport5;
 mod spreaker;
 mod srgssr;
 mod startrek;
+mod startv;
 mod steam;
 mod streamable;
 mod streamcz;
@@ -901,6 +902,7 @@ pub use srgssr::{
     SrgSsr, SrgSsrPlay, play_suitable as srgssr_play_suitable, suitable as srgssr_suitable,
 };
 pub use startrek::{StarTrek, suitable as startrek_suitable};
+pub use startv::{StarTv, suitable as startv_suitable};
 pub use steam::{
     Steam, SteamCommunity, SteamCommunityBroadcast, broadcast_suitable as steam_broadcast_suitable,
     community_suitable as steam_community_suitable, suitable as steam_suitable,

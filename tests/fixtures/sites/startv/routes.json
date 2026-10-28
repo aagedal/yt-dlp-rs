@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://www.startv.com.tr/dizi/cocuk/bolumler/3-bolum",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"OG 3. B&ouml;l&uuml;m\"><meta property=\"og:description\" content=\"OG desc\"><meta property=\"og:image\" content=\"//media.startv.com.tr/star-tv/images/3-bolum.jpg?w=640\"></head>\n<body><script>var config = {'videoUrl' : 'https://dygvideo.dygdigital.com/api/video_info?akamai=true&PublisherId=1&ReferenceId=StarTv_904972&SecretKey=NtvApiSecret2014*', \"x\": 1};</script></body></html>"
+  },
+  {
+   "url": "https://dygvideo.dygdigital.com/api/video_info?akamai=true&PublisherId=1&ReferenceId=StarTv_904972&SecretKey=NtvApiSecret2014*",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"id\": 904972, \"title\": \"3. Bölüm\", \"description\": \"<p>Ali  ve <b>Ece</b></p><p>ikinci</p>\", \"release_date\": \"1569281400\", \"flavors\": {\"hls\": \"https://dygvideo.test/startv/904972/master.m3u8\"}}}"
+  },
+  {
+   "url": "https://dygvideo.test/startv/904972/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.startv.com.tr/dizi/cocuk/fragmanlar/5-bolum-fragmani",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Fragman &amp; Fallback\"><meta name=\"og:description\" content=\"Fallback description\"></head>\n<body><script>window.player = {\"videoUrl\": \"https://dygvideo.dygdigital.com/api/video_info?ReferenceId=StarTv_5\"};</script></body></html>"
+  },
+  {
+   "url": "https://dygvideo.dygdigital.com/api/video_info?ReferenceId=StarTv_5",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"id\": \"55\", \"title\": \"\", \"description\": \"\", \"release_date\": 1569281400.7, \"flavors\": {\"hls\": \"\"}}}"
+  },
+  {
+   "url": "https://www.startv.com.tr/video/arsiv/program/buyukrisk/buyuk-risk-334-bolum",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:image\" content=\"https://media.startv.com.tr/a.jpg\"></head><body><script>{\"videoUrl\":\"https://dygvideo.dygdigital.com/api/video_info?ReferenceId=StarTv_empty\"}</script></body></html>"
+  },
+  {
+   "url": "https://dygvideo.dygdigital.com/api/video_info?ReferenceId=StarTv_empty",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {}, \"status\": \"ok\"}"
+  },
+  {
+   "url": "https://www.startv.com.tr/program/burcu-ile-haftasonu/bolumler/1-bolum",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>No player here</body></html>"
+  }
+ ]
+}
