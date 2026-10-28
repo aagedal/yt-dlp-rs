@@ -13,6 +13,7 @@ mod archiveorg;
 mod arcpublishing;
 mod ard;
 mod arte;
+mod audimedia;
 mod audioboom;
 mod audiomack;
 mod azmedien;
@@ -414,6 +415,7 @@ pub use arte::{
     category_suitable as artetv_category_suitable, embed_suitable as artetv_embed_suitable,
     playlist_suitable as artetv_playlist_suitable, suitable as artetv_suitable,
 };
+pub use audimedia::{AudiMedia, suitable as audimedia_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
 pub use audiomack::{
     Audiomack, AudiomackAlbum, album_suitable as audiomack_album_suitable,

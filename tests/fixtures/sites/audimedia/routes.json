@@ -1,0 +1,86 @@
+{
+ "routes": [
+  {
+   "url": "https://www.audi-mediacenter.com/en/audimediatv/60-seconds-of-audi-sport-104-2015-wec-bahrain-rookie-test-1467",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"amtv-embed\" data-x=\"1\" id=\"amtve-v-1565-en\"></div></body></html>"
+  },
+  {
+   "url": "https://www.audimedia.tv/api/video/v1/videos/1565?embed%5B%5D=video_versions&embed%5B%5D=thumbnail_image",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"results\": {\"title\": \"60 Seconds of Audi Sport 104/2015 - WEC Bahrain, Rookie Test\", \"subtitle\": \"Rookie test in Bahrain\", \"stream_url_hls\": \"https://cdn.audimedia.test/1565/master.m3u8\", \"stream_url_hds\": \"https://cdn.audimedia.test/1565/manifest.f4m\", \"thumbnail_image\": {\"file\": \"https://cdn.audimedia.test/1565/thumb.jpg\"}, \"publication_date\": \"2015-11-24T08:49:00+00:00\", \"duration\": 74022, \"view_count\": \"1234\", \"video_versions\": [{\"download_url\": \"https://cdn.audimedia.test/1565/video_1500k.mp4\", \"width\": 1280, \"height\": \"720\", \"audio_bitrate\": 128, \"video_bitrate\": 1500}, {\"download_url\": \"\", \"stream_url\": \"https://cdn.audimedia.test/1565/video.webm\", \"width\": null}, {\"download_url\": null}, {\"stream_url\": \"https://cdn.audimedia.test/1565/audio_96k.m4a\", \"audio_bitrate\": 96.5, \"video_bitrate\": \"x\"}]}}"
+  },
+  {
+   "url": "https://cdn.audimedia.test/1565/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000000,RESOLUTION=1280x720\n720.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=500000,RESOLUTION=640x360\n360.m3u8\n"
+  },
+  {
+   "url": "https://cdn.audimedia.test/1565/manifest.f4m?hdcore=3.4.0",
+   "headers": {
+    "Content-Type": "application/f4m+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns=\"http://ns.adobe.com/f4m/1.0\">\n <id>clip</id>\n <streamType>recorded</streamType>\n <duration>74</duration>\n <bootstrapInfo profile=\"named\" id=\"bootstrap0\">AAAA</bootstrapInfo>\n <media streamId=\"hi\" url=\"clip_hi\" bitrate=\"1500\" width=\"1280\" height=\"720\" bootstrapInfoId=\"bootstrap0\"/>\n</manifest>"
+  },
+  {
+   "url": "https://www.audi-mediacenter.com/en/audimediatv/video/escaped-2991",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "{\"html\": \"<div id=\\\"amtve-v-2991-de\\\" class=\\\"amtv-embed\\\"></div>\"}"
+  },
+  {
+   "url": "https://www.audimedia.tv/api/video/v1/videos/2991?embed%5B%5D=video_versions&embed%5B%5D=thumbnail_image",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"results\": {\"title\": \"Escaped\", \"stream_url_hls\": \"https://cdn.audimedia.test/2991/missing.m3u8\", \"stream_url_hds\": \"https://cdn.audimedia.test/2991/missing.f4m\"}}"
+  },
+  {
+   "url": "https://cdn.audimedia.test/2991/missing.m3u8",
+   "status": 404,
+   "headers": {},
+   "body": ""
+  },
+  {
+   "url": "https://cdn.audimedia.test/2991/missing.f4m?hdcore=3.4.0",
+   "status": 404,
+   "headers": {},
+   "body": ""
+  },
+  {
+   "url": "https://www.audi-mediacenter.com/en/audimediatv/nothing",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>nothing</html>"
+  },
+  {
+   "url": "https://www.audi-mediacenter.com/en/audimediatv/noresults",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div class=\"amtv-embed\" id=\"amtve-v-77-en\"></div>"
+  },
+  {
+   "url": "https://www.audimedia.tv/api/video/v1/videos/77?embed%5B%5D=video_versions&embed%5B%5D=thumbnail_image",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"nope\"}"
+  },
+  {
+   "url": "https://www.audi-mediacenter.com/en/audimediatv/short",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div class=\"amtv-embed\" id=\"amtve-v\"></div>"
+  }
+ ]
+}

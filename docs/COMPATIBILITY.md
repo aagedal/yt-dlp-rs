@@ -1287,6 +1287,20 @@ master playlist, saved collection and season responses, and synthetic
 multi-stream, playlist and category responses) is compared with pinned
 upstream output.
 
+Audi MediaCenter videos (`[www.]audi-mediacenter.com/en|de/audimediatv/[video/]ID`)
+follow upstream `AudiMediaIE`: the page's `amtv-embed` payload (fatal; the
+first of upstream's five patterns that matches, split into exactly four
+`-` parts like upstream's unpacking, whose `ValueError` text is reported
+bare) and the audimedia.tv video API (`embed[]` `video_versions` and
+`thumbnail_image`; a missing `results` is the `KeyError` error) for the
+non-fatal HLS master playlist (`hls`) and HDS manifest (`hds`,
+`?hdcore=3.4.0`), the video versions' download or stream URLs with size and
+`int_or_none` bitrates (`http-BITRATE` IDs from a `NNNk` URL part), the title,
+subtitle as description, thumbnail, ISO 8601 timestamp, duration and view
+count. Live and ended live streams (stage modes `s` and `e`), for which
+upstream returns nothing, are an unsupported error.
+`tests/fixtures/sites/audimedia/` is compared with pinned upstream output.
+
 AudioBoom posts (`audioboom.com/posts|boos/ID`) follow upstream `AudioBoomIE`:
 the post page's `V5DetailPagePlayer` React props (`_search_json` with
 `unescapeHTML`) for the clip URL, title, description (else its cleaned
