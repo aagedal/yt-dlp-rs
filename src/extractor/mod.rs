@@ -315,6 +315,7 @@ mod videopress;
 mod vidlii;
 pub(crate) mod vidyard;
 mod vimeo;
+mod viously;
 mod visir;
 mod vk;
 mod vkplay;

@@ -3885,6 +3885,18 @@
       "scope": "VisirIE App.Player.Init HLS clips with article metadata, player-page redirects and player embeds on generic pages, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "viously",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/viously.py"
+      ],
+      "rust": [
+        "src/extractor/viously.rs",
+        "tests/fixtures/sites/viously/"
+      ],
+      "scope": "ViouslyIE webpage embeds in the generic embed detection: player div IDs, non-fatal master HLS playlists, custom-alphabet base64 export JSON metadata, single-player merge_dicts with the page fields and multi-player playlists, with m3u8/JSON warning paths, compared with pinned upstream output through the fixture proxy; malformed exports remain explicit native errors"
+    },
+    {
       "name": "vimeo",
       "status": "partial",
       "upstream": [

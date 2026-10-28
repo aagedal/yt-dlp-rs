@@ -1,0 +1,82 @@
+{
+ "routes": [
+  {
+   "url": "https://page.test/turbo.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Turbo page</title><meta property=\"og:description\" content=\"Page desc\"><meta property=\"og:image\" content=\"https://page.test/og.jpg\"></head><body><div class=\"foo viously-player bar\" id=\"F_xQzS2jwb3\" data-x=\"1\"></div></body></html>"
+  },
+  {
+   "url": "https://page.test/sparse.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8",
+    "Last-Modified": "Tue, 28 Mar 2023 21:05:07 GMT"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"OG  title\"><meta property=\"og:description\" content=\"Page desc\"></head><body><div class=\"vsly-player\" id=\"sparse1\"></div></body></html>"
+  },
+  {
+   "url": "https://page.test/multi.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Multi</title></head><body><div class=\"vsly-player\"></div><div class=\"viously-player\" id=\"gone1\"></div><div class=\"viously-player\" id=\"multi1\"></div><div class=\"vsly-player\" id=\"multi2\"></div></body></html>"
+  },
+  {
+   "url": "https://page.test/none.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>None</title></head><body><div class=\"viously-player\" id=\"gone1\"></div></body></html>"
+  },
+  {
+   "url": "https://www.viously.com/video/hls/F_xQzS2jwb3/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.viously.com/video/hls/sparse1/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://www.viously.com/video/hls/multi1/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://www.viously.com/video/hls/multi2/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.viously.com/export/json/F_xQzS2jwb3",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "sxC7vTMeixB3BAnbuYe9iYQbHbVbRARxXf1yZAQyFUorFUdrFcVwGFDyHbINZT4auTw9BbtyBfMeo7GxvWI9vT0qBchyBeM8ofCrBYMeo7FbEOVbZARxXWMji75bHbVbFzowGbBnBOCjo70lZYL9ZNB3BOBxFUBzEPVzEPB5RUBwHcV8HcV6DzVtHcVtBbtyBfGauYRgi6C4BchysxCqXT8eBchyBf8ruY0xoxC0lW9VVV=="
+  },
+  {
+   "url": "https://www.viously.com/export/json/sparse1",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "sxC7vTMeixB3BAnbZYRzX6CjoAMji75bHbVbBbtyBfM8ofL9vT0qBchyFzowGb54EOVbvWGrW7MauYQbHbV6EOVbX7L9ZTurogdbHbI2Bf4aiTQbHbVbBg80lKVV"
+  },
+  {
+   "url": "https://www.viously.com/export/json/multi1",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "sxC7vTMeixB3BAnbuYe9iYQbHbVbMfexo6KblW9VVV=="
+  }
+ ]
+}

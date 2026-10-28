@@ -778,6 +778,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "VidLii",
     "Vidyard",
     "vimeo",
+    "Viously",
     "Visir",
     "vk",
     "vk:uservideos",

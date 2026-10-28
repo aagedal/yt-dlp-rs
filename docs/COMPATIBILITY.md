@@ -2379,6 +2379,21 @@ their OpenGraph URL when it is a clip (else `Unsupported URL`), and player
 iframes on other pages are followed like upstream's `_EMBED_REGEX`.
 `tests/fixtures/sites/visir/` is compared with pinned upstream output.
 
+Viously players have no URLs of their own (upstream `ViouslyIE` has
+`_VALID_URL = False`); its `_extract_from_webpage` joins the generic embed
+detection after Vidyard: each `<div>` whose class includes `viously-player`
+or `vsly-player` and that has an `id` gives that ID's non-fatal HLS master
+playlist (a failure warns and skips the player, with no metadata request),
+then the non-fatal custom-alphabet base64 export JSON (an HTTP error warns),
+with its string title and description, integer duration, ISO 8601
+`iso_date` timestamp and non-empty category name as `categories`. One
+player is merged with the page's generic title, Last-Modified timestamp,
+OpenGraph description and thumbnail and RTA age limit (`merge_dicts`);
+several are full `Viously` entries of the page's playlist. Exports that are
+not valid base64, UTF-8 or JSON (upstream's Python-worded `Failed to parse
+JSON` warnings) remain explicit native errors.
+`tests/fixtures/sites/viously/` is compared with pinned upstream output.
+
 Vimeo videos (`vimeo.com/ID`, `player.vimeo.com/video/ID`, channel, album
 or showcase and `user` clip URLs) follow upstream `VimeoIE` without
 impersonation (HTTPS pages impersonated with the `impersonate` feature,

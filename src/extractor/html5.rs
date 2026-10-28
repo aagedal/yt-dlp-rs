@@ -904,7 +904,7 @@ impl Extractor for GenericHttp {
         }
         crate::screen::debug("Looking for embeds");
         // Other extractors' `_EMBED_REGEX` iframes, in extractor order.
-        let embeds = embeds(url, html);
+        let embeds = embeds(client, url, html)?;
         let Some(media) = parse_page(&page_url, html)? else {
             if !embeds.is_empty() {
                 return self.embed_results(client, url, &page_url, html, timestamp, embeds);
@@ -1122,9 +1122,17 @@ impl GenericHttp {
         page_url: &Url,
         html: &str,
         timestamp: Option<i64>,
-        embeds: Vec<(&'static EmbedSite, Url)>,
+        mut embeds: Vec<(&'static EmbedSite, Embed)>,
     ) -> Result<Option<ExtractResult>> {
-        if let [(site, embed)] = embeds.as_slice() {
+        if let [(_, Embed::Info(_))] = embeds.as_slice() {
+            let Some((_, Embed::Info(entry))) = embeds.pop() else {
+                unreachable!("one webpage entry")
+            };
+            return Ok(Some(ExtractResult::Video(merge_page_fields(
+                entry, page_url, html, timestamp,
+            ))));
+        }
+        if let [(site, Embed::Url(embed))] = embeds.as_slice() {
             if let Some(extractor) = site.extractor {
                 let mut result = extractor.extract_result(client, embed)?;
                 // A followed playlist keeps the page as its `original_url`.
@@ -1147,6 +1155,19 @@ impl GenericHttp {
         let entries = embeds
             .into_iter()
             .map(|(site, embed)| {
+                let embed = match embed {
+                    Embed::Url(embed) => embed,
+                    // `add_default_extra_info(info, ie, None)`: the
+                    // playlist's processing gives it the page's URL.
+                    Embed::Info(entry) => {
+                        return super::dict_info(
+                            page_url,
+                            entry.extractor,
+                            entry.fields,
+                            entry.formats,
+                        );
+                    }
+                };
                 let mut info = direct::build_at(embed.clone(), &embed, String::new());
                 info.formats.clear();
                 info.direct = None;
@@ -2066,15 +2087,35 @@ pub(crate) struct EmbedSite {
     extractor: Option<&'static dyn super::Extractor>,
     embed_urls: fn(&Url, &str) -> Vec<Url>,
     temp_id: fn(&str) -> Option<String>,
+    /// An `_extract_from_webpage` override yielding info dicts (requested
+    /// while the embeds are detected) instead of `_EMBED_REGEX` URLs.
+    webpage: Option<WebpageEntries>,
 }
 
-static EMBED_SITES: [EmbedSite; 29] = [
+type WebpageEntries = fn(&Client, &Url, &str) -> Result<Vec<WebpageEntry>>;
+
+/// An info dict yielded by an extractor's `_extract_from_webpage`: its
+/// fields in key order (`None` values dropped) and formats.
+pub(crate) struct WebpageEntry {
+    pub(crate) extractor: (&'static str, &'static str),
+    pub(crate) fields: Vec<(&'static str, serde_json::Value)>,
+    pub(crate) formats: Vec<VideoFormat>,
+}
+
+/// A detected embed: an `_EMBED_REGEX` URL or a webpage info dict.
+enum Embed {
+    Url(Url),
+    Info(WebpageEntry),
+}
+
+static EMBED_SITES: [EmbedSite; 30] = [
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
         extractor: Some(&super::acast::ACast),
         embed_urls: super::acast::embed_urls,
         temp_id: super::acast::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::arcpublishing::NAME,
@@ -2082,6 +2123,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::arcpublishing::ArcPublishing),
         embed_urls: super::arcpublishing::embed_urls,
         temp_id: super::arcpublishing::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::bitmovin::NAME,
@@ -2089,6 +2131,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::bitmovin::Bitmovin),
         embed_urls: super::bitmovin::embed_urls,
         temp_id: super::bitmovin::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::blogger::NAME,
@@ -2096,6 +2139,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::blogger::Blogger),
         embed_urls: super::blogger::embed_urls,
         temp_id: super::blogger::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::brightcove::NAME,
@@ -2103,6 +2147,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::brightcove::BrightcoveNew),
         embed_urls: super::brightcove::embed_urls,
         temp_id: super::brightcove::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::crooksandliars::NAME,
@@ -2110,6 +2155,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::crooksandliars::CrooksAndLiars),
         embed_urls: super::crooksandliars::embed_urls,
         temp_id: super::crooksandliars::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::dailymail::NAME,
@@ -2117,6 +2163,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::dailymail::DailyMail),
         embed_urls: super::dailymail::embed_urls,
         temp_id: super::dailymail::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::digiteka::NAME,
@@ -2124,6 +2171,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::digiteka::Digiteka),
         embed_urls: super::digiteka::embed_urls,
         temp_id: super::digiteka::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::expressen::NAME,
@@ -2131,6 +2179,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::expressen::Expressen),
         embed_urls: super::expressen::embed_urls,
         temp_id: super::expressen::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::googledrive::NAME,
@@ -2138,6 +2187,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::googledrive::GoogleDrive),
         embed_urls: super::googledrive::embed_urls,
         temp_id: super::googledrive::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: "JWPlatform",
@@ -2145,6 +2195,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::jwplatform::JwPlatform),
         embed_urls: super::jwplatform::embed_urls,
         temp_id: super::jwplatform::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::indavideo::NAME,
@@ -2152,6 +2203,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::indavideo::IndavideoEmbed),
         embed_urls: super::indavideo::embed_urls,
         temp_id: super::indavideo::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::kaltura::NAME,
@@ -2159,6 +2211,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::kaltura::Kaltura),
         embed_urls: super::kaltura::embed_urls,
         temp_id: super::kaltura::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::maariv::NAME,
@@ -2166,6 +2219,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::maariv::Maariv),
         embed_urls: super::maariv::embed_urls,
         temp_id: super::maariv::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::megaphone::NAME,
@@ -2173,6 +2227,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::megaphone::Megaphone),
         embed_urls: super::megaphone::embed_urls,
         temp_id: super::megaphone::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::rudovideo::NAME,
@@ -2180,6 +2235,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::rudovideo::RudoVideo),
         embed_urls: super::rudovideo::embed_urls,
         temp_id: super::rudovideo::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::sbs::NAME,
@@ -2187,6 +2243,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::sbs::Sbs),
         embed_urls: super::sbs::embed_urls,
         temp_id: super::sbs::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::simplecast::NAME,
@@ -2194,6 +2251,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::simplecast::Simplecast),
         embed_urls: super::simplecast::embed_urls,
         temp_id: super::simplecast::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: "Streamable",
@@ -2201,6 +2259,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::streamable::Streamable),
         embed_urls: super::streamable::embed_urls,
         temp_id: super::streamable::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::tvigle::NAME,
@@ -2208,6 +2267,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::tvigle::Tvigle),
         embed_urls: super::tvigle::embed_urls,
         temp_id: super::tvigle::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::vbox7::NAME,
@@ -2215,6 +2275,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::vbox7::Vbox7),
         embed_urls: super::vbox7::embed_urls,
         temp_id: super::vbox7::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::vidyard::NAME,
@@ -2222,6 +2283,15 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::vidyard::Vidyard),
         embed_urls: super::vidyard::embed_urls,
         temp_id: super::vidyard::temp_id,
+        webpage: None,
+    },
+    EmbedSite {
+        name: super::viously::NAME,
+        key: super::viously::NAME,
+        extractor: None,
+        embed_urls: |_, _| Vec::new(),
+        temp_id: |_| None,
+        webpage: Some(super::viously::webpage_entries),
     },
     EmbedSite {
         name: super::visir::NAME,
@@ -2229,6 +2299,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: None,
         embed_urls: super::visir::embed_urls,
         temp_id: super::visir::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::vodplatform::NAME,
@@ -2236,6 +2307,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::vodplatform::VodPlatform),
         embed_urls: super::vodplatform::embed_urls,
         temp_id: super::vodplatform::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::washingtonpost::NAME,
@@ -2243,6 +2315,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::washingtonpost::WashingtonPost),
         embed_urls: super::washingtonpost::embed_urls,
         temp_id: super::washingtonpost::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::wistia::CHANNEL_NAME,
@@ -2250,6 +2323,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::wistia::WistiaChannel),
         embed_urls: super::wistia::channel_embed_urls,
         temp_id: super::wistia::channel_temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::wistia::NAME,
@@ -2257,6 +2331,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::wistia::Wistia),
         embed_urls: super::wistia::embed_urls,
         temp_id: super::wistia::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: "youtube",
@@ -2264,6 +2339,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: None,
         embed_urls: super::youtube::embed_urls,
         temp_id: super::youtube::temp_id,
+        webpage: None,
     },
     EmbedSite {
         name: super::zype::NAME,
@@ -2271,22 +2347,33 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::zype::Zype),
         embed_urls: super::zype::embed_urls,
         temp_id: super::zype::temp_id,
+        webpage: None,
     },
 ];
 
-/// Every embed site's URLs with `report_detected(f'{IE_NAME} embed', n)`.
-fn embeds(url: &Url, html: &str) -> Vec<(&'static EmbedSite, Url)> {
+/// Every embed site's URLs (or webpage info dicts) with
+/// `report_detected(f'{IE_NAME} embed', n)`.
+fn embeds(client: &Client, url: &Url, html: &str) -> Result<Vec<(&'static EmbedSite, Embed)>> {
     let mut found = Vec::new();
     for site in &EMBED_SITES {
-        let urls = (site.embed_urls)(url, html);
-        match urls.len() {
+        let embeds: Vec<Embed> = match site.webpage {
+            Some(webpage) => webpage(client, url, html)?
+                .into_iter()
+                .map(Embed::Info)
+                .collect(),
+            None => (site.embed_urls)(url, html)
+                .into_iter()
+                .map(Embed::Url)
+                .collect(),
+        };
+        match embeds.len() {
             0 => {}
             1 => crate::screen::debug(&format!("Identified a {} embed", site.name)),
             count => crate::screen::debug(&format!("Identified {count} {} embeds", site.name)),
         }
-        found.extend(urls.into_iter().map(|embed| (site, embed)));
+        found.extend(embeds.into_iter().map(|embed| (site, embed)));
     }
-    found
+    Ok(found)
 }
 
 /// `_extract_rss`'s playlist: `url_transparent` placeholder entries that
@@ -2713,6 +2800,53 @@ fn videojs_info(
     Ok(Some(ExtractResult::Video(crate::info_order::mark_info(
         info, "videojs",
     ))))
+}
+
+/// `merge_dicts(embed, info_dict)` for a webpage info dict: the page's
+/// generic title, Last-Modified timestamp, OpenGraph description and
+/// thumbnail and RTA age limit fill missing (or empty string) values.
+fn merge_page_fields(
+    mut entry: WebpageEntry,
+    page_url: &Url,
+    html: &str,
+    timestamp: Option<i64>,
+) -> VideoInfo {
+    use serde_json::Value;
+    let page: [(&'static str, Option<Value>); 5] = [
+        // `_og_search_title` keeps its whitespace.
+        (
+            "title",
+            Some(
+                crate::html::og_search_property(html, "title")
+                    .filter(|title| !title.is_empty())
+                    .or_else(|| page_title(html))
+                    .unwrap_or_else(|| "video".into())
+                    .into(),
+            ),
+        ),
+        ("timestamp", timestamp.map(Value::from)),
+        (
+            "description",
+            crate::html::og_search_property(html, "description").map(Value::from),
+        ),
+        (
+            "thumbnail",
+            crate::html::og_search_property(html, "image").map(Value::from),
+        ),
+        ("age_limit", crate::html::rta_search(html).map(Value::from)),
+    ];
+    for (key, value) in page {
+        let Some(value) = value else { continue };
+        match entry.fields.iter_mut().find(|(name, _)| *name == key) {
+            None => entry.fields.push((key, value)),
+            Some((_, current)) => {
+                if current.as_str() == Some("") && value.as_str() != Some("") {
+                    *current = value;
+                }
+            }
+        }
+    }
+    super::dict_info(page_url, entry.extractor, entry.fields, entry.formats)
 }
 
 /// `merge_dicts(jwplayer_entry, info_dict)` as an info dict.
