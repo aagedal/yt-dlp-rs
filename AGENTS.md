@@ -1,7 +1,7 @@
 # Working on yt-dlp-rs
 
-This is an incremental native Rust port, currently limited to direct HTTP media
-and single-source HTML5 audio/video pages.
+This is an incremental native Rust port of yt-dlp: YouTube, the major social
+networks and several hundred other extractors, plus a few fork-only extensions.
 Read README.md, docs/ROADMAP.md, and upstream/manifest.json before expanding scope.
 Python is allowed for development/reference tooling, never as a runtime extraction
 or download fallback. Do not claim yt-dlp compatibility beyond tested behavior.
