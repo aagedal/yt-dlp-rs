@@ -36,6 +36,7 @@ mod cozytv;
 mod crooksandliars;
 mod crtvg;
 mod cultureunplugged;
+mod dailymail;
 mod dailymotion;
 mod dash;
 mod daystar;
@@ -320,6 +321,7 @@ pub use cozytv::{CozyTv, suitable as cozytv_suitable};
 pub use crooksandliars::{CrooksAndLiars, suitable as crooksandliars_suitable};
 pub use crtvg::{Crtvg, suitable as crtvg_suitable};
 pub use cultureunplugged::{CultureUnplugged, suitable as cultureunplugged_suitable};
+pub use dailymail::{DailyMail, suitable as dailymail_suitable};
 pub use dailymotion::{
     Dailymotion, DailymotionPlaylist, DailymotionSearch, DailymotionUser,
     playlist_suitable as dailymotion_playlist_suitable,

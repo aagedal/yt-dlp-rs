@@ -1,0 +1,38 @@
+[
+ {
+  "url": "http://www.dailymail.co.uk/video/tvshowbiz/video-1295863/The-Mountain.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.dailymail.co.uk/video/tvshowbiz/video-1295863/The-Mountain.html",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "http://www.dailymail.co.uk/embed/video/3463585.html",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.daily-news.test/lifestyle/jessie-j/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.dailymail.co.uk/embed/video/1.html",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://www.dailymail.co.uk/embed/video/2.html",
+  "args": [
+   "-j"
+  ]
+ }
+]

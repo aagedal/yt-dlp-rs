@@ -860,6 +860,18 @@
       "scope": "CultureUnpluggedIE movie data JSON as an untyped result (metadata, creator/creators, preference thumbnails, KeyError messages) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "dailymail",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dailymail.py"
+      ],
+      "rust": [
+        "src/extractor/dailymail.rs",
+        "tests/fixtures/sites/dailymail/"
+      ],
+      "scope": "DailyMailIE data-opts player options, video-sources renditions and embed iframes on generic pages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "dailymotion",
       "status": "partial",
       "upstream": [

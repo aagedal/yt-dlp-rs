@@ -1517,6 +1517,18 @@ mp4_high)`, the title, description, protocol-relative poster, integer
 processing-time error without formats; its iframe/param embeds on generic
 pages follow Blogger's in the embed order.
 
+Daily Mail videos (`dailymail.co.uk/video/SECTION/video-ID...`,
+`dailymail.co.uk/embed/video/ID.html`) follow upstream `DailyMailIE`: the
+page's `data-opts` JSON (fatal) and its unescaped title (required) and
+description, the `plugins.sources.url` (else `sources.url`, else the
+`api/player/ID/video-sources.json`) renditions (inside `body` when present):
+`M2TS` containers as `hls-KBPS` `m3u8_native` formats with `mp4`, others with
+upstream's `determine_protocol` (`http` for protocol-relative URLs, which
+processing makes `http:`), with frame size, integer bitrate, codec and
+container; the poster (else thumbnail). Daily Mail embed iframes on other
+pages are followed like upstream's `_EMBED_REGEX`. `tests/fixtures/sites/dailymail/`
+is compared with pinned upstream output.
+
 CRTVG programmes (`crtvg.es/tvg/a-carta/ID`) follow upstream `CrtvgIE`: the
 page's fatal `var url` base, its `playlist.m3u8` (without an `ext`) and
 `manifest.mpd` as non-fatal formats (their subtitles ignored with upstream's
