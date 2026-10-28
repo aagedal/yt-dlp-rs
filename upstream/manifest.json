@@ -2006,6 +2006,18 @@
       "scope": "JoveIE chapters XML video URL as an untyped result, citation metas and regex warnings, and the escaped int(None) error compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "jstream",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/jstream.py"
+      ],
+      "rust": [
+        "src/extractor/jstream.rs",
+        "tests/fixtures/sites/jstream/"
+      ],
+      "scope": "JStreamIE jstream: eq_meta JSONP movie auto HLS formats and subtitles with duplicate removal, metadata and errors, and generic-page if.js PlayerFactoryIF embeds, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "jwplatform",
       "status": "partial",
       "upstream": [

@@ -1,0 +1,44 @@
+[
+ {
+  "url": "jstream:www50:eqd638pvwx:752",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "jstream:www50:eqd638pvwx:752",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.city.kobe.test/bousai/video.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.city.kobe.test/bousai/list.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "jstream:www50:eqd638pvwx:754",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "jstream:www50:eqd638pvwx:755",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "jstream:www50:eqd638pvwx:756",
+  "args": [
+   "-J"
+  ]
+ }
+]

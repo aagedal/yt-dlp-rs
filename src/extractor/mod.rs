@@ -136,6 +136,7 @@ mod jamendo;
 mod jixie;
 mod jove;
 mod json_ld;
+mod jstream;
 mod jwplatform;
 mod jwplayer;
 mod kaltura;
@@ -571,6 +572,7 @@ pub use jamendo::{
     Jamendo, JamendoAlbum, album_suitable as jamendo_album_suitable, suitable as jamendo_suitable,
 };
 pub use jove::{Jove, suitable as jove_suitable};
+pub use jstream::{JStream, suitable as jstream_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
 pub use kaltura::{Kaltura, suitable as kaltura_suitable};
 pub use kankanews::{KankaNews, suitable as kankanews_suitable};
@@ -2350,6 +2352,7 @@ fn py_splitlines(text: &str) -> Vec<&str> {
 /// Whether an extractor's `_VALID_URL` takes this non-HTTP pseudo-URL.
 pub fn pseudo_url(url: &str) -> bool {
     (url.starts_with("jwplatform:") && jwplatform::suitable(url))
+        || (url.starts_with("jstream:") && jstream::suitable(url))
         || (url.starts_with("kaltura:") && kaltura::suitable(url))
         || youtube::search::suitable(url)
         || (url.starts_with("nicosearch")

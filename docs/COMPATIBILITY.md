@@ -2896,6 +2896,22 @@ the `citation_title`/`citation_publication_date` metas, OpenGraph thumbnail,
 summary paragraph and comment count, each with upstream's warning, and the
 escaped `int(None)` error without a comment count.
 
+J-Stream Equipmedia videos (`jstream:HOST:PUBLISHER:MID`) follow upstream
+`JStreamIE`: the `PUBLISHER.eq.webcdn.stream.ne.jp/HOST/PUBLISHER/jmc_pub/eq_meta/v1/MID.jsonp`
+`metaDataResult(...)` callback (else upstream's `Unable to extract
+metaDataResult`; a result without `movie` is its `KeyError`, a movie
+without `movie_list_hls` its bare `'NoneType' object is not iterable`),
+each list entry whose text starts with `auto` as a fatal HLS playlist (the
+rest of the text, without a leading `_`, as the format ID prefix) with
+subtitles, duplicate format URLs removed, and the movie's title, duration
+and thumbnail URL. Generic pages loading the J-Stream player's
+`ssl-cache.stream.ne.jp/HOST/PUBLISHER/.../if.js` embed the
+`PlayerFactoryIF.create({...})` players' base64 `m` movie IDs (one embed is
+followed, several are a playlist). Player options that do not parse are
+skipped here, where upstream's generic extraction fails; non-string list
+texts or URLs and non-list HLS lists are unsupported errors.
+`tests/fixtures/sites/jstream/` is compared with pinned upstream output.
+
 JW Platform media (`content.jwplatform.com`/`cdn.jwplayer.com`
 `players|feeds|thumbs|previews|manifests|jw6|v2/media/ID`, and `jwplatform:ID`)
 follow upstream `JWPlatformIE`: the `cdn.jwplayer.com/v2/media/ID` JSON through
