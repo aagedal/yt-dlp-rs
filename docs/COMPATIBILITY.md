@@ -3589,6 +3589,15 @@ duration, channel, show, season from the slug and episode number.
 `tests/fixtures/sites/tva/` is compared with pinned upstream output (with
 `--no-geo-bypass`).
 
+TV2 Play (Hungary) videos, shows and ribbons (`tv2play.hu/PATH`,
+`tv2play.hu/szalag/ID`; `tv2play.hu`, `tv2playseries.hu`) follow upstream
+`TV2HuIE` and `TV2HuSeriesIE`: the search API's video (its player's streaming
+JSON HLS playlist, fatal) with title, series, length, description,
+thumbnail, upload date and season and episode numbers; a show page as a
+playlist of its first ribbon list's `url` results; other content types as
+`Unsupported URL`; and a ribbon's cards as `url` results.
+`tests/fixtures/sites/tv2hu/` is compared with pinned upstream output.
+
 TV 2 videos (`tv2.no/v|video[N]/.../ID`) follow upstream `TV2IE`: the
 `sumo.tv2.no` asset metadata, then the HLS and DASH playback JSON (POSTed
 like upstream; a 401's error code is the Norway geo restriction, the

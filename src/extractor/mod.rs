@@ -322,6 +322,7 @@ mod tumblr;
 mod tv2;
 mod tv24ua;
 mod tv2dk;
+mod tv2hu;
 mod tv4;
 mod tv5mondeplus;
 mod tva;
@@ -922,6 +923,9 @@ pub use tv2::{
 pub use tv2dk::{
     Tv2Dk, Tv2DkBornholmPlay, bornholm_suitable as tv2dk_bornholm_suitable,
     suitable as tv2dk_suitable,
+};
+pub use tv2hu::{
+    Tv2Hu, Tv2HuSeries, series_suitable as tv2hu_series_suitable, suitable as tv2hu_suitable,
 };
 pub use tv4::{Tv4, suitable as tv4_suitable};
 pub use tv5mondeplus::{Tv5MondePlus, suitable as tv5mondeplus_suitable};

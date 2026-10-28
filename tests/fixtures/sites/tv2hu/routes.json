@@ -1,0 +1,53 @@
+{
+ "routes": [
+  {
+   "url": "https://tv2play.hu/api/search/mintaapak/213",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"contentType\": \"video\", \"id\": 213, \"playerId\": \"p213\", \"title\": \"Mintaap\\u00e1k 213. r\\u00e9sz\", \"seriesTitle\": \"Mintaap\\u00e1k\", \"length\": 2100, \"description\": \"Desc\", \"thumbnailUrl\": \"/img/213.jpg\", \"uploadedAt\": \"2022.04.06\", \"seriesInfo\": {\"seasonNr\": 2, \"episodeNr\": 13}}"
+  },
+  {
+   "url": "https://tv2play.hu/api/streaming-url?playerId=p213",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"https://tv2-api.test/stream/213.json\"}"
+  },
+  {
+   "url": "https://tv2-api.test/stream/213.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"bitrates\": {\"hls\": \"//tv2-cdn.test/213/master.m3u8\"}}"
+  },
+  {
+   "url": "https://tv2-cdn.test/213/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://tv2play.hu/api/search/mintaapak",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"contentType\": \"showpage\", \"pages\": [{\"tabs\": [{\"x\": 1}, {\"ribbonIds\": [59, \"60\"]}]}]}"
+  },
+  {
+   "url": "https://tv2play.hu/api/search/egyeb",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"contentType\": \"article\"}"
+  },
+  {
+   "url": "https://tv2play.hu/api/ribbons/59/0?size=100000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"cards\": [{\"slug\": \"mintaapak/213\"}, {\"slug\": \"\"}, {\"slug\": \"mintaapak/214\"}]}"
+  }
+ ]
+}

@@ -1,0 +1,28 @@
+[
+ {
+  "url": "https://tv2play.hu/mintaapak/213",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://tv2play.hu/mintaapak",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://tv2play.hu/egyeb",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://tv2play.hu/szalag/59?rendezes=nepszeruseg",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

@@ -1524,6 +1524,18 @@
       "scope": "TV2DKIE article player x-data JW Player playlists and TV2DKBornholmPlayIE specifikVideo flowplayer HLS/DASH/direct sources, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "tv2hu",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tv2hu.py"
+      ],
+      "rust": [
+        "src/extractor/tv2hu.rs",
+        "tests/fixtures/sites/tv2hu/"
+      ],
+      "scope": "TV2HuIE search API videos and show pages, and TV2HuSeriesIE ribbons, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "tv4",
       "status": "partial",
       "upstream": [
