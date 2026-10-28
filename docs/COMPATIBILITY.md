@@ -3804,6 +3804,14 @@ rating; a page without the uploader line fails like upstream's unbound
 local. `tests/fixtures/sites/gaskrank/` is compared with pinned upstream
 output.
 
+GoPro shared videos (`gopro.com/v/ID`) follow upstream `GoProIE`: the page's
+`__reflectData` (fatal; an empty media list is a bare `IndexError`), the media
+download API's variations with their quality, label, type and size, the
+collection title (else the `og:title`/`twitter:title` meta or `<title>`
+without ` | GoPro`, with upstream's warnings), OpenGraph image, creation
+time, account and music track. `tests/fixtures/sites/gopro/` is compared
+with pinned upstream output.
+
 Groupon deals (`groupon.com/deals/SLUG`) follow upstream `GrouponIE`: the
 page's `payload` JSON (fatal) as a playlist of YouTube `url` results for its
 carousel's deal videos with a provider and media ID, with the OpenGraph title

@@ -1,0 +1,47 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://gopro.com/v/ZNVvED8QDzR5V",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ZNVvED8QDzR5V\", \"title\": \"My GoPro\", \"formats\": [{\"url\": \"https://gp.test/high.mp4\", \"format_id\": \"high\", \"format_note\": \"high\", \"ext\": \"mp4\", \"width\": 1920, \"height\": 1080, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"high - 1920x1080 (high)\"}], \"thumbnail\": \"https://gp.test/i.jpg\", \"timestamp\": 1611688548, \"uploader_id\": \"nick\", \"duration\": 37, \"artist\": \"Artist\", \"track\": null, \"webpage_url\": \"https://gopro.com/v/ZNVvED8QDzR5V\", \"original_url\": \"https://gopro.com/v/ZNVvED8QDzR5V\", \"webpage_url_basename\": \"ZNVvED8QDzR5V\", \"webpage_url_domain\": \"gopro.com\", \"extractor\": \"GoPro\", \"extractor_key\": \"GoPro\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://gp.test/i.jpg\", \"id\": \"0\"}], \"display_id\": \"ZNVvED8QDzR5V\", \"fulltitle\": \"My GoPro\", \"duration_string\": \"37\", \"upload_date\": \"20210126\", \"release_year\": null, \"artists\": [\"Artist\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://gp.test/high.mp4\", \"format_id\": \"high\", \"format_note\": \"high\", \"ext\": \"mp4\", \"width\": 1920, \"height\": 1080, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"high - 1920x1080 (high)\", \"_filename\": \"My GoPro [ZNVvED8QDzR5V].mp4\", \"filename\": \"My GoPro [ZNVvED8QDzR5V].mp4\", \"__write_download_archive\": false}], \"url\": \"https://gp.test/high.mp4\", \"format_id\": \"high\", \"format_note\": \"high\", \"ext\": \"mp4\", \"width\": 1920, \"height\": 1080, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"high - 1920x1080 (high)\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://gopro.com/v/Second",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [GoPro] unable to extract og:title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [GoPro] unable to extract og:image; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [GoPro] Second: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://gopro.com/v/Empty",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  }
+ ]
+}

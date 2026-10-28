@@ -116,6 +116,7 @@ mod godtube;
 mod golem;
 mod goodgame;
 mod googledrive;
+mod gopro;
 mod graspop;
 mod gronkh;
 mod groupon;
@@ -568,6 +569,7 @@ pub use googledrive::{
     GoogleDrive, GoogleDriveFolder, folder_suitable as googledrive_folder_suitable,
     suitable as googledrive_suitable,
 };
+pub use gopro::{GoPro, suitable as gopro_suitable};
 pub use graspop::{Graspop, suitable as graspop_suitable};
 pub use gronkh::{Gronkh, suitable as gronkh_suitable};
 pub use groupon::{Groupon, suitable as groupon_suitable};
