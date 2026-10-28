@@ -2925,6 +2925,18 @@
       "scope": "WhypIE __NUXT_DATA__ payload via _search_nuxt_json, required pinia/track data, audio/lossy/lossless formats with Referer headers, track and user metadata, and Nuxt search/resolution errors compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "wikimedia",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/wikimedia.py"
+      ],
+      "rust": [
+        "src/extractor/wikimedia.rs",
+        "tests/fixtures/sites/wikimedia/"
+      ],
+      "scope": "WikimediaIE MediaWiki API videoinfo (require('video info') error) with the robot-policy User-Agent on the API request, formats, subtitles and HTTP downloads; source and derivative formats with _parse_ext_and_codecs, timed text tracks and extmetadata fields compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "wimbledon",
       "status": "partial",
       "upstream": [

@@ -234,6 +234,7 @@ mod vocaroo;
 mod webcamerapl;
 mod weibo;
 mod whyp;
+mod wikimedia;
 mod wimbledon;
 mod wistia;
 mod worldstarhiphop;
@@ -649,6 +650,7 @@ pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
 };
 pub use whyp::{Whyp, suitable as whyp_suitable};
+pub use wikimedia::{Wikimedia, suitable as wikimedia_suitable};
 pub use wimbledon::{Wimbledon, suitable as wimbledon_suitable};
 pub use wistia::{
     Wistia, WistiaChannel, WistiaPlaylist, channel_suitable as wistia_channel_suitable,

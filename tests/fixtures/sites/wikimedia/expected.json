@@ -1,0 +1,107 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"83227919\", \"display_id\": \"Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm\", \"formats\": [{\"url\": \"https://upload.wikimedia.test/transcoded/f/f8/Temperaturkurve.webm.audio.ogg\", \"tbr\": 96, \"http_headers\": {\"User-Agent\": \"yt-dlp/2026.10.26 (https://github.com/yt-dlp/yt-dlp)\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"ext\": \"ogg\", \"vcodec\": \"none\", \"acodec\": \"vorbis\", \"dynamic_range\": null, \"protocol\": \"https\", \"audio_ext\": \"ogg\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 543924, \"format_id\": \"0\", \"format\": \"0 - audio only\"}, {\"url\": \"https://upload.wikimedia.test/transcoded/f/f8/Temperaturkurve.webm.240p.vp9.webm\", \"width\": 426, \"height\": 240, \"tbr\": 262, \"http_headers\": {\"User-Agent\": \"yt-dlp/2026.10.26 (https://github.com/yt-dlp/yt-dlp)\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"ext\": \"webm\", \"vcodec\": \"vp9\", \"acodec\": \"opus\", \"dynamic_range\": \"SDR\", \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"426x240\", \"aspect_ratio\": 1.77, \"filesize_approx\": 1484459, \"format_id\": \"1\", \"format\": \"1 - 426x240\"}, {\"url\": \"https://upload.wikimedia.test/transcoded/f/f8/Temperaturkurve.webm.raw\", \"width\": 320, \"http_headers\": {\"User-Agent\": \"yt-dlp/2026.10.26 (https://github.com/yt-dlp/yt-dlp)\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"ext\": \"raw\", \"video_ext\": \"raw\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"320x?\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"2\", \"format\": \"2 - 320x?\"}, {\"url\": \"https://upload.wikimedia.test/transcoded/f/f8/Temperaturkurve.webm.360p.mp4\", \"width\": 640, \"height\": 360, \"tbr\": 520, \"http_headers\": {\"User-Agent\": \"yt-dlp/2026.10.26 (https://github.com/yt-dlp/yt-dlp)\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"ext\": \"mp4\", \"vcodec\": \"avc1.42E01E\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"filesize_approx\": 2946255, \"format_id\": \"3\", \"format\": \"3 - 640x360\"}, {\"url\": \"https://upload.wikimedia.test/f/f8/Temperaturkurve.webm\", \"width\": 1280, \"height\": 720, \"tbr\": 2016, \"http_headers\": {\"User-Agent\": \"yt-dlp/2026.10.26 (https://github.com/yt-dlp/yt-dlp)\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"ext\": \"webm\", \"vcodec\": \"vp9\", \"acodec\": \"opus\", \"dynamic_range\": \"SDR\", \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"filesize_approx\": 11422403, \"format_id\": \"4\", \"format\": \"4 - 1280x720\"}, {\"url\": \"https://upload.wikimedia.test/f/f8/Temperaturkurve.webm\", \"format_id\": \"source\", \"quality\": 10, \"width\": 1280, \"height\": 720, \"filesize\": 11423513, \"http_headers\": {\"User-Agent\": \"yt-dlp/2026.10.26 (https://github.com/yt-dlp/yt-dlp)\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"source - 1280x720\"}], \"subtitles\": {\"de\": [{\"url\": \"https://commons.wikimedia.org/w/api.php?action=timedtext&title=File%3ADie_Temperaturkurve_der_Erde_%28ZDF%2C_Terra_X%29_720p_HD_50FPS.webm&lang=de&trackformat=vtt&origin=%2A\", \"ext\": \"vtt\", \"http_headers\": {\"User-Agent\": \"yt-dlp/2026.10.26 (https://github.com/yt-dlp/yt-dlp)\"}}], \"en\": [{\"url\": \"https://commons.wikimedia.org/w/api.php?action=timedtext&title=File%3ADie_Temperaturkurve_der_Erde_%28ZDF%2C_Terra_X%29_720p_HD_50FPS.webm&lang=en&trackformat=vtt&origin=%2A\", \"ext\": \"vtt\", \"http_headers\": {\"User-Agent\": \"yt-dlp/2026.10.26 (https://github.com/yt-dlp/yt-dlp)\"}}, {\"url\": \"https://commons.wikimedia.org/w/api.php?action=timedtext&title=File%3ADie_Temperaturkurve_der_Erde_%28ZDF%2C_Terra_X%29_720p_HD_50FPS.webm&lang=en&trackformat=srt&origin=%2A\", \"ext\": \"srt\", \"http_headers\": {\"User-Agent\": \"yt-dlp/2026.10.26 (https://github.com/yt-dlp/yt-dlp)\"}}], \"unk\": [{\"url\": \"https://commons.wikimedia.org/w/api.php?action=timedtext&title=x&trackformat=vtt\", \"ext\": \"vtt\", \"http_headers\": {\"User-Agent\": \"yt-dlp/2026.10.26 (https://github.com/yt-dlp/yt-dlp)\"}}]}, \"title\": \"Die Temperaturkurve der Erde (ZDF, Terra X) 720p HD 50FPS\", \"timestamp\": 1597848846, \"description\": \"Climate change, Temperature in history of Earth, Video of Terra X.\", \"uploader\": \"ZDF Terra X Redaktion\", \"duration\": 45.327, \"license\": \"Creative Commons Attribution 4.0\", \"categories\": [\"Climate change\", \"Temperature\", \"Terra X\", \"ZDF\"], \"webpage_url\": \"https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm\", \"original_url\": \"https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm\", \"webpage_url_basename\": \"File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm\", \"webpage_url_domain\": \"commons.wikimedia.org\", \"extractor\": \"wikimedia.org\", \"extractor_key\": \"Wikimedia\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Die Temperaturkurve der Erde (ZDF, Terra X) 720p HD 50FPS\", \"duration_string\": \"45\", \"upload_date\": \"20200819\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://upload.wikimedia.test/f/f8/Temperaturkurve.webm\", \"format_id\": \"source\", \"quality\": 10, \"width\": 1280, \"height\": 720, \"filesize\": 11423513, \"http_headers\": {\"User-Agent\": \"yt-dlp/2026.10.26 (https://github.com/yt-dlp/yt-dlp)\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"source - 1280x720\", \"_filename\": \"Die Temperaturkurve der Erde (ZDF, Terra X) 720p HD 50FPS [83227919].webm\", \"filename\": \"Die Temperaturkurve der Erde (ZDF, Terra X) 720p HD 50FPS [83227919].webm\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[wikimedia.org] Extracting URL: https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm",
+    "[wikimedia.org] Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm: Downloading JSON metadata",
+    "[info] Available subtitles for 83227919:",
+    "Language Formats",
+    "de       vtt",
+    "en       srt, vtt",
+    "unk      vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm",
+   "args": [
+    "--no-progress",
+    "-f",
+    "source",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[wikimedia.org] Extracting URL: https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm",
+    "[wikimedia.org] Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm: Downloading JSON metadata",
+    "[info] 83227919: Downloading 1 format(s): source",
+    "[download] Destination: 83227919.webm",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "83227919.webm": 16
+   }
+  },
+  {
+   "url": "https://commons.wikimedia.org/wiki/File:Two-toed_sloth_rail_walking_%E4%BA%8C%E8%B6%BE%E6%A8%B9%E7%8D%BA%E7%88%AC%E8%A1%8C_(HD).webm",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"165082300\", \"display_id\": \"Two-toed_sloth_rail_walking_%E4%BA%8C%E8%B6%BE%E6%A8%B9%E7%8D%BA%E7%88%AC%E8%A1%8C_(HD).webm\", \"formats\": [{\"url\": \"https://upload.wikimedia.test/sloth.webm\", \"format_id\": \"source\", \"quality\": 10, \"width\": 1920, \"height\": 1080, \"http_headers\": {\"User-Agent\": \"yt-dlp/2026.10.26 (https://github.com/yt-dlp/yt-dlp)\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"format\": \"source - 1920x1080\"}], \"subtitles\": {}, \"title\": \"Two-toed sloth rail walking \\u4e8c\\u8dbe\\u6a39\\u737a\\u722c\\u884c (HD)\", \"timestamp\": 1747012249, \"uploader\": \"Tvpuppy\", \"duration\": 25.0, \"license\": \"Creative Commons Attribution 3.0\", \"webpage_url\": \"https://commons.wikimedia.org/wiki/File:Two-toed_sloth_rail_walking_%E4%BA%8C%E8%B6%BE%E6%A8%B9%E7%8D%BA%E7%88%AC%E8%A1%8C_(HD).webm\", \"original_url\": \"https://commons.wikimedia.org/wiki/File:Two-toed_sloth_rail_walking_%E4%BA%8C%E8%B6%BE%E6%A8%B9%E7%8D%BA%E7%88%AC%E8%A1%8C_(HD).webm\", \"webpage_url_basename\": \"File:Two-toed_sloth_rail_walking_%E4%BA%8C%E8%B6%BE%E6%A8%B9%E7%8D%BA%E7%88%AC%E8%A1%8C_(HD).webm\", \"webpage_url_domain\": \"commons.wikimedia.org\", \"extractor\": \"wikimedia.org\", \"extractor_key\": \"Wikimedia\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Two-toed sloth rail walking \\u4e8c\\u8dbe\\u6a39\\u737a\\u722c\\u884c (HD)\", \"duration_string\": \"25\", \"upload_date\": \"20250512\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://upload.wikimedia.test/sloth.webm\", \"format_id\": \"source\", \"quality\": 10, \"width\": 1920, \"height\": 1080, \"http_headers\": {\"User-Agent\": \"yt-dlp/2026.10.26 (https://github.com/yt-dlp/yt-dlp)\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"format\": \"source - 1920x1080\", \"_filename\": \"Two-toed sloth rail walking \\u4e8c\\u8dbe\\u6a39\\u737a\\u722c\\u884c (HD) [165082300].webm\", \"filename\": \"Two-toed sloth rail walking \\u4e8c\\u8dbe\\u6a39\\u737a\\u722c\\u884c (HD) [165082300].webm\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://commons.wikimedia.org/wiki/File:Missing.webm",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [wikimedia.org] Missing.webm: Unable to extract video info; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm",
+   "args": [
+    "--no-progress",
+    "--skip-download",
+    "--write-subs",
+    "--sub-langs",
+    "de",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[wikimedia.org] Extracting URL: https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm",
+    "[wikimedia.org] Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm: Downloading JSON metadata",
+    "[info] 83227919: Downloading subtitles: de",
+    "[info] 83227919: Downloading 1 format(s): source",
+    "[info] Writing video subtitles to: 83227919.de.vtt",
+    "[download] Destination: 83227919.de.vtt",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "83227919.de.vtt": 44
+   }
+  }
+ ]
+}

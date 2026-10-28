@@ -1862,6 +1862,20 @@ description, duration, ISO 8601 creation time and artwork, and the first
 user's name and ID. `tests/fixtures/sites/whyp/` is compared with pinned
 upstream output.
 
+Wikimedia Commons files (`commons.wikimedia.org/wiki/File:NAME`) follow
+upstream `WikimediaIE`: the MediaWiki API's `videoinfo` for the unquoted
+title (fatal `Unable to extract video info` without one), requested with
+upstream's robot-policy User-Agent (`yt-dlp/2026.10.26
+(https://github.com/yt-dlp/yt-dlp)`, the tracked release), which every
+format and subtitle track also carries in its `http_headers` and HTTP
+downloads send: the `source` file (quality 10, size, dimensions), the
+derivatives with a URL (dimensions, bitrate, extension and codecs from their
+`type`), timed text tracks by `srclang` (else `unk`) with their MIME type's
+extension, and the page ID, display ID, title, timestamp, cleaned
+description, uploader, duration, license and categories. Timed text tracks
+without a type are explicit native errors. `tests/fixtures/sites/wikimedia/`
+is compared with pinned upstream output.
+
 WorldStarHipHop videos (`www|m.worldstar{hiphop,candy}.com/{videos,android}/video.php?v=ID`)
 follow upstream `WorldStarHipHopIE`: the first `_parse_html5_media_entries`
 entry (formats with the page as `Referer`, tracks and poster) with the fatal
@@ -5176,7 +5190,9 @@ Global headers are defaults for the shared HTTP client across direct/HTML5/
 YouTube pages, anonymous player API calls, media probes/downloads, HLS/DASH
 manifests, fragment initialization/segments, AES keys, subtitle sidecars and
 retries. Explicit per-request headers win: HTML5/YouTube media and sidecars retain
-page Referer; transfers use identity encoding and transport-owned range headers;
+page Referer; HTTP media and subtitle downloads send the format's or track's own
+`User-Agent` from its `http_headers` (other format headers are not sent);
+transfers use identity encoding and transport-owned range headers;
 player API Origin/client/version headers retain extractor values. Direct inputs
 without an extractor Referer use the global Referer. Validation does not make
 unsupported authentication or delivery protocols supported.
