@@ -748,6 +748,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "tiktok:collection",
     "tiktok:live",
     "tiktok:user",
+    "ToonGoggles",
     "Toypics",
     "TrtCocukVideo",
     "TrtWorld",
@@ -1113,6 +1114,7 @@ impl YoutubeDl {
                 Box::new(extractor::DamtomoRecord),
                 Box::new(extractor::DamtomoVideo),
                 Box::new(extractor::Tf1),
+                Box::new(extractor::ToonGoggles),
                 Box::new(extractor::TruNews),
                 Box::new(extractor::Tva),
                 Box::new(extractor::Tvigle),
@@ -3817,12 +3819,27 @@ impl YoutubeDl {
                     && let Some(marker) = video.extra.get(FOLLOW_TRANSPARENT).cloned()
                 {
                     let target = Url::parse(marker["url"].as_str().unwrap_or_default())?;
+                    // `exempted_fields`: without sections, the inner `id`,
+                    // `extractor` and `extractor_key` are kept.
+                    let sectioned = marker["fields"]
+                        .get("section_start")
+                        .is_some_and(|value| !value.is_null())
+                        || marker["fields"]
+                            .get("section_end")
+                            .is_some_and(extractor::nuxt::truthy);
                     let fields: Vec<(String, serde_json::Value)> = marker["fields"]
                         .as_object()
                         .map(|fields| {
                             fields
                                 .iter()
                                 .filter(|(_, value)| !value.is_null())
+                                .filter(|(key, _)| {
+                                    sectioned
+                                        || !matches!(
+                                            key.as_str(),
+                                            "id" | "extractor" | "extractor_key"
+                                        )
+                                })
                                 .map(|(key, value)| (key.clone(), value.clone()))
                                 .collect()
                         })

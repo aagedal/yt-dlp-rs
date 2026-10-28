@@ -3822,6 +3822,18 @@
       "scope": "TVNoeIE INIT_PLAYER js_to_json tracks (upstream's nested track-group filter) as master-only HLS and DASH formats with unsupported-type warnings, description, h2 title, premiere release date, h1 series and player poster compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "toongoggles",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/toongoggles.py"
+      ],
+      "rust": [
+        "src/extractor/toongoggles.rs",
+        "tests/fixtures/sites/toongoggles/"
+      ],
+      "scope": "ToonGogglesIE API episodes as transparent Kaltura url results and show playlists, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "trunews",
       "status": "partial",
       "upstream": [

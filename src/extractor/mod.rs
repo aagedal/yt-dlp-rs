@@ -299,6 +299,7 @@ mod thesun;
 mod thisamericanlife;
 mod threespeak;
 mod tiktok;
+mod toongoggles;
 mod toypics;
 mod trtcocuk;
 mod trtworld;
@@ -878,6 +879,7 @@ pub use tiktok::{
 pub(crate) use tiktok::{
     fetch_pages as fetch_tiktok_pages, is_pending_state as tiktok_pending_state,
 };
+pub use toongoggles::{ToonGoggles, suitable as toongoggles_suitable};
 pub use toypics::{Toypics, suitable as toypics_suitable};
 pub use trtcocuk::{TrtCocukVideo, suitable as trtcocuk_suitable};
 pub use trtworld::{TrtWorld, suitable as trtworld_suitable};

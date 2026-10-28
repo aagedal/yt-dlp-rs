@@ -1,0 +1,36 @@
+{
+ "routes": [
+  {
+   "url": "http://cdnapi.kaltura.com/api_v3/service/multirequest",
+   "request_body": [
+    "\"redirectFromEntryId\": \"0_c03e1b5g\"",
+    "\"widgetId\": \"_513551\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "html5.json"
+  },
+  {
+   "url": "http://api.toongoggles.com/search?filter=episode&id=217147&for_ng=1&for_web=1&show_meta=1&version=7.0",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"objects\": [{\"episode_name\": \"Football\", \"episode_id\": \"217147\", \"entry_id\": \"0_c03e1b5g\", \"thumbnail_url\": \"https://tg.test/t.jpg\", \"description\": \"Bernard\", \"hms\": \"00:01:30\", \"show_name\": \"Bernard Season 2\", \"season_num\": \"2\", \"episode_num\": \"1\", \"categories\": [\"Kids\"]}]}"
+  },
+  {
+   "url": "http://api.toongoggles.com/search?filter=episode&id=5&for_ng=1&for_web=1&show_meta=1&version=7.0",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"objects\": []}"
+  },
+  {
+   "url": "http://api.toongoggles.com/getepisodesbyshow?max=1000000000&showid=217143&for_ng=1&for_web=1&show_meta=1&version=7.0",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"show_name\": \"Bernard\", \"objects\": [{\"episode_name\": \"Football\", \"episode_id\": \"217147\", \"entry_id\": \"0_c03e1b5g\", \"thumbnail_url\": \"https://tg.test/t.jpg\", \"description\": \"Bernard\", \"hms\": \"00:01:30\", \"show_name\": \"Bernard Season 2\", \"season_num\": \"2\", \"episode_num\": \"1\", \"categories\": [\"Kids\"]}, {\"episode_name\": \"Two\", \"episode_id\": 9, \"entry_id\": \"0_other\"}]}"
+  }
+ ]
+}

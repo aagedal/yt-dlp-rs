@@ -3500,6 +3500,16 @@ Python's decoder message). HDS (`f4m`) streams give non-fatal F4M formats. Upstr
 not ported. `tests/fixtures/sites/tv2/` is compared with pinned upstream
 output.
 
+Toon Goggles episodes (`toongoggles.com/shows/SHOW/SLUG/episodes/ID`) and
+shows (`toongoggles.com/shows/SHOW`) follow upstream `ToonGogglesIE`: the
+API's `search` episode (an empty list is a bare `IndexError`) as a
+transparent `kaltura:513551:ENTRY` result with its title, thumbnail,
+description, duration, show, season, episode and categories, and the
+`getepisodesbyshow` episodes as a playlist of them with the show name. Like
+upstream's `url_transparent` processing, the outer `id` does not replace
+the Kaltura entry's. `tests/fixtures/sites/toongoggles/` is compared with
+pinned upstream output.
+
 TruNews streams (`trunews.com/stream/SLUG`) follow upstream `TruNewsIE`: the
 Zype API's first video with that friendly title (an empty list is a bare
 `IndexError`) as a `url` result for its Zype player.
