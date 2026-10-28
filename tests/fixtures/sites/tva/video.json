@@ -1,0 +1,83 @@
+{
+ "id": "6300000000001",
+ "account_id": "1111111111001",
+ "name": "Brightcove <b>Fixture</b> &amp; video",
+ "description": "<p>A fixture description.</p>",
+ "tags": [
+  "one",
+  "",
+  "two"
+ ],
+ "published_at": "2024-01-02T03:04:05.678Z",
+ "duration": 123456,
+ "poster": "https://cf-images.us-east-1.prod.boltdns.net/v1/static/1111111111001/abc/1280x720/match/image.jpg",
+ "thumbnail": "https://cf-images.us-east-1.prod.boltdns.net/v1/static/1111111111001/abc/160x90/match/image.jpg",
+ "sources": [
+  {
+   "type": "application/x-mpegURL",
+   "src": "https://manifest.prod.boltdns.net/manifest/v1/hls/master.m3u8"
+  },
+  {
+   "type": "application/dash+xml",
+   "src": "https://manifest.prod.boltdns.net/manifest/v1/dash/manifest.mpd"
+  },
+  {
+   "container": "MP4",
+   "type": "video/mp4",
+   "src": "https://house-fastly-signed-us-east-1-prod.brightcovecdn.com/media/v1/pmp4/static/clear/1111111111001/abc/high.mp4",
+   "avg_bitrate": 1500000,
+   "width": 1280,
+   "height": 720,
+   "size": 12345678,
+   "codec": "H264",
+   "duration": 123456
+  },
+  {
+   "container": "MP4",
+   "type": "video/mp4",
+   "streaming_src": "https://house-fastly-signed-us-east-1-prod.brightcovecdn.com/media/v1/pmp4/static/clear/1111111111001/abc/stream.mp4",
+   "avg_bitrate": 800500,
+   "width": 640,
+   "height": 360,
+   "codec": "H264"
+  },
+  {
+   "container": "MP4",
+   "src": "https://house-fastly-signed-us-east-1-prod.brightcovecdn.com/media/v1/pmp4/static/clear/1111111111001/abc/audio.mp4",
+   "avg_bitrate": 128000,
+   "width": 0,
+   "height": 0,
+   "size": 999,
+   "codec": "AAC"
+  },
+  {
+   "container": "MP4",
+   "type": "video/mp4"
+  },
+  {
+   "type": "application/x-mpegURL"
+  }
+ ],
+ "text_tracks": [
+  {
+   "kind": "captions",
+   "src": "https://cdn.example.com/captions/en.vtt",
+   "srclang": "en",
+   "label": "English"
+  },
+  {
+   "kind": "captions",
+   "src": "https://cdn.example.com/captions/fr.vtt",
+   "label": "FR"
+  },
+  {
+   "kind": "thumbnails",
+   "src": "https://cdn.example.com/thumbs.vtt"
+  },
+  {
+   "kind": "captions",
+   "src": "not a url",
+   "srclang": "de"
+  }
+ ]
+}

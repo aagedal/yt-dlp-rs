@@ -3738,6 +3738,18 @@
       "scope": "TumblrIE anonymous API token, post page and permalink API, iframe/post-media video formats, provider embeds as url results and post metadata; OAuth password-grant login with the API token (tfa_token, tfa_required retry, API errors, non-fatal Login failed warnings); compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "tva",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tva.py"
+      ],
+      "rust": [
+        "src/extractor/tva.rs",
+        "tests/fixtures/sites/tva/"
+      ],
+      "scope": "TVAIE Next.js entity as a transparent BrightcoveNew url result with CA geo countries, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "tvanouvelles",
       "status": "partial",
       "upstream": [

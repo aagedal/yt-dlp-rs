@@ -304,6 +304,7 @@ mod tv2;
 mod tv2dk;
 mod tv4;
 mod tv5mondeplus;
+mod tva;
 mod tvanouvelles;
 mod tvigle;
 mod tviplayer;
@@ -880,6 +881,7 @@ pub use tv2dk::{
 };
 pub use tv4::{Tv4, suitable as tv4_suitable};
 pub use tv5mondeplus::{Tv5MondePlus, suitable as tv5mondeplus_suitable};
+pub use tva::{Tva, suitable as tva_suitable};
 pub use tvanouvelles::{
     TvaNouvelles, TvaNouvellesArticle, article_suitable as tvanouvelles_article_suitable,
     suitable as tvanouvelles_suitable,

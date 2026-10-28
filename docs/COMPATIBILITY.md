@@ -3451,6 +3451,14 @@ range`), the runtime, uploader and the RTA age limit. Encodings that are not
 JSON or lack a name (upstream `TypeError`s) are unsupported errors.
 `tests/fixtures/sites/youjizz/` is compared with pinned upstream output.
 
+TVA+ episodes (`tvaplus.ca/.../SLUG-ID`, `tvaplus`) follow upstream `TVAIE` as
+transparent `url` results of their Brightcove video smuggled with the `CA`
+geo countries: the Next.js `staticEntity` video ID (missing keys are
+upstream's `KeyError`s), stripped name as title and episode, description,
+duration, channel, show, season from the slug and episode number.
+`tests/fixtures/sites/tva/` is compared with pinned upstream output (with
+`--no-geo-bypass`).
+
 TV 2 videos (`tv2.no/v|video[N]/.../ID`) follow upstream `TV2IE`: the
 `sumo.tv2.no` asset metadata, then the HLS and DASH playback JSON (POSTed
 like upstream; a 401's error code is the Norway geo restriction, the
@@ -6948,5 +6956,6 @@ Instagram, Twitter, NRK, SVT, Arte and Niconico). Not ported: YouTube's
 unplayable videos still raise their reason (upstream warns and lists the
 metadata), WebcameraPL's missing stream stays an error (upstream crashes
 after the warning), LBRY's offline livestreams and Vimeo/LinkedIn/archive.org
-paths are not wired, and Brightcove/JWPlatform smuggled `geo_countries`
-are not read. `--geo-verification-proxy` is accepted without effect.
+paths are not wired, and JWPlatform smuggled `geo_countries` are not read.
+Brightcove reads smuggled `geo_countries` (TVA+ passes `CA`) for its fake IP;
+its random address is not fixtured. `--geo-verification-proxy` is accepted without effect.

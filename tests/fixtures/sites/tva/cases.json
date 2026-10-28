@@ -1,0 +1,16 @@
+[
+ {
+  "url": "https://www.tvaplus.ca/tva/alerte-amber/saison-1/episode-01-1000036619",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.tvaplus.ca/tva/x/no-video-2",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ }
+]
