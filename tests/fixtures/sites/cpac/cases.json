@@ -1,0 +1,35 @@
+[
+ {
+  "url": "https://www.cpac.ca/episode?id=fc7edcae-4660-47e1-ba61-5b7f29a9db0f",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.cpac.ca/l-episode?id=fc7edcae-4660-47e1-ba61-5b7f29a9db0f",
+  "args": [
+   "--print",
+   "%(title)s|%(categories)s|%(formats.:.language_preference)s|%(is_live)s"
+  ]
+ },
+ {
+  "url": "https://www.cpac.ca/episode?id=00000000-0000-0000-0000-000000000000",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.cpac.ca/program?id=6",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.cpac.ca/search?key=hudson&type=all",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ }
+]

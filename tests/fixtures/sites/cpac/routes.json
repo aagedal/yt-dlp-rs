@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://www.cpac.ca/api/1/services/contentModel.json?url=/site/website/episode/index.xml&crafterSite=cpacca&id=fc7edcae-4660-47e1-ba61-5b7f29a9db0f",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"page\": {\"details\": {\"videoUrl\": \"https://cpac-hls.test/fc7e/master.m3u8\", \"title_en_t\": \"Honour the Next Generation\", \"title_fr_t\": \"Rendre hommage\", \"category_en_t\": \"Politics\", \"category_fr_t\": \"\", \"description_en_t\": \"Desc\", \"liveDateTime\": \"2020-12-21T13:00:00Z\", \"image_en_s\": \"/img/fc7e.jpg\", \"type\": \"vod\"}}}"
+  },
+  {
+   "url": "https://cpac-hls.test/fc7e/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.cpac.ca/api/1/services/contentModel.json?url=/site/website/episode/index.xml&crafterSite=cpacca&id=00000000-0000-0000-0000-000000000000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"page\": {\"details\": {}}}"
+  },
+  {
+   "url": "https://www.cpac.ca/api/1/services/contentModel.json?url=/site/website/program/index.xml&crafterSite=cpacca&id=6",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"page\": {\"program\": {\"title_en_t\": \"Headline Politics\", \"description_en_t\": \"Watch CPAC\"}, \"itemList\": {\"totalPages\": 2, \"item\": [{\"url_en_s\": \"/episode?id=fc7edcae-4660-47e1-ba61-5b7f29a9db0f\"}, {\"url_fr_s\": \"/l-episode?id=x\"}]}}}"
+  },
+  {
+   "url": "https://www.cpac.ca/api/1/services/contentModel.json?url=%2Fsite%2Fwebsite%2Fprogram%2Findex.xml&crafterSite=cpacca&id=6&page=2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"page\": {\"itemList\": {\"item\": [{\"url_en_s\": \"https://www.cpac.ca/episode?id=11111111-2222-3333-4444-555555555555\"}]}}}"
+  },
+  {
+   "url": "https://www.cpac.ca/api/1/services/contentModel.json?url=/site/website/search/index.xml&crafterSite=cpacca&key=hudson",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"page\": {\"searchResult\": {\"totalPages\": \"2\", \"item\": [{\"url_fr_s\": \"/l-episode?id=x\"}]}}}"
+  }
+ ]
+}

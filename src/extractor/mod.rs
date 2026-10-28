@@ -38,6 +38,7 @@ mod cloudycdn;
 mod clyp;
 mod coub;
 mod cozytv;
+mod cpac;
 mod crooksandliars;
 mod crtvg;
 mod cultureunplugged;
@@ -355,6 +356,9 @@ pub use cloudycdn::{CloudyCdn, suitable as cloudycdn_suitable};
 pub use clyp::{Clyp, suitable as clyp_suitable};
 pub use coub::{Coub, suitable as coub_suitable};
 pub use cozytv::{CozyTv, suitable as cozytv_suitable};
+pub use cpac::{
+    Cpac, CpacPlaylist, playlist_suitable as cpac_playlist_suitable, suitable as cpac_suitable,
+};
 pub use crooksandliars::{CrooksAndLiars, suitable as crooksandliars_suitable};
 pub use crtvg::{Crtvg, suitable as crtvg_suitable};
 pub use cultureunplugged::{CultureUnplugged, suitable as cultureunplugged_suitable};

@@ -1480,6 +1480,18 @@ errors), HTML5 video and audio files with upstream's quality and source
 preferences, the iPhone file and mobile audio, and the clip's metadata.
 `tests/fixtures/sites/coub/` is compared with pinned upstream output.
 
+CPAC episodes (`cpac.ca/[l-]episode?id=UUID`) follow upstream `CPACIE`: the
+Crafter `contentModel.json` episode, its `videoUrl` as a fatal HLS master
+playlist whose renditions get language preference 10 (the URL's English or
+French), -1 (none) or -10, the localized title, description, category, image
+and the live timestamp and type (a missing `videoUrl` is upstream's
+`KeyError('details')`). Programs and searches (`cpac.ca/program|search|emission|rechercher?...`)
+follow `CPACPlaylistIE`: every `totalPages` page (later pages non-fatal,
+their query re-encoded like upstream's `update_url_query`) and its items'
+localized URLs as `url` results, titled from the last page's program (else
+the ID's value). `tests/fixtures/sites/cpac/` is compared with pinned
+upstream output.
+
 CozyTV replays (`cozy.tv/USER/replays/ID`) follow upstream `CozyTVIE`: the
 `USER-ID` ID, the cached replay JSON's title (else the generic title), `user`
 (else the URL user) uploader, `unified_strdate` date, raw duration and
