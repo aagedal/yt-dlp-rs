@@ -1,0 +1,73 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://yappy.media/video/47f3b4a1ad2e41b38a1d8f8e0c1bda88",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"47f3b4a1ad2e41b38a1d8f8e0c1bda88\", \"title\": \"\\u0413\\u0434\\u0435 \\u0437\\u0430\\u043a\\u0430\\u0437\\u0430\\u0442\\u044c \\u0442\\u0430\\u043a\\u0443\\u044e \\u044e\\u0431\\u043a\\u0443?\", \"formats\": [{\"url\": \"https://cdn-st.yappy.test/a/47f3.mp3\", \"ext\": \"mp3\", \"acodec\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}, {\"url\": \"https://cdn-st.yappy.test/v/47f3-wm.mp4\", \"ext\": \"mp4\", \"format_note\": \"Watermarked\", \"preference\": -10, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - unknown (Watermarked)\"}, {\"url\": \"https://cdn-st.yappy.test/v/47f3.mp4\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"2\", \"format\": \"2 - unknown\"}], \"thumbnail\": \"https://cdn-st.yappy.test/t.jpg\", \"description\": \"\\u0413\\u0434\\u0435 \\u0437\\u0430\\u043a\\u0430\\u0437\\u0430\\u0442\\u044c \\u0442\\u0430\\u043a\\u0443\\u044e \\u044e\\u0431\\u043a\\u0443?\", \"timestamp\": 1679556161, \"view_count\": 120, \"like_count\": 5, \"uploader\": \"\\u041b\\u0435\\u0440\\u0430\", \"uploader_id\": \"lera\", \"categories\": [\"\\u041c\\u043e\\u0434\\u0430\"], \"repost_count\": 2, \"webpage_url\": \"https://yappy.media/video/47f3b4a1ad2e41b38a1d8f8e0c1bda88\", \"original_url\": \"https://yappy.media/video/47f3b4a1ad2e41b38a1d8f8e0c1bda88\", \"webpage_url_basename\": \"47f3b4a1ad2e41b38a1d8f8e0c1bda88\", \"webpage_url_domain\": \"yappy.media\", \"extractor\": \"Yappy\", \"extractor_key\": \"Yappy\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn-st.yappy.test/t.jpg\", \"id\": \"0\"}], \"display_id\": \"47f3b4a1ad2e41b38a1d8f8e0c1bda88\", \"fulltitle\": \"\\u0413\\u0434\\u0435 \\u0437\\u0430\\u043a\\u0430\\u0437\\u0430\\u0442\\u044c \\u0442\\u0430\\u043a\\u0443\\u044e \\u044e\\u0431\\u043a\\u0443?\", \"upload_date\": \"20230323\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cdn-st.yappy.test/v/47f3.mp4\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"2\", \"format\": \"2 - unknown\", \"_filename\": \"\\u0413\\u0434\\u0435 \\u0437\\u0430\\u043a\\u0430\\u0437\\u0430\\u0442\\u044c \\u0442\\u0430\\u043a\\u0443\\u044e \\u044e\\u0431\\u043a\\u0443\\uff1f [47f3b4a1ad2e41b38a1d8f8e0c1bda88].mp4\", \"filename\": \"\\u0413\\u0434\\u0435 \\u0437\\u0430\\u043a\\u0430\\u0437\\u0430\\u0442\\u044c \\u0442\\u0430\\u043a\\u0443\\u044e \\u044e\\u0431\\u043a\\u0443\\uff1f [47f3b4a1ad2e41b38a1d8f8e0c1bda88].mp4\", \"__write_download_archive\": false}], \"url\": \"https://cdn-st.yappy.test/v/47f3.mp4\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"2\", \"format\": \"2 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://yappy.media/video/aaaa",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "ERROR: [Yappy] aaaa: Unable to extract JSON-LD; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://yappy.media/video/bbbb",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "ERROR: [Yappy] bbbb: Unable to extract JSON-LD; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://yappy.media/profile/59a0",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"59a0\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Yappy\", \"id\": \"u0\", \"title\": \"d0\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u0\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u1\", \"title\": \"d1\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u1\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u2\", \"title\": \"d2\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u2\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u3\", \"title\": \"d3\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u3\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u4\", \"title\": \"d4\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u4\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u5\", \"title\": \"d5\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u5\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u6\", \"title\": \"d6\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u6\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u7\", \"title\": \"d7\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u7\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u8\", \"title\": \"d8\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u8\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u9\", \"title\": \"d9\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u9\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u10\", \"title\": \"d10\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u10\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u11\", \"title\": \"d11\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u11\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u12\", \"title\": \"d12\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u12\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u13\", \"title\": \"d13\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u13\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u14\", \"title\": \"d14\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u14\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u15\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u15\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://yappy.media/profile/59a0\", \"original_url\": \"https://yappy.media/profile/59a0\", \"webpage_url_basename\": \"59a0\", \"webpage_url_domain\": \"yappy.media\", \"extractor\": \"YappyProfile\", \"extractor_key\": \"YappyProfile\", \"release_year\": null, \"playlist_count\": 16, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://yappy.media/profile/59a0",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "2:3",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"59a0\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Yappy\", \"id\": \"u1\", \"title\": \"d1\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u1\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Yappy\", \"id\": \"u2\", \"title\": \"d2\", \"_type\": \"url\", \"url\": \"https://yappy.media/video/u2\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://yappy.media/profile/59a0\", \"original_url\": \"https://yappy.media/profile/59a0\", \"webpage_url_basename\": \"59a0\", \"webpage_url_domain\": \"yappy.media\", \"extractor\": \"YappyProfile\", \"extractor_key\": \"YappyProfile\", \"release_year\": null, \"requested_entries\": [2, 3], \"playlist_count\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

@@ -2347,6 +2347,17 @@ answers whose `data` is not an object are explicit native errors.
 `tests/fixtures/sites/zdf/` is compared with pinned upstream output; its API
 answers are synthetic, shaped like upstream's parsing and tests.
 
+Yappy videos (`yappy.media/video/ID`; marked broken upstream, with its
+warning) follow upstream `YappyIE`: the page's JSON-LD (fatal, also when it
+has no usable fields) and Next.js `data`/`OpenGraphParameters` (else the
+video API), the video link (a `-wm.mp4` watermarked copy with preference
+-10 and its unwatermarked URL) and audio link, and the title, thumbnail,
+description, timestamp, counts, creator and categories with upstream's
+JSON-LD and meta fallbacks. Profiles (`yappy.media/profile/ID`) follow
+`YappyProfileIE`: `api/video/list/ID?page=N` as an `OnDemandPagedList` of
+15 `url` results. `tests/fixtures/sites/yappy/` is compared with pinned
+upstream output.
+
 Yle Areena programmes and podcasts (`areena.yle.fi/[podcastit/]ID`) follow
 upstream `YleAreenaIE` (`_GEO_COUNTRIES = ['FI']`): the page's JSON-LD title
 (parsed with upstream's `K1, J2: EPISODE | SERIES` regex, including its

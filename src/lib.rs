@@ -748,6 +748,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "XiaoHongShu",
     "XVideos",
     "xvideos:quickies",
+    "Yappy",
+    "YappyProfile",
     "yfanefa",
     "YleAreena",
     "youtube:clip",
@@ -980,6 +982,8 @@ impl YoutubeDl {
                 Box::new(extractor::Wat),
                 Box::new(extractor::Wsj),
                 Box::new(extractor::WsjArticle),
+                Box::new(extractor::Yappy),
+                Box::new(extractor::YappyProfile),
                 Box::new(extractor::YoutubeSearchUrl),
                 Box::new(extractor::YoutubeClip),
                 Box::new(extractor::Reddit),
@@ -2120,6 +2124,8 @@ impl YoutubeDl {
                 extractor::fetch_peertube_pages
             } else if extractor::podbayfm_pending_state(&pending.state) {
                 extractor::fetch_podbayfm_pages
+            } else if extractor::yappy_pending_state(&pending.state) {
+                extractor::fetch_yappy_pages
             } else if extractor::lbry_pending_state(&pending.state) {
                 extractor::fetch_lbry_pages
             } else if extractor::bitchute_pending_state(&pending.state) {

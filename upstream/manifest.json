@@ -3516,6 +3516,18 @@
       "scope": "YfanefaIE player options (signed URL as HLS or mp4 formats), title fallback, preview/duration and KeyError/player errors compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "yappy",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/yappy.py"
+      ],
+      "rust": [
+        "src/extractor/yappy.rs",
+        "tests/fixtures/sites/yappy/"
+      ],
+      "scope": "YappyIE (broken upstream) JSON-LD/Next.js/API video and audio links, and YappyProfileIE paged url results, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "yle_areena",
       "status": "partial",
       "upstream": [

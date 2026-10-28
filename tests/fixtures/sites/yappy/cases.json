@@ -1,0 +1,36 @@
+[
+ {
+  "url": "https://yappy.media/video/47f3b4a1ad2e41b38a1d8f8e0c1bda88",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://yappy.media/video/aaaa",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://yappy.media/video/bbbb",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://yappy.media/profile/59a0",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://yappy.media/profile/59a0",
+  "args": [
+   "--flat-playlist",
+   "-I",
+   "2:3",
+   "-J"
+  ]
+ }
+]

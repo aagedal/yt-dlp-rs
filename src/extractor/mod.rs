@@ -284,6 +284,7 @@ mod xboxclips;
 mod xiaohongshu;
 mod xspf;
 mod xvideos;
+mod yappy;
 mod yfanefa;
 mod yle_areena;
 pub(crate) mod youtube;
@@ -801,6 +802,10 @@ pub use xvideos::{
     XVideos, XVideosQuickies, quickies_suitable as xvideos_quickies_suitable,
     suitable as xvideos_suitable,
 };
+pub use yappy::{
+    Yappy, YappyProfile, profile_suitable as yappy_profile_suitable, suitable as yappy_suitable,
+};
+pub(crate) use yappy::{fetch_pages as fetch_yappy_pages, is_pending_state as yappy_pending_state};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub use yle_areena::{YleAreena, suitable as yle_areena_suitable};
 pub(crate) use youtube::YoutubeUnsupported;
