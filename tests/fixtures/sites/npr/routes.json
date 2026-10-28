@@ -1,0 +1,96 @@
+{
+ "routes": [
+  {
+   "url": "http://api.npr.org/query?id=449974205&fields=audio%2Cmultimedia%2Ctitle&format=json&apiKey=MDAzMzQ2MjAyMDEyMzk4MTU1MDg3ZmM3MQ010",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"list\": {\"story\": [{\"id\": \"449974205\", \"title\": {\"$text\": \"New Music From Beach House, Chairlift, CMJ Discoveries And More\"}, \"audio\": [{\"id\": \"446929930\", \"type\": \"primary\", \"title\": {\"$text\": \"Your Mercy is Boundless (Bazum en Qo gtutyunqd)\"}, \"duration\": {\"$text\": \"402\"}, \"format\": {\"mp3\": [{\"type\": \"mp3\", \"$text\": \"https://ondemand.npr.test/anon.npr-mp3/446929930.mp3\"}], \"wm\": {\"$text\": \"https://ondemand.npr.test/446929930.wma\"}, \"threegp\": null, \"mp4\": {\"$text\": \"https://ondemand.npr.test/anon.npr-mp4/446929930.mp4\"}, \"m3u8\": {\"$text\": \"https://hls.npr.test/446929930/master.m3u8\"}, \"hlsOnDemand\": {\"$text\": \"https://hls.npr.test/ignored.m3u8\"}}}, {\"id\": \"446929931\", \"title\": {}, \"duration\": {\"$text\": 95}, \"format\": {\"smil\": {\"$text\": \"https://ondemand.npr.test/446929931.smil\"}, \"mp3\": [{\"$text\": \"\"}]}, \"stream\": {\"hlsUrl\": {\"$text\": \"https://hls.npr.test/446929931/master.m3u8\"}, \"rtmp\": {\"$text\": \"rtmp://flash.npr.org/ondemand/x\"}, \"note\": \"text\"}}], \"multimedia\": [{\"id\": \"1086468851\", \"title\": {\"$text\": \"Bonobo: Tiny Desk (Home) Concert\"}, \"duration\": {\"$text\": \"1061\"}, \"altImageUrl\": {\"$text\": \"https://media.npr.test/assets/img/bonobo.jpg\"}, \"format\": {}}]}]}}"
+  },
+  {
+   "url": "https://hls.npr.test/446929930/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://ondemand.npr.test/446929931.smil",
+   "headers": {
+    "Content-Type": "application/smil+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<smil xmlns=\"http://www.w3.org/2005/SMIL21/Language\">\n  <head>\n    <meta base=\"rtmp://flash.npr.org/ondemand/\"/>\n  </head>\n  <body>\n    <switch>\n      <video src=\"anon.npr-mp4/npr/446929931_128.mp4\" system-bitrate=\"128000\" width=\"640\" height=\"360\"/>\n      <video src=\"anon.npr-mp4/npr/446929931_64.mp4\" system-bitrate=\"64000\"/>\n      <video src=\"anon.npr-mp4/npr/446929931_32.mp4\" system-bitrate=\"32000\"/>\n    </switch>\n  </body>\n</smil>\n"
+  },
+  {
+   "url": "https://ondemand.npr.org/anon.npr-mp4/npr/446929931_128.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "npr-128"
+  },
+  {
+   "url": "https://ondemand.npr.org/anon.npr-mp4/npr/446929931_64.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "npr-64"
+  },
+  {
+   "url": "https://ondemand.npr.org/anon.npr-mp4/npr/446929931_32.mp4",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "gone"
+  },
+  {
+   "url": "https://hls.npr.test/446929931/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.npr.org/sections/allsongs/2015/10/21/449974205/new-music-from-beach-house-chairlift-cmj-discoveries-and-more",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script type=\"application/ld+json\">{\"@context\": \"https://schema.org\", \"@type\": \"NewsArticle\", \"subjectOf\": [{\"@type\": \"VideoObject\", \"name\": \"Bonobo\"}, {\"@type\": \"VideoObject\", \"embedUrl\": \"https://hls.npr.test/1086468851/master.m3u8\"}]}</script></head><body>Bonobo</body></html>"
+  },
+  {
+   "url": "https://hls.npr.test/1086468851/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://ondemand.npr.test/anon.npr-mp3/446929930.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "npr-mp3"
+  },
+  {
+   "url": "http://api.npr.org/query?id=805476846&fields=audio%2Cmultimedia%2Ctitle&format=json&apiKey=MDAzMzQ2MjAyMDEyMzk4MTU1MDg3ZmM3MQ010",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"list\": {\"story\": [{\"id\": \"805476846\", \"multimedia\": [{\"id\": \"805478520\", \"format\": {\"mp4\": null}}]}]}}"
+  },
+  {
+   "url": "https://www.npr.org/2020/02/14/805476846/laura-stevenson-tiny-desk-concert",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>no json-ld</body></html>"
+  },
+  {
+   "url": "http://api.npr.org/query?id=533198237&fields=audio%2Cmultimedia%2Ctitle&format=json&apiKey=MDAzMzQ2MjAyMDEyMzk4MTU1MDg3ZmM3MQ010",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"message\": [{\"id\": \"304\", \"text\": \"Invalid API key\"}]}"
+  }
+ ]
+}

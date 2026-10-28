@@ -142,6 +142,7 @@ mod ninegag;
 mod ninenews;
 mod nobelprize;
 mod nosnl;
+mod npr;
 mod nrk;
 mod nts;
 pub mod nuxt;
@@ -197,6 +198,7 @@ mod steam;
 mod streamable;
 mod streetvoice;
 mod substack;
+mod sverigesradio;
 mod svt;
 mod sztvhu;
 mod ted;
@@ -482,6 +484,7 @@ pub use ninegag::{NineGag, suitable as ninegag_suitable};
 pub use ninenews::{NineNews, suitable as ninenews_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use nosnl::{NosNlArticle, suitable as nosnl_suitable};
+pub use npr::{Npr, suitable as npr_suitable};
 pub use nrk::{
     Nrk, NrkPlaylist, NrkRadioPodkast, NrkTv, NrkTvDirekte, NrkTvEpisode, NrkTvSeason, NrkTvSeries,
     direkte_suitable as nrk_tv_direkte_suitable, episode_suitable as nrk_tv_episode_suitable,
@@ -578,6 +581,11 @@ pub(crate) use steam::{
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use streetvoice::{StreetVoice, suitable as streetvoice_suitable};
 pub use substack::{Substack, suitable as substack_suitable};
+pub use sverigesradio::{
+    SverigesRadioEpisode, SverigesRadioPublication,
+    episode_suitable as sverigesradio_episode_suitable,
+    publication_suitable as sverigesradio_publication_suitable,
+};
 pub use svt::{
     SvtPage, SvtPlay, SvtSeries, page_suitable as svt_page_suitable,
     series_suitable as svt_series_suitable, suitable as svt_suitable,

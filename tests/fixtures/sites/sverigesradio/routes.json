@@ -1,0 +1,159 @@
+{
+ "routes": [
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/audiometadata?id=7038546&type=publication",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"items\": [{\"subtitle\": \"Esa Teittinen: Sanningen har inte kommit fram\", \"title\": \"Nyheter (Ekot)\", \"duration\": 132, \"displayimageurl\": \"https://static-cdn.sr.test/images/83/2789.jpg?preset=api-default-square\", \"description\": \"Esa Teittinen kommenterar.\"}]}"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/getaudiourl?id=7038546&type=publication&format=iis&quality=low",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"audioUrl\": \"https://lyssna-cdn.sr.test/topsy/ljudfil/srse/7038546_a96.m4a\", \"codingFormat\": 13}"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/getaudiourl?id=7038546&type=publication&format=iis&quality=medium",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"audioUrl\": \"https://lyssna-cdn.sr.test/topsy/ljudfil/srse/7038546_a192.m4a\", \"codingFormat\": 11}"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/getaudiourl?id=7038546&type=publication&format=iis&quality=high",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"audioUrl\": \"https://lyssna-cdn.sr.test/topsy/ljudfil/srse/7038546_a192.m4a\", \"codingFormat\": 11}"
+  },
+  {
+   "url": "https://lyssna-cdn.sr.test/topsy/ljudfil/srse/7038546_a96.m4a",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body": "sr-a96"
+  },
+  {
+   "url": "https://sverigesradio.se/artikel/tysk-fotbollsfeber-bayern-munchens-10-ariga-segersvit-kan-brytas",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><button class=\"audio-button audio-button--small\" data-audio-type=\"publication\" data-publication-id=\"8360345\">Lyssna</button><script id=\"gtm-metadata\" type=\"application/json\">{\"pageId\": \"1\"}</script></body></html>"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/audiometadata?id=8360345&type=publication",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"items\": [{\"subtitle\": \"Tysk fotbollsfeber när Bayern Münchens 10-åriga segersvit kan brytas\", \"title\": \"Radiosporten\", \"duration\": \"72\", \"displayimageurl\": \"https://static-cdn.sr.test/images/179/radiosporten.jpg\", \"description\": null}]}"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/getaudiourl?id=8360345&type=publication&format=iis&quality=low",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"audioUrl\": \"https://lyssna-cdn.sr.test/topsy/ljudfil/srse/8360345.mp3\", \"codingFormat\": 5}"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/getaudiourl?id=8360345&type=publication&format=iis&quality=medium",
+   "status": 500,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "fel"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/getaudiourl?id=8360345&type=publication&format=iis&quality=high",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://sverigesradio.se/avsnitt/p4-live-med-first-aid-kit-scandinavium-mars-2023",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"audio-button\" data-audio-id=\"\">x</div><script id=\"gtm-metadata\" type=\"application/json\">{\"pageId\": 2160416, \"pageType\": \"avsnitt\"}</script></body></html>"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/audiometadata?id=2160416&type=episode",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"items\": [{\"subtitle\": \"P4 Live med First Aid Kit\", \"title\": \"P4 Live\", \"duration\": 5640.5, \"displayimageurl\": \"not a url\"}]}"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/getaudiourl?id=2160416&type=episode&format=iis&quality=low",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"audioUrl\": \"https://lyssna-cdn.sr.test/2160416_low.mp3\", \"codingFormat\": 12}"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/getaudiourl?id=2160416&type=episode&format=iis&quality=medium",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"audioUrl\": \"https://lyssna-cdn.sr.test/2160416_a0.m4a\", \"codingFormat\": 7}"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/getaudiourl?id=2160416&type=episode&format=iis&quality=high",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"audioUrl\": \"https://lyssna-cdn.sr.test/2160416_high.m4a\"}"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/audiometadata?id=1140922&type=episode",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"items\": [{\"title\": \"Konflikt\", \"subtitle\": \"Metoo och valen\", \"duration\": 3307}]}"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/getaudiourl?id=1140922&type=episode&format=iis&quality=low",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"audioUrl\": \"\"}"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/getaudiourl?id=1140922&type=episode&format=iis&quality=medium",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "null"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/getaudiourl?id=1140922&type=episode&format=iis&quality=high",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"audioUrl\": \"https://lyssna-cdn.sr.test/1140922.mp3\", \"codingFormat\": \"5\"}"
+  },
+  {
+   "url": "https://lyssna-cdn.sr.test/1140922.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "sr-mp3"
+  },
+  {
+   "url": "https://sverigesradio.se/avsnitt/saknas",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script id=\"gtm-metadata\" type=\"application/json\">{\"pageType\": \"avsnitt\"}</script></html>"
+  },
+  {
+   "url": "https://sverigesradio.se/sida/playerajax/audiometadata?id=9999&type=publication",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"error\": \"not found\"}"
+  }
+ ]
+}

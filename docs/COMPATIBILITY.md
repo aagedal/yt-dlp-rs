@@ -578,6 +578,23 @@ pages are not detected by the generic extractor (`_extract_embed_urls` is not
 ported). `tests/fixtures/sites/substack/` is compared with pinned upstream
 output.
 
+Sveriges Radio publications (`sverigesradio.se/[sida/]artikel|gruppsida.aspx?...
+artikel=ID`, `.../artikel|gruppsida/SLUG`) and episodes
+(`sverigesradio.se/[sida/]avsnitt/ID|SLUG`) follow upstream
+`SverigesRadioPublicationIE` and `SverigesRadioEpisodeIE`: a slug URL's page
+gives the first `audio-button` element's `data-audio-id` (else
+`data-publication-id`), else the `gtm-metadata` JSON's `pageId` (a missing key
+is upstream's `KeyError`; an integer ID gets processing's string-conversion
+warning). The `playerajax/audiometadata` item (a missing `items` is a
+`KeyError`) gives the title (`subtitle`), series, duration, thumbnail and
+description; the `getaudiourl` responses for the `low`, `medium` and `high`
+qualities (non-fatal: HTTP errors are warnings) give one format per distinct
+`audioUrl`, with the `_aNNN.m4a` (else `codingFormat`) bitrate, the codec of
+`mp3`/`m4a` files and the coding format as format ID. Pages without either
+element, unparsable `gtm-metadata`, and `getaudiourl` responses that are not
+JSON (upstream warns) are not supported. `tests/fixtures/sites/sverigesradio/`
+is compared with pinned upstream output.
+
 SVT Play and Öppet arkiv videos (`svtplay.se`/`oppetarkiv.se`
 `/video|klipp|kanaler/ID[...?modalId=|id=SVT_ID]`, Barnplay
 `svt.se/barnkanalen/barnplay/SLUG/SVT_ID`) follow upstream `SVTPlayIE`: the
@@ -3119,6 +3136,23 @@ description (else the `title`/`description` metas), keywords as tags, the
 the category labels, `None` values kept like upstream. Errors carry no
 `ID: ` prefix, as `_VALID_URL` has no `id` group.
 `tests/fixtures/sites/nosnl/` is compared with pinned upstream output.
+
+NPR stories (`npr.org/[sections/SECTION/]YYYY/MM/DD/ID`) follow upstream
+`NprIE`: the `api.npr.org/query` story (a missing `list` is upstream's
+`KeyError`) as a playlist (its title when non-empty) of the `audio` then
+`multimedia` items. Each item's known `format` files (the first of a list)
+become HLS formats (`hls`, master only, non-fatal), SMIL formats (non-fatal
+download, `rtmp://flash.npr.org/ondemand/` rewritten to
+`https://ondemand.npr.org/`, HTTP/HLS/DASH sources joined like Python's
+`urljoin`, then `_check_formats`; SMIL subtitles are dropped with upstream's
+warning) or direct `threegp`/`mp4`/`mp3` files with their quality; the
+`hlsUrl` stream is read under the ID `hlsUrl`, like upstream. An item without
+formats reads the story page's first JSON-LD `subjectOf` `embedUrl` HLS
+(upstream's `Failed to obtain m3u8 URL` warning when absent). Entries keep the
+item ID, title (else the story's), `altImageUrl` thumbnail and duration.
+SMIL RTMP, F4M and ISM sources, sources without an extension, and invalid
+JSON-LD scripts (skipped without upstream's warning) are not supported.
+`tests/fixtures/sites/npr/` is compared with pinned upstream output.
 
 NRK programs, clips, podcast episodes and channels (`nrk:ID`,
 `nrk:KIND/ID`, `nrk.no/video/PS*ID`, `nrk.no/video/SLUG_ID`,

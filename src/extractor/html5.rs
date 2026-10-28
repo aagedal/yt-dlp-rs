@@ -1680,14 +1680,36 @@ pub(super) fn merge_subtitles(target: &mut Subtitles, source: Subtitles) {
     }
 }
 
-/// GenericIE's `_parse_smil(doc, url, video_id)` for HTTP media sources;
+/// Python's `urllib.parse.urljoin(base, url)`: a relative path's join also
+/// drops the empty segments (`//`) inside the merged path.
+pub(crate) fn py_urljoin(base: &str, url: &str) -> Option<String> {
+    let mut joined = Url::parse(base).ok()?.join(url).ok()?;
+    let path = url.split(['?', '#']).next().unwrap_or_default();
+    let has_scheme = url
+        .split_once(':')
+        .is_some_and(|(scheme, _)| !scheme.is_empty() && !scheme.contains('/'));
+    if !path.is_empty() && !path.starts_with('/') && !has_scheme {
+        let mut collapsed = String::with_capacity(joined.path().len());
+        for character in joined.path().chars() {
+            if !(character == '/' && collapsed.ends_with('/')) {
+                collapsed.push(character);
+            }
+        }
+        joined.set_path(&collapsed);
+    }
+    Some(joined.into())
+}
+
+/// `_parse_smil_formats_and_subtitles(smil, smil_url, video_id)` for HTTP,
+/// HLS and DASH media sources (requests and notes under `[EXTRACTOR]`);
 /// other source kinds are unsupported errors.
-fn smil_info(
+pub(crate) fn smil_formats_and_subtitles(
     client: &Client,
-    smil: super::smil::Smil,
+    smil: &super::smil::Smil,
     url: &Url,
     video_id: &str,
-) -> Result<VideoInfo> {
+    extractor: &str,
+) -> Result<(Vec<VideoFormat>, Subtitles)> {
     use super::smil::get;
     static ISM: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
         regex::Regex::new(r"\.ism/[Mm]anifest").expect("static pattern")
@@ -1751,10 +1773,8 @@ fn smil_info(
         let src_url = if src.starts_with("http") {
             src.to_owned()
         } else {
-            Url::parse(&format!("{base}/"))
-                .and_then(|base| base.join(src))
-                .map(String::from)
-                .map_err(|_| unsupported("SMIL source URLs must be absolute or joinable"))?
+            py_urljoin(&format!("{base}/"), src)
+                .ok_or_else(|| unsupported("SMIL source URLs must be absolute or joinable"))?
         };
         let src_url = src_url.trim().to_owned();
         let hls = proto == Some("m3u8") || src_ext == "m3u8";
@@ -1773,7 +1793,7 @@ fn smil_info(
                     "Failed to download MPD manifest",
                 )
             };
-            let note = format!("[generic] {video_id}: {note}");
+            let note = format!("[{extractor}] {video_id}: {note}");
             crate::screen::expect_page(video_id, Some(note.clone()), None);
             let response = direct::request(client, &manifest_url, None);
             if response.is_err() {
@@ -1792,7 +1812,7 @@ fn smil_info(
                 Ok(manifest) => manifest,
                 Err(error) => {
                     crate::screen::warning(&format!(
-                        "[generic] {video_id}: {errnote}: {}",
+                        "[{extractor}] {video_id}: {errnote}: {}",
                         crate::upstream_error_text(&error)
                     ));
                     None
@@ -1843,11 +1863,11 @@ fn smil_info(
         // `_is_valid_url(src, video_id)`: absolute sources are requested.
         let checked = crate::extractor::proto_relative_http(src);
         if checked.starts_with("http://") || checked.starts_with("https://") {
-            crate::screen::screen(&format!("[generic] {video_id}: Checking video URL"));
+            crate::screen::screen(&format!("[{extractor}] {video_id}: Checking video URL"));
             let target = Url::parse(&checked)?;
             if let Err(error) = direct::request(client, &target, None) {
                 crate::screen::screen(&format!(
-                    "[generic] {video_id}: video URL is invalid, skipping: {}",
+                    "[{extractor}] {video_id}: video URL is invalid, skipping: {}",
                     crate::upstream_error_text(&error)
                 ));
                 continue;
@@ -1915,6 +1935,20 @@ fn smil_info(
         );
     }
     merge_subtitles(&mut subtitles, smil_subtitles);
+    Ok((formats, subtitles))
+}
+
+/// GenericIE's `_parse_smil(doc, url, video_id)` for HTTP media sources;
+/// other source kinds are unsupported errors.
+fn smil_info(
+    client: &Client,
+    smil: super::smil::Smil,
+    url: &Url,
+    video_id: &str,
+) -> Result<VideoInfo> {
+    use super::smil::get;
+    let int = |value: Option<&str>| value.and_then(|value| value.trim().parse::<u32>().ok());
+    let (formats, subtitles) = smil_formats_and_subtitles(client, &smil, url, video_id, "generic")?;
     // `_parse_smil`'s head metadata.
     let (mut title, mut description, mut upload_date) = (None, None, None);
     for meta in &smil.meta {
