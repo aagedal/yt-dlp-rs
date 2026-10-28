@@ -120,6 +120,7 @@ mod kommunetv;
 mod kth;
 mod ku6;
 mod kvs;
+mod lastfm;
 mod lbry;
 mod libsyn;
 mod linkedin;
@@ -469,6 +470,13 @@ pub(crate) use kika::{fetch_pages as fetch_kika_pages, is_pending_state as kika_
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use kth::{Kth, suitable as kth_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
+pub use lastfm::{
+    LastFm, LastFmPlaylist, LastFmUser, playlist_suitable as lastfm_playlist_suitable,
+    suitable as lastfm_suitable, user_suitable as lastfm_user_suitable,
+};
+pub(crate) use lastfm::{
+    fetch_pages as fetch_lastfm_pages, is_pending_state as lastfm_pending_state,
+};
 pub use lbry::{
     Lbry, LbryChannel, LbryPlaylist, channel_suitable as lbry_channel_suitable,
     playlist_suitable as lbry_playlist_suitable, suitable as lbry_suitable,

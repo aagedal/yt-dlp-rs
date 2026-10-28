@@ -3026,6 +3026,18 @@ higher) as audio formats. Non-string IDs, user names or thumbnails and
 missing users or download file names remain explicit native errors.
 `tests/fixtures/sites/hearthisat/` is compared with pinned upstream output.
 
+Last.fm pages follow upstream `lastfm.py`. Track pages
+(`last.fm/music/ARTIST/ALBUM/TRACK`, `LastFMIE`) follow the fatal
+`header-new-playlink` link as a YouTube `url` result. Artist and tag pages
+(`last.fm/music|tag/ID[/PATH]`, `LastFMPlaylistIE`) and user playlists
+(`last.fm/user/USER/playlists/ID`, `LastFMUserIE`) are read as a generator:
+the URL with `page=N` from 1 (`Downloading page N`) until a page has no
+`data-youtube-url` links, or only the URL's own `page` (`int_or_none`) page;
+each link's first occurrence is a YouTube `url` result, and pages are only
+requested as entries are needed (`-I 1` reads one page). YouTube resolution
+is the native YouTube extractor's. `tests/fixtures/sites/lastfm/` is compared
+with pinned upstream output (`--flat-playlist` for playlists).
+
 Libsyn episodes (`html5-player.libsyn.com/embed/episode/id/ID`) follow
 upstream `LibsynIE`: the player page (requested without the URL's trailing
 options) and its fatal `playlistItem` JSON, the item, `episode-title`,

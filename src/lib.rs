@@ -511,6 +511,9 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Kommunetv",
     "KTH",
     "Ku6",
+    "LastFM",
+    "LastFMPlaylist",
+    "LastFMUser",
     "lbry",
     "lbry:channel",
     "lbry:playlist",
@@ -921,6 +924,9 @@ impl YoutubeDl {
                 Box::new(extractor::GeniusLyrics),
                 Box::new(extractor::Kika),
                 Box::new(extractor::KikaPlaylist),
+                Box::new(extractor::LastFm),
+                Box::new(extractor::LastFmPlaylist),
+                Box::new(extractor::LastFmUser),
                 Box::new(extractor::Mdr),
                 Box::new(extractor::Monstercat),
                 Box::new(extractor::Servus),
@@ -2076,6 +2082,8 @@ impl YoutubeDl {
                 extractor::fetch_dailymotion_pages
             } else if extractor::kika_pending_state(&pending.state) {
                 extractor::fetch_kika_pages
+            } else if extractor::lastfm_pending_state(&pending.state) {
+                extractor::fetch_lastfm_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };

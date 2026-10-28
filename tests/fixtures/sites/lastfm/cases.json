@@ -1,0 +1,73 @@
+[
+ {
+  "url": "https://www.last.fm/music/Oasis",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.last.fm/music/Oasis",
+  "args": [
+   "--flat-playlist",
+   "--print",
+   "%(id)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_index)s|%(n_entries)s"
+  ]
+ },
+ {
+  "url": "https://www.last.fm/music/Oasis",
+  "args": [
+   "--flat-playlist",
+   "-I",
+   "1",
+   "--print",
+   "%(id)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_index)s|%(n_entries)s"
+  ]
+ },
+ {
+  "url": "https://www.last.fm/music/Oasis",
+  "args": [
+   "--flat-playlist",
+   "-I",
+   "4",
+   "--print",
+   "%(id)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_index)s|%(n_entries)s"
+  ]
+ },
+ {
+  "url": "https://www.last.fm/music/Oasis/+tracks?page=2",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.last.fm/tag/rock/tracks?date_preset=LAST_90_DAYS#top-tracks",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.last.fm/user/mehq/playlists/12319471",
+  "args": [
+   "--flat-playlist",
+   "--print",
+   "%(id)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_index)s|%(n_entries)s"
+  ]
+ },
+ {
+  "url": "https://www.last.fm/music/Oasis/_/Wonderwall",
+  "args": [
+   "--no-js-runtimes",
+   "--print",
+   "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+  ]
+ },
+ {
+  "url": "https://www.last.fm/music/Oasis/_/Champagne+Supernova",
+  "args": [
+   "-J"
+  ]
+ }
+]

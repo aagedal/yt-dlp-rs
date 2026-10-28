@@ -1730,6 +1730,18 @@
       "scope": "Ku6IE heading title and player JSON URL as an untyped result with KeyError/title errors compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "lastfm",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/lastfm.py"
+      ],
+      "rust": [
+        "src/extractor/lastfm.rs",
+        "tests/fixtures/sites/lastfm/"
+      ],
+      "scope": "LastFMIE track pages' YouTube player link as a url result, LastFMPlaylistIE and LastFMUserIE pages read lazily page by page as deduplicated YouTube url results (single-page `page` queries), compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "lbry",
       "status": "partial",
       "upstream": [
