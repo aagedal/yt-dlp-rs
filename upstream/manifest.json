@@ -2589,6 +2589,18 @@
       "scope": "NoicePodcastIE Next.js content details with HLS or MP3 media and meta-tag fallbacks, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "novaplay",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/novaplay.py"
+      ],
+      "rust": [
+        "src/extractor/novaplay.rs",
+        "tests/fixtures/sites/novaplay/"
+      ],
+      "scope": "NovaPlayIE Next.js video props, the cached client access token and the fite.tv streams API's fatal HLS playlist with OpenGraph thumbnail/description, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "nowcanal",
       "status": "partial",
       "upstream": [

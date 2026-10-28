@@ -4199,6 +4199,14 @@ the `addBrightcoveVideoWithJson` data's `brightcoveVideoId` (fatal) as a
 `url` result for the NOW Brightcove player. `tests/fixtures/sites/nowcanal/`
 is compared with pinned upstream output.
 
+NovaPlay videos (`play.nova.bg/video/.../ID`) follow upstream `NovaPlayIE`:
+the page's Next.js `video` props (title, slug, duration, publication date and
+view count; missing keys are upstream's `KeyError`s), the client API's access
+token (fetched once per run without an ID) and the fite.tv streams API's first
+HLS playlist (`hls`, fatal), with the non-fatal OpenGraph thumbnail and
+description. `tests/fixtures/sites/novaplay/` is compared with pinned upstream
+output.
+
 NOS articles and videos (`nos.nl/[SECTION/]artikel/ID-SLUG`,
 `nos.nl/video/ID-SLUG`) follow upstream `NOSNLArticleIE`: the page's fatal
 Next.js `pageProps.data` as a playlist of its `items` (or its one `video` on

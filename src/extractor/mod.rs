@@ -202,6 +202,7 @@ mod ninenews;
 mod nobelprize;
 mod noice;
 mod nosnl;
+mod novaplay;
 mod nowcanal;
 mod npr;
 mod nrk;
@@ -693,6 +694,7 @@ pub use ninenews::{NineNews, suitable as ninenews_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use noice::{NoicePodcast, suitable as noice_suitable};
 pub use nosnl::{NosNlArticle, suitable as nosnl_suitable};
+pub use novaplay::{NovaPlay, suitable as novaplay_suitable};
 pub use nowcanal::{NowCanal, suitable as nowcanal_suitable};
 pub use npr::{Npr, suitable as npr_suitable};
 pub use nrk::{
@@ -1077,7 +1079,13 @@ pub(crate) fn request_errnote_text(
         Some(_) => format!("<{}>", text.replacen("HTTP Error ", "HTTPError ", 1)),
         None => format!("TransportError({})", crate::batch::py_repr(&text)),
     };
-    format!("[{extractor}] {id}: {errnote}: {text} (caused by {cause})")
+    // `video_id=None` omits the `ID: ` prefix.
+    let id = if id.is_empty() {
+        String::new()
+    } else {
+        format!(" {id}:")
+    };
+    format!("[{extractor}]{id} {errnote}: {text} (caused by {cause})")
 }
 
 /// Upstream `_report_ignoring_subs(NAME)` for `_extract_m3u8_formats` and
@@ -1722,7 +1730,13 @@ fn download_json_with(
     headers: &[(&str, &str)],
 ) -> Result<serde_json::Value> {
     use std::io::Read;
-    crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
+    // `video_id=None` omits the `ID: ` prefix.
+    let prefix = if id.is_empty() {
+        format!("[{extractor}]")
+    } else {
+        format!("[{extractor}] {id}:")
+    };
+    crate::screen::screen(&format!("{prefix} {note}"));
     let wrap = |error: crate::Error| match error {
         crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => {
             crate::Error::ExtractorRequest {
@@ -1747,7 +1761,7 @@ fn download_json_with(
     let text = transform(&decode_webpage(&body, response.headers()))?;
     crate::json::from_str(&text).map_err(|error| {
         crate::Error::Reported(format!(
-            "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
+            "{prefix} Failed to parse JSON  (caused by {error})"
         ))
     })
 }
@@ -2095,7 +2109,13 @@ pub(crate) fn download_xml_note(
     note: &str,
 ) -> Result<String> {
     use std::io::Read;
-    crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
+    // `video_id=None` omits the `ID: ` prefix.
+    let prefix = if id.is_empty() {
+        format!("[{extractor}]")
+    } else {
+        format!("[{extractor}] {id}:")
+    };
+    crate::screen::screen(&format!("{prefix} {note}"));
     let wrap = |error: crate::Error| match error {
         crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => {
             crate::Error::ExtractorRequest {
