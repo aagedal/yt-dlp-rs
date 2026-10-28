@@ -33,6 +33,7 @@ mod cam4;
 mod ccc;
 mod cgtn;
 mod chaturbate;
+mod ciscolive;
 mod cjsw;
 mod clipchamp;
 mod cloudflarestream;
@@ -367,6 +368,13 @@ pub use cam4::{Cam4, suitable as cam4_suitable};
 pub use ccc::{Ccc, suitable as ccc_suitable};
 pub use cgtn::{Cgtn, suitable as cgtn_suitable};
 pub use chaturbate::{Chaturbate, suitable as chaturbate_suitable};
+pub use ciscolive::{
+    CiscoLiveSearch, CiscoLiveSession, search_suitable as ciscolive_search_suitable,
+    session_suitable as ciscolive_session_suitable,
+};
+pub(crate) use ciscolive::{
+    fetch_pages as fetch_ciscolive_pages, is_pending_state as ciscolive_pending_state,
+};
 pub use cjsw::{Cjsw, suitable as cjsw_suitable};
 pub use clipchamp::{Clipchamp, suitable as clipchamp_suitable};
 pub use cloudflarestream::{CloudflareStream, suitable as cloudflarestream_suitable};

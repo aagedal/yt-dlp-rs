@@ -1,0 +1,118 @@
+{
+ "routes": [
+  {
+   "url": "https://events.rainfocus.com/api/session",
+   "request_headers": {
+    "Origin": "https://ciscolive.cisco.com",
+    "rfApiProfileId": "Na3vqYdAlJFSxhYTYQGuMbpafMqftalz",
+    "rfWidgetId": "n6l4Lo05R8fiy3RpUBm447dZN8uNWoye"
+   },
+   "request_body": [
+    "id=1423353499155001FoSs"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"items\": [{\"eventName\": \"Cisco Live US 2018\", \"title\": \"13 Smart Automations to Monitor Your Cisco IOS Network\", \"abstract\": \"<p>Learn <b>automation</b>.</p>\", \"participants\": [{\"fullName\": \"Jane Doe\"}], \"videos\": [{\"url\": \"5803694304001\"}], \"times\": [{\"length\": 45, \"room\": \"16B Mezz.\"}]}]}"
+  },
+  {
+   "url": "https://events.rainfocus.com/api/session",
+   "request_body": [
+    "id=EMPTY"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"items\": []}"
+  },
+  {
+   "url": "https://events.rainfocus.com/api/session",
+   "request_body": [
+    "id=NOTITLE"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"items\": [{\"videos\": [{\"url\": \"1\"}]}]}"
+  },
+  {
+   "url": "https://events.rainfocus.com/api/session",
+   "request_body": [
+    "id=NOITEMS"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"total\": 0}"
+  },
+  {
+   "url": "http://players.brightcove.net/5647924234001/SyK2FdqjM_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_cloud\": {\"policy_key\": \"BCpkCISCO\"}}"
+  },
+  {
+   "url": "https://players.brightcove.net/5647924234001/SyK2FdqjM_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_cloud\": {\"policy_key\": \"BCpkCISCO\"}}"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/5647924234001/videos/5803694304001",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkCISCO"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"5803694304001\", \"account_id\": \"5647924234001\", \"name\": \"BC title one\", \"description\": \"Brightcove description\", \"published_at\": \"2018-06-29T20:49:55Z\", \"duration\": 2700000, \"sources\": [{\"container\": \"MP4\", \"type\": \"video/mp4\", \"src\": \"https://cdn.cisco.test/5803694304001.mp4\", \"avg_bitrate\": 1000000, \"width\": 1280, \"height\": 720, \"codec\": \"H264\"}]}"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/5647924234001/videos/5803694304002",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkCISCO"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"5803694304002\", \"account_id\": \"5647924234001\", \"name\": \"BC title two\", \"description\": \"Brightcove description\", \"published_at\": \"2018-06-29T20:49:55Z\", \"duration\": 2700000, \"sources\": [{\"container\": \"MP4\", \"type\": \"video/mp4\", \"src\": \"https://cdn.cisco.test/5803694304002.mp4\", \"avg_bitrate\": 1000000, \"width\": 1280, \"height\": 720, \"codec\": \"H264\"}]}"
+  },
+  {
+   "url": "https://events.rainfocus.com/api/search",
+   "request_headers": {
+    "Origin": "https://ciscolive.cisco.com",
+    "rfApiProfileId": "Na3vqYdAlJFSxhYTYQGuMbpafMqftalz",
+    "rfWidgetId": "n6l4Lo05R8fiy3RpUBm447dZN8uNWoye"
+   },
+   "request_body": [
+    "search.event=%5B%27ciscoliveus2018%27%5D&search.technology=%5B%27a%27%2C+%27b%27%5D&type=session&size=50&from=0"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"sectionList\": [{\"items\": [{\"eventName\": \"Cisco Live US 2018\", \"title\": \"First session\", \"abstract\": \"<p>Learn <b>automation</b>.</p>\", \"participants\": [{\"fullName\": \"Jane Doe\"}], \"videos\": [{\"url\": \"5803694304001\"}], \"times\": [{\"length\": 45, \"room\": \"16B Mezz.\"}]}, \"junk\", {\"eventName\": \"Cisco Live US 2018\", \"title\": \"No video\", \"abstract\": \"<p>Learn <b>automation</b>.</p>\", \"participants\": [{\"fullName\": \"Jane Doe\"}], \"videos\": [{\"url\": \"abc\"}], \"times\": [{\"length\": 45, \"room\": \"16B Mezz.\"}]}, {\"eventName\": \"Cisco Live US 2018\", \"title\": \"Second session\", \"abstract\": null, \"participants\": [{\"fullName\": \"Jane Doe\"}], \"videos\": [{\"url\": \"5803694304002\"}], \"times\": [{\"length\": 0, \"room\": \"16B Mezz.\"}]}], \"size\": 2, \"total\": 5}]}"
+  },
+  {
+   "url": "https://events.rainfocus.com/api/search",
+   "request_body": [
+    "type=session&size=2&from=2"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"items\": [{\"eventName\": \"Cisco Live US 2018\", \"title\": \"Third session\", \"abstract\": \"<p>Learn <b>automation</b>.</p>\", \"participants\": [{\"fullName\": \"Jane Doe\"}], \"videos\": [{\"url\": \"5803694304001\"}], \"times\": [{\"length\": \"30\", \"room\": \"16B Mezz.\"}]}], \"size\": \"2\", \"total\": 5}"
+  },
+  {
+   "url": "https://events.rainfocus.com/api/search",
+   "request_body": [
+    "type=session&size=2&from=4"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"items\": [{\"eventName\": \"Cisco Live US 2018\", \"title\": \"Fourth session\", \"abstract\": \"<p>Learn <b>automation</b>.</p>\", \"participants\": [{\"fullName\": \"Jane Doe\"}], \"videos\": [{\"url\": \"5803694304002\"}], \"times\": [{\"length\": 45, \"room\": \"16B Mezz.\"}]}], \"size\": 2, \"total\": 5}"
+  }
+ ]
+}

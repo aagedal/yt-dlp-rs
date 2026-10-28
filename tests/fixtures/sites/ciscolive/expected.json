@@ -1,0 +1,97 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://ciscolive.cisco.com/on-demand-library/?#/session/1423353499155001FoSs",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5803694304001\", \"thumbnails\": null, \"duration\": 2700.0, \"formats\": [{\"tbr\": 1000.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://cdn.cisco.test/5803694304001.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkCISCO\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 337500000, \"format\": \"http-1000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"13 Smart Automations to Monitor Your Cisco IOS Network\", \"description\": \"Learn automation.\", \"timestamp\": 1530305395, \"uploader_id\": \"5647924234001\", \"original_url\": \"https://ciscolive.cisco.com/on-demand-library/?#/session/1423353499155001FoSs\", \"webpage_url\": \"https://ciscolive.cisco.com/on-demand-library/?#/session/1423353499155001FoSs\", \"webpage_url_basename\": \"on-demand-library\", \"webpage_url_domain\": \"ciscolive.cisco.com\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"creator\": \"Jane Doe\", \"location\": \"16B Mezz.\", \"series\": \"Cisco Live US 2018\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"5803694304001\", \"fulltitle\": \"13 Smart Automations to Monitor Your Cisco IOS Network\", \"duration_string\": \"45:00\", \"upload_date\": \"20180629\", \"release_year\": null, \"creators\": [\"Jane Doe\"], \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 1000.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://cdn.cisco.test/5803694304001.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkCISCO\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 337500000, \"format\": \"http-1000k-720p - 1280x720\", \"_filename\": \"13 Smart Automations to Monitor Your Cisco IOS Network [5803694304001].mp4\", \"filename\": \"13 Smart Automations to Monitor Your Cisco IOS Network [5803694304001].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://ciscolive.cisco.com/on-demand-library/?search.event=ciscoliveus2018&search.technology=a&search.technology=b&search.empty=#/",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Search query\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url_transparent\", \"url\": \"http://players.brightcove.net/5647924234001/SyK2FdqjM_default/index.html?videoId=5803694304001\", \"ie_key\": \"BrightcoveNew\", \"title\": \"First session\", \"description\": \"Learn automation.\", \"duration\": 2700.0, \"creator\": \"Jane Doe\", \"location\": \"16B Mezz.\", \"series\": \"Cisco Live US 2018\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url_transparent\", \"url\": \"http://players.brightcove.net/5647924234001/SyK2FdqjM_default/index.html?videoId=5803694304002\", \"ie_key\": \"BrightcoveNew\", \"title\": \"Second session\", \"description\": null, \"duration\": 0.0, \"creator\": \"Jane Doe\", \"location\": \"16B Mezz.\", \"series\": \"Cisco Live US 2018\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url_transparent\", \"url\": \"http://players.brightcove.net/5647924234001/SyK2FdqjM_default/index.html?videoId=5803694304001\", \"ie_key\": \"BrightcoveNew\", \"title\": \"Third session\", \"description\": \"Learn automation.\", \"duration\": 1800.0, \"creator\": \"Jane Doe\", \"location\": \"16B Mezz.\", \"series\": \"Cisco Live US 2018\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url_transparent\", \"url\": \"http://players.brightcove.net/5647924234001/SyK2FdqjM_default/index.html?videoId=5803694304002\", \"ie_key\": \"BrightcoveNew\", \"title\": \"Fourth session\", \"description\": \"Learn automation.\", \"duration\": 2700.0, \"creator\": \"Jane Doe\", \"location\": \"16B Mezz.\", \"series\": \"Cisco Live US 2018\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://ciscolive.cisco.com/on-demand-library/?search.event=ciscoliveus2018&search.technology=a&search.technology=b&search.empty=#/\", \"original_url\": \"https://ciscolive.cisco.com/on-demand-library/?search.event=ciscoliveus2018&search.technology=a&search.technology=b&search.empty=#/\", \"webpage_url_basename\": \"on-demand-library\", \"webpage_url_domain\": \"ciscolive.cisco.com\", \"extractor\": \"CiscoLiveSearch\", \"extractor_key\": \"CiscoLiveSearch\", \"release_year\": null, \"playlist_count\": 4, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://ciscolive.cisco.com/on-demand-library/?search.event=ciscoliveus2018&search.technology=a&search.technology=b&search.empty=#/",
+   "args": [
+    "-I",
+    "1",
+    "--print",
+    "%(id)s|%(title)s|%(creator)s|%(creators)s|%(duration)s|%(location)s|%(series)s|%(description)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "5803694304001|First session|Jane Doe|['Jane Doe']|2700.0|16B Mezz.|Cisco Live US 2018|Learn automation.|http://players.brightcove.net/5647924234001/SyK2FdqjM_default/index.html?videoId=5803694304001"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://ciscolive.cisco.com/on-demand-library/?search.event=ciscoliveus2018&search.technology=a&search.technology=b&search.empty=#/",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(creator)s|%(creators)s|%(duration)s|%(location)s|%(series)s|%(description)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "5803694304001|First session|Jane Doe|['Jane Doe']|2700.0|16B Mezz.|Cisco Live US 2018|Learn automation.|http://players.brightcove.net/5647924234001/SyK2FdqjM_default/index.html?videoId=5803694304001",
+    "5803694304002|Second session|Jane Doe|['Jane Doe']|NA|16B Mezz.|Cisco Live US 2018|Brightcove description|http://players.brightcove.net/5647924234001/SyK2FdqjM_default/index.html?videoId=5803694304002",
+    "5803694304001|Third session|Jane Doe|['Jane Doe']|1800.0|16B Mezz.|Cisco Live US 2018|Learn automation.|http://players.brightcove.net/5647924234001/SyK2FdqjM_default/index.html?videoId=5803694304001",
+    "5803694304002|Fourth session|Jane Doe|['Jane Doe']|2700.0|16B Mezz.|Cisco Live US 2018|Learn automation.|http://players.brightcove.net/5647924234001/SyK2FdqjM_default/index.html?videoId=5803694304002"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ciscolive.com/global/on-demand-library.html?#/session/EMPTY",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ciscolive.com/global/on-demand-library.html?#/session/NOTITLE",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: NOTITLE: An extractor error has occurred. (caused by KeyError('title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ciscolive.com/global/on-demand-library.html?#/session/NOITEMS",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: NOITEMS: An extractor error has occurred. (caused by KeyError('items')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

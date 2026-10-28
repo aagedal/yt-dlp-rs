@@ -872,6 +872,18 @@
       "scope": "CGTNIE data-video HLS formats, date/section/author regexes with warnings, UTC+8 timestamp and OpenGraph metadata compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "ciscolive",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ciscolive.py"
+      ],
+      "rust": [
+        "src/extractor/ciscolive.rs",
+        "tests/fixtures/sites/ciscolive/"
+      ],
+      "scope": "CiscoLiveSessionIE RainFocus session API url_transparent Brightcove results and CiscoLiveSearchIE lazily read search pages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "cjsw",
       "status": "partial",
       "upstream": [

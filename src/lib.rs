@@ -401,6 +401,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "CAM4",
     "CGTN",
     "Chaturbate",
+    "CiscoLiveSearch",
+    "CiscoLiveSession",
     "CJSW",
     "Clipchamp",
     "CloudflareStream",
@@ -972,6 +974,8 @@ impl YoutubeDl {
                 Box::new(extractor::BfmtvLive),
                 Box::new(extractor::Bundestag),
                 Box::new(extractor::Chaturbate),
+                Box::new(extractor::CiscoLiveSession),
+                Box::new(extractor::CiscoLiveSearch),
                 Box::new(extractor::Cpac),
                 Box::new(extractor::CpacPlaylist),
                 Box::new(extractor::DailyMail),
@@ -2188,6 +2192,8 @@ impl YoutubeDl {
                 extractor::fetch_kika_pages
             } else if extractor::lastfm_pending_state(&pending.state) {
                 extractor::fetch_lastfm_pages
+            } else if extractor::ciscolive_pending_state(&pending.state) {
+                extractor::fetch_ciscolive_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };

@@ -1507,6 +1507,19 @@ ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the
 section as `categories`, the author as `creators`, and the OpenGraph title,
 description and thumbnail, with upstream's warnings for missing values.
 
+Cisco Live on-demand library sessions (`ciscolive[.cisco].com/...#/session/ID`)
+follow upstream `CiscoLiveSessionIE`: the RainFocus `session` API (a
+form-encoded POST with its profile and widget headers) and its first item as
+a `url_transparent` result of the Brightcove player, overriding the title,
+cleaned abstract, duration (minutes), presenter as `creator`, room as
+`location` and event as `series`, with upstream's `KeyError` and bare
+`IndexError` messages. Search pages (`.../on-demand-library[.html|/]?...`,
+`CiscoLiveSearchIE`) post the URL's query (values as `str(list)`, like
+upstream's `urlencode`) to the `search` API, read lazily page by page (each
+response's `size` and `total` advance and end it) as their sessions with
+integer Brightcove IDs are requested. `tests/fixtures/sites/ciscolive/` is
+compared with pinned upstream output.
+
 CJSW episodes (`cjsw.com/program/PROGRAM/episode/ID`) follow upstream
 `CJSWIE`: the fatal episode heading (else `data-audio-title`) and audio button
 source, the source's UUID ID (else `PROGRAM/ID`), the first paragraph as the
