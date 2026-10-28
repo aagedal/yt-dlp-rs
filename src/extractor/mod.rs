@@ -1,5 +1,6 @@
 mod acast;
 pub mod adobepass;
+mod aljazeera;
 mod amadeustv;
 mod angel;
 mod applepodcasts;
@@ -270,6 +271,7 @@ mod zhihu;
 pub use acast::{
     ACast, ACastChannel, channel_suitable as acast_channel_suitable, suitable as acast_suitable,
 };
+pub use aljazeera::{AlJazeera, suitable as aljazeera_suitable};
 pub use amadeustv::{AmadeusTv, suitable as amadeustv_suitable};
 pub use angel::{Angel, suitable as angel_suitable};
 pub use applepodcasts::{ApplePodcasts, suitable as applepodcasts_suitable};

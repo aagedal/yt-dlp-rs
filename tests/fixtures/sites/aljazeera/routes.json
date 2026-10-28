@@ -1,0 +1,76 @@
+{
+ "routes": [
+  {
+   "url": "https://balkans.aljazeera.net/graphql?wp-site=ajb&operationName=ArchipelagoSingleArticleQuery&variables=%7B%22name%22%3A+%22pojedini-domovi%22%2C+%22postType%22%3A+%22video%22%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_headers": {
+    "wp-site": "ajb"
+   },
+   "body": "{\"data\": {\"article\": {\"video\": {\"id\": \"6280641530001\", \"accountId\": \"911432371001\", \"playerId\": null}}}}"
+  },
+  {
+   "url": "https://players.brightcove.net/911432371001/csvTfAlKW_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_cloud\": {\"policy_key\": \"BCpk911432371001\"}}"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/911432371001/videos/6280641530001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_headers": {
+    "Accept": "application/json;pk=BCpk911432371001"
+   },
+   "body": "{\"id\": \"6280641530001\", \"account_id\": \"911432371001\", \"name\": \"Pojedini domovi u Sarajevu jo\\u0161 pod vodom\", \"description\": \"Opis\", \"published_at\": \"2021-11-06T17:19:09.000Z\", \"duration\": 60000, \"sources\": [{\"container\": \"MP4\", \"type\": \"video/mp4\", \"src\": \"https://aj-pd.test/6280641530001.mp4\", \"avg_bitrate\": 1000000, \"width\": 1280, \"height\": 720, \"codec\": \"H264\", \"size\": 1000}]}"
+  },
+  {
+   "url": "https://www.aljazeera.com/graphql?wp-site=aje&operationName=ArchipelagoSingleArticleQuery&variables=%7B%22name%22%3A+%22the-stream-episode%22%2C+%22postType%22%3A+%22episode%22%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"article\": {\"video\": null}}}"
+  },
+  {
+   "url": "https://www.aljazeera.com/program/the-stream/2021/11/6/the-stream-episode",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><iframe src=\"https://players.brightcove.net/665003303001/xyzPlayer_default/index.html?videoId=6280654936001\"></iframe></html>"
+  },
+  {
+   "url": "https://players.brightcove.net/665003303001/xyzPlayer_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_cloud\": {\"policy_key\": \"BCpk665003303001\"}}"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/665003303001/videos/6280654936001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_headers": {
+    "Accept": "application/json;pk=BCpk665003303001"
+   },
+   "body": "{\"id\": \"6280654936001\", \"account_id\": \"665003303001\", \"name\": \"The Stream\", \"description\": \"Opis\", \"published_at\": \"2021-11-06T17:19:09.000Z\", \"duration\": 60000, \"sources\": [{\"container\": \"MP4\", \"type\": \"video/mp4\", \"src\": \"https://aj-pd.test/6280654936001.mp4\", \"avg_bitrate\": 1000000, \"width\": 1280, \"height\": 720, \"codec\": \"H264\", \"size\": 1000}]}"
+  },
+  {
+   "url": "https://www.aljazeera.com/graphql?wp-site=aje&operationName=ArchipelagoSingleArticleQuery&variables=%7B%22name%22%3A+%22no-player%22%2C+%22postType%22%3A+%22news%22%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {}}"
+  },
+  {
+   "url": "https://www.aljazeera.com/news/2021/11/6/no-player",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>nothing</html>"
+  }
+ ]
+}

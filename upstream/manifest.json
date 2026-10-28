@@ -427,6 +427,18 @@
       "scope": "AdobePassIE: the generated MSO_INFO table (--ap-list-mso render_table output, --ap-mso validation and TV Provider account username missing), _extract_mvpd_auth device/client registration, access token, registration code, authenticate/saml redirect page and the generic meta-refresh/post_form login (Cablevision/AlticeOne _eventId_proceed, Rogers without confirmation, login_hostname validation and https upgrade) plus the Comcast_SSO, Verizon, Spectrum/Charter_Direct, slingtv and Suddenlink flows, session/authorize/shortAuthorize with mvpd headers, pendingLogout retries, authorize <error> details and the participating TV providers error; credentials from --ap-username/--ap-password or the MSO netrc machine (--netrc/--netrc-location/--netrc-cmd, CPython netrc parser); authn/authz tokens cached in memory for the run (no cache directory). Philo, Fubo, the --ap-username password prompt, geo verification headers and _get_mvpd_resource are not ported. Compared with pinned upstream output through the fixture proxy via BrightcoveNewIE TVE videos"
     },
     {
+      "name": "aljazeera",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/aljazeera.py"
+      ],
+      "rust": [
+        "src/extractor/aljazeera.rs",
+        "tests/fixtures/sites/aljazeera/"
+      ],
+      "scope": "AlJazeeraIE GraphQL and page Brightcove players as url_transparent results; the GenericIE hand-off for pages without a player is not ported. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "amadeustv",
       "status": "partial",
       "upstream": [

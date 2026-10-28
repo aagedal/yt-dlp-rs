@@ -1,0 +1,20 @@
+[
+ {
+  "url": "https://balkans.aljazeera.net/videos/2021/11/6/pojedini-domovi",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.aljazeera.com/program/the-stream/2021/11/6/the-stream-episode",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.aljazeera.com/2021/11/6/no-type",
+  "args": [
+   "-j"
+  ]
+ }
+]

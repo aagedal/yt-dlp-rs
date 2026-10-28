@@ -360,6 +360,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "9News",
     "acast",
     "acast:channel",
+    "AlJazeera",
     "AmadeusTV",
     "Angel",
     "apple:podcasts",
@@ -905,6 +906,7 @@ impl YoutubeDl {
                 Box::new(extractor::YoutubeTab {
                     no_playlist: youtube.no_playlist,
                 }),
+                Box::new(extractor::AlJazeera),
                 Box::new(extractor::Bfmtv),
                 Box::new(extractor::BfmtvArticle),
                 Box::new(extractor::BfmtvLive),

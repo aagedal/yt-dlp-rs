@@ -814,6 +814,16 @@ no `id` key). Non-string IDs, titles, media URLs, descriptions, images and
 dates remain explicit native errors. `tests/fixtures/sites/acast/` is
 compared with pinned upstream output.
 
+Al Jazeera articles, programmes and videos (`SITE.aljazeera.TLD/TYPE/YYYY/M/D/SLUG`)
+follow upstream `AlJazeeraIE`: the site's `graphql` `ArchipelagoSingleArticleQuery`
+(`wp-site` query and header: `ajb`, `chinese`, `ajm` or `aje`; the post type
+from the URL), its `article.video` ID, account (default `911432371001`) and
+player (default `csvTfAlKW`), else the page's Brightcove player URL, as a
+`url_transparent` result of the Brightcove player. Not ported: pages with
+neither, which upstream hands to the generic extractor (an explicit
+unsupported error here). `tests/fixtures/sites/aljazeera/` is compared with
+pinned upstream output.
+
 Amadeus TV library videos (`[www.]amadeus.tv/library/HEX`) follow upstream
 `AmadeusTVIE`: the page's `window.__NUXT__` fetch data (`_search_nuxt_data`,
 `fetch['0']`), the item's Tencent Cloud video ID (else upstream's `Unable to

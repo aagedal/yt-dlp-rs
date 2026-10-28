@@ -1,0 +1,41 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://balkans.aljazeera.net/videos/2021/11/6/pojedini-domovi",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6280641530001\", \"thumbnails\": null, \"duration\": 60.0, \"formats\": [{\"tbr\": 1000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://aj-pd.test/6280641530001.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk911432371001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-1000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"Pojedini domovi u Sarajevu jo\\u0161 pod vodom\", \"description\": \"Opis\", \"timestamp\": 1636219149, \"uploader_id\": \"911432371001\", \"original_url\": \"https://balkans.aljazeera.net/videos/2021/11/6/pojedini-domovi\", \"webpage_url\": \"https://balkans.aljazeera.net/videos/2021/11/6/pojedini-domovi\", \"webpage_url_basename\": \"pojedini-domovi\", \"webpage_url_domain\": \"balkans.aljazeera.net\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"6280641530001\", \"fulltitle\": \"Pojedini domovi u Sarajevu jo\\u0161 pod vodom\", \"duration_string\": \"1:00\", \"upload_date\": \"20211106\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 1000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://aj-pd.test/6280641530001.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk911432371001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-1000k-720p - 1280x720\", \"_filename\": \"Pojedini domovi u Sarajevu jo\\u0161 pod vodom [6280641530001].mp4\", \"filename\": \"Pojedini domovi u Sarajevu jo\\u0161 pod vodom [6280641530001].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.aljazeera.com/program/the-stream/2021/11/6/the-stream-episode",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6280654936001\", \"thumbnails\": null, \"duration\": 60.0, \"formats\": [{\"tbr\": 1000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://aj-pd.test/6280654936001.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk665003303001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-1000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"The Stream\", \"description\": \"Opis\", \"timestamp\": 1636219149, \"uploader_id\": \"665003303001\", \"original_url\": \"https://www.aljazeera.com/program/the-stream/2021/11/6/the-stream-episode\", \"webpage_url\": \"https://www.aljazeera.com/program/the-stream/2021/11/6/the-stream-episode\", \"webpage_url_basename\": \"the-stream-episode\", \"webpage_url_domain\": \"aljazeera.com\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"6280654936001\", \"fulltitle\": \"The Stream\", \"duration_string\": \"1:00\", \"upload_date\": \"20211106\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 1000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://aj-pd.test/6280654936001.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk665003303001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-1000k-720p - 1280x720\", \"_filename\": \"The Stream [6280654936001].mp4\", \"filename\": \"The Stream [6280654936001].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.aljazeera.com/2021/11/6/no-type",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [generic] no-type: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}
