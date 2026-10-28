@@ -1470,6 +1470,16 @@ as fatal HLS formats (`mp4`) and subtitles (a missing key is upstream's
 when present. Non-string titles and non-absolute stream URLs remain
 explicit native errors.
 
+Expressen and Dagens industri videos (`expressen.se|di.se/[tvspelare/video/|video[-]player/embed/]tv|nyheter/.../SLUG`)
+follow upstream `ExpressenIE`: the page's `data-video-tracking-info` and
+`data-article-data` attributes (HTML-unescaped JSON; fatal), the `contentId`
+(numbers get processing's string-conversion warning) and the `stream` as a
+fatal HLS master playlist (`hls`) or a direct format, with the raw title
+(else the article title), description, social image (else the article
+image), duration and publish timestamp. Player iframes on other pages are
+followed like upstream's `_EMBED_REGEX`. `tests/fixtures/sites/expressen/`
+is compared with pinned upstream output.
+
 Erocast tracks (`erocast.me/track/ID`) follow upstream `ErocastIE`: the
 page's fatal `var song_data_ID` JSON, its `file_url` (else `stream_url`) as
 fatal `hls` formats (`m4a`), age limit 18 and the title, description,

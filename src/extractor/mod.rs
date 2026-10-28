@@ -60,6 +60,7 @@ mod erocast;
 mod err;
 mod ettutv;
 mod europeantour;
+mod expressen;
 mod f4m;
 mod facebook;
 mod fathom;
@@ -375,6 +376,7 @@ pub use err::{
 };
 pub use ettutv::{EttuTv, suitable as ettutv_suitable};
 pub use europeantour::{EuropeanTour, suitable as europeantour_suitable};
+pub use expressen::{Expressen, suitable as expressen_suitable};
 pub(crate) use f4m::fix_ampersands as fix_xml_ampersands;
 pub use facebook::{
     Facebook, FacebookAds, FacebookPluginsVideo, FacebookRedirectUrl, FacebookReel,
