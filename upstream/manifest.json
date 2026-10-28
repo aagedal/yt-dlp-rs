@@ -190,6 +190,18 @@
       "scope": "MedalTVIE content API JSON, fatal HLS and http-source formats without privacy-protected guest URLs, the socialVideoUrl fallback with its warning, and the traverse_obj metadata. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "mediaklikk",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mediaklikk.py"
+      ],
+      "rust": [
+        "src/extractor/mediaklikk.rs",
+        "tests/fixtures/sites/mediaklikk/"
+      ],
+      "scope": "MediaKlikkIE loadPlayer data, player.php setup HLS playlist and page title/date fallbacks, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "mediaite",
       "status": "partial",
       "upstream": [

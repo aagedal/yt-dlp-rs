@@ -3066,6 +3066,17 @@ millisecond `created` timestamp, duration, view/like/comment counts, poster
 name, ID and profile URL, string tags and thumbnail follow.
 `tests/fixtures/sites/medaltv/` is compared with pinned upstream output.
 
+MediaKlikk, M4 Sport and Híradó videos (`mediaklikk|m4sport|hirado.hu/...video|videok|cikk/[Y/M/D/]SLUG`)
+follow upstream `MediaKlikkIE`: the page's `loadPlayer(...)` data (fatal),
+its `contentId`, title (else the non-fatal OpenGraph title, else the fatal
+`article_title` heading), the URL's date (else the `article_date`
+paragraph), and the data with its unquoted `token` moved to `video` sent as
+the `playernew/player.php` query (Python `str` values, page Referer). That
+page's `pl.setup(...)` JSON's first `hls` playlist file (required) is a
+fatal HLS master playlist (subtitles kept); the `bgImage` (else the non-fatal
+OpenGraph image) is the thumbnail. `tests/fixtures/sites/mediaklikk/` is
+compared with pinned upstream output.
+
 Mediaite articles (`mediaite.com/SECTION/SLUG`, not `/category`) follow
 upstream `MediaiteIE`: the page's `cdn.jwplayer.com/players/ID` (else
 `data-video-id`) media ID, its `cdn.jwplayer.com/v2/media/ID` JSON parsed
