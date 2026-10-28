@@ -1,0 +1,239 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://api.simplecast.com/episodes/b6dc49a2-9404-4853-9aa9-9cfc097be876",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"display_id\": \"errant-signal-chris-franklin-new-wave-video-essays\", \"title\": \"Errant Signal - Chris Franklin & New Wave Video Essays\", \"url\": \"https://cdn.simplecast.com/audio/05bd32/05bd32de-7d54-4ce4-8b9b-7a2d7d2c1a8c/episode.mp3\", \"webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/errant-signal-chris-franklin-new-wave-video-essays\", \"channel_url\": \"https://the-re-bind-io-podcast.simplecast.com\", \"series\": \"The RE:BIND.io Podcast\", \"season_number\": 1, \"season_id\": \"e23df0da-bae4-4531-8bbf-71364a88dc13\", \"thumbnail\": \"https://image.simplecastcdn.com/images/e1.jpg\", \"episode_id\": \"b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"episode_number\": 1, \"description\": \"Chris Franklin of Errant Signal joins the show.\", \"timestamp\": 1580979475, \"duration\": 5343, \"filesize\": 85512459, \"original_url\": \"https://api.simplecast.com/episodes/b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"webpage_url_basename\": \"errant-signal-chris-franklin-new-wave-video-essays\", \"webpage_url_domain\": \"the-re-bind-io-podcast.simplecast.com\", \"extractor\": \"simplecast\", \"extractor_key\": \"Simplecast\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://image.simplecastcdn.com/images/e1.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Errant Signal - Chris Franklin & New Wave Video Essays\", \"duration_string\": \"1:29:03\", \"upload_date\": \"20200206\", \"release_year\": null, \"season\": \"Season 1\", \"episode\": \"Episode 1\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Errant Signal - Chris Franklin & New Wave Video Essays [b6dc49a2-9404-4853-9aa9-9cfc097be876].mp3\", \"filename\": \"Errant Signal - Chris Franklin & New Wave Video Essays [b6dc49a2-9404-4853-9aa9-9cfc097be876].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.simplecast.com/0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(series)s|%(season_number)s|%(season)s|%(season_id)s|%(episode_number)s|%(episode)s|%(channel_url)s|%(webpage_url)s|%(timestamp)s|%(duration)s|%(filesize)s|%(ext)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10|second|Second episode|NA|2|Season 2|NA|7|Episode 7|NA|https://other.example.com/episodes/second|1619863200|NA|1234|m4a|https://cdn.simplecast.com/audio/second.m4a"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://api.simplecast.com/episodes/b6dc49a2-9404-4853-9aa9-9cfc097be876",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[simplecast] Extracting URL: https://api.simplecast.com/episodes/b6dc49a2-9404-4853-9aa9-9cfc097be876",
+    "[simplecast] b6dc49a2-9404-4853-9aa9-9cfc097be876: Downloading JSON metadata",
+    "[info] b6dc49a2-9404-4853-9aa9-9cfc097be876: Downloading 1 format(s): 0",
+    "[download] Destination: b6dc49a2-9404-4853-9aa9-9cfc097be876.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "b6dc49a2-9404-4853-9aa9-9cfc097be876.mp3": 19
+   }
+  },
+  {
+   "url": "https://the-re-bind-io-podcast.simplecast.com/episodes/errant-signal-chris-franklin-new-wave-video-essays?utm=x",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"display_id\": \"errant-signal-chris-franklin-new-wave-video-essays\", \"title\": \"Errant Signal - Chris Franklin & New Wave Video Essays\", \"url\": \"https://cdn.simplecast.com/audio/05bd32/05bd32de-7d54-4ce4-8b9b-7a2d7d2c1a8c/episode.mp3\", \"webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/errant-signal-chris-franklin-new-wave-video-essays\", \"channel_url\": \"https://the-re-bind-io-podcast.simplecast.com\", \"series\": \"The RE:BIND.io Podcast\", \"season_number\": 1, \"season_id\": \"e23df0da-bae4-4531-8bbf-71364a88dc13\", \"thumbnail\": \"https://image.simplecastcdn.com/images/e1.jpg\", \"episode_id\": \"b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"episode_number\": 1, \"description\": \"Chris Franklin of Errant Signal joins the show.\", \"timestamp\": 1580979475, \"duration\": 5343, \"filesize\": 85512459, \"original_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/errant-signal-chris-franklin-new-wave-video-essays?utm=x\", \"webpage_url_basename\": \"errant-signal-chris-franklin-new-wave-video-essays\", \"webpage_url_domain\": \"the-re-bind-io-podcast.simplecast.com\", \"extractor\": \"simplecast:episode\", \"extractor_key\": \"SimplecastEpisode\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://image.simplecastcdn.com/images/e1.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Errant Signal - Chris Franklin & New Wave Video Essays\", \"duration_string\": \"1:29:03\", \"upload_date\": \"20200206\", \"release_year\": null, \"season\": \"Season 1\", \"episode\": \"Episode 1\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Errant Signal - Chris Franklin & New Wave Video Essays [b6dc49a2-9404-4853-9aa9-9cfc097be876].mp3\", \"filename\": \"Errant Signal - Chris Franklin & New Wave Video Essays [b6dc49a2-9404-4853-9aa9-9cfc097be876].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://the-re-bind-io-podcast.simplecast.com/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"title\": \"The RE:BIND.io Podcast\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"display_id\": \"errant-signal-chris-franklin-new-wave-video-essays\", \"title\": \"Errant Signal - Chris Franklin & New Wave Video Essays\", \"url\": \"https://cdn.simplecast.com/audio/05bd32/05bd32de-7d54-4ce4-8b9b-7a2d7d2c1a8c/episode.mp3\", \"webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/errant-signal-chris-franklin-new-wave-video-essays\", \"channel_url\": \"https://the-re-bind-io-podcast.simplecast.com\", \"series\": \"The RE:BIND.io Podcast\", \"season_number\": 1, \"season_id\": \"e23df0da-bae4-4531-8bbf-71364a88dc13\", \"thumbnail\": \"https://image.simplecastcdn.com/images/e1.jpg\", \"episode_id\": \"b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"episode_number\": 1, \"description\": \"Chris Franklin of Errant Signal joins the show.\", \"timestamp\": 1580979475, \"duration\": 5343, \"filesize\": 85512459, \"playlist_count\": 3, \"playlist\": \"The RE:BIND.io Podcast\", \"playlist_id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"playlist_title\": \"The RE:BIND.io Podcast\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/\", \"n_entries\": 3, \"webpage_url_basename\": \"\", \"webpage_url_domain\": \"the-re-bind-io-podcast.simplecast.com\", \"playlist_index\": 1, \"__last_playlist_index\": 3, \"extractor\": \"simplecast:podcast\", \"extractor_key\": \"SimplecastPodcast\", \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://image.simplecastcdn.com/images/e1.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Errant Signal - Chris Franklin & New Wave Video Essays\", \"duration_string\": \"1:29:03\", \"upload_date\": \"20200206\", \"release_year\": null, \"season\": \"Season 1\", \"episode\": \"Episode 1\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Errant Signal - Chris Franklin & New Wave Video Essays [b6dc49a2-9404-4853-9aa9-9cfc097be876].mp3\", \"filename\": \"Errant Signal - Chris Franklin & New Wave Video Essays [b6dc49a2-9404-4853-9aa9-9cfc097be876].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10\", \"display_id\": \"second\", \"title\": \"Second episode\", \"url\": \"https://cdn.simplecast.com/audio/second.m4a\", \"webpage_url\": \"https://other.example.com/episodes/second\", \"channel_url\": null, \"series\": \"The RE:BIND.io Podcast\", \"season_number\": 2, \"season_id\": null, \"thumbnail\": null, \"episode_id\": \"0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10\", \"episode_number\": 7, \"description\": null, \"timestamp\": 1619863200, \"filesize\": 1234, \"playlist_count\": 3, \"playlist\": \"The RE:BIND.io Podcast\", \"playlist_id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"playlist_title\": \"The RE:BIND.io Podcast\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/\", \"n_entries\": 3, \"webpage_url_basename\": \"\", \"webpage_url_domain\": \"the-re-bind-io-podcast.simplecast.com\", \"playlist_index\": 2, \"__last_playlist_index\": 3, \"extractor\": \"simplecast:podcast\", \"extractor_key\": \"SimplecastPodcast\", \"playlist_autonumber\": 2, \"fulltitle\": \"Second episode\", \"upload_date\": \"20210501\", \"release_year\": null, \"season\": \"Season 2\", \"episode\": \"Episode 7\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Second episode [0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10].m4a\", \"filename\": \"Second episode [0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10].m4a\", \"__write_download_archive\": false}]}, {\"id\": \"3f2e1d0c-aaaa-4bbb-8ccc-1234567890ab\", \"display_id\": \"third\", \"title\": \"Third\", \"url\": \"https://cdn.simplecast.com/audio/third.mp3\", \"webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/third\", \"channel_url\": \"https://the-re-bind-io-podcast.simplecast.com\", \"series\": \"The RE:BIND.io Podcast\", \"season_number\": null, \"season_id\": null, \"thumbnail\": null, \"episode_id\": \"3f2e1d0c-aaaa-4bbb-8ccc-1234567890ab\", \"episode_number\": null, \"description\": null, \"timestamp\": null, \"filesize\": null, \"playlist_count\": 3, \"playlist\": \"The RE:BIND.io Podcast\", \"playlist_id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"playlist_title\": \"The RE:BIND.io Podcast\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/\", \"n_entries\": 3, \"webpage_url_basename\": \"\", \"webpage_url_domain\": \"the-re-bind-io-podcast.simplecast.com\", \"playlist_index\": 3, \"__last_playlist_index\": 3, \"extractor\": \"simplecast:podcast\", \"extractor_key\": \"SimplecastPodcast\", \"playlist_autonumber\": 3, \"fulltitle\": \"Third\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Third [3f2e1d0c-aaaa-4bbb-8ccc-1234567890ab].mp3\", \"filename\": \"Third [3f2e1d0c-aaaa-4bbb-8ccc-1234567890ab].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/\", \"original_url\": \"https://the-re-bind-io-podcast.simplecast.com/\", \"webpage_url_basename\": \"\", \"webpage_url_domain\": \"the-re-bind-io-podcast.simplecast.com\", \"extractor\": \"simplecast:podcast\", \"extractor_key\": \"SimplecastPodcast\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://the-re-bind-io-podcast.simplecast.com/episodes",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"title\": \"The RE:BIND.io Podcast\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"display_id\": \"errant-signal-chris-franklin-new-wave-video-essays\", \"title\": \"Errant Signal - Chris Franklin & New Wave Video Essays\", \"url\": \"https://cdn.simplecast.com/audio/05bd32/05bd32de-7d54-4ce4-8b9b-7a2d7d2c1a8c/episode.mp3\", \"webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/errant-signal-chris-franklin-new-wave-video-essays\", \"channel_url\": \"https://the-re-bind-io-podcast.simplecast.com\", \"series\": \"The RE:BIND.io Podcast\", \"season_number\": 1, \"season_id\": \"e23df0da-bae4-4531-8bbf-71364a88dc13\", \"thumbnail\": \"https://image.simplecastcdn.com/images/e1.jpg\", \"episode_id\": \"b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"episode_number\": 1, \"description\": \"Chris Franklin of Errant Signal joins the show.\", \"timestamp\": 1580979475, \"duration\": 5343, \"filesize\": 85512459, \"playlist_count\": 3, \"playlist\": \"The RE:BIND.io Podcast\", \"playlist_id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"playlist_title\": \"The RE:BIND.io Podcast\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes\", \"n_entries\": 3, \"webpage_url_basename\": \"episodes\", \"webpage_url_domain\": \"the-re-bind-io-podcast.simplecast.com\", \"playlist_index\": 1, \"__last_playlist_index\": 3, \"extractor\": \"simplecast:podcast\", \"extractor_key\": \"SimplecastPodcast\", \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://image.simplecastcdn.com/images/e1.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Errant Signal - Chris Franklin & New Wave Video Essays\", \"duration_string\": \"1:29:03\", \"upload_date\": \"20200206\", \"release_year\": null, \"season\": \"Season 1\", \"episode\": \"Episode 1\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Errant Signal - Chris Franklin & New Wave Video Essays [b6dc49a2-9404-4853-9aa9-9cfc097be876].mp3\", \"filename\": \"Errant Signal - Chris Franklin & New Wave Video Essays [b6dc49a2-9404-4853-9aa9-9cfc097be876].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10\", \"display_id\": \"second\", \"title\": \"Second episode\", \"url\": \"https://cdn.simplecast.com/audio/second.m4a\", \"webpage_url\": \"https://other.example.com/episodes/second\", \"channel_url\": null, \"series\": \"The RE:BIND.io Podcast\", \"season_number\": 2, \"season_id\": null, \"thumbnail\": null, \"episode_id\": \"0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10\", \"episode_number\": 7, \"description\": null, \"timestamp\": 1619863200, \"filesize\": 1234, \"playlist_count\": 3, \"playlist\": \"The RE:BIND.io Podcast\", \"playlist_id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"playlist_title\": \"The RE:BIND.io Podcast\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes\", \"n_entries\": 3, \"webpage_url_basename\": \"episodes\", \"webpage_url_domain\": \"the-re-bind-io-podcast.simplecast.com\", \"playlist_index\": 2, \"__last_playlist_index\": 3, \"extractor\": \"simplecast:podcast\", \"extractor_key\": \"SimplecastPodcast\", \"playlist_autonumber\": 2, \"fulltitle\": \"Second episode\", \"upload_date\": \"20210501\", \"release_year\": null, \"season\": \"Season 2\", \"episode\": \"Episode 7\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Second episode [0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10].m4a\", \"filename\": \"Second episode [0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10].m4a\", \"__write_download_archive\": false}]}, {\"id\": \"3f2e1d0c-aaaa-4bbb-8ccc-1234567890ab\", \"display_id\": \"third\", \"title\": \"Third\", \"url\": \"https://cdn.simplecast.com/audio/third.mp3\", \"webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/third\", \"channel_url\": \"https://the-re-bind-io-podcast.simplecast.com\", \"series\": \"The RE:BIND.io Podcast\", \"season_number\": null, \"season_id\": null, \"thumbnail\": null, \"episode_id\": \"3f2e1d0c-aaaa-4bbb-8ccc-1234567890ab\", \"episode_number\": null, \"description\": null, \"timestamp\": null, \"filesize\": null, \"playlist_count\": 3, \"playlist\": \"The RE:BIND.io Podcast\", \"playlist_id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"playlist_title\": \"The RE:BIND.io Podcast\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes\", \"n_entries\": 3, \"webpage_url_basename\": \"episodes\", \"webpage_url_domain\": \"the-re-bind-io-podcast.simplecast.com\", \"playlist_index\": 3, \"__last_playlist_index\": 3, \"extractor\": \"simplecast:podcast\", \"extractor_key\": \"SimplecastPodcast\", \"playlist_autonumber\": 3, \"fulltitle\": \"Third\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Third [3f2e1d0c-aaaa-4bbb-8ccc-1234567890ab].mp3\", \"filename\": \"Third [3f2e1d0c-aaaa-4bbb-8ccc-1234567890ab].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes\", \"original_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes\", \"webpage_url_basename\": \"episodes\", \"webpage_url_domain\": \"the-re-bind-io-podcast.simplecast.com\", \"extractor\": \"simplecast:podcast\", \"extractor_key\": \"SimplecastPodcast\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://the-re-bind-io-podcast.simplecast.com/",
+   "args": [
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(series)s|%(extractor)s|%(extractor_key)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "07d28d26-7522-42eb-8c53-2bdcfc81c43c|The RE:BIND.io Podcast|1|b6dc49a2-9404-4853-9aa9-9cfc097be876|Errant Signal - Chris Franklin & New Wave Video Essays|The RE:BIND.io Podcast|simplecast:podcast|SimplecastPodcast|https://the-re-bind-io-podcast.simplecast.com/episodes/errant-signal-chris-franklin-new-wave-video-essays",
+    "07d28d26-7522-42eb-8c53-2bdcfc81c43c|The RE:BIND.io Podcast|2|0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10|Second episode|The RE:BIND.io Podcast|simplecast:podcast|SimplecastPodcast|https://other.example.com/episodes/second",
+    "07d28d26-7522-42eb-8c53-2bdcfc81c43c|The RE:BIND.io Podcast|3|3f2e1d0c-aaaa-4bbb-8ccc-1234567890ab|Third|The RE:BIND.io Podcast|simplecast:podcast|SimplecastPodcast|https://the-re-bind-io-podcast.simplecast.com/episodes/third"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://the-re-bind-io-podcast.simplecast.com/",
+   "args": [
+    "-I",
+    "2",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"title\": \"The RE:BIND.io Podcast\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10\", \"display_id\": \"second\", \"title\": \"Second episode\", \"url\": \"https://cdn.simplecast.com/audio/second.m4a\", \"webpage_url\": \"https://other.example.com/episodes/second\", \"channel_url\": null, \"series\": \"The RE:BIND.io Podcast\", \"season_number\": 2, \"season_id\": null, \"thumbnail\": null, \"episode_id\": \"0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10\", \"episode_number\": 7, \"description\": null, \"timestamp\": 1619863200, \"filesize\": 1234, \"playlist_count\": null, \"playlist\": \"The RE:BIND.io Podcast\", \"playlist_id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"playlist_title\": \"The RE:BIND.io Podcast\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/\", \"n_entries\": 1, \"webpage_url_basename\": \"\", \"webpage_url_domain\": \"the-re-bind-io-podcast.simplecast.com\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"simplecast:podcast\", \"extractor_key\": \"SimplecastPodcast\", \"playlist_autonumber\": 1, \"fulltitle\": \"Second episode\", \"upload_date\": \"20210501\", \"release_year\": null, \"season\": \"Season 2\", \"episode\": \"Episode 7\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Second episode [0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10].m4a\", \"filename\": \"Second episode [0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10].m4a\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/\", \"original_url\": \"https://the-re-bind-io-podcast.simplecast.com/\", \"webpage_url_basename\": \"\", \"webpage_url_domain\": \"the-re-bind-io-podcast.simplecast.com\", \"extractor\": \"simplecast:podcast\", \"extractor_key\": \"SimplecastPodcast\", \"release_year\": null, \"requested_entries\": [2], \"playlist_count\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://broken.simplecast.com/",
+   "args": [
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(series)s|%(extractor)s|%(extractor_key)s|%(webpage_url)s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "broken-id|Broken|1|3f2e1d0c-aaaa-4bbb-8ccc-1234567890ab|Third|Broken|simplecast:podcast|SimplecastPodcast|https://the-re-bind-io-podcast.simplecast.com/episodes/third"
+   ],
+   "stderr": [
+    "ERROR: 'title'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://empty.simplecast.com/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"empty-id\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://empty.simplecast.com/\", \"original_url\": \"https://empty.simplecast.com/\", \"webpage_url_basename\": \"\", \"webpage_url_domain\": \"empty.simplecast.com\", \"extractor\": \"simplecast:podcast\", \"extractor_key\": \"SimplecastPodcast\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://nopodcast.simplecast.com/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: nopodcast: An extractor error has occurred. (caused by KeyError('podcast')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://api.simplecast.com/episodes/aaaaaaaa-0000-4000-8000-000000000000",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: aaaaaaaa-0000-4000-8000-000000000000: An extractor error has occurred. (caused by KeyError('title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://api.simplecast.com/episodes/dddddddd-0000-4000-8000-000000000000",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [simplecast] dddddddd-0000-4000-8000-000000000000: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.com/single",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"display_id\": \"errant-signal-chris-franklin-new-wave-video-essays\", \"title\": \"Errant Signal - Chris Franklin & New Wave Video Essays\", \"url\": \"https://cdn.simplecast.com/audio/05bd32/05bd32de-7d54-4ce4-8b9b-7a2d7d2c1a8c/episode.mp3\", \"webpage_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/errant-signal-chris-franklin-new-wave-video-essays\", \"channel_url\": \"https://the-re-bind-io-podcast.simplecast.com\", \"series\": \"The RE:BIND.io Podcast\", \"season_number\": 1, \"season_id\": \"e23df0da-bae4-4531-8bbf-71364a88dc13\", \"thumbnail\": \"https://image.simplecastcdn.com/images/e1.jpg\", \"episode_id\": \"b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"episode_number\": 1, \"description\": \"Chris Franklin of Errant Signal joins the show.\", \"timestamp\": 1580979475, \"duration\": 5343, \"filesize\": 85512459, \"original_url\": \"https://blog.example.com/single\", \"webpage_url_basename\": \"errant-signal-chris-franklin-new-wave-video-essays\", \"webpage_url_domain\": \"the-re-bind-io-podcast.simplecast.com\", \"extractor\": \"simplecast\", \"extractor_key\": \"Simplecast\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://image.simplecastcdn.com/images/e1.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Errant Signal - Chris Franklin & New Wave Video Essays\", \"duration_string\": \"1:29:03\", \"upload_date\": \"20200206\", \"release_year\": null, \"season\": \"Season 1\", \"episode\": \"Episode 1\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Errant Signal - Chris Franklin & New Wave Video Essays [b6dc49a2-9404-4853-9aa9-9cfc097be876].mp3\", \"filename\": \"Errant Signal - Chris Franklin & New Wave Video Essays [b6dc49a2-9404-4853-9aa9-9cfc097be876].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.com/double",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"double\", \"title\": \"Two players\", \"timestamp\": null, \"description\": null, \"thumbnail\": null, \"age_limit\": null, \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Simplecast\", \"_type\": \"url\", \"url\": \"https://player.simplecast.com/b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"extractor\": \"simplecast\", \"extractor_key\": \"Simplecast\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Simplecast\", \"_type\": \"url\", \"url\": \"https://player.simplecast.com/0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10\", \"extractor\": \"simplecast\", \"extractor_key\": \"Simplecast\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://blog.example.com/double\", \"original_url\": \"https://blog.example.com/double\", \"webpage_url_basename\": \"double\", \"webpage_url_domain\": \"blog.example.com\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.com/double",
+   "args": [
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(series)s|%(extractor)s|%(extractor_key)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "double|Two players|1|b6dc49a2-9404-4853-9aa9-9cfc097be876|Errant Signal - Chris Franklin & New Wave Video Essays|The RE:BIND.io Podcast|simplecast|Simplecast|https://the-re-bind-io-podcast.simplecast.com/episodes/errant-signal-chris-franklin-new-wave-video-essays",
+    "double|Two players|2|0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10|Second episode|NA|simplecast|Simplecast|https://other.example.com/episodes/second"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.com/legacy",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "ERROR: Unsupported URL: https://blog.example.com/legacy"
+   ],
+   "files": {}
+  }
+ ]
+}

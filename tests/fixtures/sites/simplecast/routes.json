@@ -1,0 +1,142 @@
+{
+ "routes": [
+  {
+   "url": "https://api.simplecast.com/episodes/b6dc49a2-9404-4853-9aa9-9cfc097be876",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"slug\": \"errant-signal-chris-franklin-new-wave-video-essays\", \"title\": \"  Errant Signal - Chris Franklin & New Wave Video Essays \\n\", \"audio_file\": {\"url\": \"https://dts.podtrac.com/redirect.mp3/cdn.simplecast.com/audio/05bd32/05bd32de-7d54-4ce4-8b9b-7a2d7d2c1a8c/episode.mp3\", \"size\": \"85512459\"}, \"audio_file_url\": \"https://cdn.simplecast.com/ignored.mp3\", \"enclosure_url\": \"https://cdn.simplecast.com/enclosure.mp3\", \"season\": {\"href\": \"https://api.simplecast.com/seasons/e23df0da-bae4-4531-8bbf-71364a88dc13\", \"number\": 1}, \"episode_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/errant-signal-chris-franklin-new-wave-video-essays\", \"podcast\": {\"id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"title\": \"The RE:BIND.io Podcast\"}, \"image_url\": \"https://image.simplecastcdn.com/images/e1.jpg\", \"number\": 1, \"description\": \"\\n Chris Franklin of Errant Signal joins the show. \\n\", \"published_at\": \"2020-02-06T08:57:55.000000-00:00\", \"duration\": 5343}"
+  },
+  {
+   "url": "https://api.simplecast.com/episodes/0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10\", \"slug\": \"second\", \"title\": \"Second episode\", \"audio_file\": null, \"audio_file_url\": \"\", \"enclosure_url\": \"https://chtbl.com/track/ABC/cdn.simplecast.com/audio/second.m4a\", \"season\": {\"href\": \"https://example.com/not-a-season\", \"number\": \"2\"}, \"episode_url\": \"https://other.example.com/episodes/second\", \"number\": \"7\", \"published_at\": \"2021-05-01T10:00:00Z\", \"duration\": \"61.5\", \"audio_file_size\": 1234}"
+  },
+  {
+   "url": "https://api.simplecast.com/episodes/aaaaaaaa-0000-4000-8000-000000000000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"aaaaaaaa-0000-4000-8000-000000000000\", \"enclosure_url\": \"https://cdn.simplecast.com/a.mp3\"}"
+  },
+  {
+   "url": "https://api.simplecast.com/episodes/dddddddd-0000-4000-8000-000000000000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"message\": \"Not found\"}",
+   "status": 404
+  },
+  {
+   "url": "https://api.simplecast.com/episodes/search",
+   "request_body": [
+    "url=https%3A%2F%2Fthe-re-bind-io-podcast.simplecast.com%2Fepisodes%2Ferrant-signal-chris-franklin-new-wave-video-essays"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"slug\": \"errant-signal-chris-franklin-new-wave-video-essays\", \"title\": \"  Errant Signal - Chris Franklin & New Wave Video Essays \\n\", \"audio_file\": {\"url\": \"https://dts.podtrac.com/redirect.mp3/cdn.simplecast.com/audio/05bd32/05bd32de-7d54-4ce4-8b9b-7a2d7d2c1a8c/episode.mp3\", \"size\": \"85512459\"}, \"audio_file_url\": \"https://cdn.simplecast.com/ignored.mp3\", \"enclosure_url\": \"https://cdn.simplecast.com/enclosure.mp3\", \"season\": {\"href\": \"https://api.simplecast.com/seasons/e23df0da-bae4-4531-8bbf-71364a88dc13\", \"number\": 1}, \"episode_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/errant-signal-chris-franklin-new-wave-video-essays\", \"podcast\": {\"id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"title\": \"The RE:BIND.io Podcast\"}, \"image_url\": \"https://image.simplecastcdn.com/images/e1.jpg\", \"number\": 1, \"description\": \"\\n Chris Franklin of Errant Signal joins the show. \\n\", \"published_at\": \"2020-02-06T08:57:55.000000-00:00\", \"duration\": 5343}"
+  },
+  {
+   "url": "https://api.simplecast.com/sites/search",
+   "request_body": [
+    "url=https%3A%2F%2Fthe-re-bind-io-podcast.simplecast.com%2Fepisodes"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"podcast\": {\"id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"title\": \"The RE:BIND.io Podcast\"}}"
+  },
+  {
+   "url": "https://api.simplecast.com/sites/search",
+   "request_body": [
+    "url=https%3A%2F%2Fthe-re-bind-io-podcast.simplecast.com%2F"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"podcast\": {\"id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"title\": \"The RE:BIND.io Podcast\"}}"
+  },
+  {
+   "url": "https://api.simplecast.com/sites/search",
+   "request_body": [
+    "url=https%3A%2F%2Fbroken.simplecast.com%2F"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"podcast\": {\"id\": \"broken-id\", \"title\": \"Broken\"}}"
+  },
+  {
+   "url": "https://api.simplecast.com/sites/search",
+   "request_body": [
+    "url=https%3A%2F%2Fempty.simplecast.com%2F"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"podcast\": {\"id\": \"empty-id\"}}"
+  },
+  {
+   "url": "https://api.simplecast.com/sites/search",
+   "request_body": [
+    "url=https%3A%2F%2Fnopodcast.simplecast.com%2F"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"site\": {}}"
+  },
+  {
+   "url": "https://api.simplecast.com/podcasts/07d28d26-7522-42eb-8c53-2bdcfc81c43c/episodes",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"collection\": [{\"id\": \"b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"slug\": \"errant-signal-chris-franklin-new-wave-video-essays\", \"title\": \"  Errant Signal - Chris Franklin & New Wave Video Essays \\n\", \"audio_file\": {\"url\": \"https://dts.podtrac.com/redirect.mp3/cdn.simplecast.com/audio/05bd32/05bd32de-7d54-4ce4-8b9b-7a2d7d2c1a8c/episode.mp3\", \"size\": \"85512459\"}, \"audio_file_url\": \"https://cdn.simplecast.com/ignored.mp3\", \"enclosure_url\": \"https://cdn.simplecast.com/enclosure.mp3\", \"season\": {\"href\": \"https://api.simplecast.com/seasons/e23df0da-bae4-4531-8bbf-71364a88dc13\", \"number\": 1}, \"episode_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/errant-signal-chris-franklin-new-wave-video-essays\", \"podcast\": {\"id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"title\": \"The RE:BIND.io Podcast\"}, \"image_url\": \"https://image.simplecastcdn.com/images/e1.jpg\", \"number\": 1, \"description\": \"\\n Chris Franklin of Errant Signal joins the show. \\n\", \"published_at\": \"2020-02-06T08:57:55.000000-00:00\", \"duration\": 5343}, {\"id\": \"0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10\", \"slug\": \"second\", \"title\": \"Second episode\", \"audio_file\": null, \"audio_file_url\": \"\", \"enclosure_url\": \"https://chtbl.com/track/ABC/cdn.simplecast.com/audio/second.m4a\", \"season\": {\"href\": \"https://example.com/not-a-season\", \"number\": \"2\"}, \"episode_url\": \"https://other.example.com/episodes/second\", \"number\": \"7\", \"published_at\": \"2021-05-01T10:00:00Z\", \"duration\": \"61.5\", \"audio_file_size\": 1234}, {\"id\": \"3f2e1d0c-aaaa-4bbb-8ccc-1234567890ab\", \"slug\": \"third\", \"title\": \"Third\", \"audio_file_url\": \"https://cdn.simplecast.com/audio/third.mp3\", \"episode_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/third\", \"season\": {}, \"podcast\": {\"title\": \"Ignored series\"}}]}"
+  },
+  {
+   "url": "https://api.simplecast.com/podcasts/broken-id/episodes",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"collection\": [{\"id\": \"3f2e1d0c-aaaa-4bbb-8ccc-1234567890ab\", \"slug\": \"third\", \"title\": \"Third\", \"audio_file_url\": \"https://cdn.simplecast.com/audio/third.mp3\", \"episode_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/third\", \"season\": {}, \"podcast\": {\"title\": \"Ignored series\"}}, {\"id\": \"cccccccc-0000-4000-8000-000000000000\", \"audio_file_url\": \"https://cdn.simplecast.com/audio/bad.mp3\", \"episode_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/bad\"}, {\"id\": \"b6dc49a2-9404-4853-9aa9-9cfc097be876\", \"slug\": \"errant-signal-chris-franklin-new-wave-video-essays\", \"title\": \"  Errant Signal - Chris Franklin & New Wave Video Essays \\n\", \"audio_file\": {\"url\": \"https://dts.podtrac.com/redirect.mp3/cdn.simplecast.com/audio/05bd32/05bd32de-7d54-4ce4-8b9b-7a2d7d2c1a8c/episode.mp3\", \"size\": \"85512459\"}, \"audio_file_url\": \"https://cdn.simplecast.com/ignored.mp3\", \"enclosure_url\": \"https://cdn.simplecast.com/enclosure.mp3\", \"season\": {\"href\": \"https://api.simplecast.com/seasons/e23df0da-bae4-4531-8bbf-71364a88dc13\", \"number\": 1}, \"episode_url\": \"https://the-re-bind-io-podcast.simplecast.com/episodes/errant-signal-chris-franklin-new-wave-video-essays\", \"podcast\": {\"id\": \"07d28d26-7522-42eb-8c53-2bdcfc81c43c\", \"title\": \"The RE:BIND.io Podcast\"}, \"image_url\": \"https://image.simplecastcdn.com/images/e1.jpg\", \"number\": 1, \"description\": \"\\n Chris Franklin of Errant Signal joins the show. \\n\", \"published_at\": \"2020-02-06T08:57:55.000000-00:00\", \"duration\": 5343}]}"
+  },
+  {
+   "url": "https://api.simplecast.com/podcasts/empty-id/episodes",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"collection\": null}"
+  },
+  {
+   "url": "https://cdn.simplecast.com/audio/05bd32/05bd32de-7d54-4ce4-8b9b-7a2d7d2c1a8c/episode.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3 fixture episode"
+  },
+  {
+   "url": "https://blog.example.com/single",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "<html><head><title>Blog post</title></head><body><iframe height=\"200px\" width=\"100%\" frameborder=\"no\" scrolling=\"no\" seamless src=\"https://player.simplecast.com/b6dc49a2-9404-4853-9aa9-9cfc097be876?dark=false\"></iframe></body></html>"
+  },
+  {
+   "url": "https://blog.example.com/double",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "<html><head><title>Two players</title></head><body><iframe src=\"https://player.simplecast.com/b6dc49a2-9404-4853-9aa9-9cfc097be876\"></iframe><iframe src='https://player.simplecast.com/0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10?theme=dark'></iframe><iframe src=\"https://player.simplecast.com/b6dc49a2-9404-4853-9aa9-9cfc097be876\"></iframe></body></html>"
+  },
+  {
+   "url": "https://blog.example.com/legacy",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "<html><head><title>Legacy embed</title></head><body><iframe src=\"https://embed.simplecast.com/b6dc49a2?color=f5f5f5\"></iframe></body></html>"
+  }
+ ]
+}

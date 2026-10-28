@@ -534,6 +534,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "megaphone.fm",
     "mir24.tv",
     "mixcloud",
+    "Mixlr",
+    "MixlrRecoring",
     "MochaVideo",
     "MovingImage",
     "Mux",
@@ -612,6 +614,9 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "ScreenRec",
     "Sen",
     "Servus",
+    "simplecast",
+    "simplecast:episode",
+    "simplecast:podcast",
     "SkylineWebcams",
     "SkyNewsAU",
     "SnapchatSpotlight",
@@ -971,6 +976,8 @@ impl YoutubeDl {
                 Box::new(extractor::KickLive),
                 Box::new(extractor::Bluesky),
                 Box::new(extractor::Mixcloud),
+                Box::new(extractor::Mixlr),
+                Box::new(extractor::MixlrRecording),
                 Box::new(extractor::Pinterest),
                 Box::new(extractor::Lbry),
                 Box::new(extractor::LbryChannel),
@@ -1257,6 +1264,9 @@ impl YoutubeDl {
                 Box::new(extractor::RtveTelevision),
                 Box::new(extractor::ScreenRec),
                 Box::new(extractor::Sen),
+                Box::new(extractor::Simplecast),
+                Box::new(extractor::SimplecastEpisode),
+                Box::new(extractor::SimplecastPodcast),
                 Box::new(extractor::SkylineWebcams),
                 Box::new(extractor::SnapchatSpotlight),
                 Box::new(extractor::Spiegel),
@@ -2040,6 +2050,8 @@ impl YoutubeDl {
                 extractor::fetch_nhk_episodes
             } else if extractor::spreaker_pending_state(&pending.state) {
                 extractor::fetch_spreaker_episodes
+            } else if extractor::simplecast_pending_state(&pending.state) {
+                extractor::fetch_simplecast_episodes
             } else if extractor::ard_pending_state(&pending.state) {
                 extractor::fetch_ard_pages
             } else if extractor::vk_user_videos_pending_state(&pending.state) {
@@ -2072,6 +2084,7 @@ impl YoutubeDl {
                 || extractor::orf_pending_state(&pending.state)
                 || extractor::nhk_pending_state(&pending.state)
                 || extractor::spreaker_pending_state(&pending.state)
+                || extractor::simplecast_pending_state(&pending.state)
                 || extractor::podbayfm_pending_state(&pending.state);
             playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
                 .map(|state| PendingEntries { state });

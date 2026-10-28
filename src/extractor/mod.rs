@@ -139,6 +139,7 @@ mod mediaite;
 mod megaphone;
 mod mir24tv;
 mod mixcloud;
+mod mixlr;
 mod mocha;
 mod movingimage;
 mod mux;
@@ -195,6 +196,7 @@ mod screen9;
 mod screenrec;
 mod sen;
 mod servus;
+mod simplecast;
 mod skylinewebcams;
 mod skynewsau;
 mod smil;
@@ -491,6 +493,10 @@ pub use mediaite::{Mediaite, suitable as mediaite_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
 pub use mir24tv::{Mir24Tv, suitable as mir24tv_suitable};
 pub use mixcloud::{Mixcloud, suitable as mixcloud_suitable};
+pub use mixlr::{
+    Mixlr, MixlrRecording, recording_suitable as mixlr_recording_suitable,
+    suitable as mixlr_suitable,
+};
 pub use mocha::{MochaVideo, suitable as mocha_suitable};
 pub use movingimage::{MovingImage, suitable as movingimage_suitable};
 pub use mux::{Mux, suitable as mux_suitable};
@@ -589,6 +595,14 @@ pub use screen9::{Screen9, suitable as screen9_suitable};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
 pub use servus::{Servus, suitable as servus_suitable};
+pub use simplecast::{
+    Simplecast, SimplecastEpisode, SimplecastPodcast,
+    episode_suitable as simplecast_episode_suitable,
+    podcast_suitable as simplecast_podcast_suitable, suitable as simplecast_suitable,
+};
+pub(crate) use simplecast::{
+    fetch_episodes as fetch_simplecast_episodes, is_pending_state as simplecast_pending_state,
+};
 pub use skylinewebcams::{SkylineWebcams, suitable as skylinewebcams_suitable};
 pub use skynewsau::{SkyNewsAU, suitable as skynewsau_suitable};
 pub use snapchat::{SnapchatSpotlight, suitable as snapchat_suitable};
