@@ -165,6 +165,7 @@ mod nts;
 pub mod nuxt;
 mod nzonscreen;
 mod odnoklassniki;
+mod olympics;
 mod onefootball;
 mod onenewsnz;
 mod oneplace;
@@ -195,6 +196,7 @@ mod rss;
 mod rte;
 mod rtrfm;
 mod rtve;
+mod rtvslo;
 mod rumble;
 mod rutube;
 mod ruv;
@@ -558,6 +560,7 @@ pub use nrk::{
 pub use nts::{NtsLive, suitable as nts_suitable};
 pub use nzonscreen::{NzOnScreen, suitable as nzonscreen_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
+pub use olympics::{OlympicsReplay, suitable as olympics_suitable};
 pub use onefootball::{OneFootball, suitable as onefootball_suitable};
 pub use onenewsnz::{OneNewsNz, suitable as onenewsnz_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
@@ -604,6 +607,9 @@ pub use rtve::{
     RtveALaCarta, RtveAudio, RtveLive, RtveTelevision, alacarta_suitable as rtve_alacarta_suitable,
     audio_suitable as rtve_audio_suitable, live_suitable as rtve_live_suitable,
     television_suitable as rtve_television_suitable,
+};
+pub use rtvslo::{
+    Rtvslo, RtvsloShow, show_suitable as rtvslo_show_suitable, suitable as rtvslo_suitable,
 };
 pub use rumble::{
     Rumble, RumbleEmbed, embed_suitable as rumble_embed_suitable, suitable as rumble_suitable,
@@ -1155,6 +1161,88 @@ pub(crate) fn extract_m3u8_master_optional(
         hls::live_format_ids(&mut stream.formats, m3u8_id);
     }
     Some(stream)
+}
+
+/// `_extract_wowza_formats(url, video_id, skip_protocols=SKIP)`: the
+/// stream's `playlist.m3u8` master playlist (`hls`, non-fatal) and its
+/// `rtmp:` format. The HDS, DASH and SMIL manifests are not supported
+/// natively, so a caller that does not skip them gets an error before any
+/// request.
+pub(crate) fn extract_wowza_formats(
+    client: &Client,
+    url: &str,
+    extractor: &'static str,
+    video_id: &str,
+    skip_protocols: &[&str],
+) -> Result<Vec<crate::VideoFormat>> {
+    static MANIFEST: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r"/(?:manifest|playlist|jwplayer)\.(?:m3u8|f4m|mpd|smil)").unwrap()
+    });
+    static BASE: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r"(?:(?:http|rtmp)(?P<s>s)?:)?(?P<url>//[^?]+)").unwrap()
+    });
+    static SMIL: std::sync::LazyLock<regex::Regex> =
+        std::sync::LazyLock::new(|| regex::Regex::new(r"(?:/smil:|\.smil)").unwrap());
+    let unsupported = |what: &str| {
+        crate::Error::UnsupportedHtml5(format!("Wowza {what} are not supported natively"))
+    };
+    // `urllib.parse.urlparse(url).query`.
+    let query = url
+        .split('#')
+        .next()
+        .and_then(|url| url.split_once('?'))
+        .map_or("", |(_, query)| query);
+    let stripped = MANIFEST.replace_all(url, "");
+    let found = BASE
+        .captures(&stripped)
+        .ok_or_else(|| unsupported("stream URLs without a host"))?;
+    let url_base = found["url"].to_owned();
+    let smil = SMIL.is_match(&url_base);
+    for (protocol, what) in [("f4m", "HDS manifests"), ("dash", "DASH manifests")] {
+        if !skip_protocols.contains(&protocol) {
+            return Err(unsupported(what));
+        }
+    }
+    if smil && !skip_protocols.contains(&"smil") {
+        return Err(unsupported("SMIL manifests"));
+    }
+    let http_base_url = format!(
+        "http{}:{url_base}",
+        found.name("s").map_or("", |s| s.as_str())
+    );
+    let mut formats = Vec::new();
+    if !skip_protocols.contains(&"m3u8") {
+        let mut manifest = format!("{http_base_url}/playlist.m3u8");
+        if !query.is_empty() {
+            manifest.push('?');
+            manifest.push_str(query);
+        }
+        if let Some(stream) = Url::parse(&manifest).ok().and_then(|manifest| {
+            extract_m3u8_master_optional(
+                client,
+                &manifest,
+                extractor,
+                video_id,
+                Some("hls"),
+                false,
+                false,
+            )
+        }) {
+            formats.extend(stream.formats);
+        }
+    }
+    if !smil && !skip_protocols.contains(&"rtmp") {
+        formats.push(dict_format(
+            vec![
+                ("url", format!("rtmp:{url_base}").into()),
+                ("format_id", "rtmp".into()),
+                ("protocol", "rtmp".into()),
+            ],
+            extractor,
+            video_id,
+        )?);
+    }
+    Ok(formats)
 }
 
 /// `_extract_m3u8_formats(url, id, m3u8_id=M3U8_ID, fatal=False)` of a live
@@ -2545,6 +2633,43 @@ mod tests {
             serde_json::json!({"2": {"a": 1}, "1b": {"b": 2}, "1c": {"c": 3}})
         );
         assert_eq!(py_splitlines("a\r\nb\rc\n"), ["a", "b", "c"]);
+    }
+
+    #[test]
+    fn wowza_manifests_without_native_support_are_errors_before_requests() {
+        let client = Client::new();
+        let url = "https://wowza.invalid/vod/_definst_/mp4:a.mp4/playlist.m3u8";
+        for skip in [&["smil", "dash"][..], &["smil", "f4m"][..]] {
+            assert!(matches!(
+                extract_wowza_formats(&client, url, "test", "id", skip),
+                Err(crate::Error::UnsupportedHtml5(_))
+            ));
+        }
+        let smil = "https://wowza.invalid/vod/smil:a.smil/playlist.m3u8";
+        assert!(matches!(
+            extract_wowza_formats(&client, smil, "test", "id", &["f4m", "dash"]),
+            Err(crate::Error::UnsupportedHtml5(_))
+        ));
+        // Only the `rtmp:` format without HLS.
+        let formats =
+            extract_wowza_formats(&client, url, "test", "id", &["m3u8", "f4m", "dash"]).unwrap();
+        assert_eq!(formats.len(), 1);
+        assert_eq!(
+            formats[0].url.as_str(),
+            "rtmp://wowza.invalid/vod/_definst_/mp4:a.mp4"
+        );
+        assert_eq!(formats[0].format_id, "rtmp");
+        assert!(
+            extract_wowza_formats(
+                &client,
+                smil,
+                "test",
+                "id",
+                &["m3u8", "f4m", "dash", "smil"]
+            )
+            .unwrap()
+            .is_empty()
+        );
     }
 
     #[test]

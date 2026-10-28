@@ -444,6 +444,28 @@ the page title (with upstream's live date suffix); television pages
 with pinned upstream output; `tools/generate_rtve_fixtures.py` encodes its
 media URL images.
 
+RTV Slovenija 365 recordings (`365.rtvslo.si/arhiv/SHOW/ID`,
+`4d.rtvslo.si/arhiv/...`, `rtvslo.si/rtv365/arhiv/ID`) follow upstream
+`RTVSLOIE`: the `ava` API's `getRecordingDrm` response (its JWT required,
+else upstream's unexpected-error message) and `getMedia` with that JWT. Its
+`addaptiveMedia`, `addaptiveMedia_sl` (as `sign-` formats with
+preference -10 and `slv` for English audio) and media file `hls_sec` URLs go
+through `_extract_wowza_formats` with HDS, DASH and SMIL skipped: the
+non-fatal `playlist.m3u8` master playlist (`hls`) and the `rtmp:` format,
+which is listed but not downloadable natively. Progressive media files keep
+their media type, size and integer bitrate. An `intermission.mp4` format is
+upstream's geo restriction (a warning with `--ignore-no-formats-error`); a
+`dummy_720p.mp4` manifest with an `error` stub is `Clip not available`.
+Metadata are the canonical URL, title, `Slovenski` (`sl`) or named
+subtitles, thumbnails with `Accept: image/jpeg`, description, broadcast and
+recording timestamps, duration (else the parsed length), genre tags and the
+show name and ID. Shows (`365|4d.rtvslo.si/oddaja/SLUG/ID`,
+`RTVSLOShowIE`) are playlists of the page's deduplicated `/arhiv/` links
+with the page title and OpenGraph description and image (upstream's
+warnings when missing). The shared Wowza helper returns an unsupported
+error for callers that do not skip HDS, DASH or SMIL.
+`tests/fixtures/sites/rtvslo/` is compared with pinned upstream output.
+
 Roya TV live streams (`[en.]roya.tv/live-stream/ID`) follow upstream
 `RoyaLiveIE`: the ticket API's `data.secured_url` (missing keys are
 upstream's wrapped `KeyError`) as live `hls` HLS formats, the non-fatal
@@ -754,6 +776,24 @@ while reading the entries and ends the playlist with a `None` entry, like
 upstream's default `--no-abort-on-error`. Non-string titles, download URLs,
 descriptions and dates remain explicit native errors.
 `tests/fixtures/sites/spreaker/` is compared with pinned upstream output.
+
+Olympics videos (`olympics.com/LL/[paris-2024/]replay|video|videos|
+original-series/episode/SLUG`) follow upstream `OlympicsReplayIE`: the
+Next.js `videoPlaylist` item's `currentVideo` (upstream's geo restriction
+with its countries when `geoRestrictedVideo`; geo bypass is off), its
+`videoUrl` (else the required `streamUrl`) tokenized through
+`metering.olympics.com/tokengenerator` with the URL's own query, the
+`vod`/`live` service and the required `jwtToken`, read as a fatal HLS master
+playlist (subtitles kept; an HTTP error whose reason contains
+`georestricted` is the geo error), `is_live` from `streamingStatus`, and the
+video ID, title and ISO 8601 date. Without that item the legacy page's
+`title`/`og:title`/`twitter:title`, `episode_uid` and `video_url` meta tags
+(upstream's warnings when missing; a missing UID or URL is an unsupported
+error here), the required JSON-LD (upstream's fatal error), the `image`
+list's thumbnails with the `t_W-H_WIDTH` width and derived height, and the
+`tokenGenerator` URL's HLS playlist, with the JSON-LD fields merged over
+them. `tests/fixtures/sites/olympics/` is compared with pinned upstream
+output.
 
 OneFootball videos (`onefootball.com/LL/video/SLUG-ID`) follow upstream
 `OneFootballIE`: the page's fatal `cdn.jwplayer.com/manifests/ID.m3u8` URL as

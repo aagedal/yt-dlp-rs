@@ -1,0 +1,117 @@
+{
+ "routes": [
+  {
+   "url": "https://api.rtvslo.si/ava/getRecordingDrm/174843754?client_id=82013fb3a531d5414f478747c1aca622",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"title\": \"Utrip\", \"description\": \"Pregled tedna.\", \"images\": {\"orig\": \"https://img.rtvcdn.si/_up/ava/ava_misc/show_logos/94/utrip_1.jpg\", \"wide2\": \"https://img.rtvcdn.si/_up/ava/ava_misc/show_logos/94/utrip_1_wide2.jpg\"}, \"subs\": [{\"language\": \"Slovenski\", \"file\": \"https://img.rtvcdn.si/subs/174843754.vtt\", \"format\": \"VTT\"}, {\"language\": \"English\", \"file\": \"https://img.rtvcdn.si/subs/174843754_en.srt\", \"format\": \"SRT\"}], \"jwt\": \"tok123\", \"broadcastDate\": \"2022-01-29 20:27:35\", \"recordingDate\": \"2022-01-29 20:50:25\", \"duration\": 813, \"genre\": [\"informativni\", \"tedenski\"], \"showName\": \"Utrip\", \"showId\": \"94\", \"canonical\": {\"domain\": \"https://365.rtvslo.si\", \"path\": \"/arhiv/utrip/174843754\"}}}"
+  },
+  {
+   "url": "https://api.rtvslo.si/ava/getMedia/174843754?client_id=82013fb3a531d5414f478747c1aca622&jwt=tok123",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"addaptiveMedia\": {\"hls_sec\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4/playlist.m3u8?keylockhash=abc\"}, \"addaptiveMedia_sl\": {\"hls_sec\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754_sl.mp4/playlist.m3u8?keylockhash=def\"}, \"mediaFiles\": [{\"streams\": {\"https\": \"https://progressive.rtvslo.si/encrypted00/2022/01/29/174843754.mp4\"}, \"mediaType\": \"MP4\", \"width\": 1280, \"height\": \"720\", \"bitrate\": 2500, \"filesize\": 123456}, {\"streams\": {\"http\": \"http://x\"}}]}}"
+  },
+  {
+   "url": "https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4/playlist.m3u8?keylockhash=abc",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754_sl.mp4/playlist.m3u8?keylockhash=def",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://api.rtvslo.si/ava/getRecordingDrm/174844609?client_id=82013fb3a531d5414f478747c1aca622",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"title\": \"Il giornale della sera\", \"broadcastDates\": [\"2022-02-01 19:30:00\"], \"recordingDate\": \"2022-02-01 19:57:04\", \"length\": \"00:22:08\", \"subtitles\": [{\"file\": \"https://img.rtvcdn.si/subs/x.vtt\", \"format\": \"Vtt\"}], \"jwt\": \"tok456\", \"showName\": \"Il giornale della sera\", \"showId\": \"106615841\", \"canonical\": {\"domain\": \"https://365.rtvslo.si\", \"path\": \"/arhiv/il-giornale-della-sera/174844609\"}}}"
+  },
+  {
+   "url": "https://api.rtvslo.si/ava/getMedia/174844609?client_id=82013fb3a531d5414f478747c1aca622&jwt=tok456",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"addaptiveMedia\": {\"hls_sec\": \"https://vodstr.rtvslo.si/radio00/_definst_/2022/02/01/174844609.mp3/playlist.m3u8\"}, \"mediaFiles\": [{\"streams\": {\"https\": \"https://progressive.rtvslo.si/radio00/2022/02/01/174844609.mp3\", \"hls_sec\": \"https://vodstr.rtvslo.si/radio01/_definst_/mp3:2022/02/01/174844609.mp3/playlist.m3u8?k=1\"}, \"mediaType\": \"MP3\", \"bitrate\": 128000}]}}"
+  },
+  {
+   "url": "https://vodstr.rtvslo.si/radio00/_definst_/2022/02/01/174844609.mp3/playlist.m3u8",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "nope"
+  },
+  {
+   "url": "https://vodstr.rtvslo.si/radio01/_definst_/mp3:2022/02/01/174844609.mp3/playlist.m3u8?k=1",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://api.rtvslo.si/ava/getRecordingDrm/174842550?client_id=82013fb3a531d5414f478747c1aca622",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"title\": \"Dnevnik\", \"jwt\": \"tokgeo\", \"showName\": \"Dnevnik\", \"showId\": \"92\", \"duration\": 1789, \"broadcastDate\": \"2022-01-25 19:57:26\", \"canonical\": {\"domain\": \"https://365.rtvslo.si\", \"path\": \"/arhiv/dnevnik/174842550\"}}}"
+  },
+  {
+   "url": "https://api.rtvslo.si/ava/getMedia/174842550?client_id=82013fb3a531d5414f478747c1aca622&jwt=tokgeo",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"mediaFiles\": [{\"streams\": {\"https\": \"https://progressive.rtvslo.si/intermission.mp4\"}, \"mediaType\": \"MP4\"}]}}"
+  },
+  {
+   "url": "https://api.rtvslo.si/ava/getRecordingDrm/148350750?client_id=82013fb3a531d5414f478747c1aca622",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"title\": \"Prvi\", \"jwt\": \"tokdummy\", \"stub\": \"error\", \"canonical\": {\"domain\": \"https://365.rtvslo.si\", \"path\": \"/arhiv/razred-zase/148350750\"}}}"
+  },
+  {
+   "url": "https://api.rtvslo.si/ava/getMedia/148350750?client_id=82013fb3a531d5414f478747c1aca622&jwt=tokdummy",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"addaptiveMedia\": {\"hls_sec\": \"https://vodstr.rtvslo.si/stub/_definst_/mp4:dummy_720p.mp4/playlist.m3u8\"}}}"
+  },
+  {
+   "url": "https://vodstr.rtvslo.si/stub/_definst_/mp4:dummy_720p.mp4/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://api.rtvslo.si/ava/getRecordingDrm/111?client_id=82013fb3a531d5414f478747c1aca622",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"title\": \"X\"}}"
+  },
+  {
+   "url": "https://365.rtvslo.si/oddaja/ekipa-bled/173250997",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Ekipa Bled &amp; prijatelji</title><meta property=\"og:description\" content=\"Serija o &quot;Bledu&quot;.\"><meta property=\"og:image\" content=\"https://img.rtvcdn.si/_up/ava/ava_misc/show_logos/173250997/logo_wide1.jpg\"></head><body><a class=\"x\" href=\"/arhiv/ekipa-bled/174842001\">1</a><a href=\"/arhiv/ekipa-bled/174842002\">2</a><a class=\"y\" href=\"/arhiv/ekipa-bled/174842001\">dup</a><a href=\"/oddaja/ekipa-bled/1\">no</a></body></html>"
+  },
+  {
+   "url": "https://4d.rtvslo.si/oddaja/prazno/42",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>nothing</body></html>"
+  }
+ ]
+}

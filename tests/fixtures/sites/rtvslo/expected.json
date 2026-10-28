@@ -1,0 +1,139 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://365.rtvslo.si/arhiv/utrip/174843754",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"174843754\", \"webpage_url\": \"https://365.rtvslo.si/arhiv/utrip/174843754\", \"title\": \"Utrip\", \"formats\": [{\"format_id\": \"sign-hls-aud-English\", \"format_note\": \"Sign language interpretation\", \"format_index\": null, \"url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754_sl.mp4/audio/index.m3u8\", \"manifest_url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754_sl.mp4/playlist.m3u8?keylockhash=def\", \"language\": \"slv\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": -10, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sign-hls-aud-English - audio only (Sign language interpretation)\"}, {\"format_id\": \"hls-aud-English\", \"format_note\": \"English\", \"format_index\": null, \"url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4/audio/index.m3u8\", \"manifest_url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4/playlist.m3u8?keylockhash=abc\", \"language\": \"eng\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-aud-English - audio only (English)\"}, {\"url\": \"rtmp://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754_sl.mp4\", \"format_id\": \"sign-rtmp\", \"protocol\": \"rtmp\", \"format_note\": \"Sign language interpretation\", \"preference\": -10, \"language\": null, \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sign-rtmp - unknown (Sign language interpretation)\"}, {\"format_id\": \"sign-hls-1500\", \"format_index\": null, \"url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754_sl.mp4/720/index.m3u8\", \"manifest_url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754_sl.mp4/playlist.m3u8?keylockhash=def\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": -10, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"format_note\": \"Sign language interpretation\", \"language\": null, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1500.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sign-hls-1500 - 1280x720 (Sign language interpretation)\"}, {\"url\": \"rtmp://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4\", \"format_id\": \"rtmp\", \"protocol\": \"rtmp\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"rtmp - unknown\"}, {\"url\": \"https://progressive.rtvslo.si/encrypted00/2022/01/29/174843754.mp4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 2500, \"filesize\": 123456, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"5\", \"format\": \"5 - 1280x720\"}, {\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4/720/index.m3u8\", \"manifest_url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4/playlist.m3u8?keylockhash=abc\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1500.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\"}], \"subtitles\": {\"sl\": [{\"url\": \"https://img.rtvcdn.si/subs/174843754.vtt\", \"ext\": \"vtt\"}], \"English\": [{\"url\": \"https://img.rtvcdn.si/subs/174843754_en.srt\", \"ext\": \"srt\"}]}, \"thumbnails\": [{\"id\": \"orig\", \"url\": \"https://img.rtvcdn.si/_up/ava/ava_misc/show_logos/94/utrip_1.jpg\", \"http_headers\": {\"Accept\": \"image/jpeg\"}}, {\"id\": \"wide2\", \"url\": \"https://img.rtvcdn.si/_up/ava/ava_misc/show_logos/94/utrip_1_wide2.jpg\", \"http_headers\": {\"Accept\": \"image/jpeg\"}}], \"description\": \"Pregled tedna.\", \"timestamp\": 1643488055, \"release_timestamp\": 1643489425, \"duration\": 813, \"tags\": [\"informativni\", \"tedenski\"], \"series\": \"Utrip\", \"series_id\": \"94\", \"original_url\": \"https://365.rtvslo.si/arhiv/utrip/174843754\", \"webpage_url_basename\": \"174843754\", \"webpage_url_domain\": \"365.rtvslo.si\", \"extractor\": \"rtvslo.si\", \"extractor_key\": \"RTVSLO\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://img.rtvcdn.si/_up/ava/ava_misc/show_logos/94/utrip_1_wide2.jpg\", \"display_id\": \"174843754\", \"fulltitle\": \"Utrip\", \"duration_string\": \"13:33\", \"upload_date\": \"20220129\", \"release_date\": \"20220129\", \"release_year\": 2022, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"requested_formats\": [{\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4/720/index.m3u8\", \"manifest_url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4/playlist.m3u8?keylockhash=abc\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1500.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\"}, {\"format_id\": \"hls-aud-English\", \"format_note\": \"English\", \"format_index\": null, \"url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4/audio/index.m3u8\", \"manifest_url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4/playlist.m3u8?keylockhash=abc\", \"language\": \"eng\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-aud-English - audio only (English)\"}], \"format\": \"hls-1500 - 1280x720+hls-aud-English - audio only (English)\", \"format_id\": \"hls-1500+hls-aud-English\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"language\": \"eng\", \"format_note\": \"English\", \"tbr\": 1500.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.64001f\", \"vbr\": 1500.0, \"aspect_ratio\": 1.78, \"_filename\": \"Utrip [174843754].mp4\", \"filename\": \"Utrip [174843754].mp4\", \"__write_download_archive\": false}], \"requested_formats\": [{\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4/720/index.m3u8\", \"manifest_url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4/playlist.m3u8?keylockhash=abc\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1500.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\"}, {\"format_id\": \"hls-aud-English\", \"format_note\": \"English\", \"format_index\": null, \"url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4/audio/index.m3u8\", \"manifest_url\": \"https://vodstr.rtvslo.si/encrypted00/_definst_/2022/01/29/174843754.mp4/playlist.m3u8?keylockhash=abc\", \"language\": \"eng\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-aud-English - audio only (English)\"}], \"format\": \"hls-1500 - 1280x720+hls-aud-English - audio only (English)\", \"format_id\": \"hls-1500+hls-aud-English\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"language\": \"eng\", \"format_note\": \"English\", \"filesize_approx\": null, \"tbr\": 1500.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"fps\": null, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.64001f\", \"vbr\": 1500.0, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": null, \"abr\": null, \"asr\": null, \"audio_channels\": null, \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://365.rtvslo.si/arhiv/utrip/174843754",
+   "args": [
+    "--no-geo-bypass",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[rtvslo.si] Extracting URL: https://365.rtvslo.si/arhiv/utrip/174843754",
+    "[rtvslo.si] 174843754: Downloading JSON metadata",
+    "[rtvslo.si] 174843754: Downloading JSON metadata",
+    "[rtvslo.si] 174843754: Downloading m3u8 information",
+    "[rtvslo.si] 174843754: Downloading m3u8 information",
+    "[info] Available subtitles for 174843754:",
+    "Language Formats",
+    "sl       vtt",
+    "English  srt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://365.rtvslo.si/arhiv/il-giornale-della-sera/174844609",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"174844609\", \"webpage_url\": \"https://365.rtvslo.si/arhiv/il-giornale-della-sera/174844609\", \"title\": \"Il giornale della sera\", \"formats\": [{\"format_id\": \"hls-aud-English\", \"format_note\": \"English\", \"format_index\": null, \"url\": \"https://vodstr.rtvslo.si/radio01/_definst_/mp3:2022/02/01/174844609.mp3/audio/index.m3u8\", \"manifest_url\": \"https://vodstr.rtvslo.si/radio01/_definst_/mp3:2022/02/01/174844609.mp3/playlist.m3u8?k=1\", \"language\": \"eng\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-aud-English - audio only (English)\"}, {\"url\": \"rtmp://vodstr.rtvslo.si/radio00/_definst_/2022/02/01/174844609.mp3\", \"format_id\": \"rtmp-0\", \"protocol\": \"rtmp\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"rtmp-0 - unknown\"}, {\"url\": \"rtmp://vodstr.rtvslo.si/radio01/_definst_/mp3:2022/02/01/174844609.mp3\", \"format_id\": \"rtmp-1\", \"protocol\": \"rtmp\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"rtmp-1 - unknown\"}, {\"url\": \"https://progressive.rtvslo.si/radio00/2022/02/01/174844609.mp3\", \"ext\": \"mp3\", \"tbr\": 128000, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": 21248000000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"3\", \"format\": \"3 - unknown\"}, {\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://vodstr.rtvslo.si/radio01/_definst_/mp3:2022/02/01/174844609.mp3/720/index.m3u8\", \"manifest_url\": \"https://vodstr.rtvslo.si/radio01/_definst_/mp3:2022/02/01/174844609.mp3/playlist.m3u8?k=1\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1500.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\"}], \"subtitles\": {\"und\": [{\"url\": \"https://img.rtvcdn.si/subs/x.vtt\", \"ext\": \"vtt\"}]}, \"thumbnails\": [], \"description\": null, \"timestamp\": 1643743800, \"release_timestamp\": 1643745424, \"duration\": 1328, \"tags\": null, \"series\": \"Il giornale della sera\", \"series_id\": \"106615841\", \"original_url\": \"https://365.rtvslo.si/arhiv/il-giornale-della-sera/174844609\", \"webpage_url_basename\": \"174844609\", \"webpage_url_domain\": \"365.rtvslo.si\", \"extractor\": \"rtvslo.si\", \"extractor_key\": \"RTVSLO\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"174844609\", \"fulltitle\": \"Il giornale della sera\", \"duration_string\": \"22:08\", \"upload_date\": \"20220201\", \"release_date\": \"20220201\", \"release_year\": 2022, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_formats\": [{\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://vodstr.rtvslo.si/radio01/_definst_/mp3:2022/02/01/174844609.mp3/720/index.m3u8\", \"manifest_url\": \"https://vodstr.rtvslo.si/radio01/_definst_/mp3:2022/02/01/174844609.mp3/playlist.m3u8?k=1\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1500.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\"}, {\"format_id\": \"hls-aud-English\", \"format_note\": \"English\", \"format_index\": null, \"url\": \"https://vodstr.rtvslo.si/radio01/_definst_/mp3:2022/02/01/174844609.mp3/audio/index.m3u8\", \"manifest_url\": \"https://vodstr.rtvslo.si/radio01/_definst_/mp3:2022/02/01/174844609.mp3/playlist.m3u8?k=1\", \"language\": \"eng\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-aud-English - audio only (English)\"}], \"format\": \"hls-1500 - 1280x720+hls-aud-English - audio only (English)\", \"format_id\": \"hls-1500+hls-aud-English\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"language\": \"eng\", \"format_note\": \"English\", \"filesize_approx\": null, \"tbr\": 1500.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"fps\": null, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.64001f\", \"vbr\": 1500.0, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": null, \"abr\": null, \"asr\": null, \"audio_channels\": null, \"_filename\": \"Il giornale della sera [174844609].mp4\", \"filename\": \"Il giornale della sera [174844609].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [rtvslo.si] 174844609: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.rtvslo.si/rtv365/arhiv/174842550?s=tv",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [rtvslo.si] 174842550: This video is not available from your location due to geo restriction"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.rtvslo.si/rtv365/arhiv/174842550?s=tv",
+   "args": [
+    "--no-geo-bypass",
+    "-j",
+    "--ignore-no-formats-error"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"174842550\", \"webpage_url\": \"https://365.rtvslo.si/arhiv/dnevnik/174842550\", \"title\": \"Dnevnik\", \"formats\": [{\"url\": \"https://progressive.rtvslo.si/intermission.mp4\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"thumbnails\": [], \"description\": null, \"timestamp\": 1643140646, \"release_timestamp\": null, \"duration\": 1789, \"tags\": null, \"series\": \"Dnevnik\", \"series_id\": \"92\", \"original_url\": \"https://www.rtvslo.si/rtv365/arhiv/174842550?s=tv\", \"webpage_url_basename\": \"174842550\", \"webpage_url_domain\": \"365.rtvslo.si\", \"extractor\": \"rtvslo.si\", \"extractor_key\": \"RTVSLO\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"174842550\", \"fulltitle\": \"Dnevnik\", \"duration_string\": \"29:49\", \"upload_date\": \"20220125\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://progressive.rtvslo.si/intermission.mp4\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Dnevnik [174842550].mp4\", \"filename\": \"Dnevnik [174842550].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [rtvslo.si] This video is not available from your location due to geo restriction"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://4d.rtvslo.si/arhiv/razred-zase/148350750",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [rtvslo.si] 148350750: rtvslo.si said: Clip not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://365.rtvslo.si/arhiv/x/111",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [rtvslo.si] 111: Site did not provide an authentication token, cannot proceed.; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://365.rtvslo.si/oddaja/ekipa-bled/173250997",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"description\": \"Serija o \\\"Bledu\\\".\", \"thumbnail\": \"https://img.rtvcdn.si/_up/ava/ava_misc/show_logos/173250997/logo_wide1.jpg\", \"id\": \"173250997\", \"title\": \"Ekipa Bled & prijatelji\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"RTVSLO\", \"_type\": \"url\", \"url\": \"https://365.rtvslo.si/arhiv/ekipa-bled/174842001\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"RTVSLO\", \"_type\": \"url\", \"url\": \"https://365.rtvslo.si/arhiv/ekipa-bled/174842002\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://365.rtvslo.si/oddaja/ekipa-bled/173250997\", \"original_url\": \"https://365.rtvslo.si/oddaja/ekipa-bled/173250997\", \"webpage_url_basename\": \"173250997\", \"webpage_url_domain\": \"365.rtvslo.si\", \"extractor\": \"rtvslo.si:show\", \"extractor_key\": \"RTVSLOShow\", \"release_year\": null, \"thumbnails\": [{\"url\": \"https://img.rtvcdn.si/_up/ava/ava_misc/show_logos/173250997/logo_wide1.jpg\", \"id\": \"0\"}], \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://4d.rtvslo.si/oddaja/prazno/42",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"description\": null, \"thumbnail\": null, \"id\": \"42\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://4d.rtvslo.si/oddaja/prazno/42\", \"original_url\": \"https://4d.rtvslo.si/oddaja/prazno/42\", \"webpage_url_basename\": \"42\", \"webpage_url_domain\": \"4d.rtvslo.si\", \"extractor\": \"rtvslo.si:show\", \"extractor_key\": \"RTVSLOShow\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [rtvslo.si:show] unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [rtvslo.si:show] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [rtvslo.si:show] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
