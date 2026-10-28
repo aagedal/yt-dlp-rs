@@ -494,6 +494,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "kick:vod",
     "Kicker",
     "KickStarter",
+    "Kika",
+    "KikaPlaylist",
     "Kommunetv",
     "KTH",
     "Ku6",
@@ -887,6 +889,8 @@ impl YoutubeDl {
                 Box::new(extractor::YoutubeTab {
                     no_playlist: youtube.no_playlist,
                 }),
+                Box::new(extractor::Kika),
+                Box::new(extractor::KikaPlaylist),
                 Box::new(extractor::UrPlay),
                 Box::new(extractor::YoutubeSearchUrl),
                 Box::new(extractor::YoutubeClip),
@@ -2020,6 +2024,8 @@ impl YoutubeDl {
                 extractor::fetch_niconico_pages
             } else if extractor::dailymotion_pending_state(&pending.state) {
                 extractor::fetch_dailymotion_pages
+            } else if extractor::kika_pending_state(&pending.state) {
+                extractor::fetch_kika_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };

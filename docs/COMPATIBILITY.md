@@ -2299,6 +2299,22 @@ timestamp and the double MD5 `sign`, giving the video URL as an untyped result
 with the `g.title` title and `titlepic` thumbnail; missing API keys are
 upstream's `KeyError` extractor errors.
 
+KiKA videos (`kika.de/.../videos/ID`) follow upstream `KikaIE` (geo
+countries `DE`): the `_next-api/proxy/v1/videos/ID` document and its
+`assets.url` JSON (both fatal), each asset with a URL as a non-fatal HLS
+master playlist (`hls`, subtitles dropped with upstream's warning) or a
+progressive format (`format_id` its extension; width, height, non-zero file
+size and bitrates other than `-1`, kept as integers), the `de` TTML then
+WebVTT subtitles only when the document has `hasSubtitle`, and the title,
+description, ISO 8601 date and modification date, duration (`durationInSeconds`
+else the ISO 8601 `duration`), episode and season numbers. KiKA brands
+(`kika.de/BRAND/ID`) follow `KikaPlaylistIE`: the brand document's title and
+description and its `videoSubchannel.videosPageUrl` (required), read as a
+generator one page at a time (`Downloading page N`, following `links.next`)
+with each item's `api.url` as a `url` result carrying its ID, title,
+duration and timestamp. `tests/fixtures/sites/kika/` is compared with pinned
+upstream output.
+
 Kommunetv archives (`SUBDOMAIN.kommunetv.no/archive/ID`) follow upstream
 `KommunetvIE`: the Oslo streams API (requested with `Accept:
 application/json`), its `stream.title` and first playlist's first file

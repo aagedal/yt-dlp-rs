@@ -1586,6 +1586,18 @@
       "scope": "KickStarterIE native data-video-url as an untyped result with the fatal title (without the Kickstarter suffix), og:description and og:image (else poster img, warning) thumbnail; pages without a native video (upstream's generic embed fallback) are an explicit native error. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "kika",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/kika.py"
+      ],
+      "rust": [
+        "src/extractor/kika.rs",
+        "tests/fixtures/sites/kika/"
+      ],
+      "scope": "KikaIE video documents, HLS/progressive assets and TTML/WebVTT subtitles, and KikaPlaylistIE paged brand generators of url results, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "kommunetv",
       "status": "partial",
       "upstream": [

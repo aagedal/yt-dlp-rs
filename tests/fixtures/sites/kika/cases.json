@@ -1,0 +1,60 @@
+[
+ {
+  "url": "https://www.kika.de/kaltstart/videos/video92498",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.kika.de/kaltstart/videos/video92498",
+  "args": [
+   "--no-geo-bypass",
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://www.kika.de/logo/videos/logo-100",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.kika.de/x/videos/broken-1",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.kika.de/logo/logo-562",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.kika.de/logo/logo-562",
+  "args": [
+   "--flat-playlist",
+   "-I",
+   "1",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.kika.de/logo/logo-562",
+  "args": [
+   "--flat-playlist",
+   "--print",
+   "%(id)s|%(title)s|%(duration)s|%(playlist_index)s|%(n_entries)s"
+  ]
+ },
+ {
+  "url": "https://www.kika.de/logo/leer-1",
+  "args": [
+   "-J"
+  ]
+ }
+]

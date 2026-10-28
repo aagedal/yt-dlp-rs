@@ -108,6 +108,7 @@ mod kankanews;
 mod kick;
 mod kicker;
 mod kickstarter;
+mod kika;
 mod kommunetv;
 mod kth;
 mod ku6;
@@ -429,6 +430,10 @@ pub(crate) use kick::{
 };
 pub use kicker::{Kicker, suitable as kicker_suitable};
 pub use kickstarter::{KickStarter, suitable as kickstarter_suitable};
+pub use kika::{
+    Kika, KikaPlaylist, playlist_suitable as kika_playlist_suitable, suitable as kika_suitable,
+};
+pub(crate) use kika::{fetch_pages as fetch_kika_pages, is_pending_state as kika_pending_state};
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use kth::{Kth, suitable as kth_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};

@@ -1,0 +1,123 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.kika.de/kaltstart/videos/video92498",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"video92498\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://kika-hls.test/92498/360/index.m3u8\", \"manifest_url\": \"https://kika-hls.test/92498/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"url\": \"https://kika-pd.test/92498_960x540.mp4\", \"format_id\": \"mp4-0\", \"width\": 960, \"height\": 540, \"vbr\": 1800, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-0 - 960x540\"}, {\"url\": \"https://kika-pd.test/92498_1280x720.mp4\", \"format_id\": \"mp4-1\", \"width\": 1280, \"height\": 720, \"filesize\": 123456, \"abr\": 128, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1 - 1280x720\"}], \"subtitles\": {\"de\": [{\"url\": \"https://www.kika.de/sub/video92498.xml\", \"ext\": \"ttml\"}, {\"url\": \"https://www.kika.de/sub/video92498.vtt\", \"ext\": \"vtt\"}]}, \"title\": \"7. Wo ist Leo?\", \"description\": \"Leo ist weg.\", \"timestamp\": 1702923276, \"modified_timestamp\": 1710880610, \"duration\": 436, \"episode_number\": 7, \"season_number\": 1, \"webpage_url\": \"https://www.kika.de/kaltstart/videos/video92498\", \"original_url\": \"https://www.kika.de/kaltstart/videos/video92498\", \"webpage_url_basename\": \"video92498\", \"webpage_url_domain\": \"kika.de\", \"extractor\": \"Kika\", \"extractor_key\": \"Kika\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"video92498\", \"fulltitle\": \"7. Wo ist Leo?\", \"duration_string\": \"7:16\", \"upload_date\": \"20231218\", \"modified_date\": \"20240319\", \"release_year\": null, \"season\": \"Season 1\", \"episode\": \"Episode 7\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://kika-pd.test/92498_1280x720.mp4\", \"format_id\": \"mp4-1\", \"width\": 1280, \"height\": 720, \"filesize\": 123456, \"abr\": 128, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1 - 1280x720\", \"_filename\": \"7. Wo ist Leo\\uff1f [video92498].mp4\", \"filename\": \"7. Wo ist Leo\\uff1f [video92498].mp4\", \"__write_download_archive\": false}], \"url\": \"https://kika-pd.test/92498_1280x720.mp4\", \"format_id\": \"mp4-1\", \"width\": 1280, \"height\": 720, \"filesize\": 123456, \"abr\": 128, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.kika.de/kaltstart/videos/video92498",
+   "args": [
+    "--no-geo-bypass",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Kika] Extracting URL: https://www.kika.de/kaltstart/videos/video92498",
+    "[Kika] video92498: Downloading JSON metadata",
+    "[Kika] video92498: Downloading JSON metadata",
+    "[Kika] video92498: Downloading m3u8 information",
+    "[info] Available subtitles for video92498:",
+    "Language Formats",
+    "de       vtt, ttml"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.kika.de/logo/videos/logo-100",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"logo-100\", \"formats\": [{\"url\": \"https://kika-pd.test/logo_100.mp4\", \"format_id\": \"mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\"}], \"subtitles\": {}, \"title\": \"logo! vom Dienstag\", \"duration\": 651, \"webpage_url\": \"https://www.kika.de/logo/videos/logo-100\", \"original_url\": \"https://www.kika.de/logo/videos/logo-100\", \"webpage_url_basename\": \"logo-100\", \"webpage_url_domain\": \"kika.de\", \"extractor\": \"Kika\", \"extractor_key\": \"Kika\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"logo-100\", \"fulltitle\": \"logo! vom Dienstag\", \"duration_string\": \"10:51\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://kika-pd.test/logo_100.mp4\", \"format_id\": \"mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\", \"_filename\": \"logo! vom Dienstag [logo-100].mp4\", \"filename\": \"logo! vom Dienstag [logo-100].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Kika] logo-100: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.kika.de/x/videos/broken-1",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: broken-1: An extractor error has occurred. (caused by KeyError('assets')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.kika.de/logo/logo-562",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"logo!\", \"description\": \"Nachrichten f\\u00fcr Kinder\", \"id\": \"logo-562\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"logo-100\", \"title\": \"logo! vom Dienstag\", \"duration\": 651, \"timestamp\": 1761674400, \"ie_key\": \"Kika\", \"_type\": \"url\", \"url\": \"https://www.kika.de/_next-api/proxy/v1/videos/logo-100\", \"__x_forwarded_for_ip\": null}, {\"id\": \"video92498\", \"title\": \"7. Wo ist Leo?\", \"duration\": 436, \"ie_key\": \"Kika\", \"_type\": \"url\", \"url\": \"https://www.kika.de/_next-api/proxy/v1/videos/video92498\", \"__x_forwarded_for_ip\": null}, {\"title\": \"ohne ID\", \"ie_key\": \"Kika\", \"_type\": \"url\", \"url\": \"https://www.kika.de/_next-api/proxy/v1/videos/video5\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.kika.de/logo/logo-562\", \"original_url\": \"https://www.kika.de/logo/logo-562\", \"webpage_url_basename\": \"logo-562\", \"webpage_url_domain\": \"kika.de\", \"extractor\": \"KikaPlaylist\", \"extractor_key\": \"KikaPlaylist\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.kika.de/logo/logo-562",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "1",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"logo!\", \"description\": \"Nachrichten f\\u00fcr Kinder\", \"id\": \"logo-562\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"logo-100\", \"title\": \"logo! vom Dienstag\", \"duration\": 651, \"timestamp\": 1761674400, \"ie_key\": \"Kika\", \"_type\": \"url\", \"url\": \"https://www.kika.de/_next-api/proxy/v1/videos/logo-100\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.kika.de/logo/logo-562\", \"original_url\": \"https://www.kika.de/logo/logo-562\", \"webpage_url_basename\": \"logo-562\", \"webpage_url_domain\": \"kika.de\", \"extractor\": \"KikaPlaylist\", \"extractor_key\": \"KikaPlaylist\", \"release_year\": null, \"requested_entries\": [1], \"playlist_count\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.kika.de/logo/logo-562",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(duration)s|%(playlist_index)s|%(n_entries)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "logo-100|logo! vom Dienstag|651|1|3",
+    "video92498|7. Wo ist Leo?|436|2|3",
+    "video5|ohne ID|NA|3|3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.kika.de/logo/leer-1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: leer-1: An extractor error has occurred. (caused by KeyError('videosPageUrl')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
