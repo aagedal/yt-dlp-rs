@@ -1451,6 +1451,18 @@ rejected (upstream fails later with `No video formats found!`); series
 playlists (`TheGuardianPodcastPlaylistIE`) are not ported.
 `tests/fixtures/sites/theguardian/` is compared with pinned upstream output.
 
+Chaturbate rooms (`[SUB.]chaturbate.com|eu|global/[fullvideo/?...b=]ROOM`)
+follow upstream `ChaturbateIE`: the impersonated, non-fatal
+`get_edge_hls_url_ajax` POST (its `url` as a fatal live HLS playlist; the
+`room_status` messages for offline, private, away, password-protected and
+hidden rooms, `public` without a URL as a geo restriction, other statuses
+warning before falling back), else the impersonated room page: the
+`initialRoomDossier` `hls_source`, else escaped or quoted `.m3u8` URLs, each
+with its non-`_fast` variant, as non-fatal live HLS (`fast` and `slow` IDs,
+fast preference -10), the page's error text or offline markers, and its RTA
+age limit. `tests/fixtures/sites/chaturbate/` is compared with pinned upstream
+output (live titles through `fulltitle`).
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the

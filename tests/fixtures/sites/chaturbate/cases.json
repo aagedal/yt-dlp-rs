@@ -1,0 +1,34 @@
+[
+ {
+  "url": "https://www.chaturbate.com/liveone/",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(age_limit)s|%(thumbnail)s|%(formats.:.format_id)s|%(formats.:.preference)s"
+  ]
+ },
+ {
+  "url": "https://chaturbate.com/sleepy/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://chaturbate.com/geo/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://chaturbate.com/htmlroom/",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(age_limit)s|%(thumbnail)s|%(formats.:.format_id)s|%(formats.:.preference)s"
+  ]
+ },
+ {
+  "url": "https://chaturbate.com/nostream/",
+  "args": [
+   "-j"
+  ]
+ }
+]

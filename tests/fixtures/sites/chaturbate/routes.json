@@ -1,0 +1,89 @@
+{
+ "routes": [
+  {
+   "url": "https://chaturbate.com/get_edge_hls_url_ajax/",
+   "request_body": [
+    "room_slug=liveone"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"https://edge1.highwebmedia.test/live-hls/liveone/playlist.m3u8\", \"room_status\": \"public\"}"
+  },
+  {
+   "url": "https://edge1.highwebmedia.test/live-hls/liveone/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://chaturbate.com/get_edge_hls_url_ajax/",
+   "request_body": [
+    "room_slug=sleepy"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"\", \"room_status\": \"offline\"}"
+  },
+  {
+   "url": "https://chaturbate.com/get_edge_hls_url_ajax/",
+   "request_body": [
+    "room_slug=geo"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"room_status\": \"public\"}"
+  },
+  {
+   "url": "https://chaturbate.com/get_edge_hls_url_ajax/",
+   "request_body": [
+    "room_slug=htmlroom"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"room_status\": \"unknownstate\"}"
+  },
+  {
+   "url": "https://chaturbate.com/htmlroom/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta name=\"RATING\" content=\"RTA-5042-1996-1400-1577-RTA\"><script>window.initialRoomDossier = \"{\\u0022hls_source\\u0022: \\u0022https://edge2.highwebmedia.test/live-hls/htmlroom_fast/playlist.m3u8\\u0022}\";</script>"
+  },
+  {
+   "url": "https://edge2.highwebmedia.test/live-hls/htmlroom_fast/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://edge2.highwebmedia.test/live-hls/htmlroom/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://chaturbate.com/get_edge_hls_url_ajax/",
+   "request_body": [
+    "room_slug=nostream"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://chaturbate.com/nostream/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div id=\"defchat\"><p><strong>Room is closed</strong></p></div>"
+  }
+ ]
+}

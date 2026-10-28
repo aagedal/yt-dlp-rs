@@ -812,6 +812,18 @@
       "scope": "CCCIE event data-id, public events JSON recordings as formats (language/folder IDs, codecs, MiB filesize) with title, creator, description, thumbnail, timestamp, duration, view count and tags; CCCPlaylistIE is not ported. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "chaturbate",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/chaturbate.py"
+      ],
+      "rust": [
+        "src/extractor/chaturbate.rs",
+        "tests/fixtures/sites/chaturbate/"
+      ],
+      "scope": "ChaturbateIE edge HLS API with room status errors and the room-page fallback (dossier and embedded live HLS URLs), compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "cgtn",
       "status": "partial",
       "upstream": [
