@@ -254,6 +254,7 @@ mod vimeo;
 mod vk;
 mod vkplay;
 mod vocaroo;
+mod washingtonpost;
 mod wat;
 mod webcamerapl;
 mod weibo;
@@ -732,6 +733,10 @@ pub use vkplay::{
     VkPlay, VkPlayLive, live_suitable as vkplay_live_suitable, suitable as vkplay_suitable,
 };
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
+pub use washingtonpost::{
+    WashingtonPost, WashingtonPostArticle, article_suitable as washingtonpost_article_suitable,
+    suitable as washingtonpost_suitable,
+};
 pub use wat::{Wat, suitable as wat_suitable};
 pub use webcamerapl::{Webcamerapl, suitable as webcamerapl_suitable};
 pub use weibo::{
@@ -1932,6 +1937,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || instagram::ios_suitable(url)
         || (url.starts_with("tco:") && twitter::shortener_suitable(url))
         || (url.starts_with("tiktokuser:") && tiktok::user_suitable(url))
+        || (url.starts_with("washingtonpost:") && washingtonpost::suitable(url))
         || (url.starts_with("wat:") && wat::suitable(url))
         || (url.starts_with("wistia:") && wistia::suitable(url))
         || (url.starts_with("wistiachannel:") && wistia::channel_suitable(url))

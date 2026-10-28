@@ -1,0 +1,74 @@
+{
+ "routes": [
+  {
+   "url": "https://video-api-cdn.washpost.arcpublishing.com/api/v1/ansvideos/findByUuid?uuid=480ba4ee-1ec7-11e6-82c2-a7dcb313287d",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"headlines\": {\"basic\": \"Egypt finds belongings, debris from plane crash\"}, \"subheadlines\": {\"basic\": \"Egypt finds belongings, debris from plane crash description\"}, \"promo_image\": {\"url\": \"https://wapo-images.test/egypt.jpg\"}, \"duration\": 129000, \"created_date\": \"2014-03-21T22:20:16Z\", \"streams\": [{\"stream_type\": \"mp4\", \"url\": \"https://wapo-mp4.test/egypt_1200.mp4\", \"bitrate\": 1200, \"width\": 640, \"height\": 360}]}]"
+  },
+  {
+   "url": "https://video-api-cdn.washpost.arcpublishing.com/api/v1/ansvideos/findByUuid?uuid=fc433c38-b146-11e3-b8b3-44b1d1cd4c1f",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"headlines\": {\"basic\": \"Breaking Points: The Paper Mine\"}, \"subheadlines\": {\"basic\": \"Breaking Points: The Paper Mine description\"}, \"promo_image\": {\"url\": \"https://wapo-images.test/papermine.jpg\"}, \"duration\": 129000, \"created_date\": \"2014-03-21T22:20:16Z\", \"streams\": [{\"stream_type\": \"mp4\", \"url\": \"https://wapo-mp4.test/papermine_1200.mp4\", \"bitrate\": 1200, \"width\": 640, \"height\": 360}]}]"
+  },
+  {
+   "url": "https://video-api-cdn.washpost.arcpublishing.com/api/v1/ansvideos/findByUuid?uuid=41255e28-b14a-11e3-b8b3-44b1d1cd4c1f",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"headlines\": {\"basic\": \"The town bureaucracy sustains\"}, \"subheadlines\": {\"basic\": \"The town bureaucracy sustains description\"}, \"promo_image\": {\"url\": \"https://wapo-images.test/boyers.jpg\"}, \"duration\": 129000, \"created_date\": \"2014-03-21T22:20:16Z\", \"streams\": [{\"stream_type\": \"mp4\", \"url\": \"https://wapo-mp4.test/boyers_1200.mp4\", \"bitrate\": 1200, \"width\": 640, \"height\": 360}]}]"
+  },
+  {
+   "url": "https://video-api-cdn.washpost.arcpublishing.com/api/v1/ansvideos/findByUuid?uuid=0e4bb54c-9065-11e4-a66f-0ca5037a597d",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"headlines\": {\"basic\": \"Why black boxes don\\u2019t transmit data in real time\"}, \"subheadlines\": {\"basic\": \"Why black boxes don\\u2019t transmit data in real time description\"}, \"promo_image\": {\"url\": \"https://wapo-images.test/blackbox.jpg\"}, \"duration\": 129000, \"created_date\": \"2014-03-21T22:20:16Z\", \"streams\": [{\"stream_type\": \"mp4\", \"url\": \"https://wapo-mp4.test/blackbox_1200.mp4\", \"bitrate\": 1200, \"width\": 640, \"height\": 360}]}]"
+  },
+  {
+   "url": "http://www.washingtonpost.com/sf/national/2014/03/22/sinkhole-of-bureaucracy/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Sinkhole of bureaucracy\"></head><body><div class=\"posttv-video-embed\" data-uuid=\"fc433c38-b146-11e3-b8b3-44b1d1cd4c1f\"></div><p>text</p><div data-video-uuid=\"41255e28-b14a-11e3-b8b3-44b1d1cd4c1f\"></div></body></html>"
+  },
+  {
+   "url": "https://www.washingtonpost.com/nation/2021/08/05/dixie-river-fire-california-climate/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"One airline figured out how\"></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"globalContent\": {\"content_elements\": [{\"type\": \"text\", \"content\": \"x\"}, {\"type\": \"video\", \"_id\": \"0e4bb54c-9065-11e4-a66f-0ca5037a597d\"}, {\"type\": \"image\"}]}}}}</script></body></html>"
+  },
+  {
+   "url": "https://www.washingtonpost.com/nation/2021/08/06/no-title/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><div data-video-uuid=\"480ba4ee-1ec7-11e6-82c2-a7dcb313287d\"></div></body></html>"
+  },
+  {
+   "url": "https://www.washingtonpost.com/nation/2021/08/07/no-video/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"No video\"></head><body>none</body></html>"
+  },
+  {
+   "url": "https://www.wapo-embed.test/story/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Embed</title></head><body><iframe width=\"480\" src=\"https://www.washingtonpost.com/video/c/embed/480ba4ee-1ec7-11e6-82c2-a7dcb313287d\" frameborder=\"0\"></iframe></body></html>"
+  },
+  {
+   "url": "https://www.washingtonpost.com/nation/2021/08/08/no-elements/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"No elements\"></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {}}}</script></body></html>"
+  }
+ ]
+}

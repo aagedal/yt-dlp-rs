@@ -1,0 +1,64 @@
+[
+ {
+  "url": "https://www.washingtonpost.com/video/c/video/480ba4ee-1ec7-11e6-82c2-a7dcb313287d",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.washingtonpost.com/video/world/egypt-finds-belongings-debris-from-plane-crash/2016/05/20/480ba4ee-1ec7-11e6-82c2-a7dcb313287d_video.html",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(webpage_url)s|%(original_url)s|%(extractor)s"
+  ]
+ },
+ {
+  "url": "washingtonpost:480ba4ee-1ec7-11e6-82c2-a7dcb313287d",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "http://www.washingtonpost.com/sf/national/2014/03/22/sinkhole-of-bureaucracy/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.washingtonpost.com/sf/national/2014/03/22/sinkhole-of-bureaucracy/",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.washingtonpost.com/nation/2021/08/05/dixie-river-fire-california-climate/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.washingtonpost.com/nation/2021/08/06/no-title/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.washingtonpost.com/nation/2021/08/07/no-video/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.wapo-embed.test/story/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.washingtonpost.com/nation/2021/08/08/no-elements/",
+  "args": [
+   "-j"
+  ]
+ }
+]

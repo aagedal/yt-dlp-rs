@@ -1458,6 +1458,19 @@ without a forced extension, with the cleaned `<h1>` title (no-break spaces
 replaced) and `og:description`/`description` and `og:image`/`image` meta
 values, each warning when absent.
 
+Washington Post videos (`washingtonpost:UUID`,
+`washingtonpost.com/video|posttv/.../UUID`) follow upstream
+`WashingtonPostIE` as `url` results of `arcpublishing:wapo:UUID` (see Arc
+Publishing); `washingtonpost.com/video/c/embed/UUID` iframes on other pages
+are followed like upstream's `_EMBED_REGEX`. Other `washingtonpost.com`
+pages follow `WashingtonPostArticleIE`: the OpenGraph title (upstream's
+warning when missing), the `posttv-video-embed`/`data-video-uuid` UUIDs, else
+the Next.js `globalContent.content_elements` videos (fatal Next.js data; a
+missing list is upstream's bare `'NoneType' object is not iterable`), as a
+playlist of `washingtonpost:UUID` results.
+`tests/fixtures/sites/washingtonpost/` is compared with pinned upstream
+output.
+
 WAT media (`wat:ID`, `wat.tv/video/...-ID`; base-36 IDs converted unless
 they are more than six digits) follow upstream `WatIE` (no geo bypass): the
 `mediainfo.tf1.fr/mediainfocombo/ID?pver=5010000` JSON, its error
