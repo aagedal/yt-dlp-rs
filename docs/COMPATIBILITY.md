@@ -1754,6 +1754,20 @@ categories, keywords as tags, cover, and owner name and ID. A missing
 `resource` is upstream's `AttributeError`.
 `tests/fixtures/sites/xinpianchang/` is compared with pinned upstream output.
 
+Radio Kapitał episodes (`[www.]radiokapital.pl/shows/SHOW/ID`) follow
+upstream `radiokapital`: the `wp-json/kapital/v1/episodes/ID` JSON as a
+`url_transparent` result for its `mixcloud_url`, extracted by Mixcloud only
+(another URL is upstream's `No suitable extractor (Mixcloud)` error), with
+the unescaped title, cleaned content as description, tag names, the show
+title as series and upstream's sliced `published` text as `release_date`
+(missing keys are upstream's `KeyError`s). Shows
+(`[www.]radiokapital.pl/shows/ID`) follow `radiokapital:show`: the show
+JSON's ID, title and cleaned content, and its episode list pages
+(`Downloading episode list page #N`) read lazily as those transparent
+entries until a page's `next` is `null`. A `KeyError` or failed page while
+reading them ends the playlist with upstream's reported `None` entry.
+`tests/fixtures/sites/radiokapital/` is compared with pinned upstream output.
+
 PGA Tour videos (`pgatour.com/video/SECTION/[T]ID`) follow upstream
 `PGATourIE` as `url` results for their Brightcove player (the TOURCast
 account and player for `T` IDs). `tests/fixtures/sites/pgatour/` is compared

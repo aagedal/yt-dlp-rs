@@ -246,6 +246,7 @@ mod premiershiprugby;
 mod presstv;
 mod projectveritas;
 mod qingting;
+mod radiokapital;
 mod radiozet;
 mod reddit;
 mod reverbnation;
@@ -782,6 +783,13 @@ pub use premiershiprugby::{PremiershipRugby, suitable as premiershiprugby_suitab
 pub use presstv::{PressTv, suitable as presstv_suitable};
 pub use projectveritas::{ProjectVeritas, suitable as projectveritas_suitable};
 pub use qingting::{QingTing, suitable as qingting_suitable};
+pub use radiokapital::{
+    RadioKapital, RadioKapitalShow, show_suitable as radiokapital_show_suitable,
+    suitable as radiokapital_suitable,
+};
+pub(crate) use radiokapital::{
+    fetch_pages as fetch_radiokapital_pages, is_pending_state as radiokapital_pending_state,
+};
 pub use radiozet::{RadioZetPodcast, suitable as radiozet_suitable};
 pub use reddit::{Reddit, suitable as reddit_suitable};
 pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};

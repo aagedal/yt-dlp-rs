@@ -1,0 +1,54 @@
+[
+ {
+  "url": "https://radiokapital.pl/shows/tutaj-sa-smoki/5-its-okay-to-be-immaterial",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.radiokapital.pl/shows/tutaj-sa-smoki/elsewhere",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://radiokapital.pl/shows/x/nodate",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://radiokapital.pl/shows/wesz",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://radiokapital.pl/shows/wesz/",
+  "args": [
+   "-J",
+   "-I",
+   "1"
+  ]
+ },
+ {
+  "url": "https://radiokapital.pl/shows/broken",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://radiokapital.pl/shows/gone",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://radiokapital.pl/shows/noid",
+  "args": [
+   "-J"
+  ]
+ }
+]

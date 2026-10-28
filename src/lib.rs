@@ -667,6 +667,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "PressTV",
     "ProjectVeritas",
     "QingTing",
+    "radiokapital",
+    "radiokapital:show",
     "RadioZetPodcast",
     "Reddit",
     "ReverbNation",
@@ -1493,6 +1495,8 @@ impl YoutubeDl {
                 Box::new(extractor::PressTv),
                 Box::new(extractor::ProjectVeritas),
                 Box::new(extractor::QingTing),
+                Box::new(extractor::RadioKapital),
+                Box::new(extractor::RadioKapitalShow),
                 Box::new(extractor::RadioZetPodcast),
                 Box::new(extractor::ReverbNation),
                 Box::new(extractor::RoyaLive),
@@ -2328,6 +2332,8 @@ impl YoutubeDl {
                 extractor::fetch_lastfm_pages
             } else if extractor::ciscolive_pending_state(&pending.state) {
                 extractor::fetch_ciscolive_pages
+            } else if extractor::radiokapital_pending_state(&pending.state) {
+                extractor::fetch_radiokapital_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };
