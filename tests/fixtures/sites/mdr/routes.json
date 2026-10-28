@@ -1,0 +1,81 @@
+{
+ "routes": [
+  {
+   "url": "http://www.mdr.de/fakt/video189002.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>var player = { playerXml:'/fakt/video189002-avCustom.xml', autoplay: false };</script></html>"
+  },
+  {
+   "url": "http://www.mdr.de/fakt/video189002-avCustom.xml",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<avDocument><title>Fakt vom 12. Mai</title><type>video</type><duration>00:29:30</duration><rights>MITTELDEUTSCHER RUNDFUNK</rights>\n<broadcast><broadcastName>Fakt</broadcastName><broadcastDescription>Das Magazin.</broadcastDescription><broadcastStartDate>2026-05-12T21:45:00+02:00</broadcastStartDate></broadcast>\n<assets>\n<asset><mediaType>MP4</mediaType><bitrateVideo>1800000</bitrateVideo><bitrateAudio>128000</bitrateAudio><frameWidth>960</frameWidth><frameHeight>540</frameHeight><fileSize>123456789</fileSize>\n<progressiveDownloadUrl>https://mdr-pd.test/189002_960.mp4</progressiveDownloadUrl><downloadUrl>https://mdr-pd.test/189002_960.mp4</downloadUrl></asset>\n<asset><bitrateVideo>x</bitrateVideo><bitrateAudio>96000</bitrateAudio><progressiveDownloadUrl>https://mdr-pd.test/189002_audio.mp4</progressiveDownloadUrl></asset>\n<asset><adaptiveHttpStreamingRedirectorUrl>https://mdr-hls.test/189002/master.m3u8</adaptiveHttpStreamingRedirectorUrl><dynamicHttpStreamingRedirectorUrl>https://mdr-hds.test/189002/manifest.f4m</dynamicHttpStreamingRedirectorUrl></asset>\n<asset><downloadUrl>not a url</downloadUrl></asset>\n</assets></avDocument>"
+  },
+  {
+   "url": "https://mdr-hls.test/189002/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://mdr-hds.test/189002/manifest.f4m?hdcore=3.7.0&plugin=aasp-3.7.0.39.44",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<?xml version=\"1.0\"?><manifest xmlns=\"http://ns.adobe.com/f4m/1.0\"><id>x</id><media url=\"hds_1800\" bitrate=\"1800\" width=\"960\" height=\"540\"/></manifest>"
+  },
+  {
+   "url": "http://www.mdr.de/kultur/audio1312272_zc-15948bad_zs-86171fdd.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>dataURL : \"\\/kultur\\/audio1312272-avCustom.xml\"</script>"
+  },
+  {
+   "url": "http://www.mdr.de/kultur/audio1312272-avCustom.xml",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<?xml version=\"1.0\"?><avDocument><broadcast><broadcastName>Feuilleton vom 30. Oktober</broadcastName><broadcastDate>bad</broadcastDate></broadcast><type>audio</type><duration>250</duration>\n<assets><asset><mediaType>MP3</mediaType><bitrateAudio>128000</bitrateAudio><progressiveDownloadUrl>https://mdr-pd.test/1312272.mp3</progressiveDownloadUrl></asset></assets></avDocument>"
+  },
+  {
+   "url": "http://www.mdr.de/x/video-1.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>var player = { playerXml:'https://www.mdr.de/x/1-avCustom.xml', autoplay: false };</script></html>"
+  },
+  {
+   "url": "https://www.mdr.de/x/1-avCustom.xml",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<?xml version=\"1.0\"?><avDocument><broadcast/></avDocument>"
+  },
+  {
+   "url": "http://www.mdr.de/x/video-2.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>var player = { playerXml:'/x/2-avCustom.xml', autoplay: false };</script></html>"
+  },
+  {
+   "url": "http://www.mdr.de/x/2-avCustom.xml",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<?xml version=\"1.0\"?><avDocument><title></title></avDocument>"
+  },
+  {
+   "url": "http://www.mdr.de/x/video-3.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>kein Player</html>"
+  }
+ ]
+}

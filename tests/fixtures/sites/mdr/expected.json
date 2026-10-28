@@ -1,0 +1,100 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.mdr.de/fakt/video189002.html",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"189002\", \"title\": \"Fakt vom 12. Mai\", \"description\": \"Das Magazin.\", \"timestamp\": 1778615100, \"duration\": 1770, \"uploader\": \"MITTELDEUTSCHER RUNDFUNK\", \"formats\": [{\"url\": \"https://mdr-pd.test/189002_audio.mp4\", \"format_id\": \"MP4-96\", \"filesize\": null, \"abr\": 96, \"vbr\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"MP4-96 - unknown\"}, {\"url\": \"https://mdr-pd.test/189002_960.mp4\", \"format_id\": \"MP4-1800\", \"filesize\": 123456789, \"abr\": 128, \"vbr\": 1800, \"width\": 960, \"height\": 540, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"tbr\": 1928, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"MP4-1800 - 960x540\"}, {\"format_id\": \"HLS-921\", \"format_index\": null, \"url\": \"https://mdr-hls.test/189002/360/index.m3u8\", \"manifest_url\": \"https://mdr-hls.test/189002/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": 1, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HLS-921 - 640x360\"}, {\"format_id\": \"HDS-1800\", \"url\": \"https://mdr-hds.test/189002/hds_1800\", \"manifest_url\": \"https://mdr-hds.test/189002/hds_1800\", \"ext\": \"unknown_video\", \"protocol\": \"f4m\", \"tbr\": 1800, \"width\": 960, \"height\": 540, \"vcodec\": null, \"preference\": null, \"quality\": 1, \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HDS-1800 - 960x540\"}], \"webpage_url\": \"http://www.mdr.de/fakt/video189002.html\", \"original_url\": \"http://www.mdr.de/fakt/video189002.html\", \"webpage_url_basename\": \"video189002.html\", \"webpage_url_domain\": \"mdr.de\", \"extractor\": \"MDR\", \"extractor_key\": \"MDR\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"189002\", \"fulltitle\": \"Fakt vom 12. Mai\", \"duration_string\": \"29:30\", \"upload_date\": \"20260512\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"HDS-1800\", \"url\": \"https://mdr-hds.test/189002/hds_1800\", \"manifest_url\": \"https://mdr-hds.test/189002/hds_1800\", \"ext\": \"unknown_video\", \"protocol\": \"f4m\", \"tbr\": 1800, \"width\": 960, \"height\": 540, \"quality\": 1, \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HDS-1800 - 960x540\", \"_filename\": \"Fakt vom 12. Mai [189002].unknown_video\", \"filename\": \"Fakt vom 12. Mai [189002].unknown_video\", \"__write_download_archive\": false}], \"format_id\": \"HDS-1800\", \"url\": \"https://mdr-hds.test/189002/hds_1800\", \"manifest_url\": \"https://mdr-hds.test/189002/hds_1800\", \"ext\": \"unknown_video\", \"protocol\": \"f4m\", \"tbr\": 1800, \"width\": 960, \"height\": 540, \"vcodec\": null, \"preference\": null, \"quality\": 1, \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HDS-1800 - 960x540\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.mdr.de/fakt/video189002.html",
+   "args": [
+    "--no-geo-bypass",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[MDR] Extracting URL: http://www.mdr.de/fakt/video189002.html",
+    "[MDR] 189002: Downloading webpage",
+    "[MDR] 189002: Downloading XML",
+    "[MDR] 189002: Downloading f4m manifest",
+    "[MDR] 189002: Downloading m3u8 information",
+    "[info] Available formats for 189002:",
+    "ID       EXT           RESOLUTION |   FILESIZE   TBR PROTO | VCODEC        VBR ACODEC     ABR",
+    "---------------------------------------------------------------------------------------------",
+    "MP4-96   mp4           unknown    |                  https | unknown           unknown    96k",
+    "MP4-1800 mp4           960x540    |  117.74MiB 1928k https | unknown     1800k unknown   128k",
+    "HLS-921  mp4           640x360    | ~194.33MiB  921k m3u8  | avc1.4d401e       mp4a.40.2",
+    "HDS-1800 unknown_video 960x540    | ~379.80MiB 1800k f4m   | unknown           unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.mdr.de/kultur/audio1312272_zc-15948bad_zs-86171fdd.html",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1312272\", \"title\": \"Feuilleton vom 30. Oktober\", \"description\": null, \"timestamp\": null, \"duration\": 250, \"uploader\": null, \"formats\": [{\"url\": \"https://mdr-pd.test/1312272.mp3\", \"format_id\": \"MP3-128\", \"filesize\": null, \"abr\": 128, \"vbr\": 0, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"tbr\": 128, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 4000000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"MP3-128 - audio only\"}], \"webpage_url\": \"http://www.mdr.de/kultur/audio1312272_zc-15948bad_zs-86171fdd.html\", \"original_url\": \"http://www.mdr.de/kultur/audio1312272_zc-15948bad_zs-86171fdd.html\", \"webpage_url_basename\": \"audio1312272_zc-15948bad_zs-86171fdd.html\", \"webpage_url_domain\": \"mdr.de\", \"extractor\": \"MDR\", \"extractor_key\": \"MDR\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1312272\", \"fulltitle\": \"Feuilleton vom 30. Oktober\", \"duration_string\": \"4:10\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://mdr-pd.test/1312272.mp3\", \"format_id\": \"MP3-128\", \"abr\": 128, \"vbr\": 0, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"tbr\": 128, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"filesize_approx\": 4000000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"MP3-128 - audio only\", \"_filename\": \"Feuilleton vom 30. Oktober [1312272].mp3\", \"filename\": \"Feuilleton vom 30. Oktober [1312272].mp3\", \"__write_download_archive\": false}], \"url\": \"https://mdr-pd.test/1312272.mp3\", \"format_id\": \"MP3-128\", \"filesize\": null, \"abr\": 128, \"vbr\": 0, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"tbr\": 128, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 4000000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"MP3-128 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.mdr.de/x/video-1.html",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [MDR] 1: Could not find XML element title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.mdr.de/x/video-2.html",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [MDR] 2: Could not find XML element's text title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.mdr.de/x/video-3.html",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [MDR] 3: Unable to extract data url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

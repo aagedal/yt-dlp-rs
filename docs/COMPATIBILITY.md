@@ -2728,6 +2728,20 @@ from webpage` when absent); otherwise the page is a playlist
 `tests/fixtures/sites/rottentomatoes/` is compared with pinned upstream
 output.
 
+MDR.DE videos and audio (`mdr.de/.../NAME-ID[_...].html`) follow upstream
+`MDRIE` (geo countries `DE`): the page's `dataURL`/`playerXml` `-avCustom.xml`
+URL (fatal; `\/` unescaped, joined with the page URL) and that XML document's
+`title` (else `broadcast/broadcastName`; fatal, with upstream's element and
+text errors), then each asset's `download`, `progressiveDownload`,
+`dynamicHttpStreamingRedirector` and `adaptiveHttpStreamingRedirector` URLs
+(each distinct URL once): `.m3u8` as a non-fatal HLS master playlist (`HLS`)
+and `.f4m` as non-fatal HDS (`HDS`, with upstream's `hdcore` query), both
+quality 1, other URLs as `MEDIATYPE-KBPS` formats (bitrates divided by 1000
+like `int_or_none(..., 1000)`, frame size only with a video bitrate, `vcodec
+none` for audio documents). Description, the first broadcast date as the
+timestamp, duration and `rights` as the uploader. `tests/fixtures/sites/mdr/`
+is compared with pinned upstream output.
+
 Medal.tv clips (`medal.tv/games/GAME/clips/ID`) follow upstream `MedalTVIE`:
 the `medal.tv/api/content/ID` JSON (`Accept: application/json`; fatal), its
 `contentUrlHls` playlist as fatal `hls` formats (master playlist only,
