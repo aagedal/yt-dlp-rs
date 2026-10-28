@@ -1772,6 +1772,18 @@ progressive `http[-LABEL]` files, and the title, description, duration, poster
 and space-delimited ISO 8601 timestamp. Responses without the expected video
 ID or item are explicit native errors.
 
+TVI Player videos and episodes (`tviplayer.iol.pt/[programa/SLUG/ID/]TYPE/ID`)
+follow upstream `TVIPlayerIE`: a `wmsAuthSign` token from
+`services.iol.pt/matrix` (fetched once per run, before the first `Extracting
+URL` line), the page's `opts = {video: [...]}` player JSON (missing JSON is
+upstream's `Unable to extract JSON data`, a missing `videoUrl` its
+`KeyError`), the `videoUrl` HLS signed with the token (fatal, with
+subtitles), the player's title and cover (else Open Graph), duration and
+episode number, and the first JSON-LD `TVEpisode` season number. Player JSON
+that does not parse and non-string video URLs, titles or covers are
+unsupported errors. `tests/fixtures/sites/tviplayer/` is compared with pinned
+upstream output.
+
 TV Noe programmes (`tvnoe.cz/porad/ID`) follow upstream `TVNoeIE`: the page's
 `var INIT_PLAYER` object (through `js_to_json`, else the fatal `Unable to
 extract init player`) gives, from each `tracks` group's entries with a URL

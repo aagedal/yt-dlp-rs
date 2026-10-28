@@ -3666,6 +3666,18 @@
       "scope": "TvigleIE cloud play API HLS/DASH/progressive formats, geo and API errors, and cloud player embeds on generic pages, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "tviplayer",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tviplayer.py"
+      ],
+      "rust": [
+        "src/extractor/tviplayer.rs",
+        "tests/fixtures/sites/tviplayer/"
+      ],
+      "scope": "TVIPlayerIE wmsAuthSign token (once per run), opts player JSON HLS formats and subtitles, Open Graph title/thumbnail fallbacks, duration, episode number and JSON-LD TVEpisode season compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "tweakers",
       "status": "partial",
       "upstream": [
