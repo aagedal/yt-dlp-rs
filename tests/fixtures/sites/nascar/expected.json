@@ -1,0 +1,114 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://classics.nascar.com/video/Ka5qGuxzZ~SIvJii7uAC~wszPshklHN",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"Ka5qGuxzZ~SIvJii7uAC~wszPshklHN\", \"formats\": [{\"format_id\": \"640\", \"format_index\": null, \"url\": \"https://va.nascar.test/a/lo/index.m3u8\", \"manifest_url\": \"https://va.nascar.test/a/master.m3u8\", \"tbr\": 640.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"640 - 640x360\"}, {\"format_id\": \"1280\", \"format_index\": null, \"url\": \"https://va.nascar.test/a/hi/index.m3u8\", \"manifest_url\": \"https://va.nascar.test/a/master.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1280 - 1280x720\"}], \"title\": \"Cook Out 400 2023\", \"description\": \"Richmond race\", \"thumbnail\": \"https://va.aws.nascar.test/IMAGES/a.jpg\", \"tags\": [\"2023\", \"race #22\", \"cup\"], \"timestamp\": 1690732800, \"chapters\": [{\"start_time\": 0.0, \"title\": \"Start\", \"end_time\": 95.5}, {\"start_time\": 95.5, \"title\": \"Lap 10\", \"end_time\": 300.0}, {\"start_time\": 300.0, \"end_time\": 1.0, \"title\": \"<Untitled Chapter 3>\"}, {\"start_time\": 1.0, \"end_time\": 1000.0, \"title\": \"<Untitled Chapter 4>\"}, {\"start_time\": 1000.0, \"title\": \"Sci\", \"end_time\": null}], \"webpage_url\": \"https://classics.nascar.com/video/Ka5qGuxzZ~SIvJii7uAC~wszPshklHN\", \"original_url\": \"https://classics.nascar.com/video/Ka5qGuxzZ~SIvJii7uAC~wszPshklHN\", \"webpage_url_basename\": \"Ka5qGuxzZ~SIvJii7uAC~wszPshklHN\", \"webpage_url_domain\": \"classics.nascar.com\", \"extractor\": \"NascarClassics\", \"extractor_key\": \"NascarClassics\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://va.aws.nascar.test/IMAGES/a.jpg\", \"id\": \"0\"}], \"display_id\": \"Ka5qGuxzZ~SIvJii7uAC~wszPshklHN\", \"fulltitle\": \"Cook Out 400 2023\", \"upload_date\": \"20230730\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"1280\", \"url\": \"https://va.nascar.test/a/hi/index.m3u8\", \"manifest_url\": \"https://va.nascar.test/a/master.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1280 - 1280x720\", \"_filename\": \"Cook Out 400 2023 [Ka5qGuxzZ~SIvJii7uAC~wszPshklHN].mp4\", \"filename\": \"Cook Out 400 2023 [Ka5qGuxzZ~SIvJii7uAC~wszPshklHN].mp4\", \"__write_download_archive\": false}], \"format_id\": \"1280\", \"format_index\": null, \"url\": \"https://va.nascar.test/a/hi/index.m3u8\", \"manifest_url\": \"https://va.nascar.test/a/master.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1280 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.classics.nascar.com/video/Ka5qGuxzZ~SIvJii7uAC~wszPshklHN",
+   "args": [
+    "--print",
+    "%(title)s|%(tags)s|%(chapters)j|%(upload_date)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "Cook Out 400 2023|['2023', 'race #22', 'cup']|[{\"start_time\": 0.0, \"title\": \"Start\", \"end_time\": 95.5}, {\"start_time\": 95.5, \"title\": \"Lap 10\", \"end_time\": 300.0}, {\"start_time\": 300.0, \"end_time\": 1.0, \"title\": \"<Untitled Chapter 3>\"}, {\"start_time\": 1.0, \"end_time\": 1000.0, \"title\": \"<Untitled Chapter 4>\"}, {\"start_time\": 1000.0, \"title\": \"Sci\", \"end_time\": null}]|20230730"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://classics.nascar.com/video/late-start",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"late-start\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://va.nascar.test/b/index.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"chapters\": [{\"start_time\": 0, \"end_time\": 60.0, \"title\": \"<Untitled Chapter 1>\"}, {\"start_time\": 60.0, \"title\": \"Late start\", \"end_time\": null}], \"webpage_url\": \"https://classics.nascar.com/video/late-start\", \"original_url\": \"https://classics.nascar.com/video/late-start\", \"webpage_url_basename\": \"late-start\", \"webpage_url_domain\": \"classics.nascar.com\", \"extractor\": \"NascarClassics\", \"extractor_key\": \"NascarClassics\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"late-start\", \"fulltitle\": null, \"title\": \"NascarClassics video #late-start\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"0\", \"url\": \"https://va.nascar.test/b/index.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"NascarClassics video #late-start [late-start].mp4\", \"filename\": \"NascarClassics video #late-start [late-start].mp4\", \"__write_download_archive\": false}], \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://va.nascar.test/b/index.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://classics.nascar.com/video/bare",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"bare\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://va.nascar.test/b/index.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"webpage_url\": \"https://classics.nascar.com/video/bare\", \"original_url\": \"https://classics.nascar.com/video/bare\", \"webpage_url_basename\": \"bare\", \"webpage_url_domain\": \"classics.nascar.com\", \"extractor\": \"NascarClassics\", \"extractor_key\": \"NascarClassics\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"bare\", \"fulltitle\": null, \"title\": \"NascarClassics video #bare\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://va.nascar.test/b/index.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"NascarClassics video #bare [bare].mp4\", \"filename\": \"NascarClassics video #bare [bare].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://classics.nascar.com/video/no-content",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: no-content: An extractor error has occurred. (caused by KeyError('contentData')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://classics.nascar.com/video/no-src",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: no-src: An extractor error has occurred. (caused by KeyError('src')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://classics.nascar.com/video/no-next",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [NascarClassics] no-next: Unable to extract next.js data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://classics.nascar.com/video/gone",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [NascarClassics] gone: Failed to download m3u8 information: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

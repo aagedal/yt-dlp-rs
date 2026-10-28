@@ -3998,6 +3998,17 @@ the page's fatal `rel="videolink"` URL is followed through the registry as a
 `url_result`. A link that is not an absolute URL remains an explicit native
 error.
 
+NASCAR Classics videos (`[www.]classics.nascar.com/video/ID`) follow upstream
+`NascarClassicsIE`: the page's fatal Next.js `contentData` (missing keys are
+upstream's `KeyError` messages), its input's `src` master playlist as fatal
+HLS formats (variants are not fetched), the string name, non-empty
+description, URL thumbnail, string tags and ISO 8601 `start_time` timestamp,
+and the first overlay timeline's events whose `timestamp` passes Python
+`float()` as chapters (`start_time`, string `title`). A non-string or
+non-URL source and non-finite or underscored chapter timestamps remain
+explicit native errors. `tests/fixtures/sites/nascar/` is compared
+with pinned upstream output.
+
 Mocha videos (`video.mocha.com.vn/SLUG`) follow upstream `MochaVideoIE`: the
 `getVideoDetail` API (queried with the page URL) gives the `list_resolution`
 `video_path` playlists as fatal HLS formats and subtitles and the

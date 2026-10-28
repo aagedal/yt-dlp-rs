@@ -2408,6 +2408,18 @@
       "scope": "MyVidsterIE rel=videolink URL as a followed url_result and the fatal missing-link message compared with pinned upstream output through the fixture proxy; non-absolute links remain explicit native errors"
     },
     {
+      "name": "nascar",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nascar.py"
+      ],
+      "rust": [
+        "src/extractor/nascar.rs",
+        "tests/fixtures/sites/nascar/"
+      ],
+      "scope": "NascarClassicsIE Next.js content data with a fatal master HLS playlist, input metadata, float-filtered timeline chapters and KeyError/next.js/m3u8 error paths compared with pinned upstream output through the fixture proxy; non-string/non-URL sources and non-finite chapter timestamps remain explicit native errors"
+    },
+    {
       "name": "newsy",
       "status": "partial",
       "upstream": [
