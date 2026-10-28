@@ -4365,6 +4365,18 @@
       "scope": "VeoIE match API metadata and video list formats (mp2t and URL-less entries skipped, panorama URLs checked) and the no-formats error compared with pinned upstream output through the fixture proxy; non-object API values remain explicit native errors"
     },
     {
+      "name": "arnes",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/arnes.py"
+      ],
+      "rust": [
+        "src/extractor/arnes.rs",
+        "tests/fixtures/sites/arnes/"
+      ],
+      "scope": "ArnesIE public video API media files, metadata, channel URL, start time from the t query parameter, KeyError and missing-thumbnail TypeError errors, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "videopress",
       "status": "partial",
       "upstream": [

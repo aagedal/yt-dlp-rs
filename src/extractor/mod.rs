@@ -12,6 +12,7 @@ mod applepodcasts;
 mod archiveorg;
 mod arcpublishing;
 mod ard;
+mod arnes;
 mod arte;
 mod audimedia;
 mod audioboom;
@@ -411,6 +412,7 @@ pub use ard::{
     suitable as ard_suitable,
 };
 pub(crate) use ard::{fetch_pages as fetch_ard_pages, is_pending_state as ard_pending_state};
+pub use arnes::{Arnes, suitable as arnes_suitable};
 pub use arte::{
     ArteTv, ArteTvCategory, ArteTvEmbed, ArteTvPlaylist,
     category_suitable as artetv_category_suitable, embed_suitable as artetv_embed_suitable,

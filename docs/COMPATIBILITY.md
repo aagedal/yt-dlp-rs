@@ -2042,6 +2042,17 @@ formats and thumbnails, then the page's OpenGraph title and description,
 `EXT[-HEIGHTp]` formats, image thumbnails, description, duration, keywords and
 the URL's uploader ID.
 
+Arnes Video videos (`video.arnes.si/[LANG/]watch|embed|api/asset|api/public/video/ID`)
+follow upstream `ArnesIE` (`video.arnes.si`): the public video API's `data`
+(a missing `data` or `title` is the `KeyError` error) for its media files
+(the API base URL prefixed, `FORMAT_` removed from the format ID, the format
+translation as note, size), the prefixed thumbnail (a missing one is
+upstream's bare `TypeError` text), description, license, author as creator,
+ISO 8601 creation time, channel name, ID and URL (empty without an ID, like
+`format_field`), duration in seconds, views, hashtags and the URL's `t`
+query value as `start_time`. `tests/fixtures/sites/arnes/` is compared with
+pinned upstream output.
+
 VideoPress embeds (`videopress.com|video.wordpress.com/embed/ID`) follow
 upstream `VideoPressIE`: the `public-api.wordpress.com/rest/v1.1/videos/ID`
 JSON, requested with a random 1950-1995 `birth_year`/`birth_month`/`birth_day`
