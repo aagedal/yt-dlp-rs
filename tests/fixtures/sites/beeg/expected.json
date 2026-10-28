@@ -1,0 +1,62 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://beeg.com/-0983946056129650",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0983946056129650\", \"display_id\": \"2540839\", \"title\": \"Fixture plane clip\", \"description\": \"Placeholder story.\", \"timestamp\": 1643656455, \"duration\": 927, \"tags\": [\"alpha\", \"beta\"], \"formats\": [{\"format_id\": \"480\", \"format_index\": null, \"url\": \"https://video.beeg.com/key=abc/480.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"height\": 480, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"480 - 480p\"}, {\"format_id\": \"720-1500\", \"format_index\": null, \"url\": \"https://video.beeg.com/key=abc/v720.m3u8\", \"manifest_url\": \"https://video.beeg.com/key=abc/720.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720-1500 - 1280x720\"}], \"age_limit\": 18, \"webpage_url\": \"https://beeg.com/-0983946056129650\", \"original_url\": \"https://beeg.com/-0983946056129650\", \"webpage_url_basename\": \"-0983946056129650\", \"webpage_url_domain\": \"beeg.com\", \"extractor\": \"Beeg\", \"extractor_key\": \"Beeg\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Fixture plane clip\", \"duration_string\": \"15:27\", \"upload_date\": \"20220131\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"720-1500\", \"url\": \"https://video.beeg.com/key=abc/v720.m3u8\", \"manifest_url\": \"https://video.beeg.com/key=abc/720.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720-1500 - 1280x720\", \"_filename\": \"Fixture plane clip [0983946056129650].mp4\", \"filename\": \"Fixture plane clip [0983946056129650].mp4\", \"__write_download_archive\": false}], \"format_id\": \"720-1500\", \"format_index\": null, \"url\": \"https://video.beeg.com/key=abc/v720.m3u8\", \"manifest_url\": \"https://video.beeg.com/key=abc/720.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720-1500 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://beeg.com/-0983946056129650",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Beeg] Extracting URL: https://beeg.com/-0983946056129650",
+    "[Beeg] 0983946056129650: Downloading webpage",
+    "[Beeg] 0983946056129650: Downloading JSON for 0983946056129650",
+    "[Beeg] 0983946056129650: Downloading m3u8 information",
+    "[Beeg] 0983946056129650: Downloading m3u8 information",
+    "[info] Available formats for 0983946056129650:",
+    "ID       EXT RESOLUTION |   FILESIZE   TBR PROTO | VCODEC      ACODEC",
+    "------------------------------------------------------------------------",
+    "480      mp4 480p       |                  m3u8  | unknown     unknown",
+    "720-1500 mp4 1280x720   | ~165.76MiB 1500k m3u8  | avc1.64001f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://beeg.com/1277207756",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1277207756\", \"display_id\": \"2569965\", \"title\": \"Second clip\", \"description\": null, \"timestamp\": 1643623200, \"tags\": [], \"formats\": [{\"format_id\": \"None-1500\", \"format_index\": null, \"url\": \"https://video.beeg.com/key=def/v720.m3u8\", \"manifest_url\": \"https://video.beeg.com/key=def/multi.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": null, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x?\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"None-1500 - 1280x?\"}], \"age_limit\": null, \"webpage_url\": \"https://beeg.com/1277207756\", \"original_url\": \"https://beeg.com/1277207756\", \"webpage_url_basename\": \"1277207756\", \"webpage_url_domain\": \"beeg.com\", \"extractor\": \"Beeg\", \"extractor_key\": \"Beeg\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Second clip\", \"upload_date\": \"20220131\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"None-1500\", \"format_index\": null, \"url\": \"https://video.beeg.com/key=def/v720.m3u8\", \"manifest_url\": \"https://video.beeg.com/key=def/multi.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": null, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x?\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"None-1500 - 1280x?\", \"_filename\": \"Second clip [1277207756].mp4\", \"filename\": \"Second clip [1277207756].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://beeg.com/video/1941093077",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Beeg] 1941093077: Failed to download m3u8 information: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

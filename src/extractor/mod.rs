@@ -16,6 +16,7 @@ mod audiomack;
 mod baidu;
 mod bandcamp;
 mod beacon;
+mod beeg;
 mod behindkink;
 mod bfmtv;
 mod bigo;
@@ -72,6 +73,7 @@ mod ebay;
 mod egghead;
 mod elonet;
 mod epoch;
+mod eporner;
 mod erocast;
 mod err;
 mod ettutv;
@@ -329,11 +331,13 @@ mod worldstarhiphop;
 mod wsj;
 mod xboxclips;
 mod xiaohongshu;
+mod xnxx;
 mod xspf;
 mod xvideos;
 mod yappy;
 mod yfanefa;
 mod yle_areena;
+mod youjizz;
 pub(crate) mod youtube;
 mod zdf;
 mod zhihu;
@@ -370,6 +374,7 @@ pub use audiomack::{
 pub use baidu::{BaiduVideo, suitable as baidu_suitable};
 pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use beacon::{BeaconTv, suitable as beacon_suitable};
+pub use beeg::{Beeg, suitable as beeg_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};
 pub use bfmtv::{
     Bfmtv, BfmtvArticle, BfmtvLive, article_suitable as bfmtv_article_suitable,
@@ -464,6 +469,7 @@ pub use egghead::{
 };
 pub use elonet::{Elonet, suitable as elonet_suitable};
 pub use epoch::{Epoch, suitable as epoch_suitable};
+pub use eporner::{Eporner, suitable as eporner_suitable};
 pub use erocast::{Erocast, suitable as erocast_suitable};
 pub use err::{
     ErrArhiiv, ErrJupiter, arhiiv_suitable as err_arhiiv_suitable,
@@ -924,6 +930,7 @@ pub use wsj::{
 };
 pub use xboxclips::{XboxClips, suitable as xboxclips_suitable};
 pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};
+pub use xnxx::{Xnxx, suitable as xnxx_suitable};
 pub use xvideos::{
     XVideos, XVideosQuickies, quickies_suitable as xvideos_quickies_suitable,
     suitable as xvideos_suitable,
@@ -934,6 +941,7 @@ pub use yappy::{
 pub(crate) use yappy::{fetch_pages as fetch_yappy_pages, is_pending_state as yappy_pending_state};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub use yle_areena::{YleAreena, suitable as yle_areena_suitable};
+pub use youjizz::{YouJizz, suitable as youjizz_suitable};
 pub(crate) use youtube::YoutubeUnsupported;
 pub(crate) use youtube::clip::YoutubeClip;
 pub(crate) use youtube::comments::post_extract as youtube_comments;

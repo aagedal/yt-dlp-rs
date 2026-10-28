@@ -3328,6 +3328,48 @@ requested (`Checking FORMAT video format URL`) and dropped after an HTTP error
 `#quickies/a/ID` links follow the video page. `age_limit` is 18.
 `tests/fixtures/sites/xvideos/` is compared with pinned upstream output.
 
+Beeg videos (`[www.]beeg.com[/video]/[-]ID`) follow upstream `BeegIE`: the
+page (for the RTA age limit) and the `store.externulls.com/facts/file/ID`
+JSON, whose fact with the lowest `id` gives the display ID, the
+`fc_created` timestamp and, when the file has none, the HLS resources. Each
+non-empty resource is a fatal `video.beeg.com/URI` playlist with the
+`fl_cdn_N` height as its `m3u8_id` (`None` without one), every format's
+height set to it like upstream; the file gives the title, story,
+duration and tag names. Files without a facts list or HLS resources (an
+upstream `TypeError`/`AttributeError`) are unsupported errors.
+`tests/fixtures/sites/beeg/` is compared with pinned upstream output.
+
+Eporner videos (`eporner.com/hd-porn|embed/ID[/SLUG]`, `video-ID[/SLUG]`)
+follow upstream `EpornerIE`: the page (by its slug) and its fatal 32-digit
+`hash`, encoded in base 36 per 8-digit block like upstream's `calc_hash` for
+the `xhr/video/ID` JSON (`available: false` is `Eporner said: MESSAGE`; a
+missing `sources` is upstream's `KeyError`), the OpenGraph or `<title>`
+title, non-fatal `hls` master playlists and HTTP(S) MP4 sources with their
+`Np`/`Nfps` height and FPS, plus `-av1.mp4` variants when the page has a
+`download-av1` element, merged like `merge_dicts` under the page's JSON-LD
+with the `duration` meta, `cinemaviews1` view count and `age_limit` 18.
+`tests/fixtures/sites/eporner/` is compared with pinned upstream output.
+
+XNXX videos (`video|www.xnxx[3].com/video[-]ID/`) follow upstream `XNXXIE`:
+the OpenGraph title (else the page's fatal `setVideoTitle`), each
+`setVideoUrlLow`/`setVideoUrlHigh` call as a progressive format (`low` has
+quality -1, others 0) and `setVideoHLS` as a non-fatal `hls` master playlist
+with quality 1 (a non-`m3u8` URL is a progressive format without an ID),
+the OpenGraph image or `setThumbUrl`/`setThumbUrl169` thumbnail (warning
+like upstream when missing), the fatal `og:duration`, the `nb-views-number`
+view count and `age_limit` 18. `tests/fixtures/sites/xnxx/` is compared with
+pinned upstream output.
+
+YouJizz videos (`[SUB.]youjizz.com/videos/SLUG-ID.html`, `.../embed/ID`)
+follow upstream `YouJizzIE`: the `<title>` (warning like upstream when
+missing), the page's `encodings` JSON (non-fatal `hls` playlists for
+`m3u8` files, other files as progressive formats named by `name` or
+`quality` with its `Np` height), else the first HTML5 media entry of the
+page with upstream's `"controls` fix (none is upstream's `list index out of
+range`), the runtime, uploader and the RTA age limit. Encodings that are not
+JSON or lack a name (upstream `TypeError`s) are unsupported errors.
+`tests/fixtures/sites/youjizz/` is compared with pinned upstream output.
+
 TV 2 videos (`tv2.no/v|video[N]/.../ID`) follow upstream `TV2IE`: the
 `sumo.tv2.no` asset metadata, then the HLS and DASH playback JSON (POSTed
 like upstream; a 401's error code is the Norway geo restriction, the

@@ -1,0 +1,88 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.eporner.com/hd-porn/95008/Infamous-Tiffany-Teen-Strip-Tease-Video/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Fixture & Clip\", \"description\": \"A placeholder description.\", \"thumbnails\": [{\"url\": \"https://static.eporner.test/thumbs/95008.jpg\", \"id\": \"0\"}], \"duration\": 1838, \"timestamp\": 1232524522, \"id\": \"95008\", \"display_id\": \"Infamous-Tiffany-Teen-Strip-Tease-Video\", \"view_count\": 12345, \"formats\": [{\"url\": \"https://cdn.eporner.test/95008/240p.mp4\", \"format_id\": \"240p\", \"height\": 240, \"fps\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"240p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"240p - 240p\"}, {\"url\": \"https://cdn.eporner.test/95008/240p-av1.mp4\", \"format_id\": \"av1-240p\", \"height\": 240, \"fps\": null, \"vcodec\": \"av1\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"240p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"av1-240p - 240p\"}, {\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://cdn.eporner.test/95008/360/index.m3u8\", \"manifest_url\": \"https://cdn.eporner.test/95008/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"url\": \"https://cdn.eporner.test/95008/1080p60.mp4\", \"format_id\": \"1080p_60fps_\", \"height\": 1080, \"fps\": 60, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080p_60fps_ - 1080p\"}, {\"url\": \"https://cdn.eporner.test/95008/1080p60-av1.mp4\", \"format_id\": \"av1-1080p_60fps_\", \"height\": 1080, \"fps\": 60, \"vcodec\": \"av1\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"av1-1080p_60fps_ - 1080p\"}], \"age_limit\": 18, \"webpage_url\": \"http://www.eporner.com/hd-porn/95008/Infamous-Tiffany-Teen-Strip-Tease-Video/\", \"original_url\": \"http://www.eporner.com/hd-porn/95008/Infamous-Tiffany-Teen-Strip-Tease-Video/\", \"webpage_url_basename\": \"Infamous-Tiffany-Teen-Strip-Tease-Video\", \"webpage_url_domain\": \"eporner.com\", \"extractor\": \"Eporner\", \"extractor_key\": \"Eporner\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://static.eporner.test/thumbs/95008.jpg\", \"fulltitle\": \"Fixture & Clip\", \"duration_string\": \"30:38\", \"upload_date\": \"20090121\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cdn.eporner.test/95008/1080p60-av1.mp4\", \"format_id\": \"av1-1080p_60fps_\", \"height\": 1080, \"fps\": 60, \"vcodec\": \"av1\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"av1-1080p_60fps_ - 1080p\", \"_filename\": \"Fixture & Clip [95008].mp4\", \"filename\": \"Fixture & Clip [95008].mp4\", \"__write_download_archive\": false}], \"url\": \"https://cdn.eporner.test/95008/1080p60-av1.mp4\", \"format_id\": \"av1-1080p_60fps_\", \"height\": 1080, \"fps\": 60, \"vcodec\": \"av1\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"av1-1080p_60fps_ - 1080p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.eporner.com/hd-porn/95008/Infamous-Tiffany-Teen-Strip-Tease-Video/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Eporner] Extracting URL: http://www.eporner.com/hd-porn/95008/Infamous-Tiffany-Teen-Strip-Tease-Video/",
+    "[Eporner] Infamous-Tiffany-Teen-Strip-Tease-Video: Downloading webpage",
+    "[Eporner] Infamous-Tiffany-Teen-Strip-Tease-Video: Downloading video JSON",
+    "[Eporner] Infamous-Tiffany-Teen-Strip-Tease-Video: Downloading m3u8 information",
+    "[info] Available formats for 95008:",
+    "ID               EXT RESOLUTION FPS |   FILESIZE  TBR PROTO | VCODEC      ACODEC",
+    "-----------------------------------------------------------------------------------",
+    "240p             mp4 240p           |                 https | unknown     unknown",
+    "av1-240p         mp4 240p           |                 https | av1         unknown",
+    "hls-921          mp4 640x360        | ~201.80MiB 921k m3u8  | avc1.4d401e mp4a.40.2",
+    "1080p_60fps_     mp4 1080p       60 |                 https | unknown     unknown",
+    "av1-1080p_60fps_ mp4 1080p       60 |                 https | av1         unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.eporner.com/video-FJsA19J3Y3H/one-of-the-greats/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"FJsA19J3Y3H\", \"display_id\": \"one-of-the-greats\", \"title\": \"Plain Title & More\", \"formats\": [{\"url\": \"https://cdn.eporner.test/FJsA19J3Y3H/720.mp4\", \"format_id\": \"720p_HD\", \"height\": 720, \"fps\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p_HD - 720p\"}], \"age_limit\": 18, \"webpage_url\": \"https://www.eporner.com/video-FJsA19J3Y3H/one-of-the-greats/\", \"original_url\": \"https://www.eporner.com/video-FJsA19J3Y3H/one-of-the-greats/\", \"webpage_url_basename\": \"one-of-the-greats\", \"webpage_url_domain\": \"eporner.com\", \"extractor\": \"Eporner\", \"extractor_key\": \"Eporner\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Plain Title & More\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.eporner.test/FJsA19J3Y3H/720.mp4\", \"format_id\": \"720p_HD\", \"height\": 720, \"fps\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p_HD - 720p\", \"_filename\": \"Plain Title & More [FJsA19J3Y3H].mp4\", \"filename\": \"Plain Title & More [FJsA19J3Y3H].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.eporner.com/embed/3YRUtzMcWn0",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Eporner] 3YRUtzMcWn0: Eporner said: This video has been removed."
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.eporner.com/hd-porn/nohash",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Eporner] nohash: Unable to extract hash; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.eporner.com/hd-porn/nosrc/Some-Slug",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: nosrc: An extractor error has occurred. (caused by KeyError('sources')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
