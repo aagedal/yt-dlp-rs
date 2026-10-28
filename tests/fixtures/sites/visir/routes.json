@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://www.visir.is/k/eabb8f7f-ad87-46fb-9469-a0f1dc0fc4bc-1769022963988",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div class=\"article-item press-ads\"><span class=\"article-item__date\">21. janúar 2026</span><div class=\"text -large\"><p>Sveppi og Siggi</p><p>ræða málin.</p></div><span class=\"article-item__viewcount\">1234</span></div><script>App.Player.Init({ File: 'island-i-dag/eabb8f7f-ad87-46fb-9469-a0f1dc0fc4bc-1769022963988.m3u8', Title: 'Sveppi &amp; Siggi', Categoryname: 'island-i-dag', MediaDuration: '792', Image: 'https://www.visir.is/i/thumb.jpg' });</script>"
+  },
+  {
+   "url": "https://vod.visir.is/island-i-dag/eabb8f7f-ad87-46fb-9469-a0f1dc0fc4bc-1769022963988.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.visir.is/player/0cd5709e-1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta property=\"og:url\" content=\"https://www.visir.is/k/eabb8f7f-ad87-46fb-9469-a0f1dc0fc4bc-1769022963988/sveppi\">"
+  },
+  {
+   "url": "https://www.visir.is/k/eabb8f7f-ad87-46fb-9469-a0f1dc0fc4bc-1769022963988/sveppi",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div class=\"article-item press-ads\"><span class=\"article-item__date\">21. janúar 2026</span><div class=\"text -large\"><p>Sveppi og Siggi</p><p>ræða málin.</p></div><span class=\"article-item__viewcount\">1234</span></div><script>App.Player.Init({ File: 'island-i-dag/eabb8f7f-ad87-46fb-9469-a0f1dc0fc4bc-1769022963988.m3u8', Title: 'Sveppi &amp; Siggi', Categoryname: 'island-i-dag', MediaDuration: '792', Image: 'https://www.visir.is/i/thumb.jpg' });</script>"
+  },
+  {
+   "url": "https://www.visir.is/player/0cd5709e-2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta property=\"og:url\" content=\"https://www.visir.is/g/2026/frett\">"
+  },
+  {
+   "url": "https://www.visir.is/k/0abc-3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>enginn spilari</html>"
+  },
+  {
+   "url": "https://www.visir.is/k/0abc-4",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>App.Player.Init({ Title: 'Engin skrá' });</script>"
+  },
+  {
+   "url": "https://www.visir.is/g/20262837896d/frett",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<p>frétt</p><iframe width=\"1\" src=\"https://www.visir.is/k/eabb8f7f-ad87-46fb-9469-a0f1dc0fc4bc-1769022963988/sveppi\"></iframe>"
+  }
+ ]
+}

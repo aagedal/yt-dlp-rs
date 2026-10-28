@@ -2085,6 +2085,17 @@ heights and `bit_rate / 1000` integer VBRs); entries without a URL and
 usable videos is upstream's `No video formats found!`. API values that are not
 objects or lists remain explicit native errors.
 
+Vísir clips (`visir.is/k/ID[/SLUG]`) follow upstream `VisirIE`: the article
+date (`D. MONTH YYYY` with Icelandic month names), the `App.Player.Init(...)`
+options (through `js_to_json`; fatal, with upstream's swapped name/ID in its
+error) and their `File` joined with `https://vod.visir.is/` as a fatal HLS
+master playlist (a missing one is `Failed to obtain m3u8 URL`), the
+`press-ads` article's description and view count, and the player's title,
+category, duration and image. Player pages (`visir.is/player/ID`) follow
+their OpenGraph URL when it is a clip (else `Unsupported URL`), and player
+iframes on other pages are followed like upstream's `_EMBED_REGEX`.
+`tests/fixtures/sites/visir/` is compared with pinned upstream output.
+
 Vimeo videos (`vimeo.com/ID`, `player.vimeo.com/video/ID`, channel, album
 or showcase and `user` clip URLs) follow upstream `VimeoIE` without
 impersonation (HTTPS pages impersonated with the `impersonate` feature,

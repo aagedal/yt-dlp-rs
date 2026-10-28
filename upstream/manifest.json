@@ -3221,6 +3221,18 @@
       "scope": "VidyardIE watch/share/play URLs through the player JSON payload: single chapters as videos and multi-chapter players as playlists, auto-master (else variant) HLS formats and subtitles with the play.vidyard.com Referer, progressive http-TYPE-PROFILE formats (mimetype2ext, parse_resolution, duplicate URLs removed), vttUrl captions, the non-fatal video metadata endpoint (title, duration, thumbnails, videoSections chapters) in upstream's dict order, KeyError messages, and _extract_embed_urls (iframe, vidyard-player-embed data-uuid, vidyard_embed_code script) on generic pages, compared with pinned upstream output through the fixture proxy; playlist entries are extracted eagerly (upstream's lazy generator would surface a chapter KeyError as an uncaught exception) and non-string profiles/caption fields/player names are explicit native errors"
     },
     {
+      "name": "visir",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/visir.py"
+      ],
+      "rust": [
+        "src/extractor/visir.rs",
+        "tests/fixtures/sites/visir/"
+      ],
+      "scope": "VisirIE App.Player.Init HLS clips with article metadata, player-page redirects and player embeds on generic pages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "vimeo",
       "status": "partial",
       "upstream": [

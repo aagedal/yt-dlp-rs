@@ -260,6 +260,7 @@ mod veo;
 mod videopress;
 pub(crate) mod vidyard;
 mod vimeo;
+mod visir;
 mod vk;
 mod vkplay;
 mod vocaroo;
@@ -748,6 +749,7 @@ pub use veo::{Veo, suitable as veo_suitable};
 pub use videopress::{VideoPress, suitable as videopress_suitable};
 pub use vidyard::{Vidyard, suitable as vidyard_suitable};
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
+pub use visir::{Visir, suitable as visir_suitable};
 pub use vk::{
     Vk, VkUserVideos, VkWallPost, suitable as vk_suitable,
     user_videos_suitable as vk_user_videos_suitable, wall_post_suitable as vk_wall_post_suitable,
