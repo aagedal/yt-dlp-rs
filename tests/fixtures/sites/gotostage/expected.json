@@ -1,0 +1,114 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.gotostage.com/channel/8901680603948959494/recording/60bb5554/watch",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"60bb5554\", \"title\": \"What is GoToStage?\", \"url\": \"https://cdn.gotostage.test/60bb5554.mp4\", \"ext\": \"mp4\", \"thumbnail\": \"https://cdn.gotostage.test/thumb.jpg\", \"duration\": 93.924711, \"categories\": [\"Marketing\"], \"is_live\": false, \"webpage_url\": \"https://www.gotostage.com/channel/8901680603948959494/recording/60bb5554/watch\", \"original_url\": \"https://www.gotostage.com/channel/8901680603948959494/recording/60bb5554/watch\", \"webpage_url_basename\": \"watch\", \"webpage_url_domain\": \"gotostage.com\", \"extractor\": \"GoToStage\", \"extractor_key\": \"GoToStage\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.gotostage.test/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"60bb5554\", \"fulltitle\": \"What is GoToStage?\", \"duration_string\": \"1:33\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"What is GoToStage\\uff1f [60bb5554].mp4\", \"filename\": \"What is GoToStage\\uff1f [60bb5554].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.gotostage.com/channel/8901680603948959494/recording/60bb5554/watch?source=HOMEPAGE",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(duration)s|%(categories)s|%(is_live)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "60bb5554|What is GoToStage?|93.924711|['Marketing']|False|https://cdn.gotostage.test/60bb5554.mp4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.gotostage.com/channel/8901680603948959494/recording/abc123/watch",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"abc123\", \"title\": \"GoToStage video #abc123\", \"url\": \"https://cdn.gotostage.test/abc123.mp4\", \"ext\": \"mp4\", \"thumbnail\": null, \"categories\": [null], \"is_live\": false, \"webpage_url\": \"https://www.gotostage.com/channel/8901680603948959494/recording/abc123/watch\", \"original_url\": \"https://www.gotostage.com/channel/8901680603948959494/recording/abc123/watch\", \"webpage_url_basename\": \"watch\", \"webpage_url_domain\": \"gotostage.com\", \"extractor\": \"GoToStage\", \"extractor_key\": \"GoToStage\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"abc123\", \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"GoToStage video #abc123 [abc123].mp4\", \"filename\": \"GoToStage video #abc123 [abc123].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.gotostage.com/channel/8901680603948959494/recording/empty1/watch",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.gotostage.com/channel/8901680603948959494/recording/nokey1/watch",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: nokey1: An extractor error has occurred. (caused by KeyError('productRefKey')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.gotostage.com/channel/8901680603948959494/recording/regfail/watch",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [GoToStage] regfail: Unable to register user: HTTP Error 500: OK (caused by <HTTPError 500: OK>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.gotostage.com/channel/8901680603948959494/recording/nokey2/watch",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: nokey2: An extractor error has occurred. (caused by KeyError('registrationKey')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.gotostage.com/channel/8901680603948959494/recording/missing/watch",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [GoToStage] missing: Unable to download video metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

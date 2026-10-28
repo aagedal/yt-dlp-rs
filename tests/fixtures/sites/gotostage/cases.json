@@ -1,0 +1,51 @@
+[
+ {
+  "url": "https://www.gotostage.com/channel/8901680603948959494/recording/60bb5554/watch",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.gotostage.com/channel/8901680603948959494/recording/60bb5554/watch?source=HOMEPAGE",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(duration)s|%(categories)s|%(is_live)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://www.gotostage.com/channel/8901680603948959494/recording/abc123/watch",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.gotostage.com/channel/8901680603948959494/recording/empty1/watch",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.gotostage.com/channel/8901680603948959494/recording/nokey1/watch",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.gotostage.com/channel/8901680603948959494/recording/regfail/watch",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.gotostage.com/channel/8901680603948959494/recording/nokey2/watch",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.gotostage.com/channel/8901680603948959494/recording/missing/watch",
+  "args": [
+   "-J"
+  ]
+ }
+]

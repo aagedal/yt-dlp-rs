@@ -2768,6 +2768,18 @@ de-duplicated `drive.google.com/file/d/ID` URL entries; a failing folder
 request (upstream's `TypeError`) and non-string titles, IDs or page tokens
 are reported as unsupported.
 
+GoToStage recordings (`gotostage.com/channel/C/recording/ID/watch`) follow
+upstream `GoToStageIE`: the contents API's first item (an empty list is the
+bare `list index out of range`; missing `product`, `contentType` or
+`productRefKey` keys are upstream's `KeyError`s), upstream's placeholder
+registration POST (`Unable to register user` on errors other than its
+accepted 409) and its `registrationKey` as the `x-registrantkey` of the asset
+request (`Get download url`), as an untyped `mp4` result with the string
+title, `cdnLocation` URL, `url_or_none` thumbnail, float-only duration, the
+one-item string category list and `is_live: false`. Non-object responses
+and non-string registration keys stay explicit native errors.
+`tests/fixtures/sites/gotostage/` is compared with pinned upstream output.
+
 Graspop concerts (`vod.graspop.be/LL/ID/`) follow upstream `GraspopIE`: the
 Proximus festival stream's `source.assetUri` over `http:` as fatal HLS
 formats, the string `name` title (else the generic title) and the URL-valued

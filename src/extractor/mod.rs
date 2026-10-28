@@ -105,6 +105,7 @@ mod godtube;
 mod golem;
 mod goodgame;
 mod googledrive;
+mod gotostage;
 mod graspop;
 mod gronkh;
 mod harpodeon;
@@ -524,6 +525,7 @@ pub use googledrive::{
     GoogleDrive, GoogleDriveFolder, folder_suitable as googledrive_folder_suitable,
     suitable as googledrive_suitable,
 };
+pub use gotostage::{GoToStage, suitable as gotostage_suitable};
 pub use graspop::{Graspop, suitable as graspop_suitable};
 pub use gronkh::{Gronkh, suitable as gronkh_suitable};
 pub use harpodeon::{Harpodeon, suitable as harpodeon_suitable};
@@ -1743,7 +1745,15 @@ pub(crate) fn post_json_note_headers(
     headers: &[(&str, &str)],
     body: String,
 ) -> Result<serde_json::Value> {
-    post_json_with(client, url, (extractor, id), (note, None), headers, body)
+    post_json_with(
+        client,
+        url,
+        (extractor, id),
+        (note, None),
+        headers,
+        body,
+        &[],
+    )
 }
 
 /// [`post_json_note_headers`] with `errnote=` (`[EXTRACTOR] ID: ERRNOTE:
@@ -1763,6 +1773,29 @@ pub(crate) fn post_json_errnote(
         (note, Some(errnote)),
         headers,
         body,
+        &[],
+    )
+}
+
+/// [`post_json_errnote`] with `expected_status=`: those statuses' bodies are
+/// parsed instead of erroring.
+pub(crate) fn post_json_errnote_expecting(
+    client: &Client,
+    url: &Url,
+    (extractor, id): (&'static str, &str),
+    (note, errnote): (&str, &str),
+    headers: &[(&str, &str)],
+    body: String,
+    expected: &[u16],
+) -> Result<serde_json::Value> {
+    post_json_with(
+        client,
+        url,
+        (extractor, id),
+        (note, Some(errnote)),
+        headers,
+        body,
+        expected,
     )
 }
 
@@ -1776,7 +1809,15 @@ pub(crate) fn post_json_errnote_optional(
     headers: &[(&str, &str)],
     body: String,
 ) -> Result<Option<serde_json::Value>> {
-    match post_json_with(client, url, (extractor, id), (note, None), headers, body) {
+    match post_json_with(
+        client,
+        url,
+        (extractor, id),
+        (note, None),
+        headers,
+        body,
+        &[],
+    ) {
         Ok(value) => Ok(Some(value)),
         Err(crate::Error::ExtractorRequest { source, .. }) => {
             crate::screen::warning(&format!(
@@ -1796,11 +1837,13 @@ fn post_json_with(
     (note, errnote): (&str, Option<&str>),
     headers: &[(&str, &str)],
     body: String,
+    expected: &[u16],
 ) -> Result<serde_json::Value> {
     use std::io::Read;
     crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
     let data = body.clone();
-    let mut response = direct::post(client, url, headers, body).map_err(|error| match error {
+    let response = direct::post_expecting(client, url, headers, body, expected);
+    let mut response = response.map_err(|error| match error {
         crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => match errnote {
             Some(errnote) => {
                 crate::Error::Reported(request_errnote_text(extractor, id, errnote, &error))
