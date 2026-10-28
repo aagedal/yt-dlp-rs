@@ -767,6 +767,20 @@ first description text, upper-cased category, publication time, English
 subtitle file, query-less poster and the series from the header tab.
 `tests/fixtures/sites/startrek/` is compared with pinned upstream output.
 
+Star TV videos (`startv.com.tr/dizi|program/SHOW/bolumler|fragmanlar|ekstralar/ID`,
+`startv.com.tr/video/arsiv/dizi|program/SHOW/ID`, `startv`) follow upstream
+`StarTVIE`: the page's fatal `videoUrl` API URL (`Unable to extract video info
+url`), its JSON `data` object (missing or empty is upstream's `Failed to
+extract API data`), `str()` of its `id`, the title (else `og:title` with its
+warning), the `clean_html` description (else `og:description`), the
+`og:image` thumbnail made protocol-relative `http:` (with upstream's warning
+when missing), `int_or_none` `release_date` as `timestamp`, and the
+`flavors.hls` manifest as non-fatal `hls` formats (none is upstream's `Failed
+to obtain m3u8 URL` warning; a result without formats fails in processing).
+API IDs, titles or descriptions that are not scalars or strings and relative
+API or manifest URLs are explicit errors. `tests/fixtures/sites/startv/` is
+compared with pinned upstream output.
+
 Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
 `StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
 metadata`), its unavailable-status error, `reddit_title`/`title`, every file
@@ -1052,6 +1066,17 @@ upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 `var episode = {...};` script object through `js_to_json` (`mediaUrl`
 proto-relative as `https:` as the single format, raw `duration`; missing keys are
 upstream's `KeyError` extractor errors).
+
+美拍 videos (`meipai.com/media/ID`) follow upstream `MeipaiIE`: the generic
+title (`og:title`, else `<title>`, else processing's `Meipai video #ID`), the
+live recording's `encodeURIComponent` HLS URL as non-fatal `hls` formats, else
+the `data-video` URL (as written) as the single `http` format, and the
+non-fatal `og:video:release_date` (`unified_timestamp`), `og:video:tag` split
+on commas (missing is upstream's `[""]`), `interactionCount` and `duration`
+`<meta>` values, `og:video:director` as `creator`, `og:description` and
+`og:image`, each with upstream's warning when missing; a result without
+formats fails in processing. Relative HLS or video URLs are explicit errors.
+`tests/fixtures/sites/meipai/` is compared with pinned upstream output.
 
 Mixlr events (`[www.]USER.mixlr.com/events/ID`) follow upstream `MixlrIE`:
 the `api.mixlr.com/v3/channels/USER/events/ID` JSON's first included
@@ -4554,6 +4579,15 @@ value made protocol-relative `https:` (else upstream's `Unable to extract m3u8
 URL`) as fatal `hls` formats and subtitles, the `og:title` (else the
 `<title>` text with its warning, else the generic title) and the `og:image`
 thumbnail.
+
+Mirror articles (`mirror.co.uk/...-ID`) follow upstream `MirrorCoUKIE`: the
+page's fatal `json-placeholder` `data-json` object through `unescapeHTML`
+(upstream's `Unable to extract data` and `Failed to parse JSON` errors), and
+its `videoData.videoId` (missing keys are upstream's `KeyError`s) as a
+`url_transparent` result for `jwplatform:ID` with the article ID as
+`display_id`. Video data that are not objects and IDs that JW Platform does
+not accept are explicit errors. `tests/fixtures/sites/mirrorcouk/` is
+compared with pinned upstream output.
 
 Mixcloud shows (`mixcloud.com/USER/SLUG`) follow upstream `MixcloudIE`: the
 GraphQL cloudcast lookup (impersonated with the `impersonate` feature, else

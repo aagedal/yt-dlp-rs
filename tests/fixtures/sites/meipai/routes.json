@@ -1,0 +1,47 @@
+{
+ "routes": [
+  {
+   "url": "http://www.meipai.com/media/531697625",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><head><title>#葉子##阿桑# - 美拍</title>\n<meta property=\"og:title\" content=\"#葉子##阿桑##余姿昀##超級女聲#\">\n<meta property=\"og:description\" content=\"#葉子##阿桑##余姿昀##超級女聲#\">\n<meta property=\"og:image\" content=\"https://mvimg10.meitudata.com/575a0cd7c4b5e7071.jpg\">\n<meta property=\"og:video:release_date\" content=\"2016-06-09 17:13:40\">\n<meta property=\"og:video:tag\" content=\"葉子,阿桑,余姿昀,超級女聲\">\n<meta property=\"og:video:director\" content=\"她她-TATA\">\n<meta itemprop=\"interactionCount\" content=\" 35511 \">\n<meta itemprop=\"duration\" content=\"PT2M32S\">\n</head><body><div class=\"mp-h5-player\" data-video=\"https://mvvideo10.meitudata.com/575a0cd7c4b5e7071_H264_3.mp4?k=1&amp;t=2\" data-poster=\"x\"></div></body></html>"
+  },
+  {
+   "url": "http://www.meipai.com/media/585526361",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"姿昀和善願 練歌練琴啦😁😁😁\"><meta property=\"og:description\" content=\"live desc\"><meta property=\"og:image\" content=\"https://mvimg.test/live.jpg\">\n<meta property=\"og:video:release_date\" content=\"2016-09-19T19:03:19+0000\"><meta property=\"og:video:director\" content=\"她她-TATA\">\n<meta itemprop=\"interactionCount\" content=\"1215\"><meta itemprop=\"duration\" content=\"1:39:35\"></head>\n<body><script>player.setup({file: encodeURIComponent('https://record.test/meipai/585526361/master.m3u8'), autostart: true});</script>\n<div data-video=\"https://mvvideo.test/unused.mp4\"></div></body></html>"
+  },
+  {
+   "url": "https://record.test/meipai/585526361/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://meipai.com/media/700",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>\n Fallback   title </title></head><body><script>var x = {file:encodeURIComponent(\"https://record.test/meipai/missing.m3u8\")};</script>\n<a data-video='https://mvvideo.test/fallback.mp4'>play</a></body></html>"
+  },
+  {
+   "url": "https://record.test/meipai/missing.m3u8",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "gone"
+  },
+  {
+   "url": "http://www.meipai.com/media/800",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:description\" content=\"nothing\"></head><body>deleted</body></html>"
+  }
+ ]
+}

@@ -1,0 +1,34 @@
+[
+ {
+  "url": "https://www.startv.com.tr/dizi/cocuk/bolumler/3-bolum",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.startv.com.tr/dizi/cocuk/fragmanlar/5-bolum-fragmani",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.startv.com.tr/dizi/cocuk/fragmanlar/5-bolum-fragmani",
+  "args": [
+   "--ignore-no-formats-error",
+   "--print",
+   "%(id)s|%(display_id)s|%(title)s|%(description)s|%(thumbnail)s|%(timestamp)s|%(upload_date)s"
+  ]
+ },
+ {
+  "url": "https://www.startv.com.tr/video/arsiv/program/buyukrisk/buyuk-risk-334-bolum",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.startv.com.tr/program/burcu-ile-haftasonu/bolumler/1-bolum",
+  "args": [
+   "-J"
+  ]
+ }
+]

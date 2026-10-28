@@ -212,8 +212,10 @@ mod mediaite;
 mod mediaklikk;
 mod mediaworksnz;
 mod megaphone;
+mod meipai;
 mod melonvod;
 mod mir24tv;
+mod mirrorcouk;
 mod mixcloud;
 mod mixlr;
 mod mocha;
@@ -314,6 +316,7 @@ mod sport5;
 mod spreaker;
 mod srgssr;
 mod startrek;
+mod startv;
 mod steam;
 mod streamable;
 mod streamcz;
@@ -750,8 +753,10 @@ pub use mediaite::{Mediaite, suitable as mediaite_suitable};
 pub use mediaklikk::{MediaKlikk, suitable as mediaklikk_suitable};
 pub use mediaworksnz::{MediaWorksNzVod, suitable as mediaworksnz_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
+pub use meipai::{Meipai, suitable as meipai_suitable};
 pub use melonvod::{MelonVod, suitable as melonvod_suitable};
 pub use mir24tv::{Mir24Tv, suitable as mir24tv_suitable};
+pub use mirrorcouk::{MirrorCoUk, suitable as mirrorcouk_suitable};
 pub use mixcloud::{Mixcloud, suitable as mixcloud_suitable};
 pub use mixlr::{
     Mixlr, MixlrRecording, recording_suitable as mixlr_recording_suitable,
@@ -937,6 +942,7 @@ pub use srgssr::{
     SrgSsr, SrgSsrPlay, play_suitable as srgssr_play_suitable, suitable as srgssr_suitable,
 };
 pub use startrek::{StarTrek, suitable as startrek_suitable};
+pub use startv::{StarTv, suitable as startv_suitable};
 pub use steam::{
     Steam, SteamCommunity, SteamCommunityBroadcast, broadcast_suitable as steam_broadcast_suitable,
     community_suitable as steam_community_suitable, suitable as steam_suitable,
