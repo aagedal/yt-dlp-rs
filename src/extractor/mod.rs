@@ -99,6 +99,7 @@ mod internazionale;
 pub(crate) mod ism;
 mod israelnationalnews;
 mod ivoox;
+mod jamendo;
 mod jove;
 mod json_ld;
 mod jwplatform;
@@ -413,6 +414,9 @@ pub use instagram::{
 pub use internazionale::{Internazionale, suitable as internazionale_suitable};
 pub use israelnationalnews::{IsraelNationalNews, suitable as israelnationalnews_suitable};
 pub use ivoox::{Ivoox, suitable as ivoox_suitable};
+pub use jamendo::{
+    Jamendo, JamendoAlbum, album_suitable as jamendo_album_suitable, suitable as jamendo_suitable,
+};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
 pub use kaltura::{Kaltura, suitable as kaltura_suitable};

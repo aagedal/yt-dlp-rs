@@ -1501,6 +1501,18 @@
       "scope": "IvooxIE non-fatal window.__NUXT__ audio data via _search_nuxt_data, the non-fatal download-URL API (HTTP error warning), deduplicated download/media paths as Referer formats, data-prm-*, OpenGraph, JSON-LD and Nuxt metadata in upstream's override order compared with pinned upstream output through the fixture proxy; several distinct paths (set order), unparsable API responses and failed page downloads remain explicit native errors"
     },
     {
+      "name": "jamendo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/jamendo.py"
+      ],
+      "rust": [
+        "src/extractor/jamendo.rs",
+        "tests/fixtures/sites/jamendo/"
+      ],
+      "scope": "JamendoIE www.jamendo.com/api track/artist/album JSON (X-Jam-Call header) with the four fixed mp3/ogg/flac formats, HEAD-checked deduplicated cover thumbnails, tags, stats, license and metadata, and JamendoAlbumIE album tracks as url_transparent Jamendo entries with the album name (flat and resolved), plus HTTP, empty-list, KeyError and failed non-fatal lookup errors, compared with pinned upstream output through the fixture proxy; non-list API responses, non-object items and missing artist/album IDs remain explicit native errors"
+    },
+    {
       "name": "jove",
       "status": "partial",
       "upstream": [

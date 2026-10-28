@@ -2201,6 +2201,25 @@ tag names, in upstream's override order. Several distinct download paths
 responses and failed page downloads remain explicit native errors.
 `tests/fixtures/sites/ivoox/` is compared with pinned upstream output.
 
+Jamendo tracks (`[www.]jamendo.com/track/ID[/DISPLAY_ID]`,
+`licensing.jamendo.com/LANG/track/ID...`) follow upstream `JamendoIE`: the
+first item of the `www.jamendo.com/api/tracks?id[]=ID` JSON list (sent with
+upstream's random `X-Jam-Call` SHA-1 header; an empty list is upstream's
+`list index out of range`, a missing `name` its `KeyError`), then the
+non-fatal artist and album lookups (a failed one warns and ends in upstream's
+`'bool' object is not subscriptable`). Formats are the four fixed
+`mp31`/`mp32`/`ogg1`/`flac` URLs with their `quality`; each distinct cover
+URL is HEAD-requested (`Checking thumbnail extension`; failed requests are
+skipped silently) for its extension (default `jpg`) and sized from its
+`sizeN` key. Metadata: title/track, description, duration, artist, album,
+`-`-joined `licenseCC`, creation timestamp, listen/favorite/rating stats and
+tag names. Albums (`[www.]jamendo.com/album/ID`) follow `JamendoAlbumIE`:
+the album's tracks with an ID as `url_transparent` Jamendo entries carrying
+the album name, titled with the album name and described by the cleaned
+English description. Non-list API responses, non-object items and missing
+artist/album IDs remain explicit native errors.
+`tests/fixtures/sites/jamendo/` is compared with pinned upstream output.
+
 JoVE videos (`jove.com/video/ID`) follow upstream `JoveIE`: the page's fatal
 chapters ID, the chapters XML's root `video` attribute (`Downloading chapters
 XML`; none is upstream's `Failed to get the video URL`) as an untyped result,
