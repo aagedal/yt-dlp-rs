@@ -275,7 +275,10 @@ fn arguments(
         ]);
     }
     if let Some(timecode) = growing {
-        args.extend(crate::growing::output_args(timecode));
+        args.extend(crate::growing::output_args(
+            timecode,
+            crate::growing::ext(info),
+        ));
     } else {
         if let Some(timecode) = timecode {
             args.extend(["-timecode".into(), timecode.into()]);

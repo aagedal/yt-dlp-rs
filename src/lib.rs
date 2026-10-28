@@ -3658,11 +3658,12 @@ impl YoutubeDl {
         Ok(())
     }
 
-    /// `--growing-file`: selected live results become QuickTime files.
+    /// `--growing-file`: selected live results become QuickTime files (or
+    /// fragmented MP4 for codecs MOV cannot hold, such as AV1).
     fn growing_ext(&self, mut selected: Vec<VideoInfo>) -> Vec<VideoInfo> {
         for entry in &mut selected {
             if self.grows(entry) {
-                entry.ext = growing::EXT.into();
+                entry.ext = growing::ext(entry).into();
             } else if self.growing_file && is_live(entry) {
                 screen::warning(if self.ffmpeg.is_none() {
                     "--growing-file needs ffmpeg; downloading the live stream normally"

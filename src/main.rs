@@ -592,7 +592,8 @@ struct Args {
     /// editors can import while it is written, with a time-of-day timecode
     /// and the recorded duration in the progress; on macOS, DaVinci Resolve
     /// shows it as a recording clip. Prefers H.264/AAC formats after any
-    /// --format-sort fields (needs ffmpeg; yt-dlp-rs extension)
+    /// --format-sort fields; AV1, VP9, Opus and FLAC, which MOV cannot hold,
+    /// are recorded as fragmented .mp4 (needs ffmpeg; yt-dlp-rs extension)
     #[arg(long)]
     growing_file: bool,
     /// On SIGINT or SIGTERM during a download, stop it and keep what was

@@ -72,7 +72,10 @@ These options are not in upstream yt-dlp:
   DaVinci Resolve reads at import to treat it as a recording clip. The
   attribute is removed when the recording ends, including on SIGINT or SIGTERM
   (which finish the file), but not if the process is killed. H.264/AAC formats
-  are preferred after any `-S` fields.
+  are preferred after any `-S` fields. MOV cannot hold AV1, VP9, Opus or FLAC
+  (FFmpeg refuses them: "av1 only supported in MP4"), so when those are
+  selected the recording is a fragmented `.mp4` instead, which is also the
+  container Resolve expects AV1 in.
 - **`--keep-partial-on-stop`** makes SIGINT or SIGTERM stop a download and
   keep what it has as a usable file at the final name, instead of `.part`
   files. HLS/DASH downloads keep whole fragments, and separate video and
