@@ -1596,6 +1596,30 @@ the `videoFile` as the `sd` MP4 (`videoSize` width/height) and, when `HD` is
 `true`, its `/mov/39` variant as the 1280x720 `hd` MP4. Items missing an
 element upstream reads are explicit native errors.
 
+SBS On Demand and SBS News videos (`sbs.com.au/ondemand/...ID`,
+`sbs.com.au/news/[embeds/]video/ID`) follow upstream `SBSIE` (geo countries
+`AU`): the player API's `video_smil?id=ID` SMIL document (fatal, a warning
+with `--ignore-no-formats-error`) through the shared SMIL parser (HLS, DASH
+and HTTP sources, text stream subtitles; variant playlists are read like the
+generic SMIL path), with subtitle tracks whose URL ends in `_fe.vtt`
+(case-insensitive) moved to `LANG-forced`. Without formats, the
+`Checking geo-restriction` HEAD request to `sbs-vod-prod-01.akamaized.net`
+(403 accepted, other HTTP errors a warning) gives the geo-restriction error
+when an `x-error-reason` header is `geo-blocked`, else upstream's unexpected
+`No formats are available` error (also with `--ignore-no-formats-error`).
+The non-fatal `video_stream` JSON's `video_object` is updated with the MPX
+catalogue JSON (fatal only when that object is empty), and upstream's
+`traverse_obj` metadata follows, including its branch semantics: `categories`
+are the string `taxonomy`, `genre.subgenre` and `name` values of the
+`genres` value and of every media value, a non-empty `partOfSeries` replaces
+`epName` with the catalogue `title`, `duration` tries `float_or_none` then
+`parse_duration`, and the age limit maps `classificationID`/`contentRating`
+through upstream's Australian guidelines. Generic pages embed it only through
+upstream's `_EMBED_REGEX`, including the literal `]` it requires before the
+`og:video` meta or iframe. Thumbnails without a `name` keep the port's key
+order (`url` first) rather than upstream's. `tests/fixtures/sites/sbs/` is
+compared with pinned upstream output.
+
 Crooks and Liars embeds (`embed.crooksandliars.com/embed|v/ID`) follow upstream
 `CrooksAndLiarsIE`: the `http:` embed page's fatal `var manifest` JSON, its
 `video/` flavors as formats ranked by `qualities(webm_low, mp4_low, webm_high,

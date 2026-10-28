@@ -2422,6 +2422,18 @@
       "scope": "SapoIE rd3.videos.sapo.pt RSS item (MRSS synopsis, thumbnail, duration, author, date, counts, tags, m18) with SD and HD MP4 formats compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "sbs",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/sbs.py"
+      ],
+      "rust": [
+        "src/extractor/sbs.rs",
+        "tests/fixtures/sites/sbs/"
+      ],
+      "scope": "SBSIE player API SMIL formats and subtitles (forced-track renaming), the HEAD x-error-reason geo check and unexpected no-formats error, non-fatal video_stream metadata merged with the catalogue JSON, and the generic-page embed regex, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "screen9",
       "status": "partial",
       "upstream": [

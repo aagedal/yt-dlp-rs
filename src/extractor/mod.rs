@@ -193,6 +193,7 @@ mod rumble;
 mod rutube;
 mod ruv;
 mod sapo;
+mod sbs;
 mod screen9;
 mod screenrec;
 mod sen;
@@ -596,6 +597,7 @@ pub use rutube::{
 };
 pub use ruv::{Ruv, RuvSpila, spila_suitable as ruv_spila_suitable, suitable as ruv_suitable};
 pub use sapo::{Sapo, suitable as sapo_suitable};
+pub use sbs::{Sbs, suitable as sbs_suitable};
 pub use screen9::{Screen9, suitable as screen9_suitable};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
