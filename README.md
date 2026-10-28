@@ -1,20 +1,98 @@
 # yt-dlp-rs
 
-An incremental, native Rust adaptation of [yt-dlp](https://github.com/yt-dlp/yt-dlp).
-It downloads direct HTTP media and a limited subset of HTML5 media pages, with
-a foundation for porting extractors and tracking upstream changes. This is a
-beta. YouTube (videos, live streams, playlists, mixes, channels,
-search, hashtags and YouTube Music URLs), Reddit, X/Twitter, TikTok, Douyin,
-Instagram and Facebook are extracted like pinned upstream on saved fixtures. YouTube was
-also spot-checked against the live site and pinned upstream on 2026-10-22
-(downloads, `-F`/`-j` output and playlist/channel listings matched).
+A native Rust port of [yt-dlp](https://github.com/yt-dlp/yt-dlp), with a few
+extensions for video editing workflows. Extraction and downloads run entirely
+in Rust: the binary never invokes Python or an installed yt-dlp.
 
-### Social networks (0.3.0 beta)
+This is a beta. The port follows upstream release **2026.10.26** (pinned in
+[upstream/manifest.json](upstream/manifest.json)) and covers over 550 extractors
+(`yt-dlp-rs --list-extractors`). Each one is checked against pinned upstream
+output on saved responses. That is tested behavior, not a general promise of
+yt-dlp compatibility: options this port does not implement are rejected with
+an error rather than ignored.
 
-The largest social networks that upstream yt-dlp supports are ported against
-release 2026.10.21 and were compared live with it on 2026-10-23 (same
-formats, metadata or the same error). WhatsApp, WeChat, Messenger and
-Kuaishou have no upstream extractor.
+## Install
+
+Pre-release binaries for Linux, macOS and Windows are attached to the
+[GitHub releases](https://github.com/aagedal/yt-dlp-rs/releases). To build
+from source you need current stable Rust:
+
+```sh
+cargo install --locked --path .
+```
+
+The default build uses rustls. `cargo build --locked --features impersonate`
+adds browser impersonation (TLS/HTTP2 fingerprints, as upstream's
+`curl_cffi`) through `wreq`; it builds BoringSSL from source and needs CMake
+and a C/C++ compiler.
+
+Optional tools, found on `PATH` like upstream (or with `--ffmpeg-location`
+and `--ffprobe-location`):
+
+- **FFmpeg/FFprobe** for merging, live streams, sections, audio extraction,
+  remuxing, subtitles, thumbnails and metadata embedding.
+- **A JavaScript runtime** (deno by default, or `--js-runtimes node`,
+  `quickjs` or `bun`) for YouTube's signature and `n` challenges. Without one,
+  YouTube falls back to fewer formats, with upstream's warning.
+
+Options can also come from configuration files like upstream's, named
+`yt-dlp-rs` (for example `~/.config/yt-dlp-rs/config`); see `--ignore-config`
+and `--config-locations`.
+
+## Usage
+
+The CLI follows upstream's options and output:
+
+```sh
+yt-dlp-rs 'https://www.youtube.com/watch?v=VIDEO_ID'
+yt-dlp-rs -F 'https://www.youtube.com/watch?v=VIDEO_ID'
+yt-dlp-rs -f 'bv[height<=1080]+ba/b' -o '%(title)s.%(ext)s' URL
+yt-dlp-rs -x --audio-format mp3 URL
+yt-dlp-rs --write-subs --sub-langs en --embed-subs URL
+yt-dlp-rs --cookies-from-browser firefox URL
+yt-dlp-rs --download-sections '*10:00-12:30' --section-timecode URL
+yt-dlp-rs --live-from-start --growing-file 'https://www.youtube.com/watch?v=LIVE_ID'
+```
+
+The [compatibility inventory](docs/COMPATIBILITY.md) documents every
+supported option and where it differs from upstream.
+
+## Extensions in this fork
+
+These options are not in upstream yt-dlp:
+
+- **`--growing-file`** records a live stream into one fragmented QuickTime
+  `.mov` at its final name, instead of `.part` files and a merge at the end.
+  Editors can import the file while it is still being written. FFmpeg adds a
+  time-of-day timecode track: the stream's start time with
+  `--live-from-start`, when known. The progress line also shows how much has
+  been recorded (`, recorded HH:MM:SS`, or `progress.recorded_seconds` in
+  `--progress-template`). On macOS the file carries Blackmagic's
+  `com.blackmagicdesign.metadata:recording` attribute while it grows, which
+  DaVinci Resolve reads at import to treat it as a recording clip. The
+  attribute is removed when the recording ends, including on SIGINT or SIGTERM
+  (which finish the file), but not if the process is killed. H.264/AAC formats
+  are preferred after any `-S` fields.
+- **`--download-sections` for adaptive HTTPS formats** fetches only the
+  segments covering the section, located through the format's MP4 `sidx` or
+  WebM `Cues` index, in parallel 10 MiB ranges. Upstream instead has FFmpeg
+  read the whole stream, which runs at about twice playback speed. The cut uses
+  the same FFmpeg arguments and was checked packet-identical to upstream's
+  output. Formats without an index, servers without range support and
+  `--downloader ffmpeg` keep upstream's behavior.
+- **`--section-timecode`** gives a section the timecode its first frame has in
+  the whole video, so clips line up with full downloads in an editor. It needs
+  ffprobe and an MP4/MOV result: use `--remux-video mp4` for WebM sections.
+
+## Supported sites
+
+YouTube (videos, Shorts, live streams, playlists, mixes, channels, search,
+hashtags, clips, comments and YouTube Music) is extracted like upstream,
+including PO-token policies, age-gate fallbacks and account cookies. It was
+also spot-checked against the live site.
+
+The largest social networks were compared live with upstream 2026.10.21 on
+2026-10-23 and matched (same formats and metadata, or the same error):
 
 | Network | Covered | Notes |
 | --- | --- | --- |
@@ -34,436 +112,30 @@ Kuaishou have no upstream extractor.
 | Bilibili | videos | bangumi, spaces and audio not ported |
 | VK | videos, clips, wall posts, user videos, VK Play, logins | other embedded players are unsupported |
 
-Tumblr, Twitch (VODs, clips, live, channel lists), Bluesky and Kick are
-supported too. Browser impersonation (TLS/HTTP2 fingerprints for the
-requests extractors mark, as upstream with `curl_cffi`) needs the optional
-`impersonate` build feature; default builds have no impersonate targets.
+WhatsApp, WeChat, Messenger and Kuaishou have no upstream extractor.
 
-Pre-release binaries for Linux, macOS and Windows are attached to the
-[GitHub releases](https://github.com/aagedal/yt-dlp-rs/releases): pushing a
-`vX.Y.Z[-PRE]` tag runs `.github/workflows/release.yml`, and a tag with a
-pre-release suffix publishes a pre-release.
+Beyond these, the port includes Vimeo, Dailymotion, Twitch, Kick, SoundCloud,
+Bandcamp, Tumblr, Bluesky, Niconico, PeerTube, Brightcove, Kaltura, JW Player,
+Wistia, the major European public broadcasters (NRK, SVT, DR, Yle, ARD, ZDF,
+Arte, France Télévisions) and several hundred smaller sites. Run
+`yt-dlp-rs --list-extractors` for the full list. Other URLs go through the
+generic extractor: direct media, HLS and DASH manifests, and HTML5
+`<video>`/`<audio>` pages.
 
-Requires current stable Rust (including standard-library file locking). Python 3.10+ and Git are needed
-only for the upstream development tools. The Rust binary does not invoke Python
-or an installed yt-dlp.
+## Not supported
 
-```sh
-cargo build --locked
-cargo run --locked -- 'https://example.com/video.mp4'
-cargo run --locked -- --dump-json 'https://example.com/video.mp4'
-cargo run --locked -- --list-formats 'https://example.com/page-with-multiple-sources.html'
-cargo run --locked -- --list-subs 'https://example.com/video-with-tracks.html'
-cargo run --locked -- --write-subs --sub-langs all --skip-download 'https://example.com/video-with-tracks.html'
-cargo run --locked -- --write-subs --convert-subs srt --ffmpeg-location /path/to/ffmpeg 'https://example.com/video-with-tracks.html'
-cargo run --locked -- --embed-subs --ffmpeg-location /path/to/ffmpeg 'https://example.com/video-with-tracks.html'
-cargo run --locked -- --write-auto-subs --sub-langs en --skip-download 'https://www.youtube.com/watch?v=VIDEO_ID'
-cargo run --locked -- -f 1 'https://example.com/page-with-multiple-sources.html'
-cargo run --locked -- -f 'best[height<=720][ext=mp4]/best' 'https://example.com/page-with-multiple-sources.html'
-cargo run --locked -- -f 'bestvideo+bestaudio/best' 'https://www.youtube.com/watch?v=VIDEO_ID'
-cargo run --locked -- -I '3,1:2' --playlist-reverse -o '%(playlist_index)03d-%(title)s.%(ext)s' 'https://example.com/multiple-videos.html'
-cargo run --locked -- --download-archive downloaded.txt 'https://example.com/video.mp4'
-cargo run --locked -- --simulate 'https://example.com/video.mp4'
-cargo run --locked -- --cookies cookies.txt 'https://example.com/video.mp4'
-cargo run --locked -- -x --audio-format mp3 --ffmpeg-location /path/to/ffmpeg 'https://example.com/video.mp4'
-cargo run --locked -- --remux-video mkv --ffmpeg-location /path/to/ffmpeg 'https://example.com/video.mp4'
-cargo run --locked -- --proxy 'socks5://127.0.0.1:1080' 'https://example.com/video.mp4'
-cargo run --locked -- --user-agent 'My media client' --add-headers 'X-Media-Key:example' 'https://example.com/video.mp4'
-cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
-```
+- DRM-protected media, and HLS SAMPLE-AES.
+- Python plugins, including PO-token provider plugins (pass `po_token` with
+  `--extractor-args` instead). `--use-postprocessor` supports only `Exec`.
+- Generic-page features beyond HTML5 media elements and known embeds, such as
+  JavaScript-built players.
+- Chromium cookies on Windows (DPAPI) and from the GNOME keyring.
+- Resuming partial downloads across separate runs: an interrupted transfer
+  resumes only within the same run.
+- Upstream options this port has not implemented: they are errors, never
+  silently ignored.
 
-Options can also come from configuration files like upstream's (named `yt-dlp-rs`, e.g.
-`~/.config/yt-dlp-rs/config`; see `--ignore-config` and `--config-locations`).
-ffmpeg and ffprobe are found on `PATH` like upstream; `--ffmpeg-location` accepts
-either binary or its containing directory.
-
-The example URLs illustrate syntax; replace them with actual media or supported HTML5 page URLs.
-Install locally with `cargo install --locked --path .` to use `yt-dlp-rs` directly.
-
-The default build uses rustls only. `cargo build --locked --features impersonate`
-adds the `wreq` impersonation transport (BoringSSL, built from source: it needs
-CMake and a C/C++ compiler) and its targets in `--list-impersonate-targets`.
-
-Supported today:
-
-- HTTP(S) media identified by recognized audio/video MIME types, with a known
-  file-extension fallback for absent or `application/octet-stream` content types.
-- Redirects, percent-decoded URL filenames, query strings, and streamed downloads.
-- UTF-8 HTML pages with `<video>`/`<audio>` elements and nonempty
-  `src` or direct child `<source src>` elements. Progressive sources default to
-  the highest declared resolution;
-  `-f/--format` accepts `best`, `worst`, or a source ID (`0`, `1`, … in declaration order per element). Relative
-  sources, the first `<base href>`, HTML entities, page redirects, and page referrers are supported. The media
-  response must pass the same MIME/extension checks as a direct URL.
-- Native HLS VOD downloads from direct playlist URLs or HTML5 sources:
-  master selection, MPEG-TS/AAC segments, one fMP4 initialization map, and exact
-  byte ranges. JSON/simulation fetch manifests but never segment bodies.
-  Native AES-128 CBC decryption supports identity keys, explicit/sequence IVs and
-  key rotation. External audio renditions retain group, language, name and
-  default/autoselect metadata; automatic merging stays within the declared audio
-  group. Live, SAMPLE-AES/DRM, discontinuous and external video/subtitle
-  renditions remain unsupported.
-- Static single-period DASH MPDs from direct URLs and HTML5 sources: inherited
-  BaseURLs, numbered/time templates, finite timelines, SegmentLists and exact byte
-  ranges. Native fragment downloads feed explicit audio/video merging. Dynamic,
-  DRM, multi-period and SegmentBase/SIDX presentations remain unsupported.
-- Multiple nonempty media elements form an HTML5 playlist, processed in document
-  order. Empty elements are skipped. IDs and titles use upstream's numbered
-  `-1` / ` (1)`, `-2` / ` (2)` suffixes. Titles prefer
-  Open Graph `og:title`, then `<title>`, then the page URL filename stem.
-- Typed progressive source metadata (`formats`, selected `format_id`, optional
-  `width`/`height`) for HTML5. Child source dimensions come from positive integer
-  `width`, `height`, and fallback `res` attributes. Ranking uses the smaller known
-  dimension, or the only known one; unknown resolution sorts lowest. Ties select
-  the last declaration for best/default and the first for worst.
-- Streamable videos (`streamable.com/ID`) through the site's video JSON and
-  Megaphone players (`player.megaphone.fm/ID`) through their page,
-  ReverbNation songs through the song API, Hypem tracks through their page
-  and served source, HistoricFilms tapes through their page, Livestreamfails
-  clips through the clip API, ARD Mediathek videos, shows and compilations through the page-gateway API, ARD Audiothek episodes and shows through its GraphQL API, Arte videos, embeds, collections and category pages through the player config and programs APIs, Il Post podcast episodes through the podcast endpoint, Kickstarter native project videos through their page, INA videos and audio through the asset API, HSE TV shows and product videos through their Redux data, Gronkh streams through the video API, LNK videos through the video-config API, EbaumsWorld and tv.dfb.de videos through the player XML,
-  Glide messages through their share page, GodTube videos through their
-  player XML, FC Zenit videos through the player API, BehindKink posts
-  QingTing programs, Radio ZET podcasts, OnePlace episodes, SzTV videos, Photobucket media and
-  This American Life episodes through their pages, JW Platform media through
-  the media API (and The Intercept posts, Spiegel articles, OneFootball videos, Bundesliga videos and Iltalehti articles that embed it), Israel National News articles (as playlists of their YouTube embeds), 23video players
-  (and Filmweb articles that embed them), FILMARCHIV ON videos, Kaltura entries (`kaltura:` URLs, players and embeds) and the KTH Play, UN Web TV and Inc pages that delegate to them, Vocaroo recordings, AudioBoom posts,
-  Tweakers videos, Project Veritas videos, tele-TASK lectures, Universal Music Deutschland videos, Angel episodes, Blogger videos (and their embeds), Nobel
-  Prize media, Bild clips, Masters videos, Match TV live, mir24.tv news videos, Mocha videos, Sen videos, Kankanews videos, Kommunetv archives,
-  Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, SAPO Vídeos, VideoPress embeds, Vidyard videos, playlists and generic-page embeds through the player JSON, uStudio videos and embeds, 3Speak videos and users, TV Noe programmes, Telegraaf videos, Premiership Rugby videos, PressTV videos, CJSW episodes, PeerTube videos, accounts, channels and playlists on upstream's listed instances (and `peertube:HOST:ID` URLs) through the instance API,
-  Player.fm episodes, RTRFM shows, Roya TV live streams, HitRecord records, href.li redirects, Culture Unplugged films,
-  Zhihu videos, CRTVG programmes, Breitbart videos, Brightcove players (and their embeds, including TV Everywhere videos through Adobe Pass TV provider logins), DrTalks videos, DR TV programs, live channels, seasons and series, Toronto Star videos, The Sun article videos, TVA Nouvelles videos and articles, Wimbledon videos, Wistia media, playlists and channels (and their embeds), Screen9 embeds, The HighWire videos, The Guardian podcast episodes, Sky News Australia videos, European Tour videos, Māori Television shows, Formula 1 videos, NZ On Screen titles, 1News articles, Mediaite articles, Rotten Tomatoes trailers and movie pages, 9News videos and articles, CGTN news videos, JoVE
-  videos, ParlView videos, The Epoch Times videos, eBay items, Bitmovin
-  streams and Crooks and Liars videos (and their embeds), Huajiao lives,
-  ScreenRec shares, Ku6 shows, GoodGame live streams, Fuyin TV videos, GameStar and GamePro videos, Golem videos, Moving Image Archive films, MyVidster links, ETTU TV matches, Erocast tracks, Caltrans traffic cameras, Bigo live rooms, CAM4 live channels, Université de Strasbourg UTV videos, Veo matches, Nobel   Prize media, webcamera.pl and SkylineWebcams live cameras, JoVE   videos, Bitmovin   streams and Crooks and Liars videos (and their embeds), Soundgasm sounds and profiles, StreetVoice songs, SVT Play and Öppet arkiv videos through the videoplayer API (with SVT Play series and svt.se article playlists), France Télévisions videos through the k7 player API (francetv: URLs, france.tv pages and franceinfo pages, including franceinfo Dailymotion embeds), Ivoox audios, Amadeus TV library videos, Whyp tracks, TRT Çocuk videos, WorldStarHipHop videos, Xbox clips, HellPorno videos, Toypics videos, MATCHi TV streams, BongaCams live rooms, Daystar clips, Newsy stories, TRT World videos, Pinkbike videos, NTS episodes, Netzkino films, Pear Video videos, Podbay episodes and channels, Rinse FM episodes and shows, Democracy Now! shows and stories, DLive past broadcasts and live streams, Cloudflare Stream videos, CloudyCDN/Backscreen embeds, Dumpert items, Flickr videos, 9GAG posts, IMDb trailers and lists, XVideos videos, TV 2 (tv2.no) videos and articles, Steam store trailers and community broadcasts, Clyp audio clips, Elonet films, Dropbox shared videos, Boston Globe article videos, Beacon TV content, Clipchamp shares, media.ccc.de events, Internazionale videos, Gab posts, iHeartRadio podcast episodes and podcasts, Libsyn episodes, hearthis.at tracks, Freesound sounds, Mux videos, NRK TV and NRK Radio programs, seasons, series and article playlists through the psapi playback API, ZDF Mediathek, zdfheute and logo! videos through the GraphQL and PTMD APIs (with ZDF smart collection season playlists),
-  Fathom shares, Maariv players (and their embeds), Harpodeon films,
-  Yorkshire Film Archive pages, Yle Areena programmes and podcasts, GodResource videos, Google Drive files
-  (and their embeds) and folders, PopcornTV videos, Reddit
-  posts (hosted videos, text-post videos and followed links), X/Twitter posts
-  (GraphQL, legacy or syndication APIs; videos, multi-video playlists, cards
-  including VMAP), X broadcasts and live events, Spaces, `t.co` links,
-  Amplify videos and Periscope broadcasts, TikTok
-  videos (webpage data, the page's JS challenge, subtitles, slideshow audio,
-  short links), user and collection lists, livestreams, Douyin videos (web
-  detail API with browser cookies), Instagram
-  posts and reels (logged out, or logged in with cookies; carousels as
-  playlists, inline DASH), stories, highlights, tag and user pages and
-  `instagram://` links, Facebook videos
-  (relay data with DASH, progressive URLs and captions; server JS, pagelet
-  and tahoe player pages; watch parties; JSON-LD metadata), Facebook ad
-  library ads and `flx/warn` redirects, Vimeo player and
-  clip pages, Dailymotion videos (and the kicker.de videos that embed them), playlists, channels and video searches, SoundCloud tracks, Twitch VODs, clips, live streams,
-  channel video/clip/collection lists and collections,
-  Bandcamp tracks, Rumble videos, Kick VODs, clips, live channels and channel video/clip lists, Bluesky
-  posts, Mixcloud shows, Pinterest pins, Odysee/LBRY streams, channels and playlists,
-  Tumblr posts, Imgur media, galleries and albums, Bilibili videos, VK videos, wall posts, user video lists and VK Play Live streams, Niconico videos, mylists, series, history/likes, user videos, searches and tag pages, Weibo posts, XiaoHongShu (RedNote) video notes, TED talks, playlists and series, Rutube videos, LinkedIn posts, Internet Archive items, BitChute videos, Coub clips, Loom videos, OK.ru videos,
-  Telegram public posts (multi-video posts as playlists), Snapchat Spotlight
-  snaps, plus
-  either site's iframe embeds on other pages (one is followed; several form a
-  playlist), compared with pinned upstream output on saved responses.
-- YouTube single-video watch, short-link, Shorts, embed and live URL shapes,
-  extracted like upstream from the watch page plus one player API request per
-  default InnerTube client. With a JS runtime (deno, enabled by default as
-  upstream does, or `--js-runtimes node`, `quickjs` or `bun`) the clients are `tv_samsung`,
-  `visionos` and `web`, and `n`/signature challenges are solved through the
-  bundled pinned EJS release (signature solutions are cached in
-  `~/.cache/yt-dlp-rs` in upstream's format, see `--cache-dir`). Without one, only `visionos` is used, with
-  upstream's warning. HTTPS, HLS and DASH formats follow upstream's
-  `_extract_formats_and_subtitles`: PO-token policies skip token-requiring
-  formats unless a `po_token` is configured; HTTPS formats download in 10 MiB
-  ranges like upstream (avoiding throttling), and pre-roll ads delay downloads
-  as upstream's `available_at` does. Age-restricted videos use the
-  `web_embedded` fallback; account cookies (`--cookies`, `--cookies-from-browser`)
-  switch to upstream's authenticated clients and SAPISIDHASH headers. Live
-  streams download through FFmpeg (Ctrl+C finishes the recording), or from the
-  start with `--live-from-start` through the native DASH generator; upcoming
-  ones report their start. `--growing-file` (a port extension) records a live
-  stream into one fragmented QuickTime `.mov` at its final name instead of
-  `.part`/format files and a merge, so editors can import it while it grows:
-  FFmpeg muxes the live URL (or, with `--live-from-start`, named pipes the
-  native fragment downloads feed), adds a time-of-day timecode track (the
-  stream's start with `--live-from-start`, when known), and its `-progress`
-  reports add the recorded duration to the progress line (`, recorded
-  HH:MM:SS`; `progress.recorded_seconds` in `--progress-template`). On macOS
-  the file carries Blackmagic's `com.blackmagicdesign.metadata:recording`
-  attribute while it grows, which DaVinci Resolve reads at import to treat it
-  as a recording clip; the attribute is removed when the recording ends,
-  including at SIGINT or SIGTERM (which finish the file), but not if the
-  process is killed. H.264/AAC formats are preferred after any `-S` fields. Playlists (`/playlist?list=`, `watch?v=…&list=`,
-  mixes), channel tabs (`/@NAME/videos`, `/shorts`, ...), hashtag and feed pages
-  are extracted like upstream's `youtube:tab`, with continuation pages fetched as
-  the selection needs them; a channel URL without a tab is a playlist of its
-  tab playlists, as upstream. `ytsearch[N|all]:QUERY` and `/results?search_query=`
-  searches work like upstream's `youtube:search`, and `/clip/` URLs download
-  their section like upstream's `youtube:clip`. `--download-sections` of
-  adaptive HTTPS formats is a port extension: instead of FFmpeg reading the
-  whole URLs (about twice playback speed), the format's `initRange`/`indexRange`
-  (MP4 `sidx` or WebM `Cues`) select the segments covering the section, which
-  are fetched in parallel 10 MiB ranges and cut locally with the same FFmpeg
-  arguments (checked packet-identical to upstream's output for MP4 and WebM).
-  Formats without a usable index, servers without ranged responses and
-  `--downloader ffmpeg` keep upstream's behavior. `--section-timecode`
-  (also an extension) gives a section the timecode its first frame has in the
-  whole video (frame N is N at the nominal rate, non-drop-frame; the frame
-  rate comes from ffprobe), so clips line up with full downloads in editors.
-  It needs an MP4/MOV result: WebM/MKV sections are warned about unless
-  `--remux-video mp4` (or `--recode-video`) converts them. `--write-comments`
-  extracts comments and replies like upstream. Live chat, MHTML storyboards,
-  post-live videos, `--live-from-start`, multifeed videos, `--mark-watched`,
-  the `youtube`/`youtubetab` `--extractor-args` (including a configured
-  `po_token`), YouTube Music search, notifications and upstream's other
-  YouTube URL forms and redirect extractors are ported too. PO token provider
-  plugins are Python-only upstream and are not supported; pass `po_token`
-  instead.
-- Separate streams support `-f bestvideo+bestaudio` or literal pairs such as
-  `-f 137+140`, with `/` fallbacks such as `bestvideo+bestaudio/best`.
-  `--ffmpeg-location PATH` configures an explicit FFmpeg executable for local
-  stream copying; default selection then prefers a video/audio pair. Without it,
-  default selection requires an independently playable source. `-f best` always
-  selects an independently playable source. Chained format filters constrain
-  dimensions, filesize, audio/total bitrate, extension, IDs and language/rendition
-  text before ranking. For example, `bestvideo[height<=720]+bestaudio[abr>=128]/best`
-  and `best[filesize<10MiB]`; `<=?` includes unknown values. This is a bounded
-  selector subset; filters do not add metadata that an extractor did not expose.
-  Parenthesized groups and aliases (`b`, `bv`, `ba`, `w`, `wv`, `wa`) are supported,
-  as are bare filters such as `[height<=720]` (implicit `best`). For example,
-  `(bv[height<=720]+ba)/b` preserves the fallback around the complete pair.
-  Positive rank suffixes such as `bv.2`, `ba.2` and `worst.2` choose the Nth
-  candidate after filters in upstream `FormatSorter` order; out-of-range ranks allow
-  fallback. `-S`/`--format-sort`, `--format-sort-force` and `--prefer-free-formats`
-  reorder formats like upstream.
-- `-F/--list-formats` lists all eligible formats without choosing a source or
-  downloading media, including separate-only presentations without FFmpeg.
-  Tables show IDs, containers, dimensions, stream kind, size, bitrate and language.
-  With `-j` or `-s`, normal selection still applies; `-F -j` prints a table followed
-  by selected JSON. Table styling is native, not byte-for-byte upstream output.
-- `-I/--playlist-items` selects inclusive ranges, signed indices and steps, preserving
-  requested order and deduplicating overlaps. `--playlist-start`, `--playlist-end`
-  and `--playlist-reverse` are supported for fully extracted HTML5 playlists.
-  Original indices and selected order are exposed in playlist entry JSON.
-- Generic results carry upstream `timestamp` from `Last-Modified` with derived
-  `upload_date`; single HTML5 pages add `og:description`, `og:image` and RTA
-  `age_limit`.
-- HTML5 direct-child subtitle/caption `<track>` metadata, `--list-subs`, and
-  `--write-subs` sidecars selected with literal `--sub-langs` tags/all/exclusions
-  and ordered `--sub-format` preferences. `--skip-download` writes requested
-  sidecars without media or archive records. Sidecars use native HTTP retries,
-  referrers, temporary cleanup and no overwrite. The supported YouTube response
-  subset also discovers manual and automatic captions, translations, original
-  aliases and names. `--write-auto-subs` enables automatic sidecars independently;
-  manual tracks win shared languages when both writing flags are enabled.
-  Caption PO-token restrictions are preserved; no token acquisition is implemented.
-  `--convert-subs FORMAT` accepts `srt`, `vtt`, `ass` or `lrc` for written sidecars
-  before media, including with `--skip-download`. Native TTML/DFXP-to-SRT needs
-  no FFmpeg; other supported conversions use the explicit local executable.
-  `none` disables conversion; `-k` retains originals and intermediate SRT.
-  [Conversion limits](docs/COMPATIBILITY.md#subtitle-conversion) are documented.
-  `--embed-subs` embeds selected sidecars after media processing for
-  MP4/MOV/M4A/WebM/Matroska; WebM requires WebVTT. It implies manual subtitle
-  acquisition unless automatic writing is enabled. Explicit `--write-subs` keeps
-  embedded sidecars; embed-only removes eligible sidecars after successful final
-  publication. `-k` also keeps them. [Embedding policies](docs/COMPATIBILITY.md#subtitle-embedding)
-  cover automatic tracks, skipped formats and metadata. Manifest/other-site
-  subtitles remain unsupported.
-- `--write-info-json` writes upstream-cleaned video metadata beside the media
-  name (after subtitles, before media) and playlist metadata before entries.
-  Names follow upstream extension replacement; existing files follow the
-  overwrite options and `-j`/`-s`/listing never write. Content covers the
-  represented metadata subset; `_version` and `--load-info-json` are not implemented.
-- `-q/--quiet`, `--no-quiet` and `--no-warnings` gate informational and warning lines;
-  `-v/--verbose` adds upstream's `[debug]` lines.
-- `--match-filters`/`--break-match-filters` filter videos with upstream syntax;
-  `--date`/`--datebefore`/`--dateafter` and `--age-limit` select by upload date
-  and age rating.
-- `--break-on-existing`, `--break-per-input`, `--force-write-archive` and
-  `--no-download-archive` follow upstream archive control.
-- `-r/--limit-rate RATE` throttles media transfers like upstream; `--sleep-interval`,
-  `--max-sleep-interval` and `--sleep-subtitles` pause before downloads.
-- `--write-link`/`--write-url-link`/`--write-webloc-link`/`--write-desktop-link`
-  write internet shortcuts.
-- `--load-info-json FILE` processes saved `.info.json` dictionaries without
-  extraction (playlists fall back to their URL, as upstream).
-- `--exec [WHEN:]CMD` runs shell commands at upstream's stages (POSIX only).
-- `--mtime` sets downloaded file times from `Last-Modified`; FFmpeg outputs keep
-  their inputs' modification time.
-- `--abort-on-error` stops at the first error; `-i` also continues past failed
-  postprocessors (the default continues past failed inputs).
-- `--max-downloads NUMBER` (exit 101) and `--min-filesize`/`--max-filesize SIZE`
-  for whole-file HTTP media follow upstream.
-- `--embed-metadata` writes title/date/description/URL/artist/genre/language tags
-  with explicit FFmpeg (no chapters or info JSON attachment).
-- `--list-thumbnails`, `--write-thumbnail` and `--write-all-thumbnails` use YouTube
-  thumbnails, HTML5 `poster` images and page `og:image`. `--convert-thumbnails FORMAT` converts
-  them and `--embed-thumbnail` embeds the best one into mp3, mkv/mka and
-  mp4/m4a/m4v/mov with explicit FFmpeg (no ogg/opus/flac embedding).
-- `--write-description` writes `.description` files; `--no-write-playlist-metafiles`
-  disables playlist metadata files.
-- `-w/--no-overwrites`, `--force-overwrites` and the default follow upstream:
-  existing media is "already downloaded" by default while sidecars are rewritten.
-- `--download-archive FILE` skips recorded extractor/video IDs before selection and
-  records only successfully published downloads. Metadata/listing/simulation never
-  write the archive. Extraction still makes normal requests for recorded inputs.
-- Global `--add-headers FIELD:VALUE` (repeatable), `--user-agent` and `--referer`
-  defaults across extraction, downloads, fragments, keys and subtitles. Explicit
-  extractor/transport headers take precedence, including page referrers and identity
-  encoding. A shared in-memory cookie jar learns scoped response cookies. `--cookies FILE` loads/saves Netscape cookies, including session cookies; `--no-cookies`
-  disables file persistence. Raw Cookie headers remain unsupported.
-  `--cookies-from-browser` reads Firefox, Chromium-based (macOS keychain, Linux
-  BASICTEXT/KWallet) and Safari cookie stores natively; Windows DPAPI and the GNOME
-  keyring are not implemented.
-- `--socket-timeout`, `--source-address`, `-4`/`-6` and `--no-check-certificates`
-  configure every native HTTP client.
-- Account logins with `-u`/`-p`, `-2`, `--netrc`/`--netrc-location` and
-  `--netrc-cmd` (a native netrc parser) for Niconico, Dailymotion, Twitch, VK,
-  Tumblr and SoundCloud (OAuth tokens), with upstream's YouTube warnings and
-  unsupported-login warnings elsewhere; Vimeo logins are not supported.
-- Geo restriction bypass: `--xff` (and `--geo-bypass*`) or an extractor's
-  upstream `_GEO_COUNTRIES` give a fake `X-Forwarded-For` address for its
-  requests, formats and downloads, with upstream's geo-restricted retry.
-  `--ignore-no-formats-error` keeps results without formats (metadata only).
-- Explicit `--proxy URL` for HTTP/HTTPS or SOCKS4/4a/5/5h routing across the
-  native HTTP clients. `--proxy ''` forces direct connections. Pinned SOCKS5
-  compatibility uses proxy-side DNS; SOCKS4 user-ID credentials remain unsupported.
-  HTTPS proxy and CONNECT transfers retain certificate validation.
-- `-J/--dump-single-json` prints one object per URL (playlists with selected entries).
-- `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
-- `-a/--batch-file FILE` reads URLs (`-` for stdin) before positional URLs, skipping
-  blank and `#`/`;`/`]` comment lines and ` #` trailing comments; `--no-batch-file`
-  disables it. See [batch files](upstream/notes/batch-file.md).
-- `-O/--print [WHEN:]TEMPLATE` prints field lists (`-O id,title`, `-O title=`)
-  or unsanitized output templates per selected video, including `j` JSON values,
-  `filename` and selected `urls`; `-e`, `--get-id`, `-g` and `--get-filename` are
-  supported aliases. Printing implies quiet simulation. `--print-to-file` appends
-  video-stage lines without implying simulation; `--no-simulate` downloads after
-  printing. `before_dl`, `post_process`, `after_move` and `after_video` stages
-  print with `filepath`/`_filename` and download without simulation;
-  `pre_process`, `after_filter` and `playlist` are not implemented; see
-  [print templates](docs/COMPATIBILITY.md#print-templates).
-- Output templates follow upstream's key grammar and conversions: traversal
-  (`%(formats.0.format_id)s`, `%(title.:80)s`), maths (`%(epoch-3600)d`), dates
-  (`%(timestamp>%Y-%m-%d)s`), alternates and defaults (`%(width,height|unknown)s`),
-  replacements (`%(height&{}p|)s`) and every conversion (`diuoxXeEfFgGcrsa` plus
-  upstream's `ljhqBUDS`), with Python-style width/precision formatting.
-  `--output-na-placeholder TEXT` changes the default `NA`. Literal `%%` is supported.
-  Metadata is sanitized like upstream (full-width look-alikes for reserved
-  characters); `--restrict-filenames`, `--windows-filenames`/`--no-windows-filenames`
-  and `--trim-filenames LENGTH` follow upstream. Metadata cannot introduce
-  directories or `..` components; literal template paths can.
-- `-o TYPE:TEMPLATE` for `subtitle`, `infojson` and `pl_infojson` files and
-  `-P [TYPE:]PATH` output directories, including `temp:` with `[MoveFiles]`, follow upstream.
-- `-x` / `--extract-audio` supports `best`, MP3, AAC, M4A, Opus, Vorbis,
-  FLAC, ALAC and WAV through explicitly configured local FFmpeg/FFprobe.
-  `--audio-format` accepts ordered `SOURCE>TARGET/TARGET` rules;
-  `--audio-quality` accepts VBR 0..10 or a bitrate such as `128K`.
-  FFprobe defaults to the sibling of `--ffmpeg-location`, or use
-  `--ffprobe-location PATH`. `-k` / `--keep-video` retains processing sources and
-  intermediates. [Audio limits and publication behavior](docs/COMPATIBILITY.md#audio-extraction)
-  are explicit; no tool discovery or installation is performed.
-- `--remux-video FORMAT` copies streams into a new container;
-  `--recode-video FORMAT` re-encodes with FFmpeg defaults (AVI uses Xvid).
-  Both accept ordered source/target mappings. Audio extraction runs first when
-  combined; recode takes precedence when both video options are supplied.
-  Same-extension/unmatched mappings skip FFmpeg. Container/codec incompatibility
-  remains an error. See [video processing limits](docs/COMPATIBILITY.md#video-remuxing-and-conversion).
-- Same-directory temporary files, cleanup on transfer failure, and no overwrite
-  of existing destinations. A failed entry or URL sets a nonzero exit status while later
-  entries and URLs still run. JSON, screen and progress lines go to stdout; warnings and errors go to stderr.
-- Bounded download retries for selected transient HTTP statuses,
-  connection/timeouts, and interrupted bodies. Interrupted transfers can resume
-  within the same invocation with a strong ETag, known length, and validated range.
-  `-R/--retries` and `--fragment-retries` set additional attempts (default 10,
-  `infinite` allowed) with upstream's `Got error ... Retrying` messages,
-  `--retry-sleep` delays and `--skip-unavailable-fragments`/
-  `--abort-on-unavailable-fragments`. Transient HTTP failures honor
-  a single `Retry-After` delay-seconds or preferred HTTP-date value, capped at
-  60 seconds.
-- Upstream-style download progress lines on stdout (`--newline`, `--no-progress`,
-  `--progress`, `--progress-delta`).
-  Library observers can cancel at transfer checkpoints and during retry waits,
-  cleaning up the private temporary file before publication.
-- Opt-in whole-extraction retries with `--extractor-retries N` (default 0, maximum
-  255), independent of download retries. Transient page/source request failures
-  and interrupted HTML reads restart extraction before any output is emitted,
-  using the same bounded `Retry-After` policy.
-
-Other HTML pages, broader DASH/HLS delivery, site playlists, broader
-authentication, persistent resume, broader subtitle acquisition and plugins
-remain unimplemented (`--use-postprocessor` supports only `Exec`). Format selection
-and sorting follow ports of upstream's `build_format_selector` and `FormatSorter`.
-Unsupported CLI flags are errors. Filename handling is basic and does not yet
-implement yt-dlp's platform-specific filename compatibility rules.
-
-Direct extraction makes a streaming GET and inspects headers without consuming
-the body. HTML5 extraction reads at most 2 MiB of HTML (decoded like upstream),
-then probes every declared media source. Extraction must succeed for every entry.
-All entries remaining after archive filtering must select successfully before any
-media is downloaded or JSON emitted. JavaScript
-players, lazy-loading attributes, and embedded site players are not supported by the generic extractor. A download makes another GET. There is a 15-second connection timeout
-and a five-minute total timeout per request. Simulation and JSON extraction still make
-network requests. MIME identification is not media-container verification.
-
-The library exposes `YoutubeDl`, `ExtractResult`, `PlaylistInfo`, `VideoInfo`,
-`VideoFormat`, `StreamKind`, `Fragment`, `ByteRange`, `HlsAes128`, `DownloadOptions`, `DownloadProgress`, `DownloadPhase`,
-`ExtractionOptions`, `YoutubeOptions`, and an `Extractor` interface.
-`YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path), ..Default::default() })`
-configures optional YouTube signature/n solving; `YoutubeDl::new()` keeps it disabled.
-`include_translated_subtitles: true` additionally exposes translated manual captions
-in `automatic_captions`; the CLI enables this with `--write-auto-subs` or `--list-subs`.
-ASR translations are discovered independently, without fetching their payloads.
-`YoutubeDl::with_options(YoutubeOptions::default(), HttpOptions {
-user_agent: Some("My media client".into()), ..Default::default()
-})` configures HTTP defaults; `HttpOptions.headers` holds name/value pairs.
-`HttpOptions::from_cli(user_agent, referer, &headers)` parses repeated FIELD:VALUE
-strings with the same normalization and validation as the binary.
-`CookieJar::load(path)` and `save(path)` expose explicit Netscape persistence;
-`HttpOptions.cookies` accepts a shared `Arc<CookieJar>`, or the client creates a
-fresh in-memory jar. `YoutubeDl::cookie_jar()` returns it for reuse or saving.
-`HttpOptions.proxy` accepts an explicit URL or empty string for direct routing;
-`None` preserves the existing reqwest environment/system routing policy.
-`HttpOptions::validate()` checks configuration without network/DNS requests.
-Cookie files are credential state: an explicit `--cookies` path is updated after
-requests even in JSON/listing/simulation modes and after extraction failures.
-`YoutubeDl::new()?.with_ffmpeg(path)` configures optional local merging.
-`extract_result_unselected` / `extract_result_unselected_with_options` expose all
-eligible alternatives without library selection; `select_result` applies configured
-selection atomically before downloading.
-`output::render_template_with_options` accepts `TemplateOptions` for the missing-value
-placeholder; `render_template` keeps the default `NA`.
-`output::render_formats` renders their inventory, while `validate_format_selector`
-checks supported syntax without network or availability checks.
-Use `extract_result` or
-`extract_result_with_format(url, Some("1"))` for video/playlist results. A format
-ID applies to every playlist entry independently; each must offer that ID.
-`PlaylistSelection::new(items, start, end, reverse)` parses item selection;
-`apply` filters/reorders fully extracted playlist entries and annotates their
-original index/count and selected order/count. Single videos are unaffected.
-Library extraction methods do not implicitly apply CLI playlist options.
-`SubtitleOptions::new(languages, format)?.select(&info.subtitles)` returns selected
-subtitle metadata and warnings. `select_sources(&info.subtitles,
-&info.automatic_captions, write_normal, write_automatic)` selects enabled sources
-with manual precedence. `subtitle_paths` plans sanitized sidecar names;
-`download_subtitle_with_options` / `download_subtitle_with_progress` copy one
-resource with the normal retry/cancellation policy. Selection, writing and archive
-recording remain explicit library operations.
-`DownloadArchive::load`, `contains` and `record` expose persistence separately;
-library callers choose when to filter and record, after successful publication.
-`archive_id` returns the supported lowercase extractor-key plus case-sensitive ID.
-The existing `extract_info` methods accept single videos and reject playlists.
-`--dump-json` emits one video object per entry.
-`download_with_options(info, path, DownloadOptions { retries: 0 })` disables
-download retries for a library call; `download` uses the default policy.
-`download_with_progress(info, path, options, callback)` reports one-based attempts,
-stored bytes, optional total bytes, and the current phase. Fragment downloads also report one-based fragment indexes
-and counts, with cumulative assembled bytes and a per-fragment attempt number. Return
-`std::ops::ControlFlow::Continue(())` to continue or `Break(())` to cancel.
-Cancellation is cooperative: it cannot interrupt an in-flight blocking request,
-read, or filesystem operation. See the compatibility inventory for checkpoints.
-`extract_result_with_options(url, None, ExtractionOptions { retries: 2 })` enables
-whole-extraction retries; existing extraction methods keep retries disabled. See
-[the roadmap](docs/ROADMAP.md) for architecture and upcoming milestones.
-The [compatibility inventory](docs/COMPATIBILITY.md) records the exact subset and
-the saved-fixture upstream comparison command.
-
-To verify locally:
+## Development
 
 ```sh
 cargo fmt --all -- --check
@@ -472,21 +144,29 @@ cargo test --locked
 python3 -m unittest discover -s tools -p 'test_*.py' -v
 ```
 
-The HTTP integration tests bind localhost sockets and need an environment that
-allows them. CI is configured for Linux, macOS, and Windows; tests use no live sites.
+Python 3.10+ and Git are needed only for the development tools. The HTTP
+integration tests bind localhost sockets; no test contacts a live site. CI runs
+on Linux, macOS and Windows. Pushing a `vX.Y.Z[-PRE]` tag runs
+`.github/workflows/release.yml`, and a tag with a pre-release suffix publishes
+a pre-release.
 
-Upstream tracking is pinned in [upstream/manifest.json](upstream/manifest.json).
-To produce an agent-readable change report:
+Upstream changes are tracked against the pinned baseline:
 
 ```sh
 git clone https://github.com/yt-dlp/yt-dlp.git .upstream/yt-dlp
 python3 tools/upstream_report.py .upstream/yt-dlp > upstream-report.json
 ```
 
-Use a full clone so the baseline exists. Fetch newer commits explicitly before
-subsequent reports. The report is read-only and includes changed files, commits,
-affected Rust components, and unmapped files. It does not port code or advance
-the baseline. [The upstream workflow](docs/UPSTREAM.md) describes the future
-agent update loop. No recurring agent or automatic merge is enabled yet.
+Use a full clone so the baseline exists. The report lists changed files,
+commits, affected Rust components and unmapped files. It does not port code or
+advance the baseline; [the upstream workflow](docs/UPSTREAM.md) describes how
+changes are ported.
+
+More documentation:
+
+- [Compatibility inventory](docs/COMPATIBILITY.md): every supported option and
+  its exact behavior.
+- [Library API](docs/LIBRARY.md): using the `yt_dlp_rs` crate.
+- [Roadmap](docs/ROADMAP.md): architecture and upcoming work.
 
 Licensed under the Unlicense, matching this repository's original license.
