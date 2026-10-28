@@ -1,0 +1,20 @@
+[
+ {
+  "url": "http://vod.sport5.co.il/?Vc=147&Vi=176331&Page=1",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.sport5.co.il/articles.aspx?FolderID=3075&docID=2",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.sport5.co.il/articles.aspx?docID=3",
+  "args": [
+   "-J"
+  ]
+ }
+]

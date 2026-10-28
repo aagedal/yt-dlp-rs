@@ -274,6 +274,7 @@ mod snapchat;
 mod soundcloud;
 mod soundgasm;
 mod spiegel;
+mod sport5;
 mod spreaker;
 mod srgssr;
 mod startrek;
@@ -823,6 +824,7 @@ pub use soundgasm::{
     suitable as soundgasm_suitable,
 };
 pub use spiegel::{Spiegel, suitable as spiegel_suitable};
+pub use sport5::{Sport5, suitable as sport5_suitable};
 pub use spreaker::{
     Spreaker, SpreakerShow, show_suitable as spreaker_show_suitable, suitable as spreaker_suitable,
 };

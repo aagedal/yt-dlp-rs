@@ -741,6 +741,15 @@ Not covered: a selected format with its own `duration` (upstream's
 `requested_downloads` then keeps it; this port keeps one value per key).
 `tests/fixtures/sites/streamcz/` is compared with pinned upstream output.
 
+Sport5 clips (`[www|vod].sport5.co.il/...Vi|docID=ID`) follow upstream
+`Sport5IE`: the page's `clipId` (fatal) and its metadata XML: an `Error`
+element is upstream's expected `Sport5 returned error: NAME - DESCRIPTION`,
+else the title, description, duration, posters, categories and MP4
+playback links with their bitrates and sizes. Missing elements or
+non-integer attributes, where upstream raises Python exceptions, are
+unsupported errors. `tests/fixtures/sites/sport5/` is compared with pinned
+upstream output.
+
 STAR TREK videos (`startrek.com[/en-ca|en-un]/videos/SLUG`, `startrek`)
 follow upstream `StarTrekIE`: the Next.js `video.data` (missing keys are
 upstream's `KeyError`s); a YouTube video ID becomes a `url` result (not
