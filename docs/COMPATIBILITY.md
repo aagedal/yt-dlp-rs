@@ -1753,6 +1753,21 @@ warning) and `ipfs` HLS master playlists with subtitles, the original
 date. User pages (`3speak.tv/user/USER`) follow `ThreeSpeakUserIE`: each
 `data-payout` video as a `ThreeSpeak` URL entry.
 
+UOL videos (`uol.com.br` hosts with `mediaId=ID`, `v=ID`, `view/[KEY/]ID`,
+`video=SLUG` or `video/[YYYY/MM/DD/]ID` paths) follow upstream `UOLIE`: the
+`api.mais.uol.com.br/apiuol/v3/media/detail/ID` item (a missing `item`,
+`mediaId` or `title` is upstream's KeyError) and the
+`croupier.mais.uol.com.br/v3/formats/MEDIA_ID/jsonp` map. Each entry's `url`
+(else `secureUrl`) gets the `ver` (the item's `revision`, default 2), `r`,
+`token` and `sign` query; `HLS` gives non-fatal `hls` formats whose media
+playlist URLs carry that query and whose `extra_param_to_segment_url` makes the
+native HLS downloader add it to every segment request; other entries are
+progressive formats with upstream's `mobile`/`WEBM`/`360p`/`720p`/`1080p`
+qualities. Tags, the six `thumbSIZE` thumbnails, the cleaned description,
+duration, `publishDate` timestamp and view count follow upstream.
+`tests/fixtures/sites/uol/` (including an HLS download) is compared with pinned
+upstream output.
+
 UR Play and UR Skola programs (`urplay.se/program/ID...`,
 `urskola.se/Produkter/ID...`, fetched as `urplay.se/program/`) follow upstream
 `URPlayIE`: the Next.js `productData` (a missing one is `Unable to parse

@@ -3609,6 +3609,18 @@
       "scope": "UnitedNationsWebTvIE page partnerId and kentryID as a kaltura: url result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "uol",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/uol.py"
+      ],
+      "rust": [
+        "src/extractor/uol.rs",
+        "tests/fixtures/sites/uol/"
+      ],
+      "scope": "UOLIE media detail item and croupier formats map: progressive formats with the ver/r/token/sign query and qualities, non-fatal HLS formats whose playlist URLs and segment requests carry that query (extra_param_to_segment_url), tags, thumbnails and metadata, KeyError and HTTP errors, compared with pinned upstream output (including an HLS download) through the fixture proxy"
+    },
+    {
       "name": "urplay",
       "status": "partial",
       "upstream": [
@@ -4176,6 +4188,7 @@
         "upstream/notes/hls-vod.md",
         "src/crypto.rs",
         "tests/hls_aes.rs",
+        "tests/hls_extra_params.rs",
         "tools/generate_hls_aes_fixtures.py",
         "upstream/notes/hls-aes128.md",
         "tests/hls_audio.rs",
@@ -4195,7 +4208,7 @@
         "tests/hls_subtitles.rs",
         "tests/dash_subtitles.rs"
       ],
-      "scope": "Native finite clear/identity-AES-128 HLS master/media parsing, direct and HTML5 acquisition, single initialization map, TS/AAC/fMP4 ordered assembly, exact byte ranges, per-fragment whole retries/cancellation and no-clobber publication; pinned offline HlsFD fragment-plan comparison; lazy exact-length key retrieval/cache, sequence/explicit IVs, rotation and bounded RustCrypto CBC/PKCS7 decryption; external AUDIO rendition groups with language/name/default metadata, compatible automatic pair selection, audio-only masters and copy merging; parse_codecs vcodec/acodec/dynamic_range for HLS/DASH formats; upstream protocol fields (m3u8_native/http_dash_segments/determine_protocol, +-joined merges) and single-download [hlsnative]/[dashsegments] Total fragments lines (no HlsFD manifest refetch line); static single-period DASH BaseURL inheritance, templates/timelines, lists/ranges, explicit resources and native fragment representation downloads/merging; no dynamic/multi-period/SIDX/DRM DASH, SAMPLE-AES/DRM, live, discontinuities, external video/subtitle renditions, nested masters or remux parity; FragmentFD FILE.part/FILE.ytdl resume across invocations; HLS SUBTITLES renditions as m3u8_native WebVTT subtitles joined by HlsFD WebVTT packing; DASH text representations as subtitles (direct, or segmented through DashSegmentsFD)"
+      "scope": "Native finite clear/identity-AES-128 HLS master/media parsing, direct and HTML5 acquisition, single initialization map, TS/AAC/fMP4 ordered assembly, exact byte ranges, per-fragment whole retries/cancellation and no-clobber publication; pinned offline HlsFD fragment-plan comparison; extra_param_to_segment_url/extra_param_to_key_url (parse_qs + update_url_query) on every fragment, initialization and key URL, keys falling back to the segment query; lazy exact-length key retrieval/cache, sequence/explicit IVs, rotation and bounded RustCrypto CBC/PKCS7 decryption; external AUDIO rendition groups with language/name/default metadata, compatible automatic pair selection, audio-only masters and copy merging; parse_codecs vcodec/acodec/dynamic_range for HLS/DASH formats; upstream protocol fields (m3u8_native/http_dash_segments/determine_protocol, +-joined merges) and single-download [hlsnative]/[dashsegments] Total fragments lines (no HlsFD manifest refetch line); static single-period DASH BaseURL inheritance, templates/timelines, lists/ranges, explicit resources and native fragment representation downloads/merging; no dynamic/multi-period/SIDX/DRM DASH, SAMPLE-AES/DRM, live, discontinuities, external video/subtitle renditions, nested masters or remux parity; FragmentFD FILE.part/FILE.ytdl resume across invocations; HLS SUBTITLES renditions as m3u8_native WebVTT subtitles joined by HlsFD WebVTT packing; DASH text representations as subtitles (direct, or segmented through DashSegmentsFD)"
     },
     {
       "name": "direct-stream-merging",
