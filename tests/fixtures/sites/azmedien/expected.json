@@ -1,0 +1,48 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://tv.telezueri.ch/sonntalk/rahmenabkommen-133214569",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0_c03e1b5g\", \"title\": \"Straight from the Heart\", \"formats\": [{\"format_id\": \"mp4-56\", \"ext\": \"mp4\", \"tbr\": 56, \"fps\": 0, \"filesize_approx\": 1048576, \"container\": \"isom\", \"vcodec\": \"none\", \"height\": null, \"width\": null, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_audio\", \"protocol\": \"https\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 56, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-56 - audio only\"}, {\"format_id\": \"mp4-400\", \"ext\": \"mp4\", \"tbr\": 400, \"fps\": 25, \"filesize_approx\": 180400000, \"container\": null, \"vcodec\": null, \"height\": 270, \"width\": 480, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_noext\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"480x270\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-400 - 480x270\"}, {\"format_id\": \"mov-800.0\", \"ext\": \"mov\", \"tbr\": 800, \"fps\": 25, \"filesize_approx\": 360800000, \"container\": \"qt\", \"vcodec\": \"\", \"height\": 360, \"width\": 640, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_qt\", \"protocol\": \"https\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mov-800.0 - 640x360\"}, {\"format_id\": \"mp4-1200\", \"ext\": \"mp4\", \"tbr\": 1200, \"fps\": 29, \"filesize_approx\": 41943040, \"container\": \"isom\", \"vcodec\": \"avc1\", \"height\": 720, \"width\": 1280, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_hd\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 1280x720\"}], \"subtitles\": {\"en\": [{\"url\": \"http://cdnapi.kaltura.com/api_v3/service/caption_captionasset/action/serve/captionAssetId/1_en\", \"ext\": \"vtt\"}], \"German\": [{\"url\": \"http://cdnapi.kaltura.com/api_v3/service/caption_captionasset/action/serve/captionAssetId/1_de\", \"ext\": \"srt\"}], \"fr\": [{\"url\": \"http://cdnapi.kaltura.com/api_v3/service/caption_captionasset/action/serve/captionAssetId/1_fr\", \"ext\": \"ttml\"}, {\"url\": \"http://cdnapi.kaltura.com/api_v3/service/caption_captionasset/action/serve/captionAssetId/1_xx\", \"ext\": \"ttml\"}]}, \"description\": \"The Allman Brothers Band, 12/16/1981\", \"thumbnail\": \"https://cfvod.kaltura.com/p/1926081/sp/192608100/thumbnail/entry_id/0_c03e1b5g/version/100002\", \"duration\": 3608, \"timestamp\": 1387486483, \"uploader_id\": \"mlundberg@example.com\", \"view_count\": 57, \"original_url\": \"https://tv.telezueri.ch/sonntalk/rahmenabkommen-133214569\", \"webpage_url\": \"kaltura:1719221:0_c03e1b5g\", \"webpage_url_basename\": \"1719221:0_c03e1b5g\", \"webpage_url_domain\": null, \"extractor\": \"Kaltura\", \"extractor_key\": \"Kaltura\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cfvod.kaltura.com/p/1926081/sp/192608100/thumbnail/entry_id/0_c03e1b5g/version/100002\", \"id\": \"0\"}], \"display_id\": \"0_c03e1b5g\", \"fulltitle\": \"Straight from the Heart\", \"duration_string\": \"1:00:08\", \"upload_date\": \"20131219\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"mp4-1200\", \"ext\": \"mp4\", \"tbr\": 1200, \"fps\": 29, \"filesize_approx\": 41943040, \"container\": \"isom\", \"vcodec\": \"avc1\", \"height\": 720, \"width\": 1280, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_hd\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 1280x720\", \"_filename\": \"Straight from the Heart [0_c03e1b5g].mp4\", \"filename\": \"Straight from the Heart [0_c03e1b5g].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Kaltura] 0_c03e1b5g: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.telebaern.tv/telebaern-news/ganze-sendung-133531189#video=0_c03e1b5g",
+   "args": [
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "0_c03e1b5g|Kaltura|kaltura:1719221:0_c03e1b5g"
+   ],
+   "stderr": [
+    "WARNING: [Kaltura] 0_c03e1b5g: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.telem1.ch/news/no-kaltura-133",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [AZMedien] no-kaltura-133: Unable to extract kaltura id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

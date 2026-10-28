@@ -1,0 +1,22 @@
+[
+ {
+  "url": "https://www.dagbladet.no/video/truer-iran/nPripu9l",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.dagbladet.no/video/embed/nPripu9l",
+  "args": [
+   "--print",
+   "%(id)s|%(display_id)s|%(extractor)s|%(webpage_url)s"
+  ]
+ },
+ {
+  "url": "https://www.nettavisen.test/sak/1",
+  "args": [
+   "--print",
+   "%(id)s|%(display_id)s|%(extractor)s|%(title)s"
+  ]
+ }
+]

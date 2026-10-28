@@ -856,6 +856,12 @@ a `url_transparent` result (extracted by the JW Platform extractor) overlaid
 with `_old_archive_ids` and the non-fatal JSON-LD fields without `url`; a page
 without JSON-LD warns `unable to extract JSON-LD` like upstream.
 
+AZ Medien videos (`[www.|tv.]telezueri.ch|telebaern.tv|telem1.ch|tvo-online.ch/SECTION/SLUG-ID[#video=KALTURA_ID]`)
+follow upstream `AZMedienIE` as `url` results for `kaltura:1719221:ID`: the
+URL's `#video=` ID, else the first `KalturaData` item of the page's
+`__APOLLO_STATE__` (fatal; `Unable to extract kaltura id`).
+`tests/fixtures/sites/azmedien/` is compared with pinned upstream output.
+
 Baidu video series (`v.baidu.com/TYPE/ID.htm`, `show` and `tv` as `tvshow`
 and `tvplay`) follow upstream `BaiduVideoIE`: the app API's `xqinfo` title
 and unescaped intro and its `xqsingle` episodes as `url` results with their
@@ -908,6 +914,12 @@ SzTV pages (`sztv.hu`/`tvszombathely.hu` `.../SLUG-ID`) follow upstream
 `SztvHuIE`: the fatal player `file` (under `media.sztv.hu/vod/`) and meta
 title, the meta description and OpenGraph image with upstream's non-fatal
 warnings, as an untyped result.
+
+Melon music videos (`vod.melon.com/video/detail2.htm[l]?...mvId=ID`) follow
+upstream `MelonVODIE`: the player info JSON's title (missing keys are
+upstream's `KeyError`s) and artists, and the streaming info JSON's HLS
+playlist (`hls`, fatal), image, play time and open date.
+`tests/fixtures/sites/melonvod/` is compared with pinned upstream output.
 
 Megaphone players (`https://player.megaphone.fm/ID`, `megaphone.fm`) follow
 upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
@@ -992,6 +1004,14 @@ first video media item with a truthy ID (integer IDs only; otherwise
 upstream's missing-ID error), duration, cover and `videoUrl` formats with
 definition, bitrate, size and length, and the product subject as the title.
 `tests/fixtures/sites/alibaba/` is compared with pinned upstream output.
+
+Aitube.kz videos (`aitube.kz/video|embed/?...id=ID`) follow upstream
+`AitubeKZVideoIE`: the Next.js `videoInfo` (missing keys are upstream's
+`KeyError`s), the page's JSON-LD (fatal), the static-access HLS playlist
+(fatal), and `merge_dicts` of the video's title (else the `name`/`og:title`
+meta), description, view count (else `ya:ovs:views_total`), likes, channel,
+cover, comments and subscribers with the JSON-LD fields.
+`tests/fixtures/sites/aitube/` is compared with pinned upstream output.
 
 Al Jazeera articles, programmes and videos (`SITE.aljazeera.TLD/TYPE/YYYY/M/D/SLUG`)
 follow upstream `AlJazeeraIE`: the site's `graphql` `ArchipelagoSingleArticleQuery`
@@ -3243,6 +3263,14 @@ without `--video-password` keep upstream's error; the password flow (cookie
 and POST) is not ported.
 `tests/fixtures/sites/dropbox/` is compared with pinned upstream output.
 
+El Trece TV episodes (`eltrecetv.com.ar/SHOW/capitulos/temporada-N/SLUG`)
+follow upstream `ElTreceTVIE`: the page's `Fusion.globalContent` player
+config (fatal; missing keys are upstream's `KeyError`s), its HLS playlist
+(`hls`, fatal; the ID from its file name, else the slug), progressive
+`http` copies of the `/tracks-v1a1/index.m3u8` variants below 1080p, and the
+config's title and thumbnail. `tests/fixtures/sites/eltrecetv/` is compared
+with pinned upstream output.
+
 Elonet records (`elonet.finna.fi/Record/kavi.elonet_elokuva_ID`) follow
 upstream `ElonetIE`: the first `video-data` source's non-fatal HLS or DASH
 manifest (other extensions are upstream's `Unknown streaming format` error),
@@ -3576,11 +3604,24 @@ detected natively, and undecodable tokens remain explicit native errors.
 `tests/fixtures/sites/cloudflarestream/` is compared with pinned upstream
 output.
 
+Groupon deals (`groupon.com/deals/SLUG`) follow upstream `GrouponIE`: the
+page's `payload` JSON (fatal) as a playlist of YouTube `url` results for its
+carousel's deal videos with a provider and media ID, with the OpenGraph title
+and description (warnings when missing). Providers other than YouTube, which
+upstream fails to unpack, are an unsupported error.
+`tests/fixtures/sites/groupon/` is compared with pinned upstream output.
+
 Discogs releases and masters (`discogs.com/release|master/ID`) follow upstream
 `DiscogsReleasePlaylistIE`: the API's `release|masterID` JSON as a playlist,
 with the release title, of YouTube `url` results (with their titles) for the
 videos whose URI `YoutubeIE` accepts. `tests/fixtures/sites/discogs/` is
 compared with pinned upstream output.
+
+Dagbladet videos (`dagbladet.no/video/[embed|SLUG/]ID`) follow upstream
+`DBTVIE` as transparent `url` results with the URL's ID and display ID:
+11-character IDs for YouTube (the bare ID; not fixtured) and 8-character IDs
+for `jwplatform:ID`. Dagbladet embed iframes on generic pages are embeds.
+`tests/fixtures/sites/dbtv/` is compared with pinned upstream output.
 
 Digiteka and Ultimedia videos (`digiteka.net|ultimedia.com/deliver/generic|musique/.../src|article/ID`,
 `.../default/index/videogeneric|music/id/ID`) follow upstream `DigitekaIE`:
@@ -4008,6 +4049,14 @@ duration, counts, thumbnail and `isLive`, `int_or_none(publish_time,
 scale=1000)` timestamp, `categoryname` categories and the `channels` `'0'`
 entry's channel fields (a string key, so never a list's first item), with
 upstream's unprefixed `KeyError` messages.
+
+Monster Siren songs (`monster-siren.hypergryph.com/music/ID`, `monstersiren`)
+follow upstream `MonsterSirenHypergryphMusicIE`: the song API (a nonzero
+`code` is its `msg`, expected, else `API returned an error response`), its
+title, string artists, English lyrics subtitle and source URL, with the
+album API's name, cleaned intro and cover (non-fatal: a warning on HTTP
+errors). `tests/fixtures/sites/hypergryph/` is compared with pinned upstream
+output.
 
 Monstercat releases (`www.monstercat.com/release/ID`) follow upstream
 `MonstercatIE`: the page's first `<h1>` (cleaned) as title and album, the

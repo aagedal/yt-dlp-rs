@@ -2783,7 +2783,7 @@ fn shaped_playlist(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     if !matches!(
         shape.as_str(),
-        "html5-playlist" | "rss-playlist" | "xspf-playlist"
+        "html5-playlist" | "rss-playlist" | "xspf-playlist" | "typed-playlist"
     ) {
         return map;
     }
@@ -2792,6 +2792,15 @@ fn shaped_playlist(mut map: Map<String, Value>) -> Map<String, Value> {
         // `playlist_result(entries, video_id)`: no title.
         replay.ours.shift_remove("title");
         &[("id", Take), ("_type", Take), ("entries", Take)]
+    } else if shape == "typed-playlist" {
+        // `{'_type': 'playlist', 'id', 'entries', 'title', 'description'}`.
+        &[
+            ("_type", Take),
+            ("id", Take),
+            ("entries", Take),
+            ("title", Assign),
+            ("description", Assign),
+        ]
     } else if shape == "rss-playlist" {
         // `_extract_rss`'s dict.
         &[

@@ -1,0 +1,47 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.groupon.com/deals/bikram-yoga",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"id\": \"bikram-yoga\", \"entries\": [{\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"fk6OhWpXgIQ\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"AHuQWcylaU4\", \"__x_forwarded_for_ip\": null}], \"title\": \"Bikram Yoga\", \"description\": \"Deal\", \"webpage_url\": \"https://www.groupon.com/deals/bikram-yoga\", \"original_url\": \"https://www.groupon.com/deals/bikram-yoga\", \"webpage_url_basename\": \"bikram-yoga\", \"webpage_url_domain\": \"groupon.com\", \"extractor\": \"Groupon\", \"extractor_key\": \"Groupon\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.groupon.com/deals/no-videos",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"id\": \"no-videos\", \"entries\": [], \"title\": null, \"description\": null, \"webpage_url\": \"https://www.groupon.com/deals/no-videos\", \"original_url\": \"https://www.groupon.com/deals/no-videos\", \"webpage_url_basename\": \"no-videos\", \"webpage_url_domain\": \"groupon.com\", \"extractor\": \"Groupon\", \"extractor_key\": \"Groupon\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [Groupon] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Groupon] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.groupon.com/deals/no-carousel",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: no-carousel: An extractor error has occurred. (caused by KeyError('carousel')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

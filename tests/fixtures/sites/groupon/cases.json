@@ -1,0 +1,21 @@
+[
+ {
+  "url": "https://www.groupon.com/deals/bikram-yoga",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.groupon.com/deals/no-videos",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.groupon.com/deals/no-carousel",
+  "args": [
+   "-J"
+  ]
+ }
+]

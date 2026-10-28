@@ -1,5 +1,6 @@
 mod acast;
 pub mod adobepass;
+mod aitube;
 mod akamai;
 mod alibaba;
 mod aliexpress;
@@ -13,6 +14,7 @@ mod ard;
 mod arte;
 mod audioboom;
 mod audiomack;
+mod azmedien;
 mod baidu;
 mod bandcamp;
 mod beacon;
@@ -57,6 +59,7 @@ mod dailymotion;
 mod damtomo;
 mod dash;
 mod daystar;
+mod dbtv;
 mod democracynow;
 mod dfb;
 mod digiteka;
@@ -72,6 +75,7 @@ mod ebaumsworld;
 mod ebay;
 mod egghead;
 mod elonet;
+mod eltrecetv;
 mod epoch;
 mod eporner;
 mod erocast;
@@ -107,6 +111,7 @@ mod goodgame;
 mod googledrive;
 mod graspop;
 mod gronkh;
+mod groupon;
 mod harpodeon;
 mod hearthisat;
 mod hellporno;
@@ -118,6 +123,7 @@ mod hse;
 pub(crate) mod html5;
 mod huajiao;
 mod hypem;
+mod hypergryph;
 mod iheart;
 mod ilpost;
 mod iltalehti;
@@ -174,6 +180,7 @@ mod medaltv;
 mod mediaite;
 mod mediaklikk;
 mod megaphone;
+mod melonvod;
 mod mir24tv;
 mod mixcloud;
 mod mixlr;
@@ -346,6 +353,7 @@ mod zype;
 pub use acast::{
     ACast, ACastChannel, channel_suitable as acast_channel_suitable, suitable as acast_suitable,
 };
+pub use aitube::{AitubeKzVideo, suitable as aitube_suitable};
 pub use alibaba::{Alibaba, suitable as alibaba_suitable};
 pub use aliexpress::{AliExpressLive, suitable as aliexpress_suitable};
 pub use aljazeera::{AlJazeera, suitable as aljazeera_suitable};
@@ -371,6 +379,7 @@ pub use audiomack::{
     Audiomack, AudiomackAlbum, album_suitable as audiomack_album_suitable,
     suitable as audiomack_suitable,
 };
+pub use azmedien::{AzMedien, suitable as azmedien_suitable};
 pub use baidu::{BaiduVideo, suitable as baidu_suitable};
 pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use beacon::{BeaconTv, suitable as beacon_suitable};
@@ -442,6 +451,7 @@ pub use damtomo::{
     video_suitable as damtomo_video_suitable,
 };
 pub use daystar::{DaystarClip, suitable as daystar_suitable};
+pub use dbtv::{Dbtv, suitable as dbtv_suitable};
 pub use democracynow::{Democracynow, suitable as democracynow_suitable};
 pub use dfb::{Dfb, suitable as dfb_suitable};
 pub use digiteka::{Digiteka, suitable as digiteka_suitable};
@@ -468,6 +478,7 @@ pub use egghead::{
     lesson_suitable as egghead_lesson_suitable,
 };
 pub use elonet::{Elonet, suitable as elonet_suitable};
+pub use eltrecetv::{ElTreceTv, suitable as eltrecetv_suitable};
 pub use epoch::{Epoch, suitable as epoch_suitable};
 pub use eporner::{Eporner, suitable as eporner_suitable};
 pub use erocast::{Erocast, suitable as erocast_suitable};
@@ -525,6 +536,7 @@ pub use googledrive::{
 };
 pub use graspop::{Graspop, suitable as graspop_suitable};
 pub use gronkh::{Gronkh, suitable as gronkh_suitable};
+pub use groupon::{Groupon, suitable as groupon_suitable};
 pub use harpodeon::{Harpodeon, suitable as harpodeon_suitable};
 pub use hearthisat::{HearThisAt, suitable as hearthisat_suitable};
 pub use hellporno::{HellPorno, suitable as hellporno_suitable};
@@ -539,6 +551,7 @@ pub use hse::{
 pub use html5::GenericHttp;
 pub use huajiao::{Huajiao, suitable as huajiao_suitable};
 pub use hypem::{Hypem, suitable as hypem_suitable};
+pub use hypergryph::{MonsterSirenHypergryphMusic, suitable as hypergryph_suitable};
 pub use iheart::{
     IHeartRadio, IHeartRadioPodcast, podcast_suitable as iheart_podcast_suitable,
     suitable as iheart_suitable,
@@ -632,6 +645,7 @@ pub use medaltv::{MedalTv, suitable as medaltv_suitable};
 pub use mediaite::{Mediaite, suitable as mediaite_suitable};
 pub use mediaklikk::{MediaKlikk, suitable as mediaklikk_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
+pub use melonvod::{MelonVod, suitable as melonvod_suitable};
 pub use mir24tv::{Mir24Tv, suitable as mir24tv_suitable};
 pub use mixcloud::{Mixcloud, suitable as mixcloud_suitable};
 pub use mixlr::{

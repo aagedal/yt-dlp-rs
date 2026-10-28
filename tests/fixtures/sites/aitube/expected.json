@@ -1,0 +1,59 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://aitube.kz/video?id=a1",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"a1\", \"title\": \"Ekonomika\", \"description\": \"LD desc\", \"formats\": [{\"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://api-http.aitube.kz/kz.aitudala.aitube.staticaccess/video/a1/720.m3u8\", \"manifest_url\": \"https://api-http.aitube.kz/kz.aitudala.aitube.staticaccess/video/a1/video\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\"}], \"subtitles\": {}, \"view_count\": 77, \"like_count\": 4, \"channel\": \"Ch\", \"channel_id\": \"c1\", \"thumbnail\": \"https://ait.test/c.jpg\", \"channel_follower_count\": 12, \"thumbnails\": [{\"url\": \"https://ait.test/ld.jpg\", \"id\": \"0\"}], \"duration\": 62, \"timestamp\": 1677751200, \"webpage_url\": \"https://aitube.kz/video?id=a1\", \"original_url\": \"https://aitube.kz/video?id=a1\", \"webpage_url_basename\": \"video\", \"webpage_url_domain\": \"aitube.kz\", \"extractor\": \"AitubeKZVideo\", \"extractor_key\": \"AitubeKZVideo\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"a1\", \"fulltitle\": \"Ekonomika\", \"duration_string\": \"1:02\", \"upload_date\": \"20230302\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"2000\", \"url\": \"https://api-http.aitube.kz/kz.aitudala.aitube.staticaccess/video/a1/720.m3u8\", \"manifest_url\": \"https://api-http.aitube.kz/kz.aitudala.aitube.staticaccess/video/a1/video\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\", \"_filename\": \"Ekonomika [a1].mp4\", \"filename\": \"Ekonomika [a1].mp4\", \"__write_download_archive\": false}], \"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://api-http.aitube.kz/kz.aitudala.aitube.staticaccess/video/a1/720.m3u8\", \"manifest_url\": \"https://api-http.aitube.kz/kz.aitudala.aitube.staticaccess/video/a1/video\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://aitube.kz/embed/?id=a2",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"a2\", \"title\": \"OG\", \"formats\": [{\"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://api-http.aitube.kz/kz.aitudala.aitube.staticaccess/video/a2/720.m3u8\", \"manifest_url\": \"https://api-http.aitube.kz/kz.aitudala.aitube.staticaccess/video/a2/video\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\"}], \"subtitles\": {}, \"description\": \"LD desc\", \"thumbnails\": [{\"url\": \"https://ait.test/ld.jpg\", \"id\": \"0\"}], \"duration\": 62, \"timestamp\": 1677751200, \"webpage_url\": \"https://aitube.kz/embed/?id=a2\", \"original_url\": \"https://aitube.kz/embed/?id=a2\", \"webpage_url_basename\": \"embed\", \"webpage_url_domain\": \"aitube.kz\", \"extractor\": \"AitubeKZVideo\", \"extractor_key\": \"AitubeKZVideo\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://ait.test/ld.jpg\", \"display_id\": \"a2\", \"fulltitle\": \"OG\", \"duration_string\": \"1:02\", \"upload_date\": \"20230302\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://api-http.aitube.kz/kz.aitudala.aitube.staticaccess/video/a2/720.m3u8\", \"manifest_url\": \"https://api-http.aitube.kz/kz.aitudala.aitube.staticaccess/video/a2/video\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\", \"_filename\": \"OG [a2].mp4\", \"filename\": \"OG [a2].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [AitubeKZVideo] unable to extract ya:ovs:views_total; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://aitube.kz/video?id=a3",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [AitubeKZVideo] a3: Unable to extract JSON-LD; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://aitube.kz/video?id=a4",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: a4: An extractor error has occurred. (caused by KeyError('videoInfo')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

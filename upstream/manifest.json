@@ -250,6 +250,18 @@
       "scope": "MedalTVIE content API JSON, fatal HLS and http-source formats without privacy-protected guest URLs, the socialVideoUrl fallback with its warning, and the traverse_obj metadata. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "melonvod",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/melonvod.py"
+      ],
+      "rust": [
+        "src/extractor/melonvod.rs",
+        "tests/fixtures/sites/melonvod/"
+      ],
+      "scope": "MelonVODIE player and streaming info JSON with HLS, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "mediaklikk",
       "status": "partial",
       "upstream": [
@@ -557,6 +569,18 @@
         "tests/fixtures/sites/adobepass/"
       ],
       "scope": "AdobePassIE: the generated MSO_INFO table (--ap-list-mso render_table output, --ap-mso validation and TV Provider account username missing), _extract_mvpd_auth device/client registration, access token, registration code, authenticate/saml redirect page and the generic meta-refresh/post_form login (Cablevision/AlticeOne _eventId_proceed, Rogers without confirmation, login_hostname validation and https upgrade) plus the Comcast_SSO, Verizon, Spectrum/Charter_Direct, slingtv and Suddenlink flows, session/authorize/shortAuthorize with mvpd headers, pendingLogout retries, authorize <error> details and the participating TV providers error; credentials from --ap-username/--ap-password or the MSO netrc machine (--netrc/--netrc-location/--netrc-cmd, CPython netrc parser); authn/authz tokens cached in memory for the run (no cache directory). Philo, Fubo, the --ap-username password prompt, geo verification headers and _get_mvpd_resource are not ported. Compared with pinned upstream output through the fixture proxy via BrightcoveNewIE TVE videos"
+    },
+    {
+      "name": "aitube",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/aitube.py"
+      ],
+      "rust": [
+        "src/extractor/aitube.rs",
+        "tests/fixtures/sites/aitube/"
+      ],
+      "scope": "AitubeKZVideoIE Next.js video info, HLS playlist and JSON-LD merge, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "alibaba",
@@ -920,6 +944,18 @@
       "scope": "CaltransIE page Global Vars script (route place, location name, poster and fatal-less stream URL with upstream warnings) as live HLS formats (ts, live variant IDs) compared with pinned upstream output through the fixture proxy; a missing videoStreamURL remains a native error"
     },
     {
+      "name": "azmedien",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/azmedien.py"
+      ],
+      "rust": [
+        "src/extractor/azmedien.rs",
+        "tests/fixtures/sites/azmedien/"
+      ],
+      "scope": "AZMedienIE Kaltura entry IDs from the URL or Apollo state as kaltura url results, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "baidu",
       "status": "partial",
       "upstream": [
@@ -1234,6 +1270,18 @@
       "scope": "DFBIE player XML, stream access token manifests (optional hds F4M with hdcore and hls m3u8 formats), title, unified_strdate upload date, thumbnail and wrapped AttributeError/KeyError messages compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "dbtv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dbtv.py"
+      ],
+      "rust": [
+        "src/extractor/dbtv.rs",
+        "tests/fixtures/sites/dbtv/"
+      ],
+      "scope": "DBTVIE transparent YouTube/JWPlatform url results and embeds; the JW Platform path is compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "digiteka",
       "status": "partial",
       "upstream": [
@@ -1244,6 +1292,18 @@
         "tests/fixtures/sites/digiteka/"
       ],
       "scope": "DigitekaIE getConf player JSON with HLS and MP4 renditions, and Ultimedia embeds on generic pages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "groupon",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/groupon.py"
+      ],
+      "rust": [
+        "src/extractor/groupon.rs",
+        "tests/fixtures/sites/groupon/"
+      ],
+      "scope": "GrouponIE payload deal videos as YouTube url results with OpenGraph metadata, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "discogs",
@@ -1487,6 +1547,18 @@
         "tests/fixtures/sites/egghead/"
       ],
       "scope": "EggheadCourseIE lesson url-result playlists with course metadata and EggheadLessonIE HLS/DASH/direct media, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "eltrecetv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/eltrecetv.py"
+      ],
+      "rust": [
+        "src/extractor/eltrecetv.rs",
+        "tests/fixtures/sites/eltrecetv/"
+      ],
+      "scope": "ElTreceTVIE Fusion player config HLS with derived progressive formats, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "elonet",
@@ -2370,6 +2442,18 @@
         "tests/fixtures/sites/mocha/"
       ],
       "scope": "MochaVideoIE detail API (resolution HLS formats and subtitles, original MP4, raw metadata, scaled timestamp, string-key channel traversal, generic-title fallback, KeyError and AttributeError messages) compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "hypergryph",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/hypergryph.py"
+      ],
+      "rust": [
+        "src/extractor/hypergryph.rs",
+        "tests/fixtures/sites/hypergryph/"
+      ],
+      "scope": "MonsterSirenHypergryphMusicIE song and album APIs, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "monstercat",

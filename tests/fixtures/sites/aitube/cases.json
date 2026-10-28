@@ -1,0 +1,26 @@
+[
+ {
+  "url": "https://aitube.kz/video?id=a1",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://aitube.kz/embed/?id=a2",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://aitube.kz/video?id=a3",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://aitube.kz/video?id=a4",
+  "args": [
+   "-J"
+  ]
+ }
+]

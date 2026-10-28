@@ -1,0 +1,155 @@
+[
+ {
+  "partnerId": 1926081,
+  "ks": "djJ8MTkyNjA4MXw",
+  "userId": 0,
+  "objectType": "KalturaStartWidgetSessionResponse"
+ },
+ {
+  "objects": [
+   {
+    "id": "0_c03e1b5g",
+    "name": "Straight from the Heart",
+    "description": "<p>The Allman Brothers Band, <b>12/16/1981</b></p>",
+    "userId": "mlundberg@example.com",
+    "dataUrl": "https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https",
+    "plays": "57",
+    "duration": 3608,
+    "createdAt": 1387486483,
+    "thumbnailUrl": "https://cfvod.kaltura.com/p/1926081/sp/192608100/thumbnail/entry_id/0_c03e1b5g/version/100002",
+    "objectType": "KalturaMediaEntry"
+   }
+  ],
+  "totalCount": 1,
+  "objectType": "KalturaBaseEntryListResponse"
+ },
+ [
+  {
+   "id": "0_orig",
+   "status": 2,
+   "fileExt": "mp4",
+   "bitrate": 2500,
+   "isOriginal": true,
+   "width": 1920,
+   "height": 1080,
+   "frameRate": 25,
+   "size": 51200,
+   "containerFormat": "isom",
+   "videoCodecId": "avc1"
+  },
+  {
+   "id": "0_bad",
+   "status": 2,
+   "fileExt": "mov",
+   "bitrate": 4000,
+   "isOriginal": true,
+   "width": 1920,
+   "height": 1080,
+   "frameRate": 25,
+   "containerFormat": "qt",
+   "videoCodecId": "avc1"
+  },
+  {
+   "id": "0_hd",
+   "status": 2,
+   "fileExt": "mp4",
+   "bitrate": 1200,
+   "isOriginal": false,
+   "width": 1280,
+   "height": 720,
+   "frameRate": 29.97,
+   "size": "40960",
+   "containerFormat": "isom",
+   "videoCodecId": "avc1"
+  },
+  {
+   "id": "0_audio",
+   "status": 2,
+   "fileExt": "mp4",
+   "bitrate": 56,
+   "frameRate": 0,
+   "size": 1024,
+   "containerFormat": "isom"
+  },
+  {
+   "id": "0_qt",
+   "status": 2,
+   "fileExt": "",
+   "bitrate": 800.0,
+   "width": 640,
+   "height": 360,
+   "frameRate": 25,
+   "containerFormat": "qt",
+   "videoCodecId": ""
+  },
+  {
+   "id": "0_noext",
+   "status": 2,
+   "bitrate": 400,
+   "width": 480,
+   "height": 270,
+   "frameRate": 25
+  },
+  {
+   "id": "0_pending",
+   "status": 1,
+   "fileExt": "mp4",
+   "bitrate": 300
+  },
+  {
+   "id": "0_chun",
+   "status": 2,
+   "fileExt": "chun",
+   "bitrate": 0
+  },
+  {
+   "id": "0_drm",
+   "status": 2,
+   "fileExt": "wvm",
+   "bitrate": 900
+  }
+ ],
+ {
+  "objects": [
+   {
+    "id": "1_en",
+    "status": 2,
+    "languageCode": "en",
+    "language": "English",
+    "format": "3",
+    "fileExt": "vtt"
+   },
+   {
+    "id": "1_de",
+    "status": 2,
+    "languageCode": "",
+    "language": "German",
+    "format": 1
+   },
+   {
+    "id": "1_fr",
+    "status": 2,
+    "languageCode": "fr",
+    "format": "2"
+   },
+   {
+    "id": "1_xx",
+    "status": 2,
+    "languageCode": "fr",
+    "format": 9
+   },
+   {
+    "id": "1_wait",
+    "status": 0,
+    "languageCode": "es"
+   },
+   {
+    "id": "",
+    "status": 2,
+    "languageCode": "it"
+   }
+  ],
+  "totalCount": 6,
+  "objectType": "KalturaCaptionAssetListResponse"
+ }
+]

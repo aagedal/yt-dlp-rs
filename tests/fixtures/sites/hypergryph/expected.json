@@ -1,0 +1,59 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://monster-siren.hypergryph.com/music/514562",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"514562\", \"vcodec\": \"none\", \"title\": \"Flame Shadow\", \"artists\": [\"\\u585e\\u58ec\\u5531\\u7247-MSR\"], \"subtitles\": {\"en\": [{\"url\": \"https://res01.hycdn.test/x/flame.lrc\", \"ext\": \"lrc\"}]}, \"url\": \"https://res01.hycdn.test/x/flame.wav\", \"album\": \"Flame Shadow\", \"description\": \"Intro & more\", \"thumbnail\": \"https://web.hycdn.test/cover.jpg\", \"webpage_url\": \"https://monster-siren.hypergryph.com/music/514562\", \"original_url\": \"https://monster-siren.hypergryph.com/music/514562\", \"webpage_url_basename\": \"514562\", \"webpage_url_domain\": \"monster-siren.hypergryph.com\", \"extractor\": \"monstersiren\", \"extractor_key\": \"MonsterSirenHypergryphMusic\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://web.hycdn.test/cover.jpg\", \"id\": \"0\"}], \"display_id\": \"514562\", \"fulltitle\": \"Flame Shadow\", \"release_year\": null, \"artist\": \"\\u585e\\u58ec\\u5531\\u7247-MSR\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"wav\", \"audio_ext\": \"wav\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"Flame Shadow [514562].wav\", \"filename\": \"Flame Shadow [514562].wav\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://monster-siren.hypergryph.com/music/2",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2\", \"vcodec\": \"none\", \"title\": \"No album\", \"url\": \"https://res01.hycdn.test/x/b.mp3\", \"webpage_url\": \"https://monster-siren.hypergryph.com/music/2\", \"original_url\": \"https://monster-siren.hypergryph.com/music/2\", \"webpage_url_basename\": \"2\", \"webpage_url_domain\": \"monster-siren.hypergryph.com\", \"extractor\": \"monstersiren\", \"extractor_key\": \"MonsterSirenHypergryphMusic\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2\", \"fulltitle\": \"No album\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"No album [2].mp3\", \"filename\": \"No album [2].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [monstersiren] 9: Unable to download JSON metadata: HTTP Error 500: OK"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://monster-siren.hypergryph.com/music/3",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [monstersiren] 3: Song not found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://monster-siren.hypergryph.com/music/4",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [monstersiren] 4: API returned an error response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
