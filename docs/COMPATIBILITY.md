@@ -2276,6 +2276,14 @@ description, uploader, duration, license and categories. Timed text tracks
 without a type are explicit native errors. `tests/fixtures/sites/wikimedia/`
 is compared with pinned upstream output.
 
+VTVGo videos (`vtvgo.vn/kho-video|tin-tuc/...ID[.html]`, `vtvgo.vn/digital/detail.php?...content_id=ID`)
+follow upstream `VTVGoIE`: the page's `var link`/`addPlayer(` `index.m3u8`
+(fatal). VTV.vn videos (`vtv.vn/video/...ID.htm`) follow `VTVIE`: the
+`video-highlight-box` element's `VCSortableInPreviewMode` `data-vid`
+(without its `vtv.mediacdn.vn/` prefix) under `cdn-videos.vtv.vn/.../master.m3u8`.
+Both are fatal HLS with the OpenGraph title, description and image.
+`tests/fixtures/sites/vtv/` is compared with pinned upstream output.
+
 Wall Street Journal and Barron's videos (`video-api.wsj.com/.../iframe.html?...guid=ID`,
 `wsj|barrons.com/video/.../ID`, `wsj:ID`) follow upstream `WSJIE`: the
 `find_all_videos.asp` API's first item (an empty list is upstream's bare

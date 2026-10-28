@@ -1,0 +1,53 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://vtv.vn/video/thoi-su-20h-vtv1-12-6-2024-680411.htm",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"680411\", \"title\": \"Th\\u1eddi s\\u1ef1 20h VTV1\", \"description\": null, \"thumbnail\": \"https://cdn-images.vtv.test/thumb.jpg\", \"formats\": [{\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://cdn-videos.vtv.vn/2024/6/12/ts.mp4/360/index.m3u8\", \"manifest_url\": \"https://cdn-videos.vtv.vn/2024/6/12/ts.mp4/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}], \"webpage_url\": \"https://vtv.vn/video/thoi-su-20h-vtv1-12-6-2024-680411.htm\", \"original_url\": \"https://vtv.vn/video/thoi-su-20h-vtv1-12-6-2024-680411.htm\", \"webpage_url_basename\": \"thoi-su-20h-vtv1-12-6-2024-680411.htm\", \"webpage_url_domain\": \"vtv.vn\", \"extractor\": \"VTV\", \"extractor_key\": \"VTV\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn-images.vtv.test/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"680411\", \"fulltitle\": \"Th\\u1eddi s\\u1ef1 20h VTV1\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"921\", \"url\": \"https://cdn-videos.vtv.vn/2024/6/12/ts.mp4/360/index.m3u8\", \"manifest_url\": \"https://cdn-videos.vtv.vn/2024/6/12/ts.mp4/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\", \"_filename\": \"Th\\u1eddi s\\u1ef1 20h VTV1 [680411].mp4\", \"filename\": \"Th\\u1eddi s\\u1ef1 20h VTV1 [680411].mp4\", \"__write_download_archive\": false}], \"format_id\": \"921\", \"format_index\": null, \"url\": \"https://cdn-videos.vtv.vn/2024/6/12/ts.mp4/360/index.m3u8\", \"manifest_url\": \"https://cdn-videos.vtv.vn/2024/6/12/ts.mp4/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vtvgo.vn/kho-video/bep-vtv-888456.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"888456\", \"title\": \"Th\\u1eddi s\\u1ef1 20h VTV1\", \"description\": null, \"thumbnail\": \"https://cdn-images.vtv.test/thumb.jpg\", \"formats\": [{\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://vtvgo-hls.test/888456/360/index.m3u8\", \"manifest_url\": \"https://vtvgo-hls.test/888456/index.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}], \"webpage_url\": \"https://vtvgo.vn/kho-video/bep-vtv-888456.html\", \"original_url\": \"https://vtvgo.vn/kho-video/bep-vtv-888456.html\", \"webpage_url_basename\": \"bep-vtv-888456.html\", \"webpage_url_domain\": \"vtvgo.vn\", \"extractor\": \"VTVGo\", \"extractor_key\": \"VTVGo\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn-images.vtv.test/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"888456\", \"fulltitle\": \"Th\\u1eddi s\\u1ef1 20h VTV1\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"921\", \"format_index\": null, \"url\": \"https://vtvgo-hls.test/888456/360/index.m3u8\", \"manifest_url\": \"https://vtvgo-hls.test/888456/index.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\", \"_filename\": \"Th\\u1eddi s\\u1ef1 20h VTV1 [888456].mp4\", \"filename\": \"Th\\u1eddi s\\u1ef1 20h VTV1 [888456].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vtvgo.vn/tin-tuc/khong-co-1/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [VTVGo] 1: Unable to extract m3u8 url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vtv.vn/video/x-2.htm",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 2: An extractor error has occurred. (caused by KeyError('data-vid')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

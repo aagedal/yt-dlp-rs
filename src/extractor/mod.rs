@@ -274,6 +274,7 @@ mod visir;
 mod vk;
 mod vkplay;
 mod vocaroo;
+mod vtv;
 mod wat;
 mod webcamerapl;
 mod weibo;
@@ -793,6 +794,7 @@ pub use vkplay::{
     VkPlay, VkPlayLive, live_suitable as vkplay_live_suitable, suitable as vkplay_suitable,
 };
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
+pub use vtv::{Vtv, VtvGo, go_suitable as vtv_go_suitable, suitable as vtv_suitable};
 pub use wat::{Wat, suitable as wat_suitable};
 pub use webcamerapl::{Webcamerapl, suitable as webcamerapl_suitable};
 pub use weibo::{

@@ -3408,6 +3408,18 @@
       "scope": "VocarooIE media URL HEAD request, upload timestamp header, Referer headers and empty title compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "vtv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/vtv.py"
+      ],
+      "rust": [
+        "src/extractor/vtv.rs",
+        "tests/fixtures/sites/vtv/"
+      ],
+      "scope": "VTVGoIE player HLS and VTVIE highlight-box data-vid HLS with OpenGraph metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "wat",
       "status": "partial",
       "upstream": [
