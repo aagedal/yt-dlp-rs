@@ -1,0 +1,68 @@
+{
+ "routes": [
+  {
+   "url": "https://www.n-tv.de/mediathek/videos/panorama/Kaputt-article6.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>n-tv</title><meta property=\"og:type\" content=\"article\"></head><body>\n<script>\nwindow.pageData = {\n  article: {headline: \"Schnee und Gl\\u00e4tte f\\u00fchren zu Staus\", intro: 'Schnee sorgt f\\u00fcr Chaos.', kicker: \"Winterchaos\", publishedDateAsUnixTimeStamp: 1422892797, id: 14438086},\n  section: \"panorama\"\n};\n</script>\n<script>\n$( \"#playerwrapper\" ).data(\"player\", {setup: {source: {progressive: \"https://ntv.test/v.mp4\", hls: \"https://ntv.test/master.m3u8\", dash: \"https://ntv.test/manifest.mpd\", poster: \"https://ntv.test/p.jpg\", length: 67}, ivw: window.ivwParams, autoplay: !0}});\n</script></body></html>"
+  },
+  {
+   "url": "https://www.n-tv.de/mediathek/videos/panorama/Schnee-und-Glaette-article14438086.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>n-tv</title><meta property=\"og:type\" content=\"article\"></head><body>\n<script>\nwindow.pageData = {\n  article: {headline: \"Schnee und Gl\\u00e4tte f\\u00fchren zu Staus\", intro: 'Schnee sorgt f\\u00fcr Chaos.', kicker: \"Winterchaos\", publishedDateAsUnixTimeStamp: 1422892797, id: 14438086},\n  section: \"panorama\"\n};\n</script>\n<script>\n$( \"#playerwrapper\" ).data(\"player\", {setup: {source: {progressive: \"https://ntv.test/v.mp4\", hls: \"https://ntv.test/master.m3u8\", dash: \"https://ntv.test/manifest.mpd\", poster: \"https://ntv.test/p.jpg\", length: 67}, autoplay: !0, ivw: window.ivwParams}});\n</script></body></html>"
+  },
+  {
+   "url": "https://ntv.test/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://ntv.test/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://www.n-tv.de/mediathek/videos/panorama/Progressiv-article2.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var d = {article: {headline: 'Nur progressiv', publishedDateAsUnixTimeStamp: \"1699688294\"}};\n$(\"#playerwrapper\").data(\"player\", {setup: {source: {progressive: \"https://ntv.test/p.mp4\", hls: \"https://ntv.test/missing.m3u8\", dash: \"\", poster: \"p.jpg\", length: \"326\"}}});</script>"
+  },
+  {
+   "url": "https://ntv.test/missing.m3u8",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "nope"
+  },
+  {
+   "url": "https://www.n-tv.de/mediathek/videos/panorama/Kein-article3.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<p>no article</p>"
+  },
+  {
+   "url": "https://www.n-tv.de/mediathek/videos/panorama/Kein-Player-article4.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var d = {article: {headline: \"x\"}};</script>"
+  },
+  {
+   "url": "https://www.n-tv.de/mediathek/videos/panorama/Kein-Setup-article5.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var d = {article: {headline: \"x\"}};\n$(\"#playerwrapper\").data(\"player\", {config: {}});</script>"
+  }
+ ]
+}

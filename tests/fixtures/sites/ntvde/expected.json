@@ -1,0 +1,87 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.n-tv.de/mediathek/videos/panorama/Schnee-und-Glaette-article14438086.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"14438086\", \"title\": \"Schnee und Gl\\u00e4tte f\\u00fchren zu Staus\", \"description\": \"Schnee sorgt f\\u00fcr Chaos.\", \"alt_title\": \"Winterchaos\", \"timestamp\": 1422892797, \"thumbnail\": \"https://ntv.test/p.jpg\", \"duration\": 67, \"formats\": [{\"format_id\": \"http\", \"url\": \"https://ntv.test/v.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\"}, {\"format_id\": \"dash-v1\", \"manifest_url\": \"https://ntv.test/manifest.mpd\", \"ext\": \"mp4\", \"width\": 640, \"height\": 360, \"tbr\": 800.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://ntv.test/manifest.mpd\", \"fragment_base_url\": \"https://ntv.test/\", \"fragments\": [{\"path\": \"init.mp4\"}, {\"path\": \"chunk_1.m4s\", \"duration\": 10.0}, {\"path\": \"chunk_2.m4s\", \"duration\": 10.0}, {\"path\": \"chunk_3.m4s\", \"duration\": 10.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 800.0, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-v1 - 640x360 (DASH video)\"}, {\"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://ntv.test/720.m3u8\", \"manifest_url\": \"https://ntv.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\"}], \"webpage_url\": \"https://www.n-tv.de/mediathek/videos/panorama/Schnee-und-Glaette-article14438086.html\", \"original_url\": \"https://www.n-tv.de/mediathek/videos/panorama/Schnee-und-Glaette-article14438086.html\", \"webpage_url_basename\": \"Schnee-und-Glaette-article14438086.html\", \"webpage_url_domain\": \"n-tv.de\", \"extractor\": \"n-tv.de\", \"extractor_key\": \"NTVDe\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://ntv.test/p.jpg\", \"id\": \"0\"}], \"display_id\": \"14438086\", \"fulltitle\": \"Schnee und Gl\\u00e4tte f\\u00fchren zu Staus\", \"duration_string\": \"1:07\", \"upload_date\": \"20150202\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1000\", \"url\": \"https://ntv.test/720.m3u8\", \"manifest_url\": \"https://ntv.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\", \"_filename\": \"Schnee und Gl\\u00e4tte f\\u00fchren zu Staus [14438086].mp4\", \"filename\": \"Schnee und Gl\\u00e4tte f\\u00fchren zu Staus [14438086].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://ntv.test/720.m3u8\", \"manifest_url\": \"https://ntv.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.n-tv.de/mediathek/videos/panorama/Progressiv-article2.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2\", \"title\": \"Nur progressiv\", \"timestamp\": 1699688294, \"duration\": 326, \"formats\": [{\"format_id\": \"http\", \"url\": \"https://ntv.test/p.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\"}], \"webpage_url\": \"https://www.n-tv.de/mediathek/videos/panorama/Progressiv-article2.html\", \"original_url\": \"https://www.n-tv.de/mediathek/videos/panorama/Progressiv-article2.html\", \"webpage_url_basename\": \"Progressiv-article2.html\", \"webpage_url_domain\": \"n-tv.de\", \"extractor\": \"n-tv.de\", \"extractor_key\": \"NTVDe\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2\", \"fulltitle\": \"Nur progressiv\", \"duration_string\": \"5:26\", \"upload_date\": \"20231111\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"http\", \"url\": \"https://ntv.test/p.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\", \"_filename\": \"Nur progressiv [2].mp4\", \"filename\": \"Nur progressiv [2].mp4\", \"__write_download_archive\": false}], \"format_id\": \"http\", \"url\": \"https://ntv.test/p.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [n-tv.de] 2: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.n-tv.de/mediathek/videos/panorama/Kein-article3.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [n-tv.de] 3: Unable to extract info; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.n-tv.de/mediathek/videos/panorama/Kein-Player-article4.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [n-tv.de] 4: Unable to extract player data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.n-tv.de/mediathek/videos/panorama/Kein-Setup-article5.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 5: An extractor error has occurred. (caused by KeyError('setup')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.n-tv.de/mediathek/videos/panorama/Kaputt-article6.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [n-tv.de] 6: Unable to extract player data - Failed to parse JSON (caused by JSONDecodeError('Expecting property name enclosed in double quotes in \\'th\": 67}, , \"autopla\\': line 1 column 195 (char 194)')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

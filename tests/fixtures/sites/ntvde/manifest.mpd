@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" type="static" mediaPresentationDuration="PT30S" minBufferTime="PT2S" profiles="urn:mpeg:dash:profile:isoff-live:2011">
+ <Period id="0" start="PT0S">
+  <AdaptationSet mimeType="video/mp4" segmentAlignment="true">
+   <Representation id="v1" bandwidth="800000" codecs="avc1.4d401f" width="640" height="360">
+    <SegmentTemplate media="chunk_$Number$.m4s" initialization="init.mp4" duration="10" timescale="1" startNumber="1"/>
+   </Representation>
+  </AdaptationSet>
+ </Period>
+</MPD>

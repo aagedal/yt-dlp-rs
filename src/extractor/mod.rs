@@ -101,6 +101,7 @@ mod fczenit;
 mod filmarchiv;
 mod filmon;
 mod filmweb;
+mod fivetv;
 mod flickr;
 mod footyroom;
 mod formula1;
@@ -201,6 +202,7 @@ mod massengeschmacktv;
 mod masters;
 mod matchitv;
 mod matchtv;
+mod mbn;
 mod mdr;
 mod medaltv;
 mod mediaite;
@@ -236,6 +238,7 @@ mod nowcanal;
 mod npr;
 mod nrk;
 mod nts;
+mod ntvde;
 pub mod nuxt;
 mod nzonscreen;
 mod odnoklassniki;
@@ -566,6 +569,7 @@ pub use filmon::{
     FilmOn, FilmOnChannel, channel_suitable as filmon_channel_suitable, suitable as filmon_suitable,
 };
 pub use filmweb::{Filmweb, suitable as filmweb_suitable};
+pub use fivetv::{FiveTv, suitable as fivetv_suitable};
 pub use flickr::{Flickr, suitable as flickr_suitable};
 pub use footyroom::{FootyRoom, suitable as footyroom_suitable};
 pub use formula1::{Formula1, suitable as formula1_suitable};
@@ -732,6 +736,7 @@ pub use massengeschmacktv::{MassengeschmackTv, suitable as massengeschmacktv_sui
 pub use masters::{Masters, suitable as masters_suitable};
 pub use matchitv::{MatchiTv, suitable as matchitv_suitable};
 pub use matchtv::{MatchTv, suitable as matchtv_suitable};
+pub use mbn::{Mbn, suitable as mbn_suitable};
 pub use mdr::{Mdr, suitable as mdr_suitable};
 pub use medaltv::{MedalTv, suitable as medaltv_suitable};
 pub use mediaite::{Mediaite, suitable as mediaite_suitable};
@@ -798,6 +803,7 @@ pub use nrk::{
     suitable as nrk_suitable, tv_suitable as nrk_tv_suitable,
 };
 pub use nts::{NtsLive, suitable as nts_suitable};
+pub use ntvde::{NtvDe, suitable as ntvde_suitable};
 pub use nzonscreen::{NzOnScreen, suitable as nzonscreen_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
 pub use olympics::{OlympicsReplay, suitable as olympics_suitable};

@@ -1863,6 +1863,18 @@
       "scope": "FilmOnIE VOD streams, poster thumbnails and series url playlists and FilmOnChannelIE live streams or Wowza (HLS/HDS) VOD formats with the APIs' error messages, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "fivetv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/fivetv.py"
+      ],
+      "rust": [
+        "src/extractor/fivetv.rs",
+        "tests/fixtures/sites/fivetv/"
+      ],
+      "scope": "FiveTVIE player data-href/videoplayer link as the result url, generic title and OpenGraph description/image/duration, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "filmweb",
       "status": "partial",
       "upstream": [
@@ -2671,6 +2683,18 @@
       "scope": "MangomoloVideoIE and MangomoloLiveIE player pages as Wowza formats (base64 live channel IDs with Python's errors) and _EMBED_REGEX iframes as url_transparent embeds with ID and uploader on generic pages, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "mbn",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mbn.py"
+      ],
+      "rust": [
+        "src/extractor/mbn.rs",
+        "tests/fixtures/sites/mbn/"
+      ],
+      "scope": "MBNIE player JSON, authenticated stream URLs as non-fatal HLS master playlists, title/duration/release date/thumbnail/series/episode number and the content cls cd / m3u8 URL warnings and fatal download errors, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "masters",
       "status": "partial",
       "upstream": [
@@ -3020,6 +3044,18 @@
         "tests/fixtures/sites/nrk/"
       ],
       "scope": "NRKIE psapi playback manifest/metadata (Accept header, HTTP 400 retry without program/, nonPlayable and geo-blocked errors), unencrypted HLS master formats (adap/s/bandwidth query rewrites, one random akamaized CDN retry for the Telenor/ip-only hosts) and MP3 assets, WebVTT subtitles, thumbnails, duration, age limit, timestamp and programs-API series fields with upstream's fallbacks; NRKTVIE, NRKTVDirekteIE and NRKRadioPodkastIE nrk:ID url results; NRKTVEpisodeIE redirect or pageData ID; NRKTVSeasonIE and NRKTVSeriesIE catalog playlists (pages read eagerly; linked-season entries only with --flat-playlist) and NRKPlaylistIE article items. Akamai HD (akamaihd.net/i/) assets are an explicit native error; no geo-bypass X-Forwarded-For header; NRKSkoleIE and NRKTVEpisodesIE (dead endpoints) are not ported. Compared with pinned upstream output through the fixture proxy (--no-geo-bypass)"
+    },
+    {
+      "name": "ntvde",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ntvde.py"
+      ],
+      "rust": [
+        "src/extractor/ntvde.rs",
+        "tests/fixtures/sites/ntvde/"
+      ],
+      "scope": "NTVDeIE article object and #playerwrapper player data: progressive file, non-fatal HLS/DASH manifests, headline/intro/kicker/timestamp/poster/length and the fatal search/parse/KeyError errors, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "odnoklassniki",

@@ -1,0 +1,79 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://mbn.co.kr/vod/programContents/previewlist/861/5433/1276155",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1276155\", \"title\": \"\\uacb0\\uad6d \\uc0ac\\ub85c\\uc7a1\\ud78c \\uad8c\\uc720\\ub9ac\", \"duration\": 3891, \"release_date\": \"20210703\", \"thumbnail\": \"http://img.vod.mbn.co.kr/861/1276155_360.jpg\", \"series\": \"\\ubcf4\\uc308 - \\uc6b4\\uba85\\uc744 \\ud6d4\\uce58\\ub2e4\", \"episode_number\": 19, \"formats\": [{\"format_id\": \"1000\", \"format_index\": null, \"url\": \"https://vod.mbn.test/auth/720.m3u8\", \"manifest_url\": \"https://vod.mbn.test/auth/master.m3u8?token=abc\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1000 - 1280x720\"}], \"webpage_url\": \"https://mbn.co.kr/vod/programContents/previewlist/861/5433/1276155\", \"original_url\": \"https://mbn.co.kr/vod/programContents/previewlist/861/5433/1276155\", \"webpage_url_basename\": \"1276155\", \"webpage_url_domain\": \"mbn.co.kr\", \"extractor\": \"MBN\", \"extractor_key\": \"MBN\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://img.vod.mbn.co.kr/861/1276155_360.jpg\", \"id\": \"0\"}], \"display_id\": \"1276155\", \"fulltitle\": \"\\uacb0\\uad6d \\uc0ac\\ub85c\\uc7a1\\ud78c \\uad8c\\uc720\\ub9ac\", \"duration_string\": \"1:04:51\", \"release_year\": 2021, \"episode\": \"Episode 19\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"1000\", \"url\": \"https://vod.mbn.test/auth/720.m3u8\", \"manifest_url\": \"https://vod.mbn.test/auth/master.m3u8?token=abc\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1000 - 1280x720\", \"_filename\": \"\\uacb0\\uad6d \\uc0ac\\ub85c\\uc7a1\\ud78c \\uad8c\\uc720\\ub9ac [1276155].mp4\", \"filename\": \"\\uacb0\\uad6d \\uc0ac\\ub85c\\uc7a1\\ud78c \\uad8c\\uc720\\ub9ac [1276155].mp4\", \"__write_download_archive\": false}], \"format_id\": \"1000\", \"format_index\": null, \"url\": \"https://vod.mbn.test/auth/720.m3u8\", \"manifest_url\": \"https://vod.mbn.test/auth/master.m3u8?token=abc\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1000 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.mbn.co.kr/vod/programContents/preview/952/6088/1054797?next=1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [MBN] unable to extract content cls cd; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [MBN] Failed to obtain m3u8 URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [MBN] 1054797: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.mbn.co.kr/vod/programContents/preview/952/6088/1054797?next=1",
+   "args": [
+    "-J",
+    "--ignore-no-formats-error"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1054797\", \"title\": \"[2\\ucc28 \\ud2f0\\uc800]\", \"duration\": 65, \"formats\": [], \"webpage_url\": \"https://www.mbn.co.kr/vod/programContents/preview/952/6088/1054797?next=1\", \"original_url\": \"https://www.mbn.co.kr/vod/programContents/preview/952/6088/1054797?next=1\", \"webpage_url_basename\": \"1054797\", \"webpage_url_domain\": \"mbn.co.kr\", \"extractor\": \"MBN\", \"extractor_key\": \"MBN\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1054797\", \"fulltitle\": \"[2\\ucc28 \\ud2f0\\uc800]\", \"duration_string\": \"1:05\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"_filename\": \"[2\\ucc28 \\ud2f0\\uc800] [1054797].NA\", \"filename\": \"[2\\ucc28 \\ud2f0\\uc800] [1054797].NA\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [MBN] unable to extract content cls cd; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [MBN] Failed to obtain m3u8 URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.mbn.co.kr/vod/programContents/preview/1/2/3",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [MBN] 3: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.mbn.co.kr/vod/programContents/preview/1/2/4",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [MBN] 4: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

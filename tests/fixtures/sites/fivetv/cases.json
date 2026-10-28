@@ -1,0 +1,26 @@
+[
+ {
+  "url": "http://5-tv.ru/news/96814/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://5-tv.ru/video/1021729/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://5-tv.ru/angel/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.5-tv.ru/schedule/?iframe=true&width=900&height=450",
+  "args": [
+   "-J"
+  ]
+ }
+]
