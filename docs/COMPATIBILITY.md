@@ -463,9 +463,10 @@ recording timestamps, duration (else the parsed length), genre tags and the
 show name and ID. Shows (`365|4d.rtvslo.si/oddaja/SLUG/ID`,
 `RTVSLOShowIE`) are playlists of the page's deduplicated `/arhiv/` links
 with the page title and OpenGraph description and image (upstream's
-warnings when missing). The shared Wowza helper also reads a non-fatal
-`manifest.mpd` (`dash`) for callers that do not skip DASH, and returns an
-unsupported error for callers that do not skip HDS or SMIL.
+warnings when missing). The shared Wowza helper also reads a non-skipped
+`manifest.f4m` as non-fatal HDS (`hds`) formats and a non-skipped
+`manifest.mpd` as non-fatal DASH (`dash`) formats, and returns an
+unsupported error for callers that do not skip SMIL.
 `tests/fixtures/sites/rtvslo/` is compared with pinned upstream output.
 
 Roya TV live streams (`[en.]roya.tv/live-stream/ID`) follow upstream
@@ -1567,6 +1568,19 @@ ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the
 section as `categories`, the author as `creators`, and the OpenGraph title,
 description and thumbnail, with upstream's warnings for missing values.
 
+Cisco Live on-demand library sessions (`ciscolive[.cisco].com/...#/session/ID`)
+follow upstream `CiscoLiveSessionIE`: the RainFocus `session` API (a
+form-encoded POST with its profile and widget headers) and its first item as
+a `url_transparent` result of the Brightcove player, overriding the title,
+cleaned abstract, duration (minutes), presenter as `creator`, room as
+`location` and event as `series`, with upstream's `KeyError` and bare
+`IndexError` messages. Search pages (`.../on-demand-library[.html|/]?...`,
+`CiscoLiveSearchIE`) post the URL's query (values as `str(list)`, like
+upstream's `urlencode`) to the `search` API, read lazily page by page (each
+response's `size` and `total` advance and end it) as their sessions with
+integer Brightcove IDs are requested. `tests/fixtures/sites/ciscolive/` is
+compared with pinned upstream output.
+
 CJSW episodes (`cjsw.com/program/PROGRAM/episode/ID`) follow upstream
 `CJSWIE`: the fatal episode heading (else `data-audio-title`) and audio button
 source, the source's UUID ID (else `PROGRAM/ID`), the first paragraph as the
@@ -2092,6 +2106,19 @@ the cleaned `<title-div>` content (else a generic title), the first cleaned
 `div.prose` inside a `div` whose class matches `.*\bborder-base-content\b`
 (regex `find_elements`; a parse error is no match, like `try_call`) and the
 CDN `poster.jpg` thumbnail.
+
+FilmOn VOD titles (`filmon.com/vod/view/ID...`, `filmon:ID`) follow upstream
+`FilmOnIE`: the `api/vod/movie` response (an HTTP error's JSON `reason` as
+`filmon said: ...`, upstream's `KeyError` without one), its `m3u8_native`
+streams with low/high quality, the stripped description and the poster and
+its `thumbs` as `{id, url, width, height}` thumbnails; series (`type_id` 1)
+are playlists of `filmon:ID` episode `url` results. Channels
+(`filmon.com/tv|channel/ID`, `FilmOnChannelIE`) read the `api-v2/channel`
+data (errors as `filmon:channel said: ...` from its `message`): live channels'
+streams as plain quality formats, VOD channels' through the shared Wowza
+helper (HLS and HDS, DASH and RTMP skipped), the three logo thumbnails and
+the alias as `display_id`. `tests/fixtures/sites/filmon/` is compared with
+pinned upstream output.
 
 TikTok videos (`www.tiktok[v].com/@USER/video/ID`, `/embed/ID`,
 `/share/video/ID`) follow upstream `TikTokIE`'s webpage path (no app API
@@ -2926,6 +2953,16 @@ fatal greedy `<h1 title=...>` heading (often empty, so processing's generic
 title) and the player JSON's `data.f` URL as an untyped result, with
 upstream's `KeyError` messages.
 
+Kukulu Live streams (`live.erinn.biz/live.php?hID`) follow upstream
+`KukuluLiveIE`: an expired time shift's error, the `livetitle` element's
+title and non-fatal `Description` and `og:image`/`twitter:image` metadata
+(warning when missing). Live streams (`var timeshift = false`) read the
+`fplayer` quality metadata (high, its `force_h264` variant for HEVC, low)
+as HLS and audio-only formats; recordings read the timeshift player's
+`fplayer_source` segments as one HLS video or a `multi_video` playlist of
+parts. `tests/fixtures/sites/kukululive/` is compared with pinned upstream
+output.
+
 Imgur media (`imgur.com/[SLUG-]ID`, `i.imgur.com/ID.gifv|mp4`) follow
 upstream `ImgurIE`: the post API's first media (`is not a video or animated
 image` otherwise) and account fields, the `.gifv` page (non-fatal) with its
@@ -2971,6 +3008,15 @@ error), a truthy `stream` as fatal HLS formats and subtitles, the required
 win; a missing JSON-LD is upstream's warning). JSON-LD carrying media URLs,
 formats, IDs or subtitles remains an explicit native error.
 `tests/fixtures/sites/newsy/` is compared with pinned upstream output.
+
+NFHS Network events (`nfhsnetwork.com/events/SLUG/ID`) follow upstream
+`NFHSNetworkIE`: the `cfunity` game/event API's first publisher and its
+first broadcast (else VOD), the uploader, uploader URL by publisher type,
+location and start time, the OpenGraph title (warning when missing, then
+the fatal `sr-hidden` heading) cut at `|`, and the broadcast or first VOD's
+stream URL API HLS playlist (live for on-air broadcasts). Upstream's bare
+`list index out of range` and `NoneType` errors are kept.
+`tests/fixtures/sites/nfhsnetwork/` is compared with pinned upstream output.
 
 NHK World on-demand episodes and clips (`www3.nhk.or.jp/nhkworld/LANG/shows/ID`,
 `shows/audio/ID`, the deprecated `ondemand/video/ID`) follow upstream

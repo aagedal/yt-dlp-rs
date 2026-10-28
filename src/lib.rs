@@ -406,6 +406,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Cellebrite",
     "CGTN",
     "Chaturbate",
+    "CiscoLiveSearch",
+    "CiscoLiveSession",
     "CJSW",
     "Clipchamp",
     "CloudflareStream",
@@ -460,6 +462,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "faz.net",
     "Fczenit",
     "FilmArchiv",
+    "filmon",
+    "filmon:channel",
     "Filmweb",
     "Flickr",
     "FootyRoom",
@@ -535,6 +539,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "KompasVideo",
     "KTH",
     "Ku6",
+    "KukuluLive",
     "LastFM",
     "LastFMPlaylist",
     "LastFMUser",
@@ -578,6 +583,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "MyVidster",
     "Netzkino",
     "Newsy",
+    "NFHSNetwork",
     "NhkVod",
     "NhkVodProgram",
     "niconico",
@@ -998,6 +1004,8 @@ impl YoutubeDl {
                 Box::new(extractor::BusinessInsider),
                 Box::new(extractor::Cellebrite),
                 Box::new(extractor::Chaturbate),
+                Box::new(extractor::CiscoLiveSession),
+                Box::new(extractor::CiscoLiveSearch),
                 Box::new(extractor::Cpac),
                 Box::new(extractor::CpacPlaylist),
                 Box::new(extractor::DailyMail),
@@ -1008,6 +1016,8 @@ impl YoutubeDl {
                 Box::new(extractor::EggheadLesson),
                 Box::new(extractor::Expressen),
                 Box::new(extractor::Faz),
+                Box::new(extractor::FilmOn),
+                Box::new(extractor::FilmOnChannel),
                 Box::new(extractor::FootyRoom),
                 Box::new(extractor::FreeTv),
                 Box::new(extractor::FreeTvMovies),
@@ -1018,6 +1028,7 @@ impl YoutubeDl {
                 Box::new(extractor::Kika),
                 Box::new(extractor::KikaPlaylist),
                 Box::new(extractor::KompasVideo),
+                Box::new(extractor::KukuluLive),
                 Box::new(extractor::Lci),
                 Box::new(extractor::LeFigaroVideoEmbed),
                 Box::new(extractor::LeFigaroVideoSection),
@@ -1030,6 +1041,7 @@ impl YoutubeDl {
                 Box::new(extractor::Mdr),
                 Box::new(extractor::MediaKlikk),
                 Box::new(extractor::Monstercat),
+                Box::new(extractor::NfhsNetwork),
                 Box::new(extractor::NoicePodcast),
                 Box::new(extractor::NowCanal),
                 Box::new(extractor::OlympicsReplay),
@@ -2232,6 +2244,8 @@ impl YoutubeDl {
                 extractor::fetch_kika_pages
             } else if extractor::lastfm_pending_state(&pending.state) {
                 extractor::fetch_lastfm_pages
+            } else if extractor::ciscolive_pending_state(&pending.state) {
+                extractor::fetch_ciscolive_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };

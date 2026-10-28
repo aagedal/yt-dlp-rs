@@ -1,0 +1,110 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://live.erinn.biz/live.php?h675134569",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"675134569\", \"title\": \"\\u30d7\\u30ed\\u30bb\\u30ab\", \"description\": \"\\u30c6\\u30b9\\u30c8\\u3082\\u517c\\u306d\\u305f\\u30d7\\u30ed\\u30bb\\u30ab\\u914d\\u4fe1\\u3002\", \"timestamp\": 1702689148, \"thumbnail\": \"https://live.erinn.biz/thumb/1.jpg\", \"formats\": [{\"url\": \"https://live.erinn.biz/timeshift/675134569/1.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"webpage_url\": \"https://live.erinn.biz/live.php?h675134569\", \"original_url\": \"https://live.erinn.biz/live.php?h675134569\", \"webpage_url_basename\": \"live.php\", \"webpage_url_domain\": \"live.erinn.biz\", \"extractor\": \"KukuluLive\", \"extractor_key\": \"KukuluLive\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://live.erinn.biz/thumb/1.jpg\", \"id\": \"0\"}], \"display_id\": \"675134569\", \"fulltitle\": \"\\u30d7\\u30ed\\u30bb\\u30ab\", \"upload_date\": \"20231216\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://live.erinn.biz/timeshift/675134569/1.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"\\u30d7\\u30ed\\u30bb\\u30ab [675134569].mp4\", \"filename\": \"\\u30d7\\u30ed\\u30bb\\u30ab [675134569].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://live.erinn.biz/live.php?h102338092",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"102338092\", \"_type\": \"multi_video\", \"entries\": [{\"id\": \"102338092_1\", \"title\": \"None (Part 1)\", \"description\": null, \"timestamp\": 1704603118, \"thumbnail\": null, \"formats\": [{\"url\": \"https://live.erinn.biz/timeshift/102338092/1.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"playlist_count\": 2, \"playlist\": \"102338092\", \"playlist_id\": \"102338092\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://live.erinn.biz/live.php?h102338092\", \"n_entries\": 2, \"webpage_url\": \"https://live.erinn.biz/live.php?h102338092\", \"webpage_url_basename\": \"live.php\", \"webpage_url_domain\": \"live.erinn.biz\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"KukuluLive\", \"extractor_key\": \"KukuluLive\", \"playlist_autonumber\": 1, \"display_id\": \"102338092_1\", \"fulltitle\": \"None (Part 1)\", \"upload_date\": \"20240107\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://live.erinn.biz/timeshift/102338092/1.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"None (Part 1) [102338092_1].mp4\", \"filename\": \"None (Part 1) [102338092_1].mp4\", \"__write_download_archive\": false}], \"url\": \"https://live.erinn.biz/timeshift/102338092/1.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}, {\"id\": \"102338092_2\", \"title\": \"None (Part 2)\", \"description\": null, \"timestamp\": 1704606718, \"thumbnail\": null, \"formats\": [{\"url\": \"https://cdn.erinn.test/102338092/2.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"playlist_count\": 2, \"playlist\": \"102338092\", \"playlist_id\": \"102338092\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://live.erinn.biz/live.php?h102338092\", \"n_entries\": 2, \"webpage_url\": \"https://live.erinn.biz/live.php?h102338092\", \"webpage_url_basename\": \"live.php\", \"webpage_url_domain\": \"live.erinn.biz\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"KukuluLive\", \"extractor_key\": \"KukuluLive\", \"playlist_autonumber\": 2, \"display_id\": \"102338092_2\", \"fulltitle\": \"None (Part 2)\", \"upload_date\": \"20240107\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cdn.erinn.test/102338092/2.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"None (Part 2) [102338092_2].mp4\", \"filename\": \"None (Part 2) [102338092_2].mp4\", \"__write_download_archive\": false}], \"url\": \"https://cdn.erinn.test/102338092/2.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"webpage_url\": \"https://live.erinn.biz/live.php?h102338092\", \"original_url\": \"https://live.erinn.biz/live.php?h102338092\", \"webpage_url_basename\": \"live.php\", \"webpage_url_domain\": \"live.erinn.biz\", \"extractor\": \"KukuluLive\", \"extractor_key\": \"KukuluLive\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [KukuluLive] unable to extract Description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [KukuluLive] unable to extract og:image; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://live.erinn.biz/live.php?h102338092",
+   "args": [
+    "-I",
+    "1",
+    "--print",
+    "%(id)s|%(title)s|%(timestamp)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "102338092_1|None (Part 1)|1704603118|https://live.erinn.biz/timeshift/102338092/1.m3u8"
+   ],
+   "stderr": [
+    "WARNING: [KukuluLive] unable to extract Description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [KukuluLive] unable to extract og:image; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://live.erinn.biz/live.php?h878049531",
+   "args": [
+    "--print",
+    "%(id)s|%(is_live)s|%(format_id)s|%(url)s|%(description)s|%(thumbnail)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "878049531|True|high|https://hls.erinn.test/878049531/high.m3u8|テストも兼ねたプロセカ配信。|https://live.erinn.biz/thumb/1.jpg"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://live.erinn.biz/live.php?h878049531",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[KukuluLive] Extracting URL: https://live.erinn.biz/live.php?h878049531",
+    "[KukuluLive] 878049531: Downloading webpage",
+    "[KukuluLive] 878049531: Downloading high quality metadata",
+    "[KukuluLive] 878049531: Downloading high (force_h264) quality metadata",
+    "[KukuluLive] 878049531: Downloading low quality metadata",
+    "[info] Available formats for 878049531:",
+    "ID             EXT RESOLUTION | PROTO | VCODEC     ACODEC",
+    "----------------------------------------------------------",
+    "high-audioonly m4a audio only | m3u8  | audio only unknown",
+    "low            mp4 unknown    | m3u8  | H264       unknown",
+    "h264           mp4 unknown    | m3u8  | H264       unknown",
+    "high           mp4 unknown    | m3u8  | HEVC       unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://live.erinn.biz/live.php?h111",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [KukuluLive] 111: This stream has expired"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://live.erinn.biz/live.php?h222",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [KukuluLive] 222: Unable to extract stream data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -38,6 +38,7 @@ mod ccc;
 mod cellebrite;
 mod cgtn;
 mod chaturbate;
+mod ciscolive;
 mod cjsw;
 mod clipchamp;
 mod cloudflarestream;
@@ -81,6 +82,7 @@ mod fathom;
 mod faz;
 mod fczenit;
 mod filmarchiv;
+mod filmon;
 mod filmweb;
 mod flickr;
 mod footyroom;
@@ -142,6 +144,7 @@ mod kommunetv;
 mod kompas;
 mod kth;
 mod ku6;
+mod kukululive;
 mod kvs;
 mod lastfm;
 mod lbry;
@@ -178,6 +181,7 @@ mod mux;
 mod myvidster;
 mod netzkino;
 mod newsy;
+mod nfhsnetwork;
 mod nhk;
 mod niconico;
 mod ninegag;
@@ -393,6 +397,13 @@ pub use ccc::{Ccc, suitable as ccc_suitable};
 pub use cellebrite::{Cellebrite, suitable as cellebrite_suitable};
 pub use cgtn::{Cgtn, suitable as cgtn_suitable};
 pub use chaturbate::{Chaturbate, suitable as chaturbate_suitable};
+pub use ciscolive::{
+    CiscoLiveSearch, CiscoLiveSession, search_suitable as ciscolive_search_suitable,
+    session_suitable as ciscolive_session_suitable,
+};
+pub(crate) use ciscolive::{
+    fetch_pages as fetch_ciscolive_pages, is_pending_state as ciscolive_pending_state,
+};
 pub use cjsw::{Cjsw, suitable as cjsw_suitable};
 pub use clipchamp::{Clipchamp, suitable as clipchamp_suitable};
 pub use cloudflarestream::{CloudflareStream, suitable as cloudflarestream_suitable};
@@ -464,6 +475,9 @@ pub use fathom::{Fathom, suitable as fathom_suitable};
 pub use faz::{Faz, suitable as faz_suitable};
 pub use fczenit::{Fczenit, suitable as fczenit_suitable};
 pub use filmarchiv::{FilmArchiv, suitable as filmarchiv_suitable};
+pub use filmon::{
+    FilmOn, FilmOnChannel, channel_suitable as filmon_channel_suitable, suitable as filmon_suitable,
+};
 pub use filmweb::{Filmweb, suitable as filmweb_suitable};
 pub use flickr::{Flickr, suitable as flickr_suitable};
 pub use footyroom::{FootyRoom, suitable as footyroom_suitable};
@@ -560,6 +574,7 @@ pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use kompas::{KompasVideo, suitable as kompas_suitable};
 pub use kth::{Kth, suitable as kth_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
+pub use kukululive::{KukuluLive, suitable as kukululive_suitable};
 pub use lastfm::{
     LastFm, LastFmPlaylist, LastFmUser, playlist_suitable as lastfm_playlist_suitable,
     suitable as lastfm_suitable, user_suitable as lastfm_user_suitable,
@@ -619,6 +634,7 @@ pub use mux::{Mux, suitable as mux_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
 pub use netzkino::{Netzkino, suitable as netzkino_suitable};
 pub use newsy::{Newsy, suitable as newsy_suitable};
+pub use nfhsnetwork::{NfhsNetwork, suitable as nfhsnetwork_suitable};
 pub use nhk::{
     NhkVod, NhkVodProgram, program_suitable as nhk_program_suitable,
     vod_suitable as nhk_vod_suitable,
@@ -1291,8 +1307,8 @@ pub(crate) fn extract_m3u8_master_optional(
 }
 
 /// `_extract_wowza_formats(url, video_id, skip_protocols=SKIP)`: the
-/// stream's `playlist.m3u8` master playlist (`hls`) and `manifest.mpd`
-/// (`dash`), both non-fatal, and its `rtmp:` format. The HDS and SMIL
+/// stream's `playlist.m3u8` master playlist (`hls`), `manifest.f4m` (`hds`)
+/// and `manifest.mpd` (`dash`), all non-fatal, and its `rtmp:` format. SMIL
 /// manifests are not supported natively, so a caller that does not skip
 /// them gets an error before any request.
 pub(crate) fn extract_wowza_formats(
@@ -1325,9 +1341,6 @@ pub(crate) fn extract_wowza_formats(
         .ok_or_else(|| unsupported("stream URLs without a host"))?;
     let url_base = found["url"].to_owned();
     let smil = SMIL.is_match(&url_base);
-    if !skip_protocols.contains(&"f4m") {
-        return Err(unsupported("HDS manifests"));
-    }
     if smil && !skip_protocols.contains(&"smil") {
         return Err(unsupported("SMIL manifests"));
     }
@@ -1354,6 +1367,22 @@ pub(crate) fn extract_wowza_formats(
             )
         }) {
             formats.extend(stream.formats);
+        }
+    }
+    if !skip_protocols.contains(&"f4m") {
+        let mut manifest = format!("{http_base_url}/manifest.f4m");
+        if !query.is_empty() {
+            manifest.push('?');
+            manifest.push_str(query);
+        }
+        if let Ok(manifest) = Url::parse(&manifest) {
+            formats.extend(extract_f4m_optional(
+                client,
+                extractor,
+                &manifest,
+                video_id,
+                Some("hds"),
+            )?);
         }
     }
     if !skip_protocols.contains(&"dash") {
@@ -2207,6 +2236,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("arte://") && arte::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || (url.starts_with("filmon:") && filmon::suitable(url))
         || (url.starts_with("francetv:") && francetv::suitable(url))
         || (url.starts_with("nrk:") && nrk::suitable(url))
         || (url.starts_with("peertube:") && peertube::suitable(url))
@@ -2797,13 +2827,9 @@ mod tests {
     }
 
     #[test]
-    fn wowza_manifests_without_native_support_are_errors_before_requests() {
+    fn wowza_smil_manifests_are_errors_before_requests() {
         let client = Client::new();
         let url = "https://wowza.invalid/vod/_definst_/mp4:a.mp4/playlist.m3u8";
-        assert!(matches!(
-            extract_wowza_formats(&client, url, "test", "id", &["smil", "dash"]),
-            Err(crate::Error::UnsupportedHtml5(_))
-        ));
         let smil = "https://wowza.invalid/vod/smil:a.smil/playlist.m3u8";
         assert!(matches!(
             extract_wowza_formats(&client, smil, "test", "id", &["f4m", "dash"]),
