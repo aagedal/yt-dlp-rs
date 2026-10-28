@@ -2112,6 +2112,20 @@ and the portal's `getVideoUrl.cfm` URL as an `mp4` untyped result. A
 JSON-LD script that does not parse is reported as unsupported rather than
 with upstream's Python `JSONDecodeError` text.
 
+Genius videos and articles (`genius.com/videos|a/SLUG`) follow upstream
+`GeniusIE`: the `page_data` meta's JSON (fatal, HTML-unescaped), the first
+`provider_id` or `brightcove_video_id` `dfp_kv` value of the article media
+then the video (a missing one is upstream's error, expected only on article
+pages), and the `APP_CONFIG` account and player IDs (defaults
+`4863540648001` and `S1ZcmcOC1x`) as a `url` result of the Brightcove player
+smuggled with the page as its referrer, followed by `brightcove:new`. Lyrics
+pages (`genius.com/SLUG-lyrics`) follow `GeniusLyricsIE`: the
+`__PRELOADED_STATE__` `JSON.parse` string's song ID (required), its
+tracking data's `Title` and `Primary Artist`, and the song's video and audio
+media URLs as `url` results (Spotify embeds skipped with upstream's
+message), in a playlist described as `TITLE by ARTIST`.
+`tests/fixtures/sites/genius/` is compared with pinned upstream output.
+
 Glide messages (`share.glide.me/ID`) follow upstream `GlideIE`: the page's
 generic title, first `<source>` URL (else the fatal OpenGraph video URL) and
 `video-thumbnail` image (else the OpenGraph image with its warning), each

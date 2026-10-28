@@ -69,6 +69,7 @@ mod fuyintv;
 mod gab;
 mod gamestar;
 mod generic_urls;
+mod genius;
 mod glide;
 mod godresource;
 mod godtube;
@@ -377,6 +378,9 @@ pub use freesound::{Freesound, suitable as freesound_suitable};
 pub use fuyintv::{FuyinTv, suitable as fuyintv_suitable};
 pub use gab::{Gab, suitable as gab_suitable};
 pub use gamestar::{GameStar, suitable as gamestar_suitable};
+pub use genius::{
+    Genius, GeniusLyrics, lyrics_suitable as genius_lyrics_suitable, suitable as genius_suitable,
+};
 pub use glide::{Glide, suitable as glide_suitable};
 pub use godresource::{GodResource, suitable as godresource_suitable};
 pub use godtube::{GodTube, suitable as godtube_suitable};

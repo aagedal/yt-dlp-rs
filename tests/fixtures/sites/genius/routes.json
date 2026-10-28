@@ -1,0 +1,87 @@
+{
+ "routes": [
+  {
+   "url": "https://genius.com/videos/Vince-staples-breaks-down",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta content=\"{&quot;video&quot;: {&quot;provider_id&quot;: &quot;6313303597112&quot;}}\" itemprop=\"page_data\"></head><body><script>var APP_CONFIG = {\"brightcove_account_id\": \"4863540648001\", \"brightcove_modal_web_player_id\": \"modalplayer\"};</script></body></html>"
+  },
+  {
+   "url": "https://players.brightcove.net/4863540648001/modalplayer_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_cloud\": {\"policy_key\": \"BCpk4863540648001\"}}"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/4863540648001/videos/6313303597112",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_headers": {
+    "Accept": "application/json;pk=BCpk4863540648001"
+   },
+   "body": "{\"id\": \"6313303597112\", \"account_id\": \"4863540648001\", \"name\": \"Vince Staples Breaks Down\", \"description\": \"Desc\", \"tags\": [\"verified\"], \"published_at\": \"2022-10-05T15:05:41.000Z\", \"duration\": 388416, \"sources\": [{\"container\": \"MP4\", \"type\": \"video/mp4\", \"src\": \"https://genius-pd.test/6313303597112.mp4\", \"avg_bitrate\": 2000000, \"width\": 1280, \"height\": 720, \"codec\": \"H264\", \"size\": 1000}]}"
+  },
+  {
+   "url": "https://genius.com/a/cordae-two-tens",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta content=\"{&quot;article&quot;: {&quot;media&quot;: [{&quot;type&quot;: &quot;image&quot;}, {&quot;dfp_kv&quot;: [{&quot;name&quot;: &quot;brightcove_video_id&quot;, &quot;values&quot;: [&quot;6321509903112&quot;]}]}]}}\" itemprop=\"page_data\"></head><body></body></html>"
+  },
+  {
+   "url": "https://players.brightcove.net/4863540648001/S1ZcmcOC1x_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_cloud\": {\"policy_key\": \"BCpk4863540648001\"}}"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/4863540648001/videos/6321509903112",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_headers": {
+    "Accept": "application/json;pk=BCpk4863540648001"
+   },
+   "body": "{\"id\": \"6321509903112\", \"account_id\": \"4863540648001\", \"name\": \"Vince Staples Breaks Down\", \"description\": \"Desc\", \"tags\": [\"verified\"], \"published_at\": \"2022-10-05T15:05:41.000Z\", \"duration\": 388416, \"sources\": [{\"container\": \"MP4\", \"type\": \"video/mp4\", \"src\": \"https://genius-pd.test/6321509903112.mp4\", \"avg_bitrate\": 2000000, \"width\": 1280, \"height\": 720, \"codec\": \"H264\", \"size\": 1000}]}"
+  },
+  {
+   "url": "https://genius.com/a/no-video-article",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta content=\"{&quot;article&quot;: {&quot;media&quot;: []}}\" itemprop=\"page_data\"></head><body></body></html>"
+  },
+  {
+   "url": "https://genius.com/videos/no-video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta content=\"{&quot;video&quot;: {}}\" itemprop=\"page_data\"></head><body></body></html>"
+  },
+  {
+   "url": "https://genius.com/videos/no-meta",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html></html>"
+  },
+  {
+   "url": "https://genius.com/Lil-baby-heyy-lyrics",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script>window.__PRELOADED_STATE__ = JSON.parse('{\\\"songPage\\\": {\\\"song\\\": 8454545, \\\"trackingData\\\": [{\\\"key\\\": \\\"Song ID\\\", \\\"value\\\": 8454545}, {\\\"key\\\": \\\"Title\\\", \\\"value\\\": \\\"Heyy\\\"}, {\\\"key\\\": \\\"Primary Artist\\\", \\\"value\\\": \\\"Lil Baby\\\"}]}, \\\"entities\\\": {\\\"songs\\\": {\\\"8454545\\\": {\\\"media\\\": [{\\\"type\\\": \\\"video\\\", \\\"provider\\\": \\\"youtube\\\", \\\"url\\\": \\\"https://www.youtube.com/watch?v=abcdefghijk\\\"}, {\\\"type\\\": \\\"audio\\\", \\\"provider\\\": \\\"spotify\\\", \\\"url\\\": \\\"https://open.spotify.com/track/x\\\"}, {\\\"type\\\": \\\"audio\\\", \\\"provider\\\": \\\"soundcloud\\\", \\\"url\\\": \\\"https://soundcloud.com/a/b\\\"}, {\\\"type\\\": \\\"lyrics\\\", \\\"url\\\": \\\"https://x.test\\\"}, {\\\"type\\\": \\\"video\\\", \\\"url\\\": \\\"\\\"}]}}}}');</script></body></html>"
+  },
+  {
+   "url": "https://genius.com/No-song-lyrics",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>window.__PRELOADED_STATE__ = JSON.parse('{\\\"songPage\\\": {}}');</script>"
+  }
+ ]
+}
