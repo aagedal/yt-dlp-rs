@@ -3605,6 +3605,16 @@ message is a geo restriction (`available in your country`) or the expected
 `MagellanTV said: ...` error. `tests/fixtures/sites/magellantv/` is compared
 with pinned upstream output.
 
+massengeschmack.tv episodes (`[www.]massengeschmack.tv/play/ID`) follow
+upstream `MassengeschmackTVIE`: the page's `MEDIA` sources (fatal,
+`js_to_json`; protocol-relative sources as `https:`) as non-fatal HLS
+playlists (`hls`, master playlist only) or direct files named by their
+extension, then the download links with resolution, file size and
+`vcodec: none` for `Audio` links (protocol-relative links as `http:`, like
+`sanitize_url`), the clip title and the `POSTER` thumbnail (both non-fatal).
+`tests/fixtures/sites/massengeschmacktv/` is compared with pinned upstream
+output.
+
 MDR.DE videos and audio (`mdr.de/.../NAME-ID[_...].html`) follow upstream
 `MDRIE` (geo countries `DE`): the page's `dataURL`/`playerXml` `-avCustom.xml`
 URL (fatal; `\/` unescaped, joined with the page URL) and that XML document's

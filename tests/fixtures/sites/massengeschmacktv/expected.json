@@ -1,0 +1,48 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://massengeschmack.tv/play/fktv202",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"fktv202\", \"title\": \"Fernsehkritik-TV & #202\", \"formats\": [{\"url\": \"https://cache.mg.test/fktv202.mp3\", \"format_id\": \"Audio__MP3_\", \"width\": null, \"height\": null, \"filesize\": 83886080, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"Audio__MP3_ - audio only\"}, {\"url\": \"https://cdn.mg.test/fktv202/stream\", \"format_id\": \"unknown_video\", \"protocol\": \"https\", \"ext\": \"unknown_video\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"unknown_video - unknown\"}, {\"url\": \"https://cdn.mg.test/fktv202/fktv202.mp4\", \"format_id\": \"mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\"}, {\"url\": \"https://cache.mg.test/fktv202-480p.mp4\", \"format_id\": \"480p\", \"width\": 854, \"height\": 480, \"filesize\": 367001600, \"vcodec\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"854x480\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"480p - 854x480\"}, {\"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://cdn.mg.test/fktv202/720.m3u8\", \"manifest_url\": \"https://cdn.mg.test/fktv202/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\"}, {\"url\": \"http://cache.mg.test/fktv202-1080p.mp4\", \"format_id\": \"1080p\", \"width\": 1920, \"height\": 1080, \"filesize\": 1610612736, \"vcodec\": null, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080p - 1920x1080\"}], \"thumbnail\": \"https://cache.massengeschmack.tv/img/mag/fktv202.jpg\", \"webpage_url\": \"https://massengeschmack.tv/play/fktv202\", \"original_url\": \"https://massengeschmack.tv/play/fktv202\", \"webpage_url_basename\": \"fktv202\", \"webpage_url_domain\": \"massengeschmack.tv\", \"extractor\": \"massengeschmack.tv\", \"extractor_key\": \"MassengeschmackTV\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cache.massengeschmack.tv/img/mag/fktv202.jpg\", \"id\": \"0\"}], \"display_id\": \"fktv202\", \"fulltitle\": \"Fernsehkritik-TV & #202\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"http://cache.mg.test/fktv202-1080p.mp4\", \"format_id\": \"1080p\", \"width\": 1920, \"height\": 1080, \"filesize\": 1610612736, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080p - 1920x1080\", \"_filename\": \"Fernsehkritik-TV & #202 [fktv202].mp4\", \"filename\": \"Fernsehkritik-TV & #202 [fktv202].mp4\", \"__write_download_archive\": false}], \"url\": \"http://cache.mg.test/fktv202-1080p.mp4\", \"format_id\": \"1080p\", \"width\": 1920, \"height\": 1080, \"filesize\": 1610612736, \"vcodec\": null, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080p - 1920x1080\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://massengeschmack.tv/play/b",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"b\", \"title\": \"massengeschmack.tv video #b\", \"formats\": [{\"url\": \"https://cdn.mg.test/b/b.webm\", \"format_id\": \"webm\", \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"webm - unknown\"}], \"thumbnail\": null, \"webpage_url\": \"https://massengeschmack.tv/play/b\", \"original_url\": \"https://massengeschmack.tv/play/b\", \"webpage_url_basename\": \"b\", \"webpage_url_domain\": \"massengeschmack.tv\", \"extractor\": \"massengeschmack.tv\", \"extractor_key\": \"MassengeschmackTV\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"b\", \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cdn.mg.test/b/b.webm\", \"format_id\": \"webm\", \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"webm - unknown\", \"_filename\": \"massengeschmack.tv video #b [b].webm\", \"filename\": \"massengeschmack.tv video #b [b].webm\", \"__write_download_archive\": false}], \"url\": \"https://cdn.mg.test/b/b.webm\", \"format_id\": \"webm\", \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"webm - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [massengeschmack.tv] b: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [massengeschmack.tv] unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [massengeschmack.tv] unable to extract thumbnail; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://massengeschmack.tv/play/c",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [massengeschmack.tv] c: Unable to extract media; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

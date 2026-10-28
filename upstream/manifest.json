@@ -2382,6 +2382,18 @@
       "scope": "MagellanTVIE Next.js reactContext video detail or series episode, non-fatal HLS manifests with subtitles (deduplicated in first-seen order instead of set order), metadata and the error page's geo/no-formats errors, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "massengeschmacktv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/massengeschmacktv.py"
+      ],
+      "rust": [
+        "src/extractor/massengeschmacktv.rs",
+        "tests/fixtures/sites/massengeschmacktv/"
+      ],
+      "scope": "MassengeschmackTVIE MEDIA sources (non-fatal HLS or direct files), download links with size/resolution, title and POSTER thumbnail, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "masters",
       "status": "partial",
       "upstream": [

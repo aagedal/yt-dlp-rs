@@ -175,6 +175,7 @@ mod lrt;
 mod maariv;
 mod magellantv;
 mod maoritv;
+mod massengeschmacktv;
 mod masters;
 mod matchitv;
 mod matchtv;
@@ -647,6 +648,7 @@ pub use lrt::{
 pub use maariv::{Maariv, suitable as maariv_suitable};
 pub use magellantv::{MagellanTv, suitable as magellantv_suitable};
 pub use maoritv::{MaoriTV, suitable as maoritv_suitable};
+pub use massengeschmacktv::{MassengeschmackTv, suitable as massengeschmacktv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};
 pub use matchitv::{MatchiTv, suitable as matchitv_suitable};
 pub use matchtv::{MatchTv, suitable as matchtv_suitable};

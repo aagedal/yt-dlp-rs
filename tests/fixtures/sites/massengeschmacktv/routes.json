@@ -1,0 +1,38 @@
+{
+ "routes": [
+  {
+   "url": "https://massengeschmack.tv/play/fktv202",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>\n<span class=\"t\" id=\"clip-title\">Fernsehkritik-TV &amp; #202</span>\n<script>\nvar POSTER = \"https://cache.massengeschmack.tv/img/mag/fktv202.jpg\";\nvar MEDIA = [{src: '//cdn.mg.test/fktv202/master.m3u8', type: 'application/x-mpegURL'}, {src: \"https://cdn.mg.test/fktv202/fktv202.mp4\", type: \"video/mp4\"}, {type: 'video/webm'}, {src: '', type: 'x'},\n  {src: \"https://cdn.mg.test/fktv202/stream\", type: \"video/mp4\"}];\n</script>\n<ul>\n<li><a class=\"dl\" href=\"//cache.mg.test/fktv202-1080p.mp4\" download><strong>1080p</strong> <small>1920x1080 (1,5 GiB)</small></a></li>\n<li><a class=\"dl\" href=\"https://cache.mg.test/fktv202-480p.mp4\"><strong>480p</strong> <small>854x480 (350 MiB)</small></a></li>\n<li><a class=\"dl\" href=\"https://cache.mg.test/fktv202.mp3\"><strong>Audio (MP3)</strong> <small> (80 MiB)</small></a></li>\n</ul>\n</body></html>"
+  },
+  {
+   "url": "https://cdn.mg.test/fktv202/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000000,RESOLUTION=1280x720\n720.m3u8\n"
+  },
+  {
+   "url": "https://massengeschmack.tv/play/b",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>MEDIA = [{\"src\": \"https://cdn.mg.test/b/missing.m3u8\"}, {\"src\": \"https://cdn.mg.test/b/b.webm\"}];</script>"
+  },
+  {
+   "url": "https://cdn.mg.test/b/missing.m3u8",
+   "headers": {},
+   "body": "",
+   "status": 404
+  },
+  {
+   "url": "https://massengeschmack.tv/play/c",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>nothing</html>"
+  }
+ ]
+}
