@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "http://www.youjizz.com/videos/zeichentrick-1-2189178.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Zeichentrick 1 &amp; More</title></head><body>\n<script>var dataEncodings = [{\"quality\": \"720\", \"name\": \"720p\", \"filename\": \"https://cdn.youjizz.test/2189178/720.mp4?v=1\"}, {\"quality\": \"480p\", \"filename\": \"https://cdn.youjizz.test/2189178/480.mp4\"}, {\"name\": \"HLS\", \"filename\": \"https://cdn.youjizz.test/2189178/master.m3u8\"}, {\"name\": \"bad\", \"filename\": \"not-a-url\"}, \"skip\"];\n</script>\n<p><strong>Runtime:</strong> 47:54</p>\n<p><strong>Uploaded By:</strong> <a href=\"/u/x\" class=\"u\">PlaceholderUser</a></p>\n<p>Proudly Labeled <a href=\"http://www.rtalabel.org/\" title=\"Restricted to Adults\">RTA</a></p></body></html>"
+  },
+  {
+   "url": "https://cdn.youjizz.test/2189178/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1500000,RESOLUTION=1280x720,CODECS=\"avc1.64001f,mp4a.40.2\"\nv720.m3u8\n"
+  },
+  {
+   "url": "https://www.youjizz.com/videos/embed/31991001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Embed clip</title></head><body>\n<video id=\"yj-video\" poster=\"//cdn.youjizz.test/poster.jpg\" \"controls><source src=\"https://cdn.youjizz.test/31991001/360.mp4\" type=\"video/mp4\" label=\"360p\"></video>\n<p>by continuing you acknowledge you are at least 21 years old</p></body></html>"
+  },
+  {
+   "url": "http://www.youjizz.com/videos/-2189179.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>no media here</body></html>"
+  }
+ ]
+}

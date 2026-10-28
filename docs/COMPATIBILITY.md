@@ -2945,6 +2945,16 @@ like upstream when missing), the fatal `og:duration`, the `nb-views-number`
 view count and `age_limit` 18. `tests/fixtures/sites/xnxx/` is compared with
 pinned upstream output.
 
+YouJizz videos (`[SUB.]youjizz.com/videos/SLUG-ID.html`, `.../embed/ID`)
+follow upstream `YouJizzIE`: the `<title>` (warning like upstream when
+missing), the page's `encodings` JSON (non-fatal `hls` playlists for
+`m3u8` files, other files as progressive formats named by `name` or
+`quality` with its `Np` height), else the first HTML5 media entry of the
+page with upstream's `"controls` fix (none is upstream's `list index out of
+range`), the runtime, uploader and the RTA age limit. Encodings that are not
+JSON or lack a name (upstream `TypeError`s) are unsupported errors.
+`tests/fixtures/sites/youjizz/` is compared with pinned upstream output.
+
 TV 2 videos (`tv2.no/v|video[N]/.../ID`) follow upstream `TV2IE`: the
 `sumo.tv2.no` asset metadata, then the HLS and DASH playback JSON (POSTed
 like upstream; a 401's error code is the Norway geo restriction, the
