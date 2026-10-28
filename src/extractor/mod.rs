@@ -97,6 +97,7 @@ mod fczenit;
 mod filmarchiv;
 mod filmon;
 mod filmweb;
+mod fivetv;
 mod flickr;
 mod footyroom;
 mod formula1;
@@ -548,6 +549,7 @@ pub use filmon::{
     FilmOn, FilmOnChannel, channel_suitable as filmon_channel_suitable, suitable as filmon_suitable,
 };
 pub use filmweb::{Filmweb, suitable as filmweb_suitable};
+pub use fivetv::{FiveTv, suitable as fivetv_suitable};
 pub use flickr::{Flickr, suitable as flickr_suitable};
 pub use footyroom::{FootyRoom, suitable as footyroom_suitable};
 pub use formula1::{Formula1, suitable as formula1_suitable};

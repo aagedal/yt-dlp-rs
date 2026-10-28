@@ -2322,6 +2322,14 @@ helper (HLS and HDS, DASH and RTMP skipped), the three logo thumbnails and
 the alias as `display_id`. `tests/fixtures/sites/filmon/` is compared with
 pinned upstream output.
 
+5-tv.ru videos (`[www.]5-tv.ru/.../ID`, `5-tv.ru/PATH`) follow upstream
+`FiveTVIE`: the page's `(flow)player` `data-href` (or `videoplayer` link;
+fatal, upstream's `get_temp_id` leaves `PATH` pages' error without an
+`ID: ` prefix) as the result's own `url`, with `_generic_title` (`og:title`,
+else `<title>`, else processing's generic title) and the OpenGraph
+description, image and `video:duration` (all optional).
+`tests/fixtures/sites/fivetv/` is compared with pinned upstream output.
+
 TikTok videos (`www.tiktok[v].com/@USER/video/ID`, `/embed/ID`,
 `/share/video/ID`) follow upstream `TikTokIE`'s webpage path (no app API
 without `app_info`): the webpage impersonated with the `impersonate`

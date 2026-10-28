@@ -1802,6 +1802,18 @@
       "scope": "FilmOnIE VOD streams, poster thumbnails and series url playlists and FilmOnChannelIE live streams or Wowza (HLS/HDS) VOD formats with the APIs' error messages, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "fivetv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/fivetv.py"
+      ],
+      "rust": [
+        "src/extractor/fivetv.rs",
+        "tests/fixtures/sites/fivetv/"
+      ],
+      "scope": "FiveTVIE player data-href/videoplayer link as the result url, generic title and OpenGraph description/image/duration, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "filmweb",
       "status": "partial",
       "upstream": [
