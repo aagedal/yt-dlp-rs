@@ -1778,6 +1778,14 @@ view and comment counts, rating, category and search-link tags, each optional
 regex warning like upstream when missing. `tests/fixtures/sites/vidlii/` is
 compared with pinned upstream output.
 
+Cellebrite pages (`cellebrite.com/[LL]/SLUG`) follow upstream `CellebriteIE`:
+the page's first Vidyard embed (else `No Vidyard video embeds found on
+page`), whose player JSON's first chapter is processed like `VidyardIE`'s
+(messages under `Cellebrite`), led by the page's OpenGraph description
+(unless the video has one), with the old `cellebrite` archive ID and the
+OpenGraph image appended to the thumbnails. `tests/fixtures/sites/cellebrite/`
+is compared with pinned upstream output.
+
 Vidyard videos (`*.vidyard.com|*.hubs.vidyard.com/watch/ID`,
 `embed|share.vidyard.com/share/ID`, `play.vidyard.com/[player/]ID`) follow
 upstream `VidyardIE`: the `play.vidyard.com/player/ID.json` `payload` (missing

@@ -1,0 +1,44 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://cellebrite.com/en/how-to-collect/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"description\": null, \"title\": \"Adding & Editing Video Chapters\", \"duration\": 135.46, \"thumbnails\": [{\"url\": \"https://cdn.vidyard.com/thumbnails/25926870/bvSEZS3dGY7DByQ_bzB57avIZ_hsvhr4.jpg\", \"id\": \"0\"}, {\"url\": \"https://cdn.vidyard.com/thumbnails/25926870/bvSEZS3dGY7DByQ_bzB57avIZ_hsvhr4_small.jpg\", \"id\": \"1\"}, {\"url\": \"https://cellebrite.test/og.png\", \"id\": \"2\"}], \"chapters\": [{\"title\": \"Adding new chapters\", \"start_time\": 0.0, \"end_time\": 74.0}, {\"title\": \"Previewing your video\", \"start_time\": 74.0, \"end_time\": 91.0}, {\"title\": \"Editing your chapters\", \"start_time\": 91.0, \"end_time\": 105.0}, {\"title\": \"Share a link to a specific chapter\", \"start_time\": 105.0, \"end_time\": 135.46}], \"id\": \"wL237MtNgZUHo6e8WPiJbF\", \"display_id\": \"25926870\", \"formats\": [{\"format_id\": \"hls-313\", \"format_index\": null, \"url\": \"https://cdn.vidyard.com/media/hls/sX36qdlCAvT7s-wvuNsS_Q/,hd,480p,sd,.mp4.urlset/index-f3-v1-a1.m3u8\", \"manifest_url\": \"https://cdn.vidyard.com/media/hls/sX36qdlCAvT7s-wvuNsS_Q/,hd,480p,sd,.mp4.urlset/master.m3u8?tok=j\", \"tbr\": 313.864, \"ext\": \"mp4\", \"fps\": 30.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 342, \"vcodec\": \"avc1.4d481f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x342\", \"aspect_ratio\": 1.87, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"hls-313 - 640x342\"}, {\"url\": \"https://cdn.vidyard.com/videos/sX36qdlCAvT7s-wvuNsS_Q/sd.mp4?tok=h\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-360p\", \"height\": 360, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"http-mp4-360p - 360p\"}, {\"format_id\": \"hls-502\", \"format_index\": null, \"url\": \"https://cdn.vidyard.com/media/hls/sX36qdlCAvT7s-wvuNsS_Q/,hd,480p,sd,.mp4.urlset/index-f2-v1-a1.m3u8\", \"manifest_url\": \"https://cdn.vidyard.com/media/hls/sX36qdlCAvT7s-wvuNsS_Q/,hd,480p,sd,.mp4.urlset/master.m3u8?tok=j\", \"tbr\": 502.073, \"ext\": \"mp4\", \"fps\": 30.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 854, \"height\": 456, \"vcodec\": \"avc1.4d481f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"854x456\", \"aspect_ratio\": 1.87, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"hls-502 - 854x456\"}, {\"format_id\": \"hls-1045\", \"format_index\": null, \"url\": \"https://cdn.vidyard.com/media/hls/sX36qdlCAvT7s-wvuNsS_Q/,hd,480p,sd,.mp4.urlset/index-f1-v1-a1.m3u8\", \"manifest_url\": \"https://cdn.vidyard.com/media/hls/sX36qdlCAvT7s-wvuNsS_Q/,hd,480p,sd,.mp4.urlset/master.m3u8?tok=j\", \"tbr\": 1045.146, \"ext\": \"mp4\", \"fps\": 30.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 682, \"vcodec\": \"avc1.64081f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x682\", \"aspect_ratio\": 1.88, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"hls-1045 - 1280x682\"}, {\"url\": \"https://cdn.vidyard.com/videos/sX36qdlCAvT7s-wvuNsS_Q/hd.mp4?tok=g\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-720p\", \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"http-mp4-720p - 720p\"}], \"subtitles\": {\"en\": [{\"url\": \"https://cdn.vidyard.com/transcriptions/XHw3e665f-59t4hUZXz6_g/Y91JVr4sCt1ln3gXyz4FhQ.vtt?tok=f\", \"name\": \"English\", \"ext\": \"vtt\"}]}, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"_old_archive_ids\": [\"cellebrite 25926870\"], \"webpage_url\": \"https://cellebrite.com/en/how-to-collect/\", \"original_url\": \"https://cellebrite.com/en/how-to-collect/\", \"webpage_url_basename\": \"how-to-collect\", \"webpage_url_domain\": \"cellebrite.com\", \"extractor\": \"Cellebrite\", \"extractor_key\": \"Cellebrite\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://cellebrite.test/og.png\", \"fulltitle\": \"Adding & Editing Video Chapters\", \"duration_string\": \"2:15\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"url\": \"https://cdn.vidyard.com/videos/sX36qdlCAvT7s-wvuNsS_Q/hd.mp4?tok=g\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-720p\", \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"format\": \"http-mp4-720p - 720p\", \"_filename\": \"Adding & Editing Video Chapters [wL237MtNgZUHo6e8WPiJbF].mp4\", \"filename\": \"Adding & Editing Video Chapters [wL237MtNgZUHo6e8WPiJbF].mp4\", \"__write_download_archive\": false}], \"url\": \"https://cdn.vidyard.com/videos/sX36qdlCAvT7s-wvuNsS_Q/hd.mp4?tok=g\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-720p\", \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"http-mp4-720p - 720p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://cellebrite.com/en/how-to-collect/",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(_old_archive_ids)s|%(thumbnails)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "wL237MtNgZUHo6e8WPiJbF|25926870|['cellebrite 25926870']|[{'url': 'https://cdn.vidyard.com/thumbnails/25926870/bvSEZS3dGY7DByQ_bzB57avIZ_hsvhr4.jpg', 'id': '0'}, {'url': 'https://cdn.vidyard.com/thumbnails/25926870/bvSEZS3dGY7DByQ_bzB57avIZ_hsvhr4_small.jpg', 'id': '1'}, {'url': 'https://cellebrite.test/og.png', 'id': '2'}]"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://cellebrite.com/en/no-embed/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Cellebrite] no-embed: No Vidyard video embeds found on page; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -872,6 +872,18 @@
       "scope": "CCCIE event data-id, public events JSON recordings as formats (language/folder IDs, codecs, MiB filesize) with title, creator, description, thumbnail, timestamp, duration, view count and tags; CCCPlaylistIE is not ported. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "cellebrite",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/cellebrite.py"
+      ],
+      "rust": [
+        "src/extractor/cellebrite.rs",
+        "tests/fixtures/sites/cellebrite/"
+      ],
+      "scope": "CellebriteIE first Vidyard embed processed with the shared Vidyard video JSON code, OpenGraph description and thumbnail, and old archive IDs, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "chaturbate",
       "status": "partial",
       "upstream": [

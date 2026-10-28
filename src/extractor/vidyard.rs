@@ -122,6 +122,7 @@ fn formats_and_subtitles(
     client: &Client,
     sources: &Value,
     video_id: &str,
+    name: &'static str,
 ) -> Result<(Vec<crate::VideoFormat>, crate::Subtitles)> {
     let mut formats = Vec::new();
     let mut subtitles = crate::Subtitles::default();
@@ -133,7 +134,7 @@ fn formats_and_subtitles(
         if let Some(mut stream) = super::extract_m3u8_master_optional_headers_id(
             client,
             &manifest,
-            NAME,
+            name,
             video_id,
             Some("hls"),
             &[("Referer", REFERER)],
@@ -207,7 +208,7 @@ fn formats_and_subtitles(
             if let Some(height) = height {
                 fields.push(("height", height.into()));
             }
-            formats.push(dict_format(fields, NAME, video_id)?);
+            formats.push(dict_format(fields, name, video_id)?);
         }
     }
     // `_remove_duplicate_formats`: the first format of each URL.
@@ -304,19 +305,23 @@ fn put(fields: &mut Vec<(&'static str, Value)>, key: &'static str, value: Value)
 
 /// `_get_additional_metadata(video_id)` (non-fatal): the video endpoint's
 /// title, duration, thumbnail and chapters.
-fn additional_metadata(client: &Client, facade: &str) -> Result<Vec<(&'static str, Value)>> {
+fn additional_metadata(
+    client: &Client,
+    facade: &str,
+    name: &'static str,
+) -> Result<Vec<(&'static str, Value)>> {
     let api = Url::parse(&format!("https://play.vidyard.com/video/{facade}"))?;
     let data = match super::download_json_note(
         client,
         &api,
-        NAME,
+        name,
         facade,
         "Downloading additional metadata",
     ) {
         Ok(value) => Some(value),
         Err(Error::ExtractorRequest { source, .. }) => {
             crate::screen::warning(&format!(
-                "[{NAME}] {facade}: Unable to download JSON metadata: {}",
+                "[{name}] {facade}: Unable to download JSON metadata: {}",
                 crate::upstream_error_text(&source)
             ));
             None
@@ -332,7 +337,7 @@ fn additional_metadata(client: &Client, facade: &str) -> Result<Vec<(&'static st
             .any(|cause| message.ends_with(cause));
             crate::screen::warning(&if python {
                 format!(
-                    "[{NAME}] {facade}: Failed to parse JSON: Expecting value in '': line 1 column 1 (char 0)"
+                    "[{name}] {facade}: Failed to parse JSON: Expecting value in '': line 1 column 1 (char 0)"
                 )
             } else {
                 message
@@ -390,17 +395,42 @@ fn process_video_json(
     video_id: &str,
     page: &Url,
 ) -> Result<VideoInfo> {
+    let (fields, formats, subtitles) = video_json_fields(client, data, video_id, NAME)?;
+    Ok(video_json_info(
+        page,
+        (NAME, KEY),
+        fields,
+        formats,
+        subtitles,
+    ))
+}
+
+/// The video dict of [`process_video_json`] in its key order, with its
+/// formats and subtitles.
+pub(crate) type VideoJsonFields = (
+    Vec<(&'static str, Value)>,
+    Vec<crate::VideoFormat>,
+    crate::Subtitles,
+);
+
+/// `_process_video_json`'s dict before it is built.
+pub(crate) fn video_json_fields(
+    client: &Client,
+    data: &Value,
+    video_id: &str,
+    name: &'static str,
+) -> Result<VideoJsonFields> {
     let sources = data
         .get("sources")
         .ok_or_else(|| key_error(video_id, "sources"))?;
-    let (formats, mut subtitles) = formats_and_subtitles(client, sources, video_id)?;
+    let (formats, mut subtitles) = formats_and_subtitles(client, sources, video_id, name)?;
     merge_subtitles(&mut subtitles, direct_subtitles(data.get("captions"))?);
     let facade = match data.get("facadeUuid") {
         Some(Value::String(facade)) => facade.clone(),
         Some(_) => return Err(unsupported("facade UUIDs that are not strings")),
         None => return Err(key_error(video_id, "facadeUuid")),
     };
-    let mut fields = additional_metadata(client, &facade)?;
+    let mut fields = additional_metadata(client, &facade, name)?;
     put(&mut fields, "id", facade.as_str().into());
     match data.get("videoId") {
         Some(Value::Bool(flag)) => {
@@ -460,15 +490,26 @@ fn process_video_json(
     fields.push(("formats", Value::Null));
     fields.push(("subtitles", Value::Null));
     fields.push(("http_headers", serde_json::json!({"Referer": REFERER})));
+    Ok((fields, formats, subtitles))
+}
+
+/// The info dict of [`video_json_fields`] for the `names` extractor.
+pub(crate) fn video_json_info(
+    page: &Url,
+    names: (&'static str, &'static str),
+    fields: Vec<(&'static str, Value)>,
+    formats: Vec<crate::VideoFormat>,
+    subtitles: crate::Subtitles,
+) -> VideoInfo {
     let keys: Vec<&str> = fields.iter().map(|(key, _)| *key).collect();
     let shape = format!(
         "dict;{};chapter=title,start_time;thumbnail=url;subtitle=url,name",
         keys.join(",")
     );
-    let info = dict_info(page, (NAME, KEY), fields, formats);
+    let info = dict_info(page, names, fields, formats);
     let mut info = crate::info_order::mark_info(info, &shape);
     info.subtitles = subtitles;
-    Ok(info)
+    info
 }
 
 impl Extractor for Vidyard {
