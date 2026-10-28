@@ -3931,6 +3931,20 @@ cleaned body description, millisecond duration, timestamp, uploader, Python
 `str()` of the user ID, counts and string tag texts, with upstream's
 `KeyError` messages.
 
+Hollywood Reporter videos (`hollywoodreporter.com/video/SLUG`) follow
+upstream `HollywoodReporterIE`: the first `vlanding-video-card__link`
+element's `data-video-showcase-trigger` and `data-video-showcase-type`
+(missing ones are upstream's `KeyError`s), followed as `jwplatform:ID` for
+`jwplayer` and as the bare YouTube ID for `youtube`; other types are
+upstream's `Unsupported showcase type` error. Video categories
+(`hollywoodreporter.com/vcategory/SLUG-ID`) follow
+`HollywoodReporterPlaylistIE`: an `OnDemandPagedList` of 15 entries per
+`.../page/N/` page (only the pages holding requested items are fetched),
+each page's `video-playlist-river` `c-title__link` hrefs as
+`HollywoodReporter` `url` results, titled with the slug.
+`tests/fixtures/sites/hollywoodreporter/` is compared with pinned upstream
+output.
+
 href.li redirects (`href.li/?URL`) follow upstream `HrefLiRedirectIE`: the
 text after `?` is followed as a `url` result by whichever extractor suits it
 (unlisted in `--extractor-descriptions`); a target that is not an absolute URL

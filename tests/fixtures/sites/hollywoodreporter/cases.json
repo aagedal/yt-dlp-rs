@@ -1,0 +1,67 @@
+[
+ {
+  "url": "https://www.hollywoodreporter.com/video/dungeons-dragons-cast-sxsw-2023/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.hollywoodreporter.com/video/brightcove-thing/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.hollywoodreporter.com/video/no-card/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.hollywoodreporter.com/video/no-type/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.hollywoodreporter.com/vcategory/heat-vision-breakdown-57822/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.hollywoodreporter.com/vcategory/heat-vision-breakdown-57822/",
+  "args": [
+   "--flat-playlist",
+   "-I",
+   "16:17",
+   "--print",
+   "%(playlist_index)s|%(id)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://www.hollywoodreporter.com/vcategory/heat-vision-breakdown-57822/",
+  "args": [
+   "--flat-playlist",
+   "-I",
+   "2",
+   "--print",
+   "%(id)s|%(ie_key)s"
+  ]
+ },
+ {
+  "url": "https://www.hollywoodreporter.com/vcategory/empty-list-100",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.hollywoodreporter.com/vcategory/missing-list-7/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

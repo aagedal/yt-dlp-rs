@@ -1826,6 +1826,18 @@
       "scope": "HitRecordIE records API as an untyped result (metadata conversions, tags, KeyError messages, download) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "hollywoodreporter",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/hollywoodreporter.py"
+      ],
+      "rust": [
+        "src/extractor/hollywoodreporter.rs",
+        "tests/fixtures/sites/hollywoodreporter/"
+      ],
+      "scope": "HollywoodReporterIE showcase cards followed as jwplatform:ID or YouTube IDs (unsupported types and missing attributes are upstream's errors) and HollywoodReporterPlaylistIE OnDemandPagedList category pages of HollywoodReporter url results, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "hrefli",
       "status": "partial",
       "upstream": [

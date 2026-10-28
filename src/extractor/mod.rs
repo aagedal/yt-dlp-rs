@@ -114,6 +114,7 @@ mod hellporno;
 mod historicfilms;
 mod hitrecord;
 pub(crate) mod hls;
+mod hollywoodreporter;
 mod hrefli;
 mod hse;
 pub(crate) mod html5;
@@ -535,6 +536,15 @@ pub use hellporno::{HellPorno, suitable as hellporno_suitable};
 pub use historicfilms::{HistoricFilms, suitable as historicfilms_suitable};
 pub use hitrecord::{HitRecord, suitable as hitrecord_suitable};
 pub use hls::set_split_discontinuity as hls_split_discontinuity;
+pub use hollywoodreporter::{
+    HollywoodReporter, HollywoodReporterPlaylist,
+    playlist_suitable as hollywoodreporter_playlist_suitable,
+    suitable as hollywoodreporter_suitable,
+};
+pub(crate) use hollywoodreporter::{
+    fetch_pages as fetch_hollywoodreporter_pages,
+    is_pending_state as hollywoodreporter_pending_state,
+};
 pub use hrefli::{HrefLiRedirect, suitable as hrefli_suitable};
 pub use hse::{
     HseProduct, HseShow, product_suitable as hse_product_suitable,

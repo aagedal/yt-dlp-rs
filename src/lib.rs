@@ -500,6 +500,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "HellPorno",
     "HistoricFilms",
     "HitRecord",
+    "HollywoodReporter",
+    "HollywoodReporterPlaylist",
     "href.li",
     "HSEProduct",
     "HSEShow",
@@ -1387,6 +1389,8 @@ impl YoutubeDl {
                 Box::new(extractor::HellPorno),
                 Box::new(extractor::HistoricFilms),
                 Box::new(extractor::HitRecord),
+                Box::new(extractor::HollywoodReporter),
+                Box::new(extractor::HollywoodReporterPlaylist),
                 Box::new(extractor::HrefLiRedirect),
                 Box::new(extractor::HseProduct),
                 Box::new(extractor::HseShow),
@@ -2257,6 +2261,8 @@ impl YoutubeDl {
                 extractor::fetch_yappy_pages
             } else if extractor::lefigaro_pending_state(&pending.state) {
                 extractor::fetch_lefigaro_pages
+            } else if extractor::hollywoodreporter_pending_state(&pending.state) {
+                extractor::fetch_hollywoodreporter_pages
             } else if extractor::lbry_pending_state(&pending.state) {
                 extractor::fetch_lbry_pages
             } else if extractor::bitchute_pending_state(&pending.state) {
