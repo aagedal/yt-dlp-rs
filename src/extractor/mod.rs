@@ -64,6 +64,7 @@ mod expressen;
 mod f4m;
 mod facebook;
 mod fathom;
+mod faz;
 mod fczenit;
 mod filmarchiv;
 mod filmweb;
@@ -385,6 +386,7 @@ pub use facebook::{
     suitable as facebook_suitable,
 };
 pub use fathom::{Fathom, suitable as fathom_suitable};
+pub use faz::{Faz, suitable as faz_suitable};
 pub use fczenit::{Fczenit, suitable as fczenit_suitable};
 pub use filmarchiv::{FilmArchiv, suitable as filmarchiv_suitable};
 pub use filmweb::{Filmweb, suitable as filmweb_suitable};

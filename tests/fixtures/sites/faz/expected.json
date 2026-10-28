@@ -1,0 +1,78 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.faz.net/multimedia/videos/stockholm-chemie-nobelpreis-12610585.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"12610585\", \"title\": \"Stockholm: Chemie-Nobelpreis\", \"formats\": [{\"url\": \"https://faz-pd.test/12610585_480x270_400.mp4\", \"format_id\": \"low\", \"quality\": 0, \"tbr\": 412, \"vcodec\": \"H264\", \"width\": 480, \"height\": 270, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"480x270\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 6128500, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"low - 480x270\"}, {\"url\": \"https://faz-pd.test/12610585_hi.mp4\", \"format_id\": \"high\", \"quality\": 1, \"tbr\": null, \"vcodec\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"high - unknown\"}, {\"url\": \"https://faz-pd.test/12610585_1280x720_2000.mp4\", \"format_id\": \"hq\", \"quality\": 2, \"tbr\": 2000, \"vcodec\": null, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 29750000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hq - 1280x720\"}], \"description\": \"Drei Forscher.\", \"thumbnail\": \"https://faz.test/still.jpg\", \"duration\": 119, \"webpage_url\": \"http://www.faz.net/multimedia/videos/stockholm-chemie-nobelpreis-12610585.html\", \"original_url\": \"http://www.faz.net/multimedia/videos/stockholm-chemie-nobelpreis-12610585.html\", \"webpage_url_basename\": \"stockholm-chemie-nobelpreis-12610585.html\", \"webpage_url_domain\": \"faz.net\", \"extractor\": \"faz.net\", \"extractor_key\": \"Faz\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://faz.test/still.jpg\", \"id\": \"0\"}], \"display_id\": \"12610585\", \"fulltitle\": \"Stockholm: Chemie-Nobelpreis\", \"duration_string\": \"1:59\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://faz-pd.test/12610585_1280x720_2000.mp4\", \"format_id\": \"hq\", \"quality\": 2, \"tbr\": 2000, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 29750000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hq - 1280x720\", \"_filename\": \"Stockholm\\uff1a Chemie-Nobelpreis [12610585].mp4\", \"filename\": \"Stockholm\\uff1a Chemie-Nobelpreis [12610585].mp4\", \"__write_download_archive\": false}], \"url\": \"https://faz-pd.test/12610585_1280x720_2000.mp4\", \"format_id\": \"hq\", \"quality\": 2, \"tbr\": 2000, \"vcodec\": null, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 29750000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hq - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.faz.net/multimedia/videos/stockholm-chemie-nobelpreis-12610585.html",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[faz.net] Extracting URL: http://www.faz.net/multimedia/videos/stockholm-chemie-nobelpreis-12610585.html",
+    "[faz.net] 12610585: Downloading webpage",
+    "[info] Available formats for 12610585:",
+    "ID   EXT RESOLUTION |  FILESIZE   TBR PROTO | VCODEC  ACODEC",
+    "-------------------------------------------------------------",
+    "low  mp4 480x270    | ≈ 5.84MiB  412k https | H264    unknown",
+    "high mp4 unknown    |                 https | unknown unknown",
+    "hq   mp4 1280x720   | ≈28.37MiB 2000k https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.faz.net/-13659345.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [faz.net] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [faz.net] 13659345: Could not find XML element encodings; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.faz.net/x-1.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [faz.net] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [faz.net] 1: Unable to extract media; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.faz.net/x-2.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2\", \"title\": \"faz.net video #2\", \"formats\": [{\"url\": \"https://faz-pd.test/2.mp4\", \"format_id\": \"low\", \"quality\": 0, \"tbr\": null, \"vcodec\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"low - unknown\"}], \"description\": null, \"thumbnail\": null, \"webpage_url\": \"http://www.faz.net/x-2.html\", \"original_url\": \"http://www.faz.net/x-2.html\", \"webpage_url_basename\": \"x-2.html\", \"webpage_url_domain\": \"faz.net\", \"extractor\": \"faz.net\", \"extractor_key\": \"Faz\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2\", \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://faz-pd.test/2.mp4\", \"format_id\": \"low\", \"quality\": 0, \"tbr\": null, \"vcodec\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"low - unknown\", \"_filename\": \"faz.net video #2 [2].mp4\", \"filename\": \"faz.net video #2 [2].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [faz.net] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [faz.net] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  }
+ ]
+}

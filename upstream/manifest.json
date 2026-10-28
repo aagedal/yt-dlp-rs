@@ -1249,6 +1249,18 @@
       "scope": "FathomIE app element data-page props (get_element_html_by_id/extract_attributes), fatal HLS formats, metadata traversal and KeyError/TypeError messages compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "faz",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/faz.py"
+      ],
+      "rust": [
+        "src/extractor/faz.rs",
+        "tests/fixtures/sites/faz/"
+      ],
+      "scope": "FazIE data-videojs-media XML encodings with OpenGraph metadata; the Perform Group (extern) hand-off is not ported. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "fczenit",
       "status": "partial",
       "upstream": [

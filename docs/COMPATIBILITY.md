@@ -1751,6 +1751,15 @@ upstream's warning), the head title (else the generic title, after
 `fulltitle`), float duration and ISO 8601 `started_at` timestamp, with
 upstream's `KeyError` messages.
 
+faz.net videos (`faz.net/...-ID.html`) follow upstream `FazIE`: the
+non-fatal OpenGraph description and title (each warns when missing), the
+`data-videojs-media` attribute (fatal, cleaned like `_html_search_regex`)
+as XML: its `ENCODINGS` (fatal) `LOW`, `HIGH` and `HQ` files with quality
+0-2, integer `AVERAGEBITRATE` and codec, frame size and bitrate from
+`WxH_KBPS.mp4` names, then the `STILL/STILL_BIG` thumbnail and duration.
+Not ported: `extern` media (Perform Group players), an explicit unsupported
+error. `tests/fixtures/sites/faz/` is compared with pinned upstream output.
+
 FC Zenit videos (`fc-zenit.ru/video/ID`) follow upstream `FczenitIE`: the
 page's `config` MSI video ID (fatal), then the player's `msi/video?video=ID`
 JSON: name, preview, float duration, int date, labeled qualities with URLs as
