@@ -272,6 +272,7 @@ mod twitter;
 mod umg;
 mod unistra;
 mod unitednations;
+mod uol;
 mod urplay;
 mod usatoday;
 mod ustudio;
@@ -800,6 +801,7 @@ pub use twitter::{
 pub use umg::{UmgDe, suitable as umg_suitable};
 pub use unistra::{Unistra, suitable as unistra_suitable};
 pub use unitednations::{UnitedNationsWebTv, suitable as unitednations_suitable};
+pub use uol::{Uol, suitable as uol_suitable};
 pub use urplay::{UrPlay, suitable as urplay_suitable};
 pub use usatoday::{UsaToday, suitable as usatoday_suitable};
 pub use ustudio::{Ustudio, suitable as ustudio_suitable};
@@ -1614,7 +1616,7 @@ fn download_json_with(
 }
 
 /// Upstream `update_url_query(url, query)`: the query decoded, updated and
-/// re-encoded like `urlencode`.
+/// re-encoded like `urlencode` (`quote_plus`: `~` kept, `*` escaped).
 pub(crate) fn update_url_query(url: &Url, updates: &[(&str, &str)]) -> Url {
     // `parse_qs` (blank values dropped, repeated keys grouped) and
     // `dict.update` (an updated key keeps its place).
@@ -1634,14 +1636,16 @@ pub(crate) fn update_url_query(url: &Url, updates: &[(&str, &str)]) -> Url {
             None => groups.push(((*key).to_owned(), vec![(*value).to_owned()])),
         }
     }
-    let pairs: Vec<(String, String)> = groups
-        .into_iter()
-        .flat_map(|(key, values)| values.into_iter().map(move |value| (key.clone(), value)))
+    let pairs: Vec<(&str, &str)> = groups
+        .iter()
+        .flat_map(|(key, values)| {
+            values
+                .iter()
+                .map(move |value| (key.as_str(), value.as_str()))
+        })
         .collect();
     let mut url = url.clone();
-    let query = url::form_urlencoded::Serializer::new(String::new())
-        .extend_pairs(&pairs)
-        .finish();
+    let query = login::urlencode(&pairs);
     url.set_query((!query.is_empty()).then_some(query.as_str()));
     url
 }

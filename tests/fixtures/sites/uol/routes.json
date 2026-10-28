@@ -1,0 +1,95 @@
+{
+ "routes": [
+  {
+   "url": "https://api.mais.uol.com.br/apiuol/v3/media/detail/15951931",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"item\": {\"mediaId\": 15951931, \"title\": \"Miss simpatia \\u00e9 encontrada morta\", \"revision\": 3, \"description\": \"<p>Ela foi encontrada<br>em casa &amp; sem vida.</p>\", \"duration\": \"01:23\", \"publishDate\": \"2016-08-05 18:31:00\", \"viewsQtty\": \"1234\", \"tags\": [{\"description\": \"Pol\\u00edcia\"}, {\"description\": \"\"}, {}, {\"description\": \"Miss\"}], \"thumbSmall\": \"https://thumb.uol.test/15951931-small.jpg\", \"thumbMedium\": \"\", \"thumbLarge\": \"https://thumb.uol.test/15951931-large.jpg\"}}"
+  },
+  {
+   "url": "https://croupier.mais.uol.com.br/v3/formats/15951931/jsonp",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"mobile\": {\"url\": \"https://video.uol.test/15951931-mobile.mp4\", \"token\": \"tok~1*2/=\"}, \"HLS\": {\"url\": \"https://hls.uol.test/15951931/master.m3u8\", \"token\": \"tok~1*2/=\"}, \"note\": \"not a format\", \"empty\": {\"url\": \"\"}, \"360p\": {\"url\": \"\", \"secureUrl\": \"https://video.uol.test/15951931-360p.mp4?x=1\", \"sign\": \"sg\", \"token\": \"\"}, \"other\": {\"url\": \"https://video.uol.test/15951931-other.webm\"}}"
+  },
+  {
+   "url": "https://hls.uol.test/15951931/master.m3u8?ver=3&r=http%3A%2F%2Fmais.uol.com.br&token=tok~1%2A2%2F%3D",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=800000,RESOLUTION=640x360,CODECS=\"avc1.4d401e,mp4a.40.2\"\n360/index.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=2000000,RESOLUTION=1280x720,CODECS=\"avc1.4d401f,mp4a.40.2\"\n720/index.m3u8\n"
+  },
+  {
+   "url": "https://api.mais.uol.com.br/apiuol/v3/media/detail/incendio-destroi-uma-das-maiores-casas-noturnas-de-londres-04024E9A3268D4C95326",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"item\": {\"mediaId\": \"15954259\", \"title\": \"Inc\\u00eandio destr\\u00f3i uma das maiores casas noturnas de Londres\", \"description\": \"Em Londres, um inc\\u00eandio destruiu uma das maiores boates da cidade.\", \"publishDate\": \"2016-08-08 01:42:00\", \"viewsQtty\": 77}}"
+  },
+  {
+   "url": "https://croupier.mais.uol.com.br/v3/formats/15954259/jsonp",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"HLS\": {\"secureUrl\": \"https://hls.uol.test/15954259/master.m3u8\", \"token\": \"abc123\", \"sign\": \"sig\"}}"
+  },
+  {
+   "url": "https://hls.uol.test/15954259/master.m3u8?ver=2&r=http%3A%2F%2Fmais.uol.com.br&token=abc123&sign=sig",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1200000,RESOLUTION=960x540,CODECS=\"avc1.4d401f,mp4a.40.2\"\n540/index.m3u8?ver=1\n"
+  },
+  {
+   "url": "https://hls.uol.test/15954259/540/index.m3u8?ver=2&r=http%3A%2F%2Fmais.uol.com.br&token=abc123&sign=sig",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:4\n#EXT-X-MEDIA-SEQUENCE:0\n#EXTINF:4.0,\nseg-0.ts\n#EXTINF:4.0,\nseg-1.ts?part=1\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://hls.uol.test/15954259/540/seg-0.ts?ver=2&r=http%3A%2F%2Fmais.uol.com.br&token=abc123&sign=sig",
+   "headers": {
+    "Content-Type": "video/mp2t"
+   },
+   "body": "segment-zero"
+  },
+  {
+   "url": "https://hls.uol.test/15954259/540/seg-1.ts?part=1&ver=2&r=http%3A%2F%2Fmais.uol.com.br&token=abc123&sign=sig",
+   "headers": {
+    "Content-Type": "video/mp2t"
+   },
+   "body": "segment-one"
+  },
+  {
+   "url": "https://api.mais.uol.com.br/apiuol/v3/media/detail/15275470",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"item\": {\"mediaId\": 15275470, \"title\": \"Sem HLS\", \"duration\": 95, \"publishDate\": null}}"
+  },
+  {
+   "url": "https://croupier.mais.uol.com.br/v3/formats/15275470/jsonp",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"HLS\": {\"url\": \"https://hls.uol.test/15275470/master.m3u8\"}, \"720p\": {\"url\": \"https://video.uol.test/15275470-720p.mp4\"}}"
+  },
+  {
+   "url": "https://api.mais.uol.com.br/apiuol/v3/media/detail/15000001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"items\": []}"
+  },
+  {
+   "url": "https://api.mais.uol.com.br/apiuol/v3/media/detail/15000002",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"item\": {\"mediaId\": 15000002}}"
+  }
+ ]
+}

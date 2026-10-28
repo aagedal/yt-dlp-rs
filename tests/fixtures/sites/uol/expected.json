@@ -1,0 +1,95 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://player.mais.uol.com.br/player_video_v3.swf?mediaId=15951931",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"15951931\", \"title\": \"Miss simpatia \\u00e9 encontrada morta\", \"description\": \"Ela foi encontrada\\nem casa & sem vida.\", \"thumbnails\": [{\"id\": \"Large\", \"url\": \"https://thumb.uol.test/15951931-large.jpg\"}, {\"id\": \"Small\", \"url\": \"https://thumb.uol.test/15951931-small.jpg\"}], \"duration\": 83, \"tags\": [\"Pol\\u00edcia\", \"Miss\"], \"formats\": [{\"format_id\": \"other\", \"url\": \"https://video.uol.test/15951931-other.webm?ver=3&r=http%3A%2F%2Fmais.uol.com.br\", \"quality\": -1, \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"other - unknown\"}, {\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://hls.uol.test/15951931/360/index.m3u8?ver=3&r=http%3A%2F%2Fmais.uol.com.br&token=tok~1%2A2%2F%3D\", \"manifest_url\": \"https://hls.uol.test/15951931/master.m3u8?ver=3&r=http%3A%2F%2Fmais.uol.com.br&token=tok~1%2A2%2F%3D\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"extra_param_to_segment_url\": \"ver=3&r=http%3A%2F%2Fmais.uol.com.br&token=tok~1%2A2%2F%3D\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360\"}, {\"format_id\": \"hls-2000\", \"format_index\": null, \"url\": \"https://hls.uol.test/15951931/720/index.m3u8?ver=3&r=http%3A%2F%2Fmais.uol.com.br&token=tok~1%2A2%2F%3D\", \"manifest_url\": \"https://hls.uol.test/15951931/master.m3u8?ver=3&r=http%3A%2F%2Fmais.uol.com.br&token=tok~1%2A2%2F%3D\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"extra_param_to_segment_url\": \"ver=3&r=http%3A%2F%2Fmais.uol.com.br&token=tok~1%2A2%2F%3D\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2000 - 1280x720\"}, {\"format_id\": \"mobile\", \"url\": \"https://video.uol.test/15951931-mobile.mp4?ver=3&r=http%3A%2F%2Fmais.uol.com.br&token=tok~1%2A2%2F%3D\", \"quality\": 0, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mobile - unknown\"}, {\"format_id\": \"360p\", \"url\": \"https://video.uol.test/15951931-360p.mp4?x=1&ver=3&r=http%3A%2F%2Fmais.uol.com.br&sign=sg\", \"quality\": 2, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - unknown\"}], \"timestamp\": 1470421860, \"view_count\": 1234, \"webpage_url\": \"http://player.mais.uol.com.br/player_video_v3.swf?mediaId=15951931\", \"original_url\": \"http://player.mais.uol.com.br/player_video_v3.swf?mediaId=15951931\", \"webpage_url_basename\": \"player_video_v3.swf\", \"webpage_url_domain\": \"player.mais.uol.com.br\", \"extractor\": \"uol.com.br\", \"extractor_key\": \"UOL\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://thumb.uol.test/15951931-small.jpg\", \"display_id\": \"15951931\", \"fulltitle\": \"Miss simpatia \\u00e9 encontrada morta\", \"duration_string\": \"1:23\", \"upload_date\": \"20160805\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"360p\", \"url\": \"https://video.uol.test/15951931-360p.mp4?x=1&ver=3&r=http%3A%2F%2Fmais.uol.com.br&sign=sg\", \"quality\": 2, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - unknown\", \"_filename\": \"Miss simpatia \\u00e9 encontrada morta [15951931].mp4\", \"filename\": \"Miss simpatia \\u00e9 encontrada morta [15951931].mp4\", \"__write_download_archive\": false}], \"format_id\": \"360p\", \"url\": \"https://video.uol.test/15951931-360p.mp4?x=1&ver=3&r=http%3A%2F%2Fmais.uol.com.br&sign=sg\", \"quality\": 2, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://tvuol.uol.com.br/video/incendio-destroi-uma-das-maiores-casas-noturnas-de-londres-04024E9A3268D4C95326",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"15954259\", \"title\": \"Inc\\u00eandio destr\\u00f3i uma das maiores casas noturnas de Londres\", \"description\": \"Em Londres, um inc\\u00eandio destruiu uma das maiores boates da cidade.\", \"thumbnails\": [], \"tags\": [], \"formats\": [{\"format_id\": \"hls-1200\", \"format_index\": null, \"url\": \"https://hls.uol.test/15954259/540/index.m3u8?ver=2&r=http%3A%2F%2Fmais.uol.com.br&token=abc123&sign=sig\", \"manifest_url\": \"https://hls.uol.test/15954259/master.m3u8?ver=2&r=http%3A%2F%2Fmais.uol.com.br&token=abc123&sign=sig\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"extra_param_to_segment_url\": \"ver=2&r=http%3A%2F%2Fmais.uol.com.br&token=abc123&sign=sig\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1200 - 960x540\"}], \"timestamp\": 1470620520, \"view_count\": 77, \"webpage_url\": \"http://tvuol.uol.com.br/video/incendio-destroi-uma-das-maiores-casas-noturnas-de-londres-04024E9A3268D4C95326\", \"original_url\": \"http://tvuol.uol.com.br/video/incendio-destroi-uma-das-maiores-casas-noturnas-de-londres-04024E9A3268D4C95326\", \"webpage_url_basename\": \"incendio-destroi-uma-das-maiores-casas-noturnas-de-londres-04024E9A3268D4C95326\", \"webpage_url_domain\": \"tvuol.uol.com.br\", \"extractor\": \"uol.com.br\", \"extractor_key\": \"UOL\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"15954259\", \"fulltitle\": \"Inc\\u00eandio destr\\u00f3i uma das maiores casas noturnas de Londres\", \"upload_date\": \"20160808\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-1200\", \"format_index\": null, \"url\": \"https://hls.uol.test/15954259/540/index.m3u8?ver=2&r=http%3A%2F%2Fmais.uol.com.br&token=abc123&sign=sig\", \"manifest_url\": \"https://hls.uol.test/15954259/master.m3u8?ver=2&r=http%3A%2F%2Fmais.uol.com.br&token=abc123&sign=sig\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"extra_param_to_segment_url\": \"ver=2&r=http%3A%2F%2Fmais.uol.com.br&token=abc123&sign=sig\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1200 - 960x540\", \"_filename\": \"Inc\\u00eandio destr\\u00f3i uma das maiores casas noturnas de Londres [15954259].mp4\", \"filename\": \"Inc\\u00eandio destr\\u00f3i uma das maiores casas noturnas de Londres [15954259].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://tvuol.uol.com.br/video/incendio-destroi-uma-das-maiores-casas-noturnas-de-londres-04024E9A3268D4C95326",
+   "args": [
+    "-q",
+    "--fixup",
+    "never",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [],
+   "stderr": [],
+   "files": {
+    "15954259.mp4": 23
+   }
+  },
+  {
+   "url": "http://mais.uol.com.br/view/e0qbgxid79uv/15275470",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"15275470\", \"title\": \"Sem HLS\", \"description\": null, \"thumbnails\": [], \"tags\": [], \"formats\": [{\"format_id\": \"720p\", \"url\": \"https://video.uol.test/15275470-720p.mp4?ver=2&r=http%3A%2F%2Fmais.uol.com.br\", \"quality\": 3, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - unknown\"}], \"timestamp\": null, \"view_count\": null, \"webpage_url\": \"http://mais.uol.com.br/view/e0qbgxid79uv/15275470\", \"original_url\": \"http://mais.uol.com.br/view/e0qbgxid79uv/15275470\", \"webpage_url_basename\": \"15275470\", \"webpage_url_domain\": \"mais.uol.com.br\", \"extractor\": \"uol.com.br\", \"extractor_key\": \"UOL\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"15275470\", \"fulltitle\": \"Sem HLS\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"720p\", \"url\": \"https://video.uol.test/15275470-720p.mp4?ver=2&r=http%3A%2F%2Fmais.uol.com.br\", \"quality\": 3, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - unknown\", \"_filename\": \"Sem HLS [15275470].mp4\", \"filename\": \"Sem HLS [15275470].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [uol.com.br] 15275470: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://mais.uol.com.br/view/15000001",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 15000001: An extractor error has occurred. (caused by KeyError('item')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://mais.uol.com.br/static/uolplayer/index.html?mediaId=15000002",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 15000002: An extractor error has occurred. (caused by KeyError('title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://mais.uol.com.br/view/15000003",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [uol.com.br] 15000003: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

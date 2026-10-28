@@ -3367,6 +3367,18 @@
       "scope": "UnitedNationsWebTvIE page partnerId and kentryID as a kaltura: url result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "uol",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/uol.py"
+      ],
+      "rust": [
+        "src/extractor/uol.rs",
+        "tests/fixtures/sites/uol/"
+      ],
+      "scope": "UOLIE media detail item and croupier formats map: progressive formats with the ver/r/token/sign query and qualities, non-fatal HLS formats whose playlist URLs and segment requests carry that query (extra_param_to_segment_url), tags, thumbnails and metadata, KeyError and HTTP errors, compared with pinned upstream output (including an HLS download) through the fixture proxy"
+    },
+    {
       "name": "urplay",
       "status": "partial",
       "upstream": [
