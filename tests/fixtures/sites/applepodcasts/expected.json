@@ -118,6 +118,18 @@
     "ERROR: [apple:podcasts] 1000000000006: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
    ],
    "files": {}
+  },
+  {
+   "url": "https://podcasts.apple.com/podcast/emptydata/id7?i=1000000000007",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
   }
  ]
 }

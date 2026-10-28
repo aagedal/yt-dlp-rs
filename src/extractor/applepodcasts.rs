@@ -324,7 +324,8 @@ fn from_api(
     let data = match response.get("data") {
         Some(Value::Array(data)) => data
             .first()
-            .ok_or_else(|| extractor_error(id, "IndexError('list index out of range')"))?,
+            // An uncaught `IndexError` is reported as its message.
+            .ok_or_else(|| Error::Reported("list index out of range".into()))?,
         Some(_) => return Err(unsupported("API data that are not lists")),
         None if response.is_object() => return Err(extractor_error(id, "KeyError('data')")),
         None => return Err(unsupported("API responses that are not objects")),

@@ -54,5 +54,11 @@
   "args": [
    "-j"
   ]
+ },
+ {
+  "url": "https://podcasts.apple.com/podcast/emptydata/id7?i=1000000000007",
+  "args": [
+   "-j"
+  ]
  }
 ]

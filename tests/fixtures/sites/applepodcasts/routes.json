@@ -110,6 +110,24 @@
     "Content-Type": "text/html; charset=utf-8"
    },
    "body": "<html><script id='serialized-server-data' type=\"application/json\">{\"data\": [{\"data\": {\"headerButtonItems\": {\"a\": {\"$kind\": \"share\", \"modelType\": \"EpisodeLockup\", \"model\": {\"title\": \"Episode 5\", \"episodeNumber\": \"5\", \"releaseDate\": \"2024-01-02T03:04:05+01:00\", \"duration\": \"61\", \"playAction\": {\"episodeOffer\": {\"streamUrl\": \"https://chtbl.com/track/ABC/cdn.ep.test/5.mp3\"}}}}}}}]}</script></html>"
+  },
+  {
+   "url": "https://podcasts.apple.com/podcast/emptydata/id7?i=1000000000007",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script type=\"module\" crossorigin src=\"/assets/index~cdef01.js\"></script></head><body><p>Something went wrong</p></body></html>"
+  },
+  {
+   "url": "https://amp-api.podcasts.apple.com/v1/catalog/us/podcast-episodes/1000000000007?extend=fullDescription&include=podcast&l=en-US",
+   "request_headers": {
+    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IkM0SjdHQlA3NEgifQ.eyJpc3MiOiJmaXh0dXJlIiwiZXhwIjo0MTAyNDQ0ODAwfQ.c2lnbmF0dXJl",
+    "Origin": "https://podcasts.apple.com"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": []}"
   }
  ]
 }

@@ -1,10 +1,60 @@
 {
  "routes": [
-  {"url": "https://thehighwire.com/ark-videos/the-deposition-of-stanley-plotkin/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
-  {"url": "https://thehighwire.com/ark-videos/plain/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page2.html"},
-  {"url": "https://thehighwire.com/ark-videos/no-embed/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page3.html"},
-  {"url": "https://embed.arkengine.example/v/plotkin", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "embed.html"},
-  {"url": "https://embed.arkengine.example/v/plain", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "embed2.html"},
-  {"url": "https://cdn.arkengine.example/plotkin/master.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "video.m3u8"}
+  {
+   "url": "https://thehighwire.com/ark-videos/the-deposition-of-stanley-plotkin/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://thehighwire.com/ark-videos/plain/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page2.html"
+  },
+  {
+   "url": "https://thehighwire.com/ark-videos/no-embed/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page3.html"
+  },
+  {
+   "url": "https://embed.arkengine.example/v/plotkin",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "embed.html"
+  },
+  {
+   "url": "https://embed.arkengine.example/v/plain",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "embed2.html"
+  },
+  {
+   "url": "https://cdn.arkengine.example/plotkin/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "video.m3u8"
+  },
+  {
+   "url": "https://thehighwire.com/ark-videos/nomedia/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><iframe class=\"ark-video-embed\" src=\"https://embed.arkengine.example/v/nomedia\"></iframe></body></html>\n"
+  },
+  {
+   "url": "https://embed.arkengine.example/v/nomedia",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>no media</body></html>"
+  }
  ]
 }
