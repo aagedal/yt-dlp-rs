@@ -5,6 +5,7 @@ mod amadeustv;
 mod angel;
 mod applepodcasts;
 mod archiveorg;
+mod arcpublishing;
 mod ard;
 mod arte;
 mod audioboom;
@@ -279,6 +280,7 @@ pub use amadeustv::{AmadeusTv, suitable as amadeustv_suitable};
 pub use angel::{Angel, suitable as angel_suitable};
 pub use applepodcasts::{ApplePodcasts, suitable as applepodcasts_suitable};
 pub use archiveorg::{ArchiveOrg, suitable as archiveorg_suitable};
+pub use arcpublishing::{ArcPublishing, suitable as arcpublishing_suitable};
 pub use ard::{
     ArdAudiothek, ArdAudiothekPlaylist, ArdMediathek, ArdMediathekCollection,
     audiothek_playlist_suitable as ard_audiothek_playlist_suitable,
@@ -1917,6 +1919,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("nicosearch")
             && (niconico::search_suitable(url) || niconico::search_date_suitable(url)))
         || (url.starts_with("at://") && bluesky::suitable(url))
+        || (url.starts_with("arcpublishing:") && arcpublishing::suitable(url))
         || (url.starts_with("arte://") && arte::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))

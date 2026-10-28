@@ -247,6 +247,7 @@ pub(crate) fn strip_markers(map: &mut Map<String, Value>) {
     map.shift_remove(INFO_SHAPE);
     map.shift_remove(FORMAT_SHAPE);
     map.shift_remove(INT_QUALITY);
+    map.shift_remove(INT_VBR);
     map.shift_remove(INT_FRAGMENT_DURATIONS);
     map.shift_remove(FOLLOWED);
     map.shift_remove(OWN_URL);
@@ -371,6 +372,25 @@ pub(crate) fn mark_int_quality(format: &mut crate::VideoFormat) {
     format.extra.insert(INT_QUALITY.into(), Value::Bool(true));
 }
 
+/// A format whose extractor set an int `vbr` (stored as a float) beside
+/// a float `tbr`.
+const INT_VBR: &str = "__yt_dlp_rs_int_vbr";
+
+/// The format's `vbr` is an int.
+pub(crate) fn mark_int_vbr(format: &mut crate::VideoFormat) {
+    format.extra.insert(INT_VBR.into(), Value::Bool(true));
+}
+
+/// `map['vbr']` as an int under an [`INT_VBR`] marker.
+fn int_vbr(map: &mut Map<String, Value>) {
+    if map.shift_remove(INT_VBR).is_some()
+        && let Some(vbr) = map.get("vbr").and_then(Value::as_f64)
+        && vbr.fract() == 0.0
+    {
+        map.insert("vbr".into(), (vbr as i64).into());
+    }
+}
+
 /// A format whose extractor gave int fragment `duration`s (stored as
 /// floats).
 const INT_FRAGMENT_DURATIONS: &str = "__yt_dlp_rs_int_fragment_durations";
@@ -413,6 +433,7 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     {
         map.insert("quality".into(), (quality as i64).into());
     }
+    int_vbr(&mut map);
     let Some((shape, original)) = shape_of(map.shift_remove(FORMAT_SHAPE)) else {
         return map;
     };
@@ -1031,6 +1052,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     {
         map.insert("quality".into(), (quality as i64).into());
     }
+    int_vbr(&mut map);
     let own_url = map.shift_remove(OWN_URL);
     map.shift_remove(crate::PROCESSED_ENTRY);
     let Some((shape, original)) = shape_of(map.shift_remove(INFO_SHAPE)) else {

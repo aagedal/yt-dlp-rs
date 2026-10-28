@@ -901,6 +901,20 @@ field is missing). Artwork templates with format specifications are
 explicit native errors. `tests/fixtures/sites/applepodcasts/` is compared
 with pinned upstream output.
 
+Arc Publishing videos (`arcpublishing:ORG:UUID`) follow upstream
+`ArcPublishingIE`: the organization's `ansvideos/findByUuid` API (upstream's
+`_POWA_DEFAULTS` hosts; `wapo` as `washpost`) and its first video (an empty
+list is upstream's bare `list index out of range`), with the required
+headline, the `streams` by unique URL: `smil` files (non-fatal; HTTP and HLS
+sources, RTMP sources are explicit native errors), `ts`/`hls` manifests
+(non-fatal, `live` for live videos, skipped when every format is video-only,
+with the int `vbr` from a `[_x]HEIGHT[_-]VBR` URL) and other streams as
+`TYPE-BITRATE` formats with quality -10; English subtitle URLs, promo image,
+subheadline, centisecond duration, creation date and live status. `powa`
+player divs with a `data-org` and `data-uuid` on other pages are followed
+like upstream's `_extract_embed_urls`. `tests/fixtures/sites/arcpublishing/`
+is compared with pinned upstream output.
+
 Internet Archive items (`archive.org/details|embed/ID[/FILE]`) follow
 upstream `ArchiveOrgIE`: the embed page's `<play-av>` playlist (one entry
 when the URL names a file; subtitle tracks stored under their labels, as

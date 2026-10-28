@@ -1,0 +1,57 @@
+[
+ {
+  "url": "arcpublishing:gray:508116f7-e999-48db-b7c2-60a04842679b",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "arcpublishing:gray:508116f7-e999-48db-b7c2-60a04842679b",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "arcpublishing:gray:508116f7-e999-48db-b7c2-60a04842679b",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "arcpublishing:cmg:cfb1cf1b-3ab5-4d1b-86c5-a5515d311f2a",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "arcpublishing:cmg:cfb1cf1b-3ab5-4d1b-86c5-a5515d311f2a",
+  "args": [
+   "--print",
+   "%(fulltitle)s|%(live_status)s|%(is_live)s|%(timestamp)s"
+  ]
+ },
+ {
+  "url": "arcpublishing:wapo:480ba4ee-1ec7-11e6-82c2-a7dcb313287d",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.uppermichiganssource.test/2025/07/18/scattered-showers/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "arcpublishing:adn:0b0ba30e-032a-4598-8810-901d70e6033e",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "arcpublishing:tgam:0b0ba30e-032a-4598-8810-901d70e6033e",
+  "args": [
+   "-j"
+  ]
+ }
+]

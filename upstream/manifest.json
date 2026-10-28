@@ -475,6 +475,18 @@
       "scope": "ApplePodcastsIE page (expected_status=500) serialized-server-data EpisodeLockup share item with OpenGraph thumbnail, else the amp-api catalog episode with AppleBaseIE's JS-asset JWT (process cache, expiry error), HTTPS asset URL and artwork template thumbnail, compared with pinned upstream output through the fixture proxy; AppleConnectIE (appleconnect.py) is not ported"
     },
     {
+      "name": "arcpublishing",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/arcpublishing.py"
+      ],
+      "rust": [
+        "src/extractor/arcpublishing.rs",
+        "tests/fixtures/sites/arcpublishing/"
+      ],
+      "scope": "ArcPublishingIE arcpublishing: pseudo-URLs through the findByUuid API (SMIL HTTP/HLS sources, HLS with URL vbr, progressive streams, English subtitles, live status) and powa div embeds on generic pages, compared with pinned upstream output through the fixture proxy; SMIL RTMP sources remain explicit native errors"
+    },
+    {
       "name": "archiveorg",
       "status": "partial",
       "upstream": [
