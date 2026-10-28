@@ -3211,6 +3211,17 @@ higher) as audio formats. Non-string IDs, user names or thumbnails and
 missing users or download file names remain explicit native errors.
 `tests/fixtures/sites/hearthisat/` is compared with pinned upstream output.
 
+LEGO videos (`lego.com/LL-CC/.../videos/.../SLUG-HEX32`) follow upstream
+`LEGOIE`: geo bypass initialized with the URL's country (upstream's
+`_initialize_geo_bypass`), the Slingshot `mediaplayer/v2?videoId=UUID_LOCALE`
+JSON (HTTP 451 as a geo restriction with that country), its `F4M` (non-fatal
+HDS) and `M3U8` (non-fatal HLS) sources and progressive `FORMAT-QUALITY`
+formats ranked Lowest to Highest with upstream's bitrate and size table, the
+locale's SRT subtitles when the video names its files, and the description,
+cover (else thumbnail), length, age, season title and non-zero season and
+episode numbers. `tests/fixtures/sites/lego/` is compared with pinned
+upstream output.
+
 Library of Congress items (`loc.gov/item/ID`, `loc.gov/today/cyberlc/feature_wdesc.php?...rec=ID`)
 follow upstream `LibraryOfCongressIE`: the page's media player ID (upstream's
 five patterns, fatal), the `media.loc.gov/services/v1/media` object's first

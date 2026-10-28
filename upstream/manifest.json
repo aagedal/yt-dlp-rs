@@ -286,6 +286,18 @@
       "scope": "InternazionaleIE data-video-title (or non-fatal og:title) title, fatal data-job-id/data-video-path, available_abroad host choice, non-fatal HLS (hls ids, mp4) and DASH (dash- ids) manifests, article:published_time timestamp and og thumbnail/description warnings, the generic title and no-formats error compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "lego",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/lego.py"
+      ],
+      "rust": [
+        "src/extractor/lego.rs",
+        "tests/fixtures/sites/lego/"
+      ],
+      "scope": "LEGOIE locale geo bypass, Slingshot media player HDS/HLS/progressive formats, subtitles and metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "libraryofcongress",
       "status": "partial",
       "upstream": [

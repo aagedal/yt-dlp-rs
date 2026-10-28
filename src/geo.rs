@@ -245,6 +245,20 @@ fn initialize(key: &'static str, name: &str, countries: &[&str], ip_blocks: &[&s
     }
 }
 
+/// `_initialize_geo_bypass({'countries': countries})` called by an
+/// extractor itself (a fake IP from the countries unless one is set).
+pub(crate) fn initialize_countries(countries: &[&str]) {
+    let Some((key, name)) = CURRENT.with(|current| {
+        current
+            .borrow()
+            .as_ref()
+            .map(|current| (current.key, current.name.clone().unwrap_or_default()))
+    }) else {
+        return;
+    };
+    initialize(key, &name, countries, &[], true);
+}
+
 /// The running extractor's `_x_forwarded_for_ip`.
 pub(crate) fn fake_ip() -> Option<String> {
     let key = CURRENT.with(|current| current.borrow().as_ref().map(|current| current.key))?;
