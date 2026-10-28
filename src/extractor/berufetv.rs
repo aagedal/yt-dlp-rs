@@ -164,11 +164,11 @@ impl Extractor for BerufeTv {
         }
         let get = |key: &str| meta.get(key).filter(|value| !value.is_null()).cloned();
         let title = get("titel")
-            .filter(|title| super::nuxt::truthy(title))
+            .filter(super::nuxt::truthy)
             .or_else(|| video.pointer("/videoMetaData/title").cloned())
             .unwrap_or(Value::Null);
         let thumbnail = get("thumbnail")
-            .filter(|thumbnail| super::nuxt::truthy(thumbnail))
+            .filter(super::nuxt::truthy)
             .unwrap_or_else(|| {
                 format!("https://asset-out-cdn.video-cdn.net/private/videos/{video_id}/thumbnails/active").into()
             });
@@ -177,7 +177,7 @@ impl Extractor for BerufeTv {
             .and_then(Value::as_f64)
             .map_or(Value::Null, |millis| json!(millis / 1000.0));
         let categories = get("kategorie")
-            .filter(|category| super::nuxt::truthy(category))
+            .filter(super::nuxt::truthy)
             .map_or(Value::Null, |category| json!([category]));
         let mut info = dict_info(
             url,
