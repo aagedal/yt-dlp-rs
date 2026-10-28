@@ -1,0 +1,54 @@
+{
+ "routes": [
+  {
+   "url": "https://watch.islamchannel.tv/watch/38604310",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Book of Signs\"><meta name=\"description\" content=\"Desc\"></head>\n<div data-poster=\"https://ic.test/poster.jpg?w=100\" data-token=\"TOK\" data-expiry=\"123\" data-key=\"KEY\"></div></html>"
+  },
+  {
+   "url": "https://v2-streams-elb.simplestreamcdn.com/api/show/stream/38604310?key=KEY&platform=chrome",
+   "request_headers": {
+    "Token": "TOK",
+    "Token-Expiry": "123",
+    "Uvid": "38604310"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"tokenization\": {\"url\": \"https://ic-token.test/38604310\"}}}"
+  },
+  {
+   "url": "https://ic-token.test/38604310",
+   "request_headers": {
+    "Token": "TOK"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"Streams\": {\"Adaptive\": \"https://ic-cdn.test/master.m3u8\"}}"
+  },
+  {
+   "url": "https://ic-cdn.test/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://watch.islamchannel.tv/watch/2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div data-token=\"T\"></div>"
+  },
+  {
+   "url": "https://watch.islamchannel.tv/series/a6cccef3-3ef1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<a href=\"/watch/1\" class=\"x\" data-video-type=\"show\">1</a><a href=\"/watch/2\" class=\"y\" data-video-type=\"show\">2</a><a href=\"/watch/1\" z data-video-type=\"show\">again</a><a href=\"/watch/3\" data-video-type=\"trailer\">t</a>"
+  }
+ ]
+}

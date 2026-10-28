@@ -2162,6 +2162,18 @@
       "scope": "IsraelNationalNewsIE article API Content2 embed sources as a playlist of Youtube url results and the no-videos error compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "islamchannel",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/islamchannel.py"
+      ],
+      "rust": [
+        "src/extractor/islamchannel.rs",
+        "tests/fixtures/sites/islamchannel/"
+      ],
+      "scope": "IslamChannelIE Simplestream tokenized HLS and IslamChannelSeriesIE show links, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "ivideon",
       "status": "partial",
       "upstream": [

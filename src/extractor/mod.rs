@@ -144,6 +144,7 @@ mod inc;
 mod indavideo;
 mod instagram;
 mod internazionale;
+mod islamchannel;
 pub(crate) mod ism;
 mod israelnationalnews;
 mod ivideon;
@@ -616,6 +617,10 @@ pub use instagram::{
     user_suitable as instagram_user_suitable,
 };
 pub use internazionale::{Internazionale, suitable as internazionale_suitable};
+pub use islamchannel::{
+    IslamChannel, IslamChannelSeries, series_suitable as islamchannel_series_suitable,
+    suitable as islamchannel_suitable,
+};
 pub use israelnationalnews::{IsraelNationalNews, suitable as israelnationalnews_suitable};
 pub use ivideon::{Ivideon, suitable as ivideon_suitable};
 pub use ivoox::{Ivoox, suitable as ivoox_suitable};

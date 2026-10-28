@@ -1,0 +1,21 @@
+[
+ {
+  "url": "https://watch.islamchannel.tv/watch/38604310",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://watch.islamchannel.tv/watch/2",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://watch.islamchannel.tv/series/a6cccef3-3ef1",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

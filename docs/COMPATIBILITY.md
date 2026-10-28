@@ -965,6 +965,15 @@ running time, start date and `-WxH.` images. HuffPost Live embed iframes on
 generic pages are embeds. `tests/fixtures/sites/huffpost/` is compared with
 pinned upstream output.
 
+Islam Channel videos (`watch.islamchannel.tv/watch/ID`) and series
+(`watch.islamchannel.tv/series/UUID`) follow upstream `IslamChannelIE` and
+`IslamChannelSeriesIE`: the page's token, expiry and key (fatal) for the
+Simplestream show-stream API, its tokenization JSON's adaptive HLS playlist,
+the meta-tag title and description, and the poster (else OpenGraph image) as
+unscaled and original thumbnails; series pages are playlists of their
+deduplicated show links. `tests/fixtures/sites/islamchannel/` is compared
+with pinned upstream output.
+
 Ivideon TV cameras (`ivideon.com/tv/.../camera/SERVER/CAMERA`, `ivideon`)
 follow upstream `IvideonIE` as live demo-session FLV streams (`low`, `mid`,
 `hi` with their qualities), named from the camera page's config (the page is
