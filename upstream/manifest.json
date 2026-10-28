@@ -202,6 +202,18 @@
       "scope": "MediaiteIE jwplayer player/data-video-id media ID and its cdn.jwplayer.com/v2/media JSON parsed like JWPlatform (single-item playlists only). Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "musescore",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/musescore.py"
+      ],
+      "rust": [
+        "src/extractor/musescore.rs",
+        "tests/fixtures/sites/musescore/"
+      ],
+      "scope": "MuseScoreIE score pages (fatal og:url score ID, jmuse MP3 URL with the MD5 authorization token, OpenGraph and musescore: meta fields with upstream's warnings, KeyError message) compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "mux",
       "status": "partial",
       "upstream": [

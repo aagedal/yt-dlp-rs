@@ -3332,6 +3332,18 @@ the row's title, track number and artists; rows without both IDs warn
 `Skipping track N, ID(s) not found` when reached. `tests/fixtures/sites/monstercat/`
 is compared with pinned upstream output.
 
+MuseScore scores (`musescore.com/user/N/scores/ID`, `musescore.com/USER/SLUG`)
+follow upstream `MuseScoreIE`: the page (downloaded without an ID), its
+fatal `og:url` (an empty one keeps the input URL) for the score ID, the
+`api/jmuse?id=ID&index=0&type=mp3` JSON requested with the
+`md5(ID + 'mp30gs')[:4]` authorization header, and its `info.url` MP3 as
+the only format (`vcodec` `none`; missing keys are upstream's `KeyError`),
+with the `og:title`, cleaned `description` meta, `og:image`,
+`musescore:author` and `musescore:composer` (as `creator`) fields, each
+missing one warning like upstream. An `og:url` that is not a score URL
+remains an explicit native error. `tests/fixtures/sites/musescore/` is
+compared with pinned upstream output.
+
 Moving Image Archive films (`movingimage.nls.uk/film/ID`) follow upstream
 `MovingImageIE`: the player's fatal `file` manifest as HLS formats (subtitles
 ignored with upstream's warning), the fatal `Title` field without

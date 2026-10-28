@@ -145,6 +145,7 @@ mod mixlr;
 mod mocha;
 mod monstercat;
 mod movingimage;
+mod musescore;
 mod mux;
 mod myvidster;
 mod netzkino;
@@ -514,6 +515,7 @@ pub(crate) use monstercat::{
     fetch_tracks as fetch_monstercat_tracks, is_pending_state as monstercat_pending_state,
 };
 pub use movingimage::{MovingImage, suitable as movingimage_suitable};
+pub use musescore::{MuseScore, suitable as musescore_suitable};
 pub use mux::{Mux, suitable as mux_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
 pub use netzkino::{Netzkino, suitable as netzkino_suitable};
