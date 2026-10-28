@@ -1,0 +1,40 @@
+{
+ "routes": [
+  {
+   "url": "https://lut-my.sharepoint.com/:v:/g/personal/juha/EUrAmrktb4ZMhUcY9J2PqMEBD_9x_l0DyYWVgAvp-TTOMw?e=ZpQOOw",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var g_fileInfo = {\"VroomItemId\": \"01EQRS7EKKYCNLSLLPQZGIKRYY6SOY7KGB\", \".transformUrl\": \"https://lut-my.sharepoint.com/_api/v2.0/drives/b!x/items/01EQ/driveItem/transform?provider=spo&inputFormat=mp4&v=\", \".ctag\": \"\\\"c:{1},2\\\"\", \"title\": \"\", \"displayName\": \"CmvpJST.mp4\", \"authorId\": \"7a4c6eb8\", \"MediaServiceFastMetadata\": \"{\\\"media\\\": {\\\"duration\\\": 543210000}}\", \"thumbnailUrl\": \"https://lut-my.sharepoint.com/thumb.jpg\", \"downloadUrl\": \"https://lut-my.sharepoint.com/download.aspx?x=1\", \"extension\": \".mp4\", \"size\": \"1234\", \"isAudio\": false};</script>"
+  },
+  {
+   "url": "https://lut-my.sharepoint.com/_api/v2.0/drives/b!x/items/01EQ/driveItem/videomanifest?provider=spo&inputFormat=mp4&cTag=%22c%3A%7B1%7D%2C2%22&action=Access&part=index&format=hls",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://acme.sharepoint.com/sites/x/_layouts/15/stream.aspx?id=%2Fsites%2Fx%2Flogin.mp4",
+   "status": 302,
+   "headers": {
+    "Location": "https://login.microsoftonline.com/common/oauth2"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://login.microsoftonline.com/common/oauth2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>login</html>"
+  },
+  {
+   "url": "https://acme.sharepoint.com/sites/x/_layouts/15/stream.aspx?id=%2Fsites%2Fx%2Fnone.mp4",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>no info</html>"
+  }
+ ]
+}

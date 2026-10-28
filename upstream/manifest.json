@@ -2664,6 +2664,18 @@
       "scope": "SimplecastIE episode API JSON (also from player iframes on generic pages), SimplecastEpisodeIE episode search API and SimplecastPodcastIE site search API with the podcast's episode generator, all through SimplecastBaseIE._parse_episode, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "sharepoint",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/sharepoint.py"
+      ],
+      "rust": [
+        "src/extractor/sharepoint.rs",
+        "tests/fixtures/sites/sharepoint/"
+      ],
+      "scope": "SharePointIE g_fileInfo videomanifest DASH/HLS and source download, login redirect error, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "skylinewebcams",
       "status": "partial",
       "upstream": [

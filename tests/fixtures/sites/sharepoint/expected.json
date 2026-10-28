@@ -1,0 +1,44 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://lut-my.sharepoint.com/:v:/g/personal/juha/EUrAmrktb4ZMhUcY9J2PqMEBD_9x_l0DyYWVgAvp-TTOMw?e=ZpQOOw",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"01EQRS7EKKYCNLSLLPQZGIKRYY6SOY7KGB\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://lut-my.sharepoint.com/_api/v2.0/drives/b!x/items/01EQ/driveItem/360/index.m3u8\", \"manifest_url\": \"https://lut-my.sharepoint.com/_api/v2.0/drives/b!x/items/01EQ/driveItem/videomanifest?provider=spo&inputFormat=mp4&cTag=%22c%3A%7B1%7D%2C2%22&action=Access&part=index&format=hls\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": -2, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"url\": \"https://lut-my.sharepoint.com/download.aspx?x=1\", \"ext\": \"mp4\", \"quality\": 1, \"format_id\": \"source\", \"filesize\": 1234, \"vcodec\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\"}], \"title\": \"CmvpJST.mp4\", \"display_id\": \"EUrAmrktb4ZMhUcY9J2PqMEBD_9x_l0DyYWVgAvp-TTOMw\", \"uploader_id\": \"7a4c6eb8\", \"duration\": 54.321, \"thumbnail\": \"https://lut-my.sharepoint.com/thumb.jpg\", \"webpage_url\": \"https://lut-my.sharepoint.com/:v:/g/personal/juha/EUrAmrktb4ZMhUcY9J2PqMEBD_9x_l0DyYWVgAvp-TTOMw?e=ZpQOOw\", \"original_url\": \"https://lut-my.sharepoint.com/:v:/g/personal/juha/EUrAmrktb4ZMhUcY9J2PqMEBD_9x_l0DyYWVgAvp-TTOMw?e=ZpQOOw\", \"webpage_url_basename\": \"EUrAmrktb4ZMhUcY9J2PqMEBD_9x_l0DyYWVgAvp-TTOMw\", \"webpage_url_domain\": \"lut-my.sharepoint.com\", \"extractor\": \"SharePoint\", \"extractor_key\": \"SharePoint\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://lut-my.sharepoint.com/thumb.jpg\", \"id\": \"0\"}], \"fulltitle\": \"CmvpJST.mp4\", \"duration_string\": \"54\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://lut-my.sharepoint.com/download.aspx?x=1\", \"ext\": \"mp4\", \"quality\": 1, \"format_id\": \"source\", \"filesize\": 1234, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\", \"_filename\": \"CmvpJST.mp4 [01EQRS7EKKYCNLSLLPQZGIKRYY6SOY7KGB].mp4\", \"filename\": \"CmvpJST.mp4 [01EQRS7EKKYCNLSLLPQZGIKRYY6SOY7KGB].mp4\", \"__write_download_archive\": false}], \"url\": \"https://lut-my.sharepoint.com/download.aspx?x=1\", \"ext\": \"mp4\", \"quality\": 1, \"format_id\": \"source\", \"filesize\": 1234, \"vcodec\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [SharePoint] 01EQRS7EKKYCNLSLLPQZGIKRYY6SOY7KGB: Failed to download MPD manifest: HTTP Error 404: Not Found",
+    "WARNING: [SharePoint] 01EQRS7EKKYCNLSLLPQZGIKRYY6SOY7KGB: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://acme.sharepoint.com/sites/x/_layouts/15/stream.aspx?id=%2Fsites%2Fx%2Flogin.mp4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [SharePoint] %2Fsites%2Fx%2Flogin.mp4: Session cookies are required for this URL and can be passed with the --cookies option. The --cookies-from-browser option will not work"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://acme.sharepoint.com/sites/x/_layouts/15/stream.aspx?id=%2Fsites%2Fx%2Fnone.mp4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [SharePoint] %2Fsites%2Fx%2Fnone.mp4: Unable to extract player config; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

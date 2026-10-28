@@ -1397,6 +1397,17 @@ Pages that TeachableIE claims (its `teachableTracker` check on
 itself is not ported. `tests/fixtures/sites/wistia/` is compared with pinned
 upstream output.
 
+SharePoint videos (`TENANT.sharepoint.com/:v:/X/.../ID46`, `.../stream.aspx?...id=PATH`)
+follow upstream `SharePointIE`: the page (a redirect to
+`login.microsoftonline.com` is upstream's cookies error), its `g_fileInfo`
+(fatal), the transform URL's sibling `videomanifest` (its query values kept,
+then `cTag`, `action=Access` and `part=index`) as non-fatal DASH
+(`format=dash`, `dash`) and HLS (`hls`, `hls-vnext`, quality -2) manifests,
+and the `downloadUrl` source (quality 1, extension from the file, size,
+audio-only flag), with the title (else display name), uploader, the
+`MediaServiceFastMetadata` duration and thumbnail. `tests/fixtures/sites/sharepoint/`
+is compared with pinned upstream output.
+
 ServusTV, Servus and P.M. Wissen videos (`servustv.com/[SECTION/]v[ideos]/ID`,
 `servus.com/(at|de)/p/NAME/ID`, `servus.com/tv/videos/ID`,
 `pm-wissen.com/videos/ID`) follow upstream `ServusIE`: the upper-cased ID,

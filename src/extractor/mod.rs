@@ -212,6 +212,7 @@ mod screen9;
 mod screenrec;
 mod sen;
 mod servus;
+mod sharepoint;
 mod simplecast;
 mod sky;
 mod skylinewebcams;
@@ -652,6 +653,7 @@ pub use screen9::{Screen9, suitable as screen9_suitable};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
 pub use servus::{Servus, suitable as servus_suitable};
+pub use sharepoint::{SharePoint, suitable as sharepoint_suitable};
 pub use simplecast::{
     Simplecast, SimplecastEpisode, SimplecastPodcast,
     episode_suitable as simplecast_episode_suitable,
