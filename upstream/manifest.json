@@ -1923,6 +1923,20 @@
       "scope": "KikaIE video documents, HLS/progressive assets and TTML/WebVTT subtitles, and KikaPlaylistIE paged brand generators of url results, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "kompas",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/jixie.py",
+        "yt_dlp/extractor/kompas.py"
+      ],
+      "rust": [
+        "src/extractor/jixie.rs",
+        "src/extractor/kompas.rs",
+        "tests/fixtures/sites/kompas/"
+      ],
+      "scope": "JixieBaseIE stream API data (HLS with DRM flags, MP4, metadata and meta fallbacks) through KompasVideoIE, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "kommunetv",
       "status": "partial",
       "upstream": [

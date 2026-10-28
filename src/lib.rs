@@ -526,6 +526,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Kika",
     "KikaPlaylist",
     "Kommunetv",
+    "KompasVideo",
     "KTH",
     "Ku6",
     "LastFM",
@@ -998,6 +999,7 @@ impl YoutubeDl {
                 Box::new(extractor::IndavideoEmbed),
                 Box::new(extractor::Kika),
                 Box::new(extractor::KikaPlaylist),
+                Box::new(extractor::KompasVideo),
                 Box::new(extractor::LeFigaroVideoEmbed),
                 Box::new(extractor::LeFigaroVideoSection),
                 Box::new(extractor::Lego),
@@ -2662,20 +2664,44 @@ impl YoutubeDl {
                     );
                 }
             }
+            // `process_video_result`: `_has_drm`, and DRM formats dropped
+            // without `--allow-unplayable-formats`.
+            let drm = |format: &VideoFormat| {
+                format.extra.get("has_drm") == Some(&serde_json::Value::Bool(true))
+            };
+            let has_drm = entry.formats.iter().any(drm);
+            if has_drm {
+                entry
+                    .extra
+                    .insert("_has_drm".into(), serde_json::Value::Bool(true));
+                if !no_formats::allow_unplayable() {
+                    entry.formats.retain(|format| !drm(format));
+                    if entry.formats.is_empty() {
+                        entry
+                            .extra
+                            .insert(info::NO_FORMATS.into(), serde_json::Value::Bool(true));
+                    }
+                }
+            }
             // `process_video_result`: `raise_no_formats` for a result
             // without formats.
             if entry.extra.shift_remove(info::NO_FORMATS).is_some() {
+                // `msg = has_drm and 'This video is DRM protected'`: expected.
+                let drm_message = has_drm.then_some("This video is DRM protected");
                 if no_formats::ignore() {
                     // `--ignore-no-formats-error`: processing continues.
-                    screen::warning("No video formats found!");
+                    screen::warning(drm_message.unwrap_or("No video formats found!"));
                     entry
                         .extra
                         .insert(info::FORMATS_IGNORED.into(), serde_json::Value::Bool(true));
                 } else {
-                    let message = format!(
-                        "[{}] {}: No video formats found!; {}",
-                        entry.extractor, entry.id, BUG_REPORTS_MESSAGE
-                    );
+                    let message = match drm_message {
+                        Some(message) => format!("[{}] {}: {message}", entry.extractor, entry.id),
+                        None => format!(
+                            "[{}] {}: No video formats found!; {}",
+                            entry.extractor, entry.id, BUG_REPORTS_MESSAGE
+                        ),
+                    };
                     // A playlist entry's error is reported when the entry is
                     // processed; the other entries continue.
                     if playlist {
@@ -3179,8 +3205,10 @@ impl YoutubeDl {
                     .get("__needs_testing")
                     .is_some_and(|value| value.as_bool() != Some(false) && !value.is_null())
         };
-        let default =
-            self.check_formats == CheckFormats::Default && info.formats.iter().any(needs_testing);
+        // `--allow-unplayable-formats` tests none of them.
+        let default = self.check_formats == CheckFormats::Default
+            && !no_formats::allow_unplayable()
+            && info.formats.iter().any(needs_testing);
         if self.check_formats != CheckFormats::Selected && !default {
             return info.select_formats(format, self.ffmpeg.is_some(), &options);
         }

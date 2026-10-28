@@ -1,0 +1,79 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://video.kompas.com/watch/164474/kim-jong-un",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"164474\", \"display_id\": \"kim-jong-un\", \"formats\": [{\"format_id\": \"900\", \"format_index\": null, \"url\": \"https://jixie-cdn.test/164474/480.m3u8\", \"manifest_url\": \"https://jixie-cdn.test/164474/master.m3u8\", \"tbr\": 900.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 854, \"height\": 480, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"854x480\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"900 - 854x480\"}, {\"url\": \"https://jixie-cdn.test/164474/720.mp4\", \"width\": 1280, \"height\": 720, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 1280x720\"}], \"subtitles\": {}, \"title\": \"Kim Jong Un\", \"description\": \"Desc here\", \"thumbnails\": [{\"url\": \"https://jixie-img.test/a.jpg\", \"width\": 640, \"id\": \"0\"}], \"duration\": 85.5, \"tags\": [\"a\", \"b\", \"\", \"c\"], \"categories\": null, \"uploader_id\": 17, \"webpage_url\": \"https://video.kompas.com/watch/164474/kim-jong-un\", \"original_url\": \"https://video.kompas.com/watch/164474/kim-jong-un\", \"webpage_url_basename\": \"kim-jong-un\", \"webpage_url_domain\": \"video.kompas.com\", \"extractor\": \"KompasVideo\", \"extractor_key\": \"KompasVideo\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://jixie-img.test/a.jpg\", \"fulltitle\": \"Kim Jong Un\", \"duration_string\": \"1:25\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://jixie-cdn.test/164474/720.mp4\", \"width\": 1280, \"height\": 720, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 1280x720\", \"_filename\": \"Kim Jong Un [164474].mp4\", \"filename\": \"Kim Jong Un [164474].mp4\", \"__write_download_archive\": false}], \"url\": \"https://jixie-cdn.test/164474/720.mp4\", \"width\": 1280, \"height\": 720, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://video.kompas.com/watch/2/drm-video",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [KompasVideo] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [KompasVideo] 2: This video is DRM protected"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://video.kompas.com/watch/2/drm-video",
+   "args": [
+    "-J",
+    "--allow-unplayable-formats"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2\", \"display_id\": \"drm-video\", \"formats\": [{\"format_id\": \"900\", \"format_index\": null, \"url\": \"https://jixie-cdn.test/2/480.m3u8\", \"manifest_url\": \"https://jixie-cdn.test/2/master.m3u8\", \"tbr\": 900.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": true, \"width\": 854, \"height\": 480, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"854x480\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"900 - 854x480\"}], \"subtitles\": {}, \"title\": \"OG title\", \"description\": null, \"thumbnails\": null, \"tags\": null, \"categories\": null, \"uploader_id\": null, \"webpage_url\": \"https://video.kompas.com/watch/2/drm-video\", \"original_url\": \"https://video.kompas.com/watch/2/drm-video\", \"webpage_url_basename\": \"drm-video\", \"webpage_url_domain\": \"video.kompas.com\", \"extractor\": \"KompasVideo\", \"extractor_key\": \"KompasVideo\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"OG title\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": true, \"requested_downloads\": [{\"format_id\": \"900\", \"url\": \"https://jixie-cdn.test/2/480.m3u8\", \"manifest_url\": \"https://jixie-cdn.test/2/master.m3u8\", \"tbr\": 900.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": true, \"width\": 854, \"height\": 480, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"854x480\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"900 - 854x480\", \"_filename\": \"OG title [2].mp4\", \"filename\": \"OG title [2].mp4\", \"__write_download_archive\": false}], \"format_id\": \"900\", \"format_index\": null, \"url\": \"https://jixie-cdn.test/2/480.m3u8\", \"manifest_url\": \"https://jixie-cdn.test/2/master.m3u8\", \"tbr\": 900.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": true, \"width\": 854, \"height\": 480, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"854x480\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"900 - 854x480\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: You have asked for UNPLAYABLE formats to be listed/downloaded. This is a developer option intended for debugging. ",
+    "WARNING: [KompasVideo] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://video.kompas.com/watch/3/no-data",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 3: An extractor error has occurred. (caused by KeyError('data')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://video.kompas.com/watch/2/drm-video",
+   "args": [
+    "-J",
+    "--ignore-no-formats-error"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2\", \"display_id\": \"drm-video\", \"formats\": [], \"subtitles\": {}, \"title\": \"OG title\", \"description\": null, \"thumbnails\": null, \"tags\": null, \"categories\": null, \"uploader_id\": null, \"webpage_url\": \"https://video.kompas.com/watch/2/drm-video\", \"original_url\": \"https://video.kompas.com/watch/2/drm-video\", \"webpage_url_basename\": \"drm-video\", \"webpage_url_domain\": \"video.kompas.com\", \"extractor\": \"KompasVideo\", \"extractor_key\": \"KompasVideo\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"OG title\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": true, \"requested_downloads\": [{\"_filename\": \"OG title [2].NA\", \"filename\": \"OG title [2].NA\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [KompasVideo] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: This video is DRM protected",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  }
+ ]
+}

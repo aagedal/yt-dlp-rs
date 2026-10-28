@@ -121,6 +121,7 @@ pub(crate) mod ism;
 mod israelnationalnews;
 mod ivoox;
 mod jamendo;
+mod jixie;
 mod jove;
 mod json_ld;
 mod jwplatform;
@@ -132,6 +133,7 @@ mod kicker;
 mod kickstarter;
 mod kika;
 mod kommunetv;
+mod kompas;
 mod kth;
 mod ku6;
 mod kvs;
@@ -537,6 +539,7 @@ pub use kika::{
 };
 pub(crate) use kika::{fetch_pages as fetch_kika_pages, is_pending_state as kika_pending_state};
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
+pub use kompas::{KompasVideo, suitable as kompas_suitable};
 pub use kth::{Kth, suitable as kth_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
 pub use lastfm::{
