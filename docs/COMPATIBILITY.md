@@ -1255,6 +1255,16 @@ upstream `BloggerIE`: the page's `VIDEO_CONFIG` line decoded like Python's
 format IDs), the iframe ID as ID and title, the thumbnail and the first
 stream's `dur`; its `_EMBED_REGEX` iframes join the generic embed detection.
 
+Bloomberg pages (`bloomberg.com/.../NAME`) follow upstream `BloombergIE`:
+the first of the page's `bmmrId`, `videoId` and `data-bmmrid` values (else
+the `BPlayer(null, {...});` data's `id`, with upstream's `Unable to extract
+id`, JSON and `KeyError` failures), then the multimedia embed API's streams
+with a URL: `TS` ones as HLS (`hls`), others as HDS (`hds`), both non-fatal.
+The OpenGraph title loses a final `: Video`; a page without one fails like
+upstream (`expected string or bytes-like object`). The OpenGraph description
+and thumbnail warn when missing. `tests/fixtures/sites/bloomberg/` is
+compared with pinned upstream output.
+
 Bluesky posts (`bsky.app/profile/HANDLE/post/ID`, `main.bsky.dev`, and
 `at://HANDLE/app.bsky.feed.post/ID`) follow upstream `BlueskyIE`: the
 public API's post thread, each video embed's HLS playlist plus its PDS blob

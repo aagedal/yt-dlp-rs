@@ -25,6 +25,7 @@ mod bilibili;
 pub(crate) mod bitchute;
 mod bitmovin;
 mod blogger;
+mod bloomberg;
 mod bluesky;
 mod bongacams;
 mod bostonglobe;
@@ -392,6 +393,7 @@ pub(crate) use bitchute::{
 };
 pub use bitmovin::{Bitmovin, suitable as bitmovin_suitable};
 pub use blogger::{Blogger, suitable as blogger_suitable};
+pub use bloomberg::{Bloomberg, suitable as bloomberg_suitable};
 pub use bluesky::{Bluesky, suitable as bluesky_suitable};
 pub use bongacams::{BongaCams, suitable as bongacams_suitable};
 pub use bostonglobe::{BostonGlobe, suitable as bostonglobe_suitable};

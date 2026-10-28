@@ -1,0 +1,127 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.bloomberg.com/news/videos/2021-09-14/apple-unveils-video",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"V8cFcYMxTHaMcEiiYVr39A\", \"title\": \"Apple Unveils the New IPhone 13\", \"formats\": [{\"format_id\": \"hds-600\", \"url\": \"https://media.bbg.test/hds/v_600\", \"manifest_url\": \"https://media.bbg.test/hds/v_600\", \"ext\": \"unknown_video\", \"protocol\": \"f4m\", \"tbr\": 600, \"width\": 640, \"height\": 360, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-600 - 640x360\"}, {\"format_id\": \"hls-640\", \"format_index\": null, \"url\": \"https://media.bbg.test/hls/low/index.m3u8\", \"manifest_url\": \"https://media.bbg.test/hls/master.m3u8\", \"tbr\": 640.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-640 - 640x360\"}, {\"format_id\": \"hds-1200\", \"url\": \"https://media.bbg.test/hds/v_1200\", \"manifest_url\": \"https://media.bbg.test/hds/v_1200\", \"ext\": \"unknown_video\", \"protocol\": \"f4m\", \"tbr\": 1200, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-1200 - 1280x720\"}, {\"format_id\": \"hls-1280\", \"format_index\": null, \"url\": \"https://media.bbg.test/hls/high/index.m3u8\", \"manifest_url\": \"https://media.bbg.test/hls/master.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1280 - 1280x720\"}], \"description\": \"Stock & more\", \"thumbnail\": \"https://assets.bbg.test/thumb.jpg\", \"webpage_url\": \"https://www.bloomberg.com/news/videos/2021-09-14/apple-unveils-video\", \"original_url\": \"https://www.bloomberg.com/news/videos/2021-09-14/apple-unveils-video\", \"webpage_url_basename\": \"apple-unveils-video\", \"webpage_url_domain\": \"bloomberg.com\", \"extractor\": \"Bloomberg\", \"extractor_key\": \"Bloomberg\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://assets.bbg.test/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"V8cFcYMxTHaMcEiiYVr39A\", \"fulltitle\": \"Apple Unveils the New IPhone 13\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1280\", \"url\": \"https://media.bbg.test/hls/high/index.m3u8\", \"manifest_url\": \"https://media.bbg.test/hls/master.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1280 - 1280x720\", \"_filename\": \"Apple Unveils the New IPhone 13 [V8cFcYMxTHaMcEiiYVr39A].mp4\", \"filename\": \"Apple Unveils the New IPhone 13 [V8cFcYMxTHaMcEiiYVr39A].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1280\", \"format_index\": null, \"url\": \"https://media.bbg.test/hls/high/index.m3u8\", \"manifest_url\": \"https://media.bbg.test/hls/master.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1280 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bloomberg.com/news/videos/2021-09-14/apple-unveils-video",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Bloomberg] Extracting URL: https://www.bloomberg.com/news/videos/2021-09-14/apple-unveils-video",
+    "[Bloomberg] apple-unveils-video: Downloading webpage",
+    "[Bloomberg] V8cFcYMxTHaMcEiiYVr39A: Downloading JSON metadata",
+    "[Bloomberg] V8cFcYMxTHaMcEiiYVr39A: Downloading m3u8 information",
+    "[Bloomberg] V8cFcYMxTHaMcEiiYVr39A: Downloading f4m manifest",
+    "[info] Available formats for V8cFcYMxTHaMcEiiYVr39A:",
+    "ID       EXT           RESOLUTION |   TBR PROTO | VCODEC  ACODEC",
+    "-----------------------------------------------------------------",
+    "hds-600  unknown_video 640x360    |  600k f4m   | unknown unknown",
+    "hls-640  mp4           640x360    |  640k m3u8  | unknown unknown",
+    "hds-1200 unknown_video 1280x720   | 1200k f4m   | unknown unknown",
+    "hls-1280 mp4           1280x720   | 1280k m3u8  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.bloomberg.com/features/2016-hello-world-new-zealand/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"938c7e72-3f25\", \"title\": \"Meet the Real-Life Tech Wizards\", \"formats\": [{\"format_id\": \"hds-600\", \"url\": \"https://media.bbg.test/hds/v_600\", \"manifest_url\": \"https://media.bbg.test/hds/v_600\", \"ext\": \"unknown_video\", \"protocol\": \"f4m\", \"tbr\": 600, \"width\": 640, \"height\": 360, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-600 - 640x360\"}, {\"format_id\": \"hds-1200\", \"url\": \"https://media.bbg.test/hds/v_1200\", \"manifest_url\": \"https://media.bbg.test/hds/v_1200\", \"ext\": \"unknown_video\", \"protocol\": \"f4m\", \"tbr\": 1200, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-1200 - 1280x720\"}], \"description\": null, \"thumbnail\": null, \"webpage_url\": \"http://www.bloomberg.com/features/2016-hello-world-new-zealand/\", \"original_url\": \"http://www.bloomberg.com/features/2016-hello-world-new-zealand/\", \"webpage_url_basename\": \"2016-hello-world-new-zealand\", \"webpage_url_domain\": \"bloomberg.com\", \"extractor\": \"Bloomberg\", \"extractor_key\": \"Bloomberg\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"938c7e72-3f25\", \"fulltitle\": \"Meet the Real-Life Tech Wizards\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hds-1200\", \"url\": \"https://media.bbg.test/hds/v_1200\", \"manifest_url\": \"https://media.bbg.test/hds/v_1200\", \"ext\": \"unknown_video\", \"protocol\": \"f4m\", \"tbr\": 1200, \"width\": 1280, \"height\": 720, \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-1200 - 1280x720\", \"_filename\": \"Meet the Real-Life Tech Wizards [938c7e72-3f25].unknown_video\", \"filename\": \"Meet the Real-Life Tech Wizards [938c7e72-3f25].unknown_video\", \"__write_download_archive\": false}], \"format_id\": \"hds-1200\", \"url\": \"https://media.bbg.test/hds/v_1200\", \"manifest_url\": \"https://media.bbg.test/hds/v_1200\", \"ext\": \"unknown_video\", \"protocol\": \"f4m\", \"tbr\": 1200, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-1200 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Bloomberg] 938c7e72-3f25: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [Bloomberg] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Bloomberg] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bloomberg.com/politics/articles/2017-02-08/no-video",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Bloomberg] no-video: Unable to extract id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bloomberg.com/politics/articles/2017-02-08/untitled",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [Bloomberg] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: expected string or bytes-like object, got 'NoneType'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bloomberg.com/news/articles/2015-11-12/no-streams",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: no-streams: An extractor error has occurred. (caused by KeyError('streams')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bloomberg.com/politics/videos/2015-11-25/bad-player",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Bloomberg] bad-player: Failed to parse JSON (caused by JSONDecodeError('Expecting property name enclosed in double quotes in \"{id: \\'x\\'}\": line 1 column 2 (char 1)')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bloomberg.com/news/videos/2015-11-25/no-muxing",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: no-muxing: An extractor error has occurred. (caused by KeyError('muxing_format')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
