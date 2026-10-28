@@ -198,6 +198,7 @@ mod monstercat;
 mod movingimage;
 mod musescore;
 mod mux;
+mod myspass;
 mod myvidster;
 mod nascar;
 mod netapp;
@@ -692,6 +693,7 @@ pub(crate) use monstercat::{
 pub use movingimage::{MovingImage, suitable as movingimage_suitable};
 pub use musescore::{MuseScore, suitable as musescore_suitable};
 pub use mux::{Mux, suitable as mux_suitable};
+pub use myspass::{MySpass, suitable as myspass_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
 pub use nascar::{NascarClassics, suitable as nascar_classics_suitable};
 pub use netapp::{

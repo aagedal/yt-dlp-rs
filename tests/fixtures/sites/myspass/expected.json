@@ -1,0 +1,57 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.myspass.de/shows/tvshows/tv-total/Novak-Puffovic-bei-bester-Laune--/44996/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"44996\", \"url\": \"https://cldf-od.r53.cdn.tv1.eu/secdl/abc/myspass2009/11/30/44996/972/44996_61.mp4\", \"title\": \"Novak Puffovic bei bester Laune\", \"thumbnail\": \"https://www.myspass.test/myspass/media/images/videos/96/44996_640x360.jpg\", \"description\": \"Novak Djokovic war zu Gast & hatte gute Laune.\", \"duration\": 2941, \"series\": \"TV total\", \"season_number\": 19, \"season_id\": \"987\", \"episode\": \"Novak Puffovic bei bester Laune\", \"episode_number\": 8, \"webpage_url\": \"https://www.myspass.de/shows/tvshows/tv-total/Novak-Puffovic-bei-bester-Laune--/44996/\", \"original_url\": \"https://www.myspass.de/shows/tvshows/tv-total/Novak-Puffovic-bei-bester-Laune--/44996/\", \"webpage_url_basename\": \"44996\", \"webpage_url_domain\": \"myspass.de\", \"extractor\": \"MySpass\", \"extractor_key\": \"MySpass\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://www.myspass.test/myspass/media/images/videos/96/44996_640x360.jpg\", \"id\": \"0\"}], \"display_id\": \"44996\", \"fulltitle\": \"Novak Puffovic bei bester Laune\", \"duration_string\": \"49:01\", \"release_year\": null, \"season\": \"Season 19\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Novak Puffovic bei bester Laune [44996].mp4\", \"filename\": \"Novak Puffovic bei bester Laune [44996].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.myspass.de/channels/tv-total-raabigramm/17033/20831/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"20831\", \"url\": \"https://cldf-od.r53.cdn.tv1.eu/secdl/def/myspass/20831/20831_61.flv\", \"title\": \"Raabigramm Verona Feldbusch\", \"thumbnail\": null, \"description\": null, \"duration\": 105, \"series\": null, \"season_number\": null, \"season_id\": null, \"episode\": \"Raabigramm Verona Feldbusch\", \"episode_number\": 6, \"webpage_url\": \"https://www.myspass.de/channels/tv-total-raabigramm/17033/20831/\", \"original_url\": \"https://www.myspass.de/channels/tv-total-raabigramm/17033/20831/\", \"webpage_url_basename\": \"20831\", \"webpage_url_domain\": \"myspass.de\", \"extractor\": \"MySpass\", \"extractor_key\": \"MySpass\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"20831\", \"fulltitle\": \"Raabigramm Verona Feldbusch\", \"duration_string\": \"1:45\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"flv\", \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Raabigramm Verona Feldbusch [20831].flv\", \"filename\": \"Raabigramm Verona Feldbusch [20831].flv\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.myspass.de/shows/x/11/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [MySpass] 11: Could not find XML element title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.myspass.de/shows/x/12",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [MySpass] 12: Could not find XML element's text download url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

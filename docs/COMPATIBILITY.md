@@ -1735,6 +1735,14 @@ title, cleaned description (warning when missing), preview (else OpenGraph)
 image, director, release date and the duration, bitrate and size meta tags.
 `tests/fixtures/sites/popcorntimes/` is compared with pinned upstream output.
 
+MySpass videos (`myspass.de/.../ID[/...]`) follow upstream `MySpassIE`: the
+`getvideometadataxml.php` document's fatal title and `url_flv` (upstream's
+`Could not find XML element` errors), with `/myspass2009/N/A/B/C/` path
+numbers above the video ID divided by it, and the preview image,
+description, duration, series (`format`), season, season ID and episode
+number, as an untyped result.
+`tests/fixtures/sites/myspass/` is compared with pinned upstream output.
+
 PGA Tour videos (`pgatour.com/video/SECTION/[T]ID`) follow upstream
 `PGATourIE` as `url` results for their Brightcove player (the TOURCast
 account and player for `T` IDs). `tests/fixtures/sites/pgatour/` is compared

@@ -310,6 +310,18 @@
       "scope": "MuxIE stream.new/v and player.mux.com playback IDs as the fatal stream.mux.com HLS playlist (playback-token as token) with subtitles and the ID as title; generic-page iframe and mux-player embeds are not detected. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "myspass",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/myspass.py"
+      ],
+      "rust": [
+        "src/extractor/myspass.rs",
+        "tests/fixtures/sites/myspass/"
+      ],
+      "scope": "MySpassIE video metadata XML (fatal title and url_flv with xpath_text errors, path numbers divided by the video ID, duration, series, season and episode fields) as an untyped result, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "netzkino",
       "status": "partial",
       "upstream": [
