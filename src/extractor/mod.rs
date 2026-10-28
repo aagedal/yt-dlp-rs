@@ -189,6 +189,7 @@ mod peertube;
 mod peertv;
 mod periscope;
 mod photobucket;
+mod pialive;
 mod picarto;
 mod pinkbike;
 mod pinterest;
@@ -633,6 +634,8 @@ pub(crate) use peertube::{
 pub use peertv::{PeerTv, suitable as peertv_suitable};
 pub use periscope::{Periscope, suitable as periscope_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
+pub(crate) use pialive::post_extract as pialive_comments;
+pub use pialive::{PiaLive, suitable as pialive_suitable};
 pub use picarto::{
     Picarto, PicartoVod, suitable as picarto_suitable, vod_suitable as picarto_vod_suitable,
 };
@@ -1627,6 +1630,49 @@ pub(crate) fn post_json_note_headers(
     body: String,
 ) -> Result<serde_json::Value> {
     post_json_with(client, url, (extractor, id), (note, None), headers, body)
+}
+
+/// [`post_json_note_headers`] with `errnote=` (`[EXTRACTOR] ID: ERRNOTE:
+/// ...` for HTTP errors).
+pub(crate) fn post_json_errnote(
+    client: &Client,
+    url: &Url,
+    (extractor, id): (&'static str, &str),
+    (note, errnote): (&str, &str),
+    headers: &[(&str, &str)],
+    body: String,
+) -> Result<serde_json::Value> {
+    post_json_with(
+        client,
+        url,
+        (extractor, id),
+        (note, Some(errnote)),
+        headers,
+        body,
+    )
+}
+
+/// [`post_json_errnote`] with `fatal=False`: an HTTP error is a warning and
+/// `None`.
+pub(crate) fn post_json_errnote_optional(
+    client: &Client,
+    url: &Url,
+    (extractor, id): (&'static str, &str),
+    (note, errnote): (&str, &str),
+    headers: &[(&str, &str)],
+    body: String,
+) -> Result<Option<serde_json::Value>> {
+    match post_json_with(client, url, (extractor, id), (note, None), headers, body) {
+        Ok(value) => Ok(Some(value)),
+        Err(crate::Error::ExtractorRequest { source, .. }) => {
+            crate::screen::warning(&format!(
+                "[{extractor}] {id}: {errnote}: {}",
+                crate::upstream_error_text(&source)
+            ));
+            Ok(None)
+        }
+        Err(error) => Err(error),
+    }
 }
 
 fn post_json_with(

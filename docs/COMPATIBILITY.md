@@ -3964,6 +3964,19 @@ Photobucket media (`photobucket.com/..._ID.mp4|flv`) follow upstream
 information`) with the embed code's unquoted `file=` URL, username, creation
 date, title and thumbnail as an untyped result with the URL's extension.
 
+PIA LIVE STREAM players (`player.pia-live.jp/stream/KEY`) follow upstream
+`PiaLiveIE`: the page's `programCode`/`articleCode` variables (fatal), the
+`<title>` (non-fatal), a `play-end` element as `The video is no longer
+available`, a `play-waiting__date` start as upstream's expected no-formats
+error (with `--ignore-no-formats-error`, an `is_upcoming` result with its
+`+09:00` release time; an unparsed date is upstream's bare unpack
+`TypeError`), and otherwise the `player-tag-list` API (a multipart POST with
+a random boundary) whose `movie_one_tag` iframe source is followed as a
+`url_transparent` result with the page title and program code as
+`display_id`. With `--write-comments` the `chat-tag-list` API's chat room
+page `_history` rows become `comments` (each request non-fatal).
+`tests/fixtures/sites/pialive/` is compared with pinned upstream output.
+
 Pinterest pins (`pinterest.TLD/pin/[SLUG--]ID`) follow upstream
 `PinterestIE`: the Pin resource API, the pin's video list (HLS with the
 list key as `m3u8_id`, or progressive formats with their duration) or a

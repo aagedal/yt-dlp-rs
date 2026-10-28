@@ -2373,6 +2373,18 @@
       "scope": "PhotobucketIE page MEDIA JSON and embed file= URL as an untyped result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "pialive",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/pialive.py"
+      ],
+      "rust": [
+        "src/extractor/pialive.rs",
+        "tests/fixtures/sites/pialive/"
+      ],
+      "scope": "PiaLiveIE program/article variables, ended and upcoming streams, the player tag list's multipart POST and transparent player iframe, and chat history comments, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "picarto",
       "status": "partial",
       "upstream": [

@@ -991,8 +991,10 @@ const PROCESSED_INFO_KEYS: &[&str] = &[
     "requested_subtitles",
     "_has_drm",
     "epoch",
-    // `post_extract`'s comments (`comment_count` is the extractor's).
+    // `post_extract`'s comments (`comment_count` too when the extractor's
+    // dict did not have it).
     "comments",
+    "comment_count",
     "requested_formats",
     "requested_downloads",
     "_filename",
@@ -2435,8 +2437,10 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // The first `prepare_outtmpl` sets `epoch` before format selection.
     replay.take("epoch");
-    // `post_extract` adds the comments before format selection.
+    // `post_extract` adds the comments before format selection (and their
+    // count, unless the extractor's dict had it).
     replay.take("comments");
+    replay.take("comment_count");
     // `-J`: `requested_downloads`, each without the keys whose values equal
     // the info dict's ("Remove copied info"); the selected format's keys are
     // merged afterwards (`info_dict.update(best_format)`), so the dict still

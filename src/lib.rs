@@ -603,6 +603,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "peer.tv",
     "periscope",
     "Photobucket",
+    "PiaLive",
     "picarto",
     "picarto:vod",
     "Pinkbike",
@@ -1010,6 +1011,7 @@ impl YoutubeDl {
                 Box::new(extractor::MuseScore),
                 Box::new(extractor::StvPlayer),
                 Box::new(extractor::Telewebion),
+                Box::new(extractor::PiaLive),
                 Box::new(extractor::Tf1),
                 Box::new(extractor::Tvigle),
                 Box::new(extractor::UrPlay),
@@ -2095,6 +2097,7 @@ impl YoutubeDl {
     /// filters (YouTube's comments with `getcomments`).
     pub fn post_extract(&self, info: &mut VideoInfo) -> Result<()> {
         extractor::youtube_comments(&self.client, info)?;
+        extractor::pialive_comments(&self.client, info)?;
         extractor::instagram_comments(&self.client, info)
     }
 
