@@ -2708,6 +2708,18 @@
       "scope": "Mir24TvIE player iframe source query (parse_qs last value, protocol-relative URL, required m3u8 URL) as fatal HLS formats and subtitles, og/title fallbacks, og thumbnail and impersonation warning compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "mirrorcouk",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mirrorcouk.py"
+      ],
+      "rust": [
+        "src/extractor/mirrorcouk.rs",
+        "tests/fixtures/sites/mirrorcouk/"
+      ],
+      "scope": "MirrorCoUKIE json-placeholder videoData as a url_transparent JW Platform result with display_id, and missing, unparsable and KeyError data errors, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "mixcloud",
       "status": "partial",
       "upstream": [

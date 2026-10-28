@@ -205,6 +205,7 @@ mod mediaworksnz;
 mod megaphone;
 mod melonvod;
 mod mir24tv;
+mod mirrorcouk;
 mod mixcloud;
 mod mixlr;
 mod mocha;
@@ -730,6 +731,7 @@ pub use mediaworksnz::{MediaWorksNzVod, suitable as mediaworksnz_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
 pub use melonvod::{MelonVod, suitable as melonvod_suitable};
 pub use mir24tv::{Mir24Tv, suitable as mir24tv_suitable};
+pub use mirrorcouk::{MirrorCoUk, suitable as mirrorcouk_suitable};
 pub use mixcloud::{Mixcloud, suitable as mixcloud_suitable};
 pub use mixlr::{
     Mixlr, MixlrRecording, recording_suitable as mixlr_recording_suitable,

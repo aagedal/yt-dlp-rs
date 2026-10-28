@@ -4423,6 +4423,15 @@ URL`) as fatal `hls` formats and subtitles, the `og:title` (else the
 `<title>` text with its warning, else the generic title) and the `og:image`
 thumbnail.
 
+Mirror articles (`mirror.co.uk/...-ID`) follow upstream `MirrorCoUKIE`: the
+page's fatal `json-placeholder` `data-json` object through `unescapeHTML`
+(upstream's `Unable to extract data` and `Failed to parse JSON` errors), and
+its `videoData.videoId` (missing keys are upstream's `KeyError`s) as a
+`url_transparent` result for `jwplatform:ID` with the article ID as
+`display_id`. Video data that are not objects and IDs that JW Platform does
+not accept are explicit errors. `tests/fixtures/sites/mirrorcouk/` is
+compared with pinned upstream output.
+
 Mixcloud shows (`mixcloud.com/USER/SLUG`) follow upstream `MixcloudIE`: the
 GraphQL cloudcast lookup (impersonated with the `impersonate` feature, else
 with upstream's impersonation warning), its
