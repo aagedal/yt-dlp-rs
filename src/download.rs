@@ -52,6 +52,9 @@ pub struct DownloadProgress {
     pub fragment_count: Option<u32>,
     /// The current fragment's own bytes, as its HttpFD reports them.
     pub fragment: Option<FragmentBytes>,
+    /// Milliseconds of media in a growing file (`--growing-file`, a port
+    /// extension); `downloaded_bytes` is then the file's size.
+    pub recorded_ms: Option<u64>,
 }
 
 /// One fragment's HttpFD progress: bytes so far and its total (the
@@ -167,6 +170,7 @@ impl Reporter<'_> {
             fragment_index: None,
             fragment_count: None,
             fragment: None,
+            recorded_ms: None,
         }) {
             ControlFlow::Continue(()) => Ok(()),
             ControlFlow::Break(()) => Err(Error::DownloadCancelled),
@@ -715,6 +719,7 @@ fn join_subtitle_fragments(
                     fragment_index: Some(index as u32 + 1),
                     fragment_count: Some(fragments.len() as u32),
                     fragment: None,
+                    recorded_ms: None,
                     ..progress
                 })
             },
@@ -750,6 +755,7 @@ fn join_subtitle_fragments(
         fragment_index: None,
         fragment_count: None,
         fragment: None,
+        recorded_ms: None,
     })
     .is_break()
     {

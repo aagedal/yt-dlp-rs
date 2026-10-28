@@ -42,6 +42,7 @@ impl Reporter<'_> {
             // Live fragment lists have no count (`0`).
             fragment_count: (self.count > 0).then_some(self.count),
             fragment,
+            recorded_ms: None,
         })
         .is_break()
         {

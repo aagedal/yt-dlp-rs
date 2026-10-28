@@ -124,6 +124,7 @@ fn progress(
         fragment_index: None,
         fragment_count: None,
         fragment: None,
+        recorded_ms: None,
     })
 }
 

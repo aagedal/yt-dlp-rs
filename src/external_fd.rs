@@ -578,6 +578,7 @@ pub(crate) fn download(
         fragment_index: None,
         fragment_count: None,
         fragment: None,
+        recorded_ms: None,
     };
     // `report_destination`.
     if callback(progress(DownloadPhase::Downloading, 0, None)).is_break() {

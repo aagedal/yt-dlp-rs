@@ -1044,6 +1044,12 @@ pub fn local_today() -> i64 {
     (now + local_offset(now).unwrap_or(0)).div_euclid(86_400)
 }
 
+/// Seconds since local midnight at Unix time `time` (UTC where the C
+/// library's `localtime_r` is unavailable).
+pub(crate) fn local_seconds_of_day(time: i64) -> i64 {
+    (time + local_offset(time).unwrap_or(0)).rem_euclid(86_400)
+}
+
 /// The local UTC offset in seconds at `time` (`tm_gmtoff`).
 #[cfg(unix)]
 fn local_offset(time: i64) -> Option<i64> {

@@ -227,6 +227,7 @@ pub(crate) fn download(
         fragment_index: None,
         fragment_count: None,
         fragment: None,
+        recorded_ms: None,
     };
     if callback(progress(DownloadPhase::Requesting, 0, None)).is_break() {
         return Err(Error::DownloadCancelled);

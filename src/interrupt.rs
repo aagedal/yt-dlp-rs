@@ -11,6 +11,9 @@ static INTERRUPTED: AtomicBool = AtomicBool::new(false);
 const SIGINT: i32 = 2;
 
 #[cfg(unix)]
+const SIGTERM: i32 = 15;
+
+#[cfg(unix)]
 const SIG_IGN: usize = 1;
 
 #[cfg(unix)]
@@ -27,6 +30,9 @@ extern "C" fn record(_: i32) {
 pub(crate) struct Guard {
     #[cfg(unix)]
     previous: usize,
+    /// SIGTERM's previous handler, when it is handled too.
+    #[cfg(unix)]
+    terminate: Option<usize>,
 }
 
 impl Guard {
@@ -34,15 +40,24 @@ impl Guard {
         #[cfg(unix)]
         {
             INTERRUPTED.store(false, Ordering::SeqCst);
-            // SAFETY: the handler only stores to an atomic flag.
-            let previous = unsafe { signal(SIGINT, record as extern "C" fn(i32) as usize) };
-            if previous == SIG_IGN {
-                // An ignored SIGINT (a background job) stays ignored, as
-                // Python then installs no `KeyboardInterrupt` handler.
-                // SAFETY: restores the previous disposition.
-                unsafe { signal(SIGINT, SIG_IGN) };
+            Self {
+                previous: replace(SIGINT),
+                terminate: None,
             }
-            Self { previous }
+        }
+        #[cfg(not(unix))]
+        Self {}
+    }
+
+    /// Also end at SIGTERM, which stops a growing-file recording
+    /// (`--growing-file`, a port extension) as an interrupt does, so its
+    /// file is finished and its recording mark removed.
+    pub(crate) fn install_with_terminate() -> Self {
+        #[cfg(unix)]
+        {
+            let mut guard = Self::install();
+            guard.terminate = Some(replace(SIGTERM));
+            guard
         }
         #[cfg(not(unix))]
         Self {}
@@ -64,11 +79,28 @@ pub(crate) fn interrupted() -> bool {
     false
 }
 
+/// Install `record` for `signum`, returning the previous handler.
+#[cfg(unix)]
+fn replace(signum: i32) -> usize {
+    // SAFETY: the handler only stores to an atomic flag.
+    let previous = unsafe { signal(signum, record as extern "C" fn(i32) as usize) };
+    if previous == SIG_IGN {
+        // An ignored signal (SIGINT in a background job) stays ignored, as
+        // Python then installs no `KeyboardInterrupt` handler.
+        // SAFETY: restores the previous disposition.
+        unsafe { signal(signum, SIG_IGN) };
+    }
+    previous
+}
+
 impl Drop for Guard {
     fn drop(&mut self) {
         #[cfg(unix)]
-        // SAFETY: restores the handler `install` replaced.
+        // SAFETY: restores the handlers `install` replaced.
         unsafe {
+            if let Some(previous) = self.terminate {
+                signal(SIGTERM, previous);
+            }
             signal(SIGINT, self.previous);
         }
     }

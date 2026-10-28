@@ -201,3 +201,131 @@ fn an_interrupted_live_from_start_download_is_completed() {
     assert_eq!(text_file.into_bytes(), expected("140", count - 1));
     assert!(!part.exists());
 }
+
+/// `--growing-file` (port extension): a fake FFmpeg recording its arguments
+/// in `calls.txt`, reporting one `-progress` block on stdout and copying its
+/// `-i` inputs (the named pipes the fragment downloads feed) in order into
+/// the output.
+#[cfg(unix)]
+fn growing_ffmpeg(directory: &Path) -> String {
+    use std::os::unix::fs::PermissionsExt;
+    let path = directory.join("ffmpeg");
+    std::fs::write(
+        &path,
+        "#!/bin/sh\n\
+         case \"$1\" in -version) echo 'ffmpeg version live-fixture'; exit 0;; esac\n\
+         for a in \"$@\"; do printf '%s\\n' \"$a\"; done > \"${0%/ffmpeg}/calls.txt\"\n\
+         inputs=''\n\
+         while [ $# -gt 1 ]; do [ \"$1\" = -i ] && inputs=\"$inputs ${2#file:}\"; shift; done\n\
+         cat $inputs > \"${1#file:}\"\n\
+         printf 'out_time_us=1500000\\ntotal_size=24\\nprogress=end\\n'\n",
+    )
+    .unwrap();
+    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    path.display().to_string()
+}
+
+#[cfg(unix)]
+#[test]
+fn a_growing_file_is_fed_through_named_pipes_without_a_merge() {
+    let proxy = proxy(Arc::new(|| 1), Duration::ZERO);
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = growing_ffmpeg(tools.path());
+    let work = tempfile::tempdir().unwrap();
+    let output = command(&proxy, work.path())
+        .args([
+            "-f",
+            "137+140",
+            "--ffmpeg-location",
+            &ffmpeg,
+            "--growing-file",
+        ])
+        .args(["--progress", "--newline"])
+        .env("TZ", "UTC")
+        .arg("https://www.youtube.com/watch?v=LiveStart01")
+        .output()
+        .unwrap();
+    assert!(output.status.success(), "{}", text(&output));
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        stdout.contains(
+            "[info] LiveStart01: Downloading 1 format(s): 137+140\n\
+             [dashsegments] Total fragments: unknown (live)\n\
+             [dashsegments] Total fragments: unknown (live)\n\
+             [download] Destination: LiveStart01.mov\n"
+        ),
+        "{stdout}"
+    );
+    assert!(stdout.contains(", recorded 00:00:01\n"), "{stdout}");
+    assert!(!stdout.contains("[Merger]"), "{stdout}");
+    // One file at its final name: no format files, pipes or workspace left.
+    let names: Vec<_> = std::fs::read_dir(work.path())
+        .unwrap()
+        .map(|entry| entry.unwrap().file_name())
+        .collect();
+    assert_eq!(names, ["LiveStart01.mov"]);
+    assert_eq!(
+        std::fs::read(work.path().join("LiveStart01.mov")).unwrap(),
+        [expected("137", 1), expected("140", 1)].concat()
+    );
+    let calls = std::fs::read_to_string(tools.path().join("calls.txt")).unwrap();
+    let args: Vec<&str> = calls.lines().collect();
+    let inputs: Vec<&str> = args
+        .windows(2)
+        .filter(|pair| pair[0] == "-i")
+        .map(|pair| pair[1])
+        .collect();
+    assert_eq!(inputs.len(), 2, "{calls}");
+    for (index, input) in inputs.iter().enumerate() {
+        assert!(input.starts_with("file:"), "{calls}");
+        assert!(input.ends_with(&format!("/input-{index}")), "{calls}");
+        assert!(input.contains("/.yt-dlp-rs-growing-"), "{calls}");
+    }
+    let tail = args[args.iter().position(|arg| *arg == "-c").unwrap()..].join(" ");
+    // The stream's start (2024-01-01T00:00:00-08:00) as the time of day.
+    assert_eq!(
+        tail,
+        "-c copy -map 0:0 -map 1:0 -nostats -progress pipe:1 -timecode 08:00:00:00 \
+         -movflags +frag_keyframe -frag_duration 1000000 -flush_packets 1 -f mov \
+         file:LiveStart01.mov"
+    );
+}
+
+#[cfg(unix)]
+#[test]
+fn an_interrupted_growing_file_keeps_whole_fragments() {
+    let proxy = proxy(Arc::new(|| 1000), Duration::from_millis(100));
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = growing_ffmpeg(tools.path());
+    let work = tempfile::tempdir().unwrap();
+    let child = command(&proxy, work.path())
+        .args(["-f", "140", "--ffmpeg-location", &ffmpeg, "--growing-file"])
+        .arg("https://www.youtube.com/watch?v=LiveStart01")
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .unwrap();
+    let file = work.path().join("LiveStart01.mov");
+    let deadline = std::time::Instant::now() + Duration::from_secs(30);
+    while std::fs::metadata(&file).map_or(0, |metadata| metadata.len()) < 12 {
+        assert!(std::time::Instant::now() < deadline, "no fragment arrived");
+        std::thread::sleep(Duration::from_millis(20));
+    }
+    // How apps stop a recording: SIGTERM, which completes it like SIGINT.
+    let status = Command::new("kill")
+        .args(["-TERM", &child.id().to_string()])
+        .status()
+        .unwrap();
+    assert!(status.success());
+    let output = child.wait_with_output().unwrap();
+    assert!(output.status.success(), "{}", text(&output));
+    let text_file = String::from_utf8(std::fs::read(&file).unwrap()).unwrap();
+    let count = text_file.matches(';').count() as i64;
+    assert!((2..1000).contains(&count), "{text_file}");
+    assert_eq!(text_file.into_bytes(), expected("140", count - 1));
+    let names: Vec<_> = std::fs::read_dir(work.path())
+        .unwrap()
+        .map(|entry| entry.unwrap().file_name())
+        .collect();
+    assert_eq!(names, ["LiveStart01.mov"]);
+}

@@ -28,6 +28,7 @@ pub mod format_sort;
 mod fragment;
 pub mod geo;
 pub mod getpass;
+mod growing;
 mod hls;
 mod html;
 mod html_elements;
@@ -150,6 +151,8 @@ pub struct YoutubeDl {
     multistreams: (bool, bool),
     /// `--live-from-start`.
     live_from_start: bool,
+    /// `--growing-file` (port extension).
+    growing_file: bool,
     /// The YouTube JavaScript runtime, for live-from-start refetches.
     youtube_runtime: Vec<extractor::JsRuntime>,
     format_sort: FormatSortOptions,
@@ -201,6 +204,19 @@ fn is_ffmpeg_name(name: &str) -> bool {
 /// `info_dict.get('is_live')` (from `live_status`).
 pub(crate) fn is_live(info: &VideoInfo) -> bool {
     info.metadata.live_status.as_deref() == Some("is_live")
+}
+
+/// Whether every selected format comes from a fragment generator
+/// (`--live-from-start`).
+fn live_generated(info: &VideoInfo) -> bool {
+    const GENERATOR: &str = "http_dash_segments_generator";
+    if info.requested_formats.is_empty() {
+        info.protocol.as_deref() == Some(GENERATOR)
+    } else {
+        info.requested_formats
+            .iter()
+            .all(|format| format.determine_protocol() == GENERATOR)
+    }
 }
 
 /// A transport error as urllib words it: `[Errno N] TEXT` for an OS error.
@@ -1042,6 +1058,7 @@ impl YoutubeDl {
             merge_output_format: None,
             multistreams: (false, false),
             live_from_start: false,
+            growing_file: false,
             youtube_runtime,
             format_sort: FormatSortOptions::default(),
             prefer_best: false,
@@ -1845,7 +1862,8 @@ impl YoutubeDl {
         options: &FixupOptions,
     ) -> Result<()> {
         let policy = options.policy.as_deref().unwrap_or("detect_or_warn");
-        if matches!(policy, "never" | "ignore") {
+        // FFmpeg wrote a growing file, which may be in use.
+        if matches!(policy, "never" | "ignore") || self.grows(info) {
             return Ok(());
         }
         // `FFmpegFixupStretchedPP` comes first and also follows merges and
@@ -2333,6 +2351,18 @@ impl YoutubeDl {
         merged: bool,
         callback: &mut dyn FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<Vec<u64>> {
+        let jobs = self.live_jobs(info, streams, merged, false)?;
+        live_dash::download(&self.client, jobs, options, merged, callback)
+    }
+
+    /// The DashSegmentsFD jobs for `streams`; `pipe` jobs feed named pipes.
+    fn live_jobs(
+        &self,
+        info: &VideoInfo,
+        streams: &[(VideoInfo, PathBuf)],
+        merged: bool,
+        pipe: bool,
+    ) -> Result<Vec<live_dash::Job>> {
         let feed = extractor::LiveFeed::new(&self.client, info, &self.youtube_runtime).ok_or_else(
             || {
                 Error::Reported(
@@ -2350,9 +2380,180 @@ impl YoutubeDl {
                 fragments: extractor::LiveFragments::new(feed.clone(), &stream.extra, &stream.url),
                 info: stream.clone(),
                 destination: path.clone(),
+                pipe,
             });
         }
-        live_dash::download(&self.client, jobs, options, merged, callback)
+        Ok(jobs)
+    }
+
+    /// `--growing-file` (port extension): live results are written as one
+    /// growing QuickTime file (see `growing.rs`).
+    pub fn with_growing_file(mut self, growing: bool) -> Self {
+        self.growing_file = growing;
+        self
+    }
+
+    /// Whether `--growing-file` applies to a selected result: a live stream
+    /// that FFmpeg reads itself, or `--live-from-start` streams that the
+    /// native downloader feeds it (named pipes, Unix only).
+    pub fn grows(&self, info: &VideoInfo) -> bool {
+        self.growing_file
+            && is_live(info)
+            && self.ffmpeg.is_some()
+            && ((cfg!(unix) && live_generated(info)) || self.uses_ffmpeg_fd(info))
+    }
+
+    /// `--growing-file`'s download: FFmpeg writes the file at `destination`
+    /// from the live URLs, or from named pipes the `--live-from-start`
+    /// fragment downloads feed.
+    fn download_growing(
+        &self,
+        info: &VideoInfo,
+        destination: &Path,
+        options: DownloadOptions,
+        callback: &mut dyn FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
+    ) -> Result<u64> {
+        let ffmpeg = self
+            .ffmpeg
+            .as_deref()
+            .ok_or_else(|| Error::Reported("--growing-file needs ffmpeg".into()))?;
+        let network = ffmpeg_fd::Network {
+            headers: &self.headers,
+            cookies: &self.cookies,
+            proxy: self.proxy.as_deref(),
+        };
+        if !live_generated(info) {
+            let growing = ffmpeg_fd::Growing {
+                timecode: growing::timecode(growing::now()),
+                pipes: false,
+            };
+            return ffmpeg_fd::download_growing(
+                ffmpeg,
+                &network,
+                &self.ffmpeg_settings,
+                info,
+                None,
+                &growing,
+                destination,
+                &options,
+                callback,
+            );
+        }
+        #[cfg(not(unix))]
+        return Err(Error::Reported(
+            "--growing-file with --live-from-start needs named pipes".into(),
+        ));
+        #[cfg(unix)]
+        {
+            use std::sync::atomic::{AtomicBool, Ordering};
+            download::check_destination(destination, &options)?;
+            let parent = destination
+                .parent()
+                .filter(|path| !path.as_os_str().is_empty())
+                .unwrap_or(Path::new("."));
+            std::fs::create_dir_all(parent)?;
+            let workspace = tempfile::Builder::new()
+                .prefix(".yt-dlp-rs-growing-")
+                .tempdir_in(parent)?;
+            let streams: Vec<(VideoInfo, PathBuf)> = if info.requested_formats.is_empty() {
+                vec![(info.clone(), workspace.path().join("input-0"))]
+            } else {
+                info.requested_formats
+                    .iter()
+                    .enumerate()
+                    .map(|(index, format)| {
+                        (
+                            info.with_selected_format(format),
+                            workspace.path().join(format!("input-{index}")),
+                        )
+                    })
+                    .collect()
+            };
+            for (_, pipe) in &streams {
+                growing::fifo::create(pipe)?;
+            }
+            let jobs = self.live_jobs(info, &streams, false, true)?;
+            if !info.requested_formats.is_empty() {
+                screen::screen(&format!(
+                    "[download] Destination: {}",
+                    destination.display()
+                ));
+            }
+            let local: Vec<ffmpeg_fd::LocalInput> = streams
+                .iter()
+                .map(|(_, pipe)| ffmpeg_fd::LocalInput {
+                    path: pipe.clone(),
+                    start_time: 0.0,
+                })
+                .collect();
+            // The stream's start, when the extractor knows it.
+            let start = info
+                .extra
+                .get("release_timestamp")
+                .and_then(serde_json::Value::as_i64);
+            let growing = ffmpeg_fd::Growing {
+                timecode: start.map_or_else(|| "00:00:00:00".into(), growing::timecode),
+                pipes: true,
+            };
+            // One handler for both threads' interrupt checks.
+            let _interrupt = interrupt::Guard::install_with_terminate();
+            let ended = &AtomicBool::new(false);
+            let client = &self.client;
+            // The feeders' messages are written by this thread, which may
+            // hold the output streams.
+            let (sender, messages) = std::sync::mpsc::channel::<screen::OwnedMessage>();
+            let relay = || messages.try_iter().for_each(|message| message.emit());
+            std::thread::scope(|scope| {
+                let feeder = scope.spawn(move || {
+                    screen::forward(Some(Box::new(move |message| {
+                        let _ = sender.send(message);
+                    })));
+                    let fed = live_dash::download(client, jobs, options, false, &mut |_| {
+                        if ended.load(Ordering::SeqCst) {
+                            std::ops::ControlFlow::Break(())
+                        } else {
+                            std::ops::ControlFlow::Continue(())
+                        }
+                    });
+                    screen::forward(None);
+                    fed
+                });
+                let result = ffmpeg_fd::download_growing(
+                    ffmpeg,
+                    &network,
+                    &self.ffmpeg_settings,
+                    info,
+                    Some(&local),
+                    &growing,
+                    destination,
+                    &options,
+                    &mut |progress| {
+                        relay();
+                        callback(progress)
+                    },
+                );
+                // Stop the feeders; one may still wait for FFmpeg to open its pipe.
+                ended.store(true, Ordering::SeqCst);
+                while !feeder.is_finished() {
+                    relay();
+                    for (_, pipe) in &streams {
+                        growing::fifo::release(pipe);
+                    }
+                    std::thread::sleep(std::time::Duration::from_millis(20));
+                }
+                let fed = feeder
+                    .join()
+                    .unwrap_or_else(|_| Err(Error::Reported("a fragment worker panicked".into())));
+                relay();
+                let size = result?;
+                match fed {
+                    // FFmpeg may end first (an interrupt reaching it too).
+                    Ok(_) | Err(Error::DownloadCancelled) => Ok(size),
+                    // What was recorded stays in the file.
+                    Err(error) => Err(error),
+                }
+            })
+        }
     }
 
     /// Evaluate YouTube post-live formats' fragment lists (upstream's
@@ -3186,8 +3387,15 @@ impl YoutubeDl {
             .iter()
             .map(String::as_str)
             .collect();
+        // `--growing-file` prefers codecs QuickTime and editors take, after
+        // the user's own sort fields.
+        let mut user = std::borrow::Cow::Borrowed(&self.format_sort.fields);
+        if self.growing_file && is_live(entry) {
+            user.to_mut()
+                .extend(["vcodec:h264".to_owned(), "acodec:aac".to_owned()]);
+        }
         format_sort::FormatSorter::new(
-            &self.format_sort.fields,
+            &user,
             &extractor,
             self.format_sort.force,
             self.format_sort.prefer_free,
@@ -3381,6 +3589,22 @@ impl YoutubeDl {
         Ok(())
     }
 
+    /// `--growing-file`: selected live results become QuickTime files.
+    fn growing_ext(&self, mut selected: Vec<VideoInfo>) -> Vec<VideoInfo> {
+        for entry in &mut selected {
+            if self.grows(entry) {
+                entry.ext = growing::EXT.into();
+            } else if self.growing_file && is_live(entry) {
+                screen::warning(if self.ffmpeg.is_none() {
+                    "--growing-file needs ffmpeg; downloading the live stream normally"
+                } else {
+                    "--growing-file does not support this live stream's protocol; downloading it normally"
+                });
+            }
+        }
+        selected
+    }
+
     /// Upstream `formats_to_download`: one result per selected format, each
     /// downloaded on its own by `process_info`.
     pub fn select_videos(&self, info: &VideoInfo, format: Option<&str>) -> Result<Vec<VideoInfo>> {
@@ -3420,7 +3644,8 @@ impl YoutubeDl {
             && !no_formats::allow_unplayable()
             && info.formats.iter().any(needs_testing);
         if self.check_formats != CheckFormats::Selected && !default {
-            return info.select_formats(format, self.ffmpeg.is_some(), &options);
+            let selected = info.select_formats(format, self.ffmpeg.is_some(), &options)?;
+            return Ok(self.growing_ext(selected));
         }
         // Upstream `_check_formats` for `selected`: each candidate is tested
         // once, in preference order, as selection reaches it.
@@ -3466,7 +3691,7 @@ impl YoutubeDl {
             entry.formats.iter_mut().for_each(mark);
             entry.requested_formats.iter_mut().for_each(mark);
         }
-        Ok(selected)
+        Ok(self.growing_ext(selected))
     }
 
     /// Extract all supported alternatives without applying library format selection.
@@ -4112,6 +4337,9 @@ impl YoutubeDl {
         if announced.as_ref() != Some(&info.url) {
             self.report_invoking(info);
         }
+        if self.grows(info) {
+            return self.download_growing(info, destination.as_ref(), options, &mut callback);
+        }
         if ffmpeg_fd {
             let ffmpeg = self.ffmpeg.as_deref().ok_or_else(|| {
                 Error::Reported(
@@ -4574,6 +4802,7 @@ impl YoutubeDl {
                     fragment_index: None,
                     fragment_count: None,
                     fragment: None,
+                    recorded_ms: None,
                 })
                 .is_break()
                 {
@@ -4735,6 +4964,7 @@ impl YoutubeDl {
                 fragment_index: None,
                 fragment_count: None,
                 fragment: None,
+                recorded_ms: None,
             })
         })?;
         filetime::inherit(&output, oldest);
@@ -4754,6 +4984,7 @@ impl YoutubeDl {
             fragment_index: None,
             fragment_count: None,
             fragment: None,
+            recorded_ms: None,
         })
         .is_break()
         {
