@@ -194,6 +194,7 @@ mod rtve;
 mod rumble;
 mod rutube;
 mod ruv;
+mod s4c;
 mod sapo;
 mod sbs;
 mod screen9;
@@ -599,6 +600,7 @@ pub use rutube::{
     Rutube, RutubeEmbed, embed_suitable as rutube_embed_suitable, suitable as rutube_suitable,
 };
 pub use ruv::{Ruv, RuvSpila, spila_suitable as ruv_spila_suitable, suitable as ruv_suitable};
+pub use s4c::{S4c, S4cSeries, series_suitable as s4c_series_suitable, suitable as s4c_suitable};
 pub use sapo::{Sapo, suitable as sapo_suitable};
 pub use sbs::{Sbs, suitable as sbs_suitable};
 pub use screen9::{Screen9, suitable as screen9_suitable};

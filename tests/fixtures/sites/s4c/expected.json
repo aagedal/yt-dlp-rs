@@ -1,0 +1,118 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.s4c.cymru/clic/programme/893068169",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"893068169\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://vod.s4c.test/893068169/360/index.m3u8\", \"manifest_url\": \"https://vod.s4c.test/893068169/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://vod.s4c.test/893068169/720/index.m3u8\", \"manifest_url\": \"https://vod.s4c.test/893068169/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"cy\": [{\"url\": \"https://cdn.s4c.test/subs/893068169_cy.vtt\", \"name\": \"Cymraeg\", \"ext\": \"vtt\"}], \"en\": [{\"url\": \"https://cdn.s4c.test/subs/893068169_en.vtt\", \"name\": \"English\", \"ext\": \"vtt\"}]}, \"thumbnail\": \"https://www.s4c.cymru/amg/1920x1080/Pride_2024S4C-P11_Uchafbwyntiau-0608.jpg\", \"title\": \"Uchafbwyntiau\", \"description\": \"Uchafbwyntiau o Pride Cymru.\", \"duration\": 900, \"release_date\": \"20240717\", \"series\": \"Pride Cymru 2024\", \"series_id\": \"893067960\", \"webpage_url\": \"https://www.s4c.cymru/clic/programme/893068169\", \"original_url\": \"https://www.s4c.cymru/clic/programme/893068169\", \"webpage_url_basename\": \"893068169\", \"webpage_url_domain\": \"s4c.cymru\", \"extractor\": \"S4C\", \"extractor_key\": \"S4C\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://www.s4c.cymru/amg/1920x1080/Pride_2024S4C-P11_Uchafbwyntiau-0608.jpg\", \"id\": \"0\"}], \"display_id\": \"893068169\", \"fulltitle\": \"Uchafbwyntiau\", \"duration_string\": \"15:00\", \"release_year\": 2024, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-3121\", \"url\": \"https://vod.s4c.test/893068169/720/index.m3u8\", \"manifest_url\": \"https://vod.s4c.test/893068169/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Uchafbwyntiau [893068169].mp4\", \"filename\": \"Uchafbwyntiau [893068169].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://vod.s4c.test/893068169/720/index.m3u8\", \"manifest_url\": \"https://vod.s4c.test/893068169/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.s4c.cymru/clic/programme/893068169",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[S4C] Extracting URL: https://www.s4c.cymru/clic/programme/893068169",
+    "[S4C] 893068169: Downloading JSON metadata",
+    "[S4C] 893068169: Downloading player config JSON",
+    "[S4C] 893068169: Downloading streaming urls JSON",
+    "[S4C] 893068169: Downloading m3u8 information",
+    "[info] Available subtitles for 893068169:",
+    "Language Name    Formats",
+    "cy       Cymraeg vtt",
+    "en       English vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.s4c.cymru/clic/programme/947426692",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"947426692\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://vod.s4c.test/947426692/360/index.m3u8\", \"manifest_url\": \"https://vod.s4c.test/947426692/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://vod.s4c.test/947426692/720/index.m3u8\", \"manifest_url\": \"https://vod.s4c.test/947426692/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {}, \"thumbnail\": null, \"title\": \"3 Can\", \"description\": \"Bwyd a Diod\", \"duration\": 1380, \"upload_date\": \"20260513\", \"series\": \"3 Can\", \"webpage_url\": \"https://www.s4c.cymru/clic/programme/947426692\", \"original_url\": \"https://www.s4c.cymru/clic/programme/947426692\", \"webpage_url_basename\": \"947426692\", \"webpage_url_domain\": \"s4c.cymru\", \"extractor\": \"S4C\", \"extractor_key\": \"S4C\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"947426692\", \"fulltitle\": \"3 Can\", \"duration_string\": \"23:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-3121\", \"url\": \"https://vod.s4c.test/947426692/720/index.m3u8\", \"manifest_url\": \"https://vod.s4c.test/947426692/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"3 Can [947426692].mp4\", \"filename\": \"3 Can [947426692].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://vod.s4c.test/947426692/720/index.m3u8\", \"manifest_url\": \"https://vod.s4c.test/947426692/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.s4c.cymru/clic/programme/876045439",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"876045439\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://vod.s4c.test/876045439/360/index.m3u8\", \"manifest_url\": \"https://vod.s4c.test/876045439/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://vod.s4c.test/876045439/720/index.m3u8\", \"manifest_url\": \"https://vod.s4c.test/876045439/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {}, \"thumbnail\": null, \"webpage_url\": \"https://www.s4c.cymru/clic/programme/876045439\", \"original_url\": \"https://www.s4c.cymru/clic/programme/876045439\", \"webpage_url_basename\": \"876045439\", \"webpage_url_domain\": \"s4c.cymru\", \"extractor\": \"S4C\", \"extractor_key\": \"S4C\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"876045439\", \"fulltitle\": null, \"title\": \"S4C video #876045439\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-3121\", \"url\": \"https://vod.s4c.test/876045439/720/index.m3u8\", \"manifest_url\": \"https://vod.s4c.test/876045439/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"S4C video #876045439 [876045439].mp4\", \"filename\": \"S4C video #876045439 [876045439].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"https://vod.s4c.test/876045439/720/index.m3u8\", \"manifest_url\": \"https://vod.s4c.test/876045439/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [S4C] 876045439: Unable to download JSON metadata: HTTP Error 404: Not Found",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.s4c.cymru/clic/programme/1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 1: An extractor error has occurred. (caused by KeyError('filename')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.s4c.cymru/clic/programme/2",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 2: An extractor error has occurred. (caused by KeyError('hls')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.s4c.cymru/clic/series/864982911",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"864982911\", \"title\": \"Iaith ar Daith\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"S4C\", \"id\": \"864982913\", \"_type\": \"url\", \"url\": \"https://www.s4c.cymru/clic/programme/864982913\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"S4C\", \"id\": 864982915, \"_type\": \"url\", \"url\": \"https://www.s4c.cymru/clic/programme/864982915\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.s4c.cymru/clic/series/864982911\", \"original_url\": \"https://www.s4c.cymru/clic/series/864982911\", \"webpage_url_basename\": \"864982911\", \"webpage_url_domain\": \"s4c.cymru\", \"extractor\": \"S4CSeries\", \"extractor_key\": \"S4CSeries\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.s4c.cymru/clic/series/866852587",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"866852587\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.s4c.cymru/clic/series/866852587\", \"original_url\": \"https://www.s4c.cymru/clic/series/866852587\", \"webpage_url_basename\": \"866852587\", \"webpage_url_domain\": \"s4c.cymru\", \"extractor\": \"S4CSeries\", \"extractor_key\": \"S4CSeries\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

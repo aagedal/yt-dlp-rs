@@ -1596,6 +1596,21 @@ the `videoFile` as the `sd` MP4 (`videoSize` width/height) and, when `HD` is
 `true`, its `/mov/39` variant as the 1280x720 `hd` MP4. Items missing an
 element upstream reads are explicit native errors.
 
+S4C Clic programmes (`[www.]s4c.cymru/clic/programme/ID`) follow upstream
+`S4CIE`: the non-fatal `df/full_prog_details` JSON, the fatal player
+configuration JSON (its `subtitles` entries with a URL `0`, name `1` and
+language `3`, default `en`, and its `poster` URL), the fatal streaming-URL
+JSON for its `filename` (region `UK` for the `s4chttpl` application, else
+`WW`) and its `hls` URL as fatal `hls` formats (subtitles ignored), with
+upstream's `KeyError` messages for a missing `filename` or `hls`. The first
+programme detail gives the programme (else series) title, stripped billing,
+minutes duration, `unified_strdate` upload and release dates, and truthy
+series and series ID. Subtitle entries without a name (a `None` track name
+upstream) are explicit native errors. Series (`.../clic/series/ID`) follow
+upstream `S4CSeriesIE`: the fatal `df/series_details` JSON's
+`other_progs_in_series` IDs as `S4C` `url` results titled by the series
+title. `tests/fixtures/sites/s4c/` is compared with pinned upstream output.
+
 SBS On Demand and SBS News videos (`sbs.com.au/ondemand/...ID`,
 `sbs.com.au/news/[embeds/]video/ID`) follow upstream `SBSIE` (geo countries
 `AU`): the player API's `video_smil?id=ID` SMIL document (fatal, a warning
