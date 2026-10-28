@@ -2963,6 +2963,18 @@
       "scope": "PodbayFMIE __NEXT_DATA__ episode as an untyped MP3 result (clean_html description, JWT image thumbnail, timestamp, duration), next.js/KeyError/no-formats errors and generic title, and PodbayFMChannelIE random-access OnDemandPagedList podcast API playlists (pending resolved entries) with timestamp-based episode webpage_url compared with pinned upstream output through the fixture proxy; episodes without a string id remain explicit native errors"
     },
     {
+      "name": "popcorntimes",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/popcorntimes.py"
+      ],
+      "rust": [
+        "src/extractor/popcorntimes.rs",
+        "tests/fixtures/sites/popcorntimes/"
+      ],
+      "scope": "PopcorntimesIE ROT13/base64 video location and meta tags, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "popcorntv",
       "status": "partial",
       "upstream": [

@@ -237,6 +237,7 @@ mod pinkbike;
 mod pinterest;
 mod playerfm;
 mod podbayfm;
+mod popcorntimes;
 mod popcorntv;
 mod premiershiprugby;
 mod presstv;
@@ -767,6 +768,7 @@ pub use podbayfm::{PodbayFmChannel, channel_suitable as podbayfm_channel_suitabl
 pub(crate) use podbayfm::{
     fetch_pages as fetch_podbayfm_pages, is_pending_state as podbayfm_pending_state,
 };
+pub use popcorntimes::{Popcorntimes, suitable as popcorntimes_suitable};
 pub use popcorntv::{PopcornTv, suitable as popcorntv_suitable};
 pub use premiershiprugby::{PremiershipRugby, suitable as premiershiprugby_suitable};
 pub use presstv::{PressTv, suitable as presstv_suitable};

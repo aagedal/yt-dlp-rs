@@ -1,0 +1,45 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://popcorntimes.tv/de/m/A1XCFvz/haensel-und-gretel",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"A1XCFvz\", \"display_id\": \"haensel-und-gretel\", \"url\": \"https://pct.test/v/haensel.mp4\", \"title\": \"H\\u00e4nsel und Gretel\", \"description\": \"Eine Oper\", \"thumbnail\": \"https://pct.test/og.jpg\", \"creator\": \"V\\u00e1clav Vorl\\u00ed\\u010dek\", \"release_date\": \"19710101\", \"duration\": 5400, \"tbr\": 1500, \"width\": 1280, \"height\": 720, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://popcorntimes.tv/de/m/A1XCFvz/haensel-und-gretel\"}, \"webpage_url\": \"https://popcorntimes.tv/de/m/A1XCFvz/haensel-und-gretel\", \"original_url\": \"https://popcorntimes.tv/de/m/A1XCFvz/haensel-und-gretel\", \"webpage_url_basename\": \"haensel-und-gretel\", \"webpage_url_domain\": \"popcorntimes.tv\", \"extractor\": \"Popcorntimes\", \"extractor_key\": \"Popcorntimes\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://pct.test/og.jpg\", \"id\": \"0\"}], \"fulltitle\": \"H\\u00e4nsel und Gretel\", \"duration_string\": \"1:30:00\", \"release_year\": 1971, \"creators\": [\"V\\u00e1clav Vorl\\u00ed\\u010dek\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 1012500000, \"format_id\": \"0\", \"format\": \"0 - 1280x720\", \"requested_downloads\": [{\"_filename\": \"H\\u00e4nsel und Gretel [A1XCFvz].mp4\", \"filename\": \"H\\u00e4nsel und Gretel [A1XCFvz].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://popcorntimes.tv/de/m/B2/orig",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"B2\", \"display_id\": \"orig\", \"url\": \"https://pct.test/v/haensel.mp4\", \"title\": \"Orig\", \"description\": null, \"thumbnail\": \"https://pct.test/p.jpg\", \"creator\": null, \"release_date\": null, \"tbr\": null, \"width\": null, \"height\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://popcorntimes.tv/de/m/B2/orig\"}, \"webpage_url\": \"https://popcorntimes.tv/de/m/B2/orig\", \"original_url\": \"https://popcorntimes.tv/de/m/B2/orig\", \"webpage_url_basename\": \"orig\", \"webpage_url_domain\": \"popcorntimes.tv\", \"extractor\": \"Popcorntimes\", \"extractor_key\": \"Popcorntimes\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://pct.test/p.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Orig\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Orig [B2].mp4\", \"filename\": \"Orig [B2].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Popcorntimes] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://popcorntimes.tv/de/m/C3/none",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Popcorntimes] C3: Unable to extract loc; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

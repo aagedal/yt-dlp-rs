@@ -1728,6 +1728,13 @@ CozyTV replays (`cozy.tv/USER/replays/ID`) follow upstream `CozyTVIE`: the
 (else the URL user) uploader, `unified_strdate` date, raw duration and
 `was_live`, with the CDN `index.m3u8` as fatal HLS formats and subtitles.
 
+Popcorntimes movies (`popcorntimes.tv/LL/m/ID/SLUG`) follow upstream
+`PopcorntimesIE`: the page's ROT13-shifted base64 `PCTMLOC` as the video URL
+(with the page as `Referer`), the heading (else `ya:ovs:original_name`)
+title, cleaned description (warning when missing), preview (else OpenGraph)
+image, director, release date and the duration, bitrate and size meta tags.
+`tests/fixtures/sites/popcorntimes/` is compared with pinned upstream output.
+
 PGA Tour videos (`pgatour.com/video/SECTION/[T]ID`) follow upstream
 `PGATourIE` as `url` results for their Brightcove player (the TOURCast
 account and player for `T` IDs). `tests/fixtures/sites/pgatour/` is compared
