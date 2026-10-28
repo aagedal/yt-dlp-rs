@@ -1768,6 +1768,17 @@ entries until a page's `next` is `null`. A `KeyError` or failed page while
 reading them ends the playlist with upstream's reported `None` entry.
 `tests/fixtures/sites/radiokapital/` is compared with pinned upstream output.
 
+A Galega videos (`[www.]agalega.gal/videos/[detail/]ID`) follow upstream
+`agalega:videos`: an anonymous access token (POSTed to `fetch-api/jwt/token`
+and noted with the API endpoint as its ID, cached for the run and refreshed
+when its JWT `exp` is under 120 seconds away), then the Interactvty
+`content/ID/` data (non-fatal: upstream's warning when it fails) and the
+fatal `content_resources/ID/` media URLs as `hls` formats with merged
+subtitles, with the string name as title, the first string `description` or
+`short_description`, and the image URL as thumbnail (only when found).
+`tests/fixtures/sites/agalega/` and `tests/fixtures/sites/agalega-expired/`
+are compared with pinned upstream output.
+
 PGA Tour videos (`pgatour.com/video/SECTION/[T]ID`) follow upstream
 `PGATourIE` as `url` results for their Brightcove player (the TOURCast
 account and player for `T` IDs). `tests/fixtures/sites/pgatour/` is compared

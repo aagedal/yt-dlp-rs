@@ -1,0 +1,62 @@
+{
+ "routes": [
+  {
+   "url": "https://www.agalega.gal/api/fetch-api/jwt/token",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"access\": \"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ0b2tlbl90eXBlIjogImFjY2VzcyIsICJleHAiOiA0MTAyNDQ0ODAwLCAidXNlcl9pZCI6IG51bGx9.c2lnbmF0dXJl\", \"refresh\": \"r\"}"
+  },
+  {
+   "url": "https://api-agalega.interactvty.com/api/2.0/contents/content/288664/?optional_fields=image%2Cis_premium%2Cshort_description%2Chas_subtitle",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 288664, \"name\": \"Roberto e \\u00c1ngel Mart\\u00edn atenden consultas dos espectadores\", \"description\": \"O c\\u00f3mico ademais fai un repaso\", \"short_description\": \"curto\", \"image\": \"https://crtvg-bucket.flumotion.test/content_cards/2ef3.png\", \"is_premium\": false}"
+  },
+  {
+   "url": "https://api-agalega.interactvty.com/api/2.0/contents/content_resources/288664/?optional_fields=media_url",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"results\": [{\"media_url\": null}, {\"media_url\": \"https://agalega-vod.test/288664/master.m3u8\"}]}"
+  },
+  {
+   "url": "https://agalega-vod.test/288664/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://api-agalega.interactvty.com/api/2.0/contents/content/3/?optional_fields=image%2Cis_premium%2Cshort_description%2Chas_subtitle",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://api-agalega.interactvty.com/api/2.0/contents/content_resources/3/?optional_fields=media_url",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"results\": []}"
+  },
+  {
+   "url": "https://api-agalega.interactvty.com/api/2.0/contents/content/4/?optional_fields=image%2Cis_premium%2Cshort_description%2Chas_subtitle",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"name\": \"Four\"}"
+  },
+  {
+   "url": "https://api-agalega.interactvty.com/api/2.0/contents/content_resources/4/?optional_fields=media_url",
+   "status": 403,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  }
+ ]
+}

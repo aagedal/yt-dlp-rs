@@ -1,0 +1,67 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.agalega.gal/videos/288664-lr-ninguencheconta",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"288664\", \"formats\": [{\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://agalega-vod.test/288664/360/index.m3u8\", \"manifest_url\": \"https://agalega-vod.test/288664/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.64001e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360\"}, {\"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://agalega-vod.test/288664/720/index.m3u8\", \"manifest_url\": \"https://agalega-vod.test/288664/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\"}], \"subtitles\": {\"gl\": [{\"url\": \"https://agalega-vod.test/288664/subs/gl.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"title\": \"Roberto e \\u00c1ngel Mart\\u00edn atenden consultas dos espectadores\", \"description\": \"O c\\u00f3mico ademais fai un repaso\", \"thumbnail\": \"https://crtvg-bucket.flumotion.test/content_cards/2ef3.png\", \"webpage_url\": \"https://www.agalega.gal/videos/288664-lr-ninguencheconta\", \"original_url\": \"https://www.agalega.gal/videos/288664-lr-ninguencheconta\", \"webpage_url_basename\": \"288664-lr-ninguencheconta\", \"webpage_url_domain\": \"agalega.gal\", \"extractor\": \"agalega:videos\", \"extractor_key\": \"AGalega\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://crtvg-bucket.flumotion.test/content_cards/2ef3.png\", \"id\": \"0\"}], \"display_id\": \"288664\", \"fulltitle\": \"Roberto e \\u00c1ngel Mart\\u00edn atenden consultas dos espectadores\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-2400\", \"url\": \"https://agalega-vod.test/288664/720/index.m3u8\", \"manifest_url\": \"https://agalega-vod.test/288664/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\", \"_filename\": \"Roberto e \\u00c1ngel Mart\\u00edn atenden consultas dos espectadores [288664].mp4\", \"filename\": \"Roberto e \\u00c1ngel Mart\\u00edn atenden consultas dos espectadores [288664].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://agalega-vod.test/288664/720/index.m3u8\", \"manifest_url\": \"https://agalega-vod.test/288664/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.agalega.gal/videos/288664-lr-ninguencheconta",
+   "args": [
+    "--list-subs",
+    "--skip-download"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[agalega:videos] Extracting URL: https://www.agalega.gal/videos/288664-lr-ninguencheconta",
+    "[agalega:videos] content/288664/: Downloading access token",
+    "[agalega:videos] 288664: Downloading content data",
+    "[agalega:videos] 288664: Downloading resource data",
+    "[agalega:videos] 288664: Downloading m3u8 information",
+    "[info] Available subtitles for 288664:",
+    "Language Formats",
+    "gl       vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://agalega.gal/videos/3",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [agalega:videos] 3: Unable to download JSON metadata: HTTP Error 404: Not Found",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [agalega:videos] 3: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.agalega.gal/videos/detail/4-catro",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [agalega:videos] 4: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>)"
+   ],
+   "files": {}
+  }
+ ]
+}

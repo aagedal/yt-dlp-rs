@@ -583,6 +583,19 @@
       "scope": "AdobePassIE: the generated MSO_INFO table (--ap-list-mso render_table output, --ap-mso validation and TV Provider account username missing), _extract_mvpd_auth device/client registration, access token, registration code, authenticate/saml redirect page and the generic meta-refresh/post_form login (Cablevision/AlticeOne _eventId_proceed, Rogers without confirmation, login_hostname validation and https upgrade) plus the Comcast_SSO, Verizon, Spectrum/Charter_Direct, slingtv and Suddenlink flows, session/authorize/shortAuthorize with mvpd headers, pendingLogout retries, authorize <error> details and the participating TV providers error; credentials from --ap-username/--ap-password or the MSO netrc machine (--netrc/--netrc-location/--netrc-cmd, CPython netrc parser); authn/authz tokens cached in memory for the run (no cache directory). Philo, Fubo, the --ap-username password prompt, geo verification headers and _get_mvpd_resource are not ported. Compared with pinned upstream output through the fixture proxy via BrightcoveNewIE TVE videos"
     },
     {
+      "name": "agalega",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/agalega.py"
+      ],
+      "rust": [
+        "src/extractor/agalega.rs",
+        "tests/fixtures/sites/agalega/",
+        "tests/fixtures/sites/agalega-expired/"
+      ],
+      "scope": "AGalegaIE anonymous JWT access token (POSTed, cached for the run, refreshed within 120 s of exp; KeyErrors as upstream), non-fatal content data (name, description/short_description, image) and fatal content resources HLS formats with merged subtitles, compared with pinned upstream output through the fixture proxy (agalega and agalega-expired)"
+    },
+    {
       "name": "aitube",
       "status": "partial",
       "upstream": [
