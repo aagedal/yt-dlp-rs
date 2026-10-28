@@ -52,6 +52,7 @@ mod cnbc;
 mod coub;
 mod cozytv;
 mod cpac;
+mod craftsy;
 mod crooksandliars;
 mod crtvg;
 mod cultureunplugged;
@@ -442,6 +443,7 @@ pub use cozytv::{CozyTv, suitable as cozytv_suitable};
 pub use cpac::{
     Cpac, CpacPlaylist, playlist_suitable as cpac_playlist_suitable, suitable as cpac_suitable,
 };
+pub use craftsy::{Craftsy, suitable as craftsy_suitable};
 pub use crooksandliars::{CrooksAndLiars, suitable as crooksandliars_suitable};
 pub use crtvg::{Crtvg, suitable as crtvg_suitable};
 pub use cultureunplugged::{CultureUnplugged, suitable as cultureunplugged_suitable};

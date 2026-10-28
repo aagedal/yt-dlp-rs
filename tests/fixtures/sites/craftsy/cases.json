@@ -1,0 +1,22 @@
+[
+ {
+  "url": "https://www.craftsy.com/class/full/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.craftsy.com/class/preview/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.craftsy.com/class/locked/",
+  "args": [
+   "-J"
+  ]
+ }
+]

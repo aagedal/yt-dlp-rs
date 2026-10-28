@@ -1,0 +1,48 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.craftsy.com/class/full/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"full\", \"title\": \"Midnight Quilt\", \"description\": \"Quilts\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"BrightcoveNew\", \"id\": \"631\", \"title\": \"Lesson 1\", \"_type\": \"url\", \"url\": \"http://players.brightcove.net/6253214573001/default_default/index.html?videoId=631\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BrightcoveNew\", \"id\": 632, \"_type\": \"url\", \"url\": \"http://players.brightcove.net/6253214573001/default_default/index.html?videoId=632\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.craftsy.com/class/full/\", \"original_url\": \"https://www.craftsy.com/class/full/\", \"webpage_url_basename\": \"full\", \"webpage_url_domain\": \"craftsy.com\", \"extractor\": \"Craftsy\", \"extractor_key\": \"Craftsy\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.craftsy.com/class/preview/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"preview\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"BrightcoveNew\", \"id\": \"999\", \"_type\": \"url\", \"url\": \"http://players.brightcove.net/111/default_default/index.html?videoId=999\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.craftsy.com/class/preview/\", \"original_url\": \"https://www.craftsy.com/class/preview/\", \"webpage_url_basename\": \"preview\", \"webpage_url_domain\": \"craftsy.com\", \"extractor\": \"Craftsy\", \"extractor_key\": \"Craftsy\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [Craftsy] Only extracting preview. For the full class, pass cookies from an account that has access. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies",
+    "WARNING: [Craftsy] unable to extract og:title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.craftsy.com/class/locked/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Craftsy] locked: You do not have access to this class. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  }
+ ]
+}

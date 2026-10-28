@@ -1149,6 +1149,18 @@
       "scope": "CoubIE v2 API formats and metadata, including coub: pseudo-URLs; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "craftsy",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/craftsy.py"
+      ],
+      "rust": [
+        "src/extractor/craftsy.rs",
+        "tests/fixtures/sites/craftsy/"
+      ],
+      "scope": "CraftsyIE Livewire lessons and preview as Brightcove url results, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "cpac",
       "status": "partial",
       "upstream": [

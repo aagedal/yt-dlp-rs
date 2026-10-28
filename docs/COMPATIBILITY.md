@@ -1663,6 +1663,15 @@ errors), HTML5 video and audio files with upstream's quality and source
 preferences, the iPhone file and mobile audio, and the clip's metadata.
 `tests/fixtures/sites/coub/` is compared with pinned upstream output.
 
+Craftsy classes (`craftsy.com/class/SLUG`) follow upstream `CraftsyIE`: the
+class video player's Livewire snapshot lessons (three levels deep, like
+upstream's traversal) as Brightcove `url` results with their titles, plus the
+`video-js` preview when it is not a lesson (upstream's preview warning
+without access; no lessons and no access is the login-required error), with
+the `og:title`/`twitter:title` (warning when missing) and description meta
+tags. `tests/fixtures/sites/craftsy/` is compared with pinned upstream
+output.
+
 CPAC episodes (`cpac.ca/[l-]episode?id=UUID`) follow upstream `CPACIE`: the
 Crafter `contentModel.json` episode, its `videoUrl` as a fatal HLS master
 playlist whose renditions get language preference 10 (the URL's English or
