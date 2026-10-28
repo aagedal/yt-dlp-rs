@@ -1911,6 +1911,18 @@
       "scope": "Ku6IE heading title and player JSON URL as an untyped result with KeyError/title errors compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "kukululive",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/kukululive.py"
+      ],
+      "rust": [
+        "src/extractor/kukululive.rs",
+        "tests/fixtures/sites/kukululive/"
+      ],
+      "scope": "KukuluLiveIE live quality metadata formats and time-shift fplayer_source segments (single video or multi_video parts) compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "lastfm",
       "status": "partial",
       "upstream": [

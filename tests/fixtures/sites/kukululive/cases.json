@@ -1,0 +1,48 @@
+[
+ {
+  "url": "https://live.erinn.biz/live.php?h675134569",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://live.erinn.biz/live.php?h102338092",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://live.erinn.biz/live.php?h102338092",
+  "args": [
+   "-I",
+   "1",
+   "--print",
+   "%(id)s|%(title)s|%(timestamp)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://live.erinn.biz/live.php?h878049531",
+  "args": [
+   "--print",
+   "%(id)s|%(is_live)s|%(format_id)s|%(url)s|%(description)s|%(thumbnail)s"
+  ]
+ },
+ {
+  "url": "https://live.erinn.biz/live.php?h878049531",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://live.erinn.biz/live.php?h111",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://live.erinn.biz/live.php?h222",
+  "args": [
+   "-j"
+  ]
+ }
+]

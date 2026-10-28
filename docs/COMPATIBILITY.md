@@ -2821,6 +2821,16 @@ fatal greedy `<h1 title=...>` heading (often empty, so processing's generic
 title) and the player JSON's `data.f` URL as an untyped result, with
 upstream's `KeyError` messages.
 
+Kukulu Live streams (`live.erinn.biz/live.php?hID`) follow upstream
+`KukuluLiveIE`: an expired time shift's error, the `livetitle` element's
+title and non-fatal `Description` and `og:image`/`twitter:image` metadata
+(warning when missing). Live streams (`var timeshift = false`) read the
+`fplayer` quality metadata (high, its `force_h264` variant for HEVC, low)
+as HLS and audio-only formats; recordings read the timeshift player's
+`fplayer_source` segments as one HLS video or a `multi_video` playlist of
+parts. `tests/fixtures/sites/kukululive/` is compared with pinned upstream
+output.
+
 Imgur media (`imgur.com/[SLUG-]ID`, `i.imgur.com/ID.gifv|mp4`) follow
 upstream `ImgurIE`: the post API's first media (`is not a video or animated
 image` otherwise) and account fields, the `.gifv` page (non-fatal) with its

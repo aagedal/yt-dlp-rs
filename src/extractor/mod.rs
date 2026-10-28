@@ -131,6 +131,7 @@ mod kika;
 mod kommunetv;
 mod kth;
 mod ku6;
+mod kukululive;
 mod kvs;
 mod lastfm;
 mod lbry;
@@ -527,6 +528,7 @@ pub(crate) use kika::{fetch_pages as fetch_kika_pages, is_pending_state as kika_
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use kth::{Kth, suitable as kth_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
+pub use kukululive::{KukuluLive, suitable as kukululive_suitable};
 pub use lastfm::{
     LastFm, LastFmPlaylist, LastFmUser, playlist_suitable as lastfm_playlist_suitable,
     suitable as lastfm_suitable, user_suitable as lastfm_user_suitable,

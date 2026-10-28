@@ -1,0 +1,81 @@
+{
+ "routes": [
+  {
+   "url": "https://live.erinn.biz/live.php?h675134569",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"Description\" content=\"テストも兼ねたプロセカ配信。\"><meta property=\"og:image\" content=\"https://live.erinn.biz/thumb/1.jpg\"></head><body><SPAN id=\"livetitle\" class=\"t\">プロセカ</SPAN><script>var timeshift = true;</script></body></html>"
+  },
+  {
+   "url": "https://live.erinn.biz/live.timeshift.fplayer.php?hash=675134569",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var fplayer_source = [{file: '/timeshift/675134569/1.m3u8', time_start: '1702689148', label: 'part'}];\nplayer.setup();</script>"
+  },
+  {
+   "url": "https://live.erinn.biz/live.php?h102338092",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><h1>no title</h1><script></script></body></html>"
+  },
+  {
+   "url": "https://live.erinn.biz/live.timeshift.fplayer.php?hash=102338092",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var fplayer_source = [{file: '/timeshift/102338092/1.m3u8', time_start: 1704603118}, {file: ''}, {file: 'https://cdn.erinn.test/102338092/2.m3u8', time_start: 1704606718}];</script>"
+  },
+  {
+   "url": "https://live.erinn.biz/live.php?h878049531",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"Description\" content=\"テストも兼ねたプロセカ配信。\"><meta property=\"og:image\" content=\"https://live.erinn.biz/thumb/1.jpg\"></head><body><span id=\"livetitle\">Live <b>now</b></span><script>var timeshift=false;</script></body></html>"
+  },
+  {
+   "url": "https://live.erinn.biz/live.player.fplayer.php?hash=878049531&action=getZliveByAjax",
+   "headers": {
+    "Content-Type": "text/plain; charset=utf-8"
+   },
+   "body": "vcodec=HEVC&now_quality=high&hlsaddr=https%3A%2F%2Fhls.erinn.test%2F878049531%2Fhigh.m3u8&hlsaddr_audioonly=https%3A%2F%2Fhls.erinn.test%2F878049531%2Faudio.m3u8"
+  },
+  {
+   "url": "https://live.erinn.biz/live.player.fplayer.php?hash=878049531&action=getZliveByAjax&force_h264=1",
+   "headers": {
+    "Content-Type": "text/plain; charset=utf-8"
+   },
+   "body": "vcodec=H264&now_quality=h264&hlsaddr=https%3A%2F%2Fhls.erinn.test%2F878049531%2Fh264.m3u8"
+  },
+  {
+   "url": "https://live.erinn.biz/live.player.fplayer.php?hash=878049531&action=getForceLowliveByAjax",
+   "headers": {
+    "Content-Type": "text/plain; charset=utf-8"
+   },
+   "body": "vcodec=H264&now_quality=low&hlsaddr=https%3A%2F%2Fhls.erinn.test%2F878049531%2Flow.m3u8&hlsaddr_audioonly=not-a-url"
+  },
+  {
+   "url": "https://live.erinn.biz/live.php?h111",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"Description\" content=\"テストも兼ねたプロセカ配信。\"><meta property=\"og:image\" content=\"https://live.erinn.biz/thumb/1.jpg\"></head><body><p>タイムシフトが見つかりませんでした。</p><script></script></body></html>"
+  },
+  {
+   "url": "https://live.erinn.biz/live.php?h222",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"Description\" content=\"テストも兼ねたプロセカ配信。\"><meta property=\"og:image\" content=\"https://live.erinn.biz/thumb/1.jpg\"></head><body><span id=\"livetitle\">x</span><script></script></body></html>"
+  },
+  {
+   "url": "https://live.erinn.biz/live.timeshift.fplayer.php?hash=222",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<p>no player</p>"
+  }
+ ]
+}
