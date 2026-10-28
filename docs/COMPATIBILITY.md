@@ -932,6 +932,14 @@ Bundesliga videos (`bundesliga.com/LL/bundesliga/videos[/...]?vid=ID`) follow
 upstream `BundesligaIE`: a `url` result of `jwplatform:ID`, extracted by the
 JW Platform extractor (so its `webpage_url` is the `jwplatform:` URL).
 
+Ivideon TV cameras (`ivideon.com/tv/.../camera/SERVER/CAMERA`, `ivideon`)
+follow upstream `IvideonIE` as live demo-session FLV streams (`low`, `mid`,
+`hi` with their qualities), named from the camera page's config (the page is
+non-fatal; an unparsable config warns and then fails with upstream's
+`'NoneType' object has no attribute 'get'`), else its `name` meta tag or
+heading, else the server ID. `tests/fixtures/sites/ivideon/` is compared
+with pinned upstream output (with `--print`, as live titles carry the time).
+
 Iltalehti articles (`iltalehti.fi/SECTION/a/ID`, with upstream's
 single-character ID) follow upstream `IltalehtiIE`: the fatal `window.App`
 state through `js_to_json`, the articles' main media and body properties with

@@ -1,0 +1,26 @@
+{
+ "routes": [
+  {
+   "url": "https://www.ivideon.com/tv/camera/100-916ca13b5c4ad9f564266424a026386d/0/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var config = {\"ivTvAppOptions\": {\"currentCameraInfo\": {\"camera_name\": \"Kitchen\", \"misc\": {\"description\": \"Restaurant\"}}}};</script>"
+  },
+  {
+   "url": "https://www.ivideon.com/tv/camera/100-aaaa/1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta name=\"name\" content=\"Meta cam\"><script>var config = {bad json};</script>"
+  },
+  {
+   "url": "https://www.ivideon.com/tv/camera/100-bbbb/2/",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "no"
+  }
+ ]
+}
