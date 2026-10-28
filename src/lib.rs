@@ -770,6 +770,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "zdf",
     "zdf:channel",
     "Zhihu",
+    "Zype",
     "generic",
     "end",
 ];
@@ -1376,6 +1377,7 @@ impl YoutubeDl {
                 Box::new(extractor::Zdf),
                 Box::new(extractor::ZdfChannel),
                 Box::new(extractor::Zhihu),
+                Box::new(extractor::Zype),
                 Box::new(GenericHttp),
             ],
         })

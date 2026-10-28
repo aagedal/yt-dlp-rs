@@ -3504,6 +3504,18 @@
       "scope": "ZhihuIE zvideos API playlist formats, author/count metadata, format_field uploader URL and KeyError/no-formats errors compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "zype",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/zype.py"
+      ],
+      "rust": [
+        "src/extractor/zype.rs",
+        "tests/fixtures/sites/zype/"
+      ],
+      "scope": "ZypeIE player responses (outputs, script HLS/Uplynk sources, text tracks, API error messages) and player script embeds on generic pages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "zdf",
       "status": "partial",
       "upstream": [

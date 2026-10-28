@@ -2351,6 +2351,18 @@ their sample rate, size, FPS, dimensions and bitrate, the fatal title, the
 video thumbnail (else `image_url`), author name/ID and `people/` URL (`''`
 without a token), timestamp, duration and counts.
 
+Zype players (`player.zype.com/embed/ID.js|json|html?...api_key|app_key|player_key|access_token=...`)
+follow upstream `ZypeIE`: the `.json` player response (400/401/403 bodies'
+`message` as upstream's error), its body's outputs (an `m3u8` output as the
+non-fatal HLS formats, replacing earlier outputs like upstream; others as
+`tbr`, size or `vcodec none` formats) and subtitles, or for script bodies the
+quoted `.m3u8` URL (else a Verizon Media `sources` entry's Uplynk playlist)
+as fatal HLS and the `textTracks`, plus thumbnails and the video's display
+ID, title, description, timestamp, duration, views, rating, season and
+episode. Player scripts on other pages are followed like upstream's
+`_EMBED_REGEX`. `tests/fixtures/sites/zype/` is compared with pinned upstream
+output.
+
 Fuyin TV videos (`fuyin.tv/html/N/ID.html`) follow upstream `FuyinTVIE`: the
 movie API's `data.url` as an untyped `mp4` result with its title (else the
 generic title) and the non-fatal page's description meta (with its warning);

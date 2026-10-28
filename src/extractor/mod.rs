@@ -286,6 +286,7 @@ mod yle_areena;
 pub(crate) mod youtube;
 mod zdf;
 mod zhihu;
+mod zype;
 
 pub use acast::{
     ACast, ACastChannel, channel_suitable as acast_channel_suitable, suitable as acast_suitable,
@@ -818,6 +819,7 @@ pub use zdf::{
 };
 pub(crate) use zdf::{fetch_pages as fetch_zdf_pages, is_pending_state as zdf_pending_state};
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
+pub use zype::{Zype, suitable as zype_suitable};
 
 use crate::{ExtractResult, Result, VideoInfo};
 use reqwest::blocking::Client;
