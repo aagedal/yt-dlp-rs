@@ -3080,6 +3080,16 @@ Clyp clips (`[www.]clyp.it/ID`) follow upstream `ClypIE`: the
 titles remain explicit native errors. `tests/fixtures/sites/clyp/` is
 compared with pinned upstream output.
 
+Duoplay telecasts (`duoplay.ee/ID[/...][?ep=N]`) follow upstream `DuoplayIE`:
+the page's `<video-player>` `manifest-url` (else `No video found`), the
+`sts.postimees.ee/session/register` token (errnote `Unable to register
+session`) added as the HLS manifest's `s` query (fatal), and the
+`:episode` attribute's JSON (non-fatal, warning like upstream when empty):
+title, synopsis, image, Estonian airtime, cast and year, plus for
+non-movies the subtitle (else `Episode N`) as title and the series, season,
+episode and IDs. `tests/fixtures/sites/duoplay/` is compared with pinned
+upstream output.
+
 Dumpert items (`[www.|legacy.]dumpert.nl/item|embed|mediabase/ID` and
 `?selectedId=ID` pages) follow upstream `DumpertIE`: the
 `api-live.dumpert.nl/mobile_api/json/info/ID` JSON, its first item (a

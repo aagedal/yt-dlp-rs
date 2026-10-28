@@ -1,0 +1,84 @@
+{
+ "routes": [
+  {
+   "url": "https://duoplay.ee/4312/zoo?ep=3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<video-player manifest-url=\"https://duo-hls.test/4312/master.m3u8\" :episode=\"{&quot;title&quot;: &quot;Zoo&quot;, &quot;synopsis&quot;: &quot;S\\u00fcnopsis&quot;, &quot;images&quot;: {&quot;original&quot;: &quot;https://duo.test/zoo.jpg&quot;}, &quot;airtime&quot;: &quot;2024-01-05 20:00:00&quot;, &quot;cast&quot;: &quot;A, B&quot;, &quot;year&quot;: &quot;2023&quot;, &quot;subtitle&quot;: &quot;&quot;, &quot;telecast_id&quot;: 4312, &quot;season_id&quot;: &quot;1&quot;, &quot;episode_nr&quot;: 3, &quot;episode_id&quot;: 77, &quot;category&quot;: &quot;series&quot;}\"></video-player>"
+  },
+  {
+   "url": "https://sts.postimees.ee/session/register",
+   "request_headers": {
+    "X-Original-URI": "https://duo-hls.test/4312/master.m3u8"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"session\": \"TOK\"}"
+  },
+  {
+   "url": "https://duo-hls.test/4312/master.m3u8?s=TOK",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://duoplay.ee/17/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<video-player manifest-url=\"https://duo-hls.test/17/master.m3u8\" :episode=\"{&quot;title&quot;: &quot;Film&quot;, &quot;category&quot;: &quot;movies&quot;, &quot;cast&quot;: &quot;&quot;, &quot;year&quot;: 2001}\"></video-player>"
+  },
+  {
+   "url": "https://sts.postimees.ee/session/register",
+   "request_headers": {
+    "X-Original-URI": "https://duo-hls.test/17/master.m3u8"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"session\": \"TOK17\"}"
+  },
+  {
+   "url": "https://duo-hls.test/17/master.m3u8?s=TOK17",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://duoplay.ee/18/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<video-player manifest-url=\"https://duo-hls.test/18/master.m3u8\"></video-player>"
+  },
+  {
+   "url": "https://sts.postimees.ee/session/register",
+   "request_headers": {
+    "X-Original-URI": "https://duo-hls.test/18/master.m3u8"
+   },
+   "status": 500,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://duoplay.ee/19/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>no player</html>"
+  },
+  {
+   "url": "https://duoplay.ee/20/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<video-player manifest-url=\"https://duo-hls.test/17/master.m3u8\"></video-player>"
+  }
+ ]
+}

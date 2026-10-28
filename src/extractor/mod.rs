@@ -58,6 +58,7 @@ mod dropbox;
 mod drtalks;
 mod drtv;
 mod dumpert;
+mod duoplay;
 mod ebaumsworld;
 mod ebay;
 mod egghead;
@@ -408,6 +409,7 @@ pub use drtv::{
     suitable as drtv_suitable,
 };
 pub use dumpert::{Dumpert, suitable as dumpert_suitable};
+pub use duoplay::{Duoplay, suitable as duoplay_suitable};
 pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
 pub use ebay::{Ebay, suitable as ebay_suitable};
 pub use egghead::{
