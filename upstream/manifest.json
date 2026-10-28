@@ -2278,6 +2278,20 @@
       "scope": "RTVEALaCartaIE, RTVEAudioIE, RTVELiveIE and RTVETelevisionIE: API metadata and errors, RTVEBaseIE's base64 PNG media URL decoding (rtveplayw and default managers, non-fatal), HLS/DASH/progressive formats with qualities, API subtitles, _parse_metadata, live data-setup assets with JSON-LD, television contentUrl url results. RTVEProgramIE is not ported. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "rtvslo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rtvslo.py",
+        "yt_dlp/extractor/common.py"
+      ],
+      "rust": [
+        "src/extractor/rtvslo.rs",
+        "src/extractor/mod.rs",
+        "tests/fixtures/sites/rtvslo/"
+      ],
+      "scope": "RTVSLOIE ava API recordings (Wowza HLS master playlists and rtmp formats through the shared _extract_wowza_formats subset, sign-language variants, media files, subtitles, thumbnails, geo and Clip not available errors) and RTVSLOShowIE archive link playlists, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "rumble",
       "status": "partial",
       "upstream": [

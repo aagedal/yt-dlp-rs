@@ -444,6 +444,28 @@ the page title (with upstream's live date suffix); television pages
 with pinned upstream output; `tools/generate_rtve_fixtures.py` encodes its
 media URL images.
 
+RTV Slovenija 365 recordings (`365.rtvslo.si/arhiv/SHOW/ID`,
+`4d.rtvslo.si/arhiv/...`, `rtvslo.si/rtv365/arhiv/ID`) follow upstream
+`RTVSLOIE`: the `ava` API's `getRecordingDrm` response (its JWT required,
+else upstream's unexpected-error message) and `getMedia` with that JWT. Its
+`addaptiveMedia`, `addaptiveMedia_sl` (as `sign-` formats with
+preference -10 and `slv` for English audio) and media file `hls_sec` URLs go
+through `_extract_wowza_formats` with HDS, DASH and SMIL skipped: the
+non-fatal `playlist.m3u8` master playlist (`hls`) and the `rtmp:` format,
+which is listed but not downloadable natively. Progressive media files keep
+their media type, size and integer bitrate. An `intermission.mp4` format is
+upstream's geo restriction (a warning with `--ignore-no-formats-error`); a
+`dummy_720p.mp4` manifest with an `error` stub is `Clip not available`.
+Metadata are the canonical URL, title, `Slovenski` (`sl`) or named
+subtitles, thumbnails with `Accept: image/jpeg`, description, broadcast and
+recording timestamps, duration (else the parsed length), genre tags and the
+show name and ID. Shows (`365|4d.rtvslo.si/oddaja/SLUG/ID`,
+`RTVSLOShowIE`) are playlists of the page's deduplicated `/arhiv/` links
+with the page title and OpenGraph description and image (upstream's
+warnings when missing). The shared Wowza helper returns an unsupported
+error for callers that do not skip HDS, DASH or SMIL.
+`tests/fixtures/sites/rtvslo/` is compared with pinned upstream output.
+
 Roya TV live streams (`[en.]roya.tv/live-stream/ID`) follow upstream
 `RoyaLiveIE`: the ticket API's `data.secured_url` (missing keys are
 upstream's wrapped `KeyError`) as live `hls` HLS formats, the non-fatal
