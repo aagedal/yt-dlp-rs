@@ -1,0 +1,20 @@
+[
+ {
+  "url": "https://www.televizeseznam.cz/video/lajna/buh-57953890",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.televizeseznam.cz/video/lajna/buh-57953890",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://www.stream.cz/x/nic-1",
+  "args": [
+   "-j"
+  ]
+ }
+]

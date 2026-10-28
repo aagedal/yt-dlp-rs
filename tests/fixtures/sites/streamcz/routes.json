@@ -1,0 +1,38 @@
+{
+ "routes": [
+  {
+   "url": "https://www.televizeseznam.cz/api/graphql",
+   "request_body": [
+    "\"urlName\": \"57953890\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"episode\": {\"id\": 1, \"spl\": \"https://v39-a.sdn.cz/v_39/vmd/5999364?fl=mdk,432f65a0|\", \"name\": \"B\\u016fh\", \"perex\": \"Popis\", \"duration\": 20.44, \"views\": 1234}}}"
+  },
+  {
+   "url": "https://v39-a.sdn.cz/v_39/vmd/5999364?fl=mdk,432f65a0%7Cspl2,3",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"Location\": \"https://v39-b.sdn.cz/v_39/vmd/5999364/spl2,3\"}"
+  },
+  {
+   "url": "https://v39-b.sdn.cz/v_39/vmd/5999364/spl2,3",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"http_stream\": {\"qualities\": {\"720p\": {\"url\": \"hls/720.ts\", \"bandwidth\": 2500000, \"resolution\": [1280, 720], \"codec\": \"avc1.64001f,mp4a.40.2\"}, \"360p\": {\"url\": \"\"}}}, \"mp4\": {\"480p\": {\"url\": \"/mp4/480.mp4\", \"bandwidth\": \"1200000\", \"resolution\": [854, null], \"duration\": 1500000}, \"audio\": {\"url\": \"https://cdn.stream.test/a.m4a\", \"codec\": \"mp4a.40.2\"}}, \"subtitles\": {\"cs\": {\"language\": \"cs\", \"urls\": {\"vtt\": \"subs/cs.vtt\", \"srt\": \"subs/cs.srt\"}}, \"x\": {\"language\": \"\", \"urls\": {}}}}}"
+  },
+  {
+   "url": "https://www.televizeseznam.cz/api/graphql",
+   "request_body": [
+    "\"urlName\": \"1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"episode\": {\"name\": \"no spl\"}}}"
+  }
+ ]
+}

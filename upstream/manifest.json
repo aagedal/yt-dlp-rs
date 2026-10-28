@@ -2690,6 +2690,18 @@
       "scope": "SRGSSRIE mediaComposition chapters (onlyChapters for videos) with the No media information found, KeyError, geo (CH, no bypass) and SRGSSR said block-reason errors; HTTP(S) resources ranked by qualities(SD, HD), non-fatal plain HLS, AKAMAI HLS/HDS via the non-fatal akahd token and _extract_akamai_formats_and_subtitles without hosts (hds formats with extra_param_to_segment_url, hls formats, packaging parameters stripped from unsigned URLs), position-0 podcast formats, subtitleList tracks with the business-unit default language, title/description/timestamp/thumbnail/duration; SRGSSRPlayIE play-site URLs as srgssr: url results. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "streamcz",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/streamcz.py"
+      ],
+      "rust": [
+        "src/extractor/streamcz.rs",
+        "tests/fixtures/sites/streamcz/"
+      ],
+      "scope": "StreamCZIE GraphQL episode, spl playlist (with redirect) TS/MP4 qualities, codecs and subtitles, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "streamable",
       "status": "partial",
       "upstream": [

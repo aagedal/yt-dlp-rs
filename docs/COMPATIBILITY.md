@@ -689,6 +689,18 @@ script patterns) are playlists of Dailymotion `url` results.
 (the API responses and manifests are constructed after the shapes upstream
 parses).
 
+Stream.cz and Televize Seznam episodes (`stream|televizeseznam.cz/.../SLUG-ID`)
+follow upstream `StreamCZIE`: the `televizeseznam.cz/api/graphql` episode
+(JSON POST), its `spl` plus `spl2,3` playlist (`|` sent as `%7C` like
+upstream's request escaping; a `Location`-only response is followed), the
+playlist's `http_stream.qualities` (`ts`, source preference -1) and `mp4`
+(preference 1) streams with joined URLs, bitrate and duration in thousands,
+resolution (height else from the `NNNp` key) and parsed codecs, and its
+subtitles by language and extension; name, perex, duration and views.
+Not covered: a selected format with its own `duration` (upstream's
+`requested_downloads` then keeps it; this port keeps one value per key).
+`tests/fixtures/sites/streamcz/` is compared with pinned upstream output.
+
 Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
 `StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
 metadata`), its unavailable-status error, `reddit_title`/`title`, every file

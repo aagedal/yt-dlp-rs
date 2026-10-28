@@ -220,6 +220,7 @@ mod spreaker;
 mod srgssr;
 mod steam;
 mod streamable;
+mod streamcz;
 mod streetvoice;
 mod substack;
 mod sverigesradio;
@@ -667,6 +668,7 @@ pub(crate) use steam::{
     fetch_trailers as fetch_steam_trailers, is_pending_state as steam_pending_state,
 };
 pub use streamable::{Streamable, suitable as streamable_suitable};
+pub use streamcz::{StreamCz, suitable as streamcz_suitable};
 pub use streetvoice::{StreetVoice, suitable as streetvoice_suitable};
 pub use substack::{Substack, suitable as substack_suitable};
 pub use sverigesradio::{
