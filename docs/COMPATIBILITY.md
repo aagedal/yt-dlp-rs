@@ -3038,6 +3038,18 @@ requested as entries are needed (`-I 1` reads one page). YouTube resolution
 is the native YouTube extractor's. `tests/fixtures/sites/lastfm/` is compared
 with pinned upstream output (`--flat-playlist` for playlists).
 
+Listen Notes episodes (`listennotes.com/podcasts/SHOW/SLUG-ID/`) follow
+upstream `ListenNotesIE`: the fatal `original-content` JSON updated with the
+`episode-play-button-toolbar`/`episode-no-play-button-toolbar` element's
+attributes, the `audio` URL (a missing one is upstream's `KeyError`), the
+`data-title`, first `<h1>` or `og:title` title, the cleaned `ln-text-p`
+description (paragraph breaks as blank lines) or the `DURATION - TEXT`
+description meta's text (with upstream's warnings when missing), the
+`audio_length`/`data-duration` or meta duration, the episode UUID,
+thumbnail, channel, `nlp_entities` cast, channel URL and channel ID.
+Pages without a toolbar element remain an explicit native error.
+`tests/fixtures/sites/listennotes/` is compared with pinned upstream output.
+
 Libsyn episodes (`html5-player.libsyn.com/embed/episode/id/ID`) follow
 upstream `LibsynIE`: the player page (requested without the URL's trailing
 options) and its fatal `playlistItem` JSON, the item, `episode-title`,

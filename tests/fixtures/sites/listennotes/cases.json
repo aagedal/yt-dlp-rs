@@ -1,0 +1,40 @@
+[
+ {
+  "url": "https://www.listennotes.com/podcasts/thriving-on-overload/tim-oreilly-on-noticing-KrDgvNb_u1n/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.listennotes.com/podcasts/thriving-on-overload/tim-oreilly-on-noticing-KrDgvNb_u1n/",
+  "args": [
+   "-q",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://www.listennotes.com/podcasts/ask-noah-show/episode-177-wireguard-with-lwEA3154JzG/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.listennotes.com/podcasts/some-show/only-og-title-ep-Abc123/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.listennotes.com/podcasts/some-show/no-audio-ep-NoAudio1/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.listennotes.com/podcasts/some-show/missing-content-ep-Gone1/",
+  "args": [
+   "-J"
+  ]
+ }
+]

@@ -1767,6 +1767,18 @@
       "scope": "LinkedInIE public post video sources, captions and metadata; no LinkedIn Learning or events; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "listennotes",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/listennotes.py"
+      ],
+      "rust": [
+        "src/extractor/listennotes.rs",
+        "tests/fixtures/sites/listennotes/"
+      ],
+      "scope": "ListenNotesIE episode pages (original-content JSON merged with the play button toolbar attributes, description meta duration fallback, ln-text-p description, cast, KeyError message) compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "livestreamfails",
       "status": "partial",
       "upstream": [

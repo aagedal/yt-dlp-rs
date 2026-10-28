@@ -124,6 +124,7 @@ mod lastfm;
 mod lbry;
 mod libsyn;
 mod linkedin;
+mod listennotes;
 mod livestreamfails;
 mod lnk;
 pub mod login;
@@ -484,6 +485,7 @@ pub use lbry::{
 pub(crate) use lbry::{fetch_pages as fetch_lbry_pages, is_pending_state as lbry_pending_state};
 pub use libsyn::{Libsyn, suitable as libsyn_suitable};
 pub use linkedin::{LinkedIn, suitable as linkedin_suitable};
+pub use listennotes::{ListenNotes, suitable as listennotes_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
 pub use lnk::{Lnk, suitable as lnk_suitable};
 pub use loom::{Loom, suitable as loom_suitable};
