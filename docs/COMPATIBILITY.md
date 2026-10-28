@@ -761,6 +761,19 @@ a `url_transparent` result (extracted by the JW Platform extractor) overlaid
 with `_old_archive_ids` and the non-fatal JSON-LD fields without `url`; a page
 without JSON-LD warns `unable to extract JSON-LD` like upstream.
 
+Bundestag Mediathek videos (`dbtg.tv/cvid|fvid/ID`, `bundestag.de/mediathek?...videoid=ID`)
+follow upstream `BundestagIE`: the archive `ID_playlist.smil/playlist.m3u8`
+master playlist (`instance`; a 404 is `Could not find video id`, other errors
+warn `Error extracting hls formats: ...`), the share API's `audio*` and
+`download*` URLs as formats with codec, channels, bitrate, size and
+extension from their file names (a non-1 status warns with its message),
+upstream's unexpected `Could not find suitable formats` error without any,
+and the non-fatal metadata overlay's first `<h3>` (spans removed) and `<p>`
+as title and description. Like upstream, fatal HLS requests become non-fatal
+with `--ignore-no-formats-error` (in every extractor using the shared
+helper). `tests/fixtures/sites/bundestag/` is compared with pinned upstream
+output.
+
 Bundesliga videos (`bundesliga.com/LL/bundesliga/videos[/...]?vid=ID`) follow
 upstream `BundesligaIE`: a `url` result of `jwplatform:ID`, extracted by the
 JW Platform extractor (so its `webpage_url` is the `jwplatform:` URL).

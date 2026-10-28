@@ -25,6 +25,7 @@ mod bostonglobe;
 mod breitbart;
 pub(crate) mod brightcove;
 mod bundesliga;
+mod bundestag;
 mod caltrans;
 mod cam4;
 mod ccc;
@@ -325,6 +326,7 @@ pub use bostonglobe::{BostonGlobe, suitable as bostonglobe_suitable};
 pub use breitbart::{BreitBart, suitable as breitbart_suitable};
 pub use brightcove::{BrightcoveNew, suitable as brightcove_new_suitable};
 pub use bundesliga::{Bundesliga, suitable as bundesliga_suitable};
+pub use bundestag::{Bundestag, suitable as bundestag_suitable};
 pub use caltrans::{Caltrans, suitable as caltrans_suitable};
 pub use cam4::{Cam4, suitable as cam4_suitable};
 pub use ccc::{Ccc, suitable as ccc_suitable};
@@ -967,6 +969,35 @@ fn extract_m3u8_fatal_with(
     keep_subtitles: bool,
     master_only: bool,
 ) -> crate::Result<crate::VideoInfo> {
+    // `if self.get_param('ignore_no_formats_error'): fatal = False`.
+    if crate::no_formats::ignore() {
+        let stream = extract_manifest_optional_note(
+            client,
+            manifest,
+            extractor,
+            id,
+            keep_subtitles,
+            &|response| {
+                hls::from_response_with(
+                    client,
+                    response,
+                    manifest,
+                    None,
+                    true,
+                    m3u8_id,
+                    master_only,
+                )
+            },
+            ("m3u8 information", "HLS"),
+            "Downloading m3u8 information",
+        );
+        return Ok(stream.unwrap_or_else(|| {
+            let mut empty = direct::build_at(manifest.clone(), manifest, String::new());
+            empty.formats.clear();
+            empty.direct = None;
+            empty
+        }));
+    }
     let note = format!("[{extractor}] {id}: Downloading m3u8 information");
     crate::screen::expect_page(id, Some(note.clone()), None);
     let response = direct::request(client, manifest, None);
