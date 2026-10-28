@@ -2588,6 +2588,18 @@
       "scope": "MonstercatIE release pages as lazily read track-stream MP3 playlists with album metadata, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "moviepilot",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/moviepilot.py"
+      ],
+      "rust": [
+        "src/extractor/moviepilot.rs",
+        "tests/fixtures/sites/moviepilot/"
+      ],
+      "scope": "MoviepilotIE trailer page as a transparent Dailymotion url result, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "movingimage",
       "status": "partial",
       "upstream": [

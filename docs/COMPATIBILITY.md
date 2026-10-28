@@ -4251,6 +4251,12 @@ scale=1000)` timestamp, `categoryname` categories and the `channels` `'0'`
 entry's channel fields (a string key, so never a list's first item), with
 upstream's unprefixed `KeyError` messages.
 
+Moviepilot trailers (`moviepilot.de/movies/SLUG`, `moviepilot`) follow
+upstream `MoviepilotIE`: the trailer page's Next.js `pageProps` (missing
+keys are upstream's `KeyError`s) as a transparent Dailymotion `url` result
+for its `remoteId`, with the slug as display ID and the title and summary.
+`tests/fixtures/sites/moviepilot/` is compared with pinned upstream output.
+
 Monster Siren songs (`monster-siren.hypergryph.com/music/ID`, `monstersiren`)
 follow upstream `MonsterSirenHypergryphMusicIE`: the song API (a nonzero
 `code` is its `msg`, expected, else `API returned an error response`), its
