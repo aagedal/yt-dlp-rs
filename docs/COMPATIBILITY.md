@@ -2671,6 +2671,14 @@ episode. Player scripts on other pages are followed like upstream's
 `_EMBED_REGEX`. `tests/fixtures/sites/zype/` is compared with pinned upstream
 output.
 
+Funker530 videos (`funker530.com/video/SLUG`) follow upstream `Funker530IE`:
+a `url_transparent` result of the page's first Rumble embed (`_EMBED_REGEX`,
+else a `Rumble("play", {video: ID})` script) or else its first YouTube embed,
+with the `video-desc-paragraph` element's cleaned text before `About the
+Author` as description (none without the element or the marker). A page
+without either embed is upstream's `No videos found on webpage`.
+`tests/fixtures/sites/funker530/` is compared with pinned upstream output.
+
 Fuyin TV videos (`fuyin.tv/html/N/ID.html`) follow upstream `FuyinTVIE`: the
 movie API's `data.url` as an untyped `mp4` result with its title (else the
 generic title) and the non-fatal page's description meta (with its warning);

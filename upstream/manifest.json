@@ -1646,6 +1646,18 @@
       "scope": "FilmwebIE trailer embed JSON as a url_transparent 23video result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "funker530",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/funker530.py"
+      ],
+      "rust": [
+        "src/extractor/funker530.rs",
+        "tests/fixtures/sites/funker530/"
+      ],
+      "scope": "Funker530IE url_transparent hand-off to the first Rumble (else YouTube) embed with the page description before About the Author, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "fuyintv",
       "status": "partial",
       "upstream": [

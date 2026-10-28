@@ -30,6 +30,19 @@ static PLAY_SCRIPT: LazyLock<Regex> = LazyLock::new(|| {
         .unwrap()
 });
 
+/// The first of `RumbleEmbedIE._extract_embed_urls(url, webpage)`: an
+/// `_EMBED_REGEX` match, else a `Rumble("play", {video: ID})` script's embed.
+pub(crate) fn first_embed_url(webpage: &str) -> Option<String> {
+    EMBED_IN_PAGE
+        .captures(webpage)
+        .map(|found| crate::html::unescape_html(&found["url"]))
+        .or_else(|| {
+            PLAY_SCRIPT
+                .captures(webpage)
+                .map(|found| format!("https://rumble.com/embed/{}", &found["id"]))
+        })
+}
+
 /// `RumbleEmbedIE.suitable`.
 pub fn embed_suitable(url: &str) -> bool {
     EMBED_URL.is_match(url)
@@ -397,15 +410,7 @@ impl Extractor for Rumble {
             crate::screen::extracting_url(url.as_str())
         ));
         let webpage = super::download_webpage(client, url, NAME, &page_id)?;
-        let embed = EMBED_IN_PAGE
-            .captures(&webpage)
-            .map(|found| crate::html::unescape_html(&found["url"]))
-            .or_else(|| {
-                PLAY_SCRIPT
-                    .captures(&webpage)
-                    .map(|found| format!("https://rumble.com/embed/{}", &found["id"]))
-            });
-        let Some(embed) = embed else {
+        let Some(embed) = first_embed_url(&webpage) else {
             return Err(Error::Reported(format!("Unsupported URL: {url}")));
         };
         let search = |pattern: &str| {

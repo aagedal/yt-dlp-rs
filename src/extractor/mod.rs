@@ -95,6 +95,7 @@ mod francetv;
 mod freesound;
 mod freespeech;
 mod freetv;
+mod funker530;
 mod fuyintv;
 mod gab;
 mod gamespot;
@@ -511,6 +512,7 @@ pub use freetv::{
 pub(crate) use freetv::{
     fetch_episodes as fetch_freetv_episodes, is_pending_state as freetv_pending_state,
 };
+pub use funker530::{Funker530, suitable as funker530_suitable};
 pub use fuyintv::{FuyinTv, suitable as fuyintv_suitable};
 pub use gab::{Gab, suitable as gab_suitable};
 pub use gamespot::{GameSpot, suitable as gamespot_suitable};
