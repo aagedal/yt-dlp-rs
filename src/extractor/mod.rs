@@ -105,6 +105,7 @@ mod imdb;
 mod imgur;
 mod ina;
 mod inc;
+mod indavideo;
 mod instagram;
 mod internazionale;
 pub(crate) mod ism;
@@ -449,6 +450,7 @@ pub use imgur::{
 };
 pub use ina::{Ina, suitable as ina_suitable};
 pub use inc::{Inc, suitable as inc_suitable};
+pub use indavideo::{IndavideoEmbed, suitable as indavideo_suitable};
 pub(crate) use instagram::post_extract as instagram_comments;
 pub use instagram::{
     Instagram, InstagramIos, InstagramStory, InstagramTag, InstagramUser,

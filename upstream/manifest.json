@@ -1597,6 +1597,18 @@
       "scope": "InaIE asset-details-url JSON (asset ID .json URL) resourceUrl as an untyped result with type-based ext (else the URL's), unified_strdate broadcast date and raw metadata; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "indavideo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/indavideo.py"
+      ],
+      "rust": [
+        "src/extractor/indavideo.rs",
+        "tests/fixtures/sites/indavideo/"
+      ],
+      "scope": "IndavideoEmbedIE getVideoData tokens per height, metadata and player embeds on generic pages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "inc",
       "status": "partial",
       "upstream": [

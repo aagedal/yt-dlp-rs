@@ -3220,6 +3220,17 @@ and presenter, or a product's poster and brand name. Like upstream's
 `X-Forwarded-For` address by default; the fixtures compare with
 `--no-geo-bypass`.
 
+Indavideo players (`[embed.]indavideo.hu/player/video/ID`,
+`assets.indavideo.hu/swf/player.swf?...vID=ID`) follow upstream
+`IndavideoEmbedIE`: the `getVideoData/ID/` JSON's `data` (required), each
+distinct video file with the token of its height (from `.HEIGHT.mp4`, else
+the only `filesh` key; files without a token are skipped), the CEST
+`date` as timestamp, protocol-relative thumbnails, tag titles, uploader,
+duration and age limit. Player iframes on other pages are followed like
+upstream's `_EMBED_REGEX`. Upstream's file order is a Python `set`'s; formats
+are sorted by height either way. `tests/fixtures/sites/indavideo/` is
+compared with pinned upstream output (the `_` timestamp query ignored).
+
 INA media (`ina.fr/.../ID`) follow upstream `InaIE`: the page's fatal
 `asset-details-url`, its `assets/ID` as the ID and the `ID.json` asset
 JSON's `resourceUrl` (else the upstream `KeyError`) as an untyped result,

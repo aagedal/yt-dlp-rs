@@ -2068,7 +2068,7 @@ pub(crate) struct EmbedSite {
     temp_id: fn(&str) -> Option<String>,
 }
 
-static EMBED_SITES: [EmbedSite; 19] = [
+static EMBED_SITES: [EmbedSite; 20] = [
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
@@ -2138,6 +2138,13 @@ static EMBED_SITES: [EmbedSite; 19] = [
         extractor: Some(&super::jwplatform::JwPlatform),
         embed_urls: super::jwplatform::embed_urls,
         temp_id: super::jwplatform::temp_id,
+    },
+    EmbedSite {
+        name: super::indavideo::NAME,
+        key: super::indavideo::KEY,
+        extractor: Some(&super::indavideo::IndavideoEmbed),
+        embed_urls: super::indavideo::embed_urls,
+        temp_id: super::indavideo::temp_id,
     },
     EmbedSite {
         name: super::kaltura::NAME,
