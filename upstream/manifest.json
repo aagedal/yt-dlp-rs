@@ -2310,6 +2310,18 @@
       "scope": "MaarivIE media API non-fatal HLS and parse_resolution HTTP formats, metadata, processing-time no-formats error and generic-page _EMBED_REGEX embeds compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "mangomolo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mangomolo.py"
+      ],
+      "rust": [
+        "src/extractor/mangomolo.rs",
+        "tests/fixtures/sites/mangomolo/"
+      ],
+      "scope": "MangomoloVideoIE and MangomoloLiveIE player pages as Wowza formats (base64 live channel IDs with Python's errors) and _EMBED_REGEX iframes as url_transparent embeds with ID and uploader on generic pages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "masters",
       "status": "partial",
       "upstream": [

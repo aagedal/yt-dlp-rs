@@ -1125,6 +1125,46 @@ impl GenericHttp {
         embeds: Vec<(&'static EmbedSite, Url)>,
     ) -> Result<Option<ExtractResult>> {
         if let [(site, embed)] = embeds.as_slice() {
+            if let Some(fields) = site.fields {
+                // `merge_dicts(embed, info_dict)`: the page's non-`None`
+                // fields the embed's `url_transparent` result lacks.
+                let mut fields = fields(url, embed);
+                let page_fields = [
+                    (
+                        "title",
+                        Some(page_title(html).unwrap_or_else(|| "video".into()).into()),
+                    ),
+                    ("timestamp", timestamp.map(serde_json::Value::from)),
+                    (
+                        "description",
+                        crate::html::og_search_property(html, "description")
+                            .map(serde_json::Value::from),
+                    ),
+                    (
+                        "thumbnail",
+                        crate::html::og_search_property(html, "image").map(serde_json::Value::from),
+                    ),
+                    (
+                        "age_limit",
+                        crate::html::rta_search(html).map(serde_json::Value::from),
+                    ),
+                ];
+                for (key, value) in page_fields {
+                    if let Some(value) = value
+                        && !fields.get(key).is_some_and(|known| !known.is_null())
+                    {
+                        fields.insert(key.into(), value);
+                    }
+                }
+                let mut info = direct::build_at(url.clone(), url, String::new());
+                info.formats.clear();
+                info.direct = None;
+                info.extra.insert(
+                    crate::FOLLOW_TRANSPARENT.into(),
+                    serde_json::json!({"url": embed.as_str(), "fields": fields}),
+                );
+                return Ok(Some(ExtractResult::Video(info)));
+            }
             if let Some(extractor) = site.extractor {
                 let mut result = extractor.extract_result(client, embed)?;
                 // A followed playlist keeps the page as its `original_url`.
@@ -1151,6 +1191,30 @@ impl GenericHttp {
                 info.formats.clear();
                 info.direct = None;
                 info.id = (site.temp_id)(embed.as_str()).unwrap_or_default();
+                if let Some(fields) = site.fields {
+                    // A custom `_extract_from_webpage`'s `url_transparent`
+                    // entry dict.
+                    let fields = fields(url, &embed);
+                    let mut entry = serde_json::Map::new();
+                    entry.insert("ie_key".into(), site.key.into());
+                    entry.insert("_type".into(), "url_transparent".into());
+                    entry.insert("url".into(), embed.as_str().into());
+                    entry.extend(fields.clone());
+                    entry.insert("extractor".into(), site.name.into());
+                    entry.insert("extractor_key".into(), site.key.into());
+                    info.extra.insert(
+                        crate::TRANSPARENT.into(),
+                        serde_json::json!({
+                            "url": embed.as_str(),
+                            "force_videoid": null,
+                            "fields": fields,
+                            "ie_key": site.key,
+                            "extractor": site.name,
+                            "entry": entry,
+                        }),
+                    );
+                    return info;
+                }
                 info.extra.insert(
                     crate::TRANSPARENT.into(),
                     serde_json::json!({
@@ -2058,6 +2122,9 @@ fn xspf_playlist(
 
 /// An extractor with `_EMBED_REGEX` iframes (upstream `_extract_embeds`
 /// asks every extractor, in `gen_extractor_classes` order).
+/// An embed's `url_transparent` fields for the page and embed URLs.
+type EmbedFields = fn(&Url, &Url) -> serde_json::Map<String, serde_json::Value>;
+
 pub(crate) struct EmbedSite {
     name: &'static str,
     key: &'static str,
@@ -2066,15 +2133,19 @@ pub(crate) struct EmbedSite {
     extractor: Option<&'static dyn super::Extractor>,
     embed_urls: fn(&Url, &str) -> Vec<Url>,
     temp_id: fn(&str) -> Option<String>,
+    /// A custom `_extract_from_webpage`'s `url_transparent` fields for the
+    /// page and embed URLs (`None`: plain `url_result(embed, ie)` results).
+    fields: Option<EmbedFields>,
 }
 
-static EMBED_SITES: [EmbedSite; 29] = [
+static EMBED_SITES: [EmbedSite; 31] = [
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
         extractor: Some(&super::acast::ACast),
         embed_urls: super::acast::embed_urls,
         temp_id: super::acast::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::arcpublishing::NAME,
@@ -2082,6 +2153,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::arcpublishing::ArcPublishing),
         embed_urls: super::arcpublishing::embed_urls,
         temp_id: super::arcpublishing::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::bitmovin::NAME,
@@ -2089,6 +2161,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::bitmovin::Bitmovin),
         embed_urls: super::bitmovin::embed_urls,
         temp_id: super::bitmovin::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::blogger::NAME,
@@ -2096,6 +2169,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::blogger::Blogger),
         embed_urls: super::blogger::embed_urls,
         temp_id: super::blogger::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::brightcove::NAME,
@@ -2103,6 +2177,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::brightcove::BrightcoveNew),
         embed_urls: super::brightcove::embed_urls,
         temp_id: super::brightcove::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::crooksandliars::NAME,
@@ -2110,6 +2185,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::crooksandliars::CrooksAndLiars),
         embed_urls: super::crooksandliars::embed_urls,
         temp_id: super::crooksandliars::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::dailymail::NAME,
@@ -2117,6 +2193,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::dailymail::DailyMail),
         embed_urls: super::dailymail::embed_urls,
         temp_id: super::dailymail::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::digiteka::NAME,
@@ -2124,6 +2201,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::digiteka::Digiteka),
         embed_urls: super::digiteka::embed_urls,
         temp_id: super::digiteka::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::expressen::NAME,
@@ -2131,6 +2209,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::expressen::Expressen),
         embed_urls: super::expressen::embed_urls,
         temp_id: super::expressen::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::googledrive::NAME,
@@ -2138,6 +2217,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::googledrive::GoogleDrive),
         embed_urls: super::googledrive::embed_urls,
         temp_id: super::googledrive::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: "JWPlatform",
@@ -2145,6 +2225,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::jwplatform::JwPlatform),
         embed_urls: super::jwplatform::embed_urls,
         temp_id: super::jwplatform::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::indavideo::NAME,
@@ -2152,6 +2233,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::indavideo::IndavideoEmbed),
         embed_urls: super::indavideo::embed_urls,
         temp_id: super::indavideo::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::kaltura::NAME,
@@ -2159,6 +2241,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::kaltura::Kaltura),
         embed_urls: super::kaltura::embed_urls,
         temp_id: super::kaltura::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::maariv::NAME,
@@ -2166,6 +2249,23 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::maariv::Maariv),
         embed_urls: super::maariv::embed_urls,
         temp_id: super::maariv::temp_id,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::mangomolo::LIVE_NAME,
+        key: super::mangomolo::LIVE_KEY,
+        extractor: Some(&super::mangomolo::MangomoloLive),
+        embed_urls: super::mangomolo::live_embed_urls,
+        temp_id: super::mangomolo::live_temp_id,
+        fields: Some(super::mangomolo::live_embed_fields),
+    },
+    EmbedSite {
+        name: super::mangomolo::VIDEO_NAME,
+        key: super::mangomolo::VIDEO_KEY,
+        extractor: Some(&super::mangomolo::MangomoloVideo),
+        embed_urls: super::mangomolo::video_embed_urls,
+        temp_id: super::mangomolo::video_temp_id,
+        fields: Some(super::mangomolo::video_embed_fields),
     },
     EmbedSite {
         name: super::megaphone::NAME,
@@ -2173,6 +2273,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::megaphone::Megaphone),
         embed_urls: super::megaphone::embed_urls,
         temp_id: super::megaphone::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::rudovideo::NAME,
@@ -2180,6 +2281,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::rudovideo::RudoVideo),
         embed_urls: super::rudovideo::embed_urls,
         temp_id: super::rudovideo::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::sbs::NAME,
@@ -2187,6 +2289,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::sbs::Sbs),
         embed_urls: super::sbs::embed_urls,
         temp_id: super::sbs::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::simplecast::NAME,
@@ -2194,6 +2297,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::simplecast::Simplecast),
         embed_urls: super::simplecast::embed_urls,
         temp_id: super::simplecast::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: "Streamable",
@@ -2201,6 +2305,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::streamable::Streamable),
         embed_urls: super::streamable::embed_urls,
         temp_id: super::streamable::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::tvigle::NAME,
@@ -2208,6 +2313,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::tvigle::Tvigle),
         embed_urls: super::tvigle::embed_urls,
         temp_id: super::tvigle::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::vbox7::NAME,
@@ -2215,6 +2321,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::vbox7::Vbox7),
         embed_urls: super::vbox7::embed_urls,
         temp_id: super::vbox7::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::vidyard::NAME,
@@ -2222,6 +2329,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::vidyard::Vidyard),
         embed_urls: super::vidyard::embed_urls,
         temp_id: super::vidyard::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::visir::NAME,
@@ -2229,6 +2337,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: None,
         embed_urls: super::visir::embed_urls,
         temp_id: super::visir::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::vodplatform::NAME,
@@ -2236,6 +2345,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::vodplatform::VodPlatform),
         embed_urls: super::vodplatform::embed_urls,
         temp_id: super::vodplatform::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::washingtonpost::NAME,
@@ -2243,6 +2353,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::washingtonpost::WashingtonPost),
         embed_urls: super::washingtonpost::embed_urls,
         temp_id: super::washingtonpost::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::wistia::CHANNEL_NAME,
@@ -2250,6 +2361,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::wistia::WistiaChannel),
         embed_urls: super::wistia::channel_embed_urls,
         temp_id: super::wistia::channel_temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::wistia::NAME,
@@ -2257,6 +2369,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::wistia::Wistia),
         embed_urls: super::wistia::embed_urls,
         temp_id: super::wistia::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: "youtube",
@@ -2264,6 +2377,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: None,
         embed_urls: super::youtube::embed_urls,
         temp_id: super::youtube::temp_id,
+        fields: None,
     },
     EmbedSite {
         name: super::zype::NAME,
@@ -2271,6 +2385,7 @@ static EMBED_SITES: [EmbedSite; 29] = [
         extractor: Some(&super::zype::Zype),
         embed_urls: super::zype::embed_urls,
         temp_id: super::zype::temp_id,
+        fields: None,
     },
 ];
 

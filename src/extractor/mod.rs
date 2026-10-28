@@ -168,6 +168,7 @@ pub mod login;
 mod loom;
 mod lrt;
 mod maariv;
+mod mangomolo;
 mod maoritv;
 mod masters;
 mod matchitv;
@@ -629,6 +630,10 @@ pub use lrt::{
     stream_suitable as lrt_stream_suitable, vod_suitable as lrt_vod_suitable,
 };
 pub use maariv::{Maariv, suitable as maariv_suitable};
+pub use mangomolo::{
+    MangomoloLive, MangomoloVideo, live_suitable as mangomolo_live_suitable,
+    video_suitable as mangomolo_video_suitable,
+};
 pub use maoritv::{MaoriTV, suitable as maoritv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};
 pub use matchitv::{MatchiTv, suitable as matchitv_suitable};

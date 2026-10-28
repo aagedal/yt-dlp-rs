@@ -3992,6 +3992,23 @@ duration and `unified_timestamp` upload date; a result without formats fails
 in processing. Its iframe embeds on generic pages follow JW Platform's in the
 embed order.
 
+Mangomolo players (`player.mangomolo.com/v1/video?...id=ID`,
+`player.mangomolo.com/v1/live|index?...channelid=BASE64`, and the
+`admin.mangomolo.com/analytics/index.php/customers/embed/` paths) follow
+upstream `MangomoloVideoIE` and `MangomoloLiveIE`: live channel IDs are
+percent-unquoted and base64-decoded with Python's errors (`Incorrect
+padding`, data-character counts, UTF-8 decoding), then the
+`player.mangomolo.com/v1/video|live` page for the URL's query gives the
+`playlist.m3u8` URL (fatal) as Wowza formats with SMIL skipped (HLS, HDS,
+DASH and `rtmp:`; live HLS entries use the `m3u8` protocol), the ID as
+title, the hidden `userid` as `uploader_id`, the hidden `duration` as an
+integer, and `is_live`. Their iframes on generic pages are embeds (live
+first) yielding upstream's `url_transparent` results with the slug's ID and
+the page URL's host as `uploader`: a single embed also takes the generic
+page's title, description, thumbnail and age limit; several form a playlist
+of those entries. `tests/fixtures/sites/mangomolo/` is compared with pinned
+upstream output.
+
 Masters videos (`masters.com/en_US/watch/YYYY-MM-DD/ID`) follow upstream
 `MastersIE`: the related-content API's fatal HLS manifest (with its subtitle
 renditions; no manifest is upstream's `Failed to obtain m3u8 URL`), the API
