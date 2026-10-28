@@ -1,0 +1,51 @@
+[
+ {
+  "url": "https://classics.nascar.com/video/Ka5qGuxzZ~SIvJii7uAC~wszPshklHN",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.classics.nascar.com/video/Ka5qGuxzZ~SIvJii7uAC~wszPshklHN",
+  "args": [
+   "--print",
+   "%(title)s|%(tags)s|%(chapters)j|%(upload_date)s"
+  ]
+ },
+ {
+  "url": "https://classics.nascar.com/video/late-start",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://classics.nascar.com/video/bare",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://classics.nascar.com/video/no-content",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://classics.nascar.com/video/no-src",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://classics.nascar.com/video/no-next",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://classics.nascar.com/video/gone",
+  "args": [
+   "-J"
+  ]
+ }
+]

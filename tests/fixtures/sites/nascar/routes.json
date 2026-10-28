@@ -1,0 +1,74 @@
+{
+ "routes": [
+  {
+   "url": "https://classics.nascar.com/video/Ka5qGuxzZ~SIvJii7uAC~wszPshklHN",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"contentData\": {\"input\": {\"src\": \"https://va.nascar.test/a/master.m3u8\", \"name\": \"Cook Out 400 2023\", \"description\": \"Richmond race\", \"thumbnail\": \"https://va.aws.nascar.test/IMAGES/a.jpg\", \"start_time\": \"2023-07-30T16:00:00Z\", \"settings\": {\"tags\": [\"2023\", \"race #22\", 5, \"cup\"]}}, \"overlay\": {\"data\": {\"timelines\": [{\"events\": [{\"timestamp\": \"0\", \"name\": \"Start\"}, {\"timestamp\": \" 95.5 \", \"name\": \"Lap 10\"}, {\"timestamp\": \"abc\", \"name\": \"Bad\"}, {\"timestamp\": null, \"name\": \"Null\"}, {\"name\": \"No ts\"}, \"str\", {\"timestamp\": 300}, {\"timestamp\": true, \"name\": 7}, {\"timestamp\": \"1e3\", \"name\": \"Sci\"}]}, {\"events\": [{\"timestamp\": \"9\", \"name\": \"Second timeline\"}]}]}}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://www.classics.nascar.com/video/Ka5qGuxzZ~SIvJii7uAC~wszPshklHN",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"contentData\": {\"input\": {\"src\": \"https://va.nascar.test/a/master.m3u8\", \"name\": \"Cook Out 400 2023\", \"description\": \"Richmond race\", \"thumbnail\": \"https://va.aws.nascar.test/IMAGES/a.jpg\", \"start_time\": \"2023-07-30T16:00:00Z\", \"settings\": {\"tags\": [\"2023\", \"race #22\", 5, \"cup\"]}}, \"overlay\": {\"data\": {\"timelines\": [{\"events\": [{\"timestamp\": \"0\", \"name\": \"Start\"}, {\"timestamp\": \" 95.5 \", \"name\": \"Lap 10\"}, {\"timestamp\": \"abc\", \"name\": \"Bad\"}, {\"timestamp\": null, \"name\": \"Null\"}, {\"name\": \"No ts\"}, \"str\", {\"timestamp\": 300}, {\"timestamp\": true, \"name\": 7}, {\"timestamp\": \"1e3\", \"name\": \"Sci\"}]}, {\"events\": [{\"timestamp\": \"9\", \"name\": \"Second timeline\"}]}]}}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://classics.nascar.com/video/late-start",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"contentData\": {\"input\": {\"src\": \"https://va.nascar.test/b/index.m3u8\", \"description\": \"\", \"thumbnail\": \"not a url\", \"start_time\": \"bogus\", \"settings\": {\"tags\": []}}, \"overlay\": {\"data\": {\"timelines\": [{\"events\": [{\"timestamp\": \"60\", \"name\": \"Late start\"}]}]}}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://classics.nascar.com/video/bare",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"contentData\": {\"input\": {\"src\": \"https://va.nascar.test/b/index.m3u8\"}, \"overlay\": {\"data\": {\"timelines\": []}}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://classics.nascar.com/video/no-content",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {}}}</script></body></html>"
+  },
+  {
+   "url": "https://classics.nascar.com/video/no-src",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"contentData\": {\"input\": {\"name\": \"x\"}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://classics.nascar.com/video/no-next",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>nothing</body></html>"
+  },
+  {
+   "url": "https://classics.nascar.com/video/gone",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"contentData\": {\"input\": {\"src\": \"https://va.nascar.test/gone.m3u8\"}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://va.nascar.test/a/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://va.nascar.test/b/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  }
+ ]
+}

@@ -2247,6 +2247,18 @@
       "scope": "KikaIE video documents, HLS/progressive assets and TTML/WebVTT subtitles, and KikaPlaylistIE paged brand generators of url results, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "kinopoisk",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/kinopoisk.py"
+      ],
+      "rust": [
+        "src/extractor/kinopoisk.rs",
+        "tests/fixtures/sites/kinopoisk/"
+      ],
+      "scope": "KinoPoiskIE OTT widget JSON models (title/originalTitle, dict_get description, cover/poster, integer duration and age limit) with a fatal master HLS playlist and KeyError/data/m3u8 error paths compared with pinned upstream output through the fixture proxy; non-string fields and playlist URIs remain explicit native errors"
+    },
+    {
       "name": "kompas",
       "status": "partial",
       "upstream": [
@@ -2598,6 +2610,18 @@
         "tests/fixtures/sites/myvidster/"
       ],
       "scope": "MyVidsterIE rel=videolink URL as a followed url_result and the fatal missing-link message compared with pinned upstream output through the fixture proxy; non-absolute links remain explicit native errors"
+    },
+    {
+      "name": "nascar",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nascar.py"
+      ],
+      "rust": [
+        "src/extractor/nascar.rs",
+        "tests/fixtures/sites/nascar/"
+      ],
+      "scope": "NascarClassicsIE Next.js content data with a fatal master HLS playlist, input metadata, float-filtered timeline chapters and KeyError/next.js/m3u8 error paths compared with pinned upstream output through the fixture proxy; non-string/non-URL sources and non-finite chapter timestamps remain explicit native errors"
     },
     {
       "name": "newsy",
@@ -4159,6 +4183,18 @@
         "tests/fixtures/sites/visir/"
       ],
       "scope": "VisirIE App.Player.Init HLS clips with article metadata, player-page redirects and player embeds on generic pages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "viously",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/viously.py"
+      ],
+      "rust": [
+        "src/extractor/viously.rs",
+        "tests/fixtures/sites/viously/"
+      ],
+      "scope": "ViouslyIE webpage embeds in the generic embed detection: player div IDs, non-fatal master HLS playlists, custom-alphabet base64 export JSON metadata, single-player merge_dicts with the page fields and multi-player playlists, with m3u8/JSON warning paths, compared with pinned upstream output through the fixture proxy; malformed exports remain explicit native errors"
     },
     {
       "name": "vimeo",

@@ -157,6 +157,7 @@ mod kick;
 mod kicker;
 mod kickstarter;
 mod kika;
+mod kinopoisk;
 mod kommunetv;
 mod kompas;
 mod kth;
@@ -198,6 +199,7 @@ mod movingimage;
 mod musescore;
 mod mux;
 mod myvidster;
+mod nascar;
 mod netapp;
 mod netzkino;
 mod newsy;
@@ -338,6 +340,7 @@ mod videopress;
 mod vidlii;
 pub(crate) mod vidyard;
 mod vimeo;
+mod viously;
 mod visir;
 mod vk;
 mod vkplay;
@@ -625,6 +628,7 @@ pub use kika::{
     Kika, KikaPlaylist, playlist_suitable as kika_playlist_suitable, suitable as kika_suitable,
 };
 pub(crate) use kika::{fetch_pages as fetch_kika_pages, is_pending_state as kika_pending_state};
+pub use kinopoisk::{KinoPoisk, suitable as kinopoisk_suitable};
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use kompas::{KompasVideo, suitable as kompas_suitable};
 pub use kth::{Kth, suitable as kth_suitable};
@@ -689,6 +693,7 @@ pub use movingimage::{MovingImage, suitable as movingimage_suitable};
 pub use musescore::{MuseScore, suitable as musescore_suitable};
 pub use mux::{Mux, suitable as mux_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
+pub use nascar::{NascarClassics, suitable as nascar_classics_suitable};
 pub use netapp::{
     NetAppCollection, NetAppVideo, collection_suitable as netapp_collection_suitable,
     video_suitable as netapp_video_suitable,
