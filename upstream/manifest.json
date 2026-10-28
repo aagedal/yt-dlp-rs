@@ -2370,6 +2370,18 @@
       "scope": "MaarivIE media API non-fatal HLS and parse_resolution HTTP formats, metadata, processing-time no-formats error and generic-page _EMBED_REGEX embeds compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "magellantv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/magellantv.py"
+      ],
+      "rust": [
+        "src/extractor/magellantv.rs",
+        "tests/fixtures/sites/magellantv/"
+      ],
+      "scope": "MagellanTVIE Next.js reactContext video detail or series episode, non-fatal HLS manifests with subtitles (deduplicated in first-seen order instead of set order), metadata and the error page's geo/no-formats errors, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "masters",
       "status": "partial",
       "upstream": [

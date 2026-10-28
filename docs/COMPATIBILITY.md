@@ -3594,6 +3594,17 @@ from webpage` when absent); otherwise the page is a playlist
 `tests/fixtures/sites/rottentomatoes/` is compared with pinned upstream
 output.
 
+MagellanTV videos (`[www.]magellantv.com/watch|video/ID`) follow upstream
+`MagellanTVIE`: the page's Next.js `reactContext` (missing keys are
+upstream's `KeyError`s), its video detail or else the series' current
+episode, whose `manifests[].hls` and `jwp_video_url` playlists (non-fatal,
+master playlist only, with subtitles) are deduplicated in first-seen order
+(upstream iterates a `set`, whose order is hash-dependent), and its title,
+description, duration, age rating and tags. Without formats, the error page's
+message is a geo restriction (`available in your country`) or the expected
+`MagellanTV said: ...` error. `tests/fixtures/sites/magellantv/` is compared
+with pinned upstream output.
+
 MDR.DE videos and audio (`mdr.de/.../NAME-ID[_...].html`) follow upstream
 `MDRIE` (geo countries `DE`): the page's `dataURL`/`playerXml` `-avCustom.xml`
 URL (fatal; `\/` unescaped, joined with the page URL) and that XML document's
