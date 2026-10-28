@@ -76,6 +76,7 @@ mod flickr;
 mod formula1;
 mod francetv;
 mod freesound;
+mod freetv;
 mod fuyintv;
 mod gab;
 mod gamestar;
@@ -425,6 +426,12 @@ pub use francetv::{
     site_suitable as francetv_site_suitable, suitable as francetv_suitable,
 };
 pub use freesound::{Freesound, suitable as freesound_suitable};
+pub use freetv::{
+    FreeTv, FreeTvMovies, movies_suitable as freetv_movies_suitable, suitable as freetv_suitable,
+};
+pub(crate) use freetv::{
+    fetch_episodes as fetch_freetv_episodes, is_pending_state as freetv_pending_state,
+};
 pub use fuyintv::{FuyinTv, suitable as fuyintv_suitable};
 pub use gab::{Gab, suitable as gab_suitable};
 pub use gamestar::{GameStar, suitable as gamestar_suitable};

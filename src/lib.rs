@@ -458,6 +458,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "franceinfo",
     "francetv:site",
     "Freesound",
+    "freetv:series",
+    "FreeTvMovies",
     "FuyinTV",
     "Gab",
     "GameStar",
@@ -957,6 +959,8 @@ impl YoutubeDl {
                 Box::new(extractor::EggheadLesson),
                 Box::new(extractor::Expressen),
                 Box::new(extractor::Faz),
+                Box::new(extractor::FreeTv),
+                Box::new(extractor::FreeTvMovies),
                 Box::new(extractor::Genius),
                 Box::new(extractor::GeniusLyrics),
                 Box::new(extractor::IndavideoEmbed),
@@ -2114,6 +2118,8 @@ impl YoutubeDl {
                 extractor::fetch_nhk_episodes
             } else if extractor::monstercat_pending_state(&pending.state) {
                 extractor::fetch_monstercat_tracks
+            } else if extractor::freetv_pending_state(&pending.state) {
+                extractor::fetch_freetv_episodes
             } else if extractor::spreaker_pending_state(&pending.state) {
                 extractor::fetch_spreaker_episodes
             } else if extractor::simplecast_pending_state(&pending.state) {
@@ -2152,6 +2158,7 @@ impl YoutubeDl {
                 || extractor::orf_pending_state(&pending.state)
                 || extractor::nhk_pending_state(&pending.state)
                 || extractor::monstercat_pending_state(&pending.state)
+                || extractor::freetv_pending_state(&pending.state)
                 || extractor::spreaker_pending_state(&pending.state)
                 || extractor::simplecast_pending_state(&pending.state)
                 || extractor::podbayfm_pending_state(&pending.state);

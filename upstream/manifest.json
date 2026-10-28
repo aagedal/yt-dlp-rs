@@ -5,6 +5,18 @@
   "upstream_version": "2026.10.26",
   "components": [
     {
+      "name": "freetv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/freetv.py"
+      ],
+      "rust": [
+        "src/extractor/freetv.rs",
+        "tests/fixtures/sites/freetv/"
+      ],
+      "scope": "FreeTvMoviesIE admin-ajax video HLS and FreeTvIE lazily read series seasons, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "freesound",
       "status": "partial",
       "upstream": [

@@ -3238,6 +3238,18 @@ non-string titles, paths or caption languages remain explicit native errors.
 `tests/fixtures/sites/democracynow/` is compared with pinned upstream output.
 
 
+FreeTV movies (`freetv.com/peliculas/SLUG`) follow upstream `FreeTvMoviesIE`:
+the page's post ID (three patterns, fatal), the `admin-ajax.php`
+`olyott_video_play` POST's `data.displayMeta` and its `streamURLVideo` as a
+fatal HLS master playlist (subtitles kept), with the title, description and
+processing's string-conversion warning for numeric IDs. Series
+(`freetv.com/series/SLUG`) follow `FreeTvIE`: the synopsis title and
+description (non-fatal) and every season `<option>` read lazily as a
+generator (a season's `olyott_get_dynamic_series_content` POST only when
+its episodes are requested), each episode's stream as fatal HLS with its
+series, season and episode metadata. `tests/fixtures/sites/freetv/` is
+compared with pinned upstream output.
+
 Freesound sounds (`freesound.org/people/USER/sounds/ID`) follow upstream
 `FreesoundIE`: the page's fatal `og:audio` URL and `og:audio:title`, the
 non-fatal description, `og:audio:artist` uploader and channels info (their
