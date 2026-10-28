@@ -1247,6 +1247,18 @@ non-empty `"ACCOUNT_ID"` (else upstream's `'NoneType' object has no attribute
 Brightcove players above. `tests/fixtures/sites/europeantour/` is compared with
 pinned upstream output.
 
+Sky Sports and Sky News videos (`skysports.com/watch/video/.../ID`,
+`news.sky.com/video/SLUG-ID`) follow upstream `SkySportsIE` and `SkyNewsIE`:
+the first `sdc-article-video`/`sdc-site-video` element (fatal) as a
+`url_transparent` result of its Brightcove player (account `6058004172001`
+and player `RC9PQUaJ6` unless the element names them) with the non-fatal
+OpenGraph title and stripped description. Sky News stories and Sky Sports
+news (`news.sky.com/story/SLUG-ID`, `skysports.com/.../news/N/ID`) follow
+`SkyNewsStoryIE` and `SkySportsNewsIE`: every element as a playlist entry,
+with the OpenGraph title and `og:description`/`description` meta. Non-Brightcove
+providers fail like upstream (its unbound `video_id`). `tests/fixtures/sites/sky/`
+is compared with pinned upstream output.
+
 Sky News Australia videos (`skynews.com.au/SECTION/SUB/SLUG/video/ID`) follow
 upstream `SkyNewsAUIE`: the page's `embedcode` (`ACCOUNT-VIDEO`, else
 upstream's error) as a `url_transparent` result of that account's

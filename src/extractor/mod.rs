@@ -201,6 +201,7 @@ mod screenrec;
 mod sen;
 mod servus;
 mod simplecast;
+mod sky;
 mod skylinewebcams;
 mod skynewsau;
 mod smil;
@@ -613,6 +614,11 @@ pub use simplecast::{
 };
 pub(crate) use simplecast::{
     fetch_episodes as fetch_simplecast_episodes, is_pending_state as simplecast_pending_state,
+};
+pub use sky::{SkyNews, news_suitable as sky_news_suitable};
+pub use sky::{
+    SkyNewsStory, SkySports, SkySportsNews, sports_news_suitable as sky_sports_news_suitable,
+    sports_suitable as sky_sports_suitable, story_suitable as sky_news_story_suitable,
 };
 pub use skylinewebcams::{SkylineWebcams, suitable as skylinewebcams_suitable};
 pub use skynewsau::{SkyNewsAU, suitable as skynewsau_suitable};

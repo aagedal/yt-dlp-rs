@@ -1,0 +1,39 @@
+[
+ {
+  "url": "https://www.skysports.com/watch/video/sports/f1/12160544/abu-dhabi-gp",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://news.sky.com/video/russian-plane-11712962",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://news.sky.com/story/car-crash-12345678",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.skysports.com/golf/news/12176/10871916/dustin",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.skysports.com/watch/video/sports/1",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.skysports.com/watch/video/sports/2",
+  "args": [
+   "-j"
+  ]
+ }
+]
