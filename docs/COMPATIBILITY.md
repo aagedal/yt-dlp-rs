@@ -1325,6 +1325,15 @@ absent). Non-object responses and non-string or relative media URLs remain
 explicit native errors. `tests/fixtures/sites/audiomack/` is compared with
 pinned upstream output.
 
+Beatport tracks (`[www.|pro.]beatport.com/track/SLUG/ID`) follow upstream
+`BeatportIE`: the page's `window.Playables` JSON (fatal) and its track with
+the URL's numeric ID (none is upstream's `StopIteration` error; missing keys
+are `KeyError` errors), the artists, name and mix as the title, each preview
+file named by its extension (`vcodec: none`; MP3 and AAC with 96 kbit/s and
+44.1 kHz), the images except `dynamic` as thumbnails, and the track's slug
+as `display_id`. Playables that are not plain JSON are an unsupported error.
+`tests/fixtures/sites/beatport/` is compared with pinned upstream output.
+
 BehindKink posts (`behindkink.com/YYYY/MM/DD/SLUG`, marked broken upstream with
 its warning) follow upstream `BehindKinkIE`: the fatal `<source>` URL (its
 basename before `_` as the ID), OpenGraph title/image/description with

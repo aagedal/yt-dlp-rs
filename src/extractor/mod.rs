@@ -21,6 +21,7 @@ mod azmedien;
 mod baidu;
 mod bandcamp;
 mod beacon;
+mod beatport;
 mod beeg;
 mod behindkink;
 mod bfmtv;
@@ -428,6 +429,7 @@ pub use azmedien::{AzMedien, suitable as azmedien_suitable};
 pub use baidu::{BaiduVideo, suitable as baidu_suitable};
 pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use beacon::{BeaconTv, suitable as beacon_suitable};
+pub use beatport::{Beatport, suitable as beatport_suitable};
 pub use beeg::{Beeg, suitable as beeg_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};
 pub use bfmtv::{

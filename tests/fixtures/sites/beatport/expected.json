@@ -1,0 +1,90 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://beatport.com/track/synesthesia-original-mix/5379371",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5379371\", \"display_id\": \"synesthesia-original-mix\", \"title\": \"Froxic - Synesthesia (Original Mix)\", \"formats\": [{\"url\": \"https://geo-samples.beatport.test/5379371.webm\", \"ext\": \"webm\", \"format_id\": \"webm\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"webm\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"webm - audio only\"}, {\"url\": \"https://geo-samples.beatport.test/5379371.LOFI.mp3\", \"ext\": \"mp3\", \"format_id\": \"mp3\", \"vcodec\": \"none\", \"acodec\": \"mp3\", \"abr\": 96, \"asr\": 44100, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\"}, {\"url\": \"https://geo-samples.beatport.test/5379371.LOFI.mp4\", \"ext\": \"mp4\", \"format_id\": \"mp4\", \"vcodec\": \"none\", \"acodec\": \"aac\", \"abr\": 96, \"asr\": 44100, \"protocol\": \"https\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - audio only\"}], \"thumbnails\": [{\"id\": \"medium\", \"url\": \"https://geo-media.beatport.test/medium.jpg\", \"height\": null, \"width\": null}, {\"id\": \"large\", \"url\": \"https://geo-media.beatport.test/large.jpg\", \"height\": 500, \"width\": 500, \"resolution\": \"500x500\"}], \"webpage_url\": \"https://beatport.com/track/synesthesia-original-mix/5379371\", \"original_url\": \"https://beatport.com/track/synesthesia-original-mix/5379371\", \"webpage_url_basename\": \"5379371\", \"webpage_url_domain\": \"beatport.com\", \"extractor\": \"Beatport\", \"extractor_key\": \"Beatport\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://geo-media.beatport.test/large.jpg\", \"fulltitle\": \"Froxic - Synesthesia (Original Mix)\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://geo-samples.beatport.test/5379371.LOFI.mp4\", \"ext\": \"mp4\", \"format_id\": \"mp4\", \"vcodec\": \"none\", \"acodec\": \"aac\", \"abr\": 96, \"asr\": 44100, \"protocol\": \"https\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 96, \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - audio only\", \"_filename\": \"Froxic - Synesthesia (Original Mix) [5379371].mp4\", \"filename\": \"Froxic - Synesthesia (Original Mix) [5379371].mp4\", \"__write_download_archive\": false}], \"url\": \"https://geo-samples.beatport.test/5379371.LOFI.mp4\", \"ext\": \"mp4\", \"format_id\": \"mp4\", \"vcodec\": \"none\", \"acodec\": \"aac\", \"abr\": 96, \"asr\": 44100, \"protocol\": \"https\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://beatport.com/track/synesthesia-original-mix/5379371",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Beatport] Extracting URL: https://beatport.com/track/synesthesia-original-mix/5379371",
+    "[Beatport] synesthesia-original-mix: Downloading webpage",
+    "[info] Available formats for 5379371:",
+    "ID   EXT  RESOLUTION | TBR PROTO | VCODEC     ACODEC  ABR ASR",
+    "-------------------------------------------------------------",
+    "webm webm audio only |     https | audio only unknown",
+    "mp3  mp3  audio only | 96k https | audio only mp3     96k 44k",
+    "mp4  mp4  audio only | 96k https | audio only aac     96k 44k"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.beatport.com/track/birds-original-mix/4991738",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4991738\", \"display_id\": \"birds-original-mix\", \"title\": \"Tos, Middle Milk, Mumblin' Johnsson - Birds\", \"formats\": [{\"url\": \"https://geo-samples.beatport.test/4991738.mp3\", \"ext\": \"mp3\", \"format_id\": \"mp3\", \"vcodec\": \"none\", \"acodec\": \"mp3\", \"abr\": 96, \"asr\": 44100, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\"}], \"thumbnails\": [], \"webpage_url\": \"https://www.beatport.com/track/birds-original-mix/4991738\", \"original_url\": \"https://www.beatport.com/track/birds-original-mix/4991738\", \"webpage_url_basename\": \"4991738\", \"webpage_url_domain\": \"beatport.com\", \"extractor\": \"Beatport\", \"extractor_key\": \"Beatport\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Tos, Middle Milk, Mumblin' Johnsson - Birds\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://geo-samples.beatport.test/4991738.mp3\", \"ext\": \"mp3\", \"format_id\": \"mp3\", \"vcodec\": \"none\", \"acodec\": \"mp3\", \"abr\": 96, \"asr\": 44100, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 96, \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\", \"_filename\": \"Tos, Middle Milk, Mumblin' Johnsson - Birds [4991738].mp3\", \"filename\": \"Tos, Middle Milk, Mumblin' Johnsson - Birds [4991738].mp3\", \"__write_download_archive\": false}], \"url\": \"https://geo-samples.beatport.test/4991738.mp3\", \"ext\": \"mp3\", \"format_id\": \"mp3\", \"vcodec\": \"none\", \"acodec\": \"mp3\", \"abr\": 96, \"asr\": 44100, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://beatport.com/track/missing/1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 1: An extractor error has occurred. (caused by StopIteration()); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://beatport.com/track/noid/1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 1: An extractor error has occurred. (caused by KeyError('id')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://beatport.com/track/noplayables/1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Beatport] 1: Unable to extract playables info; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
