@@ -360,6 +360,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "9News",
     "acast",
     "acast:channel",
+    "agalega:videos",
     "AitubeKZVideo",
     "Alibaba",
     "AliExpressLive",
@@ -623,6 +624,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "MovingImage",
     "MuseScore",
     "Mux",
+    "MySpass",
     "MyVidster",
     "NascarClassics",
     "NetAppCollection",
@@ -689,6 +691,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "ProjectVeritas",
     "Pyvideo",
     "QingTing",
+    "radiokapital",
+    "radiokapital:show",
     "RadioZetPodcast",
     "Reddit",
     "ReverbNation",
@@ -862,6 +866,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "WSJArticle",
     "XboxClips",
     "XiaoHongShu",
+    "Xinpianchang",
     "XNXX",
     "XVideos",
     "xvideos:quickies",
@@ -1060,6 +1065,7 @@ impl YoutubeDl {
                 Box::new(extractor::YoutubeTab {
                     no_playlist: youtube.no_playlist,
                 }),
+                Box::new(extractor::AGalega),
                 Box::new(extractor::AitubeKzVideo),
                 Box::new(extractor::AlJazeera),
                 Box::new(extractor::AliExpressLive),
@@ -1524,6 +1530,7 @@ impl YoutubeDl {
                 Box::new(extractor::Mir24Tv),
                 Box::new(extractor::MochaVideo),
                 Box::new(extractor::MovingImage),
+                Box::new(extractor::MySpass),
                 Box::new(extractor::MyVidster),
                 Box::new(extractor::NobelPrize),
                 Box::new(extractor::NosNlArticle),
@@ -1545,6 +1552,8 @@ impl YoutubeDl {
                 Box::new(extractor::ProjectVeritas),
                 Box::new(extractor::Pyvideo),
                 Box::new(extractor::QingTing),
+                Box::new(extractor::RadioKapital),
+                Box::new(extractor::RadioKapitalShow),
                 Box::new(extractor::RadioZetPodcast),
                 Box::new(extractor::ReverbNation),
                 Box::new(extractor::RoyaLive),
@@ -1617,6 +1626,7 @@ impl YoutubeDl {
                 Box::new(extractor::WorldStarHipHop),
                 Box::new(extractor::XboxClips),
                 Box::new(extractor::XiaoHongShu),
+                Box::new(extractor::Xinpianchang),
                 Box::new(extractor::Yfanefa),
                 Box::new(extractor::YleAreena),
                 Box::new(extractor::YouJizz),
@@ -2384,6 +2394,8 @@ impl YoutubeDl {
                 extractor::fetch_lastfm_pages
             } else if extractor::ciscolive_pending_state(&pending.state) {
                 extractor::fetch_ciscolive_pages
+            } else if extractor::radiokapital_pending_state(&pending.state) {
+                extractor::fetch_radiokapital_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };

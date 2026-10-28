@@ -1,0 +1,102 @@
+{
+ "routes": [
+  {
+   "url": "https://www.radiokapital.pl/wp-json/kapital/v1/episodes/5-its-okay-to-be-immaterial",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"published\": \"20.05.2021\", \"mixcloud_url\": \"https://www.mixcloud.com/dholbach/cryptkeeper/\", \"title\": \"#5: It&#8217;s okay to&nbsp;be&nbsp;immaterial\", \"content\": \"<p>Odcinek &amp; rozmowa</p>\\n<p>Druga linia</p>\", \"tags\": [{\"name\": \"filozofia\"}, {\"name\": \"kultura\"}], \"show\": {\"title\": \"Tutaj s\\u0105 smoki\"}}"
+  },
+  {
+   "url": "https://www.radiokapital.pl/wp-json/kapital/v1/episodes/elsewhere",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"published\": \"20.05.2021\", \"mixcloud_url\": \"https://soundcloud.com/x/y\", \"title\": \"Elsewhere\", \"content\": \"<p>Odcinek &amp; rozmowa</p>\\n<p>Druga linia</p>\", \"tags\": [{\"name\": \"filozofia\"}, {\"name\": \"kultura\"}], \"show\": {\"title\": \"Tutaj s\\u0105 smoki\"}}"
+  },
+  {
+   "url": "https://www.radiokapital.pl/wp-json/kapital/v1/episodes/nodate",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"mixcloud_url\": \"https://www.mixcloud.com/dholbach/cryptkeeper/\", \"title\": \"x\"}"
+  },
+  {
+   "url": "https://www.radiokapital.pl/wp-json/kapital/v1/shows/wesz",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 100, \"title\": \"W\\u0118SZ\", \"content\": \"<p>Audycja o <b>zapachach</b></p>\"}"
+  },
+  {
+   "url": "https://www.radiokapital.pl/wp-json/kapital/v1/episodes?show=wesz&page=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"items\": [{\"published\": \"20.05.2021\", \"mixcloud_url\": \"https://www.mixcloud.com/dholbach/cryptkeeper/\", \"title\": \"Wesz 1\", \"content\": null, \"tags\": [], \"show\": null}, {\"published\": \"2021-06-01T10:00\", \"mixcloud_url\": \"https://www.mixcloud.com/dholbach/cryptkeeper/\", \"title\": null, \"content\": \"<p>Odcinek &amp; rozmowa</p>\\n<p>Druga linia</p>\", \"tags\": [{\"name\": \"filozofia\"}, {\"name\": \"kultura\"}], \"show\": {\"title\": \"Tutaj s\\u0105 smoki\"}}], \"next\": 2}"
+  },
+  {
+   "url": "https://www.radiokapital.pl/wp-json/kapital/v1/episodes?show=wesz&page=2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"items\": [{\"published\": \"20.05.2021\", \"mixcloud_url\": \"https://www.mixcloud.com/dholbach/cryptkeeper/\", \"title\": \"Wesz 3\", \"content\": \"<p>Odcinek &amp; rozmowa</p>\\n<p>Druga linia</p>\", \"tags\": [{\"name\": \"filozofia\"}, {\"name\": \"kultura\"}], \"show\": {\"title\": \"Tutaj s\\u0105 smoki\"}}], \"next\": null}"
+  },
+  {
+   "url": "https://www.radiokapital.pl/wp-json/kapital/v1/shows/broken",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"b7\"}"
+  },
+  {
+   "url": "https://www.radiokapital.pl/wp-json/kapital/v1/episodes?show=broken&page=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"next\": null}"
+  },
+  {
+   "url": "https://www.radiokapital.pl/wp-json/kapital/v1/shows/noid",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"No ID\"}"
+  },
+  {
+   "url": "https://www.radiokapital.pl/wp-json/kapital/v1/shows/gone",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 7, \"title\": \"Gone\", \"content\": null}"
+  },
+  {
+   "url": "https://app.mixcloud.com/graphql?query=%7B%0A++cloudcastLookup%28lookup%3A+%7Busername%3A+%22dholbach%22%2C+slug%3A+%22cryptkeeper%22%7D%29+%7B%0A++++audioLength%0A++++comments%28first%3A+100%29+%7B%0A++++++edges+%7B%0A++++++++node+%7B%0A++++++++++comment%0A++++++++++created%0A++++++++++user+%7B%0A++++++++++++displayName%0A++++++++++++username%0A++++++++++%7D%0A++++++++%7D%0A++++++%7D%0A++++++totalCount%0A++++%7D%0A++++description%0A++++favorites+%7B%0A++++++totalCount%0A++++%7D%0A++++featuringArtistList%0A++++isExclusive%0A++++name%0A++++owner+%7B%0A++++++displayName%0A++++++url%0A++++++username%0A++++%7D%0A++++picture%28width%3A+1024%2C+height%3A+1024%29+%7B%0A++++++++url%0A++++%7D%0A++++plays%0A++++publishDate%0A++++reposts+%7B%0A++++++totalCount%0A++++%7D%0A++++streamInfo+%7B%0A++++++dashUrl%0A++++++hlsUrl%0A++++++url%0A++++%7D%0A++++tags+%7B%0A++++++tag+%7B%0A++++++++name%0A++++++%7D%0A++++%7D%0A++++restrictedReason%0A++++id%0A++%7D%0A%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "cast.json"
+  },
+  {
+   "url": "https://audio.mixcloud.com/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://audio.mixcloud.com/hls/hls/128.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://stream.mixcloud.com/a/cryptkeeper.m4a",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body": "0000ftypM4A-mix"
+  }
+ ]
+}

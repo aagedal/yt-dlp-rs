@@ -1,0 +1,91 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.xinpianchang.com/a11766551",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"a11766551\", \"title\": \"\\u5317\\u4eac2022\\u51ac\\u5965\\u4f1a\\u95ed\\u5e55\\u5f0f\\u518d\\u89c1\\u77ed\\u7247-\\u51b0\\u58a9\\u58a9\\u4e0b\\u73ed\\u4e86\", \"description\": \"\\u518d\\u89c1\\uff0c\\u51b0\\u58a9\\u58a9\", \"duration\": 151, \"categories\": [\"\\u5ba3\\u4f20\\u7247\", \"\\u56fd\\u5bb6\\u57ce\\u5e02\"], \"tags\": [\"\\u5317\\u4eac\\u51ac\\u5965\\u4f1a\", \"\\u51b0\\u58a9\\u58a9\"], \"thumbnail\": \"https://oss-xpc0.xpccdn.test/assets/cover.jpg\", \"uploader\": \"\\u6b63\\u65f6\\u6587\\u521b\", \"uploader_id\": \"10357277\", \"formats\": [{\"format_id\": \"1-0\", \"manifest_url\": \"https://xpc.test/dash/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 69.248, \"asr\": 44100, \"fps\": null, \"language\": null, \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://xpc.test/dash/manifest.mpd\", \"fragment_base_url\": \"https://xpc.test/dash/\", \"fragments\": [{\"path\": \"init-stream1.m4s\"}, {\"path\": \"chunk-stream1-00001.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00002.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00003.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00004.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00005.m4s\", \"duration\": 2.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 1, \"is_dash_periods\": true, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 69.248, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1-0 - audio only (DASH audio)\"}, {\"url\": \"https://xpc.test/p/540.mp4\", \"width\": null, \"height\": null, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Range\": \"bytes=0-\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"1-1\", \"format\": \"1-1 - unknown\"}, {\"format_id\": \"0\", \"manifest_url\": \"https://xpc.test/dash/manifest.mpd\", \"ext\": \"mp4\", \"width\": 320, \"height\": 240, \"tbr\": 56.115, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.f4000d\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://xpc.test/dash/manifest.mpd\", \"fragment_base_url\": \"https://xpc.test/dash/\", \"fragments\": [{\"path\": \"init-stream0.m4s\"}, {\"path\": \"chunk-stream0-00001.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00002.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00003.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00004.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00005.m4s\", \"duration\": 2.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 56.115, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - 320x240 (DASH video)\"}, {\"format_id\": \"640\", \"format_index\": null, \"url\": \"https://xpc.test/hls/360.m3u8\", \"manifest_url\": \"https://xpc.test/hls/master.m3u8\", \"tbr\": 640.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.64001e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"640 - 640x360\"}, {\"format_id\": \"1280\", \"format_index\": null, \"url\": \"https://xpc.test/hls/720.m3u8\", \"manifest_url\": \"https://xpc.test/hls/master.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1280 - 1280x720\"}, {\"url\": \"https://xpc.test/p/1080.mp4\", \"width\": 1920, \"height\": 1080, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Range\": \"bytes=0-\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"format_id\": \"5\", \"format\": \"5 - 1920x1080\"}], \"subtitles\": {\"fr\": [{\"ext\": \"vtt\", \"manifest_url\": \"https://xpc.test/dash/manifest.mpd\", \"filesize\": null, \"url\": \"https://xpc.test/dash/manifest.mpd\", \"fragment_base_url\": \"https://xpc.test/dash/\", \"fragments\": [{\"path\": \"s1.vtt\", \"duration\": 2.0}, {\"path\": \"s2.vtt\", \"duration\": 2.0}], \"protocol\": \"http_dash_segments\"}]}, \"webpage_url\": \"https://www.xinpianchang.com/a11766551\", \"original_url\": \"https://www.xinpianchang.com/a11766551\", \"webpage_url_basename\": \"a11766551\", \"webpage_url_domain\": \"xinpianchang.com\", \"extractor\": \"Xinpianchang\", \"extractor_key\": \"Xinpianchang\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://oss-xpc0.xpccdn.test/assets/cover.jpg\", \"id\": \"0\"}], \"display_id\": \"a11766551\", \"fulltitle\": \"\\u5317\\u4eac2022\\u51ac\\u5965\\u4f1a\\u95ed\\u5e55\\u5f0f\\u518d\\u89c1\\u77ed\\u7247-\\u51b0\\u58a9\\u58a9\\u4e0b\\u73ed\\u4e86\", \"duration_string\": \"2:31\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://xpc.test/p/1080.mp4\", \"width\": 1920, \"height\": 1080, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Range\": \"bytes=0-\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format_id\": \"5\", \"format\": \"5 - 1920x1080\", \"_filename\": \"\\u5317\\u4eac2022\\u51ac\\u5965\\u4f1a\\u95ed\\u5e55\\u5f0f\\u518d\\u89c1\\u77ed\\u7247-\\u51b0\\u58a9\\u58a9\\u4e0b\\u73ed\\u4e86 [a11766551].mp4\", \"filename\": \"\\u5317\\u4eac2022\\u51ac\\u5965\\u4f1a\\u95ed\\u5e55\\u5f0f\\u518d\\u89c1\\u77ed\\u7247-\\u51b0\\u58a9\\u58a9\\u4e0b\\u73ed\\u4e86 [a11766551].mp4\", \"__write_download_archive\": false}], \"url\": \"https://xpc.test/p/1080.mp4\", \"width\": 1920, \"height\": 1080, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Range\": \"bytes=0-\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"format_id\": \"5\", \"format\": \"5 - 1920x1080\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.xinpianchang.com/a11766551",
+   "args": [
+    "--list-subs",
+    "--skip-download"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Xinpianchang] Extracting URL: https://www.xinpianchang.com/a11766551",
+    "[Xinpianchang] a11766551: Downloading webpage",
+    "[Xinpianchang] a11766551: Downloading JSON metadata",
+    "[Xinpianchang] a11766551: Downloading MPD manifest",
+    "[Xinpianchang] a11766551: Downloading m3u8 information",
+    "[info] Available subtitles for a11766551:",
+    "Language Formats",
+    "fr       vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://xinpianchang.com/a2?from=IndexPick",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"a2\", \"title\": \"\\u51ac\\u5965\\u4f1a\\u51b3\\u80dc\\u65f6\\u523b\", \"description\": null, \"duration\": 136, \"categories\": null, \"tags\": null, \"thumbnail\": null, \"uploader\": null, \"uploader_id\": null, \"formats\": [{\"url\": \"https://xpc.test/p2/720.mp4\", \"width\": 1280, \"height\": 720, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Range\": \"bytes=0-\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - 1280x720\"}], \"subtitles\": {}, \"webpage_url\": \"https://xinpianchang.com/a2?from=IndexPick\", \"original_url\": \"https://xinpianchang.com/a2?from=IndexPick\", \"webpage_url_basename\": \"a2\", \"webpage_url_domain\": \"xinpianchang.com\", \"extractor\": \"Xinpianchang\", \"extractor_key\": \"Xinpianchang\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"a2\", \"fulltitle\": \"\\u51ac\\u5965\\u4f1a\\u51b3\\u80dc\\u65f6\\u523b\", \"duration_string\": \"2:16\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://xpc.test/p2/720.mp4\", \"width\": 1280, \"height\": 720, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Range\": \"bytes=0-\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format_id\": \"0\", \"format\": \"0 - 1280x720\", \"_filename\": \"\\u51ac\\u5965\\u4f1a\\u51b3\\u80dc\\u65f6\\u523b [a2].mp4\", \"filename\": \"\\u51ac\\u5965\\u4f1a\\u51b3\\u80dc\\u65f6\\u523b [a2].mp4\", \"__write_download_archive\": false}], \"url\": \"https://xpc.test/p2/720.mp4\", \"width\": 1280, \"height\": 720, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Range\": \"bytes=0-\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.xinpianchang.com/a3",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: a3: An extractor error has occurred. (caused by KeyError('detail')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.xinpianchang.com/a4",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 'NoneType' object has no attribute 'items'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.xinpianchang.com/a5",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Xinpianchang] a5: Unable to extract next.js data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

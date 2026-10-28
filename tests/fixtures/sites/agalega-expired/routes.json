@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://www.agalega.gal/api/fetch-api/jwt/token",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"access\": \"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ0b2tlbl90eXBlIjogImFjY2VzcyIsICJleHAiOiAxLCAidXNlcl9pZCI6IG51bGx9.c2lnbmF0dXJl\", \"refresh\": \"r\"}"
+  },
+  {
+   "url": "https://api-agalega.interactvty.com/api/2.0/contents/content/296152/?optional_fields=image%2Cis_premium%2Cshort_description%2Chas_subtitle",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"name\": 296152, \"description\": \"\", \"short_description\": \"Anxo, Noem\\u00ed, Silvia e Estrella\", \"image\": \"not a url\"}"
+  },
+  {
+   "url": "https://api-agalega.interactvty.com/api/2.0/contents/content_resources/296152/?optional_fields=media_url",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"results\": [{\"media_url\": \"https://agalega-vod.test/296152/master.m3u8\"}]}"
+  },
+  {
+   "url": "https://agalega-vod.test/296152/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  }
+ ]
+}

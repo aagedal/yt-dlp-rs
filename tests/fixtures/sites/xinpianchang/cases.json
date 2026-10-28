@@ -1,0 +1,39 @@
+[
+ {
+  "url": "https://www.xinpianchang.com/a11766551",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.xinpianchang.com/a11766551",
+  "args": [
+   "--list-subs",
+   "--skip-download"
+  ]
+ },
+ {
+  "url": "https://xinpianchang.com/a2?from=IndexPick",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.xinpianchang.com/a3",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.xinpianchang.com/a4",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.xinpianchang.com/a5",
+  "args": [
+   "-J"
+  ]
+ }
+]

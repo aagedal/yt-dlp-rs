@@ -1809,6 +1809,50 @@ media urls`) with its non-fatal OpenGraph title, YouTube watch links again as
 explicit native errors. `tests/fixtures/sites/pyvideo/` is compared with
 pinned upstream output.
 
+MySpass videos (`myspass.de/.../ID[/...]`) follow upstream `MySpassIE`: the
+`getvideometadataxml.php` document's fatal title and `url_flv` (upstream's
+`Could not find XML element` errors), with `/myspass2009/N/A/B/C/` path
+numbers above the video ID divided by it, and the preview image,
+description, duration, series (`format`), season, season ID and episode
+number, as an untyped result.
+`tests/fixtures/sites/myspass/` is compared with pinned upstream output.
+
+Xinpianchang (新片场) videos (`[www.]xinpianchang.com/aID`) follow upstream
+`XinpianchangIE`: the page (requested with itself as `Referer`) gives the
+Next.js `props.pageProps.detail.video` `vid` and `appKey` (missing keys are
+upstream's `KeyError`s), and the `mod-api` media JSON's `resource` entries
+in order give fatal DASH (`Downloading MPD manifest`) and HLS (master
+playlist only) formats with merged subtitles, and progressive `mp4` files
+(with `Range: bytes=0-`), plus the title, description, integer duration,
+categories, keywords as tags, cover, and owner name and ID. A missing
+`resource` is upstream's `AttributeError`.
+`tests/fixtures/sites/xinpianchang/` is compared with pinned upstream output.
+
+Radio Kapitał episodes (`[www.]radiokapital.pl/shows/SHOW/ID`) follow
+upstream `radiokapital`: the `wp-json/kapital/v1/episodes/ID` JSON as a
+`url_transparent` result for its `mixcloud_url`, extracted by Mixcloud only
+(another URL is upstream's `No suitable extractor (Mixcloud)` error), with
+the unescaped title, cleaned content as description, tag names, the show
+title as series and upstream's sliced `published` text as `release_date`
+(missing keys are upstream's `KeyError`s). Shows
+(`[www.]radiokapital.pl/shows/ID`) follow `radiokapital:show`: the show
+JSON's ID, title and cleaned content, and its episode list pages
+(`Downloading episode list page #N`) read lazily as those transparent
+entries until a page's `next` is `null`. A `KeyError` or failed page while
+reading them ends the playlist with upstream's reported `None` entry.
+`tests/fixtures/sites/radiokapital/` is compared with pinned upstream output.
+
+A Galega videos (`[www.]agalega.gal/videos/[detail/]ID`) follow upstream
+`agalega:videos`: an anonymous access token (POSTed to `fetch-api/jwt/token`
+and noted with the API endpoint as its ID, cached for the run and refreshed
+when its JWT `exp` is under 120 seconds away), then the Interactvty
+`content/ID/` data (non-fatal: upstream's warning when it fails) and the
+fatal `content_resources/ID/` media URLs as `hls` formats with merged
+subtitles, with the string name as title, the first string `description` or
+`short_description`, and the image URL as thumbnail (only when found).
+`tests/fixtures/sites/agalega/` and `tests/fixtures/sites/agalega-expired/`
+are compared with pinned upstream output.
+
 PGA Tour videos (`pgatour.com/video/SECTION/[T]ID`) follow upstream
 `PGATourIE` as `url` results for their Brightcove player (the TOURCast
 account and player for `T` IDs). `tests/fixtures/sites/pgatour/` is compared

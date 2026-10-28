@@ -1,0 +1,119 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://radiokapital.pl/shows/tutaj-sa-smoki/5-its-okay-to-be-immaterial",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"dholbach_cryptkeeper\", \"formats\": [{\"format_id\": \"http\", \"url\": \"https://stream.mixcloud.com/a/cryptkeeper.m4a\", \"vcodec\": \"none\", \"downloader_options\": {\"http_chunk_size\": 5242880}, \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - audio only\"}, {\"format_id\": \"hls-128\", \"format_index\": null, \"url\": \"https://audio.mixcloud.com/hls/hls/128.m3u8\", \"manifest_url\": \"https://audio.mixcloud.com/hls/master.m3u8\", \"tbr\": 128.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-128 - audio only\"}], \"comments\": [{\"text\": \"nice\", \"author\": \"Fan\", \"author_id\": \"fan1\", \"timestamp\": 1420070400}], \"title\": \"#5: It\\u2019s okay to\\u00a0be\\u00a0immaterial\", \"description\": \"Odcinek & rozmowa\\nDruga linia\", \"thumbnail\": \"https://thumbnailer.mixcloud.com/unsafe/1024x1024/x.jpg\", \"timestamp\": 1311703800, \"duration\": 3723, \"uploader\": \"Daniel Holbach\", \"uploader_id\": \"dholbach\", \"uploader_url\": \"https://www.mixcloud.com/dholbach/\", \"view_count\": 99, \"like_count\": 10, \"repost_count\": 2, \"comment_count\": 2, \"tags\": [\"filozofia\", \"kultura\"], \"artists\": [\"Artist A\"], \"original_url\": \"https://radiokapital.pl/shows/tutaj-sa-smoki/5-its-okay-to-be-immaterial\", \"webpage_url\": \"https://radiokapital.pl/shows/tutaj-sa-smoki/5-its-okay-to-be-immaterial\", \"webpage_url_basename\": \"5-its-okay-to-be-immaterial\", \"webpage_url_domain\": \"radiokapital.pl\", \"extractor\": \"mixcloud\", \"extractor_key\": \"Mixcloud\", \"release_date\": \"202105.20.\", \"series\": \"Tutaj s\\u0105 smoki\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://thumbnailer.mixcloud.com/unsafe/1024x1024/x.jpg\", \"id\": \"0\"}], \"display_id\": \"dholbach_cryptkeeper\", \"fulltitle\": \"#5: It\\u2019s okay to\\u00a0be\\u00a0immaterial\", \"duration_string\": \"1:02:03\", \"upload_date\": \"20110726\", \"release_year\": 2021, \"artist\": \"Artist A\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-128\", \"url\": \"https://audio.mixcloud.com/hls/hls/128.m3u8\", \"manifest_url\": \"https://audio.mixcloud.com/hls/master.m3u8\", \"tbr\": 128.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-128 - audio only\", \"_filename\": \"#5\\uff1a It\\u2019s okay to\\u00a0be\\u00a0immaterial [dholbach_cryptkeeper].mp4\", \"filename\": \"#5\\uff1a It\\u2019s okay to\\u00a0be\\u00a0immaterial [dholbach_cryptkeeper].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-128\", \"format_index\": null, \"url\": \"https://audio.mixcloud.com/hls/hls/128.m3u8\", \"manifest_url\": \"https://audio.mixcloud.com/hls/master.m3u8\", \"tbr\": 128.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-128 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [mixcloud] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.radiokapital.pl/shows/tutaj-sa-smoki/elsewhere",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: No suitable extractor (Mixcloud) found for URL https://soundcloud.com/x/y"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://radiokapital.pl/shows/x/nodate",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: nodate: An extractor error has occurred. (caused by KeyError('published')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://radiokapital.pl/shows/wesz",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"entries\": [{\"_type\": \"url_transparent\", \"url\": \"https://www.mixcloud.com/dholbach/cryptkeeper/\", \"ie_key\": \"Mixcloud\", \"title\": \"Wesz 1\", \"description\": null, \"tags\": [], \"release_date\": \"202105.20.\", \"series\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url_transparent\", \"url\": \"https://www.mixcloud.com/dholbach/cryptkeeper/\", \"ie_key\": \"Mixcloud\", \"title\": null, \"description\": \"Odcinek & rozmowa\\nDruga linia\", \"tags\": [\"filozofia\", \"kultura\"], \"release_date\": \"6-01T1-0202\", \"series\": \"Tutaj s\\u0105 smoki\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url_transparent\", \"url\": \"https://www.mixcloud.com/dholbach/cryptkeeper/\", \"ie_key\": \"Mixcloud\", \"title\": \"Wesz 3\", \"description\": \"Odcinek & rozmowa\\nDruga linia\", \"tags\": [\"filozofia\", \"kultura\"], \"release_date\": \"202105.20.\", \"series\": \"Tutaj s\\u0105 smoki\", \"__x_forwarded_for_ip\": null}], \"id\": \"100\", \"title\": \"W\\u0118SZ\", \"description\": \"Audycja o zapachach\", \"webpage_url\": \"https://radiokapital.pl/shows/wesz\", \"original_url\": \"https://radiokapital.pl/shows/wesz\", \"webpage_url_basename\": \"wesz\", \"webpage_url_domain\": \"radiokapital.pl\", \"extractor\": \"radiokapital:show\", \"extractor_key\": \"RadioKapitalShow\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://radiokapital.pl/shows/wesz/",
+   "args": [
+    "-J",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"entries\": [{\"id\": \"dholbach_cryptkeeper\", \"formats\": [{\"format_id\": \"http\", \"url\": \"https://stream.mixcloud.com/a/cryptkeeper.m4a\", \"vcodec\": \"none\", \"downloader_options\": {\"http_chunk_size\": 5242880}, \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - audio only\"}, {\"format_id\": \"hls-128\", \"format_index\": null, \"url\": \"https://audio.mixcloud.com/hls/hls/128.m3u8\", \"manifest_url\": \"https://audio.mixcloud.com/hls/master.m3u8\", \"tbr\": 128.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-128 - audio only\"}], \"comments\": [{\"text\": \"nice\", \"author\": \"Fan\", \"author_id\": \"fan1\", \"timestamp\": 1420070400}], \"title\": \"Wesz 1\", \"description\": \"A great mix\", \"thumbnail\": \"https://thumbnailer.mixcloud.com/unsafe/1024x1024/x.jpg\", \"timestamp\": 1311703800, \"duration\": 3723, \"uploader\": \"Daniel Holbach\", \"uploader_id\": \"dholbach\", \"uploader_url\": \"https://www.mixcloud.com/dholbach/\", \"view_count\": 99, \"like_count\": 10, \"repost_count\": 2, \"comment_count\": 2, \"tags\": [], \"artists\": [\"Artist A\"], \"webpage_url\": \"https://www.mixcloud.com/dholbach/cryptkeeper/\", \"original_url\": \"https://www.mixcloud.com/dholbach/cryptkeeper/\", \"webpage_url_basename\": \"cryptkeeper\", \"webpage_url_domain\": \"mixcloud.com\", \"extractor\": \"mixcloud\", \"extractor_key\": \"Mixcloud\", \"release_date\": \"202105.20.\", \"playlist_count\": null, \"playlist\": \"W\\u0118SZ\", \"playlist_id\": \"100\", \"playlist_title\": \"W\\u0118SZ\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://radiokapital.pl/shows/wesz/\", \"n_entries\": 1, \"playlist_index\": 1, \"__last_playlist_index\": 1, \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://thumbnailer.mixcloud.com/unsafe/1024x1024/x.jpg\", \"id\": \"0\"}], \"display_id\": \"dholbach_cryptkeeper\", \"fulltitle\": \"Wesz 1\", \"duration_string\": \"1:02:03\", \"upload_date\": \"20110726\", \"release_year\": 2021, \"artist\": \"Artist A\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-128\", \"url\": \"https://audio.mixcloud.com/hls/hls/128.m3u8\", \"manifest_url\": \"https://audio.mixcloud.com/hls/master.m3u8\", \"tbr\": 128.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-128 - audio only\", \"_filename\": \"Wesz 1 [dholbach_cryptkeeper].mp4\", \"filename\": \"Wesz 1 [dholbach_cryptkeeper].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-128\", \"format_index\": null, \"url\": \"https://audio.mixcloud.com/hls/hls/128.m3u8\", \"manifest_url\": \"https://audio.mixcloud.com/hls/master.m3u8\", \"tbr\": 128.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-128 - audio only\"}], \"id\": \"100\", \"title\": \"W\\u0118SZ\", \"description\": \"Audycja o zapachach\", \"webpage_url\": \"https://radiokapital.pl/shows/wesz/\", \"original_url\": \"https://radiokapital.pl/shows/wesz/\", \"webpage_url_basename\": \"wesz\", \"webpage_url_domain\": \"radiokapital.pl\", \"extractor\": \"radiokapital:show\", \"extractor_key\": \"RadioKapitalShow\", \"release_year\": null, \"requested_entries\": [1], \"playlist_count\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [mixcloud] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://radiokapital.pl/shows/broken",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"entries\": [null], \"id\": \"b7\", \"title\": null, \"description\": null, \"webpage_url\": \"https://radiokapital.pl/shows/broken\", \"original_url\": \"https://radiokapital.pl/shows/broken\", \"webpage_url_basename\": \"broken\", \"webpage_url_domain\": \"radiokapital.pl\", \"extractor\": \"radiokapital:show\", \"extractor_key\": \"RadioKapitalShow\", \"release_year\": null, \"requested_entries\": [1], \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "ERROR: 'items'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://radiokapital.pl/shows/gone",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"entries\": [null], \"id\": \"7\", \"title\": \"Gone\", \"description\": null, \"webpage_url\": \"https://radiokapital.pl/shows/gone\", \"original_url\": \"https://radiokapital.pl/shows/gone\", \"webpage_url_basename\": \"gone\", \"webpage_url_domain\": \"radiokapital.pl\", \"extractor\": \"radiokapital:show\", \"extractor_key\": \"RadioKapitalShow\", \"release_year\": null, \"requested_entries\": [1], \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "ERROR: gone: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://radiokapital.pl/shows/noid",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: noid: An extractor error has occurred. (caused by KeyError('id')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

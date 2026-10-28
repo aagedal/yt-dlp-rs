@@ -1,0 +1,23 @@
+[
+ {
+  "url": "https://www.agalega.gal/videos/detail/296152-pulso-activo-7",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.agalega.gal/videos/detail/296152-pulso-activo-7",
+  "args": [
+   "--simulate",
+   "--print",
+   "%(id)s|%(title)s|%(description)s|%(thumbnail)s"
+  ]
+ },
+ {
+  "url": "https://www.agalega.gal/videos/detail/296152-pulso-activo-7",
+  "args": [
+   "--list-subs",
+   "--skip-download"
+  ]
+ }
+]

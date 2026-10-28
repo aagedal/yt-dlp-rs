@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://www.agalega.gal/videos/288664-lr-ninguencheconta",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.agalega.gal/videos/288664-lr-ninguencheconta",
+  "args": [
+   "--list-subs",
+   "--skip-download"
+  ]
+ },
+ {
+  "url": "https://agalega.gal/videos/3",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.agalega.gal/videos/detail/4-catro",
+  "args": [
+   "-J"
+  ]
+ }
+]

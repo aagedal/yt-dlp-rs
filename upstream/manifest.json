@@ -310,6 +310,18 @@
       "scope": "MuxIE stream.new/v and player.mux.com playback IDs as the fatal stream.mux.com HLS playlist (playback-token as token) with subtitles and the ID as title; generic-page iframe and mux-player embeds are not detected. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "myspass",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/myspass.py"
+      ],
+      "rust": [
+        "src/extractor/myspass.rs",
+        "tests/fixtures/sites/myspass/"
+      ],
+      "scope": "MySpassIE video metadata XML (fatal title and url_flv with xpath_text errors, path numbers divided by the video ID, duration, series, season and episode fields) as an untyped result, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "netzkino",
       "status": "partial",
       "upstream": [
@@ -569,6 +581,19 @@
         "tests/fixtures/sites/adobepass/"
       ],
       "scope": "AdobePassIE: the generated MSO_INFO table (--ap-list-mso render_table output, --ap-mso validation and TV Provider account username missing), _extract_mvpd_auth device/client registration, access token, registration code, authenticate/saml redirect page and the generic meta-refresh/post_form login (Cablevision/AlticeOne _eventId_proceed, Rogers without confirmation, login_hostname validation and https upgrade) plus the Comcast_SSO, Verizon, Spectrum/Charter_Direct, slingtv and Suddenlink flows, session/authorize/shortAuthorize with mvpd headers, pendingLogout retries, authorize <error> details and the participating TV providers error; credentials from --ap-username/--ap-password or the MSO netrc machine (--netrc/--netrc-location/--netrc-cmd, CPython netrc parser); authn/authz tokens cached in memory for the run (no cache directory). Philo, Fubo, the --ap-username password prompt, geo verification headers and _get_mvpd_resource are not ported. Compared with pinned upstream output through the fixture proxy via BrightcoveNewIE TVE videos"
+    },
+    {
+      "name": "agalega",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/agalega.py"
+      ],
+      "rust": [
+        "src/extractor/agalega.rs",
+        "tests/fixtures/sites/agalega/",
+        "tests/fixtures/sites/agalega-expired/"
+      ],
+      "scope": "AGalegaIE anonymous JWT access token (POSTed, cached for the run, refreshed within 120 s of exp; KeyErrors as upstream), non-fatal content data (name, description/short_description, image) and fatal content resources HLS formats with merged subtitles, compared with pinned upstream output through the fixture proxy (agalega and agalega-expired)"
     },
     {
       "name": "aitube",
@@ -3311,6 +3336,18 @@
       "scope": "QingTingIE mobile page __initStores JSON (_search_json, traverse_obj fields) as an untyped m4a result compared with pinned upstream output through the fixture proxy; JSON decode error texts differ"
     },
     {
+      "name": "radiokapital",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/radiokapital.py"
+      ],
+      "rust": [
+        "src/extractor/radiokapital.rs",
+        "tests/fixtures/sites/radiokapital/"
+      ],
+      "scope": "RadioKapitalIE episode API JSON as a url_transparent Mixcloud result (Python-sliced release date, unescaped title, cleaned content, tags, series; non-Mixcloud URLs fail like ie_key='Mixcloud'), and RadioKapitalShowIE show metadata with a lazily paged episode generator whose KeyErrors and page errors end it with a None entry, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "radiozet",
       "status": "partial",
       "upstream": [
@@ -4694,6 +4731,18 @@
         "tests/fixtures/sites/xiaohongshu/"
       ],
       "scope": "XiaoHongShuIE (release 2026.10.21) __INITIAL_STATE__ stream formats (master and backup URLs), original-video direct format with its unavailable warning, image thumbnails, title/description/tags/uploader ID and missing-state/no-formats errors compared with upstream output through the fixture proxy; non-HTTP stream URLs refused"
+    },
+    {
+      "name": "xinpianchang",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/xinpianchang.py"
+      ],
+      "rust": [
+        "src/extractor/xinpianchang.rs",
+        "tests/fixtures/sites/xinpianchang/"
+      ],
+      "scope": "XinpianchangIE Next.js video vid/appKey, media API JSON with fatal DASH and HLS (master playlist only) formats and merged subtitles, progressive mp4 files with the Range header, and the API metadata, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "xboxclips",

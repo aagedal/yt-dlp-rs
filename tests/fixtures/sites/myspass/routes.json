@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "http://www.myspass.de/myspass/includes/apps/video/getvideometadataxml.php?id=44996",
+   "headers": {
+    "Content-Type": "text/xml; charset=utf-8"
+   },
+   "body_file": "full.xml"
+  },
+  {
+   "url": "http://www.myspass.de/myspass/includes/apps/video/getvideometadataxml.php?id=20831",
+   "headers": {
+    "Content-Type": "text/xml; charset=utf-8"
+   },
+   "body_file": "sparse.xml"
+  },
+  {
+   "url": "http://www.myspass.de/myspass/includes/apps/video/getvideometadataxml.php?id=11",
+   "headers": {
+    "Content-Type": "text/xml; charset=utf-8"
+   },
+   "body_file": "notitle.xml"
+  },
+  {
+   "url": "http://www.myspass.de/myspass/includes/apps/video/getvideometadataxml.php?id=12",
+   "headers": {
+    "Content-Type": "text/xml; charset=utf-8"
+   },
+   "body_file": "nourl.xml"
+  }
+ ]
+}
