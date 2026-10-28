@@ -1,0 +1,121 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.servustv.com/natur/v/aa-28bycqnh92111/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"AA-28BYCQNH92111\", \"title\": \"Vie Ferrate - Klettersteige in den Alpen\", \"description\": \"Kurz & gut.\\nZweite Zeile\\n\\nLang.\", \"thumbnail\": \"https://servus.test/poster.jpg\", \"duration\": 2823.0, \"timestamp\": 1655752333, \"series\": \"Bergwelten\", \"season\": \"Season 11\", \"season_number\": 11, \"episode\": \"Episode 8 - Vie Ferrate \\u2013 Klettersteige in den Alpen\", \"episode_number\": 8, \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://servus-hls.test/AA-28BYCQNH92111/360/index.m3u8\", \"manifest_url\": \"https://servus-hls.test/AA-28BYCQNH92111/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"subtitles\": {\"de\": [{\"url\": \"https://servus-hls.test/AA-28BYCQNH92111/subs/de.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"categories\": [\"Bergwelten\", \"Natur\"], \"webpage_url\": \"https://www.servustv.com/natur/v/aa-28bycqnh92111/\", \"original_url\": \"https://www.servustv.com/natur/v/aa-28bycqnh92111/\", \"webpage_url_basename\": \"aa-28bycqnh92111\", \"webpage_url_domain\": \"servustv.com\", \"extractor\": \"Servus\", \"extractor_key\": \"Servus\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://servus.test/poster.jpg\", \"id\": \"0\"}], \"display_id\": \"AA-28BYCQNH92111\", \"fulltitle\": \"Vie Ferrate - Klettersteige in den Alpen\", \"duration_string\": \"47:03\", \"upload_date\": \"20220620\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-921\", \"url\": \"https://servus-hls.test/AA-28BYCQNH92111/360/index.m3u8\", \"manifest_url\": \"https://servus-hls.test/AA-28BYCQNH92111/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"Vie Ferrate - Klettersteige in den Alpen [AA-28BYCQNH92111].mp4\", \"filename\": \"Vie Ferrate - Klettersteige in den Alpen [AA-28BYCQNH92111].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://servus-hls.test/AA-28BYCQNH92111/360/index.m3u8\", \"manifest_url\": \"https://servus-hls.test/AA-28BYCQNH92111/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.servustv.com/natur/v/aa-28bycqnh92111/",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Servus] Extracting URL: https://www.servustv.com/natur/v/aa-28bycqnh92111/",
+    "[Servus] AA-28BYCQNH92111: Downloading webpage",
+    "[Servus] AA-28BYCQNH92111: Downloading video JSON",
+    "[Servus] AA-28BYCQNH92111: Downloading m3u8 information",
+    "[info] Available subtitles for AA-28BYCQNH92111:",
+    "Language Formats",
+    "de       vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.servus.com/tv/videos/1380889096408-1235196658/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1380889096408-1235196658\", \"title\": \"Alt\", \"description\": \"Nur API\", \"thumbnail\": null, \"duration\": 60.0, \"timestamp\": null, \"series\": null, \"season\": null, \"season_number\": null, \"episode\": null, \"episode_number\": null, \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://servus-hls.test/AA-28BYCQNH92111/360/index.m3u8\", \"manifest_url\": \"https://servus-hls.test/AA-28BYCQNH92111/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"subtitles\": {\"de\": [{\"url\": \"https://servus-hls.test/AA-28BYCQNH92111/subs/de.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"webpage_url\": \"https://www.servus.com/tv/videos/1380889096408-1235196658/\", \"original_url\": \"https://www.servus.com/tv/videos/1380889096408-1235196658/\", \"webpage_url_basename\": \"1380889096408-1235196658\", \"webpage_url_domain\": \"servus.com\", \"extractor\": \"Servus\", \"extractor_key\": \"Servus\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1380889096408-1235196658\", \"fulltitle\": \"Alt\", \"duration_string\": \"1:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://servus-hls.test/AA-28BYCQNH92111/360/index.m3u8\", \"manifest_url\": \"https://servus-hls.test/AA-28BYCQNH92111/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"Alt [1380889096408-1235196658].mp4\", \"filename\": \"Alt [1380889096408-1235196658].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Servus] unable to extract next.js data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.pm-wissen.com/videos/aa-fsk1/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Servus] aa-fsk1: Only available from 20:00 to 06:00 (Minimum age 16)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.pm-wissen.com/videos/aa-fsk2/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Servus] aa-fsk2: Blocked by FSK with unknown availability"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.pm-wissen.com/videos/aa-nya1/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Servus] aa-nya1: Only available from 2026-11-01T00:00:00Z"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.pm-wissen.com/videos/aa-nya2/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Servus] aa-nya2: Video not yet available with unknown availability"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.pm-wissen.com/videos/aa-geo1/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Servus] aa-geo1: Video unavailable: GEO_BLOCKED, OTHER"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.pm-wissen.com/videos/aa-none1/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Servus] aa-none1: No videoUrl and no information about errors; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

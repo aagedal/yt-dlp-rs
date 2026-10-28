@@ -1,0 +1,56 @@
+[
+ {
+  "url": "https://www.servustv.com/natur/v/aa-28bycqnh92111/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.servustv.com/natur/v/aa-28bycqnh92111/",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://www.servus.com/tv/videos/1380889096408-1235196658/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.pm-wissen.com/videos/aa-fsk1/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.pm-wissen.com/videos/aa-fsk2/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.pm-wissen.com/videos/aa-nya1/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.pm-wissen.com/videos/aa-nya2/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.pm-wissen.com/videos/aa-geo1/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.pm-wissen.com/videos/aa-none1/",
+  "args": [
+   "-j"
+  ]
+ }
+]

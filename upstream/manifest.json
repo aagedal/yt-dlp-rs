@@ -2350,6 +2350,18 @@
       "scope": "SenIE content API player/details nodes (fatal HLS formats, VOD manifest fallback, title/description/tags traversal, generic title) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "servus",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/servus.py"
+      ],
+      "rust": [
+        "src/extractor/servus.rs",
+        "tests/fixtures/sites/servus/"
+      ],
+      "scope": "ServusIE playnet API HLS, playability errors and Next.js metadata overlay, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "skylinewebcams",
       "status": "partial",
       "upstream": [

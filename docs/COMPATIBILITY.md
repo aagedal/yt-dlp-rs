@@ -1233,6 +1233,22 @@ Pages that TeachableIE claims (its `teachableTracker` check on
 itself is not ported. `tests/fixtures/sites/wistia/` is compared with pinned
 upstream output.
 
+ServusTV, Servus and P.M. Wissen videos (`servustv.com/[SECTION/]v[ideos]/ID`,
+`servus.com/(at|de)/p/NAME/ID`, `servus.com/tv/videos/ID`,
+`pm-wissen.com/videos/ID`) follow upstream `ServusIE`: the upper-cased ID,
+the page's Next.js data (non-fatal, with upstream's warning), the
+`api-player.redbull.com/stv/servus-tv-playnet?videoId=ID` JSON and its
+`videoUrl` as a fatal HLS master playlist (`hls`, subtitles kept). Without
+a `videoUrl` the playability errors become upstream's messages (FSK hours
+and minimum age, the availability date, `Video unavailable: ERRORS`, or the
+unexpected `No videoUrl and no information about errors`), prefixed with the
+URL's ID before upper-casing like upstream's temporary ID. Metadata: title,
+the Next.js short and long descriptions (else the API's), poster,
+duration, `currentSunrise` timestamp, label as series, season and chapter
+with their numbers, then the Next.js `title.rendered`, `stv_date.raw`,
+`stv_duration` and string `category_names` replacing or following them.
+`tests/fixtures/sites/servus/` is compared with pinned upstream output.
+
 Screen9 videos (`*.screen9.tv|com/embed|media/ID`, `play.su.se/...`) follow
 upstream `Screen9IE`: the `api.screen9.com/embed/ID` page's fatal
 `var config` JSON, its first `application/x-mpegURL` source's HLS formats
