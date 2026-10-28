@@ -956,6 +956,13 @@ no `id` key). Non-string IDs, titles, media URLs, descriptions, images and
 dates remain explicit native errors. `tests/fixtures/sites/acast/` is
 compared with pinned upstream output.
 
+Alibaba product videos (`alibaba.com/product-detail/SLUG_ID.html`) follow
+upstream `AlibabaIE`: the page's `window.detailData` product (fatal), its
+first video media item with a truthy ID (integer IDs only; otherwise
+upstream's missing-ID error), duration, cover and `videoUrl` formats with
+definition, bitrate, size and length, and the product subject as the title.
+`tests/fixtures/sites/alibaba/` is compared with pinned upstream output.
+
 Al Jazeera articles, programmes and videos (`SITE.aljazeera.TLD/TYPE/YYYY/M/D/SLUG`)
 follow upstream `AlJazeeraIE`: the site's `graphql` `ArchipelagoSingleArticleQuery`
 (`wp-site` query and header: `ajb`, `chinese`, `ajm` or `aje`; the post type
