@@ -1,0 +1,21 @@
+[
+ {
+  "url": "https://media.netapp.com/video-detail/da25fc01-82ad/seamless",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://media.netapp.com/video-detail/0000/none",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://media.netapp.com/collection/9820e190",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

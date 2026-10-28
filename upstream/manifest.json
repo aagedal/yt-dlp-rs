@@ -2613,6 +2613,18 @@
       "scope": "NobelPrizeIE query ID, JSON-LD untyped result and meta/description overlay compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "netapp",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/netapp.py"
+      ],
+      "rust": [
+        "src/extractor/netapp.rs",
+        "tests/fixtures/sites/netapp/"
+      ],
+      "scope": "NetAppVideoIE and NetAppCollectionIE detail/collection APIs as transparent BrightcoveNew url results, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "noice",
       "status": "partial",
       "upstream": [

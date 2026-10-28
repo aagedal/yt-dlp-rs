@@ -195,6 +195,7 @@ mod movingimage;
 mod musescore;
 mod mux;
 mod myvidster;
+mod netapp;
 mod netzkino;
 mod newsy;
 mod nfhsnetwork;
@@ -677,6 +678,10 @@ pub use movingimage::{MovingImage, suitable as movingimage_suitable};
 pub use musescore::{MuseScore, suitable as musescore_suitable};
 pub use mux::{Mux, suitable as mux_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
+pub use netapp::{
+    NetAppCollection, NetAppVideo, collection_suitable as netapp_collection_suitable,
+    video_suitable as netapp_video_suitable,
+};
 pub use netzkino::{Netzkino, suitable as netzkino_suitable};
 pub use newsy::{Newsy, suitable as newsy_suitable};
 pub use nfhsnetwork::{NfhsNetwork, suitable as nfhsnetwork_suitable};
