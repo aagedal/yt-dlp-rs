@@ -332,6 +332,12 @@ pub(crate) fn mark_format(format: &mut crate::VideoFormat, shape: &str) {
     format.extra.insert(FORMAT_SHAPE.into(), shape.into());
 }
 
+/// A caller's `format[key] = ...` of a key the extractor's dict already
+/// holds: the key keeps its position even when set to `None`.
+pub(crate) fn mark_format_update_in_place(format: &mut crate::VideoFormat, key: &str) {
+    mark_format_update(format, &format!("={key}"));
+}
+
 /// A caller's `format[key] = ...` after the format was built.
 pub(crate) fn mark_format_update(format: &mut crate::VideoFormat, key: &str) {
     let Some(Value::String(shape)) = format.extra.get(FORMAT_SHAPE).cloned() else {
@@ -841,8 +847,26 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         .filter_map(|key| key.strip_prefix('+'))
         .map(|key| (key.to_owned(), replay.ours.shift_remove(key)))
         .collect();
+    // `=KEY`: an update of a key the extractor's dict already holds, which
+    // keeps its position even when set to `None`.
+    let in_place: Vec<(&str, Set)>;
+    let extractor = if update.iter().any(|key| key.starts_with('=')) {
+        in_place = extractor
+            .iter()
+            .map(|(key, how)| {
+                let assigned = update
+                    .iter()
+                    .any(|update| update.strip_prefix('=') == Some(*key));
+                (*key, if assigned { Assign } else { *how })
+            })
+            .collect();
+        &in_place[..]
+    } else {
+        extractor
+    };
     replay.steps(extractor);
     for key in &update {
+        let key = key.strip_prefix('=').unwrap_or(key);
         match key.strip_prefix('+') {
             Some(name) => {
                 let value = late

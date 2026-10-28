@@ -2913,6 +2913,17 @@ requested (`Checking FORMAT video format URL`) and dropped after an HTTP error
 `#quickies/a/ID` links follow the video page. `age_limit` is 18.
 `tests/fixtures/sites/xvideos/` is compared with pinned upstream output.
 
+Beeg videos (`[www.]beeg.com[/video]/[-]ID`) follow upstream `BeegIE`: the
+page (for the RTA age limit) and the `store.externulls.com/facts/file/ID`
+JSON, whose fact with the lowest `id` gives the display ID, the
+`fc_created` timestamp and, when the file has none, the HLS resources. Each
+non-empty resource is a fatal `video.beeg.com/URI` playlist with the
+`fl_cdn_N` height as its `m3u8_id` (`None` without one), every format's
+height set to it like upstream; the file gives the title, story,
+duration and tag names. Files without a facts list or HLS resources (an
+upstream `TypeError`/`AttributeError`) are unsupported errors.
+`tests/fixtures/sites/beeg/` is compared with pinned upstream output.
+
 Eporner videos (`eporner.com/hd-porn|embed/ID[/SLUG]`, `video-ID[/SLUG]`)
 follow upstream `EpornerIE`: the page (by its slug) and its fatal 32-digit
 `hash`, encoded in base 36 per 8-digit block like upstream's `calc_hash` for

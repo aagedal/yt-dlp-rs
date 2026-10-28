@@ -5,6 +5,18 @@
   "upstream_version": "2026.10.26",
   "components": [
     {
+      "name": "beeg",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/beeg.py"
+      ],
+      "rust": [
+        "src/extractor/beeg.rs",
+        "tests/fixtures/sites/beeg/"
+      ],
+      "scope": "BeegIE externulls facts JSON: fatal HLS resources with fl_cdn heights, first fact ID and date, file metadata and tags, RTA age limit, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "eporner",
       "status": "partial",
       "upstream": [
