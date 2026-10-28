@@ -1,0 +1,31 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.tf1info.fr/replay-lci/videos/video-24h-pujadas-2300831.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"14010600\", \"title\": \"Burger Quiz WAT\", \"thumbnail\": \"https://photos.tf1.fr/preview.jpg\", \"upload_date\": \"20230819\", \"duration\": 2312, \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://tf1-hls.test/14010600/360/index.m3u8\", \"manifest_url\": \"https://tf1-hls.test/14010600/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"subtitles\": {\"fr\": [{\"url\": \"https://tf1-hls.test/14010600/subs/fr.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"original_url\": \"https://www.tf1info.fr/replay-lci/videos/video-24h-pujadas-2300831.html\", \"webpage_url\": \"wat:14010600\", \"webpage_url_basename\": \"14010600\", \"webpage_url_domain\": null, \"extractor\": \"wat.tv\", \"extractor_key\": \"Wat\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://photos.tf1.fr/preview.jpg\", \"id\": \"0\"}], \"display_id\": \"14010600\", \"fulltitle\": \"Burger Quiz WAT\", \"duration_string\": \"38:32\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-921\", \"url\": \"https://tf1-hls.test/14010600/360/index.m3u8\", \"manifest_url\": \"https://tf1-hls.test/14010600/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"Burger Quiz WAT [14010600].mp4\", \"filename\": \"Burger Quiz WAT [14010600].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://tf1-hls.test/14010600/360/index.m3u8\", \"manifest_url\": \"https://tf1-hls.test/14010600/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.lci.fr/politique/nothing-2125611.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [LCI] 2125611: Could not find wat_id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

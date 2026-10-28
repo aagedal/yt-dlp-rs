@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "http://footyroom.com/matches/79922154/hull-city-vs-chelsea/review",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Hull City vs Chelsea\"></head><script>DataStore.media = [{\"payload\": \"<iframe src=\\\"https://streamable.com/e/abc1\\\" frameborder=0></iframe>\"}, {\"payload\": \"\"}, {\"title\": \"x\"}, {\"payload\": \"<iframe width='1' src='//streamable.com/s/def2/xyz'></iframe>\"}, {\"payload\": \"<iframe src=\\\"https://youtube.com/embed/x\\\"></iframe>\"}];</script></html>"
+  },
+  {
+   "url": "http://footyroom.com/matches/2/empty",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>DataStore.media = [];</script></html>"
+  },
+  {
+   "url": "http://footyroom.com/matches/3/none",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html></html>"
+  }
+ ]
+}

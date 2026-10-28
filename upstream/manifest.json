@@ -5,6 +5,18 @@
   "upstream_version": "2026.10.26",
   "components": [
     {
+      "name": "footyroom",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/footyroom.py"
+      ],
+      "rust": [
+        "src/extractor/footyroom.rs",
+        "tests/fixtures/sites/footyroom/"
+      ],
+      "scope": "FootyRoomIE DataStore.media payloads as a playlist of Streamable url results, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "freetv",
       "status": "partial",
       "upstream": [
@@ -15,6 +27,18 @@
         "tests/fixtures/sites/freetv/"
       ],
       "scope": "FreeTvMoviesIE admin-ajax video HLS and FreeTvIE lazily read series seasons, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "freespeech",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/freespeech.py"
+      ],
+      "rust": [
+        "src/extractor/freespeech.rs",
+        "tests/fixtures/sites/freespeech/"
+      ],
+      "scope": "FreespeechIE data-video-url as a url result; only the missing-URL error is fixtured"
     },
     {
       "name": "freesound",
@@ -310,6 +334,18 @@
       "scope": "InternazionaleIE data-video-title (or non-fatal og:title) title, fatal data-job-id/data-video-path, available_abroad host choice, non-fatal HLS (hls ids, mp4) and DASH (dash- ids) manifests, article:published_time timestamp and og thumbnail/description warnings, the generic title and no-formats error compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "lci",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/lci.py"
+      ],
+      "rust": [
+        "src/extractor/lci.rs",
+        "tests/fixtures/sites/lci/"
+      ],
+      "scope": "LCIIE Next.js WAT IDs as wat url results, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "lefigaro",
       "status": "partial",
       "upstream": [
@@ -509,6 +545,18 @@
         "tests/fixtures/sites/alibaba/"
       ],
       "scope": "AlibabaIE detail data video media formats and product title, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "aliexpress",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/aliexpress.py"
+      ],
+      "rust": [
+        "src/extractor/aliexpress.rs",
+        "tests/fixtures/sites/aliexpress/"
+      ],
+      "scope": "AliExpressLiveIE runParams replay HLS and metadata, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "aljazeera",
@@ -848,6 +896,30 @@
       "scope": "CaltransIE page Global Vars script (route place, location name, poster and fatal-less stream URL with upstream warnings) as live HLS formats (ts, live variant IDs) compared with pinned upstream output through the fixture proxy; a missing videoStreamURL remains a native error"
     },
     {
+      "name": "baidu",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/baidu.py"
+      ],
+      "rust": [
+        "src/extractor/baidu.rs",
+        "tests/fixtures/sites/baidu/"
+      ],
+      "scope": "BaiduVideoIE app API series info and episodes as url results, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "businessinsider",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/businessinsider.py"
+      ],
+      "rust": [
+        "src/extractor/businessinsider.rs",
+        "tests/fixtures/sites/businessinsider/"
+      ],
+      "scope": "BusinessInsiderIE JW Platform ID patterns as jwplatform url results, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "cam4",
       "status": "partial",
       "upstream": [
@@ -1124,6 +1196,18 @@
         "tests/fixtures/sites/digiteka/"
       ],
       "scope": "DigitekaIE getConf player JSON with HLS and MP4 renditions, and Ultimedia embeds on generic pages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "discogs",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/discogs.py"
+      ],
+      "rust": [
+        "src/extractor/discogs.rs",
+        "tests/fixtures/sites/discogs/"
+      ],
+      "scope": "DiscogsReleasePlaylistIE API videos as YouTube url results, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "dlive",
@@ -2289,6 +2373,18 @@
       "scope": "NoicePodcastIE Next.js content details with HLS or MP3 media and meta-tag fallbacks, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "nowcanal",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nowcanal.py"
+      ],
+      "rust": [
+        "src/extractor/nowcanal.rs",
+        "tests/fixtures/sites/nowcanal/"
+      ],
+      "scope": "NowCanalIE Brightcove video data as a BrightcoveNew url result, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "nosnl",
       "status": "partial",
       "upstream": [
@@ -2371,6 +2467,18 @@
         "tests/fixtures/sites/onefootball/"
       ],
       "scope": "OneFootballIE JW Player manifest URL as a url_transparent JWPlatform result with the old archive ID and non-fatal JSON-LD fields compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "outsidetv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/outsidetv.py"
+      ],
+      "rust": [
+        "src/extractor/outsidetv.rs",
+        "tests/fixtures/sites/outsidetv/"
+      ],
+      "scope": "OutsideTVIE JW Platform url results, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "oneplace",
@@ -2457,6 +2565,18 @@
         "tests/fixtures/sites/photobucket/"
       ],
       "scope": "PhotobucketIE page MEDIA JSON and embed file= URL as an untyped result compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "pgatour",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/pgatour.py"
+      ],
+      "rust": [
+        "src/extractor/pgatour.rs",
+        "tests/fixtures/sites/pgatour/"
+      ],
+      "scope": "PGATourIE Brightcove player url results (TOURCast and standard accounts), compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "picarto",
@@ -3376,6 +3496,18 @@
         "tests/fixtures/sites/tvnoe/"
       ],
       "scope": "TVNoeIE INIT_PLAYER js_to_json tracks (upstream's nested track-group filter) as master-only HLS and DASH formats with unsupported-type warnings, description, h2 title, premiere release date, h1 series and player poster compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "trunews",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/trunews.py"
+      ],
+      "rust": [
+        "src/extractor/trunews.rs",
+        "tests/fixtures/sites/trunews/"
+      ],
+      "scope": "TruNewsIE Zype API lookup as a Zype url result, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "tvigle",

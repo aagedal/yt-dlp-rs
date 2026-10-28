@@ -845,6 +845,18 @@ a `url_transparent` result (extracted by the JW Platform extractor) overlaid
 with `_old_archive_ids` and the non-fatal JSON-LD fields without `url`; a page
 without JSON-LD warns `unable to extract JSON-LD` like upstream.
 
+Baidu video series (`v.baidu.com/TYPE/ID.htm`, `show` and `tv` as `tvshow`
+and `tvplay`) follow upstream `BaiduVideoIE`: the app API's `xqinfo` title
+and unescaped intro and its `xqsingle` episodes as `url` results with their
+titles (missing keys are upstream's `KeyError`s).
+`tests/fixtures/sites/baidu/` is compared with pinned upstream output.
+
+Business Insider pages (`[SUB.]businessinsider.com|nl/.../SLUG`) follow
+upstream `BusinessInsiderIE`: the first of its four JW Platform ID patterns
+that matches (else `Unable to extract jwplatform id`) as a `url` result for
+`jwplatform:ID`. `tests/fixtures/sites/businessinsider/` is compared with
+pinned upstream output.
+
 Bundestag Mediathek videos (`dbtg.tv/cvid|fvid/ID`, `bundestag.de/mediathek?...videoid=ID`)
 follow upstream `BundestagIE`: the archive `ID_playlist.smil/playlist.m3u8`
 master playlist (`instance`; a 404 is `Could not find video id`, other errors
@@ -956,6 +968,12 @@ episode dicts, with the show ID, title and description (an ID-less show has
 no `id` key). Non-string IDs, titles, media URLs, descriptions, images and
 dates remain explicit native errors. `tests/fixtures/sites/acast/` is
 compared with pinned upstream output.
+
+AliExpress live replays (`live.aliexpress.com/live/ID`) follow upstream
+`AliExpressLiveIE`: the page's `runParams` JSON (fatal), its `replyStreamUrl`
+HLS playlist (`hls`, fatal) and title (missing keys are upstream's
+`KeyError`s), cover, host name and millisecond start time.
+`tests/fixtures/sites/aliexpress/` is compared with pinned upstream output.
 
 Alibaba product videos (`alibaba.com/product-detail/SLUG_ID.html`) follow
 upstream `AlibabaIE`: the page's `window.detailData` product (fatal), its
@@ -1345,6 +1363,13 @@ result of its `players.brightcove.net/794267642001/default_default` player,
 extracted like Brightcove players above. `tests/fixtures/sites/thestar/` is
 compared with pinned upstream output.
 
+FootyRoom matches (`footyroom.com/matches/ID`) follow upstream `FootyRoomIE`:
+the page's `DataStore.media` JSON (fatal) as a playlist, with the OpenGraph
+title (warning when missing), of `url` results for each payload's first
+Streamable iframe whose unjoined URL `StreamableIE` accepts (protocol-relative
+embeds are dropped, like upstream).
+`tests/fixtures/sites/footyroom/` is compared with pinned upstream output.
+
 Formula 1 videos (`formula1.com/en/latest/video.SLUG.ID.html`) follow upstream
 `Formula1IE`: the URL's Brightcove ID as a `url` result of the
 `players.brightcove.net/6057949432001/S1WMrhjlh_default` player, extracted like
@@ -1569,6 +1594,11 @@ CozyTV replays (`cozy.tv/USER/replays/ID`) follow upstream `CozyTVIE`: the
 `USER-ID` ID, the cached replay JSON's title (else the generic title), `user`
 (else the URL user) uploader, `unified_strdate` date, raw duration and
 `was_live`, with the CDN `index.m3u8` as fatal HLS formats and subtitles.
+
+PGA Tour videos (`pgatour.com/video/SECTION/[T]ID`) follow upstream
+`PGATourIE` as `url` results for their Brightcove player (the TOURCast
+account and player for `T` IDs). `tests/fixtures/sites/pgatour/` is compared
+with pinned upstream output.
 
 PeerTube videos follow upstream `PeerTubeIE` on its listed instances
 (`_INSTANCES_RE`, generated into `src/extractor/peertube/instances.rs` from
@@ -3018,6 +3048,10 @@ the fixture's `-j` cases use `--no-geo-bypass` or a fixed `/32` block. The
 DRM error is a warning with `--ignore-no-formats-error`.
 `tests/fixtures/sites/netzkino/` is compared with pinned upstream output.
 
+Outside TV videos (`outsidetv.com/.../play/X/N/N/ID`) follow upstream
+`OutsideTVIE` as `url` results for `jwplatform:ID`.
+`tests/fixtures/sites/outsidetv/` is compared with pinned upstream output.
+
 Pear Video pages (`pearvideo.com/video_ID`) follow upstream `PearVideoIE`: the
 page's `KINDUrl = "..."` assignments as formats ranked by upstream's
 `qualities` list (protocol-relative URLs as `http:`), else the
@@ -3227,6 +3261,11 @@ Python's decoder message). HDS (`f4m`) streams give non-fatal F4M formats. Upstr
 not ported. `tests/fixtures/sites/tv2/` is compared with pinned upstream
 output.
 
+TruNews streams (`trunews.com/stream/SLUG`) follow upstream `TruNewsIE`: the
+Zype API's first video with that friendly title (an empty list is a bare
+`IndexError`) as a `url` result for its Zype player.
+`tests/fixtures/sites/trunews/` is compared with pinned upstream output.
+
 Tvigle videos (`tvigle.ru/.../SLUG/`, `cloud.tvigle.ru/video/ID`) follow
 upstream `TvigleIE` (no geo bypass, countries `RU`): the page's player ID
 (three patterns, fatal) or the cloud ID, the `cloud.tvigle.ru/api/play/video/ID/`
@@ -3412,6 +3451,12 @@ detected natively, and undecodable tokens remain explicit native errors.
 `tests/fixtures/sites/cloudflarestream/` is compared with pinned upstream
 output.
 
+Discogs releases and masters (`discogs.com/release|master/ID`) follow upstream
+`DiscogsReleasePlaylistIE`: the API's `release|masterID` JSON as a playlist,
+with the release title, of YouTube `url` results (with their titles) for the
+videos whose URI `YoutubeIE` accepts. `tests/fixtures/sites/discogs/` is
+compared with pinned upstream output.
+
 Digiteka and Ultimedia videos (`digiteka.net|ultimedia.com/deliver/generic|musique/.../src|article/ID`,
 `.../default/index/videogeneric|music/id/ID`) follow upstream `DigitekaIE`:
 the `ultimedia.com/player/getConf/01836272/1/ID` JSON's `video` (required),
@@ -3457,6 +3502,11 @@ its episodes are requested), each episode's stream as fatal HLS with its
 series, season and episode metadata. `tests/fixtures/sites/freetv/` is
 compared with pinned upstream output.
 
+Freespeech stories (`freespeech.org/stories/SLUG`, `freespeech.org`) follow
+upstream `FreespeechIE`: the page's `data-video-url` (else `Unable to extract
+youtube url`) as a `url` result. Only the missing-URL error is covered by
+`tests/fixtures/sites/freespeech/` (the YouTube follow-up is not fixtured).
+
 Freesound sounds (`freesound.org/people/USER/sounds/ID`) follow upstream
 `FreesoundIE`: the page's fatal `og:audio` URL and `og:audio:title`, the
 non-fatal description, `og:audio:artist` uploader and channels info (their
@@ -3474,6 +3524,11 @@ original download (only when its file name has a known extension, ranked
 higher) as audio formats. Non-string IDs, user names or thumbnails and
 missing users or download file names remain explicit native errors.
 `tests/fixtures/sites/hearthisat/` is compared with pinned upstream output.
+
+LCI and TF1 Info videos (`lci.fr|tf1info.fr/.../SLUG-ID.html`) follow upstream
+`LCIIE`: the first integer key of the Next.js `tms.videos` (else `Could not
+find wat_id`) as a `url` result for `wat:ID`. `tests/fixtures/sites/lci/` is
+compared with pinned upstream output.
 
 Le Figaro embeds (`video.lefigaro.fr/embed/.../SLUG`) follow upstream
 `LeFigaroVideoEmbedIE`: the Next.js `playerData.videoId` (required) as a
@@ -3898,6 +3953,11 @@ timestamps, duration, genres, season, catalog and like, dislike, comment
 and follower counts, with the page's meta tags as fallbacks (warning when
 missing). `tests/fixtures/sites/noice/` is compared with pinned upstream
 output.
+
+NOW Canal pages (`nowcanal.pt/.../detalhe/SLUG`) follow upstream `NowCanalIE`:
+the `addBrightcoveVideoWithJson` data's `brightcoveVideoId` (fatal) as a
+`url` result for the NOW Brightcove player. `tests/fixtures/sites/nowcanal/`
+is compared with pinned upstream output.
 
 NOS articles and videos (`nos.nl/[SECTION/]artikel/ID-SLUG`,
 `nos.nl/video/ID-SLUG`) follow upstream `NOSNLArticleIE`: the page's fatal

@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://mediainfo.tf1.fr/mediainfocombo/14010600?pver=5010000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"media\": {\"title\": \"Burger Quiz WAT\", \"preview\": \"https://photos.tf1.fr/preview.jpg\", \"duration\": \"2312\"}, \"mediametrie\": {\"chapters\": [{\"estatS4\": \"2023-08-19\"}]}, \"delivery\": {\"format\": \"hls\", \"url\": \"https://tf1-hls.test/14010600/master.m3u8\"}}"
+  },
+  {
+   "url": "https://tf1-hls.test/14010600/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.tf1info.fr/replay-lci/videos/video-24h-pujadas-2300831.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"page\": {\"tms\": {\"videos\": {\"abc\": {}, \"14010600\": {\"x\": 1}, \"99\": {}}}}}}}</script></html>"
+  },
+  {
+   "url": "https://www.lci.fr/politique/nothing-2125611.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"page\": {\"tms\": {\"videos\": [\"14010600\"]}}}}}</script></html>"
+  }
+ ]
+}

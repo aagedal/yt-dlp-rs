@@ -386,7 +386,7 @@ fn path<'a>(value: &'a Value, keys: &[&str]) -> Option<&'a Value> {
 }
 
 /// A `url_result(target, ie, video_id, video_title)` playlist entry.
-fn url_entry(
+pub(crate) fn url_entry(
     target: &str,
     ie_key: &'static str,
     id: Option<&str>,
@@ -431,7 +431,7 @@ fn nrk_entry(nrk_id: &str) -> Result<VideoInfo> {
 }
 
 /// A playlist result in `playlist_result`'s key order.
-fn playlist_result(
+pub(crate) fn playlist_result(
     page: &Url,
     extractor: &'static str,
     id: String,

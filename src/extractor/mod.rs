@@ -2,6 +2,7 @@ mod acast;
 pub mod adobepass;
 mod akamai;
 mod alibaba;
+mod aliexpress;
 mod aljazeera;
 mod amadeustv;
 mod angel;
@@ -12,6 +13,7 @@ mod ard;
 mod arte;
 mod audioboom;
 mod audiomack;
+mod baidu;
 mod bandcamp;
 mod beacon;
 mod behindkink;
@@ -29,6 +31,7 @@ mod breitbart;
 pub(crate) mod brightcove;
 mod bundesliga;
 mod bundestag;
+mod businessinsider;
 mod caltrans;
 mod cam4;
 mod ccc;
@@ -55,6 +58,7 @@ mod democracynow;
 mod dfb;
 mod digiteka;
 pub(crate) mod direct;
+mod discogs;
 mod dlive;
 mod dropbox;
 mod drtalks;
@@ -79,9 +83,11 @@ mod fczenit;
 mod filmarchiv;
 mod filmweb;
 mod flickr;
+mod footyroom;
 mod formula1;
 mod francetv;
 mod freesound;
+mod freespeech;
 mod freetv;
 mod fuyintv;
 mod gab;
@@ -139,6 +145,7 @@ mod ku6;
 mod kvs;
 mod lastfm;
 mod lbry;
+mod lci;
 mod lefigaro;
 mod lego;
 mod libraryofcongress;
@@ -178,6 +185,7 @@ mod ninenews;
 mod nobelprize;
 mod noice;
 mod nosnl;
+mod nowcanal;
 mod npr;
 mod nrk;
 mod nts;
@@ -190,12 +198,14 @@ mod onefootball;
 mod onenewsnz;
 mod oneplace;
 mod orf;
+mod outsidetv;
 pub(crate) mod paged;
 mod parlview;
 mod pearvideo;
 mod peertube;
 mod peertv;
 mod periscope;
+mod pgatour;
 mod photobucket;
 mod picarto;
 mod pinkbike;
@@ -267,6 +277,7 @@ mod tiktok;
 mod toypics;
 mod trtcocuk;
 mod trtworld;
+mod trunews;
 mod tumblr;
 mod tv2;
 mod tv2dk;
@@ -323,6 +334,7 @@ pub use acast::{
     ACast, ACastChannel, channel_suitable as acast_channel_suitable, suitable as acast_suitable,
 };
 pub use alibaba::{Alibaba, suitable as alibaba_suitable};
+pub use aliexpress::{AliExpressLive, suitable as aliexpress_suitable};
 pub use aljazeera::{AlJazeera, suitable as aljazeera_suitable};
 pub use amadeustv::{AmadeusTv, suitable as amadeustv_suitable};
 pub use angel::{Angel, suitable as angel_suitable};
@@ -346,6 +358,7 @@ pub use audiomack::{
     Audiomack, AudiomackAlbum, album_suitable as audiomack_album_suitable,
     suitable as audiomack_suitable,
 };
+pub use baidu::{BaiduVideo, suitable as baidu_suitable};
 pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use beacon::{BeaconTv, suitable as beacon_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};
@@ -372,6 +385,7 @@ pub use breitbart::{BreitBart, suitable as breitbart_suitable};
 pub use brightcove::{BrightcoveNew, suitable as brightcove_new_suitable};
 pub use bundesliga::{Bundesliga, suitable as bundesliga_suitable};
 pub use bundestag::{Bundestag, suitable as bundestag_suitable};
+pub use businessinsider::{BusinessInsider, suitable as businessinsider_suitable};
 pub use caltrans::{Caltrans, suitable as caltrans_suitable};
 pub use cam4::{Cam4, suitable as cam4_suitable};
 pub use ccc::{Ccc, suitable as ccc_suitable};
@@ -408,6 +422,7 @@ pub use dfb::{Dfb, suitable as dfb_suitable};
 pub use digiteka::{Digiteka, suitable as digiteka_suitable};
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
+pub use discogs::{DiscogsReleasePlaylist, suitable as discogs_suitable};
 pub use dlive::{
     DLiveStream, DLiveVod, stream_suitable as dlive_stream_suitable,
     vod_suitable as dlive_vod_suitable,
@@ -450,12 +465,14 @@ pub use fczenit::{Fczenit, suitable as fczenit_suitable};
 pub use filmarchiv::{FilmArchiv, suitable as filmarchiv_suitable};
 pub use filmweb::{Filmweb, suitable as filmweb_suitable};
 pub use flickr::{Flickr, suitable as flickr_suitable};
+pub use footyroom::{FootyRoom, suitable as footyroom_suitable};
 pub use formula1::{Formula1, suitable as formula1_suitable};
 pub use francetv::{
     FranceTv, FranceTvInfo, FranceTvSite, info_suitable as francetv_info_suitable,
     site_suitable as francetv_site_suitable, suitable as francetv_suitable,
 };
 pub use freesound::{Freesound, suitable as freesound_suitable};
+pub use freespeech::{Freespeech, suitable as freespeech_suitable};
 pub use freetv::{
     FreeTv, FreeTvMovies, movies_suitable as freetv_movies_suitable, suitable as freetv_suitable,
 };
@@ -554,6 +571,7 @@ pub use lbry::{
     playlist_suitable as lbry_playlist_suitable, suitable as lbry_suitable,
 };
 pub(crate) use lbry::{fetch_pages as fetch_lbry_pages, is_pending_state as lbry_pending_state};
+pub use lci::{Lci, suitable as lci_suitable};
 pub use lefigaro::{
     LeFigaroVideoEmbed, LeFigaroVideoSection, embed_suitable as lefigaro_embed_suitable,
     section_suitable as lefigaro_section_suitable,
@@ -623,6 +641,7 @@ pub use ninenews::{NineNews, suitable as ninenews_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use noice::{NoicePodcast, suitable as noice_suitable};
 pub use nosnl::{NosNlArticle, suitable as nosnl_suitable};
+pub use nowcanal::{NowCanal, suitable as nowcanal_suitable};
 pub use npr::{Npr, suitable as npr_suitable};
 pub use nrk::{
     Nrk, NrkPlaylist, NrkRadioPodkast, NrkTv, NrkTvDirekte, NrkTvEpisode, NrkTvSeason, NrkTvSeries,
@@ -644,6 +663,7 @@ pub use orf::{
     radio_suitable as orf_radio_suitable, suitable as orf_on_suitable,
 };
 pub(crate) use orf::{fetch_segments as fetch_orf_segments, is_pending_state as orf_pending_state};
+pub use outsidetv::{OutsideTv, suitable as outsidetv_suitable};
 pub use parlview::{Parlview, suitable as parlview_suitable};
 pub use pearvideo::{PearVideo, suitable as pearvideo_suitable};
 pub use peertube::{
@@ -655,6 +675,7 @@ pub(crate) use peertube::{
 };
 pub use peertv::{PeerTv, suitable as peertv_suitable};
 pub use periscope::{Periscope, suitable as periscope_suitable};
+pub use pgatour::{PgaTour, suitable as pgatour_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
 pub use picarto::{
     Picarto, PicartoVod, suitable as picarto_suitable, vod_suitable as picarto_vod_suitable,
@@ -788,6 +809,7 @@ pub(crate) use tiktok::{
 pub use toypics::{Toypics, suitable as toypics_suitable};
 pub use trtcocuk::{TrtCocukVideo, suitable as trtcocuk_suitable};
 pub use trtworld::{TrtWorld, suitable as trtworld_suitable};
+pub use trunews::{TruNews, suitable as trunews_suitable};
 pub use tumblr::{Tumblr, suitable as tumblr_suitable};
 pub use tv2::{
     Tv2, Tv2Article, article_suitable as tv2_article_suitable, suitable as tv2_suitable,
@@ -2573,6 +2595,18 @@ pub(crate) fn proto_relative(url: &str) -> String {
         Some(rest) => format!("https://{rest}"),
         None => url.to_owned(),
     }
+}
+
+/// A top-level `url_result(target, ...)`: processing extracts `target`
+/// (its own fields are not merged).
+pub(crate) fn follow_url(page: &Url, target: String) -> crate::ExtractResult {
+    let mut follow = direct::build_at(page.clone(), page, String::new());
+    follow.formats.clear();
+    follow.direct = None;
+    follow
+        .extra
+        .insert(crate::FOLLOW_URL.into(), serde_json::Value::from(target));
+    crate::ExtractResult::Video(follow)
 }
 
 /// An upstream `{'url': ..., ...}` format dict in its key order (`None`

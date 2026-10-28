@@ -1,0 +1,15 @@
+[
+ {
+  "url": "https://www.pgatour.com/video/features/6322506425112/follow-the-players",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.pgatour.com/video/competition/T6322447785112/adam-hadwin",
+  "args": [
+   "--print",
+   "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+  ]
+ }
+]

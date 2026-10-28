@@ -1,0 +1,14 @@
+[
+ {
+  "url": "https://www.trunews.com/stream/state-of-the-union",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.trunews.com/stream/missing",
+  "args": [
+   "-J"
+  ]
+ }
+]

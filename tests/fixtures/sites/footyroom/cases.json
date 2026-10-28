@@ -1,0 +1,29 @@
+[
+ {
+  "url": "http://footyroom.com/matches/79922154/hull-city-vs-chelsea/review",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "http://footyroom.com/matches/79922154/hull-city-vs-chelsea/review",
+  "args": [
+   "--flat-playlist",
+   "--print",
+   "%(url)s %(id)s %(ie_key)s"
+  ]
+ },
+ {
+  "url": "http://footyroom.com/matches/2/empty",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://footyroom.com/matches/3/none",
+  "args": [
+   "-J"
+  ]
+ }
+]

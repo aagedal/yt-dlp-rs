@@ -1,0 +1,26 @@
+{
+ "routes": [
+  {
+   "url": "https://api.discogs.com/releases/1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Stockholm\", \"videos\": [{\"uri\": \"https://www.youtube.com/watch?v=AHuQWcylaU4\", \"title\": \"The Persuader - \\u00d6stermalm\"}, {\"uri\": \"https://vimeo.com/123\", \"title\": \"Not YouTube\"}, {\"title\": \"no uri\"}, {\"uri\": \"https://youtu.be/5lcxh2nJ9uA\", \"title\": \"\"}, {\"uri\": \"https://www.youtube.com/watch?v=QVdDhOnoR8k\"}]}"
+  },
+  {
+   "url": "https://api.discogs.com/masters/113",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"\", \"videos\": []}"
+  },
+  {
+   "url": "https://api.discogs.com/releases/9",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"message\": \"Release not found.\"}"
+  }
+ ]
+}
