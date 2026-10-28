@@ -245,6 +245,11 @@ fn url_entry(target: &str, fields: Vec<(&str, Value)>) -> Result<VideoInfo> {
     let mut info = super::direct::build_at(url.clone(), &url, String::new());
     info.formats.clear();
     info.direct = None;
+    // Without an `id` field, a flat entry's ID is KikaIE's temporary ID.
+    info.id = VALID_URL
+        .captures(target)
+        .map(|found| found["id"].to_owned())
+        .unwrap_or_default();
     let mut entry = Map::new();
     for (key, value) in fields {
         if key == "id"

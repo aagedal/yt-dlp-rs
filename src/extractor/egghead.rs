@@ -100,10 +100,18 @@ fn lesson_entry(target: &str, lesson_id: Option<Value>) -> Result<VideoInfo> {
     let mut info = super::direct::build_at(url.clone(), &url, String::new());
     info.formats.clear();
     info.direct = None;
+    // Without an ID, a flat entry's ID is EggheadLessonIE's temporary ID.
+    info.id = LESSON_URL
+        .captures(target)
+        .map(|found| found["id"].to_owned())
+        .unwrap_or_default();
     let mut entry = Map::new();
     entry.insert("ie_key".into(), LESSON_KEY.into());
     if let Some(id) = lesson_id {
-        info.id = py_str(Some(&id)).unwrap_or_default();
+        // A falsy ID also gets the temporary one when flat.
+        if super::nuxt::truthy(&id) {
+            info.id = py_str(Some(&id)).unwrap_or_default();
+        }
         entry.insert("id".into(), id);
     }
     entry.insert("_type".into(), "url".into());

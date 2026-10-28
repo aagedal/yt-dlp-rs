@@ -118,6 +118,22 @@
     "ERROR: leer-1: An extractor error has occurred. (caused by KeyError('videosPageUrl')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
    ],
    "files": {}
+  },
+  {
+   "url": "https://www.kika.de/logo/logo-562",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(playlist_index)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "logo-100|logo! vom Dienstag|1",
+    "video92498|7. Wo ist Leo?|2",
+    "video5|ohne ID|3"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

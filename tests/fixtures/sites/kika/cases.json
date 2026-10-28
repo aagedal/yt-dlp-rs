@@ -56,5 +56,13 @@
   "args": [
    "-J"
   ]
+ },
+ {
+  "url": "https://www.kika.de/logo/logo-562",
+  "args": [
+   "--flat-playlist",
+   "--print",
+   "%(id)s|%(title)s|%(playlist_index)s"
+  ]
  }
 ]

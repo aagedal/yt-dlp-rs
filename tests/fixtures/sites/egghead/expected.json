@@ -54,6 +54,21 @@
     "ERROR: broken: An extractor error has occurred. (caused by KeyError('title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
    ],
    "files": {}
+  },
+  {
+   "url": "https://egghead.io/courses/frisby",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(playlist_index)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1196|NA|1",
+    "other|NA|2"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

@@ -23,5 +23,13 @@
   "args": [
    "-j"
   ]
+ },
+ {
+  "url": "https://egghead.io/courses/frisby",
+  "args": [
+   "--flat-playlist",
+   "--print",
+   "%(id)s|%(title)s|%(playlist_index)s"
+  ]
  }
 ]
