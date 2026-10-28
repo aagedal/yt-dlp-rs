@@ -4420,6 +4420,18 @@
       "scope": "XiaoHongShuIE (release 2026.10.21) __INITIAL_STATE__ stream formats (master and backup URLs), original-video direct format with its unavailable warning, image thumbnails, title/description/tags/uploader ID and missing-state/no-formats errors compared with upstream output through the fixture proxy; non-HTTP stream URLs refused"
     },
     {
+      "name": "xinpianchang",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/xinpianchang.py"
+      ],
+      "rust": [
+        "src/extractor/xinpianchang.rs",
+        "tests/fixtures/sites/xinpianchang/"
+      ],
+      "scope": "XinpianchangIE Next.js video vid/appKey, media API JSON with fatal DASH and HLS (master playlist only) formats and merged subtitles, progressive mp4 files with the Range header, and the API metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "xboxclips",
       "status": "partial",
       "upstream": [

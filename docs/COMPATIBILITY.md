@@ -1743,6 +1743,17 @@ description, duration, series (`format`), season, season ID and episode
 number, as an untyped result.
 `tests/fixtures/sites/myspass/` is compared with pinned upstream output.
 
+Xinpianchang (新片场) videos (`[www.]xinpianchang.com/aID`) follow upstream
+`XinpianchangIE`: the page (requested with itself as `Referer`) gives the
+Next.js `props.pageProps.detail.video` `vid` and `appKey` (missing keys are
+upstream's `KeyError`s), and the `mod-api` media JSON's `resource` entries
+in order give fatal DASH (`Downloading MPD manifest`) and HLS (master
+playlist only) formats with merged subtitles, and progressive `mp4` files
+(with `Range: bytes=0-`), plus the title, description, integer duration,
+categories, keywords as tags, cover, and owner name and ID. A missing
+`resource` is upstream's `AttributeError`.
+`tests/fixtures/sites/xinpianchang/` is compared with pinned upstream output.
+
 PGA Tour videos (`pgatour.com/video/SECTION/[T]ID`) follow upstream
 `PGATourIE` as `url` results for their Brightcove player (the TOURCast
 account and player for `T` IDs). `tests/fixtures/sites/pgatour/` is compared

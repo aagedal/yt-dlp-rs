@@ -360,6 +360,7 @@ mod worldstarhiphop;
 mod wsj;
 mod xboxclips;
 mod xiaohongshu;
+mod xinpianchang;
 mod xnxx;
 mod xspf;
 mod xvideos;
@@ -992,6 +993,7 @@ pub use wsj::{
 };
 pub use xboxclips::{XboxClips, suitable as xboxclips_suitable};
 pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};
+pub use xinpianchang::{Xinpianchang, suitable as xinpianchang_suitable};
 pub use xnxx::{Xnxx, suitable as xnxx_suitable};
 pub use xvideos::{
     XVideos, XVideosQuickies, quickies_suitable as xvideos_quickies_suitable,
@@ -1264,6 +1266,56 @@ fn extract_m3u8_fatal_with(
     })?;
     if !keep_subtitles {
         ignore_subtitles(&mut info, extractor, "HLS");
+    }
+    Ok(info)
+}
+
+/// Upstream fatal `_extract_mpd_formats_and_subtitles(url, video_id)` (or
+/// `_extract_mpd_formats` without `keep_subtitles`), without an `mpd_id`:
+/// `[EXTRACTOR] ID: Downloading MPD manifest`, the request (an HTTP error is
+/// `Failed to download MPD manifest`), and the manifest's formats and
+/// subtitles.
+pub(crate) fn extract_mpd_fatal(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    keep_subtitles: bool,
+) -> crate::Result<crate::VideoInfo> {
+    // `if self.get_param('ignore_no_formats_error'): fatal = False`.
+    if crate::no_formats::ignore() {
+        let stream = extract_mpd_optional(client, manifest, extractor, id, keep_subtitles);
+        return Ok(stream.unwrap_or_else(|| {
+            let mut empty = direct::build_at(manifest.clone(), manifest, String::new());
+            empty.formats.clear();
+            empty.direct = None;
+            empty
+        }));
+    }
+    let note = format!("[{extractor}] {id}: Downloading MPD manifest");
+    crate::screen::expect_page(id, Some(note.clone()), None);
+    let response = direct::request(client, manifest, None);
+    if response.is_err() {
+        crate::screen::screen(&note);
+    }
+    let parsed = response
+        .map_err(|error| match error {
+            crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => crate::Error::Reported(
+                request_error_text(extractor, id, "MPD manifest", &error).replacen(
+                    ": Unable to download ",
+                    ": Failed to download ",
+                    1,
+                ),
+            ),
+            error => error,
+        })
+        .and_then(|response| dash::from_response(response, manifest, true));
+    crate::screen::clear_page();
+    let mut info = parsed?.ok_or_else(|| {
+        crate::Error::UnsupportedHtml5(format!("the {extractor} stream is not a DASH manifest"))
+    })?;
+    if !keep_subtitles {
+        ignore_subtitles(&mut info, extractor, "DASH");
     }
     Ok(info)
 }
