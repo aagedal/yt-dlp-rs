@@ -1,0 +1,48 @@
+[
+ {
+  "url": "https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm",
+  "args": [
+   "--no-progress",
+   "-f",
+   "source",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://commons.wikimedia.org/wiki/File:Two-toed_sloth_rail_walking_%E4%BA%8C%E8%B6%BE%E6%A8%B9%E7%8D%BA%E7%88%AC%E8%A1%8C_(HD).webm",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://commons.wikimedia.org/wiki/File:Missing.webm",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm",
+  "args": [
+   "--no-progress",
+   "--skip-download",
+   "--write-subs",
+   "--sub-langs",
+   "de",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ }
+]

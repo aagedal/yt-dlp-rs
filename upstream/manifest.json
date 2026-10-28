@@ -451,6 +451,18 @@
       "scope": "AngelIE JSON-LD HLS stream, OpenGraph fields, Cloudinary thumbnail rewrite and merge_dicts with JSON-LD compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "applepodcasts",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/applepodcasts.py"
+      ],
+      "rust": [
+        "src/extractor/applepodcasts.rs",
+        "tests/fixtures/sites/applepodcasts/"
+      ],
+      "scope": "ApplePodcastsIE page (expected_status=500) serialized-server-data EpisodeLockup share item with OpenGraph thumbnail, else the amp-api catalog episode with AppleBaseIE's JS-asset JWT (process cache, expiry error), HTTPS asset URL and artwork template thumbnail, compared with pinned upstream output through the fixture proxy; AppleConnectIE (appleconnect.py) is not ported"
+    },
+    {
       "name": "archiveorg",
       "status": "partial",
       "upstream": [
@@ -3116,6 +3128,18 @@
         "tests/fixtures/sites/whyp/"
       ],
       "scope": "WhypIE __NUXT_DATA__ payload via _search_nuxt_json, required pinia/track data, audio/lossy/lossless formats with Referer headers, track and user metadata, and Nuxt search/resolution errors compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "wikimedia",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/wikimedia.py"
+      ],
+      "rust": [
+        "src/extractor/wikimedia.rs",
+        "tests/fixtures/sites/wikimedia/"
+      ],
+      "scope": "WikimediaIE MediaWiki API videoinfo (require('video info') error) with the robot-policy User-Agent on the API request, formats, subtitles and HTTP downloads; source and derivative formats with _parse_ext_and_codecs, timed text tracks and extmetadata fields compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "wimbledon",
