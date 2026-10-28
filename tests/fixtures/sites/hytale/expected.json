@@ -1,0 +1,33 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://hytale.com/news/2021/07/summer-2021-development-update",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"summer-2021-development-update\", \"title\": \"Summer 2021 Development Update\", \"_type\": \"playlist\", \"entries\": [{\"title\": \"Avatar Personalization\", \"ie_key\": \"CloudflareStream\", \"_type\": \"url_transparent\", \"url\": \"https://cloudflarestream.com/ed51a2609d21bad6e14145c37c334999/manifest/video.mpd?parentOrigin=https%3A%2F%2Fhytale.com\", \"__x_forwarded_for_ip\": null}, {\"title\": null, \"ie_key\": \"CloudflareStream\", \"_type\": \"url_transparent\", \"url\": \"https://cloudflarestream.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/manifest/video.mpd?parentOrigin=https%3A%2F%2Fhytale.com\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://hytale.com/news/2021/07/summer-2021-development-update\", \"original_url\": \"https://hytale.com/news/2021/07/summer-2021-development-update\", \"webpage_url_basename\": \"summer-2021-development-update\", \"webpage_url_domain\": \"hytale.com\", \"extractor\": \"Hytale\", \"extractor_key\": \"Hytale\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://hytale.com/news/2019/11/hytale-graphics-update",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"hytale-graphics-update\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://hytale.com/news/2019/11/hytale-graphics-update\", \"original_url\": \"https://hytale.com/news/2019/11/hytale-graphics-update\", \"webpage_url_basename\": \"hytale-graphics-update\", \"webpage_url_domain\": \"hytale.com\", \"extractor\": \"Hytale\", \"extractor_key\": \"Hytale\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [Hytale] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

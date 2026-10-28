@@ -966,6 +966,13 @@ Bundesliga videos (`bundesliga.com/LL/bundesliga/videos[/...]?vid=ID`) follow
 upstream `BundesligaIE`: a `url` result of `jwplatform:ID`, extracted by the
 JW Platform extractor (so its `webpage_url` is the `jwplatform:` URL).
 
+Hytale news posts (`hytale.com/news/YYYY/MM/SLUG`) follow upstream `HytaleIE`:
+the media page's clip captions (downloaded before the `Extracting URL` line;
+its state is required), and the post's Cloudflare Stream embeds as
+transparent `url` results with those captions as titles, with the OpenGraph
+title (warning when missing). `tests/fixtures/sites/hytale/` is compared with
+pinned upstream output.
+
 HuffPost Live segments (`[embed.]live.huffingtonpost.com/r/segment/SLUG/ID`,
 `.../HPLEmbedPlayer/?segmentId=ID`) follow upstream `HuffPostIE`: the
 segments API's live and live-again sources (HLS and HDS non-fatal, else

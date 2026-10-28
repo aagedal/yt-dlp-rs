@@ -2732,6 +2732,18 @@
       "scope": "MochaVideoIE detail API (resolution HLS formats and subtitles, original MP4, raw metadata, scaled timestamp, string-key channel traversal, generic-title fallback, KeyError and AttributeError messages) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "hytale",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/hytale.py"
+      ],
+      "rust": [
+        "src/extractor/hytale.rs",
+        "tests/fixtures/sites/hytale/"
+      ],
+      "scope": "HytaleIE Cloudflare Stream embeds titled from the media page, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "huffpost",
       "status": "partial",
       "upstream": [

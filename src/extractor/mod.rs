@@ -139,6 +139,7 @@ mod huajiao;
 mod huffpost;
 mod hypem;
 mod hypergryph;
+mod hytale;
 mod iheart;
 mod ilpost;
 mod iltalehti;
@@ -620,6 +621,7 @@ pub use huajiao::{Huajiao, suitable as huajiao_suitable};
 pub use huffpost::{HuffPost, suitable as huffpost_suitable};
 pub use hypem::{Hypem, suitable as hypem_suitable};
 pub use hypergryph::{MonsterSirenHypergryphMusic, suitable as hypergryph_suitable};
+pub use hytale::{Hytale, suitable as hytale_suitable};
 pub use iheart::{
     IHeartRadio, IHeartRadioPodcast, podcast_suitable as iheart_podcast_suitable,
     suitable as iheart_suitable,

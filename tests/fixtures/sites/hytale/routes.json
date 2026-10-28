@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://hytale.com/media",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>window.__INITIAL_COMPONENTS_STATE__ = [{\"media\": {\"clips\": [{\"src\": \"ed51a2609d21bad6e14145c37c334999\", \"caption\": \"Avatar Personalization\"}, {\"src\": \"x\"}]}}, {}];</script>"
+  },
+  {
+   "url": "https://hytale.com/news/2021/07/summer-2021-development-update",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Summer 2021 Development Update\"></head><body>\n<stream class=\"ql-video cf-stream\" src=\"ed51a2609d21bad6e14145c37c334999\"></stream>\n<stream class=\"ql-video cf-stream\" src=\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"></stream></body></html>"
+  },
+  {
+   "url": "https://hytale.com/news/2019/11/hytale-graphics-update",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html></html>"
+  }
+ ]
+}
