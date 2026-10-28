@@ -1,0 +1,53 @@
+{
+ "routes": [
+  {
+   "url": "http://loc.gov/item/90716351/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta property=\"og:title\" content=\"Og title\"><meta property=\"og:image\" content=\"https://loc.test/thumb.jpg\"><div id=\"media-player-ABCDEF0123456789ABCDEF0123456789\" class=\"media-player\"></div><select><option value=\"https://loc.test/dl/90716351.mp4\" data-file-download=\"x\">MP4 (63.0 MB)</option><option value=\"https://loc.test/dl/90716351.gif\" data-file-download=\"x\">GIF</option><option value=\"https://loc.test/dl/90716351.mp4\" data-file-download=\"x\">MP4 again</option><option value=\"https://loc.test/dl/90716351.mov\" data-file-download=\"x\">MOV&nbsp;(1.2 GB)</option></select>"
+  },
+  {
+   "url": "https://media.loc.gov/services/v1/media?id=ABCDEF0123456789ABCDEF0123456789&context=json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"mediaObject\": {\"shortName\": \"Pa's trip to Mars\", \"mediaType\": \"V\", \"duration\": \"1416.0\", \"viewCount\": \"27\", \"ccUrl\": \"https://loc.test/cc/90716351.xml\", \"derivatives\": [{\"derivativeUrl\": \"rtmp://loc.test/vod/mp4:media/90716351\", \"shortName\": null}]}}"
+  },
+  {
+   "url": "https://www.loc.gov/today/cyberlc/feature_wdesc.php?rec=5578",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var x = { mediaObjectId: 'aud5578' };</script>"
+  },
+  {
+   "url": "https://media.loc.gov/services/v1/media?id=aud5578&context=json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"mediaObject\": {\"mediaType\": \"a\", \"derivatives\": [{\"derivativeUrl\": \"https://loc.test/aod/mp3:audio/5578.mp3\", \"shortName\": \"Audio\"}]}}"
+  },
+  {
+   "url": "https://www.loc.gov/item/none/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>nothing</html>"
+  },
+  {
+   "url": "https://www.loc.gov/item/empty/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<video data-uuid=\"emp1\"></video>"
+  },
+  {
+   "url": "https://media.loc.gov/services/v1/media?id=emp1&context=json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"mediaObject\": {\"derivatives\": []}}"
+  }
+ ]
+}

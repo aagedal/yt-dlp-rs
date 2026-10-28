@@ -79,10 +79,10 @@ fn thumbnails(item: &Value) -> Result<Value> {
         _ => Vec::new(),
     };
     let Some(first) = ratios.first() else {
-        return Err(Error::Reported(format!(
-            "An extractor error has occurred. (caused by IndexError('list index out of range')); {}",
-            crate::BUG_REPORTS_MESSAGE
-        )));
+        return Err(
+            // An uncaught `IndexError` is reported as its message.
+            Error::Reported("list index out of range".into()),
+        );
     };
     let images: Vec<&Value> = match first {
         Value::Array(items) => items.iter().collect(),

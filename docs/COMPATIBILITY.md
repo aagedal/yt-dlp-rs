@@ -3153,6 +3153,18 @@ higher) as audio formats. Non-string IDs, user names or thumbnails and
 missing users or download file names remain explicit native errors.
 `tests/fixtures/sites/hearthisat/` is compared with pinned upstream output.
 
+Library of Congress items (`loc.gov/item/ID`, `loc.gov/today/cyberlc/feature_wdesc.php?...rec=ID`)
+follow upstream `LibraryOfCongressIE`: the page's media player ID (upstream's
+five patterns, fatal), the `media.loc.gov/services/v1/media` object's first
+derivative URL rewritten like the page's `setAVSource` (`rtmp` to `https`,
+an `.mp4`/`.mp3` suffix by media type): an `hls-vod` playlist URL for
+`/vod/mp4:` streams and the HTTP file, both quality 1, plus the page's
+distinct download options (not GIF/JPEG) with their approximate sizes; the
+derivative's or object's short name (else the OpenGraph title), duration,
+view count, English TTML captions and OpenGraph image. An empty derivative
+list is upstream's bare `list index out of range`. `tests/fixtures/sites/libraryofcongress/`
+is compared with pinned upstream output.
+
 Libsyn episodes (`html5-player.libsyn.com/embed/episode/id/ID`) follow
 upstream `LibsynIE`: the player page (requested without the URL's trailing
 options) and its fatal `playlistItem` JSON, the item, `episode-title`,

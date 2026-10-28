@@ -1,0 +1,70 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://loc.gov/item/90716351/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"90716351\", \"title\": \"Pa's trip to Mars\", \"thumbnail\": \"https://loc.test/thumb.jpg\", \"duration\": 1416.0, \"view_count\": 27, \"formats\": [{\"url\": \"https://loc.test/dl/90716351.mp4\", \"format_id\": \"mp4\", \"filesize_approx\": 63000000, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\"}, {\"url\": \"https://loc.test/dl/90716351.mov\", \"format_id\": \"mov\", \"filesize_approx\": 1200000000, \"protocol\": \"https\", \"ext\": \"mov\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mov - unknown\"}, {\"url\": \"https://loc.test/hls-vod/media/media/90716351.mp4.m3u8\", \"format_id\": \"hls\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"quality\": 1, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - unknown\"}, {\"url\": \"https://loc.test/media/90716351.mp4\", \"format_id\": \"http\", \"quality\": 1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\"}], \"subtitles\": {\"en\": [{\"url\": \"https://loc.test/cc/90716351.xml\", \"ext\": \"ttml\"}]}, \"webpage_url\": \"http://loc.gov/item/90716351/\", \"original_url\": \"http://loc.gov/item/90716351/\", \"webpage_url_basename\": \"90716351\", \"webpage_url_domain\": \"loc.gov\", \"extractor\": \"loc\", \"extractor_key\": \"LibraryOfCongress\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://loc.test/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"90716351\", \"fulltitle\": \"Pa's trip to Mars\", \"duration_string\": \"23:36\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://loc.test/media/90716351.mp4\", \"format_id\": \"http\", \"quality\": 1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\", \"_filename\": \"Pa's trip to Mars [90716351].mp4\", \"filename\": \"Pa's trip to Mars [90716351].mp4\", \"__write_download_archive\": false}], \"url\": \"https://loc.test/media/90716351.mp4\", \"format_id\": \"http\", \"quality\": 1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://loc.gov/item/90716351/",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[loc] Extracting URL: http://loc.gov/item/90716351/",
+    "[loc] 90716351: Downloading webpage",
+    "[loc] ABCDEF0123456789ABCDEF0123456789: Downloading JSON metadata",
+    "[info] Available subtitles for 90716351:",
+    "Language Formats",
+    "en       ttml"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.loc.gov/today/cyberlc/feature_wdesc.php?rec=5578",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5578\", \"title\": \"Audio\", \"thumbnail\": null, \"view_count\": null, \"formats\": [{\"url\": \"https://loc.test/audio/5578.mp3\", \"format_id\": \"http\", \"quality\": 1, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - audio only\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.loc.gov/today/cyberlc/feature_wdesc.php?rec=5578\", \"original_url\": \"https://www.loc.gov/today/cyberlc/feature_wdesc.php?rec=5578\", \"webpage_url_basename\": \"feature_wdesc.php\", \"webpage_url_domain\": \"loc.gov\", \"extractor\": \"loc\", \"extractor_key\": \"LibraryOfCongress\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"5578\", \"fulltitle\": \"Audio\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://loc.test/audio/5578.mp3\", \"format_id\": \"http\", \"quality\": 1, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - audio only\", \"_filename\": \"Audio [5578].mp3\", \"filename\": \"Audio [5578].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.loc.gov/item/none/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [loc] none: Unable to extract media id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.loc.gov/item/empty/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  }
+ ]
+}
