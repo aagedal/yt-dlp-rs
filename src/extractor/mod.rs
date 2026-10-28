@@ -185,7 +185,9 @@ pub mod login;
 mod loom;
 mod lrt;
 mod maariv;
+mod magellantv;
 mod maoritv;
+mod massengeschmacktv;
 mod masters;
 mod matchitv;
 mod matchtv;
@@ -218,6 +220,7 @@ mod ninenews;
 mod nobelprize;
 mod noice;
 mod nosnl;
+mod novaplay;
 mod nowcanal;
 mod npr;
 mod nrk;
@@ -272,6 +275,7 @@ mod s4c;
 mod sapo;
 mod sbs;
 mod screen9;
+mod screencastify;
 mod screenrec;
 mod sen;
 mod servus;
@@ -686,7 +690,9 @@ pub use lrt::{
     stream_suitable as lrt_stream_suitable, vod_suitable as lrt_vod_suitable,
 };
 pub use maariv::{Maariv, suitable as maariv_suitable};
+pub use magellantv::{MagellanTv, suitable as magellantv_suitable};
 pub use maoritv::{MaoriTV, suitable as maoritv_suitable};
+pub use massengeschmacktv::{MassengeschmackTv, suitable as massengeschmacktv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};
 pub use matchitv::{MatchiTv, suitable as matchitv_suitable};
 pub use matchtv::{MatchTv, suitable as matchtv_suitable};
@@ -744,6 +750,7 @@ pub use ninenews::{NineNews, suitable as ninenews_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use noice::{NoicePodcast, suitable as noice_suitable};
 pub use nosnl::{NosNlArticle, suitable as nosnl_suitable};
+pub use novaplay::{NovaPlay, suitable as novaplay_suitable};
 pub use nowcanal::{NowCanal, suitable as nowcanal_suitable};
 pub use npr::{Npr, suitable as npr_suitable};
 pub use nrk::{
@@ -829,6 +836,7 @@ pub use s4c::{S4c, S4cSeries, series_suitable as s4c_series_suitable, suitable a
 pub use sapo::{Sapo, suitable as sapo_suitable};
 pub use sbs::{Sbs, suitable as sbs_suitable};
 pub use screen9::{Screen9, suitable as screen9_suitable};
+pub use screencastify::{Screencastify, suitable as screencastify_suitable};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
 pub use servus::{Servus, suitable as servus_suitable};
@@ -1140,7 +1148,13 @@ pub(crate) fn request_errnote_text(
         Some(_) => format!("<{}>", text.replacen("HTTP Error ", "HTTPError ", 1)),
         None => format!("TransportError({})", crate::batch::py_repr(&text)),
     };
-    format!("[{extractor}] {id}: {errnote}: {text} (caused by {cause})")
+    // `video_id=None` omits the `ID: ` prefix.
+    let id = if id.is_empty() {
+        String::new()
+    } else {
+        format!(" {id}:")
+    };
+    format!("[{extractor}]{id} {errnote}: {text} (caused by {cause})")
 }
 
 /// Upstream `_report_ignoring_subs(NAME)` for `_extract_m3u8_formats` and
@@ -1785,7 +1799,13 @@ fn download_json_with(
     headers: &[(&str, &str)],
 ) -> Result<serde_json::Value> {
     use std::io::Read;
-    crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
+    // `video_id=None` omits the `ID: ` prefix.
+    let prefix = if id.is_empty() {
+        format!("[{extractor}]")
+    } else {
+        format!("[{extractor}] {id}:")
+    };
+    crate::screen::screen(&format!("{prefix} {note}"));
     let wrap = |error: crate::Error| match error {
         crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => {
             crate::Error::ExtractorRequest {
@@ -1810,7 +1830,7 @@ fn download_json_with(
     let text = transform(&decode_webpage(&body, response.headers()))?;
     crate::json::from_str(&text).map_err(|error| {
         crate::Error::Reported(format!(
-            "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
+            "{prefix} Failed to parse JSON  (caused by {error})"
         ))
     })
 }
@@ -1915,6 +1935,15 @@ fn post_json_with(
 /// Upstream `update_url_query(url, query)`: the query decoded, updated and
 /// re-encoded like `urlencode` (`quote_plus`: `~` kept, `*` escaped).
 pub(crate) fn update_url_query(url: &Url, updates: &[(&str, &str)]) -> Url {
+    let updates: Vec<(&str, Vec<&str>)> = updates
+        .iter()
+        .map(|(key, value)| (*key, vec![*value]))
+        .collect();
+    update_url_query_lists(url, &updates)
+}
+
+/// [`update_url_query`] with `parse_qs`-style list values (`doseq`).
+pub(crate) fn update_url_query_lists(url: &Url, updates: &[(&str, Vec<&str>)]) -> Url {
     // `parse_qs` (blank values dropped, repeated keys grouped) and
     // `dict.update` (an updated key keeps its place).
     let mut groups: Vec<(String, Vec<String>)> = Vec::new();
@@ -1928,9 +1957,10 @@ pub(crate) fn update_url_query(url: &Url, updates: &[(&str, &str)]) -> Url {
         }
     }
     for (key, value) in updates {
+        let value: Vec<String> = value.iter().map(|value| (*value).to_owned()).collect();
         match groups.iter_mut().find(|(existing, _)| existing == key) {
-            Some((_, values)) => *values = vec![(*value).to_owned()],
-            None => groups.push(((*key).to_owned(), vec![(*value).to_owned()])),
+            Some((_, values)) => *values = value,
+            None => groups.push(((*key).to_owned(), value)),
         }
     }
     let pairs: Vec<(&str, &str)> = groups
@@ -2158,7 +2188,13 @@ pub(crate) fn download_xml_note(
     note: &str,
 ) -> Result<String> {
     use std::io::Read;
-    crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
+    // `video_id=None` omits the `ID: ` prefix.
+    let prefix = if id.is_empty() {
+        format!("[{extractor}]")
+    } else {
+        format!("[{extractor}] {id}:")
+    };
+    crate::screen::screen(&format!("{prefix} {note}"));
     let wrap = |error: crate::Error| match error {
         crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => {
             crate::Error::ExtractorRequest {

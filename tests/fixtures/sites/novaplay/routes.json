@@ -1,0 +1,101 @@
+{
+ "routes": [
+  {
+   "url": "https://play.nova.bg/video/ochakvaite/season-0/sybudi-se-sat/606627",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:image\" content=\"https://nbg-img.fite.tv/img/606627_460x260.jpg\"><meta property=\"og:description\" content=\"29 &amp; сек\"></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"video\": {\"title\": \"Събуди се - събота по NOVA (23.07.2022)\", \"slug\": \"ochakvaite/season-0/sybudi-se-sat\", \"duration\": \"00:00:29\", \"published_at\": \"2022-07-22T12:05:47+00:00\", \"view_count\": \"17\"}}}}</script></body></html>"
+  },
+  {
+   "url": "https://play.nova.bg/api/client",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"accessToken\": \"tok-1\"}"
+  },
+  {
+   "url": "https://nbg-api.fite.tv/api/v2/videos/606627/streams",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"links\": {\"play\": {\"href\": \"https://nbg-cdn.test/606627/master.m3u8\"}}}]",
+   "request_headers": {
+    "Authorization": "Bearer tok-1",
+    "x-flipps-version": "2022-05-17",
+    "x-flipps-user-agent": "Flipps/75/9.7"
+   }
+  },
+  {
+   "url": "https://nbg-cdn.test/606627/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://play.nova.bg/video/ochakvaite/season-0/b/606628",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"video\": {\"title\": \"B\", \"duration\": 29, \"published_at\": null, \"view_count\": null}}}}</script></body></html>"
+  },
+  {
+   "url": "https://nbg-api.fite.tv/api/v2/videos/606628/streams",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"links\": {\"play\": {\"href\": \"https://nbg-cdn.test/606627/master.m3u8\"}}}]"
+  },
+  {
+   "url": "https://play.nova.bg/video/ochakvaite/season-0/c/606629",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:image\" content=\"https://nbg-img.fite.tv/img/606629_460x260.jpg\"><meta property=\"og:description\" content=\"29 &amp; сек\"></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"video\": {\"title\": \"C\"}}}}</script></body></html>"
+  },
+  {
+   "url": "https://nbg-api.fite.tv/api/v2/videos/606629/streams",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}",
+   "status": 404
+  },
+  {
+   "url": "https://play.nova.bg/video/ochakvaite/season-0/d/606630",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {}}}</script>"
+  },
+  {
+   "url": "https://play.nova.bg/video/ochakvaite/season-0/e/606631",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:image\" content=\"https://nbg-img.fite.tv/img/606631_460x260.jpg\"><meta property=\"og:description\" content=\"29 &amp; сек\"></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"video\": {\"title\": \"E\", \"published_at\": \"2022-07-22T12:05:47Z\", \"view_count\": 1}}}}</script></body></html>"
+  },
+  {
+   "url": "https://nbg-api.fite.tv/api/v2/videos/606631/streams",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"links\": {\"play\": {\"href\": \"https://nbg-cdn.test/606627/master.m3u8\"}}}]"
+  },
+  {
+   "url": "https://play.nova.bg/video/ochakvaite/season-0/f/606632",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"video\": {\"title\": \"B\", \"duration\": 29, \"published_at\": null, \"view_count\": null}}}}</script></body></html>"
+  },
+  {
+   "url": "https://nbg-api.fite.tv/api/v2/videos/606632/streams",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[]"
+  }
+ ]
+}

@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://umbrella.svc.screencastify.com/api/umbrellaService/watch/sYVkZip3quLKhHw4Ybk8",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Inserting and Aligning\", \"description\": \"\", \"userName\": \"Paul Gunn\", \"manifest\": {\"url\": \"https://cdn.screencastify.test/a/manifest.mpd?x=1\", \"hlsUrl\": \"https://cdn.screencastify.test/a/master.m3u8\", \"auth\": {\"query\": \"Policy=abc%2Bdef&Signature=s~ig&Key-Pair-Id=K1&empty=\"}}}"
+  },
+  {
+   "url": "https://cdn.screencastify.test/a/manifest.mpd?x=1&Policy=abc%2Bdef&Signature=s~ig&Key-Pair-Id=K1",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://cdn.screencastify.test/a/master.m3u8?Policy=abc%2Bdef&Signature=s~ig&Key-Pair-Id=K1",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://umbrella.svc.screencastify.com/api/umbrellaService/watch/J5N7H11wofDN1jZUCr3t",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Lesson\", \"userName\": \"Scott\", \"manifest\": {\"url\": \"https://cdn.screencastify.test/b/manifest.mpd\", \"hlsUrl\": \"https://cdn.screencastify.test/b/master.m3u8\"}}"
+  },
+  {
+   "url": "https://cdn.screencastify.test/b/manifest.mpd",
+   "headers": {},
+   "body": "",
+   "status": 404
+  },
+  {
+   "url": "https://cdn.screencastify.test/b/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://umbrella.svc.screencastify.com/api/umbrellaService/watch/BQ26VbUdfbQLhKzkktOk",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Nothing\"}"
+  },
+  {
+   "url": "https://umbrella.svc.screencastify.com/api/umbrellaService/watch/missing",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}",
+   "status": 404
+  }
+ ]
+}

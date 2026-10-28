@@ -2526,6 +2526,30 @@
       "scope": "MaarivIE media API non-fatal HLS and parse_resolution HTTP formats, metadata, processing-time no-formats error and generic-page _EMBED_REGEX embeds compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "magellantv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/magellantv.py"
+      ],
+      "rust": [
+        "src/extractor/magellantv.rs",
+        "tests/fixtures/sites/magellantv/"
+      ],
+      "scope": "MagellanTVIE Next.js reactContext video detail or series episode, non-fatal HLS manifests with subtitles (deduplicated in first-seen order instead of set order), metadata and the error page's geo/no-formats errors, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "massengeschmacktv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/massengeschmacktv.py"
+      ],
+      "rust": [
+        "src/extractor/massengeschmacktv.rs",
+        "tests/fixtures/sites/massengeschmacktv/"
+      ],
+      "scope": "MassengeschmackTVIE MEDIA sources (non-fatal HLS or direct files), download links with size/resolution, title and POSTER thumbnail, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "masters",
       "status": "partial",
       "upstream": [
@@ -2803,6 +2827,18 @@
         "tests/fixtures/sites/noice/"
       ],
       "scope": "NoicePodcastIE Next.js content details with HLS or MP3 media and meta-tag fallbacks, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "novaplay",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/novaplay.py"
+      ],
+      "rust": [
+        "src/extractor/novaplay.rs",
+        "tests/fixtures/sites/novaplay/"
+      ],
+      "scope": "NovaPlayIE Next.js video props, the cached client access token and the fite.tv streams API's fatal HLS playlist with OpenGraph thumbnail/description, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "nowcanal",
@@ -3397,6 +3433,18 @@
         "tests/fixtures/sites/screenrec/"
       ],
       "scope": "ScreenRecIE customUrl HLS formats, OpenGraph/<title> fallback and warnings compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "screencastify",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/screencastify.py"
+      ],
+      "rust": [
+        "src/extractor/screencastify.rs",
+        "tests/fixtures/sites/screencastify/"
+      ],
+      "scope": "ScreencastifyIE umbrella watch JSON with non-fatal DASH and HLS manifests, the auth query on manifests and format URLs and extra_param_to_segment_url, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "sen",

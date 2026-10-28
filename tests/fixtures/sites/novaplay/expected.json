@@ -1,0 +1,88 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://play.nova.bg/video/ochakvaite/season-0/sybudi-se-sat/606627",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"606627\", \"title\": \"\\u0421\\u044a\\u0431\\u0443\\u0434\\u0438 \\u0441\\u0435 - \\u0441\\u044a\\u0431\\u043e\\u0442\\u0430 \\u043f\\u043e NOVA (23.07.2022)\", \"alt_title\": \"ochakvaite/season-0/sybudi-se-sat\", \"thumbnail\": \"https://nbg-img.fite.tv/img/606627_460x260.jpg\", \"description\": \"29 & \\u0441\\u0435\\u043a\", \"formats\": [{\"format_id\": \"hls-500\", \"format_index\": null, \"url\": \"https://nbg-cdn.test/606627/360.m3u8\", \"manifest_url\": \"https://nbg-cdn.test/606627/master.m3u8\", \"tbr\": 500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-500 - 640x360\"}, {\"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://nbg-cdn.test/606627/720.m3u8\", \"manifest_url\": \"https://nbg-cdn.test/606627/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\"}], \"duration\": 29, \"timestamp\": 1658491547, \"view_count\": 17, \"webpage_url\": \"https://play.nova.bg/video/ochakvaite/season-0/sybudi-se-sat/606627\", \"original_url\": \"https://play.nova.bg/video/ochakvaite/season-0/sybudi-se-sat/606627\", \"webpage_url_basename\": \"606627\", \"webpage_url_domain\": \"play.nova.bg\", \"extractor\": \"NovaPlay\", \"extractor_key\": \"NovaPlay\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://nbg-img.fite.tv/img/606627_460x260.jpg\", \"id\": \"0\"}], \"display_id\": \"606627\", \"fulltitle\": \"\\u0421\\u044a\\u0431\\u0443\\u0434\\u0438 \\u0441\\u0435 - \\u0441\\u044a\\u0431\\u043e\\u0442\\u0430 \\u043f\\u043e NOVA (23.07.2022)\", \"duration_string\": \"29\", \"upload_date\": \"20220722\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1000\", \"url\": \"https://nbg-cdn.test/606627/720.m3u8\", \"manifest_url\": \"https://nbg-cdn.test/606627/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\", \"_filename\": \"\\u0421\\u044a\\u0431\\u0443\\u0434\\u0438 \\u0441\\u0435 - \\u0441\\u044a\\u0431\\u043e\\u0442\\u0430 \\u043f\\u043e NOVA (23.07.2022) [606627].mp4\", \"filename\": \"\\u0421\\u044a\\u0431\\u0443\\u0434\\u0438 \\u0441\\u0435 - \\u0441\\u044a\\u0431\\u043e\\u0442\\u0430 \\u043f\\u043e NOVA (23.07.2022) [606627].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://nbg-cdn.test/606627/720.m3u8\", \"manifest_url\": \"https://nbg-cdn.test/606627/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://play.nova.bg/video/ochakvaite/season-0/b/606628",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"606628\", \"title\": \"B\", \"alt_title\": null, \"thumbnail\": null, \"description\": null, \"formats\": [{\"format_id\": \"hls-500\", \"format_index\": null, \"url\": \"https://nbg-cdn.test/606627/360.m3u8\", \"manifest_url\": \"https://nbg-cdn.test/606627/master.m3u8\", \"tbr\": 500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-500 - 640x360\"}, {\"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://nbg-cdn.test/606627/720.m3u8\", \"manifest_url\": \"https://nbg-cdn.test/606627/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\"}], \"timestamp\": null, \"view_count\": null, \"webpage_url\": \"https://play.nova.bg/video/ochakvaite/season-0/b/606628\", \"original_url\": \"https://play.nova.bg/video/ochakvaite/season-0/b/606628\", \"webpage_url_basename\": \"606628\", \"webpage_url_domain\": \"play.nova.bg\", \"extractor\": \"NovaPlay\", \"extractor_key\": \"NovaPlay\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"606628\", \"fulltitle\": \"B\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1000\", \"url\": \"https://nbg-cdn.test/606627/720.m3u8\", \"manifest_url\": \"https://nbg-cdn.test/606627/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\", \"_filename\": \"B [606628].mp4\", \"filename\": \"B [606628].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://nbg-cdn.test/606627/720.m3u8\", \"manifest_url\": \"https://nbg-cdn.test/606627/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [NovaPlay] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [NovaPlay] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://play.nova.bg/video/ochakvaite/season-0/c/606629",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [NovaPlay] 606629: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://play.nova.bg/video/ochakvaite/season-0/d/606630",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 606630: An extractor error has occurred. (caused by KeyError('video')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://play.nova.bg/video/ochakvaite/season-0/e/606631",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 606631: An extractor error has occurred. (caused by KeyError('duration')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://play.nova.bg/video/ochakvaite/season-0/f/606632",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  }
+ ]
+}

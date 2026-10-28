@@ -527,6 +527,15 @@ episode or program title and description, the `$$IMAGESIZE$$` thumbnail, the
 time are an unsupported error (processing would fill their `None` start).
 `tests/fixtures/sites/ruv/` is compared with pinned upstream output.
 
+Screencastify videos (`watch.screencastify.com/v/ID`,
+`app.screencastify.com/v2|v3/watch/ID`) follow upstream `ScreencastifyIE`:
+the umbrella service's watch JSON (title, description, uploader), its DASH
+(`dash`) and HLS (`hls`) manifests (both non-fatal, master playlist only)
+requested with the manifest's `auth.query` parsed like `parse_qs`, which is
+also added to every format URL and kept as the top-level
+`extra_param_to_segment_url`. `tests/fixtures/sites/screencastify/` is
+compared with pinned upstream output.
+
 ScreenRec shares (`screenrec.com/share/ID`) follow upstream `ScreenRecIE`: the
 page's fatal `customUrl` manifest as HLS formats (subtitles ignored with
 upstream's warning), the OpenGraph title (else the `<title>` text) and the
@@ -3767,6 +3776,27 @@ from webpage` when absent); otherwise the page is a playlist
 `tests/fixtures/sites/rottentomatoes/` is compared with pinned upstream
 output.
 
+MagellanTV videos (`[www.]magellantv.com/watch|video/ID`) follow upstream
+`MagellanTVIE`: the page's Next.js `reactContext` (missing keys are
+upstream's `KeyError`s), its video detail or else the series' current
+episode, whose `manifests[].hls` and `jwp_video_url` playlists (non-fatal,
+master playlist only, with subtitles) are deduplicated in first-seen order
+(upstream iterates a `set`, whose order is hash-dependent), and its title,
+description, duration, age rating and tags. Without formats, the error page's
+message is a geo restriction (`available in your country`) or the expected
+`MagellanTV said: ...` error. `tests/fixtures/sites/magellantv/` is compared
+with pinned upstream output.
+
+massengeschmack.tv episodes (`[www.]massengeschmack.tv/play/ID`) follow
+upstream `MassengeschmackTVIE`: the page's `MEDIA` sources (fatal,
+`js_to_json`; protocol-relative sources as `https:`) as non-fatal HLS
+playlists (`hls`, master playlist only) or direct files named by their
+extension, then the download links with resolution, file size and
+`vcodec: none` for `Audio` links (protocol-relative links as `http:`, like
+`sanitize_url`), the clip title and the `POSTER` thumbnail (both non-fatal).
+`tests/fixtures/sites/massengeschmacktv/` is compared with pinned upstream
+output.
+
 MDR.DE videos and audio (`mdr.de/.../NAME-ID[_...].html`) follow upstream
 `MDRIE` (geo countries `DE`): the page's `dataURL`/`playerXml` `-avCustom.xml`
 URL (fatal; `\/` unescaped, joined with the page URL) and that XML document's
@@ -4429,6 +4459,14 @@ with the `VideoDetail` name, description and creation time, and the
 collection API's items with a Brightcove ID as such results, with the
 collection name. `tests/fixtures/sites/netapp/` is compared with pinned
 upstream output.
+
+NovaPlay videos (`play.nova.bg/video/.../ID`) follow upstream `NovaPlayIE`:
+the page's Next.js `video` props (title, slug, duration, publication date and
+view count; missing keys are upstream's `KeyError`s), the client API's access
+token (fetched once per run without an ID) and the fite.tv streams API's first
+HLS playlist (`hls`, fatal), with the non-fatal OpenGraph thumbnail and
+description. `tests/fixtures/sites/novaplay/` is compared with pinned upstream
+output.
 
 NOS articles and videos (`nos.nl/[SECTION/]artikel/ID-SLUG`,
 `nos.nl/video/ID-SLUG`) follow upstream `NOSNLArticleIE`: the page's fatal

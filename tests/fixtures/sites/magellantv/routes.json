@@ -1,0 +1,66 @@
+{
+ "routes": [
+  {
+   "url": "https://www.magellantv.com/watch/incas-the-new-story?type=v",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"reactContext\": {\"video\": {\"detail\": {\"title\": \"Incas: The New Story\", \"metadata\": {\"description\": \"About Incas.\"}, \"duration\": \"51:00\", \"ratingCategory\": \"TV-14\", \"tags\": [\"Ancient History\", 3, \"Archaeology\"], \"manifests\": [{\"hls\": \"https://cdn.magellantv.test/a/master.m3u8\"}, {\"dash\": \"x\"}, {\"hls\": \"https://cdn.magellantv.test/a/master.m3u8\"}], \"jwp_video_url\": \"not a url\"}}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://www.magellantv.com/video/celebration-nation",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"reactContext\": {\"video\": {\"detail\": {}}, \"series\": {\"currentEpisode\": {\"title\": \"Ancestors\", \"duration\": 2640, \"ratingCategory\": null, \"tags\": \"x\", \"manifests\": {\"a\": {\"hls\": \"https://cdn.magellantv.test/b/subs.m3u8\"}}}}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://www.magellantv.com/watch/geo-blocked",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"reactContext\": {\"video\": {\"detail\": {\"title\": \"Geo\"}}, \"errorDetailPage\": {\"errorMessage\": \"This video is not available in your country.\"}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://www.magellantv.com/watch/gone",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"reactContext\": {\"errorDetailPage\": {\"errorMessage\": \"Video not found\"}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://www.magellantv.com/watch/nothing",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"reactContext\": {\"video\": {\"detail\": {\"title\": \"Nothing\", \"manifests\": [{\"hls\": \"https://cdn.magellantv.test/missing.m3u8\"}]}}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://cdn.magellantv.test/missing.m3u8",
+   "headers": {},
+   "body": "",
+   "status": 404
+  },
+  {
+   "url": "https://www.magellantv.com/video/no-context",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {}}}</script>"
+  },
+  {
+   "url": "https://cdn.magellantv.test/a/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000000,RESOLUTION=1280x720\n720.m3u8\n"
+  },
+  {
+   "url": "https://cdn.magellantv.test/b/subs.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID=\"subs\",NAME=\"English\",LANGUAGE=\"en\",URI=\"subs/en.m3u8\"\n#EXT-X-STREAM-INF:BANDWIDTH=800000,RESOLUTION=960x540,SUBTITLES=\"subs\"\n540.m3u8\n"
+  }
+ ]
+}
