@@ -1,0 +1,102 @@
+{
+ "routes": [
+  {
+   "url": "https://www.nfhsnetwork.com/events/rockford-high-school-rockford-mi/gamcf7e54cfbc",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta property=\"og:title\" content=\"Rockford vs Spring Lake - Girls Varsity Lacrosse 03/27/2021 | NFHS Network\">"
+  },
+  {
+   "url": "https://cfunity.nfhsnetwork.com/v2/game_or_event/gamcf7e54cfbc",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"city\": \"Rockford\", \"state_name\": \"Michigan\", \"local_start_time\": \"2021-03-27T15:30:00\", \"publishers\": [{\"formatted_name\": \"MHSAA - Michigan: Rockford High School, Rockford, MI\", \"name\": \"Rockford\", \"publisher_key\": \"cd2622cf76\", \"type\": \"school\", \"slug\": \"rockford-high-school-rockford-mi\", \"broadcasts\": [{\"key\": \"bcast1\", \"on_air\": false, \"status\": \"archived\"}], \"vods\": [{\"key\": \"vod123\"}]}]}"
+  },
+  {
+   "url": "https://cfunity.nfhsnetwork.com/v2/vods/vod123/url",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_url\": \"https://hls.nfhs.test/vod123/master.m3u8\"}"
+  },
+  {
+   "url": "https://hls.nfhs.test/vod123/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.nfhsnetwork.com/events/wiaa-wi/9aa2f92f82",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<h1 class=\"sr-hidden\">Competitive Equity  - 01/21/2015 | NFHS</h1>"
+  },
+  {
+   "url": "https://cfunity.nfhsnetwork.com/v2/game_or_event/9aa2f92f82",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"city\": \"Stevens Point\", \"state_name\": \"Wisconsin\", \"local_start_time\": \"2015-01-21 16:00:00\", \"publishers\": [{\"name\": \"WIAA - Wisconsin: Wisconsin Interscholastic Athletic Association\", \"publisher_key\": \"a49f7d1002\", \"type\": \"state_association\", \"slug\": \"wiaa-wi\", \"vods\": [{\"key\": \"vod9\", \"description\": \"Committee members discuss points\"}]}]}"
+  },
+  {
+   "url": "https://cfunity.nfhsnetwork.com/v2/vods/vod9/url",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_url\": \"https://hls.nfhs.test/vod123/master.m3u8\"}"
+  },
+  {
+   "url": "https://www.nfhsnetwork.com/events/nfhs-network-special-events/dd8de71d45",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta property=\"og:title\" content=\"2015 UA Holiday Classic\">"
+  },
+  {
+   "url": "https://cfunity.nfhsnetwork.com/v2/game_or_event/dd8de71d45",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"city\": \"San Diego\", \"state_name\": null, \"publishers\": [{\"formatted_name\": \"SoCal Sports Productions\", \"publisher_key\": \"063dba0150\", \"type\": \"publisher\", \"slug\": \"socal-sports-productions\", \"broadcasts\": [{\"key\": \"live77\", \"status\": \"on_air\", \"description\": \"Live now\"}], \"vods\": []}]}"
+  },
+  {
+   "url": "https://cfunity.nfhsnetwork.com/v2/broadcasts/live77/url",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_url\": \"https://hls.nfhs.test/vod123/master.m3u8\"}"
+  },
+  {
+   "url": "https://www.nfhsnetwork.com/events/x/evt0000000",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<p>x</p>"
+  },
+  {
+   "url": "https://cfunity.nfhsnetwork.com/v2/game_or_event/evt0000000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"publishers\": []}"
+  },
+  {
+   "url": "https://www.nfhsnetwork.com/events/x/evt0000001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<p>x</p>"
+  },
+  {
+   "url": "https://cfunity.nfhsnetwork.com/v2/game_or_event/evt0000001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"publishers\": [{\"type\": \"school\", \"broadcasts\": [{\"key\": \"k\"}]}]}"
+  }
+ ]
+}

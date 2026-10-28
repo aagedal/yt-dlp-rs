@@ -166,6 +166,7 @@ mod mux;
 mod myvidster;
 mod netzkino;
 mod newsy;
+mod nfhsnetwork;
 mod nhk;
 mod niconico;
 mod ninegag;
@@ -580,6 +581,7 @@ pub use mux::{Mux, suitable as mux_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
 pub use netzkino::{Netzkino, suitable as netzkino_suitable};
 pub use newsy::{Newsy, suitable as newsy_suitable};
+pub use nfhsnetwork::{NfhsNetwork, suitable as nfhsnetwork_suitable};
 pub use nhk::{
     NhkVod, NhkVodProgram, program_suitable as nhk_program_suitable,
     vod_suitable as nhk_vod_suitable,

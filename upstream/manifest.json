@@ -2190,6 +2190,18 @@
       "scope": "NewsyIE data-video-player attribute via js_to_json, fatal HLS formats and subtitles from a truthy stream, KeyError/Unable to extract data paths and the player metadata merged under the page JSON-LD (merge_dicts, missing-JSON-LD warning) compared with pinned upstream output through the fixture proxy; JSON-LD media URLs/formats/IDs/subtitles remain explicit native errors"
     },
     {
+      "name": "nfhsnetwork",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nfhsnetwork.py"
+      ],
+      "rust": [
+        "src/extractor/nfhsnetwork.rs",
+        "tests/fixtures/sites/nfhsnetwork/"
+      ],
+      "scope": "NFHSNetworkIE game/event API publisher broadcast or VOD metadata and stream URL API HLS (live for on-air broadcasts) compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "nhk",
       "status": "partial",
       "upstream": [

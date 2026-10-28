@@ -2877,6 +2877,15 @@ win; a missing JSON-LD is upstream's warning). JSON-LD carrying media URLs,
 formats, IDs or subtitles remains an explicit native error.
 `tests/fixtures/sites/newsy/` is compared with pinned upstream output.
 
+NFHS Network events (`nfhsnetwork.com/events/SLUG/ID`) follow upstream
+`NFHSNetworkIE`: the `cfunity` game/event API's first publisher and its
+first broadcast (else VOD), the uploader, uploader URL by publisher type,
+location and start time, the OpenGraph title (warning when missing, then
+the fatal `sr-hidden` heading) cut at `|`, and the broadcast or first VOD's
+stream URL API HLS playlist (live for on-air broadcasts). Upstream's bare
+`list index out of range` and `NoneType` errors are kept.
+`tests/fixtures/sites/nfhsnetwork/` is compared with pinned upstream output.
+
 NHK World on-demand episodes and clips (`www3.nhk.or.jp/nhkworld/LANG/shows/ID`,
 `shows/audio/ID`, the deprecated `ondemand/video/ID`) follow upstream
 `NhkVodIE`: the `api.nhkworld.jp/showsapi/v1` episode or clip (`9999...`

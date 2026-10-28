@@ -1,0 +1,33 @@
+[
+ {
+  "url": "https://www.nfhsnetwork.com/events/rockford-high-school-rockford-mi/gamcf7e54cfbc",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.nfhsnetwork.com/events/wiaa-wi/9aa2f92f82",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.nfhsnetwork.com/events/nfhs-network-special-events/dd8de71d45",
+  "args": [
+   "--print",
+   "%(id)s|%(is_live)s|%(format_id)s|%(uploader_url)s|%(location)s|%(description)s|%(timestamp)s"
+  ]
+ },
+ {
+  "url": "https://www.nfhsnetwork.com/events/x/evt0000000",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.nfhsnetwork.com/events/x/evt0000001",
+  "args": [
+   "-j"
+  ]
+ }
+]
