@@ -2068,7 +2068,7 @@ pub(crate) struct EmbedSite {
     temp_id: fn(&str) -> Option<String>,
 }
 
-static EMBED_SITES: [EmbedSite; 23] = [
+static EMBED_SITES: [EmbedSite; 24] = [
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
@@ -2180,6 +2180,13 @@ static EMBED_SITES: [EmbedSite; 23] = [
         extractor: Some(&super::streamable::Streamable),
         embed_urls: super::streamable::embed_urls,
         temp_id: super::streamable::temp_id,
+    },
+    EmbedSite {
+        name: super::tvigle::NAME,
+        key: super::tvigle::KEY,
+        extractor: Some(&super::tvigle::Tvigle),
+        embed_urls: super::tvigle::embed_urls,
+        temp_id: super::tvigle::temp_id,
     },
     EmbedSite {
         name: super::vbox7::NAME,

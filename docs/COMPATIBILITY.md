@@ -3051,6 +3051,18 @@ Python's decoder message). HDS (`f4m`) streams give non-fatal F4M formats. Upstr
 not ported. `tests/fixtures/sites/tv2/` is compared with pinned upstream
 output.
 
+Tvigle videos (`tvigle.ru/.../SLUG/`, `cloud.tvigle.ru/video/ID`) follow
+upstream `TvigleIE` (no geo bypass, countries `RU`): the page's player ID
+(three patterns, fatal) or the cloud ID, the `cloud.tvigle.ru/api/play/video/ID/`
+item (an empty list is upstream's bare `list index out of range`; without
+videos its `errorMessage` as a geo restriction when `isGeoBlocked`, else
+`tvigle returned error: ...`), its non-fatal HLS (`hls`) and DASH (`dash`)
+URLs and progressive files (`CODEC-ID`, height from `NNNp`, sizes from
+`video_files_size`), and the title, description, thumbnail, duration and
+age limit. Cloud player iframes on other pages are followed like upstream's
+`_EMBED_REGEX`. `tests/fixtures/sites/tvigle/` is compared with pinned
+upstream output.
+
 TV 2 regional sites (`tvsyd`, `tv2ostjylland`, `tvmidtvest`, `tv2fyn`,
 `tv2east`, `tv2lorry`, `tv2nord` and `tv2kosmopol.dk/.../SLUG`) follow upstream
 `TV2DKIE`: the `video_player(...)`/`simple_player(...)` `x-data` objects

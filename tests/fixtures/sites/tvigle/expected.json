@@ -1,0 +1,68 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.tvigle.ru/video/sokrat/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1848932\", \"display_id\": \"sokrat\", \"title\": \"\\u0421\\u043e\\u043a\\u0440\\u0430\\u0442\", \"description\": \"\\u041e\\u043f\\u0438\\u0441\\u0430\\u043d\\u0438\\u0435\", \"thumbnail\": \"https://tvigle.test/t.jpg\", \"duration\": 6586.159, \"age_limit\": 12, \"formats\": [{\"url\": \"https://tvigle-pd.test/1848932_hd.mp4\", \"format_id\": \"mp4-hd\", \"vcodec\": \"mp4\", \"height\": null, \"filesize\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-hd - unknown\"}, {\"url\": \"https://tvigle-pd.test/1848932_360.mp4\", \"format_id\": \"mp4-360p\", \"vcodec\": \"mp4\", \"height\": 360, \"filesize\": 123456, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-360p - 360p\"}, {\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://tvigle-hls.test/1848932/360/index.m3u8\", \"manifest_url\": \"https://tvigle-hls.test/1848932/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"webpage_url\": \"http://www.tvigle.ru/video/sokrat/\", \"original_url\": \"http://www.tvigle.ru/video/sokrat/\", \"webpage_url_basename\": \"sokrat\", \"webpage_url_domain\": \"tvigle.ru\", \"extractor\": \"tvigle\", \"extractor_key\": \"Tvigle\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://tvigle.test/t.jpg\", \"id\": \"0\"}], \"fulltitle\": \"\\u0421\\u043e\\u043a\\u0440\\u0430\\u0442\", \"duration_string\": \"1:49:46\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-921\", \"url\": \"https://tvigle-hls.test/1848932/360/index.m3u8\", \"manifest_url\": \"https://tvigle-hls.test/1848932/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"\\u0421\\u043e\\u043a\\u0440\\u0430\\u0442 [1848932].mp4\", \"filename\": \"\\u0421\\u043e\\u043a\\u0440\\u0430\\u0442 [1848932].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://tvigle-hls.test/1848932/360/index.m3u8\", \"manifest_url\": \"https://tvigle-hls.test/1848932/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://cloud.tvigle.ru/video/5267604/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [tvigle] 5267604: Видео недоступно в вашей стране"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://cloud.tvigle.ru/video/5267605/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [tvigle] 5267605: tvigle returned error: Видео удалено"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://cloud.tvigle.ru/video/5267606/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://news.tvigle.test/article",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(age_limit)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1848932|Сократ|12|https://cloud.tvigle.ru/video/1848932/"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  }
+ ]
+}

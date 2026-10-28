@@ -254,6 +254,7 @@ mod tv2dk;
 mod tv4;
 mod tv5mondeplus;
 mod tvanouvelles;
+mod tvigle;
 mod tvnoe;
 mod tweakers;
 mod twentythreevideo;
@@ -750,6 +751,7 @@ pub use tvanouvelles::{
     TvaNouvelles, TvaNouvellesArticle, article_suitable as tvanouvelles_article_suitable,
     suitable as tvanouvelles_suitable,
 };
+pub use tvigle::{Tvigle, suitable as tvigle_suitable};
 pub use tvnoe::{TvNoe, suitable as tvnoe_suitable};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};

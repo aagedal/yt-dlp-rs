@@ -3170,6 +3170,18 @@
       "scope": "TVNoeIE INIT_PLAYER js_to_json tracks (upstream's nested track-group filter) as master-only HLS and DASH formats with unsupported-type warnings, description, h2 title, premiere release date, h1 series and player poster compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "tvigle",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tvigle.py"
+      ],
+      "rust": [
+        "src/extractor/tvigle.rs",
+        "tests/fixtures/sites/tvigle/"
+      ],
+      "scope": "TvigleIE cloud play API HLS/DASH/progressive formats, geo and API errors, and cloud player embeds on generic pages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "tweakers",
       "status": "partial",
       "upstream": [
