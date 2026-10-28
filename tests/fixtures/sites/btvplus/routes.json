@@ -1,0 +1,68 @@
+{
+ "routes": [
+  {
+   "url": "https://btvplus.bg/produkt/predavaniya/67271/btv-reporterite/btv-reporterite-12-07-2025-g",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"  bTV Репортерите - 12.07.2025 г.  \"><meta property=\"og:image\" content=\"https://cdn.btv.bg/media/images/940x529/Jul2025/2113606319.jpg\"><meta property=\"og:description\" content=\"Репортаж &amp; още\"></head><body>\n<h1 class=\"product-title\">Ignored</h1><script>var videoUrl = '/lbin/v3/btvplus/player_config.php?media_id=67271';</script></body></html>"
+  },
+  {
+   "url": "https://btvplus.bg/lbin/v3/btvplus/player_config.php?media_id=67271",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"status\": \"ok\", \"config\": \"<div id=\\\"player\\\"></div><script>var player = videojs('player-67271', { autoplay: true, sources: [{ src: 'https://hls.btv.test/67271/master.m3u8', type: 'application/x-mpegURL' }, { src: \\\"https://cdn.btv.test/67271.mp4\\\", type: \\\"video/mp4\\\" }] });</script>\"}"
+  },
+  {
+   "url": "https://hls.btv.test/67271/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://btvplus.bg/produkt/seriali/66942/sezon-2/plen-sezon-2-epizod-55",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><div class=\"product-title\"> Плен - сезон 2, <b>епизод 55</b> </div>\n<script>var videoUrl = \"https://btvplus.bg/lbin/v3/btvplus/player_config.php?media_id=66942\";</script></body></html>"
+  },
+  {
+   "url": "https://btvplus.bg/lbin/v3/btvplus/player_config.php?media_id=66942",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"config\": \"<script>videojs(\\\"p\\\", {sources: [{src: \\\"not a url\\\", type: \\\"application/x-mpegURL\\\"}, {src: \\\"https://hls.btv.test/66942/master.m3u8\\\", type: \\\"application/vnd.apple.mpegurl\\\"}, {src: \\\"https://cdn.btv.test/66942.bin\\\"}]})</script>\"}"
+  },
+  {
+   "url": "https://hls.btv.test/66942/master.m3u8",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "no"
+  },
+  {
+   "url": "https://btvplus.bg/produkt/novini/67270/btv-novinite",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Новини\"></head><body><p>no player</p></body></html>"
+  },
+  {
+   "url": "https://www.btvplus.bg/produkt/novini/4/no-videojs",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script>var videoUrl = '/lbin/v3/btvplus/player_config.php?media_id=4';</script></body></html>"
+  },
+  {
+   "url": "https://btvplus.bg/lbin/v3/btvplus/player_config.php?media_id=4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"config\": \"<p>\\u0412\\u0438\\u0434\\u0435\\u043e\\u0442\\u043e \\u043d\\u0435 \\u0435 \\u043d\\u0430\\u043b\\u0438\\u0447\\u043d\\u043e</p>\"}"
+  }
+ ]
+}

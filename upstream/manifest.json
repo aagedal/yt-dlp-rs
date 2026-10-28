@@ -908,6 +908,18 @@
       "scope": "BrightcoveNewIE players.brightcove.net video URLs: policy key from config.json (non-fatal) else index.min.js catalog/policyKey, Playback API with Accept pk header and smuggled referrer/token, _parse_brightcove_metadata (non-fatal HLS/DASH with subtitles, progressive and streaming HTTP sources, DRM flags, captions, thumbnails, metadata), 401/403 API errors (geo and messages) and raise_no_formats errors; _extract_brightcove_urls iframe and <video>+player-script embeds on generic pages (smuggled referrer) compared with pinned upstream output through the fixture proxy; TVE_AUTH videos with smuggled source_url/software_statement through AdobePassIE._extract_mvpd_auth and the tveToken Playback API request (tests/fixtures/sites/adobepass/); playlists, RTMP sources, <video>-only embeds needing _is_valid_url and BrightcoveLegacyIE are unsupported"
     },
     {
+      "name": "btvplus",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/btvplus.py"
+      ],
+      "rust": [
+        "src/extractor/btvplus.rs",
+        "tests/fixtures/sites/btvplus/"
+      ],
+      "scope": "BTVPlusIE videoUrl player JSON config videojs sources (non-fatal HLS formats and subtitles, unknown-type warnings), Open Graph/product-title metadata compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "bundestag",
       "status": "partial",
       "upstream": [
@@ -2064,6 +2076,18 @@
         "tests/fixtures/sites/jove/"
       ],
       "scope": "JoveIE chapters XML video URL as an untyped result, citation metas and regex warnings, and the escaped int(None) error compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "jstream",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/jstream.py"
+      ],
+      "rust": [
+        "src/extractor/jstream.rs",
+        "tests/fixtures/sites/jstream/"
+      ],
+      "scope": "JStreamIE jstream: eq_meta JSONP movie auto HLS formats and subtitles with duplicate removal, metadata and errors, and generic-page if.js PlayerFactoryIF embeds, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "jwplatform",
@@ -3399,6 +3423,18 @@
       "scope": "TedTalkIE Next.js video data formats, external url results and metadata; TedPlaylistIE, TedSeriesIE and TedEmbedIE; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "telebruxelles",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/telebruxelles.py"
+      ],
+      "rust": [
+        "src/extractor/telebruxelles.rs",
+        "tests/fixtures/sites/telebruxelles/"
+      ],
+      "scope": "TeleBruxellesIE player RTMP URL (concatenated VOD paths, misspelled live scheme) as Wowza HLS/HDS/DASH/RTMP formats, article ID, h1/Open Graph title and description compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "telegraaf",
       "status": "partial",
       "upstream": [
@@ -3736,6 +3772,18 @@
         "tests/fixtures/sites/tvigle/"
       ],
       "scope": "TvigleIE cloud play API HLS/DASH/progressive formats, geo and API errors, and cloud player embeds on generic pages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "tviplayer",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tviplayer.py"
+      ],
+      "rust": [
+        "src/extractor/tviplayer.rs",
+        "tests/fixtures/sites/tviplayer/"
+      ],
+      "scope": "TVIPlayerIE wmsAuthSign token (once per run), opts player JSON HLS formats and subtitles, Open Graph title/thumbnail fallbacks, duration, episode number and JSON-LD TVEpisode season compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "tweakers",

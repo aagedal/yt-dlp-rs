@@ -762,6 +762,18 @@ not a video) is an unsupported error here; upstream warns that the extractor
 returned nothing. `tests/fixtures/sites/telegram/` is compared with pinned
 upstream output.
 
+BX1 (formerly Télé Bruxelles) articles and live streams (`bx1.be/...` and
+`telebruxelles.be/...` pages) follow upstream `TeleBruxellesIE`: the page's
+player `file` RTMP URL (VOD paths joined from their JavaScript string
+concatenation, the live stream's misspelled `rmtp` scheme corrected) as
+upstream's Wowza formats (non-fatal `playlist.m3u8`, `manifest.f4m` and
+`manifest.mpd` beside `rtmp`; SMIL streams remain an unsupported error),
+the `post-ID` article ID (else the URL's display ID), the first `<h1>`
+(else Open Graph) title and the Open Graph description; `stream/live` URLs
+are live. A page without the player URL is upstream's `Unable to extract
+RTMP url`. `tests/fixtures/sites/telebruxelles/` is compared with pinned
+upstream output.
+
 Telewebion episodes (`telewebion.ir/episode/ID`, decimal IDs as `0x...`)
 follow upstream `TelewebionIE`: the `graph.telewebion.ir/graphql`
 `getEpisodeDetail` query (a JSON POST; GraphQL `errors` messages, or
@@ -885,6 +897,19 @@ and the non-fatal metadata overlay's first `<h3>` (spans removed) and `<p>`
 as title and description. Like upstream, fatal HLS requests become non-fatal
 with `--ignore-no-formats-error` (in every extractor using the shared
 helper). `tests/fixtures/sites/bundestag/` is compared with pinned upstream
+output.
+
+bTV Plus shows, series and news (`btvplus.bg/produkt/{predavaniya,seriali,novini}/ID`)
+follow upstream `BTVPlusIE`: the page's `var videoUrl` player JSON (joined
+to `https://btvplus.bg`; a page without it is upstream's `Unable to extract
+player URL`, a response without `config` its `KeyError`), the config's
+`videojs(...)` options (else `Unable to extract videojs data`), each source
+with a URL `src` as non-fatal HLS formats and subtitles (`hls`) when its
+type is an HLS MIME type, other types being upstream's `Unknown format type`
+warning, and the stripped Open Graph title (else the cleaned
+`product-title` element), Open Graph image and description. Configs that
+are not strings and videojs options that do not parse are unsupported
+errors. `tests/fixtures/sites/btvplus/` is compared with pinned upstream
 output.
 
 Bundesliga videos (`bundesliga.com/LL/bundesliga/videos[/...]?vid=ID`) follow
@@ -1779,6 +1804,18 @@ first video ID, whose `content.tmgvideo.nl` playlist item supplies non-fatal
 progressive `http[-LABEL]` files, and the title, description, duration, poster
 and space-delimited ISO 8601 timestamp. Responses without the expected video
 ID or item are explicit native errors.
+
+TVI Player videos and episodes (`tviplayer.iol.pt/[programa/SLUG/ID/]TYPE/ID`)
+follow upstream `TVIPlayerIE`: a `wmsAuthSign` token from
+`services.iol.pt/matrix` (fetched once per run, before the first `Extracting
+URL` line), the page's `opts = {video: [...]}` player JSON (missing JSON is
+upstream's `Unable to extract JSON data`, a missing `videoUrl` its
+`KeyError`), the `videoUrl` HLS signed with the token (fatal, with
+subtitles), the player's title and cover (else Open Graph), duration and
+episode number, and the first JSON-LD `TVEpisode` season number. Player JSON
+that does not parse and non-string video URLs, titles or covers are
+unsupported errors. `tests/fixtures/sites/tviplayer/` is compared with pinned
+upstream output.
 
 TV Noe programmes (`tvnoe.cz/porad/ID`) follow upstream `TVNoeIE`: the page's
 `var INIT_PLAYER` object (through `js_to_json`, else the fatal `Unable to
@@ -2878,6 +2915,22 @@ XML`; none is upstream's `Failed to get the video URL`) as an untyped result,
 the `citation_title`/`citation_publication_date` metas, OpenGraph thumbnail,
 summary paragraph and comment count, each with upstream's warning, and the
 escaped `int(None)` error without a comment count.
+
+J-Stream Equipmedia videos (`jstream:HOST:PUBLISHER:MID`) follow upstream
+`JStreamIE`: the `PUBLISHER.eq.webcdn.stream.ne.jp/HOST/PUBLISHER/jmc_pub/eq_meta/v1/MID.jsonp`
+`metaDataResult(...)` callback (else upstream's `Unable to extract
+metaDataResult`; a result without `movie` is its `KeyError`, a movie
+without `movie_list_hls` its bare `'NoneType' object is not iterable`),
+each list entry whose text starts with `auto` as a fatal HLS playlist (the
+rest of the text, without a leading `_`, as the format ID prefix) with
+subtitles, duplicate format URLs removed, and the movie's title, duration
+and thumbnail URL. Generic pages loading the J-Stream player's
+`ssl-cache.stream.ne.jp/HOST/PUBLISHER/.../if.js` embed the
+`PlayerFactoryIF.create({...})` players' base64 `m` movie IDs (one embed is
+followed, several are a playlist). Player options that do not parse are
+skipped here, where upstream's generic extraction fails; non-string list
+texts or URLs and non-list HLS lists are unsupported errors.
+`tests/fixtures/sites/jstream/` is compared with pinned upstream output.
 
 JW Platform media (`content.jwplatform.com`/`cdn.jwplayer.com`
 `players|feeds|thumbs|previews|manifests|jw6|v2/media/ID`, and `jwplatform:ID`)

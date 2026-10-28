@@ -32,6 +32,7 @@ mod bongacams;
 mod bostonglobe;
 mod breitbart;
 pub(crate) mod brightcove;
+mod btvplus;
 mod bundesliga;
 mod bundestag;
 mod businessinsider;
@@ -141,6 +142,7 @@ mod jamendo;
 mod jixie;
 mod jove;
 mod json_ld;
+mod jstream;
 mod jwplatform;
 mod jwplayer;
 mod kaltura;
@@ -278,6 +280,7 @@ mod sverigesradio;
 mod svt;
 mod sztvhu;
 mod ted;
+mod telebruxelles;
 mod telegraaf;
 mod telegram;
 mod teletask;
@@ -302,6 +305,7 @@ mod tv4;
 mod tv5mondeplus;
 mod tvanouvelles;
 mod tvigle;
+mod tviplayer;
 mod tvnoe;
 mod tweakers;
 mod twentythreevideo;
@@ -406,6 +410,7 @@ pub use bongacams::{BongaCams, suitable as bongacams_suitable};
 pub use bostonglobe::{BostonGlobe, suitable as bostonglobe_suitable};
 pub use breitbart::{BreitBart, suitable as breitbart_suitable};
 pub use brightcove::{BrightcoveNew, suitable as brightcove_new_suitable};
+pub use btvplus::{BtvPlus, suitable as btvplus_suitable};
 pub use bundesliga::{Bundesliga, suitable as bundesliga_suitable};
 pub use bundestag::{Bundestag, suitable as bundestag_suitable};
 pub use businessinsider::{BusinessInsider, suitable as businessinsider_suitable};
@@ -580,6 +585,7 @@ pub use jamendo::{
     Jamendo, JamendoAlbum, album_suitable as jamendo_album_suitable, suitable as jamendo_suitable,
 };
 pub use jove::{Jove, suitable as jove_suitable};
+pub use jstream::{JStream, suitable as jstream_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
 pub use kaltura::{Kaltura, suitable as kaltura_suitable};
 pub use kankanews::{KankaNews, suitable as kankanews_suitable};
@@ -833,6 +839,7 @@ pub use ted::{
     playlist_suitable as ted_playlist_suitable, series_suitable as ted_series_suitable,
     talk_suitable as ted_talk_suitable,
 };
+pub use telebruxelles::{TeleBruxelles, suitable as telebruxelles_suitable};
 pub use telegraaf::{Telegraaf, suitable as telegraaf_suitable};
 pub use telegram::{TelegramEmbed, suitable as telegram_suitable};
 pub use teletask::{TeleTask, suitable as teletask_suitable};
@@ -874,6 +881,7 @@ pub use tvanouvelles::{
     suitable as tvanouvelles_suitable,
 };
 pub use tvigle::{Tvigle, suitable as tvigle_suitable};
+pub use tviplayer::{TviPlayer, suitable as tviplayer_suitable};
 pub use tvnoe::{TvNoe, suitable as tvnoe_suitable};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
@@ -2358,6 +2366,7 @@ fn py_splitlines(text: &str) -> Vec<&str> {
 /// Whether an extractor's `_VALID_URL` takes this non-HTTP pseudo-URL.
 pub fn pseudo_url(url: &str) -> bool {
     (url.starts_with("jwplatform:") && jwplatform::suitable(url))
+        || (url.starts_with("jstream:") && jstream::suitable(url))
         || (url.starts_with("kaltura:") && kaltura::suitable(url))
         || youtube::search::suitable(url)
         || (url.starts_with("nicosearch")

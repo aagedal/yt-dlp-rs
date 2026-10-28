@@ -97,7 +97,7 @@ fn url_basename(text: &str) -> String {
 
 /// `_remove_duplicate_formats`: the first format of each URL, or of each
 /// set of fragment URLs for fragmented formats.
-fn remove_duplicate_formats(formats: &mut Vec<crate::VideoFormat>) {
+pub(crate) fn remove_duplicate_formats(formats: &mut Vec<crate::VideoFormat>) {
     let mut seen_urls: Vec<Url> = Vec::new();
     let mut seen_fragments: Vec<Vec<String>> = Vec::new();
     formats.retain(|format| {

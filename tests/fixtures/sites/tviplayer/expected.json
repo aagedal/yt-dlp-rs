@@ -1,0 +1,88 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://tviplayer.iol.pt/programa/jornal-das-8/53c6b3903004dc006243d0cf/video/61c8e8b90cf2c7ea0f0f71a9",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"61c8e8b90cf2c7ea0f0f71a9\", \"title\": \"Jornal das 8 - 26 de dezembro de 2021\", \"thumbnail\": \"https://img.iol.pt/image/id/61c8ee630cf2cc58e7d98d9f/\", \"duration\": 4167, \"formats\": [{\"format_id\": \"1500\", \"format_index\": null, \"url\": \"https://vod.iol.test/vod/mp4:jornal.mp4/chunklist_b1500000.m3u8\", \"manifest_url\": \"https://vod.iol.test/vod/mp4:jornal.mp4/playlist.m3u8?wmsAuthSign=tok123\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1500 - 1280x720\"}], \"subtitles\": {\"pt\": [{\"url\": \"https://vod.iol.test/vod/mp4:jornal.mp4/subs/pt.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"season_number\": 8, \"episode_number\": null, \"webpage_url\": \"https://tviplayer.iol.pt/programa/jornal-das-8/53c6b3903004dc006243d0cf/video/61c8e8b90cf2c7ea0f0f71a9\", \"original_url\": \"https://tviplayer.iol.pt/programa/jornal-das-8/53c6b3903004dc006243d0cf/video/61c8e8b90cf2c7ea0f0f71a9\", \"webpage_url_basename\": \"61c8e8b90cf2c7ea0f0f71a9\", \"webpage_url_domain\": \"tviplayer.iol.pt\", \"extractor\": \"TVIPlayer\", \"extractor_key\": \"TVIPlayer\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.iol.pt/image/id/61c8ee630cf2cc58e7d98d9f/\", \"id\": \"0\"}], \"display_id\": \"61c8e8b90cf2c7ea0f0f71a9\", \"fulltitle\": \"Jornal das 8 - 26 de dezembro de 2021\", \"duration_string\": \"1:09:27\", \"release_year\": null, \"season\": \"Season 8\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"1500\", \"url\": \"https://vod.iol.test/vod/mp4:jornal.mp4/chunklist_b1500000.m3u8\", \"manifest_url\": \"https://vod.iol.test/vod/mp4:jornal.mp4/playlist.m3u8?wmsAuthSign=tok123\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1500 - 1280x720\", \"_filename\": \"Jornal das 8 - 26 de dezembro de 2021 [61c8e8b90cf2c7ea0f0f71a9].mp4\", \"filename\": \"Jornal das 8 - 26 de dezembro de 2021 [61c8e8b90cf2c7ea0f0f71a9].mp4\", \"__write_download_archive\": false}], \"format_id\": \"1500\", \"format_index\": null, \"url\": \"https://vod.iol.test/vod/mp4:jornal.mp4/chunklist_b1500000.m3u8\", \"manifest_url\": \"https://vod.iol.test/vod/mp4:jornal.mp4/playlist.m3u8?wmsAuthSign=tok123\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1500 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://tviplayer.iol.pt/video/62c4131c0cf2f9a86eac06bb",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"62c4131c0cf2f9a86eac06bb\", \"title\": \"David e Mickael Carreira respondem: \\u00abQual \\u00e9 o pr\\u00f3ximo a ser pai?\\u00bb\", \"thumbnail\": \"https://img.iol.pt/image/id/62c416490cf2ea367d4433fd/\", \"duration\": 148, \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://vod.iol.test/vod/mp4:carreira.mp4/playlist.m3u8?wmsAuthSign=tok123\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"season_number\": null, \"episode_number\": null, \"webpage_url\": \"https://tviplayer.iol.pt/video/62c4131c0cf2f9a86eac06bb\", \"original_url\": \"https://tviplayer.iol.pt/video/62c4131c0cf2f9a86eac06bb\", \"webpage_url_basename\": \"62c4131c0cf2f9a86eac06bb\", \"webpage_url_domain\": \"tviplayer.iol.pt\", \"extractor\": \"TVIPlayer\", \"extractor_key\": \"TVIPlayer\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.iol.pt/image/id/62c416490cf2ea367d4433fd/\", \"id\": \"0\"}], \"display_id\": \"62c4131c0cf2f9a86eac06bb\", \"fulltitle\": \"David e Mickael Carreira respondem: \\u00abQual \\u00e9 o pr\\u00f3ximo a ser pai?\\u00bb\", \"duration_string\": \"2:28\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"0\", \"url\": \"https://vod.iol.test/vod/mp4:carreira.mp4/playlist.m3u8?wmsAuthSign=tok123\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"David e Mickael Carreira respondem\\uff1a \\u00abQual \\u00e9 o pr\\u00f3ximo a ser pai\\uff1f\\u00bb [62c4131c0cf2f9a86eac06bb].mp4\", \"filename\": \"David e Mickael Carreira respondem\\uff1a \\u00abQual \\u00e9 o pr\\u00f3ximo a ser pai\\uff1f\\u00bb [62c4131c0cf2f9a86eac06bb].mp4\", \"__write_download_archive\": false}], \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://vod.iol.test/vod/mp4:carreira.mp4/playlist.m3u8?wmsAuthSign=tok123\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://tviplayer.iol.pt/programa/para-sempre/61716c360cf2365a5ed894c4/episodio/t1e187",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"t1e187\", \"title\": \"Quem denunciou Pedro?\", \"thumbnail\": \"https://img.iol.pt/image/id/62eda30b0cf2ea367d48973b/\", \"duration\": 1250, \"formats\": [{\"format_id\": \"1500\", \"format_index\": null, \"url\": \"https://vod.iol.test/vod/mp4:t1e187.mp4/chunklist_b1500000.m3u8\", \"manifest_url\": \"https://vod.iol.test/vod/mp4:t1e187.mp4/playlist.m3u8?wmsAuthSign=tok123\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1500 - 1280x720\"}], \"subtitles\": {\"pt\": [{\"url\": \"https://vod.iol.test/vod/mp4:t1e187.mp4/subs/pt.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"season_number\": 1, \"episode_number\": 187, \"webpage_url\": \"https://tviplayer.iol.pt/programa/para-sempre/61716c360cf2365a5ed894c4/episodio/t1e187\", \"original_url\": \"https://tviplayer.iol.pt/programa/para-sempre/61716c360cf2365a5ed894c4/episodio/t1e187\", \"webpage_url_basename\": \"t1e187\", \"webpage_url_domain\": \"tviplayer.iol.pt\", \"extractor\": \"TVIPlayer\", \"extractor_key\": \"TVIPlayer\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.iol.pt/image/id/62eda30b0cf2ea367d48973b/\", \"id\": \"0\"}], \"display_id\": \"t1e187\", \"fulltitle\": \"Quem denunciou Pedro?\", \"duration_string\": \"20:50\", \"release_year\": null, \"season\": \"Season 1\", \"episode\": \"Episode 187\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"1500\", \"url\": \"https://vod.iol.test/vod/mp4:t1e187.mp4/chunklist_b1500000.m3u8\", \"manifest_url\": \"https://vod.iol.test/vod/mp4:t1e187.mp4/playlist.m3u8?wmsAuthSign=tok123\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1500 - 1280x720\", \"_filename\": \"Quem denunciou Pedro\\uff1f [t1e187].mp4\", \"filename\": \"Quem denunciou Pedro\\uff1f [t1e187].mp4\", \"__write_download_archive\": false}], \"format_id\": \"1500\", \"format_index\": null, \"url\": \"https://vod.iol.test/vod/mp4:t1e187.mp4/chunklist_b1500000.m3u8\", \"manifest_url\": \"https://vod.iol.test/vod/mp4:t1e187.mp4/playlist.m3u8?wmsAuthSign=tok123\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1500 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://tviplayer.iol.pt/programa/para-sempre/61716c360cf2365a5ed894c4/episodio/t1e187",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[TVIPlayer] wmsAuthSign: Trying to get wmsAuthSign token",
+    "[TVIPlayer] Extracting URL: https://tviplayer.iol.pt/programa/para-sempre/61716c360cf2365a5ed894c4/episodio/t1e187",
+    "[TVIPlayer] t1e187: Downloading webpage",
+    "[TVIPlayer] t1e187: Downloading m3u8 information",
+    "[info] Available formats for t1e187:",
+    "ID   EXT RESOLUTION |   FILESIZE   TBR PROTO | VCODEC      ACODEC",
+    "--------------------------------------------------------------------",
+    "1500 mp4 1280x720   | ~223.52MiB 1500k m3u8  | avc1.4d401f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://tviplayer.iol.pt/video/nojson",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [TVIPlayer] nojson: Unable to extract JSON data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://tviplayer.iol.pt/video/nourl",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: nourl: An extractor error has occurred. (caused by KeyError('videoUrl')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

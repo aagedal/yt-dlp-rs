@@ -1,0 +1,33 @@
+[
+ {
+  "url": "http://bx1.be/news/que-risque-lauteur-dune-fausse-alerte-a-la-bombe/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://bx1.be/lives/direct-tv/",
+  "args": [
+   "--print",
+   "%(id)s|%(display_id)s|%(fulltitle)s|%(description)s|%(is_live)s|%(live_status)s|%(format_id)s|%(protocol)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://bx1.be/lives/direct-tv/",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.telebruxelles.be/sport/sans-titre",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://bx1.be/emission/bxenf1-gastronomie/",
+  "args": [
+   "-J"
+  ]
+ }
+]

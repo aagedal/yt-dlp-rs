@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "http://bx1.be/news/que-risque-lauteur-dune-fausse-alerte-a-la-bombe/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"OG title\"><meta property=\"og:description\" content=\"Une fausse alerte &amp; ses risques.\"></head><body>\n<article id=\"post-158856\" class=\"post\"><h1 class=\"entry-title\">Que risque <em>l&#8217;auteur</em> d&#8217;une fausse alerte ?</h1>\n<script>jwplayer(\"player\").setup({ file: \"rtmp://bx1-wowza.test/vod/mp4:\" + \"2016/03/alerte_bombe\" + \".mp4\", image: \"x.jpg\" });</script>\n</article></body></html>"
+  },
+  {
+   "url": "http://bx1-wowza.test/vod/mp4:2016/03/alerte_bombe.mp4/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "playlist.m3u8"
+  },
+  {
+   "url": "https://bx1.be/lives/direct-tv/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"BX1 en direct\"></head><body>\n<div><script>var player = { \"file\": \"rmtp://bx1-live.test/stream/live\", autostart: true };</script></div></body></html>"
+  },
+  {
+   "url": "http://bx1-live.test/stream/live/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "playlist.m3u8"
+  },
+  {
+   "url": "https://www.telebruxelles.be/sport/sans-titre",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><article id=\"post-1\"><script>file: \"rtmps://bx1-wowza.test/vod/mp4:\" + \"a/b\" + \".mp4\"</script></article></body></html>"
+  },
+  {
+   "url": "https://bx1.be/emission/bxenf1-gastronomie/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Emission\"></head><body><article id=\"post-77\"><h1>Emission</h1><p>Pas de vidéo</p></article></body></html>"
+  }
+ ]
+}
