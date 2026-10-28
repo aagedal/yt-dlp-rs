@@ -45,6 +45,7 @@ mod dash;
 mod daystar;
 mod democracynow;
 mod dfb;
+mod digiteka;
 pub(crate) mod direct;
 mod dlive;
 mod dropbox;
@@ -348,6 +349,7 @@ pub(crate) use dailymotion::{
 pub use daystar::{DaystarClip, suitable as daystar_suitable};
 pub use democracynow::{Democracynow, suitable as democracynow_suitable};
 pub use dfb::{Dfb, suitable as dfb_suitable};
+pub use digiteka::{Digiteka, suitable as digiteka_suitable};
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
 pub use dlive::{

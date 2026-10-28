@@ -2985,6 +2985,16 @@ detected natively, and undecodable tokens remain explicit native errors.
 `tests/fixtures/sites/cloudflarestream/` is compared with pinned upstream
 output.
 
+Digiteka and Ultimedia videos (`digiteka.net|ultimedia.com/deliver/generic|musique/.../src|article/ID`,
+`.../default/index/videogeneric|music/id/ID`) follow upstream `DigitekaIE`:
+the `ultimedia.com/player/getConf/01836272/1/ID` JSON's `video` (required),
+its `media_sources.hls.hls_auto` as a non-fatal HLS master playlist (`hls`,
+subtitles kept) and each non-empty `media_sources.mp4` rendition (`mp4`,
+height from the key's `_HEIGHT` suffix), with the title, image, duration,
+creation timestamp and owner ID. Ultimedia iframes and scripts on other pages
+are followed like upstream's `_EMBED_REGEX`. `tests/fixtures/sites/digiteka/`
+is compared with pinned upstream output.
+
 DLive past broadcasts (`dlive.tv/p/UPLOADER+ID`) and live streams
 (`dlive.tv/NAME`, not `p/`) follow upstream `DLiveVODIE` and `DLiveStreamIE`:
 the `graphigo.prd.dlive.tv` GraphQL POST (`pastBroadcast(permlink:...)` or

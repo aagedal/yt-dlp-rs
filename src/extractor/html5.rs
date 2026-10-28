@@ -2068,7 +2068,7 @@ pub(crate) struct EmbedSite {
     temp_id: fn(&str) -> Option<String>,
 }
 
-static EMBED_SITES: [EmbedSite; 17] = [
+static EMBED_SITES: [EmbedSite; 18] = [
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
@@ -2110,6 +2110,13 @@ static EMBED_SITES: [EmbedSite; 17] = [
         extractor: Some(&super::dailymail::DailyMail),
         embed_urls: super::dailymail::embed_urls,
         temp_id: super::dailymail::temp_id,
+    },
+    EmbedSite {
+        name: super::digiteka::NAME,
+        key: super::digiteka::KEY,
+        extractor: Some(&super::digiteka::Digiteka),
+        embed_urls: super::digiteka::embed_urls,
+        temp_id: super::digiteka::temp_id,
     },
     EmbedSite {
         name: super::googledrive::NAME,

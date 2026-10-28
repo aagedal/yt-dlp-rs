@@ -957,6 +957,18 @@
       "scope": "DFBIE player XML, stream access token manifests (optional hds F4M with hdcore and hls m3u8 formats), title, unified_strdate upload date, thumbnail and wrapped AttributeError/KeyError messages compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "digiteka",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/digiteka.py"
+      ],
+      "rust": [
+        "src/extractor/digiteka.rs",
+        "tests/fixtures/sites/digiteka/"
+      ],
+      "scope": "DigitekaIE getConf player JSON with HLS and MP4 renditions, and Ultimedia embeds on generic pages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "dlive",
       "status": "partial",
       "upstream": [

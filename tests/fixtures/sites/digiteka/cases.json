@@ -1,0 +1,20 @@
+[
+ {
+  "url": "https://www.ultimedia.com/default/index/videogeneric/id/3x5x55k",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.lemonde.test/article.html",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.digiteka.net/deliver/musique/iframe/src/nope1",
+  "args": [
+   "-j"
+  ]
+ }
+]
