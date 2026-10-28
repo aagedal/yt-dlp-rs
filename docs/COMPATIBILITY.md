@@ -2231,6 +2231,18 @@ description, uploader, duration, license and categories. Timed text tracks
 without a type are explicit native errors. `tests/fixtures/sites/wikimedia/`
 is compared with pinned upstream output.
 
+Wall Street Journal and Barron's videos (`video-api.wsj.com/.../iframe.html?...guid=ID`,
+`wsj|barrons.com/video/.../ID`, `wsj:ID`) follow upstream `WSJIE`: the
+`find_all_videos.asp` API's first item (an empty list is upstream's bare
+`list index out of range`), its non-fatal HDS (`hds`) and HLS (`hls`)
+manifests and MP4 renditions (`http-KBPS`, integer bitrate, size, fps), the
+API's thumbnails as given, author, editor, duration, US-order creation date,
+name (else title tag) and keywords. Articles (`wsj.com/articles|opinion/SLUG`)
+follow `WSJArticleIE`: the page (requested with impersonation, warning like
+upstream when no target is available) and its first video ID as a
+`wsj:ID` result. `tests/fixtures/sites/wsj/` is compared with pinned
+upstream output.
+
 WorldStarHipHop videos (`www|m.worldstar{hiphop,candy}.com/{videos,android}/video.php?v=ID`)
 follow upstream `WorldStarHipHopIE`: the first `_parse_html5_media_entries`
 entry (formats with the page as `Referer`, tracks and poster) with the fatal

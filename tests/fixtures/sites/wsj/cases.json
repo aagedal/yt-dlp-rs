@@ -1,0 +1,26 @@
+[
+ {
+  "url": "http://www.wsj.com/video/can-alphabet-build-a-smarter-city/1BD01A4C-BFE8-40A5-A42F-8A8AF9898B1A.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.wsj.com/articles/dont-like-china-no-pandas-for-you-1490366939",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.wsj.com/articles/no-video",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "wsj:00000000-0000-0000-0000-000000000000",
+  "args": [
+   "-j"
+  ]
+ }
+]

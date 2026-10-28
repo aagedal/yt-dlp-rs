@@ -275,6 +275,7 @@ mod wikimedia;
 mod wimbledon;
 mod wistia;
 mod worldstarhiphop;
+mod wsj;
 mod xboxclips;
 mod xiaohongshu;
 mod xspf;
@@ -780,6 +781,9 @@ pub use wistia::{
     playlist_suitable as wistia_playlist_suitable, suitable as wistia_suitable,
 };
 pub use worldstarhiphop::{WorldStarHipHop, suitable as worldstarhiphop_suitable};
+pub use wsj::{
+    Wsj, WsjArticle, article_suitable as wsj_article_suitable, suitable as wsj_suitable,
+};
 pub use xboxclips::{XboxClips, suitable as xboxclips_suitable};
 pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};
 pub use xvideos::{
@@ -2079,6 +2083,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("tiktokuser:") && tiktok::user_suitable(url))
         || (url.starts_with("wat:") && wat::suitable(url))
         || (url.starts_with("wistia:") && wistia::suitable(url))
+        || (url.starts_with("wsj:") && wsj::suitable(url))
         || (url.starts_with("wistiachannel:") && wistia::channel_suitable(url))
         || youtube::redirect::user_suitable(url)
 }
