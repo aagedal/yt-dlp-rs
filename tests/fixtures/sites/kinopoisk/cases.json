@@ -1,0 +1,59 @@
+[
+ {
+  "url": "https://www.kinopoisk.ru/film/81041/watch/",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://kinopoisk.ru/film/81041",
+  "args": [
+   "--no-geo-bypass",
+   "--print",
+   "%(id)s|%(title)s|%(description)s|%(thumbnail)s|%(duration)s|%(age_limit)s"
+  ]
+ },
+ {
+  "url": "https://www.kinopoisk.ru/film/2",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.kinopoisk.ru/film/3",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.kinopoisk.ru/film/4",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.kinopoisk.ru/film/5",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.kinopoisk.ru/film/6",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.kinopoisk.ru/film/7",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ }
+]

@@ -2079,6 +2079,18 @@
       "scope": "KikaIE video documents, HLS/progressive assets and TTML/WebVTT subtitles, and KikaPlaylistIE paged brand generators of url results, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "kinopoisk",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/kinopoisk.py"
+      ],
+      "rust": [
+        "src/extractor/kinopoisk.rs",
+        "tests/fixtures/sites/kinopoisk/"
+      ],
+      "scope": "KinoPoiskIE OTT widget JSON models (title/originalTitle, dict_get description, cover/poster, integer duration and age limit) with a fatal master HLS playlist and KeyError/data/m3u8 error paths compared with pinned upstream output through the fixture proxy; non-string fields and playlist URIs remain explicit native errors"
+    },
+    {
       "name": "kompas",
       "status": "partial",
       "upstream": [

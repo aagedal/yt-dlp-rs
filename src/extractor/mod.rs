@@ -143,6 +143,7 @@ mod kick;
 mod kicker;
 mod kickstarter;
 mod kika;
+mod kinopoisk;
 mod kommunetv;
 mod kompas;
 mod kth;
@@ -585,6 +586,7 @@ pub use kika::{
     Kika, KikaPlaylist, playlist_suitable as kika_playlist_suitable, suitable as kika_suitable,
 };
 pub(crate) use kika::{fetch_pages as fetch_kika_pages, is_pending_state as kika_pending_state};
+pub use kinopoisk::{KinoPoisk, suitable as kinopoisk_suitable};
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use kompas::{KompasVideo, suitable as kompas_suitable};
 pub use kth::{Kth, suitable as kth_suitable};

@@ -2949,6 +2949,18 @@ with each item's `api.url` as a `url` result carrying its ID, title,
 duration and timestamp. `tests/fixtures/sites/kika/` is compared with pinned
 upstream output.
 
+KinoPoisk films (`[www.]kinopoisk.ru/film/ID`) follow upstream `KinoPoiskIE`
+(geo countries `RU`): the `ott-widget.kinopoisk.ru/v1/kp/?kpId=ID` page's
+fatal `application/json` script (missing keys are upstream's `KeyError`
+messages), the `filmStatus` truthy `title` else `originalTitle`, the first
+truthy description (`descriptscription`, `description`,
+`shortDescriptscription`, `shortDescription`), truthy `coverUrl` else
+`posterUrl` thumbnail, integer duration and `restrictionAge` age limit, and
+the `playlistEntity.uri` master playlist as fatal `hls` formats (variants are
+not fetched). Non-string titles, descriptions, thumbnails and playlist URIs
+remain explicit native errors. `tests/fixtures/sites/kinopoisk/` is compared
+with pinned upstream output.
+
 Kompas.com videos (`video.kompas.com/TYPE/ID/SLUG`) follow upstream
 `KompasVideoIE` through `JixieBaseIE`: the Jixie public stream API's `data`
 (missing keys are upstream's `KeyError`s), its HLS streams (fatal; DRM-flagged

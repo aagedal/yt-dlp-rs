@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "https://ott-widget.kinopoisk.ru/v1/kp/?kpId=81041",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script nonce=\"x\" type=\"application/json\" id=\"d\">{\"models\": {\"filmStatus\": {\"title\": \"Алеша попович и тугарин змей\", \"originalTitle\": \"Orig\", \"description\": \"\", \"descriptscription\": null, \"shortDescriptscription\": \"Короткое описание\", \"shortDescription\": \"Short\", \"coverUrl\": \"\", \"posterUrl\": \"https://kp.test/poster.jpg\", \"duration\": \"4533\", \"restrictionAge\": 12}, \"playlistEntity\": {\"uri\": \"https://kp.test/a/master.m3u8\"}}}</script></body></html>"
+  },
+  {
+   "url": "https://ott-widget.kinopoisk.ru/v1/kp/?kpId=2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script nonce=\"x\" type=\"application/json\" id=\"d\">{\"models\": {\"filmStatus\": {\"title\": \"\", \"originalTitle\": \"Original Only\", \"duration\": 4533.7, \"restrictionAge\": \"x\"}, \"playlistEntity\": {\"uri\": \"https://kp.test/b/index.m3u8\"}}}</script></body></html>"
+  },
+  {
+   "url": "https://ott-widget.kinopoisk.ru/v1/kp/?kpId=3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script nonce=\"x\" type=\"application/json\" id=\"d\">{\"models\": {\"filmStatus\": {\"title\": null}, \"playlistEntity\": {\"uri\": \"https://kp.test/b/index.m3u8\"}}}</script></body></html>"
+  },
+  {
+   "url": "https://ott-widget.kinopoisk.ru/v1/kp/?kpId=4",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script nonce=\"x\" type=\"application/json\" id=\"d\">{\"models\": {\"filmStatus\": {\"title\": \"T\"}}}</script></body></html>"
+  },
+  {
+   "url": "https://ott-widget.kinopoisk.ru/v1/kp/?kpId=5",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script nonce=\"x\" type=\"application/json\" id=\"d\">{\"x\": 1}</script></body></html>"
+  },
+  {
+   "url": "https://ott-widget.kinopoisk.ru/v1/kp/?kpId=6",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>no data</body></html>"
+  },
+  {
+   "url": "https://ott-widget.kinopoisk.ru/v1/kp/?kpId=7",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script nonce=\"x\" type=\"application/json\" id=\"d\">{\"models\": {\"filmStatus\": {\"title\": \"T\"}, \"playlistEntity\": {\"uri\": \"https://kp.test/gone.m3u8\"}}}</script></body></html>"
+  },
+  {
+   "url": "https://kp.test/a/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://kp.test/b/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  }
+ ]
+}
