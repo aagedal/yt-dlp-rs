@@ -97,6 +97,7 @@ mod freespeech;
 mod freetv;
 mod fuyintv;
 mod gab;
+mod gamespot;
 mod gamestar;
 mod generic_urls;
 mod genius;
@@ -512,6 +513,7 @@ pub(crate) use freetv::{
 };
 pub use fuyintv::{FuyinTv, suitable as fuyintv_suitable};
 pub use gab::{Gab, suitable as gab_suitable};
+pub use gamespot::{GameSpot, suitable as gamespot_suitable};
 pub use gamestar::{GameStar, suitable as gamestar_suitable};
 pub use genius::{
     Genius, GeniusLyrics, lyrics_suitable as genius_lyrics_suitable, suitable as genius_suitable,

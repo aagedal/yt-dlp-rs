@@ -1658,6 +1658,18 @@
       "scope": "FuyinTVIE movie API URL as an untyped mp4 result, non-fatal webpage description and the escaped TypeError after a failed page compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "gamespot",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/gamespot.py"
+      ],
+      "rust": [
+        "src/extractor/gamespot.rs",
+        "tests/fixtures/sites/gamespot/"
+      ],
+      "scope": "GameSpotIE data-video JSON, adaptive HLS formats with their http- MP4 copies, DASH formats and page metadata compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "gamestar",
       "status": "partial",
       "upstream": [

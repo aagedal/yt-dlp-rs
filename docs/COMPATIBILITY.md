@@ -2677,6 +2677,16 @@ generic title) and the non-fatal page's description meta (with its warning);
 a failed page download warns and then fails with upstream's escaped
 `TypeError` text.
 
+GameSpot videos, articles and reviews (`gamespot.com/videos|articles|reviews/.../NNNN-ID`,
+`gamespot.com/videos/embed/ID`) follow upstream `GameSpotIE`: the page's
+`data-video` JSON (fatal, HTML-cleaned) with its percent-unquoted title, the
+adaptive HLS stream's formats (non-fatal), each followed by an `http-` copy
+whose URL ends in `.mp4` instead of `.m3u8` (a media playlist without a
+`manifest_url` is upstream's `KeyError`), and the adaptive DASH manifest's
+formats; the `guid` (else the page ID) as ID, the page ID as display ID and
+the description meta and OpenGraph thumbnail with upstream's warnings.
+`tests/fixtures/sites/gamespot/` is compared with pinned upstream output.
+
 GameStar and GamePro videos (`gamestar.de|gamepro.de/videos/...,ID.html`)
 follow upstream `GameStarIE`: the first `application/ld+json` script
 containing `VideoObject` (fatal) through `_json_ld`, its title without the
