@@ -118,6 +118,7 @@ mod golem;
 mod goodgame;
 mod googledrive;
 mod gopro;
+mod gotostage;
 mod graspop;
 mod gronkh;
 mod groupon;
@@ -127,6 +128,7 @@ mod hellporno;
 mod historicfilms;
 mod hitrecord;
 pub(crate) mod hls;
+mod hollywoodreporter;
 mod hrefli;
 mod hse;
 pub(crate) mod html5;
@@ -254,6 +256,7 @@ mod popcorntv;
 mod premiershiprugby;
 mod presstv;
 mod projectveritas;
+mod pyvideo;
 mod qingting;
 mod radiozet;
 mod reddit;
@@ -382,6 +385,7 @@ mod yle_areena;
 mod youjizz;
 pub(crate) mod youtube;
 mod zdf;
+mod zetland;
 mod zhihu;
 mod zype;
 
@@ -580,6 +584,7 @@ pub use googledrive::{
     suitable as googledrive_suitable,
 };
 pub use gopro::{GoPro, suitable as gopro_suitable};
+pub use gotostage::{GoToStage, suitable as gotostage_suitable};
 pub use graspop::{Graspop, suitable as graspop_suitable};
 pub use gronkh::{Gronkh, suitable as gronkh_suitable};
 pub use groupon::{Groupon, suitable as groupon_suitable};
@@ -589,6 +594,15 @@ pub use hellporno::{HellPorno, suitable as hellporno_suitable};
 pub use historicfilms::{HistoricFilms, suitable as historicfilms_suitable};
 pub use hitrecord::{HitRecord, suitable as hitrecord_suitable};
 pub use hls::set_split_discontinuity as hls_split_discontinuity;
+pub use hollywoodreporter::{
+    HollywoodReporter, HollywoodReporterPlaylist,
+    playlist_suitable as hollywoodreporter_playlist_suitable,
+    suitable as hollywoodreporter_suitable,
+};
+pub(crate) use hollywoodreporter::{
+    fetch_pages as fetch_hollywoodreporter_pages,
+    is_pending_state as hollywoodreporter_pending_state,
+};
 pub use hrefli::{HrefLiRedirect, suitable as hrefli_suitable};
 pub use hse::{
     HseProduct, HseShow, product_suitable as hse_product_suitable,
@@ -805,6 +819,7 @@ pub use popcorntv::{PopcornTv, suitable as popcorntv_suitable};
 pub use premiershiprugby::{PremiershipRugby, suitable as premiershiprugby_suitable};
 pub use presstv::{PressTv, suitable as presstv_suitable};
 pub use projectveritas::{ProjectVeritas, suitable as projectveritas_suitable};
+pub use pyvideo::{Pyvideo, suitable as pyvideo_suitable};
 pub use qingting::{QingTing, suitable as qingting_suitable};
 pub use radiozet::{RadioZetPodcast, suitable as radiozet_suitable};
 pub use reddit::{Reddit, suitable as reddit_suitable};
@@ -1056,6 +1071,7 @@ pub use zdf::{
     Zdf, ZdfChannel, channel_suitable as zdf_channel_suitable, suitable as zdf_suitable,
 };
 pub(crate) use zdf::{fetch_pages as fetch_zdf_pages, is_pending_state as zdf_pending_state};
+pub use zetland::{ZetlandDkArticle, suitable as zetland_suitable};
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
 pub use zype::{Zype, suitable as zype_suitable};
 
@@ -1846,7 +1862,15 @@ pub(crate) fn post_json_note_headers(
     headers: &[(&str, &str)],
     body: String,
 ) -> Result<serde_json::Value> {
-    post_json_with(client, url, (extractor, id), (note, None), headers, body)
+    post_json_with(
+        client,
+        url,
+        (extractor, id),
+        (note, None),
+        headers,
+        body,
+        &[],
+    )
 }
 
 /// [`post_json_note_headers`] with `errnote=` (`[EXTRACTOR] ID: ERRNOTE:
@@ -1866,6 +1890,29 @@ pub(crate) fn post_json_errnote(
         (note, Some(errnote)),
         headers,
         body,
+        &[],
+    )
+}
+
+/// [`post_json_errnote`] with `expected_status=`: those statuses' bodies are
+/// parsed instead of erroring.
+pub(crate) fn post_json_errnote_expecting(
+    client: &Client,
+    url: &Url,
+    (extractor, id): (&'static str, &str),
+    (note, errnote): (&str, &str),
+    headers: &[(&str, &str)],
+    body: String,
+    expected: &[u16],
+) -> Result<serde_json::Value> {
+    post_json_with(
+        client,
+        url,
+        (extractor, id),
+        (note, Some(errnote)),
+        headers,
+        body,
+        expected,
     )
 }
 
@@ -1879,7 +1926,15 @@ pub(crate) fn post_json_errnote_optional(
     headers: &[(&str, &str)],
     body: String,
 ) -> Result<Option<serde_json::Value>> {
-    match post_json_with(client, url, (extractor, id), (note, None), headers, body) {
+    match post_json_with(
+        client,
+        url,
+        (extractor, id),
+        (note, None),
+        headers,
+        body,
+        &[],
+    ) {
         Ok(value) => Ok(Some(value)),
         Err(crate::Error::ExtractorRequest { source, .. }) => {
             crate::screen::warning(&format!(
@@ -1899,11 +1954,13 @@ fn post_json_with(
     (note, errnote): (&str, Option<&str>),
     headers: &[(&str, &str)],
     body: String,
+    expected: &[u16],
 ) -> Result<serde_json::Value> {
     use std::io::Read;
     crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
     let data = body.clone();
-    let mut response = direct::post(client, url, headers, body).map_err(|error| match error {
+    let response = direct::post_expecting(client, url, headers, body, expected);
+    let mut response = response.map_err(|error| match error {
         crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => match errnote {
             Some(errnote) => {
                 crate::Error::Reported(request_errnote_text(extractor, id, errnote, &error))

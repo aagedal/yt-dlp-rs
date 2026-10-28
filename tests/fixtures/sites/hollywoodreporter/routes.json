@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://www.hollywoodreporter.com/video/dungeons-dragons-cast-sxsw-2023/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"vlanding-video-card\"><a class=\"vlanding-video-card__link c-link\" href=\"#\" data-video-showcase-trigger=\"zH4jZaR5\" data-video-showcase-type=\"jwplayer\"><img src=\"x.jpg\"></a></div></body></html>"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/v2/media/zH4jZaR5",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Dungeons & Dragons Cast\", \"description\": \"The cast talk.\", \"kind\": \"Single Item\", \"playlist\": [{\"title\": \"Dungeons & Dragons Cast\", \"mediaid\": \"zH4jZaR5\", \"image\": \"https://cdn.jwplayer.com/v2/media/zH4jZaR5/poster.jpg?width=720\", \"duration\": 242, \"pubdate\": 1678586423, \"description\": \"The cast and directors talk about their new film.\", \"sources\": [{\"file\": \"https://cdn.jwplayer.com/videos/zH4jZaR5-720.mp4\", \"type\": \"video/mp4\", \"height\": 720, \"width\": 1280, \"label\": \"720p\"}], \"tracks\": []}]}"
+  },
+  {
+   "url": "https://www.hollywoodreporter.com/video/brightcove-thing/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"vlanding-video-card\"><a class=\"vlanding-video-card__link c-link\" href=\"#\" data-video-showcase-trigger='123' data-video-showcase-type='brightcove'><img src=\"x.jpg\"></a></div></body></html>"
+  },
+  {
+   "url": "https://www.hollywoodreporter.com/video/no-card/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><p>No video</p></body></html>"
+  },
+  {
+   "url": "https://www.hollywoodreporter.com/video/no-type/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"vlanding-video-card\"><a class=\"vlanding-video-card__link c-link\" href=\"#\" data-video-showcase-trigger=\"abc\"><img src=\"x.jpg\"></a></div></body></html>"
+  },
+  {
+   "url": "https://www.hollywoodreporter.com/vcategory/heat-vision-breakdown-57822/page/1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><a href=\"https://www.hollywoodreporter.com/video/outside/\" class=\"c-title__link\">x</a><div class=\"lrv-a-grid video-playlist-river\"><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-1/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-2/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-3/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-4/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-5/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-6/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-7/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-8/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-9/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-10/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-11/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-12/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-13/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-14/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-15/\" class=\"c-title__link u-color-black\">T</a></h3></article></div></body></html>"
+  },
+  {
+   "url": "https://www.hollywoodreporter.com/vcategory/heat-vision-breakdown-57822/page/2/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><a href=\"https://www.hollywoodreporter.com/video/outside/\" class=\"c-title__link\">x</a><div class=\"lrv-a-grid video-playlist-river\"><article><h3><a href=\"https://www.hollywoodreporter.com/video/clip-16/\" class=\"c-title__link u-color-black\">T</a></h3></article><article><h3><a href=\"https://www.youtube.com/watch?v=BaW_jenozKc\" class=\"c-title__link u-color-black\">T</a></h3></article></div></body></html>"
+  },
+  {
+   "url": "https://www.hollywoodreporter.com/vcategory/empty-list-100/page/1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>nothing</body></html>"
+  }
+ ]
+}

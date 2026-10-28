@@ -1946,6 +1946,18 @@
       "scope": "GoProIE reflect data and media download variations, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "gotostage",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/gotostage.py"
+      ],
+      "rust": [
+        "src/extractor/gotostage.rs",
+        "tests/fixtures/sites/gotostage/"
+      ],
+      "scope": "GoToStageIE contents API metadata, placeholder registration POST (409 accepted) and registrant-keyed asset URL as an untyped mp4 result, with IndexError/KeyError/registration errors compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "graspop",
       "status": "partial",
       "upstream": [
@@ -2016,6 +2028,18 @@
         "tests/fixtures/sites/hitrecord/"
       ],
       "scope": "HitRecordIE records API as an untyped result (metadata conversions, tags, KeyError messages, download) compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "hollywoodreporter",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/hollywoodreporter.py"
+      ],
+      "rust": [
+        "src/extractor/hollywoodreporter.rs",
+        "tests/fixtures/sites/hollywoodreporter/"
+      ],
+      "scope": "HollywoodReporterIE showcase cards followed as jwplatform:ID or YouTube IDs (unsupported types and missing attributes are upstream's errors) and HollywoodReporterPlaylistIE OnDemandPagedList category pages of HollywoodReporter url results, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "hrefli",
@@ -3081,6 +3105,18 @@
         "tests/fixtures/sites/pinkbike/"
       ],
       "scope": "PinkbikeIE data-quality/src formats (plain and escaped quotes, heights), OpenGraph title/description/thumbnail, video:duration, uploader, upload date, location and view/comment counts with upstream warnings, NoneType/no-formats errors compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "pyvideo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/pyvideo.py"
+      ],
+      "rust": [
+        "src/extractor/pyvideo.rs",
+        "tests/fixtures/sites/pyvideo/"
+      ],
+      "scope": "PyvideoIE pyvideo/data JSON playlists (YouTube url results and direct media with id/title/description/thumbnail/duration) and the webpage Media URL fallback after a non-fatal JSON failure, with KeyError and missing-media-urls errors, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "pinterest",
@@ -4622,6 +4658,18 @@
         "tests/fixtures/sites/yle_areena/"
       ],
       "scope": "YleAreenaIE (_GEO_COUNTRIES FI): page JSON-LD title/thumbnails and upstream's K/J title regex, the player preview API JSON (origin/referer headers, KeyError('data')), podcast media_url results, ongoing_event live HLS (duration dropped), on-demand master-only HLS formats with merged manifest subtitles, the url_transparent kaltura:1955031 delegation with smuggled source_url, the gone notice (raise_no_formats) and 'Unable to extract content'; SRT subtitles and metadata fields in upstream key order. Non-string subtitle languages/kinds, non-string manifest URLs and relative media URLs are explicit native errors. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "zetland",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/zetland.py"
+      ],
+      "rust": [
+        "src/extractor/zetland.rs",
+        "tests/fixtures/sites/zetland/"
+      ],
+      "scope": "ZetlandDKArticleIE Next.js story audio formats with merge_dicts of story, metaInfo, HTML meta and JSON-LD metadata, the non-fatal meta/JSON-LD warnings and next.js/KeyError/no-formats errors, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "youjizz",

@@ -1,0 +1,42 @@
+[
+ {
+  "url": "http://pyvideo.org/pycon-us-2013/become-a-logging-expert.html",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "http://pyvideo.org/pycon-us-2013/become-a-logging-expert.html",
+  "args": [
+   "--flat-playlist",
+   "--print",
+   "%(id)s|%(title)s|%(url)s|%(duration)s"
+  ]
+ },
+ {
+  "url": "http://pyvideo.org/pygotham-2012/spotify-talk.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://pyvideo.org/pycon-2014/empty-data.html",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://pyvideo.org/pycon-2015/no-media.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://pyvideo.org/pycon-2014/no-videos",
+  "args": [
+   "-J"
+  ]
+ }
+]

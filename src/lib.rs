@@ -507,6 +507,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "GoogleDrive:Folder",
     "GoPro",
     "GoogleDrive",
+    "GoToStage",
     "Graspop",
     "Gronkh",
     "Groupon",
@@ -514,6 +515,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "HellPorno",
     "HistoricFilms",
     "HitRecord",
+    "HollywoodReporter",
+    "HollywoodReporterPlaylist",
     "href.li",
     "HSEProduct",
     "HSEShow",
@@ -676,6 +679,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "PremiershipRugby",
     "PressTV",
     "ProjectVeritas",
+    "Pyvideo",
     "QingTing",
     "RadioZetPodcast",
     "Reddit",
@@ -880,6 +884,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "youtube:user",
     "zdf",
     "zdf:channel",
+    "ZetlandDKArticle",
     "Zhihu",
     "Zype",
     "generic",
@@ -1467,12 +1472,15 @@ impl YoutubeDl {
                 Box::new(extractor::GoodGame),
                 Box::new(extractor::GoogleDriveFolder),
                 Box::new(extractor::GoogleDrive),
+                Box::new(extractor::GoToStage),
                 Box::new(extractor::Graspop),
                 Box::new(extractor::Gronkh),
                 Box::new(extractor::Harpodeon),
                 Box::new(extractor::HellPorno),
                 Box::new(extractor::HistoricFilms),
                 Box::new(extractor::HitRecord),
+                Box::new(extractor::HollywoodReporter),
+                Box::new(extractor::HollywoodReporterPlaylist),
                 Box::new(extractor::HrefLiRedirect),
                 Box::new(extractor::HseProduct),
                 Box::new(extractor::HseShow),
@@ -1521,6 +1529,7 @@ impl YoutubeDl {
                 Box::new(extractor::PremiershipRugby),
                 Box::new(extractor::PressTv),
                 Box::new(extractor::ProjectVeritas),
+                Box::new(extractor::Pyvideo),
                 Box::new(extractor::QingTing),
                 Box::new(extractor::RadioZetPodcast),
                 Box::new(extractor::ReverbNation),
@@ -1597,6 +1606,7 @@ impl YoutubeDl {
                 Box::new(extractor::YouJizz),
                 Box::new(extractor::Zdf),
                 Box::new(extractor::ZdfChannel),
+                Box::new(extractor::ZetlandDkArticle),
                 Box::new(extractor::Zhihu),
                 Box::new(extractor::Zype),
                 Box::new(GenericHttp),
@@ -2342,6 +2352,8 @@ impl YoutubeDl {
                 extractor::fetch_yappy_pages
             } else if extractor::lefigaro_pending_state(&pending.state) {
                 extractor::fetch_lefigaro_pages
+            } else if extractor::hollywoodreporter_pending_state(&pending.state) {
+                extractor::fetch_hollywoodreporter_pages
             } else if extractor::lbry_pending_state(&pending.state) {
                 extractor::fetch_lbry_pages
             } else if extractor::bitchute_pending_state(&pending.state) {

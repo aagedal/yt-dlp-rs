@@ -1771,6 +1771,18 @@ title, cleaned description (warning when missing), preview (else OpenGraph)
 image, director, release date and the duration, bitrate and size meta tags.
 `tests/fixtures/sites/popcorntimes/` is compared with pinned upstream output.
 
+PyVideo talks (`pyvideo.org/CATEGORY/ID`) follow upstream `PyvideoIE`: the
+`pyvideo/data` repository's `CATEGORY/videos/ID.json` (non-fatal; a failed
+request or parse warns) as a playlist of its videos with a URL: `youtube`
+types as `url` results for YouTube, others as direct-media entries with the
+talk's ID (else the URL ID), title (a missing one is upstream's `KeyError`),
+description or summary, thumbnail and integer duration. An empty or failed
+JSON falls back to the page's `Media URL:` links (else `Unable to extract
+media urls`) with its non-fatal OpenGraph title, YouTube watch links again as
+`url` results. Video lists that are not arrays and non-string fields stay
+explicit native errors. `tests/fixtures/sites/pyvideo/` is compared with
+pinned upstream output.
+
 PGA Tour videos (`pgatour.com/video/SECTION/[T]ID`) follow upstream
 `PGATourIE` as `url` results for their Brightcove player (the TOURCast
 account and player for `T` IDs). `tests/fixtures/sites/pgatour/` is compared
@@ -2838,6 +2850,18 @@ Non-string subtitle languages or kinds, non-string manifest URLs and
 non-absolute media URLs are explicit native errors.
 `tests/fixtures/sites/yle_areena/` is compared with pinned upstream output.
 
+Zetland stories (`zetland.dk/SECTION/STORY-UPLOADER-XXXXX`) follow upstream
+`ZetlandDKArticleIE`: the page's Next.js data (fatal; missing `props` or
+`pageProps` are upstream's `KeyError`s) and its story's `audioFiles`
+`url_or_none` URLs as audio-only formats, with `merge_dicts` of the URL's
+uploader ID, the story's title, sharer, social description, series ID and
+publish/revision timestamps, the page `metaInfo` meta/ld/og fallbacks, the
+non-fatal HTML meta tags (each missing one warns like upstream) and the
+non-fatal JSON-LD (warning when absent). A story without audio is upstream's
+`No video formats found!`. JSON-LD media or chapters and non-string merged
+titles stay explicit native errors. `tests/fixtures/sites/zetland/` is
+compared with pinned upstream output.
+
 Zhihu videos (`zhihu.com/zvideo/ID`) follow upstream `ZhihuIE`: the zvideos
 API's playlist qualities with a URL (`url` else `play_url`) as formats with
 their sample rate, size, FPS, dimensions and bitrate, the fatal title, the
@@ -2950,6 +2974,18 @@ warning) and every batch listing page (`nextPageToken`) as a playlist of
 de-duplicated `drive.google.com/file/d/ID` URL entries; a failing folder
 request (upstream's `TypeError`) and non-string titles, IDs or page tokens
 are reported as unsupported.
+
+GoToStage recordings (`gotostage.com/channel/C/recording/ID/watch`) follow
+upstream `GoToStageIE`: the contents API's first item (an empty list is the
+bare `list index out of range`; missing `product`, `contentType` or
+`productRefKey` keys are upstream's `KeyError`s), upstream's placeholder
+registration POST (`Unable to register user` on errors other than its
+accepted 409) and its `registrationKey` as the `x-registrantkey` of the asset
+request (`Get download url`), as an untyped `mp4` result with the string
+title, `cdnLocation` URL, `url_or_none` thumbnail, float-only duration, the
+one-item string category list and `is_live: false`. Non-object responses
+and non-string registration keys stay explicit native errors.
+`tests/fixtures/sites/gotostage/` is compared with pinned upstream output.
 
 Graspop concerts (`vod.graspop.be/LL/ID/`) follow upstream `GraspopIE`: the
 Proximus festival stream's `source.assetUri` over `http:` as fatal HLS
@@ -4223,6 +4259,20 @@ the records API's `source_url.mp4_url` as an untyped result with its title,
 cleaned body description, millisecond duration, timestamp, uploader, Python
 `str()` of the user ID, counts and string tag texts, with upstream's
 `KeyError` messages.
+
+Hollywood Reporter videos (`hollywoodreporter.com/video/SLUG`) follow
+upstream `HollywoodReporterIE`: the first `vlanding-video-card__link`
+element's `data-video-showcase-trigger` and `data-video-showcase-type`
+(missing ones are upstream's `KeyError`s), followed as `jwplatform:ID` for
+`jwplayer` and as the bare YouTube ID for `youtube`; other types are
+upstream's `Unsupported showcase type` error. Video categories
+(`hollywoodreporter.com/vcategory/SLUG-ID`) follow
+`HollywoodReporterPlaylistIE`: an `OnDemandPagedList` of 15 entries per
+`.../page/N/` page (only the pages holding requested items are fetched),
+each page's `video-playlist-river` `c-title__link` hrefs as
+`HollywoodReporter` `url` results, titled with the slug.
+`tests/fixtures/sites/hollywoodreporter/` is compared with pinned upstream
+output.
 
 href.li redirects (`href.li/?URL`) follow upstream `HrefLiRedirectIE`: the
 text after `?` is followed as a `url` result by whichever extractor suits it
