@@ -1,0 +1,75 @@
+{
+ "routes": [
+  {
+   "url": "https://www.cnbc.com/video/2023/12/07/mcdonalds-just-unveiled-cosmcsits-new-spinoff-brand.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>CNBC</title><script type=\"application/ld+json\">{\"@context\": \"https://schema.org\", \"@type\": \"VideoObject\", \"name\": \"JSON-LD title\", \"description\": \"JSON-LD description\", \"thumbnailUrl\": [\"https://image.cnbcfm.com/api/v1/image/ld.jpg\"], \"uploadDate\": \"2023-12-07T19:00:00Z\", \"duration\": \"PT1M5S\", \"keywords\": \"food, fast food\"}</script></head><body><script>window.__s_data={\"page\": {\"page\": {\"layout\": [{\"columns\": [{\"modules\": [{\"name\": \"header\", \"data\": {\"title\": \"x\"}}]}]}, {\"columns\": [{\"modules\": [{\"name\": \"clipPlayer\", \"data\": {\"id\": 107344774, \"title\": \"Here's a first look at McDonald's new spinoff brand, CosMc's\", \"description\": \"McDonald's unveiled CosMc's.\", \"author\": [{\"name\": \"Sean Conlon\"}, {\"id\": 3}], \"datePublished\": \"2023-12-07T19:36:50+0000\", \"uploadDate\": \"2023-12-07T19:29:35+0000\", \"dateLastPublished\": \"2023-12-08T16:38:03+0000\", \"thumbnail\": \"https://image.cnbcfm.com/api/v1/image/107344192-hero.jpg?v=1701894855\", \"duration\": 65, \"section\": {\"title\": \"News Videos\"}, \"playbackURL\": \"https://cnbcmedia-vh.akamaihd.net/i/mp4/VCPS/Y2023/M12D07/107344774/,1080p,720p,.mp4.csmil/master.m3u8?__b__=800&b=500-1000&__a__=off\"}}]}]}]}}};window.__c_data={\"x\": {\"y\": 1}};</script></body></html>"
+  },
+  {
+   "url": "https://cnbcmedia-vh.akamaihd.net/z/mp4/VCPS/Y2023/M12D07/107344774/,1080p,720p,.mp4.csmil/manifest.f4m?hdcore=3.7.0",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "gone"
+  },
+  {
+   "url": "https://cnbcmedia-vh.akamaihd.net/i/mp4/VCPS/Y2023/M12D07/107344774/,1080p,720p,.mp4.csmil/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.cnbc.com/video/2023/12/08/jim-cramer-shares-his-take-on-seattles-tech-scene.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>CNBC</title><script type=\"application/ld+json\">{\"@context\": \"https://schema.org\", \"@type\": \"NewsArticle\", \"headline\": \"Article headline\", \"description\": \"Article description\", \"datePublished\": \"2023-12-08T22:12:31Z\", \"video\": {\"@type\": \"VideoObject\", \"name\": \"Video name\", \"duration\": \"PT4M59S\", \"thumbnailUrl\": \"https://image.cnbcfm.com/api/v1/image/107345481.jpg\"}}</script></head><body><script>window.__s_data={\"page\": {\"page\": {\"layout\": [{\"columns\": [{\"modules\": [{\"name\": \"header\", \"data\": {\"title\": \"x\"}}]}]}, {\"columns\": [{\"modules\": [{\"name\": \"clipPlayer\", \"data\": {\"id\": \"107345451\", \"title\": \"Jim Cramer shares his take on Seattle's tech scene\", \"author\": [{\"name\": \"Jim Cramer\"}], \"datePublished\": \"2023-12-09T00:02:19+0000\", \"duration\": \"x\", \"thumbnail\": \"not a url\", \"section\": {\"title\": \"Mad Money with Jim Cramer\"}, \"playbackURL\": \"https://cnbcmedia-vh.akamaihd.net/z/mp4/VCPS/Y2023/M12D08/107345451/,720p,.mp4.csmil/manifest.f4m?token=abc\"}}]}]}]}}};window.__c_data={\"x\": {\"y\": 1}};</script></body></html>"
+  },
+  {
+   "url": "https://cnbcmedia-vh.akamaihd.net/z/mp4/VCPS/Y2023/M12D08/107345451/,720p,.mp4.csmil/manifest.f4m?token=abc&hdcore=3.7.0",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<?xml version=\"1.0\"?><manifest xmlns=\"http://ns.adobe.com/f4m/1.0\"><id>x</id><media url=\"hds_720\" bitrate=\"1500\" width=\"1280\" height=\"720\"/></manifest>"
+  },
+  {
+   "url": "https://cnbcmedia-vh.akamaihd.net/i/mp4/VCPS/Y2023/M12D08/107345451/,720p,.mp4.csmil/master.m3u8?token=abc",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "subs.m3u8"
+  },
+  {
+   "url": "https://www.cnbc.com/video/2023/12/08/the-epicenter-of-ai-is-in-seattle-says-jim-cramer.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>CNBC</title></head><body><script>window.__s_data={\"page\": {\"page\": {\"layout\": [{\"columns\": [{\"modules\": [{\"name\": \"header\", \"data\": {\"title\": \"x\"}}]}]}, {\"columns\": [{\"modules\": [{\"name\": \"clipPlayer\", \"data\": {\"id\": null, \"title\": \"The epicenter of AI is in Seattle, says Jim Cramer\", \"duration\": 113.7, \"playbackURL\": \"https://cnbcmedia-vh.akamaihd.net/i/mp4/VCPS/Y2023/M12D08/107345474/,720p,.mp4.csmil/master.m3u8\"}}]}]}]}}};window.__c_data={\"x\": {\"y\": 1}};</script></body></html>"
+  },
+  {
+   "url": "https://www.cnbc.com/video/2023/12/09/no-player.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>CNBC</title></head><body><script>window.__s_data={\"page\": {\"page\": {\"layout\": [{\"columns\": [{\"modules\": [{\"name\": \"header\", \"data\": {\"title\": \"x\"}}]}]}, {\"columns\": [{\"modules\": [{\"name\": \"clipPlayerX\", \"data\": {}}]}]}]}}};window.__c_data={\"x\": {\"y\": 1}};</script></body></html>"
+  },
+  {
+   "url": "https://www.cnbc.com/video/2023/12/09/no-playback.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>CNBC</title></head><body><script>window.__s_data={\"page\": {\"page\": {\"layout\": [{\"columns\": [{\"modules\": [{\"name\": \"header\", \"data\": {\"title\": \"x\"}}]}]}, {\"columns\": [{\"modules\": [{\"name\": \"clipPlayer\", \"data\": {\"id\": 1}}]}]}]}}};window.__c_data={\"x\": {\"y\": 1}};</script></body></html>"
+  },
+  {
+   "url": "https://www.cnbc.com/video/2023/12/09/no-data.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>nothing</body></html>"
+  }
+ ]
+}

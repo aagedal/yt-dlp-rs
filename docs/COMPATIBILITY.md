@@ -2747,6 +2747,23 @@ OpenGraph title). Pages without such videos (upstream's generic-extractor
 fallback) remain explicit native errors.
 `tests/fixtures/sites/bostonglobe/` is compared with pinned upstream output.
 
+CNBC videos (`[www.]cnbc.com/video/.../NAME.html`) follow upstream
+`CNBCVideoIE`: the page's fatal `window.__s_data=` JSON and its first
+`page.page.layout[].columns[].modules[]` `clipPlayer` module's `data` dict
+(upstream's unprefixed `TypeError` without one, its `KeyError` without
+`playbackURL`). The `playbackURL` goes through the shared
+`_extract_akamai_formats` port (`src/extractor/akamai.rs`, also used by
+`SRGSSRIE`): packaging parameters stripped from unsigned URLs, non-fatal
+`hds` formats with `extra_param_to_segment_url`, non-fatal `hls` master
+playlist formats, and subtitles ignored with upstream's `akamai` warning.
+The info is `id`, `display_id` and formats, then the page's non-fatal
+JSON-LD (upstream's `unable to extract JSON-LD` warning without one), then
+the player's string ID, title, description, author names as creators, ISO
+8601 published/upload/last-published timestamps, thumbnail URL, integer
+duration and section title as channel, in upstream's merge order. JSON-LD
+media URLs remain explicit native errors. `tests/fixtures/sites/cnbc/` is
+compared with pinned upstream output.
+
 Dropbox shared files (`[www.]dropbox.com/s|sh|scl/fi|scl/fo|e/scl/...`)
 follow upstream `DropboxIE`: the URL basename (unquoted, extension removed)
 as title, the base64 `registerStreamedPrefetch` parts (last first), the
