@@ -240,6 +240,7 @@ mod orf;
 mod outsidetv;
 pub(crate) mod paged;
 mod parlview;
+mod parti;
 mod pearvideo;
 mod peertube;
 mod peertv;
@@ -791,6 +792,10 @@ pub use orf::{
 pub(crate) use orf::{fetch_segments as fetch_orf_segments, is_pending_state as orf_pending_state};
 pub use outsidetv::{OutsideTv, suitable as outsidetv_suitable};
 pub use parlview::{Parlview, suitable as parlview_suitable};
+pub use parti::{
+    PartiLivestream, PartiVideo, livestream_suitable as parti_livestream_suitable,
+    video_suitable as parti_video_suitable,
+};
 pub use pearvideo::{PearVideo, suitable as pearvideo_suitable};
 pub use peertube::{
     PeerTube, PeerTubePlaylist, playlist_suitable as peertube_playlist_suitable,

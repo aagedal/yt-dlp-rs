@@ -1,0 +1,51 @@
+[
+ {
+  "url": "https://parti.com/video/66284",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.parti.com/video/2",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://parti.com/video/3",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://parti.com/video/4",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://parti.com/creator/parti/Capt_Robs",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(description)s|%(thumbnail)s|%(timestamp)s|%(view_count)s|%(format_id)s|%(ext)s|%(protocol)s|%(extractor)s"
+  ]
+ },
+ {
+  "url": "https://parti.com/creator/parti/Capt_Robs",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://parti.com/offline",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://parti.com/nouser",
+  "args": [
+   "-J"
+  ]
+ }
+]

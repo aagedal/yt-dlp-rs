@@ -1,0 +1,94 @@
+{
+ "routes": [
+  {
+   "url": "https://prod-api.parti.com/parti_v2/profile/get_livestream_channel_info/recent/66284",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"livestream_recording\": \"recordings/66284/master.m3u8\", \"event_title\": \"NOW LIVE \", \"user_name\": \"ItZTMGG\", \"event_file\": \"https://media.parti.com/351424.png\", \"category_name\": \"Gaming\", \"event_start_ts\": 1743044379}"
+  },
+  {
+   "url": "https://media.parti.com/recordings/66284/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=2000000,RESOLUTION=1920x1080\n1080.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=800000,RESOLUTION=854x480\n480.m3u8\n"
+  },
+  {
+   "url": "https://prod-api.parti.com/parti_v2/profile/get_livestream_channel_info/recent/2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"livestream_recording\": \"https://cdn.parti.test/2/index.m3u8\", \"event_title\": 5, \"event_file\": \"not a url\", \"category_name\": \"\", \"event_start_ts\": \"17\"}"
+  },
+  {
+   "url": "https://cdn.parti.test/2/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXTINF:4,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://prod-api.parti.com/parti_v2/profile/get_livestream_channel_info/recent/3",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"event_title\": \"x\"}"
+  },
+  {
+   "url": "https://prod-api.parti.com/parti_v2/profile/get_livestream_channel_info/recent/4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"livestream_recording\": \"/missing.m3u8\"}"
+  },
+  {
+   "url": "https://media.parti.com/missing.m3u8",
+   "status": 404,
+   "headers": {},
+   "body": ""
+  },
+  {
+   "url": "https://prod-api.parti.com/parti_v2/profile/user_id_from_name/creator%23parti%23Capt_Robs",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"user_id\": 123}"
+  },
+  {
+   "url": "https://prod-api.parti.com/parti_v2/profile/get_livestream_channel_info/123",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"channel_info\": {\"channel\": {\"is_live\": true, \"playback_url\": \"https://live.parti.test/123/master.m3u8\"}, \"livestream_event_info\": {\"event_name\": \"I'm Live on Parti\", \"event_description\": \"Streaming now\", \"livestream_preview_file\": \"https://media.parti.com/stream-screenshots/123.png\"}, \"stream\": {\"start_time\": \"2025-03-27T03:39:39Z\", \"viewer_count\": \"42\"}}}"
+  },
+  {
+   "url": "https://live.parti.test/123/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=2000000,RESOLUTION=1920x1080\n1080.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=800000,RESOLUTION=854x480\n480.m3u8\n"
+  },
+  {
+   "url": "https://prod-api.parti.com/parti_v2/profile/user_id_from_name/offline",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"user_id\": \"u9\"}"
+  },
+  {
+   "url": "https://prod-api.parti.com/parti_v2/profile/get_livestream_channel_info/u9",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"channel_info\": {\"channel\": {\"is_live\": false}}}"
+  },
+  {
+   "url": "https://prod-api.parti.com/parti_v2/profile/user_id_from_name/nouser",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"not found\"}"
+  }
+ ]
+}

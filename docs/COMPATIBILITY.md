@@ -1802,6 +1802,20 @@ PGA Tour videos (`pgatour.com/video/SECTION/[T]ID`) follow upstream
 account and player for `T` IDs). `tests/fixtures/sites/pgatour/` is compared
 with pinned upstream output.
 
+Parti recordings (`[www.]parti.com/video/ID`) follow upstream
+`PartiVideoIE`: the profile API's `get_livestream_channel_info/recent/ID`
+(with upstream's `Origin`/`Referer` headers; a missing `livestream_recording`
+is the `KeyError` error) for the recording's fatal HLS master playlist
+(joined with `https://media.parti.com/`, `mp4`), the event title, channel,
+`url_or_none` thumbnail, category list (empty without a category) and
+`int_or_none` start timestamp. Parti channels (`[www.]parti.com/SLUG`, not
+`video/`) follow `PartiLivestreamIE`: the user ID from `user_id_from_name`
+(`/` encoded as `%23`), the channel info (`The channel is not currently
+live` unless `channel.is_live` is `true`) and the fatal live HLS master
+playlist, with the event name, description, preview thumbnail, ISO 8601
+start time and viewer count. `tests/fixtures/sites/parti/` is compared with
+pinned upstream output.
+
 PeerTube videos follow upstream `PeerTubeIE` on its listed instances
 (`_INSTANCES_RE`, generated into `src/extractor/peertube/instances.rs` from
 the pinned checkout by `tools/generate_peertube_instances.py`; matched

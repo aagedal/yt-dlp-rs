@@ -3021,6 +3021,18 @@
       "scope": "ParlviewIE API file as fatal HLS formats and subtitles, metadata traversal (title fallback, duration, ISO 8601 timestamp, thumbnail) and KeyError messages compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "parti",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/parti.py"
+      ],
+      "rust": [
+        "src/extractor/parti.rs",
+        "tests/fixtures/sites/parti/"
+      ],
+      "scope": "PartiVideoIE recording API with the fatal HLS master playlist and traversed metadata, PartiLivestreamIE user ID and channel info lookups, UserNotLive and live HLS master playlist, KeyError errors, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "pearvideo",
       "status": "partial",
       "upstream": [
