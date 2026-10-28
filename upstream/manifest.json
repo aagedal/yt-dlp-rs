@@ -3531,6 +3531,18 @@
       "scope": "TedTalkIE Next.js video data formats, external url results and metadata; TedPlaylistIE, TedSeriesIE and TedEmbedIE; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "tele13",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tele13.py"
+      ],
+      "rust": [
+        "src/extractor/tele13.rs",
+        "tests/fixtures/sites/tele13/"
+      ],
+      "scope": "Tele13IE JW Player setup sources (YouTube hand-off not fixtured), compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "telebruxelles",
       "status": "partial",
       "upstream": [

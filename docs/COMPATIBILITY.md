@@ -3539,6 +3539,13 @@ Python's decoder message). HDS (`f4m`) streams give non-fatal F4M formats. Upstr
 not ported. `tests/fixtures/sites/tv2/` is compared with pinned upstream
 output.
 
+T13 videos (`t13.cl/videos/.../SLUG`) follow upstream `Tele13IE`: the
+`player-vivo` JW Player setup (fatal) and its deduplicated sources: HLS
+(non-fatal), a YouTube URL as a `url` result (not fixtured), else files with
+their label as format ID and `Móvil`/`SD`/`HD` quality, with the setup's
+title (fatal) and image and the page's description (warning when missing).
+`tests/fixtures/sites/tele13/` is compared with pinned upstream output.
+
 Toon Goggles episodes (`toongoggles.com/shows/SHOW/SLUG/episodes/ID`) and
 shows (`toongoggles.com/shows/SHOW`) follow upstream `ToonGogglesIE`: the
 API's `search` episode (an empty list is a bare `IndexError`) as a
