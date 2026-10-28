@@ -3298,6 +3298,16 @@ scale=1000)` timestamp, `categoryname` categories and the `channels` `'0'`
 entry's channel fields (a string key, so never a list's first item), with
 upstream's unprefixed `KeyError` messages.
 
+Monstercat releases (`www.monstercat.com/release/ID`) follow upstream
+`MonstercatIE`: the page's first `<h1>` (cleaned) as title and album, the
+cover URL, the album artist element and the `Released DATE` element, and the
+`table table-small` rows read as a generator (rows are only parsed as
+entries are requested): each row's play button `data-track-id` and
+`data-release-id` give an MP3 `track-stream` entry with the album fields,
+the row's title, track number and artists; rows without both IDs warn
+`Skipping track N, ID(s) not found` when reached. `tests/fixtures/sites/monstercat/`
+is compared with pinned upstream output.
+
 Moving Image Archive films (`movingimage.nls.uk/film/ID`) follow upstream
 `MovingImageIE`: the player's fatal `file` manifest as HLS formats (subtitles
 ignored with upstream's warning), the fatal `Title` field without

@@ -537,6 +537,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Mixlr",
     "MixlrRecoring",
     "MochaVideo",
+    "Monstercat",
     "MovingImage",
     "Mux",
     "MyVidster",
@@ -921,6 +922,7 @@ impl YoutubeDl {
                 Box::new(extractor::Kika),
                 Box::new(extractor::KikaPlaylist),
                 Box::new(extractor::Mdr),
+                Box::new(extractor::Monstercat),
                 Box::new(extractor::Servus),
                 Box::new(extractor::Tf1),
                 Box::new(extractor::UrPlay),
@@ -2048,6 +2050,8 @@ impl YoutubeDl {
                 extractor::fetch_orf_segments
             } else if extractor::nhk_pending_state(&pending.state) {
                 extractor::fetch_nhk_episodes
+            } else if extractor::monstercat_pending_state(&pending.state) {
+                extractor::fetch_monstercat_tracks
             } else if extractor::spreaker_pending_state(&pending.state) {
                 extractor::fetch_spreaker_episodes
             } else if extractor::simplecast_pending_state(&pending.state) {
@@ -2083,6 +2087,7 @@ impl YoutubeDl {
             let resolved = extractor::steam_pending_state(&pending.state)
                 || extractor::orf_pending_state(&pending.state)
                 || extractor::nhk_pending_state(&pending.state)
+                || extractor::monstercat_pending_state(&pending.state)
                 || extractor::spreaker_pending_state(&pending.state)
                 || extractor::simplecast_pending_state(&pending.state)
                 || extractor::podbayfm_pending_state(&pending.state);

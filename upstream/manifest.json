@@ -1925,6 +1925,18 @@
       "scope": "MochaVideoIE detail API (resolution HLS formats and subtitles, original MP4, raw metadata, scaled timestamp, string-key channel traversal, generic-title fallback, KeyError and AttributeError messages) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "monstercat",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/monstercat.py"
+      ],
+      "rust": [
+        "src/extractor/monstercat.rs",
+        "tests/fixtures/sites/monstercat/"
+      ],
+      "scope": "MonstercatIE release pages as lazily read track-stream MP3 playlists with album metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "movingimage",
       "status": "partial",
       "upstream": [

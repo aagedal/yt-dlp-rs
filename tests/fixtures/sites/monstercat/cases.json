@@ -1,0 +1,31 @@
+[
+ {
+  "url": "https://www.monstercat.com/release/742779548009",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.monstercat.com/release/742779548009",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(track_number)s|%(artists)s|%(album)s|%(playlist_index)s|%(n_entries)s"
+  ]
+ },
+ {
+  "url": "https://www.monstercat.com/release/742779548009",
+  "args": [
+   "-q",
+   "-I",
+   "1",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://www.monstercat.com/release/MCRAB001",
+  "args": [
+   "-J"
+  ]
+ }
+]
