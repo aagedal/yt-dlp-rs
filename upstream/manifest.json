@@ -884,6 +884,18 @@
       "scope": "BrightcoveNewIE players.brightcove.net video URLs: policy key from config.json (non-fatal) else index.min.js catalog/policyKey, Playback API with Accept pk header and smuggled referrer/token, _parse_brightcove_metadata (non-fatal HLS/DASH with subtitles, progressive and streaming HTTP sources, DRM flags, captions, thumbnails, metadata), 401/403 API errors (geo and messages) and raise_no_formats errors; _extract_brightcove_urls iframe and <video>+player-script embeds on generic pages (smuggled referrer) compared with pinned upstream output through the fixture proxy; TVE_AUTH videos with smuggled source_url/software_statement through AdobePassIE._extract_mvpd_auth and the tveToken Playback API request (tests/fixtures/sites/adobepass/); playlists, RTMP sources, <video>-only embeds needing _is_valid_url and BrightcoveLegacyIE are unsupported"
     },
     {
+      "name": "btvplus",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/btvplus.py"
+      ],
+      "rust": [
+        "src/extractor/btvplus.rs",
+        "tests/fixtures/sites/btvplus/"
+      ],
+      "scope": "BTVPlusIE videoUrl player JSON config videojs sources (non-fatal HLS formats and subtitles, unknown-type warnings), Open Graph/product-title metadata compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "bundestag",
       "status": "partial",
       "upstream": [

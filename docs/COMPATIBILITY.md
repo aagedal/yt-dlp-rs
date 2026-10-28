@@ -893,6 +893,19 @@ with `--ignore-no-formats-error` (in every extractor using the shared
 helper). `tests/fixtures/sites/bundestag/` is compared with pinned upstream
 output.
 
+bTV Plus shows, series and news (`btvplus.bg/produkt/{predavaniya,seriali,novini}/ID`)
+follow upstream `BTVPlusIE`: the page's `var videoUrl` player JSON (joined
+to `https://btvplus.bg`; a page without it is upstream's `Unable to extract
+player URL`, a response without `config` its `KeyError`), the config's
+`videojs(...)` options (else `Unable to extract videojs data`), each source
+with a URL `src` as non-fatal HLS formats and subtitles (`hls`) when its
+type is an HLS MIME type, other types being upstream's `Unknown format type`
+warning, and the stripped Open Graph title (else the cleaned
+`product-title` element), Open Graph image and description. Configs that
+are not strings and videojs options that do not parse are unsupported
+errors. `tests/fixtures/sites/btvplus/` is compared with pinned upstream
+output.
+
 Bundesliga videos (`bundesliga.com/LL/bundesliga/videos[/...]?vid=ID`) follow
 upstream `BundesligaIE`: a `url` result of `jwplatform:ID`, extracted by the
 JW Platform extractor (so its `webpage_url` is the `jwplatform:` URL).
