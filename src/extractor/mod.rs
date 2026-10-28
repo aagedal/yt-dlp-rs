@@ -185,6 +185,7 @@ mod sapo;
 mod screen9;
 mod screenrec;
 mod sen;
+mod simplecast;
 mod skylinewebcams;
 mod skynewsau;
 mod smil;
@@ -555,6 +556,14 @@ pub use sapo::{Sapo, suitable as sapo_suitable};
 pub use screen9::{Screen9, suitable as screen9_suitable};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
+pub use simplecast::{
+    Simplecast, SimplecastEpisode, SimplecastPodcast,
+    episode_suitable as simplecast_episode_suitable,
+    podcast_suitable as simplecast_podcast_suitable, suitable as simplecast_suitable,
+};
+pub(crate) use simplecast::{
+    fetch_episodes as fetch_simplecast_episodes, is_pending_state as simplecast_pending_state,
+};
 pub use skylinewebcams::{SkylineWebcams, suitable as skylinewebcams_suitable};
 pub use skynewsau::{SkyNewsAU, suitable as skynewsau_suitable};
 pub use snapchat::{SnapchatSpotlight, suitable as snapchat_suitable};

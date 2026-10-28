@@ -1159,6 +1159,9 @@ impl GenericHttp {
                         "fields": {},
                         "ie_key": site.key,
                         "extractor": site.name,
+                        // `url_result(embed, ie)`: the extracted video keeps
+                        // its own `webpage_url`.
+                        "keep_webpage_url": true,
                     }),
                 );
                 info
@@ -2031,7 +2034,7 @@ pub(crate) struct EmbedSite {
     temp_id: fn(&str) -> Option<String>,
 }
 
-static EMBED_SITES: [EmbedSite; 15] = [
+static EMBED_SITES: [EmbedSite; 16] = [
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
@@ -2101,6 +2104,13 @@ static EMBED_SITES: [EmbedSite; 15] = [
         extractor: Some(&super::megaphone::Megaphone),
         embed_urls: super::megaphone::embed_urls,
         temp_id: super::megaphone::temp_id,
+    },
+    EmbedSite {
+        name: super::simplecast::NAME,
+        key: super::simplecast::KEY,
+        extractor: Some(&super::simplecast::Simplecast),
+        embed_urls: super::simplecast::embed_urls,
+        temp_id: super::simplecast::temp_id,
     },
     EmbedSite {
         name: "Streamable",

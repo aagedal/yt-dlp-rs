@@ -1,0 +1,114 @@
+[
+ {
+  "url": "https://api.simplecast.com/episodes/b6dc49a2-9404-4853-9aa9-9cfc097be876",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.simplecast.com/0b1c3a51-62b3-4c7e-9a1d-5f7e8a2b9c10",
+  "args": [
+   "--print",
+   "%(id)s|%(display_id)s|%(title)s|%(series)s|%(season_number)s|%(season)s|%(season_id)s|%(episode_number)s|%(episode)s|%(channel_url)s|%(webpage_url)s|%(timestamp)s|%(duration)s|%(filesize)s|%(ext)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://api.simplecast.com/episodes/b6dc49a2-9404-4853-9aa9-9cfc097be876",
+  "args": [
+   "--no-progress",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://the-re-bind-io-podcast.simplecast.com/episodes/errant-signal-chris-franklin-new-wave-video-essays?utm=x",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://the-re-bind-io-podcast.simplecast.com/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://the-re-bind-io-podcast.simplecast.com/episodes",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://the-re-bind-io-podcast.simplecast.com/",
+  "args": [
+   "--print",
+   "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(series)s|%(extractor)s|%(extractor_key)s|%(webpage_url)s"
+  ]
+ },
+ {
+  "url": "https://the-re-bind-io-podcast.simplecast.com/",
+  "args": [
+   "-I",
+   "2",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://broken.simplecast.com/",
+  "args": [
+   "--print",
+   "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(series)s|%(extractor)s|%(extractor_key)s|%(webpage_url)s"
+  ]
+ },
+ {
+  "url": "https://empty.simplecast.com/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://nopodcast.simplecast.com/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://api.simplecast.com/episodes/aaaaaaaa-0000-4000-8000-000000000000",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://api.simplecast.com/episodes/dddddddd-0000-4000-8000-000000000000",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://blog.example.com/single",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://blog.example.com/double",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://blog.example.com/double",
+  "args": [
+   "--print",
+   "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(series)s|%(extractor)s|%(extractor_key)s|%(webpage_url)s"
+  ]
+ },
+ {
+  "url": "https://blog.example.com/legacy",
+  "args": [
+   "-j"
+  ]
+ }
+]
