@@ -1,0 +1,107 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.zetland.dk/historie/sO9aq2MY-a81VP3BY-66e69?utm_source=instagram",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"sO9aq2MY-a81VP3BY-66e69\", \"formats\": [{\"url\": \"https://audio.zetland.test/afsnit1.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}], \"uploader_id\": \"a81VP3BY\", \"title\": \"Afsnit 1: \\u201cDet f\\u00f8ltes som en kidnapning.\\u201d \", \"uploader\": \"Helle Fuusager\", \"description\": \"Social description\", \"series_id\": \"62d54630-e87b\", \"release_timestamp\": 1705377592, \"modified_timestamp\": 1705568739, \"uploader_url\": \"https://www.zetland.dk/skribent/a81VP3BY\", \"thumbnail\": \"https://zetland.imgix.test/image1.jpg\", \"timestamp\": 1705377592, \"webpage_url\": \"https://www.zetland.dk/historie/sO9aq2MY-a81VP3BY-66e69?utm_source=instagram\", \"original_url\": \"https://www.zetland.dk/historie/sO9aq2MY-a81VP3BY-66e69?utm_source=instagram\", \"webpage_url_basename\": \"sO9aq2MY-a81VP3BY-66e69\", \"webpage_url_domain\": \"zetland.dk\", \"extractor\": \"ZetlandDKArticle\", \"extractor_key\": \"ZetlandDKArticle\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://zetland.imgix.test/image1.jpg\", \"id\": \"0\"}], \"display_id\": \"sO9aq2MY-a81VP3BY-66e69\", \"fulltitle\": \"Afsnit 1: \\u201cDet f\\u00f8ltes som en kidnapning.\\u201d \", \"upload_date\": \"20240116\", \"release_date\": \"20240116\", \"modified_date\": \"20240118\", \"release_year\": 2024, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://audio.zetland.test/afsnit1.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Afsnit 1\\uff1a \\u201cDet f\\u00f8ltes som en kidnapning.\\u201d  [sO9aq2MY-a81VP3BY-66e69].mp3\", \"filename\": \"Afsnit 1\\uff1a \\u201cDet f\\u00f8ltes som en kidnapning.\\u201d  [sO9aq2MY-a81VP3BY-66e69].mp3\", \"__write_download_archive\": false}], \"url\": \"https://audio.zetland.test/afsnit1.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [ZetlandDKArticle] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zetland.dk/historie/sparse01-uploadr1-abcde",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"sparse01-uploadr1-abcde\", \"formats\": [{\"url\": \"https://audio.zetland.test/sparse.m4a\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}], \"uploader_id\": \"uploadr1\", \"title\": \"Twitter title\", \"uploader\": \"\", \"description\": \"Twitter description\", \"webpage_url\": \"https://www.zetland.dk/historie/sparse01-uploadr1-abcde\", \"original_url\": \"https://www.zetland.dk/historie/sparse01-uploadr1-abcde\", \"webpage_url_basename\": \"sparse01-uploadr1-abcde\", \"webpage_url_domain\": \"zetland.dk\", \"extractor\": \"ZetlandDKArticle\", \"extractor_key\": \"ZetlandDKArticle\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"sparse01-uploadr1-abcde\", \"fulltitle\": \"Twitter title\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://audio.zetland.test/sparse.m4a\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Twitter title [sparse01-uploadr1-abcde].m4a\", \"filename\": \"Twitter title [sparse01-uploadr1-abcde].m4a\", \"__write_download_archive\": false}], \"url\": \"https://audio.zetland.test/sparse.m4a\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [ZetlandDKArticle] unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ZetlandDKArticle] unable to extract og:image; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ZetlandDKArticle] unable to extract author; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ZetlandDKArticle] unable to extract article:published_time; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ZetlandDKArticle] unable to extract JSON-LD ; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zetland.dk/historie/noaudio1-uploadr2-abcde",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [ZetlandDKArticle] unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ZetlandDKArticle] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ZetlandDKArticle] unable to extract og:image; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ZetlandDKArticle] unable to extract author; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ZetlandDKArticle] unable to extract article:published_time; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ZetlandDKArticle] unable to extract JSON-LD ; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [ZetlandDKArticle] noaudio1-uploadr2-abcde: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zetland.dk/historie/noaudio1-uploadr2-abcde",
+   "args": [
+    "-J",
+    "--ignore-no-formats-error"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"noaudio1-uploadr2-abcde\", \"formats\": [], \"uploader_id\": \"uploadr2\", \"title\": \"Only meta\", \"webpage_url\": \"https://www.zetland.dk/historie/noaudio1-uploadr2-abcde\", \"original_url\": \"https://www.zetland.dk/historie/noaudio1-uploadr2-abcde\", \"webpage_url_basename\": \"noaudio1-uploadr2-abcde\", \"webpage_url_domain\": \"zetland.dk\", \"extractor\": \"ZetlandDKArticle\", \"extractor_key\": \"ZetlandDKArticle\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"noaudio1-uploadr2-abcde\", \"fulltitle\": \"Only meta\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"_filename\": \"Only meta [noaudio1-uploadr2-abcde].NA\", \"filename\": \"Only meta [noaudio1-uploadr2-abcde].NA\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [ZetlandDKArticle] unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ZetlandDKArticle] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ZetlandDKArticle] unable to extract og:image; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ZetlandDKArticle] unable to extract author; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ZetlandDKArticle] unable to extract article:published_time; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ZetlandDKArticle] unable to extract JSON-LD ; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zetland.dk/historie/nonext01-uploadr3-abcde",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [ZetlandDKArticle] nonext01-uploadr3-abcde: Unable to extract next.js data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.zetland.dk/historie/noprops1-uploadr4-abcde",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: noprops1-uploadr4-abcde: An extractor error has occurred. (caused by KeyError('pageProps')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

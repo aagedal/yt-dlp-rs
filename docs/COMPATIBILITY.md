@@ -2655,6 +2655,18 @@ Non-string subtitle languages or kinds, non-string manifest URLs and
 non-absolute media URLs are explicit native errors.
 `tests/fixtures/sites/yle_areena/` is compared with pinned upstream output.
 
+Zetland stories (`zetland.dk/SECTION/STORY-UPLOADER-XXXXX`) follow upstream
+`ZetlandDKArticleIE`: the page's Next.js data (fatal; missing `props` or
+`pageProps` are upstream's `KeyError`s) and its story's `audioFiles`
+`url_or_none` URLs as audio-only formats, with `merge_dicts` of the URL's
+uploader ID, the story's title, sharer, social description, series ID and
+publish/revision timestamps, the page `metaInfo` meta/ld/og fallbacks, the
+non-fatal HTML meta tags (each missing one warns like upstream) and the
+non-fatal JSON-LD (warning when absent). A story without audio is upstream's
+`No video formats found!`. JSON-LD media or chapters and non-string merged
+titles stay explicit native errors. `tests/fixtures/sites/zetland/` is
+compared with pinned upstream output.
+
 Zhihu videos (`zhihu.com/zvideo/ID`) follow upstream `ZhihuIE`: the zvideos
 API's playlist qualities with a URL (`url` else `play_url`) as formats with
 their sample rate, size, FPS, dimensions and bitrate, the fatal title, the

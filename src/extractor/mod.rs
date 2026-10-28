@@ -342,6 +342,7 @@ mod yle_areena;
 mod youjizz;
 pub(crate) mod youtube;
 mod zdf;
+mod zetland;
 mod zhihu;
 mod zype;
 
@@ -967,6 +968,7 @@ pub use zdf::{
     Zdf, ZdfChannel, channel_suitable as zdf_channel_suitable, suitable as zdf_suitable,
 };
 pub(crate) use zdf::{fetch_pages as fetch_zdf_pages, is_pending_state as zdf_pending_state};
+pub use zetland::{ZetlandDkArticle, suitable as zetland_suitable};
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
 pub use zype::{Zype, suitable as zype_suitable};
 

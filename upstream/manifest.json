@@ -4144,6 +4144,18 @@
       "scope": "YleAreenaIE (_GEO_COUNTRIES FI): page JSON-LD title/thumbnails and upstream's K/J title regex, the player preview API JSON (origin/referer headers, KeyError('data')), podcast media_url results, ongoing_event live HLS (duration dropped), on-demand master-only HLS formats with merged manifest subtitles, the url_transparent kaltura:1955031 delegation with smuggled source_url, the gone notice (raise_no_formats) and 'Unable to extract content'; SRT subtitles and metadata fields in upstream key order. Non-string subtitle languages/kinds, non-string manifest URLs and relative media URLs are explicit native errors. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "zetland",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/zetland.py"
+      ],
+      "rust": [
+        "src/extractor/zetland.rs",
+        "tests/fixtures/sites/zetland/"
+      ],
+      "scope": "ZetlandDKArticleIE Next.js story audio formats with merge_dicts of story, metaInfo, HTML meta and JSON-LD metadata, the non-fatal meta/JSON-LD warnings and next.js/KeyError/no-formats errors, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "youjizz",
       "status": "partial",
       "upstream": [
