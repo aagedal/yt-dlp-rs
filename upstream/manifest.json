@@ -2311,6 +2311,18 @@
       "scope": "OlympicsReplayIE Next.js videoPlaylist videos (geo restriction, metering tokenized HLS master playlists, live status) and legacy meta/tokenGenerator/JSON-LD pages, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "on24",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/on24.py"
+      ],
+      "rust": [
+        "src/extractor/on24.rs",
+        "tests/fixtures/sites/on24/"
+      ],
+      "scope": "On24IE event console JSON with video and audio media and event metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "onefootball",
       "status": "partial",
       "upstream": [

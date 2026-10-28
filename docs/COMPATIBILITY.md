@@ -829,6 +829,14 @@ list's thumbnails with the `t_W-H_WIDTH` width and derived height, and the
 them. `tests/fixtures/sites/olympics/` is compared with pinned upstream
 output.
 
+ON24 events (`event.on24.com/wcc/r/ID/KEY` and the event console and lobby
+URLs with `eventid` and `key`) follow upstream `On24IE`: the event console's
+cached JSON with its `fhvideo1` (MP4) and `audio` (WAV) media joined to the
+events media path, the locale language, stripped description, start date
+and registrant count, and the `wcc/r` page as `webpage_url` (a missing
+event ID is upstream's `None`). `tests/fixtures/sites/on24/` is compared
+with pinned upstream output.
+
 OneFootball videos (`onefootball.com/LL/video/SLUG-ID`) follow upstream
 `OneFootballIE`: the page's fatal `cdn.jwplayer.com/manifests/ID.m3u8` URL as
 a `url_transparent` result (extracted by the JW Platform extractor) overlaid
