@@ -2913,6 +2913,17 @@ requested (`Checking FORMAT video format URL`) and dropped after an HTTP error
 `#quickies/a/ID` links follow the video page. `age_limit` is 18.
 `tests/fixtures/sites/xvideos/` is compared with pinned upstream output.
 
+Eporner videos (`eporner.com/hd-porn|embed/ID[/SLUG]`, `video-ID[/SLUG]`)
+follow upstream `EpornerIE`: the page (by its slug) and its fatal 32-digit
+`hash`, encoded in base 36 per 8-digit block like upstream's `calc_hash` for
+the `xhr/video/ID` JSON (`available: false` is `Eporner said: MESSAGE`; a
+missing `sources` is upstream's `KeyError`), the OpenGraph or `<title>`
+title, non-fatal `hls` master playlists and HTTP(S) MP4 sources with their
+`Np`/`Nfps` height and FPS, plus `-av1.mp4` variants when the page has a
+`download-av1` element, merged like `merge_dicts` under the page's JSON-LD
+with the `duration` meta, `cinemaviews1` view count and `age_limit` 18.
+`tests/fixtures/sites/eporner/` is compared with pinned upstream output.
+
 TV 2 videos (`tv2.no/v|video[N]/.../ID`) follow upstream `TV2IE`: the
 `sumo.tv2.no` asset metadata, then the HLS and DASH playback JSON (POSTed
 like upstream; a 401's error code is the Norway geo restriction, the

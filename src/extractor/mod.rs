@@ -58,6 +58,7 @@ mod ebay;
 mod egghead;
 mod elonet;
 mod epoch;
+mod eporner;
 mod erocast;
 mod err;
 mod ettutv;
@@ -382,6 +383,7 @@ pub use egghead::{
 };
 pub use elonet::{Elonet, suitable as elonet_suitable};
 pub use epoch::{Epoch, suitable as epoch_suitable};
+pub use eporner::{Eporner, suitable as eporner_suitable};
 pub use erocast::{Erocast, suitable as erocast_suitable};
 pub use err::{
     ErrArhiiv, ErrJupiter, arhiiv_suitable as err_arhiiv_suitable,

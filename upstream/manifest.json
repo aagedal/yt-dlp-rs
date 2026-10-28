@@ -5,6 +5,18 @@
   "upstream_version": "2026.10.26",
   "components": [
     {
+      "name": "eporner",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/eporner.py"
+      ],
+      "rust": [
+        "src/extractor/eporner.rs",
+        "tests/fixtures/sites/eporner/"
+      ],
+      "scope": "EpornerIE xhr/video JSON signed with the page hash: HLS and MP4 sources with AV1 variants, the unavailable error, JSON-LD merge, duration, view count and age limit, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "freesound",
       "status": "partial",
       "upstream": [
