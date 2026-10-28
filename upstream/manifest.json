@@ -3014,6 +3014,18 @@
       "scope": "TeleTaskIE (marked broken) video class/source pairs as a playlist of untyped entries with the fatal title and optional date, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "telewebion",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/telewebion.py"
+      ],
+      "rust": [
+        "src/extractor/telewebion.rs",
+        "tests/fixtures/sites/telewebion/"
+      ],
+      "scope": "TelewebionIE GraphQL episode metadata (JSON POST, API errors), channel live URL, thumbnail and episode HLS formats, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "tf1",
       "status": "partial",
       "upstream": [

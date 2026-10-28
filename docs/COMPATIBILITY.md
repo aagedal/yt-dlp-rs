@@ -750,6 +750,16 @@ not a video) is an unsupported error here; upstream warns that the extractor
 returned nothing. `tests/fixtures/sites/telegram/` is compared with pinned
 upstream output.
 
+Telewebion episodes (`telewebion.ir/episode/ID`, decimal IDs as `0x...`)
+follow upstream `TelewebionIE`: the `graph.telewebion.ir/graphql`
+`getEpisodeDetail` query (a JSON POST; GraphQL `errors` messages, or
+`Unknown GraphQL API error`, as errors under the URL's ID), the first
+`queryEpisode`'s title, view count, duration, tags, start and creation
+times, program and channel, the channel's `/live/DESCRIPTOR` URL and the
+`episodeImages` thumbnail, and the channel's episode HLS (`hls`; without a
+string descriptor upstream's `Failed to obtain m3u8 URL`).
+`tests/fixtures/sites/telewebion/` is compared with pinned upstream output.
+
 The Intercept Field of Vision posts (`theintercept.com/fieldofvision/SLUG`)
 follow upstream `TheInterceptIE`: the page's `initialStoreTree` post with the
 slug, as a `url_transparent` result of `jwplatform:VIDEO` (extracted by the

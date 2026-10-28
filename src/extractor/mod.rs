@@ -245,6 +245,7 @@ mod ted;
 mod telegraaf;
 mod telegram;
 mod teletask;
+mod telewebion;
 mod tf1;
 mod theguardian;
 mod thehighwire;
@@ -741,6 +742,7 @@ pub use ted::{
 pub use telegraaf::{Telegraaf, suitable as telegraaf_suitable};
 pub use telegram::{TelegramEmbed, suitable as telegram_suitable};
 pub use teletask::{TeleTask, suitable as teletask_suitable};
+pub use telewebion::{Telewebion, suitable as telewebion_suitable};
 pub use tf1::{Tf1, suitable as tf1_suitable};
 pub use theguardian::{TheGuardianPodcast, suitable as theguardian_suitable};
 pub use thehighwire::{TheHighWire, suitable as thehighwire_suitable};
@@ -1607,6 +1609,60 @@ fn download_json_with(
     crate::screen::page_read(&page_url, &body)?;
     let text = transform(&decode_webpage(&body, response.headers()))?;
     crate::json::from_str(&text).map_err(|error| {
+        crate::Error::Reported(format!(
+            "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
+        ))
+    })
+}
+
+/// Upstream `_download_json(url, video_id, note, data=BODY, headers=...)`:
+/// [`download_json_note_headers`] as a POST of `body`.
+pub(crate) fn post_json_note_headers(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    note: &str,
+    headers: &[(&str, &str)],
+    body: String,
+) -> Result<serde_json::Value> {
+    post_json_with(client, url, (extractor, id), (note, None), headers, body)
+}
+
+fn post_json_with(
+    client: &Client,
+    url: &Url,
+    (extractor, id): (&'static str, &str),
+    (note, errnote): (&str, Option<&str>),
+    headers: &[(&str, &str)],
+    body: String,
+) -> Result<serde_json::Value> {
+    use std::io::Read;
+    crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
+    let data = body.clone();
+    let mut response = direct::post(client, url, headers, body).map_err(|error| match error {
+        crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => match errnote {
+            Some(errnote) => {
+                crate::Error::Reported(request_errnote_text(extractor, id, errnote, &error))
+            }
+            None => crate::Error::ExtractorRequest {
+                extractor,
+                id: id.to_owned(),
+                what: "JSON metadata",
+                source: Box::new(error),
+            },
+        },
+        error => error,
+    })?;
+    let page_url = response.url().clone();
+    let mut body = Vec::new();
+    response
+        .read_to_end(&mut body)
+        .map_err(crate::Error::ExtractionRead)?;
+    let body = decode_content(response.headers(), body).map_err(crate::Error::ExtractionRead)?;
+    crate::screen::expect_post_page(id, data.as_bytes());
+    crate::screen::page_read(&page_url, &body)?;
+    crate::json::from_str(&decode_webpage(&body, response.headers())).map_err(|error| {
         crate::Error::Reported(format!(
             "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
         ))

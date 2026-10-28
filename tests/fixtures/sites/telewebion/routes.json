@@ -1,0 +1,78 @@
+{
+ "routes": [
+  {
+   "url": "https://graph.telewebion.ir/graphql",
+   "request_body": [
+    "\"EpisodeId\":\"0x1b3139c\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"queryEpisode\": [{\"title\": \"\\u0642\\u0631\\u0639\\u0647\\u200c\\u06a9\\u0634\\u06cc \\u0644\\u06cc\\u06af \\u0642\\u0647\\u0631\\u0645\\u0627\\u0646\\u0627\\u0646 \\u0627\\u0631\\u0648\\u067e\\u0627\", \"program\": {\"ProgramID\": \"0x1b2505c\", \"title\": \"+ \\u0641\\u0648\\u062a\\u0628\\u0627\\u0644\"}, \"image\": \"YjFhM2MxMDBkMDNi/x\", \"view_count\": 1234, \"duration\": \"420\", \"started_at\": \"2015-03-05T00:57:00Z\", \"created_at\": \"2015-03-05T02:26:54.123+00:00\", \"channel\": {\"ChannelID\": \"0x1b1a761\", \"name\": \"\\u0634\\u0628\\u06a9\\u0647 3\", \"descriptor\": \"tv3\"}, \"tags\": [{\"name\": \"\\u0648\\u0631\\u0632\\u0634\\u06cc\"}, {\"name\": 7}, {\"name\": \"\\u0627\\u0631\\u0648\\u067e\\u0627\"}]}]}}"
+  },
+  {
+   "url": "https://cdna.telewebion.ir/tv3/episode/0x1b3139c/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1280000,RESOLUTION=854x480,CODECS=\"avc1.4d401f,mp4a.40.2\"\n480/index.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=2560000,RESOLUTION=1280x720,CODECS=\"avc1.4d401f,mp4a.40.2\"\n720/index.m3u8\n"
+  },
+  {
+   "url": "https://graph.telewebion.ir/graphql",
+   "request_body": [
+    "\"EpisodeId\":\"0x9aa9a30\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"queryEpisode\": [{\"title\": \"\\u06a9\\u0627\\u0631\\u0645\\u0627 \\u06cc\\u0639\\u0646\\u06cc \\u0627\\u06cc\\u0646 !\", \"duration\": 78.9, \"view_count\": null, \"image\": \"\", \"channel\": {\"ChannelID\": \"0x1b1a719\", \"name\": \"\\u0634\\u0628\\u06a9\\u0647 2\", \"descriptor\": \"tv2\"}, \"tags\": []}]}}"
+  },
+  {
+   "url": "https://cdna.telewebion.ir/tv2/episode/0x9aa9a30/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1280000,RESOLUTION=854x480,CODECS=\"avc1.4d401f,mp4a.40.2\"\n480/index.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=2560000,RESOLUTION=1280x720,CODECS=\"avc1.4d401f,mp4a.40.2\"\n720/index.m3u8\n"
+  },
+  {
+   "url": "https://graph.telewebion.ir/graphql",
+   "request_body": [
+    "\"EpisodeId\":\"0x1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"errors\": [{\"message\": \"Episode not found\"}, {\"message\": \"Access denied\"}], \"data\": null}"
+  },
+  {
+   "url": "https://graph.telewebion.ir/graphql",
+   "request_body": [
+    "\"EpisodeId\":\"0x2\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"result\": {}}"
+  },
+  {
+   "url": "https://graph.telewebion.ir/graphql",
+   "request_body": [
+    "\"EpisodeId\":\"0x3\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"queryEpisode\": [{\"title\": \"Bez kanala\", \"channel\": {\"name\": \"x\"}}]}}"
+  },
+  {
+   "url": "https://graph.telewebion.ir/graphql",
+   "request_body": [
+    "\"EpisodeId\":\"0x4\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  }
+ ]
+}
