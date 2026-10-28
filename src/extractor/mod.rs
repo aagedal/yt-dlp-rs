@@ -6,6 +6,7 @@ mod archiveorg;
 mod ard;
 mod arte;
 mod audioboom;
+mod audiomack;
 mod bandcamp;
 mod beacon;
 mod behindkink;
@@ -273,6 +274,10 @@ pub use arte::{
     playlist_suitable as artetv_playlist_suitable, suitable as artetv_suitable,
 };
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
+pub use audiomack::{
+    Audiomack, AudiomackAlbum, album_suitable as audiomack_album_suitable,
+    suitable as audiomack_suitable,
+};
 pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use beacon::{BeaconTv, suitable as beacon_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};

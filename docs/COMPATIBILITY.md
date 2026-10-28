@@ -924,6 +924,23 @@ formatted description), duration, author and author URL, each falling back to
 upstream's OpenGraph/meta/regex lookups with their non-fatal warnings (the
 audio URL's is fatal), as an untyped result.
 
+Audiomack songs (`[www.]audiomack.com/song/ARTIST/SLUG` and
+`audiomack.com/ARTIST/song/SLUG`) follow upstream `AudiomackIE`: the extended
+`api/music/url/song/ARTIST/SLUG` JSON (a missing, empty or `error` response
+URL is upstream's `Invalid url URL` error) as an untyped `id`/`uploader`/
+`title`/`url` result (the ID falls back to the URL tag; a `None` title gets
+the generic title). A media URL the SoundCloud extractor accepts is followed
+as a `url` result of that extractor. Albums (`audiomack.com/album/...`,
+`.../album/...`) follow `AudiomackAlbumIE`: track numbers from 0 are queried
+(`Querying song information (N)`) until a response with an empty URL (a
+response without `url` or with `error` is upstream's `Invalid url for track
+N of album url URL`); each song is an untyped entry whose ID and title fall
+back to its media URL basename before the last dot, and the playlist takes
+the first `album_id`/`album_title` seen as its ID and title (neither when
+absent). Non-object responses and non-string or relative media URLs remain
+explicit native errors. `tests/fixtures/sites/audiomack/` is compared with
+pinned upstream output.
+
 BehindKink posts (`behindkink.com/YYYY/MM/DD/SLUG`, marked broken upstream with
 its warning) follow upstream `BehindKinkIE`: the fatal `<source>` URL (its
 basename before `_` as the ID), OpenGraph title/image/description with

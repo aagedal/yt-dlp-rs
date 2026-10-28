@@ -487,6 +487,18 @@
       "scope": "AudioBoomIE React props (_search_json with unescapeHTML) and OpenGraph/meta fallbacks with warnings compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "audiomack",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/audiomack.py"
+      ],
+      "rust": [
+        "src/extractor/audiomack.rs",
+        "tests/fixtures/sites/audiomack/"
+      ],
+      "scope": "AudiomackIE extended api/music/url/song JSON as an untyped id/uploader/title/url result (song/ and ARTIST/song/ URLs, URL-tag and generic-title fallbacks), wrapped SoundCloud URLs followed as url results of the SoundCloud extractor, the Invalid url error, and AudiomackAlbumIE per-track queries until an empty URL with album id/title from the songs, url_basename song IDs and the Invalid url for track error, compared with pinned upstream output through the fixture proxy; non-object responses, non-string media URLs/titles and relative media URLs remain explicit native errors"
+    },
+    {
       "name": "bandcamp",
       "status": "partial",
       "upstream": [
