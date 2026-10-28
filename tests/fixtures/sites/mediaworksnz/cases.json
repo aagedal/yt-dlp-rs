@@ -1,0 +1,21 @@
+[
+ {
+  "url": "https://vodupload-api.mediaworks.nz/library/asset/published/VID00359",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://vodupload-api.mediaworks.nz/library/asset/published/VID-DRM",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.rova.test/podcast",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(extractor)s"
+  ]
+ }
+]

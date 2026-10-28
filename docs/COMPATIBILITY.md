@@ -1003,6 +1003,15 @@ upstream's `KeyError`s) and artists, and the streaming info JSON's HLS
 playlist (`hls`, fatal), image, play time and open date.
 `tests/fixtures/sites/melonvod/` is compared with pinned upstream output.
 
+MediaWorks NZ VOD assets (`vodupload-api.mediaworks.nz/library/asset/published/ID`)
+follow upstream `MediaWorksNZVODIE`: the API's `asset` (a DRM type other
+than `NonDRM` is the expected `This video is DRM protected`; another content
+type warns), its HLS playlist (fatal) plus the audio playlist (non-fatal) as
+`mp3` formats defaulting to `vcodec: none` and `acodec: aac`, with the title,
+description, duration, date, brand and thumbnails. JW player divs with the
+asset request URL on generic pages are embeds.
+`tests/fixtures/sites/mediaworksnz/` is compared with pinned upstream output.
+
 Megaphone players (`https://player.megaphone.fm/ID`, `megaphone.fm`) follow
 upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 (`creators`), non-fatal `og:image` (with upstream's warning), and the

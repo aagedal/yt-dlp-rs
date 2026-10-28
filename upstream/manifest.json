@@ -2550,6 +2550,18 @@
       "scope": "MatchTVIE fixed channel-106 iframe data-config feed rewritten to a live HLS master (live variant IDs), fixed title and is_live compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "mediaworksnz",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mediaworksnz.py"
+      ],
+      "rust": [
+        "src/extractor/mediaworksnz.rs",
+        "tests/fixtures/sites/mediaworksnz/"
+      ],
+      "scope": "MediaWorksNZVODIE asset API HLS and audio formats, DRM check, and embeds, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "megaphone",
       "status": "partial",
       "upstream": [

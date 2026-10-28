@@ -2108,7 +2108,7 @@ enum Embed {
     Info(WebpageEntry),
 }
 
-static EMBED_SITES: [EmbedSite; 37] = [
+static EMBED_SITES: [EmbedSite; 38] = [
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
@@ -2259,6 +2259,14 @@ static EMBED_SITES: [EmbedSite; 37] = [
         extractor: Some(&super::maariv::Maariv),
         embed_urls: super::maariv::embed_urls,
         temp_id: super::maariv::temp_id,
+        webpage: None,
+    },
+    EmbedSite {
+        name: super::mediaworksnz::NAME,
+        key: super::mediaworksnz::KEY,
+        extractor: Some(&super::mediaworksnz::MediaWorksNzVod),
+        embed_urls: super::mediaworksnz::embed_urls,
+        temp_id: super::mediaworksnz::temp_id,
         webpage: None,
     },
     EmbedSite {

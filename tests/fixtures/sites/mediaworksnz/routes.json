@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://vodupload-api.mediaworks.nz/library/asset/published/VID00359",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"asset\": {\"title\": \"Episode 1\", \"description\": \"Desc\", \"duration\": \"1290.5\", \"dateadded\": \"2022-11-25T19:00:00Z\", \"brand\": \"Rova\", \"thumbnails\": [\"https://mw.test/t1.jpg\"], \"type\": \"audio\", \"drm\": \"NonDRM\", \"streamingUrl\": \"https://mw-cdn.test/master.m3u8\", \"palyoutPathAudio\": \"https://mw-cdn.test/audio.m3u8\"}}"
+  },
+  {
+   "url": "https://mw-cdn.test/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://mw-cdn.test/audio.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "audio.m3u8"
+  },
+  {
+   "url": "https://vodupload-api.mediaworks.nz/library/asset/published/VID-DRM",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"asset\": {\"title\": \"DRM\", \"drm\": \"Widevine\", \"streamingUrl\": \"https://mw-cdn.test/master.m3u8\"}}"
+  },
+  {
+   "url": "https://www.rova.test/podcast",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Pod</title></head><body><div id=\"Player-Attributes-JWID\" class=\"x\" data-request-url=\"https://vodupload-api.mediaworks.nz/library/asset/published/\" x=\"1\" data-asset-id=\"VID00359\"></div></body></html>"
+  }
+ ]
+}
