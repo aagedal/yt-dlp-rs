@@ -2653,6 +2653,18 @@
       "scope": "RTVSLOIE ava API recordings (Wowza HLS master playlists and rtmp formats through the shared _extract_wowza_formats subset, sign-language variants, media files, subtitles, thumbnails, geo and Clip not available errors) and RTVSLOShowIE archive link playlists, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "rudovideo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rudovideo.py"
+      ],
+      "rust": [
+        "src/extractor/rudovideo.rs",
+        "tests/fixtures/sites/rudovideo/"
+      ],
+      "scope": "RudoVideoIE stream URLs with access tokens, HLS/MP3/direct formats, YouTube follow-ups and iframe embeds, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "rumble",
       "status": "partial",
       "upstream": [

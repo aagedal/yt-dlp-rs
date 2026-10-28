@@ -1,0 +1,103 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://rudo.video/vod/abc",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"abc\", \"title\": \"Diego Cabot\", \"creator\": \"La Tercera\", \"thumbnail\": \"http://rudo-img.test/p.jpg\", \"formats\": [{\"format_id\": \"64\", \"format_index\": null, \"url\": \"https://rudo-cdn.test/vod/abc/audio.m3u8\", \"manifest_url\": \"https://rudo-cdn.test/vod/abc/playlist.m3u8?auth-token=TOK\", \"tbr\": 64.0, \"ext\": \"m4a\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 64.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"64 - audio only\"}, {\"format_id\": \"1280\", \"format_index\": null, \"url\": \"https://rudo-cdn.test/vod/abc/720.m3u8\", \"manifest_url\": \"https://rudo-cdn.test/vod/abc/playlist.m3u8?auth-token=TOK\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1280 - 1280x720\"}], \"is_live\": false, \"webpage_url\": \"https://rudo.video/vod/abc\", \"original_url\": \"https://rudo.video/vod/abc\", \"webpage_url_basename\": \"abc\", \"webpage_url_domain\": \"rudo.video\", \"extractor\": \"RudoVideo\", \"extractor_key\": \"RudoVideo\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://rudo-img.test/p.jpg\", \"id\": \"0\"}], \"display_id\": \"abc\", \"fulltitle\": \"Diego Cabot\", \"release_year\": null, \"creators\": [\"La Tercera\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"1280\", \"url\": \"https://rudo-cdn.test/vod/abc/720.m3u8\", \"manifest_url\": \"https://rudo-cdn.test/vod/abc/playlist.m3u8?auth-token=TOK\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1280 - 1280x720\", \"_filename\": \"Diego Cabot [abc].mp4\", \"filename\": \"Diego Cabot [abc].mp4\", \"__write_download_archive\": false}], \"format_id\": \"1280\", \"format_index\": null, \"url\": \"https://rudo-cdn.test/vod/abc/720.m3u8\", \"manifest_url\": \"https://rudo-cdn.test/vod/abc/playlist.m3u8?auth-token=TOK\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1280 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://rudo.video/podcast/pod1",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"pod1\", \"title\": \"Columna\", \"creator\": null, \"thumbnail\": null, \"formats\": [{\"url\": \"https://rudo-cdn.test/pod/c.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}], \"is_live\": false, \"webpage_url\": \"https://rudo.video/podcast/pod1\", \"original_url\": \"https://rudo.video/podcast/pod1\", \"webpage_url_basename\": \"pod1\", \"webpage_url_domain\": \"rudo.video\", \"extractor\": \"RudoVideo\", \"extractor_key\": \"RudoVideo\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"pod1\", \"fulltitle\": \"Columna\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://rudo-cdn.test/pod/c.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Columna [pod1].mp3\", \"filename\": \"Columna [pod1].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [RudoVideo] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://rudo.video/live/bbtv",
+   "args": [
+    "--print",
+    "%(id)s %(is_live)s %(live_status)s %(format_id)s %(creator)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "bbtv True is_live 1 NA"
+   ],
+   "stderr": [
+    "WARNING: [RudoVideo] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://rudo.video/vod/geo",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [RudoVideo] geo: This video is not available from your location due to geo restriction"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://rudo.video/vod/none",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [RudoVideo] none: Unable to extract stream url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://rudo.video/vod/badtok",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [RudoVideo] badtok: Invalid access token array; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://rudo-host.test/article",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"pod1\", \"title\": \"Columna\", \"creator\": null, \"thumbnail\": null, \"formats\": [{\"url\": \"https://rudo-cdn.test/pod/c.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}], \"is_live\": false, \"original_url\": \"https://rudo-host.test/article\", \"webpage_url\": \"https://rudo.video/podcast/pod1\", \"webpage_url_basename\": \"pod1\", \"webpage_url_domain\": \"rudo.video\", \"extractor\": \"RudoVideo\", \"extractor_key\": \"RudoVideo\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"pod1\", \"fulltitle\": \"Columna\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://rudo-cdn.test/pod/c.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Columna [pod1].mp3\", \"filename\": \"Columna [pod1].mp3\", \"__write_download_archive\": false}], \"url\": \"https://rudo-cdn.test/pod/c.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [RudoVideo] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

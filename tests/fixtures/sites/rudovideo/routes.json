@@ -1,0 +1,74 @@
+{
+ "routes": [
+  {
+   "url": "https://rudo.video/vod/abc",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>var _$_a1b2 = [\"x\", \"https://rudo-api.test/token?v=1\", 'y'];</script>\n<script>var streamURL = \"https://rudo-cdn.test/vod/abc/playlist.m3u8?old=1\"; var titleVideo = \"Diego Cabot\"; var videoAuthor = \"La Tercera\"; var posterIMG = \"//rudo-img.test/p.jpg\";</script></html>"
+  },
+  {
+   "url": "https://rudo-api.test/token?v=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"authToken\": \"TOK\"}}"
+  },
+  {
+   "url": "https://rudo-cdn.test/vod/abc/playlist.m3u8?auth-token=TOK",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://rudo.video/podcast/pod1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Columna\"></head><body><audio><source src=\"https://rudo-cdn.test/pod/c.mp3\"></audio></body></html>"
+  },
+  {
+   "url": "https://rudo.video/live/bbtv",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var streamURL = \"https://rudo-cdn.test/live/bbtv/master.m3u8\"; var titleVideo = \"LIVE BBTV\";</script>"
+  },
+  {
+   "url": "https://rudo-cdn.test/live/bbtv/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://rudo.video/vod/geo",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<p>Streaming is not available in your area</p>"
+  },
+  {
+   "url": "https://rudo.video/vod/none",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<p>nothing</p>"
+  },
+  {
+   "url": "https://rudo.video/vod/badtok",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var _$_zz = [\"a\", 1];</script><script>var streamURL = \"https://rudo-cdn.test/x.mp4\";</script>"
+  },
+  {
+   "url": "https://rudo-host.test/article",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Article</title></head><body><iframe src=\"https://rudo.video/podcast/pod1\"></iframe></body></html>"
+  }
+ ]
+}

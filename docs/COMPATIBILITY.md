@@ -472,6 +472,15 @@ upstream's wrapped `KeyError`) as live `hls` HLS formats, the non-fatal
 schedule API's first page channel title whose `str(id)` matches (else the
 generic title after upstream's warning) and `is_live`.
 
+Rudo videos, podcasts and live streams (`rudo.video/vod|podcast|live/ID`)
+follow upstream `RudoVideoIE`: the page's geo notice, `streamURL` (else its
+first `<source>`; a YouTube player is followed as a `url` result, else
+`Unable to extract stream url`), the token array's first URL for the
+`auth-token` query (else `Invalid access token array`), HLS (live for
+`live`), MP3 or direct formats, and the title, author and poster variables
+with OpenGraph fallbacks. Rudo iframes on generic pages are embeds.
+`tests/fixtures/sites/rudovideo/` is compared with pinned upstream output.
+
 Rumble embeds (`rumble.com/embed/ID`) follow upstream `RumbleEmbedIE`: the
 embed JS API's `ua` formats (progressive by height, audio, timeline; HLS
 manifests non-fatally; tar archives skipped), live status, captions,

@@ -213,6 +213,7 @@ mod rte;
 mod rtrfm;
 mod rtve;
 mod rtvslo;
+mod rudovideo;
 mod rumble;
 mod rutube;
 mod ruv;
@@ -678,6 +679,7 @@ pub use rtve::{
 pub use rtvslo::{
     Rtvslo, RtvsloShow, show_suitable as rtvslo_show_suitable, suitable as rtvslo_suitable,
 };
+pub use rudovideo::{RudoVideo, suitable as rudovideo_suitable};
 pub use rumble::{
     Rumble, RumbleEmbed, embed_suitable as rumble_embed_suitable, suitable as rumble_suitable,
 };
