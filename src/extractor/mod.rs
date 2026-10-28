@@ -250,6 +250,7 @@ mod rss;
 mod rte;
 mod rtrfm;
 mod rtve;
+mod rtvs;
 mod rtvslo;
 mod rudovideo;
 mod rumble;
@@ -779,6 +780,7 @@ pub use rtve::{
     audio_suitable as rtve_audio_suitable, live_suitable as rtve_live_suitable,
     television_suitable as rtve_television_suitable,
 };
+pub use rtvs::{Rtvs, suitable as rtvs_suitable};
 pub use rtvslo::{
     Rtvslo, RtvsloShow, show_suitable as rtvslo_show_suitable, suitable as rtvslo_suitable,
 };

@@ -397,6 +397,13 @@ and `thumbnail` finalization (no `--check-formats` URL testing). These
 fields appear in JSON, info JSON, match filters and (scalar ones) output
 templates; see [the source slice](../upstream/notes/youtube-metadata.md).
 
+STVR (formerly RTVS) archive items (`rtvs|stvr.sk/radio|televizia/archiv/[N/]ID`,
+`stvr`) follow upstream `RTVSIE`: the page's first `player_*_ID` iframe
+(fatal), its playlist JSON URL, and the JSON's clip (else first playlist
+item): an `audio/mp3` source as a direct format, else its HLS playlist
+(fatal), with the title, description, length, image and creation time.
+`tests/fixtures/sites/rtvs/` is compared with pinned upstream output.
+
 RTÉ Player shows (`rte.ie/player/CC/show/SLUG/ID`, `rte`) and radio player
 recordings (`rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=...`, old
 and new specifiers, `rte:radio`) follow upstream `RteBaseIE`: both the IPTV

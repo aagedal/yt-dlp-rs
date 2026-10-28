@@ -1,0 +1,43 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.rtvs.sk/radio/archiv/11224/414872",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"414872\", \"display_id\": \"10\", \"title\": \"Ostrov\", \"description\": \"Popis\", \"duration\": 2823, \"thumbnail\": \"https://img.stvr.test/a.jpg\", \"timestamp\": 1650902960, \"formats\": [{\"url\": \"https://cdn.stvr.test/a.mp3\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"webpage_url\": \"https://www.rtvs.sk/radio/archiv/11224/414872\", \"original_url\": \"https://www.rtvs.sk/radio/archiv/11224/414872\", \"webpage_url_basename\": \"414872\", \"webpage_url_domain\": \"rtvs.sk\", \"extractor\": \"stvr\", \"extractor_key\": \"RTVS\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.stvr.test/a.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Ostrov\", \"duration_string\": \"47:03\", \"upload_date\": \"20220425\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cdn.stvr.test/a.mp3\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"acodec\": \"mp3\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Ostrov [414872].mp3\", \"filename\": \"Ostrov [414872].mp3\", \"__write_download_archive\": false}], \"url\": \"https://cdn.stvr.test/a.mp3\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.stvr.sk/televizia/archiv/18083",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"18083\", \"display_id\": \"55\", \"title\": \"Klip\", \"description\": null, \"duration\": 90, \"thumbnail\": null, \"timestamp\": null, \"formats\": [{\"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://cdn.stvr.test/v/720.m3u8\", \"manifest_url\": \"https://cdn.stvr.test/v/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\"}], \"webpage_url\": \"https://www.stvr.sk/televizia/archiv/18083\", \"original_url\": \"https://www.stvr.sk/televizia/archiv/18083\", \"webpage_url_basename\": \"18083\", \"webpage_url_domain\": \"stvr.sk\", \"extractor\": \"stvr\", \"extractor_key\": \"RTVS\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Klip\", \"duration_string\": \"1:30\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"2000\", \"url\": \"https://cdn.stvr.test/v/720.m3u8\", \"manifest_url\": \"https://cdn.stvr.test/v/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\", \"_filename\": \"Klip [18083].mp4\", \"filename\": \"Klip [18083].mp4\", \"__write_download_archive\": false}], \"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://cdn.stvr.test/v/720.m3u8\", \"manifest_url\": \"https://cdn.stvr.test/v/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.stvr.sk/radio/archiv/1/2",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [stvr] 2: Unable to extract Iframe ID; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
