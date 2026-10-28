@@ -3462,6 +3462,19 @@ thumbnail, channel, `nlp_entities` cast, channel URL and channel ID.
 Pages without a toolbar element remain an explicit native error.
 `tests/fixtures/sites/listennotes/` is compared with pinned upstream output.
 
+LiTV pages (`litv.tv/TYPE/watch/ID`, `litv.tv/vod/TYPE/content.do?content_id=ID`)
+follow upstream `LiTVIE` (countries `TW`): the Next.js `pageProps`, a
+`seriesTree` with a `series_id` as a playlist (series ID and title) of each
+season's episodes as smuggled `force_noplaylist` URLs unless `--no-playlist`,
+otherwise the first asset (`vod`) or the live `content_id`/`content_type`
+posted to `api/get-urls` with a `PUID` cookie (else `get-urls-no-auth` with a
+random `puid`). API errors are upstream's (`OutsideRegionError` as a geo
+restriction, `LiTV said: ...`, `Unexpected error from LiTV`; an empty URL
+list is the bare `list index out of range`). The first asset URL's HLS
+(`hls`, `Accept-Encoding: identity`), the joined title and secondary mark,
+description, thumbnail, genres and episode number.
+`tests/fixtures/sites/litv/` is compared with pinned upstream output.
+
 Libsyn episodes (`html5-player.libsyn.com/embed/episode/id/ID`) follow
 upstream `LibsynIE`: the player page (requested without the URL's trailing
 options) and its fatal `playlistItem` JSON, the item, `episode-title`,

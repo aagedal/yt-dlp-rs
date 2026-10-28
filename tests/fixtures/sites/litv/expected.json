@@ -1,0 +1,173 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD00041610",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"VOD00041606\", \"title\": \"\\u82b1\\u5343\\u9aa8\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"VOD00041610\", \"formats\": [{\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://litv-hls.test/A1/720.m3u8\", \"manifest_url\": \"https://litv-hls.test/A1/master.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Accept-Encoding\": \"identity\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"hls-1500 - 1280x720\"}], \"title\": \"\\u82b1\\u5343\\u9aa8\\u7b2c1\\u96c6\", \"description\": \"\\u7b2c1\\u96c6\\u63cf\\u8ff0\", \"thumbnail\": \"https://p-cdnstatic.svc.litv.tv/pics/VOD00041610.jpg\", \"categories\": [\"\\u5947\\u5e7b\", \"\\u611b\\u60c5\"], \"episode_number\": 1, \"webpage_url\": \"https://www.litv.tv/drama/watch/VOD00041610#__youtubedl_smuggle=%7B%22force_noplaylist%22%3A+true%7D\", \"original_url\": \"https://www.litv.tv/drama/watch/VOD00041610#__youtubedl_smuggle=%7B%22force_noplaylist%22%3A+true%7D\", \"webpage_url_basename\": \"VOD00041610\", \"webpage_url_domain\": \"litv.tv\", \"extractor\": \"LiTV\", \"extractor_key\": \"LiTV\", \"playlist_count\": 2, \"playlist\": \"\\u82b1\\u5343\\u9aa8\", \"playlist_id\": \"VOD00041606\", \"playlist_title\": \"\\u82b1\\u5343\\u9aa8\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.litv.tv/drama/watch/VOD00041610\", \"n_entries\": 2, \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://p-cdnstatic.svc.litv.tv/pics/VOD00041610.jpg\", \"id\": \"0\"}], \"display_id\": \"VOD00041610\", \"fulltitle\": \"\\u82b1\\u5343\\u9aa8\\u7b2c1\\u96c6\", \"release_year\": null, \"episode\": \"Episode 1\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1500\", \"url\": \"https://litv-hls.test/A1/720.m3u8\", \"manifest_url\": \"https://litv-hls.test/A1/master.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Accept-Encoding\": \"identity\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"hls-1500 - 1280x720\", \"_filename\": \"\\u82b1\\u5343\\u9aa8\\u7b2c1\\u96c6 [VOD00041610].mp4\", \"filename\": \"\\u82b1\\u5343\\u9aa8\\u7b2c1\\u96c6 [VOD00041610].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://litv-hls.test/A1/720.m3u8\", \"manifest_url\": \"https://litv-hls.test/A1/master.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Accept-Encoding\": \"identity\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"hls-1500 - 1280x720\"}, {\"id\": \"VOD00041611\", \"formats\": [{\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://litv-hls.test/A2/720.m3u8\", \"manifest_url\": \"https://litv-hls.test/A2/master.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Accept-Encoding\": \"identity\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"hls-1500 - 1280x720\"}], \"title\": \"\\u82b1\\u5343\\u9aa8\\u7b2c2\\u96c6\", \"description\": \"\\u7b2c2\\u96c6\\u63cf\\u8ff0\", \"thumbnail\": \"https://p-cdnstatic.svc.litv.tv/pics/VOD00041611.jpg\", \"categories\": [\"\\u5947\\u5e7b\", \"\\u611b\\u60c5\"], \"episode_number\": 2, \"webpage_url\": \"https://www.litv.tv/drama/watch/VOD00041611#__youtubedl_smuggle=%7B%22force_noplaylist%22%3A+true%7D\", \"original_url\": \"https://www.litv.tv/drama/watch/VOD00041611#__youtubedl_smuggle=%7B%22force_noplaylist%22%3A+true%7D\", \"webpage_url_basename\": \"VOD00041611\", \"webpage_url_domain\": \"litv.tv\", \"extractor\": \"LiTV\", \"extractor_key\": \"LiTV\", \"playlist_count\": 2, \"playlist\": \"\\u82b1\\u5343\\u9aa8\", \"playlist_id\": \"VOD00041606\", \"playlist_title\": \"\\u82b1\\u5343\\u9aa8\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.litv.tv/drama/watch/VOD00041610\", \"n_entries\": 2, \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"thumbnails\": [{\"url\": \"https://p-cdnstatic.svc.litv.tv/pics/VOD00041611.jpg\", \"id\": \"0\"}], \"display_id\": \"VOD00041611\", \"fulltitle\": \"\\u82b1\\u5343\\u9aa8\\u7b2c2\\u96c6\", \"release_year\": null, \"episode\": \"Episode 2\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1500\", \"url\": \"https://litv-hls.test/A2/720.m3u8\", \"manifest_url\": \"https://litv-hls.test/A2/master.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Accept-Encoding\": \"identity\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"hls-1500 - 1280x720\", \"_filename\": \"\\u82b1\\u5343\\u9aa8\\u7b2c2\\u96c6 [VOD00041611].mp4\", \"filename\": \"\\u82b1\\u5343\\u9aa8\\u7b2c2\\u96c6 [VOD00041611].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://litv-hls.test/A2/720.m3u8\", \"manifest_url\": \"https://litv-hls.test/A2/master.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Accept-Encoding\": \"identity\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"hls-1500 - 1280x720\"}], \"webpage_url\": \"https://www.litv.tv/drama/watch/VOD00041610\", \"original_url\": \"https://www.litv.tv/drama/watch/VOD00041610\", \"webpage_url_basename\": \"VOD00041610\", \"webpage_url_domain\": \"litv.tv\", \"extractor\": \"LiTV\", \"extractor_key\": \"LiTV\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD00041610",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"VOD00041606\", \"title\": \"\\u82b1\\u5343\\u9aa8\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"url\": \"https://www.litv.tv/drama/watch/VOD00041610#__youtubedl_smuggle=%7B%22force_noplaylist%22%3A+true%7D\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"https://www.litv.tv/drama/watch/VOD00041611#__youtubedl_smuggle=%7B%22force_noplaylist%22%3A+true%7D\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.litv.tv/drama/watch/VOD00041610\", \"original_url\": \"https://www.litv.tv/drama/watch/VOD00041610\", \"webpage_url_basename\": \"VOD00041610\", \"webpage_url_domain\": \"litv.tv\", \"extractor\": \"LiTV\", \"extractor_key\": \"LiTV\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD00041610",
+   "args": [
+    "--no-geo-bypass",
+    "-I",
+    "1",
+    "--print",
+    "%(id)s|%(title)s|%(episode)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "VOD00041610|花千骨第1集|Episode 1"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD00041610",
+   "args": [
+    "--no-geo-bypass",
+    "--no-playlist",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"VOD00041610\", \"formats\": [{\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://litv-hls.test/A1/720.m3u8\", \"manifest_url\": \"https://litv-hls.test/A1/master.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Accept-Encoding\": \"identity\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"hls-1500 - 1280x720\"}], \"title\": \"\\u82b1\\u5343\\u9aa8\\u7b2c1\\u96c6\", \"description\": \"\\u7b2c1\\u96c6\\u63cf\\u8ff0\", \"thumbnail\": \"https://p-cdnstatic.svc.litv.tv/pics/VOD00041610.jpg\", \"categories\": [\"\\u5947\\u5e7b\", \"\\u611b\\u60c5\"], \"episode_number\": 1, \"webpage_url\": \"https://www.litv.tv/drama/watch/VOD00041610\", \"original_url\": \"https://www.litv.tv/drama/watch/VOD00041610\", \"webpage_url_basename\": \"VOD00041610\", \"webpage_url_domain\": \"litv.tv\", \"extractor\": \"LiTV\", \"extractor_key\": \"LiTV\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://p-cdnstatic.svc.litv.tv/pics/VOD00041610.jpg\", \"id\": \"0\"}], \"display_id\": \"VOD00041610\", \"fulltitle\": \"\\u82b1\\u5343\\u9aa8\\u7b2c1\\u96c6\", \"release_year\": null, \"episode\": \"Episode 1\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://litv-hls.test/A1/720.m3u8\", \"manifest_url\": \"https://litv-hls.test/A1/master.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Accept-Encoding\": \"identity\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"hls-1500 - 1280x720\", \"_filename\": \"\\u82b1\\u5343\\u9aa8\\u7b2c1\\u96c6 [VOD00041610].mp4\", \"filename\": \"\\u82b1\\u5343\\u9aa8\\u7b2c1\\u96c6 [VOD00041610].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.litv.tv/channel/watch/4gtv-live-1",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "%(id)s|%(title)s|%(formats.0.http_headers.Accept-Encoding)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "4gtv-live-1|直播台|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.litv.tv/vod/drama/content.do?content_id=VOD-auth",
+   "args": [
+    "--no-geo-bypass",
+    "--cookies",
+    "cookies.txt",
+    "--print",
+    "%(id)s|%(title)s"
+   ],
+   "copy": [
+    "cookies.txt"
+   ],
+   "exit": 0,
+   "stdout": [
+    "VOD-auth|登入"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD-geo",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [LiTV] VOD-geo: This video is available in Taiwan only"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD-err",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [LiTV] VOD-err: LiTV said: Asset not found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD-unk",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [LiTV] VOD-unk: Unexpected error from LiTV; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD-empty",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD-nolive",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: VOD-nolive: An extractor error has occurred. (caused by KeyError('content_id')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD-nonext",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [LiTV] VOD-nonext: Unable to extract next.js data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

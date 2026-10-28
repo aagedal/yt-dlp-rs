@@ -1960,6 +1960,18 @@
       "scope": "ListenNotesIE episode pages (original-content JSON merged with the play button toolbar attributes, description meta duration fallback, ln-text-p description, cast, KeyError message) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "litv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/litv.py"
+      ],
+      "rust": [
+        "src/extractor/litv.rs",
+        "tests/fixtures/sites/litv/"
+      ],
+      "scope": "LiTVIE Next.js program information, series playlists of smuggled no-playlist episodes, the get-urls JSON POST (PUID cookie or random puid) with its region and API errors, and identity-encoded HLS formats, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "livestreamfails",
       "status": "partial",
       "upstream": [

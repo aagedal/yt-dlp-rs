@@ -139,6 +139,7 @@ mod libraryofcongress;
 mod libsyn;
 mod linkedin;
 mod listennotes;
+mod litv;
 mod livestreamfails;
 mod lnk;
 pub mod login;
@@ -546,6 +547,7 @@ pub use libraryofcongress::{LibraryOfCongress, suitable as libraryofcongress_sui
 pub use libsyn::{Libsyn, suitable as libsyn_suitable};
 pub use linkedin::{LinkedIn, suitable as linkedin_suitable};
 pub use listennotes::{ListenNotes, suitable as listennotes_suitable};
+pub use litv::{LiTv, suitable as litv_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
 pub use lnk::{Lnk, suitable as lnk_suitable};
 pub use loom::{Loom, suitable as loom_suitable};
