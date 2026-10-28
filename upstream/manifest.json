@@ -932,6 +932,18 @@
       "scope": "BTVPlusIE videoUrl player JSON config videojs sources (non-fatal HLS formats and subtitles, unknown-type warnings), Open Graph/product-title metadata compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "boxcast",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/boxcast.py"
+      ],
+      "rust": [
+        "src/extractor/boxcast.rs",
+        "tests/fixtures/sites/boxcast/"
+      ],
+      "scope": "BoxCastVideoIE preload/API broadcast and recorded HLS view, and embeds, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "bundestag",
       "status": "partial",
       "upstream": [

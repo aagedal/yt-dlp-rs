@@ -1,0 +1,21 @@
+[
+ {
+  "url": "https://boxcast.tv/view-embed/vigil-ys0ryhjsjgw2abbgdhx3",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://boxcast.tv/channel/z03?b=live1",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://boxcast-host.test/page",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(extractor)s"
+  ]
+ }
+]

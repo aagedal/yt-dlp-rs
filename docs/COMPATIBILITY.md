@@ -918,6 +918,15 @@ that matches (else `Unable to extract jwplatform id`) as a `url` result for
 `jwplatform:ID`. `tests/fixtures/sites/businessinsider/` is compared with
 pinned upstream output.
 
+BoxCast broadcasts (`boxcast.tv/view-embed/ID`, `channel/CH?...b=ID`,
+`video-portal/A/B/ID`) follow upstream `BoxCastVideoIE`: the page's
+`BOXCAST_PRELOAD` broadcast and view data (else the broadcasts API, its view
+non-fatal), a recorded view's HLS playlist (fatal), the broadcast's ID, name,
+description and preview (else the OpenGraph/Twitter meta tags, warning when
+missing), stream time and account. BoxCast embed iframes on generic pages
+are embeds. `tests/fixtures/sites/boxcast/` is compared with pinned upstream
+output.
+
 Bundestag Mediathek videos (`dbtg.tv/cvid|fvid/ID`, `bundestag.de/mediathek?...videoid=ID`)
 follow upstream `BundestagIE`: the archive `ID_playlist.smil/playlist.m3u8`
 master playlist (`instance`; a 404 is `Could not find video id`, other errors

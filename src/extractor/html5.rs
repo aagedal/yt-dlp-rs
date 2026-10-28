@@ -2108,7 +2108,7 @@ enum Embed {
     Info(WebpageEntry),
 }
 
-static EMBED_SITES: [EmbedSite; 35] = [
+static EMBED_SITES: [EmbedSite; 36] = [
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
@@ -2147,6 +2147,14 @@ static EMBED_SITES: [EmbedSite; 35] = [
         extractor: Some(&super::blogger::Blogger),
         embed_urls: super::blogger::embed_urls,
         temp_id: super::blogger::temp_id,
+        webpage: None,
+    },
+    EmbedSite {
+        name: super::boxcast::NAME,
+        key: super::boxcast::KEY,
+        extractor: Some(&super::boxcast::BoxCastVideo),
+        embed_urls: super::boxcast::embed_urls,
+        temp_id: super::boxcast::temp_id,
         webpage: None,
     },
     EmbedSite {
