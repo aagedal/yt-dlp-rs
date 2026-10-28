@@ -1267,6 +1267,16 @@ entry (`hls` m3u8 sources, poster thumbnail) and the article's cleaned
 `description`. `tests/fixtures/sites/thehighwire/` is compared with pinned
 upstream output.
 
+TF1 videos (`tf1.fr/CHANNEL/PROGRAM/videos/SLUG.html`) follow upstream
+`TF1IE`: the persisted GraphQL `videoBySlug` query (`programSlug` and `slug`
+variables in `json.dumps` form) and its `streamId` (required) as a
+`url_transparent` result of `wat:ID`, overlaid with the title, the
+decoration's image sources (URL and width), description and program label
+(series), the ISO 8601 date, playing duration, non-empty tag labels and the
+season and episode numbers; the `wat.tv` extractor names stay.
+`tests/fixtures/sites/tf1/` (with WAT) is compared with pinned upstream
+output.
+
 The Guardian podcast episodes (`theguardian.com/SECTION/audio/YYYY/mon/D/
 SLUG`) follow upstream `TheGuardianPodcastIE`: the first `podcast__player`
 element's `data-source` as the info's own format, the OpenGraph title (else
@@ -1346,6 +1356,17 @@ the session ID, the player page's `playlist_url` the fatal `hls` formats
 without a forced extension, with the cleaned `<h1>` title (no-break spaces
 replaced) and `og:description`/`description` and `og:image`/`image` meta
 values, each warning when absent.
+
+WAT media (`wat:ID`, `wat.tv/video/...-ID`; base-36 IDs converted unless
+they are more than six digits) follow upstream `WatIE` (no geo bypass): the
+`mediainfo.tf1.fr/mediainfocombo/ID?pver=5010000` JSON, its error
+descriptions (`GEOBLOCKED` as a geo restriction with its `geoList` under the
+URL's ID, `DELIVERY_ERROR` with a 403/500 delivery code as DRM, else joined
+with the delivery error), the delivery's `dash`/`mpd` (`das-q1` rewritten to
+`das-q1-ssl`, `dash`) or `hls` manifest (non-fatal, subtitles merged), and
+without formats the DRM error for DRM deliveries or the non-fatal
+`wat.tv/get/webhtml/ID` manifests; title (required), preview, the first
+Médiamétrie chapter date and duration.
 
 webcamera.pl cameras (`SUBDOMAIN.webcamera.pl`) follow upstream
 `WebcameraplIE`: the ROT13-decoded `data-src` manifest (else the expected

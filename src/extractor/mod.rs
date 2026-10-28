@@ -209,6 +209,7 @@ mod ted;
 mod telegraaf;
 mod telegram;
 mod teletask;
+mod tf1;
 mod theguardian;
 mod thehighwire;
 mod theintercept;
@@ -243,6 +244,7 @@ mod vimeo;
 mod vk;
 mod vkplay;
 mod vocaroo;
+mod wat;
 mod webcamerapl;
 mod weibo;
 mod whyp;
@@ -613,6 +615,7 @@ pub use ted::{
 pub use telegraaf::{Telegraaf, suitable as telegraaf_suitable};
 pub use telegram::{TelegramEmbed, suitable as telegram_suitable};
 pub use teletask::{TeleTask, suitable as teletask_suitable};
+pub use tf1::{Tf1, suitable as tf1_suitable};
 pub use theguardian::{TheGuardianPodcast, suitable as theguardian_suitable};
 pub use thehighwire::{TheHighWire, suitable as thehighwire_suitable};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
@@ -688,6 +691,7 @@ pub use vkplay::{
     VkPlay, VkPlayLive, live_suitable as vkplay_live_suitable, suitable as vkplay_suitable,
 };
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
+pub use wat::{Wat, suitable as wat_suitable};
 pub use webcamerapl::{Webcamerapl, suitable as webcamerapl_suitable};
 pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
@@ -1885,6 +1889,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || instagram::ios_suitable(url)
         || (url.starts_with("tco:") && twitter::shortener_suitable(url))
         || (url.starts_with("tiktokuser:") && tiktok::user_suitable(url))
+        || (url.starts_with("wat:") && wat::suitable(url))
         || (url.starts_with("wistia:") && wistia::suitable(url))
         || (url.starts_with("wistiachannel:") && wistia::channel_suitable(url))
         || youtube::redirect::user_suitable(url)

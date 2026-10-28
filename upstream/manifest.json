@@ -2602,6 +2602,18 @@
       "scope": "TeleTaskIE (marked broken) video class/source pairs as a playlist of untyped entries with the fatal title and optional date, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "tf1",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tf1.py"
+      ],
+      "rust": [
+        "src/extractor/tf1.rs",
+        "tests/fixtures/sites/tf1/"
+      ],
+      "scope": "TF1IE GraphQL videoBySlug url_transparent results of wat: media with overlaid metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "theguardian",
       "status": "partial",
       "upstream": [
@@ -3032,6 +3044,18 @@
         "tests/fixtures/sites/vocaroo/"
       ],
       "scope": "VocarooIE media URL HEAD request, upload timestamp header, Referer headers and empty title compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "wat",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/wat.py"
+      ],
+      "rust": [
+        "src/extractor/wat.rs",
+        "tests/fixtures/sites/tf1/"
+      ],
+      "scope": "WatIE mediainfocombo DASH/HLS deliveries, webhtml fallback and geo/DRM/delivery errors, compared with pinned upstream output through the fixture proxy (tests/fixtures/sites/tf1/)"
     },
     {
       "name": "webcamerapl",
