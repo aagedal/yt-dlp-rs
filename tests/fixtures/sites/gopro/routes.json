@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://gopro.com/v/ZNVvED8QDzR5V",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:image\" content=\"https://gp.test/i.jpg\"></head><script>window.__reflectData = {\"collectionMedia\": [{\"id\": \"mediaA\", \"source_duration\": \"37\", \"music_track_artist\": \"Artist\", \"music_track_name\": \"\"}], \"collection\": {\"title\": \"My\\nGoPro\", \"created_at\": \"2021-01-26T19:15:48Z\"}, \"account\": {\"nickname\": \"nick\"}};</script></html>"
+  },
+  {
+   "url": "https://api.gopro.com/media/mediaA/download",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"_embedded\": {\"variations\": [{\"url\": \"https://gp.test/high.mp4\", \"quality\": \"high\", \"label\": \"high\", \"type\": \"mp4\", \"width\": 1920, \"height\": \"1080\"}, {\"url\": \"no\", \"quality\": \"x\"}]}}"
+  },
+  {
+   "url": "https://gopro.com/v/Second",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Second | GoPro</title></head><script>window.__reflectData = {\"collectionMedia\": [{\"id\": 77}], \"collection\": {}};</script></html>"
+  },
+  {
+   "url": "https://api.gopro.com/media/77/download",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://gopro.com/v/Empty",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>window.__reflectData = {\"collectionMedia\": []};</script>"
+  }
+ ]
+}

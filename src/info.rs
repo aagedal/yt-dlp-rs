@@ -105,9 +105,14 @@ fn serialize_input_url<S: serde::Serializer>(
 
 /// Upstream `url_basename`: the URL path's last segment.
 pub fn url_basename(url: &Url) -> String {
-    crate::extractor::input_view(url)
-        .path()
-        .trim_matches('/')
+    let view = crate::extractor::input_view(url);
+    let path = view.path();
+    // `urlparse` splits `;params` off the last path segment (`_splitparams`).
+    let path = match path.rfind('/') {
+        Some(slash) => path[slash..].find(';').map_or(path, |i| &path[..slash + i]),
+        None => path.split(';').next().unwrap_or(path),
+    };
+    path.trim_matches('/')
         .rsplit('/')
         .next()
         .unwrap_or_default()
@@ -1602,6 +1607,15 @@ fn selection_error(message: impl Into<String>) -> crate::Error {
 
 #[cfg(test)]
 mod tests {
+
+    #[test]
+    fn url_basename_drops_the_last_segments_params_like_urlparse() {
+        let url = |text: &str| Url::parse(text).unwrap();
+        assert_eq!(url_basename(&url("https://a.test/x/film;filmId=1")), "film");
+        assert_eq!(url_basename(&url("https://a.test/x;y/film")), "film");
+        assert_eq!(url_basename(&url("https://a.test/watch?v=1")), "watch");
+    }
+
     use super::*;
     use serde_json::{Value, json};
 

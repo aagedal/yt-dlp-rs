@@ -1,0 +1,76 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://musescore.com/user/73797/scores/142975",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"142975\", \"formats\": [{\"url\": \"https://s3.ultimate-guitar.test/musescore.scoredata/g/abc/score.mp3?response-content-disposition=attachment\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}], \"title\": \"WA Mozart Marche Turque (Turkish March fingered)\", \"description\": \"Download and print in PDF or MIDI free sheet music for Rondo Alla Turca & more. Arranged by PapyPiano\", \"thumbnail\": \"https://cdn.ustatik.com/musescore/scoredata/g/abc/score_0.png@500x660?no-cache=1&bgclr=ffffff\", \"uploader\": \"PapyPiano\", \"creator\": \"Wolfgang Amadeus Mozart\", \"webpage_url\": \"https://musescore.com/user/73797/scores/142975\", \"original_url\": \"https://musescore.com/user/73797/scores/142975\", \"webpage_url_basename\": \"142975\", \"webpage_url_domain\": \"musescore.com\", \"extractor\": \"MuseScore\", \"extractor_key\": \"MuseScore\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.ustatik.com/musescore/scoredata/g/abc/score_0.png@500x660?no-cache=1&bgclr=ffffff\", \"id\": \"0\"}], \"display_id\": \"142975\", \"fulltitle\": \"WA Mozart Marche Turque (Turkish March fingered)\", \"release_year\": null, \"creators\": [\"Wolfgang Amadeus Mozart\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://s3.ultimate-guitar.test/musescore.scoredata/g/abc/score.mp3?response-content-disposition=attachment\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"WA Mozart Marche Turque (Turkish March fingered) [142975].mp3\", \"filename\": \"WA Mozart Marche Turque (Turkish March fingered) [142975].mp3\", \"__write_download_archive\": false}], \"url\": \"https://s3.ultimate-guitar.test/musescore.scoredata/g/abc/score.mp3?response-content-disposition=attachment\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://musescore.com/user/73797/scores/142975",
+   "args": [
+    "-q",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [],
+   "stderr": [],
+   "files": {
+    "142975.mp3": 12
+   }
+  },
+  {
+   "url": "https://musescore.com/classicman/fur-elise",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"33816\", \"formats\": [{\"url\": \"https://s3.ultimate-guitar.test/fur.mp3\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}], \"title\": \"F\\u00fcr Elise \\u2013 Beethoven\", \"description\": null, \"thumbnail\": null, \"uploader\": null, \"creator\": null, \"webpage_url\": \"https://musescore.com/classicman/fur-elise\", \"original_url\": \"https://musescore.com/classicman/fur-elise\", \"webpage_url_basename\": \"fur-elise\", \"webpage_url_domain\": \"musescore.com\", \"extractor\": \"MuseScore\", \"extractor_key\": \"MuseScore\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"33816\", \"fulltitle\": \"F\\u00fcr Elise \\u2013 Beethoven\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://s3.ultimate-guitar.test/fur.mp3\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"F\\u00fcr Elise \\u2013 Beethoven [33816].mp3\", \"filename\": \"F\\u00fcr Elise \\u2013 Beethoven [33816].mp3\", \"__write_download_archive\": false}], \"url\": \"https://s3.ultimate-guitar.test/fur.mp3\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [MuseScore] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [MuseScore] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [MuseScore] unable to extract uploader; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [MuseScore] unable to extract composer; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://musescore.com/minh_cuteee/scores/6555384",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [MuseScore] 6555384: Unable to extract OpenGraph url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://musescore.com/user/2/scores/555",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 555: An extractor error has occurred. (caused by KeyError('info')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

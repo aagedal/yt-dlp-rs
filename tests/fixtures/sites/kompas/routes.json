@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://video.kompas.com/watch/164474/kim-jong-un",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name='description' content='page desc'></head></html>"
+  },
+  {
+   "url": "https://apidam.jixie.io/api/public/stream?metadata=full&video_id=164474",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"title\": \"Kim Jong Un\", \"owner_id\": 17, \"streams\": [{\"type\": \"HLS\", \"url\": \"https://jixie-cdn.test/164474/master.m3u8\"}, {\"type\": \"MP4\", \"url\": \"https://jixie-cdn.test/164474/720.mp4\", \"width\": 1280, \"height\": 720}], \"metadata\": {\"description\": \"<p>Desc <b>here</b></p>\", \"thumbnails\": [{\"url\": \"https://jixie-img.test/a.jpg\", \"width\": 640}], \"duration\": \"85.5\", \"keywords\": \"a,b,,c\", \"categories\": \"\"}}}"
+  },
+  {
+   "url": "https://jixie-cdn.test/164474/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://video.kompas.com/watch/2/drm-video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property='og:title' content='OG title'></head></html>"
+  },
+  {
+   "url": "https://apidam.jixie.io/api/public/stream?metadata=full&video_id=2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"title\": \"\", \"drm\": 1, \"streams\": [{\"type\": \"HLS\", \"url\": \"https://jixie-cdn.test/2/master.m3u8\"}], \"metadata\": {\"keywords\": 5}}}"
+  },
+  {
+   "url": "https://jixie-cdn.test/2/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://video.kompas.com/watch/3/no-data",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html></html>"
+  },
+  {
+   "url": "https://apidam.jixie.io/api/public/stream?metadata=full&video_id=3",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": 1}"
+  }
+ ]
+}

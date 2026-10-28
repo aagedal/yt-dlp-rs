@@ -157,7 +157,7 @@ fn anonymous_token(response: &Value) -> Option<String> {
 }
 
 /// A random `uuid.uuid4()`.
-fn uuid4() -> String {
+pub(crate) fn uuid4() -> String {
     use std::hash::{BuildHasher, Hasher};
     let mut bytes = [0u8; 16];
     for (index, chunk) in bytes.chunks_mut(8).enumerate() {

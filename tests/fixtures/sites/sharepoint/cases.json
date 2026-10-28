@@ -1,0 +1,20 @@
+[
+ {
+  "url": "https://lut-my.sharepoint.com/:v:/g/personal/juha/EUrAmrktb4ZMhUcY9J2PqMEBD_9x_l0DyYWVgAvp-TTOMw?e=ZpQOOw",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://acme.sharepoint.com/sites/x/_layouts/15/stream.aspx?id=%2Fsites%2Fx%2Flogin.mp4",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://acme.sharepoint.com/sites/x/_layouts/15/stream.aspx?id=%2Fsites%2Fx%2Fnone.mp4",
+  "args": [
+   "-j"
+  ]
+ }
+]

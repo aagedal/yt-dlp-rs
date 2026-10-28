@@ -1,0 +1,87 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.dailymail.co.uk/video/tvshowbiz/video-1295863/The-Mountain.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1295863\", \"title\": \"The Mountain appears in sparkling water ad for 'Heavy Bubbles'\", \"description\": \"Gregor & bubbles\", \"thumbnail\": \"https://i.dailymail.co.uk/1295863.jpg\", \"formats\": [{\"format_id\": \"http\", \"url\": \"http://video.dailymail.co.uk/1295863_low.mp4\", \"width\": null, \"height\": null, \"tbr\": null, \"vcodec\": null, \"container\": \"MP4\", \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\"}, {\"format_id\": \"https-1000\", \"url\": \"https://video.dailymail.co.uk/1295863_1000.mp4\", \"width\": 640, \"height\": 360, \"tbr\": 1000, \"vcodec\": \"H264\", \"container\": \"MP4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-1000 - 640x360\"}, {\"format_id\": \"hls-1500\", \"url\": \"https://video.dailymail.co.uk/1295863_hls.m3u8\", \"width\": 1280, \"height\": 720, \"tbr\": 1500, \"vcodec\": \"H264\", \"container\": \"M2TS\", \"protocol\": \"m3u8_native\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\"}], \"webpage_url\": \"http://www.dailymail.co.uk/video/tvshowbiz/video-1295863/The-Mountain.html\", \"original_url\": \"http://www.dailymail.co.uk/video/tvshowbiz/video-1295863/The-Mountain.html\", \"webpage_url_basename\": \"The-Mountain.html\", \"webpage_url_domain\": \"dailymail.co.uk\", \"extractor\": \"DailyMail\", \"extractor_key\": \"DailyMail\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://i.dailymail.co.uk/1295863.jpg\", \"id\": \"0\"}], \"display_id\": \"1295863\", \"fulltitle\": \"The Mountain appears in sparkling water ad for 'Heavy Bubbles'\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1500\", \"url\": \"https://video.dailymail.co.uk/1295863_hls.m3u8\", \"width\": 1280, \"height\": 720, \"tbr\": 1500, \"vcodec\": \"H264\", \"container\": \"M2TS\", \"protocol\": \"m3u8_native\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\", \"_filename\": \"The Mountain appears in sparkling water ad for 'Heavy Bubbles' [1295863].mp4\", \"filename\": \"The Mountain appears in sparkling water ad for 'Heavy Bubbles' [1295863].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1500\", \"url\": \"https://video.dailymail.co.uk/1295863_hls.m3u8\", \"width\": 1280, \"height\": 720, \"tbr\": 1500, \"vcodec\": \"H264\", \"container\": \"M2TS\", \"protocol\": \"m3u8_native\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.dailymail.co.uk/video/tvshowbiz/video-1295863/The-Mountain.html",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[DailyMail] Extracting URL: http://www.dailymail.co.uk/video/tvshowbiz/video-1295863/The-Mountain.html",
+    "[DailyMail] 1295863: Downloading webpage",
+    "[DailyMail] 1295863: Downloading JSON metadata",
+    "[info] Available formats for 1295863:",
+    "ID         EXT RESOLUTION |   TBR PROTO | VCODEC  ACODEC  MORE INFO",
+    "-------------------------------------------------------------------",
+    "http       mp4 unknown    |       http  | unknown unknown MP4",
+    "https-1000 mp4 640x360    | 1000k https | H264    unknown MP4",
+    "hls-1500   mp4 1280x720   | 1500k m3u8  | H264    unknown M2TS"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.dailymail.co.uk/embed/video/3463585.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3463585\", \"title\": \"Jessie J\", \"description\": null, \"thumbnail\": \"https://i.dailymail.co.uk/t.jpg\", \"formats\": [{\"format_id\": \"https-800\", \"url\": \"https://video.dailymail.co.uk/3463585.mp4\", \"width\": null, \"height\": null, \"tbr\": 800, \"vcodec\": null, \"container\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-800 - unknown\"}], \"webpage_url\": \"http://www.dailymail.co.uk/embed/video/3463585.html\", \"original_url\": \"http://www.dailymail.co.uk/embed/video/3463585.html\", \"webpage_url_basename\": \"3463585.html\", \"webpage_url_domain\": \"dailymail.co.uk\", \"extractor\": \"DailyMail\", \"extractor_key\": \"DailyMail\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://i.dailymail.co.uk/t.jpg\", \"id\": \"0\"}], \"display_id\": \"3463585\", \"fulltitle\": \"Jessie J\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"https-800\", \"url\": \"https://video.dailymail.co.uk/3463585.mp4\", \"width\": null, \"height\": null, \"tbr\": 800, \"vcodec\": null, \"container\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-800 - unknown\", \"_filename\": \"Jessie J [3463585].mp4\", \"filename\": \"Jessie J [3463585].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.daily-news.test/lifestyle/jessie-j/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3463585\", \"title\": \"Jessie J\", \"description\": null, \"thumbnail\": \"https://i.dailymail.co.uk/t.jpg\", \"formats\": [{\"format_id\": \"https-800\", \"url\": \"https://video.dailymail.co.uk/3463585.mp4\", \"width\": null, \"height\": null, \"tbr\": 800, \"vcodec\": null, \"container\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-800 - unknown\"}], \"original_url\": \"https://www.daily-news.test/lifestyle/jessie-j/\", \"webpage_url\": \"https://www.dailymail.co.uk/embed/video/3463585.html\", \"webpage_url_basename\": \"3463585.html\", \"webpage_url_domain\": \"dailymail.co.uk\", \"extractor\": \"DailyMail\", \"extractor_key\": \"DailyMail\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://i.dailymail.co.uk/t.jpg\", \"id\": \"0\"}], \"display_id\": \"3463585\", \"fulltitle\": \"Jessie J\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"https-800\", \"url\": \"https://video.dailymail.co.uk/3463585.mp4\", \"tbr\": 800, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-800 - unknown\", \"_filename\": \"Jessie J [3463585].mp4\", \"filename\": \"Jessie J [3463585].mp4\", \"__write_download_archive\": false}], \"format_id\": \"https-800\", \"url\": \"https://video.dailymail.co.uk/3463585.mp4\", \"width\": null, \"height\": null, \"tbr\": 800, \"vcodec\": null, \"container\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-800 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.dailymail.co.uk/embed/video/1.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [DailyMail] 1: Unable to extract video data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.dailymail.co.uk/embed/video/2.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 2: An extractor error has occurred. (caused by KeyError('title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

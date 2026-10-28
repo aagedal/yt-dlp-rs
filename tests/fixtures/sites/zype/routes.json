@@ -1,0 +1,54 @@
+{
+ "routes": [
+  {
+   "url": "https://player.zype.com/embed/5b400b834b32992a310622b9.json?api_key=K1&autoplay=false",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"body\": {\"outputs\": [{\"name\": \"mp4\", \"url\": \"https://zype-pd.test/a.mp4\", \"bitrate\": \"800\", \"width\": 640, \"height\": 360}, {\"name\": \"m4a\", \"url\": \"https://zype-pd.test/a.m4a\", \"bitrate\": 128}], \"subtitles\": [{\"label\": \"English\", \"file\": \"https://zype.test/en.vtt\"}, {\"src\": \"https://zype.test/x.vtt\"}, {\"label\": \"Bad\"}]}, \"video\": {\"title\": \"Smoky Barbecue Favorites\", \"friendly_title\": \"smoky-barbecue\", \"ott_description\": \"OTT desc\", \"description\": \"\", \"published_at\": \"2018-07-07T00:00:00Z\", \"duration\": \"1366\", \"request_count\": 5, \"rating\": \"4\", \"season\": 1, \"episode\": \"2\", \"thumbnails\": [{\"url\": \"https://zype.test/t1.jpg\", \"width\": 1280, \"height\": \"720\"}, {\"url\": \"\"}]}}}"
+  },
+  {
+   "url": "https://player.zype.com/embed/5b400b834b32992a310622ba.json?api_key=K2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"body\": {\"outputs\": [{\"name\": \"mp4\", \"url\": \"https://zype-pd.test/b.mp4\"}, {\"name\": \"m3u8\", \"url\": \"https://zype-hls.test/b/master.m3u8\"}]}, \"video\": {\"title\": \"HLS\"}}}"
+  },
+  {
+   "url": "https://zype-hls.test/b/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://player.zype.com/embed/5b400b834b32992a310622bb.json?player_key=K3",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"body\": \"window.player = { sources: [ { integration: 'verizon-media', id: 'abc123' } ], textTracks: [{label: 'Spanish', src: 'https://zype.test/es.vtt'}] };\", \"video\": {\"title\": \"Script\"}}}"
+  },
+  {
+   "url": "https://content.uplynk.com/abc123.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://player.zype.com/embed/5b400b834b32992a310622bc.json?api_key=K4",
+   "status": 403,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"message\": \"Video is not available in your region\"}"
+  },
+  {
+   "url": "https://www.cookscountry.test/episode/1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script async src=\"https://player.zype.com/embed/5b400b834b32992a310622b9.js?api_key=K1&autoplay=false\"></script>"
+  }
+ ]
+}

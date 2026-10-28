@@ -1,0 +1,74 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://dbtg.tv/cvid/7605304",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"7605304\", \"formats\": [{\"format_id\": \"audioMp3\", \"url\": \"https://cdn.bundestag.test/7605304_mp3_128kb_stereo_de_128.mp3\", \"vcodec\": \"none\", \"acodec\": \"mp3\", \"audio_channels\": 2, \"abr\": 128, \"ext\": \"mp3\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"audioMp3 - audio only\"}, {\"format_id\": \"downloadOther\", \"url\": \"https://cdn.bundestag.test/odd.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"downloadOther - unknown\"}, {\"format_id\": \"instance-921\", \"format_index\": null, \"url\": \"https://cldf-wzw-od.r53.cdn.tv1.eu/13014bundestagod/_definst_/13014bundestag/ondemand/3777parlamentsfernsehen/archiv/app144277506/145293313/7605304/7605304_playlist.smil/360/index.m3u8\", \"manifest_url\": \"https://cldf-wzw-od.r53.cdn.tv1.eu/13014bundestagod/_definst_/13014bundestag/ondemand/3777parlamentsfernsehen/archiv/app144277506/145293313/7605304/7605304_playlist.smil/playlist.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"instance-921 - 640x360\"}, {\"format_id\": \"downloadHD\", \"url\": \"https://cdn.bundestag.test/7605304_h264_1920_1080_5000kb_baseline_de_5000.mp4\", \"vcodec\": \"h264\", \"tbr\": 5000, \"width\": 1920, \"height\": 1080, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"downloadHD - 1920x1080\"}], \"title\": \"145. Sitzung vom 15.12.2023, TOP 24 Barrierefreiheit\", \"description\": \"Barrierefreiheit & mehr\", \"webpage_url\": \"https://dbtg.tv/cvid/7605304\", \"original_url\": \"https://dbtg.tv/cvid/7605304\", \"webpage_url_basename\": \"7605304\", \"webpage_url_domain\": \"dbtg.tv\", \"extractor\": \"Bundestag\", \"extractor_key\": \"Bundestag\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"7605304\", \"fulltitle\": \"145. Sitzung vom 15.12.2023, TOP 24 Barrierefreiheit\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"downloadHD\", \"url\": \"https://cdn.bundestag.test/7605304_h264_1920_1080_5000kb_baseline_de_5000.mp4\", \"vcodec\": \"h264\", \"tbr\": 5000, \"width\": 1920, \"height\": 1080, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"downloadHD - 1920x1080\", \"_filename\": \"145. Sitzung vom 15.12.2023, TOP 24 Barrierefreiheit [7605304].mp4\", \"filename\": \"145. Sitzung vom 15.12.2023, TOP 24 Barrierefreiheit [7605304].mp4\", \"__write_download_archive\": false}], \"format_id\": \"downloadHD\", \"url\": \"https://cdn.bundestag.test/7605304_h264_1920_1080_5000kb_baseline_de_5000.mp4\", \"vcodec\": \"h264\", \"tbr\": 5000, \"width\": 1920, \"height\": 1080, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"downloadHD - 1920x1080\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bundestag.de/mediathek?videoid=7602120&url=x",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [Bundestag] 7602120: Error extracting hls formats: 7602120: Failed to download m3u8 information: HTTP Error 500: OK (caused by <HTTPError 500: OK>)",
+    "WARNING: [Bundestag] Share API response: Not available; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [Bundestag] 7602120: Could not find suitable formats; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://dbtg.tv/fvid/1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Bundestag] 1: Could not find video id"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://dbtg.tv/fvid/2",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2\", \"formats\": [{\"format_id\": \"audio\", \"url\": \"https://cdn.bundestag.test/2_aac_96kb_mono_de_96.m4a\", \"vcodec\": \"none\", \"acodec\": \"aac\", \"audio_channels\": 1, \"abr\": 96, \"ext\": \"m4a\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"audio - audio only\"}], \"webpage_url\": \"https://dbtg.tv/fvid/2\", \"original_url\": \"https://dbtg.tv/fvid/2\", \"webpage_url_basename\": \"2\", \"webpage_url_domain\": \"dbtg.tv\", \"extractor\": \"Bundestag\", \"extractor_key\": \"Bundestag\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2\", \"fulltitle\": null, \"title\": \"Bundestag video #2\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"audio\", \"url\": \"https://cdn.bundestag.test/2_aac_96kb_mono_de_96.m4a\", \"vcodec\": \"none\", \"acodec\": \"aac\", \"audio_channels\": 1, \"abr\": 96, \"ext\": \"m4a\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"audio - audio only\", \"_filename\": \"Bundestag video #2 [2].m4a\", \"filename\": \"Bundestag video #2 [2].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Bundestag] 2: Error extracting hls formats: 2: Failed to download m3u8 information: HTTP Error 500: OK (caused by <HTTPError 500: OK>)",
+    "WARNING: [Bundestag] 2: Unable to download webpage: HTTP Error 404: Not Found",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bundestag.de/mediathek?videoid=7602120&url=x",
+   "args": [
+    "--ignore-no-formats-error",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [Bundestag] 7602120: Failed to download m3u8 information: HTTP Error 500: OK",
+    "WARNING: [Bundestag] Share API response: Not available; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [Bundestag] 7602120: Could not find suitable formats; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

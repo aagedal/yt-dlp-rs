@@ -1,0 +1,17 @@
+[
+ {"url": "https://www.jamendo.com/track/196219/stories-from-emona-i", "args": ["-j"]},
+ {"url": "https://www.jamendo.com/track/196219/stories-from-emona-i", "args": ["-F"]},
+ {"url": "https://www.jamendo.com/track/196219/stories-from-emona-i", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://licensing.jamendo.com/en/track/1496667/energetic-rock", "args": ["-j"]},
+ {"url": "https://jamendo.com/track/1496667", "args": ["--print", "%(id)s|%(display_id)s|%(title)s|%(artist)s|%(album)s|%(license)s|%(tags)s|%(thumbnail)s|%(duration)s"]},
+ {"url": "https://www.jamendo.com/album/121486/duck-on-cover", "args": ["-J"]},
+ {"url": "https://www.jamendo.com/album/121486/duck-on-cover", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://www.jamendo.com/album/121486", "args": ["--print", "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(album)s|%(artist)s|%(extractor)s|%(webpage_url)s|%(format_id)s"]},
+ {"url": "https://www.jamendo.com/album/121486", "args": ["--no-progress", "-o", "%(playlist_index)s-%(id)s.%(ext)s"]},
+ {"url": "https://www.jamendo.com/album/5", "args": ["-J"]},
+ {"url": "https://www.jamendo.com/track/404", "args": ["-j"]},
+ {"url": "https://www.jamendo.com/track/777", "args": ["-j"]},
+ {"url": "https://www.jamendo.com/track/888", "args": ["-j"]},
+ {"url": "https://www.jamendo.com/track/889", "args": ["-j"]},
+ {"url": "https://www.jamendo.com/album/6", "args": ["-J"]}
+]

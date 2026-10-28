@@ -1,0 +1,46 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://watch.islamchannel.tv/watch/38604310",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"38604310\", \"title\": \"Book of Signs\", \"description\": \"Desc\", \"formats\": [{\"format_id\": \"1000\", \"format_index\": null, \"url\": \"https://ic-cdn.test/720.m3u8\", \"manifest_url\": \"https://ic-cdn.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1000 - 1280x720\"}], \"subtitles\": {}, \"thumbnails\": [{\"id\": \"orig\", \"url\": \"https://ic.test/poster.jpg?w=100\", \"ext\": \"jpg\", \"preference\": 1}, {\"id\": \"unscaled\", \"url\": \"https://ic.test/poster.jpg\", \"ext\": \"jpg\", \"preference\": 2}], \"webpage_url\": \"https://watch.islamchannel.tv/watch/38604310\", \"original_url\": \"https://watch.islamchannel.tv/watch/38604310\", \"webpage_url_basename\": \"38604310\", \"webpage_url_domain\": \"watch.islamchannel.tv\", \"extractor\": \"IslamChannel\", \"extractor_key\": \"IslamChannel\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://ic.test/poster.jpg\", \"display_id\": \"38604310\", \"fulltitle\": \"Book of Signs\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"1000\", \"url\": \"https://ic-cdn.test/720.m3u8\", \"manifest_url\": \"https://ic-cdn.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1000 - 1280x720\", \"_filename\": \"Book of Signs [38604310].mp4\", \"filename\": \"Book of Signs [38604310].mp4\", \"__write_download_archive\": false}], \"format_id\": \"1000\", \"format_index\": null, \"url\": \"https://ic-cdn.test/720.m3u8\", \"manifest_url\": \"https://ic-cdn.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1000 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://watch.islamchannel.tv/watch/2",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [IslamChannel] unable to extract data poster; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [IslamChannel] unable to extract og:image; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [IslamChannel] 2: Unable to extract data expiry; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://watch.islamchannel.tv/series/a6cccef3-3ef1",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"a6cccef3-3ef1\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"IslamChannel\", \"_type\": \"url\", \"url\": \"https://watch.islamchannel.tv/watch/1\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"IslamChannel\", \"_type\": \"url\", \"url\": \"https://watch.islamchannel.tv/watch/2\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://watch.islamchannel.tv/series/a6cccef3-3ef1\", \"original_url\": \"https://watch.islamchannel.tv/series/a6cccef3-3ef1\", \"webpage_url_basename\": \"a6cccef3-3ef1\", \"webpage_url_domain\": \"watch.islamchannel.tv\", \"extractor\": \"IslamChannelSeries\", \"extractor_key\": \"IslamChannelSeries\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

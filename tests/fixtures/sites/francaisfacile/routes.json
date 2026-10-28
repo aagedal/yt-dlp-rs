@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://francaisfacile.rfi.fr/fr/podcasts/journal-en-fran%C3%A7ais-facile/20250127-journal",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Journal &amp; co | RFI</title><script type=\"application/ld+json\">{\"@context\": \"https://schema.org\", \"@type\": \"NewsArticle\", \"headline\": \"LD headline\", \"description\": \"LD desc\", \"datePublished\": \"2025-01-27T20:00:00Z\"}</script></head><body><script data-media-id=\"x\" type=\"application/json\">{\"mediaId\": \"1b0d9b02\", \"title\": \"Journal en fran\\u00e7ais facile 20h00 GMT\", \"sources\": [{\"url\": \"not a url\"}, {\"url\": \"https://aod-rfi.test/fra/a.mp3\", \"duration\": \"600.5\"}]}</script></body></html>"
+  },
+  {
+   "url": "https://francaisfacile.rfi.fr/fr/podcasts/journal-en-fran%C3%A7ais-facile/no-ld",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script data-media-id=\"y\" type=\"application/json\">{\"mediaId\": 7, \"sources\": []}</script></body></html>"
+  },
+  {
+   "url": "https://francaisfacile.rfi.fr/fr/podcasts/journal-en-fran%C3%A7ais-facile/no-data",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><title>x</title></html>"
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://app.egghead.io/api/v1/lessons/javascript-linear-data-flow",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 1196, \"title\": \"Linear Data Flow with Container Style Types (Box)\", \"summary\": \"We spot a few bugs\", \"thumb_nail\": \"https://egghead.test/thumb.png\", \"published_at\": \"2016-12-06T00:46:22.000Z\", \"duration\": \"304\", \"plays_count\": 12, \"tag_list\": [\"javascript\"], \"series\": {\"title\": \"Professor Frisby\"}, \"media_urls\": {\"hls_url\": \"https://egghead-hls.test/1196/master.m3u8\", \"dash_url\": \"https://egghead-hls.test/1196/missing.mpd\", \"mp4_url\": \"https://egghead-pd.test/1196.mp4\", \"wistia\": null}}"
+  },
+  {
+   "url": "https://egghead-hls.test/1196/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://app.egghead.io/api/v1/series/frisby/lessons",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"id\": 1196, \"http_url\": \"https://egghead.io/lessons/javascript-linear-data-flow\"}, {\"id\": 0, \"http_url\": \"https://egghead.io/lessons/other\"}, {\"http_url\": \"nope\"}]"
+  },
+  {
+   "url": "https://app.egghead.io/api/v1/series/frisby",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 219, \"title\": \"Professor Frisby Introduces Composable Functional JavaScript\", \"description\": null}"
+  },
+  {
+   "url": "https://app.egghead.io/api/v1/series/nometa/lessons",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[]"
+  },
+  {
+   "url": "https://app.egghead.io/api/v1/lessons/broken",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 5}"
+  }
+ ]
+}

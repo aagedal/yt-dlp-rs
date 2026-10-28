@@ -1,0 +1,80 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.startv.com.tr/dizi/cocuk/bolumler/3-bolum",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"904972\", \"display_id\": \"3-bolum\", \"title\": \"3. B\\u00f6l\\u00fcm\", \"description\": \"Ali ve Ece\\nikinci\", \"thumbnail\": \"http://media.startv.com.tr/star-tv/images/3-bolum.jpg?w=640\", \"timestamp\": 1569281400, \"formats\": [{\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://dygvideo.test/startv/904972/360p.m3u8\", \"manifest_url\": \"https://dygvideo.test/startv/904972/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360\"}, {\"format_id\": \"hls-2000\", \"format_index\": null, \"url\": \"https://dygvideo.test/startv/904972/720p.m3u8\", \"manifest_url\": \"https://dygvideo.test/startv/904972/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2000 - 1280x720\"}], \"webpage_url\": \"https://www.startv.com.tr/dizi/cocuk/bolumler/3-bolum\", \"original_url\": \"https://www.startv.com.tr/dizi/cocuk/bolumler/3-bolum\", \"webpage_url_basename\": \"3-bolum\", \"webpage_url_domain\": \"startv.com.tr\", \"extractor\": \"startv\", \"extractor_key\": \"StarTV\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://media.startv.com.tr/star-tv/images/3-bolum.jpg?w=640\", \"id\": \"0\"}], \"fulltitle\": \"3. B\\u00f6l\\u00fcm\", \"upload_date\": \"20190923\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-2000\", \"url\": \"https://dygvideo.test/startv/904972/720p.m3u8\", \"manifest_url\": \"https://dygvideo.test/startv/904972/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2000 - 1280x720\", \"_filename\": \"3. B\\u00f6l\\u00fcm [904972].mp4\", \"filename\": \"3. B\\u00f6l\\u00fcm [904972].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-2000\", \"format_index\": null, \"url\": \"https://dygvideo.test/startv/904972/720p.m3u8\", \"manifest_url\": \"https://dygvideo.test/startv/904972/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2000 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.startv.com.tr/dizi/cocuk/fragmanlar/5-bolum-fragmani",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [startv] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [startv] Failed to obtain m3u8 URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [startv] 55: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.startv.com.tr/dizi/cocuk/fragmanlar/5-bolum-fragmani",
+   "args": [
+    "--ignore-no-formats-error",
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(description)s|%(thumbnail)s|%(timestamp)s|%(upload_date)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "55|5-bolum-fragmani|Fragman & Fallback|Fallback description|NA|1569281400|20190923"
+   ],
+   "stderr": [
+    "WARNING: [startv] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [startv] Failed to obtain m3u8 URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.startv.com.tr/video/arsiv/program/buyukrisk/buyuk-risk-334-bolum",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [startv] buyuk-risk-334-bolum: Failed to extract API data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.startv.com.tr/program/burcu-ile-haftasonu/bolumler/1-bolum",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [startv] 1-bolum: Unable to extract video info url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,61 @@
+{
+ "routes": [
+  {
+   "url": "https://feeder.acast.com/api/v1/shows/sparpodcast/episodes/2.raggarmordet-rosterurdetforflutna?showInfo=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"2a92b283-1a75-4ad8-8396-499c641de0d9\", \"title\": \"2. Raggarmordet - Röster ur det förflutna\", \"episodeUrl\": \"2.raggarmordet-rosterurdetforflutna\", \"url\": \"https://flex.acast.com/sphinx.acast.com/p/open/s/616ebe1886d7b1398620b943/e/2a92b283/media.mp3\", \"description\": \"<p>Ett <b>mord</b> &amp; en röst</p><br>Andra raden\", \"summary\": \"unused summary\", \"image\": \"https://assets.pippa.io/shows/616ebe1886d7b1398620b943/616ebe33c7e6e70013cae7da.jpg\", \"publishDate\": \"2016-10-24T22:05:00.000Z\", \"duration\": 2766, \"contentLength\": \"44277000\", \"season\": 4, \"episode\": \"2\", \"show\": {\"id\": \"616ebe1886d7b1398620b943\", \"title\": \"Spår\", \"author\": \"Third Ear Studio\", \"description\": \"<p>True crime</p>\"}}"
+  },
+  {
+   "url": "https://feeder.acast.com/api/v1/shows/adambuxton/episodes/ep.12-adam-joeschristmaspodcast2015?showInfo=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"ep2\", \"title\": \"Bare episode\", \"url\": \"https://sphinx.acast.com/p/open/s/x/e/ep2/media.mp3\", \"summary\": \"Only a <i>summary</i>\"}"
+  },
+  {
+   "url": "https://feeder.acast.com/api/v1/shows/notitle/episodes/x?showInfo=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"x\", \"url\": \"https://sphinx.acast.com/x.mp3\"}"
+  },
+  {
+   "url": "https://feeder.acast.com/api/v1/shows/gone/episodes/missing?showInfo=true",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://feeder.acast.com/api/v1/shows/todayinfocus",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"4efc5294-5385-4847-98bd-519799ce5786\", \"title\": \"Today in Focus\", \"author\": \"The Guardian\", \"description\": \"Daily <b>news</b>\", \"episodes\": [{\"id\": \"ep3\", \"title\": \"Third\", \"url\": \"https://sphinx.acast.com/p/open/s/x/e/ep3/media.mp3\", \"publishDate\": \"2023-05-23T07:19:22Z\", \"duration\": 61.7, \"episode\": 3, \"episodeUrl\": \"third\"}, {\"id\": \"ep2\", \"title\": \"Bare episode\", \"url\": \"https://sphinx.acast.com/p/open/s/x/e/ep2/media.mp3\", \"summary\": \"Only a <i>summary</i>\"}]}"
+  },
+  {
+   "url": "https://feeder.acast.com/api/v1/shows/empty-show",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Empty\"}"
+  },
+  {
+   "url": "https://sphinx.acast.com/p/open/s/616ebe1886d7b1398620b943/e/2a92b283/media.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3fakemp3"
+  },
+  {
+   "url": "https://ausi.example.test/news/democracy-sausage",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "<html><head><title>Democracy</title></head><body><iframe width=\"100%\" src=\"https://embed.acast.com/adambuxton/ep.12-adam-joeschristmaspodcast2015?theme=light\"></iframe></body></html>"
+  }
+ ]
+}

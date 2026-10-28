@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://beatport.com/track/synesthesia-original-mix/5379371",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>\nwindow.Playables = {\n \"tracks\": [\n  {\n   \"id\": 111,\n   \"name\": \"Other\"\n  },\n  {\n   \"id\": 5379371,\n   \"slug\": \"synesthesia-original-mix\",\n   \"name\": \"Synesthesia\",\n   \"mix\": \"Original Mix\",\n   \"artists\": [\n    {\n     \"name\": \"Froxic\"\n    }\n   ],\n   \"preview\": {\n    \"mp4\": {\n     \"url\": \"https://geo-samples.beatport.test/5379371.LOFI.mp4\"\n    },\n    \"mp3\": {\n     \"url\": \"https://geo-samples.beatport.test/5379371.LOFI.mp3\"\n    },\n    \"ogg\": {\n     \"url\": null\n    },\n    \"webm\": {\n     \"url\": \"https://geo-samples.beatport.test/5379371.webm\"\n    }\n   },\n   \"images\": {\n    \"large\": {\n     \"url\": \"https://geo-media.beatport.test/large.jpg\",\n     \"width\": 500,\n     \"height\": \"500\"\n    },\n    \"dynamic\": {\n     \"url\": \"https://geo-media.beatport.test/{w}x{h}.jpg\"\n    },\n    \"small\": {\n     \"url\": \"\"\n    },\n    \"medium\": {\n     \"url\": \"https://geo-media.beatport.test/medium.jpg\"\n    }\n   }\n  }\n ]\n};\nwindow.Other = {};\n</script></html>"
+  },
+  {
+   "url": "https://www.beatport.com/track/birds-original-mix/4991738",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>\nwindow.Playables = {\n \"tracks\": [\n  {\n   \"id\": 4991738,\n   \"slug\": \"\",\n   \"name\": \"Birds\",\n   \"mix\": \"\",\n   \"artists\": [\n    {\n     \"name\": \"Tos\"\n    },\n    {\n     \"name\": \"Middle Milk\"\n    },\n    {\n     \"name\": \"Mumblin' Johnsson\"\n    }\n   ],\n   \"preview\": {\n    \"mp3\": {\n     \"url\": \"https://geo-samples.beatport.test/4991738.mp3\"\n    }\n   },\n   \"images\": {}\n  }\n ]\n};\nwindow.Other = {};\n</script></html>"
+  },
+  {
+   "url": "https://beatport.com/track/missing/1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>\nwindow.Playables = {\n \"tracks\": [\n  {\n   \"id\": 2,\n   \"name\": \"x\"\n  }\n ]\n};\nwindow.Other = {};\n</script></html>"
+  },
+  {
+   "url": "https://beatport.com/track/noid/1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>\nwindow.Playables = {\n \"tracks\": [\n  {\n   \"name\": \"x\"\n  }\n ]\n};\nwindow.Other = {};\n</script></html>"
+  },
+  {
+   "url": "https://beatport.com/track/noplayables/1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html></html>"
+  }
+ ]
+}

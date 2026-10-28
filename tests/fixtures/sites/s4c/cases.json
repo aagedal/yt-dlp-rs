@@ -1,0 +1,52 @@
+[
+ {
+  "url": "https://www.s4c.cymru/clic/programme/893068169",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.s4c.cymru/clic/programme/893068169",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://www.s4c.cymru/clic/programme/947426692",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.s4c.cymru/clic/programme/876045439",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.s4c.cymru/clic/programme/1",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.s4c.cymru/clic/programme/2",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.s4c.cymru/clic/series/864982911",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.s4c.cymru/clic/series/866852587",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ }
+]

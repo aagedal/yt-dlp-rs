@@ -1,0 +1,46 @@
+[
+ {
+  "url": "https://www.bfmtv.com/politique/emmanuel-macron_VN-202010020146.html",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.bfmtv.com/politique/emmanuel-macron_VN-202010020146.html",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bfmtv.com/en-direct/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.bfmtv.com/sante/covid-19-pasteur_AV-202101060198.html",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bfmtv.com/x/sans-titre_AN-202101060275.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bfmtv.com/x/pas-de-bloc_VN-202101060276.html",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.bfmtv.com/x/bloc-vide_VN-202101060277.html",
+  "args": [
+   "-j"
+  ]
+ }
+]

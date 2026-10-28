@@ -1,0 +1,92 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://bx1.be/news/que-risque-lauteur-dune-fausse-alerte-a-la-bombe/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"158856\", \"display_id\": \"que-risque-lauteur-dune-fausse-alerte-a-la-bombe\", \"title\": \"Que risque l\\u2019auteur d\\u2019une fausse alerte ?\", \"description\": \"Une fausse alerte & ses risques.\", \"formats\": [{\"url\": \"rtmp://bx1-wowza.test/vod/mp4:2016/03/alerte_bombe.mp4\", \"format_id\": \"rtmp\", \"protocol\": \"rtmp\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"rtmp - unknown\"}, {\"format_id\": \"hls-1128\", \"format_index\": null, \"url\": \"http://bx1-wowza.test/vod/mp4:2016/03/alerte_bombe.mp4/chunklist_w1.m3u8\", \"manifest_url\": \"http://bx1-wowza.test/vod/mp4:2016/03/alerte_bombe.mp4/playlist.m3u8\", \"tbr\": 1128.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1024, \"height\": 576, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1024x576\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1128 - 1024x576\"}], \"is_live\": false, \"webpage_url\": \"http://bx1.be/news/que-risque-lauteur-dune-fausse-alerte-a-la-bombe/\", \"original_url\": \"http://bx1.be/news/que-risque-lauteur-dune-fausse-alerte-a-la-bombe/\", \"webpage_url_basename\": \"que-risque-lauteur-dune-fausse-alerte-a-la-bombe\", \"webpage_url_domain\": \"bx1.be\", \"extractor\": \"TeleBruxelles\", \"extractor_key\": \"TeleBruxelles\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Que risque l\\u2019auteur d\\u2019une fausse alerte ?\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1128\", \"url\": \"http://bx1-wowza.test/vod/mp4:2016/03/alerte_bombe.mp4/chunklist_w1.m3u8\", \"manifest_url\": \"http://bx1-wowza.test/vod/mp4:2016/03/alerte_bombe.mp4/playlist.m3u8\", \"tbr\": 1128.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1024, \"height\": 576, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1024x576\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1128 - 1024x576\", \"_filename\": \"Que risque l\\u2019auteur d\\u2019une fausse alerte \\uff1f [158856].mp4\", \"filename\": \"Que risque l\\u2019auteur d\\u2019une fausse alerte \\uff1f [158856].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1128\", \"format_index\": null, \"url\": \"http://bx1-wowza.test/vod/mp4:2016/03/alerte_bombe.mp4/chunklist_w1.m3u8\", \"manifest_url\": \"http://bx1-wowza.test/vod/mp4:2016/03/alerte_bombe.mp4/playlist.m3u8\", \"tbr\": 1128.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1024, \"height\": 576, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1024x576\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1128 - 1024x576\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [TeleBruxelles] 158856: Unable to download f4m manifest: HTTP Error 404: Not Found",
+    "WARNING: [TeleBruxelles] 158856: Failed to download MPD manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://bx1.be/lives/direct-tv/",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(fulltitle)s|%(description)s|%(is_live)s|%(live_status)s|%(format_id)s|%(protocol)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "direct-tv|direct-tv|BX1 en direct|NA|True|is_live|hls-1128|m3u8_native|http://bx1-live.test/stream/live/chunklist_w1.m3u8"
+   ],
+   "stderr": [
+    "WARNING: [TeleBruxelles] direct-tv: Unable to download f4m manifest: HTTP Error 404: Not Found",
+    "WARNING: [TeleBruxelles] direct-tv: Failed to download MPD manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://bx1.be/lives/direct-tv/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[TeleBruxelles] Extracting URL: https://bx1.be/lives/direct-tv/",
+    "[TeleBruxelles] direct-tv: Downloading webpage",
+    "[TeleBruxelles] direct-tv: Downloading m3u8 information",
+    "[TeleBruxelles] direct-tv: Downloading f4m manifest",
+    "[TeleBruxelles] direct-tv: Downloading MPD manifest",
+    "[info] Available formats for direct-tv:",
+    "ID       EXT           RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "-----------------------------------------------------------------------",
+    "rtmp     unknown_video unknown    |       rtmp  | unknown     unknown",
+    "hls-1128 mp4           1024x576   | 1128k m3u8  | avc1.4d401f mp4a.40.2"
+   ],
+   "stderr": [
+    "WARNING: [TeleBruxelles] direct-tv: Unable to download f4m manifest: HTTP Error 404: Not Found",
+    "WARNING: [TeleBruxelles] direct-tv: Failed to download MPD manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.telebruxelles.be/sport/sans-titre",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1\", \"display_id\": \"sans-titre\", \"title\": \"TeleBruxelles video #1\", \"description\": null, \"formats\": [{\"url\": \"rtmp://bx1-wowza.test/vod/mp4:a/b.mp4\", \"format_id\": \"rtmp\", \"protocol\": \"rtmp\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"rtmp - unknown\"}], \"is_live\": false, \"webpage_url\": \"https://www.telebruxelles.be/sport/sans-titre\", \"original_url\": \"https://www.telebruxelles.be/sport/sans-titre\", \"webpage_url_basename\": \"sans-titre\", \"webpage_url_domain\": \"telebruxelles.be\", \"extractor\": \"TeleBruxelles\", \"extractor_key\": \"TeleBruxelles\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"rtmp://bx1-wowza.test/vod/mp4:a/b.mp4\", \"format_id\": \"rtmp\", \"protocol\": \"rtmp\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"rtmp - unknown\", \"_filename\": \"TeleBruxelles video #1 [1].mp4\", \"filename\": \"TeleBruxelles video #1 [1].mp4\", \"__write_download_archive\": false}], \"url\": \"rtmp://bx1-wowza.test/vod/mp4:a/b.mp4\", \"format_id\": \"rtmp\", \"protocol\": \"rtmp\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"rtmp - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [TeleBruxelles] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [TeleBruxelles] 1: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [TeleBruxelles] 1: Unable to download f4m manifest: HTTP Error 404: Not Found",
+    "WARNING: [TeleBruxelles] 1: Failed to download MPD manifest: HTTP Error 404: Not Found",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://bx1.be/emission/bxenf1-gastronomie/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [TeleBruxelles] bxenf1-gastronomie: Unable to extract RTMP url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

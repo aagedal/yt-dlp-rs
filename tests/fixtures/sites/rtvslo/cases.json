@@ -1,0 +1,66 @@
+[
+ {
+  "url": "https://365.rtvslo.si/arhiv/utrip/174843754",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://365.rtvslo.si/arhiv/utrip/174843754",
+  "args": [
+   "--no-geo-bypass",
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://365.rtvslo.si/arhiv/il-giornale-della-sera/174844609",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.rtvslo.si/rtv365/arhiv/174842550?s=tv",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.rtvslo.si/rtv365/arhiv/174842550?s=tv",
+  "args": [
+   "--no-geo-bypass",
+   "-j",
+   "--ignore-no-formats-error"
+  ]
+ },
+ {
+  "url": "https://4d.rtvslo.si/arhiv/razred-zase/148350750",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://365.rtvslo.si/arhiv/x/111",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://365.rtvslo.si/oddaja/ekipa-bled/173250997",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://4d.rtvslo.si/oddaja/prazno/42",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

@@ -1,0 +1,15 @@
+[
+ {
+  "url": "http://v.baidu.com/show/11595.htm?frp=bdbrand",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "http://v.baidu.com/comic/1069.htm",
+  "args": [
+   "-J"
+  ]
+ }
+]

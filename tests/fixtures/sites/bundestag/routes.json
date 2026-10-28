@@ -1,0 +1,63 @@
+{
+ "routes": [
+  {
+   "url": "https://cldf-wzw-od.r53.cdn.tv1.eu/13014bundestagod/_definst_/13014bundestag/ondemand/3777parlamentsfernsehen/archiv/app144277506/145293313/7605304/7605304_playlist.smil/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://webtv.bundestag.de/player/macros/_x_s-144277506/shareData.json?contentId=7605304",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"status\": {\"code\": 1}, \"title\": \"x\", \"audioMp3\": \"https://cdn.bundestag.test/7605304_mp3_128kb_stereo_de_128.mp3\", \"downloadHD\": \"https://cdn.bundestag.test/7605304_h264_1920_1080_5000kb_baseline_de_5000.mp4\", \"downloadOther\": \"https://cdn.bundestag.test/odd.mp4\", \"thumbnail\": \"https://cdn.bundestag.test/t.jpg\", \"audioBad\": \"nope\"}"
+  },
+  {
+   "url": "https://www.bundestag.de/mediathekoverlay?videoid=7605304&view=main",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div><h3><span class=\"date\">15.12.2023</span>145. Sitzung vom 15.12.2023, TOP 24 Barrierefreiheit</h3><p>Barrierefreiheit &amp; mehr</p></div>"
+  },
+  {
+   "url": "https://cldf-wzw-od.r53.cdn.tv1.eu/13014bundestagod/_definst_/13014bundestag/ondemand/3777parlamentsfernsehen/archiv/app144277506/145293313/7602120/7602120_playlist.smil/playlist.m3u8",
+   "status": 500,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "boom"
+  },
+  {
+   "url": "https://webtv.bundestag.de/player/macros/_x_s-144277506/shareData.json?contentId=7602120",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"status\": {\"code\": 0, \"message\": \"Not available\"}}"
+  },
+  {
+   "url": "https://cldf-wzw-od.r53.cdn.tv1.eu/13014bundestagod/_definst_/13014bundestag/ondemand/3777parlamentsfernsehen/archiv/app144277506/145293313/1/1_playlist.smil/playlist.m3u8",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "nope"
+  },
+  {
+   "url": "https://cldf-wzw-od.r53.cdn.tv1.eu/13014bundestagod/_definst_/13014bundestag/ondemand/3777parlamentsfernsehen/archiv/app144277506/145293313/2/2_playlist.smil/playlist.m3u8",
+   "status": 500,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "boom"
+  },
+  {
+   "url": "https://webtv.bundestag.de/player/macros/_x_s-144277506/shareData.json?contentId=2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"status\": {\"code\": 1}, \"audio\": \"https://cdn.bundestag.test/2_aac_96kb_mono_de_96.m4a\"}"
+  }
+ ]
+}

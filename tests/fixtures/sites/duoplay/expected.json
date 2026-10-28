@@ -1,0 +1,68 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://duoplay.ee/4312/zoo?ep=3",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4312_3\", \"formats\": [{\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://duo-hls.test/4312/360/index.m3u8\", \"manifest_url\": \"https://duo-hls.test/4312/master.m3u8?s=TOK\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}], \"title\": \"Episode 3\", \"description\": \"S\\u00fcnopsis\", \"thumbnail\": \"https://duo.test/zoo.jpg\", \"timestamp\": 1704477600, \"cast\": [\"A\", \"B\"], \"release_year\": 2023, \"series\": \"Zoo\", \"series_id\": \"4312\", \"season_number\": 1, \"episode_number\": 3, \"episode_id\": \"77\", \"webpage_url\": \"https://duoplay.ee/4312/zoo?ep=3\", \"original_url\": \"https://duoplay.ee/4312/zoo?ep=3\", \"webpage_url_basename\": \"zoo\", \"webpage_url_domain\": \"duoplay.ee\", \"extractor\": \"Duoplay\", \"extractor_key\": \"Duoplay\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://duo.test/zoo.jpg\", \"id\": \"0\"}], \"display_id\": \"4312_3\", \"fulltitle\": \"Episode 3\", \"upload_date\": \"20240105\", \"season\": \"Season 1\", \"episode\": \"Episode 3\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"921\", \"url\": \"https://duo-hls.test/4312/360/index.m3u8\", \"manifest_url\": \"https://duo-hls.test/4312/master.m3u8?s=TOK\", \"tbr\": 921.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\", \"_filename\": \"Episode 3 [4312_3].mp4\", \"filename\": \"Episode 3 [4312_3].mp4\", \"__write_download_archive\": false}], \"format_id\": \"921\", \"format_index\": null, \"url\": \"https://duo-hls.test/4312/360/index.m3u8\", \"manifest_url\": \"https://duo-hls.test/4312/master.m3u8?s=TOK\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://duoplay.ee/17/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"17\", \"formats\": [{\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://duo-hls.test/17/360/index.m3u8\", \"manifest_url\": \"https://duo-hls.test/17/master.m3u8?s=TOK17\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}], \"title\": \"Film\", \"release_year\": 2001, \"webpage_url\": \"https://duoplay.ee/17/\", \"original_url\": \"https://duoplay.ee/17/\", \"webpage_url_basename\": \"17\", \"webpage_url_domain\": \"duoplay.ee\", \"extractor\": \"Duoplay\", \"extractor_key\": \"Duoplay\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"17\", \"fulltitle\": \"Film\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"921\", \"format_index\": null, \"url\": \"https://duo-hls.test/17/360/index.m3u8\", \"manifest_url\": \"https://duo-hls.test/17/master.m3u8?s=TOK17\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\", \"_filename\": \"Film [17].mp4\", \"filename\": \"Film [17].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://duoplay.ee/18/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Duoplay] 18: Unable to register session: HTTP Error 500: OK (caused by <HTTPError 500: OK>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://duoplay.ee/19/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Duoplay] 19: No video found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://duoplay.ee/20/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"20\", \"formats\": [{\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://duo-hls.test/17/360/index.m3u8\", \"manifest_url\": \"https://duo-hls.test/17/master.m3u8?s=TOK17\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}], \"webpage_url\": \"https://duoplay.ee/20/\", \"original_url\": \"https://duoplay.ee/20/\", \"webpage_url_basename\": \"20\", \"webpage_url_domain\": \"duoplay.ee\", \"extractor\": \"Duoplay\", \"extractor_key\": \"Duoplay\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"20\", \"fulltitle\": null, \"title\": \"Duoplay video #20\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"921\", \"format_index\": null, \"url\": \"https://duo-hls.test/17/360/index.m3u8\", \"manifest_url\": \"https://duo-hls.test/17/master.m3u8?s=TOK17\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\", \"_filename\": \"Duoplay video #20 [20].mp4\", \"filename\": \"Duoplay video #20 [20].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Duoplay] 20: Failed to parse JSON: Expecting value in '': line 1 column 1 (char 0)",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  }
+ ]
+}

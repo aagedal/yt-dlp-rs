@@ -1,0 +1,276 @@
+{
+ "routes": [
+  {
+   "url": "https://soundcloud.com/",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "home.html"
+  },
+  {
+   "url": "https://a-v2.sndcdn.com/assets/1-second.js",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body": "var x={client_id:\"aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB\",y:1};"
+  },
+  {
+   "url": "https://a-v2.sndcdn.com/assets/0-first.js",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body": "var nothing=1;"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/resolve?url=https%3A%2F%2Fsoundcloud.com%2Fethmusic%2Flostin-powers-she-so-heavy&client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "track.json"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/tracks/123998367?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "track.json"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/media/soundcloud:tracks:123998367/aaa/stream/hls?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"https://cf-hls-media.sndcdn.com/playlist/x.128.mp3/playlist.m3u8?Policy=1\"}"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/media/soundcloud:tracks:123998367/bbb/stream/progressive?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"https://cf-media.sndcdn.com/x.128.mp3?Policy=2\"}"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/media/soundcloud:tracks:123998367/ccc/stream/hls?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"https://cf-hls-media.sndcdn.com/playlist/y.aac/playlist.m3u8?Policy=3\"}"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/media/soundcloud:tracks:123998367/ddd/stream/hls?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"https://cf-hls-opus-media.sndcdn.com/playlist/z.64.opus/playlist.m3u8?Policy=4\"}"
+  },
+  {
+   "url": "https://i1.sndcdn.com/artworks-000071811455-l4hrpp-original.png",
+   "status": 404,
+   "headers": {},
+   "body": ""
+  },
+  {
+   "url": "https://cf-media.sndcdn.com/x.128.mp3?Policy=2",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3-fake-mp3-bytes"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/tracks/777?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 777, \"title\": \"Blocked here\", \"duration\": 1000, \"created_at\": \"2014-01-02T03:04:05Z\", \"permalink_url\": \"https://soundcloud.com/ethmusic/blocked\", \"policy\": \"BLOCK\", \"user\": {\"id\": 52984226, \"username\": \"ethmusic\", \"permalink\": \"ethmusic\"}, \"media\": {\"transcodings\": []}}"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/song/roosh-williams/extraordinary?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 310086, \"artist\": \"Roosh Williams\", \"title\": \"Extraordinary\", \"url\": \"https://music.audiomack.com/tracks/roosh-williams/extraordinary.mp3?Expires=1\"}"
+  },
+  {
+   "url": "https://music.audiomack.com/tracks/roosh-williams/extraordinary.mp3?Expires=1",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/song/someone/no-id?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"https://music.audiomack.com/x/plain.m4a\", \"title\": null}"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/song/hip-hop-daily/black-mamba-freestyle?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 1, \"url\": \"https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy\"}"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/song/bad/error?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"Song not found\", \"url\": \"https://music.audiomack.com/tracks/roosh-williams/extraordinary.mp3?Expires=1\"}"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/song/bad/empty?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"\"}"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/song/bad/missing?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"status\": \"x\"}"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/album/flytunezcom/tha-tour-part-2-mixtape/0?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 812252, \"album_id\": 812251, \"album_title\": \"Tha Tour: Part 2 (Official Mixtape)\", \"artist\": \"Rich Homie Quan\", \"title\": \"Intro\", \"url\": \"https://music.audiomack.com/albums/flytunez/01-intro.mp3?x=1\"}"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/album/flytunezcom/tha-tour-part-2-mixtape/1?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"album_id\": 999, \"album_title\": \"Ignored\", \"url\": \"https://music.audiomack.com/albums/flytunez/02-track.two.mp3\"}"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/album/flytunezcom/tha-tour-part-2-mixtape/2?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": null, \"title\": null, \"artist\": null, \"url\": \"https://music.audiomack.com/albums/flytunez/03-noext\"}"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/album/flytunezcom/tha-tour-part-2-mixtape/3?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"\"}"
+  },
+  {
+   "url": "https://music.audiomack.com/albums/flytunez/01-intro.mp3?x=1",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3000000000000000000000000000000"
+  },
+  {
+   "url": "https://music.audiomack.com/albums/flytunez/02-track.two.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3111111111111111111111111111111"
+  },
+  {
+   "url": "https://music.audiomack.com/albums/flytunez/03-noext",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3222222222222222222222222222222"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/album/fakeshoredrive/ppp-pistol-p-project/0?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 837576, \"artist\": \"Lil Herb a.k.a. G Herbo\", \"title\": \"PPP (Pistol P Project) - 8. Real\", \"url\": \"https://music.audiomack.com/a/837576.mp3\"}"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/album/fakeshoredrive/ppp-pistol-p-project/1?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"album_title\": \"PPP (Pistol P Project)\", \"album_id\": 837572, \"url\": null}"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/album/bad/first/0?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"Album not found\"}"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/album/bad/later/0?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 5, \"url\": \"https://music.audiomack.com/a/5.mp3\"}"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/album/bad/later/1?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 6}"
+  },
+  {
+   "url": "http://www.audiomack.com/api/music/url/album/bad/http/0?extended=1",
+   "ignore_query": [
+    "_"
+   ],
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  }
+ ]
+}

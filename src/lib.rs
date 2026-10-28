@@ -358,9 +358,19 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "1News",
     "9gag",
     "9News",
+    "acast",
+    "acast:channel",
+    "agalega:videos",
+    "AitubeKZVideo",
+    "Alibaba",
+    "AliExpressLive",
+    "AlJazeera",
     "AmadeusTV",
     "Angel",
+    "APA",
+    "apple:podcasts",
     "archive.org",
+    "ArcPublishing",
     "ARDAudiothek",
     "ARDAudiothekPlaylist",
     "ARDMediathek",
@@ -369,10 +379,21 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "ArteTVEmbed",
     "ArteTV",
     "ArteTVPlaylist",
+    "AudiMedia",
     "AudioBoom",
+    "audiomack",
+    "audiomack:album",
+    "AZMedien",
+    "BaiduVideo",
     "Bandcamp",
     "BeaconTv",
+    "Beatport",
+    "Beeg",
     "BehindKink",
+    "BerufeTV",
+    "bfmtv",
+    "bfmtv:article",
+    "bfmtv:live",
     "Bigo",
     "Bild",
     "BiliBili",
@@ -380,31 +401,53 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "BitChuteChannel",
     "Bitmovin",
     "blogger.com",
+    "Bloomberg",
     "Bluesky",
     "BongaCams",
     "BostonGlobe",
+    "BoxCastVideo",
     "BreitBart",
     "brightcove:new",
+    "BTVPlus",
     "Bundesliga",
+    "Bundestag",
+    "BusinessInsider",
     "Caltrans",
     "CAM4",
+    "CanalAlpha",
+    "Cellebrite",
     "CGTN",
+    "Chaturbate",
+    "CiscoLiveSearch",
+    "CiscoLiveSession",
     "CJSW",
     "Clipchamp",
     "CloudflareStream",
     "CloudyCDN",
     "Clyp",
+    "CNBCVideo",
     "Coub",
     "CozyTV",
+    "cpac",
+    "cpac:playlist",
+    "Craftsy",
     "CrooksAndLiars",
     "Crtvg",
     "CultureUnplugged",
+    "DailyMail",
     "dailymotion",
     "dailymotion:playlist",
     "dailymotion:search",
     "dailymotion:user",
+    "damtomo:record",
+    "damtomo:video",
     "daystar:clip",
+    "DBTV",
     "democracynow",
+    "DeuxM",
+    "DeuxMNews",
+    "Digiteka",
+    "DiscogsReleasePlaylist",
     "dlive:stream",
     "dlive:vod",
     "Douyin",
@@ -415,33 +458,54 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "drtv:season",
     "drtv:series",
     "Dumpert",
+    "Duoplay",
     "EbaumsWorld",
     "Ebay",
+    "egghead:course",
+    "egghead:lesson",
     "Elonet",
+    "ElPais",
+    "ElTreceTV",
     "Epoch",
+    "Eporner",
     "Erocast",
     "ERRArhiiv",
     "ERRJupiter",
     "EttuTv",
     "EuropeanTour",
+    "Expressen",
     "facebook:ads",
     "facebook",
     "facebook:reel",
     "FacebookPluginsVideo",
     "FacebookRedirectURL",
     "Fathom",
+    "faz.net",
     "Fczenit",
     "FilmArchiv",
+    "filmon",
+    "filmon:channel",
     "Filmweb",
+    "FiveTV",
     "Flickr",
+    "FootyRoom",
     "Formula1",
+    "FrancaisFacile",
     "francetv",
     "franceinfo",
     "francetv:site",
     "Freesound",
+    "freespeech.org",
+    "freetv:series",
+    "FreeTvMovies",
+    "Funker530",
     "FuyinTV",
     "Gab",
+    "GameSpot",
     "GameStar",
+    "Gaskrank",
+    "Genius",
+    "GeniusLyrics",
     "Golem",
     "goodgame:stream",
     "HearThisAt",
@@ -450,18 +514,25 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "GodResource",
     "GodTube",
     "GoogleDrive:Folder",
+    "GoPro",
     "GoogleDrive",
+    "GoToStage",
     "Graspop",
     "Gronkh",
+    "Groupon",
     "Harpodeon",
     "HellPorno",
     "HistoricFilms",
     "HitRecord",
+    "HollywoodReporter",
+    "HollywoodReporterPlaylist",
     "href.li",
     "HSEProduct",
     "HSEShow",
     "Huajiao",
+    "HuffPost",
     "Hypem",
+    "Hytale",
     "iheartradio",
     "iheartradio:podcast",
     "IlPost",
@@ -473,15 +544,22 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "imgur:gallery",
     "Ina",
     "Inc",
+    "IndavideoEmbed",
     "Instagram",
     "InstagramIOS",
     "instagram:story",
     "instagram:tag",
     "instagram:user",
     "Internazionale",
+    "IslamChannel",
+    "IslamChannelSeries",
     "IsraelNationalNews",
+    "ivideon",
     "Ivoox",
+    "Jamendo",
+    "JamendoAlbum",
     "Jove",
+    "JStream",
     "JWPlatform",
     "Kaltura",
     "KankaNews",
@@ -492,37 +570,75 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "kick:vod",
     "Kicker",
     "KickStarter",
+    "Kika",
+    "KikaPlaylist",
+    "KinoPoisk",
     "Kommunetv",
+    "KompasVideo",
     "KTH",
     "Ku6",
+    "KukuluLive",
+    "LastFM",
+    "LastFMPlaylist",
+    "LastFMUser",
     "lbry",
     "lbry:channel",
     "lbry:playlist",
+    "LCI",
+    "LeFigaroVideoEmbed",
+    "LeFigaroVideoSection",
+    "LEGO",
     "Libsyn",
     "LinkedIn",
+    "ListenNotes",
+    "LiTV",
     "Livestreamfails",
     "Lnk",
+    "loc",
     "loom",
     "LRTRadio",
     "LRTStream",
     "LRTVOD",
     "maariv.co.il",
+    "MagellanTV",
+    "mangomolo:live",
+    "mangomolo:video",
     "MaoriTV",
+    "massengeschmack.tv",
     "Masters",
     "MatchiTV",
     "MatchTV",
+    "MBN",
+    "MDR",
     "MedalTV",
     "media.ccc.de",
     "Mediaite",
+    "MediaKlikk",
+    "MediaWorksNZVOD",
     "megaphone.fm",
+    "Meipai",
+    "MelonVOD",
     "mir24.tv",
+    "MirrorCoUK",
     "mixcloud",
+    "Mixlr",
+    "MixlrRecoring",
     "MochaVideo",
+    "Monstercat",
+    "monstersiren",
+    "moviepilot",
     "MovingImage",
+    "MuseScore",
     "Mux",
+    "MySpass",
     "MyVidster",
+    "n-tv.de",
+    "NascarClassics",
+    "NetAppCollection",
+    "NetAppVideo",
     "Netzkino",
     "Newsy",
+    "NFHSNetwork",
     "NhkVod",
     "NhkVodProgram",
     "niconico",
@@ -535,6 +651,11 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "nicovideo:search:date",
     "nicovideo:search_url",
     "NobelPrize",
+    "NoicePodcast",
+    "NOSNLArticle",
+    "NovaPlay",
+    "NowCanal",
+    "Npr",
     "NRK",
     "NRKPlaylist",
     "NRKRadioPodkast",
@@ -546,28 +667,41 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "nts.live",
     "NZOnScreen",
     "Odnoklassniki",
+    "OlympicsReplay",
+    "on24",
     "OneFootball",
     "OnePlacePodcast",
     "orf:on",
     "orf:podcast",
     "orf:radio",
+    "OutsideTV",
     "Parlview",
+    "parti:livestream",
+    "parti:video",
     "PearVideo",
     "PeerTube",
     "PeerTube:Playlist",
     "peer.tv",
     "periscope",
+    "PGATour",
     "Photobucket",
+    "PiaLive",
+    "picarto",
+    "picarto:vod",
     "Pinkbike",
     "Pinterest",
     "PlayerFm",
     "PodbayFM",
     "PodbayFMChannel",
+    "Popcorntimes",
     "PopcornTV",
     "PremiershipRugby",
     "PressTV",
     "ProjectVeritas",
+    "Pyvideo",
     "QingTing",
+    "radiokapital",
+    "radiokapital:show",
     "RadioZetPodcast",
     "Reddit",
     "ReverbNation",
@@ -575,19 +709,40 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "RinseFMArtistPlaylist",
     "RottenTomatoes",
     "RoyaLive",
+    "rte",
+    "rte:radio",
     "RTRFM",
     "rtve.es:alacarta",
     "rtve.es:audio",
     "rtve.es:live",
     "rtve.es:television",
+    "rtvslo.si",
+    "rtvslo.si:show",
+    "RudoVideo",
     "Rumble",
     "RumbleEmbed",
     "rutube",
     "rutube:embed",
+    "Ruv",
+    "ruv.is:spila",
+    "S4C",
+    "S4CSeries",
     "Sapo",
+    "SBS",
     "Screen9",
+    "Screencastify",
     "ScreenRec",
     "Sen",
+    "Servus",
+    "SharePoint",
+    "simplecast",
+    "simplecast:episode",
+    "simplecast:podcast",
+    "Skeb",
+    "sky:news",
+    "sky:news:story",
+    "sky:sports",
+    "sky:sports:news",
     "SkylineWebcams",
     "SkyNewsAU",
     "SnapchatSpotlight",
@@ -595,14 +750,24 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "soundgasm",
     "soundgasm:profile",
     "Spiegel",
+    "Sport5",
+    "Spreaker",
+    "SpreakerShow",
     "SRGSSR",
     "SRGSSRPlay",
+    "startrek",
+    "startv",
     "Steam",
     "SteamCommunity",
     "SteamCommunityBroadcast",
     "Streamable",
+    "StreamCZ",
     "StreetVoice",
+    "stv:player",
+    "stvr",
     "Substack",
+    "sverigesradio:episode",
+    "sverigesradio:publication",
     "svt:page",
     "svt:play",
     "svt:play:series",
@@ -611,9 +776,13 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "TedPlaylist",
     "TedSeries",
     "TedTalk",
+    "Tele13",
+    "TeleBruxelles",
     "Telegraaf",
     "telegram:embed",
     "TeleTask",
+    "Telewebion",
+    "TF1",
     "TheGuardianPodcast",
     "TheHighWire",
     "TheIntercept",
@@ -626,17 +795,26 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "tiktok:collection",
     "tiktok:live",
     "tiktok:user",
+    "ToonGoggles",
     "Toypics",
     "TrtCocukVideo",
     "TrtWorld",
+    "TruNews",
     "Tumblr",
     "tv.dfb.de",
     "TV2",
     "TV2Article",
+    "TV2DK",
+    "TV2DKBornholmPlay",
+    "tv2play.hu",
+    "tv2playseries.hu",
     "TV4",
     "TV5MONDE",
     "TVANouvelles",
     "TVANouvellesArticle",
+    "tvaplus",
+    "tvigle",
+    "TVIPlayer",
     "tvnoe",
     "Tweakers",
     "twitch:clips",
@@ -652,16 +830,26 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "twitter:card",
     "twitter:shortener",
     "twitter:spaces",
+    "UDNEmbed",
     "23video",
+    "24tv.ua",
     "umg:de",
     "Unistra",
     "UnitedNationsWebTv",
+    "uol.com.br",
+    "URPlay",
+    "USAToday",
     "ustudio",
     "ustudio:embed",
+    "Vbox7",
     "Veo",
+    "video.arnes.si",
     "VideoPress",
+    "VidLii",
     "Vidyard",
     "vimeo",
+    "Viously",
+    "Visir",
     "vk",
     "vk:uservideos",
     "vk:wallpost",
@@ -669,21 +857,35 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "VKPlayLive",
     "vm.tiktok",
     "Vocaroo",
+    "VODPlatform",
+    "VTV",
+    "VTVGo",
+    "washingtonpost",
+    "washingtonpost:article",
+    "wat.tv",
     "Webcamerapl",
     "Weibo",
     "WeiboVideo",
     "Whyp",
+    "wikimedia.org",
     "Wimbledon",
     "Wistia",
     "WistiaChannel",
     "WistiaPlaylist",
     "WorldStarHipHop",
+    "WSJ",
+    "WSJArticle",
     "XboxClips",
     "XiaoHongShu",
+    "Xinpianchang",
+    "XNXX",
     "XVideos",
     "xvideos:quickies",
+    "Yappy",
+    "YappyProfile",
     "yfanefa",
     "YleAreena",
+    "YouJizz",
     "youtube:clip",
     "youtube:consent",
     "youtube:favorites",
@@ -706,7 +908,9 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "youtube:user",
     "zdf",
     "zdf:channel",
+    "ZetlandDKArticle",
     "Zhihu",
+    "Zype",
     "generic",
     "end",
 ];
@@ -872,6 +1076,151 @@ impl YoutubeDl {
                 Box::new(extractor::YoutubeTab {
                     no_playlist: youtube.no_playlist,
                 }),
+                Box::new(extractor::AGalega),
+                Box::new(extractor::AitubeKzVideo),
+                Box::new(extractor::AlJazeera),
+                Box::new(extractor::AliExpressLive),
+                Box::new(extractor::Alibaba),
+                Box::new(extractor::Apa),
+                Box::new(extractor::ArcPublishing),
+                Box::new(extractor::AzMedien),
+                Box::new(extractor::BaiduVideo),
+                Box::new(extractor::BerufeTv),
+                Box::new(extractor::Bfmtv),
+                Box::new(extractor::BfmtvArticle),
+                Box::new(extractor::BfmtvLive),
+                Box::new(extractor::BoxCastVideo),
+                Box::new(extractor::Bundestag),
+                Box::new(extractor::BtvPlus),
+                Box::new(extractor::BusinessInsider),
+                Box::new(extractor::CanalAlpha),
+                Box::new(extractor::Cellebrite),
+                Box::new(extractor::Chaturbate),
+                Box::new(extractor::CiscoLiveSession),
+                Box::new(extractor::CiscoLiveSearch),
+                Box::new(extractor::Cpac),
+                Box::new(extractor::CpacPlaylist),
+                Box::new(extractor::Craftsy),
+                Box::new(extractor::DailyMail),
+                Box::new(extractor::Dbtv),
+                Box::new(extractor::DeuxM),
+                Box::new(extractor::DeuxMNews),
+                Box::new(extractor::Digiteka),
+                Box::new(extractor::DiscogsReleasePlaylist),
+                Box::new(extractor::Duoplay),
+                Box::new(extractor::EggheadCourse),
+                Box::new(extractor::EggheadLesson),
+                Box::new(extractor::ElPais),
+                Box::new(extractor::ElTreceTv),
+                Box::new(extractor::Expressen),
+                Box::new(extractor::Faz),
+                Box::new(extractor::FilmOn),
+                Box::new(extractor::FilmOnChannel),
+                Box::new(extractor::FiveTv),
+                Box::new(extractor::FootyRoom),
+                Box::new(extractor::FrancaisFacile),
+                Box::new(extractor::FreeTv),
+                Box::new(extractor::FreeTvMovies),
+                Box::new(extractor::Freespeech),
+                Box::new(extractor::Gaskrank),
+                Box::new(extractor::Genius),
+                Box::new(extractor::GeniusLyrics),
+                Box::new(extractor::GoPro),
+                Box::new(extractor::Groupon),
+                Box::new(extractor::HuffPost),
+                Box::new(extractor::Hytale),
+                Box::new(extractor::IndavideoEmbed),
+                Box::new(extractor::IslamChannel),
+                Box::new(extractor::IslamChannelSeries),
+                Box::new(extractor::Ivideon),
+                Box::new(extractor::Kika),
+                Box::new(extractor::KikaPlaylist),
+                Box::new(extractor::KinoPoisk),
+                Box::new(extractor::KompasVideo),
+                Box::new(extractor::KukuluLive),
+                Box::new(extractor::Lci),
+                Box::new(extractor::LeFigaroVideoEmbed),
+                Box::new(extractor::LeFigaroVideoSection),
+                Box::new(extractor::Lego),
+                Box::new(extractor::LibraryOfCongress),
+                Box::new(extractor::LastFm),
+                Box::new(extractor::LastFmPlaylist),
+                Box::new(extractor::LastFmUser),
+                Box::new(extractor::ListenNotes),
+                Box::new(extractor::MagellanTv),
+                Box::new(extractor::MassengeschmackTv),
+                Box::new(extractor::Mbn),
+                Box::new(extractor::Mdr),
+                Box::new(extractor::MediaKlikk),
+                Box::new(extractor::MediaWorksNzVod),
+                Box::new(extractor::MelonVod),
+                Box::new(extractor::MonsterSirenHypergryphMusic),
+                Box::new(extractor::Monstercat),
+                Box::new(extractor::Moviepilot),
+                Box::new(extractor::NascarClassics),
+                Box::new(extractor::NetAppCollection),
+                Box::new(extractor::NetAppVideo),
+                Box::new(extractor::NfhsNetwork),
+                Box::new(extractor::NoicePodcast),
+                Box::new(extractor::NovaPlay),
+                Box::new(extractor::NowCanal),
+                Box::new(extractor::NtvDe),
+                Box::new(extractor::OlympicsReplay),
+                Box::new(extractor::On24),
+                Box::new(extractor::OutsideTv),
+                Box::new(extractor::PgaTour),
+                Box::new(extractor::Picarto),
+                Box::new(extractor::PicartoVod),
+                Box::new(extractor::Popcorntimes),
+                Box::new(extractor::Rtvs),
+                Box::new(extractor::Rtvslo),
+                Box::new(extractor::RtvsloShow),
+                Box::new(extractor::RudoVideo),
+                Box::new(extractor::Screencastify),
+                Box::new(extractor::Servus),
+                Box::new(extractor::SharePoint),
+                Box::new(extractor::Skeb),
+                Box::new(extractor::SkyNews),
+                Box::new(extractor::SkyNewsStory),
+                Box::new(extractor::SkySports),
+                Box::new(extractor::SkySportsNews),
+                Box::new(extractor::Sport5),
+                Box::new(extractor::StarTrek),
+                Box::new(extractor::StarTv),
+                Box::new(extractor::StreamCz),
+                Box::new(extractor::MuseScore),
+                Box::new(extractor::StvPlayer),
+                Box::new(extractor::Tele13),
+                Box::new(extractor::Telewebion),
+                Box::new(extractor::TeleBruxelles),
+                Box::new(extractor::PiaLive),
+                Box::new(extractor::LiTv),
+                Box::new(extractor::DamtomoRecord),
+                Box::new(extractor::DamtomoVideo),
+                Box::new(extractor::Tf1),
+                Box::new(extractor::ToonGoggles),
+                Box::new(extractor::TruNews),
+                Box::new(extractor::Tv24UaVideo),
+                Box::new(extractor::Tv2Hu),
+                Box::new(extractor::Tv2HuSeries),
+                Box::new(extractor::Tva),
+                Box::new(extractor::Tvigle),
+                Box::new(extractor::UdnEmbed),
+                Box::new(extractor::UrPlay),
+                Box::new(extractor::Vbox7),
+                Box::new(extractor::VidLii),
+                Box::new(extractor::Visir),
+                Box::new(extractor::VodPlatform),
+                Box::new(extractor::Vtv),
+                Box::new(extractor::VtvGo),
+                Box::new(extractor::UsaToday),
+                Box::new(extractor::WashingtonPost),
+                Box::new(extractor::WashingtonPostArticle),
+                Box::new(extractor::Wat),
+                Box::new(extractor::Wsj),
+                Box::new(extractor::WsjArticle),
+                Box::new(extractor::Yappy),
+                Box::new(extractor::YappyProfile),
                 Box::new(extractor::YoutubeSearchUrl),
                 Box::new(extractor::YoutubeClip),
                 Box::new(extractor::Reddit),
@@ -923,6 +1272,8 @@ impl YoutubeDl {
                 Box::new(extractor::KickLive),
                 Box::new(extractor::Bluesky),
                 Box::new(extractor::Mixcloud),
+                Box::new(extractor::Mixlr),
+                Box::new(extractor::MixlrRecording),
                 Box::new(extractor::Pinterest),
                 Box::new(extractor::Lbry),
                 Box::new(extractor::LbryChannel),
@@ -934,8 +1285,16 @@ impl YoutubeDl {
                 Box::new(extractor::LrtRadio),
                 Box::new(extractor::LrtStream),
                 Box::new(extractor::LrtVod),
+                Box::new(extractor::ACast),
+                Box::new(extractor::ACastChannel),
+                Box::new(extractor::Spreaker),
+                Box::new(extractor::SpreakerShow),
                 Box::new(extractor::IHeartRadio),
                 Box::new(extractor::IHeartRadioPodcast),
+                Box::new(extractor::Jamendo),
+                Box::new(extractor::JamendoAlbum),
+                Box::new(extractor::Audiomack),
+                Box::new(extractor::AudiomackAlbum),
                 Box::new(extractor::Gab),
                 Box::new(extractor::Internazionale),
                 Box::new(extractor::MatchiTv),
@@ -975,26 +1334,39 @@ impl YoutubeDl {
                 Box::new(extractor::Tv2),
                 Box::new(extractor::Tv2Article),
                 Box::new(extractor::Tv4),
+                Box::new(extractor::Tv2Dk),
+                Box::new(extractor::Tv2DkBornholmPlay),
                 Box::new(extractor::Tv5MondePlus),
+                Box::new(extractor::Ruv),
+                Box::new(extractor::RuvSpila),
+                Box::new(extractor::Rte),
+                Box::new(extractor::RteRadio),
                 Box::new(extractor::XVideosQuickies),
                 Box::new(extractor::XVideos),
+                Box::new(extractor::Xnxx),
                 Box::new(extractor::Imdb),
                 Box::new(extractor::ImdbList),
                 Box::new(extractor::Flickr),
                 Box::new(extractor::Telegraaf),
                 Box::new(extractor::TvNoe),
+                Box::new(extractor::TviPlayer),
                 Box::new(extractor::ThreeSpeak),
                 Box::new(extractor::ThreeSpeakUser),
                 Box::new(extractor::Ustudio),
                 Box::new(extractor::UstudioEmbed),
+                Box::new(extractor::Arnes),
                 Box::new(extractor::VideoPress),
                 Box::new(extractor::Vidyard),
+                Box::new(extractor::S4c),
+                Box::new(extractor::S4cSeries),
                 Box::new(extractor::Sapo),
+                Box::new(extractor::Sbs),
                 Box::new(extractor::Clyp),
                 Box::new(extractor::Elonet),
                 Box::new(extractor::Dropbox),
                 Box::new(extractor::BostonGlobe),
                 Box::new(extractor::BeaconTv),
+                Box::new(extractor::Beeg),
                 Box::new(extractor::Clipchamp),
                 Box::new(extractor::Ccc),
                 Box::new(extractor::DaystarClip),
@@ -1043,6 +1415,7 @@ impl YoutubeDl {
                 Box::new(extractor::ArteTvPlaylist),
                 Box::new(extractor::BitChute),
                 Box::new(extractor::BitChuteChannel),
+                Box::new(extractor::CnbcVideo),
                 Box::new(extractor::Coub),
                 Box::new(extractor::Loom),
                 Box::new(extractor::Odnoklassniki),
@@ -1093,11 +1466,15 @@ impl YoutubeDl {
                 Box::new(extractor::YoutubeUnsupported),
                 Box::new(extractor::AmadeusTv),
                 Box::new(extractor::Angel),
+                Box::new(extractor::ApplePodcasts),
+                Box::new(extractor::AudiMedia),
                 Box::new(extractor::AudioBoom),
+                Box::new(extractor::Beatport),
                 Box::new(extractor::BehindKink),
                 Box::new(extractor::Bild),
                 Box::new(extractor::Bitmovin),
                 Box::new(extractor::Blogger),
+                Box::new(extractor::Bloomberg),
                 Box::new(extractor::BreitBart),
                 Box::new(extractor::BrightcoveNew),
                 Box::new(extractor::Bundesliga),
@@ -1117,11 +1494,14 @@ impl YoutubeDl {
                 Box::new(extractor::EbaumsWorld),
                 Box::new(extractor::Ebay),
                 Box::new(extractor::Epoch),
+                Box::new(extractor::Eporner),
                 Box::new(extractor::Fathom),
                 Box::new(extractor::Fczenit),
                 Box::new(extractor::FilmArchiv),
                 Box::new(extractor::Filmweb),
+                Box::new(extractor::Funker530),
                 Box::new(extractor::FuyinTv),
+                Box::new(extractor::GameSpot),
                 Box::new(extractor::GameStar),
                 Box::new(extractor::Glide),
                 Box::new(extractor::GodResource),
@@ -1130,12 +1510,15 @@ impl YoutubeDl {
                 Box::new(extractor::GoodGame),
                 Box::new(extractor::GoogleDriveFolder),
                 Box::new(extractor::GoogleDrive),
+                Box::new(extractor::GoToStage),
                 Box::new(extractor::Graspop),
                 Box::new(extractor::Gronkh),
                 Box::new(extractor::Harpodeon),
                 Box::new(extractor::HellPorno),
                 Box::new(extractor::HistoricFilms),
                 Box::new(extractor::HitRecord),
+                Box::new(extractor::HollywoodReporter),
+                Box::new(extractor::HollywoodReporterPlaylist),
                 Box::new(extractor::HrefLiRedirect),
                 Box::new(extractor::HseProduct),
                 Box::new(extractor::HseShow),
@@ -1146,6 +1529,7 @@ impl YoutubeDl {
                 Box::new(extractor::IsraelNationalNews),
                 Box::new(extractor::Ivoox),
                 Box::new(extractor::Jove),
+                Box::new(extractor::JStream),
                 Box::new(extractor::JwPlatform),
                 Box::new(extractor::Kaltura),
                 Box::new(extractor::KankaNews),
@@ -1161,17 +1545,24 @@ impl YoutubeDl {
                 Box::new(extractor::MedalTv),
                 Box::new(extractor::MatchTv),
                 Box::new(extractor::Megaphone),
+                Box::new(extractor::Meipai),
                 Box::new(extractor::Mir24Tv),
+                Box::new(extractor::MirrorCoUk),
                 Box::new(extractor::MochaVideo),
                 Box::new(extractor::MovingImage),
+                Box::new(extractor::MySpass),
                 Box::new(extractor::MyVidster),
                 Box::new(extractor::NobelPrize),
+                Box::new(extractor::NosNlArticle),
+                Box::new(extractor::Npr),
                 Box::new(extractor::OneFootball),
                 Box::new(extractor::OnePlacePodcast),
                 Box::new(extractor::OrfOn),
                 Box::new(extractor::OrfPodcast),
                 Box::new(extractor::OrfRadio),
                 Box::new(extractor::Parlview),
+                Box::new(extractor::PartiLivestream),
+                Box::new(extractor::PartiVideo),
                 Box::new(extractor::PeerTube),
                 Box::new(extractor::PeerTubePlaylist),
                 Box::new(extractor::PeerTv),
@@ -1181,7 +1572,10 @@ impl YoutubeDl {
                 Box::new(extractor::PremiershipRugby),
                 Box::new(extractor::PressTv),
                 Box::new(extractor::ProjectVeritas),
+                Box::new(extractor::Pyvideo),
                 Box::new(extractor::QingTing),
+                Box::new(extractor::RadioKapital),
+                Box::new(extractor::RadioKapitalShow),
                 Box::new(extractor::RadioZetPodcast),
                 Box::new(extractor::ReverbNation),
                 Box::new(extractor::RoyaLive),
@@ -1192,6 +1586,9 @@ impl YoutubeDl {
                 Box::new(extractor::RtveTelevision),
                 Box::new(extractor::ScreenRec),
                 Box::new(extractor::Sen),
+                Box::new(extractor::Simplecast),
+                Box::new(extractor::SimplecastEpisode),
+                Box::new(extractor::SimplecastPodcast),
                 Box::new(extractor::SkylineWebcams),
                 Box::new(extractor::SnapchatSpotlight),
                 Box::new(extractor::Spiegel),
@@ -1200,6 +1597,8 @@ impl YoutubeDl {
                 Box::new(extractor::Streamable),
                 Box::new(extractor::StreetVoice),
                 Box::new(extractor::Substack),
+                Box::new(extractor::SverigesRadioEpisode),
+                Box::new(extractor::SverigesRadioPublication),
                 Box::new(extractor::SvtPage),
                 Box::new(extractor::SvtPlay),
                 Box::new(extractor::SvtSeries),
@@ -1212,6 +1611,8 @@ impl YoutubeDl {
                 Box::new(extractor::FranceTv),
                 Box::new(extractor::FranceTvInfo),
                 Box::new(extractor::FranceTvSite),
+                Box::new(extractor::MangomoloVideo),
+                Box::new(extractor::MangomoloLive),
                 Box::new(extractor::MaoriTV),
                 Box::new(extractor::EuropeanTour),
                 Box::new(extractor::SkyNewsAU),
@@ -1236,20 +1637,26 @@ impl YoutubeDl {
                 Box::new(extractor::Unistra),
                 Box::new(extractor::Veo),
                 Box::new(extractor::UnitedNationsWebTv),
+                Box::new(extractor::Uol),
                 Box::new(extractor::Vocaroo),
                 Box::new(extractor::Webcamerapl),
                 Box::new(extractor::Whyp),
+                Box::new(extractor::Wikimedia),
                 Box::new(extractor::WistiaChannel),
                 Box::new(extractor::Wistia),
                 Box::new(extractor::WistiaPlaylist),
                 Box::new(extractor::WorldStarHipHop),
                 Box::new(extractor::XboxClips),
                 Box::new(extractor::XiaoHongShu),
+                Box::new(extractor::Xinpianchang),
                 Box::new(extractor::Yfanefa),
                 Box::new(extractor::YleAreena),
+                Box::new(extractor::YouJizz),
                 Box::new(extractor::Zdf),
                 Box::new(extractor::ZdfChannel),
+                Box::new(extractor::ZetlandDkArticle),
                 Box::new(extractor::Zhihu),
+                Box::new(extractor::Zype),
                 Box::new(GenericHttp),
             ],
         })
@@ -1911,6 +2318,7 @@ impl YoutubeDl {
     /// filters (YouTube's comments with `getcomments`).
     pub fn post_extract(&self, info: &mut VideoInfo) -> Result<()> {
         extractor::youtube_comments(&self.client, info)?;
+        extractor::pialive_comments(&self.client, info)?;
         extractor::instagram_comments(&self.client, info)
     }
 
@@ -1970,6 +2378,14 @@ impl YoutubeDl {
                 extractor::fetch_orf_segments
             } else if extractor::nhk_pending_state(&pending.state) {
                 extractor::fetch_nhk_episodes
+            } else if extractor::monstercat_pending_state(&pending.state) {
+                extractor::fetch_monstercat_tracks
+            } else if extractor::freetv_pending_state(&pending.state) {
+                extractor::fetch_freetv_episodes
+            } else if extractor::spreaker_pending_state(&pending.state) {
+                extractor::fetch_spreaker_episodes
+            } else if extractor::simplecast_pending_state(&pending.state) {
+                extractor::fetch_simplecast_episodes
             } else if extractor::ard_pending_state(&pending.state) {
                 extractor::fetch_ard_pages
             } else if extractor::vk_user_videos_pending_state(&pending.state) {
@@ -1980,6 +2396,12 @@ impl YoutubeDl {
                 extractor::fetch_peertube_pages
             } else if extractor::podbayfm_pending_state(&pending.state) {
                 extractor::fetch_podbayfm_pages
+            } else if extractor::yappy_pending_state(&pending.state) {
+                extractor::fetch_yappy_pages
+            } else if extractor::lefigaro_pending_state(&pending.state) {
+                extractor::fetch_lefigaro_pages
+            } else if extractor::hollywoodreporter_pending_state(&pending.state) {
+                extractor::fetch_hollywoodreporter_pages
             } else if extractor::lbry_pending_state(&pending.state) {
                 extractor::fetch_lbry_pages
             } else if extractor::bitchute_pending_state(&pending.state) {
@@ -1988,6 +2410,14 @@ impl YoutubeDl {
                 extractor::fetch_niconico_pages
             } else if extractor::dailymotion_pending_state(&pending.state) {
                 extractor::fetch_dailymotion_pages
+            } else if extractor::kika_pending_state(&pending.state) {
+                extractor::fetch_kika_pages
+            } else if extractor::lastfm_pending_state(&pending.state) {
+                extractor::fetch_lastfm_pages
+            } else if extractor::ciscolive_pending_state(&pending.state) {
+                extractor::fetch_ciscolive_pages
+            } else if extractor::radiokapital_pending_state(&pending.state) {
+                extractor::fetch_radiokapital_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };
@@ -1999,6 +2429,10 @@ impl YoutubeDl {
             let resolved = extractor::steam_pending_state(&pending.state)
                 || extractor::orf_pending_state(&pending.state)
                 || extractor::nhk_pending_state(&pending.state)
+                || extractor::monstercat_pending_state(&pending.state)
+                || extractor::freetv_pending_state(&pending.state)
+                || extractor::spreaker_pending_state(&pending.state)
+                || extractor::simplecast_pending_state(&pending.state)
                 || extractor::podbayfm_pending_state(&pending.state);
             playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
                 .map(|state| PendingEntries { state });
@@ -2440,20 +2874,44 @@ impl YoutubeDl {
                     );
                 }
             }
+            // `process_video_result`: `_has_drm`, and DRM formats dropped
+            // without `--allow-unplayable-formats`.
+            let drm = |format: &VideoFormat| {
+                format.extra.get("has_drm") == Some(&serde_json::Value::Bool(true))
+            };
+            let has_drm = entry.formats.iter().any(drm);
+            if has_drm {
+                entry
+                    .extra
+                    .insert("_has_drm".into(), serde_json::Value::Bool(true));
+                if !no_formats::allow_unplayable() {
+                    entry.formats.retain(|format| !drm(format));
+                    if entry.formats.is_empty() {
+                        entry
+                            .extra
+                            .insert(info::NO_FORMATS.into(), serde_json::Value::Bool(true));
+                    }
+                }
+            }
             // `process_video_result`: `raise_no_formats` for a result
             // without formats.
             if entry.extra.shift_remove(info::NO_FORMATS).is_some() {
+                // `msg = has_drm and 'This video is DRM protected'`: expected.
+                let drm_message = has_drm.then_some("This video is DRM protected");
                 if no_formats::ignore() {
                     // `--ignore-no-formats-error`: processing continues.
-                    screen::warning("No video formats found!");
+                    screen::warning(drm_message.unwrap_or("No video formats found!"));
                     entry
                         .extra
                         .insert(info::FORMATS_IGNORED.into(), serde_json::Value::Bool(true));
                 } else {
-                    let message = format!(
-                        "[{}] {}: No video formats found!; {}",
-                        entry.extractor, entry.id, BUG_REPORTS_MESSAGE
-                    );
+                    let message = match drm_message {
+                        Some(message) => format!("[{}] {}: {message}", entry.extractor, entry.id),
+                        None => format!(
+                            "[{}] {}: No video formats found!; {}",
+                            entry.extractor, entry.id, BUG_REPORTS_MESSAGE
+                        ),
+                    };
                     // A playlist entry's error is reported when the entry is
                     // processed; the other entries continue.
                     if playlist {
@@ -2957,8 +3415,10 @@ impl YoutubeDl {
                     .get("__needs_testing")
                     .is_some_and(|value| value.as_bool() != Some(false) && !value.is_null())
         };
-        let default =
-            self.check_formats == CheckFormats::Default && info.formats.iter().any(needs_testing);
+        // `--allow-unplayable-formats` tests none of them.
+        let default = self.check_formats == CheckFormats::Default
+            && !no_formats::allow_unplayable()
+            && info.formats.iter().any(needs_testing);
         if self.check_formats != CheckFormats::Selected && !default {
             return info.select_formats(format, self.ffmpeg.is_some(), &options);
         }
@@ -3399,6 +3859,11 @@ impl YoutubeDl {
             number(entry.playlist_autonumber),
         );
         for key in &own {
+            // `if ie and not ie_result.get('id')`: a falsy own ID gives way to
+            // the temporary one.
+            if key == "id" && ie_key.is_some() && !extractor::nuxt::truthy(&raw[key]) {
+                continue;
+            }
             full.insert(key.clone(), raw[key].clone());
         }
         full.insert("epoch".into(), epoch.into());
@@ -3467,12 +3932,27 @@ impl YoutubeDl {
                     && let Some(marker) = video.extra.get(FOLLOW_TRANSPARENT).cloned()
                 {
                     let target = Url::parse(marker["url"].as_str().unwrap_or_default())?;
+                    // `exempted_fields`: without sections, the inner `id`,
+                    // `extractor` and `extractor_key` are kept.
+                    let sectioned = marker["fields"]
+                        .get("section_start")
+                        .is_some_and(|value| !value.is_null())
+                        || marker["fields"]
+                            .get("section_end")
+                            .is_some_and(extractor::nuxt::truthy);
                     let fields: Vec<(String, serde_json::Value)> = marker["fields"]
                         .as_object()
                         .map(|fields| {
                             fields
                                 .iter()
                                 .filter(|(_, value)| !value.is_null())
+                                .filter(|(key, _)| {
+                                    sectioned
+                                        || !matches!(
+                                            key.as_str(),
+                                            "id" | "extractor" | "extractor_key"
+                                        )
+                                })
                                 .map(|(key, value)| (key.clone(), value.clone()))
                                 .collect()
                         })
@@ -3486,10 +3966,23 @@ impl YoutubeDl {
                                 "url_transparent playlists are not supported natively".into(),
                             ));
                         };
-                        let inner_shape = match inner.extra.get(info_order::INFO_SHAPE) {
+                        let mut inner_shape = match inner.extra.get(info_order::INFO_SHAPE) {
                             Some(serde_json::Value::String(shape)) => shape.clone(),
                             _ => String::new(),
                         };
+                        // Overriding `subtitles` tracks keep the outer
+                        // extractor's key order (`subtitle_keys`), not the
+                        // inner one's.
+                        if let Some(keys) = marker["subtitle_keys"].as_str()
+                            && fields.iter().any(|(key, _)| key == "subtitles")
+                        {
+                            inner_shape = inner_shape
+                                .split(';')
+                                .filter(|part| !part.starts_with("subtitle="))
+                                .collect::<Vec<_>>()
+                                .join(";");
+                            inner_shape.push_str(&format!(";subtitle={keys}"));
+                        }
                         for (key, value) in &fields {
                             match key.as_str() {
                                 "title" => {
@@ -3497,6 +3990,16 @@ impl YoutubeDl {
                                 }
                                 _ => metadata_parser::set_field(inner, key, value.clone()),
                             }
+                        }
+                        // `_sanitize_thumbnails` builds a `None` `thumbnails`
+                        // from the forced `thumbnail`.
+                        if fields.iter().any(|(key, _)| key == "thumbnail")
+                            && inner
+                                .extra
+                                .get("thumbnails")
+                                .is_some_and(serde_json::Value::is_null)
+                        {
+                            inner.extra.shift_remove("thumbnails");
                         }
                         inner.webpage_url = outer.clone();
                         if let Some(ip) = &outer_ip {

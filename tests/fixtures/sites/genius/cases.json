@@ -1,0 +1,52 @@
+[
+ {
+  "url": "https://genius.com/videos/Vince-staples-breaks-down",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://genius.com/videos/Vince-staples-breaks-down",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://genius.com/a/cordae-two-tens",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://genius.com/a/no-video-article",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://genius.com/videos/no-video",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://genius.com/videos/no-meta",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://genius.com/Lil-baby-heyy-lyrics",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://genius.com/No-song-lyrics",
+  "args": [
+   "-J"
+  ]
+ }
+]

@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://nos.nl/artikel/2440409-vannacht-sliepen",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Meta titel\"><meta name=\"description\" content=\"Meta beschrijving\"></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"data\": {\"id\": 2440409, \"title\": \"Vannacht sliepen weer enkele honderden asielzoekers buiten\", \"description\": \"Artikel beschrijving\", \"keywords\": [\"COA\", \"Ter Apel\"], \"modifiedAt\": \"2022-08-14T06:52:53+0200\", \"publishedAt\": \"2022-08-13T16:36:24+0200\", \"shareImageSrc\": \"https://cdn.nos.nl/image/share.jpg\", \"categories\": [{\"label\": \"Regionaal nieuws\"}, {\"label\": \"Binnenland\"}, {\"x\": 1}], \"items\": [{\"type\": \"text\", \"id\": 1}, {\"type\": \"video\", \"id\": 2440340, \"title\": \"'We hebben een huis vol met scheuren'\", \"description\": \"Scheuren in huizen.\", \"duration\": \"PT1M35S\", \"source\": {\"url\": \"https://nos-hls.test/2440340/master.m3u8\"}, \"imagesByRatio\": [[{\"url\": {\"1x\": \"https://cdn.nos.nl/image/a/1024x576a.jpg\", \"2x\": \"https://cdn.nos.nl/image/a/2048x1152a.jpg\"}, \"width\": 1024, \"height\": 576}, {\"url\": {\"1x\": \"https://cdn.nos.nl/image/a/3840x2160a.jpg\"}, \"width\": 3840, \"height\": 2160}], [{\"url\": {\"1x\": \"https://cdn.nos.nl/image/a/sq.jpg\"}, \"width\": 500, \"height\": 500}]]}, {\"type\": \"audio\", \"id\": \"a-77\", \"title\": \"Wekdienst audio\", \"media\": {\"src\": \"https://nos-audio.test/77.mp3\"}}]}}}, \"page\": \"/x\"}</script></body></html>"
+  },
+  {
+   "url": "https://nos.nl/video/2452718-xi-en-trudeau",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Meta titel\"><meta property=\"og:image\" content=\"https://cdn.nos.nl/og.jpg\"><meta name=\"description\" content=\"Meta beschrijving\"></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"data\": {\"id\": \"2452718\", \"title\": \"\", \"video\": {\"type\": \"video\", \"id\": 2452718, \"title\": \"'We hebben een huis vol met scheuren'\", \"description\": \"Scheuren in huizen.\", \"duration\": \"PT1M35S\", \"source\": {\"url\": \"https://nos-hls.test/2452718/master.m3u8\"}, \"imagesByRatio\": [[{\"url\": {\"1x\": \"https://cdn.nos.nl/image/a/1024x576a.jpg\", \"2x\": \"https://cdn.nos.nl/image/a/2048x1152a.jpg\"}, \"width\": 1024, \"height\": 576}, {\"url\": {\"1x\": \"https://cdn.nos.nl/image/a/3840x2160a.jpg\"}, \"width\": 3840, \"height\": 2160}], [{\"url\": {\"1x\": \"https://cdn.nos.nl/image/a/sq.jpg\"}, \"width\": 500, \"height\": 500}]]}}}}, \"page\": \"/x\"}</script></body></html>"
+  },
+  {
+   "url": "https://nos.nl/artikel/1-geen-data",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>geen data</body></html>"
+  },
+  {
+   "url": "https://nos.nl/artikel/2-zonder-items",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Meta titel\"><meta name=\"description\" content=\"Meta beschrijving\"></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"data\": {\"id\": 2}}}, \"page\": \"/x\"}</script></body></html>"
+  },
+  {
+   "url": "https://nos-hls.test/2440340/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://nos-hls.test/2452718/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  }
+ ]
+}

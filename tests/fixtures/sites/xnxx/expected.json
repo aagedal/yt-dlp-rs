@@ -1,0 +1,78 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.xnxx.com/video-55awb78/skyrim_test_video",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"55awb78\", \"title\": \"Fixture & Test Video\", \"thumbnail\": \"https://thumbs.xnxx.test/55awb78.jpg\", \"duration\": 469, \"view_count\": 1234567, \"age_limit\": 18, \"formats\": [{\"url\": \"https://cdn.xnxx.test/55awb78/low.mp4?e=1\", \"format_id\": \"low\", \"quality\": -1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"low - unknown\"}, {\"url\": \"https://cdn.xnxx.test/55awb78/high.mp4?e=1\", \"format_id\": \"high\", \"quality\": 0, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"high - unknown\"}, {\"format_id\": \"hls-500\", \"format_index\": null, \"url\": \"https://cdn.xnxx.test/55awb78/hls-360p.m3u8\", \"manifest_url\": \"https://cdn.xnxx.test/55awb78/hls.m3u8\", \"tbr\": 500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": 1, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-500 - 640x360\"}, {\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://cdn.xnxx.test/55awb78/hls-720p.m3u8\", \"manifest_url\": \"https://cdn.xnxx.test/55awb78/hls.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": 1, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\"}], \"webpage_url\": \"http://www.xnxx.com/video-55awb78/skyrim_test_video\", \"original_url\": \"http://www.xnxx.com/video-55awb78/skyrim_test_video\", \"webpage_url_basename\": \"skyrim_test_video\", \"webpage_url_domain\": \"xnxx.com\", \"extractor\": \"XNXX\", \"extractor_key\": \"XNXX\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://thumbs.xnxx.test/55awb78.jpg\", \"id\": \"0\"}], \"display_id\": \"55awb78\", \"fulltitle\": \"Fixture & Test Video\", \"duration_string\": \"7:49\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1500\", \"url\": \"https://cdn.xnxx.test/55awb78/hls-720p.m3u8\", \"manifest_url\": \"https://cdn.xnxx.test/55awb78/hls.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"quality\": 1, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\", \"_filename\": \"Fixture & Test Video [55awb78].mp4\", \"filename\": \"Fixture & Test Video [55awb78].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://cdn.xnxx.test/55awb78/hls-720p.m3u8\", \"manifest_url\": \"https://cdn.xnxx.test/55awb78/hls.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": 1, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.xnxx.com/video-55awb78/skyrim_test_video",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[XNXX] Extracting URL: http://www.xnxx.com/video-55awb78/skyrim_test_video",
+    "[XNXX] 55awb78: Downloading webpage",
+    "[XNXX] 55awb78: Downloading m3u8 information",
+    "[info] Available formats for 55awb78:",
+    "ID       EXT RESOLUTION |  FILESIZE   TBR PROTO | VCODEC      ACODEC",
+    "-----------------------------------------------------------------------",
+    "low      mp4 unknown    |                 https | unknown     unknown",
+    "high     mp4 unknown    |                 https | unknown     unknown",
+    "hls-500  mp4 640x360    | ~27.95MiB  500k m3u8  | avc1.4d401e mp4a.40.2",
+    "hls-1500 mp4 1280x720   | ~83.86MiB 1500k m3u8  | avc1.64001f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://video.xnxx.com/video1135332/lida_naked_funny_actress_5_",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1135332\", \"title\": \"Second &amp; title\", \"thumbnail\": \"https://thumbs.xnxx.test/169.jpg\", \"duration\": 30, \"view_count\": null, \"age_limit\": 18, \"formats\": [{\"url\": \"https://cdn.xnxx.test/1135332/plain.mp4\", \"format_id\": \"0\", \"quality\": 0, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}, {\"url\": \"https://cdn.xnxx.test/1135332/high.mp4\", \"format_id\": \"high\", \"quality\": 0, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"high - unknown\"}], \"webpage_url\": \"http://video.xnxx.com/video1135332/lida_naked_funny_actress_5_\", \"original_url\": \"http://video.xnxx.com/video1135332/lida_naked_funny_actress_5_\", \"webpage_url_basename\": \"lida_naked_funny_actress_5_\", \"webpage_url_domain\": \"video.xnxx.com\", \"extractor\": \"XNXX\", \"extractor_key\": \"XNXX\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://thumbs.xnxx.test/169.jpg\", \"id\": \"0\"}], \"display_id\": \"1135332\", \"fulltitle\": \"Second &amp; title\", \"duration_string\": \"30\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.xnxx.test/1135332/high.mp4\", \"format_id\": \"high\", \"quality\": 0, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"high - unknown\", \"_filename\": \"Second &amp; title [1135332].mp4\", \"filename\": \"Second &amp; title [1135332].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [XNXX] unable to extract ThumbUrl; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.xnxx3.com/video-nodur/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [XNXX] unable to extract ThumbUrl; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [XNXX] unable to extract ThumbUrl169; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [XNXX] nodur: Unable to extract OpenGraph duration; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.xnxx.com/video-notitle/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [XNXX] notitle: Unable to extract VideoTitle; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

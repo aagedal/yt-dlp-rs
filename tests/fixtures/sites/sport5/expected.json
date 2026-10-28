@@ -1,0 +1,45 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://vod.sport5.co.il/?Vc=147&Vi=176331&Page=1",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"NOsKJpHT4k\", \"title\": \"Goal\", \"description\": \"Great goal\", \"thumbnails\": [{\"url\": \"https://sport5.test/p1.jpg\", \"width\": 640, \"height\": 360, \"id\": \"0\", \"resolution\": \"640x360\"}], \"duration\": 95, \"categories\": [\"Football\", \"Israel\"], \"formats\": [{\"url\": \"https://sport5.test/v800.mp4\", \"ext\": \"mp4\", \"vbr\": 800, \"width\": 640, \"height\": 360, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 640x360\"}, {\"url\": \"https://sport5.test/v1500.mp4\", \"ext\": \"mp4\", \"vbr\": 1500, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 1280x720\"}], \"webpage_url\": \"http://vod.sport5.co.il/?Vc=147&Vi=176331&Page=1\", \"original_url\": \"http://vod.sport5.co.il/?Vc=147&Vi=176331&Page=1\", \"webpage_url_basename\": \"\", \"webpage_url_domain\": \"vod.sport5.co.il\", \"extractor\": \"Sport5\", \"extractor_key\": \"Sport5\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://sport5.test/p1.jpg\", \"display_id\": \"NOsKJpHT4k\", \"fulltitle\": \"Goal\", \"duration_string\": \"1:35\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://sport5.test/v1500.mp4\", \"ext\": \"mp4\", \"vbr\": 1500, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 1280x720\", \"_filename\": \"Goal [NOsKJpHT4k].mp4\", \"filename\": \"Goal [NOsKJpHT4k].mp4\", \"__write_download_archive\": false}], \"url\": \"https://sport5.test/v1500.mp4\", \"ext\": \"mp4\", \"vbr\": 1500, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.sport5.co.il/articles.aspx?FolderID=3075&docID=2",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Sport5] 2: Sport5 returned error: NotFound - No clip"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.sport5.co.il/articles.aspx?docID=3",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Sport5] 3: Unable to extract video id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

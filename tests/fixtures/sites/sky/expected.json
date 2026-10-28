@@ -1,0 +1,83 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.skysports.com/watch/video/sports/f1/12160544/abu-dhabi-gp",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6216184661001\", \"thumbnails\": null, \"duration\": 60.0, \"formats\": [{\"tbr\": 1000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://sky-pd.test/6216184661001.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk6058004203001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-1000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"Abu Dhabi GP: The Notebook\", \"description\": \"Notes.\", \"timestamp\": 1606816800, \"uploader_id\": \"6058004203001\", \"original_url\": \"https://www.skysports.com/watch/video/sports/f1/12160544/abu-dhabi-gp\", \"webpage_url\": \"https://www.skysports.com/watch/video/sports/f1/12160544/abu-dhabi-gp\", \"webpage_url_basename\": \"abu-dhabi-gp\", \"webpage_url_domain\": \"skysports.com\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"6216184661001\", \"fulltitle\": \"Abu Dhabi GP: The Notebook\", \"duration_string\": \"1:00\", \"upload_date\": \"20201201\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 1000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://sky-pd.test/6216184661001.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk6058004203001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-1000k-720p - 1280x720\", \"_filename\": \"Abu Dhabi GP\\uff1a The Notebook [6216184661001].mp4\", \"filename\": \"Abu Dhabi GP\\uff1a The Notebook [6216184661001].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://news.sky.com/video/russian-plane-11712962",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6216184661001\", \"thumbnails\": null, \"duration\": 60.0, \"formats\": [{\"tbr\": 1000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://sky-pd.test/6216184661001.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk6058004203001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-1000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"Russian plane inspected\", \"description\": \"BC desc\", \"timestamp\": 1606816800, \"uploader_id\": \"6058004203001\", \"original_url\": \"https://news.sky.com/video/russian-plane-11712962\", \"webpage_url\": \"https://news.sky.com/video/russian-plane-11712962\", \"webpage_url_basename\": \"russian-plane-11712962\", \"webpage_url_domain\": \"news.sky.com\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"6216184661001\", \"fulltitle\": \"Russian plane inspected\", \"duration_string\": \"1:00\", \"upload_date\": \"20201201\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 1000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://sky-pd.test/6216184661001.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk6058004203001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-1000k-720p - 1280x720\", \"_filename\": \"Russian plane inspected [6216184661001].mp4\", \"filename\": \"Russian plane inspected [6216184661001].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [sky:news] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://news.sky.com/story/car-crash-12345678",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"12345678\", \"title\": \"Car crash\", \"description\": \"Story desc\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url_transparent\", \"id\": \"6216184661001\", \"url\": \"http://players.brightcove.net/6058004203001/RC9PQUaJ6_default/index.html?videoId=6216184661001\", \"ie_key\": \"BrightcoveNew\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url_transparent\", \"id\": \"62\", \"url\": \"http://players.brightcove.net/6058004172001/pl_default/index.html?videoId=62\", \"ie_key\": \"BrightcoveNew\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://news.sky.com/story/car-crash-12345678\", \"original_url\": \"https://news.sky.com/story/car-crash-12345678\", \"webpage_url_basename\": \"car-crash-12345678\", \"webpage_url_domain\": \"news.sky.com\", \"extractor\": \"sky:news:story\", \"extractor_key\": \"SkyNewsStory\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.skysports.com/golf/news/12176/10871916/dustin",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"10871916\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.skysports.com/golf/news/12176/10871916/dustin\", \"original_url\": \"https://www.skysports.com/golf/news/12176/10871916/dustin\", \"webpage_url_basename\": \"dustin\", \"webpage_url_domain\": \"skysports.com\", \"extractor\": \"sky:sports:news\", \"extractor_key\": \"SkySportsNews\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [sky:sports:news] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [sky:sports:news] unable to extract og:description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.skysports.com/watch/video/sports/1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: cannot access local variable 'video_id' where it is not associated with a value"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.skysports.com/watch/video/sports/2",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [sky:sports] 2: Unable to extract sdc element; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

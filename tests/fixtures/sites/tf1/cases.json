@@ -1,0 +1,56 @@
+[
+ {
+  "url": "https://www.tf1.fr/tmc/burger-quiz/videos/burger-quiz-s03-ep21.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.tf1.fr/tmc/burger-quiz/videos/burger-quiz-s03-ep21.html",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://www.tf1.fr/tmc/quotidien/videos/sans-media.html",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.tf1.fr/tmc/x/videos/pas-de-stream.html",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://www.wat.tv/video/soupe-figues-6z1uz_2hvf7_.html",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "wat:1000001",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "wat:1000002",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "wat:1000003",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "wat:1000004",
+  "args": [
+   "-j"
+  ]
+ }
+]

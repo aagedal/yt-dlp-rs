@@ -1,0 +1,45 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://live.aliexpress.com/live/2800002704436634",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2800002704436634\", \"title\": \"Live sale\", \"thumbnail\": \"https://ali-img.test/c.jpg\", \"uploader\": \"Store\", \"timestamp\": 1543406410.123, \"formats\": [{\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://ali-live.test/2800/720.m3u8\", \"manifest_url\": \"https://ali-live.test/2800/master.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 720, \"height\": 1280, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 720x1280\"}], \"webpage_url\": \"https://live.aliexpress.com/live/2800002704436634\", \"original_url\": \"https://live.aliexpress.com/live/2800002704436634\", \"webpage_url_basename\": \"2800002704436634\", \"webpage_url_domain\": \"live.aliexpress.com\", \"extractor\": \"AliExpressLive\", \"extractor_key\": \"AliExpressLive\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://ali-img.test/c.jpg\", \"id\": \"0\"}], \"display_id\": \"2800002704436634\", \"fulltitle\": \"Live sale\", \"upload_date\": \"20181128\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1500\", \"url\": \"https://ali-live.test/2800/720.m3u8\", \"manifest_url\": \"https://ali-live.test/2800/master.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 720, \"height\": 1280, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 720x1280\", \"_filename\": \"Live sale [2800002704436634].mp4\", \"filename\": \"Live sale [2800002704436634].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://ali-live.test/2800/720.m3u8\", \"manifest_url\": \"https://ali-live.test/2800/master.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 720, \"height\": 1280, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 720x1280\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://live.aliexpress.com/live/2",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 2: An extractor error has occurred. (caused by KeyError('replyStreamUrl')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://live.aliexpress.com/live/3",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [AliExpressLive] 3: Unable to extract runParams; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

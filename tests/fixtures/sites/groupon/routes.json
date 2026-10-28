@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://www.groupon.com/deals/bikram-yoga",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Bikram Yoga\"><meta property=\"og:description\" content=\"Deal\"></head><script>window.payload = {\"carousel\": {\"dealVideos\": [{\"provider\": \"YouTube\", \"media\": \"fk6OhWpXgIQ\"}, {\"provider\": \"\", \"media\": \"x\"}, {\"provider\": \"youtube\"}, {\"provider\": \"youtube\", \"id\": \"AHuQWcylaU4\"}]}};\nvar z;</script></html>"
+  },
+  {
+   "url": "https://www.groupon.com/deals/no-videos",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>var payload = {\"carousel\": {}};\n</script></html>"
+  },
+  {
+   "url": "https://www.groupon.com/deals/no-carousel",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>var payload = {\"x\": 1};\n</script></html>"
+  }
+ ]
+}

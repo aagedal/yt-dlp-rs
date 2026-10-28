@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "http://www.t13.cl/videos/actualidad/el-circulo",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"description\" content=\"Bachelet\"></head><script>jwplayer('player-vivo').setup({\n  file: 'x', title: \"El circulo de hierro\", image: \"https://t13.test/i.jpg\",\n  sources: [{file: 'https://t13.test/v/hd.mp4', label: 'HD'}, {file: 'https://t13.test/v/m.mp4', label: 'M\\u00f3vil'}, {file: 'https://t13.test/v/hd.mp4', label: 'dup'}, {file: '', label: 'x'}, {file: 'https://t13.test/v/master.m3u8'}, {file: 'https://t13.test/v/o.mp4', label: 'Otro'}]\n})</script></html>"
+  },
+  {
+   "url": "https://t13.test/v/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "http://www.t13.cl/videos/x/no-title",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>jwplayer('player-vivo').setup({ sources: [{file: 'https://t13.test/v/a.mp4'}] })</script>"
+  },
+  {
+   "url": "http://www.t13.cl/videos/x/nada",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<p>none</p>"
+  }
+ ]
+}

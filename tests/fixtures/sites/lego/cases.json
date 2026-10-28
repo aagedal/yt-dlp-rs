@@ -1,0 +1,30 @@
+[
+ {
+  "url": "http://www.lego.com/en-us/videos/themes/club/blocumentary-kawaguchi-55492d823b1b4d5e985787fa8c2973b1",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.lego.com/en-us/videos/themes/club/blocumentary-kawaguchi-55492d823b1b4d5e985787fa8c2973b1",
+  "args": [
+   "--no-geo-bypass",
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://www.lego.com/de-de/videos/x-13bdc2140b534b39a48e2afb8d94e3d6",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "http://www.lego.com/en-us/videos/themes/club/blocumentary-kawaguchi-55492d823b1b4d5e985787fa8c2973b1",
+  "args": [
+   "--print",
+   "%(id)s|%(formats.:.format_id)s|%(http_headers.X-Forwarded-For)s"
+  ]
+ }
+]

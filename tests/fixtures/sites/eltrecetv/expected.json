@@ -1,0 +1,66 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.eltrecetv.com.ar/ahora-caigo/capitulos/temporada-2023/programa-del-061023/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"abc123\", \"title\": \"Programa\", \"thumbnail\": \"https://img.eltrece.test/t.jpg\", \"formats\": [{\"url\": \"https://vod.eltrece.test/v/programa.mp4\", \"format_id\": \"http-800\", \"width\": 640, \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-800 - 640x360\"}, {\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://vod.eltrece.test/v/programa.mp4/tracks-v1a1/index.m3u8\", \"manifest_url\": \"https://vod.eltrece.test/v/abc123.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360\"}, {\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://vod.eltrece.test/v/other/index.m3u8\", \"manifest_url\": \"https://vod.eltrece.test/v/abc123.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\"}, {\"format_id\": \"hls-4000\", \"format_index\": null, \"url\": \"https://vod.eltrece.test/v/programa_1080.mp4/tracks-v1a1/index.m3u8\", \"manifest_url\": \"https://vod.eltrece.test/v/abc123.m3u8\", \"tbr\": 4000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-4000 - 1920x1080\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.eltrecetv.com.ar/ahora-caigo/capitulos/temporada-2023/programa-del-061023/\", \"original_url\": \"https://www.eltrecetv.com.ar/ahora-caigo/capitulos/temporada-2023/programa-del-061023/\", \"webpage_url_basename\": \"programa-del-061023\", \"webpage_url_domain\": \"eltrecetv.com.ar\", \"extractor\": \"ElTreceTV\", \"extractor_key\": \"ElTreceTV\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.eltrece.test/t.jpg\", \"id\": \"0\"}], \"display_id\": \"abc123\", \"fulltitle\": \"Programa\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-4000\", \"url\": \"https://vod.eltrece.test/v/programa_1080.mp4/tracks-v1a1/index.m3u8\", \"manifest_url\": \"https://vod.eltrece.test/v/abc123.m3u8\", \"tbr\": 4000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-4000 - 1920x1080\", \"_filename\": \"Programa [abc123].mp4\", \"filename\": \"Programa [abc123].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-4000\", \"format_index\": null, \"url\": \"https://vod.eltrece.test/v/programa_1080.mp4/tracks-v1a1/index.m3u8\", \"manifest_url\": \"https://vod.eltrece.test/v/abc123.m3u8\", \"tbr\": 4000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-4000 - 1920x1080\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.eltrecetv.com.ar/ahora-caigo/capitulos/temporada-2023/programa-del-061023/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ElTreceTV] Extracting URL: https://www.eltrecetv.com.ar/ahora-caigo/capitulos/temporada-2023/programa-del-061023/",
+    "[ElTreceTV] programa-del-061023: Downloading webpage",
+    "[ElTreceTV] abc123: Downloading m3u8 information",
+    "[info] Available formats for abc123:",
+    "ID       EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "-------------------------------------------------------------",
+    "http-800 mp4 640x360    |       https | unknown     unknown",
+    "hls-800  mp4 640x360    |  800k m3u8  | avc1.4d401e mp4a.40.2",
+    "hls-1500 mp4 1280x720   | 1500k m3u8  | avc1.4d401f mp4a.40.2",
+    "hls-4000 mp4 1920x1080  | 4000k m3u8  | avc1.640028 mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.eltrecetv.com.ar/x/capitulos/temporada-1/sin-video",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: sin-video: An extractor error has occurred. (caused by KeyError('m3u8')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.eltrecetv.com.ar/x/capitulos/temporada-1/nada",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [ElTreceTV] nada: Unable to extract content; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

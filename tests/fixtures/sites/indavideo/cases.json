@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://embed.indavideo.hu/player/video/1bdc3c6d80/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://assets.indavideo.hu/swf/player.swf?v=fe25e500&vID=abc&autostart=1",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://embed.indavideo.hu/player/video/dead",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://index.indavideo.test/video/Cicatanc",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(timestamp)s|%(formats.:.format_id)s|%(webpage_url)s"
+  ]
+ }
+]

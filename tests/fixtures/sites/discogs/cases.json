@@ -1,0 +1,29 @@
+[
+ {
+  "url": "https://www.discogs.com/release/1-The-Persuader-Stockholm",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.discogs.com/release/1-The-Persuader-Stockholm",
+  "args": [
+   "--flat-playlist",
+   "--print",
+   "%(id)s|%(title)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://www.discogs.com/master/113-Vince-Watson",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.discogs.com/release/9",
+  "args": [
+   "-J"
+  ]
+ }
+]

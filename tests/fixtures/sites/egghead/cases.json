@@ -1,0 +1,35 @@
+[
+ {
+  "url": "https://egghead.io/lessons/javascript-linear-data-flow",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://egghead.io/courses/frisby",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://app.egghead.io/playlists/nometa",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://egghead.io/api/v1/lessons/broken",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://egghead.io/courses/frisby",
+  "args": [
+   "--flat-playlist",
+   "--print",
+   "%(id)s|%(title)s|%(playlist_index)s"
+  ]
+ }
+]

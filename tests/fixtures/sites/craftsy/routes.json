@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://www.craftsy.com/class/full/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Midnight Quilt\"><meta name=\"description\" content=\"Quilts\"></head><body><div class=\"class-video-player\" wire:snapshot=\"{&quot;data&quot;: {&quot;userHasAccess&quot;: true, &quot;accountId&quot;: &quot;6253214573001&quot;, &quot;lessons&quot;: [{&quot;chapter&quot;: [{&quot;video_id&quot;: &quot;631&quot;, &quot;title&quot;: &quot;Lesson 1&quot;}, {&quot;video_id&quot;: &quot;&quot;, &quot;title&quot;: &quot;x&quot;}]}, [[{&quot;video_id&quot;: 632}]], [{&quot;video_id&quot;: &quot;flat&quot;}]]}}\"></div></body></html>"
+  },
+  {
+   "url": "https://www.craftsy.com/class/preview/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><div class=\"class-video-player\" wire:snapshot=\"{&quot;data&quot;: {&quot;userHasAccess&quot;: false, &quot;lessons&quot;: []}}\"><video-js data-video-id=\"999\" data-account=\"111\"></video-js></div></body></html>"
+  },
+  {
+   "url": "https://www.craftsy.com/class/locked/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><div class=\"class-video-player\" wire:snapshot=\"{&quot;data&quot;: {&quot;userHasAccess&quot;: false, &quot;lessons&quot;: []}}\"></div></body></html>"
+  }
+ ]
+}

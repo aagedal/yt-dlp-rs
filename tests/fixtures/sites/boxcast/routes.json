@@ -1,0 +1,47 @@
+{
+ "routes": [
+  {
+   "url": "https://boxcast.tv/view-embed/vigil-ys0ryhjsjgw2abbgdhx3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property='og:description' content='OG desc'></head><script>var BOXCAST_PRELOAD = {\"broadcast\": {\"data\": {\"id\": \"ys0ryhjsjgw2abbgdhx3\", \"name\": \"Vigil\", \"description\": \"\", \"preview\": \"https://boxcast.test/p.jpg\", \"streamed_at\": \"2023-10-20T23:00:00Z\", \"account_name\": \"Church\", \"account_id\": \"acc1\"}}, \"view\": {\"data\": {\"status\": \"recorded\", \"playlist\": \"https://boxcast.test/master.m3u8\"}}};</script></html>"
+  },
+  {
+   "url": "https://boxcast.test/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://boxcast.tv/channel/z03?b=live1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property='og:title' content='Live OG'></head></html>"
+  },
+  {
+   "url": "https://api.boxcast.com/broadcasts/live1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 42, \"account_name\": \"Acc\"}"
+  },
+  {
+   "url": "https://api.boxcast.com/broadcasts/live1/view",
+   "status": 403,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://boxcast-host.test/page",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Page</title></head><body><iframe src=\"https://boxcast.tv/view-embed/vigil-ys0ryhjsjgw2abbgdhx3\"></iframe></body></html>"
+  }
+ ]
+}

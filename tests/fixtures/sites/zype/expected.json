@@ -1,0 +1,84 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://player.zype.com/embed/5b400b834b32992a310622b9.js?api_key=K1&autoplay=false",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5b400b834b32992a310622b9\", \"display_id\": \"smoky-barbecue\", \"title\": \"Smoky Barbecue Favorites\", \"thumbnails\": [{\"url\": \"https://zype.test/t1.jpg\", \"width\": 1280, \"height\": 720, \"id\": \"0\", \"resolution\": \"1280x720\"}], \"description\": \"OTT desc\", \"timestamp\": 1530921600, \"duration\": 1366, \"view_count\": 5, \"average_rating\": 4, \"season_number\": 1, \"episode_number\": 2, \"formats\": [{\"format_id\": \"m4a\", \"tbr\": 128, \"url\": \"https://zype-pd.test/a.m4a\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 21856000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"m4a - audio only\"}, {\"format_id\": \"mp4\", \"tbr\": 800, \"url\": \"https://zype-pd.test/a.mp4\", \"height\": 360, \"width\": 640, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 136600000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - 640x360\"}], \"subtitles\": {\"English\": [{\"url\": \"https://zype.test/en.vtt\", \"ext\": \"vtt\"}, {\"url\": \"https://zype.test/x.vtt\", \"ext\": \"vtt\"}]}, \"webpage_url\": \"https://player.zype.com/embed/5b400b834b32992a310622b9.js?api_key=K1&autoplay=false\", \"original_url\": \"https://player.zype.com/embed/5b400b834b32992a310622b9.js?api_key=K1&autoplay=false\", \"webpage_url_basename\": \"5b400b834b32992a310622b9.js\", \"webpage_url_domain\": \"player.zype.com\", \"extractor\": \"Zype\", \"extractor_key\": \"Zype\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://zype.test/t1.jpg\", \"fulltitle\": \"Smoky Barbecue Favorites\", \"duration_string\": \"22:46\", \"upload_date\": \"20180707\", \"release_year\": null, \"season\": \"Season 1\", \"episode\": \"Episode 2\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"mp4\", \"tbr\": 800, \"url\": \"https://zype-pd.test/a.mp4\", \"height\": 360, \"width\": 640, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 136600000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - 640x360\", \"_filename\": \"Smoky Barbecue Favorites [5b400b834b32992a310622b9].mp4\", \"filename\": \"Smoky Barbecue Favorites [5b400b834b32992a310622b9].mp4\", \"__write_download_archive\": false}], \"format_id\": \"mp4\", \"tbr\": 800, \"url\": \"https://zype-pd.test/a.mp4\", \"height\": 360, \"width\": 640, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 136600000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.zype.com/embed/5b400b834b32992a310622b9.js?api_key=K1&autoplay=false",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Zype] Extracting URL: https://player.zype.com/embed/5b400b834b32992a310622b9.js?api_key=K1&autoplay=false",
+    "[Zype] 5b400b834b32992a310622b9: Downloading JSON metadata",
+    "[info] Available subtitles for 5b400b834b32992a310622b9:",
+    "Language Formats",
+    "English  vtt, vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.zype.com/embed/5b400b834b32992a310622ba.html?api_key=K2",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5b400b834b32992a310622ba\", \"display_id\": \"5b400b834b32992a310622ba\", \"title\": \"HLS\", \"thumbnails\": [], \"description\": null, \"timestamp\": null, \"view_count\": null, \"average_rating\": null, \"season_number\": null, \"episode_number\": null, \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://zype-hls.test/b/360/index.m3u8\", \"manifest_url\": \"https://zype-hls.test/b/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"subtitles\": {}, \"webpage_url\": \"https://player.zype.com/embed/5b400b834b32992a310622ba.html?api_key=K2\", \"original_url\": \"https://player.zype.com/embed/5b400b834b32992a310622ba.html?api_key=K2\", \"webpage_url_basename\": \"5b400b834b32992a310622ba.html\", \"webpage_url_domain\": \"player.zype.com\", \"extractor\": \"Zype\", \"extractor_key\": \"Zype\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"HLS\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://zype-hls.test/b/360/index.m3u8\", \"manifest_url\": \"https://zype-hls.test/b/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"HLS [5b400b834b32992a310622ba].mp4\", \"filename\": \"HLS [5b400b834b32992a310622ba].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.zype.com/embed/5b400b834b32992a310622bb.js?player_key=K3",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5b400b834b32992a310622bb\", \"display_id\": \"5b400b834b32992a310622bb\", \"title\": \"Script\", \"thumbnails\": [], \"description\": null, \"timestamp\": null, \"view_count\": null, \"average_rating\": null, \"season_number\": null, \"episode_number\": null, \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://content.uplynk.com/360/index.m3u8\", \"manifest_url\": \"https://content.uplynk.com/abc123.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"subtitles\": {\"Spanish\": [{\"url\": \"https://zype.test/es.vtt\", \"ext\": \"vtt\"}]}, \"webpage_url\": \"https://player.zype.com/embed/5b400b834b32992a310622bb.js?player_key=K3\", \"original_url\": \"https://player.zype.com/embed/5b400b834b32992a310622bb.js?player_key=K3\", \"webpage_url_basename\": \"5b400b834b32992a310622bb.js\", \"webpage_url_domain\": \"player.zype.com\", \"extractor\": \"Zype\", \"extractor_key\": \"Zype\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Script\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://content.uplynk.com/360/index.m3u8\", \"manifest_url\": \"https://content.uplynk.com/abc123.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"Script [5b400b834b32992a310622bb].mp4\", \"filename\": \"Script [5b400b834b32992a310622bb].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.zype.com/embed/5b400b834b32992a310622bc.js?api_key=K4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Zype] 5b400b834b32992a310622bc: Video is not available in your region"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.cookscountry.test/episode/1",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "5b400b834b32992a310622b9|Smoky Barbecue Favorites|https://player.zype.com/embed/5b400b834b32992a310622b9.js?api_key=K1&autoplay=false"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "http://vod.melon.com/video/playerInfo.json?mvId=50158734",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"mvInfo\": {\"MVTITLE\": \"Jessica 'Wonderland' MV Making Film\"}, \"artistList\": [{\"ARTISTNAMEWEBLIST\": \"Jessica\"}, {\"ARTISTNAMEWEBLIST\": \"\"}, {\"ARTISTNAMEWEBLIST\": \"Krystal\"}]}"
+  },
+  {
+   "url": "http://vod.melon.com/delivery/streamingInfo.json?contsId=50158734&contsType=VIDEO",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"staticDomain\": \"http://cdnimg.melon.test\", \"streamingInfo\": {\"encUrl\": \"https://melon-hls.test/50158734/master.m3u8\", \"imgPath\": \"/mv/images/1.jpg\", \"playTime\": \"176\", \"mvSvcOpenDt\": \"201605241200\"}}"
+  },
+  {
+   "url": "https://melon-hls.test/50158734/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "http://vod.melon.com/video/playerInfo.json?mvId=2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"mvInfo\": {}}"
+  }
+ ]
+}

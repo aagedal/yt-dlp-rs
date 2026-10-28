@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://www.canalalpha.ch/play/le-journal/episode/24520/jeudi",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>window.__SERVER_STATE__ = {\"1\": {\"data\": {\"data\": {\"title\": \" Le Journal \", \"longDesc\": \"\", \"shortDesc\": \"<p>R\\u00e9sum\\u00e9</p>\", \"poster\": \"https://ca.test/p.jpg\", \"webPublishAt\": \"2021-10-28T18:30:00Z\", \"video\": {\"duration\": 1125, \"mp4\": [{\"$url\": \"https://ca.test/v720.mp4\", \"res\": {\"width\": 1280, \"height\": 720}}, {\"$url\": \"\"}], \"manifests\": {\"hls\": \"https://ca.test/master.m3u8\", \"dash\": \"https://ca.test/manifest.mpd\"}}}}}};</script>"
+  },
+  {
+   "url": "https://ca.test/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://ca.test/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://www.canalalpha.ch/play/x/y/2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>window.__SERVER_STATE__ = {\"1\": {}};</script>"
+  },
+  {
+   "url": "https://www.canalalpha.ch/play/x/y/3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<p>none</p>"
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+[
+ {
+  "url": "https://web.arbeitsagentur.de/berufetv/studienberufe/wirtschaft/film;filmId=DvKC3DUpMKvUZ_6fEnfg3u",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://web.arbeitsagentur.de/berufetv/studienberufe/wirtschaft/film;filmId=other2",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://web.arbeitsagentur.de/berufetv/studienberufe/wirtschaft/film;filmId=broken",
+  "args": [
+   "-J"
+  ]
+ }
+]

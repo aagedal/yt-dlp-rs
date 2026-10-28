@@ -1,0 +1,31 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://vod.melon.com/video/detail2.htm?mvId=50158734",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"50158734\", \"title\": \"Jessica 'Wonderland' MV Making Film\", \"artist\": \"Jessica, Krystal\", \"thumbnail\": \"http://cdnimg.melon.test/mv/images/1.jpg\", \"upload_date\": \"20160524\", \"duration\": 176, \"formats\": [{\"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://melon-hls.test/50158734/720.m3u8\", \"manifest_url\": \"https://melon-hls.test/50158734/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\"}], \"webpage_url\": \"http://vod.melon.com/video/detail2.htm?mvId=50158734\", \"original_url\": \"http://vod.melon.com/video/detail2.htm?mvId=50158734\", \"webpage_url_basename\": \"detail2.htm\", \"webpage_url_domain\": \"vod.melon.com\", \"extractor\": \"MelonVOD\", \"extractor_key\": \"MelonVOD\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://cdnimg.melon.test/mv/images/1.jpg\", \"id\": \"0\"}], \"display_id\": \"50158734\", \"fulltitle\": \"Jessica 'Wonderland' MV Making Film\", \"duration_string\": \"2:56\", \"release_year\": null, \"artists\": [\"Jessica\", \"Krystal\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1000\", \"url\": \"https://melon-hls.test/50158734/720.m3u8\", \"manifest_url\": \"https://melon-hls.test/50158734/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\", \"_filename\": \"Jessica 'Wonderland' MV Making Film [50158734].mp4\", \"filename\": \"Jessica 'Wonderland' MV Making Film [50158734].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://melon-hls.test/50158734/720.m3u8\", \"manifest_url\": \"https://melon-hls.test/50158734/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://vod.melon.com/video/detail2.html?menuId=1&mvId=2",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 2: An extractor error has occurred. (caused by KeyError('MVTITLE')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

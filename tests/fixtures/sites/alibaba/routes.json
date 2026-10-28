@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://www.alibaba.com/product-detail/Item-0_100.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>window.detailData = {\"globalData\": {\"product\": {\"mediaItems\": [{\"type\": \"image\", \"videoId\": 1}, {\"type\": \"video\", \"videoId\": 0}, {\"type\": \"video\", \"videoId\": 6000280444270, \"duration\": \"30\", \"videoCoverUrl\": \"https://sc04.alicdn.test/c.jpg\", \"videoUrl\": {\"hd\": {\"videoUrl\": \"https://cloud.video.test/hd.mp4\", \"definition\": \"hd\", \"bitrate\": 1200, \"width\": 1280, \"height\": 720, \"length\": 999}, \"sd\": {\"videoUrl\": \"not a url\", \"definition\": \"sd\"}, \"ld\": {\"videoUrl\": \"https://cloud.video.test/ld.mp4\", \"definition\": null, \"bitrate\": \"300.5\"}}}]}}};\nwindow.other = 1;</script></html>"
+  },
+  {
+   "url": "https://www.alibaba.com/product-detail/Item-1_101.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>window.detailData = {\"globalData\": {\"product\": {\"mediaItems\": [{\"type\": \"video\", \"videoId\": \"777\", \"videoUrl\": [{\"videoUrl\": \"https://cloud.video.test/s.mp4\"}]}]}}};\nwindow.other = 1;</script></html>"
+  },
+  {
+   "url": "https://www.alibaba.com/product-detail/Item-2_102.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>window.detailData = {\"globalData\": {\"product\": {\"mediaItems\": []}}};\nwindow.other = 1;</script></html>"
+  },
+  {
+   "url": "https://www.alibaba.com/product-detail/Item-3_103.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>window.detailData = {\"globalData\": {}};\nwindow.other = 1;</script></html>"
+  },
+  {
+   "url": "https://www.alibaba.com/product-detail/Item-9_109.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>none</html>"
+  }
+ ]
+}

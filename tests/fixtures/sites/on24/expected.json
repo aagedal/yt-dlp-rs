@@ -1,0 +1,46 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://event.on24.com/eventRegistration/console/EventConsoleApollo.jsp?uimode=nextgeneration&eventid=2197467&sessionid=1&key=5DF57BE53237F36A43B478DD36277A84&contenttype=A",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2197467\", \"title\": \"Pitch Webinar\", \"timestamp\": 1576051200, \"webpage_url\": \"https://event.on24.com/wcc/r/2197467/5DF57BE53237F36A43B478DD36277A84\", \"view_count\": 169, \"formats\": [{\"format_id\": \"audio-0\", \"url\": \"https://cdn.on24.test/a.wav\", \"language\": \"en\", \"ext\": \"wav\", \"vcodec\": \"none\", \"acodec\": \"wav\", \"protocol\": \"https\", \"audio_ext\": \"wav\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"audio-0 - audio only\"}, {\"format_id\": \"audio-1\", \"url\": \"https://event.on24.com/media/news/corporatevideo/events/None\", \"language\": \"en\", \"ext\": \"wav\", \"vcodec\": \"none\", \"acodec\": \"wav\", \"protocol\": \"https\", \"audio_ext\": \"wav\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"audio-1 - audio only\"}, {\"format_id\": \"video\", \"url\": \"https://event.on24.com/media/news/corporatevideo/events/fhvideo1_x.mp4\", \"language\": \"en\", \"ext\": \"mp4\", \"vcodec\": \"avc1.640020\", \"acodec\": \"mp4a.40.2\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video - unknown\"}], \"original_url\": \"https://event.on24.com/eventRegistration/console/EventConsoleApollo.jsp?uimode=nextgeneration&eventid=2197467&sessionid=1&key=5DF57BE53237F36A43B478DD36277A84&contenttype=A\", \"webpage_url_basename\": \"5DF57BE53237F36A43B478DD36277A84\", \"webpage_url_domain\": \"event.on24.com\", \"extractor\": \"on24\", \"extractor_key\": \"On24\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2197467\", \"fulltitle\": \"Pitch Webinar\", \"upload_date\": \"20191211\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"video\", \"url\": \"https://event.on24.com/media/news/corporatevideo/events/fhvideo1_x.mp4\", \"language\": \"en\", \"ext\": \"mp4\", \"vcodec\": \"avc1.640020\", \"acodec\": \"mp4a.40.2\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video - unknown\", \"_filename\": \"Pitch Webinar [2197467].mp4\", \"filename\": \"Pitch Webinar [2197467].mp4\", \"__write_download_archive\": false}], \"format_id\": \"video\", \"url\": \"https://event.on24.com/media/news/corporatevideo/events/fhvideo1_x.mp4\", \"language\": \"en\", \"ext\": \"mp4\", \"vcodec\": \"avc1.640020\", \"acodec\": \"mp4a.40.2\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://event.on24.com/wcc/r/2197467/5DF57BE53237F36A43B478DD36277A84?mode=login",
+   "args": [
+    "-j",
+    "-f",
+    "video"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2197467\", \"title\": \"Pitch Webinar\", \"timestamp\": 1576051200, \"webpage_url\": \"https://event.on24.com/wcc/r/2197467/5DF57BE53237F36A43B478DD36277A84\", \"view_count\": 169, \"formats\": [{\"format_id\": \"audio-0\", \"url\": \"https://cdn.on24.test/a.wav\", \"language\": \"en\", \"ext\": \"wav\", \"vcodec\": \"none\", \"acodec\": \"wav\", \"protocol\": \"https\", \"audio_ext\": \"wav\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"audio-0 - audio only\"}, {\"format_id\": \"audio-1\", \"url\": \"https://event.on24.com/media/news/corporatevideo/events/None\", \"language\": \"en\", \"ext\": \"wav\", \"vcodec\": \"none\", \"acodec\": \"wav\", \"protocol\": \"https\", \"audio_ext\": \"wav\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"audio-1 - audio only\"}, {\"format_id\": \"video\", \"url\": \"https://event.on24.com/media/news/corporatevideo/events/fhvideo1_x.mp4\", \"language\": \"en\", \"ext\": \"mp4\", \"vcodec\": \"avc1.640020\", \"acodec\": \"mp4a.40.2\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video - unknown\"}], \"original_url\": \"https://event.on24.com/wcc/r/2197467/5DF57BE53237F36A43B478DD36277A84?mode=login\", \"webpage_url_basename\": \"5DF57BE53237F36A43B478DD36277A84\", \"webpage_url_domain\": \"event.on24.com\", \"extractor\": \"on24\", \"extractor_key\": \"On24\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2197467\", \"fulltitle\": \"Pitch Webinar\", \"upload_date\": \"20191211\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"video\", \"url\": \"https://event.on24.com/media/news/corporatevideo/events/fhvideo1_x.mp4\", \"language\": \"en\", \"ext\": \"mp4\", \"vcodec\": \"avc1.640020\", \"acodec\": \"mp4a.40.2\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"video - unknown\", \"_filename\": \"Pitch Webinar [2197467].mp4\", \"filename\": \"Pitch Webinar [2197467].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://event.on24.com/eventRegistration/EventLobbyServlet?target=reg20.jsp&eventid=3543176&key=5DF57BE53237F36A43B478DD36277A84",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [on24] None: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

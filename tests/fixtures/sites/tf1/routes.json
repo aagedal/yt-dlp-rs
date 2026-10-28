@@ -1,0 +1,95 @@
+{
+ "routes": [
+  {
+   "url": "https://www.tf1.fr/graphql/web?id=9b80783950b85247541dd1d851f9cc7fa36574af015621f853ab111a679ce26f&variables=%7B%22programSlug%22%3A+%22burger-quiz%22%2C+%22slug%22%3A+%22burger-quiz-s03-ep21%22%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"videoBySlug\": {\"streamId\": \"14010600\", \"title\": \"Burger Quiz - S03 EP21\", \"date\": \"2023-08-19T18:24:31Z\", \"season\": 3, \"episode\": \"21\", \"publicPlayingInfos\": {\"duration\": 2312}, \"tags\": [{\"label\": \"humour\"}, {\"label\": \"\"}, {\"x\": 1}, {\"label\": \"jeu\"}], \"decoration\": {\"description\": \"Manu Payet recevra...\", \"programLabel\": \"Burger Quiz\", \"image\": {\"sources\": [{\"url\": \"https://photos.tf1.fr/1280/720/bq.jpg\", \"width\": \"1280\"}, {\"url\": \"\"}, {\"url\": \"https://photos.tf1.fr/640/360/bq.jpg\"}]}}}}}"
+  },
+  {
+   "url": "https://mediainfo.tf1.fr/mediainfocombo/14010600?pver=5010000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"media\": {\"title\": \"Burger Quiz WAT\", \"preview\": \"https://photos.tf1.fr/preview.jpg\", \"duration\": \"2312\"}, \"mediametrie\": {\"chapters\": [{\"estatS4\": \"2023-08-19\"}]}, \"delivery\": {\"format\": \"hls\", \"url\": \"https://tf1-hls.test/14010600/master.m3u8\"}}"
+  },
+  {
+   "url": "https://tf1-hls.test/14010600/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.tf1.fr/graphql/web?id=9b80783950b85247541dd1d851f9cc7fa36574af015621f853ab111a679ce26f&variables=%7B%22programSlug%22%3A+%22quotidien%22%2C+%22slug%22%3A+%22sans-media%22%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"videoBySlug\": {\"streamId\": \"13641379\", \"title\": null}}}"
+  },
+  {
+   "url": "https://mediainfo.tf1.fr/mediainfocombo/13641379?pver=5010000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"media\": {\"title\": \"Quotidien\"}, \"delivery\": {\"format\": \"mpd\", \"url\": \"\"}}"
+  },
+  {
+   "url": "http://www.wat.tv/get/webhtml/13641379",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"dash\": \"https://das-q1.tf1.fr/13641379/manifest.mpd\", \"hls\": null, \"other\": \"x\"}"
+  },
+  {
+   "url": "https://das-q1-ssl.tf1.fr/13641379/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body": "<?xml version=\"1.0\"?><MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" type=\"static\" mediaPresentationDuration=\"PT60S\" minBufferTime=\"PT2S\" profiles=\"urn:mpeg:dash:profile:isoff-on-demand:2011\"><Period><AdaptationSet mimeType=\"video/mp4\"><Representation id=\"v1\" bandwidth=\"800000\" width=\"640\" height=\"360\" codecs=\"avc1.4d401e\"><BaseURL>v1.mp4</BaseURL><SegmentBase indexRange=\"0-100\"/></Representation></AdaptationSet></Period></MPD>"
+  },
+  {
+   "url": "https://www.tf1.fr/graphql/web?id=9b80783950b85247541dd1d851f9cc7fa36574af015621f853ab111a679ce26f&variables=%7B%22programSlug%22%3A+%22x%22%2C+%22slug%22%3A+%22pas-de-stream%22%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"videoBySlug\": {\"title\": \"x\"}}}"
+  },
+  {
+   "url": "https://mediainfo.tf1.fr/mediainfocombo/11713067?pver=5010000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"media\": {\"error_desc\": \"Video unavailable in your area\", \"error_code\": \"GEOBLOCKED\", \"geoList\": [\"FR\", \"BE\"]}}"
+  },
+  {
+   "url": "https://mediainfo.tf1.fr/mediainfocombo/1000001?pver=5010000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"media\": {\"error_desc\": \"Delivery failed\", \"error_code\": \"DELIVERY_ERROR\"}, \"delivery\": {\"code\": 404, \"error\": \"not found\"}}"
+  },
+  {
+   "url": "https://mediainfo.tf1.fr/mediainfocombo/1000002?pver=5010000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"media\": {\"error_desc\": \"Delivery failed\", \"error_code\": \"DELIVERY_ERROR\"}, \"delivery\": {\"code\": 403}}"
+  },
+  {
+   "url": "https://mediainfo.tf1.fr/mediainfocombo/1000003?pver=5010000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"media\": {\"title\": \"DRM\"}, \"delivery\": {\"drm\": true}}"
+  },
+  {
+   "url": "https://mediainfo.tf1.fr/mediainfocombo/1000004?pver=5010000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"media\": {\"title\": \"Rien\"}}"
+  }
+ ]
+}

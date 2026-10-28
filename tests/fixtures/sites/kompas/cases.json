@@ -1,0 +1,34 @@
+[
+ {
+  "url": "https://video.kompas.com/watch/164474/kim-jong-un",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.kompas.com/watch/2/drm-video",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.kompas.com/watch/2/drm-video",
+  "args": [
+   "-J",
+   "--allow-unplayable-formats"
+  ]
+ },
+ {
+  "url": "https://video.kompas.com/watch/3/no-data",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.kompas.com/watch/2/drm-video",
+  "args": [
+   "-J",
+   "--ignore-no-formats-error"
+  ]
+ }
+]

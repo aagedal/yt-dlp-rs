@@ -1,0 +1,26 @@
+[
+ {
+  "url": "https://www.expressen.se/tv/ledare/ledarsnack/ledarsnack-om-arbetslosheten/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.di.se/videoplayer/embed/tv/ditv/borsmorgon/implantica/?embed=true",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.di.test/artikel",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.expressen.se/nyheter/ingen-video/",
+  "args": [
+   "-j"
+  ]
+ }
+]

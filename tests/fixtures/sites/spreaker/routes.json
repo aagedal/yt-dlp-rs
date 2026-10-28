@@ -1,0 +1,110 @@
+{
+ "routes": [
+  {
+   "url": "https://api.spreaker.com/v2/episodes/12534508",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"episode\": {\"episode_id\": 12534508, \"type\": \"RECORDED\", \"title\": \"EP:15 | Music Marketing (Likes) - Part 2\", \"duration\": 1063420, \"show_id\": 2408542, \"author_id\": 9780658, \"image_url\": \"https://d3wo5wojvuv7l.cloudfront.net/t_square_limited_160/images.spreaker.com/original/777ce4f96b71b0e1b7c09a5e625210e3.jpg\", \"image_original_url\": \"https://d3wo5wojvuv7l.cloudfront.net/images.spreaker.com/original/777ce4f96b71b0e1b7c09a5e625210e3.jpg\", \"image_medium_url\": \"not a url\", \"published_at\": \"2017-08-09 03:45:36\", \"download_url\": \"https://api.spreaker.com/download/episode/12534508/swm_ep15.mp3\", \"permalink\": \"swm-ep15-how-to-market-your-music-part-2\", \"description\": \"In this <b>episode</b> we talk.\", \"author\": {\"user_id\": 9780658, \"fullname\": \"SWM\"}, \"show\": {\"show_id\": 2408542, \"title\": \"Success With Music | SWM\"}, \"plays_count\": 1200, \"likes_count\": 7, \"messages_count\": 2}}}"
+  },
+  {
+   "url": "https://api.spreaker.com/v2/episodes/60269615?key=secret",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"episode\": {\"episode_id\": 60269615, \"title\": \"Grunge Music Origins\", \"length\": 818830, \"duration\": 0, \"author_id\": \"17733249\", \"image_url\": \"https://images.example.test/grunge.jpg\", \"published_at\": \"2024-06-04T02:41:45+00:00\", \"download_url\": \"https://api.spreaker.com/download/episode/60269615/grunge.mp3\", \"permalink\": \"grunge-music-origins-the-raw-sound-that-\", \"stats\": {\"plays\": \"33\", \"likes\": 4, \"messages\": null}, \"author\": {\"fullname\": 7}, \"show\": {\"title\": \"90s Grunge\"}}}}"
+  },
+  {
+   "url": "https://api.spreaker.com/v2/episodes/111",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"episode\": {\"episode_id\": 111, \"title\": \"No download\"}}}"
+  },
+  {
+   "url": "https://api.spreaker.com/v2/episodes/222",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://api.spreaker.com/v2/episodes/333",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {}}"
+  },
+  {
+   "url": "https://api.spreaker.com/download/episode/12534508/swm_ep15.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3fakemp3"
+  },
+  {
+   "url": "https://api.spreaker.com/download/episode/101/one.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3one"
+  },
+  {
+   "url": "https://api.spreaker.com/download/episode/102/two.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3two"
+  },
+  {
+   "url": "https://api.spreaker.com/download/episode/103/three.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3three"
+  },
+  {
+   "url": "https://api.spreaker.com/show/4652058/episodes?page=1&max_per_page=100",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"pager\": {\"page\": 1, \"last_page\": 2, \"results\": [{\"episode_id\": 101, \"title\": \"Show one\", \"download_url\": \"https://api.spreaker.com/download/episode/101/one.mp3\", \"duration\": 60000, \"published_at\": \"2020-01-02 03:04:05\", \"plays_count\": 1, \"author\": {\"fullname\": \"Host\"}, \"show\": {\"title\": \"The Show\"}}, \"junk\", {\"episode_id\": 102, \"title\": \"Show two\", \"download_url\": \"https://api.spreaker.com/download/episode/102/two.mp3\", \"length\": 1500, \"permalink\": \"two\"}]}}}"
+  },
+  {
+   "url": "https://api.spreaker.com/show/4652058/episodes?page=2&max_per_page=100",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"pager\": {\"page\": 2, \"last_page\": 2, \"results\": [{\"episode_id\": \"103\", \"title\": \"Show three\", \"download_url\": \"https://api.spreaker.com/download/episode/103/three.mp3\", \"description\": null}]}}}"
+  },
+  {
+   "url": "https://api.spreaker.com/show/5918323/episodes?page=1&max_per_page=100&key=k",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {}}"
+  },
+  {
+   "url": "https://api.spreaker.com/show/5887186/episodes?page=1&max_per_page=100",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"pager\": {\"page\": 1, \"last_page\": 3, \"results\": [{\"episode_id\": 102, \"title\": \"Show two\", \"download_url\": \"https://api.spreaker.com/download/episode/102/two.mp3\", \"length\": 1500, \"permalink\": \"two\"}]}}}"
+  },
+  {
+   "url": "https://api.spreaker.com/show/5887186/episodes?page=2&max_per_page=100",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"pager\": {\"page\": 2, \"last_page\": 3, \"results\": []}}}"
+  },
+  {
+   "url": "https://api.spreaker.com/show/777/episodes?page=1&max_per_page=100",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"pager\": {\"last_page\": 1, \"results\": [{\"episode_id\": 101, \"title\": \"Show one\", \"download_url\": \"https://api.spreaker.com/download/episode/101/one.mp3\", \"duration\": 60000, \"published_at\": \"2020-01-02 03:04:05\", \"plays_count\": 1, \"author\": {\"fullname\": \"Host\"}, \"show\": {\"title\": \"The Show\"}}, {\"episode_id\": 5, \"download_url\": \"https://x.test/a.mp3\"}]}}}"
+  }
+ ]
+}

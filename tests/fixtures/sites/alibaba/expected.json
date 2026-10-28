@@ -1,0 +1,75 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.alibaba.com/product-detail/Item-0_100.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6000280444270\", \"duration\": 30, \"thumbnail\": \"https://sc04.alicdn.test/c.jpg\", \"formats\": [{\"url\": \"https://cloud.video.test/ld.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}, {\"url\": \"https://cloud.video.test/hd.mp4\", \"format_id\": \"hd\", \"tbr\": 1200, \"width\": 1280, \"height\": 720, \"filesize\": 999, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - 1280x720\"}], \"title\": \"Alibaba video #6000280444270\", \"display_id\": \"100\", \"webpage_url\": \"https://www.alibaba.com/product-detail/Item-0_100.html\", \"original_url\": \"https://www.alibaba.com/product-detail/Item-0_100.html\", \"webpage_url_basename\": \"Item-0_100.html\", \"webpage_url_domain\": \"alibaba.com\", \"extractor\": \"Alibaba\", \"extractor_key\": \"Alibaba\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://sc04.alicdn.test/c.jpg\", \"id\": \"0\"}], \"fulltitle\": null, \"duration_string\": \"30\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cloud.video.test/hd.mp4\", \"format_id\": \"hd\", \"tbr\": 1200, \"width\": 1280, \"height\": 720, \"filesize\": 999, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - 1280x720\", \"_filename\": \"Alibaba video #6000280444270 [6000280444270].mp4\", \"filename\": \"Alibaba video #6000280444270 [6000280444270].mp4\", \"__write_download_archive\": false}], \"url\": \"https://cloud.video.test/hd.mp4\", \"format_id\": \"hd\", \"tbr\": 1200, \"width\": 1280, \"height\": 720, \"filesize\": 999, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.alibaba.com/product-detail/Item-1_101.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Alibaba] Missing \"id\" field in extractor result; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.alibaba.com/product-detail/Item-2_102.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Alibaba] Missing \"id\" field in extractor result; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.alibaba.com/product-detail/Item-3_103.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 103: An extractor error has occurred. (caused by KeyError('product')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.alibaba.com/product-detail/Item-9_109.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Alibaba] 109: Unable to extract detail data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

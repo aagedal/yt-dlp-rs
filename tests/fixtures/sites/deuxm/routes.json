@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://2m.ma/api/watchDetail/6351d439b15e1a613b3debe8",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"News\": {\"titre\": \"Grand Angle\", \"url\": \"https://2m-vod.test/a/video.mp4\", \"description\": \"Desc\", \"image\": \"https://2m-img.test/a.png\"}}}"
+  },
+  {
+   "url": "https://2m.ma/api/watchDetail/nourl",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"News\": {\"titre\": \"x\"}}}"
+  },
+  {
+   "url": "https://2m.ma/api/articlesByUrl?lang=fr&url=/news/Kan-Ya-Mkan-20221028",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"article\": [{\"id\": \"635c5d1233b83834e35b282e\", \"title\": \"Kan Ya Mkan\", \"image\": [\"https://2m-vod.test/b/video.mp4\"], \"content\": \"<p>c</p>\", \"cover\": \"not a url\"}]}}"
+  },
+  {
+   "url": "https://2m.ma/api/articlesByUrl?lang=ar&url=/news/empty",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"article\": []}}"
+  }
+ ]
+}

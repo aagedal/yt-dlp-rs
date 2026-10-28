@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "https://gray-prod-cdn.video-api.arcpublishing.com/api/v1/ansvideos/findByUuid?uuid=508116f7-e999-48db-b7c2-60a04842679b",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"_id\": \"508116f7-e999-48db-b7c2-60a04842679b\", \"headlines\": {\"basic\": \"Scattered showers & storms bring heavy rain potential\"}, \"subheadlines\": {\"basic\": \"Scattered showers & storms bring heavy rain potential\"}, \"promo_image\": {\"url\": \"https://arc-images.test/508116f7.jpg\"}, \"duration\": 201650, \"created_date\": \"2025-07-18T23:28:07Z\", \"status\": \"published\", \"streams\": [{\"stream_type\": \"ts\", \"url\": \"https://arc-hls.test/508116f7/master.m3u8\"}, {\"stream_type\": \"hls\", \"url\": \"https://arc-hls.test/508116f7/video-only.m3u8\"}, {\"stream_type\": \"mp4\", \"url\": \"https://arc-mp4.test/508116f7/file_1280x720_2000.mp4\", \"bitrate\": 2000, \"width\": 1280, \"height\": 720, \"filesize\": 5000000}, {\"stream_type\": \"mp4\", \"url\": \"https://arc-mp4.test/508116f7/file_1280x720_2000.mp4\", \"bitrate\": 3000}, {\"stream_type\": \"mp4\", \"url\": \"\"}, {\"stream_type\": \"gif-mp4\", \"url\": \"https://arc-mp4.test/508116f7/preview.mp4\", \"bitrate\": 0, \"width\": \"480\"}], \"subtitles\": {\"urls\": [{\"format\": \"WEB_VTT\", \"url\": \"https://arc-subs.test/508116f7.vtt\"}, {\"format\": \"SRT\"}, {\"url\": \"https://arc-subs.test/508116f7.srt\"}]}}]"
+  },
+  {
+   "url": "https://arc-hls.test/508116f7/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://arc-hls.test/508116f7/video-only.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "video-only.m3u8"
+  },
+  {
+   "url": "https://cmg-config-prod.api.cdn.arcpublishing.com/video/v1/ansvideos/findByUuid?uuid=cfb1cf1b-3ab5-4d1b-86c5-a5515d311f2a",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"headlines\": {\"basic\": \"Action News Jax Live\"}, \"status\": \"live\", \"created_date\": \"2020-12-30T10:00:00Z\", \"streams\": [{\"stream_type\": \"smil\", \"url\": \"https://arc-smil.test/cfb1cf1b.smil\"}, {\"stream_type\": \"mp4\", \"url\": \"https://arc-mp4.test/cfb1cf1b.mp4\"}]}]"
+  },
+  {
+   "url": "https://arc-smil.test/cfb1cf1b.smil",
+   "headers": {
+    "Content-Type": "application/smil+xml"
+   },
+   "body": "<smil><head><meta base=\"https://arc-smil.test/media/\"/></head><body><switch><video src=\"cfb1cf1b_720.mp4\" system-bitrate=\"2000000\" width=\"1280\" height=\"720\"/><video src=\"cfb1cf1b_360.mp4\" system-bitrate=\"800000\" width=\"640\" height=\"360\"/></switch></body></smil>"
+  },
+  {
+   "url": "https://video-api-cdn.washpost.arcpublishing.com/api/v1/ansvideos/findByUuid?uuid=480ba4ee-1ec7-11e6-82c2-a7dcb313287d",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"headlines\": {\"basic\": \"Egypt finds belongings, debris from plane crash\"}, \"subheadlines\": {\"basic\": \"Debris found.\"}, \"duration\": \"9000\", \"created_date\": \"2016-05-20T20:33:07Z\", \"streams\": [{\"stream_type\": \"mp4\", \"url\": \"https://arc-mp4.test/480ba4ee/file_640.mp4\", \"bitrate\": 1200, \"width\": 640, \"height\": 360}]}]"
+  },
+  {
+   "url": "https://video-api-cdn.adn.arcpublishing.com/api/v1/ansvideos/findByUuid?uuid=0b0ba30e-032a-4598-8810-901d70e6033e",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[]"
+  },
+  {
+   "url": "https://video-api-cdn.tgam.arcpublishing.com/api/v1/ansvideos/findByUuid?uuid=0b0ba30e-032a-4598-8810-901d70e6033e",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"headlines\": {}}]"
+  },
+  {
+   "url": "https://www.uppermichiganssource.test/2025/07/18/scattered-showers/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Scattered showers</title></head><body><div class=\"article\"><div id=\"p1\" class=\"powa-player powa\" data-org=\"gray\" data-uuid=\"508116f7-e999-48db-b7c2-60a04842679b\" data-env=\"prod\"></div><div class=\"powa\" data-uuid=\"cfb1cf1b-3ab5-4d1b-86c5-a5515d311f2a\"></div></div></body></html>"
+  }
+ ]
+}

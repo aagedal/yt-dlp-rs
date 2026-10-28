@@ -1,0 +1,49 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://boxcast.tv/view-embed/vigil-ys0ryhjsjgw2abbgdhx3",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ys0ryhjsjgw2abbgdhx3\", \"title\": \"Vigil\", \"description\": \"OG desc\", \"thumbnail\": \"https://boxcast.test/p.jpg\", \"formats\": [{\"format_id\": \"1000\", \"format_index\": null, \"url\": \"https://boxcast.test/720.m3u8\", \"manifest_url\": \"https://boxcast.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1000 - 1280x720\"}], \"subtitles\": {}, \"release_timestamp\": 1697842800, \"uploader\": \"Church\", \"uploader_id\": \"acc1\", \"webpage_url\": \"https://boxcast.tv/view-embed/vigil-ys0ryhjsjgw2abbgdhx3\", \"original_url\": \"https://boxcast.tv/view-embed/vigil-ys0ryhjsjgw2abbgdhx3\", \"webpage_url_basename\": \"vigil-ys0ryhjsjgw2abbgdhx3\", \"webpage_url_domain\": \"boxcast.tv\", \"extractor\": \"BoxCastVideo\", \"extractor_key\": \"BoxCastVideo\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://boxcast.test/p.jpg\", \"id\": \"0\"}], \"display_id\": \"ys0ryhjsjgw2abbgdhx3\", \"fulltitle\": \"Vigil\", \"release_date\": \"20231020\", \"release_year\": 2023, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"1000\", \"url\": \"https://boxcast.test/720.m3u8\", \"manifest_url\": \"https://boxcast.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1000 - 1280x720\", \"_filename\": \"Vigil [ys0ryhjsjgw2abbgdhx3].mp4\", \"filename\": \"Vigil [ys0ryhjsjgw2abbgdhx3].mp4\", \"__write_download_archive\": false}], \"format_id\": \"1000\", \"format_index\": null, \"url\": \"https://boxcast.test/720.m3u8\", \"manifest_url\": \"https://boxcast.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1000 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://boxcast.tv/channel/z03?b=live1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [BoxCastVideo] live1: Unable to download JSON metadata: HTTP Error 403: Forbidden",
+    "WARNING: [BoxCastVideo] unable to extract og:description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [BoxCastVideo] unable to extract og:image; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [BoxCastVideo] 42: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://boxcast-host.test/page",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "ys0ryhjsjgw2abbgdhx3|Vigil|BoxCastVideo"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  }
+ ]
+}

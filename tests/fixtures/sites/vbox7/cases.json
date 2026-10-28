@@ -1,0 +1,38 @@
+[
+ {
+  "url": "http://vbox7.com/play:0946fff23c",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "http://vbox7.com/emb/external.php?vid=a240d20f9c&autoplay=1",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "http://vbox7.com/play:bbbbbbbb",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "http://vbox7.com/play:cccccccc",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://news.vbox7.test/article",
+  "args": [
+   "--no-geo-bypass",
+   "--print",
+   "%(id)s|%(title)s|%(webpage_url)s"
+  ]
+ }
+]

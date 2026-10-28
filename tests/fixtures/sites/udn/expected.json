@@ -1,0 +1,46 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://video.udn.com/embed/news/300040",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"300040\", \"formats\": [{\"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://udn-cdn.test/v/720.m3u8\", \"manifest_url\": \"https://udn-cdn.test/v/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 1280x720\"}, {\"url\": \"https://udn-cdn.test/v/300040_720p_1500.mp4\", \"format_id\": \"http-mp4\", \"height\": 720, \"tbr\": 1500, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-mp4 - 720p\"}], \"title\": \"\\u751f\\u7269\\u8001\\u5e2b\\u7537\\u8b8a\\u5973\", \"thumbnail\": \"https://udn.test/p.jpg\", \"webpage_url\": \"https://video.udn.com/embed/news/300040\", \"original_url\": \"https://video.udn.com/embed/news/300040\", \"webpage_url_basename\": \"300040\", \"webpage_url_domain\": \"video.udn.com\", \"extractor\": \"UDNEmbed\", \"extractor_key\": \"UDNEmbed\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://udn.test/p.jpg\", \"id\": \"0\"}], \"display_id\": \"300040\", \"fulltitle\": \"\\u751f\\u7269\\u8001\\u5e2b\\u7537\\u8b8a\\u5973\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://udn-cdn.test/v/300040_720p_1500.mp4\", \"format_id\": \"http-mp4\", \"height\": 720, \"tbr\": 1500, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-mp4 - 720p\", \"_filename\": \"\\u751f\\u7269\\u8001\\u5e2b\\u7537\\u8b8a\\u5973 [300040].mp4\", \"filename\": \"\\u751f\\u7269\\u8001\\u5e2b\\u7537\\u8b8a\\u5973 [300040].mp4\", \"__write_download_archive\": false}], \"url\": \"https://udn-cdn.test/v/300040_720p_1500.mp4\", \"format_id\": \"http-mp4\", \"height\": 720, \"tbr\": 1500, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-mp4 - 720p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://video.udn.com/play/news/2",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 2: An extractor error has occurred. (caused by KeyError('title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://udn-host.test/news",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "300040|生物老師男變女|UDNEmbed|http-mp4"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  }
+ ]
+}

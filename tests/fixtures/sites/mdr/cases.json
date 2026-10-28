@@ -1,0 +1,44 @@
+[
+ {
+  "url": "http://www.mdr.de/fakt/video189002.html",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.mdr.de/fakt/video189002.html",
+  "args": [
+   "--no-geo-bypass",
+   "-F"
+  ]
+ },
+ {
+  "url": "http://www.mdr.de/kultur/audio1312272_zc-15948bad_zs-86171fdd.html",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.mdr.de/x/video-1.html",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.mdr.de/x/video-2.html",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.mdr.de/x/video-3.html",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ }
+]

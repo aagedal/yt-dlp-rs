@@ -1,0 +1,55 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://mediaklikk.hu/ajanlo/video/2025/08/04/heviz-dzsungel/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"8573769\", \"title\": \"H\\u00e9v\\u00edz - dzsungel a v\\u00edz alatt\", \"display_id\": \"heviz-dzsungel\", \"formats\": [{\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://mk-hls.test/8573769/360/index.m3u8\", \"manifest_url\": \"https://mk-hls.test/8573769/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}], \"subtitles\": {}, \"upload_date\": \"20250804\", \"thumbnail\": \"https://mediaklikk.test/bg.jpg\", \"webpage_url\": \"https://mediaklikk.hu/ajanlo/video/2025/08/04/heviz-dzsungel/\", \"original_url\": \"https://mediaklikk.hu/ajanlo/video/2025/08/04/heviz-dzsungel/\", \"webpage_url_basename\": \"heviz-dzsungel\", \"webpage_url_domain\": \"mediaklikk.hu\", \"extractor\": \"MediaKlikk\", \"extractor_key\": \"MediaKlikk\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://mediaklikk.test/bg.jpg\", \"id\": \"0\"}], \"fulltitle\": \"H\\u00e9v\\u00edz - dzsungel a v\\u00edz alatt\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"921\", \"url\": \"https://mk-hls.test/8573769/360/index.m3u8\", \"manifest_url\": \"https://mk-hls.test/8573769/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\", \"_filename\": \"H\\u00e9v\\u00edz - dzsungel a v\\u00edz alatt [8573769].mp4\", \"filename\": \"H\\u00e9v\\u00edz - dzsungel a v\\u00edz alatt [8573769].mp4\", \"__write_download_archive\": false}], \"format_id\": \"921\", \"format_index\": null, \"url\": \"https://mk-hls.test/8573769/360/index.m3u8\", \"manifest_url\": \"https://mk-hls.test/8573769/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://m4sport.hu/video/foci-nb1",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"42\", \"title\": \"Foci NB1\", \"display_id\": \"foci-nb1\", \"formats\": [{\"format_id\": \"921\", \"format_index\": null, \"url\": \"https://mk-hls.test/8573769/360/index.m3u8\", \"manifest_url\": \"https://mk-hls.test/8573769/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\"}], \"subtitles\": {}, \"upload_date\": \"20250807\", \"thumbnail\": \"https://m4.test/og.jpg\", \"webpage_url\": \"https://m4sport.hu/video/foci-nb1\", \"original_url\": \"https://m4sport.hu/video/foci-nb1\", \"webpage_url_basename\": \"foci-nb1\", \"webpage_url_domain\": \"m4sport.hu\", \"extractor\": \"MediaKlikk\", \"extractor_key\": \"MediaKlikk\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://m4.test/og.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Foci NB1\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"921\", \"format_index\": null, \"url\": \"https://mk-hls.test/8573769/360/index.m3u8\", \"manifest_url\": \"https://mk-hls.test/8573769/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"921 - 640x360\", \"_filename\": \"Foci NB1 [42].mp4\", \"filename\": \"Foci NB1 [42].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [MediaKlikk] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://hirado.hu/cikk/nincs",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [MediaKlikk] nincs: Unable to extract player data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://m4sport.hu/video/2025/08/07/hiba",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [MediaKlikk] hiba: Unable to extract playlist url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

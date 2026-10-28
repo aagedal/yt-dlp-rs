@@ -120,6 +120,17 @@ pub fn og_search_raw(html: &str, prop: &str) -> Option<String> {
 /// (quoted, or unquoted as a prefix like upstream's empty `\1`) with a later
 /// quoted `content`, cleaned like `_html_search_regex`.
 pub fn html_search_meta(html: &str, prop: &str) -> Option<String> {
+    html_search_meta_raw(html, prop).map(|value| unescape_html(&value).trim().to_owned())
+}
+
+/// [`html_search_meta`] cleaned with `clean_html` like upstream's
+/// `_html_search_regex` (whitespace collapsed, tags removed).
+pub fn html_search_meta_clean(html: &str, prop: &str) -> Option<String> {
+    html_search_meta_raw(html, prop).map(|value| clean_html(&value))
+}
+
+/// The matched `<meta>` `content` as written.
+fn html_search_meta_raw(html: &str, prop: &str) -> Option<String> {
     static CONTENT: LazyLock<Regex> = LazyLock::new(|| {
         Regex::new(r#"(?is)^[^>]+?content=(?:"(.*?)"|'(.*?)')"#).expect("static pattern")
     });
@@ -152,7 +163,7 @@ pub fn html_search_meta(html: &str, prop: &str) -> Option<String> {
                 .get(1)
                 .or_else(|| found.get(2))
                 .map_or("", |value| value.as_str());
-            return Some(unescape_html(value).trim().to_owned());
+            return Some(value.to_owned());
         }
     }
     None

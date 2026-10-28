@@ -1,0 +1,57 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://5-tv.ru/news/96814/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"96814\", \"url\": \"https://5tv.test/video/96814.mp4?a=1&amp;b=2\", \"title\": \"\\u0420\\u043e\\u0441\\u0441\\u0438\\u044f\\u043d\\u0435 \\u0432\\u044b\\u0431\\u0440\\u0430\\u043b\\u0438 \\u0438\\u043c\\u044f \\\"\\u041c\\u0438\\u0440\\\"\", \"description\": \"\\u041e\\u043f\\u0438\\u0441\\u0430\\u043d\\u0438\\u0435 \\u043d\\u043e\\u0432\\u043e\\u0441\\u0442\\u0438\", \"thumbnail\": \"https://5tv.test/thumb.jpg\", \"duration\": 180, \"webpage_url\": \"http://5-tv.ru/news/96814/\", \"original_url\": \"http://5-tv.ru/news/96814/\", \"webpage_url_basename\": \"96814\", \"webpage_url_domain\": \"5-tv.ru\", \"extractor\": \"FiveTV\", \"extractor_key\": \"FiveTV\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://5tv.test/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"96814\", \"fulltitle\": \"\\u0420\\u043e\\u0441\\u0441\\u0438\\u044f\\u043d\\u0435 \\u0432\\u044b\\u0431\\u0440\\u0430\\u043b\\u0438 \\u0438\\u043c\\u044f \\\"\\u041c\\u0438\\u0440\\\"\", \"duration_string\": \"3:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"\\u0420\\u043e\\u0441\\u0441\\u0438\\u044f\\u043d\\u0435 \\u0432\\u044b\\u0431\\u0440\\u0430\\u043b\\u0438 \\u0438\\u043c\\u044f \\uff02\\u041c\\u0438\\u0440\\uff02 [96814].mp4\", \"filename\": \"\\u0420\\u043e\\u0441\\u0441\\u0438\\u044f\\u043d\\u0435 \\u0432\\u044b\\u0431\\u0440\\u0430\\u043b\\u0438 \\u0438\\u043c\\u044f \\uff02\\u041c\\u0438\\u0440\\uff02 [96814].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://5-tv.ru/video/1021729/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1021729\", \"url\": \"https://5tv.test/1021729.mp4\", \"title\": \"3D \\u043f\\u0440\\u0438\\u043d\\u0442\\u0435\\u0440 | 5 \\u043a\\u0430\\u043d\\u0430\\u043b\", \"description\": null, \"thumbnail\": null, \"webpage_url\": \"http://5-tv.ru/video/1021729/\", \"original_url\": \"http://5-tv.ru/video/1021729/\", \"webpage_url_basename\": \"1021729\", \"webpage_url_domain\": \"5-tv.ru\", \"extractor\": \"FiveTV\", \"extractor_key\": \"FiveTV\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1021729\", \"fulltitle\": \"3D \\u043f\\u0440\\u0438\\u043d\\u0442\\u0435\\u0440 | 5 \\u043a\\u0430\\u043d\\u0430\\u043b\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"3D \\u043f\\u0440\\u0438\\u043d\\u0442\\u0435\\u0440 \\uff5c 5 \\u043a\\u0430\\u043d\\u0430\\u043b [1021729].mp4\", \"filename\": \"3D \\u043f\\u0440\\u0438\\u043d\\u0442\\u0435\\u0440 \\uff5c 5 \\u043a\\u0430\\u043d\\u0430\\u043b [1021729].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://5-tv.ru/angel/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"angel\", \"url\": \"https://5tv.test/angel.m3u8\", \"title\": \"FiveTV video #angel\", \"description\": null, \"thumbnail\": null, \"webpage_url\": \"http://5-tv.ru/angel/\", \"original_url\": \"http://5-tv.ru/angel/\", \"webpage_url_basename\": \"angel\", \"webpage_url_domain\": \"5-tv.ru\", \"extractor\": \"FiveTV\", \"extractor_key\": \"FiveTV\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"angel\", \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"m3u8_native\", \"ext\": \"m3u8\", \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"FiveTV video #angel [angel].m3u8\", \"filename\": \"FiveTV video #angel [angel].m3u8\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.5-tv.ru/schedule/?iframe=true&width=900&height=450",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [FiveTV] Unable to extract video url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

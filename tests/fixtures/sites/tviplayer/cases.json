@@ -1,0 +1,38 @@
+[
+ {
+  "url": "https://tviplayer.iol.pt/programa/jornal-das-8/53c6b3903004dc006243d0cf/video/61c8e8b90cf2c7ea0f0f71a9",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://tviplayer.iol.pt/video/62c4131c0cf2f9a86eac06bb",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://tviplayer.iol.pt/programa/para-sempre/61716c360cf2365a5ed894c4/episodio/t1e187",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://tviplayer.iol.pt/programa/para-sempre/61716c360cf2365a5ed894c4/episodio/t1e187",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://tviplayer.iol.pt/video/nojson",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://tviplayer.iol.pt/video/nourl",
+  "args": [
+   "-J"
+  ]
+ }
+]

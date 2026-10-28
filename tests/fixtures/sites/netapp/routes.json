@@ -1,0 +1,56 @@
+{
+ "routes": [
+  {
+   "url": "https://players.brightcove.net/6255154784001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/6255154784001/videos/1843620950167202073",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkFIXTUREKEY1"
+   }
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://api.media.netapp.com/client/detail/da25fc01-82ad",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"sections\": [{\"type\": \"Hero\"}, {\"type\": \"Player\", \"video\": \"1843620950167202073\"}, {\"type\": \"VideoDetail\", \"name\": \"Seamless storage\", \"description\": \"Desc\", \"createdAt\": \"2025-09-18T16:45:49Z\"}]}"
+  },
+  {
+   "url": "https://api.media.netapp.com/client/detail/0000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"sections\": [{\"type\": \"VideoDetail\"}]}"
+  },
+  {
+   "url": "https://api.media.netapp.com/client/collection/9820e190",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"name\": \"Featured sessions\", \"items\": [{\"brightcoveVideoId\": \"1843620950167202073\", \"name\": \"One\", \"createdAt\": \"2025-01-01T00:00:00Z\"}, {\"brightcoveVideoId\": \"\"}, {\"brightcoveVideoId\": 6366, \"description\": \"Two\"}]}"
+  }
+ ]
+}

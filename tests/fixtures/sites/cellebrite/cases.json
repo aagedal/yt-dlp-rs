@@ -1,0 +1,21 @@
+[
+ {
+  "url": "https://cellebrite.com/en/how-to-collect/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://cellebrite.com/en/how-to-collect/",
+  "args": [
+   "--print",
+   "%(id)s|%(display_id)s|%(_old_archive_ids)s|%(thumbnails)s"
+  ]
+ },
+ {
+  "url": "https://cellebrite.com/en/no-embed/",
+  "args": [
+   "-J"
+  ]
+ }
+]

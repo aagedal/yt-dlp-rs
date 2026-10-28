@@ -81,12 +81,8 @@ impl Extractor for TheHighWire {
         )?
         .into_iter()
         .next()
-        .ok_or_else(|| {
-            Error::Reported(format!(
-                "{display_id}: An extractor error has occurred. (caused by IndexError('list index out of range')); {}",
-                crate::BUG_REPORTS_MESSAGE
-            ))
-        })?;
+        // An uncaught `IndexError` is reported as its message.
+        .ok_or_else(|| Error::Reported("list index out of range".into()))?;
         let first = entry
             .formats
             .first()

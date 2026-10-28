@@ -1,5 +1,26 @@
 [
- {"url": "https://thehighwire.com/ark-videos/the-deposition-of-stanley-plotkin/", "args": ["-j"]},
- {"url": "https://thehighwire.com/ark-videos/plain/", "args": ["-j"]},
- {"url": "https://thehighwire.com/ark-videos/no-embed/", "args": ["-j"]}
+ {
+  "url": "https://thehighwire.com/ark-videos/the-deposition-of-stanley-plotkin/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://thehighwire.com/ark-videos/plain/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://thehighwire.com/ark-videos/no-embed/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://thehighwire.com/ark-videos/nomedia/",
+  "args": [
+   "-j"
+  ]
+ }
 ]

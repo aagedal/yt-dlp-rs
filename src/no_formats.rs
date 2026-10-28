@@ -5,12 +5,23 @@ use std::sync::atomic::{AtomicBool, Ordering};
 
 static IGNORE: AtomicBool = AtomicBool::new(false);
 static WAIT_FOR_VIDEO: AtomicBool = AtomicBool::new(false);
+static ALLOW_UNPLAYABLE: AtomicBool = AtomicBool::new(false);
 
 /// `--ignore-no-formats-error`, and whether `--wait-for-video` is given
 /// (extractors' expected no-formats errors then warn too).
 pub fn set(ignore: bool, wait_for_video: bool) {
     IGNORE.store(ignore, Ordering::Relaxed);
     WAIT_FOR_VIDEO.store(wait_for_video, Ordering::Relaxed);
+}
+
+/// `--allow-unplayable-formats` (`allow_unplayable_formats`).
+pub fn set_allow_unplayable(allow: bool) {
+    ALLOW_UNPLAYABLE.store(allow, Ordering::Relaxed);
+}
+
+/// `params.get('allow_unplayable_formats')`.
+pub(crate) fn allow_unplayable() -> bool {
+    ALLOW_UNPLAYABLE.load(Ordering::Relaxed)
 }
 
 /// `params.get('ignore_no_formats_error')`.

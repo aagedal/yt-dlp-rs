@@ -1,0 +1,63 @@
+{
+ "routes": [
+  {
+   "url": "https://mediaklikk.hu/ajanlo/video/2025/08/04/heviz-dzsungel/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>mtva.loadPlayer('p1', {\"contentId\": 8573769, \"title\": \"H\\u00e9v\\u00edz - dzsungel a v\\u00edz alatt\", \"token\": \"ab%2Fcd%3D%3D\", \"autostart\": true, \"bgImage\": \"https://mediaklikk.test/bg.jpg\", \"series\": null});</script>"
+  },
+  {
+   "url": "https://player.mediaklikk.hu/playernew/player.php?contentId=8573769&title=H%C3%A9v%C3%ADz+-+dzsungel+a+v%C3%ADz+alatt&autostart=True&bgImage=https%3A%2F%2Fmediaklikk.test%2Fbg.jpg&series=None&video=ab%2Fcd%3D%3D",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "request_headers": {
+    "Referer": "https://mediaklikk.hu/ajanlo/video/2025/08/04/heviz-dzsungel/"
+   },
+   "body": "<script>var pl = jwplayer(\"p\"); pl.setup({\"playlist\": [{\"type\": \"dash\", \"file\": \"https://x.test/a.mpd\"}, {\"type\": \"hls\", \"file\": \"https://mk-hls.test/8573769/master.m3u8\"}], \"x\": \"y\"});</script>"
+  },
+  {
+   "url": "https://mk-hls.test/8573769/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://m4sport.hu/video/foci-nb1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta property=\"og:image\" content=\"https://m4.test/og.jpg\"><h1 class=\"article_title\">Foci NB1</h1><p class=\"article_date\">2025.08.07.</p><script>loadPlayer({\"contentId\": \"42\", \"token\": \"xyz\", \"embedded\": false})</script>"
+  },
+  {
+   "url": "https://player.mediaklikk.hu/playernew/player.php?contentId=42&embedded=False&video=xyz",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>pl.setup({\"playlist\": [{\"type\": \"hls\", \"file\": \"https://mk-hls.test/8573769/master.m3u8\"}]});</script>"
+  },
+  {
+   "url": "https://hirado.hu/cikk/nincs",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>nincs</html>"
+  },
+  {
+   "url": "https://m4sport.hu/video/2025/08/07/hiba",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta property=\"og:title\" content=\"Hiba\"><script>loadPlayer({\"contentId\": 7, \"token\": \"t7\"})</script>"
+  },
+  {
+   "url": "https://player.mediaklikk.hu/playernew/player.php?contentId=7&video=t7",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>pl.setup({\"playlist\": []});</script>"
+  }
+ ]
+}

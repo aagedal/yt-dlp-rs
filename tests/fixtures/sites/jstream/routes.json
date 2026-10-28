@@ -1,0 +1,74 @@
+{
+ "routes": [
+  {
+   "url": "https://eqd638pvwx.eq.webcdn.stream.ne.jp/www50/eqd638pvwx/jmc_pub/eq_meta/v1/752.jsonp",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body": "metaDataResult({\"movie\": {\"title\": \"阪神淡路大震災 激震の記録2020年版　解説動画\", \"duration\": \"672\", \"thumbnail_url\": \"https://eqd638pvwx.eq.webcdn.stream.ne.jp/www50/eqd638pvwx/jmc_pub/thumbnail/752.jpg\", \"movie_list_hls\": [{\"text\": \"auto\", \"url\": \"hls/752/master.m3u8\"}, {\"text\": \"auto_hd\", \"url\": \"hls/752/hd.m3u8\"}, {\"text\": \"1080p\", \"url\": \"hls/752/1080.m3u8\"}, {\"text\": null, \"url\": \"x\"}]}});"
+  },
+  {
+   "url": "https://eqd638pvwx.eq.webcdn.stream.ne.jp/www50/eqd638pvwx/jmc_pub/hls/752/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://eqd638pvwx.eq.webcdn.stream.ne.jp/www50/eqd638pvwx/jmc_pub/hls/752/hd.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "hd.m3u8"
+  },
+  {
+   "url": "https://eqd638pvwx.eq.webcdn.stream.ne.jp/www50/eqd638pvwx/jmc_pub/eq_meta/v1/753.jsonp",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body": "  metaDataResult ({\"movie\": {\"title\": \"Second\", \"duration\": 12.5, \"movie_list_hls\": [{\"text\": \"auto_\", \"url\": \"hls/753/master.m3u8\"}]}})"
+  },
+  {
+   "url": "https://eqd638pvwx.eq.webcdn.stream.ne.jp/www50/eqd638pvwx/jmc_pub/hls/753/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://eqd638pvwx.eq.webcdn.stream.ne.jp/www50/eqd638pvwx/jmc_pub/eq_meta/v1/754.jsonp",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body": "callback({\"movie\": {}})"
+  },
+  {
+   "url": "https://eqd638pvwx.eq.webcdn.stream.ne.jp/www50/eqd638pvwx/jmc_pub/eq_meta/v1/755.jsonp",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body": "metaDataResult({\"error\": \"not found\"})"
+  },
+  {
+   "url": "https://eqd638pvwx.eq.webcdn.stream.ne.jp/www50/eqd638pvwx/jmc_pub/eq_meta/v1/756.jsonp",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body": "metaDataResult({\"movie\": {\"title\": \"No list\"}})"
+  },
+  {
+   "url": "https://www.city.kobe.test/bousai/video.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>防災動画</title></head><body><script type=\"text/javascript\" src=\"https://ssl-cache.stream.ne.jp/www50/eqd638pvwx/jmc_pub/jmc_swf/player/t3/if.js\"></script><script>PlayerFactoryIF.create({ b: 'eqd638pvwx.eq.webcdn.stream.ne.jp/www50/eqd638pvwx/jmc_pub/jmc_swf/player/', c: 'MTE0MA==', m: 'NzUy', s: 'eyJ3aWR0aCI6NjQwfQ==' });</script><script>PlayerFactoryIF.create({ b: 'eqd638pvwx.eq.webcdn.stream.ne.jp/www50/eqd638pvwx/jmc_pub/jmc_swf/player/', c: 'MTE0MA==', m: 'NzUy', s: 'eyJ3aWR0aCI6NjQwfQ==' });</script></body></html>"
+  },
+  {
+   "url": "https://www.city.kobe.test/bousai/list.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>動画一覧</title></head><body><script type=\"text/javascript\" src=\"https://ssl-cache.stream.ne.jp/www50/eqd638pvwx/jmc_pub/jmc_swf/player/t3/if.js\"></script><script>PlayerFactoryIF.create({ b: 'eqd638pvwx.eq.webcdn.stream.ne.jp/www50/eqd638pvwx/jmc_pub/jmc_swf/player/', c: 'MTE0MA==', m: 'NzUy', s: 'eyJ3aWR0aCI6NjQwfQ==' });</script><p>…</p><script>PlayerFactoryIF.create({ b: 'eqd638pvwx.eq.webcdn.stream.ne.jp/www50/eqd638pvwx/jmc_pub/jmc_swf/player/', c: 'MTE0MA==', m: 'NzUz', s: 'eyJ3aWR0aCI6NjQwfQ==' });</script></body></html>"
+  }
+ ]
+}

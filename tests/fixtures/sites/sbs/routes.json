@@ -1,0 +1,174 @@
+{
+ "routes": [
+  {
+   "url": "https://www.sbs.com.au/api/v3/video_smil?id=320403011771",
+   "headers": {
+    "Content-Type": "application/smil+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<smil xmlns=\"http://www.w3.org/2005/SMIL21/Language\">\n  <head>\n    <meta base=\"https://sbsvod.test/\"/>\n  </head>\n  <body>\n    <seq>\n      <video src=\"https://sbs-vod-prod-01.akamaized.net/320403011771/master.m3u8\" title=\"SBS\" type=\"application/x-mpegURL\"/>\n      <video src=\"https://sbs-vod-prod-01.akamaized.net/320403011771/master.m3u8\" title=\"SBS\" type=\"application/x-mpegURL\"/>\n      <textstream src=\"https://sbsvod.test/subs/320403011771_en.vtt\" lang=\"en\" type=\"text/vtt\"/>\n      <textstream src=\"https://sbsvod.test/subs/320403011771_EN_FE.VTT\" lang=\"en\" type=\"text/vtt\"/>\n      <textstream src=\"https://sbsvod.test/subs/320403011771_zh.vtt\" lang=\"zh\" type=\"text/vtt\"/>\n    </seq>\n  </body>\n</smil>\n"
+  },
+  {
+   "url": "https://sbs-vod-prod-01.akamaized.net/320403011771/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://sbs-vod-prod-01.akamaized.net/320403011771/360/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://sbs-vod-prod-01.akamaized.net/320403011771/720/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://www.sbs.com.au/api/v3/video_stream?id=320403011771&context=tv",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_object\": {\"name\": \"Stream name\", \"description\": \"The dingo is Australia's apex predator.\", \"duration\": \"PT5M8S\", \"datePublished\": \"2014-08-21T09:27:00Z\", \"liveStream\": false, \"contentRating\": \"m\", \"genres\": [\"Documentary\", 7, \"Nature\"], \"consumerAdviceTexts\": [\"Coarse language\"], \"epName\": \"Episode 5\", \"thumbnails\": [{\"name\": \"thumbnail-16x9\", \"contentUrl\": \"https://sbs.test/img/dingo_16x9.jpg\", \"width\": 1920, \"height\": \"1080\"}, {\"name\": \"bad\", \"contentUrl\": \"not a url\"}, {\"name\": \"thumbnail-small\", \"contentUrl\": \"https://sbs.test/img/dingo.jpg\", \"width\": \"x\"}]}}"
+  },
+  {
+   "url": "https://catalogue.pr.sbsod.com/mpx-media/320403011771",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"name\": \"Dingo Conservation (The Feed)\", \"title\": \"Dingo Conservation\", \"partOfSeries\": {\"name\": \"The Feed\", \"uuid\": \"the-feed-uuid\"}, \"seriesTitle\": \"Ignored\", \"seasonNumber\": 2, \"episodeNumber\": \"5\", \"releaseYear\": 2014, \"classificationID\": \"XX\", \"duration\": 308, \"taxonomy\": {\"channel\": {\"name\": \"SBS VICELAND\"}, \"genre\": {\"name\": \"News\"}, \"subgenre\": {\"name\": \"Current Affairs\"}}, \"sbsSubCertification\": {\"consumerAdvice\": [\"Violence\", null]}}"
+  },
+  {
+   "url": "https://www.sbs.com.au/api/v3/video_smil?id=471395907773",
+   "headers": {
+    "Content-Type": "application/smil+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<smil xmlns=\"http://www.w3.org/2005/SMIL21/Language\">\n  <head>\n    <meta base=\"https://sbsvod.test/\"/>\n  </head>\n  <body>\n    <seq>\n      <video src=\"https://sbs-vod-prod-01.akamaized.net/471395907773/master.m3u8\" title=\"SBS\" type=\"application/x-mpegURL\"/>\n    </seq>\n  </body>\n</smil>\n"
+  },
+  {
+   "url": "https://sbs-vod-prod-01.akamaized.net/471395907773/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://sbs-vod-prod-01.akamaized.net/471395907773/360/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://sbs-vod-prod-01.akamaized.net/471395907773/720/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://www.sbs.com.au/api/v3/video_stream?id=471395907773&context=tv",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "gone"
+  },
+  {
+   "url": "https://catalogue.pr.sbsod.com/mpx-media/471395907773",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"name\": \"The Feed July 9\", \"seriesTitle\": \"The Feed\", \"seriesID\": \"feed1\", \"epName\": \"Episode 9\", \"publication\": {\"startDate\": \"2015-07-09T10:00:00+10:00\"}, \"duration\": \"00:22:30\", \"liveStream\": \"no\", \"classificationID\": \"ma15+\", \"partOfSeries\": {}, \"thumbnails\": [{\"contentUrl\": \"not a url\"}]}"
+  },
+  {
+   "url": "https://www.sbs.com.au/api/v3/video_smil?id=1836638787723",
+   "headers": {
+    "Content-Type": "application/smil+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<smil xmlns=\"http://www.w3.org/2005/SMIL21/Language\">\n  <head>\n    <meta base=\"https://sbsvod.test/\"/>\n  </head>\n  <body>\n    <seq>\n    </seq>\n  </body>\n</smil>\n"
+  },
+  {
+   "url": "https://sbs-vod-prod-01.akamaized.net/",
+   "status": 403,
+   "request_headers": {
+    "x-sbs-case": "geo"
+   },
+   "headers": {
+    "Content-Type": "text/plain",
+    "x-error-reason": "geo-blocked"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://sbs-vod-prod-01.akamaized.net/",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "not found"
+  },
+  {
+   "url": "https://www.sbs.com.au/api/v3/video_smil?id=1840778819866",
+   "status": 500,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "nope"
+  },
+  {
+   "url": "https://www.sbs.com.au/api/v3/video_smil?id=1698704451971",
+   "headers": {
+    "Content-Type": "application/smil+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<smil xmlns=\"http://www.w3.org/2005/SMIL21/Language\">\n  <head>\n    <meta base=\"https://sbsvod.test/\"/>\n  </head>\n  <body>\n    <seq>\n      <video src=\"https://sbs-vod-prod-01.akamaized.net/1698704451971/master.m3u8\" title=\"SBS\" type=\"application/x-mpegURL\"/>\n    </seq>\n  </body>\n</smil>\n"
+  },
+  {
+   "url": "https://sbs-vod-prod-01.akamaized.net/1698704451971/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://sbs-vod-prod-01.akamaized.net/1698704451971/360/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://sbs-vod-prod-01.akamaized.net/1698704451971/720/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://www.sbs.com.au/api/v3/video_stream?id=1698704451971&context=tv",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_object\": []}"
+  },
+  {
+   "url": "https://catalogue.pr.sbsod.com/mpx-media/1698704451971",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "gone"
+  },
+  {
+   "url": "https://www.sbs-embed.test/thefeed/blog/dingo-conservation",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Dingo blog</title></head><body><p>]<iframe width=\"640\" src=\"https://www.sbs.com.au/ondemand/video/320403011771/Dingo-Conservation-The-Feed\"></iframe></p><iframe src=\"https://www.sbs.com.au/ondemand/video/1/ignored\"></iframe></body></html>"
+  }
+ ]
+}

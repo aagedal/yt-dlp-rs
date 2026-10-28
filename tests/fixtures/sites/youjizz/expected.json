@@ -1,0 +1,62 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.youjizz.com/videos/zeichentrick-1-2189178.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"url\": \"https://cdn.youjizz.test/2189178/480.mp4\", \"format_id\": \"480p\", \"height\": 480, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"480p - 480p\"}, {\"url\": \"https://cdn.youjizz.test/2189178/720.mp4?v=1\", \"format_id\": \"720p\", \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\"}, {\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://cdn.youjizz.test/2189178/v720.m3u8\", \"manifest_url\": \"https://cdn.youjizz.test/2189178/master.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\"}], \"id\": \"2189178\", \"title\": \"Zeichentrick 1 & More\", \"age_limit\": 18, \"duration\": 2874, \"uploader\": \"PlaceholderUser\", \"webpage_url\": \"http://www.youjizz.com/videos/zeichentrick-1-2189178.html\", \"original_url\": \"http://www.youjizz.com/videos/zeichentrick-1-2189178.html\", \"webpage_url_basename\": \"zeichentrick-1-2189178.html\", \"webpage_url_domain\": \"youjizz.com\", \"extractor\": \"YouJizz\", \"extractor_key\": \"YouJizz\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2189178\", \"fulltitle\": \"Zeichentrick 1 & More\", \"duration_string\": \"47:54\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1500\", \"url\": \"https://cdn.youjizz.test/2189178/v720.m3u8\", \"manifest_url\": \"https://cdn.youjizz.test/2189178/master.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\", \"_filename\": \"Zeichentrick 1 & More [2189178].mp4\", \"filename\": \"Zeichentrick 1 & More [2189178].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://cdn.youjizz.test/2189178/v720.m3u8\", \"manifest_url\": \"https://cdn.youjizz.test/2189178/master.m3u8\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.youjizz.com/videos/zeichentrick-1-2189178.html",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[YouJizz] Extracting URL: http://www.youjizz.com/videos/zeichentrick-1-2189178.html",
+    "[YouJizz] 2189178: Downloading webpage",
+    "[YouJizz] 2189178: Downloading m3u8 information",
+    "[info] Available formats for 2189178:",
+    "ID       EXT RESOLUTION |   FILESIZE   TBR PROTO | VCODEC      ACODEC",
+    "------------------------------------------------------------------------",
+    "480p     mp4 480p       |                  https | unknown     unknown",
+    "720p     mp4 720p       |                  https | unknown     unknown",
+    "hls-1500 mp4 1280x720   | ~513.91MiB 1500k m3u8  | avc1.64001f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youjizz.com/videos/embed/31991001",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"ext\": \"mp4\", \"width\": null, \"height\": 360, \"tbr\": null, \"format_id\": \"360p\", \"url\": \"https://cdn.youjizz.test/31991001/360.mp4\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.youjizz.com/videos/embed/31991001\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"360p - 360p\"}], \"subtitles\": {}, \"thumbnail\": \"http://cdn.youjizz.test/poster.jpg\", \"id\": \"31991001\", \"title\": \"Embed clip\", \"age_limit\": 21, \"uploader\": null, \"webpage_url\": \"https://www.youjizz.com/videos/embed/31991001\", \"original_url\": \"https://www.youjizz.com/videos/embed/31991001\", \"webpage_url_basename\": \"31991001\", \"webpage_url_domain\": \"youjizz.com\", \"extractor\": \"YouJizz\", \"extractor_key\": \"YouJizz\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://cdn.youjizz.test/poster.jpg\", \"id\": \"0\"}], \"display_id\": \"31991001\", \"fulltitle\": \"Embed clip\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"ext\": \"mp4\", \"width\": null, \"height\": 360, \"tbr\": null, \"format_id\": \"360p\", \"url\": \"https://cdn.youjizz.test/31991001/360.mp4\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.youjizz.com/videos/embed/31991001\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"360p - 360p\", \"_filename\": \"Embed clip [31991001].mp4\", \"filename\": \"Embed clip [31991001].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.youjizz.com/videos/-2189179.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [YouJizz] unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  }
+ ]
+}

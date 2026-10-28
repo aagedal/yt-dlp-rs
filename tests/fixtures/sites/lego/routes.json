@@ -1,0 +1,26 @@
+{
+ "routes": [
+  {
+   "url": "https://services.slingshot.lego.com/mediaplayer/v2?videoId=55492d82-3b1b-4d5e-9857-87fa8c2973b1_en-us",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"Video\": {\"Id\": \"55492d82-3b1b-4d5e-9857-87fa8c2973b1_en-US\", \"Title\": \"Blocumentary Great Creations: Akiyuki Kawaguchi\", \"Description\": \"Blocumentary desc\", \"GeneratedCoverImage\": \"\", \"GeneratedThumbnail\": \"https://lego.test/thumb.jpg\", \"Length\": \"217\", \"AgeFrom\": 0, \"SeasonTitle\": null, \"Season\": \"0\", \"Episode\": 3, \"SubFileId\": \"aaaa\", \"NetstoragePath\": \"ns/path\", \"InvariantId\": \"inv\", \"VideoFileId\": \"vf\", \"VideoVersion\": 2}, \"VideoFormats\": [{\"Format\": \"M3U8\", \"Url\": \"https://lego-hls.test/55492d82/master.m3u8\"}, {\"Format\": \"MP4\", \"Quality\": \"High\", \"Url\": \"https://lego-pd.test/high.mp4\"}, {\"Format\": \"MP4\", \"Quality\": \"Odd\", \"Url\": \"https://lego-pd.test/odd.mp4\"}, {\"Format\": \"F4M\", \"Url\": \"https://lego-hds.test/missing.f4m\"}, {\"Format\": \"MP4\"}]}"
+  },
+  {
+   "url": "https://lego-hls.test/55492d82/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://services.slingshot.lego.com/mediaplayer/v2?videoId=13bdc214-0b53-4b39-a48e-2afb8d94e3d6_de-de",
+   "status": 451,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  }
+ ]
+}

@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "https://beeg.com/-0983946056129650",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"rating\" content=\"RTA-5042-1996-1400-1577-RTA\"></head></html>"
+  },
+  {
+   "url": "https://store.externulls.com/facts/file/0983946056129650",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"fc_facts\": [{\"id\": 2600001, \"fc_created\": \"2022-02-01 10:00:00\", \"hls_resources\": {\"fl_cdn_240\": \"ignored/240.m3u8\"}}, {\"id\": 2540839, \"fc_created\": \"2022-01-31 19:14:15\"}], \"file\": {\"fl_duration\": \"927\", \"stuff\": {\"sf_name\": \"Fixture plane clip\", \"sf_story\": \"Placeholder story.\"}, \"hls_resources\": {\"fl_cdn_480\": \"key=abc/480.m3u8\", \"fl_cdn_720\": \"key=abc/720.m3u8\", \"fl_cdn_1080\": null, \"fl_cdn_360\": \"\"}}, \"tags\": [{\"tg_name\": \"alpha\"}, {\"tg_name\": \"beta\"}, {\"other\": 1}]}"
+  },
+  {
+   "url": "https://video.beeg.com/key=abc/480.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-MEDIA-SEQUENCE:0\n#EXTINF:10.0,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://video.beeg.com/key=abc/720.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1500000,RESOLUTION=1280x720,CODECS=\"avc1.64001f,mp4a.40.2\"\nv720.m3u8\n"
+  },
+  {
+   "url": "https://beeg.com/1277207756",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><title>beeg</title></html>"
+  },
+  {
+   "url": "https://store.externulls.com/facts/file/1277207756",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"fc_facts\": [{\"id\": 2569965, \"fc_created\": \"2022-01-31T10:00:00Z\", \"hls_resources\": {\"multi\": \"key=def/multi.m3u8\"}}, {\"id\": 2600002, \"hls_resources\": {\"fl_cdn_240\": \"ignored/x.m3u8\"}}], \"file\": {\"stuff\": {\"sf_name\": \"Second clip\"}}}"
+  },
+  {
+   "url": "https://video.beeg.com/key=def/multi.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1500000,RESOLUTION=1280x720,CODECS=\"avc1.64001f,mp4a.40.2\"\nv720.m3u8\n"
+  },
+  {
+   "url": "https://beeg.com/video/1941093077",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html></html>"
+  },
+  {
+   "url": "https://store.externulls.com/facts/file/1941093077",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"fc_facts\": [{\"id\": 1}], \"file\": {\"hls_resources\": {\"fl_cdn_480\": \"key=missing/480.m3u8\"}}}"
+  }
+ ]
+}

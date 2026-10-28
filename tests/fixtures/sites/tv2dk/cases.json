@@ -1,0 +1,39 @@
+[
+ {
+  "url": "https://www.tvsyd.dk/haderslev/x-factor-brodre",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.tvsyd.dk/haderslev/x-factor-brodre",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.tv2lorry.dk/gadekamp/gadekamp-6",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.tv2nord.dk/artikel/ingen-video",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://play.tv2bornholm.dk/?area=specifikTV&id=781021",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://play.tv2bornholm.dk/?area=specifikTV&id=5",
+  "args": [
+   "-J"
+  ]
+ }
+]

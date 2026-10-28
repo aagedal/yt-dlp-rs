@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://raw.githubusercontent.com/pyvideo/data/master/pycon-us-2013/videos/become-a-logging-expert.json",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"id\": 2542, \"title\": \"Become a Logging Expert\", \"summary\": \"Logging talk summary\", \"description\": \"\", \"thumbnail_url\": \"https://i.ytimg.test/logging.jpg\", \"duration\": \"1834\", \"videos\": [{\"type\": \"youtube\", \"url\": \"https://www.youtube.com/watch?v=24KrjbT1hwk\"}, {\"type\": \"mp4\", \"url\": \"https://media.pyvideo.test/logging.mp4\"}, {\"type\": \"ogv\"}, {\"type\": \"youtube\", \"url\": \"https://vimeo.test/123456\"}]}"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/pyvideo/data/master/pygotham-2012/videos/spotify-talk.json",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"title\": \"Spotify With Erik\", \"description\": \"Erik talks\", \"duration\": 93.7, \"videos\": [{\"url\": \"https://media.pyvideo.test/gloriajw-spotify.m4v\"}]}"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/pyvideo/data/master/pycon-2014/videos/no-videos.json",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"title\": \"x\"}"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/pyvideo/data/master/pycon-2014/videos/empty-data.json",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://pyvideo.org/pycon-2014/empty-data.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Fallback &amp; Talk\"></head><body><ul><li>Media URL: <a href=\"https://www.youtube.com/watch?v=BaW_jenozKc\">YouTube</a> <a href='https://media.pyvideo.test/fallback.webm'>webm</a> <a href=\"/relative.mp4\">rel</a></li></ul></body></html>"
+  },
+  {
+   "url": "https://pyvideo.org/pycon-2015/no-media.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>No media</title></head><body><p>Nothing here</p></body></html>"
+  }
+ ]
+}

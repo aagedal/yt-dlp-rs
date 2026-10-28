@@ -1,0 +1,14 @@
+[
+ {
+  "url": "http://vod.melon.com/video/detail2.htm?mvId=50158734",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://vod.melon.com/video/detail2.html?menuId=1&mvId=2",
+  "args": [
+   "-J"
+  ]
+ }
+]

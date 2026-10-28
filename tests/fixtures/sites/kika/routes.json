@@ -1,0 +1,74 @@
+{
+ "routes": [
+  {
+   "url": "https://www.kika.de/_next-api/proxy/v1/videos/video92498",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"7. Wo ist Leo?\", \"description\": \"Leo ist weg.\", \"date\": \"2023-12-18T19:14:36+01:00\", \"modificationDate\": \"2024-03-19T21:36:50+01:00\", \"durationInSeconds\": 436, \"episodeNumber\": 7, \"season\": \"1\", \"hasSubtitle\": true, \"assets\": {\"url\": \"https://www.kika.de/assets/video92498.json\"}}"
+  },
+  {
+   "url": "https://www.kika.de/assets/video92498.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"videoSubtitle\": \"https://www.kika.de/sub/video92498.xml\", \"webvttUrl\": \"https://www.kika.de/sub/video92498.vtt\", \"assets\": [{\"url\": \"https://kika-hls.test/92498/master.m3u8\"}, {\"url\": \"https://kika-pd.test/92498_960x540.mp4\", \"frameWidth\": 960, \"frameHeight\": 540, \"fileSize\": 0, \"bitrateAudio\": -1, \"bitrateVideo\": 1800}, {\"url\": \"https://kika-pd.test/92498_1280x720.mp4\", \"frameWidth\": \"1280\", \"frameHeight\": 720, \"fileSize\": 123456, \"bitrateAudio\": 128, \"bitrateVideo\": -1}, {\"url\": \"not a url\"}, {\"nourl\": 1}]}"
+  },
+  {
+   "url": "https://www.kika.de/_next-api/proxy/v1/videos/logo-100",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"logo! vom Dienstag\", \"duration\": \"PT10M51S\", \"date\": \"x\", \"hasSubtitle\": false, \"assets\": {\"url\": \"https://www.kika.de/assets/logo-100.json\"}}"
+  },
+  {
+   "url": "https://www.kika.de/assets/logo-100.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"videoSubtitle\": \"https://www.kika.de/sub/bad\", \"assets\": [{\"url\": \"https://kika-pd.test/logo_100.mp4\"}, {\"url\": \"https://kika-hls.test/missing/master.m3u8\"}]}"
+  },
+  {
+   "url": "https://www.kika.de/_next-api/proxy/v1/videos/broken-1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"x\"}"
+  },
+  {
+   "url": "https://kika-hls.test/92498/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.kika.de/_next-api/proxy/v1/brands/logo-562",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"logo!\", \"description\": \"Nachrichten f\\u00fcr Kinder\", \"videoSubchannel\": {\"videosPageUrl\": \"https://www.kika.de/_next-api/proxy/v1/brands/logo-562/videos\"}}"
+  },
+  {
+   "url": "https://www.kika.de/_next-api/proxy/v1/brands/logo-562/videos",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"content\": [{\"id\": \"logo-100\", \"title\": \"logo! vom Dienstag\", \"duration\": 651, \"date\": \"2025-10-28T19:00:00+01:00\", \"api\": {\"url\": \"https://www.kika.de/_next-api/proxy/v1/videos/logo-100\"}}, {\"id\": \"skip\", \"api\": {}}, {\"id\": \"video92498\", \"title\": \"7. Wo ist Leo?\", \"duration\": \"436\", \"api\": {\"url\": \"https://www.kika.de/_next-api/proxy/v1/videos/video92498\"}}], \"links\": {\"next\": \"https://www.kika.de/_next-api/proxy/v1/brands/logo-562/videos?page=2\"}}"
+  },
+  {
+   "url": "https://www.kika.de/_next-api/proxy/v1/brands/logo-562/videos?page=2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"content\": [{\"title\": \"ohne ID\", \"api\": {\"url\": \"https://www.kika.de/_next-api/proxy/v1/videos/video5\"}}], \"links\": {\"next\": null}}"
+  },
+  {
+   "url": "https://www.kika.de/_next-api/proxy/v1/brands/leer-1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"videoSubchannel\": {}}"
+  }
+ ]
+}

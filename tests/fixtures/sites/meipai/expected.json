@@ -1,0 +1,92 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.meipai.com/media/531697625",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"531697625\", \"title\": \"#\\u8449\\u5b50##\\u963f\\u6851##\\u4f59\\u59ff\\u6600##\\u8d85\\u7d1a\\u5973\\u8072#\", \"description\": \"#\\u8449\\u5b50##\\u963f\\u6851##\\u4f59\\u59ff\\u6600##\\u8d85\\u7d1a\\u5973\\u8072#\", \"thumbnail\": \"https://mvimg10.meitudata.com/575a0cd7c4b5e7071.jpg\", \"duration\": 152, \"timestamp\": 1465492420, \"view_count\": 35511, \"creator\": \"\\u5979\\u5979-TATA\", \"tags\": [\"\\u8449\\u5b50\", \"\\u963f\\u6851\", \"\\u4f59\\u59ff\\u6600\", \"\\u8d85\\u7d1a\\u5973\\u8072\"], \"formats\": [{\"url\": \"https://mvvideo10.meitudata.com/575a0cd7c4b5e7071_H264_3.mp4?k=1&amp;t=2\", \"format_id\": \"http\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\"}], \"webpage_url\": \"http://www.meipai.com/media/531697625\", \"original_url\": \"http://www.meipai.com/media/531697625\", \"webpage_url_basename\": \"531697625\", \"webpage_url_domain\": \"meipai.com\", \"extractor\": \"Meipai\", \"extractor_key\": \"Meipai\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://mvimg10.meitudata.com/575a0cd7c4b5e7071.jpg\", \"id\": \"0\"}], \"display_id\": \"531697625\", \"fulltitle\": \"#\\u8449\\u5b50##\\u963f\\u6851##\\u4f59\\u59ff\\u6600##\\u8d85\\u7d1a\\u5973\\u8072#\", \"duration_string\": \"2:32\", \"upload_date\": \"20160609\", \"release_year\": null, \"creators\": [\"\\u5979\\u5979-TATA\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://mvvideo10.meitudata.com/575a0cd7c4b5e7071_H264_3.mp4?k=1&amp;t=2\", \"format_id\": \"http\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\", \"_filename\": \"#\\u8449\\u5b50##\\u963f\\u6851##\\u4f59\\u59ff\\u6600##\\u8d85\\u7d1a\\u5973\\u8072# [531697625].mp4\", \"filename\": \"#\\u8449\\u5b50##\\u963f\\u6851##\\u4f59\\u59ff\\u6600##\\u8d85\\u7d1a\\u5973\\u8072# [531697625].mp4\", \"__write_download_archive\": false}], \"url\": \"https://mvvideo10.meitudata.com/575a0cd7c4b5e7071_H264_3.mp4?k=1&amp;t=2\", \"format_id\": \"http\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.meipai.com/media/585526361",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"585526361\", \"title\": \"\\u59ff\\u6600\\u548c\\u5584\\u9858 \\u7df4\\u6b4c\\u7df4\\u7434\\u5566\\ud83d\\ude01\\ud83d\\ude01\\ud83d\\ude01\", \"description\": \"live desc\", \"thumbnail\": \"https://mvimg.test/live.jpg\", \"duration\": 5975, \"timestamp\": 1474311799, \"view_count\": 1215, \"creator\": \"\\u5979\\u5979-TATA\", \"tags\": [\"\"], \"formats\": [{\"format_id\": \"hls-400\", \"format_index\": null, \"url\": \"https://record.test/meipai/585526361/low.m3u8\", \"manifest_url\": \"https://record.test/meipai/585526361/master.m3u8\", \"tbr\": 400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 360, \"height\": 640, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"360x640\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-400 - 360x640\"}, {\"format_id\": \"hls-1200\", \"format_index\": null, \"url\": \"https://record.test/meipai/585526361/high.m3u8\", \"manifest_url\": \"https://record.test/meipai/585526361/master.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 720, \"height\": 1280, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1200 - 720x1280\"}], \"webpage_url\": \"http://www.meipai.com/media/585526361\", \"original_url\": \"http://www.meipai.com/media/585526361\", \"webpage_url_basename\": \"585526361\", \"webpage_url_domain\": \"meipai.com\", \"extractor\": \"Meipai\", \"extractor_key\": \"Meipai\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://mvimg.test/live.jpg\", \"id\": \"0\"}], \"display_id\": \"585526361\", \"fulltitle\": \"\\u59ff\\u6600\\u548c\\u5584\\u9858 \\u7df4\\u6b4c\\u7df4\\u7434\\u5566\\ud83d\\ude01\\ud83d\\ude01\\ud83d\\ude01\", \"duration_string\": \"1:39:35\", \"upload_date\": \"20160919\", \"release_year\": null, \"creators\": [\"\\u5979\\u5979-TATA\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1200\", \"url\": \"https://record.test/meipai/585526361/high.m3u8\", \"manifest_url\": \"https://record.test/meipai/585526361/master.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 720, \"height\": 1280, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1200 - 720x1280\", \"_filename\": \"\\u59ff\\u6600\\u548c\\u5584\\u9858 \\u7df4\\u6b4c\\u7df4\\u7434\\u5566\\ud83d\\ude01\\ud83d\\ude01\\ud83d\\ude01 [585526361].mp4\", \"filename\": \"\\u59ff\\u6600\\u548c\\u5584\\u9858 \\u7df4\\u6b4c\\u7df4\\u7434\\u5566\\ud83d\\ude01\\ud83d\\ude01\\ud83d\\ude01 [585526361].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1200\", \"format_index\": null, \"url\": \"https://record.test/meipai/585526361/high.m3u8\", \"manifest_url\": \"https://record.test/meipai/585526361/master.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 720, \"height\": 1280, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1200 - 720x1280\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://meipai.com/media/700",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"700\", \"title\": \"Fallback title\", \"description\": null, \"thumbnail\": null, \"timestamp\": null, \"view_count\": null, \"creator\": null, \"tags\": [\"\"], \"formats\": [{\"url\": \"https://mvvideo.test/fallback.mp4\", \"format_id\": \"http\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\"}], \"webpage_url\": \"https://meipai.com/media/700\", \"original_url\": \"https://meipai.com/media/700\", \"webpage_url_basename\": \"700\", \"webpage_url_domain\": \"meipai.com\", \"extractor\": \"Meipai\", \"extractor_key\": \"Meipai\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"700\", \"fulltitle\": \"Fallback title\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://mvvideo.test/fallback.mp4\", \"format_id\": \"http\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\", \"_filename\": \"Fallback title [700].mp4\", \"filename\": \"Fallback title [700].mp4\", \"__write_download_archive\": false}], \"url\": \"https://mvvideo.test/fallback.mp4\", \"format_id\": \"http\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Meipai] 700: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [Meipai] unable to extract release date; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Meipai] unable to extract view count; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Meipai] unable to extract duration; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Meipai] unable to extract creator; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Meipai] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Meipai] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.meipai.com/media/800",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [Meipai] unable to extract release date; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Meipai] unable to extract view count; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Meipai] unable to extract duration; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Meipai] unable to extract creator; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Meipai] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [Meipai] 800: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.meipai.com/media/800",
+   "args": [
+    "--ignore-no-formats-error",
+    "--print",
+    "%(id)s|%(title)s|%(tags)j|%(creators)j|%(view_count)s|%(duration)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "800|Meipai video #800|[\"\"]|NA|NA|NA"
+   ],
+   "stderr": [
+    "WARNING: [Meipai] unable to extract release date; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Meipai] unable to extract view count; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Meipai] unable to extract duration; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Meipai] unable to extract creator; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Meipai] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  }
+ ]
+}

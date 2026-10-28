@@ -1,0 +1,111 @@
+{
+ "routes": [
+  {
+   "url": "https://api.mixlr.com/v3/channels/suncity-104-9fm/events/4387115",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"id\": \"4387115\", \"type\": \"event\", \"attributes\": {\"title\": \"SUNCITY 104.9FM's live audio\", \"description\": null, \"starts_at\": \"2025-07-08T03:02:44Z\", \"started_at\": \"2025-07-08T03:02:53.000Z\", \"heart_count\": 12, \"artwork_url\": \"https://imagecdn.mixlr.com/cdn-cgi/image/fit=cover,width=600/cd5b34d05fa2cee72d80477724a2f02e.png\", \"broadcaster_id\": \"7654321\"}}, \"included\": [{\"id\": \"b1\", \"type\": \"broadcast\", \"attributes\": {\"title\": \"Broadcast title\", \"started_at\": \"2025-07-08T03:02:50Z\", \"concurrent_view_count\": \"42\", \"heart_count\": 5, \"live\": true, \"progressive_stream_url\": \"https://edge.mixlr.com/channel/suncity\"}}]}"
+  },
+  {
+   "url": "https://edge.mixlr.com/channel/suncity",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3"
+  },
+  {
+   "url": "https://api.mixlr.com/v3/channels/brcountdown/events/4395480",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"id\": \"4395480\", \"type\": \"event\", \"attributes\": {\"title\": \"Beats Revolution Countdown Episodio 461\", \"description\": \"Countdown semanal\", \"starts_at\": \"2025-07-12T21:00:00Z\", \"started_at\": \"2025-07-12T21:00:07Z\", \"heart_count\": \"9\", \"concurrent_view_count\": 3.7, \"artwork_url\": \"https://imagecdn.mixlr.com/cdn-cgi/image/fit=cover/c48727a59f690b87a55d47d123ba0d6d.jpg\", \"broadcaster_id\": 123}}, \"included\": [{\"type\": \"broadcast\", \"attributes\": {\"live\": false, \"progressive_stream_url\": \"https://edge.mixlr.com/channel/brc\"}}]}"
+  },
+  {
+   "url": "https://edge.mixlr.com/channel/brc",
+   "headers": {
+    "Content-Type": "audio/aacp"
+   },
+   "body": "ID3"
+  },
+  {
+   "url": "https://api.mixlr.com/v3/channels/octet/events/100",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"attributes\": {\"title\": \"Octet event\", \"starts_at\": \"2025-01-01T00:00:00Z\"}}, \"included\": [{\"attributes\": {\"live\": true, \"progressive_stream_url\": \"https://edge.mixlr.com/channel/octet\"}}]}"
+  },
+  {
+   "url": "https://edge.mixlr.com/channel/octet",
+   "headers": {
+    "Content-Type": "application/octet-stream"
+   },
+   "body": "ID3"
+  },
+  {
+   "url": "https://api.mixlr.com/v3/channels/upcoming/events/200",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"attributes\": {\"title\": \"Upcoming event\", \"starts_at\": \"2026-12-24T18:00:00Z\", \"artwork_url\": \"not a url\"}}, \"included\": []}"
+  },
+  {
+   "url": "https://api.mixlr.com/v3/channels/gone/events/300",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"attributes\": {\"title\": \"Gone event\", \"starts_at\": \"2025-02-02T10:00:00Z\"}}, \"included\": [{\"attributes\": {\"live\": false, \"progressive_stream_url\": \"https://edge.mixlr.com/channel/gone\"}}]}"
+  },
+  {
+   "url": "https://edge.mixlr.com/channel/gone",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "nope"
+  },
+  {
+   "url": "https://api.mixlr.com/v3/channels/empty/events/400",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"attributes\": {\"title\": \"Empty\"}}}"
+  },
+  {
+   "url": "https://api.mixlr.com/v3/channels/biblewayng/recordings/2375193",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"id\": \"2375193\", \"type\": \"recording\", \"attributes\": {\"title\": \"God's Jewels and Their Resting Place Bro. Adeniji\", \"description\": \"Preached February 21, 2024 in the evening\", \"created_at\": \"2024-02-21T19:42:22.000Z\", \"duration\": 10968.6, \"file_format\": \"mp3\", \"url\": \"https://cdn.mixlr.com/recordings/2375193.mp3?sig=1\", \"artwork_url\": \"https://imagecdn.mixlr.com/cdn-cgi/image/fit=cover/ceca120ef707f642abeea6e29cd74238.jpg\", \"user_id\": \"8659190\"}}}"
+  },
+  {
+   "url": "https://api.mixlr.com/v3/channels/noformat/recordings/9",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"attributes\": {\"url\": \"https://cdn.mixlr.com/recordings/9.m4a\", \"title\": \"No format\"}}}"
+  },
+  {
+   "url": "https://api.mixlr.com/v3/channels/nourl/recordings/10",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"attributes\": {\"title\": \"No URL\", \"file_format\": \"mp3\"}}}"
+  },
+  {
+   "url": "https://api.mixlr.com/v3/channels/missing/recordings/11",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"not found\"}",
+   "status": 404
+  },
+  {
+   "url": "https://cdn.mixlr.com/recordings/2375193.mp3?sig=1",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3\u0003\u0000fixture mp3 bytes"
+  }
+ ]
+}

@@ -1,0 +1,32 @@
+[
+ {
+  "url": "https://www.alibaba.com/product-detail/Item-0_100.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.alibaba.com/product-detail/Item-1_101.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.alibaba.com/product-detail/Item-2_102.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.alibaba.com/product-detail/Item-3_103.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.alibaba.com/product-detail/Item-9_109.html",
+  "args": [
+   "-J"
+  ]
+ }
+]

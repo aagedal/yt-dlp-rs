@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://www.rtvs.sk/radio/archiv/11224/414872",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<iframe id=\"player_audio_10\" src=\"https://www.stvr.test/embed/audio/10\"></iframe><iframe id=\"player_audio_123\" width=\"1\" src=\"https://www.stvr.test/embed/audio/123\"></iframe>"
+  },
+  {
+   "url": "https://www.stvr.test/embed/audio/10",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "var url = \"//www.stvr.test/json/audio/10?\" + ruurl;"
+  },
+  {
+   "url": "https://www.stvr.test/json/audio/10?b=mozilla&p=win&v=97&f=0&d=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playlist\": [{\"title\": \"Ostrov\", \"description\": \"Popis\", \"length\": \"00:47:03\", \"image\": \"https://img.stvr.test/a.jpg\", \"datetime_create\": \"2022-04-25 16:09:20\", \"sources\": [{\"type\": \"audio/mp3\", \"src\": \"https://cdn.stvr.test/a.mp3\"}]}]}"
+  },
+  {
+   "url": "https://www.stvr.sk/televizia/archiv/18083",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<iframe id=\"player_video_55\" src=\"https://www.stvr.test/embed/video/55\"></iframe>"
+  },
+  {
+   "url": "https://www.stvr.test/embed/video/55",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "var url = \"//www.stvr.test/json/video/55?\" + ruurl;"
+  },
+  {
+   "url": "https://www.stvr.test/json/video/55?b=mozilla&p=win&v=97&f=0&d=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"clip\": {\"title\": \"Klip\", \"length\": \"1:30\", \"sources\": [{\"type\": \"application/x-mpegurl\", \"src\": \"https://cdn.stvr.test/v/master.m3u8\"}]}}"
+  },
+  {
+   "url": "https://cdn.stvr.test/v/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.stvr.sk/radio/archiv/1/2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<p>none</p>"
+  }
+ ]
+}

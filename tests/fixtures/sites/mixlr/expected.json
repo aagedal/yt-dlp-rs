@@ -1,0 +1,185 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://suncity-104-9fm.mixlr.com/events/4387115",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(uploader)s|%(uploader_id)s|%(description)s|%(timestamp)s|%(release_timestamp)s|%(concurrent_view_count)s|%(like_count)s|%(thumbnail)s|%(format_id)s|%(ext)s|%(vcodec)s|%(acodec)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "4387115|SUNCITY 104.9FM's live audio|True|is_live|suncity-104-9fm|7654321|NA|1751943773|1751943764|42|12|https://imagecdn.mixlr.com/cdn-cgi/image/fit=cover,width=600/cd5b34d05fa2cee72d80477724a2f02e.png|0|mp3|none|mp3|https://edge.mixlr.com/channel/suncity"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.brcountdown.mixlr.com/events/4395480",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4395480\", \"uploader\": \"brcountdown\", \"formats\": [{\"url\": \"https://edge.mixlr.com/channel/brc\", \"ext\": \"aac\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"aac\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"aac\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}], \"release_timestamp\": 1752354000, \"is_live\": false, \"title\": \"Beats Revolution Countdown Episodio 461\", \"description\": \"Countdown semanal\", \"timestamp\": 1752354007, \"concurrent_view_count\": 3, \"like_count\": 9, \"thumbnail\": \"https://imagecdn.mixlr.com/cdn-cgi/image/fit=cover/c48727a59f690b87a55d47d123ba0d6d.jpg\", \"webpage_url\": \"https://www.brcountdown.mixlr.com/events/4395480\", \"original_url\": \"https://www.brcountdown.mixlr.com/events/4395480\", \"webpage_url_basename\": \"4395480\", \"webpage_url_domain\": \"brcountdown.mixlr.com\", \"extractor\": \"Mixlr\", \"extractor_key\": \"Mixlr\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://imagecdn.mixlr.com/cdn-cgi/image/fit=cover/c48727a59f690b87a55d47d123ba0d6d.jpg\", \"id\": \"0\"}], \"display_id\": \"4395480\", \"fulltitle\": \"Beats Revolution Countdown Episodio 461\", \"upload_date\": \"20250712\", \"release_date\": \"20250712\", \"release_year\": 2025, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://edge.mixlr.com/channel/brc\", \"ext\": \"aac\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"aac\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"aac\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Beats Revolution Countdown Episodio 461 [4395480].aac\", \"filename\": \"Beats Revolution Countdown Episodio 461 [4395480].aac\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://brcountdown.mixlr.com/events/4395480",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Mixlr] Extracting URL: https://brcountdown.mixlr.com/events/4395480",
+    "[Mixlr] 4395480: Downloading JSON metadata",
+    "[Mixlr] 4395480: Checking stream",
+    "[info] Available formats for 4395480:",
+    "ID EXT RESOLUTION | PROTO | VCODEC     ACODEC",
+    "---------------------------------------------",
+    "0  aac audio only | https | audio only aac"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://octet.mixlr.com/events/100",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(uploader)s|%(uploader_id)s|%(description)s|%(timestamp)s|%(release_timestamp)s|%(concurrent_view_count)s|%(like_count)s|%(thumbnail)s|%(format_id)s|%(ext)s|%(vcodec)s|%(acodec)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "100|Octet event|True|is_live|octet|NA|NA|NA|1735689600|NA|NA|NA|0|mp3|none|mp3|https://edge.mixlr.com/channel/octet"
+   ],
+   "stderr": [
+    "WARNING: [Mixlr] The server did not return a valid file extension for the stream URL. Assuming an mp3 stream; postprocessing may fail if this is incorrect"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://upcoming.mixlr.com/events/200",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Mixlr] 200: This event will start at 2026-12-24T18:00:00Z"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://upcoming.mixlr.com/events/200",
+   "args": [
+    "--ignore-no-formats-error",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"200\", \"uploader\": \"upcoming\", \"formats\": [], \"release_timestamp\": 1798135200, \"title\": \"Upcoming event\", \"webpage_url\": \"https://upcoming.mixlr.com/events/200\", \"original_url\": \"https://upcoming.mixlr.com/events/200\", \"webpage_url_basename\": \"200\", \"webpage_url_domain\": \"upcoming.mixlr.com\", \"extractor\": \"Mixlr\", \"extractor_key\": \"Mixlr\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"200\", \"fulltitle\": \"Upcoming event\", \"release_date\": \"20261224\", \"release_year\": 2026, \"requested_subtitles\": null, \"_has_drm\": null, \"_filename\": \"Upcoming event [200].NA\", \"filename\": \"Upcoming event [200].NA\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Mixlr] This event will start at 2026-12-24T18:00:00Z",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://gone.mixlr.com/events/300",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [Mixlr] 300: Unable to download webpage: HTTP Error 404: Not Found",
+    "ERROR: [Mixlr] 300: This event will start at 2025-02-02T10:00:00Z"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://empty.mixlr.com/events/400",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Mixlr] 400: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://biblewayng.mixlr.com/recordings/2375193",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2375193\", \"ext\": \"mp3\", \"url\": \"https://cdn.mixlr.com/recordings/2375193.mp3?sig=1\", \"title\": \"God's Jewels and Their Resting Place Bro. Adeniji\", \"description\": \"Preached February 21, 2024 in the evening\", \"timestamp\": 1708544542, \"duration\": 10968, \"thumbnail\": \"https://imagecdn.mixlr.com/cdn-cgi/image/fit=cover/ceca120ef707f642abeea6e29cd74238.jpg\", \"uploader_id\": \"8659190\", \"webpage_url\": \"https://biblewayng.mixlr.com/recordings/2375193\", \"original_url\": \"https://biblewayng.mixlr.com/recordings/2375193\", \"webpage_url_basename\": \"2375193\", \"webpage_url_domain\": \"biblewayng.mixlr.com\", \"extractor\": \"MixlrRecoring\", \"extractor_key\": \"MixlrRecoring\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://imagecdn.mixlr.com/cdn-cgi/image/fit=cover/ceca120ef707f642abeea6e29cd74238.jpg\", \"id\": \"0\"}], \"display_id\": \"2375193\", \"fulltitle\": \"God's Jewels and Their Resting Place Bro. Adeniji\", \"duration_string\": \"3:02:48\", \"upload_date\": \"20240221\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"God's Jewels and Their Resting Place Bro. Adeniji [2375193].mp3\", \"filename\": \"God's Jewels and Their Resting Place Bro. Adeniji [2375193].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://biblewayng.mixlr.com/recordings/2375193",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[MixlrRecoring] Extracting URL: https://biblewayng.mixlr.com/recordings/2375193",
+    "[MixlrRecoring] 2375193: Downloading JSON metadata",
+    "[info] 2375193: Downloading 1 format(s): 0",
+    "[download] Destination: 2375193.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "2375193.mp3": 22
+   }
+  },
+  {
+   "url": "https://noformat.mixlr.com/recordings/9",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"9\", \"url\": \"https://cdn.mixlr.com/recordings/9.m4a\", \"title\": \"No format\", \"webpage_url\": \"https://noformat.mixlr.com/recordings/9\", \"original_url\": \"https://noformat.mixlr.com/recordings/9\", \"webpage_url_basename\": \"9\", \"webpage_url_domain\": \"noformat.mixlr.com\", \"extractor\": \"MixlrRecoring\", \"extractor_key\": \"MixlrRecoring\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"9\", \"fulltitle\": \"No format\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"No format [9].m4a\", \"filename\": \"No format [9].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://nourl.mixlr.com/recordings/10",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [MixlrRecoring] 10: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://missing.mixlr.com/recordings/11",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [MixlrRecoring] 11: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

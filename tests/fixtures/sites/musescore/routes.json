@@ -1,0 +1,66 @@
+{
+ "routes": [
+  {
+   "url": "https://musescore.com/user/73797/scores/142975",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:url\" content=\"https://musescore.com/user/73797/scores/142975\"><meta property=\"og:title\" content=\"WA Mozart Marche Turque (Turkish March fingered)\"><meta name=\"description\" content=\"Download and print in PDF or MIDI free sheet music for Rondo Alla Turca &amp; more.\n  Arranged   by PapyPiano\"><meta property=\"og:image\" content=\"https://cdn.ustatik.com/musescore/scoredata/g/abc/score_0.png@500x660?no-cache=1&amp;bgclr=ffffff\"><meta property=\"musescore:author\" content=\"PapyPiano\"><meta property=\"musescore:composer\" content=\"Wolfgang Amadeus Mozart\"></head><body></body></html>"
+  },
+  {
+   "url": "https://musescore.com/api/jmuse?id=142975&index=0&type=mp3",
+   "request_headers": {
+    "authorization": "096c"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"info\": {\"url\": \"https://s3.ultimate-guitar.test/musescore.scoredata/g/abc/score.mp3?response-content-disposition=attachment\"}}"
+  },
+  {
+   "url": "https://s3.ultimate-guitar.test/musescore.scoredata/g/abc/score.mp3?response-content-disposition=attachment",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3musescore"
+  },
+  {
+   "url": "https://musescore.com/classicman/fur-elise",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:url\" content=\"https://musescore.com/user/1/scores/33816\"><meta property=\"og:title\" content=\"Für Elise – Beethoven\"></head><body></body></html>"
+  },
+  {
+   "url": "https://musescore.com/api/jmuse?id=33816&index=0&type=mp3",
+   "request_headers": {
+    "authorization": "5d02"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"info\": {\"url\": \"https://s3.ultimate-guitar.test/fur.mp3\"}}"
+  },
+  {
+   "url": "https://musescore.com/minh_cuteee/scores/6555384",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"No og:url\"></head><body></body></html>"
+  },
+  {
+   "url": "https://musescore.com/user/2/scores/555",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:url\" content=\"https://musescore.com/user/2/scores/555\"></head><body></body></html>"
+  },
+  {
+   "url": "https://musescore.com/api/jmuse?id=555&index=0&type=mp3",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"denied\"}"
+  }
+ ]
+}

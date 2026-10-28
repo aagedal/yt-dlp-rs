@@ -1,6 +1,6 @@
 //! Subtitle-embedding metadata plans. Publication and cleanup belong to orchestration.
 pub(crate) mod ffmpeg;
-mod languages;
+pub(crate) mod languages;
 use crate::{Error, Result};
 pub(crate) use languages::short_to_long;
 use std::path::PathBuf;

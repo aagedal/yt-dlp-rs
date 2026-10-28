@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "http://embed.live.huffingtonpost.com/api/segments/52dd3e4b02a7602131000677.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"title\": \"Legalese It! with @MikeSacksHP\", \"description\": \"Desc\", \"running_time\": \"00:25:26\", \"schedule\": {\"starts_at\": \"\"}, \"segment_start_date_time\": \"2014-01-20 18:00:00\", \"images\": {\"small\": \"https://hpl.test/img-1280x720.jpg\", \"none\": null, \"bad\": \"https://hpl.test/img.jpg\"}, \"sources\": {\"live\": {\"video/mp4_600\": \"https://hpl.test/v600.mp4\", \"audio/mp3\": \"https://hpl.test/a.mp3\"}, \"live_again\": {\"hls\": \"https://hpl.test/master.m3u8\"}}}}"
+  },
+  {
+   "url": "https://hpl.test/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "http://embed.live.huffingtonpost.com/api/segments/abc.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"title\": \"x\"}}"
+  },
+  {
+   "url": "https://hp-host.test/post",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Post</title></head><body><iframe src=\"https://embed.live.huffingtonpost.com/HPLEmbedPlayer/?segmentId=52dd3e4b02a7602131000677\"></iframe></body></html>"
+  }
+ ]
+}

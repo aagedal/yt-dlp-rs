@@ -1,0 +1,48 @@
+{
+ "routes": [
+  {
+   "url": "https://skeb.jp/api/users/u1/works/10",
+   "request_headers": {
+    "Authorization": "Bearer null"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"nsfw\": false, \"source_body\": null, \"body\": \"<p>Hello<br>world</p>\", \"genre\": \"video\", \"tag_list\": [\"a\", \"\", \"b\"], \"creator\": {\"name\": \"Uploader\"}, \"previews\": [{\"id\": 466853, \"url\": \"https://skeb-media.test/1.mp4\", \"poster_url\": \"https://skeb-media.test/1.jpg\", \"vtt_url\": \"https://skeb-media.test/1.vtt\", \"information\": {\"extension\": \"mp4\", \"duration\": 313, \"frame_rate\": 30, \"height\": 720, \"width\": 1280}}, {\"id\": 2, \"url\": \"https://skeb-media.test/2.png\", \"information\": {\"extension\": \"png\"}}, {\"id\": 3, \"url\": null}, {\"id\": 489408, \"url\": \"https://skeb-media.test/3.mp3\", \"information\": {\"extension\": \"mp3\", \"duration\": 98.6}}]}"
+  },
+  {
+   "url": "https://skeb.jp/api/users/u2/works/11",
+   "request_headers": {
+    "Cookie": "request_key=KEY1"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"nsfw\": true, \"source_body\": \"Source\", \"genre\": \"\", \"tag_list\": [], \"creator\": {}, \"previews\": [{\"id\": \"w\", \"url\": \"https://skeb-media.test/4.wav\", \"information\": {\"extension\": \"wav\"}}]}"
+  },
+  {
+   "url": "https://skeb.jp/api/users/u2/works/11",
+   "status": 429,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "<script>document.cookie = 'request_key=KEY1; path=/';location.reload()</script>"
+  },
+  {
+   "url": "https://skeb.jp/api/users/u3/works/12",
+   "status": 429,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "<p>slow down</p>"
+  },
+  {
+   "url": "https://skeb.jp/api/users/u4/works/13",
+   "status": 500,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "oops"
+  }
+ ]
+}

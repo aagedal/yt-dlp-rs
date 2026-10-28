@@ -1,0 +1,81 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://page.test/turbo.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"F_xQzS2jwb3\", \"formats\": [{\"format_id\": \"640\", \"format_index\": null, \"url\": \"https://www.viously.com/video/hls/F_xQzS2jwb3/lo/index.m3u8\", \"manifest_url\": \"https://www.viously.com/video/hls/F_xQzS2jwb3/index.m3u8\", \"tbr\": 640.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"640 - 640x360\"}, {\"format_id\": \"1280\", \"format_index\": null, \"url\": \"https://www.viously.com/video/hls/F_xQzS2jwb3/hi/index.m3u8\", \"manifest_url\": \"https://www.viously.com/video/hls/F_xQzS2jwb3/index.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1280 - 1280x720\"}], \"title\": \"Turbo du 07/09/2014\\u00a0: Renault\", \"description\": \"Turbo desc\", \"duration\": 3716, \"timestamp\": 1680037507, \"categories\": [\"motors\"], \"extractor\": \"Viously\", \"extractor_key\": \"Viously\", \"thumbnail\": \"https://page.test/og.jpg\", \"webpage_url\": \"https://page.test/turbo.html\", \"original_url\": \"https://page.test/turbo.html\", \"webpage_url_basename\": \"turbo.html\", \"webpage_url_domain\": \"page.test\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://page.test/og.jpg\", \"id\": \"0\"}], \"display_id\": \"F_xQzS2jwb3\", \"fulltitle\": \"Turbo du 07/09/2014\\u00a0: Renault\", \"duration_string\": \"1:01:56\", \"upload_date\": \"20230328\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"1280\", \"url\": \"https://www.viously.com/video/hls/F_xQzS2jwb3/hi/index.m3u8\", \"manifest_url\": \"https://www.viously.com/video/hls/F_xQzS2jwb3/index.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1280 - 1280x720\", \"_filename\": \"Turbo du 07\\u29f809\\u29f82014\\u00a0\\uff1a Renault [F_xQzS2jwb3].mp4\", \"filename\": \"Turbo du 07\\u29f809\\u29f82014\\u00a0\\uff1a Renault [F_xQzS2jwb3].mp4\", \"__write_download_archive\": false}], \"format_id\": \"1280\", \"format_index\": null, \"url\": \"https://www.viously.com/video/hls/F_xQzS2jwb3/hi/index.m3u8\", \"manifest_url\": \"https://www.viously.com/video/hls/F_xQzS2jwb3/index.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1280 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://page.test/turbo.html",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(thumbnail)s|%(duration)s|%(upload_date)s|%(categories)s|%(age_limit)s|%(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "F_xQzS2jwb3|Turbo du 07/09/2014 : Renault|Turbo desc|https://page.test/og.jpg|3716|20230328|['motors']|NA|Viously"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://page.test/sparse.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"sparse1\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://www.viously.com/video/hls/sparse1/index.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"description\": \"Page desc\", \"duration\": 3716, \"extractor\": \"Viously\", \"extractor_key\": \"Viously\", \"title\": \"OG  title\", \"timestamp\": 1680037507, \"webpage_url\": \"https://page.test/sparse.html\", \"original_url\": \"https://page.test/sparse.html\", \"webpage_url_basename\": \"sparse.html\", \"webpage_url_domain\": \"page.test\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"sparse1\", \"fulltitle\": \"OG  title\", \"duration_string\": \"1:01:56\", \"upload_date\": \"20230328\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"0\", \"url\": \"https://www.viously.com/video/hls/sparse1/index.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"OG  title [sparse1].m3u8\", \"filename\": \"OG  title [sparse1].m3u8\", \"__write_download_archive\": false}], \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://www.viously.com/video/hls/sparse1/index.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://page.test/multi.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"multi\", \"title\": \"Multi\", \"timestamp\": null, \"description\": null, \"thumbnail\": null, \"age_limit\": null, \"_type\": \"playlist\", \"entries\": [{\"id\": \"multi1\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://www.viously.com/video/hls/multi1/index.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"title\": \"First\", \"extractor\": \"Viously\", \"extractor_key\": \"Viously\", \"playlist_count\": 2, \"playlist\": \"Multi\", \"playlist_id\": \"multi\", \"playlist_title\": \"Multi\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://page.test/multi.html\", \"n_entries\": 2, \"webpage_url\": \"https://page.test/multi.html\", \"webpage_url_basename\": \"multi.html\", \"webpage_url_domain\": \"page.test\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"display_id\": \"multi1\", \"fulltitle\": \"First\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"0\", \"url\": \"https://www.viously.com/video/hls/multi1/index.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"First [multi1].m3u8\", \"filename\": \"First [multi1].m3u8\", \"__write_download_archive\": false}], \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://www.viously.com/video/hls/multi1/index.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}, {\"id\": \"multi2\", \"formats\": [{\"format_id\": \"640\", \"format_index\": null, \"url\": \"https://www.viously.com/video/hls/multi2/lo/index.m3u8\", \"manifest_url\": \"https://www.viously.com/video/hls/multi2/index.m3u8\", \"tbr\": 640.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"640 - 640x360\"}, {\"format_id\": \"1280\", \"format_index\": null, \"url\": \"https://www.viously.com/video/hls/multi2/hi/index.m3u8\", \"manifest_url\": \"https://www.viously.com/video/hls/multi2/index.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1280 - 1280x720\"}], \"extractor\": \"Viously\", \"extractor_key\": \"Viously\", \"playlist_count\": 2, \"playlist\": \"Multi\", \"playlist_id\": \"multi\", \"playlist_title\": \"Multi\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://page.test/multi.html\", \"n_entries\": 2, \"webpage_url\": \"https://page.test/multi.html\", \"webpage_url_basename\": \"multi.html\", \"webpage_url_domain\": \"page.test\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"display_id\": \"multi2\", \"fulltitle\": null, \"title\": \"Viously video #multi2\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"1280\", \"url\": \"https://www.viously.com/video/hls/multi2/hi/index.m3u8\", \"manifest_url\": \"https://www.viously.com/video/hls/multi2/index.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1280 - 1280x720\", \"_filename\": \"Viously video #multi2 [multi2].mp4\", \"filename\": \"Viously video #multi2 [multi2].mp4\", \"__write_download_archive\": false}], \"format_id\": \"1280\", \"format_index\": null, \"url\": \"https://www.viously.com/video/hls/multi2/hi/index.m3u8\", \"manifest_url\": \"https://www.viously.com/video/hls/multi2/index.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1280 - 1280x720\"}], \"webpage_url\": \"https://page.test/multi.html\", \"original_url\": \"https://page.test/multi.html\", \"webpage_url_basename\": \"multi.html\", \"webpage_url_domain\": \"page.test\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [Viously] gone1: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [Viously] multi2: Unable to download JSON metadata: HTTP Error 404: Not Found",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://page.test/none.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [Viously] gone1: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "ERROR: Unsupported URL: https://page.test/none.html"
+   ],
+   "files": {}
+  }
+ ]
+}

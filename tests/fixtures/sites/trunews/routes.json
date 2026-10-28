@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://player.zype.com/embed/5b400b834b32992a310622ba.json?api_key=X5XnahkjCwJrT_l5zUqypnaLEObotyvtUKJWWlONxDoHVjP8vqxlArLV8llxMbyt",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"body\": {\"outputs\": [{\"name\": \"mp4\", \"url\": \"https://zype-pd.test/b.mp4\"}, {\"name\": \"m3u8\", \"url\": \"https://zype-hls.test/b/master.m3u8\"}]}, \"video\": {\"title\": \"HLS\"}}}"
+  },
+  {
+   "url": "https://zype-hls.test/b/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://api.zype.com/videos?app_key=PUVKp9WgGUb3-JUw6EqafLx8tFVP6VKZTWbUOR-HOm__g4fNDt1bCsm_LgYf_k9H&per_page=1&active=true&friendly_title=state-of-the-union",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": [{\"_id\": \"5b400b834b32992a310622ba\"}]}"
+  },
+  {
+   "url": "https://api.zype.com/videos?app_key=PUVKp9WgGUb3-JUw6EqafLx8tFVP6VKZTWbUOR-HOm__g4fNDt1bCsm_LgYf_k9H&per_page=1&active=true&friendly_title=missing",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": []}"
+  }
+ ]
+}

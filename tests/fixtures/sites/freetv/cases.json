@@ -1,0 +1,29 @@
+[
+ {
+  "url": "https://www.freetv.com/peliculas/atrapame-si-puedes/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.freetv.com/series/el-detective-l/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.freetv.com/series/el-detective-l/",
+  "args": [
+   "-I",
+   "1",
+   "--print",
+   "%(id)s|%(series)s|%(season_number)s|%(episode_number)s|%(playlist_index)s"
+  ]
+ },
+ {
+  "url": "https://www.freetv.com/peliculas/nada/",
+  "args": [
+   "-j"
+  ]
+ }
+]

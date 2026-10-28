@@ -1,0 +1,70 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.cpac.ca/episode?id=fc7edcae-4660-47e1-ba61-5b7f29a9db0f",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"fc7edcae-4660-47e1-ba61-5b7f29a9db0f\", \"formats\": [{\"format_id\": \"hls-aud-French\", \"format_note\": \"French\", \"format_index\": null, \"url\": \"https://cpac-hls.test/fc7e/fr/a.m3u8\", \"manifest_url\": \"https://cpac-hls.test/fc7e/master.m3u8\", \"language\": \"fr\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"language_preference\": -10, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-aud-French - audio only (French)\"}, {\"format_id\": \"hls-aud-English\", \"format_note\": \"English\", \"format_index\": null, \"url\": \"https://cpac-hls.test/fc7e/en/a.m3u8\", \"manifest_url\": \"https://cpac-hls.test/fc7e/master.m3u8\", \"language\": \"en\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"language_preference\": 10, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-aud-English - audio only (English)\"}, {\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://cpac-hls.test/fc7e/360/index.m3u8\", \"manifest_url\": \"https://cpac-hls.test/fc7e/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"language_preference\": -1, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 921.0, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"title\": \"Honour the Next Generation\", \"description\": \"Desc\", \"timestamp\": 1608555600, \"categories\": [\"Politics\"], \"thumbnail\": \"https://www.cpac.ca/img/fc7e.jpg\", \"is_live\": false, \"webpage_url\": \"https://www.cpac.ca/episode?id=fc7edcae-4660-47e1-ba61-5b7f29a9db0f\", \"original_url\": \"https://www.cpac.ca/episode?id=fc7edcae-4660-47e1-ba61-5b7f29a9db0f\", \"webpage_url_basename\": \"episode\", \"webpage_url_domain\": \"cpac.ca\", \"extractor\": \"cpac\", \"extractor_key\": \"CPAC\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://www.cpac.ca/img/fc7e.jpg\", \"id\": \"0\"}], \"display_id\": \"fc7edcae-4660-47e1-ba61-5b7f29a9db0f\", \"fulltitle\": \"Honour the Next Generation\", \"upload_date\": \"20201221\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"requested_formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://cpac-hls.test/fc7e/360/index.m3u8\", \"manifest_url\": \"https://cpac-hls.test/fc7e/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"language_preference\": -1, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 921.0, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-aud-English\", \"format_note\": \"English\", \"format_index\": null, \"url\": \"https://cpac-hls.test/fc7e/en/a.m3u8\", \"manifest_url\": \"https://cpac-hls.test/fc7e/master.m3u8\", \"language\": \"en\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"language_preference\": 10, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-aud-English - audio only (English)\"}], \"format\": \"hls-921 - 640x360+hls-aud-English - audio only (English)\", \"format_id\": \"hls-921+hls-aud-English\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"language\": \"en\", \"format_note\": \"English\", \"tbr\": 921.0, \"width\": 640, \"height\": 360, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.4d401e\", \"vbr\": 921.0, \"aspect_ratio\": 1.78, \"_filename\": \"Honour the Next Generation [fc7edcae-4660-47e1-ba61-5b7f29a9db0f].mp4\", \"filename\": \"Honour the Next Generation [fc7edcae-4660-47e1-ba61-5b7f29a9db0f].mp4\", \"__write_download_archive\": false}], \"requested_formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://cpac-hls.test/fc7e/360/index.m3u8\", \"manifest_url\": \"https://cpac-hls.test/fc7e/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"language_preference\": -1, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 921.0, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"hls-aud-English\", \"format_note\": \"English\", \"format_index\": null, \"url\": \"https://cpac-hls.test/fc7e/en/a.m3u8\", \"manifest_url\": \"https://cpac-hls.test/fc7e/master.m3u8\", \"language\": \"en\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"language_preference\": 10, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-aud-English - audio only (English)\"}], \"format\": \"hls-921 - 640x360+hls-aud-English - audio only (English)\", \"format_id\": \"hls-921+hls-aud-English\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"language\": \"en\", \"format_note\": \"English\", \"filesize_approx\": null, \"tbr\": 921.0, \"width\": 640, \"height\": 360, \"resolution\": \"640x360\", \"fps\": null, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.4d401e\", \"vbr\": 921.0, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": null, \"abr\": null, \"asr\": null, \"audio_channels\": null, \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.cpac.ca/l-episode?id=fc7edcae-4660-47e1-ba61-5b7f29a9db0f",
+   "args": [
+    "--print",
+    "%(title)s|%(categories)s|%(formats.:.language_preference)s|%(is_live)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "Rendre hommage|NA|[-10, 10, -1]|False"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.cpac.ca/episode?id=00000000-0000-0000-0000-000000000000",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 00000000-0000-0000-0000-000000000000: An extractor error has occurred. (caused by KeyError('details')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.cpac.ca/program?id=6",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"id=6\", \"title\": \"6\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"url\": \"https://www.cpac.ca/episode?id=fc7edcae-4660-47e1-ba61-5b7f29a9db0f\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"https://www.cpac.ca/episode?id=11111111-2222-3333-4444-555555555555\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.cpac.ca/program?id=6\", \"original_url\": \"https://www.cpac.ca/program?id=6\", \"webpage_url_basename\": \"program\", \"webpage_url_domain\": \"cpac.ca\", \"extractor\": \"cpac:playlist\", \"extractor_key\": \"CPACPlaylist\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.cpac.ca/search?key=hudson&type=all",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"key=hudson\", \"title\": \"hudson\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.cpac.ca/search?key=hudson&type=all\", \"original_url\": \"https://www.cpac.ca/search?key=hudson&type=all\", \"webpage_url_basename\": \"search\", \"webpage_url_domain\": \"cpac.ca\", \"extractor\": \"cpac:playlist\", \"extractor_key\": \"CPACPlaylist\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [cpac:playlist] key=hudson: Unable to download JSON metadata: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  }
+ ]
+}

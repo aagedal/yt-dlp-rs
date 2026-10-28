@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "http://vod.sport5.co.il/?Vc=147&Vi=176331&Page=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<embed src=\"player.swf?clipId=NOsKJpHT4k&x=1\">"
+  },
+  {
+   "url": "http://sport5-metadata-rr-d.nsacdn.com/vod/vod/NOsKJpHT4k/HDS/metadata.xml",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?><Metadata><Title>Goal</Title><Description>Great goal</Description><Duration>95</Duration>\n<PosterLinks><PosterIMG width=\"640\" height=\"360\">https://sport5.test/p1.jpg</PosterIMG></PosterLinks>\n<Categories><Category name=\"Football\"/><Category name=\"Israel\"/></Categories>\n<PlaybackLinks><FileURL bitrate=\"800\" width=\"640\" height=\"360\">https://sport5.test/v800.mp4</FileURL><FileURL bitrate=\"1500\" width=\"1280\" height=\"720\">https://sport5.test/v1500.mp4</FileURL></PlaybackLinks></Metadata>"
+  },
+  {
+   "url": "http://www.sport5.co.il/articles.aspx?FolderID=3075&docID=2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "clipId=gone-1"
+  },
+  {
+   "url": "http://sport5-metadata-rr-d.nsacdn.com/vod/vod/gone-1/HDS/metadata.xml",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<?xml version=\"1.0\"?><Metadata><Error><Name>NotFound</Name><Description>No clip</Description></Error></Metadata>"
+  },
+  {
+   "url": "http://www.sport5.co.il/articles.aspx?docID=3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "nothing"
+  }
+ ]
+}

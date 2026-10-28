@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://www.vbox7.com/aj/player/item/options?vid=0946fff23c",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"options\": {\"src\": \"https://edge1.vbox7.test/sl/0946fff23c/0946fff23c_576.mpd\", \"title\": \"\\u0411\\u043e\\u0440\\u0438\\u0441\\u043e\\u0432: \\u041a\\u043e\\u0439 \\u0449\\u0435 \\u0431\\u044a\\u0434\\u0435\", \"uploader\": \"zdraveibulgaria\", \"duration\": 41, \"resolutions\": [576, 360, 0, \"1080\"]}}"
+  },
+  {
+   "url": "https://edge1.vbox7.test/sl/0946fff23c/0946fff23c.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.vbox7.com/play:0946fff23c",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script type=\"application/ld+json\">{\"@context\": \"https://schema.org\", \"@type\": \"VideoObject\", \"name\": \"LD title\", \"description\": \"\\u0411\\u043e\\u0440\\u0438\\u0441\\u043e\\u0432\", \"uploadDate\": \"2023-03-06T10:00:00+02:00\", \"thumbnailUrl\": \"https://i49.vbox7.test/t.jpg\", \"duration\": \"PT41S\"}</script>"
+  },
+  {
+   "url": "https://www.vbox7.com/aj/player/item/options?vid=a240d20f9c",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"options\": {\"src\": \"blank\"}}"
+  },
+  {
+   "url": "https://www.vbox7.com/aj/player/item/options?vid=bbbbbbbb",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"options\": {\"src\": \"https://edge1.vbox7.test/sl/x/vn_576.mp4\"}}"
+  },
+  {
+   "url": "https://www.vbox7.com/aj/player/item/options?vid=cccccccc",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"options\": {\"src\": \"https://edge1.vbox7.test/sl/c/c_480.mp4\", \"resolutions\": [480]}}"
+  },
+  {
+   "url": "https://www.vbox7.com/play:cccccccc",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>no ld</html>"
+  },
+  {
+   "url": "https://news.vbox7.test/article",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<iframe width=\"1\" src=\"//vbox7.com/emb/external.php?vid=cccccccc\"></iframe>"
+  }
+ ]
+}

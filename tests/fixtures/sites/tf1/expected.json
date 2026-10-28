@@ -1,0 +1,121 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.tf1.fr/tmc/burger-quiz/videos/burger-quiz-s03-ep21.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"14010600\", \"title\": \"Burger Quiz - S03 EP21\", \"thumbnail\": \"https://photos.tf1.fr/preview.jpg\", \"upload_date\": \"20230819\", \"duration\": 2312, \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://tf1-hls.test/14010600/360/index.m3u8\", \"manifest_url\": \"https://tf1-hls.test/14010600/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"subtitles\": {\"fr\": [{\"url\": \"https://tf1-hls.test/14010600/subs/fr.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"original_url\": \"https://www.tf1.fr/tmc/burger-quiz/videos/burger-quiz-s03-ep21.html\", \"webpage_url\": \"https://www.tf1.fr/tmc/burger-quiz/videos/burger-quiz-s03-ep21.html\", \"webpage_url_basename\": \"burger-quiz-s03-ep21.html\", \"webpage_url_domain\": \"tf1.fr\", \"extractor\": \"wat.tv\", \"extractor_key\": \"Wat\", \"thumbnails\": [{\"url\": \"https://photos.tf1.fr/640/360/bq.jpg\", \"width\": null, \"id\": \"0\"}, {\"url\": \"https://photos.tf1.fr/1280/720/bq.jpg\", \"width\": 1280, \"id\": \"1\"}], \"description\": \"Manu Payet recevra...\", \"timestamp\": 1692469471, \"tags\": [\"humour\", \"jeu\"], \"series\": \"Burger Quiz\", \"season_number\": 3, \"episode_number\": 21, \"playlist\": null, \"playlist_index\": null, \"display_id\": \"14010600\", \"fulltitle\": \"Burger Quiz - S03 EP21\", \"duration_string\": \"38:32\", \"release_year\": null, \"season\": \"Season 3\", \"episode\": \"Episode 21\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-921\", \"url\": \"https://tf1-hls.test/14010600/360/index.m3u8\", \"manifest_url\": \"https://tf1-hls.test/14010600/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"Burger Quiz - S03 EP21 [14010600].mp4\", \"filename\": \"Burger Quiz - S03 EP21 [14010600].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://tf1-hls.test/14010600/360/index.m3u8\", \"manifest_url\": \"https://tf1-hls.test/14010600/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.tf1.fr/tmc/burger-quiz/videos/burger-quiz-s03-ep21.html",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[TF1] Extracting URL: https://www.tf1.fr/tmc/burger-quiz/videos/burger-quiz-s03-ep21.html",
+    "[TF1] burger-quiz-s03-ep21: Downloading JSON metadata",
+    "[wat.tv] Extracting URL: wat:14010600",
+    "[wat.tv] 14010600: Downloading JSON metadata",
+    "[wat.tv] 14010600: Downloading m3u8 information",
+    "[info] Available subtitles for 14010600:",
+    "Language Formats",
+    "fr       vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.tf1.fr/tmc/quotidien/videos/sans-media.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"13641379\", \"title\": \"Quotidien\", \"thumbnail\": null, \"upload_date\": null, \"formats\": [{\"format_id\": \"dash-v1\", \"manifest_url\": \"https://das-q1-ssl.tf1.fr/13641379/manifest.mpd\", \"ext\": \"mp4\", \"width\": 640, \"height\": 360, \"tbr\": 800.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401e\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://das-q1-ssl.tf1.fr/13641379/v1.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 800.0, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-v1 - 640x360 (DASH video)\"}], \"subtitles\": {}, \"original_url\": \"https://www.tf1.fr/tmc/quotidien/videos/sans-media.html\", \"webpage_url\": \"https://www.tf1.fr/tmc/quotidien/videos/sans-media.html\", \"webpage_url_basename\": \"sans-media.html\", \"webpage_url_domain\": \"tf1.fr\", \"extractor\": \"wat.tv\", \"extractor_key\": \"Wat\", \"thumbnails\": [], \"tags\": [], \"playlist\": null, \"playlist_index\": null, \"display_id\": \"13641379\", \"fulltitle\": \"Quotidien\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"dash-v1\", \"manifest_url\": \"https://das-q1-ssl.tf1.fr/13641379/manifest.mpd\", \"ext\": \"mp4\", \"width\": 640, \"height\": 360, \"tbr\": 800.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401e\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://das-q1-ssl.tf1.fr/13641379/v1.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 800.0, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-v1 - 640x360 (DASH video)\", \"_filename\": \"Quotidien [13641379].mp4\", \"filename\": \"Quotidien [13641379].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.tf1.fr/tmc/x/videos/pas-de-stream.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: pas-de-stream: An extractor error has occurred. (caused by KeyError('streamId')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.wat.tv/video/soupe-figues-6z1uz_2hvf7_.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [wat.tv] 6z1uz: Video unavailable in your area"
+   ],
+   "files": {}
+  },
+  {
+   "url": "wat:1000001",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [wat.tv] 1000001: Delivery failed: not found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "wat:1000002",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [wat.tv] 1000002: This video is DRM protected"
+   ],
+   "files": {}
+  },
+  {
+   "url": "wat:1000003",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [wat.tv] 1000003: This video is DRM protected"
+   ],
+   "files": {}
+  },
+  {
+   "url": "wat:1000004",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [wat.tv] 1000004: Unable to download JSON metadata: HTTP Error 404: Not Found",
+    "ERROR: [wat.tv] 1000004: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,60 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://footyroom.com/matches/79922154/hull-city-vs-chelsea/review",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"79922154\", \"title\": \"Hull City vs Chelsea\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Streamable\", \"_type\": \"url\", \"url\": \"https://streamable.com/e/abc1\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"http://footyroom.com/matches/79922154/hull-city-vs-chelsea/review\", \"original_url\": \"http://footyroom.com/matches/79922154/hull-city-vs-chelsea/review\", \"webpage_url_basename\": \"review\", \"webpage_url_domain\": \"footyroom.com\", \"extractor\": \"FootyRoom\", \"extractor_key\": \"FootyRoom\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://footyroom.com/matches/79922154/hull-city-vs-chelsea/review",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(url)s %(id)s %(ie_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "https://streamable.com/e/abc1 abc1 Streamable"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://footyroom.com/matches/2/empty",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"http://footyroom.com/matches/2/empty\", \"original_url\": \"http://footyroom.com/matches/2/empty\", \"webpage_url_basename\": \"empty\", \"webpage_url_domain\": \"footyroom.com\", \"extractor\": \"FootyRoom\", \"extractor_key\": \"FootyRoom\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [FootyRoom] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://footyroom.com/matches/3/none",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [FootyRoom] 3: Unable to extract media data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

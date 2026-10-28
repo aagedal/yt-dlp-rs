@@ -1,0 +1,56 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://embed.indavideo.hu/player/video/1bdc3c6d80/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1837039\", \"title\": \"Cicat\\u00e1nc\", \"description\": \"\", \"thumbnails\": [{\"url\": \"https://pics.indavideo.hu/videos/2016/08/14/1bdc3c6d80/1.jpg\", \"id\": \"0\"}, {\"url\": \"https://pics.indavideo.hu/videos/2016/08/14/1bdc3c6d80/2.jpg\", \"id\": \"1\"}], \"uploader\": \"cukiajanlo\", \"uploader_id\": \"83729\", \"timestamp\": 1471201933, \"duration\": 72, \"age_limit\": 0, \"tags\": [\"t\\u00e1nc\", \"macska\"], \"formats\": [{\"url\": \"https://hu.indavideo.test/1bdc3c6d80.360.mp4?token=tok360\", \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 360p\"}, {\"url\": \"https://hu.indavideo.test/1bdc3c6d80.720.mp4?token=tok720\", \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 720p\"}], \"webpage_url\": \"https://embed.indavideo.hu/player/video/1bdc3c6d80/\", \"original_url\": \"https://embed.indavideo.hu/player/video/1bdc3c6d80/\", \"webpage_url_basename\": \"1bdc3c6d80\", \"webpage_url_domain\": \"embed.indavideo.hu\", \"extractor\": \"IndavideoEmbed\", \"extractor_key\": \"IndavideoEmbed\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://pics.indavideo.hu/videos/2016/08/14/1bdc3c6d80/2.jpg\", \"display_id\": \"1837039\", \"fulltitle\": \"Cicat\\u00e1nc\", \"duration_string\": \"1:12\", \"upload_date\": \"20160814\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://hu.indavideo.test/1bdc3c6d80.720.mp4?token=tok720\", \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 720p\", \"_filename\": \"Cicat\\u00e1nc [1837039].mp4\", \"filename\": \"Cicat\\u00e1nc [1837039].mp4\", \"__write_download_archive\": false}], \"url\": \"https://hu.indavideo.test/1bdc3c6d80.720.mp4?token=tok720\", \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 720p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://assets.indavideo.hu/swf/player.swf?v=fe25e500&vID=abc&autostart=1",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"abc\", \"title\": \"Egy\", \"description\": null, \"thumbnails\": [], \"uploader\": null, \"uploader_id\": null, \"timestamp\": null, \"age_limit\": null, \"tags\": [], \"formats\": [{\"url\": \"https://hu.indavideo.test/abc.mp4?token=tok480\", \"height\": 480, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 480p\"}], \"webpage_url\": \"https://assets.indavideo.hu/swf/player.swf?v=fe25e500&vID=abc&autostart=1\", \"original_url\": \"https://assets.indavideo.hu/swf/player.swf?v=fe25e500&vID=abc&autostart=1\", \"webpage_url_basename\": \"player.swf\", \"webpage_url_domain\": \"assets.indavideo.hu\", \"extractor\": \"IndavideoEmbed\", \"extractor_key\": \"IndavideoEmbed\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"abc\", \"fulltitle\": \"Egy\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://hu.indavideo.test/abc.mp4?token=tok480\", \"height\": 480, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 480p\", \"_filename\": \"Egy [abc].mp4\", \"filename\": \"Egy [abc].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://embed.indavideo.hu/player/video/dead",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: dead: An extractor error has occurred. (caused by KeyError('data')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://index.indavideo.test/video/Cicatanc",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(timestamp)s|%(formats.:.format_id)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1837039|Cicatánc|1471201933|['0', '1']|https://embed.indavideo.hu/player/video/1bdc3c6d80"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "http://www.dailymail.co.uk/video/tvshowbiz/video-1295863/The-Mountain.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div data-opts='{\"title\": \"The Mountain appears in sparkling water ad for &#39;Heavy Bubbles&#39;\", \"descr\": \"Gregor &amp; bubbles\", \"poster\": \"https://i.dailymail.co.uk/1295863.jpg\", \"plugins\": {\"sources\": {\"url\": \"https://www.dailymail.co.uk/api/player/1295863/sources.json\"}}}'></div>"
+  },
+  {
+   "url": "https://www.dailymail.co.uk/api/player/1295863/sources.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"body\": {\"renditions\": [{\"url\": \"https://video.dailymail.co.uk/1295863_hls.m3u8\", \"encodingRate\": 1500000, \"videoContainer\": \"M2TS\", \"frameWidth\": 1280, \"frameHeight\": 720, \"videoCodec\": \"H264\"}, {\"url\": \"https://video.dailymail.co.uk/1295863_1000.mp4\", \"encodingRate\": \"1000000\", \"videoContainer\": \"MP4\", \"frameWidth\": \"640\", \"frameHeight\": 360, \"videoCodec\": \"H264\"}, {\"url\": \"//video.dailymail.co.uk/1295863_low.mp4\", \"videoContainer\": \"MP4\"}, {\"url\": \"\"}]}}"
+  },
+  {
+   "url": "http://www.dailymail.co.uk/embed/video/3463585.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div data-opts='{\"title\": \"Jessie J\", \"thumbnail\": \"https://i.dailymail.co.uk/t.jpg\"}'></div>"
+  },
+  {
+   "url": "http://www.dailymail.co.uk/api/player/3463585/video-sources.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"renditions\": [{\"url\": \"https://video.dailymail.co.uk/3463585.mp4\", \"encodingRate\": 800000}]}"
+  },
+  {
+   "url": "https://www.daily-news.test/lifestyle/jessie-j/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><p>Story</p><iframe frameborder=\"0\" src=\"https://www.dailymail.co.uk/embed/video/3463585.html\"></iframe></body></html>"
+  },
+  {
+   "url": "https://www.dailymail.co.uk/embed/video/3463585.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div data-opts='{\"title\": \"Jessie J\", \"thumbnail\": \"https://i.dailymail.co.uk/t.jpg\"}'></div>"
+  },
+  {
+   "url": "http://www.dailymail.co.uk/embed/video/1.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>no player</html>"
+  },
+  {
+   "url": "http://www.dailymail.co.uk/embed/video/2.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div data-opts='{\"descr\": \"no title\"}'></div>"
+  }
+ ]
+}

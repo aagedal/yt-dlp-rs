@@ -1,0 +1,49 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://vodupload-api.mediaworks.nz/library/asset/published/VID00359",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"VID00359\", \"title\": \"Episode 1\", \"description\": \"Desc\", \"duration\": 1290.5, \"timestamp\": 1669402800, \"channel\": \"Rova\", \"thumbnails\": [{\"url\": \"https://mw.test/t1.jpg\", \"id\": \"0\"}], \"formats\": [{\"format_id\": \"128\", \"format_index\": null, \"url\": \"https://mw-cdn.test/audio.m3u8\", \"manifest_url\": \"https://mw-cdn.test/audio.m3u8\", \"tbr\": 128.0, \"ext\": \"mp3\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"aac\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"128 - audio only\"}, {\"format_id\": \"1000\", \"format_index\": null, \"url\": \"https://mw-cdn.test/720.m3u8\", \"manifest_url\": \"https://mw-cdn.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1000 - 1280x720\"}], \"subtitles\": {}, \"webpage_url\": \"https://vodupload-api.mediaworks.nz/library/asset/published/VID00359\", \"original_url\": \"https://vodupload-api.mediaworks.nz/library/asset/published/VID00359\", \"webpage_url_basename\": \"VID00359\", \"webpage_url_domain\": \"vodupload-api.mediaworks.nz\", \"extractor\": \"MediaWorksNZVOD\", \"extractor_key\": \"MediaWorksNZVOD\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://mw.test/t1.jpg\", \"display_id\": \"VID00359\", \"fulltitle\": \"Episode 1\", \"duration_string\": \"21:30\", \"upload_date\": \"20221125\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"1000\", \"url\": \"https://mw-cdn.test/720.m3u8\", \"manifest_url\": \"https://mw-cdn.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1000 - 1280x720\", \"_filename\": \"Episode 1 [VID00359].mp4\", \"filename\": \"Episode 1 [VID00359].mp4\", \"__write_download_archive\": false}], \"format_id\": \"1000\", \"format_index\": null, \"url\": \"https://mw-cdn.test/720.m3u8\", \"manifest_url\": \"https://mw-cdn.test/master.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1000 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [MediaWorksNZVOD] VID00359: Unknown content type: audio; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vodupload-api.mediaworks.nz/library/asset/published/VID-DRM",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [MediaWorksNZVOD] VID-DRM: This video is DRM protected"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.rova.test/podcast",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "VID00359|Episode 1|MediaWorksNZVOD"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [MediaWorksNZVOD] VID00359: Unknown content type: audio; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

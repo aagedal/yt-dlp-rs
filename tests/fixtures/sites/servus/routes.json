@@ -1,0 +1,123 @@
+{
+ "routes": [
+  {
+   "url": "https://www.servustv.com/natur/v/aa-28bycqnh92111/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"data\": {\"title\": {\"rendered\": \"Vie Ferrate - Klettersteige in den Alpen\"}, \"stv_date\": {\"raw\": 1655752333}, \"stv_duration\": 2823, \"stv_short_description\": \"Kurz &amp; gut.\\n\\nZweite Zeile\", \"stv_long_description\": \"Lang.\", \"category_names\": [\"Bergwelten\", 7, \"Natur\"]}}}}</script></body></html>"
+  },
+  {
+   "url": "https://api-player.redbull.com/stv/servus-tv-playnet?videoId=AA-28BYCQNH92111",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"videoUrl\": \"https://servus-hls.test/AA-28BYCQNH92111/master.m3u8\", \"title\": \"VIE FERRATE\", \"description\": \"API Beschreibung\", \"poster\": \"https://servus.test/poster.jpg\", \"duration\": \"2823.5\", \"currentSunrise\": \"2022-06-20T19:12:13Z\", \"label\": \"Bergwelten\", \"season\": \"Season 11\", \"chapter\": \"Episode 8 - Vie Ferrate \\u2013 Klettersteige in den Alpen\"}"
+  },
+  {
+   "url": "https://servus-hls.test/AA-28BYCQNH92111/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.servus.com/tv/videos/1380889096408-1235196658/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>kein next</html>"
+  },
+  {
+   "url": "https://api-player.redbull.com/stv/servus-tv-playnet?videoId=1380889096408-1235196658",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"videoUrl\": \"https://servus-hls.test/AA-28BYCQNH92111/master.m3u8\", \"title\": \"Alt\", \"description\": \"Nur API\", \"duration\": 60}"
+  },
+  {
+   "url": "https://www.pm-wissen.com/videos/aa-fsk1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"data\": {}}}}</script></body></html>"
+  },
+  {
+   "url": "https://api-player.redbull.com/stv/servus-tv-playnet?videoId=AA-FSK1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playabilityErrors\": [\"FSK_BLOCKED\"], \"playabilityErrorDetails\": {\"FSK_BLOCKED\": {\"minEveningHour\": 20, \"maxMorningHour\": 6, \"minAge\": 16}}}"
+  },
+  {
+   "url": "https://www.pm-wissen.com/videos/aa-fsk2/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"data\": {}}}}</script></body></html>"
+  },
+  {
+   "url": "https://api-player.redbull.com/stv/servus-tv-playnet?videoId=AA-FSK2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playabilityErrors\": [\"FSK_BLOCKED\"]}"
+  },
+  {
+   "url": "https://www.pm-wissen.com/videos/aa-nya1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"data\": {}}}}</script></body></html>"
+  },
+  {
+   "url": "https://api-player.redbull.com/stv/servus-tv-playnet?videoId=AA-NYA1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playabilityErrors\": [\"NOT_YET_AVAILABLE\"], \"currentSunrise\": \"2026-11-01T00:00:00Z\"}"
+  },
+  {
+   "url": "https://www.pm-wissen.com/videos/aa-nya2/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"data\": {}}}}</script></body></html>"
+  },
+  {
+   "url": "https://api-player.redbull.com/stv/servus-tv-playnet?videoId=AA-NYA2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playabilityErrors\": [\"NOT_YET_AVAILABLE\"]}"
+  },
+  {
+   "url": "https://www.pm-wissen.com/videos/aa-geo1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"data\": {}}}}</script></body></html>"
+  },
+  {
+   "url": "https://api-player.redbull.com/stv/servus-tv-playnet?videoId=AA-GEO1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playabilityErrors\": [\"GEO_BLOCKED\", \"OTHER\"]}"
+  },
+  {
+   "url": "https://www.pm-wissen.com/videos/aa-none1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"data\": {}}}}</script></body></html>"
+  },
+  {
+   "url": "https://api-player.redbull.com/stv/servus-tv-playnet?videoId=AA-NONE1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"videoUrl\": \"\"}"
+  }
+ ]
+}

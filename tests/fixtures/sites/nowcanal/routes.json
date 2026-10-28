@@ -1,0 +1,49 @@
+{
+ "routes": [
+  {
+   "url": "https://players.brightcove.net/6108484330001/chhIqzukMq_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/6108484330001/videos/6366000000001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkFIXTUREKEY1"
+   }
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://www.nowcanal.pt/ultimas/detalhe/pedro-sousa",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>videoHandler.addBrightcoveVideoWithJson([{\"brightcoveVideoId\": \"6366000000001\", \"title\": \"x\"}]);</script></html>"
+  },
+  {
+   "url": "https://www.nowcanal.pt/ultimas/detalhe/sem-video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html></html>"
+  }
+ ]
+}

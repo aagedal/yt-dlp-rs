@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://24tv.ua/news/showPlayer.do?objectId=2074790&videoUrl=2022/07/2074790&w=640&h=360",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://24tv.ua/news/showPlayer.do?objectId=2",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://24tv.ua/news/showPlayer.do?objectId=3",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://24tv.test/article",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(extractor)s"
+  ]
+ }
+]

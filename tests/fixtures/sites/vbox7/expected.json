@@ -1,0 +1,80 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://vbox7.com/play:0946fff23c",
+   "args": [
+    "--no-geo-bypass",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0946fff23c\", \"formats\": [{\"url\": \"https://edge1.vbox7.test/sl/0946fff23c/0946fff23c_360.mp4\", \"format_id\": \"http-360\", \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-360 - 360p\"}, {\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://edge1.vbox7.test/sl/0946fff23c/360/index.m3u8\", \"manifest_url\": \"https://edge1.vbox7.test/sl/0946fff23c/0946fff23c.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"url\": \"https://edge1.vbox7.test/sl/0946fff23c/0946fff23c_576.mp4\", \"format_id\": \"http-576\", \"height\": 576, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"576p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-576 - 576p\"}], \"title\": \"\\u0411\\u043e\\u0440\\u0438\\u0441\\u043e\\u0432: \\u041a\\u043e\\u0439 \\u0449\\u0435 \\u0431\\u044a\\u0434\\u0435\", \"description\": \"\\u0411\\u043e\\u0440\\u0438\\u0441\\u043e\\u0432\", \"thumbnails\": [{\"url\": \"https://i49.vbox7.test/t.jpg\", \"id\": \"0\"}], \"duration\": 41, \"timestamp\": 1678089600, \"uploader\": \"zdraveibulgaria\", \"webpage_url\": \"http://vbox7.com/play:0946fff23c\", \"original_url\": \"http://vbox7.com/play:0946fff23c\", \"webpage_url_basename\": \"play:0946fff23c\", \"webpage_url_domain\": \"vbox7.com\", \"extractor\": \"Vbox7\", \"extractor_key\": \"Vbox7\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://i49.vbox7.test/t.jpg\", \"display_id\": \"0946fff23c\", \"fulltitle\": \"\\u0411\\u043e\\u0440\\u0438\\u0441\\u043e\\u0432: \\u041a\\u043e\\u0439 \\u0449\\u0435 \\u0431\\u044a\\u0434\\u0435\", \"duration_string\": \"41\", \"upload_date\": \"20230306\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://edge1.vbox7.test/sl/0946fff23c/0946fff23c_576.mp4\", \"format_id\": \"http-576\", \"height\": 576, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"576p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-576 - 576p\", \"_filename\": \"\\u0411\\u043e\\u0440\\u0438\\u0441\\u043e\\u0432\\uff1a \\u041a\\u043e\\u0439 \\u0449\\u0435 \\u0431\\u044a\\u0434\\u0435 [0946fff23c].mp4\", \"filename\": \"\\u0411\\u043e\\u0440\\u0438\\u0441\\u043e\\u0432\\uff1a \\u041a\\u043e\\u0439 \\u0449\\u0435 \\u0431\\u044a\\u0434\\u0435 [0946fff23c].mp4\", \"__write_download_archive\": false}], \"url\": \"https://edge1.vbox7.test/sl/0946fff23c/0946fff23c_576.mp4\", \"format_id\": \"http-576\", \"height\": 576, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"576p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-576 - 576p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://vbox7.com/emb/external.php?vid=a240d20f9c&autoplay=1",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Vbox7] a240d20f9c: Video is unavailable"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://vbox7.com/play:bbbbbbbb",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Vbox7] bbbbbbbb: This video is not available from your location due to geo restriction"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://vbox7.com/play:cccccccc",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"cccccccc\", \"formats\": [{\"url\": \"https://edge1.vbox7.test/sl/c/c_480.mp4\", \"format_id\": \"http-480\", \"height\": 480, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-480 - 480p\"}], \"webpage_url\": \"http://vbox7.com/play:cccccccc\", \"original_url\": \"http://vbox7.com/play:cccccccc\", \"webpage_url_basename\": \"play:cccccccc\", \"webpage_url_domain\": \"vbox7.com\", \"extractor\": \"Vbox7\", \"extractor_key\": \"Vbox7\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"cccccccc\", \"fulltitle\": null, \"title\": \"Vbox7 video #cccccccc\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://edge1.vbox7.test/sl/c/c_480.mp4\", \"format_id\": \"http-480\", \"height\": 480, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-480 - 480p\", \"_filename\": \"Vbox7 video #cccccccc [cccccccc].mp4\", \"filename\": \"Vbox7 video #cccccccc [cccccccc].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Vbox7] cccccccc: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [Vbox7] unable to extract JSON-LD ; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://news.vbox7.test/article",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "%(id)s|%(title)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "cccccccc|Vbox7 video #cccccccc|https://vbox7.com/emb/external.php?vid=cccccccc"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [Vbox7] cccccccc: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [Vbox7] unable to extract JSON-LD ; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,105 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://genius.com/videos/Vince-staples-breaks-down",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6313303597112\", \"thumbnails\": null, \"duration\": 388.416, \"formats\": [{\"tbr\": 2000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://genius-pd.test/6313303597112.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk4863540648001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://genius.com/videos/Vince-staples-breaks-down\", \"Origin\": \"https://genius.com\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-2000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"Vince Staples Breaks Down\", \"description\": \"Desc\", \"tags\": [\"verified\"], \"timestamp\": 1664982341, \"uploader_id\": \"4863540648001\", \"original_url\": \"https://genius.com/videos/Vince-staples-breaks-down\", \"webpage_url\": \"https://players.brightcove.net/4863540648001/modalplayer_default/index.html?videoId=6313303597112#__youtubedl_smuggle=%7B%22referrer%22%3A+%22https%3A%2F%2Fgenius.com%2Fvideos%2FVince-staples-breaks-down%22%7D\", \"webpage_url_basename\": \"index.html\", \"webpage_url_domain\": \"players.brightcove.net\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"6313303597112\", \"fulltitle\": \"Vince Staples Breaks Down\", \"duration_string\": \"6:28\", \"upload_date\": \"20221005\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 2000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://genius-pd.test/6313303597112.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk4863540648001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://genius.com/videos/Vince-staples-breaks-down\", \"Origin\": \"https://genius.com\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-2000k-720p - 1280x720\", \"_filename\": \"Vince Staples Breaks Down [6313303597112].mp4\", \"filename\": \"Vince Staples Breaks Down [6313303597112].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://genius.com/videos/Vince-staples-breaks-down",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6313303597112\", \"thumbnails\": null, \"duration\": 388.416, \"formats\": [{\"tbr\": 2000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://genius-pd.test/6313303597112.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk4863540648001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://genius.com/videos/Vince-staples-breaks-down\", \"Origin\": \"https://genius.com\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-2000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"Vince Staples Breaks Down\", \"description\": \"Desc\", \"tags\": [\"verified\"], \"timestamp\": 1664982341, \"uploader_id\": \"4863540648001\", \"original_url\": \"https://genius.com/videos/Vince-staples-breaks-down\", \"webpage_url\": \"https://players.brightcove.net/4863540648001/modalplayer_default/index.html?videoId=6313303597112#__youtubedl_smuggle=%7B%22referrer%22%3A+%22https%3A%2F%2Fgenius.com%2Fvideos%2FVince-staples-breaks-down%22%7D\", \"webpage_url_basename\": \"index.html\", \"webpage_url_domain\": \"players.brightcove.net\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"6313303597112\", \"fulltitle\": \"Vince Staples Breaks Down\", \"duration_string\": \"6:28\", \"upload_date\": \"20221005\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"tbr\": 2000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://genius-pd.test/6313303597112.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk4863540648001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://genius.com/videos/Vince-staples-breaks-down\", \"Origin\": \"https://genius.com\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-2000k-720p - 1280x720\", \"_filename\": \"Vince Staples Breaks Down [6313303597112].mp4\", \"filename\": \"Vince Staples Breaks Down [6313303597112].mp4\", \"__write_download_archive\": false}], \"tbr\": 2000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://genius-pd.test/6313303597112.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk4863540648001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://genius.com/videos/Vince-staples-breaks-down\", \"Origin\": \"https://genius.com\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-2000k-720p - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://genius.com/a/cordae-two-tens",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6321509903112\", \"thumbnails\": null, \"duration\": 388.416, \"formats\": [{\"tbr\": 2000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://genius-pd.test/6321509903112.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk4863540648001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://genius.com/a/cordae-two-tens\", \"Origin\": \"https://genius.com\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-2000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"Vince Staples Breaks Down\", \"description\": \"Desc\", \"tags\": [\"verified\"], \"timestamp\": 1664982341, \"uploader_id\": \"4863540648001\", \"original_url\": \"https://genius.com/a/cordae-two-tens\", \"webpage_url\": \"https://players.brightcove.net/4863540648001/S1ZcmcOC1x_default/index.html?videoId=6321509903112#__youtubedl_smuggle=%7B%22referrer%22%3A+%22https%3A%2F%2Fgenius.com%2Fa%2Fcordae-two-tens%22%7D\", \"webpage_url_basename\": \"index.html\", \"webpage_url_domain\": \"players.brightcove.net\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"6321509903112\", \"fulltitle\": \"Vince Staples Breaks Down\", \"duration_string\": \"6:28\", \"upload_date\": \"20221005\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 2000.0, \"filesize\": 1000, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://genius-pd.test/6321509903112.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpk4863540648001\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://genius.com/a/cordae-two-tens\", \"Origin\": \"https://genius.com\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-2000k-720p - 1280x720\", \"_filename\": \"Vince Staples Breaks Down [6321509903112].mp4\", \"filename\": \"Vince Staples Breaks Down [6321509903112].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://genius.com/a/no-video-article",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Genius] no-video-article: Brightcove video ID not found in webpage"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://genius.com/videos/no-video",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Genius] no-video: Brightcove video ID not found in webpage; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://genius.com/videos/no-meta",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Genius] no-meta: Unable to extract metadata; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://genius.com/Lil-baby-heyy-lyrics",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"8454545\", \"title\": \"Heyy\", \"description\": \"Heyy by Lil Baby\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=abcdefghijk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"https://soundcloud.com/a/b\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://genius.com/Lil-baby-heyy-lyrics\", \"original_url\": \"https://genius.com/Lil-baby-heyy-lyrics\", \"webpage_url_basename\": \"Lil-baby-heyy-lyrics\", \"webpage_url_domain\": \"genius.com\", \"extractor\": \"GeniusLyrics\", \"extractor_key\": \"GeniusLyrics\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://genius.com/No-song-lyrics",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [GeniusLyrics] No-song: Song id not found in webpage; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

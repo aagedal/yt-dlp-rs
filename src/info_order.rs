@@ -46,7 +46,8 @@ enum Set {
 use Set::*;
 
 /// An extractor's subtitle track keys (`KEY,KEY`) first, then the others
-/// (processing's `ext`); manifest tracks keep their parser's order.
+/// (processing's `ext`); manifest tracks (DASH tracks' `manifest_url`, HLS
+/// renditions' `m3u8_native` protocol) keep their parser's order.
 fn order_subtitle_tracks(out: &mut Map<String, Value>, subtitle_keys: &str) {
     for key in ["subtitles", "automatic_captions"] {
         if let Some(Value::Object(languages)) = out.get_mut(key) {
@@ -54,7 +55,10 @@ fn order_subtitle_tracks(out: &mut Map<String, Value>, subtitle_keys: &str) {
                 for track in tracks
                     .iter_mut()
                     .filter_map(Value::as_object_mut)
-                    .filter(|track| !track.contains_key("manifest_url"))
+                    .filter(|track| {
+                        !track.contains_key("manifest_url")
+                            && track.get("protocol").and_then(Value::as_str) != Some("m3u8_native")
+                    })
                 {
                     let mut ordered = Map::new();
                     for key in subtitle_keys.split(',') {
@@ -243,6 +247,7 @@ pub(crate) fn strip_markers(map: &mut Map<String, Value>) {
     map.shift_remove(INFO_SHAPE);
     map.shift_remove(FORMAT_SHAPE);
     map.shift_remove(INT_QUALITY);
+    map.shift_remove(INT_VBR);
     map.shift_remove(INT_FRAGMENT_DURATIONS);
     map.shift_remove(FOLLOWED);
     map.shift_remove(OWN_URL);
@@ -328,6 +333,12 @@ pub(crate) fn mark_format(format: &mut crate::VideoFormat, shape: &str) {
     format.extra.insert(FORMAT_SHAPE.into(), shape.into());
 }
 
+/// A caller's `format[key] = ...` of a key the extractor's dict already
+/// holds: the key keeps its position even when set to `None`.
+pub(crate) fn mark_format_update_in_place(format: &mut crate::VideoFormat, key: &str) {
+    mark_format_update(format, &format!("={key}"));
+}
+
 /// A caller's `format[key] = ...` after the format was built.
 pub(crate) fn mark_format_update(format: &mut crate::VideoFormat, key: &str) {
     let Some(Value::String(shape)) = format.extra.get(FORMAT_SHAPE).cloned() else {
@@ -365,6 +376,25 @@ const INT_QUALITY: &str = "__yt_dlp_rs_int_quality";
 /// The format's `quality` is an int.
 pub(crate) fn mark_int_quality(format: &mut crate::VideoFormat) {
     format.extra.insert(INT_QUALITY.into(), Value::Bool(true));
+}
+
+/// A format whose extractor set an int `vbr` (stored as a float) beside
+/// a float `tbr`.
+const INT_VBR: &str = "__yt_dlp_rs_int_vbr";
+
+/// The format's `vbr` is an int.
+pub(crate) fn mark_int_vbr(format: &mut crate::VideoFormat) {
+    format.extra.insert(INT_VBR.into(), Value::Bool(true));
+}
+
+/// `map['vbr']` as an int under an [`INT_VBR`] marker.
+fn int_vbr(map: &mut Map<String, Value>) {
+    if map.shift_remove(INT_VBR).is_some()
+        && let Some(vbr) = map.get("vbr").and_then(Value::as_f64)
+        && vbr.fract() == 0.0
+    {
+        map.insert("vbr".into(), (vbr as i64).into());
+    }
 }
 
 /// A format whose extractor gave int fragment `duration`s (stored as
@@ -409,6 +439,7 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     {
         map.insert("quality".into(), (quality as i64).into());
     }
+    int_vbr(&mut map);
     let Some((shape, original)) = shape_of(map.shift_remove(FORMAT_SHAPE)) else {
         return map;
     };
@@ -837,8 +868,26 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         .filter_map(|key| key.strip_prefix('+'))
         .map(|key| (key.to_owned(), replay.ours.shift_remove(key)))
         .collect();
+    // `=KEY`: an update of a key the extractor's dict already holds, which
+    // keeps its position even when set to `None`.
+    let in_place: Vec<(&str, Set)>;
+    let extractor = if update.iter().any(|key| key.starts_with('=')) {
+        in_place = extractor
+            .iter()
+            .map(|(key, how)| {
+                let assigned = update
+                    .iter()
+                    .any(|update| update.strip_prefix('=') == Some(*key));
+                (*key, if assigned { Assign } else { *how })
+            })
+            .collect();
+        &in_place[..]
+    } else {
+        extractor
+    };
     replay.steps(extractor);
     for key in &update {
+        let key = key.strip_prefix('=').unwrap_or(key);
         match key.strip_prefix('+') {
             Some(name) => {
                 let value = late
@@ -966,8 +1015,10 @@ const PROCESSED_INFO_KEYS: &[&str] = &[
     "requested_subtitles",
     "_has_drm",
     "epoch",
-    // `post_extract`'s comments (`comment_count` is the extractor's).
+    // `post_extract`'s comments (`comment_count` too when the extractor's
+    // dict did not have it).
     "comments",
+    "comment_count",
     "requested_formats",
     "requested_downloads",
     "_filename",
@@ -1027,6 +1078,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     {
         map.insert("quality".into(), (quality as i64).into());
     }
+    int_vbr(&mut map);
     let own_url = map.shift_remove(OWN_URL);
     map.shift_remove(crate::PROCESSED_ENTRY);
     let Some((shape, original)) = shape_of(map.shift_remove(INFO_SHAPE)) else {
@@ -2149,9 +2201,14 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         let mut thumbnail_all_set = false;
         let mut subtitle_keys = None;
         let mut chapter_keys = None;
+        let mut chapter_all_set = false;
         for part in parts {
             if let Some(found) = part.strip_prefix("chapter=") {
                 chapter_keys = Some(found);
+            } else if let Some(found) = part.strip_prefix("chapter!=") {
+                // Every listed key is set, so a `None` title keeps its place.
+                chapter_keys = Some(found);
+                chapter_all_set = true;
             }
             if let Some(found) = part.strip_prefix("thumbnail=") {
                 thumbnail_keys = Some(found);
@@ -2189,7 +2246,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                     .is_some_and(|title| title.as_str() == Some(untitled.as_str()));
                 let mut ordered = Map::new();
                 for key in chapter_keys.split(',') {
-                    if generated && key == "title" {
+                    if generated && key == "title" && !chapter_all_set {
                         continue;
                     }
                     if let Some(value) = chapter.shift_remove(key) {
@@ -2197,7 +2254,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                     }
                 }
                 ordered.append(chapter);
-                if generated && let Some(title) = ordered.shift_remove("title") {
+                // Processing always sets `end_time` (`None` for a last
+                // chapter without a duration).
+                ordered.entry("end_time").or_insert(Value::Null);
+                if generated
+                    && !chapter_all_set
+                    && let Some(title) = ordered.shift_remove("title")
+                {
                     ordered.insert("title".into(), title);
                 }
                 *chapter = ordered;
@@ -2398,8 +2461,10 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // The first `prepare_outtmpl` sets `epoch` before format selection.
     replay.take("epoch");
-    // `post_extract` adds the comments before format selection.
+    // `post_extract` adds the comments before format selection (and their
+    // count, unless the extractor's dict had it).
     replay.take("comments");
+    replay.take("comment_count");
     // `-J`: `requested_downloads`, each without the keys whose values equal
     // the info dict's ("Remove copied info"); the selected format's keys are
     // merged afterwards (`info_dict.update(best_format)`), so the dict still
@@ -2718,7 +2783,7 @@ fn shaped_playlist(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     if !matches!(
         shape.as_str(),
-        "html5-playlist" | "rss-playlist" | "xspf-playlist"
+        "html5-playlist" | "rss-playlist" | "xspf-playlist" | "typed-playlist"
     ) {
         return map;
     }
@@ -2727,6 +2792,15 @@ fn shaped_playlist(mut map: Map<String, Value>) -> Map<String, Value> {
         // `playlist_result(entries, video_id)`: no title.
         replay.ours.shift_remove("title");
         &[("id", Take), ("_type", Take), ("entries", Take)]
+    } else if shape == "typed-playlist" {
+        // `{'_type': 'playlist', 'id', 'entries', 'title', 'description'}`.
+        &[
+            ("_type", Take),
+            ("id", Take),
+            ("entries", Take),
+            ("title", Assign),
+            ("description", Assign),
+        ]
     } else if shape == "rss-playlist" {
         // `_extract_rss`'s dict.
         &[

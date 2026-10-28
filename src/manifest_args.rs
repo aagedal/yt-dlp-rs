@@ -90,7 +90,7 @@ fn parse_qs(text: &str) -> Vec<(String, Vec<String>)> {
 }
 
 /// Upstream `update_url_query(url, query)`: the parsed query updated with
-/// `query`, re-encoded like `urlencode(..., True)`.
+/// `query`, re-encoded like `urlencode(..., True)` (`quote_plus`).
 fn update_url_query(url: &Url, extra: &[(String, Vec<String>)]) -> Url {
     let mut query = parse_qs(url.query().unwrap_or(""));
     for (key, values) in extra {
@@ -99,14 +99,16 @@ fn update_url_query(url: &Url, extra: &[(String, Vec<String>)]) -> Url {
             None => query.push((key.clone(), values.clone())),
         }
     }
-    let mut encoded = url::form_urlencoded::Serializer::new(String::new());
-    for (key, values) in &query {
-        for value in values {
-            encoded.append_pair(key, value);
-        }
-    }
+    let pairs: Vec<(&str, &str)> = query
+        .iter()
+        .flat_map(|(key, values)| {
+            values
+                .iter()
+                .map(move |value| (key.as_str(), value.as_str()))
+        })
+        .collect();
     let mut updated = url.clone();
-    let encoded = encoded.finish();
+    let encoded = crate::extractor::login::urlencode(&pairs);
     updated.set_query((!encoded.is_empty()).then_some(encoded.as_str()));
     updated
 }
@@ -280,6 +282,11 @@ mod tests {
         assert_eq!(
             update_url_query(&url, &parse_qs("a=1&c=3")).as_str(),
             "https://e.invalid/s.ts?a=1&b=2&c=3"
+        );
+        // `quote_plus`: `~` stays, `*` is escaped.
+        assert_eq!(
+            update_url_query(&url, &parse_qs("c=x~*+y")).as_str(),
+            "https://e.invalid/s.ts?a=0&b=2&c=x~%2A+y"
         );
         assert_eq!(query_of("https://e.invalid/?t=1"), "t=1");
         assert_eq!(query_of("t=1"), "t=1");

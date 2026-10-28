@@ -1,0 +1,53 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.ivideon.com/tv/map/22.9/-31.8/16/camera/100-916ca13b5c4ad9f564266424a026386d/0",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(description)s|%(is_live)s|%(format_id)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "100-916ca13b5c4ad9f564266424a026386d|Kitchen|Restaurant|True|hi|https://streaming.ivideon.com/flv/live?server=100-916ca13b5c4ad9f564266424a026386d&camera=0&sessionId=demo&q=2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ivideon.com/tv/camera/100-aaaa/1/",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(description)s|%(is_live)s|%(format_id)s|%(url)s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [ivideon] 100-aaaa: Failed to parse JSON: Expecting property name enclosed in double quotes in 'bad json}': line 1 column 2 (char 1)",
+    "ERROR: 'NoneType' object has no attribute 'get'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ivideon.com/tv/camera/100-bbbb/2/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ivideon] Extracting URL: https://www.ivideon.com/tv/camera/100-bbbb/2/",
+    "[ivideon] 100-bbbb: Downloading webpage",
+    "[info] Available formats for 100-bbbb:",
+    "ID  EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "--------------------------------------------",
+    "low flv unknown    | https | unknown unknown",
+    "mid flv unknown    | https | unknown unknown",
+    "hi  flv unknown    | https | unknown unknown"
+   ],
+   "stderr": [
+    "WARNING: [ivideon] 100-bbbb: Unable to download webpage: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://video.lefigaro.fr/embed/figaro/video/les-francais/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"initialProps\": {\"pageData\": {\"playerData\": {\"videoId\": \"g9j7Eovo\", \"title\": \"T\", \"description\": \"D\", \"poster\": \"P\"}}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/v2/media/g9j7Eovo",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Les Fran\\u00e7ais ne veulent-ils plus travailler ?\", \"playlist\": [{\"title\": \"Les Fran\\u00e7ais ne veulent-ils plus travailler ?\", \"mediaid\": \"g9j7Eovo\", \"description\": \"JW desc\", \"duration\": 3076, \"pubdate\": 1676581615, \"sources\": [{\"file\": \"https://cdn.jwplayer.com/videos/g9j7Eovo-1.mp4\", \"type\": \"video/mp4\", \"height\": 720, \"width\": 1280, \"label\": \"720p\"}]}]}"
+  },
+  {
+   "url": "https://api-graphql.lefigaro.fr/graphql?id=flive-website_UpdateListPage_1fb260f996bca2d78960805ac382544186b3225f5bedb43ad08b9b8abef79af6&variables=%7B%22slug%22%3A+%22le-club%22%2C+%22videosLimit%22%3A+20%2C+%22sort%22%3A+%22DESC%22%2C+%22order%22%3A+%22PUBLISHED_AT%22%2C+%22page%22%3A+1%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"playlist\": {\"title\": \"Le Club Le Figaro Id\\u00e9es\", \"videoCount\": 25, \"jsonLd\": [{\"itemListElement\": [{\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v0/\", \"name\": \"Vid\\u00e9o 0\", \"description\": \"d0\", \"thumbnailUrl\": \"https://lefigaro.test/0.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v1/\", \"name\": \"Vid\\u00e9o 1\", \"description\": \"d1\", \"thumbnailUrl\": \"https://lefigaro.test/1.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v2/\", \"name\": \"Vid\\u00e9o 2\", \"description\": \"d2\", \"thumbnailUrl\": \"https://lefigaro.test/2.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v3/\", \"name\": \"Vid\\u00e9o 3\", \"description\": \"d3\", \"thumbnailUrl\": \"https://lefigaro.test/3.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v4/\", \"name\": \"Vid\\u00e9o 4\", \"description\": \"d4\", \"thumbnailUrl\": \"https://lefigaro.test/4.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v5/\", \"name\": \"Vid\\u00e9o 5\", \"description\": \"d5\", \"thumbnailUrl\": \"https://lefigaro.test/5.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v6/\", \"name\": \"Vid\\u00e9o 6\", \"description\": \"d6\", \"thumbnailUrl\": \"https://lefigaro.test/6.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v7/\", \"name\": \"Vid\\u00e9o 7\", \"description\": \"d7\", \"thumbnailUrl\": \"https://lefigaro.test/7.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v8/\", \"name\": \"Vid\\u00e9o 8\", \"description\": \"d8\", \"thumbnailUrl\": \"https://lefigaro.test/8.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v9/\", \"name\": \"Vid\\u00e9o 9\", \"description\": \"d9\", \"thumbnailUrl\": \"https://lefigaro.test/9.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v10/\", \"name\": \"Vid\\u00e9o 10\", \"description\": \"d10\", \"thumbnailUrl\": \"https://lefigaro.test/10.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v11/\", \"name\": \"Vid\\u00e9o 11\", \"description\": \"d11\", \"thumbnailUrl\": \"https://lefigaro.test/11.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v12/\", \"name\": \"Vid\\u00e9o 12\", \"description\": \"d12\", \"thumbnailUrl\": \"https://lefigaro.test/12.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v13/\", \"name\": \"Vid\\u00e9o 13\", \"description\": \"d13\", \"thumbnailUrl\": \"https://lefigaro.test/13.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v14/\", \"name\": \"Vid\\u00e9o 14\", \"description\": \"d14\", \"thumbnailUrl\": \"https://lefigaro.test/14.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v15/\", \"name\": \"Vid\\u00e9o 15\", \"description\": \"d15\", \"thumbnailUrl\": \"https://lefigaro.test/15.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v16/\", \"name\": \"Vid\\u00e9o 16\", \"description\": \"d16\", \"thumbnailUrl\": \"https://lefigaro.test/16.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v17/\", \"name\": \"Vid\\u00e9o 17\", \"description\": \"d17\", \"thumbnailUrl\": \"https://lefigaro.test/17.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v18/\", \"name\": \"Vid\\u00e9o 18\", \"description\": \"d18\", \"thumbnailUrl\": \"https://lefigaro.test/18.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v19/\", \"name\": \"Vid\\u00e9o 19\", \"description\": \"d19\", \"thumbnailUrl\": \"https://lefigaro.test/19.jpg\"}]}]}}}"
+  },
+  {
+   "url": "https://api-graphql.lefigaro.fr/graphql?id=flive-website_UpdateListPage_1fb260f996bca2d78960805ac382544186b3225f5bedb43ad08b9b8abef79af6&variables=%7B%22slug%22%3A+%22le-club%22%2C+%22videosLimit%22%3A+20%2C+%22sort%22%3A+%22DESC%22%2C+%22order%22%3A+%22PUBLISHED_AT%22%2C+%22page%22%3A+2%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"playlist\": {\"title\": \"Le Club Le Figaro Id\\u00e9es\", \"videoCount\": 25, \"jsonLd\": [{\"itemListElement\": [{\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v20/\", \"name\": \"Vid\\u00e9o 20\", \"description\": \"d20\", \"thumbnailUrl\": \"https://lefigaro.test/20.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v21/\", \"name\": \"Vid\\u00e9o 21\", \"description\": \"d21\", \"thumbnailUrl\": \"https://lefigaro.test/21.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v22/\", \"name\": \"Vid\\u00e9o 22\", \"description\": \"d22\", \"thumbnailUrl\": \"https://lefigaro.test/22.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v23/\", \"name\": \"Vid\\u00e9o 23\", \"description\": \"d23\", \"thumbnailUrl\": \"https://lefigaro.test/23.jpg\"}, {\"embedUrl\": \"https://video.lefigaro.fr/embed/figaro/video/v24/\", \"name\": \"Vid\\u00e9o 24\", \"description\": \"d24\", \"thumbnailUrl\": \"https://lefigaro.test/24.jpg\"}]}]}}}"
+  },
+  {
+   "url": "https://video.lefigaro.fr/embed/figaro/video/vide/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"initialProps\": {\"pageData\": {\"playerData\": {\"title\": \"no id\"}}}}}}</script></body></html>"
+  }
+ ]
+}

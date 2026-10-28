@@ -1,0 +1,32 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://v.baidu.com/show/11595.htm?frp=bdbrand",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"11595\", \"title\": \"Show\", \"description\": \"A & B\", \"_type\": \"playlist\", \"entries\": [{\"title\": \"Ep 1\", \"_type\": \"url\", \"url\": \"http://www.iqiyi.com/v_19rrok.html\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=AHuQWcylaU4\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"http://v.baidu.com/show/11595.htm?frp=bdbrand\", \"original_url\": \"http://v.baidu.com/show/11595.htm?frp=bdbrand\", \"webpage_url_basename\": \"11595.htm\", \"webpage_url_domain\": \"v.baidu.com\", \"extractor\": \"BaiduVideo\", \"extractor_key\": \"BaiduVideo\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://v.baidu.com/comic/1069.htm",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 1069: An extractor error has occurred. (caused by KeyError('title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

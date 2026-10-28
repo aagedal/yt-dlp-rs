@@ -1,0 +1,63 @@
+{
+ "routes": [
+  {
+   "url": "https://www.skysports.com/watch/video/sports/f1/12160544/abu-dhabi-gp",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta property=\"og:title\" content=\"Abu Dhabi GP: The Notebook\"><meta property=\"og:description\" content=\"  Notes.  \"><div class=\"sdc-site-video\" data-component-name=\"sdc-site-video\" data-provider=\"brightcove\" data-video-id=\"6216184661001\" data-account-id=\"6058004203001\">"
+  },
+  {
+   "url": "https://players.brightcove.net/6058004203001/RC9PQUaJ6_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_cloud\": {\"policy_key\": \"BCpk6058004203001\"}}"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/6058004203001/videos/6216184661001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_headers": {
+    "Accept": "application/json;pk=BCpk6058004203001"
+   },
+   "body": "{\"id\": \"6216184661001\", \"account_id\": \"6058004203001\", \"name\": \"BC title\", \"description\": \"BC desc\", \"published_at\": \"2020-12-01T10:00:00.000Z\", \"duration\": 60000, \"sources\": [{\"container\": \"MP4\", \"type\": \"video/mp4\", \"src\": \"https://sky-pd.test/6216184661001.mp4\", \"avg_bitrate\": 1000000, \"width\": 1280, \"height\": 720, \"codec\": \"H264\", \"size\": 1000}]}"
+  },
+  {
+   "url": "https://news.sky.com/story/car-crash-12345678",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta property=\"og:title\" content=\"Car crash\"><meta name=\"description\" content=\"Story desc\"><div class=\"sdc-site-video\" data-component-name=\"sdc-site-video\" data-provider=\"brightcove\" data-video-id=\"6216184661001\" data-account-id=\"6058004203001\"><p>x</p><div data-fn=\"sdc-article-video\" data-provider=\"brightcove\" data-video-id=\"62\" data-player-id=\"pl\">"
+  },
+  {
+   "url": "https://www.skysports.com/golf/news/12176/10871916/dustin",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>no video</html>"
+  },
+  {
+   "url": "https://www.skysports.com/watch/video/sports/1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta property=\"og:title\" content=\"T\"><div data-component-name=\"sdc-site-video\" data-provider=\"ooyala\" data-video-id=\"1\">"
+  },
+  {
+   "url": "https://www.skysports.com/watch/video/sports/2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>none</html>"
+  },
+  {
+   "url": "https://news.sky.com/video/russian-plane-11712962",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta property=\"og:title\" content=\"Russian plane inspected\"><div data-component-name=\"sdc-site-video\" data-provider=\"brightcove\" data-video-id=\"6216184661001\" data-account-id=\"6058004203001\">"
+  }
+ ]
+}

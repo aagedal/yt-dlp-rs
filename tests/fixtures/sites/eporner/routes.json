@@ -1,0 +1,74 @@
+{
+ "routes": [
+  {
+   "url": "http://www.eporner.com/hd-porn/95008/Infamous-Tiffany-Teen-Strip-Tease-Video/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Fixture Clip - EPORNER</title>\n<meta property=\"og:title\" content=\"Fixture &amp; Clip OG\">\n<meta itemprop=\"duration\" content=\"PT30M38S\">\n<script type=\"application/ld+json\">{\"@context\": \"https://schema.org\", \"@type\": \"VideoObject\", \"name\": \"Fixture &amp; Clip\", \"description\": \"A placeholder description.\", \"uploadDate\": \"2009-01-21T07:55:22+00:00\", \"thumbnailUrl\": \"https://static.eporner.test/thumbs/95008.jpg\", \"duration\": \"PT30M38S\"}</script></head><body>\n<div id=\"cinemaviews1\" class=\"x\"> 12,345 </div>\n<a class=\"dl download-av1\" href=\"#\">AV1</a>\n<script>EP.video.player.hash = '0123456789abcdef00000000ffffffff';</script></body></html>"
+  },
+  {
+   "url": "http://www.eporner.com/xhr/video/95008?hash=bd4yv1275p7z01z141z3&device=generic&domain=www.eporner.com&fallback=false",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"available\": true, \"sources\": {\"mp4\": {\"240p\": {\"src\": \"https://cdn.eporner.test/95008/240p.mp4\", \"labelShort\": \"240p\"}, \"1080p(60fps)\": {\"src\": \"https://cdn.eporner.test/95008/1080p60.mp4\"}, \"bad\": {\"src\": \"/relative.mp4\"}, \"x\": \"notadict\"}, \"hls\": {\"auto\": {\"src\": \"https://cdn.eporner.test/95008/master.m3u8\"}}, \"other\": []}}"
+  },
+  {
+   "url": "https://cdn.eporner.test/95008/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=921000,RESOLUTION=640x360,CODECS=\"avc1.4d401e,mp4a.40.2\"\n360/index.m3u8\n"
+  },
+  {
+   "url": "https://www.eporner.com/video-FJsA19J3Y3H/one-of-the-greats/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Plain Title &amp; More - EPORNER</title></head><body>\n<script>var vid_hash=\"0123456789abcdef00000000ffffffff\";</script></body></html>"
+  },
+  {
+   "url": "http://www.eporner.com/xhr/video/FJsA19J3Y3H?hash=bd4yv1275p7z01z141z3&device=generic&domain=www.eporner.com&fallback=false",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"sources\": {\"mp4\": {\"720p HD\": {\"src\": \"https://cdn.eporner.test/FJsA19J3Y3H/720.mp4\"}}}}"
+  },
+  {
+   "url": "http://www.eporner.com/embed/3YRUtzMcWn0",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Gone - EPORNER</title></head><script>hash: \"0123456789abcdef00000000ffffffff\"</script></html>"
+  },
+  {
+   "url": "http://www.eporner.com/xhr/video/3YRUtzMcWn0?hash=bd4yv1275p7z01z141z3&device=generic&domain=www.eporner.com&fallback=false",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"available\": false, \"message\": \"This video has been removed.\"}"
+  },
+  {
+   "url": "http://www.eporner.com/hd-porn/nohash",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><title>x - EPORNER</title></html>"
+  },
+  {
+   "url": "http://www.eporner.com/hd-porn/nosrc/Some-Slug",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"No sources\"></head><script>hash = '0123456789abcdef00000000ffffffff'</script></html>"
+  },
+  {
+   "url": "http://www.eporner.com/xhr/video/nosrc?hash=bd4yv1275p7z01z141z3&device=generic&domain=www.eporner.com&fallback=false",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"available\": true}"
+  }
+ ]
+}

@@ -669,6 +669,11 @@ impl Extractor for BrightcoveNew {
             "[{NAME}] Extracting URL: {}",
             crate::screen::extracting_url(url.as_str())
         ));
+        // `_initialize_geo_bypass({'countries': smuggled['geo_countries']})`.
+        if let Some(Value::Array(countries)) = smuggled.get("geo_countries") {
+            let countries: Vec<&str> = countries.iter().filter_map(Value::as_str).collect();
+            crate::geo::initialize_countries(&countries);
+        }
         let account_id = &found["account_id"];
         let player_id = &found["player_id"];
         let embed = &found["embed"];

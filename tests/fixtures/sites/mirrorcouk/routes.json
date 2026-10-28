@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://cdn.jwplayer.com/v2/media/voyyS7SV",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Love Island: Gemma Owen enters the villa\", \"description\": \"Love Island feed\", \"kind\": \"Single Item\", \"playlist\": [{\"title\": \"Love Island: Gemma Owen enters the villa\", \"mediaid\": \"voyyS7SV\", \"image\": \"https://cdn.jwplayer.com/v2/media/voyyS7SV/poster.jpg?width=720\", \"duration\": 57, \"pubdate\": 1654547895, \"description\": \"Love Island: Michael Owen's daughter Gemma Owen enters the villa.\", \"sources\": [{\"file\": \"https://cdn.jwplayer.com/videos/voyyS7SV-1.mp4\", \"type\": \"video/mp4\", \"height\": 360, \"width\": 640, \"label\": \"360p\", \"bitrate\": 600000, \"filesize\": 4300000, \"framerate\": 25}, {\"file\": \"https://cdn.jwplayer.com/videos/voyyS7SV-2.mp4\", \"type\": \"video/mp4\", \"height\": 720, \"width\": 1280, \"label\": \"720p\", \"bitrate\": 1800000, \"filesize\": 12900000, \"framerate\": 25}], \"tracks\": []}]}"
+  },
+  {
+   "url": "https://www.mirror.co.uk/tv/tv-news/love-island-fans-baffled-after-27163139",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Mirror</title></head><body><div class=\"json-placeholder\" data-json=\"{&quot;videoData&quot;: {&quot;videoId&quot;: &quot;voyyS7SV&quot;, &quot;title&quot;: &quot;ignored&quot;, &quot;autoplay&quot;: true}, &quot;other&quot;: {&quot;x&quot;: [1, 2]}}\"></div><script>var later = {\"a\": 1};</script></body></html>"
+  },
+  {
+   "url": "https://www.mirror.co.uk/news/uk-news/no-video-27160572",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"article\">{\"text\": 1}</div></body></html>"
+  },
+  {
+   "url": "https://www.mirror.co.uk/3am/celebrity-news/broken-json-25344890",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"json-placeholder\" data-json=\"{&quot;videoData&quot;: {&quot;videoId&quot; &quot;x&quot;}}\"></div></body></html>"
+  },
+  {
+   "url": "https://www.mirror.co.uk/sport/football/news/no-video-data-25346042",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div  class=\"json-placeholder\"\n data-json=\"  {&quot;articleData&quot;: {&quot;id&quot;: 1}}\"></div>"
+  }
+ ]
+}

@@ -1,0 +1,74 @@
+{
+ "routes": [
+  {
+   "url": "https://www.xinpianchang.com/a11766551",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "a11766551.html"
+  },
+  {
+   "url": "https://xinpianchang.com/a2?from=IndexPick",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "a2.html"
+  },
+  {
+   "url": "https://www.xinpianchang.com/a3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "a3.html"
+  },
+  {
+   "url": "https://www.xinpianchang.com/a4",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "a4.html"
+  },
+  {
+   "url": "https://www.xinpianchang.com/a5",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "a5.html"
+  },
+  {
+   "url": "https://mod-api.xinpianchang.com/mod/api/v2/media/Elv7yVv7l1Zv5Eqk?appKey=61a2f329348b3bf77",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"status\": 0, \"data\": {\"title\": \"\\u5317\\u4eac2022\\u51ac\\u5965\\u4f1a\\u95ed\\u5e55\\u5f0f\\u518d\\u89c1\\u77ed\\u7247-\\u51b0\\u58a9\\u58a9\\u4e0b\\u73ed\\u4e86\", \"description\": \"\\u518d\\u89c1\\uff0c\\u51b0\\u58a9\\u58a9\", \"duration\": 151.6, \"categories\": [\"\\u5ba3\\u4f20\\u7247\", \"\\u56fd\\u5bb6\\u57ce\\u5e02\"], \"keywords\": [\"\\u5317\\u4eac\\u51ac\\u5965\\u4f1a\", \"\\u51b0\\u58a9\\u58a9\"], \"cover\": \"https://oss-xpc0.xpccdn.test/assets/cover.jpg\", \"owner\": {\"username\": \"\\u6b63\\u65f6\\u6587\\u521b\", \"id\": 10357277}, \"resource\": {\"dash\": {\"url\": \"https://xpc.test/dash/manifest.mpd\"}, \"hls\": {\"url\": \"https://xpc.test/hls/master.m3u8\"}, \"audio\": {\"url\": \"https://xpc.test/ignored.m4a\"}, \"progressive\": [{\"url\": \"https://xpc.test/p/1080.mp4\", \"width\": \"1920\", \"height\": 1080}, {\"url\": \"\", \"width\": 1}, {\"url\": \"https://xpc.test/p/540.mp4\"}]}}}"
+  },
+  {
+   "url": "https://mod-api.xinpianchang.com/mod/api/v2/media/77?appKey=key2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"title\": \"\\u51ac\\u5965\\u4f1a\\u51b3\\u80dc\\u65f6\\u523b\", \"description\": null, \"duration\": \"136\", \"resource\": {\"hls\": {\"url\": \"\"}, \"progressive\": [{\"url\": \"https://xpc.test/p2/720.mp4\", \"width\": 1280, \"height\": 720}]}}}"
+  },
+  {
+   "url": "https://mod-api.xinpianchang.com/mod/api/v2/media/v4?appKey=key4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"title\": \"no resource\"}}"
+  },
+  {
+   "url": "https://xpc.test/dash/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://xpc.test/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  }
+ ]
+}

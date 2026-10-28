@@ -1,0 +1,152 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://shows.acast.com/sparpodcast/episodes/2.raggarmordet-rosterurdetforflutna",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2a92b283-1a75-4ad8-8396-499c641de0d9\", \"display_id\": \"2.raggarmordet-rosterurdetforflutna\", \"url\": \"https://sphinx.acast.com/p/open/s/616ebe1886d7b1398620b943/e/2a92b283/media.mp3\", \"title\": \"2. Raggarmordet - R\\u00f6ster ur det f\\u00f6rflutna\", \"description\": \"Ett mord & en r\\u00f6st\\nAndra raden\", \"thumbnail\": \"https://assets.pippa.io/shows/616ebe1886d7b1398620b943/616ebe33c7e6e70013cae7da.jpg\", \"timestamp\": 1477346700, \"duration\": 2766, \"filesize\": 44277000, \"season_number\": 4, \"episode\": \"2. Raggarmordet - R\\u00f6ster ur det f\\u00f6rflutna\", \"episode_number\": 2, \"creator\": \"Third Ear Studio\", \"series\": \"Sp\\u00e5r\", \"webpage_url\": \"https://shows.acast.com/sparpodcast/episodes/2.raggarmordet-rosterurdetforflutna\", \"original_url\": \"https://shows.acast.com/sparpodcast/episodes/2.raggarmordet-rosterurdetforflutna\", \"webpage_url_basename\": \"2.raggarmordet-rosterurdetforflutna\", \"webpage_url_domain\": \"shows.acast.com\", \"extractor\": \"acast\", \"extractor_key\": \"ACast\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://assets.pippa.io/shows/616ebe1886d7b1398620b943/616ebe33c7e6e70013cae7da.jpg\", \"id\": \"0\"}], \"fulltitle\": \"2. Raggarmordet - R\\u00f6ster ur det f\\u00f6rflutna\", \"duration_string\": \"46:06\", \"upload_date\": \"20161024\", \"release_year\": null, \"season\": \"Season 4\", \"creators\": [\"Third Ear Studio\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"2. Raggarmordet - R\\u00f6ster ur det f\\u00f6rflutna [2a92b283-1a75-4ad8-8396-499c641de0d9].mp3\", \"filename\": \"2. Raggarmordet - R\\u00f6ster ur det f\\u00f6rflutna [2a92b283-1a75-4ad8-8396-499c641de0d9].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://shows.acast.com/sparpodcast/episodes/2.raggarmordet-rosterurdetforflutna",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(description)s|%(timestamp)s|%(duration)s|%(filesize)s|%(season_number)s|%(season)s|%(episode_number)s|%(creators)s|%(series)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2a92b283-1a75-4ad8-8396-499c641de0d9|2.raggarmordet-rosterurdetforflutna|2. Raggarmordet - Röster ur det förflutna|Ett mord & en röst",
+    "Andra raden|1477346700|2766|44277000|4|Season 4|2|['Third Ear Studio']|Spår|mp3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://shows.acast.com/sparpodcast/episodes/2.raggarmordet-rosterurdetforflutna",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[acast] Extracting URL: https://shows.acast.com/sparpodcast/episodes/2.raggarmordet-rosterurdetforflutna",
+    "[acast] 2.raggarmordet-rosterurdetforflutna: Downloading JSON metadata",
+    "[info] 2a92b283-1a75-4ad8-8396-499c641de0d9: Downloading 1 format(s): 0",
+    "[download] Destination: 2a92b283-1a75-4ad8-8396-499c641de0d9.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "2a92b283-1a75-4ad8-8396-499c641de0d9.mp3": 10
+   }
+  },
+  {
+   "url": "http://embed.acast.com/adambuxton/ep.12-adam-joeschristmaspodcast2015",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ep2\", \"display_id\": \"ep2\", \"url\": \"https://sphinx.acast.com/p/open/s/x/e/ep2/media.mp3\", \"title\": \"Bare episode\", \"description\": \"Only a summary\", \"thumbnail\": null, \"timestamp\": null, \"filesize\": null, \"season_number\": null, \"episode\": \"Bare episode\", \"episode_number\": null, \"creator\": null, \"series\": null, \"webpage_url\": \"http://embed.acast.com/adambuxton/ep.12-adam-joeschristmaspodcast2015\", \"original_url\": \"http://embed.acast.com/adambuxton/ep.12-adam-joeschristmaspodcast2015\", \"webpage_url_basename\": \"ep.12-adam-joeschristmaspodcast2015\", \"webpage_url_domain\": \"embed.acast.com\", \"extractor\": \"acast\", \"extractor_key\": \"ACast\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Bare episode\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Bare episode [ep2].mp3\", \"filename\": \"Bare episode [ep2].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://play.acast.com/s/notitle/x",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: x: An extractor error has occurred. (caused by KeyError('title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.acast.com/gone/missing",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [acast] missing: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.acast.com/todayinfocus",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4efc5294-5385-4847-98bd-519799ce5786\", \"title\": \"Today in Focus\", \"description\": \"Daily <b>news</b>\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"ep3\", \"display_id\": \"third\", \"url\": \"https://sphinx.acast.com/p/open/s/x/e/ep3/media.mp3\", \"title\": \"Third\", \"description\": null, \"thumbnail\": null, \"timestamp\": 1684826362, \"duration\": 61, \"filesize\": null, \"season_number\": null, \"episode\": \"Third\", \"episode_number\": 3, \"creator\": \"The Guardian\", \"series\": \"Today in Focus\", \"playlist_count\": 2, \"playlist\": \"Today in Focus\", \"playlist_id\": \"4efc5294-5385-4847-98bd-519799ce5786\", \"playlist_title\": \"Today in Focus\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.acast.com/todayinfocus\", \"n_entries\": 2, \"webpage_url\": \"https://www.acast.com/todayinfocus\", \"webpage_url_basename\": \"todayinfocus\", \"webpage_url_domain\": \"acast.com\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"acast:channel\", \"extractor_key\": \"ACastChannel\", \"playlist_autonumber\": 1, \"fulltitle\": \"Third\", \"duration_string\": \"1:01\", \"upload_date\": \"20230523\", \"release_year\": null, \"creators\": [\"The Guardian\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Third [ep3].mp3\", \"filename\": \"Third [ep3].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"ep2\", \"display_id\": \"ep2\", \"url\": \"https://sphinx.acast.com/p/open/s/x/e/ep2/media.mp3\", \"title\": \"Bare episode\", \"description\": \"Only a summary\", \"thumbnail\": null, \"timestamp\": null, \"filesize\": null, \"season_number\": null, \"episode\": \"Bare episode\", \"episode_number\": null, \"creator\": \"The Guardian\", \"series\": \"Today in Focus\", \"playlist_count\": 2, \"playlist\": \"Today in Focus\", \"playlist_id\": \"4efc5294-5385-4847-98bd-519799ce5786\", \"playlist_title\": \"Today in Focus\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.acast.com/todayinfocus\", \"n_entries\": 2, \"webpage_url\": \"https://www.acast.com/todayinfocus\", \"webpage_url_basename\": \"todayinfocus\", \"webpage_url_domain\": \"acast.com\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"acast:channel\", \"extractor_key\": \"ACastChannel\", \"playlist_autonumber\": 2, \"fulltitle\": \"Bare episode\", \"release_year\": null, \"creators\": [\"The Guardian\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Bare episode [ep2].mp3\", \"filename\": \"Bare episode [ep2].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://www.acast.com/todayinfocus\", \"original_url\": \"https://www.acast.com/todayinfocus\", \"webpage_url_basename\": \"todayinfocus\", \"webpage_url_domain\": \"acast.com\", \"extractor\": \"acast:channel\", \"extractor_key\": \"ACastChannel\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://play.acast.com/s/todayinfocus",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4efc5294-5385-4847-98bd-519799ce5786\", \"title\": \"Today in Focus\", \"description\": \"Daily <b>news</b>\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"ep3\", \"display_id\": \"third\", \"url\": \"https://sphinx.acast.com/p/open/s/x/e/ep3/media.mp3\", \"title\": \"Third\", \"description\": null, \"thumbnail\": null, \"timestamp\": 1684826362, \"duration\": 61, \"filesize\": null, \"season_number\": null, \"episode\": \"Third\", \"episode_number\": 3, \"creator\": \"The Guardian\", \"series\": \"Today in Focus\", \"playlist_count\": 2, \"playlist\": \"Today in Focus\", \"playlist_id\": \"4efc5294-5385-4847-98bd-519799ce5786\", \"playlist_title\": \"Today in Focus\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://play.acast.com/s/todayinfocus\", \"n_entries\": 2, \"webpage_url\": \"http://play.acast.com/s/todayinfocus\", \"webpage_url_basename\": \"todayinfocus\", \"webpage_url_domain\": \"play.acast.com\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"acast:channel\", \"extractor_key\": \"ACastChannel\", \"playlist_autonumber\": 1, \"fulltitle\": \"Third\", \"duration_string\": \"1:01\", \"upload_date\": \"20230523\", \"release_year\": null, \"creators\": [\"The Guardian\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Third [ep3].mp3\", \"filename\": \"Third [ep3].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"ep2\", \"display_id\": \"ep2\", \"url\": \"https://sphinx.acast.com/p/open/s/x/e/ep2/media.mp3\", \"title\": \"Bare episode\", \"description\": \"Only a summary\", \"thumbnail\": null, \"timestamp\": null, \"filesize\": null, \"season_number\": null, \"episode\": \"Bare episode\", \"episode_number\": null, \"creator\": \"The Guardian\", \"series\": \"Today in Focus\", \"playlist_count\": 2, \"playlist\": \"Today in Focus\", \"playlist_id\": \"4efc5294-5385-4847-98bd-519799ce5786\", \"playlist_title\": \"Today in Focus\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://play.acast.com/s/todayinfocus\", \"n_entries\": 2, \"webpage_url\": \"http://play.acast.com/s/todayinfocus\", \"webpage_url_basename\": \"todayinfocus\", \"webpage_url_domain\": \"play.acast.com\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"acast:channel\", \"extractor_key\": \"ACastChannel\", \"playlist_autonumber\": 2, \"fulltitle\": \"Bare episode\", \"release_year\": null, \"creators\": [\"The Guardian\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Bare episode [ep2].mp3\", \"filename\": \"Bare episode [ep2].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"http://play.acast.com/s/todayinfocus\", \"original_url\": \"http://play.acast.com/s/todayinfocus\", \"webpage_url_basename\": \"todayinfocus\", \"webpage_url_domain\": \"play.acast.com\", \"extractor\": \"acast:channel\", \"extractor_key\": \"ACastChannel\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://shows.acast.com/todayinfocus",
+   "args": [
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(creators)s|%(series)s|%(extractor)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "4efc5294-5385-4847-98bd-519799ce5786|Today in Focus|1|ep3|Third|['The Guardian']|Today in Focus|acast:channel|https://shows.acast.com/todayinfocus",
+    "4efc5294-5385-4847-98bd-519799ce5786|Today in Focus|2|ep2|Bare episode|['The Guardian']|Today in Focus|acast:channel|https://shows.acast.com/todayinfocus"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://shows.acast.com/empty-show",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Empty\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://shows.acast.com/empty-show\", \"original_url\": \"https://shows.acast.com/empty-show\", \"webpage_url_basename\": \"empty-show\", \"webpage_url_domain\": \"shows.acast.com\", \"extractor\": \"acast:channel\", \"extractor_key\": \"ACastChannel\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://ausi.example.test/news/democracy-sausage",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ep2\", \"display_id\": \"ep2\", \"url\": \"https://sphinx.acast.com/p/open/s/x/e/ep2/media.mp3\", \"title\": \"Bare episode\", \"description\": \"Only a summary\", \"thumbnail\": null, \"timestamp\": null, \"filesize\": null, \"season_number\": null, \"episode\": \"Bare episode\", \"episode_number\": null, \"creator\": null, \"series\": null, \"original_url\": \"https://ausi.example.test/news/democracy-sausage\", \"webpage_url\": \"https://embed.acast.com/adambuxton/ep.12-adam-joeschristmaspodcast2015\", \"webpage_url_basename\": \"ep.12-adam-joeschristmaspodcast2015\", \"webpage_url_domain\": \"embed.acast.com\", \"extractor\": \"acast\", \"extractor_key\": \"ACast\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Bare episode\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Bare episode [ep2].mp3\", \"filename\": \"Bare episode [ep2].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  }
+ ]
+}

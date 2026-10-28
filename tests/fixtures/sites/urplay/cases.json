@@ -1,0 +1,44 @@
+[
+ {
+  "url": "https://urplay.se/program/203704-ur-samtiden",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://urskola.se/Produkter/190031-tripp-trapp",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://urplay.se/program/3-ingen",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://urplay.se/program/4-legacy",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://urplay.se/program/5-tom",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://urplay.se/program/6-nohls",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://urplay.se/program/203704-ur-samtiden",
+  "args": [
+   "--list-subs"
+  ]
+ }
+]

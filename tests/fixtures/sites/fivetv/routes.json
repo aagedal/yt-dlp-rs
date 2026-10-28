@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "http://5-tv.ru/news/96814/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>5 канал</title>\n<meta property=\"og:title\" content=\"Россияне выбрали имя &quot;Мир&quot;\">\n<meta property=\"og:description\" content=\"Описание новости\">\n<meta property=\"og:image\" content=\"https://5tv.test/thumb.jpg\">\n<meta property=\"og:video:duration\" content=\"180\">\n</head><body><div id=\"p\" class=\"flowplayer is-splash\" data-ratio=\"0.56\" data-href=\"https://5tv.test/video/96814.mp4?a=1&amp;b=2\"></div></body></html>"
+  },
+  {
+   "url": "http://5-tv.ru/video/1021729/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>  3D   принтер | 5 канал </title>\n<meta property=\"og:video:duration\" content=\"3 мин\">\n<meta property=\"og:description\" content=\"\">\n</head><body><a id=\"x\" href=\"https://5tv.test/1021729.mp4\" title=\"t\" class=\"videoplayer\">play</a></body></html>"
+  },
+  {
+   "url": "http://5-tv.ru/angel/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><div class=\"player\" data-href=\"https://5tv.test/angel.m3u8\"></div></body></html>"
+  },
+  {
+   "url": "http://www.5-tv.ru/schedule/?iframe=true&width=900&height=450",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<p>Расписание</p>"
+  }
+ ]
+}

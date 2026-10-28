@@ -1,7 +1,10 @@
 use crate::{Error, Result, VideoInfo};
 use reqwest::{
     blocking::{Client, Response},
-    header::{ACCEPT_ENCODING, CONTENT_ENCODING, CONTENT_RANGE, ETAG, IF_RANGE, RANGE, REFERER},
+    header::{
+        ACCEPT_ENCODING, CONTENT_ENCODING, CONTENT_RANGE, ETAG, IF_RANGE, RANGE, REFERER,
+        USER_AGENT,
+    },
 };
 use std::{
     fs,
@@ -487,6 +490,7 @@ pub(crate) fn download(
             url: &info.url,
             referrer: (!info.is_direct()).then_some(&info.webpage_url),
             forwarded_for: crate::geo::forwarded_for(info),
+            user_agent: own_user_agent(info.extra.get("http_headers")),
             validate_media: !info.is_direct(),
             subtitle: false,
             limits: (options.min_filesize, options.max_filesize),
@@ -574,6 +578,7 @@ pub(crate) fn download_subtitle(
             referrer: Some(&info.webpage_url),
             // `sub_copy.setdefault(\'http_headers\', info_dict.get(\'http_headers\'))`.
             forwarded_for: crate::geo::forwarded_for(info),
+            user_agent: own_user_agent(subtitle.extra.get("http_headers")),
             validate_media: false,
             subtitle: true,
             limits: (None, None),
@@ -683,6 +688,7 @@ fn join_subtitle_fragments(
                 url: &fragment.url,
                 referrer: Some(&info.webpage_url),
                 forwarded_for: crate::geo::forwarded_for(info),
+                user_agent: None,
                 validate_media: false,
                 subtitle: true,
                 limits: (None, None),
@@ -770,6 +776,7 @@ pub(crate) fn download_thumbnail(
             url,
             referrer: None,
             forwarded_for: None,
+            user_agent: None,
             validate_media: false,
             subtitle: false,
             limits: (None, None),
@@ -785,11 +792,19 @@ pub(crate) fn download_thumbnail(
     )
 }
 
+/// A format's or subtitle track's `User-Agent` from its `http_headers`.
+fn own_user_agent(headers: Option<&serde_json::Value>) -> Option<&str> {
+    headers?.get("User-Agent")?.as_str()
+}
+
 struct HttpResource<'a> {
     url: &'a url::Url,
     referrer: Option<&'a url::Url>,
     /// The format's fake `X-Forwarded-For` (`--xff`).
     forwarded_for: Option<&'a str>,
+    /// The format's (or subtitle track's) own `User-Agent` from its
+    /// `http_headers` (such as Wikimedia's robot-policy agent).
+    user_agent: Option<&'a str>,
     validate_media: bool,
     subtitle: bool,
     /// Minimum/maximum declared total length in bytes.
@@ -1034,6 +1049,9 @@ fn chunked_attempt(
         }
         if let Some(ip) = resource.forwarded_for {
             request = request.header("X-Forwarded-For", ip);
+        }
+        if let Some(agent) = resource.user_agent {
+            request = request.header(USER_AGENT, agent);
         }
         crate::screen::load_cookies().map_err(AttemptFailure::from)?;
         let mut response = request
@@ -1295,6 +1313,9 @@ fn download_attempt(
         }
         if let Some(ip) = resource.forwarded_for {
             request = request.header("X-Forwarded-For", ip);
+        }
+        if let Some(agent) = resource.user_agent {
+            request = request.header(USER_AGENT, agent);
         }
         request
     };

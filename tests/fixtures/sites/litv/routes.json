@@ -1,0 +1,170 @@
+{
+ "routes": [
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD00041610",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>LiTV</title></head><body><div id=\"__next\"></div><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"programInformation\": {\"content_id\": \"VOD00041610\", \"content_type\": \"drama\", \"series_id\": \"VOD00041606\", \"title\": \"花千骨\", \"secondary_mark\": \"第1集\", \"description\": \"第1集描述\", \"picture\": \"/pics/VOD00041610.jpg\", \"genres\": [{\"name\": \"奇幻\"}, {\"name\": 5}, {\"name\": \"愛情\"}], \"episode\": \"1\", \"assets\": [{\"asset_id\": \"A1\"}]}, \"seriesTree\": {\"content_id\": \"VOD00041606\", \"title\": \"花千骨\", \"seasons\": [{\"episodes\": [{\"content_id\": \"VOD00041610\"}, {\"content_id\": \"\"}, {\"content_id\": \"VOD00041611\"}]}, {\"episodes\": [{\"title\": \"no id\"}]}]}}}, \"page\": \"/[type]/watch/[id]\"}</script></body></html>"
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD00041611",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>LiTV</title></head><body><div id=\"__next\"></div><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"programInformation\": {\"content_id\": \"VOD00041611\", \"content_type\": \"drama\", \"series_id\": \"VOD00041606\", \"title\": \"花千骨\", \"secondary_mark\": \"第2集\", \"description\": \"第2集描述\", \"picture\": \"/pics/VOD00041611.jpg\", \"genres\": [{\"name\": \"奇幻\"}, {\"name\": 5}, {\"name\": \"愛情\"}], \"episode\": \"2\", \"assets\": [{\"asset_id\": \"A2\"}]}, \"seriesTree\": {\"content_id\": \"VOD00041606\", \"title\": \"花千骨\", \"seasons\": [{\"episodes\": [{\"content_id\": \"VOD00041610\"}, {\"content_id\": \"\"}, {\"content_id\": \"VOD00041611\"}]}, {\"episodes\": [{\"title\": \"no id\"}]}]}}}, \"page\": \"/[type]/watch/[id]\"}</script></body></html>"
+  },
+  {
+   "url": "https://www.litv.tv/api/get-urls-no-auth",
+   "request_body": [
+    "\"AssetId\": \"A1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"result\": {\"AssetURLs\": [\"https://litv-hls.test/A1/master.m3u8\"]}}"
+  },
+  {
+   "url": "https://www.litv.tv/api/get-urls-no-auth",
+   "request_body": [
+    "\"AssetId\": \"A2\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"result\": {\"AssetURLs\": [\"https://litv-hls.test/A2/master.m3u8\"]}}"
+  },
+  {
+   "url": "https://litv-hls.test/A1/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1500000,RESOLUTION=1280x720,CODECS=\"avc1.640028,mp4a.40.2\"\n720.m3u8\n"
+  },
+  {
+   "url": "https://litv-hls.test/A2/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1500000,RESOLUTION=1280x720,CODECS=\"avc1.640028,mp4a.40.2\"\n720.m3u8\n"
+  },
+  {
+   "url": "https://www.litv.tv/channel/watch/4gtv-live-1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>LiTV</title></head><body><div id=\"__next\"></div><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"programInformation\": {\"content_id\": \"4gtv-live-1\", \"content_type\": \"channel\", \"title\": \"直播台\"}}}, \"page\": \"/[type]/watch/[id]\"}</script></body></html>"
+  },
+  {
+   "url": "https://www.litv.tv/api/get-urls-no-auth",
+   "request_body": [
+    "\"AssetId\": \"4gtv-live-1\"",
+    "\"MediaType\": \"channel\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"result\": {\"AssetURLs\": [\"https://litv-hls.test/A1/master.m3u8\"]}}"
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD-geo",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>LiTV</title></head><body><div id=\"__next\"></div><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"programInformation\": {\"content_id\": \"VOD-geo\", \"assets\": [{\"asset_id\": \"G1\"}]}}}, \"page\": \"/[type]/watch/[id]\"}</script></body></html>"
+  },
+  {
+   "url": "https://www.litv.tv/api/get-urls-no-auth",
+   "request_body": [
+    "\"AssetId\": \"G1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": {\"code\": 42000075, \"message\": \"OutsideRegionError\"}}"
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD-err",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>LiTV</title></head><body><div id=\"__next\"></div><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"programInformation\": {\"content_id\": \"VOD-err\", \"assets\": [{\"asset_id\": \"E1\"}]}}}, \"page\": \"/[type]/watch/[id]\"}</script></body></html>"
+  },
+  {
+   "url": "https://www.litv.tv/api/get-urls-no-auth",
+   "request_body": [
+    "\"AssetId\": \"E1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": {\"message\": \"Asset not found\"}}"
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD-unk",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>LiTV</title></head><body><div id=\"__next\"></div><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"programInformation\": {\"content_id\": \"VOD-unk\", \"assets\": [{\"asset_id\": \"U1\"}]}}}, \"page\": \"/[type]/watch/[id]\"}</script></body></html>"
+  },
+  {
+   "url": "https://www.litv.tv/api/get-urls-no-auth",
+   "request_body": [
+    "\"AssetId\": \"U1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": {\"code\": 1}}"
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD-empty",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>LiTV</title></head><body><div id=\"__next\"></div><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"programInformation\": {\"content_id\": \"VOD-empty\", \"title\": \"x\", \"assets\": [{\"asset_id\": \"X1\"}]}}}, \"page\": \"/[type]/watch/[id]\"}</script></body></html>"
+  },
+  {
+   "url": "https://www.litv.tv/api/get-urls-no-auth",
+   "request_body": [
+    "\"AssetId\": \"X1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"result\": {\"AssetURLs\": []}}"
+  },
+  {
+   "url": "https://www.litv.tv/vod/drama/content.do?content_id=VOD-auth",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>LiTV</title></head><body><div id=\"__next\"></div><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"programInformation\": {\"content_id\": \"VOD-auth\", \"title\": \"登入\", \"assets\": [{\"asset_id\": \"P1\"}]}}}, \"page\": \"/[type]/watch/[id]\"}</script></body></html>"
+  },
+  {
+   "url": "https://www.litv.tv/api/get-urls",
+   "request_body": [
+    "\"AssetId\": \"P1\"",
+    "\"puid\": \"puid-cookie-1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"result\": {\"AssetURLs\": [\"https://litv-hls.test/A1/master.m3u8\"]}}"
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD-nolive",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>LiTV</title></head><body><div id=\"__next\"></div><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"programInformation\": {\"title\": \"x\"}}}, \"page\": \"/[type]/watch/[id]\"}</script></body></html>"
+  },
+  {
+   "url": "https://www.litv.tv/drama/watch/VOD-nonext",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>no data</body></html>"
+  }
+ ]
+}

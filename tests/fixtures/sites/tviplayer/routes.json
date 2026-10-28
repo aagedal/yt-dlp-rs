@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "https://services.iol.pt/matrix?userId=",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "tok123"
+  },
+  {
+   "url": "https://tviplayer.iol.pt/programa/jornal-das-8/53c6b3903004dc006243d0cf/video/61c8e8b90cf2c7ea0f0f71a9",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"OG Jornal\"><meta property=\"og:image\" content=\"https://img.iol.pt/og.jpg\">\n<script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"TVEpisode\",\"seasonNumber\":\"8\",\"name\":\"Jornal\"}</script></head><body>\n<script>var player; var opts = { video: [{ videoUrl: 'https://vod.iol.test/vod/mp4:jornal.mp4/playlist.m3u8', title: \"Jornal das 8 - 26 de dezembro de 2021\", cover: 'https://img.iol.pt/image/id/61c8ee630cf2cc58e7d98d9f/', duration: \"4167\", episodeNum: null }], autoplay: true };</script></body></html>"
+  },
+  {
+   "url": "https://vod.iol.test/vod/mp4:jornal.mp4/playlist.m3u8?wmsAuthSign=tok123",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://tviplayer.iol.pt/video/62c4131c0cf2f9a86eac06bb",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"David e Mickael Carreira respondem: &laquo;Qual &eacute; o pr&oacute;ximo a ser pai?&raquo;\"><meta property=\"og:image\" content=\"https://img.iol.pt/image/id/62c416490cf2ea367d4433fd/\"></head><body>\n<script> opts = {video:[{videoUrl:\"https://vod.iol.test/vod/mp4:carreira.mp4/playlist.m3u8\",title:\"\",duration:148.6}]}</script></body></html>"
+  },
+  {
+   "url": "https://vod.iol.test/vod/mp4:carreira.mp4/playlist.m3u8?wmsAuthSign=tok123",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://tviplayer.iol.pt/programa/para-sempre/61716c360cf2365a5ed894c4/episodio/t1e187",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script type=\"application/ld+json\">[{\"@type\":\"WebPage\"},{\"@type\":\"TVEpisode\",\"seasonNumber\":1,\"episodeNumber\":187}]</script></head><body>\n<script>\n opts = {\n  video: [{\n    videoUrl: 'https://vod.iol.test/vod/mp4:t1e187.mp4/playlist.m3u8',\n    title: 'Quem denunciou Pedro?',\n    cover: 'https://img.iol.pt/image/id/62eda30b0cf2ea367d48973b/',\n    duration: 1250,\n    episodeNum: '187',\n  }]\n }\n</script></body></html>"
+  },
+  {
+   "url": "https://vod.iol.test/vod/mp4:t1e187.mp4/playlist.m3u8?wmsAuthSign=tok123",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://tviplayer.iol.pt/video/nojson",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Sem vídeo\"></head><body><p>Nada</p></body></html>"
+  },
+  {
+   "url": "https://tviplayer.iol.pt/video/nourl",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script> opts = { video: [{ title: 'Sem URL', duration: 10 }] }</script></body></html>"
+  }
+ ]
+}

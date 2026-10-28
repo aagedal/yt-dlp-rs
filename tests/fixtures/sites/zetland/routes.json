@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://www.zetland.dk/historie/sO9aq2MY-a81VP3BY-66e69?utm_source=instagram",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"title\" content=\"HTML title\"><meta property=\"og:image\" content=\"https://zetland.imgix.test/meta.jpg\"><meta name=\"author\" content=\"HTML author\"><meta property=\"article:published_time\" content=\"2024-01-15T10:00:00Z\"><script type=\"application/ld+json\">{\"@context\": \"https://schema.org\", \"@type\": \"NewsArticle\", \"headline\": \"JSON-LD headline\", \"description\": \"JSON-LD description\", \"datePublished\": \"2024-01-16T03:59:52Z\", \"author\": {\"@type\": \"Person\", \"name\": \"LD Person\"}}</script></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"initialState\": {\"consume\": {\"story\": {\"story\": {\"title\": \"Fallback story title\", \"story_content\": {\"content\": {\"title\": \"Afsnit 1: \\u201cDet f\\u00f8ltes som en kidnapning.\\u201d \", \"socialDescription\": \"Social description\"}, \"meta\": {\"audioFiles\": [\"https://audio.zetland.test/afsnit1.mp3\", \"not a url\", null], \"seriesId\": \"62d54630-e87b\"}}, \"sharer\": {\"name\": \"Helle Fuusager\", \"sharer_id\": \"a81VP3BY\"}, \"published_at\": \"2024-01-16T03:59:52.000Z\", \"revised_at\": \"2024-01-18T09:05:39.000Z\"}}}}, \"metaInfo\": {\"meta\": {\"title\": \"Meta title\", \"description\": \"Meta description\", \"author\": \"Meta author\"}, \"ld\": {\"headline\": \"LD headline\", \"author\": {\"name\": \"LD author\", \"url\": \"https://www.zetland.dk/skribent/a81VP3BY\"}, \"image\": \"https://zetland.imgix.test/image1.jpg\", \"dateModified\": \"2024-01-18T09:05:39Z\", \"datePublished\": \"2024-01-16T03:59:52Z\", \"dateCreated\": \"2024-01-16T03:59:52Z\"}, \"og\": {\"og:title\": \"OG title\", \"og:image\": \"https://zetland.imgix.test/og.jpg\"}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://www.zetland.dk/historie/sparse01-uploadr1-abcde",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"description\" content=\"HTML description\"></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"initialState\": {\"consume\": {\"story\": {\"story\": {\"title\": \"\", \"sharer\": {\"name\": \"\"}, \"story_content\": {\"meta\": {\"audioFiles\": [\"https://audio.zetland.test/sparse.m4a\"]}}}}}}, \"metaInfo\": {\"og\": {\"twitter:title\": \"Twitter title\", \"twitter:description\": \"Twitter description\"}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://www.zetland.dk/historie/noaudio1-uploadr2-abcde",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"metaInfo\": {\"meta\": {\"title\": \"Only meta\"}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://www.zetland.dk/historie/nonext01-uploadr3-abcde",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"title\" content=\"x\"></head><body></body></html>"
+  },
+  {
+   "url": "https://www.zetland.dk/historie/noprops1-uploadr4-abcde",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"other\": 1}}</script></body></html>"
+  }
+ ]
+}

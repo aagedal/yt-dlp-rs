@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "http://www.faz.net/multimedia/videos/stockholm-chemie-nobelpreis-12610585.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta property=\"og:title\" content=\"Stockholm: Chemie-Nobelpreis\"><meta property=\"og:description\" content=\"  Drei Forscher.  \"><div data-videojs-media='&lt;CONFIG&gt;&lt;DURATION&gt;119&lt;/DURATION&gt;&lt;STILL&gt;&lt;STILL_BIG&gt;https://faz.test/still.jpg&lt;/STILL_BIG&gt;&lt;/STILL&gt;\n&lt;ENCODINGS&gt;&lt;LOW&gt;&lt;FILENAME&gt;https://faz-pd.test/12610585_480x270_400.mp4&lt;/FILENAME&gt;&lt;AVERAGEBITRATE&gt;412&lt;/AVERAGEBITRATE&gt;&lt;CODEC&gt;H264&lt;/CODEC&gt;&lt;/LOW&gt;\n&lt;HIGH&gt;&lt;FILENAME&gt;https://faz-pd.test/12610585_hi.mp4&lt;/FILENAME&gt;&lt;AVERAGEBITRATE&gt;1,5&lt;/AVERAGEBITRATE&gt;&lt;/HIGH&gt;\n&lt;HQ&gt;&lt;FILENAME&gt;https://faz-pd.test/12610585_1280x720_2000.mp4&lt;/FILENAME&gt;&lt;/HQ&gt;&lt;/ENCODINGS&gt;&lt;/CONFIG&gt;'></div>"
+  },
+  {
+   "url": "http://www.faz.net/-13659345.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<meta property=\"og:title\" content=\"T\"><div data-videojs-media='&lt;CONFIG&gt;&lt;/CONFIG&gt;'></div>"
+  },
+  {
+   "url": "http://www.faz.net/x-1.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>kein Video</html>"
+  },
+  {
+   "url": "http://www.faz.net/x-2.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div data-videojs-media='&lt;CONFIG&gt;&lt;ENCODINGS&gt;&lt;LOW&gt;&lt;FILENAME&gt;https://faz-pd.test/2.mp4&lt;/FILENAME&gt;&lt;/LOW&gt;&lt;/ENCODINGS&gt;&lt;/CONFIG&gt;'></div>"
+  }
+ ]
+}

@@ -1,0 +1,102 @@
+{
+ "routes": [
+  {
+   "url": "https://olympics.com/en/paris-2024/videos/vod-one",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"page\": {\"items\": [{\"name\": \"header\", \"data\": {}}, {\"name\": \"videoPlaylist\", \"data\": {\"currentVideo\": {\"videoID\": \"3d96db23-8eee-4b7c-8ef5-488a0361026c\", \"title\": \"Men's Preliminaries | Hockey\", \"contentDate\": \"2024-07-27T07:50:00Z\", \"streamingStatus\": \"VOD\", \"videoUrl\": \"https://ocs.test/vod/abc/master.m3u8?a=1&b=2\", \"jwtToken\": \"jwt1\", \"countries\": [\"RU\", \"BR\"], \"geoRestrictedVideo\": false}}}]}}}}</script></body></html>"
+  },
+  {
+   "url": "https://metering.olympics.com/tokengenerator?a=1&b=2&url=https%3A%2F%2Focs.test%2Fvod%2Fabc%2Fmaster.m3u8&service-id=vod&user-auth=jwt1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"url\": \"https://ocs.test/vod/abc/master.m3u8?token=t1\"}}"
+  },
+  {
+   "url": "https://ocs.test/vod/abc/master.m3u8?token=t1",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://olympics.com/en/paris-2024/videos/live-two",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"page\": {\"items\": [{\"name\": \"header\", \"data\": {}}, {\"name\": \"videoPlaylist\", \"data\": {\"currentVideo\": {\"videoID\": \"a42f37ab\", \"title\": \"Live final\", \"streamingStatus\": \"LIVE\", \"videoUrl\": \"not a url\", \"streamUrl\": \"https://ocs.test/live/xyz/master.m3u8\", \"jwtToken\": \"jwt2\"}}}]}}}}</script></body></html>"
+  },
+  {
+   "url": "https://metering.olympics.com/tokengenerator?url=https%3A%2F%2Focs.test%2Flive%2Fxyz%2Fmaster.m3u8&service-id=live&user-auth=jwt2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"url\": \"https://ocs.test/live/xyz/master.m3u8?token=t2\"}}"
+  },
+  {
+   "url": "https://ocs.test/live/xyz/master.m3u8?token=t2",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://olympics.com/en/paris-2024/videos/geo-three",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"page\": {\"items\": [{\"name\": \"header\", \"data\": {}}, {\"name\": \"videoPlaylist\", \"data\": {\"currentVideo\": {\"videoID\": \"g\", \"title\": \"Geo\", \"geoRestrictedVideo\": true, \"countries\": [\"RU\", \"BR\", 3], \"videoUrl\": \"https://ocs.test/g.m3u8\", \"jwtToken\": \"x\"}}}]}}}}</script></body></html>"
+  },
+  {
+   "url": "https://olympics.com/en/paris-2024/videos/nojwt-four",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"page\": {\"items\": [{\"name\": \"header\", \"data\": {}}, {\"name\": \"videoPlaylist\", \"data\": {\"currentVideo\": {\"videoID\": \"n\", \"videoUrl\": \"https://ocs.test/n.m3u8\"}}}]}}}}</script></body></html>"
+  },
+  {
+   "url": "https://olympics.com/fr/video/men-s-109kg-legacy",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"og:title\" content=\"OG titre\"><meta name=\"episode_uid\" content=\"f6a0753c-8e6f-4b7d-a435-027054a4f8e9\"><meta name=\"video_url\" content=\"https://ocs.test/legacy/abc.m3u8\"><script>window.__d = {\"image\": \"[https://img.olympics.com/images/image/private/t_1-1_1280/primary/nua4, https://img.olympics.com/images/image/private/t_16-9_640/primary/b]\"};</script><script type=\"application/ld+json\">{\"@context\": \"https://schema.org\", \"@type\": \"VideoObject\", \"name\": \"+109kg (H) Groupe A | Replay\", \"description\": \"Halt\\u00e9rophilie.\", \"uploadDate\": \"2021-08-01T06:00:00Z\", \"duration\": \"PT1H56M57S\", \"thumbnailUrl\": \"https://img.olympics.com/images/image/private/t_16-9_640/primary/ld\"}</script></head><body></body></html>"
+  },
+  {
+   "url": "https://olympics.com/tokenGenerator?url=https%3A%2F%2Focs.test%2Flegacy%2Fabc.m3u8",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "\"https://ocs.test/legacy/abc.m3u8?hdnts=tok\""
+  },
+  {
+   "url": "https://ocs.test/legacy/abc.m3u8?hdnts=tok",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://olympics.com/en/replay/no-ld",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>x</title><meta name=\"title\" content=\"T\"><meta name=\"episode_uid\" content=\"u6\"><meta name=\"video_url\" content=\"https://ocs.test/legacy/x.m3u8\"></head></html>"
+  },
+  {
+   "url": "https://olympics.com/en/original-series/episode/b-girl-legacy",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"twitter:title\" content=\"B-girl Nicka | Episode 1\"><meta name=\"episode_uid\" content=\"32633650\"><meta name=\"video_url\" content=\"https://ocs.test/legacy/b.m3u8\"><script>var p = {'image': 'https://img.olympics.com/images/image/private/t_1-1_1280/primary/a3j9, https://img.olympics.com/images/image/private/t_16-9_640/primary/z, https://x.test/plain.jpg'};</script><script type=\"application/ld+json\">{\"@context\": \"https://schema.org\", \"@type\": \"NewsArticle\", \"headline\": \"Nicka article\", \"description\": \"Breaking.\", \"uploadDate\": \"2024-05-17T12:16:40Z\"}</script></head></html>"
+  },
+  {
+   "url": "https://olympics.com/tokenGenerator?url=https%3A%2F%2Focs.test%2Flegacy%2Fb.m3u8",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "\"https://ocs.test/legacy/abc.m3u8?hdnts=tok\""
+  }
+ ]
+}

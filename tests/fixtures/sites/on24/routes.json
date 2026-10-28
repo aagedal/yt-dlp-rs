@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://event.on24.com/apic/utilApp/EventConsoleCachedServlet?eventId=2197467&displayProfile=player&key=5DF57BE53237F36A43B478DD36277A84&contentType=A",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"presentationLogInfo\": {\"eventid\": 2197467}, \"localelanguagecode\": \"en\", \"description\": \"  Pitch Webinar  \", \"session\": {\"startdate\": 1576051200999}, \"registrantcount\": 169, \"mediaUrlInfo\": [{\"code\": \"fhvideo1\", \"url\": \"fhvideo1_x.mp4\"}, {\"code\": \"audio\", \"url\": \"https://cdn.on24.test/a.wav\"}, {\"code\": \"slides\", \"url\": \"s.pdf\"}, {\"code\": \"audio\"}]}"
+  },
+  {
+   "url": "https://event.on24.com/apic/utilApp/EventConsoleCachedServlet?eventId=3543176&displayProfile=player&key=5DF57BE53237F36A43B478DD36277A84&contentType=A",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"description\": null, \"session\": {\"startdate\": \"1576051200000\"}}"
+  }
+ ]
+}

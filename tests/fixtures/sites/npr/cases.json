@@ -1,0 +1,38 @@
+[
+ {
+  "url": "https://www.npr.org/sections/allsongs/2015/10/21/449974205/new-music-from-beach-house-chairlift-cmj-discoveries-and-more",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.npr.org/sections/allsongs/2015/10/21/449974205/new-music-from-beach-house-chairlift-cmj-discoveries-and-more",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.npr.org/sections/allsongs/2015/10/21/449974205/new-music-from-beach-house-chairlift-cmj-discoveries-and-more",
+  "args": [
+   "--no-progress",
+   "-I",
+   "1",
+   "-f",
+   "mp3",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://www.npr.org/2020/02/14/805476846/laura-stevenson-tiny-desk-concert",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.npr.org/2017/06/19/533198237/tigers-jaw-tiny-desk-concert",
+  "args": [
+   "-j"
+  ]
+ }
+]

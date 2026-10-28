@@ -1,0 +1,41 @@
+{
+ "routes": [
+  {
+   "url": "https://amfphp.indavideo.hu/SYm0json.php/player.playerHandler.getVideoData/1bdc3c6d80/",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"id\": \"1837039\", \"title\": \"Cicat\\u00e1nc\", \"description\": \"\", \"user_name\": \"cukiajanlo\", \"user_id\": \"83729\", \"date\": \"2016-08-14 21:12:13\", \"length\": \"72\", \"age_limit\": \"0\", \"thumbnails\": [\"//pics.indavideo.hu/videos/2016/08/14/1bdc3c6d80/1.jpg\", \"https://pics.indavideo.hu/videos/2016/08/14/1bdc3c6d80/2.jpg\"], \"tags\": [{\"title\": \"t\\u00e1nc\"}, {\"title\": \"macska\"}], \"video_files\": {\"360\": \"https://hu.indavideo.test/1bdc3c6d80.360.mp4\", \"720\": \"https://hu.indavideo.test/1bdc3c6d80.720.mp4\", \"x\": \"https://hu.indavideo.test/1bdc3c6d80.360.mp4\", \"odd\": \"https://hu.indavideo.test/1bdc3c6d80.1080.mp4\"}, \"filesh\": {\"360\": \"tok360\", \"720\": \"tok720\"}}}"
+  },
+  {
+   "url": "https://amfphp.indavideo.hu/SYm0json.php/player.playerHandler.getVideoData/abc/",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"title\": \"Egy\", \"video_files\": [\"https://hu.indavideo.test/abc.mp4\"], \"filesh\": {\"480\": \"tok480\"}}}"
+  },
+  {
+   "url": "https://amfphp.indavideo.hu/SYm0json.php/player.playerHandler.getVideoData/dead/",
+   "ignore_query": [
+    "_"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"success\": 0}"
+  },
+  {
+   "url": "https://index.indavideo.test/video/Cicatanc",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<iframe width=\"1\" src=\"https://embed.indavideo.hu/player/video/1bdc3c6d80/\"></iframe>"
+  }
+ ]
+}

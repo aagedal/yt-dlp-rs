@@ -1,0 +1,32 @@
+[
+ {
+  "url": "http://loc.gov/item/90716351/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://loc.gov/item/90716351/",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://www.loc.gov/today/cyberlc/feature_wdesc.php?rec=5578",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.loc.gov/item/none/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.loc.gov/item/empty/",
+  "args": [
+   "-j"
+  ]
+ }
+]

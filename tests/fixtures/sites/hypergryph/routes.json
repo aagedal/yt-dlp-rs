@@ -1,0 +1,47 @@
+{
+ "routes": [
+  {
+   "url": "https://monster-siren.hypergryph.com/api/song/514562",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": 0, \"msg\": \"\", \"data\": {\"cid\": \"514562\", \"name\": \"Flame Shadow\", \"albumCid\": \"6747\", \"sourceUrl\": \"https://res01.hycdn.test/x/flame.wav\", \"lyricUrl\": \"https://res01.hycdn.test/x/flame.lrc\", \"artists\": [\"\\u585e\\u58ec\\u5531\\u7247-MSR\", 3]}}"
+  },
+  {
+   "url": "https://monster-siren.hypergryph.com/api/album/6747/detail",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": 0, \"data\": {\"name\": \"Flame Shadow\", \"intro\": \"<p>Intro &amp; more</p>\", \"coverUrl\": \"https://web.hycdn.test/cover.jpg\"}}"
+  },
+  {
+   "url": "https://monster-siren.hypergryph.com/api/song/2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": 0, \"data\": {\"name\": \"No album\", \"sourceUrl\": \"https://res01.hycdn.test/x/b.mp3\", \"albumCid\": \"9\"}}"
+  },
+  {
+   "url": "https://monster-siren.hypergryph.com/api/album/9/detail",
+   "status": 500,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://monster-siren.hypergryph.com/api/song/3",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": 1, \"msg\": \"Song not found\"}"
+  },
+  {
+   "url": "https://monster-siren.hypergryph.com/api/song/4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": 7}"
+  }
+ ]
+}

@@ -38,6 +38,18 @@
     "ERROR: [TheHighWire] no-embed: Unable to extract embed URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
    ],
    "files": {}
+  },
+  {
+   "url": "https://thehighwire.com/ark-videos/nomedia/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
   }
  ]
 }

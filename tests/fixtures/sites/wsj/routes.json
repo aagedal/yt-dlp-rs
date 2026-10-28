@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "http://video-api.wsj.com/api-video/find_all_videos.asp?type=guid&count=1&query=1BD01A4C-BFE8-40A5-A42F-8A8AF9898B1A&fields=type%2Chls%2CvideoMP4List%2CthumbnailList%2Cauthor%2Cdescription%2Cname%2Cduration%2CvideoURL%2Ctitletag%2CformattedCreationDate%2Ckeywords%2Ceditor",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"items\": [{\"name\": \"Can Alphabet Build a Smarter City?\", \"titletag\": \"x\", \"hls\": \"https://wsj-hls.test/V1/master.m3u8\", \"videoURL\": \"https://wsj-hds.test/V1/manifest.f4m\", \"videoMP4List\": [{\"url\": \"https://wsj-pd.test/V1_1800.mp4\", \"bitrate\": \"1800\", \"width\": 1280, \"height\": \"720\", \"fps\": \"29.97\"}, {\"url\": \"\"}, {\"url\": \"https://wsj-pd.test/V1_low.mp4\"}], \"thumbnailList\": [{\"url\": \"https://wsj.test/t1.jpg\", \"width\": 640}], \"author\": \"Jason Bellini\", \"editor\": \"jbellini\", \"duration\": \"90\", \"formattedCreationDate\": \"February 20, 2017\", \"keywords\": [\"Alphabet\", \"Cities\"]}]}"
+  },
+  {
+   "url": "https://wsj-hls.test/V1/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "http://video-api.wsj.com/api-video/find_all_videos.asp?type=guid&count=1&query=4B13FA62-1D8C-45DB-8EA1-4105CB20B362&fields=type%2Chls%2CvideoMP4List%2CthumbnailList%2Cauthor%2Cdescription%2Cname%2Cduration%2CvideoURL%2Ctitletag%2CformattedCreationDate%2Ckeywords%2Ceditor",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"items\": [{\"titletag\": \"Bao Bao\", \"videoMP4List\": [{\"url\": \"https://wsj-pd.test/V2.mp4\", \"bitrate\": 0}]}]}"
+  },
+  {
+   "url": "https://www.wsj.com/articles/dont-like-china-no-pandas-for-you-1490366939",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div id=\"video4B13FA62-1D8C-45DB-8EA1-4105CB20B362\" class=\"v\"></div>"
+  },
+  {
+   "url": "https://www.wsj.com/articles/no-video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>none</html>"
+  },
+  {
+   "url": "http://video-api.wsj.com/api-video/find_all_videos.asp?type=guid&count=1&query=00000000-0000-0000-0000-000000000000&fields=type%2Chls%2CvideoMP4List%2CthumbnailList%2Cauthor%2Cdescription%2Cname%2Cduration%2CvideoURL%2Ctitletag%2CformattedCreationDate%2Ckeywords%2Ceditor",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"items\": []}"
+  }
+ ]
+}

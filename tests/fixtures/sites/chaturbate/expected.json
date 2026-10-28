@@ -1,0 +1,76 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.chaturbate.com/liveone/",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(is_live)s|%(age_limit)s|%(thumbnail)s|%(formats.:.format_id)s|%(formats.:.preference)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "liveone|liveone|True|18|https://roomimg.stream.highwebmedia.com/ri/liveone.jpg|['0']|[]"
+   ],
+   "stderr": [
+    "WARNING: [Chaturbate] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://chaturbate.com/sleepy/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [Chaturbate] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [Chaturbate] sleepy: Room is currently offline"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://chaturbate.com/geo/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [Chaturbate] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [Chaturbate] geo: This video is not available from your location due to geo restriction"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://chaturbate.com/htmlroom/",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(is_live)s|%(age_limit)s|%(thumbnail)s|%(formats.:.format_id)s|%(formats.:.preference)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "htmlroom|htmlroom|True|18|https://roomimg.stream.highwebmedia.com/ri/htmlroom.jpg|['fast', '1']|[-10]"
+   ],
+   "stderr": [
+    "WARNING: [Chaturbate] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "WARNING: [Chaturbate] Got status \"unknownstate\" from API; falling back to webpage extraction"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://chaturbate.com/nostream/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [Chaturbate] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "WARNING: [Chaturbate] Got status \"None\" from API; falling back to webpage extraction",
+    "ERROR: [Chaturbate] nostream: Room is closed"
+   ],
+   "files": {}
+  }
+ ]
+}

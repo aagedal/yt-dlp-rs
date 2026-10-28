@@ -1,0 +1,58 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.wsj.com/video/can-alphabet-build-a-smarter-city/1BD01A4C-BFE8-40A5-A42F-8A8AF9898B1A.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1BD01A4C-BFE8-40A5-A42F-8A8AF9898B1A\", \"formats\": [{\"url\": \"https://wsj-pd.test/V1_low.mp4\", \"format_id\": \"http\", \"tbr\": null, \"width\": null, \"height\": null, \"fps\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\"}, {\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://wsj-hls.test/V1/360/index.m3u8\", \"manifest_url\": \"https://wsj-hls.test/V1/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"url\": \"https://wsj-pd.test/V1_1800.mp4\", \"format_id\": \"http-1800\", \"tbr\": 1800, \"width\": 1280, \"height\": 720, \"fps\": 29.97, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 20250000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-1800 - 1280x720\"}], \"thumbnails\": [{\"url\": \"https://wsj.test/t1.jpg\", \"width\": 640, \"id\": \"0\"}], \"creator\": \"Jason Bellini\", \"uploader_id\": \"jbellini\", \"duration\": 90, \"upload_date\": \"20170220\", \"title\": \"Can Alphabet Build a Smarter City?\", \"categories\": [\"Alphabet\", \"Cities\"], \"webpage_url\": \"http://www.wsj.com/video/can-alphabet-build-a-smarter-city/1BD01A4C-BFE8-40A5-A42F-8A8AF9898B1A.html\", \"original_url\": \"http://www.wsj.com/video/can-alphabet-build-a-smarter-city/1BD01A4C-BFE8-40A5-A42F-8A8AF9898B1A.html\", \"webpage_url_basename\": \"1BD01A4C-BFE8-40A5-A42F-8A8AF9898B1A.html\", \"webpage_url_domain\": \"wsj.com\", \"extractor\": \"WSJ\", \"extractor_key\": \"WSJ\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://wsj.test/t1.jpg\", \"display_id\": \"1BD01A4C-BFE8-40A5-A42F-8A8AF9898B1A\", \"fulltitle\": \"Can Alphabet Build a Smarter City?\", \"duration_string\": \"1:30\", \"release_year\": null, \"creators\": [\"Jason Bellini\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://wsj-pd.test/V1_1800.mp4\", \"format_id\": \"http-1800\", \"tbr\": 1800, \"width\": 1280, \"height\": 720, \"fps\": 29.97, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 20250000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-1800 - 1280x720\", \"_filename\": \"Can Alphabet Build a Smarter City\\uff1f [1BD01A4C-BFE8-40A5-A42F-8A8AF9898B1A].mp4\", \"filename\": \"Can Alphabet Build a Smarter City\\uff1f [1BD01A4C-BFE8-40A5-A42F-8A8AF9898B1A].mp4\", \"__write_download_archive\": false}], \"url\": \"https://wsj-pd.test/V1_1800.mp4\", \"format_id\": \"http-1800\", \"tbr\": 1800, \"width\": 1280, \"height\": 720, \"fps\": 29.97, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 20250000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-1800 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [WSJ] 1BD01A4C-BFE8-40A5-A42F-8A8AF9898B1A: Unable to download f4m manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.wsj.com/articles/dont-like-china-no-pandas-for-you-1490366939",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4B13FA62-1D8C-45DB-8EA1-4105CB20B362\", \"formats\": [{\"url\": \"https://wsj-pd.test/V2.mp4\", \"format_id\": \"http\", \"tbr\": null, \"width\": null, \"height\": null, \"fps\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\"}], \"thumbnails\": null, \"creator\": null, \"uploader_id\": null, \"upload_date\": null, \"title\": \"Bao Bao\", \"categories\": null, \"original_url\": \"https://www.wsj.com/articles/dont-like-china-no-pandas-for-you-1490366939\", \"webpage_url\": \"wsj:4B13FA62-1D8C-45DB-8EA1-4105CB20B362\", \"webpage_url_basename\": \"4B13FA62-1D8C-45DB-8EA1-4105CB20B362\", \"webpage_url_domain\": null, \"extractor\": \"WSJ\", \"extractor_key\": \"WSJ\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"4B13FA62-1D8C-45DB-8EA1-4105CB20B362\", \"fulltitle\": \"Bao Bao\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://wsj-pd.test/V2.mp4\", \"format_id\": \"http\", \"tbr\": null, \"width\": null, \"height\": null, \"fps\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\", \"_filename\": \"Bao Bao [4B13FA62-1D8C-45DB-8EA1-4105CB20B362].mp4\", \"filename\": \"Bao Bao [4B13FA62-1D8C-45DB-8EA1-4105CB20B362].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [WSJArticle] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.wsj.com/articles/no-video",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [WSJArticle] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [WSJArticle] no-video: Unable to extract video id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "wsj:00000000-0000-0000-0000-000000000000",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  }
+ ]
+}

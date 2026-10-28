@@ -1,0 +1,98 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://urplay.se/program/203704-ur-samtiden",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"203704\", \"title\": \"UR Samtiden - Vetenskap : UR Samtiden - Livet, universum och rymdens m\\u00e4rkliga musik\", \"description\": \"Om vetenskap.\", \"thumbnails\": [{\"id\": \"poster\", \"url\": \"https://assets.ur.se/p.jpg\"}, {\"id\": \"640x360\", \"url\": \"https://assets.ur.se/id/203704/images/1_l.jpg\", \"width\": 640, \"height\": 360, \"resolution\": \"640x360\"}, {\"id\": \"1280x720\", \"url\": \"https://assets.ur.se/id/203704/images/1_hd.jpg\", \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\"}], \"timestamp\": 1526295600, \"series\": \"UR Samtiden - Vetenskap\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://urplay-hls.test/203704/360/index.m3u8\", \"manifest_url\": \"https://urplay-hls.test/203704/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"duration\": 2297, \"categories\": [\"Kultur & historia\"], \"tags\": [\"Kritiskt t\\u00e4nkande\", \"Vetenskap\"], \"season\": \"S\\u00e4song 1\", \"episode\": \"UR Samtiden - Livet, universum och rymdens m\\u00e4rkliga musik\", \"episode_number\": 3, \"age_limit\": 0, \"subtitles\": {\"swe\": [{\"url\": \"https://urplay-hls.test/203704/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}, {\"ext\": \"sweComplete\", \"url\": \"https://media-api.urplay.se/sub/203704.vtt\"}], \"eng\": [{\"ext\": \"tt\", \"url\": \"https://media-api.urplay.se/sub/203704.tt\"}]}, \"webpage_url\": \"https://urplay.se/program/203704-ur-samtiden\", \"original_url\": \"https://urplay.se/program/203704-ur-samtiden\", \"webpage_url_basename\": \"203704-ur-samtiden\", \"webpage_url_domain\": \"urplay.se\", \"extractor\": \"URPlay\", \"extractor_key\": \"URPlay\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://assets.ur.se/id/203704/images/1_hd.jpg\", \"display_id\": \"203704\", \"fulltitle\": \"UR Samtiden - Vetenskap : UR Samtiden - Livet, universum och rymdens m\\u00e4rkliga musik\", \"duration_string\": \"38:17\", \"upload_date\": \"20180514\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-921\", \"url\": \"https://urplay-hls.test/203704/360/index.m3u8\", \"manifest_url\": \"https://urplay-hls.test/203704/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"UR Samtiden - Vetenskap \\uff1a UR Samtiden - Livet, universum och rymdens m\\u00e4rkliga musik [203704].mp4\", \"filename\": \"UR Samtiden - Vetenskap \\uff1a UR Samtiden - Livet, universum och rymdens m\\u00e4rkliga musik [203704].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://urplay-hls.test/203704/360/index.m3u8\", \"manifest_url\": \"https://urplay-hls.test/203704/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://urskola.se/Produkter/190031-tripp-trapp",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"190031\", \"title\": \"Tripp, Trapp, Tr\\u00e4d : Sovkudde\", \"description\": null, \"thumbnails\": [], \"timestamp\": null, \"series\": \"Tripp, Trapp, Tr\\u00e4d\", \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://urplay-hls.test/190031/360/index.m3u8\", \"manifest_url\": \"https://urplay-hls.test/190031/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"categories\": null, \"tags\": null, \"season\": null, \"episode\": \"Sovkudde\", \"episode_number\": null, \"age_limit\": 0, \"subtitles\": {\"swe\": [{\"url\": \"https://urplay-hls.test/190031/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"webpage_url\": \"https://urskola.se/Produkter/190031-tripp-trapp\", \"original_url\": \"https://urskola.se/Produkter/190031-tripp-trapp\", \"webpage_url_basename\": \"190031-tripp-trapp\", \"webpage_url_domain\": \"urskola.se\", \"extractor\": \"URPlay\", \"extractor_key\": \"URPlay\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"190031\", \"fulltitle\": \"Tripp, Trapp, Tr\\u00e4d : Sovkudde\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://urplay-hls.test/190031/360/index.m3u8\", \"manifest_url\": \"https://urplay-hls.test/190031/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"Tripp, Trapp, Tr\\u00e4d \\uff1a Sovkudde [190031].mp4\", \"filename\": \"Tripp, Trapp, Tr\\u00e4d \\uff1a Sovkudde [190031].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://urplay.se/program/3-ingen",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: min() iterable argument is empty"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://urplay.se/program/4-legacy",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4\", \"title\": \"Legacy avsnitt\", \"description\": null, \"thumbnails\": [], \"timestamp\": null, \"series\": null, \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://urplay-hls.test/4/360/index.m3u8\", \"manifest_url\": \"https://urplay-hls.test/4/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"categories\": null, \"tags\": null, \"season\": null, \"episode\": \"Legacy avsnitt\", \"episode_number\": null, \"age_limit\": 7, \"subtitles\": {\"swe\": [{\"url\": \"https://urplay-hls.test/4/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"webpage_url\": \"https://urplay.se/program/4-legacy\", \"original_url\": \"https://urplay.se/program/4-legacy\", \"webpage_url_basename\": \"4-legacy\", \"webpage_url_domain\": \"urplay.se\", \"extractor\": \"URPlay\", \"extractor_key\": \"URPlay\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"4\", \"fulltitle\": \"Legacy avsnitt\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://urplay-hls.test/4/360/index.m3u8\", \"manifest_url\": \"https://urplay-hls.test/4/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"Legacy avsnitt [4].mp4\", \"filename\": \"Legacy avsnitt [4].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [URPlay] unable to extract next.js data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://urplay.se/program/5-tom",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [URPlay] 5: Unable to parse __NEXT_DATA__; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://urplay.se/program/6-nohls",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [URPlay] 6: Unable to extract HLS URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://urplay.se/program/203704-ur-samtiden",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[URPlay] Extracting URL: https://urplay.se/program/203704-ur-samtiden",
+    "[URPlay] 203704: Downloading webpage",
+    "[URPlay] 203704: Downloading streaming information",
+    "[URPlay] 203704: Downloading m3u8 information",
+    "[info] Available subtitles for 203704:",
+    "Language Formats",
+    "swe      sweComplete, vtt",
+    "eng      tt"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

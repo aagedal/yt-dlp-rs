@@ -1,0 +1,39 @@
+[
+ {
+  "url": "https://player.zype.com/embed/5b400b834b32992a310622b9.js?api_key=K1&autoplay=false",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://player.zype.com/embed/5b400b834b32992a310622b9.js?api_key=K1&autoplay=false",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://player.zype.com/embed/5b400b834b32992a310622ba.html?api_key=K2",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.zype.com/embed/5b400b834b32992a310622bb.js?player_key=K3",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.zype.com/embed/5b400b834b32992a310622bc.js?api_key=K4",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.cookscountry.test/episode/1",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(webpage_url)s"
+  ]
+ }
+]

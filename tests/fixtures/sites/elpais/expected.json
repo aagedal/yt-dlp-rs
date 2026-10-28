@@ -1,0 +1,46 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://elpais.com/elpais/2017/01/26/ciencia/1485456786_417876.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1485456786_417876\", \"url\": \"http://ep01.epimg.test/videos/1485456786.mp4\", \"title\": \"Hallado un barco\", \"description\": \"Ciencia\", \"thumbnail\": \"http://ep01.epimg.test/stills/1.jpg\", \"upload_date\": \"20170126\", \"webpage_url\": \"https://elpais.com/elpais/2017/01/26/ciencia/1485456786_417876.html\", \"original_url\": \"https://elpais.com/elpais/2017/01/26/ciencia/1485456786_417876.html\", \"webpage_url_basename\": \"1485456786_417876.html\", \"webpage_url_domain\": \"elpais.com\", \"extractor\": \"ElPais\", \"extractor_key\": \"ElPais\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://ep01.epimg.test/stills/1.jpg\", \"id\": \"0\"}], \"display_id\": \"1485456786_417876\", \"fulltitle\": \"Hallado un barco\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Hallado un barco [1485456786_417876].mp4\", \"filename\": \"Hallado un barco [1485456786_417876].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://blogs.elpais.com/la-voz/2014/02/tiempo.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"tiempo\", \"url\": \"http://ep02.epimg.test/v/clip.mp4\", \"title\": \"OG\", \"description\": null, \"thumbnail\": \"https://ep.test/og.jpg\", \"upload_date\": null, \"webpage_url\": \"http://blogs.elpais.com/la-voz/2014/02/tiempo.html\", \"original_url\": \"http://blogs.elpais.com/la-voz/2014/02/tiempo.html\", \"webpage_url_basename\": \"tiempo.html\", \"webpage_url_domain\": \"blogs.elpais.com\", \"extractor\": \"ElPais\", \"extractor_key\": \"ElPais\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://ep.test/og.jpg\", \"id\": \"0\"}], \"display_id\": \"tiempo\", \"fulltitle\": \"OG\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"OG [tiempo].mp4\", \"filename\": \"OG [tiempo].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [ElPais] unable to extract timestamp; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ElPais] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://elpais.com/x/none.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [ElPais] none: Unable to extract URL prefix; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,97 @@
+{
+ "routes": [
+  {
+   "url": "https://player.mangomolo.com/v1/video?id=29431242&user_id=168&signature=b40e&autoplay=true",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><input type=\"hidden\" name=\"userid\" value=\"168\"><input type=\"hidden\" id=\"duration\" value=\" 95 \"><script>player.setup({file: \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/playlist.m3u8\", width: 640});</script></body></html>"
+  },
+  {
+   "url": "https://mango-wowza.test/vod/_definst_/mp4:a.mp4/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1280000,RESOLUTION=1280x720\nchunklist_720.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=640000,RESOLUTION=640x360\nchunklist_360.m3u8\n"
+  },
+  {
+   "url": "http://mango-wowza.test/vod/_definst_/mp4:a.mp4/manifest.f4m",
+   "headers": {
+    "Content-Type": "application/f4m+xml"
+   },
+   "body": "<manifest xmlns=\"http://ns.adobe.com/f4m/1.0\"><id>v</id><media url=\"media_720\" bitrate=\"1200\" width=\"1280\" height=\"720\"/></manifest>"
+  },
+  {
+   "url": "https://mango-wowza.test/vod/_definst_/mp4:a.mp4/manifest.f4m",
+   "headers": {
+    "Content-Type": "application/f4m+xml"
+   },
+   "body": "<manifest xmlns=\"http://ns.adobe.com/f4m/1.0\"><id>v</id><media url=\"media_720\" bitrate=\"1200\" width=\"1280\" height=\"720\"/></manifest>"
+  },
+  {
+   "url": "https://mango-wowza.test/vod/_definst_/mp4:a.mp4/manifest.mpd",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "no"
+  },
+  {
+   "url": "https://player.mangomolo.com/v1/live?channelid=MjM%3D&countries=Q0M%3D&w=100%25",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><input type=\"hidden\" name=\"duration\" value=\"live\"><script>var p = {src : \"https://mango-live.test/live/ch23/playlist.m3u8\"};</script></body></html>"
+  },
+  {
+   "url": "https://mango-live.test/live/ch23/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1280000,RESOLUTION=1280x720\nchunklist_720.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=640000,RESOLUTION=640x360\nchunklist_360.m3u8\n"
+  },
+  {
+   "url": "https://mango-live.test/live/ch23/manifest.f4m",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "no"
+  },
+  {
+   "url": "https://mango-live.test/live/ch23/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" type=\"static\" mediaPresentationDuration=\"PT30S\" minBufferTime=\"PT2S\" profiles=\"urn:mpeg:dash:profile:isoff-live:2011\">\n <Period id=\"0\" start=\"PT0S\">\n  <AdaptationSet mimeType=\"video/mp4\" segmentAlignment=\"true\">\n   <Representation id=\"v1\" bandwidth=\"800000\" codecs=\"avc1.4d401f\" width=\"640\" height=\"360\">\n    <SegmentTemplate media=\"chunk_$Number$.m4s\" initialization=\"init.mp4\" duration=\"10\" timescale=\"1\" startNumber=\"1\"/>\n   </Representation>\n  </AdaptationSet>\n </Period>\n</MPD>\n"
+  },
+  {
+   "url": "https://player.mangomolo.com/v1/video?id=1&user_id=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>Unavailable</body></html>"
+  },
+  {
+   "url": "https://ayn.om/video/29431242/one",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>AYN video</title><meta property=\"og:description\" content=\"Desc\"></head><body><iframe class=\"x\" src=\"https://player.mangomolo.com/v1/video?id=29431242&amp;user_id=168&amp;signature=b40e&amp;autoplay=true\" width=\"640\"></iframe></body></html>"
+  },
+  {
+   "url": "https://ayn.om/video/two",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Two players</title></head><body><iframe src='//admin.mangomolo.com/analytics/index.php/customers/embed/index?channelid=MjM%3D&amp;x=1'></iframe><iframe src=\"https://player.mangomolo.com/v1/video?id=29431242&user_id=168&signature=b40e&autoplay=true\"></iframe></body></html>"
+  },
+  {
+   "url": "https://admin.mangomolo.com/analytics/index.php/customers/embed/index?channelid=MjM%3D&x=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "unused"
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+[
+ {
+  "url": "https://mediaklikk.hu/ajanlo/video/2025/08/04/heviz-dzsungel/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://m4sport.hu/video/foci-nb1",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://hirado.hu/cikk/nincs",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://m4sport.hu/video/2025/08/07/hiba",
+  "args": [
+   "-j"
+  ]
+ }
+]

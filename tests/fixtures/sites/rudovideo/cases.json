@@ -1,0 +1,45 @@
+[
+ {
+  "url": "https://rudo.video/vod/abc",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://rudo.video/podcast/pod1",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://rudo.video/live/bbtv",
+  "args": [
+   "--print",
+   "%(id)s %(is_live)s %(live_status)s %(format_id)s %(creator)s"
+  ]
+ },
+ {
+  "url": "https://rudo.video/vod/geo",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://rudo.video/vod/none",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://rudo.video/vod/badtok",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://rudo-host.test/article",
+  "args": [
+   "-J"
+  ]
+ }
+]

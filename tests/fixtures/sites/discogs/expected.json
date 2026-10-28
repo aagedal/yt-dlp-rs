@@ -1,0 +1,60 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.discogs.com/release/1-The-Persuader-Stockholm",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"release1\", \"title\": \"Stockholm\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Youtube\", \"title\": \"The Persuader - \\u00d6stermalm\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=AHuQWcylaU4\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"title\": \"\", \"_type\": \"url\", \"url\": \"https://youtu.be/5lcxh2nJ9uA\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=QVdDhOnoR8k\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.discogs.com/release/1-The-Persuader-Stockholm\", \"original_url\": \"https://www.discogs.com/release/1-The-Persuader-Stockholm\", \"webpage_url_basename\": \"1-The-Persuader-Stockholm\", \"webpage_url_domain\": \"discogs.com\", \"extractor\": \"DiscogsReleasePlaylist\", \"extractor_key\": \"DiscogsReleasePlaylist\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.discogs.com/release/1-The-Persuader-Stockholm",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "AHuQWcylaU4|The Persuader - Östermalm|https://www.youtube.com/watch?v=AHuQWcylaU4",
+    "5lcxh2nJ9uA||https://youtu.be/5lcxh2nJ9uA",
+    "QVdDhOnoR8k|NA|https://www.youtube.com/watch?v=QVdDhOnoR8k"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.discogs.com/master/113-Vince-Watson",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"master113\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.discogs.com/master/113-Vince-Watson\", \"original_url\": \"https://www.discogs.com/master/113-Vince-Watson\", \"webpage_url_basename\": \"113-Vince-Watson\", \"webpage_url_domain\": \"discogs.com\", \"extractor\": \"DiscogsReleasePlaylist\", \"extractor_key\": \"DiscogsReleasePlaylist\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.discogs.com/release/9",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [DiscogsReleasePlaylist] release9: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

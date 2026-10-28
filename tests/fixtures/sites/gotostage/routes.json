@@ -1,0 +1,110 @@
+{
+ "routes": [
+  {
+   "url": "https://api.gotostage.com/contents?ids=60bb5554",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"product\": \"g2w\", \"contentType\": \"recording\", \"productRefKey\": \"ref1\", \"title\": \"What is GoToStage?\", \"thumbnail\": {\"location\": \"https://cdn.gotostage.test/thumb.jpg\"}, \"duration\": 93.924711, \"category\": \"Marketing\"}]"
+  },
+  {
+   "url": "https://api-registrations.logmeininc.com/registrations",
+   "request_body": [
+    "\"productReferenceKey\": \"ref1\""
+   ],
+   "status": 409,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"registrationKey\": \"regkey1\", \"message\": \"already registered\"}"
+  },
+  {
+   "url": "https://api.gotostage.com/contents/60bb5554/asset",
+   "request_headers": {
+    "x-registrantkey": "regkey1"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"cdnLocation\": \"https://cdn.gotostage.test/60bb5554.mp4\"}"
+  },
+  {
+   "url": "https://api.gotostage.com/contents?ids=abc123",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"product\": \"g2w\", \"contentType\": \"recording\", \"productRefKey\": \"ref2\", \"title\": 5, \"thumbnail\": {\"location\": \"not a url\"}, \"duration\": 93, \"category\": null}]"
+  },
+  {
+   "url": "https://api-registrations.logmeininc.com/registrations",
+   "request_body": [
+    "\"productReferenceKey\": \"ref2\"",
+    "\"firstName\": \"foo\", \"lastName\": \"bar\", \"email\": \"foobar@example.com\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"registrationKey\": \"regkey2\"}"
+  },
+  {
+   "url": "https://api.gotostage.com/contents/abc123/asset",
+   "request_headers": {
+    "x-registrantkey": "regkey2"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"cdnLocation\": \"https://cdn.gotostage.test/abc123.mp4\"}"
+  },
+  {
+   "url": "https://api.gotostage.com/contents?ids=empty1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[]"
+  },
+  {
+   "url": "https://api.gotostage.com/contents?ids=nokey1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"product\": \"g2w\", \"contentType\": \"recording\"}]"
+  },
+  {
+   "url": "https://api.gotostage.com/contents?ids=regfail",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"product\": \"g2w\", \"contentType\": \"recording\", \"productRefKey\": \"ref3\", \"title\": \"What is GoToStage?\", \"thumbnail\": {\"location\": \"https://cdn.gotostage.test/thumb.jpg\"}, \"duration\": 93.924711, \"category\": \"Marketing\"}]"
+  },
+  {
+   "url": "https://api-registrations.logmeininc.com/registrations",
+   "request_body": [
+    "\"productReferenceKey\": \"ref3\""
+   ],
+   "status": 500,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://api.gotostage.com/contents?ids=nokey2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"product\": \"g2w\", \"contentType\": \"recording\", \"productRefKey\": \"ref4\", \"title\": \"What is GoToStage?\", \"thumbnail\": {\"location\": \"https://cdn.gotostage.test/thumb.jpg\"}, \"duration\": 93.924711, \"category\": \"Marketing\"}]"
+  },
+  {
+   "url": "https://api-registrations.logmeininc.com/registrations",
+   "request_body": [
+    "\"productReferenceKey\": \"ref4\""
+   ],
+   "status": 409,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"x\"}"
+  }
+ ]
+}

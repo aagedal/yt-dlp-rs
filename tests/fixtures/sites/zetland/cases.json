@@ -1,0 +1,39 @@
+[
+ {
+  "url": "https://www.zetland.dk/historie/sO9aq2MY-a81VP3BY-66e69?utm_source=instagram",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.zetland.dk/historie/sparse01-uploadr1-abcde",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.zetland.dk/historie/noaudio1-uploadr2-abcde",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.zetland.dk/historie/noaudio1-uploadr2-abcde",
+  "args": [
+   "-J",
+   "--ignore-no-formats-error"
+  ]
+ },
+ {
+  "url": "https://www.zetland.dk/historie/nonext01-uploadr3-abcde",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.zetland.dk/historie/noprops1-uploadr4-abcde",
+  "args": [
+   "-J"
+  ]
+ }
+]

@@ -1,0 +1,84 @@
+{
+ "routes": [
+  {
+   "url": "https://www.freetv.com/peliculas/atrapame-si-puedes/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<body class=\"single postid-428021 x\">"
+  },
+  {
+   "url": "https://www.freetv.com/wordpress/wp-admin/admin-ajax.php",
+   "request_body": [
+    "action=olyott_video_play",
+    "contentID=428021"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"displayMeta\": {\"contentID\": 428021, \"streamURLVideo\": \"https://freetv-hls.test/428021/master.m3u8\", \"title\": \"Atr\\u00e1pame Si Puedes\", \"desc\": \"Desc\"}}}"
+  },
+  {
+   "url": "https://www.freetv.com/series/el-detective-l/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<h1 class=\"synopis\">El Detective L</h1><div class=\"synopis content\"><p>Series desc</p></div><select><option value=\"101\">T1</option><option value=\"102\">T2</option></select>"
+  },
+  {
+   "url": "https://www.freetv.com/wordpress/wp-admin/admin-ajax.php",
+   "request_body": [
+    "contentID=101"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"1\": [{\"contentID\": 1, \"streamURL\": \"https://freetv-hls.test/1/master.m3u8\", \"fullTitle\": \"Episodio 1\", \"description\": \"d\", \"thumbnail\": \"https://freetv.test/1.jpg\", \"contentMeta\": {\"displayMeta\": {\"seriesID\": \"S1\", \"seasonID\": \"101\", \"seasonNum\": \"1\", \"episodeNum\": 1}}}, {\"contentID\": 2, \"streamURL\": \"https://freetv-hls.test/2/master.m3u8\", \"fullTitle\": \"Episodio 2\", \"description\": \"d\", \"thumbnail\": \"https://freetv.test/2.jpg\", \"contentMeta\": {\"displayMeta\": {\"seriesID\": \"S1\", \"seasonID\": \"101\", \"seasonNum\": \"1\", \"episodeNum\": 2}}}]}}"
+  },
+  {
+   "url": "https://www.freetv.com/wordpress/wp-admin/admin-ajax.php",
+   "request_body": [
+    "contentID=102"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"1\": [{\"contentID\": 11, \"streamURL\": \"https://freetv-hls.test/11/master.m3u8\", \"fullTitle\": \"Episodio 11\", \"description\": \"d\", \"thumbnail\": \"https://freetv.test/11.jpg\", \"contentMeta\": {\"displayMeta\": {\"seriesID\": \"S1\", \"seasonID\": \"102\", \"seasonNum\": \"1\", \"episodeNum\": 1}}}]}}"
+  },
+  {
+   "url": "https://www.freetv.com/peliculas/nada/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>nada</html>"
+  },
+  {
+   "url": "https://freetv-hls.test/428021/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://freetv-hls.test/1/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://freetv-hls.test/2/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://freetv-hls.test/11/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+[
+ {
+  "url": "https://page.test/turbo.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://page.test/turbo.html",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(description)s|%(thumbnail)s|%(duration)s|%(upload_date)s|%(categories)s|%(age_limit)s|%(extractor)s"
+  ]
+ },
+ {
+  "url": "https://page.test/sparse.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://page.test/multi.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://page.test/none.html",
+  "args": [
+   "-J"
+  ]
+ }
+]

@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://www.monstercat.com/release/742779548009",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><h1>The Secret <i>Language</i> of Trees</h1><div class=\"h-normal text-uppercase mb-desktop-medium mb-smallish\">BT</div><p class=\"font-italic mb-medium d-tablet-none d-phone-block\">Released July 11, 2023</p><table class=\"table table-small\"><tbody><tr class=\"track\"><td class=\"py-xsmall\">1</td><td><button class=\"btn-play cursor-pointer mr-small\" data-track-id=\"aaa-111\" data-release-id=\"rel-1\">▶</button></td><td><div class=\"d-inline-flex flex-column\">The Secret Language of Trees <span class=\"badge\">Explicit</span></div><span class=\"d-block fs-xxsmall\">BT</span><span class=\"d-block fs-xxsmall\">Nation of Wolves</span></td></tr><tr class=\"track\"><td class=\"py-xsmall\">2</td><td><button class=\"btn-play cursor-pointer mr-small\" data-track-id=\"bbb-222\" data-release-id=\"rel-1\">▶</button></td><td><div class=\"d-inline-flex flex-column\">Wildflower <span class=\"badge\">Explicit</span></div></td></tr><tr class=\"track\"><td class=\"py-xsmall\">3</td><td><button class=\"btn-play cursor-pointer mr-small\">▶</button></td><td><div class=\"d-inline-flex flex-column\">Lost <span class=\"badge\">Explicit</span></div><span class=\"d-block fs-xxsmall\">BT</span></td></tr><tr class=\"track\"><td class=\"py-xsmall\">x</td><td><button class=\"btn-play cursor-pointer mr-small\" data-track-id=\"\" data-release-id=\"rel-1\">▶</button></td><td><div class=\"d-inline-flex flex-column\">NoNum <span class=\"badge\">Explicit</span></div><span class=\"d-block fs-xxsmall\">BT</span></td></tr></tbody></table></body></html>"
+  },
+  {
+   "url": "https://www.monstercat.com/release/MCRAB001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><p>empty</p></body></html>"
+  },
+  {
+   "url": "https://www.monstercat.com/api/release/rel-1/track-stream/aaa-111",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3fakeaudio"
+  }
+ ]
+}

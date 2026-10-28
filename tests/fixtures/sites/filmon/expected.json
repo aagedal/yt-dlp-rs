@@ -1,0 +1,108 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.filmon.com/vod/view/24869-0-plan-9-from-outer-space",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"24869\", \"title\": \"Plan 9 From Outer Space\", \"formats\": [{\"format_id\": \"low\", \"url\": \"https://vod.filmon.test/24869/low.m3u8\", \"ext\": \"mp4\", \"quality\": 0, \"protocol\": \"m3u8_native\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"low - unknown\"}, {\"format_id\": \"high\", \"url\": \"https://vod.filmon.test/24869/high.m3u8\", \"ext\": \"mp4\", \"quality\": 1, \"protocol\": \"m3u8_native\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"high - unknown\"}], \"description\": \"Dead human, zombies and vampires\", \"thumbnails\": [{\"id\": \"small\", \"url\": \"https://static.filmon.test/s.jpg\", \"width\": 100, \"height\": 150, \"resolution\": \"100x150\"}, {\"id\": \"poster\", \"url\": \"https://static.filmon.test/p.jpg\", \"width\": 300, \"height\": 450, \"resolution\": \"300x450\"}], \"webpage_url\": \"https://www.filmon.com/vod/view/24869-0-plan-9-from-outer-space\", \"original_url\": \"https://www.filmon.com/vod/view/24869-0-plan-9-from-outer-space\", \"webpage_url_basename\": \"24869-0-plan-9-from-outer-space\", \"webpage_url_domain\": \"filmon.com\", \"extractor\": \"filmon\", \"extractor_key\": \"FilmOn\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://static.filmon.test/p.jpg\", \"display_id\": \"24869\", \"fulltitle\": \"Plan 9 From Outer Space\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"high\", \"url\": \"https://vod.filmon.test/24869/high.m3u8\", \"ext\": \"mp4\", \"quality\": 1, \"protocol\": \"m3u8_native\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"high - unknown\", \"_filename\": \"Plan 9 From Outer Space [24869].mp4\", \"filename\": \"Plan 9 From Outer Space [24869].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.filmon.com/vod/view/2825-1-popeye-series-1",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2825\", \"title\": \"Popeye Series 1\", \"description\": \"The original series of Popeye.\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"url\": \"filmon:24869\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"filmon:3000\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.filmon.com/vod/view/2825-1-popeye-series-1\", \"original_url\": \"https://www.filmon.com/vod/view/2825-1-popeye-series-1\", \"webpage_url_basename\": \"2825-1-popeye-series-1\", \"webpage_url_domain\": \"filmon.com\", \"extractor\": \"filmon\", \"extractor_key\": \"FilmOn\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.filmon.com/vod/view/2825-1-popeye-series-1",
+   "args": [
+    "-I",
+    "1",
+    "--print",
+    "%(id)s|%(title)s|%(playlist_id)s|%(playlist_title)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "24869|Plan 9 From Outer Space|2825|Popeye Series 1|filmon:24869"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "filmon:3000",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [filmon] 3000: filmon said: Movie not found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "filmon:3001",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 3001: An extractor error has occurred. (caused by KeyError('reason')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.filmon.com/tv/sports-haters",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4190\", \"display_id\": \"sports-haters\", \"title\": \"Sports Haters\", \"description\": \"Sports talk\", \"thumbnails\": [{\"id\": \"logo\", \"url\": \"http://static.filmon.com/assets/channels/4190/logo.png\", \"width\": 56, \"height\": 28, \"resolution\": \"56x28\"}, {\"id\": \"big_logo\", \"url\": \"http://static.filmon.com/assets/channels/4190/big_logo.png\", \"width\": 106, \"height\": 106, \"resolution\": \"106x106\"}, {\"id\": \"extra_big_logo\", \"url\": \"http://static.filmon.com/assets/channels/4190/extra_big_logo.png\", \"width\": 300, \"height\": 300, \"resolution\": \"300x300\"}], \"formats\": [{\"format_id\": \"hls-640\", \"format_index\": null, \"url\": \"http://vod.filmon.test/vodlive/_definst_/mp4:4190.mp4/360p.m3u8\", \"manifest_url\": \"http://vod.filmon.test/vodlive/_definst_/mp4:4190.mp4/playlist.m3u8\", \"tbr\": 640.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-640 - 640x360\"}, {\"format_id\": \"hls-1280\", \"format_index\": null, \"url\": \"http://vod.filmon.test/vodlive/_definst_/mp4:4190.mp4/720p.m3u8\", \"manifest_url\": \"http://vod.filmon.test/vodlive/_definst_/mp4:4190.mp4/playlist.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1280 - 1280x720\"}], \"is_live\": false, \"webpage_url\": \"http://www.filmon.com/tv/sports-haters\", \"original_url\": \"http://www.filmon.com/tv/sports-haters\", \"webpage_url_basename\": \"sports-haters\", \"webpage_url_domain\": \"filmon.com\", \"extractor\": \"filmon:channel\", \"extractor_key\": \"FilmOnChannel\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"http://static.filmon.com/assets/channels/4190/extra_big_logo.png\", \"fulltitle\": \"Sports Haters\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-1280\", \"format_index\": null, \"url\": \"http://vod.filmon.test/vodlive/_definst_/mp4:4190.mp4/720p.m3u8\", \"manifest_url\": \"http://vod.filmon.test/vodlive/_definst_/mp4:4190.mp4/playlist.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1280 - 1280x720\", \"_filename\": \"Sports Haters [4190].mp4\", \"filename\": \"Sports Haters [4190].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [filmon:channel] 4190: Unable to download f4m manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.filmon.com/channel/filmon-sports",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(is_live)s|%(format_id)s|%(url)s|%(description)s|%(thumbnail)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "55|filmon-sports|True|high|https://live.filmon.test/55/high.m3u8|NA|http://static.filmon.com/assets/channels/55/extra_big_logo.png"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.filmon.com/tv/missing",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [filmon:channel] missing: filmon:channel said: Channel not found"
+   ],
+   "files": {}
+  }
+ ]
+}

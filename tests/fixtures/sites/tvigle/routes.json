@@ -1,0 +1,53 @@
+{
+ "routes": [
+  {
+   "url": "http://www.tvigle.ru/video/sokrat/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<div class=\"player\" id=\"1848932\" data-x=\"1\"></div>"
+  },
+  {
+   "url": "http://cloud.tvigle.ru/api/play/video/1848932/",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playlist\": {\"items\": [{\"title\": \"\\u0421\\u043e\\u043a\\u0440\\u0430\\u0442\", \"description\": \"\\u041e\\u043f\\u0438\\u0441\\u0430\\u043d\\u0438\\u0435\", \"thumbnail\": \"https://tvigle.test/t.jpg\", \"durationMilliseconds\": 6586159, \"ageRestrictions\": \"12+\", \"videos\": {\"hls\": \"https://tvigle-hls.test/1848932/master.m3u8\", \"dash\": \"not a url\", \"mp4\": {\"360p\": \"https://tvigle-pd.test/1848932_360.mp4\", \"m3u8\": \"https://x\", \"hd\": \"https://tvigle-pd.test/1848932_hd.mp4\"}}, \"video_files_size\": {\"mp4\": {\"360p\": \"123456\"}}}]}}"
+  },
+  {
+   "url": "https://tvigle-hls.test/1848932/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "http://cloud.tvigle.ru/api/play/video/5267604/",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playlist\": {\"items\": [{\"errorMessage\": \"\\u0412\\u0438\\u0434\\u0435\\u043e \\u043d\\u0435\\u0434\\u043e\\u0441\\u0442\\u0443\\u043f\\u043d\\u043e \\u0432 \\u0432\\u0430\\u0448\\u0435\\u0439 \\u0441\\u0442\\u0440\\u0430\\u043d\\u0435\", \"isGeoBlocked\": true}]}}"
+  },
+  {
+   "url": "http://cloud.tvigle.ru/api/play/video/5267605/",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playlist\": {\"items\": [{\"errorMessage\": \"\\u0412\\u0438\\u0434\\u0435\\u043e \\u0443\\u0434\\u0430\\u043b\\u0435\\u043d\\u043e\"}]}}"
+  },
+  {
+   "url": "http://cloud.tvigle.ru/api/play/video/5267606/",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playlist\": {\"items\": []}}"
+  },
+  {
+   "url": "https://news.tvigle.test/article",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<iframe frameborder=\"0\" src=\"//cloud.tvigle.ru/video/1848932/\"></iframe>"
+  }
+ ]
+}

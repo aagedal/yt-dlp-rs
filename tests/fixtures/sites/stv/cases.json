@@ -1,0 +1,39 @@
+[
+ {
+  "url": "https://player.stv.tv/video/4gwd/emmerdale/60-seconds-on-set-with-laura-norton/",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://player.stv.tv/video/4gwd/emmerdale/60-seconds-on-set-with-laura-norton/",
+  "args": [
+   "--no-geo-bypass",
+   "-q",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://player.stv.tv/episode/4125/jennifer-saunders-memory-lane",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://player.stv.tv/episode/4126/missing",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://player.stv.tv/video/4127/gone",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ }
+]

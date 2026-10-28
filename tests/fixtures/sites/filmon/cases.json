@@ -1,0 +1,55 @@
+[
+ {
+  "url": "https://www.filmon.com/vod/view/24869-0-plan-9-from-outer-space",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.filmon.com/vod/view/2825-1-popeye-series-1",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.filmon.com/vod/view/2825-1-popeye-series-1",
+  "args": [
+   "-I",
+   "1",
+   "--print",
+   "%(id)s|%(title)s|%(playlist_id)s|%(playlist_title)s|%(webpage_url)s"
+  ]
+ },
+ {
+  "url": "filmon:3000",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "filmon:3001",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://www.filmon.com/tv/sports-haters",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.filmon.com/channel/filmon-sports",
+  "args": [
+   "--print",
+   "%(id)s|%(display_id)s|%(is_live)s|%(format_id)s|%(url)s|%(description)s|%(thumbnail)s"
+  ]
+ },
+ {
+  "url": "https://www.filmon.com/tv/missing",
+  "args": [
+   "-j"
+  ]
+ }
+]

@@ -1,0 +1,133 @@
+{
+ "routes": [
+  {
+   "url": "https://podcasts.apple.com/us/podcast/urbana-podcast-724-by-david-penn/id1531349107?i=1000748574256",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:image\" content=\"https://is1-ssl.mzstatic.test/image/thumb/724/1200x630wp.jpg\"><script type=\"module\" crossorigin src=\"/assets/index~0123abcd.js\"></script></head><body><script type=\"application/json\" id=\"serialized-server-data\">{\"data\": [{\"intent\": {\"$kind\": \"EpisodeIntent\"}, \"data\": {\"headerButtonItems\": [{\"$kind\": \"bookmark\", \"modelType\": \"EpisodeLockup\", \"model\": {\"title\": \"wrong\"}}, {\"$kind\": \"share\", \"modelType\": \"EpisodeLockup\", \"model\": {\"title\": \"URBANA PODCAST 724 BY DAVID PENN\", \"summary\": \"<p>Weekly <b>house</b> mix.</p>\\n<p>Tracklist &amp; more.</p>\", \"playAction\": {\"episodeOffer\": {\"streamUrl\": \"https://dts.podtrac.com/redirect.m4a/media.urbana.test/724.m4a?src=apple\"}}, \"releaseDate\": \"2026-02-06T18:00:01Z\", \"duration\": 3602, \"showTitle\": \"Urbana Radio Show\"}}]}}]}</script></body></html>"
+  },
+  {
+   "url": "https://media.urbana.test/724.m4a?src=apple",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body": "urbana-audio"
+  },
+  {
+   "url": "https://podcasts.apple.com/us/podcast/207-whitney-webb-returns/id1135137367?i=1000482637777",
+   "status": 500,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script type=\"module\" crossorigin src=\"/assets/index~4567ef.js\"></script></head><body><p>Something went wrong</p></body></html>"
+  },
+  {
+   "url": "https://podcasts.apple.com/assets/index~4567ef.js",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body": "const a=\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.x\";const t='eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IkM0SjdHQlA3NEgifQ.eyJpc3MiOiJmaXh0dXJlIiwiZXhwIjo0MTAyNDQ0ODAwfQ.c2lnbmF0dXJl';export{t};"
+  },
+  {
+   "url": "https://amp-api.podcasts.apple.com/v1/catalog/us//podcast-episodes/1000482637777?extend=fullDescription&include=podcast&l=en-US",
+   "request_headers": {
+    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IkM0SjdHQlA3NEgifQ.eyJpc3MiOiJmaXh0dXJlIiwiZXhwIjo0MTAyNDQ0ODAwfQ.c2lnbmF0dXJl",
+    "Origin": "https://podcasts.apple.com"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": [{\"id\": \"1000482637777\", \"type\": \"podcast-episodes\", \"attributes\": {\"name\": \"207 - Whitney Webb Returns\", \"fullDescription\": \"Whitney Webb <i>returns</i>.\\n\\nSponsored by &quot;X&quot;.\", \"assetUrl\": \"http://www.podtrac.com/pts/redirect.mp3/traffic.tim.test/207.mp3\", \"releaseDateTime\": \"2020-07-05T07:00:00Z\", \"durationInMilliseconds\": 5369123, \"episodeNumber\": 207, \"artwork\": {\"url\": \"https://is1-ssl.mzstatic.test/image/thumb/207/{w}x{h}bb.{f}\", \"width\": 3000, \"height\": 3000}}, \"relationships\": {\"podcast\": {\"data\": [{\"id\": \"1135137367\", \"attributes\": {\"name\": \"The Tim Dillon Show\"}}]}}}]}"
+  },
+  {
+   "url": "https://podcasts.apple.com/podcast/id1?i=1000000000001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script type=\"module\" crossorigin src=\"/assets/index~4567ef.js\"></script></head><body><p>Something went wrong</p></body></html>"
+  },
+  {
+   "url": "https://amp-api.podcasts.apple.com/v1/catalog/us/podcast-episodes/1000000000001?extend=fullDescription&include=podcast&l=en-US",
+   "request_headers": {
+    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IkM0SjdHQlA3NEgifQ.eyJpc3MiOiJmaXh0dXJlIiwiZXhwIjo0MTAyNDQ0ODAwfQ.c2lnbmF0dXJl",
+    "Origin": "https://podcasts.apple.com"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": [{\"id\": \"1000000000001\", \"attributes\": {\"name\": \"Minimal\", \"assetUrl\": \"https://cdn.min.test/1.mp3\", \"artwork\": {\"url\": \"https://is1-ssl.mzstatic.test/image/thumb/1/{w}x{h}bb.{f}\", \"width\": 600}}}]}"
+  },
+  {
+   "url": "https://podcasts.apple.com/gb/podcast/expired/id2?i=1000000000002",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script type=\"module\" crossorigin src=\"/assets/index~89ab.js\"></script></head><body></body></html>"
+  },
+  {
+   "url": "https://podcasts.apple.com/assets/index~89ab.js",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body": "var k=\"eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IkM0SjdHQlA3NEgifQ.eyJpc3MiOiJmaXh0dXJlIiwiZXhwIjoxMDAwMDAwMDAwfQ.c2lnbmF0dXJl\";"
+  },
+  {
+   "url": "https://podcasts.apple.com/podcast/no-assets?i=1000000000003",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>nothing</body></html>"
+  },
+  {
+   "url": "https://podcasts.apple.com/podcast/empty/id4?i=1000000000004",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script type=\"module\" crossorigin src=\"/assets/index~cdef01.js\"></script></head><body><p>Something went wrong</p></body></html>"
+  },
+  {
+   "url": "https://podcasts.apple.com/assets/index~cdef01.js",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body": "const a=\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.x\";const t='eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IkM0SjdHQlA3NEgifQ.eyJpc3MiOiJmaXh0dXJlIiwiZXhwIjo0MTAyNDQ0ODAwfQ.c2lnbmF0dXJl';export{t};"
+  },
+  {
+   "url": "https://amp-api.podcasts.apple.com/v1/catalog/us/podcast-episodes/1000000000004?extend=fullDescription&include=podcast&l=en-US",
+   "request_headers": {
+    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IkM0SjdHQlA3NEgifQ.eyJpc3MiOiJmaXh0dXJlIiwiZXhwIjo0MTAyNDQ0ODAwfQ.c2lnbmF0dXJl",
+    "Origin": "https://podcasts.apple.com"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"errors\": []}"
+  },
+  {
+   "url": "https://podcasts.apple.com/de/podcast/ep5/id5?foo=1&i=1000000000005",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script id='serialized-server-data' type=\"application/json\">{\"data\": [{\"data\": {\"headerButtonItems\": {\"a\": {\"$kind\": \"share\", \"modelType\": \"EpisodeLockup\", \"model\": {\"title\": \"Episode 5\", \"episodeNumber\": \"5\", \"releaseDate\": \"2024-01-02T03:04:05+01:00\", \"duration\": \"61\", \"playAction\": {\"episodeOffer\": {\"streamUrl\": \"https://chtbl.com/track/ABC/cdn.ep.test/5.mp3\"}}}}}}}]}</script></html>"
+  },
+  {
+   "url": "https://podcasts.apple.com/podcast/emptydata/id7?i=1000000000007",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script type=\"module\" crossorigin src=\"/assets/index~cdef01.js\"></script></head><body><p>Something went wrong</p></body></html>"
+  },
+  {
+   "url": "https://amp-api.podcasts.apple.com/v1/catalog/us/podcast-episodes/1000000000007?extend=fullDescription&include=podcast&l=en-US",
+   "request_headers": {
+    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IkM0SjdHQlA3NEgifQ.eyJpc3MiOiJmaXh0dXJlIiwiZXhwIjo0MTAyNDQ0ODAwfQ.c2lnbmF0dXJl",
+    "Origin": "https://podcasts.apple.com"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": []}"
+  }
+ ]
+}

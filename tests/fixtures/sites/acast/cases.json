@@ -1,0 +1,13 @@
+[
+ {"url": "https://shows.acast.com/sparpodcast/episodes/2.raggarmordet-rosterurdetforflutna", "args": ["-j"]},
+ {"url": "https://shows.acast.com/sparpodcast/episodes/2.raggarmordet-rosterurdetforflutna", "args": ["--print", "%(id)s|%(display_id)s|%(title)s|%(description)s|%(timestamp)s|%(duration)s|%(filesize)s|%(season_number)s|%(season)s|%(episode_number)s|%(creators)s|%(series)s|%(ext)s"]},
+ {"url": "https://shows.acast.com/sparpodcast/episodes/2.raggarmordet-rosterurdetforflutna", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "http://embed.acast.com/adambuxton/ep.12-adam-joeschristmaspodcast2015", "args": ["-j"]},
+ {"url": "https://play.acast.com/s/notitle/x", "args": ["-j"]},
+ {"url": "https://www.acast.com/gone/missing", "args": ["-j"]},
+ {"url": "https://www.acast.com/todayinfocus", "args": ["-J"]},
+ {"url": "http://play.acast.com/s/todayinfocus", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://shows.acast.com/todayinfocus", "args": ["--print", "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(creators)s|%(series)s|%(extractor)s|%(webpage_url)s"]},
+ {"url": "https://shows.acast.com/empty-show", "args": ["-J"]},
+ {"url": "https://ausi.example.test/news/democracy-sausage", "args": ["-j"]}
+]

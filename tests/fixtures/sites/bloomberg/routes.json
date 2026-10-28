@@ -1,0 +1,103 @@
+{
+ "routes": [
+  {
+   "url": "https://www.bloomberg.com/news/videos/2021-09-14/apple-unveils-video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Apple Unveils the New IPhone 13: Video\"><meta property=\"og:description\" content=\"Stock &amp; more\"><meta property=\"og:image\" content=\"https://assets.bbg.test/thumb.jpg\"></head><body><script>var c = {\"bmmrId\": \"V8cFcYMxTHaMcEiiYVr39A\", \"videoId\": \"other\"};</script></body></html>"
+  },
+  {
+   "url": "http://www.bloomberg.com/multimedia/api/embed?id=V8cFcYMxTHaMcEiiYVr39A",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"streams\": [{\"url\": \"https://media.bbg.test/hls/master.m3u8\", \"muxing_format\": \"TS\"}, {\"url\": \"\", \"muxing_format\": \"TS\"}, {\"muxing_format\": \"FLV\"}, {\"url\": \"https://media.bbg.test/hds/manifest.f4m\", \"muxing_format\": \"FLV\"}]}"
+  },
+  {
+   "url": "https://media.bbg.test/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1280000,RESOLUTION=1280x720\nhigh/index.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=640000,RESOLUTION=640x360\nlow/index.m3u8\n"
+  },
+  {
+   "url": "https://media.bbg.test/hds/manifest.f4m",
+   "headers": {
+    "Content-Type": "application/f4m+xml"
+   },
+   "body": "<manifest xmlns=\"http://ns.adobe.com/f4m/1.0\"><id>v</id><streamType>recorded</streamType><duration>27.5</duration><media url=\"v_1200\" bitrate=\"1200\" width=\"1280\" height=\"720\"/><media url=\"v_600\" bitrate=\"600\" width=\"640\" height=\"360\"/></manifest>"
+  },
+  {
+   "url": "http://www.bloomberg.com/features/2016-hello-world-new-zealand/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Meet the Real-Life Tech Wizards\"></head><body><script>new BPlayer(null, {\"id\": \"938c7e72-3f25\", \"autoplay\": false});</script></body></html>"
+  },
+  {
+   "url": "http://www.bloomberg.com/multimedia/api/embed?id=938c7e72-3f25",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"streams\": [{\"url\": \"https://media.bbg.test/missing/master.m3u8\", \"muxing_format\": \"TS\"}, {\"url\": \"https://media.bbg.test/hds/manifest.f4m\", \"muxing_format\": \"FLV\"}]}"
+  },
+  {
+   "url": "https://media.bbg.test/missing/master.m3u8",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "no"
+  },
+  {
+   "url": "https://www.bloomberg.com/politics/articles/2017-02-08/no-video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"No video\"></head></html>"
+  },
+  {
+   "url": "https://www.bloomberg.com/politics/articles/2017-02-08/untitled",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div data-bmmrid='abc123'></div></body></html>"
+  },
+  {
+   "url": "https://www.bloomberg.com/news/articles/2015-11-12/no-streams",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"No streams\"></head><body><script>player({videoId: 'nostreams1'})</script></body></html>"
+  },
+  {
+   "url": "http://www.bloomberg.com/multimedia/api/embed?id=nostreams1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"not found\"}"
+  },
+  {
+   "url": "https://www.bloomberg.com/politics/videos/2015-11-25/bad-player",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Bad\"></head><body><script>BPlayer(null, {id: 'x'});</script></body></html>"
+  },
+  {
+   "url": "https://www.bloomberg.com/news/videos/2015-11-25/no-muxing",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"No muxing: Video\"></head><body><div data-bmmrid=\"nomux1\"></div></body></html>"
+  },
+  {
+   "url": "http://www.bloomberg.com/multimedia/api/embed?id=nomux1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"streams\": [{\"url\": \"https://media.bbg.test/hls/master.m3u8\"}]}"
+  }
+ ]
+}

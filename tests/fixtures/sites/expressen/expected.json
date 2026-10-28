@@ -1,0 +1,58 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.expressen.se/tv/ledare/ledarsnack/ledarsnack-om-arbetslosheten/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ba90f5a9-78d1-4511-aa02-c177b9c99136\", \"display_id\": \"ledarsnack-om-arbetslosheten\", \"title\": \"Ledarsnack: Om arbetsl\\u00f6sheten\", \"description\": \"Beskrivning\", \"thumbnail\": \"https://expressen.test/social.jpg\", \"duration\": 788, \"timestamp\": 1526639109, \"formats\": [{\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://expressen-hls.test/ba90/360/index.m3u8\", \"manifest_url\": \"https://expressen-hls.test/ba90/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}], \"webpage_url\": \"https://www.expressen.se/tv/ledare/ledarsnack/ledarsnack-om-arbetslosheten/\", \"original_url\": \"https://www.expressen.se/tv/ledare/ledarsnack/ledarsnack-om-arbetslosheten/\", \"webpage_url_basename\": \"ledarsnack-om-arbetslosheten\", \"webpage_url_domain\": \"expressen.se\", \"extractor\": \"Expressen\", \"extractor_key\": \"Expressen\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://expressen.test/social.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Ledarsnack: Om arbetsl\\u00f6sheten\", \"duration_string\": \"13:08\", \"upload_date\": \"20180518\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-921\", \"url\": \"https://expressen-hls.test/ba90/360/index.m3u8\", \"manifest_url\": \"https://expressen-hls.test/ba90/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_filename\": \"Ledarsnack\\uff1a Om arbetsl\\u00f6sheten [ba90f5a9-78d1-4511-aa02-c177b9c99136].mp4\", \"filename\": \"Ledarsnack\\uff1a Om arbetsl\\u00f6sheten [ba90f5a9-78d1-4511-aa02-c177b9c99136].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://expressen-hls.test/ba90/360/index.m3u8\", \"manifest_url\": \"https://expressen-hls.test/ba90/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.di.se/videoplayer/embed/tv/ditv/borsmorgon/implantica/?embed=true",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"42\", \"display_id\": \"implantica\", \"title\": \"DI titel\", \"description\": null, \"thumbnail\": null, \"duration\": 61, \"timestamp\": null, \"formats\": [{\"url\": \"https://di-pd.test/42.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"webpage_url\": \"https://www.di.se/videoplayer/embed/tv/ditv/borsmorgon/implantica/?embed=true\", \"original_url\": \"https://www.di.se/videoplayer/embed/tv/ditv/borsmorgon/implantica/?embed=true\", \"webpage_url_basename\": \"implantica\", \"webpage_url_domain\": \"di.se\", \"extractor\": \"Expressen\", \"extractor_key\": \"Expressen\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"DI titel\", \"duration_string\": \"1:01\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://di-pd.test/42.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"DI titel [42].mp4\", \"filename\": \"DI titel [42].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: \"id\" field is not a string - forcing string conversion, there is an error in extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.di.test/artikel",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"42\", \"display_id\": \"implantica\", \"title\": \"DI titel\", \"description\": null, \"thumbnail\": null, \"duration\": 61, \"timestamp\": null, \"formats\": [{\"url\": \"https://di-pd.test/42.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"original_url\": \"https://www.di.test/artikel\", \"webpage_url\": \"https://www.di.se/videoplayer/embed/tv/ditv/borsmorgon/implantica/?embed=true\", \"webpage_url_basename\": \"implantica\", \"webpage_url_domain\": \"di.se\", \"extractor\": \"Expressen\", \"extractor_key\": \"Expressen\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"DI titel\", \"duration_string\": \"1:01\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://di-pd.test/42.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"DI titel [42].mp4\", \"filename\": \"DI titel [42].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: \"id\" field is not a string - forcing string conversion, there is an error in extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.expressen.se/nyheter/ingen-video/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Expressen] ingen-video: Unable to extract info; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,29 @@
+{
+ "routes": [
+  {
+   "url": "http://cdnapi.kaltura.com/api_v3/service/multirequest",
+   "request_body": [
+    "\"redirectFromEntryId\": \"0_c03e1b5g\"",
+    "\"widgetId\": \"_1719221\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "html5.json"
+  },
+  {
+   "url": "https://tv.telezueri.ch/sonntalk/rahmenabkommen-133214569",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>window.__APOLLO_STATE__ = {\"ROOT\": {\"x\": 1}, \"Kal:1\": {\"__typename\": \"KalturaData\", \"kalturaId\": \"0_c03e1b5g\"}};</script>"
+  },
+  {
+   "url": "https://www.telem1.ch/news/no-kaltura-133",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>window.__APOLLO_STATE__ = {\"ROOT\": {}};</script>"
+  }
+ ]
+}

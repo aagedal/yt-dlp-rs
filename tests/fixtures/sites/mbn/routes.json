@@ -1,0 +1,90 @@
+{
+ "routes": [
+  {
+   "url": "https://mbn.co.kr/vod/programContents/previewlist/861/5433/1276155",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var u = \"/player/x.mbn\" + \"?content_cls_cd=21&content_id=1\";</script>"
+  },
+  {
+   "url": "https://www.mbn.co.kr/player/mbnVodPlayer_2020.mbn?content_cls_cd=21&content_id=1276155&relay_type=1",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"movie_title\": \"결국 사로잡힌 권유리\", \"play_sec\": \"3891\", \"bcast_date\": \"2021.07.03\", \"movie_start_Img\": \"http://img.vod.mbn.co.kr/861/1276155_360.jpg\", \"prog_nm\": \"보쌈 - 운명을 훔치다\", \"ad_contentnumber\": \"19\", \"movie_list\": [{\"url\": \"https://vod.mbn.test/861/chunklist_pd1000.m3u8?t=1\"}, {\"url\": \"not a url\"}, {\"name\": \"x\"}]}"
+  },
+  {
+   "url": "https://www.mbn.co.kr/player/mbnStreamAuth_new_vod.mbn?vod_url=https://vod.mbn.test/861/manifest.m3u8?t=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "  https://vod.mbn.test/auth/master.m3u8?token=abc\n"
+  },
+  {
+   "url": "https://vod.mbn.test/auth/master.m3u8?token=abc",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.mbn.co.kr/vod/programContents/preview/952/6088/1054797?next=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<p>preview</p>"
+  },
+  {
+   "url": "https://www.mbn.co.kr/player/mbnVodPlayer_2020.mbn?content_cls_cd=20&content_id=1054797&relay_type=1",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"movie_title\": \"[2차 티저]\", \"play_sec\": 65, \"bcast_date\": 20231028, \"prog_nm\": [\"x\"], \"movie_list\": [{\"url\": \"https://vod.mbn.test/952/playlist.m3u8\"}]}"
+  },
+  {
+   "url": "https://www.mbn.co.kr/player/mbnStreamAuth_new_vod.mbn?vod_url=https://vod.mbn.test/952/manifest.m3u8",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "error"
+  },
+  {
+   "url": "https://www.mbn.co.kr/vod/programContents/preview/1/2/3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var u = \"/player/x.mbn\" + \"?content_cls_cd=20&content_id=1\";</script>"
+  },
+  {
+   "url": "https://www.mbn.co.kr/player/mbnVodPlayer_2020.mbn?content_cls_cd=20&content_id=3&relay_type=1",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "nope"
+  },
+  {
+   "url": "https://www.mbn.co.kr/vod/programContents/preview/1/2/4",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var u = \"/player/x.mbn\" + \"?content_cls_cd=20&content_id=1\";</script>"
+  },
+  {
+   "url": "https://www.mbn.co.kr/player/mbnVodPlayer_2020.mbn?content_cls_cd=20&content_id=4&relay_type=1",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"movie_title\": \"t\", \"movie_list\": [{\"url\": \"https://vod.mbn.test/4/playlist_pd1.m3u8\"}]}"
+  },
+  {
+   "url": "https://www.mbn.co.kr/player/mbnStreamAuth_new_vod.mbn?vod_url=https://vod.mbn.test/4/manifest.m3u8",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "nope"
+  }
+ ]
+}

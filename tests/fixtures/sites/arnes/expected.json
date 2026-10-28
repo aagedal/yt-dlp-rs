@@ -1,0 +1,108 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://video.arnes.si/watch/a1qrWTOQfVoU?t=10",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"a1qrWTOQfVoU\", \"title\": \"Linearna neodvisnost, definicija\", \"formats\": [{\"url\": \"https://video.arnes.si/api/public/video/a1qrWTOQfVoU/audio.m4a\", \"format_id\": \"0\", \"format_note\": null, \"width\": null, \"height\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}, {\"url\": \"https://video.arnes.si/api/public/video/a1qrWTOQfVoU/play.webm\", \"format_id\": \"WEBM\", \"format_note\": null, \"width\": null, \"height\": null, \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"WEBM - unknown\"}, {\"url\": \"https://video.arnes.si/api/public/video/a1qrWTOQfVoU/play.mp4?q=720\", \"format_id\": \"MP4_720P\", \"format_note\": \"720p\", \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"MP4_720P - 1280x720 (720p)\"}], \"thumbnail\": \"https://video.arnes.si/api/public/video/a1qrWTOQfVoU/thumbnail\", \"description\": \"Linearna neodvisnost, definicija\", \"license\": \"PRIVATE\", \"creator\": \"Polona Oblak\", \"timestamp\": 1585063725, \"channel\": \"Polona Oblak\", \"channel_id\": \"q6pc04hw24cj\", \"channel_url\": \"https://video.arnes.si/?channel=q6pc04hw24cj\", \"duration\": 596.75, \"view_count\": 117, \"tags\": [\"linearna_algebra\"], \"start_time\": 10, \"webpage_url\": \"https://video.arnes.si/watch/a1qrWTOQfVoU?t=10\", \"original_url\": \"https://video.arnes.si/watch/a1qrWTOQfVoU?t=10\", \"webpage_url_basename\": \"a1qrWTOQfVoU\", \"webpage_url_domain\": \"video.arnes.si\", \"extractor\": \"video.arnes.si\", \"extractor_key\": \"Arnes\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://video.arnes.si/api/public/video/a1qrWTOQfVoU/thumbnail\", \"id\": \"0\"}], \"display_id\": \"a1qrWTOQfVoU\", \"fulltitle\": \"Linearna neodvisnost, definicija\", \"duration_string\": \"9:56\", \"upload_date\": \"20200324\", \"release_year\": null, \"creators\": [\"Polona Oblak\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://video.arnes.si/api/public/video/a1qrWTOQfVoU/play.mp4?q=720\", \"format_id\": \"MP4_720P\", \"format_note\": \"720p\", \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"MP4_720P - 1280x720 (720p)\", \"_filename\": \"Linearna neodvisnost, definicija [a1qrWTOQfVoU].mp4\", \"filename\": \"Linearna neodvisnost, definicija [a1qrWTOQfVoU].mp4\", \"__write_download_archive\": false}], \"url\": \"https://video.arnes.si/api/public/video/a1qrWTOQfVoU/play.mp4?q=720\", \"format_id\": \"MP4_720P\", \"format_note\": \"720p\", \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"MP4_720P - 1280x720 (720p)\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://video.arnes.si/watch/a1qrWTOQfVoU?t=10",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[video.arnes.si] Extracting URL: https://video.arnes.si/watch/a1qrWTOQfVoU?t=10",
+    "[video.arnes.si] a1qrWTOQfVoU: Downloading JSON metadata",
+    "[info] Available formats for a1qrWTOQfVoU:",
+    "ID       EXT  RESOLUTION | PROTO | VCODEC  ACODEC  MORE INFO",
+    "------------------------------------------------------------",
+    "0        m4a  unknown    | https | unknown unknown",
+    "WEBM     webm unknown    | https | unknown unknown",
+    "MP4_720P mp4  1280x720   | https | unknown unknown 720p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://video.arnes.si/en/embed/s1YjnV7hadlC?t=abc&hideRelated=1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [video.arnes.si] s1YjnV7hadlC: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://video.arnes.si/en/embed/s1YjnV7hadlC?t=abc&hideRelated=1",
+   "args": [
+    "-J",
+    "--ignore-no-formats-error"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"s1YjnV7hadlC\", \"title\": \"Bare\", \"formats\": [], \"thumbnail\": \"https://video.arnes.si/thumb.jpg\", \"description\": null, \"license\": null, \"creator\": null, \"timestamp\": null, \"channel\": null, \"channel_id\": null, \"channel_url\": \"\", \"duration\": 1.0, \"view_count\": null, \"tags\": null, \"start_time\": null, \"webpage_url\": \"https://video.arnes.si/en/embed/s1YjnV7hadlC?t=abc&hideRelated=1\", \"original_url\": \"https://video.arnes.si/en/embed/s1YjnV7hadlC?t=abc&hideRelated=1\", \"webpage_url_basename\": \"s1YjnV7hadlC\", \"webpage_url_domain\": \"video.arnes.si\", \"extractor\": \"video.arnes.si\", \"extractor_key\": \"Arnes\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://video.arnes.si/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"s1YjnV7hadlC\", \"fulltitle\": \"Bare\", \"duration_string\": \"1\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"_filename\": \"Bare [s1YjnV7hadlC].NA\", \"filename\": \"Bare [s1YjnV7hadlC].NA\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://video.arnes.si/api/public/video/noThumbnail1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: can only concatenate str (not \"NoneType\") to str"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://video.arnes.si/embed/missingData1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: missingData1: An extractor error has occurred. (caused by KeyError('data')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://video.arnes.si/watch/notFound0001",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [video.arnes.si] notFound0001: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

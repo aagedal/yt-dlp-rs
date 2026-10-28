@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://video.udn.com/embed/news/300040",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var options = {title: '\u751f\u7269\u8001\u5e2b\u7537\u8b8a\u5973', poster: 'https://udn.test/p.jpg', video: {mp4: '/api/mp4/300040', hls: 'https://udn-api.test/hls/300040', flash: ''}};</script>"
+  },
+  {
+   "url": "https://video.udn.com/api/mp4/300040",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "https://udn-cdn.test/v/300040_720p_1500.mp4"
+  },
+  {
+   "url": "https://udn-api.test/hls/300040",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "https://udn-cdn.test/v/master.m3u8"
+  },
+  {
+   "url": "https://udn-cdn.test/v/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://video.udn.com/play/news/2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var options = {poster: 'x', video: {}};</script>"
+  },
+  {
+   "url": "https://udn-host.test/news",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>News</title></head><body><iframe src=\"//video.udn.com/embed/news/300040\"></iframe></body></html>"
+  }
+ ]
+}

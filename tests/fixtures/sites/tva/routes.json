@@ -1,0 +1,49 @@
+{
+ "routes": [
+  {
+   "url": "https://players.brightcove.net/5481942443001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/5481942443001/videos/6324461225112",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkFIXTUREKEY1"
+   }
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://www.tvaplus.ca/tva/alerte-amber/saison-1/episode-01-1000036619",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"staticEntity\": {\"videoId\": \"6324461225112\", \"name\": \" \\u00c9pisode 01 \", \"longDescription\": \"Long\", \"durationMillis\": 2625963, \"knownEntities\": {\"channel\": {\"name\": \"TVA\"}, \"videoShow\": {\"name\": \"Alerte Amber\"}}, \"slug\": \"/tva/alerte-amber/saison-1/episode-01-1000036619\", \"episodeNumber\": \"1\"}}}}</script></html>"
+  },
+  {
+   "url": "https://www.tvaplus.ca/tva/x/no-video-2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"staticEntity\": {\"name\": \"x\"}}}}</script></html>"
+  }
+ ]
+}

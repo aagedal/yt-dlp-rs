@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "http://app.video.baidu.com/xqinfo/?worktype=adnativetvshow&id=11595",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Show\", \"intro\": \"A &amp; B\"}"
+  },
+  {
+   "url": "http://app.video.baidu.com/xqsingle/?worktype=adnativetvshow&id=11595",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"videos\": [{\"url\": \"http://www.iqiyi.com/v_19rrok.html\", \"title\": \"Ep 1\"}, {\"url\": \"https://www.youtube.com/watch?v=AHuQWcylaU4\", \"title\": null}]}"
+  },
+  {
+   "url": "http://app.video.baidu.com/xqinfo/?worktype=adnativecomic&id=1069",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"intro\": \"x\"}"
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+[
+ {
+  "url": "http://www.toongoggles.com/shows/217143/bernard-season-2/episodes/217147/football",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://www.toongoggles.com/shows/217143/bernard-season-2/episodes/5/none",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.toongoggles.com/shows/217143/bernard",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

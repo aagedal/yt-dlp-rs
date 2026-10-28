@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://www.eltrecetv.com.ar/ahora-caigo/capitulos/temporada-2023/programa-del-061023/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>Fusion.globalContent = {\"promo_items\": {\"basic\": {\"embed\": {\"config\": {\"m3u8\": \"https://vod.eltrece.test/v/abc123.m3u8\", \"title\": \"Programa\", \"thumbnail\": \"https://img.eltrece.test/t.jpg\"}}}}};</script>"
+  },
+  {
+   "url": "https://vod.eltrece.test/v/abc123.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.eltrecetv.com.ar/x/capitulos/temporada-1/sin-video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>Fusion.globalContent = {\"promo_items\": {\"basic\": {\"embed\": {\"config\": {\"title\": \"x\"}}}}};</script>"
+  },
+  {
+   "url": "https://www.eltrecetv.com.ar/x/capitulos/temporada-1/nada",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html></html>"
+  }
+ ]
+}

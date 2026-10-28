@@ -1,0 +1,70 @@
+[
+ {
+  "url": "https://player.mangomolo.com/v1/video?id=29431242&user_id=168&signature=b40e&autoplay=true",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://player.mangomolo.com/v1/live?channelid=MjM%3D&countries=Q0M%3D&w=100%25",
+  "args": [
+   "--print",
+   "%(id)s|%(is_live)s|%(live_status)s|%(uploader_id)s|%(duration)s|%(formats.:.format_id)j|%(formats.:.protocol)j"
+  ]
+ },
+ {
+  "url": "https://player.mangomolo.com/v1/video?id=1&user_id=1",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://player.mangomolo.com/v1/live?channelid=MjM",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://player.mangomolo.com/v1/live?channelid=MjMxN",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://player.mangomolo.com/v1/live?channelid=%2Fw%3D%3D",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://ayn.om/video/29431242/one",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://ayn.om/video/two",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://ayn.om/video/two",
+  "args": [
+   "-I",
+   "2",
+   "--print",
+   "%(id)s|%(title)s|%(uploader)s|%(webpage_url)s|%(extractor)s|%(playlist_index)s"
+  ]
+ },
+ {
+  "url": "https://ayn.om/video/two",
+  "args": [
+   "-I",
+   "1",
+   "--print",
+   "%(id)s|%(uploader)s|%(webpage_url)s|%(extractor)s|%(formats.:.protocol)j"
+  ]
+ }
+]

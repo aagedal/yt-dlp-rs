@@ -1,0 +1,135 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://podcasts.apple.com/us/podcast/urbana-podcast-724-by-david-penn/id1531349107?i=1000748574256",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1000748574256\", \"title\": \"URBANA PODCAST 724 BY DAVID PENN\", \"description\": \"Weekly house mix.\\nTracklist & more.\", \"url\": \"https://media.urbana.test/724.m4a?src=apple\", \"timestamp\": 1770400801, \"duration\": 3602, \"episode\": \"URBANA PODCAST 724 BY DAVID PENN\", \"series\": \"Urbana Radio Show\", \"thumbnail\": \"https://is1-ssl.mzstatic.test/image/thumb/724/1200x630wp.jpg\", \"vcodec\": \"none\", \"webpage_url\": \"https://podcasts.apple.com/us/podcast/urbana-podcast-724-by-david-penn/id1531349107?i=1000748574256\", \"original_url\": \"https://podcasts.apple.com/us/podcast/urbana-podcast-724-by-david-penn/id1531349107?i=1000748574256\", \"webpage_url_basename\": \"id1531349107\", \"webpage_url_domain\": \"podcasts.apple.com\", \"extractor\": \"apple:podcasts\", \"extractor_key\": \"ApplePodcasts\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://is1-ssl.mzstatic.test/image/thumb/724/1200x630wp.jpg\", \"id\": \"0\"}], \"display_id\": \"1000748574256\", \"fulltitle\": \"URBANA PODCAST 724 BY DAVID PENN\", \"duration_string\": \"1:00:02\", \"upload_date\": \"20260206\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"URBANA PODCAST 724 BY DAVID PENN [1000748574256].m4a\", \"filename\": \"URBANA PODCAST 724 BY DAVID PENN [1000748574256].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://podcasts.apple.com/us/podcast/urbana-podcast-724-by-david-penn/id1531349107?i=1000748574256",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[apple:podcasts] Extracting URL: https://podcasts.apple.com/us/podcast/urbana-podcast-724-by-david-penn/id1531349107?i=1000748574256",
+    "[apple:podcasts] 1000748574256: Downloading webpage",
+    "[info] 1000748574256: Downloading 1 format(s): 0",
+    "[download] Destination: 1000748574256.m4a",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "1000748574256.m4a": 12
+   }
+  },
+  {
+   "url": "https://podcasts.apple.com/us/podcast/207-whitney-webb-returns/id1135137367?i=1000482637777",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1000482637777\", \"title\": \"207 - Whitney Webb Returns\", \"description\": \"Whitney Webb returns. Sponsored by \\\"X\\\".\", \"url\": \"https://traffic.tim.test/207.mp3\", \"timestamp\": 1593932400, \"duration\": 5369, \"episode\": \"207 - Whitney Webb Returns\", \"episode_number\": 207, \"series\": \"The Tim Dillon Show\", \"thumbnail\": \"https://is1-ssl.mzstatic.test/image/thumb/207/3000x3000bb.jpg\", \"vcodec\": \"none\", \"webpage_url\": \"https://podcasts.apple.com/us/podcast/207-whitney-webb-returns/id1135137367?i=1000482637777\", \"original_url\": \"https://podcasts.apple.com/us/podcast/207-whitney-webb-returns/id1135137367?i=1000482637777\", \"webpage_url_basename\": \"id1135137367\", \"webpage_url_domain\": \"podcasts.apple.com\", \"extractor\": \"apple:podcasts\", \"extractor_key\": \"ApplePodcasts\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://is1-ssl.mzstatic.test/image/thumb/207/3000x3000bb.jpg\", \"id\": \"0\"}], \"display_id\": \"1000482637777\", \"fulltitle\": \"207 - Whitney Webb Returns\", \"duration_string\": \"1:29:29\", \"upload_date\": \"20200705\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"207 - Whitney Webb Returns [1000482637777].mp3\", \"filename\": \"207 - Whitney Webb Returns [1000482637777].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://podcasts.apple.com/podcast/id1?i=1000000000001",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1000000000001\", \"title\": \"Minimal\", \"url\": \"https://cdn.min.test/1.mp3\", \"episode\": \"Minimal\", \"thumbnail\": null, \"vcodec\": \"none\", \"webpage_url\": \"https://podcasts.apple.com/podcast/id1?i=1000000000001\", \"original_url\": \"https://podcasts.apple.com/podcast/id1?i=1000000000001\", \"webpage_url_basename\": \"id1\", \"webpage_url_domain\": \"podcasts.apple.com\", \"extractor\": \"apple:podcasts\", \"extractor_key\": \"ApplePodcasts\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1000000000001\", \"fulltitle\": \"Minimal\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Minimal [1000000000001].mp3\", \"filename\": \"Minimal [1000000000001].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://podcasts.apple.com/gb/podcast/expired/id2?i=1000000000002",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [apple:podcasts] 1000000000002: The fetched token is already expired; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://podcasts.apple.com/podcast/no-assets?i=1000000000003",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [apple:podcasts] 1000000000003: Unable to extract JS asset path; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://podcasts.apple.com/podcast/empty/id4?i=1000000000004",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 1000000000004: An extractor error has occurred. (caused by KeyError('data')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://podcasts.apple.com/de/podcast/ep5/id5?foo=1&i=1000000000005",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1000000000005\", \"title\": \"Episode 5\", \"url\": \"https://cdn.ep.test/5.mp3\", \"timestamp\": 1704161045, \"duration\": 61, \"episode\": \"Episode 5\", \"episode_number\": 5, \"thumbnail\": null, \"vcodec\": \"none\", \"webpage_url\": \"https://podcasts.apple.com/de/podcast/ep5/id5?foo=1&i=1000000000005\", \"original_url\": \"https://podcasts.apple.com/de/podcast/ep5/id5?foo=1&i=1000000000005\", \"webpage_url_basename\": \"id5\", \"webpage_url_domain\": \"podcasts.apple.com\", \"extractor\": \"apple:podcasts\", \"extractor_key\": \"ApplePodcasts\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1000000000005\", \"fulltitle\": \"Episode 5\", \"duration_string\": \"1:01\", \"upload_date\": \"20240102\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Episode 5 [1000000000005].mp3\", \"filename\": \"Episode 5 [1000000000005].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [apple:podcasts] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://podcasts.apple.com/podcast/missing/id6?i=1000000000006",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [apple:podcasts] 1000000000006: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://podcasts.apple.com/podcast/emptydata/id7?i=1000000000007",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  }
+ ]
+}

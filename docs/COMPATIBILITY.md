@@ -116,6 +116,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--impersonate CLIENT[:OS]`, `--list-impersonate-targets` | Upstream `ImpersonateTarget` parsing (lowercased; `Invalid impersonate target "X"` usage errors), containment and `str()`. Targets come only from the optional `impersonate` cargo feature (`cargo build --features impersonate`): a `wreq` transport on BoringSSL whose `wreq-util` emulations send the browser's TLS ClientHello, HTTP/2 SETTINGS and default headers (Chrome 145-149 on `windows-10`/`macos`/`linux`/`android`, Edge 146-148 on `windows-10`/`macos`, Firefox 149-151 on `windows-10`/`macos`/`linux`, Safari 18.5-26.4 on `macos` and three iOS Safari profiles; OS versions are left open except where the user agent names one), ordered like `CurlCFFIRH` (desktop first, then `edge < firefox < safari < chrome`, newest version, OS name). `--list-impersonate-targets` renders upstream's table with `wreq` as the Source (least preferred first); without the feature it lists Chrome, Safari, Firefox and Edge as `wreq (unavailable)` (upstream's `tor` row is omitted: no backend of this port provides it). An unavailable `--impersonate` target is upstream's `Impersonate target "TARGET" is not available. ...` error (exit 1); an available one is an error too, since this port cannot impersonate every request like upstream. Extractor requests marked `impersonate=` (`_request_webpage`) use the first available requested target resolved like upstream (`impersonate=True` takes the most preferred target, ignoring `--impersonate`), or warn with upstream's `The extractor is attempting impersonation, but ...` text; `require_impersonation=True` gives upstream's error text. Impersonated requests use the global proxy, `--no-check-certificate`, source address, socket timeout and the session cookie jar, at most 5 redirects (`curl_cffi`'s limit), and drop header values equal to upstream's `std_headers` (the random User-Agent, Accept, Accept-Language, Sec-Fetch-Mode) and this port's `Accept-Encoding: identity`, so the target's headers apply (an explicit `--user-agent` is kept, as upstream). Impersonated: TikTok webpages (the `Impersonation target:` debug line names the resolved target), Kick API calls, Vimeo HTTPS pages, the Mixcloud GraphQL lookup, Mir24Tv pages and Dailymotion's Chrome/Firefox m3u8 retries. Not supported: `--client-certificate` with impersonation (an error), format/download `impersonate` fields, Instagram's and Bandcamp's impersonated requests, Vimeo's `Got HTTP Error N when using impersonate target` mapping and `curl_cffi` target names |
 | `--xff VALUE`, `--geo-bypass`, `--no-geo-bypass`, `--geo-bypass-country CODE`, `--geo-bypass-ip-block IP_BLOCK` | Upstream's shared `geo_bypass` destination (the last option wins) and `validate_options`: `default`, `never`, a two-letter country code (unknown codes give no address, `Using fake IP None (ZZ)`) or a CIDR block read like `inet_aton`/`int`, else `Unsupported --xff "VALUE"`. See "Geo restriction bypass" |
 | `--ignore-no-formats-error`, `--no-ignore-no-formats-error` | Upstream `ignore_no_formats_error`: a result without formats warns `No video formats found!` and `Requested format is not available`, `-j`/`--print`/`-F` (`ID has no formats`) and the info JSON/sidecars use its metadata (`formats: []`, no format fields), and a download then fails with `[EXTRACTOR] ID: No video formats found!`; extractors' expected `raise_no_formats` errors and `raise_geo_restricted(metadata_available=True)` warn instead (see "Geo restriction bypass") |
+| `--allow-unplayable-formats` | Upstream `allow_unplayable_formats` (with its developer-option warning): formats with `has_drm: True` are kept (and not tested) instead of dropped; without it they are dropped, `_has_drm` is set, and a result left without formats fails with the expected `[EXTRACTOR] ID: This video is DRM protected` (a warning with `--ignore-no-formats-error`) |
 | `--client-certificate CERTFILE`, `--client-certificate-key KEYFILE`, `--client-certificate-password PASSWORD` | TLS client authentication for every request: a PEM certificate (optionally containing its key) plus an optional separate PEM key. Encrypted keys and `--client-certificate-password` are an explicit native error, because the rustls transport needs unencrypted keys |
 | `--enable-file-urls`, `file:` URLs | Upstream refuses `file:` URLs after `[generic] Extracting URL`/`Downloading webpage` with `file:// URLs are disabled by default in yt-dlp for security reasons. Use --enable-file-urls to enable at your own risk.`; with the option, local media files are direct links like urllib's file handler gives upstream (guessed Content-Type, mtime timestamp, protocol `file`) and are copied with progress. Local HTML pages and manifests remain an explicit native error |
 | `--http-chunk-size SIZE`, `--test` | Upstream `HttpFD` chunking for whole-file HTTP media: each request asks for `bytes=START-END` of a randomized 95-100% chunk (`--http-chunk-size`, else the format's `downloader_options.http_chunk_size`, which YouTube HTTPS formats set to 10 MiB like upstream); a matching `206` continues with the next chunk, other responses restart as a whole download (`Unable to resume` past the start), and the size limits compare against each response's end like upstream. Hidden `--test` keeps the first 10241 bytes (one `bytes=0-10240` request, even if Range is ignored). Request patterns compared with pinned upstream; fragments and FFmpeg downloads ignore `--test` |
@@ -396,6 +397,28 @@ and `thumbnail` finalization (no `--check-formats` URL testing). These
 fields appear in JSON, info JSON, match filters and (scalar ones) output
 templates; see [the source slice](../upstream/notes/youtube-metadata.md).
 
+STVR (formerly RTVS) archive items (`rtvs|stvr.sk/radio|televizia/archiv/[N/]ID`,
+`stvr`) follow upstream `RTVSIE`: the page's first `player_*_ID` iframe
+(fatal), its playlist JSON URL, and the JSON's clip (else first playlist
+item): an `audio/mp3` source as a direct format, else its HLS playlist
+(fatal), with the title, description, length, image and creation time.
+`tests/fixtures/sites/rtvs/` is compared with pinned upstream output.
+
+RTÉ Player shows (`rte.ie/player/CC/show/SLUG/ID`, `rte`) and radio player
+recordings (`rte.ie/radio/utils/radioplayer/rteradioweb.html#!rii=...`, old
+and new specifiers, `rte:radio`) follow upstream `RteBaseIE`: both the IPTV
+(`feeds.rasset.ie`) and web (`www.rte.ie/rteavgen/getplaylist`) feeds are
+read; the first show found gives the unescaped title and description,
+thumbnail, `published` timestamp and millisecond duration, and every show's
+first `media:group` adds an RTMP(E) `mp4:` format (`flv`, `rtmp`), non-fatal
+HLS (`hls`, master only) and HDS (`hds`, from `hds_server` and from
+`rte:server`) formats. A failing IPTV feed is skipped silently; a failing web
+feed without formats is fatal, and its 404 JSON body's `message` becomes
+upstream's `IE_NAME said: MESSAGE` error (an unparsable body warns with
+Python's JSONDecodeError text before the HTTP error). Feeds without any show
+are an unsupported error. `tests/fixtures/sites/rte/` is compared with
+pinned upstream output.
+
 RTRFM shows (`rtrfm.com.au/shows|show-episode/ID`) follow upstream `RTRFMIE`:
 the page's fatal `playShow[From]` show, date and title, the restream API's
 `u` MP3 URL (`Downloading MP3 URL`) as an untyped result, upstream's expected
@@ -429,11 +452,44 @@ the page title (with upstream's live date suffix); television pages
 with pinned upstream output; `tools/generate_rtve_fixtures.py` encodes its
 media URL images.
 
+RTV Slovenija 365 recordings (`365.rtvslo.si/arhiv/SHOW/ID`,
+`4d.rtvslo.si/arhiv/...`, `rtvslo.si/rtv365/arhiv/ID`) follow upstream
+`RTVSLOIE`: the `ava` API's `getRecordingDrm` response (its JWT required,
+else upstream's unexpected-error message) and `getMedia` with that JWT. Its
+`addaptiveMedia`, `addaptiveMedia_sl` (as `sign-` formats with
+preference -10 and `slv` for English audio) and media file `hls_sec` URLs go
+through `_extract_wowza_formats` with HDS, DASH and SMIL skipped: the
+non-fatal `playlist.m3u8` master playlist (`hls`) and the `rtmp:` format,
+which is listed but not downloadable natively. Progressive media files keep
+their media type, size and integer bitrate. An `intermission.mp4` format is
+upstream's geo restriction (a warning with `--ignore-no-formats-error`); a
+`dummy_720p.mp4` manifest with an `error` stub is `Clip not available`.
+Metadata are the canonical URL, title, `Slovenski` (`sl`) or named
+subtitles, thumbnails with `Accept: image/jpeg`, description, broadcast and
+recording timestamps, duration (else the parsed length), genre tags and the
+show name and ID. Shows (`365|4d.rtvslo.si/oddaja/SLUG/ID`,
+`RTVSLOShowIE`) are playlists of the page's deduplicated `/arhiv/` links
+with the page title and OpenGraph description and image (upstream's
+warnings when missing). The shared Wowza helper also reads a non-skipped
+`manifest.f4m` as non-fatal HDS (`hds`) formats and a non-skipped
+`manifest.mpd` as non-fatal DASH (`dash`) formats, and returns an
+unsupported error for callers that do not skip SMIL.
+`tests/fixtures/sites/rtvslo/` is compared with pinned upstream output.
+
 Roya TV live streams (`[en.]roya.tv/live-stream/ID`) follow upstream
 `RoyaLiveIE`: the ticket API's `data.secured_url` (missing keys are
 upstream's wrapped `KeyError`) as live `hls` HLS formats, the non-fatal
 schedule API's first page channel title whose `str(id)` matches (else the
 generic title after upstream's warning) and `is_live`.
+
+Rudo videos, podcasts and live streams (`rudo.video/vod|podcast|live/ID`)
+follow upstream `RudoVideoIE`: the page's geo notice, `streamURL` (else its
+first `<source>`; a YouTube player is followed as a `url` result, else
+`Unable to extract stream url`), the token array's first URL for the
+`auth-token` query (else `Invalid access token array`), HLS (live for
+`live`), MP3 or direct formats, and the title, author and poster variables
+with OpenGraph fallbacks. Rudo iframes on generic pages are embeds.
+`tests/fixtures/sites/rudovideo/` is compared with pinned upstream output.
 
 Rumble embeds (`rumble.com/embed/ID`) follow upstream `RumbleEmbedIE`: the
 embed JS API's `ua` formats (progressive by height, audio, timeline; HLS
@@ -454,6 +510,31 @@ HLS streams and captions (`ru` without a code). Numeric embeds
 `extractor_key` `Rutube`. F4M balancer entries are an unsupported error;
 channels, playlists, tags, people and movies are not supported.
 `tests/fixtures/sites/rutube/` is compared with pinned upstream output.
+
+RÚV Sarpurinn pages (`ruv.is/sarpurinn/CHANNEL/ID[/DATE]`, `ruv.is/node/ID`)
+follow upstream `RuvIE`: the OpenGraph title (fatal), the page's `video.src`
+(fatal) as HLS (`hls`, master only), an `mp3` audio format or a direct URL,
+the `www.ruv.is/node/ID` link's ID (else the URL's), the OpenGraph
+description, and the OpenGraph image, else upstream's `video.poster` match
+(whose first group is the opening quote, as upstream returns it) or its
+warning, and the `article:published_time` timestamp with its warning. RÚV
+Spila episodes (`ruv.is/{sjonvarp,utvarp,krakkaruv,ungruv}/spila/.../SERIES/ID`,
+`ruv.is:spila`) follow `RuvSpilaIE`: the `ruv.is/gql/` GraphQL program's first
+episode (an empty list is Python's `list index out of range`), its HLS
+(master only) or direct file, named VTT subtitles, clips as chapters, the
+episode or program title and description, the `$$IMAGESIZE$$` thumbnail, the
+`firstrun` timestamp and the rating as `age_limit`. Clips without a parseable
+time are an unsupported error (processing would fill their `None` start).
+`tests/fixtures/sites/ruv/` is compared with pinned upstream output.
+
+Screencastify videos (`watch.screencastify.com/v/ID`,
+`app.screencastify.com/v2|v3/watch/ID`) follow upstream `ScreencastifyIE`:
+the umbrella service's watch JSON (title, description, uploader), its DASH
+(`dash`) and HLS (`hls`) manifests (both non-fatal, master playlist only)
+requested with the manifest's `auth.query` parsed like `parse_qs`, which is
+also added to every format URL and kept as the top-level
+`extra_param_to_segment_url`. `tests/fixtures/sites/screencastify/` is
+compared with pinned upstream output.
 
 ScreenRec shares (`screenrec.com/share/ID`) follow upstream `ScreenRecIE`: the
 page's fatal `customUrl` manifest as HLS formats (subtitles ignored with
@@ -531,6 +612,19 @@ formats (`m3u8_native` for HLS; `.mp3.NNNk` URLs give the ABR/TBR). Format
 responses whose body is not empty but fails to parse remain explicit native
 errors, since this port does not reproduce Python's `JSONDecodeError` text.
 
+STV Player videos and episodes (`player.stv.tv/video|episode/ID`) follow
+upstream `STVPlayerIE`: the page is downloaded non-fatally (a failure warns
+without its cause), its Next.js `playerApiCache` `/episodes/` or
+`/shortform/` result is used, else `player.api.stv.tv/v1/episodes|shortform/ID`
+(the page's `episodeId` first; a missing `results` is upstream's
+`KeyError`); `drmEnabled` programmes raise upstream's DRM error. The result
+is a `url_transparent` BrightcoveNew player URL (account `1486976045`,
+smuggled `geo_countries` `GB`) overlaid with the summary, the `length`
+duration in seconds, the `_subtitles` tracks as `en` subtitles (an empty
+dict still replaces Brightcove's, like upstream), the view count and the
+programme name. `tests/fixtures/sites/stv/` is compared with pinned upstream
+output (`--no-geo-bypass`).
+
 Substack posts (`SUB.substack.com/p/SLUG`) follow upstream `SubstackIE`: the
 page's `window._preloads = JSON.parse("...")` literal (`Unable to extract
 json string` without it; decoded with `js_to_json`, then parsed), the
@@ -546,6 +640,23 @@ description, cover image, publication name and ID follow. Custom-domain
 pages are not detected by the generic extractor (`_extract_embed_urls` is not
 ported). `tests/fixtures/sites/substack/` is compared with pinned upstream
 output.
+
+Sveriges Radio publications (`sverigesradio.se/[sida/]artikel|gruppsida.aspx?...
+artikel=ID`, `.../artikel|gruppsida/SLUG`) and episodes
+(`sverigesradio.se/[sida/]avsnitt/ID|SLUG`) follow upstream
+`SverigesRadioPublicationIE` and `SverigesRadioEpisodeIE`: a slug URL's page
+gives the first `audio-button` element's `data-audio-id` (else
+`data-publication-id`), else the `gtm-metadata` JSON's `pageId` (a missing key
+is upstream's `KeyError`; an integer ID gets processing's string-conversion
+warning). The `playerajax/audiometadata` item (a missing `items` is a
+`KeyError`) gives the title (`subtitle`), series, duration, thumbnail and
+description; the `getaudiourl` responses for the `low`, `medium` and `high`
+qualities (non-fatal: HTTP errors are warnings) give one format per distinct
+`audioUrl`, with the `_aNNN.m4a` (else `codingFormat`) bitrate, the codec of
+`mp3`/`m4a` files and the coding format as format ID. Pages without either
+element, unparsable `gtm-metadata`, and `getaudiourl` responses that are not
+JSON (upstream warns) are not supported. `tests/fixtures/sites/sverigesradio/`
+is compared with pinned upstream output.
 
 SVT Play and Öppet arkiv videos (`svtplay.se`/`oppetarkiv.se`
 `/video|klipp|kanaler/ID[...?modalId=|id=SVT_ID]`, Barnplay
@@ -591,6 +702,14 @@ fixtures follow the upstream code's shapes. `tests/fixtures/sites/svt/` is
 compared with pinned upstream output (the video CDN is geo-blocked outside
 Sweden, so its manifests are constructed).
 
+RFI Français facile audio (`francaisfacile.rfi.fr/LL/actualit%C3%A9|podcasts/SHOW/SLUG`)
+follows upstream `FrancaisFacileIE`: the page's `data-media-id` JSON (fatal;
+a missing `mediaId` is upstream's `KeyError`), the page title, the JSON-LD
+fields (non-fatal, with upstream's warning) and the JSON's title, first
+valid source URL and duration, as an audio-only URL result.
+`tests/fixtures/sites/francaisfacile/` is compared with pinned upstream
+output.
+
 France Télévisions videos (`francetv:ID`, an `@catalog` suffix ignored)
 follow upstream `FranceTVIE`: the `k7.ftven.fr/videos/ID` JSON for desktop
 Chrome and mobile Safari (non-fatal, with the smuggled page hostname, else
@@ -618,6 +737,49 @@ script patterns) are playlists of Dailymotion `url` results.
 `tests/fixtures/sites/francetv/` is compared with pinned upstream output
 (the API responses and manifests are constructed after the shapes upstream
 parses).
+
+Stream.cz and Televize Seznam episodes (`stream|televizeseznam.cz/.../SLUG-ID`)
+follow upstream `StreamCZIE`: the `televizeseznam.cz/api/graphql` episode
+(JSON POST), its `spl` plus `spl2,3` playlist (`|` sent as `%7C` like
+upstream's request escaping; a `Location`-only response is followed), the
+playlist's `http_stream.qualities` (`ts`, source preference -1) and `mp4`
+(preference 1) streams with joined URLs, bitrate and duration in thousands,
+resolution (height else from the `NNNp` key) and parsed codecs, and its
+subtitles by language and extension; name, perex, duration and views.
+Not covered: a selected format with its own `duration` (upstream's
+`requested_downloads` then keeps it; this port keeps one value per key).
+`tests/fixtures/sites/streamcz/` is compared with pinned upstream output.
+
+Sport5 clips (`[www|vod].sport5.co.il/...Vi|docID=ID`) follow upstream
+`Sport5IE`: the page's `clipId` (fatal) and its metadata XML: an `Error`
+element is upstream's expected `Sport5 returned error: NAME - DESCRIPTION`,
+else the title, description, duration, posters, categories and MP4
+playback links with their bitrates and sizes. Missing elements or
+non-integer attributes, where upstream raises Python exceptions, are
+unsupported errors. `tests/fixtures/sites/sport5/` is compared with pinned
+upstream output.
+
+STAR TREK videos (`startrek.com[/en-ca|en-un]/videos/SLUG`, `startrek`)
+follow upstream `StarTrekIE`: the Next.js `video.data` (missing keys are
+upstream's `KeyError`s); a YouTube video ID becomes a `url` result (not
+fixtured), else the legacy video URL with the cleaned title, subhead and
+first description text, upper-cased category, publication time, English
+subtitle file, query-less poster and the series from the header tab.
+`tests/fixtures/sites/startrek/` is compared with pinned upstream output.
+
+Star TV videos (`startv.com.tr/dizi|program/SHOW/bolumler|fragmanlar|ekstralar/ID`,
+`startv.com.tr/video/arsiv/dizi|program/SHOW/ID`, `startv`) follow upstream
+`StarTVIE`: the page's fatal `videoUrl` API URL (`Unable to extract video info
+url`), its JSON `data` object (missing or empty is upstream's `Failed to
+extract API data`), `str()` of its `id`, the title (else `og:title` with its
+warning), the `clean_html` description (else `og:description`), the
+`og:image` thumbnail made protocol-relative `http:` (with upstream's warning
+when missing), `int_or_none` `release_date` as `timestamp`, and the
+`flavors.hls` manifest as non-fatal `hls` formats (none is upstream's `Failed
+to obtain m3u8 URL` warning; a result without formats fails in processing).
+API IDs, titles or descriptions that are not scalars or strings and relative
+API or manifest URLs are explicit errors. `tests/fixtures/sites/startv/` is
+compared with pinned upstream output.
 
 Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
 `StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
@@ -655,6 +817,28 @@ not a video) is an unsupported error here; upstream warns that the extractor
 returned nothing. `tests/fixtures/sites/telegram/` is compared with pinned
 upstream output.
 
+BX1 (formerly Télé Bruxelles) articles and live streams (`bx1.be/...` and
+`telebruxelles.be/...` pages) follow upstream `TeleBruxellesIE`: the page's
+player `file` RTMP URL (VOD paths joined from their JavaScript string
+concatenation, the live stream's misspelled `rmtp` scheme corrected) as
+upstream's Wowza formats (non-fatal `playlist.m3u8`, `manifest.f4m` and
+`manifest.mpd` beside `rtmp`; SMIL streams remain an unsupported error),
+the `post-ID` article ID (else the URL's display ID), the first `<h1>`
+(else Open Graph) title and the Open Graph description; `stream/live` URLs
+are live. A page without the player URL is upstream's `Unable to extract
+RTMP url`. `tests/fixtures/sites/telebruxelles/` is compared with pinned
+upstream output.
+
+Telewebion episodes (`telewebion.ir/episode/ID`, decimal IDs as `0x...`)
+follow upstream `TelewebionIE`: the `graph.telewebion.ir/graphql`
+`getEpisodeDetail` query (a JSON POST; GraphQL `errors` messages, or
+`Unknown GraphQL API error`, as errors under the URL's ID), the first
+`queryEpisode`'s title, view count, duration, tags, start and creation
+times, program and channel, the channel's `/live/DESCRIPTOR` URL and the
+`episodeImages` thumbnail, and the channel's episode HLS (`hls`; without a
+string descriptor upstream's `Failed to obtain m3u8 URL`).
+`tests/fixtures/sites/telewebion/` is compared with pinned upstream output.
+
 The Intercept Field of Vision posts (`theintercept.com/fieldofvision/SLUG`)
 follow upstream `TheInterceptIE`: the page's `initialStoreTree` post with the
 slug, as a `url_transparent` result of `jwplatform:VIDEO` (extracted by the
@@ -686,15 +870,156 @@ else upstream's `Unable to extract media id`) as a `url_transparent` result of
 `jwplatform:MEDIA` overlaid with the URL ID as `display_id` and the
 `og:title` when present.
 
+Spreaker episodes (`api.spreaker.com/[download/]episode/ID`,
+`api.spreaker.com/v2/episodes/ID`, `[www.]spreaker.com/episode/[SLUG-]ID`)
+follow upstream `SpreakerIE`: the `api.spreaker.com/v2/episodes/ID` JSON
+(with the URL's `key` query) `response.episode` as an untyped result with
+the permalink display ID, raw description, `unified_timestamp` publish date,
+author full name (uploader and `creator`), author ID, `duration` (else
+`length`) in milliseconds, play/like/message counts (`*_count`, else
+`stats`), the original/medium/plain image URLs as thumbnails, the show title
+as series and upstream's fixed `mp3` format fields (`MPEG Layer 3`,
+`container`); missing `response`/`episode`/`title`/`download_url` keys are
+upstream's `KeyError` extractor errors. Shows (`api.spreaker.com/show/ID`,
+`spreaker.com/podcast/SLUG--ID`, `spreaker.com/show/ID/episodes/feed`)
+follow `SpreakerShowIE`: `show/ID/episodes` pages (`page`, `max_per_page=100`,
+`key`) read like upstream's generator, stopping without a pager or results
+or at `last_page`, with dict results as the same episode dicts
+(`extractor_key` `Spreaker`); an episode's `KeyError` there is reported
+while reading the entries and ends the playlist with a `None` entry, like
+upstream's default `--no-abort-on-error`. Non-string titles, download URLs,
+descriptions and dates remain explicit native errors.
+`tests/fixtures/sites/spreaker/` is compared with pinned upstream output.
+
+Olympics videos (`olympics.com/LL/[paris-2024/]replay|video|videos|
+original-series/episode/SLUG`) follow upstream `OlympicsReplayIE`: the
+Next.js `videoPlaylist` item's `currentVideo` (upstream's geo restriction
+with its countries when `geoRestrictedVideo`; geo bypass is off), its
+`videoUrl` (else the required `streamUrl`) tokenized through
+`metering.olympics.com/tokengenerator` with the URL's own query, the
+`vod`/`live` service and the required `jwtToken`, read as a fatal HLS master
+playlist (subtitles kept; an HTTP error whose reason contains
+`georestricted` is the geo error), `is_live` from `streamingStatus`, and the
+video ID, title and ISO 8601 date. Without that item the legacy page's
+`title`/`og:title`/`twitter:title`, `episode_uid` and `video_url` meta tags
+(upstream's warnings when missing; a missing UID or URL is an unsupported
+error here), the required JSON-LD (upstream's fatal error), the `image`
+list's thumbnails with the `t_W-H_WIDTH` width and derived height, and the
+`tokenGenerator` URL's HLS playlist, with the JSON-LD fields merged over
+them. `tests/fixtures/sites/olympics/` is compared with pinned upstream
+output.
+
+ON24 events (`event.on24.com/wcc/r/ID/KEY` and the event console and lobby
+URLs with `eventid` and `key`) follow upstream `On24IE`: the event console's
+cached JSON with its `fhvideo1` (MP4) and `audio` (WAV) media joined to the
+events media path, the locale language, stripped description, start date
+and registrant count, and the `wcc/r` page as `webpage_url` (a missing
+event ID is upstream's `None`). `tests/fixtures/sites/on24/` is compared
+with pinned upstream output.
+
 OneFootball videos (`onefootball.com/LL/video/SLUG-ID`) follow upstream
 `OneFootballIE`: the page's fatal `cdn.jwplayer.com/manifests/ID.m3u8` URL as
 a `url_transparent` result (extracted by the JW Platform extractor) overlaid
 with `_old_archive_ids` and the non-fatal JSON-LD fields without `url`; a page
 without JSON-LD warns `unable to extract JSON-LD` like upstream.
 
+AZ Medien videos (`[www.|tv.]telezueri.ch|telebaern.tv|telem1.ch|tvo-online.ch/SECTION/SLUG-ID[#video=KALTURA_ID]`)
+follow upstream `AZMedienIE` as `url` results for `kaltura:1719221:ID`: the
+URL's `#video=` ID, else the first `KalturaData` item of the page's
+`__APOLLO_STATE__` (fatal; `Unable to extract kaltura id`).
+`tests/fixtures/sites/azmedien/` is compared with pinned upstream output.
+
+Baidu video series (`v.baidu.com/TYPE/ID.htm`, `show` and `tv` as `tvshow`
+and `tvplay`) follow upstream `BaiduVideoIE`: the app API's `xqinfo` title
+and unescaped intro and its `xqsingle` episodes as `url` results with their
+titles (missing keys are upstream's `KeyError`s).
+`tests/fixtures/sites/baidu/` is compared with pinned upstream output.
+
+Business Insider pages (`[SUB.]businessinsider.com|nl/.../SLUG`) follow
+upstream `BusinessInsiderIE`: the first of its four JW Platform ID patterns
+that matches (else `Unable to extract jwplatform id`) as a `url` result for
+`jwplatform:ID`. `tests/fixtures/sites/businessinsider/` is compared with
+pinned upstream output.
+
+BerufeTV films (`web.arbeitsagentur.de/berufetv/.../film;filmId=ID`) follow
+upstream `BerufeTVIE`: the movingimage player JSON's `auto` HLS playlist
+(fatal; its subtitles replace earlier ones) and progressive sources, and its
+subtitle tracks as VTT, with the film metadata API's matching entry
+(non-fatal) for the title (else the player's), description, thumbnail (else
+the CDN default), category and topics. `webpage_url_basename` drops the last
+path segment's `;params`, like Python's `urlparse`.
+`tests/fixtures/sites/berufetv/` is compared with pinned upstream output.
+
+BoxCast broadcasts (`boxcast.tv/view-embed/ID`, `channel/CH?...b=ID`,
+`video-portal/A/B/ID`) follow upstream `BoxCastVideoIE`: the page's
+`BOXCAST_PRELOAD` broadcast and view data (else the broadcasts API, its view
+non-fatal), a recorded view's HLS playlist (fatal), the broadcast's ID, name,
+description and preview (else the OpenGraph/Twitter meta tags, warning when
+missing), stream time and account. BoxCast embed iframes on generic pages
+are embeds. `tests/fixtures/sites/boxcast/` is compared with pinned upstream
+output.
+
+Bundestag Mediathek videos (`dbtg.tv/cvid|fvid/ID`, `bundestag.de/mediathek?...videoid=ID`)
+follow upstream `BundestagIE`: the archive `ID_playlist.smil/playlist.m3u8`
+master playlist (`instance`; a 404 is `Could not find video id`, other errors
+warn `Error extracting hls formats: ...`), the share API's `audio*` and
+`download*` URLs as formats with codec, channels, bitrate, size and
+extension from their file names (a non-1 status warns with its message),
+upstream's unexpected `Could not find suitable formats` error without any,
+and the non-fatal metadata overlay's first `<h3>` (spans removed) and `<p>`
+as title and description. Like upstream, fatal HLS requests become non-fatal
+with `--ignore-no-formats-error` (in every extractor using the shared
+helper). `tests/fixtures/sites/bundestag/` is compared with pinned upstream
+output.
+
+bTV Plus shows, series and news (`btvplus.bg/produkt/{predavaniya,seriali,novini}/ID`)
+follow upstream `BTVPlusIE`: the page's `var videoUrl` player JSON (joined
+to `https://btvplus.bg`; a page without it is upstream's `Unable to extract
+player URL`, a response without `config` its `KeyError`), the config's
+`videojs(...)` options (else `Unable to extract videojs data`), each source
+with a URL `src` as non-fatal HLS formats and subtitles (`hls`) when its
+type is an HLS MIME type, other types being upstream's `Unknown format type`
+warning, and the stripped Open Graph title (else the cleaned
+`product-title` element), Open Graph image and description. Configs that
+are not strings and videojs options that do not parse are unsupported
+errors. `tests/fixtures/sites/btvplus/` is compared with pinned upstream
+output.
+
 Bundesliga videos (`bundesliga.com/LL/bundesliga/videos[/...]?vid=ID`) follow
 upstream `BundesligaIE`: a `url` result of `jwplatform:ID`, extracted by the
 JW Platform extractor (so its `webpage_url` is the `jwplatform:` URL).
+
+Hytale news posts (`hytale.com/news/YYYY/MM/SLUG`) follow upstream `HytaleIE`:
+the media page's clip captions (downloaded before the `Extracting URL` line;
+its state is required), and the post's Cloudflare Stream embeds as
+transparent `url` results with those captions as titles, with the OpenGraph
+title (warning when missing). `tests/fixtures/sites/hytale/` is compared with
+pinned upstream output.
+
+HuffPost Live segments (`[embed.]live.huffingtonpost.com/r/segment/SLUG/ID`,
+`.../HPLEmbedPlayer/?segmentId=ID`) follow upstream `HuffPostIE`: the
+segments API's live and live-again sources (HLS and HDS non-fatal, else
+direct files keeping their source key as `format`), title, description,
+running time, start date and `-WxH.` images. HuffPost Live embed iframes on
+generic pages are embeds. `tests/fixtures/sites/huffpost/` is compared with
+pinned upstream output.
+
+Islam Channel videos (`watch.islamchannel.tv/watch/ID`) and series
+(`watch.islamchannel.tv/series/UUID`) follow upstream `IslamChannelIE` and
+`IslamChannelSeriesIE`: the page's token, expiry and key (fatal) for the
+Simplestream show-stream API, its tokenization JSON's adaptive HLS playlist,
+the meta-tag title and description, and the poster (else OpenGraph image) as
+unscaled and original thumbnails; series pages are playlists of their
+deduplicated show links. `tests/fixtures/sites/islamchannel/` is compared
+with pinned upstream output.
+
+Ivideon TV cameras (`ivideon.com/tv/.../camera/SERVER/CAMERA`, `ivideon`)
+follow upstream `IvideonIE` as live demo-session FLV streams (`low`, `mid`,
+`hi` with their qualities), named from the camera page's config (the page is
+non-fatal; an unparsable config warns and then fails with upstream's
+`'NoneType' object has no attribute 'get'`), else its `name` meta tag or
+heading, else the server ID. `tests/fixtures/sites/ivideon/` is compared
+with pinned upstream output (with `--print`, as live titles carry the time).
 
 Iltalehti articles (`iltalehti.fi/SECTION/a/ID`, with upstream's
 single-character ID) follow upstream `IltalehtiIE`: the fatal `window.App`
@@ -720,12 +1045,133 @@ SzTV pages (`sztv.hu`/`tvszombathely.hu` `.../SLUG-ID`) follow upstream
 title, the meta description and OpenGraph image with upstream's non-fatal
 warnings, as an untyped result.
 
+Melon music videos (`vod.melon.com/video/detail2.htm[l]?...mvId=ID`) follow
+upstream `MelonVODIE`: the player info JSON's title (missing keys are
+upstream's `KeyError`s) and artists, and the streaming info JSON's HLS
+playlist (`hls`, fatal), image, play time and open date.
+`tests/fixtures/sites/melonvod/` is compared with pinned upstream output.
+
+MediaWorks NZ VOD assets (`vodupload-api.mediaworks.nz/library/asset/published/ID`)
+follow upstream `MediaWorksNZVODIE`: the API's `asset` (a DRM type other
+than `NonDRM` is the expected `This video is DRM protected`; another content
+type warns), its HLS playlist (fatal) plus the audio playlist (non-fatal) as
+`mp3` formats defaulting to `vcodec: none` and `acodec: aac`, with the title,
+description, duration, date, brand and thumbnails. JW player divs with the
+asset request URL on generic pages are embeds.
+`tests/fixtures/sites/mediaworksnz/` is compared with pinned upstream output.
+
 Megaphone players (`https://player.megaphone.fm/ID`, `megaphone.fm`) follow
 upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 (`creators`), non-fatal `og:image` (with upstream's warning), and the
 `var episode = {...};` script object through `js_to_json` (`mediaUrl`
 proto-relative as `https:` as the single format, raw `duration`; missing keys are
 upstream's `KeyError` extractor errors).
+
+美拍 videos (`meipai.com/media/ID`) follow upstream `MeipaiIE`: the generic
+title (`og:title`, else `<title>`, else processing's `Meipai video #ID`), the
+live recording's `encodeURIComponent` HLS URL as non-fatal `hls` formats, else
+the `data-video` URL (as written) as the single `http` format, and the
+non-fatal `og:video:release_date` (`unified_timestamp`), `og:video:tag` split
+on commas (missing is upstream's `[""]`), `interactionCount` and `duration`
+`<meta>` values, `og:video:director` as `creator`, `og:description` and
+`og:image`, each with upstream's warning when missing; a result without
+formats fails in processing. Relative HLS or video URLs are explicit errors.
+`tests/fixtures/sites/meipai/` is compared with pinned upstream output.
+
+Mixlr events (`[www.]USER.mixlr.com/events/ID`) follow upstream `MixlrIE`:
+the `api.mixlr.com/v3/channels/USER/events/ID` JSON's first included
+broadcast `progressive_stream_url`, checked with a non-fatal `HEAD` request
+(`Checking stream`; an HTTP error is upstream's warning) and kept on a 200
+as the single audio-only format with `urlhandle_detect_ext`'s extension
+(`octet-stream` is upstream's warning and `mp3`). Without formats, an
+event's `starts_at` is upstream's expected `This event will start at DATE`
+error (a warning with `--ignore-no-formats-error`). Metadata: the username
+as uploader, `starts_at` as release timestamp, and the broadcast's then the
+event's title, description, start time, viewer and heart counts, live flag,
+artwork and broadcaster ID. Recordings (`USER.mixlr.com/recordings/ID`)
+follow `MixlrRecoringIE`: the recording API JSON's URL, file format,
+title, description, creation time, integer duration, artwork and user ID as
+an untyped result. A stream without a detectable extension remains an
+explicit native error. `tests/fixtures/sites/mixlr/` is compared with
+pinned upstream output.
+
+Simplecast episodes (`api.simplecast.com/episodes/UUID`,
+`player.simplecast.com/UUID`, `simplecast`) follow upstream `SimplecastIE`:
+the `api.simplecast.com/episodes/UUID` JSON parsed like
+`SimplecastBaseIE._parse_episode` as an untyped result: the stripped title,
+slug display ID, `clean_podcast_url` of the audio file URL (else
+`audio_file_url`, else `enclosure_url`), the episode URL as `webpage_url`
+and its `*.simplecast.com` channel URL, podcast title as series, season
+number and `api.simplecast.com/seasons/UUID` ID, image, episode ID and
+number, stripped description, ISO 8601 publish date, integer duration and
+audio file size; missing `id`/`title`/`enclosure_url` keys are upstream's
+`KeyError` extractor errors. `player.simplecast.com` iframes on other pages
+are followed as generic-page embeds (several as a playlist of `url`
+results that keep the episode's own `webpage_url`); upstream's
+`embed.simplecast.com` iframe URLs match no extractor, so such pages stay
+unsupported like upstream. Episode pages (`SITE.simplecast.com/episodes/SLUG`,
+`simplecast:episode`) follow `SimplecastEpisodeIE`: the matched URL posted
+to `episodes/search`. Podcast sites (`SITE.simplecast.com[/...]`, not an
+`api`/`cdn`/`embed`/`feeds`/`player` host or an episode page,
+`simplecast:podcast`) follow `SimplecastPodcastIE`: the URL posted to
+`sites/search` (a missing `podcast`/`id` is upstream's `KeyError` error),
+then a generator reading `podcasts/ID/episodes` and yielding each
+`collection` episode with the podcast title as series, titled by the
+podcast; an episode's `KeyError` there ends the playlist like upstream's
+default `--no-abort-on-error`. Episodes without an `episode_url` and
+non-string IDs, titles, URLs, descriptions and dates remain explicit native
+errors. A bare-host podcast URL is handled as `https://SITE.simplecast.com/`
+(with a path), as for every URL in this port. `tests/fixtures/sites/simplecast/`
+is compared with pinned upstream output.
+
+Acast episodes (`[www.|shows.|embed.]acast.com/SHOW/[episodes/]EPISODE`,
+`play.acast.com/s/SHOW/EPISODE`, `acast`) follow upstream `ACastIE`: the
+`feeder.acast.com/api/v1/shows/SHOW/episodes/EPISODE?showInfo=true` JSON
+as an untyped result with the episode ID, `episodeUrl` display ID,
+`clean_podcast_url` media URL, title (also the episode), the cleaned
+description (else summary), image, ISO 8601 publish date, integer
+duration, content length (`filesize`), season and episode numbers, and the
+show's author and title as `creator` (`creators`) and `series`; missing
+`title`/`id`/`url` keys are upstream's `KeyError` extractor errors. Acast
+iframes on other pages are followed as generic-page embeds, first in
+extractor order. Shows (`[www.|shows.]acast.com/SHOW`,
+`play.acast.com/s/SHOW`, `acast:channel`, never an episode URL) follow
+`ACastChannelIE`: the show JSON's episodes as a playlist of the same
+episode dicts, with the show ID, title and description (an ID-less show has
+no `id` key). Non-string IDs, titles, media URLs, descriptions, images and
+dates remain explicit native errors. `tests/fixtures/sites/acast/` is
+compared with pinned upstream output.
+
+AliExpress live replays (`live.aliexpress.com/live/ID`) follow upstream
+`AliExpressLiveIE`: the page's `runParams` JSON (fatal), its `replyStreamUrl`
+HLS playlist (`hls`, fatal) and title (missing keys are upstream's
+`KeyError`s), cover, host name and millisecond start time.
+`tests/fixtures/sites/aliexpress/` is compared with pinned upstream output.
+
+Alibaba product videos (`alibaba.com/product-detail/SLUG_ID.html`) follow
+upstream `AlibabaIE`: the page's `window.detailData` product (fatal), its
+first video media item with a truthy ID (integer IDs only; otherwise
+upstream's missing-ID error), duration, cover and `videoUrl` formats with
+definition, bitrate, size and length, and the product subject as the title.
+`tests/fixtures/sites/alibaba/` is compared with pinned upstream output.
+
+Aitube.kz videos (`aitube.kz/video|embed/?...id=ID`) follow upstream
+`AitubeKZVideoIE`: the Next.js `videoInfo` (missing keys are upstream's
+`KeyError`s), the page's JSON-LD (fatal), the static-access HLS playlist
+(fatal), and `merge_dicts` of the video's title (else the `name`/`og:title`
+meta), description, view count (else `ya:ovs:views_total`), likes, channel,
+cover, comments and subscribers with the JSON-LD fields.
+`tests/fixtures/sites/aitube/` is compared with pinned upstream output.
+
+Al Jazeera articles, programmes and videos (`SITE.aljazeera.TLD/TYPE/YYYY/M/D/SLUG`)
+follow upstream `AlJazeeraIE`: the site's `graphql` `ArchipelagoSingleArticleQuery`
+(`wp-site` query and header: `ajb`, `chinese`, `ajm` or `aje`; the post type
+from the URL), its `article.video` ID, account (default `911432371001`) and
+player (default `csvTfAlKW`), else the page's Brightcove player URL, as a
+`url_transparent` result of the Brightcove player. Not ported: pages with
+neither, which upstream hands to the generic extractor (an explicit
+unsupported error here). `tests/fixtures/sites/aljazeera/` is compared with
+pinned upstream output.
 
 Amadeus TV library videos (`[www.]amadeus.tv/library/HEX`) follow upstream
 `AmadeusTVIE`: the page's `window.__NUXT__` fetch data (`_search_nuxt_data`,
@@ -743,6 +1189,41 @@ follow upstream `AngelIE`: the page's JSON-LD `url` as a fatal HLS manifest
 (`Downloading HD m3u8 information`), the OpenGraph title, description and
 image (Cloudinary transformations removed), then `merge_dicts` with the
 remaining JSON-LD fields after the extractor's own.
+
+APA video embeds (`SUB.apa.at/embed/UUID`) follow upstream `APAIE`: the
+player page's JW Platform media ID as a `url` result for `jwplatform:ID`,
+else its `title`, `description`, `poster`, `hls` (non-fatal) and
+`progressive` (height from the file name) fields. APA embed iframes on
+generic pages are embeds. `tests/fixtures/sites/apa/` is compared with
+pinned upstream output.
+
+Apple Podcasts episodes (`podcasts.apple.com/[COUNTRY/]podcast/...?i=ID`)
+follow upstream `ApplePodcastsIE`: the page (also when it answers 500) and
+its `serialized-server-data` share item (`EpisodeLockup` model: title,
+cleaned summary, cleaned stream URL, release date, duration, episode number,
+show title, and the OpenGraph image with upstream's warning when missing);
+without one, the amp-api catalog episode (the country group keeps its slash,
+like upstream's `catalog/us//...`), authorized by the ES256 JSON Web Token
+found in the page's `/assets/index~HASH.js` (cached per process; an expired
+token is upstream's error), with its cleaned asset URL forced to HTTPS and
+its artwork template formatted with `f`, `h` and `w` (no thumbnail when a
+field is missing). Artwork templates with format specifications are
+explicit native errors. `tests/fixtures/sites/applepodcasts/` is compared
+with pinned upstream output.
+
+Arc Publishing videos (`arcpublishing:ORG:UUID`) follow upstream
+`ArcPublishingIE`: the organization's `ansvideos/findByUuid` API (upstream's
+`_POWA_DEFAULTS` hosts; `wapo` as `washpost`) and its first video (an empty
+list is upstream's bare `list index out of range`), with the required
+headline, the `streams` by unique URL: `smil` files (non-fatal; HTTP and HLS
+sources, RTMP sources are explicit native errors), `ts`/`hls` manifests
+(non-fatal, `live` for live videos, skipped when every format is video-only,
+with the int `vbr` from a `[_x]HEIGHT[_-]VBR` URL) and other streams as
+`TYPE-BITRATE` formats with quality -10; English subtitle URLs, promo image,
+subheadline, centisecond duration, creation date and live status. `powa`
+player divs with a `data-org` and `data-uuid` on other pages are followed
+like upstream's `_extract_embed_urls`. `tests/fixtures/sites/arcpublishing/`
+is compared with pinned upstream output.
 
 Internet Archive items (`archive.org/details|embed/ID[/FILE]`) follow
 upstream `ArchiveOrgIE`: the embed page's `<play-av>` playlist (one entry
@@ -847,12 +1328,52 @@ master playlist, saved collection and season responses, and synthetic
 multi-stream, playlist and category responses) is compared with pinned
 upstream output.
 
+Audi MediaCenter videos (`[www.]audi-mediacenter.com/en|de/audimediatv/[video/]ID`)
+follow upstream `AudiMediaIE`: the page's `amtv-embed` payload (fatal; the
+first of upstream's five patterns that matches, split into exactly four
+`-` parts like upstream's unpacking, whose `ValueError` text is reported
+bare) and the audimedia.tv video API (`embed[]` `video_versions` and
+`thumbnail_image`; a missing `results` is the `KeyError` error) for the
+non-fatal HLS master playlist (`hls`) and HDS manifest (`hds`,
+`?hdcore=3.4.0`), the video versions' download or stream URLs with size and
+`int_or_none` bitrates (`http-BITRATE` IDs from a `NNNk` URL part), the title,
+subtitle as description, thumbnail, ISO 8601 timestamp, duration and view
+count. Live and ended live streams (stage modes `s` and `e`), for which
+upstream returns nothing, are an unsupported error.
+`tests/fixtures/sites/audimedia/` is compared with pinned upstream output.
+
 AudioBoom posts (`audioboom.com/posts|boos/ID`) follow upstream `AudioBoomIE`:
 the post page's `V5DetailPagePlayer` React props (`_search_json` with
 `unescapeHTML`) for the clip URL, title, description (else its cleaned
 formatted description), duration, author and author URL, each falling back to
 upstream's OpenGraph/meta/regex lookups with their non-fatal warnings (the
 audio URL's is fatal), as an untyped result.
+
+Audiomack songs (`[www.]audiomack.com/song/ARTIST/SLUG` and
+`audiomack.com/ARTIST/song/SLUG`) follow upstream `AudiomackIE`: the extended
+`api/music/url/song/ARTIST/SLUG` JSON (a missing, empty or `error` response
+URL is upstream's `Invalid url URL` error) as an untyped `id`/`uploader`/
+`title`/`url` result (the ID falls back to the URL tag; a `None` title gets
+the generic title). A media URL the SoundCloud extractor accepts is followed
+as a `url` result of that extractor. Albums (`audiomack.com/album/...`,
+`.../album/...`) follow `AudiomackAlbumIE`: track numbers from 0 are queried
+(`Querying song information (N)`) until a response with an empty URL (a
+response without `url` or with `error` is upstream's `Invalid url for track
+N of album url URL`); each song is an untyped entry whose ID and title fall
+back to its media URL basename before the last dot, and the playlist takes
+the first `album_id`/`album_title` seen as its ID and title (neither when
+absent). Non-object responses and non-string or relative media URLs remain
+explicit native errors. `tests/fixtures/sites/audiomack/` is compared with
+pinned upstream output.
+
+Beatport tracks (`[www.|pro.]beatport.com/track/SLUG/ID`) follow upstream
+`BeatportIE`: the page's `window.Playables` JSON (fatal) and its track with
+the URL's numeric ID (none is upstream's `StopIteration` error; missing keys
+are `KeyError` errors), the artists, name and mix as the title, each preview
+file named by its extension (`vcodec: none`; MP3 and AAC with 96 kbit/s and
+44.1 kHz), the images except `dynamic` as thumbnails, and the track's slug
+as `display_id`. Playables that are not plain JSON are an unsupported error.
+`tests/fixtures/sites/beatport/` is compared with pinned upstream output.
 
 BehindKink posts (`behindkink.com/YYYY/MM/DD/SLUG`, marked broken upstream with
 its warning) follow upstream `BehindKinkIE`: the fatal `<source>` URL (its
@@ -933,6 +1454,16 @@ upstream `BloggerIE`: the page's `VIDEO_CONFIG` line decoded like Python's
 `unicode_escape`, its streams as formats (`mime`-query extensions, string
 format IDs), the iframe ID as ID and title, the thumbnail and the first
 stream's `dur`; its `_EMBED_REGEX` iframes join the generic embed detection.
+
+Bloomberg pages (`bloomberg.com/.../NAME`) follow upstream `BloombergIE`:
+the first of the page's `bmmrId`, `videoId` and `data-bmmrid` values (else
+the `BPlayer(null, {...});` data's `id`, with upstream's `Unable to extract
+id`, JSON and `KeyError` failures), then the multimedia embed API's streams
+with a URL: `TS` ones as HLS (`hls`), others as HDS (`hds`), both non-fatal.
+The OpenGraph title loses a final `: Video`; a page without one fails like
+upstream (`expected string or bytes-like object`). The OpenGraph description
+and thumbnail warn when missing. `tests/fixtures/sites/bloomberg/` is
+compared with pinned upstream output.
 
 Bluesky posts (`bsky.app/profile/HANDLE/post/ID`, `main.bsky.dev`, and
 `at://HANDLE/app.bsky.feed.post/ID`) follow upstream `BlueskyIE`: the
@@ -1053,6 +1584,13 @@ result of its `players.brightcove.net/794267642001/default_default` player,
 extracted like Brightcove players above. `tests/fixtures/sites/thestar/` is
 compared with pinned upstream output.
 
+FootyRoom matches (`footyroom.com/matches/ID`) follow upstream `FootyRoomIE`:
+the page's `DataStore.media` JSON (fatal) as a playlist, with the OpenGraph
+title (warning when missing), of `url` results for each payload's first
+Streamable iframe whose unjoined URL `StreamableIE` accepts (protocol-relative
+embeds are dropped, like upstream).
+`tests/fixtures/sites/footyroom/` is compared with pinned upstream output.
+
 Formula 1 videos (`formula1.com/en/latest/video.SLUG.ID.html`) follow upstream
 `Formula1IE`: the URL's Brightcove ID as a `url` result of the
 `players.brightcove.net/6057949432001/S1WMrhjlh_default` player, extracted like
@@ -1072,6 +1610,27 @@ non-empty `"ACCOUNT_ID"` (else upstream's `'NoneType' object has no attribute
 `players.brightcove.net/ACCOUNT/default_default` player, extracted like
 Brightcove players above. `tests/fixtures/sites/europeantour/` is compared with
 pinned upstream output.
+
+Skeb works (`skeb.jp/@USER/works/ID`) follow upstream `SkebIE`: the works
+API (a 429 page's `request_key` cookie set and the API retried, else
+`Unable to extract request key`) as a playlist with the uploader, adult flag,
+cleaned description, genre, tags and creator name, of the previews with
+`mp3`, `mp4` or `wav` extensions (others skipped with upstream's warning):
+direct URLs with their poster, Japanese VTT subtitles, duration, frame rate
+and size. `tests/fixtures/sites/skeb/` is compared with pinned upstream
+output.
+
+Sky Sports and Sky News videos (`skysports.com/watch/video/.../ID`,
+`news.sky.com/video/SLUG-ID`) follow upstream `SkySportsIE` and `SkyNewsIE`:
+the first `sdc-article-video`/`sdc-site-video` element (fatal) as a
+`url_transparent` result of its Brightcove player (account `6058004172001`
+and player `RC9PQUaJ6` unless the element names them) with the non-fatal
+OpenGraph title and stripped description. Sky News stories and Sky Sports
+news (`news.sky.com/story/SLUG-ID`, `skysports.com/.../news/N/ID`) follow
+`SkyNewsStoryIE` and `SkySportsNewsIE`: every element as a playlist entry,
+with the OpenGraph title and `og:description`/`description` meta. Non-Brightcove
+providers fail like upstream (its unbound `video_id`). `tests/fixtures/sites/sky/`
+is compared with pinned upstream output.
 
 Sky News Australia videos (`skynews.com.au/SECTION/SUB/SLUG/video/ID`) follow
 upstream `SkyNewsAUIE`: the page's `embedcode` (`ACCOUNT-VIDEO`, else
@@ -1146,6 +1705,33 @@ Pages that TeachableIE claims (its `teachableTracker` check on
 itself is not ported. `tests/fixtures/sites/wistia/` is compared with pinned
 upstream output.
 
+SharePoint videos (`TENANT.sharepoint.com/:v:/X/.../ID46`, `.../stream.aspx?...id=PATH`)
+follow upstream `SharePointIE`: the page (a redirect to
+`login.microsoftonline.com` is upstream's cookies error), its `g_fileInfo`
+(fatal), the transform URL's sibling `videomanifest` (its query values kept,
+then `cTag`, `action=Access` and `part=index`) as non-fatal DASH
+(`format=dash`, `dash`) and HLS (`hls`, `hls-vnext`, quality -2) manifests,
+and the `downloadUrl` source (quality 1, extension from the file, size,
+audio-only flag), with the title (else display name), uploader, the
+`MediaServiceFastMetadata` duration and thumbnail. `tests/fixtures/sites/sharepoint/`
+is compared with pinned upstream output.
+
+ServusTV, Servus and P.M. Wissen videos (`servustv.com/[SECTION/]v[ideos]/ID`,
+`servus.com/(at|de)/p/NAME/ID`, `servus.com/tv/videos/ID`,
+`pm-wissen.com/videos/ID`) follow upstream `ServusIE`: the upper-cased ID,
+the page's Next.js data (non-fatal, with upstream's warning), the
+`api-player.redbull.com/stv/servus-tv-playnet?videoId=ID` JSON and its
+`videoUrl` as a fatal HLS master playlist (`hls`, subtitles kept). Without
+a `videoUrl` the playability errors become upstream's messages (FSK hours
+and minimum age, the availability date, `Video unavailable: ERRORS`, or the
+unexpected `No videoUrl and no information about errors`), prefixed with the
+URL's ID before upper-casing like upstream's temporary ID. Metadata: title,
+the Next.js short and long descriptions (else the API's), poster,
+duration, `currentSunrise` timestamp, label as series, season and chapter
+with their numbers, then the Next.js `title.rendered`, `stv_date.raw`,
+`stv_duration` and string `category_names` replacing or following them.
+`tests/fixtures/sites/servus/` is compared with pinned upstream output.
+
 Screen9 videos (`*.screen9.tv|com/embed|media/ID`, `play.su.se/...`) follow
 upstream `Screen9IE`: the `api.screen9.com/embed/ID` page's fatal
 `var config` JSON, its first `application/x-mpegURL` source's HLS formats
@@ -1164,6 +1750,16 @@ entry (`hls` m3u8 sources, poster thumbnail) and the article's cleaned
 `description`. `tests/fixtures/sites/thehighwire/` is compared with pinned
 upstream output.
 
+TF1 videos (`tf1.fr/CHANNEL/PROGRAM/videos/SLUG.html`) follow upstream
+`TF1IE`: the persisted GraphQL `videoBySlug` query (`programSlug` and `slug`
+variables in `json.dumps` form) and its `streamId` (required) as a
+`url_transparent` result of `wat:ID`, overlaid with the title, the
+decoration's image sources (URL and width), description and program label
+(series), the ISO 8601 date, playing duration, non-empty tag labels and the
+season and episode numbers; the `wat.tv` extractor names stay.
+`tests/fixtures/sites/tf1/` (with WAT) is compared with pinned upstream
+output.
+
 The Guardian podcast episodes (`theguardian.com/SECTION/audio/YYYY/mon/D/
 SLUG`) follow upstream `TheGuardianPodcastIE`: the first `podcast__player`
 element's `data-source` as the info's own format, the OpenGraph title (else
@@ -1174,11 +1770,36 @@ rejected (upstream fails later with `No video formats found!`); series
 playlists (`TheGuardianPodcastPlaylistIE`) are not ported.
 `tests/fixtures/sites/theguardian/` is compared with pinned upstream output.
 
+Chaturbate rooms (`[SUB.]chaturbate.com|eu|global/[fullvideo/?...b=]ROOM`)
+follow upstream `ChaturbateIE`: the impersonated, non-fatal
+`get_edge_hls_url_ajax` POST (its `url` as a fatal live HLS playlist; the
+`room_status` messages for offline, private, away, password-protected and
+hidden rooms, `public` without a URL as a geo restriction, other statuses
+warning before falling back), else the impersonated room page: the
+`initialRoomDossier` `hls_source`, else escaped or quoted `.m3u8` URLs, each
+with its non-`_fast` variant, as non-fatal live HLS (`fast` and `slow` IDs,
+fast preference -10), the page's error text or offline markers, and its RTA
+age limit. `tests/fixtures/sites/chaturbate/` is compared with pinned upstream
+output (live titles through `fulltitle`).
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the
 section as `categories`, the author as `creators`, and the OpenGraph title,
 description and thumbnail, with upstream's warnings for missing values.
+
+Cisco Live on-demand library sessions (`ciscolive[.cisco].com/...#/session/ID`)
+follow upstream `CiscoLiveSessionIE`: the RainFocus `session` API (a
+form-encoded POST with its profile and widget headers) and its first item as
+a `url_transparent` result of the Brightcove player, overriding the title,
+cleaned abstract, duration (minutes), presenter as `creator`, room as
+`location` and event as `series`, with upstream's `KeyError` and bare
+`IndexError` messages. Search pages (`.../on-demand-library[.html|/]?...`,
+`CiscoLiveSearchIE`) post the URL's query (values as `str(list)`, like
+upstream's `urlencode`) to the `search` API, read lazily page by page (each
+response's `size` and `total` advance and end it) as their sessions with
+integer Brightcove IDs are requested. `tests/fixtures/sites/ciscolive/` is
+compared with pinned upstream output.
 
 CJSW episodes (`cjsw.com/program/PROGRAM/episode/ID`) follow upstream
 `CJSWIE`: the fatal episode heading (else `data-audio-title`) and audio button
@@ -1191,10 +1812,113 @@ errors), HTML5 video and audio files with upstream's quality and source
 preferences, the iPhone file and mobile audio, and the clip's metadata.
 `tests/fixtures/sites/coub/` is compared with pinned upstream output.
 
+Craftsy classes (`craftsy.com/class/SLUG`) follow upstream `CraftsyIE`: the
+class video player's Livewire snapshot lessons (three levels deep, like
+upstream's traversal) as Brightcove `url` results with their titles, plus the
+`video-js` preview when it is not a lesson (upstream's preview warning
+without access; no lessons and no access is the login-required error), with
+the `og:title`/`twitter:title` (warning when missing) and description meta
+tags. `tests/fixtures/sites/craftsy/` is compared with pinned upstream
+output.
+
+CPAC episodes (`cpac.ca/[l-]episode?id=UUID`) follow upstream `CPACIE`: the
+Crafter `contentModel.json` episode, its `videoUrl` as a fatal HLS master
+playlist whose renditions get language preference 10 (the URL's English or
+French), -1 (none) or -10, the localized title, description, category, image
+and the live timestamp and type (a missing `videoUrl` is upstream's
+`KeyError('details')`). Programs and searches (`cpac.ca/program|search|emission|rechercher?...`)
+follow `CPACPlaylistIE`: every `totalPages` page (later pages non-fatal,
+their query re-encoded like upstream's `update_url_query`) and its items'
+localized URLs as `url` results, titled from the last page's program (else
+the ID's value). `tests/fixtures/sites/cpac/` is compared with pinned
+upstream output.
+
 CozyTV replays (`cozy.tv/USER/replays/ID`) follow upstream `CozyTVIE`: the
 `USER-ID` ID, the cached replay JSON's title (else the generic title), `user`
 (else the URL user) uploader, `unified_strdate` date, raw duration and
 `was_live`, with the CDN `index.m3u8` as fatal HLS formats and subtitles.
+
+Popcorntimes movies (`popcorntimes.tv/LL/m/ID/SLUG`) follow upstream
+`PopcorntimesIE`: the page's ROT13-shifted base64 `PCTMLOC` as the video URL
+(with the page as `Referer`), the heading (else `ya:ovs:original_name`)
+title, cleaned description (warning when missing), preview (else OpenGraph)
+image, director, release date and the duration, bitrate and size meta tags.
+`tests/fixtures/sites/popcorntimes/` is compared with pinned upstream output.
+
+PyVideo talks (`pyvideo.org/CATEGORY/ID`) follow upstream `PyvideoIE`: the
+`pyvideo/data` repository's `CATEGORY/videos/ID.json` (non-fatal; a failed
+request or parse warns) as a playlist of its videos with a URL: `youtube`
+types as `url` results for YouTube, others as direct-media entries with the
+talk's ID (else the URL ID), title (a missing one is upstream's `KeyError`),
+description or summary, thumbnail and integer duration. An empty or failed
+JSON falls back to the page's `Media URL:` links (else `Unable to extract
+media urls`) with its non-fatal OpenGraph title, YouTube watch links again as
+`url` results. Video lists that are not arrays and non-string fields stay
+explicit native errors. `tests/fixtures/sites/pyvideo/` is compared with
+pinned upstream output.
+
+MySpass videos (`myspass.de/.../ID[/...]`) follow upstream `MySpassIE`: the
+`getvideometadataxml.php` document's fatal title and `url_flv` (upstream's
+`Could not find XML element` errors), with `/myspass2009/N/A/B/C/` path
+numbers above the video ID divided by it, and the preview image,
+description, duration, series (`format`), season, season ID and episode
+number, as an untyped result.
+`tests/fixtures/sites/myspass/` is compared with pinned upstream output.
+
+Xinpianchang (新片场) videos (`[www.]xinpianchang.com/aID`) follow upstream
+`XinpianchangIE`: the page (requested with itself as `Referer`) gives the
+Next.js `props.pageProps.detail.video` `vid` and `appKey` (missing keys are
+upstream's `KeyError`s), and the `mod-api` media JSON's `resource` entries
+in order give fatal DASH (`Downloading MPD manifest`) and HLS (master
+playlist only) formats with merged subtitles, and progressive `mp4` files
+(with `Range: bytes=0-`), plus the title, description, integer duration,
+categories, keywords as tags, cover, and owner name and ID. A missing
+`resource` is upstream's `AttributeError`.
+`tests/fixtures/sites/xinpianchang/` is compared with pinned upstream output.
+
+Radio Kapitał episodes (`[www.]radiokapital.pl/shows/SHOW/ID`) follow
+upstream `radiokapital`: the `wp-json/kapital/v1/episodes/ID` JSON as a
+`url_transparent` result for its `mixcloud_url`, extracted by Mixcloud only
+(another URL is upstream's `No suitable extractor (Mixcloud)` error), with
+the unescaped title, cleaned content as description, tag names, the show
+title as series and upstream's sliced `published` text as `release_date`
+(missing keys are upstream's `KeyError`s). Shows
+(`[www.]radiokapital.pl/shows/ID`) follow `radiokapital:show`: the show
+JSON's ID, title and cleaned content, and its episode list pages
+(`Downloading episode list page #N`) read lazily as those transparent
+entries until a page's `next` is `null`. A `KeyError` or failed page while
+reading them ends the playlist with upstream's reported `None` entry.
+`tests/fixtures/sites/radiokapital/` is compared with pinned upstream output.
+
+A Galega videos (`[www.]agalega.gal/videos/[detail/]ID`) follow upstream
+`agalega:videos`: an anonymous access token (POSTed to `fetch-api/jwt/token`
+and noted with the API endpoint as its ID, cached for the run and refreshed
+when its JWT `exp` is under 120 seconds away), then the Interactvty
+`content/ID/` data (non-fatal: upstream's warning when it fails) and the
+fatal `content_resources/ID/` media URLs as `hls` formats with merged
+subtitles, with the string name as title, the first string `description` or
+`short_description`, and the image URL as thumbnail (only when found).
+`tests/fixtures/sites/agalega/` and `tests/fixtures/sites/agalega-expired/`
+are compared with pinned upstream output.
+
+PGA Tour videos (`pgatour.com/video/SECTION/[T]ID`) follow upstream
+`PGATourIE` as `url` results for their Brightcove player (the TOURCast
+account and player for `T` IDs). `tests/fixtures/sites/pgatour/` is compared
+with pinned upstream output.
+
+Parti recordings (`[www.]parti.com/video/ID`) follow upstream
+`PartiVideoIE`: the profile API's `get_livestream_channel_info/recent/ID`
+(with upstream's `Origin`/`Referer` headers; a missing `livestream_recording`
+is the `KeyError` error) for the recording's fatal HLS master playlist
+(joined with `https://media.parti.com/`, `mp4`), the event title, channel,
+`url_or_none` thumbnail, category list (empty without a category) and
+`int_or_none` start timestamp. Parti channels (`[www.]parti.com/SLUG`, not
+`video/`) follow `PartiLivestreamIE`: the user ID from `user_id_from_name`
+(`/` encoded as `%23`), the channel info (`The channel is not currently
+live` unless `channel.is_live` is `true`) and the fatal live HLS master
+playlist, with the event name, description, preview thumbnail, ISO 8601
+start time and viewer count. `tests/fixtures/sites/parti/` is compared with
+pinned upstream output.
 
 PeerTube videos follow upstream `PeerTubeIE` on its listed instances
 (`_INSTANCES_RE`, generated into `src/extractor/peertube/instances.rs` from
@@ -1244,6 +1968,30 @@ without a forced extension, with the cleaned `<h1>` title (no-break spaces
 replaced) and `og:description`/`description` and `og:image`/`image` meta
 values, each warning when absent.
 
+Washington Post videos (`washingtonpost:UUID`,
+`washingtonpost.com/video|posttv/.../UUID`) follow upstream
+`WashingtonPostIE` as `url` results of `arcpublishing:wapo:UUID` (see Arc
+Publishing); `washingtonpost.com/video/c/embed/UUID` iframes on other pages
+are followed like upstream's `_EMBED_REGEX`. Other `washingtonpost.com`
+pages follow `WashingtonPostArticleIE`: the OpenGraph title (upstream's
+warning when missing), the `posttv-video-embed`/`data-video-uuid` UUIDs, else
+the Next.js `globalContent.content_elements` videos (fatal Next.js data; a
+missing list is upstream's bare `'NoneType' object is not iterable`), as a
+playlist of `washingtonpost:UUID` results.
+`tests/fixtures/sites/washingtonpost/` is compared with pinned upstream
+output.
+
+WAT media (`wat:ID`, `wat.tv/video/...-ID`; base-36 IDs converted unless
+they are more than six digits) follow upstream `WatIE` (no geo bypass): the
+`mediainfo.tf1.fr/mediainfocombo/ID?pver=5010000` JSON, its error
+descriptions (`GEOBLOCKED` as a geo restriction with its `geoList` under the
+URL's ID, `DELIVERY_ERROR` with a 403/500 delivery code as DRM, else joined
+with the delivery error), the delivery's `dash`/`mpd` (`das-q1` rewritten to
+`das-q1-ssl`, `dash`) or `hls` manifest (non-fatal, subtitles merged), and
+without formats the DRM error for DRM deliveries or the non-fatal
+`wat.tv/get/webhtml/ID` manifests; title (required), preview, the first
+Médiamétrie chapter date and duration.
+
 webcamera.pl cameras (`SUBDOMAIN.webcamera.pl`) follow upstream
 `WebcameraplIE`: the ROT13-decoded `data-src` manifest (else the expected
 `No video/audio found` error) as live HLS formats and subtitles with live
@@ -1258,6 +2006,16 @@ as fatal HLS formats (`mp4`) and subtitles (a missing key is upstream's
 `url_or_none` image, `unified_timestamp` date and boolean `isLivestream`
 when present. Non-string titles and non-absolute stream URLs remain
 explicit native errors.
+
+Expressen and Dagens industri videos (`expressen.se|di.se/[tvspelare/video/|video[-]player/embed/]tv|nyheter/.../SLUG`)
+follow upstream `ExpressenIE`: the page's `data-video-tracking-info` and
+`data-article-data` attributes (HTML-unescaped JSON; fatal), the `contentId`
+(numbers get processing's string-conversion warning) and the `stream` as a
+fatal HLS master playlist (`hls`) or a direct format, with the raw title
+(else the article title), description, social image (else the article
+image), duration and publish timestamp. Player iframes on other pages are
+followed like upstream's `_EMBED_REGEX`. `tests/fixtures/sites/expressen/`
+is compared with pinned upstream output.
 
 Erocast tracks (`erocast.me/track/ID`) follow upstream `ErocastIE`: the
 page's fatal `var song_data_ID` JSON, its `file_url` (else `stream_url`) as
@@ -1298,6 +2056,18 @@ progressive `http[-LABEL]` files, and the title, description, duration, poster
 and space-delimited ISO 8601 timestamp. Responses without the expected video
 ID or item are explicit native errors.
 
+TVI Player videos and episodes (`tviplayer.iol.pt/[programa/SLUG/ID/]TYPE/ID`)
+follow upstream `TVIPlayerIE`: a `wmsAuthSign` token from
+`services.iol.pt/matrix` (fetched once per run, before the first `Extracting
+URL` line), the page's `opts = {video: [...]}` player JSON (missing JSON is
+upstream's `Unable to extract JSON data`, a missing `videoUrl` its
+`KeyError`), the `videoUrl` HLS signed with the token (fatal, with
+subtitles), the player's title and cover (else Open Graph), duration and
+episode number, and the first JSON-LD `TVEpisode` season number. Player JSON
+that does not parse and non-string video URLs, titles or covers are
+unsupported errors. `tests/fixtures/sites/tviplayer/` is compared with pinned
+upstream output.
+
 TV Noe programmes (`tvnoe.cz/porad/ID`) follow upstream `TVNoeIE`: the page's
 `var INIT_PLAYER` object (through `js_to_json`, else the fatal `Unable to
 extract init player`) gives, from each `tracks` group's entries with a URL
@@ -1315,6 +2085,57 @@ warning) and `ipfs` HLS master playlists with subtitles, the original
 date. User pages (`3speak.tv/user/USER`) follow `ThreeSpeakUserIE`: each
 `data-payout` video as a `ThreeSpeak` URL entry.
 
+UDN video embeds (`video.udn.com/embed|play/news/ID`) follow upstream
+`UDNEmbedIE`: the player page's `options` (title and video map missing are
+upstream's `KeyError`s): a YouTube URL as a `url` result (not fixtured),
+else each video type's resolved URL (fatal HLS, HDS, or `http-TYPE` files
+with height and bitrate from the name), with the poster. Unparsable options
+(upstream's regex fallback) are an unsupported error. UDN embed iframes on
+generic pages are embeds. `tests/fixtures/sites/udn/` is compared with pinned
+upstream output.
+
+UOL videos (`uol.com.br` hosts with `mediaId=ID`, `v=ID`, `view/[KEY/]ID`,
+`video=SLUG` or `video/[YYYY/MM/DD/]ID` paths) follow upstream `UOLIE`: the
+`api.mais.uol.com.br/apiuol/v3/media/detail/ID` item (a missing `item`,
+`mediaId` or `title` is upstream's KeyError) and the
+`croupier.mais.uol.com.br/v3/formats/MEDIA_ID/jsonp` map. Each entry's `url`
+(else `secureUrl`) gets the `ver` (the item's `revision`, default 2), `r`,
+`token` and `sign` query; `HLS` gives non-fatal `hls` formats whose media
+playlist URLs carry that query and whose `extra_param_to_segment_url` makes the
+native HLS downloader add it to every segment request; other entries are
+progressive formats with upstream's `mobile`/`WEBM`/`360p`/`720p`/`1080p`
+qualities. Tags, the six `thumbSIZE` thumbnails, the cleaned description,
+duration, `publishDate` timestamp and view count follow upstream.
+`tests/fixtures/sites/uol/` (including an HLS download) is compared with pinned
+upstream output.
+
+UR Play and UR Skola programs (`urplay.se/program/ID...`,
+`urskola.se/Produkter/ID...`, fetched as `urplay.se/program/`) follow upstream
+`URPlayIE`: the Next.js `productData` (a missing one is `Unable to parse
+__NEXT_DATA__`; without Next.js data, after upstream's warning, the legacy
+`ProgramContainer` React props' accessible episode with the URL's numeric
+ID), the media API's `sources.hls` URL (required) as a fatal HLS master
+playlist (`hls`, subtitles kept), then each streaming info subtitle track
+(not `sd`/`hd`) as `{ext: KIND, url}` under its ISO 639-2 language (a
+two-letter code converted with `ISO639Utils`; unknown languages skipped).
+Metadata: `SERIES : EPISODE` titles (series from `series.seriesTitle|title`,
+else `seriesTitle|mainTitle`), description, `WxH` image thumbnails,
+timestamp, duration, categories, keywords as tags, season label, episode
+number and the lowest age range's age limit (no age ranges is upstream's
+`min() iterable argument is empty` error). HLS subtitle renditions keep
+their manifest key order (`order_subtitle_tracks`). `tests/fixtures/sites/urplay/`
+is compared with pinned upstream output.
+
+USA Today pages (`usatoday.com/.../SLUG`) follow upstream `USATodayIE`: the
+`?ajax=true` page's `ui-video-data` element JSON (else upstream's expected
+`no video on the webpage` error) as a `url_transparent` result of its
+Brightcove player (the item's `brightcoveaccount`, default `29906170001`,
+and `brightcoveid`, else the `brightcove_id`), overlaid with the title,
+thumbnail, description and parsed `length`; the page `id` is required but,
+as upstream's `process_ie_result` drops a forced `id`, the Brightcove ID
+stays. `tests/fixtures/sites/usatoday/` is compared with pinned upstream
+output.
+
 uStudio videos (`ustudio.com/video/ID/DISPLAY_ID`) follow upstream
 `UstudioIE`: the `v1.ustudio.com` `config.xml` `qualities/quality/video` and
 `image` entries with a `url` (unescaped again, with integer width/height) as
@@ -1325,6 +2146,17 @@ formats and thumbnails, then the page's OpenGraph title and description,
 `EXT[-HEIGHTp]` formats, image thumbnails, description, duration, keywords and
 the URL's uploader ID.
 
+Arnes Video videos (`video.arnes.si/[LANG/]watch|embed|api/asset|api/public/video/ID`)
+follow upstream `ArnesIE` (`video.arnes.si`): the public video API's `data`
+(a missing `data` or `title` is the `KeyError` error) for its media files
+(the API base URL prefixed, `FORMAT_` removed from the format ID, the format
+translation as note, size), the prefixed thumbnail (a missing one is
+upstream's bare `TypeError` text), description, license, author as creator,
+ISO 8601 creation time, channel name, ID and URL (empty without an ID, like
+`format_field`), duration in seconds, views, hashtags and the URL's `t`
+query value as `start_time`. `tests/fixtures/sites/arnes/` is compared with
+pinned upstream output.
+
 VideoPress embeds (`videopress.com|video.wordpress.com/embed/ID`) follow
 upstream `VideoPressIE`: the `public-api.wordpress.com/rest/v1.1/videos/ID`
 JSON, requested with a random 1950-1995 `birth_year`/`birth_month`/`birth_day`
@@ -1333,6 +2165,31 @@ joined to `file_url_base` (https, else http) as `QUALITY-EXT` formats ranked
 std < dvd < hd, the `original` upload (quality 3, width/height), and the title
 (else a `KeyError`), description, poster, millisecond duration, upload
 timestamp and `parse_age_limit` rating.
+
+VidLii videos (`vidlii.com/watch|embed?...v=ID`) follow upstream `VidLiiIE`:
+the watch page's player `src` URLs (joined with the input URL) that answer a
+silent HEAD check (`Checking NNNp url`, height from `NNN.mp4`, else 360), the
+fatal `<h1>`/`<title>` title, the description meta (else `des_text`), the
+`twitter:image` meta (else the player `img`), uploader and its URL (an empty
+string without one, like upstream's `format_field`), the date, duration,
+view and comment counts, rating, category and search-link tags, each optional
+regex warning like upstream when missing. `tests/fixtures/sites/vidlii/` is
+compared with pinned upstream output.
+
+Canal Alpha videos (`canalalpha.ch/play/SHOW/TYPE/ID/...`) follow upstream
+`CanalAlphaIE`: the page's `__SERVER_STATE__` (its `1.data.data`; missing
+keys are upstream's `KeyError`s), MP4 files with their size, non-fatal HLS
+and DASH manifests, the stripped title, cleaned long (else short)
+description, poster, first publication date and duration.
+`tests/fixtures/sites/canalalpha/` is compared with pinned upstream output.
+
+Cellebrite pages (`cellebrite.com/[LL]/SLUG`) follow upstream `CellebriteIE`:
+the page's first Vidyard embed (else `No Vidyard video embeds found on
+page`), whose player JSON's first chapter is processed like `VidyardIE`'s
+(messages under `Cellebrite`), led by the page's OpenGraph description
+(unless the video has one), with the old `cellebrite` archive ID and the
+OpenGraph image appended to the thumbnails. `tests/fixtures/sites/cellebrite/`
+is compared with pinned upstream output.
 
 Vidyard videos (`*.vidyard.com|*.hubs.vidyard.com/watch/ID`,
 `embed|share.vidyard.com/share/ID`, `play.vidyard.com/[player/]ID`) follow
@@ -1368,6 +2225,45 @@ the `videoFile` as the `sd` MP4 (`videoSize` width/height) and, when `HD` is
 `true`, its `/mov/39` variant as the 1280x720 `hd` MP4. Items missing an
 element upstream reads are explicit native errors.
 
+S4C Clic programmes (`[www.]s4c.cymru/clic/programme/ID`) follow upstream
+`S4CIE`: the non-fatal `df/full_prog_details` JSON, the fatal player
+configuration JSON (its `subtitles` entries with a URL `0`, name `1` and
+language `3`, default `en`, and its `poster` URL), the fatal streaming-URL
+JSON for its `filename` (region `UK` for the `s4chttpl` application, else
+`WW`) and its `hls` URL as fatal `hls` formats (subtitles ignored), with
+upstream's `KeyError` messages for a missing `filename` or `hls`. The first
+programme detail gives the programme (else series) title, stripped billing,
+minutes duration, `unified_strdate` upload and release dates, and truthy
+series and series ID. Subtitle entries without a name (a `None` track name
+upstream) are explicit native errors. Series (`.../clic/series/ID`) follow
+upstream `S4CSeriesIE`: the fatal `df/series_details` JSON's
+`other_progs_in_series` IDs as `S4C` `url` results titled by the series
+title. `tests/fixtures/sites/s4c/` is compared with pinned upstream output.
+
+SBS On Demand and SBS News videos (`sbs.com.au/ondemand/...ID`,
+`sbs.com.au/news/[embeds/]video/ID`) follow upstream `SBSIE` (geo countries
+`AU`): the player API's `video_smil?id=ID` SMIL document (fatal, a warning
+with `--ignore-no-formats-error`) through the shared SMIL parser (HLS, DASH
+and HTTP sources, text stream subtitles; variant playlists are read like the
+generic SMIL path), with subtitle tracks whose URL ends in `_fe.vtt`
+(case-insensitive) moved to `LANG-forced`. Without formats, the
+`Checking geo-restriction` HEAD request to `sbs-vod-prod-01.akamaized.net`
+(403 accepted, other HTTP errors a warning) gives the geo-restriction error
+when an `x-error-reason` header is `geo-blocked`, else upstream's unexpected
+`No formats are available` error (also with `--ignore-no-formats-error`).
+The non-fatal `video_stream` JSON's `video_object` is updated with the MPX
+catalogue JSON (fatal only when that object is empty), and upstream's
+`traverse_obj` metadata follows, including its branch semantics: `categories`
+are the string `taxonomy`, `genre.subgenre` and `name` values of the
+`genres` value and of every media value, a non-empty `partOfSeries` replaces
+`epName` with the catalogue `title`, `duration` tries `float_or_none` then
+`parse_duration`, and the age limit maps `classificationID`/`contentRating`
+through upstream's Australian guidelines. Generic pages embed it only through
+upstream's `_EMBED_REGEX`, including the literal `]` it requires before the
+`og:video` meta or iframe. Thumbnails without a `name` keep the port's key
+order (`url` first) rather than upstream's. `tests/fixtures/sites/sbs/` is
+compared with pinned upstream output.
+
 Crooks and Liars embeds (`embed.crooksandliars.com/embed|v/ID`) follow upstream
 `CrooksAndLiarsIE`: the `http:` embed page's fatal `var manifest` JSON, its
 `video/` flavors as formats ranked by `qualities(webm_low, mp4_low, webm_high,
@@ -1375,6 +2271,18 @@ mp4_high)`, the title, description, protocol-relative poster, integer
 `created`/duration and author, with upstream's `KeyError` messages and a
 processing-time error without formats; its iframe/param embeds on generic
 pages follow Blogger's in the embed order.
+
+Daily Mail videos (`dailymail.co.uk/video/SECTION/video-ID...`,
+`dailymail.co.uk/embed/video/ID.html`) follow upstream `DailyMailIE`: the
+page's `data-opts` JSON (fatal) and its unescaped title (required) and
+description, the `plugins.sources.url` (else `sources.url`, else the
+`api/player/ID/video-sources.json`) renditions (inside `body` when present):
+`M2TS` containers as `hls-KBPS` `m3u8_native` formats with `mp4`, others with
+upstream's `determine_protocol` (`http` for protocol-relative URLs, which
+processing makes `http:`), with frame size, integer bitrate, codec and
+container; the poster (else thumbnail). Daily Mail embed iframes on other
+pages are followed like upstream's `_EMBED_REGEX`. `tests/fixtures/sites/dailymail/`
+is compared with pinned upstream output.
 
 CRTVG programmes (`crtvg.es/tvg/a-carta/ID`) follow upstream `CrtvgIE`: the
 page's fatal `var url` base, its `playlist.m3u8` (without an `ext`) and
@@ -1403,6 +2311,18 @@ feature; without it, upstream's error text), including
 (`age_restricted`). A video URL with `?playlist=ID` (or a `player.html?playlist=`
 URL) is, without `--no-playlist`, a `url` result for
 `http://www.dailymotion.com/playlist/ID` followed by the playlist extractor.
+
+DAM★とも karaoke movies and posts (`clubdam.com/app/damtomo/[SP/]karaokeMovie/StreamingDkm.do?karaokeMovieId=ID`,
+`.../karaokePost/StreamingKrk.do?karaokeContributeId=ID`) follow upstream
+`DamtomoVideoIE` and `DamtomoRecordIE`: the canonical page decoded like
+Python's strict `sjis` codec (JIS X 0208 only, U+FFFD for other rows), a
+redirect to `/sorry/` and the server-side error heading as upstream's
+errors, the public comment, profile ID and the page's `<p|div class>` texts
+(song title as title and track, artist, singer without `さん`, date, view and
+like counts; upstream's `KeyError`s for a missing singer or count), and the
+stream XML's namespaced `streamingUrl` HLS (`Failed to obtain m3u8 URL`
+without it). `tests/fixtures/sites/damtomo/` is compared with pinned upstream
+output.
 
 Dailymotion playlists (`dailymotion.TLD/playlist/xID`, upstream
 `DailymotionPlaylistIE`), channels (`dailymotion.TLD/[old/]user/NAME` and
@@ -1443,6 +2363,17 @@ the title (else a generic one), `unified_strdate` upload date and the
 `images/ID_640x360.jpg` thumbnail. A token without `url`/`auth` is upstream's
 wrapped `KeyError`, a missing element its bare `AttributeError` text. F4M
 manifests with nested manifests or non-F4M documents are explicit native errors.
+
+egghead.io courses (`[app.]egghead.io/courses|playlists/ID`) follow upstream
+`EggheadCourseIE`: the `api/v1/series/ID/lessons` list's lessons with an
+`http_url` as `url` results of `egghead:lesson` (truthy IDs as strings), with
+the non-fatal `series/ID` course's ID, title and description. Lessons
+(`[app.]egghead.io/[api/v1/]lessons/ID`) follow `EggheadLessonIE`: the
+`api/v1/lessons/ID` JSON's media URLs as non-fatal HLS (`hls`) and DASH
+(`dash`) manifests (subtitles dropped with upstream's warnings) or direct
+formats, with the summary, thumbnail, timestamp, duration, play count, tags
+and series title. `tests/fixtures/sites/egghead/` is compared with pinned
+upstream output.
 
 eBay items (`ebay.com/itm/ID`) follow upstream `EbayIE`: the page's fatal
 `"video":` JSON `playlistMap`, its `HLS` (without an `ext`) and `DASH`
@@ -1501,6 +2432,15 @@ upstream's warning), the head title (else the generic title, after
 `fulltitle`), float duration and ISO 8601 `started_at` timestamp, with
 upstream's `KeyError` messages.
 
+faz.net videos (`faz.net/...-ID.html`) follow upstream `FazIE`: the
+non-fatal OpenGraph description and title (each warns when missing), the
+`data-videojs-media` attribute (fatal, cleaned like `_html_search_regex`)
+as XML: its `ENCODINGS` (fatal) `LOW`, `HIGH` and `HQ` files with quality
+0-2, integer `AVERAGEBITRATE` and codec, frame size and bitrate from
+`WxH_KBPS.mp4` names, then the `STILL/STILL_BIG` thumbnail and duration.
+Not ported: `extern` media (Perform Group players), an explicit unsupported
+error. `tests/fixtures/sites/faz/` is compared with pinned upstream output.
+
 FC Zenit videos (`fc-zenit.ru/video/ID`) follow upstream `FczenitIE`: the
 page's `config` MSI video ID (fatal), then the player's `msi/video?video=ID`
 JSON: name, preview, float duration, int date, labeled qualities with URLs as
@@ -1523,6 +2463,27 @@ the cleaned `<title-div>` content (else a generic title), the first cleaned
 `div.prose` inside a `div` whose class matches `.*\bborder-base-content\b`
 (regex `find_elements`; a parse error is no match, like `try_call`) and the
 CDN `poster.jpg` thumbnail.
+
+FilmOn VOD titles (`filmon.com/vod/view/ID...`, `filmon:ID`) follow upstream
+`FilmOnIE`: the `api/vod/movie` response (an HTTP error's JSON `reason` as
+`filmon said: ...`, upstream's `KeyError` without one), its `m3u8_native`
+streams with low/high quality, the stripped description and the poster and
+its `thumbs` as `{id, url, width, height}` thumbnails; series (`type_id` 1)
+are playlists of `filmon:ID` episode `url` results. Channels
+(`filmon.com/tv|channel/ID`, `FilmOnChannelIE`) read the `api-v2/channel`
+data (errors as `filmon:channel said: ...` from its `message`): live channels'
+streams as plain quality formats, VOD channels' through the shared Wowza
+helper (HLS and HDS, DASH and RTMP skipped), the three logo thumbnails and
+the alias as `display_id`. `tests/fixtures/sites/filmon/` is compared with
+pinned upstream output.
+
+5-tv.ru videos (`[www.]5-tv.ru/.../ID`, `5-tv.ru/PATH`) follow upstream
+`FiveTVIE`: the page's `(flow)player` `data-href` (or `videoplayer` link;
+fatal, upstream's `get_temp_id` leaves `PATH` pages' error without an
+`ID: ` prefix) as the result's own `url`, with `_generic_title` (`og:title`,
+else `<title>`, else processing's generic title) and the OpenGraph
+description, image and `video:duration` (all optional).
+`tests/fixtures/sites/fivetv/` is compared with pinned upstream output.
 
 TikTok videos (`www.tiktok[v].com/@USER/video/ID`, `/embed/ID`,
 `/share/video/ID`) follow upstream `TikTokIE`'s webpage path (no app API
@@ -1730,6 +2691,17 @@ follows this port's HLS downloader selection rather than upstream's forced
 FFmpeg. `tests/fixtures/sites/twitter/` is compared with pinned upstream
 output.
 
+Vbox7 videos (`[SUB.]vbox7.com/play:ID`, `.../emb/external.php?...vid=ID`,
+`.../player/ext.swf?...vid=ID`) follow upstream `Vbox7IE` (geo countries
+`BG`): the `aj/player/item/options` JSON's `src` (missing or `blank` is
+`Video is unavailable`; a `vn` base is a geo restriction), the non-fatal
+`BASE.m3u8` master playlist (`hls`) and each non-zero integer resolution's
+`BASE_RES.mp4`, merged with the non-fatal `play:ID` page's JSON-LD (warning
+like upstream without any) and overlaid with the options' title, uploader
+and duration. Player iframes on other pages are followed like upstream's
+`_EMBED_REGEX`. `tests/fixtures/sites/vbox7/` is compared with pinned
+upstream output.
+
 Veo matches (`app.veo.co/matches/ID`) follow upstream `VeoIE`: the match
 API's title, thumbnail, `created` timestamp, view count and duration, and the
 `videos` list as formats (`RENDER-HEIGHTp` IDs, MIME-type extensions, widths,
@@ -1738,6 +2710,32 @@ heights and `bit_rate / 1000` integer VBRs); entries without a URL and
 (`Checking ... URL`) and skipped with upstream's message when invalid. No
 usable videos is upstream's `No video formats found!`. API values that are not
 objects or lists remain explicit native errors.
+
+Vísir clips (`visir.is/k/ID[/SLUG]`) follow upstream `VisirIE`: the article
+date (`D. MONTH YYYY` with Icelandic month names), the `App.Player.Init(...)`
+options (through `js_to_json`; fatal, with upstream's swapped name/ID in its
+error) and their `File` joined with `https://vod.visir.is/` as a fatal HLS
+master playlist (a missing one is `Failed to obtain m3u8 URL`), the
+`press-ads` article's description and view count, and the player's title,
+category, duration and image. Player pages (`visir.is/player/ID`) follow
+their OpenGraph URL when it is a clip (else `Unsupported URL`), and player
+iframes on other pages are followed like upstream's `_EMBED_REGEX`.
+`tests/fixtures/sites/visir/` is compared with pinned upstream output.
+
+Viously players have no URLs of their own (upstream `ViouslyIE` has
+`_VALID_URL = False`); its `_extract_from_webpage` joins the generic embed
+detection after Vidyard: each `<div>` whose class includes `viously-player`
+or `vsly-player` and that has an `id` gives that ID's non-fatal HLS master
+playlist (a failure warns and skips the player, with no metadata request),
+then the non-fatal custom-alphabet base64 export JSON (an HTTP error warns),
+with its string title and description, integer duration, ISO 8601
+`iso_date` timestamp and non-empty category name as `categories`. One
+player is merged with the page's generic title, Last-Modified timestamp,
+OpenGraph description and thumbnail and RTA age limit (`merge_dicts`);
+several are full `Viously` entries of the page's playlist. Exports that are
+not valid base64, UTF-8 or JSON (upstream's Python-worded `Failed to parse
+JSON` warnings) remain explicit native errors.
+`tests/fixtures/sites/viously/` is compared with pinned upstream output.
 
 Vimeo videos (`vimeo.com/ID`, `player.vimeo.com/video/ID`, channel, album
 or showcase and `user` clip URLs) follow upstream `VimeoIE` without
@@ -1848,6 +2846,48 @@ description, duration, ISO 8601 creation time and artwork, and the first
 user's name and ID. `tests/fixtures/sites/whyp/` is compared with pinned
 upstream output.
 
+Wikimedia Commons files (`commons.wikimedia.org/wiki/File:NAME`) follow
+upstream `WikimediaIE`: the MediaWiki API's `videoinfo` for the unquoted
+title (fatal `Unable to extract video info` without one), requested with
+upstream's robot-policy User-Agent (`yt-dlp/2026.10.26
+(https://github.com/yt-dlp/yt-dlp)`, the tracked release), which every
+format and subtitle track also carries in its `http_headers` and HTTP
+downloads send: the `source` file (quality 10, size, dimensions), the
+derivatives with a URL (dimensions, bitrate, extension and codecs from their
+`type`), timed text tracks by `srclang` (else `unk`) with their MIME type's
+extension, and the page ID, display ID, title, timestamp, cleaned
+description, uploader, duration, license and categories. Timed text tracks
+without a type are explicit native errors. `tests/fixtures/sites/wikimedia/`
+is compared with pinned upstream output.
+
+VOD Platform and KwikMotion embeds (`vod-platform.net/embed/ID`,
+`embed.kwikmotion.com/Embed/ID`) follow upstream `VODPlatformIE`: the
+page's hidden `HiddenmyhHlsLink` (else `HiddenmyDashLink`) as Wowza formats
+with HDS and SMIL skipped (HLS, DASH and `rtmp:`), the twice-unescaped
+OpenGraph title and the hidden (else OpenGraph) thumbnail, with upstream's
+warnings. Their iframes on generic pages are embeds.
+`tests/fixtures/sites/vodplatform/` is compared with pinned upstream output.
+
+VTVGo videos (`vtvgo.vn/kho-video|tin-tuc/...ID[.html]`, `vtvgo.vn/digital/detail.php?...content_id=ID`)
+follow upstream `VTVGoIE`: the page's `var link`/`addPlayer(` `index.m3u8`
+(fatal). VTV.vn videos (`vtv.vn/video/...ID.htm`) follow `VTVIE`: the
+`video-highlight-box` element's `VCSortableInPreviewMode` `data-vid`
+(without its `vtv.mediacdn.vn/` prefix) under `cdn-videos.vtv.vn/.../master.m3u8`.
+Both are fatal HLS with the OpenGraph title, description and image.
+`tests/fixtures/sites/vtv/` is compared with pinned upstream output.
+
+Wall Street Journal and Barron's videos (`video-api.wsj.com/.../iframe.html?...guid=ID`,
+`wsj|barrons.com/video/.../ID`, `wsj:ID`) follow upstream `WSJIE`: the
+`find_all_videos.asp` API's first item (an empty list is upstream's bare
+`list index out of range`), its non-fatal HDS (`hds`) and HLS (`hls`)
+manifests and MP4 renditions (`http-KBPS`, integer bitrate, size, fps), the
+API's thumbnails as given, author, editor, duration, US-order creation date,
+name (else title tag) and keywords. Articles (`wsj.com/articles|opinion/SLUG`)
+follow `WSJArticleIE`: the page (requested with impersonation, warning like
+upstream when no target is available) and its first video ID as a
+`wsj:ID` result. `tests/fixtures/sites/wsj/` is compared with pinned
+upstream output.
+
 WorldStarHipHop videos (`www|m.worldstar{hiphop,candy}.com/{videos,android}/video.php?v=ID`)
 follow upstream `WorldStarHipHopIE`: the first `_parse_html5_media_entries`
 entry (formats with the page as `Referer`, tracks and poster) with the fatal
@@ -1930,6 +2970,17 @@ answers whose `data` is not an object are explicit native errors.
 `tests/fixtures/sites/zdf/` is compared with pinned upstream output; its API
 answers are synthetic, shaped like upstream's parsing and tests.
 
+Yappy videos (`yappy.media/video/ID`; marked broken upstream, with its
+warning) follow upstream `YappyIE`: the page's JSON-LD (fatal, also when it
+has no usable fields) and Next.js `data`/`OpenGraphParameters` (else the
+video API), the video link (a `-wm.mp4` watermarked copy with preference
+-10 and its unwatermarked URL) and audio link, and the title, thumbnail,
+description, timestamp, counts, creator and categories with upstream's
+JSON-LD and meta fallbacks. Profiles (`yappy.media/profile/ID`) follow
+`YappyProfileIE`: `api/video/list/ID?page=N` as an `OnDemandPagedList` of
+15 `url` results. `tests/fixtures/sites/yappy/` is compared with pinned
+upstream output.
+
 Yle Areena programmes and podcasts (`areena.yle.fi/[podcastit/]ID`) follow
 upstream `YleAreenaIE` (`_GEO_COUNTRIES = ['FI']`): the page's JSON-LD title
 (parsed with upstream's `K1, J2: EPISODE | SERIES` regex, including its
@@ -1950,17 +3001,59 @@ Non-string subtitle languages or kinds, non-string manifest URLs and
 non-absolute media URLs are explicit native errors.
 `tests/fixtures/sites/yle_areena/` is compared with pinned upstream output.
 
+Zetland stories (`zetland.dk/SECTION/STORY-UPLOADER-XXXXX`) follow upstream
+`ZetlandDKArticleIE`: the page's Next.js data (fatal; missing `props` or
+`pageProps` are upstream's `KeyError`s) and its story's `audioFiles`
+`url_or_none` URLs as audio-only formats, with `merge_dicts` of the URL's
+uploader ID, the story's title, sharer, social description, series ID and
+publish/revision timestamps, the page `metaInfo` meta/ld/og fallbacks, the
+non-fatal HTML meta tags (each missing one warns like upstream) and the
+non-fatal JSON-LD (warning when absent). A story without audio is upstream's
+`No video formats found!`. JSON-LD media or chapters and non-string merged
+titles stay explicit native errors. `tests/fixtures/sites/zetland/` is
+compared with pinned upstream output.
+
 Zhihu videos (`zhihu.com/zvideo/ID`) follow upstream `ZhihuIE`: the zvideos
 API's playlist qualities with a URL (`url` else `play_url`) as formats with
 their sample rate, size, FPS, dimensions and bitrate, the fatal title, the
 video thumbnail (else `image_url`), author name/ID and `people/` URL (`''`
 without a token), timestamp, duration and counts.
 
+Zype players (`player.zype.com/embed/ID.js|json|html?...api_key|app_key|player_key|access_token=...`)
+follow upstream `ZypeIE`: the `.json` player response (400/401/403 bodies'
+`message` as upstream's error), its body's outputs (an `m3u8` output as the
+non-fatal HLS formats, replacing earlier outputs like upstream; others as
+`tbr`, size or `vcodec none` formats) and subtitles, or for script bodies the
+quoted `.m3u8` URL (else a Verizon Media `sources` entry's Uplynk playlist)
+as fatal HLS and the `textTracks`, plus thumbnails and the video's display
+ID, title, description, timestamp, duration, views, rating, season and
+episode. Player scripts on other pages are followed like upstream's
+`_EMBED_REGEX`. `tests/fixtures/sites/zype/` is compared with pinned upstream
+output.
+
+Funker530 videos (`funker530.com/video/SLUG`) follow upstream `Funker530IE`:
+a `url_transparent` result of the page's first Rumble embed (`_EMBED_REGEX`,
+else a `Rumble("play", {video: ID})` script) or else its first YouTube embed,
+with the `video-desc-paragraph` element's cleaned text before `About the
+Author` as description (none without the element or the marker). A page
+without either embed is upstream's `No videos found on webpage`.
+`tests/fixtures/sites/funker530/` is compared with pinned upstream output.
+
 Fuyin TV videos (`fuyin.tv/html/N/ID.html`) follow upstream `FuyinTVIE`: the
 movie API's `data.url` as an untyped `mp4` result with its title (else the
 generic title) and the non-fatal page's description meta (with its warning);
 a failed page download warns and then fails with upstream's escaped
 `TypeError` text.
+
+GameSpot videos, articles and reviews (`gamespot.com/videos|articles|reviews/.../NNNN-ID`,
+`gamespot.com/videos/embed/ID`) follow upstream `GameSpotIE`: the page's
+`data-video` JSON (fatal, HTML-cleaned) with its percent-unquoted title, the
+adaptive HLS stream's formats (non-fatal), each followed by an `http-` copy
+whose URL ends in `.mp4` instead of `.m3u8` (a media playlist without a
+`manifest_url` is upstream's `KeyError`), and the adaptive DASH manifest's
+formats; the `guid` (else the page ID) as ID, the page ID as display ID and
+the description meta and OpenGraph thumbnail with upstream's warnings.
+`tests/fixtures/sites/gamespot/` is compared with pinned upstream output.
 
 GameStar and GamePro videos (`gamestar.de|gamepro.de/videos/...,ID.html`)
 follow upstream `GameStarIE`: the first `application/ld+json` script
@@ -1970,6 +3063,20 @@ containing `VideoObject` (fatal) through `_json_ld`, its title without the
 and the portal's `getVideoUrl.cfm` URL as an `mp4` untyped result. A
 JSON-LD script that does not parse is reported as unsupported rather than
 with upstream's Python `JSONDecodeError` text.
+
+Genius videos and articles (`genius.com/videos|a/SLUG`) follow upstream
+`GeniusIE`: the `page_data` meta's JSON (fatal, HTML-unescaped), the first
+`provider_id` or `brightcove_video_id` `dfp_kv` value of the article media
+then the video (a missing one is upstream's error, expected only on article
+pages), and the `APP_CONFIG` account and player IDs (defaults
+`4863540648001` and `S1ZcmcOC1x`) as a `url` result of the Brightcove player
+smuggled with the page as its referrer, followed by `brightcove:new`. Lyrics
+pages (`genius.com/SLUG-lyrics`) follow `GeniusLyricsIE`: the
+`__PRELOADED_STATE__` `JSON.parse` string's song ID (required), its
+tracking data's `Title` and `Primary Artist`, and the song's video and audio
+media URLs as `url` results (Spotify embeds skipped with upstream's
+message), in a playlist described as `TITLE by ARTIST`.
+`tests/fixtures/sites/genius/` is compared with pinned upstream output.
 
 Glide messages (`share.glide.me/ID`) follow upstream `GlideIE`: the page's
 generic title, first `<source>` URL (else the fatal OpenGraph video URL) and
@@ -2036,6 +3143,18 @@ warning) and every batch listing page (`nextPageToken`) as a playlist of
 de-duplicated `drive.google.com/file/d/ID` URL entries; a failing folder
 request (upstream's `TypeError`) and non-string titles, IDs or page tokens
 are reported as unsupported.
+
+GoToStage recordings (`gotostage.com/channel/C/recording/ID/watch`) follow
+upstream `GoToStageIE`: the contents API's first item (an empty list is the
+bare `list index out of range`; missing `product`, `contentType` or
+`productRefKey` keys are upstream's `KeyError`s), upstream's placeholder
+registration POST (`Unable to register user` on errors other than its
+accepted 409) and its `registrationKey` as the `x-registrantkey` of the asset
+request (`Get download url`), as an untyped `mp4` result with the string
+title, `cdnLocation` URL, `url_or_none` thumbnail, float-only duration, the
+one-item string category list and `is_live: false`. Non-object responses
+and non-string registration keys stay explicit native errors.
+`tests/fixtures/sites/gotostage/` is compared with pinned upstream output.
 
 Graspop concerts (`vod.graspop.be/LL/ID/`) follow upstream `GraspopIE`: the
 Proximus festival stream's `source.assetUri` over `http:` as fatal HLS
@@ -2114,12 +3233,47 @@ tag names, in upstream's override order. Several distinct download paths
 responses and failed page downloads remain explicit native errors.
 `tests/fixtures/sites/ivoox/` is compared with pinned upstream output.
 
+Jamendo tracks (`[www.]jamendo.com/track/ID[/DISPLAY_ID]`,
+`licensing.jamendo.com/LANG/track/ID...`) follow upstream `JamendoIE`: the
+first item of the `www.jamendo.com/api/tracks?id[]=ID` JSON list (sent with
+upstream's random `X-Jam-Call` SHA-1 header; an empty list is upstream's
+`list index out of range`, a missing `name` its `KeyError`), then the
+non-fatal artist and album lookups (a failed one warns and ends in upstream's
+`'bool' object is not subscriptable`). Formats are the four fixed
+`mp31`/`mp32`/`ogg1`/`flac` URLs with their `quality`; each distinct cover
+URL is HEAD-requested (`Checking thumbnail extension`; failed requests are
+skipped silently) for its extension (default `jpg`) and sized from its
+`sizeN` key. Metadata: title/track, description, duration, artist, album,
+`-`-joined `licenseCC`, creation timestamp, listen/favorite/rating stats and
+tag names. Albums (`[www.]jamendo.com/album/ID`) follow `JamendoAlbumIE`:
+the album's tracks with an ID as `url_transparent` Jamendo entries carrying
+the album name, titled with the album name and described by the cleaned
+English description. Non-list API responses, non-object items and missing
+artist/album IDs remain explicit native errors.
+`tests/fixtures/sites/jamendo/` is compared with pinned upstream output.
+
 JoVE videos (`jove.com/video/ID`) follow upstream `JoveIE`: the page's fatal
 chapters ID, the chapters XML's root `video` attribute (`Downloading chapters
 XML`; none is upstream's `Failed to get the video URL`) as an untyped result,
 the `citation_title`/`citation_publication_date` metas, OpenGraph thumbnail,
 summary paragraph and comment count, each with upstream's warning, and the
 escaped `int(None)` error without a comment count.
+
+J-Stream Equipmedia videos (`jstream:HOST:PUBLISHER:MID`) follow upstream
+`JStreamIE`: the `PUBLISHER.eq.webcdn.stream.ne.jp/HOST/PUBLISHER/jmc_pub/eq_meta/v1/MID.jsonp`
+`metaDataResult(...)` callback (else upstream's `Unable to extract
+metaDataResult`; a result without `movie` is its `KeyError`, a movie
+without `movie_list_hls` its bare `'NoneType' object is not iterable`),
+each list entry whose text starts with `auto` as a fatal HLS playlist (the
+rest of the text, without a leading `_`, as the format ID prefix) with
+subtitles, duplicate format URLs removed, and the movie's title, duration
+and thumbnail URL. Generic pages loading the J-Stream player's
+`ssl-cache.stream.ne.jp/HOST/PUBLISHER/.../if.js` embed the
+`PlayerFactoryIF.create({...})` players' base64 `m` movie IDs (one embed is
+followed, several are a playlist). Player options that do not parse are
+skipped here, where upstream's generic extraction fails; non-string list
+texts or URLs and non-list HLS lists are unsupported errors.
+`tests/fixtures/sites/jstream/` is compared with pinned upstream output.
 
 JW Platform media (`content.jwplatform.com`/`cdn.jwplayer.com`
 `players|feeds|thumbs|previews|manifests|jw6|v2/media/ID`, and `jwplatform:ID`)
@@ -2195,6 +3349,43 @@ timestamp and the double MD5 `sign`, giving the video URL as an untyped result
 with the `g.title` title and `titlepic` thumbnail; missing API keys are
 upstream's `KeyError` extractor errors.
 
+KiKA videos (`kika.de/.../videos/ID`) follow upstream `KikaIE` (geo
+countries `DE`): the `_next-api/proxy/v1/videos/ID` document and its
+`assets.url` JSON (both fatal), each asset with a URL as a non-fatal HLS
+master playlist (`hls`, subtitles dropped with upstream's warning) or a
+progressive format (`format_id` its extension; width, height, non-zero file
+size and bitrates other than `-1`, kept as integers), the `de` TTML then
+WebVTT subtitles only when the document has `hasSubtitle`, and the title,
+description, ISO 8601 date and modification date, duration (`durationInSeconds`
+else the ISO 8601 `duration`), episode and season numbers. KiKA brands
+(`kika.de/BRAND/ID`) follow `KikaPlaylistIE`: the brand document's title and
+description and its `videoSubchannel.videosPageUrl` (required), read as a
+generator one page at a time (`Downloading page N`, following `links.next`)
+with each item's `api.url` as a `url` result carrying its ID, title,
+duration and timestamp. `tests/fixtures/sites/kika/` is compared with pinned
+upstream output.
+
+KinoPoisk films (`[www.]kinopoisk.ru/film/ID`) follow upstream `KinoPoiskIE`
+(geo countries `RU`): the `ott-widget.kinopoisk.ru/v1/kp/?kpId=ID` page's
+fatal `application/json` script (missing keys are upstream's `KeyError`
+messages), the `filmStatus` truthy `title` else `originalTitle`, the first
+truthy description (`descriptscription`, `description`,
+`shortDescriptscription`, `shortDescription`), truthy `coverUrl` else
+`posterUrl` thumbnail, integer duration and `restrictionAge` age limit, and
+the `playlistEntity.uri` master playlist as fatal `hls` formats (variants are
+not fetched). Non-string titles, descriptions, thumbnails and playlist URIs
+remain explicit native errors. `tests/fixtures/sites/kinopoisk/` is compared
+with pinned upstream output.
+
+Kompas.com videos (`video.kompas.com/TYPE/ID/SLUG`) follow upstream
+`KompasVideoIE` through `JixieBaseIE`: the Jixie public stream API's `data`
+(missing keys are upstream's `KeyError`s), its HLS streams (fatal; DRM-flagged
+formats when the video has `drm`) and MP4 files with their size, and the
+title, cleaned description, API thumbnails, duration, comma-split keywords
+and categories and owner ID, with the page's meta tags as fallbacks
+(warning when missing). `tests/fixtures/sites/kompas/` is compared with
+pinned upstream output.
+
 Kommunetv archives (`SUBDOMAIN.kommunetv.no/archive/ID`) follow upstream
 `KommunetvIE`: the Oslo streams API (requested with `Accept:
 application/json`), its `stream.title` and first playlist's first file
@@ -2211,6 +3402,16 @@ Ku6 shows (`v.ku6.com/show/ID[...].html`) follow upstream `Ku6IE`: the page's
 fatal greedy `<h1 title=...>` heading (often empty, so processing's generic
 title) and the player JSON's `data.f` URL as an untyped result, with
 upstream's `KeyError` messages.
+
+Kukulu Live streams (`live.erinn.biz/live.php?hID`) follow upstream
+`KukuluLiveIE`: an expired time shift's error, the `livetitle` element's
+title and non-fatal `Description` and `og:image`/`twitter:image` metadata
+(warning when missing). Live streams (`var timeshift = false`) read the
+`fplayer` quality metadata (high, its `force_h264` variant for HEVC, low)
+as HLS and audio-only formats; recordings read the timeshift player's
+`fplayer_source` segments as one HLS video or a `multi_video` playlist of
+parts. `tests/fixtures/sites/kukululive/` is compared with pinned upstream
+output.
 
 Imgur media (`imgur.com/[SLUG-]ID`, `i.imgur.com/ID.gifv|mp4`) follow
 upstream `ImgurIE`: the post API's first media (`is not a video or animated
@@ -2258,6 +3459,15 @@ win; a missing JSON-LD is upstream's warning). JSON-LD carrying media URLs,
 formats, IDs or subtitles remains an explicit native error.
 `tests/fixtures/sites/newsy/` is compared with pinned upstream output.
 
+NFHS Network events (`nfhsnetwork.com/events/SLUG/ID`) follow upstream
+`NFHSNetworkIE`: the `cfunity` game/event API's first publisher and its
+first broadcast (else VOD), the uploader, uploader URL by publisher type,
+location and start time, the OpenGraph title (warning when missing, then
+the fatal `sr-hidden` heading) cut at `|`, and the broadcast or first VOD's
+stream URL API HLS playlist (live for on-air broadcasts). Upstream's bare
+`list index out of range` and `NoneType` errors are kept.
+`tests/fixtures/sites/nfhsnetwork/` is compared with pinned upstream output.
+
 NHK World on-demand episodes and clips (`www3.nhk.or.jp/nhkworld/LANG/shows/ID`,
 `shows/audio/ID`, the deprecated `ondemand/video/ID`) follow upstream
 `NhkVodIE`: the `api.nhkworld.jp/showsapi/v1` episode or clip (`9999...`
@@ -2304,6 +3514,17 @@ thumbnail and the fatal `streams.padelgo.tv` HLS playlist (`m3u8_id='hls'`,
 `mp4`). Non-string court descriptions remain explicit native errors.
 `tests/fixtures/sites/matchitv/` is compared with pinned upstream output.
 
+Picarto channels (`picarto.tv/CHANNEL`) follow upstream `PicartoIE`: the
+`ptvapi` GraphQL channel and load balancer (`online == 0`, also `false`, is
+`Stream is offline`), the balancer's `stream/json_NAME.js` sources as
+non-fatal HLS (`hls`) or MP4 formats, live, with the stripped title, channel
+ID and URL and the `adult` age limit. Recorded videos
+(`picarto.tv/videopopout/ID`, `.../[profile/]videos/ID`) follow
+`PicartoVodIE`: the API's video, its recording host's
+`stream/hls/FILE/index.m3u8` (fatal) and its ID, title, image, channel and
+age limit. `tests/fixtures/sites/picarto/` is compared with pinned upstream
+output (live titles through `fulltitle`, as processing adds the time).
+
 Pinkbike videos (`pinkbike.com/video/ID` and the old
 `es.pinkbike.org/i/kvid/kvid-y5.swf?id=ID` player) follow upstream
 `PinkbikeIE`: the `http://www.pinkbike.com/video/ID` page's
@@ -2314,6 +3535,17 @@ thumbnail, `video:duration`, author link, `fullTime` upload date, location and
 view/comment counters, with upstream's warnings, its `NoneType` error when
 both title and description are missing and `No video formats found!`.
 `tests/fixtures/sites/pinkbike/` is compared with pinned upstream output.
+
+n-tv.de Mediathek videos (`[www.]n-tv.de/mediathek/videos|magazine/SECTION/SLUG-articleID.html`)
+follow upstream `NTVDeIE`: the page's `article:` object (fatal, `js_to_json`)
+gives the headline, intro, kicker and publication time, and the
+`$("#playerwrapper").data("player", ...)` object (fatal, `ivw:` values removed
+before `js_to_json`; a parse failure keeps upstream's `JSONDecodeError` text)
+its `setup.source` (missing keys are upstream's `KeyError`): the `progressive`
+file (`http`), the non-fatal HLS master playlist (`hls`) and DASH manifest
+(`dash`, subtitles ignored), the poster and the length. Non-string article
+fields and non-string manifest URLs are explicit native errors.
+`tests/fixtures/sites/ntvde/` is compared with pinned upstream output.
 
 NTS episodes (`nts.live/shows/SHOW/episodes/SLUG`) follow upstream
 `NTSLiveIE`: the page's `window._REACT_STATE_` episode, whose first valid
@@ -2337,6 +3569,10 @@ and empty-value filtering as upstream), plus the generic title and
 the fixture's `-j` cases use `--no-geo-bypass` or a fixed `/32` block. The
 DRM error is a warning with `--ignore-no-formats-error`.
 `tests/fixtures/sites/netzkino/` is compared with pinned upstream output.
+
+Outside TV videos (`outsidetv.com/.../play/X/N/N/ID`) follow upstream
+`OutsideTVIE` as `url` results for `jwplatform:ID`.
+`tests/fixtures/sites/outsidetv/` is compared with pinned upstream output.
 
 Pear Video pages (`pearvideo.com/video_ID`) follow upstream `PearVideoIE`: the
 page's `KINDUrl = "..."` assignments as formats ranked by upstream's
@@ -2389,6 +3625,19 @@ the non-fatal `dash`/`hls` manifests with the `parentOrigin` query, plus the
 creator's name as `uploader`, project name, creation timestamp and thumbnail.
 `tests/fixtures/sites/clipchamp/` is compared with pinned upstream output.
 
+BFM TV and RMC videos, live pages and articles (`[www.|rmc.]bfmtv.com/..._VX-ID.html`,
+`.../[SECTION/]en-direct`, `..._AX-ID.html`) follow upstream `BFMTVIE`,
+`BFMTVLiveIE` and `BFMTVArticleIE`: the first single-line
+`<div ... data-video-id=...>...</div>` block (fatal for videos and live
+pages, with upstream's video block and Brightcove ID errors) as a `url`
+result of `players.brightcove.net/ACCOUNT/PLAYER_default/index.html?videoId=ID`
+(account `876450612001` and player `default` unless the block names them),
+followed by `brightcove:new`; articles return every block's result as a
+playlist (blocks without an ID warn and are skipped) with the OpenGraph
+title and `og:description`/`description` meta, each missing one warning like
+upstream. `tests/fixtures/sites/bfmtv/` is compared with pinned upstream
+output.
+
 Beacon TV content (`[www.]beacon.tv/content/SLUG`) follows upstream
 `BeaconTvIE`: the next.js Apollo state's `Content:` entry with the slug
 (upstream's `Failed to extract content data`), its JSON-encoded JW Player
@@ -2407,6 +3656,23 @@ OpenGraph title). Pages without such videos (upstream's generic-extractor
 fallback) remain explicit native errors.
 `tests/fixtures/sites/bostonglobe/` is compared with pinned upstream output.
 
+CNBC videos (`[www.]cnbc.com/video/.../NAME.html`) follow upstream
+`CNBCVideoIE`: the page's fatal `window.__s_data=` JSON and its first
+`page.page.layout[].columns[].modules[]` `clipPlayer` module's `data` dict
+(upstream's unprefixed `TypeError` without one, its `KeyError` without
+`playbackURL`). The `playbackURL` goes through the shared
+`_extract_akamai_formats` port (`src/extractor/akamai.rs`, also used by
+`SRGSSRIE`): packaging parameters stripped from unsigned URLs, non-fatal
+`hds` formats with `extra_param_to_segment_url`, non-fatal `hls` master
+playlist formats, and subtitles ignored with upstream's `akamai` warning.
+The info is `id`, `display_id` and formats, then the page's non-fatal
+JSON-LD (upstream's `unable to extract JSON-LD` warning without one), then
+the player's string ID, title, description, author names as creators, ISO
+8601 published/upload/last-published timestamps, thumbnail URL, integer
+duration and section title as channel, in upstream's merge order. JSON-LD
+media URLs remain explicit native errors. `tests/fixtures/sites/cnbc/` is
+compared with pinned upstream output.
+
 Dropbox shared files (`[www.]dropbox.com/s|sh|scl/fi|scl/fo|e/scl/...`)
 follow upstream `DropboxIE`: the URL basename (unquoted, extension removed)
 as title, the base64 `registerStreamedPrefetch` parts (last first), the
@@ -2415,6 +3681,22 @@ first part's transcode HLS playlist (fatal) and thumbnail, and an `original`
 without `--video-password` keep upstream's error; the password flow (cookie
 and POST) is not ported.
 `tests/fixtures/sites/dropbox/` is compared with pinned upstream output.
+
+El País videos (`[SUB.]elpais.com/.../SLUG.html`) follow upstream `ElPaisIE`:
+the page's `url_cache` prefix (fatal) joined with the multimedia JSONP's
+`mp4` path (else the page's media-file variable, fatal), the still (else the
+OpenGraph image), the title variable or heading (else the OpenGraph title),
+the header date (else `datePublished`) and the OpenGraph description, with
+upstream's warnings. `tests/fixtures/sites/elpais/` is compared with pinned
+upstream output.
+
+El Trece TV episodes (`eltrecetv.com.ar/SHOW/capitulos/temporada-N/SLUG`)
+follow upstream `ElTreceTVIE`: the page's `Fusion.globalContent` player
+config (fatal; missing keys are upstream's `KeyError`s), its HLS playlist
+(`hls`, fatal; the ID from its file name, else the slug), progressive
+`http` copies of the `/tracks-v1a1/index.m3u8` variants below 1080p, and the
+config's title and thumbnail. `tests/fixtures/sites/eltrecetv/` is compared
+with pinned upstream output.
 
 Elonet records (`elonet.finna.fi/Record/kavi.elonet_elokuva_ID`) follow
 upstream `ElonetIE`: the first `video-data` source's non-fatal HLS or DASH
@@ -2429,6 +3711,16 @@ Clyp clips (`[www.]clyp.it/ID`) follow upstream `ClypIE`: the
 `float_or_none` duration and `unified_timestamp` creation date. Non-string
 titles remain explicit native errors. `tests/fixtures/sites/clyp/` is
 compared with pinned upstream output.
+
+Duoplay telecasts (`duoplay.ee/ID[/...][?ep=N]`) follow upstream `DuoplayIE`:
+the page's `<video-player>` `manifest-url` (else `No video found`), the
+`sts.postimees.ee/session/register` token (errnote `Unable to register
+session`) added as the HLS manifest's `s` query (fatal), and the
+`:episode` attribute's JSON (non-fatal, warning like upstream when empty):
+title, synopsis, image, Estonian airtime, cast and year, plus for
+non-movies the subtitle (else `Episode N`) as title and the series, season,
+episode and IDs. `tests/fixtures/sites/duoplay/` is compared with pinned
+upstream output.
 
 Dumpert items (`[www.|legacy.]dumpert.nl/item|embed|mediabase/ID` and
 `?selectedId=ID` pages) follow upstream `DumpertIE`: the
@@ -2491,6 +3783,72 @@ requested (`Checking FORMAT video format URL`) and dropped after an HTTP error
 `#quickies/a/ID` links follow the video page. `age_limit` is 18.
 `tests/fixtures/sites/xvideos/` is compared with pinned upstream output.
 
+Beeg videos (`[www.]beeg.com[/video]/[-]ID`) follow upstream `BeegIE`: the
+page (for the RTA age limit) and the `store.externulls.com/facts/file/ID`
+JSON, whose fact with the lowest `id` gives the display ID, the
+`fc_created` timestamp and, when the file has none, the HLS resources. Each
+non-empty resource is a fatal `video.beeg.com/URI` playlist with the
+`fl_cdn_N` height as its `m3u8_id` (`None` without one), every format's
+height set to it like upstream; the file gives the title, story,
+duration and tag names. Files without a facts list or HLS resources (an
+upstream `TypeError`/`AttributeError`) are unsupported errors.
+`tests/fixtures/sites/beeg/` is compared with pinned upstream output.
+
+Eporner videos (`eporner.com/hd-porn|embed/ID[/SLUG]`, `video-ID[/SLUG]`)
+follow upstream `EpornerIE`: the page (by its slug) and its fatal 32-digit
+`hash`, encoded in base 36 per 8-digit block like upstream's `calc_hash` for
+the `xhr/video/ID` JSON (`available: false` is `Eporner said: MESSAGE`; a
+missing `sources` is upstream's `KeyError`), the OpenGraph or `<title>`
+title, non-fatal `hls` master playlists and HTTP(S) MP4 sources with their
+`Np`/`Nfps` height and FPS, plus `-av1.mp4` variants when the page has a
+`download-av1` element, merged like `merge_dicts` under the page's JSON-LD
+with the `duration` meta, `cinemaviews1` view count and `age_limit` 18.
+`tests/fixtures/sites/eporner/` is compared with pinned upstream output.
+
+XNXX videos (`video|www.xnxx[3].com/video[-]ID/`) follow upstream `XNXXIE`:
+the OpenGraph title (else the page's fatal `setVideoTitle`), each
+`setVideoUrlLow`/`setVideoUrlHigh` call as a progressive format (`low` has
+quality -1, others 0) and `setVideoHLS` as a non-fatal `hls` master playlist
+with quality 1 (a non-`m3u8` URL is a progressive format without an ID),
+the OpenGraph image or `setThumbUrl`/`setThumbUrl169` thumbnail (warning
+like upstream when missing), the fatal `og:duration`, the `nb-views-number`
+view count and `age_limit` 18. `tests/fixtures/sites/xnxx/` is compared with
+pinned upstream output.
+
+YouJizz videos (`[SUB.]youjizz.com/videos/SLUG-ID.html`, `.../embed/ID`)
+follow upstream `YouJizzIE`: the `<title>` (warning like upstream when
+missing), the page's `encodings` JSON (non-fatal `hls` playlists for
+`m3u8` files, other files as progressive formats named by `name` or
+`quality` with its `Np` height), else the first HTML5 media entry of the
+page with upstream's `"controls` fix (none is upstream's `list index out of
+range`), the runtime, uploader and the RTA age limit. Encodings that are not
+JSON or lack a name (upstream `TypeError`s) are unsupported errors.
+`tests/fixtures/sites/youjizz/` is compared with pinned upstream output.
+
+24 Kanal player pages (`24tv.ua/news/showPlayer.do?...objectId=ID`, `24tv.ua`)
+follow upstream `TV24UAVideoIE`: every `vPlayConfig.sources` list (HLS
+playlists fatal, else direct files), the config's poster (else the OpenGraph
+image, warning when missing), the generic page title and the OpenGraph
+description. 24tv.ua player iframes on generic pages are embeds.
+`tests/fixtures/sites/tv24ua/` is compared with pinned upstream output.
+
+TVA+ episodes (`tvaplus.ca/.../SLUG-ID`, `tvaplus`) follow upstream `TVAIE` as
+transparent `url` results of their Brightcove video smuggled with the `CA`
+geo countries: the Next.js `staticEntity` video ID (missing keys are
+upstream's `KeyError`s), stripped name as title and episode, description,
+duration, channel, show, season from the slug and episode number.
+`tests/fixtures/sites/tva/` is compared with pinned upstream output (with
+`--no-geo-bypass`).
+
+TV2 Play (Hungary) videos, shows and ribbons (`tv2play.hu/PATH`,
+`tv2play.hu/szalag/ID`; `tv2play.hu`, `tv2playseries.hu`) follow upstream
+`TV2HuIE` and `TV2HuSeriesIE`: the search API's video (its player's streaming
+JSON HLS playlist, fatal) with title, series, length, description,
+thumbnail, upload date and season and episode numbers; a show page as a
+playlist of its first ribbon list's `url` results; other content types as
+`Unsupported URL`; and a ribbon's cards as `url` results.
+`tests/fixtures/sites/tv2hu/` is compared with pinned upstream output.
+
 TV 2 videos (`tv2.no/v|video[N]/.../ID`) follow upstream `TV2IE`: the
 `sumo.tv2.no` asset metadata, then the HLS and DASH playback JSON (POSTed
 like upstream; a 401's error code is the Norway geo restriction, the
@@ -2506,6 +3864,53 @@ pages give their `data-assetid` (or `TV2ContentboxVideo`/`TV2.TV2Video`
 Python's decoder message). HDS (`f4m`) streams give non-fatal F4M formats. Upstream's Katsomo and MTV Uutiset extractors are marked broken and
 not ported. `tests/fixtures/sites/tv2/` is compared with pinned upstream
 output.
+
+T13 videos (`t13.cl/videos/.../SLUG`) follow upstream `Tele13IE`: the
+`player-vivo` JW Player setup (fatal) and its deduplicated sources: HLS
+(non-fatal), a YouTube URL as a `url` result (not fixtured), else files with
+their label as format ID and `Móvil`/`SD`/`HD` quality, with the setup's
+title (fatal) and image and the page's description (warning when missing).
+`tests/fixtures/sites/tele13/` is compared with pinned upstream output.
+
+Toon Goggles episodes (`toongoggles.com/shows/SHOW/SLUG/episodes/ID`) and
+shows (`toongoggles.com/shows/SHOW`) follow upstream `ToonGogglesIE`: the
+API's `search` episode (an empty list is a bare `IndexError`) as a
+transparent `kaltura:513551:ENTRY` result with its title, thumbnail,
+description, duration, show, season, episode and categories, and the
+`getepisodesbyshow` episodes as a playlist of them with the show name. Like
+upstream's `url_transparent` processing, the outer `id` does not replace
+the Kaltura entry's. `tests/fixtures/sites/toongoggles/` is compared with
+pinned upstream output.
+
+TruNews streams (`trunews.com/stream/SLUG`) follow upstream `TruNewsIE`: the
+Zype API's first video with that friendly title (an empty list is a bare
+`IndexError`) as a `url` result for its Zype player.
+`tests/fixtures/sites/trunews/` is compared with pinned upstream output.
+
+Tvigle videos (`tvigle.ru/.../SLUG/`, `cloud.tvigle.ru/video/ID`) follow
+upstream `TvigleIE` (no geo bypass, countries `RU`): the page's player ID
+(three patterns, fatal) or the cloud ID, the `cloud.tvigle.ru/api/play/video/ID/`
+item (an empty list is upstream's bare `list index out of range`; without
+videos its `errorMessage` as a geo restriction when `isGeoBlocked`, else
+`tvigle returned error: ...`), its non-fatal HLS (`hls`) and DASH (`dash`)
+URLs and progressive files (`CODEC-ID`, height from `NNNp`, sizes from
+`video_files_size`), and the title, description, thumbnail, duration and
+age limit. Cloud player iframes on other pages are followed like upstream's
+`_EMBED_REGEX`. `tests/fixtures/sites/tvigle/` is compared with pinned
+upstream output.
+
+TV 2 regional sites (`tvsyd`, `tv2ostjylland`, `tvmidtvest`, `tv2fyn`,
+`tv2east`, `tv2lorry`, `tv2nord` and `tv2kosmopol.dk/.../SLUG`) follow upstream
+`TV2DKIE`: the `video_player(...)`/`simple_player(...)` `x-data` objects
+(through `js_to_json`; unparsable ones skipped) inside the first `<article>`
+(the whole page when there is none or it is empty), their string
+`jwpMediaId` then `videoId`, as a playlist of deduplicated `jwplatform:ID`
+results with the slug as its ID. TV 2 Bornholm Play (`play.tv2bornholm.dk/?...id=ID`)
+follows `TV2DKBornholmPlayIE`: the `specifikVideo` JSON POST, its `d`
+flowplayer script's title (fatal) and `sources` (through `js_to_json`), each
+distinct URL as non-fatal HLS (`hls`, master only), non-fatal DASH (`dash`)
+or a direct format. `tests/fixtures/sites/tv2dk/` is compared with pinned
+upstream output.
 
 TV4 videos (`tv4.se/PROGRAM/klipp/...-ID`, `tv4play.se/program|barn/...ID`,
 `?video_id=ID`, `/iframe/video/ID`, `/film/ID`, `/sport/ID` and
@@ -2595,6 +4000,52 @@ from webpage` when absent); otherwise the page is a playlist
 `tests/fixtures/sites/rottentomatoes/` is compared with pinned upstream
 output.
 
+MagellanTV videos (`[www.]magellantv.com/watch|video/ID`) follow upstream
+`MagellanTVIE`: the page's Next.js `reactContext` (missing keys are
+upstream's `KeyError`s), its video detail or else the series' current
+episode, whose `manifests[].hls` and `jwp_video_url` playlists (non-fatal,
+master playlist only, with subtitles) are deduplicated in first-seen order
+(upstream iterates a `set`, whose order is hash-dependent), and its title,
+description, duration, age rating and tags. Without formats, the error page's
+message is a geo restriction (`available in your country`) or the expected
+`MagellanTV said: ...` error. `tests/fixtures/sites/magellantv/` is compared
+with pinned upstream output.
+
+massengeschmack.tv episodes (`[www.]massengeschmack.tv/play/ID`) follow
+upstream `MassengeschmackTVIE`: the page's `MEDIA` sources (fatal,
+`js_to_json`; protocol-relative sources as `https:`) as non-fatal HLS
+playlists (`hls`, master playlist only) or direct files named by their
+extension, then the download links with resolution, file size and
+`vcodec: none` for `Audio` links (protocol-relative links as `http:`, like
+`sanitize_url`), the clip title and the `POSTER` thumbnail (both non-fatal).
+`tests/fixtures/sites/massengeschmacktv/` is compared with pinned upstream
+output.
+
+MBN (매일방송) VOD previews (`[www.]mbn.co.kr/vod/programContents/preview[list]/N/N/ID`)
+follow upstream `MBNIE`: the page's `content_cls_cd` (non-fatal, default
+`20`), the `mbnVodPlayer_2020.mbn` player JSON (fatal) and, for each
+`movie_list` URL (`chunklist`/`playlist[_pdN].m3u8` rewritten to
+`manifest.m3u8`), the fatal `mbnStreamAuth_new_vod.mbn` request whose text is
+the authenticated playlist URL (a non-URL text is upstream's `Failed to obtain
+m3u8 URL` warning), read as a non-fatal HLS master playlist. The title, play
+time, broadcast date (dots removed), image, programme and episode number are
+taken when they have the expected types. `tests/fixtures/sites/mbn/` is
+compared with pinned upstream output.
+
+MDR.DE videos and audio (`mdr.de/.../NAME-ID[_...].html`) follow upstream
+`MDRIE` (geo countries `DE`): the page's `dataURL`/`playerXml` `-avCustom.xml`
+URL (fatal; `\/` unescaped, joined with the page URL) and that XML document's
+`title` (else `broadcast/broadcastName`; fatal, with upstream's element and
+text errors), then each asset's `download`, `progressiveDownload`,
+`dynamicHttpStreamingRedirector` and `adaptiveHttpStreamingRedirector` URLs
+(each distinct URL once): `.m3u8` as a non-fatal HLS master playlist (`HLS`)
+and `.f4m` as non-fatal HDS (`HDS`, with upstream's `hdcore` query), both
+quality 1, other URLs as `MEDIATYPE-KBPS` formats (bitrates divided by 1000
+like `int_or_none(..., 1000)`, frame size only with a video bitrate, `vcodec
+none` for audio documents). Description, the first broadcast date as the
+timestamp, duration and `rights` as the uploader. `tests/fixtures/sites/mdr/`
+is compared with pinned upstream output.
+
 Medal.tv clips (`medal.tv/games/GAME/clips/ID`) follow upstream `MedalTVIE`:
 the `medal.tv/api/content/ID` JSON (`Accept: application/json`; fatal), its
 `contentUrlHls` playlist as fatal `hls` formats (master playlist only,
@@ -2605,6 +4056,17 @@ no format, the `socialVideoUrl` redirect's final URL as `social-video`
 millisecond `created` timestamp, duration, view/like/comment counts, poster
 name, ID and profile URL, string tags and thumbnail follow.
 `tests/fixtures/sites/medaltv/` is compared with pinned upstream output.
+
+MediaKlikk, M4 Sport and Híradó videos (`mediaklikk|m4sport|hirado.hu/...video|videok|cikk/[Y/M/D/]SLUG`)
+follow upstream `MediaKlikkIE`: the page's `loadPlayer(...)` data (fatal),
+its `contentId`, title (else the non-fatal OpenGraph title, else the fatal
+`article_title` heading), the URL's date (else the `article_date`
+paragraph), and the data with its unquoted `token` moved to `video` sent as
+the `playernew/player.php` query (Python `str` values, page Referer). That
+page's `pl.setup(...)` JSON's first `hls` playlist file (required) is a
+fatal HLS master playlist (subtitles kept); the `bgImage` (else the non-fatal
+OpenGraph image) is the thumbnail. `tests/fixtures/sites/mediaklikk/` is
+compared with pinned upstream output.
 
 Mediaite articles (`mediaite.com/SECTION/SLUG`, not `/category`) follow
 upstream `MediaiteIE`: the page's `cdn.jwplayer.com/players/ID` (else
@@ -2642,6 +4104,58 @@ detected natively, and undecodable tokens remain explicit native errors.
 `tests/fixtures/sites/cloudflarestream/` is compared with pinned upstream
 output.
 
+Gaskrank.tv videos (`gaskrank.tv/tv/CATEGORY/SLUG.htm`) follow upstream
+`GaskrankIE`: the page's first HTML5 media entry (none is a bare
+`IndexError`) with the OpenGraph (else `title` meta) title, the URL's
+category, the uploader and date line, homepage, tags, views and the fatal
+rating; a page without the uploader line fails like upstream's unbound
+local. `tests/fixtures/sites/gaskrank/` is compared with pinned upstream
+output.
+
+GoPro shared videos (`gopro.com/v/ID`) follow upstream `GoProIE`: the page's
+`__reflectData` (fatal; an empty media list is a bare `IndexError`), the media
+download API's variations with their quality, label, type and size, the
+collection title (else the `og:title`/`twitter:title` meta or `<title>`
+without ` | GoPro`, with upstream's warnings), OpenGraph image, creation
+time, account and music track. `tests/fixtures/sites/gopro/` is compared
+with pinned upstream output.
+
+Groupon deals (`groupon.com/deals/SLUG`) follow upstream `GrouponIE`: the
+page's `payload` JSON (fatal) as a playlist of YouTube `url` results for its
+carousel's deal videos with a provider and media ID, with the OpenGraph title
+and description (warnings when missing). Providers other than YouTube, which
+upstream fails to unpack, are an unsupported error.
+`tests/fixtures/sites/groupon/` is compared with pinned upstream output.
+
+Discogs releases and masters (`discogs.com/release|master/ID`) follow upstream
+`DiscogsReleasePlaylistIE`: the API's `release|masterID` JSON as a playlist,
+with the release title, of YouTube `url` results (with their titles) for the
+videos whose URI `YoutubeIE` accepts. `tests/fixtures/sites/discogs/` is
+compared with pinned upstream output.
+
+Dagbladet videos (`dagbladet.no/video/[embed|SLUG/]ID`) follow upstream
+`DBTVIE` as transparent `url` results with the URL's ID and display ID:
+11-character IDs for YouTube (the bare ID; not fixtured) and 8-character IDs
+for `jwplatform:ID`. Dagbladet embed iframes on generic pages are embeds.
+`tests/fixtures/sites/dbtv/` is compared with pinned upstream output.
+
+2M replays and news (`2m.ma/LL/replay/single/ID`, `2m.ma/LL/news/SLUG`) follow
+upstream `DeuxMIE` and `DeuxMNewsIE`: the watch-detail API's `News` media URL
+and the articles-by-URL API's first article (an empty list is a bare
+`IndexError`) with its first image as the media URL, each with its title,
+description and thumbnail (missing keys are upstream's `KeyError`s).
+`tests/fixtures/sites/deuxm/` is compared with pinned upstream output.
+
+Digiteka and Ultimedia videos (`digiteka.net|ultimedia.com/deliver/generic|musique/.../src|article/ID`,
+`.../default/index/videogeneric|music/id/ID`) follow upstream `DigitekaIE`:
+the `ultimedia.com/player/getConf/01836272/1/ID` JSON's `video` (required),
+its `media_sources.hls.hls_auto` as a non-fatal HLS master playlist (`hls`,
+subtitles kept) and each non-empty `media_sources.mp4` rendition (`mp4`,
+height from the key's `_HEIGHT` suffix), with the title, image, duration,
+creation timestamp and owner ID. Ultimedia iframes and scripts on other pages
+are followed like upstream's `_EMBED_REGEX`. `tests/fixtures/sites/digiteka/`
+is compared with pinned upstream output.
+
 DLive past broadcasts (`dlive.tv/p/UPLOADER+ID`) and live streams
 (`dlive.tv/NAME`, not `p/`) follow upstream `DLiveVODIE` and `DLiveStreamIE`:
 the `graphigo.prd.dlive.tv` GraphQL POST (`pastBroadcast(permlink:...)` or
@@ -2665,6 +4179,23 @@ non-string titles, paths or caption languages remain explicit native errors.
 `tests/fixtures/sites/democracynow/` is compared with pinned upstream output.
 
 
+FreeTV movies (`freetv.com/peliculas/SLUG`) follow upstream `FreeTvMoviesIE`:
+the page's post ID (three patterns, fatal), the `admin-ajax.php`
+`olyott_video_play` POST's `data.displayMeta` and its `streamURLVideo` as a
+fatal HLS master playlist (subtitles kept), with the title, description and
+processing's string-conversion warning for numeric IDs. Series
+(`freetv.com/series/SLUG`) follow `FreeTvIE`: the synopsis title and
+description (non-fatal) and every season `<option>` read lazily as a
+generator (a season's `olyott_get_dynamic_series_content` POST only when
+its episodes are requested), each episode's stream as fatal HLS with its
+series, season and episode metadata. `tests/fixtures/sites/freetv/` is
+compared with pinned upstream output.
+
+Freespeech stories (`freespeech.org/stories/SLUG`, `freespeech.org`) follow
+upstream `FreespeechIE`: the page's `data-video-url` (else `Unable to extract
+youtube url`) as a `url` result. Only the missing-URL error is covered by
+`tests/fixtures/sites/freespeech/` (the YouTube follow-up is not fixtured).
+
 Freesound sounds (`freesound.org/people/USER/sounds/ID`) follow upstream
 `FreesoundIE`: the page's fatal `og:audio` URL and `og:audio:title`, the
 non-fatal description, `og:audio:artist` uploader and channels info (their
@@ -2682,6 +4213,82 @@ original download (only when its file name has a known extension, ranked
 higher) as audio formats. Non-string IDs, user names or thumbnails and
 missing users or download file names remain explicit native errors.
 `tests/fixtures/sites/hearthisat/` is compared with pinned upstream output.
+
+LCI and TF1 Info videos (`lci.fr|tf1info.fr/.../SLUG-ID.html`) follow upstream
+`LCIIE`: the first integer key of the Next.js `tms.videos` (else `Could not
+find wat_id`) as a `url` result for `wat:ID`. `tests/fixtures/sites/lci/` is
+compared with pinned upstream output.
+
+Le Figaro embeds (`video.lefigaro.fr/embed/.../SLUG`) follow upstream
+`LeFigaroVideoEmbedIE`: the Next.js `playerData.videoId` (required) as a
+`url` result of `jwplatform:ID` (its title, description and poster are not
+merged, like any `url` result). Video sections (`video.lefigaro.fr/figaro/SLUG`)
+follow `LeFigaroVideoSectionIE`: the GraphQL `UpdateListPage` playlist's
+title and `videoCount`, then an `InAdvancePagedList` of 20-video pages
+(only the pages a selection needs are fetched) whose JSON-LD items are `url`
+results of their embed URLs with name, description and thumbnail (flat IDs
+from the embed URL, like upstream's temporary ID). `tests/fixtures/sites/lefigaro/`
+is compared with pinned upstream output.
+
+LEGO videos (`lego.com/LL-CC/.../videos/.../SLUG-HEX32`) follow upstream
+`LEGOIE`: geo bypass initialized with the URL's country (upstream's
+`_initialize_geo_bypass`), the Slingshot `mediaplayer/v2?videoId=UUID_LOCALE`
+JSON (HTTP 451 as a geo restriction with that country), its `F4M` (non-fatal
+HDS) and `M3U8` (non-fatal HLS) sources and progressive `FORMAT-QUALITY`
+formats ranked Lowest to Highest with upstream's bitrate and size table, the
+locale's SRT subtitles when the video names its files, and the description,
+cover (else thumbnail), length, age, season title and non-zero season and
+episode numbers. `tests/fixtures/sites/lego/` is compared with pinned
+upstream output.
+
+Library of Congress items (`loc.gov/item/ID`, `loc.gov/today/cyberlc/feature_wdesc.php?...rec=ID`)
+follow upstream `LibraryOfCongressIE`: the page's media player ID (upstream's
+five patterns, fatal), the `media.loc.gov/services/v1/media` object's first
+derivative URL rewritten like the page's `setAVSource` (`rtmp` to `https`,
+an `.mp4`/`.mp3` suffix by media type): an `hls-vod` playlist URL for
+`/vod/mp4:` streams and the HTTP file, both quality 1, plus the page's
+distinct download options (not GIF/JPEG) with their approximate sizes; the
+derivative's or object's short name (else the OpenGraph title), duration,
+view count, English TTML captions and OpenGraph image. An empty derivative
+list is upstream's bare `list index out of range`. `tests/fixtures/sites/libraryofcongress/`
+is compared with pinned upstream output.
+
+Last.fm pages follow upstream `lastfm.py`. Track pages
+(`last.fm/music/ARTIST/ALBUM/TRACK`, `LastFMIE`) follow the fatal
+`header-new-playlink` link as a YouTube `url` result. Artist and tag pages
+(`last.fm/music|tag/ID[/PATH]`, `LastFMPlaylistIE`) and user playlists
+(`last.fm/user/USER/playlists/ID`, `LastFMUserIE`) are read as a generator:
+the URL with `page=N` from 1 (`Downloading page N`) until a page has no
+`data-youtube-url` links, or only the URL's own `page` (`int_or_none`) page;
+each link's first occurrence is a YouTube `url` result, and pages are only
+requested as entries are needed (`-I 1` reads one page). YouTube resolution
+is the native YouTube extractor's. `tests/fixtures/sites/lastfm/` is compared
+with pinned upstream output (`--flat-playlist` for playlists).
+
+Listen Notes episodes (`listennotes.com/podcasts/SHOW/SLUG-ID/`) follow
+upstream `ListenNotesIE`: the fatal `original-content` JSON updated with the
+`episode-play-button-toolbar`/`episode-no-play-button-toolbar` element's
+attributes, the `audio` URL (a missing one is upstream's `KeyError`), the
+`data-title`, first `<h1>` or `og:title` title, the cleaned `ln-text-p`
+description (paragraph breaks as blank lines) or the `DURATION - TEXT`
+description meta's text (with upstream's warnings when missing), the
+`audio_length`/`data-duration` or meta duration, the episode UUID,
+thumbnail, channel, `nlp_entities` cast, channel URL and channel ID.
+Pages without a toolbar element remain an explicit native error.
+`tests/fixtures/sites/listennotes/` is compared with pinned upstream output.
+
+LiTV pages (`litv.tv/TYPE/watch/ID`, `litv.tv/vod/TYPE/content.do?content_id=ID`)
+follow upstream `LiTVIE` (countries `TW`): the Next.js `pageProps`, a
+`seriesTree` with a `series_id` as a playlist (series ID and title) of each
+season's episodes as smuggled `force_noplaylist` URLs unless `--no-playlist`,
+otherwise the first asset (`vod`) or the live `content_id`/`content_type`
+posted to `api/get-urls` with a `PUID` cookie (else `get-urls-no-auth` with a
+random `puid`). API errors are upstream's (`OutsideRegionError` as a geo
+restriction, `LiTV said: ...`, `Unexpected error from LiTV`; an empty URL
+list is the bare `list index out of range`). The first asset URL's HLS
+(`hls`, `Accept-Encoding: identity`), the joined title and secondary mark,
+description, thumbnail, genres and episode number.
+`tests/fixtures/sites/litv/` is compared with pinned upstream output.
 
 Libsyn episodes (`html5-player.libsyn.com/embed/episode/id/ID`) follow
 upstream `LibsynIE`: the player page (requested without the URL's trailing
@@ -2812,6 +4419,17 @@ and presenter, or a product's poster and brand name. Like upstream's
 `X-Forwarded-For` address by default; the fixtures compare with
 `--no-geo-bypass`.
 
+Indavideo players (`[embed.]indavideo.hu/player/video/ID`,
+`assets.indavideo.hu/swf/player.swf?...vID=ID`) follow upstream
+`IndavideoEmbedIE`: the `getVideoData/ID/` JSON's `data` (required), each
+distinct video file with the token of its height (from `.HEIGHT.mp4`, else
+the only `filesh` key; files without a token are skipped), the CEST
+`date` as timestamp, protocol-relative thumbnails, tag titles, uploader,
+duration and age limit. Player iframes on other pages are followed like
+upstream's `_EMBED_REGEX`. Upstream's file order is a Python `set`'s; formats
+are sorted by height either way. `tests/fixtures/sites/indavideo/` is
+compared with pinned upstream output (the `_` timestamp query ignored).
+
 INA media (`ina.fr/.../ID`) follow upstream `InaIE`: the page's fatal
 `asset-details-url`, its `assets/ID` as the ID and the `ID.json` asset
 JSON's `resourceUrl` (else the upstream `KeyError`) as an untyped result,
@@ -2840,6 +4458,20 @@ the records API's `source_url.mp4_url` as an untyped result with its title,
 cleaned body description, millisecond duration, timestamp, uploader, Python
 `str()` of the user ID, counts and string tag texts, with upstream's
 `KeyError` messages.
+
+Hollywood Reporter videos (`hollywoodreporter.com/video/SLUG`) follow
+upstream `HollywoodReporterIE`: the first `vlanding-video-card__link`
+element's `data-video-showcase-trigger` and `data-video-showcase-type`
+(missing ones are upstream's `KeyError`s), followed as `jwplatform:ID` for
+`jwplayer` and as the bare YouTube ID for `youtube`; other types are
+upstream's `Unsupported showcase type` error. Video categories
+(`hollywoodreporter.com/vcategory/SLUG-ID`) follow
+`HollywoodReporterPlaylistIE`: an `OnDemandPagedList` of 15 entries per
+`.../page/N/` page (only the pages holding requested items are fetched),
+each page's `video-playlist-river` `c-title__link` hrefs as
+`HollywoodReporter` `url` results, titled with the slug.
+`tests/fixtures/sites/hollywoodreporter/` is compared with pinned upstream
+output.
 
 href.li redirects (`href.li/?URL`) follow upstream `HrefLiRedirectIE`: the
 text after `?` is followed as a `url` result by whichever extractor suits it
@@ -2910,6 +4542,23 @@ duration and `unified_timestamp` upload date; a result without formats fails
 in processing. Its iframe embeds on generic pages follow JW Platform's in the
 embed order.
 
+Mangomolo players (`player.mangomolo.com/v1/video?...id=ID`,
+`player.mangomolo.com/v1/live|index?...channelid=BASE64`, and the
+`admin.mangomolo.com/analytics/index.php/customers/embed/` paths) follow
+upstream `MangomoloVideoIE` and `MangomoloLiveIE`: live channel IDs are
+percent-unquoted and base64-decoded with Python's errors (`Incorrect
+padding`, data-character counts, UTF-8 decoding), then the
+`player.mangomolo.com/v1/video|live` page for the URL's query gives the
+`playlist.m3u8` URL (fatal) as Wowza formats with SMIL skipped (HLS, HDS,
+DASH and `rtmp:`; live HLS entries use the `m3u8` protocol), the ID as
+title, the hidden `userid` as `uploader_id`, the hidden `duration` as an
+integer, and `is_live`. Their iframes on generic pages are embeds (live
+first) yielding upstream's `url_transparent` results with the slug's ID and
+the page URL's host as `uploader`: a single embed also takes the generic
+page's title, description, thumbnail and age limit; several form a playlist
+of those entries. `tests/fixtures/sites/mangomolo/` is compared with pinned
+upstream output.
+
 Masters videos (`masters.com/en_US/watch/YYYY-MM-DD/ID`) follow upstream
 `MastersIE`: the related-content API's fatal HLS manifest (with its subtitle
 renditions; no manifest is upstream's `Failed to obtain m3u8 URL`), the API
@@ -2931,6 +4580,15 @@ URL`) as fatal `hls` formats and subtitles, the `og:title` (else the
 `<title>` text with its warning, else the generic title) and the `og:image`
 thumbnail.
 
+Mirror articles (`mirror.co.uk/...-ID`) follow upstream `MirrorCoUKIE`: the
+page's fatal `json-placeholder` `data-json` object through `unescapeHTML`
+(upstream's `Unable to extract data` and `Failed to parse JSON` errors), and
+its `videoData.videoId` (missing keys are upstream's `KeyError`s) as a
+`url_transparent` result for `jwplatform:ID` with the article ID as
+`display_id`. Video data that are not objects and IDs that JW Platform does
+not accept are explicit errors. `tests/fixtures/sites/mirrorcouk/` is
+compared with pinned upstream output.
+
 Mixcloud shows (`mixcloud.com/USER/SLUG`) follow upstream `MixcloudIE`: the
 GraphQL cloudcast lookup (impersonated with the `impersonate` feature, else
 with upstream's impersonation warning), its
@@ -2944,6 +4602,17 @@ the page's fatal `rel="videolink"` URL is followed through the registry as a
 `url_result`. A link that is not an absolute URL remains an explicit native
 error.
 
+NASCAR Classics videos (`[www.]classics.nascar.com/video/ID`) follow upstream
+`NascarClassicsIE`: the page's fatal Next.js `contentData` (missing keys are
+upstream's `KeyError` messages), its input's `src` master playlist as fatal
+HLS formats (variants are not fetched), the string name, non-empty
+description, URL thumbnail, string tags and ISO 8601 `start_time` timestamp,
+and the first overlay timeline's events whose `timestamp` passes Python
+`float()` as chapters (`start_time`, string `title`). A non-string or
+non-URL source and non-finite or underscored chapter timestamps remain
+explicit native errors. `tests/fixtures/sites/nascar/` is compared
+with pinned upstream output.
+
 Mocha videos (`video.mocha.com.vn/SLUG`) follow upstream `MochaVideoIE`: the
 `getVideoDetail` API (queried with the page URL) gives the `list_resolution`
 `video_path` playlists as fatal HLS formats and subtitles and the
@@ -2954,6 +4623,42 @@ duration, counts, thumbnail and `isLive`, `int_or_none(publish_time,
 scale=1000)` timestamp, `categoryname` categories and the `channels` `'0'`
 entry's channel fields (a string key, so never a list's first item), with
 upstream's unprefixed `KeyError` messages.
+
+Moviepilot trailers (`moviepilot.de/movies/SLUG`, `moviepilot`) follow
+upstream `MoviepilotIE`: the trailer page's Next.js `pageProps` (missing
+keys are upstream's `KeyError`s) as a transparent Dailymotion `url` result
+for its `remoteId`, with the slug as display ID and the title and summary.
+`tests/fixtures/sites/moviepilot/` is compared with pinned upstream output.
+
+Monster Siren songs (`monster-siren.hypergryph.com/music/ID`, `monstersiren`)
+follow upstream `MonsterSirenHypergryphMusicIE`: the song API (a nonzero
+`code` is its `msg`, expected, else `API returned an error response`), its
+title, string artists, English lyrics subtitle and source URL, with the
+album API's name, cleaned intro and cover (non-fatal: a warning on HTTP
+errors). `tests/fixtures/sites/hypergryph/` is compared with pinned upstream
+output.
+
+Monstercat releases (`www.monstercat.com/release/ID`) follow upstream
+`MonstercatIE`: the page's first `<h1>` (cleaned) as title and album, the
+cover URL, the album artist element and the `Released DATE` element, and the
+`table table-small` rows read as a generator (rows are only parsed as
+entries are requested): each row's play button `data-track-id` and
+`data-release-id` give an MP3 `track-stream` entry with the album fields,
+the row's title, track number and artists; rows without both IDs warn
+`Skipping track N, ID(s) not found` when reached. `tests/fixtures/sites/monstercat/`
+is compared with pinned upstream output.
+
+MuseScore scores (`musescore.com/user/N/scores/ID`, `musescore.com/USER/SLUG`)
+follow upstream `MuseScoreIE`: the page (downloaded without an ID), its
+fatal `og:url` (an empty one keeps the input URL) for the score ID, the
+`api/jmuse?id=ID&index=0&type=mp3` JSON requested with the
+`md5(ID + 'mp30gs')[:4]` authorization header, and its `info.url` MP3 as
+the only format (`vcodec` `none`; missing keys are upstream's `KeyError`),
+with the `og:title`, cleaned `description` meta, `og:image`,
+`musescore:author` and `musescore:composer` (as `creator`) fields, each
+missing one warning like upstream. An `og:url` that is not a score URL
+remains an explicit native error. `tests/fixtures/sites/musescore/` is
+compared with pinned upstream output.
 
 Moving Image Archive films (`movingimage.nls.uk/film/ID`) follow upstream
 `MovingImageIE`: the player's fatal `file` manifest as HLS formats (subtitles
@@ -3006,6 +4711,67 @@ follow upstream `NobelPrizeIE`: the integer `id` (else `qid`) query value (no
 ID is upstream's `Unsupported URL`), the `mediaplayer.nobelprize.org` page's
 fatal JSON-LD as an untyped result overlaid with the `caption` meta title, the
 `itemprop="description"` span and the `duration` meta.
+
+Noice podcast episodes (`open.noice.id/content/UUID`) follow upstream
+`NoicePodcastIE`: the Next.js `contentDetails` raw content and content URLs
+(fatal HLS playlists, else MP3 files), the episode's ID, title, description
+(else cleaned HTML description), image, created/published/updated
+timestamps, duration, genres, season, catalog and like, dislike, comment
+and follower counts, with the page's meta tags as fallbacks (warning when
+missing). `tests/fixtures/sites/noice/` is compared with pinned upstream
+output.
+
+NOW Canal pages (`nowcanal.pt/.../detalhe/SLUG`) follow upstream `NowCanalIE`:
+the `addBrightcoveVideoWithJson` data's `brightcoveVideoId` (fatal) as a
+`url` result for the NOW Brightcove player. `tests/fixtures/sites/nowcanal/`
+is compared with pinned upstream output.
+
+NetApp media videos (`media.netapp.com/video-detail/UUID`) and collections
+(`media.netapp.com/collection/UUID`) follow upstream `NetAppVideoIE` and
+`NetAppCollectionIE`: the detail API's `Player` section video (else `Unable
+to extract brightcove video id`) as a transparent Brightcove `url` result
+with the `VideoDetail` name, description and creation time, and the
+collection API's items with a Brightcove ID as such results, with the
+collection name. `tests/fixtures/sites/netapp/` is compared with pinned
+upstream output.
+
+NovaPlay videos (`play.nova.bg/video/.../ID`) follow upstream `NovaPlayIE`:
+the page's Next.js `video` props (title, slug, duration, publication date and
+view count; missing keys are upstream's `KeyError`s), the client API's access
+token (fetched once per run without an ID) and the fite.tv streams API's first
+HLS playlist (`hls`, fatal), with the non-fatal OpenGraph thumbnail and
+description. `tests/fixtures/sites/novaplay/` is compared with pinned upstream
+output.
+
+NOS articles and videos (`nos.nl/[SECTION/]artikel/ID-SLUG`,
+`nos.nl/video/ID-SLUG`) follow upstream `NOSNLArticleIE`: the page's fatal
+Next.js `pageProps.data` as a playlist of its `items` (or its one `video` on
+video pages): `video` items as their HLS master playlist (fatal, subtitles
+kept), title, description, ISO 8601 duration and the first ratio's thumbnails
+(the first URL with width and height), `audio` items as their `media.src` MP3
+URL; other item types are skipped. The playlist has the page ID, title and
+description (else the `title`/`description` metas), keywords as tags, the
+`modifiedAt`/`publishedAt` timestamps, the share image (else `og:image`) and
+the category labels, `None` values kept like upstream. Errors carry no
+`ID: ` prefix, as `_VALID_URL` has no `id` group.
+`tests/fixtures/sites/nosnl/` is compared with pinned upstream output.
+
+NPR stories (`npr.org/[sections/SECTION/]YYYY/MM/DD/ID`) follow upstream
+`NprIE`: the `api.npr.org/query` story (a missing `list` is upstream's
+`KeyError`) as a playlist (its title when non-empty) of the `audio` then
+`multimedia` items. Each item's known `format` files (the first of a list)
+become HLS formats (`hls`, master only, non-fatal), SMIL formats (non-fatal
+download, `rtmp://flash.npr.org/ondemand/` rewritten to
+`https://ondemand.npr.org/`, HTTP/HLS/DASH sources joined like Python's
+`urljoin`, then `_check_formats`; SMIL subtitles are dropped with upstream's
+warning) or direct `threegp`/`mp4`/`mp3` files with their quality; the
+`hlsUrl` stream is read under the ID `hlsUrl`, like upstream. An item without
+formats reads the story page's first JSON-LD `subjectOf` `embedUrl` HLS
+(upstream's `Failed to obtain m3u8 URL` warning when absent). Entries keep the
+item ID, title (else the story's), `altImageUrl` thumbnail and duration.
+SMIL RTMP, F4M and ISM sources, sources without an extension, and invalid
+JSON-LD scripts (skipped without upstream's warning) are not supported.
+`tests/fixtures/sites/npr/` is compared with pinned upstream output.
 
 NRK programs, clips, podcast episodes and channels (`nrk:ID`,
 `nrk:KIND/ID`, `nrk.no/video/PS*ID`, `nrk.no/video/SLUG_ID`,
@@ -3121,6 +4887,19 @@ Photobucket media (`photobucket.com/..._ID.mp4|flv`) follow upstream
 `PhotobucketIE`: the page's `Pb.Data.Shared.MEDIA` JSON (`Extracting
 information`) with the embed code's unquoted `file=` URL, username, creation
 date, title and thumbnail as an untyped result with the URL's extension.
+
+PIA LIVE STREAM players (`player.pia-live.jp/stream/KEY`) follow upstream
+`PiaLiveIE`: the page's `programCode`/`articleCode` variables (fatal), the
+`<title>` (non-fatal), a `play-end` element as `The video is no longer
+available`, a `play-waiting__date` start as upstream's expected no-formats
+error (with `--ignore-no-formats-error`, an `is_upcoming` result with its
+`+09:00` release time; an unparsed date is upstream's bare unpack
+`TypeError`), and otherwise the `player-tag-list` API (a multipart POST with
+a random boundary) whose `movie_one_tag` iframe source is followed as a
+`url_transparent` result with the page title and program code as
+`display_id`. With `--write-comments` the `chat-tag-list` API's chat room
+page `_history` rows become `comments` (each request non-fatal).
+`tests/fixtures/sites/pialive/` is compared with pinned upstream output.
 
 Pinterest pins (`pinterest.TLD/pin/[SLUG--]ID`) follow upstream
 `PinterestIE`: the Pin resource API, the pin's video list (HLS with the
@@ -5162,7 +6941,9 @@ Global headers are defaults for the shared HTTP client across direct/HTML5/
 YouTube pages, anonymous player API calls, media probes/downloads, HLS/DASH
 manifests, fragment initialization/segments, AES keys, subtitle sidecars and
 retries. Explicit per-request headers win: HTML5/YouTube media and sidecars retain
-page Referer; transfers use identity encoding and transport-owned range headers;
+page Referer; HTTP media and subtitle downloads send the format's or track's own
+`User-Agent` from its `http_headers` (other format headers are not sent);
+transfers use identity encoding and transport-owned range headers;
 player API Origin/client/version headers retain extractor values. Direct inputs
 without an extractor Referer use the global Referer. Validation does not make
 unsupported authentication or delivery protocols supported.
@@ -5704,5 +7485,6 @@ Instagram, Twitter, NRK, SVT, Arte and Niconico). Not ported: YouTube's
 unplayable videos still raise their reason (upstream warns and lists the
 metadata), WebcameraPL's missing stream stays an error (upstream crashes
 after the warning), LBRY's offline livestreams and Vimeo/LinkedIn/archive.org
-paths are not wired, and Brightcove/JWPlatform smuggled `geo_countries`
-are not read. `--geo-verification-proxy` is accepted without effect.
+paths are not wired, and JWPlatform smuggled `geo_countries` are not read.
+Brightcove reads smuggled `geo_countries` (TVA+ passes `CA`) for its fake IP;
+its random address is not fixtured. `--geo-verification-proxy` is accepted without effect.

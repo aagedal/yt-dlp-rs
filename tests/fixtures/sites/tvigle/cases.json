@@ -1,0 +1,33 @@
+[
+ {
+  "url": "http://www.tvigle.ru/video/sokrat/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://cloud.tvigle.ru/video/5267604/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://cloud.tvigle.ru/video/5267605/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://cloud.tvigle.ru/video/5267606/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://news.tvigle.test/article",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(age_limit)s|%(webpage_url)s"
+  ]
+ }
+]

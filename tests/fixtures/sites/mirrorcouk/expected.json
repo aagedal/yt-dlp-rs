@@ -1,0 +1,59 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.mirror.co.uk/tv/tv-news/love-island-fans-baffled-after-27163139",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"voyyS7SV\", \"title\": \"Love Island: Gemma Owen enters the villa\", \"description\": \"Love Island: Michael Owen's daughter Gemma Owen enters the villa.\", \"thumbnail\": \"https://cdn.jwplayer.com/v2/media/voyyS7SV/poster.jpg?width=720\", \"timestamp\": 1654547895, \"duration\": 57.0, \"subtitles\": {}, \"alt_title\": null, \"genre\": null, \"channel\": null, \"season_number\": null, \"episode_number\": null, \"release_year\": null, \"age_limit\": null, \"formats\": [{\"url\": \"https://cdn.jwplayer.com/videos/voyyS7SV-1.mp4\", \"width\": 640, \"height\": 360, \"tbr\": 600, \"filesize\": 4300000, \"ext\": \"mp4\", \"format_id\": \"360p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 640x360\"}, {\"url\": \"https://cdn.jwplayer.com/videos/voyyS7SV-2.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1800, \"filesize\": 12900000, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\"}], \"original_url\": \"https://www.mirror.co.uk/tv/tv-news/love-island-fans-baffled-after-27163139\", \"webpage_url\": \"https://www.mirror.co.uk/tv/tv-news/love-island-fans-baffled-after-27163139\", \"webpage_url_basename\": \"love-island-fans-baffled-after-27163139\", \"webpage_url_domain\": \"mirror.co.uk\", \"extractor\": \"JWPlatform\", \"extractor_key\": \"JWPlatform\", \"display_id\": \"27163139\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.jwplayer.com/v2/media/voyyS7SV/poster.jpg?width=720\", \"id\": \"0\"}], \"fulltitle\": \"Love Island: Gemma Owen enters the villa\", \"duration_string\": \"57\", \"upload_date\": \"20220606\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cdn.jwplayer.com/videos/voyyS7SV-2.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1800, \"filesize\": 12900000, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\", \"_filename\": \"Love Island\\uff1a Gemma Owen enters the villa [voyyS7SV].mp4\", \"filename\": \"Love Island\\uff1a Gemma Owen enters the villa [voyyS7SV].mp4\", \"__write_download_archive\": false}], \"url\": \"https://cdn.jwplayer.com/videos/voyyS7SV-2.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1800, \"filesize\": 12900000, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.mirror.co.uk/news/uk-news/no-video-27160572",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [MirrorCoUK] 27160572: Unable to extract data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.mirror.co.uk/3am/celebrity-news/broken-json-25344890",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [MirrorCoUK] 25344890: Unable to extract data - Failed to parse JSON (caused by JSONDecodeError('Expecting \\':\\' delimiter in \\'\"videoId\" \"x\"}}\\': line 1 column 26 (char 25)')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.mirror.co.uk/sport/football/news/no-video-data-25346042",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 25346042: An extractor error has occurred. (caused by KeyError('videoData')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

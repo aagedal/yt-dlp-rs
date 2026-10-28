@@ -1,0 +1,154 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://player.mangomolo.com/v1/video?id=29431242&user_id=168&signature=b40e&autoplay=true",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"29431242\", \"title\": \"29431242\", \"uploader_id\": \"168\", \"duration\": 95, \"is_live\": false, \"formats\": [{\"url\": \"rtmp://mango-wowza.test/vod/_definst_/mp4:a.mp4\", \"format_id\": \"rtmp\", \"protocol\": \"rtmp\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"rtmp - unknown\"}, {\"format_id\": \"hls-640\", \"format_index\": null, \"url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/chunklist_360.m3u8\", \"manifest_url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/playlist.m3u8\", \"tbr\": 640.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-640 - 640x360\"}, {\"format_id\": \"hds-1200\", \"url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/media_720\", \"manifest_url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/media_720\", \"ext\": \"unknown_video\", \"protocol\": \"f4m\", \"tbr\": 1200, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-1200 - 1280x720\"}, {\"format_id\": \"hls-1280\", \"format_index\": null, \"url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/chunklist_720.m3u8\", \"manifest_url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/playlist.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1280 - 1280x720\"}], \"webpage_url\": \"https://player.mangomolo.com/v1/video?id=29431242&user_id=168&signature=b40e&autoplay=true\", \"original_url\": \"https://player.mangomolo.com/v1/video?id=29431242&user_id=168&signature=b40e&autoplay=true\", \"webpage_url_basename\": \"video\", \"webpage_url_domain\": \"player.mangomolo.com\", \"extractor\": \"mangomolo:video\", \"extractor_key\": \"MangomoloVideo\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"29431242\", \"fulltitle\": \"29431242\", \"duration_string\": \"1:35\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1280\", \"url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/chunklist_720.m3u8\", \"manifest_url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/playlist.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1280 - 1280x720\", \"_filename\": \"29431242 [29431242].mp4\", \"filename\": \"29431242 [29431242].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1280\", \"format_index\": null, \"url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/chunklist_720.m3u8\", \"manifest_url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/playlist.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1280 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [mangomolo:video] 29431242: Failed to download MPD manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.mangomolo.com/v1/live?channelid=MjM%3D&countries=Q0M%3D&w=100%25",
+   "args": [
+    "--print",
+    "%(id)s|%(is_live)s|%(live_status)s|%(uploader_id)s|%(duration)s|%(formats.:.format_id)j|%(formats.:.protocol)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "23|True|is_live|NA|NA|[\"rtmp\", \"hls-640\", \"dash-v1\", \"hls-1280\"]|[\"rtmp\", \"m3u8\", \"http_dash_segments\", \"m3u8\"]"
+   ],
+   "stderr": [
+    "WARNING: [mangomolo:live] 23: Unable to download f4m manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.mangomolo.com/v1/video?id=1&user_id=1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [mangomolo:video] 1: Unable to extract format url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.mangomolo.com/v1/live?channelid=MjM",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: Incorrect padding"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.mangomolo.com/v1/live?channelid=MjMxN",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: Invalid base64-encoded string: number of data characters (5) cannot be 1 more than a multiple of 4"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.mangomolo.com/v1/live?channelid=%2Fw%3D%3D",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://ayn.om/video/29431242/one",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"29431242\", \"title\": \"AYN video\", \"uploader_id\": \"168\", \"duration\": 95, \"is_live\": false, \"formats\": [{\"url\": \"rtmp://mango-wowza.test/vod/_definst_/mp4:a.mp4\", \"format_id\": \"rtmp\", \"protocol\": \"rtmp\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"rtmp - unknown\"}, {\"format_id\": \"hls-640\", \"format_index\": null, \"url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/chunklist_360.m3u8\", \"manifest_url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/playlist.m3u8\", \"tbr\": 640.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-640 - 640x360\"}, {\"format_id\": \"hds-1200\", \"url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/media_720\", \"manifest_url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/media_720\", \"ext\": \"unknown_video\", \"protocol\": \"f4m\", \"tbr\": 1200, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-1200 - 1280x720\"}, {\"format_id\": \"hls-1280\", \"format_index\": null, \"url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/chunklist_720.m3u8\", \"manifest_url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/playlist.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1280 - 1280x720\"}], \"original_url\": \"https://ayn.om/video/29431242/one\", \"webpage_url\": \"https://ayn.om/video/29431242/one\", \"webpage_url_basename\": \"one\", \"webpage_url_domain\": \"ayn.om\", \"extractor\": \"mangomolo:video\", \"extractor_key\": \"MangomoloVideo\", \"uploader\": \"ayn.om\", \"description\": \"Desc\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"29431242\", \"fulltitle\": \"AYN video\", \"duration_string\": \"1:35\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1280\", \"url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/chunklist_720.m3u8\", \"manifest_url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/playlist.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1280 - 1280x720\", \"_filename\": \"AYN video [29431242].mp4\", \"filename\": \"AYN video [29431242].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1280\", \"format_index\": null, \"url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/chunklist_720.m3u8\", \"manifest_url\": \"https://mango-wowza.test/vod/_definst_/mp4:a.mp4/playlist.m3u8\", \"tbr\": 1280.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1280 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [mangomolo:video] 29431242: Failed to download MPD manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://ayn.om/video/two",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"two\", \"title\": \"Two players\", \"timestamp\": null, \"description\": null, \"thumbnail\": null, \"age_limit\": null, \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"MangomoloLive\", \"_type\": \"url_transparent\", \"url\": \"https://admin.mangomolo.com/analytics/index.php/customers/embed/index?channelid=MjM%3D&x=1\", \"id\": \"MjM%3D\", \"uploader\": \"ayn.om\", \"extractor\": \"mangomolo:live\", \"extractor_key\": \"MangomoloLive\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"MangomoloVideo\", \"_type\": \"url_transparent\", \"url\": \"https://player.mangomolo.com/v1/video?id=29431242&user_id=168&signature=b40e&autoplay=true\", \"id\": \"29431242\", \"uploader\": \"ayn.om\", \"extractor\": \"mangomolo:video\", \"extractor_key\": \"MangomoloVideo\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://ayn.om/video/two\", \"original_url\": \"https://ayn.om/video/two\", \"webpage_url_basename\": \"two\", \"webpage_url_domain\": \"ayn.om\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://ayn.om/video/two",
+   "args": [
+    "-I",
+    "2",
+    "--print",
+    "%(id)s|%(title)s|%(uploader)s|%(webpage_url)s|%(extractor)s|%(playlist_index)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "29431242|29431242|ayn.om|https://player.mangomolo.com/v1/video?id=29431242&user_id=168&signature=b40e&autoplay=true|mangomolo:video|2"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [mangomolo:video] 29431242: Failed to download MPD manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://ayn.om/video/two",
+   "args": [
+    "-I",
+    "1",
+    "--print",
+    "%(id)s|%(uploader)s|%(webpage_url)s|%(extractor)s|%(formats.:.protocol)j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "ERROR: [mangomolo:live] 23: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

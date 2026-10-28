@@ -1,0 +1,49 @@
+[
+ {
+  "url": "https://ciscolive.cisco.com/on-demand-library/?#/session/1423353499155001FoSs",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://ciscolive.cisco.com/on-demand-library/?search.event=ciscoliveus2018&search.technology=a&search.technology=b&search.empty=#/",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://ciscolive.cisco.com/on-demand-library/?search.event=ciscoliveus2018&search.technology=a&search.technology=b&search.empty=#/",
+  "args": [
+   "-I",
+   "1",
+   "--print",
+   "%(id)s|%(title)s|%(creator)s|%(creators)s|%(duration)s|%(location)s|%(series)s|%(description)s|%(webpage_url)s"
+  ]
+ },
+ {
+  "url": "https://ciscolive.cisco.com/on-demand-library/?search.event=ciscoliveus2018&search.technology=a&search.technology=b&search.empty=#/",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(creator)s|%(creators)s|%(duration)s|%(location)s|%(series)s|%(description)s|%(webpage_url)s"
+  ]
+ },
+ {
+  "url": "https://www.ciscolive.com/global/on-demand-library.html?#/session/EMPTY",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.ciscolive.com/global/on-demand-library.html?#/session/NOTITLE",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.ciscolive.com/global/on-demand-library.html?#/session/NOITEMS",
+  "args": [
+   "-j"
+  ]
+ }
+]

@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://www.ultimedia.com/player/getConf/01836272/1/3x5x55k",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video\": {\"title\": \"Il est passionn\\u00e9 de DS\", \"image\": \"https://ultimedia.test/3x5x55k.jpg\", \"duration\": \"89\", \"creationDate\": 1760285363, \"ownerId\": \"3pz33\", \"media_sources\": {\"hls\": {\"hls_auto\": \"https://ultimedia-hls.test/3x5x55k/master.m3u8\"}, \"mp4\": {\"mp4_720\": \"https://ultimedia-pd.test/3x5x55k_720.mp4\", \"mp4_360\": \"https://ultimedia-pd.test/3x5x55k_360.mp4\", \"mp4_x\": null}}}}"
+  },
+  {
+   "url": "https://ultimedia-hls.test/3x5x55k/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.ultimedia.com/player/getConf/01836272/1/lqm3kl",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video\": {\"title\": \"Embed\", \"ownerId\": 7, \"media_sources\": {\"hls\": {\"hls_auto\": \"https://ultimedia-hls.test/missing/master.m3u8\"}}}}"
+  },
+  {
+   "url": "https://www.lemonde.test/article.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><iframe frameborder=\"0\" src=\"//www.ultimedia.com/deliver/generic/iframe/mdtk/01601930/src/lqm3kl/zone/1\"></iframe></html>"
+  },
+  {
+   "url": "https://www.ultimedia.com/player/getConf/01836272/1/nope1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"x\"}"
+  }
+ ]
+}

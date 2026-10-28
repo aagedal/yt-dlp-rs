@@ -1,0 +1,109 @@
+{
+ "routes": [
+  {
+   "url": "https://urplay.se/program/203704-ur-samtiden",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"productData\": {\"id\": 203704, \"title\": \"UR Samtiden - Livet, universum och rymdens m\\u00e4rkliga musik\", \"description\": \"Om vetenskap.\", \"image\": {\"1280x720\": \"https://assets.ur.se/id/203704/images/1_hd.jpg\", \"640x360\": \"https://assets.ur.se/id/203704/images/1_l.jpg\", \"poster\": \"https://assets.ur.se/p.jpg\"}, \"publishedAt\": \"2018-05-14T11:00:00Z\", \"duration\": \"2297\", \"categories\": [\"Kultur & historia\"], \"keywords\": [\"Kritiskt t\\u00e4nkande\", \"Vetenskap\"], \"series\": {\"title\": \"\", \"seriesTitle\": \"UR Samtiden - Vetenskap\", \"label\": \"S\\u00e4song 1\"}, \"episodeNumber\": 3, \"ageRanges\": [{\"from\": 13, \"to\": 19}, {\"from\": \"x\"}, {\"to\": 99}], \"streamingInfo\": {\"raw\": {\"sd\": {\"location\": \"x\"}, \"sweComplete\": {\"language\": \"SV\", \"location\": \"https://media-api.urplay.se/sub/203704.vtt\"}, \"tt\": {\"language\": \"eng\", \"location\": \"https://media-api.urplay.se/sub/203704.tt\"}, \"nolang\": {\"location\": \"https://x.test/a.vtt\"}, \"empty\": {\"language\": \"sv\", \"location\": \"\"}, \"flag\": true}}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://urplay.se/program/190031-tripp-trapp",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"productData\": {\"title\": \"Sovkudde\", \"mainTitle\": \"Tripp, Trapp, Tr\\u00e4d\", \"streamingInfo\": {}, \"ageRanges\": [{\"from\": 0}, {\"from\": 3}]}}}}</script></body></html>"
+  },
+  {
+   "url": "https://urplay.se/program/3-ingen",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"productData\": {\"title\": \"Ingen \\u00e5lder\", \"streamingInfo\": {}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://urplay.se/program/4-legacy",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div data-react-class=\"routes/Product/components/ProgramContainer/ProgramContainer\" data-react-props=\"{&quot;accessibleEpisodes&quot;: [{&quot;id&quot;: 1, &quot;title&quot;: &quot;Annan&quot;}, {&quot;id&quot;: 4, &quot;title&quot;: &quot;Legacy avsnitt&quot;, &quot;streamingInfo&quot;: {}, &quot;ageRanges&quot;: [{&quot;from&quot;: 7}]}]}\"></div></body></html>"
+  },
+  {
+   "url": "https://urplay.se/program/5-tom",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"other\": 1}}}</script></body></html>"
+  },
+  {
+   "url": "https://urplay.se/program/6-nohls",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"productData\": {\"title\": \"Ingen \\u00e5lder\", \"streamingInfo\": {}}}}}</script></body></html>"
+  },
+  {
+   "url": "https://media-api.urplay.se/config-streaming/v1/urplay/sources/203704",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"sources\": {\"hls\": \"https://urplay-hls.test/203704/master.m3u8\"}}"
+  },
+  {
+   "url": "https://media-api.urplay.se/config-streaming/v1/urplay/sources/190031",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"sources\": {\"hls\": \"https://urplay-hls.test/190031/master.m3u8\"}}"
+  },
+  {
+   "url": "https://media-api.urplay.se/config-streaming/v1/urplay/sources/3",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"sources\": {\"hls\": \"https://urplay-hls.test/3/master.m3u8\"}}"
+  },
+  {
+   "url": "https://media-api.urplay.se/config-streaming/v1/urplay/sources/4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"sources\": {\"hls\": \"https://urplay-hls.test/4/master.m3u8\"}}"
+  },
+  {
+   "url": "https://media-api.urplay.se/config-streaming/v1/urplay/sources/6",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"sources\": {\"hls\": \"not a url\"}}"
+  },
+  {
+   "url": "https://urplay-hls.test/203704/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://urplay-hls.test/190031/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://urplay-hls.test/3/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://urplay-hls.test/4/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  }
+ ]
+}

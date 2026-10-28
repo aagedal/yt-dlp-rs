@@ -259,12 +259,10 @@ fn stream_formats(
     // The official player reads `e.get("versions")[0].eStat.ml5`.
     let versions = index(stream, "versions", video_id)?;
     let version = match versions {
-        Value::Array(versions) => versions.first().ok_or_else(|| {
-            Error::Reported(format!(
-                "[{NAME}] {video_id}: An extractor error has occurred. (caused by IndexError('list index out of range')); {}",
-                crate::BUG_REPORTS_MESSAGE
-            ))
-        })?,
+        // An uncaught `IndexError` is reported as its message.
+        Value::Array(versions) => versions
+            .first()
+            .ok_or_else(|| Error::Reported("list index out of range".into()))?,
         _ => return Err(unsupported("stream versions that are not lists")),
     };
     let code = index(index(version, "eStat", video_id)?, "ml5", video_id)?

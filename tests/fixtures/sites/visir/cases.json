@@ -1,0 +1,39 @@
+[
+ {
+  "url": "https://www.visir.is/k/eabb8f7f-ad87-46fb-9469-a0f1dc0fc4bc-1769022963988",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.visir.is/player/0cd5709e-1",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.visir.is/player/0cd5709e-2",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.visir.is/k/0abc-3",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.visir.is/k/0abc-4",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.visir.is/g/20262837896d/frett",
+  "args": [
+   "--print",
+   "%(id)s|%(display_id)s|%(title)s|%(upload_date)s|%(webpage_url)s"
+  ]
+ }
+]

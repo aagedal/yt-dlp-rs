@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://picarto.tv/Setz",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(channel_id)s|%(age_limit)s|%(formats.:.format_id)s"
+  ]
+ },
+ {
+  "url": "https://picarto.tv/Sleepy",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://picarto.tv/ArtofZod/videos/771008",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://picarto.tv/videopopout/1",
+  "args": [
+   "-j"
+  ]
+ }
+]

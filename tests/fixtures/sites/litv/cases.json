@@ -1,0 +1,98 @@
+[
+ {
+  "url": "https://www.litv.tv/drama/watch/VOD00041610",
+  "args": [
+   "--no-geo-bypass",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.litv.tv/drama/watch/VOD00041610",
+  "args": [
+   "--no-geo-bypass",
+   "--flat-playlist",
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.litv.tv/drama/watch/VOD00041610",
+  "args": [
+   "--no-geo-bypass",
+   "-I",
+   "1",
+   "--print",
+   "%(id)s|%(title)s|%(episode)s"
+  ]
+ },
+ {
+  "url": "https://www.litv.tv/drama/watch/VOD00041610",
+  "args": [
+   "--no-geo-bypass",
+   "--no-playlist",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.litv.tv/channel/watch/4gtv-live-1",
+  "args": [
+   "--no-geo-bypass",
+   "--print",
+   "%(id)s|%(title)s|%(formats.0.http_headers.Accept-Encoding)s"
+  ]
+ },
+ {
+  "url": "https://www.litv.tv/vod/drama/content.do?content_id=VOD-auth",
+  "args": [
+   "--no-geo-bypass",
+   "--cookies",
+   "cookies.txt",
+   "--print",
+   "%(id)s|%(title)s"
+  ],
+  "copy": [
+   "cookies.txt"
+  ]
+ },
+ {
+  "url": "https://www.litv.tv/drama/watch/VOD-geo",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.litv.tv/drama/watch/VOD-err",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.litv.tv/drama/watch/VOD-unk",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.litv.tv/drama/watch/VOD-empty",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.litv.tv/drama/watch/VOD-nolive",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.litv.tv/drama/watch/VOD-nonext",
+  "args": [
+   "--no-geo-bypass",
+   "-j"
+  ]
+ }
+]

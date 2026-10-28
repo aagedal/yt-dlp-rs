@@ -1,0 +1,133 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.hollywoodreporter.com/video/dungeons-dragons-cast-sxsw-2023/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"zH4jZaR5\", \"title\": \"Dungeons & Dragons Cast\", \"description\": \"The cast and directors talk about their new film.\", \"thumbnail\": \"https://cdn.jwplayer.com/v2/media/zH4jZaR5/poster.jpg?width=720\", \"timestamp\": 1678586423, \"duration\": 242.0, \"subtitles\": {}, \"alt_title\": null, \"genre\": null, \"channel\": null, \"season_number\": null, \"episode_number\": null, \"release_year\": null, \"age_limit\": null, \"formats\": [{\"url\": \"https://cdn.jwplayer.com/videos/zH4jZaR5-720.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": null, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\"}], \"original_url\": \"https://www.hollywoodreporter.com/video/dungeons-dragons-cast-sxsw-2023/\", \"webpage_url\": \"jwplatform:zH4jZaR5\", \"webpage_url_basename\": \"zH4jZaR5\", \"webpage_url_domain\": null, \"extractor\": \"JWPlatform\", \"extractor_key\": \"JWPlatform\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.jwplayer.com/v2/media/zH4jZaR5/poster.jpg?width=720\", \"id\": \"0\"}], \"display_id\": \"zH4jZaR5\", \"fulltitle\": \"Dungeons & Dragons Cast\", \"duration_string\": \"4:02\", \"upload_date\": \"20230312\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cdn.jwplayer.com/videos/zH4jZaR5-720.mp4\", \"width\": 1280, \"height\": 720, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\", \"_filename\": \"Dungeons & Dragons Cast [zH4jZaR5].mp4\", \"filename\": \"Dungeons & Dragons Cast [zH4jZaR5].mp4\", \"__write_download_archive\": false}], \"url\": \"https://cdn.jwplayer.com/videos/zH4jZaR5-720.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": null, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.hollywoodreporter.com/video/brightcove-thing/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [HollywoodReporter] brightcove-thing: Unsupported showcase type \"brightcove\"; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.hollywoodreporter.com/video/no-card/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: no-card: An extractor error has occurred. (caused by KeyError('data-video-showcase-trigger')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.hollywoodreporter.com/video/no-type/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: no-type: An extractor error has occurred. (caused by KeyError('data-video-showcase-type')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.hollywoodreporter.com/vcategory/heat-vision-breakdown-57822/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"57822\", \"title\": \"heat-vision-breakdown\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-1/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-2/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-3/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-4/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-5/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-6/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-7/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-8/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-9/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-10/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-11/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-12/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-13/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-14/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-15/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.hollywoodreporter.com/video/clip-16/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"HollywoodReporter\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=BaW_jenozKc\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.hollywoodreporter.com/vcategory/heat-vision-breakdown-57822/\", \"original_url\": \"https://www.hollywoodreporter.com/vcategory/heat-vision-breakdown-57822/\", \"webpage_url_basename\": \"heat-vision-breakdown-57822\", \"webpage_url_domain\": \"hollywoodreporter.com\", \"extractor\": \"HollywoodReporterPlaylist\", \"extractor_key\": \"HollywoodReporterPlaylist\", \"release_year\": null, \"playlist_count\": 17, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.hollywoodreporter.com/vcategory/heat-vision-breakdown-57822/",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "16:17",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "16|clip-16|https://www.hollywoodreporter.com/video/clip-16/",
+    "17|NA|https://www.youtube.com/watch?v=BaW_jenozKc"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.hollywoodreporter.com/vcategory/heat-vision-breakdown-57822/",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "2",
+    "--print",
+    "%(id)s|%(ie_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "clip-2|HollywoodReporter"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.hollywoodreporter.com/vcategory/empty-list-100",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"100\", \"title\": \"empty-list\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.hollywoodreporter.com/vcategory/empty-list-100\", \"original_url\": \"https://www.hollywoodreporter.com/vcategory/empty-list-100\", \"webpage_url_basename\": \"empty-list-100\", \"webpage_url_domain\": \"hollywoodreporter.com\", \"extractor\": \"HollywoodReporterPlaylist\", \"extractor_key\": \"HollywoodReporterPlaylist\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.hollywoodreporter.com/vcategory/missing-list-7/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "{\"id\": \"7\", \"title\": \"missing-list\", \"_type\": \"playlist\", \"entries\": [null], \"webpage_url\": \"https://www.hollywoodreporter.com/vcategory/missing-list-7/\", \"original_url\": \"https://www.hollywoodreporter.com/vcategory/missing-list-7/\", \"webpage_url_basename\": \"missing-list-7\", \"webpage_url_domain\": \"hollywoodreporter.com\", \"extractor\": \"HollywoodReporterPlaylist\", \"extractor_key\": \"HollywoodReporterPlaylist\", \"release_year\": null, \"requested_entries\": [1], \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "ERROR: 7: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

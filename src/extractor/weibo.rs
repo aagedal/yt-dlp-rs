@@ -70,7 +70,7 @@ fn str_or_none(value: Option<&Value>) -> Option<String> {
 }
 
 /// Upstream `strip_jsonp`: the callback's argument.
-fn strip_jsonp(code: &str) -> String {
+pub(crate) fn strip_jsonp(code: &str) -> String {
     let trimmed = code.trim_start();
     let body = trimmed.strip_prefix("window.").unwrap_or(trimmed);
     let name_end = body
