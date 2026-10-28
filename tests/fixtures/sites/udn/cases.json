@@ -1,0 +1,21 @@
+[
+ {
+  "url": "https://video.udn.com/embed/news/300040",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.udn.com/play/news/2",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://udn-host.test/news",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(extractor)s|%(format_id)s"
+  ]
+ }
+]

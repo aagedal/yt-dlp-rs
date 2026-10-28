@@ -332,6 +332,7 @@ mod tweakers;
 mod twentythreevideo;
 mod twitch;
 mod twitter;
+mod udn;
 mod umg;
 mod unistra;
 mod unitednations;
@@ -950,6 +951,7 @@ pub use twitter::{
     card_suitable as twitter_card_suitable, shortener_suitable as twitter_shortener_suitable,
     spaces_suitable as twitter_spaces_suitable, suitable as twitter_suitable,
 };
+pub use udn::{UdnEmbed, suitable as udn_suitable};
 pub use umg::{UmgDe, suitable as umg_suitable};
 pub use unistra::{Unistra, suitable as unistra_suitable};
 pub use unitednations::{UnitedNationsWebTv, suitable as unitednations_suitable};

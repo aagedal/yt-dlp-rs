@@ -1914,6 +1914,15 @@ warning) and `ipfs` HLS master playlists with subtitles, the original
 date. User pages (`3speak.tv/user/USER`) follow `ThreeSpeakUserIE`: each
 `data-payout` video as a `ThreeSpeak` URL entry.
 
+UDN video embeds (`video.udn.com/embed|play/news/ID`) follow upstream
+`UDNEmbedIE`: the player page's `options` (title and video map missing are
+upstream's `KeyError`s): a YouTube URL as a `url` result (not fixtured),
+else each video type's resolved URL (fatal HLS, HDS, or `http-TYPE` files
+with height and bitrate from the name), with the poster. Unparsable options
+(upstream's regex fallback) are an unsupported error. UDN embed iframes on
+generic pages are embeds. `tests/fixtures/sites/udn/` is compared with pinned
+upstream output.
+
 UOL videos (`uol.com.br` hosts with `mediaId=ID`, `v=ID`, `view/[KEY/]ID`,
 `video=SLUG` or `video/[YYYY/MM/DD/]ID` paths) follow upstream `UOLIE`: the
 `api.mais.uol.com.br/apiuol/v3/media/detail/ID` item (a missing `item`,

@@ -2108,7 +2108,7 @@ enum Embed {
     Info(WebpageEntry),
 }
 
-static EMBED_SITES: [EmbedSite; 36] = [
+static EMBED_SITES: [EmbedSite; 37] = [
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
@@ -2315,6 +2315,14 @@ static EMBED_SITES: [EmbedSite; 36] = [
         extractor: Some(&super::tvigle::Tvigle),
         embed_urls: super::tvigle::embed_urls,
         temp_id: super::tvigle::temp_id,
+        webpage: None,
+    },
+    EmbedSite {
+        name: super::udn::NAME,
+        key: super::udn::KEY,
+        extractor: Some(&super::udn::UdnEmbed),
+        embed_urls: super::udn::embed_urls,
+        temp_id: super::udn::temp_id,
         webpage: None,
     },
     EmbedSite {

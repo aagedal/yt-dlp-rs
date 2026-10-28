@@ -4089,6 +4089,18 @@
       "scope": "TwitterIE GraphQL (guest token or auth cookies), legacy and syndication APIs selected with the api extractor argument, the HTTP 429 syndication fallback, _graphql_to_legacy errors, HLS/MP4 variants, thumbnails, metadata, multi-video playlists, /video/N with --no-playlist, unified/VMAP cards and followed player/summary/broadcast/audiospace/periscope cards and links; TwitterCardIE redirects; TwitterShortenerIE (t.co, tco:); TwitterAmplifyIE; TwitterBroadcastIE broadcasts and live events; TwitterSpacesIE; PeriscopeBaseIE/PeriscopeIE HLS broadcasts (no RTMP, PeriscopeUserIE or embeds); compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "udn",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/udn.py"
+      ],
+      "rust": [
+        "src/extractor/udn.rs",
+        "tests/fixtures/sites/udn/"
+      ],
+      "scope": "UDNEmbedIE player options with resolved video URLs, and embeds, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "umg",
       "status": "partial",
       "upstream": [
