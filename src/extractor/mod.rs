@@ -47,6 +47,7 @@ mod crtvg;
 mod cultureunplugged;
 mod dailymail;
 mod dailymotion;
+mod damtomo;
 mod dash;
 mod daystar;
 mod democracynow;
@@ -391,6 +392,10 @@ pub use dailymotion::{
 };
 pub(crate) use dailymotion::{
     fetch_pages as fetch_dailymotion_pages, is_pending_state as dailymotion_pending_state,
+};
+pub use damtomo::{
+    DamtomoRecord, DamtomoVideo, record_suitable as damtomo_record_suitable,
+    video_suitable as damtomo_video_suitable,
 };
 pub use daystar::{DaystarClip, suitable as daystar_suitable};
 pub use democracynow::{Democracynow, suitable as democracynow_suitable};

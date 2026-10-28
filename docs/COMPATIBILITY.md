@@ -1875,6 +1875,18 @@ feature; without it, upstream's error text), including
 URL) is, without `--no-playlist`, a `url` result for
 `http://www.dailymotion.com/playlist/ID` followed by the playlist extractor.
 
+DAM★とも karaoke movies and posts (`clubdam.com/app/damtomo/[SP/]karaokeMovie/StreamingDkm.do?karaokeMovieId=ID`,
+`.../karaokePost/StreamingKrk.do?karaokeContributeId=ID`) follow upstream
+`DamtomoVideoIE` and `DamtomoRecordIE`: the canonical page decoded like
+Python's strict `sjis` codec (JIS X 0208 only, U+FFFD for other rows), a
+redirect to `/sorry/` and the server-side error heading as upstream's
+errors, the public comment, profile ID and the page's `<p|div class>` texts
+(song title as title and track, artist, singer without `さん`, date, view and
+like counts; upstream's `KeyError`s for a missing singer or count), and the
+stream XML's namespaced `streamingUrl` HLS (`Failed to obtain m3u8 URL`
+without it). `tests/fixtures/sites/damtomo/` is compared with pinned upstream
+output.
+
 Dailymotion playlists (`dailymotion.TLD/playlist/xID`, upstream
 `DailymotionPlaylistIE`), channels (`dailymotion.TLD/[old/]user/NAME` and
 `dailymotion.TLD/NAME`, `DailymotionUserIE`) and video searches
