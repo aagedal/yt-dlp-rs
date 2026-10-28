@@ -1,0 +1,18 @@
+[
+ {"url": "http://www.audiomack.com/song/roosh-williams/extraordinary", "args": ["-j"]},
+ {"url": "https://audiomack.com/roosh-williams/song/extraordinary", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.audiomack.com/song/someone/no-id", "args": ["-j"]},
+ {"url": "http://www.audiomack.com/song/hip-hop-daily/black-mamba-freestyle", "args": ["--print", "%(id)s|%(title)s|%(uploader)s|%(extractor)s|%(webpage_url)s|%(original_url)s"]},
+ {"url": "http://www.audiomack.com/song/hip-hop-daily/black-mamba-freestyle", "args": ["-J"]},
+ {"url": "http://www.audiomack.com/song/bad/error", "args": ["-j"]},
+ {"url": "http://www.audiomack.com/song/bad/empty", "args": ["-j"]},
+ {"url": "http://www.audiomack.com/song/bad/missing", "args": ["-j"]},
+ {"url": "http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape", "args": ["-J"]},
+ {"url": "http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://audiomack.com/flytunezcom/album/tha-tour-part-2-mixtape", "args": ["--no-progress", "-o", "%(playlist_index)s-%(id)s.%(ext)s"]},
+ {"url": "http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape", "args": ["--print", "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(uploader)s|%(ext)s|%(extractor)s|%(webpage_url)s"]},
+ {"url": "http://www.audiomack.com/album/fakeshoredrive/ppp-pistol-p-project", "args": ["-J"]},
+ {"url": "http://www.audiomack.com/album/bad/first", "args": ["-J"]},
+ {"url": "http://www.audiomack.com/album/bad/later", "args": ["-J"]},
+ {"url": "http://www.audiomack.com/album/bad/http", "args": ["-J"]}
+]

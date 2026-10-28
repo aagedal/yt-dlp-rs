@@ -257,22 +257,21 @@ impl PlaylistSelection {
                 .cloned()
                 .unwrap_or(serde_json::Value::Null)
         };
+        // `playlist_result(entries)` without an ID (an `id: None` extra).
+        let id = if playlist.id.is_empty()
+            && playlist.extra.get("id") == Some(&serde_json::Value::Null)
+        {
+            serde_json::Value::Null
+        } else {
+            playlist.id.clone().into()
+        };
         let defaults: [(&str, serde_json::Value); 10] = [
+            // `title or id`.
             (
                 "playlist",
-                title.clone().unwrap_or_else(|| playlist.id.clone()).into(),
+                title.clone().map_or_else(|| id.clone(), Into::into),
             ),
-            // `playlist_result(entries)` without an ID (an `id: None` extra).
-            (
-                "playlist_id",
-                if playlist.id.is_empty()
-                    && playlist.extra.get("id") == Some(&serde_json::Value::Null)
-                {
-                    serde_json::Value::Null
-                } else {
-                    playlist.id.clone().into()
-                },
-            ),
+            ("playlist_id", id),
             ("playlist_title", title.into()),
             ("playlist_uploader", field("uploader")),
             ("playlist_uploader_id", field("uploader_id")),

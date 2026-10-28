@@ -955,6 +955,23 @@ formatted description), duration, author and author URL, each falling back to
 upstream's OpenGraph/meta/regex lookups with their non-fatal warnings (the
 audio URL's is fatal), as an untyped result.
 
+Audiomack songs (`[www.]audiomack.com/song/ARTIST/SLUG` and
+`audiomack.com/ARTIST/song/SLUG`) follow upstream `AudiomackIE`: the extended
+`api/music/url/song/ARTIST/SLUG` JSON (a missing, empty or `error` response
+URL is upstream's `Invalid url URL` error) as an untyped `id`/`uploader`/
+`title`/`url` result (the ID falls back to the URL tag; a `None` title gets
+the generic title). A media URL the SoundCloud extractor accepts is followed
+as a `url` result of that extractor. Albums (`audiomack.com/album/...`,
+`.../album/...`) follow `AudiomackAlbumIE`: track numbers from 0 are queried
+(`Querying song information (N)`) until a response with an empty URL (a
+response without `url` or with `error` is upstream's `Invalid url for track
+N of album url URL`); each song is an untyped entry whose ID and title fall
+back to its media URL basename before the last dot, and the playlist takes
+the first `album_id`/`album_title` seen as its ID and title (neither when
+absent). Non-object responses and non-string or relative media URLs remain
+explicit native errors. `tests/fixtures/sites/audiomack/` is compared with
+pinned upstream output.
+
 BehindKink posts (`behindkink.com/YYYY/MM/DD/SLUG`, marked broken upstream with
 its warning) follow upstream `BehindKinkIE`: the fatal `<source>` URL (its
 basename before `_` as the ID), OpenGraph title/image/description with
@@ -2308,6 +2325,25 @@ tag names, in upstream's override order. Several distinct download paths
 (whose order upstream takes from a randomized Python set), unparsable API
 responses and failed page downloads remain explicit native errors.
 `tests/fixtures/sites/ivoox/` is compared with pinned upstream output.
+
+Jamendo tracks (`[www.]jamendo.com/track/ID[/DISPLAY_ID]`,
+`licensing.jamendo.com/LANG/track/ID...`) follow upstream `JamendoIE`: the
+first item of the `www.jamendo.com/api/tracks?id[]=ID` JSON list (sent with
+upstream's random `X-Jam-Call` SHA-1 header; an empty list is upstream's
+`list index out of range`, a missing `name` its `KeyError`), then the
+non-fatal artist and album lookups (a failed one warns and ends in upstream's
+`'bool' object is not subscriptable`). Formats are the four fixed
+`mp31`/`mp32`/`ogg1`/`flac` URLs with their `quality`; each distinct cover
+URL is HEAD-requested (`Checking thumbnail extension`; failed requests are
+skipped silently) for its extension (default `jpg`) and sized from its
+`sizeN` key. Metadata: title/track, description, duration, artist, album,
+`-`-joined `licenseCC`, creation timestamp, listen/favorite/rating stats and
+tag names. Albums (`[www.]jamendo.com/album/ID`) follow `JamendoAlbumIE`:
+the album's tracks with an ID as `url_transparent` Jamendo entries carrying
+the album name, titled with the album name and described by the cleaned
+English description. Non-list API responses, non-object items and missing
+artist/album IDs remain explicit native errors.
+`tests/fixtures/sites/jamendo/` is compared with pinned upstream output.
 
 JoVE videos (`jove.com/video/ID`) follow upstream `JoveIE`: the page's fatal
 chapters ID, the chapters XML's root `video` attribute (`Downloading chapters

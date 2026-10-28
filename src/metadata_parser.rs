@@ -572,7 +572,11 @@ pub fn set_field(info: &mut VideoInfo, key: &str, value: Value) {
                 format.byte_index = previous.byte_index;
             }
         }
-        let represented = serde_json::to_value(&updated)
+        // Whether a typed field holds the value: an untyped key's previous
+        // value in `extra` does not count.
+        let mut probe = updated.clone();
+        probe.extra.shift_remove(key);
+        let represented = serde_json::to_value(&probe)
             .ok()
             .and_then(|dict| dict.get(key).cloned())
             == Some(value.clone());

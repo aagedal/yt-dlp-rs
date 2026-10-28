@@ -1,0 +1,236 @@
+{
+ "routes": [
+  {
+   "url": "https://www.jamendo.com/api/tracks?id%5B%5D=196219",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"id\": 196219, \"name\": \"Stories from Emona I\", \"duration\": 210, \"artistId\": 7743, \"albumId\": 29279, \"description\": null, \"dateCreated\": 1217438117, \"cover\": {\"big\": {\"size300\": \"https://usercontent.jamendo.com?type=album&id=29279&width=300&trackid=196219\", \"size600\": \"https://usercontent.jamendo.com?type=album&id=29279&width=600&trackid=196219\"}, \"small\": {\"size100\": \"https://usercontent.jamendo.com?type=album&id=29279&width=100&trackid=196219\", \"size300\": \"https://usercontent.jamendo.com?type=album&id=29279&width=300&trackid=196219\", \"size50\": \"\", \"sizeX\": \"https://usercontent.jamendo.com/x.png\"}}, \"tags\": [{\"name\": \"piano\"}, {\"name\": \"peaceful\"}, {}, {\"name\": \"\"}, {\"name\": \"newage\"}], \"stats\": {\"listenedAll\": 1234, \"favorited\": \"56\", \"averageNote\": 4.5}, \"licenseCC\": [\"by\", \"nc\", \"nd\"]}]"
+  },
+  {
+   "url": "https://www.jamendo.com/api/artists?id%5B%5D=7743",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"id\": 7743, \"name\": \"Maya Filipi\\u010d\"}]"
+  },
+  {
+   "url": "https://www.jamendo.com/api/albums?id%5B%5D=29279",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"id\": 29279, \"name\": \"Between two worlds\"}]"
+  },
+  {
+   "url": "https://usercontent.jamendo.com/?type=album&id=29279&width=300&trackid=196219",
+   "headers": {
+    "Content-Type": "image/jpeg"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://usercontent.jamendo.com/?type=album&id=29279&width=600&trackid=196219",
+   "headers": {
+    "Content-Type": "image/webp"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://usercontent.jamendo.com/?type=album&id=29279&width=100&trackid=196219",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://usercontent.jamendo.com/x.png",
+   "headers": {},
+   "body": ""
+  },
+  {
+   "url": "https://mp3l.jamendo.com/?trackid=196219&format=mp31&from=app-97dab294",
+   "headers": {
+    "Content-Type": "audio/flac"
+   },
+   "body": "fLaCxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+   "url": "https://mp3d.jamendo.com/?trackid=196219&format=mp32&from=app-97dab294",
+   "headers": {
+    "Content-Type": "audio/flac"
+   },
+   "body": "fLaCxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+   "url": "https://ogg.jamendo.com/?trackid=196219&format=ogg1&from=app-97dab294",
+   "headers": {
+    "Content-Type": "audio/flac"
+   },
+   "body": "fLaCxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+   "url": "https://flac.jamendo.com/?trackid=196219&format=flac&from=app-97dab294",
+   "headers": {
+    "Content-Type": "audio/flac"
+   },
+   "body": "fLaCxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+   "url": "https://www.jamendo.com/api/tracks?id%5B%5D=1496667",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"name\": \"Energetic Rock\", \"artistId\": 9, \"albumId\": 8, \"duration\": \"95\"}]"
+  },
+  {
+   "url": "https://www.jamendo.com/api/artists?id%5B%5D=9",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"id\": 9}]"
+  },
+  {
+   "url": "https://www.jamendo.com/api/albums?id%5B%5D=8",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"id\": 8, \"name\": null}]"
+  },
+  {
+   "url": "https://www.jamendo.com/api/albums?id%5B%5D=121486",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"id\": 121486, \"name\": \"Duck On Cover\", \"description\": {\"en\": \"<p>Shearer&#39;s <b>album</b></p><br/>Second line\", \"fr\": \"x\"}, \"tracks\": [{\"id\": 1032333}, {\"id\": null}, {\"name\": \"no id\"}, {\"id\": \"1032330\"}]}]"
+  },
+  {
+   "url": "https://www.jamendo.com/api/tracks?id%5B%5D=1032333",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"id\": 1032333, \"name\": \"Warmachine\", \"artistId\": 1, \"albumId\": 121486, \"duration\": 190, \"dateCreated\": 1368089771, \"licenseCC\": [\"by\"], \"tags\": [{\"name\": \"rock\"}], \"stats\": {\"listenedAll\": 10, \"favorited\": 2, \"averageNote\": 4}}]"
+  },
+  {
+   "url": "https://www.jamendo.com/api/tracks?id%5B%5D=1032330",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"id\": 1032330, \"name\": \"Without Your Ghost\", \"artistId\": 1, \"albumId\": 121486, \"duration\": 190, \"dateCreated\": 1368089771, \"licenseCC\": [\"by\"], \"tags\": [{\"name\": \"rock\"}], \"stats\": {\"listenedAll\": 10, \"favorited\": 2, \"averageNote\": 4}}]"
+  },
+  {
+   "url": "https://www.jamendo.com/api/artists?id%5B%5D=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"name\": \"Shearer\"}]"
+  },
+  {
+   "url": "https://mp3l.jamendo.com/?trackid=1032333&format=mp31&from=app-97dab294",
+   "headers": {
+    "Content-Type": "audio/flac"
+   },
+   "body": "fLaCyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+  },
+  {
+   "url": "https://mp3l.jamendo.com/?trackid=1032330&format=mp31&from=app-97dab294",
+   "headers": {
+    "Content-Type": "audio/flac"
+   },
+   "body": "fLaCyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+  },
+  {
+   "url": "https://mp3d.jamendo.com/?trackid=1032333&format=mp32&from=app-97dab294",
+   "headers": {
+    "Content-Type": "audio/flac"
+   },
+   "body": "fLaCyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+  },
+  {
+   "url": "https://mp3d.jamendo.com/?trackid=1032330&format=mp32&from=app-97dab294",
+   "headers": {
+    "Content-Type": "audio/flac"
+   },
+   "body": "fLaCyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+  },
+  {
+   "url": "https://ogg.jamendo.com/?trackid=1032333&format=ogg1&from=app-97dab294",
+   "headers": {
+    "Content-Type": "audio/flac"
+   },
+   "body": "fLaCyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+  },
+  {
+   "url": "https://ogg.jamendo.com/?trackid=1032330&format=ogg1&from=app-97dab294",
+   "headers": {
+    "Content-Type": "audio/flac"
+   },
+   "body": "fLaCyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+  },
+  {
+   "url": "https://flac.jamendo.com/?trackid=1032333&format=flac&from=app-97dab294",
+   "headers": {
+    "Content-Type": "audio/flac"
+   },
+   "body": "fLaCyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+  },
+  {
+   "url": "https://flac.jamendo.com/?trackid=1032330&format=flac&from=app-97dab294",
+   "headers": {
+    "Content-Type": "audio/flac"
+   },
+   "body": "fLaCyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+  },
+  {
+   "url": "https://www.jamendo.com/api/albums?id%5B%5D=5",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"id\": 5}]"
+  },
+  {
+   "url": "https://www.jamendo.com/api/tracks?id%5B%5D=404",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[]"
+  },
+  {
+   "url": "https://www.jamendo.com/api/tracks?id%5B%5D=777",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[]"
+  },
+  {
+   "url": "https://www.jamendo.com/api/tracks?id%5B%5D=888",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"artistId\": 1, \"albumId\": 121486}]"
+  },
+  {
+   "url": "https://www.jamendo.com/api/tracks?id%5B%5D=889",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"name\": \"Lonely\", \"artistId\": 404, \"albumId\": 121486}]"
+  },
+  {
+   "url": "https://www.jamendo.com/api/artists?id%5B%5D=404",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://www.jamendo.com/api/albums?id%5B%5D=6",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[]"
+  }
+ ]
+}

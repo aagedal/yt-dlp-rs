@@ -1,0 +1,245 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.jamendo.com/track/196219/stories-from-emona-i",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"196219\", \"display_id\": \"stories-from-emona-i\", \"thumbnails\": [{\"id\": \"sizeX\", \"ext\": \"jpg\", \"url\": \"https://usercontent.jamendo.com/x.png\", \"width\": null, \"height\": null}, {\"id\": \"size300\", \"ext\": \"jpg\", \"url\": \"https://usercontent.jamendo.com?type=album&id=29279&width=300&trackid=196219\", \"width\": 300, \"height\": 300, \"resolution\": \"300x300\"}, {\"id\": \"size600\", \"ext\": \"webp\", \"url\": \"https://usercontent.jamendo.com?type=album&id=29279&width=600&trackid=196219\", \"width\": 600, \"height\": 600, \"resolution\": \"600x600\"}], \"title\": \"Stories from Emona I\", \"description\": null, \"duration\": 210, \"artist\": \"Maya Filipi\\u010d\", \"track\": \"Stories from Emona I\", \"album\": \"Between two worlds\", \"formats\": [{\"url\": \"https://mp3l.jamendo.com/?trackid=196219&format=mp31&from=app-97dab294\", \"format_id\": \"mp31\", \"ext\": \"mp3\", \"quality\": 0, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp31 - unknown\"}, {\"url\": \"https://mp3d.jamendo.com/?trackid=196219&format=mp32&from=app-97dab294\", \"format_id\": \"mp32\", \"ext\": \"mp3\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp32 - unknown\"}, {\"url\": \"https://ogg.jamendo.com/?trackid=196219&format=ogg1&from=app-97dab294\", \"format_id\": \"ogg1\", \"ext\": \"ogg\", \"quality\": 2, \"protocol\": \"https\", \"video_ext\": \"ogg\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"ogg1 - unknown\"}, {\"url\": \"https://flac.jamendo.com/?trackid=196219&format=flac&from=app-97dab294\", \"format_id\": \"flac\", \"ext\": \"flac\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"flac\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"flac\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flac - unknown\"}], \"license\": \"by-nc-nd\", \"timestamp\": 1217438117, \"view_count\": 1234, \"like_count\": 56, \"average_rating\": 4, \"tags\": [\"piano\", \"peaceful\", \"newage\"], \"webpage_url\": \"https://www.jamendo.com/track/196219/stories-from-emona-i\", \"original_url\": \"https://www.jamendo.com/track/196219/stories-from-emona-i\", \"webpage_url_basename\": \"stories-from-emona-i\", \"webpage_url_domain\": \"jamendo.com\", \"extractor\": \"Jamendo\", \"extractor_key\": \"Jamendo\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://usercontent.jamendo.com?type=album&id=29279&width=600&trackid=196219\", \"fulltitle\": \"Stories from Emona I\", \"duration_string\": \"3:30\", \"upload_date\": \"20080730\", \"release_year\": null, \"artists\": [\"Maya Filipi\\u010d\"], \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://flac.jamendo.com/?trackid=196219&format=flac&from=app-97dab294\", \"format_id\": \"flac\", \"ext\": \"flac\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"flac\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"flac\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flac - unknown\", \"_filename\": \"Stories from Emona I [196219].flac\", \"filename\": \"Stories from Emona I [196219].flac\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.jamendo.com/track/196219/stories-from-emona-i",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Jamendo] Extracting URL: https://www.jamendo.com/track/196219/stories-from-emona-i",
+    "[Jamendo] 196219: Downloading JSON metadata",
+    "[Jamendo] 7743: Downloading JSON metadata",
+    "[Jamendo] 29279: Downloading JSON metadata",
+    "[Jamendo] 196219: Checking thumbnail extension",
+    "[Jamendo] 196219: Checking thumbnail extension",
+    "[Jamendo] 196219: Checking thumbnail extension",
+    "[Jamendo] 196219: Checking thumbnail extension",
+    "[info] Available formats for 196219:",
+    "ID   EXT  RESOLUTION | PROTO | VCODEC  ACODEC",
+    "----------------------------------------------",
+    "mp31 mp3  unknown    | https | unknown mp3",
+    "mp32 mp3  unknown    | https | unknown mp3",
+    "ogg1 ogg  unknown    | https | unknown unknown",
+    "flac flac unknown    | https | unknown flac"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.jamendo.com/track/196219/stories-from-emona-i",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Jamendo] Extracting URL: https://www.jamendo.com/track/196219/stories-from-emona-i",
+    "[Jamendo] 196219: Downloading JSON metadata",
+    "[Jamendo] 7743: Downloading JSON metadata",
+    "[Jamendo] 29279: Downloading JSON metadata",
+    "[Jamendo] 196219: Checking thumbnail extension",
+    "[Jamendo] 196219: Checking thumbnail extension",
+    "[Jamendo] 196219: Checking thumbnail extension",
+    "[Jamendo] 196219: Checking thumbnail extension",
+    "[info] 196219: Downloading 1 format(s): flac",
+    "[download] Destination: 196219.flac",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "196219.flac": 64
+   }
+  },
+  {
+   "url": "https://licensing.jamendo.com/en/track/1496667/energetic-rock",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1496667\", \"display_id\": \"energetic-rock\", \"thumbnails\": [], \"title\": \"Energetic Rock\", \"description\": null, \"duration\": 95, \"artist\": null, \"track\": \"Energetic Rock\", \"album\": null, \"formats\": [{\"url\": \"https://mp3l.jamendo.com/?trackid=1496667&format=mp31&from=app-97dab294\", \"format_id\": \"mp31\", \"ext\": \"mp3\", \"quality\": 0, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp31 - unknown\"}, {\"url\": \"https://mp3d.jamendo.com/?trackid=1496667&format=mp32&from=app-97dab294\", \"format_id\": \"mp32\", \"ext\": \"mp3\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp32 - unknown\"}, {\"url\": \"https://ogg.jamendo.com/?trackid=1496667&format=ogg1&from=app-97dab294\", \"format_id\": \"ogg1\", \"ext\": \"ogg\", \"quality\": 2, \"protocol\": \"https\", \"video_ext\": \"ogg\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"ogg1 - unknown\"}, {\"url\": \"https://flac.jamendo.com/?trackid=1496667&format=flac&from=app-97dab294\", \"format_id\": \"flac\", \"ext\": \"flac\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"flac\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"flac\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flac - unknown\"}], \"license\": null, \"timestamp\": null, \"view_count\": null, \"like_count\": null, \"average_rating\": null, \"tags\": [], \"webpage_url\": \"https://licensing.jamendo.com/en/track/1496667/energetic-rock\", \"original_url\": \"https://licensing.jamendo.com/en/track/1496667/energetic-rock\", \"webpage_url_basename\": \"energetic-rock\", \"webpage_url_domain\": \"licensing.jamendo.com\", \"extractor\": \"Jamendo\", \"extractor_key\": \"Jamendo\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Energetic Rock\", \"duration_string\": \"1:35\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://flac.jamendo.com/?trackid=1496667&format=flac&from=app-97dab294\", \"format_id\": \"flac\", \"ext\": \"flac\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"flac\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"flac\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flac - unknown\", \"_filename\": \"Energetic Rock [1496667].flac\", \"filename\": \"Energetic Rock [1496667].flac\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://jamendo.com/track/1496667",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(artist)s|%(album)s|%(license)s|%(tags)s|%(thumbnail)s|%(duration)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1496667|1496667|Energetic Rock|NA|NA|NA|[]|NA|95"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.jamendo.com/album/121486/duck-on-cover",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"121486\", \"title\": \"Duck On Cover\", \"description\": \"Shearer's album\\nSecond line\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"1032333\", \"display_id\": \"1032333\", \"thumbnails\": [], \"title\": \"Warmachine\", \"description\": null, \"duration\": 190, \"artist\": \"Shearer\", \"track\": \"Warmachine\", \"album\": \"Duck On Cover\", \"formats\": [{\"url\": \"https://mp3l.jamendo.com/?trackid=1032333&format=mp31&from=app-97dab294\", \"format_id\": \"mp31\", \"ext\": \"mp3\", \"quality\": 0, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp31 - unknown\"}, {\"url\": \"https://mp3d.jamendo.com/?trackid=1032333&format=mp32&from=app-97dab294\", \"format_id\": \"mp32\", \"ext\": \"mp3\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp32 - unknown\"}, {\"url\": \"https://ogg.jamendo.com/?trackid=1032333&format=ogg1&from=app-97dab294\", \"format_id\": \"ogg1\", \"ext\": \"ogg\", \"quality\": 2, \"protocol\": \"https\", \"video_ext\": \"ogg\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"ogg1 - unknown\"}, {\"url\": \"https://flac.jamendo.com/?trackid=1032333&format=flac&from=app-97dab294\", \"format_id\": \"flac\", \"ext\": \"flac\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"flac\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"flac\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flac - unknown\"}], \"license\": \"by\", \"timestamp\": 1368089771, \"view_count\": 10, \"like_count\": 2, \"average_rating\": 4, \"tags\": [\"rock\"], \"webpage_url\": \"https://www.jamendo.com/track/1032333\", \"original_url\": \"https://www.jamendo.com/track/1032333\", \"webpage_url_basename\": \"1032333\", \"webpage_url_domain\": \"jamendo.com\", \"extractor\": \"Jamendo\", \"extractor_key\": \"Jamendo\", \"playlist_count\": 2, \"playlist\": \"Duck On Cover\", \"playlist_id\": \"121486\", \"playlist_title\": \"Duck On Cover\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.jamendo.com/album/121486/duck-on-cover\", \"n_entries\": 2, \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"fulltitle\": \"Warmachine\", \"duration_string\": \"3:10\", \"upload_date\": \"20130509\", \"release_year\": null, \"artists\": [\"Shearer\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://flac.jamendo.com/?trackid=1032333&format=flac&from=app-97dab294\", \"format_id\": \"flac\", \"ext\": \"flac\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"flac\", \"audio_ext\": \"none\", \"acodec\": \"flac\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flac - unknown\", \"_filename\": \"Warmachine [1032333].flac\", \"filename\": \"Warmachine [1032333].flac\", \"__write_download_archive\": false}], \"url\": \"https://flac.jamendo.com/?trackid=1032333&format=flac&from=app-97dab294\", \"format_id\": \"flac\", \"ext\": \"flac\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"flac\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"flac\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flac - unknown\"}, {\"id\": \"1032330\", \"display_id\": \"1032330\", \"thumbnails\": [], \"title\": \"Without Your Ghost\", \"description\": null, \"duration\": 190, \"artist\": \"Shearer\", \"track\": \"Without Your Ghost\", \"album\": \"Duck On Cover\", \"formats\": [{\"url\": \"https://mp3l.jamendo.com/?trackid=1032330&format=mp31&from=app-97dab294\", \"format_id\": \"mp31\", \"ext\": \"mp3\", \"quality\": 0, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp31 - unknown\"}, {\"url\": \"https://mp3d.jamendo.com/?trackid=1032330&format=mp32&from=app-97dab294\", \"format_id\": \"mp32\", \"ext\": \"mp3\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp32 - unknown\"}, {\"url\": \"https://ogg.jamendo.com/?trackid=1032330&format=ogg1&from=app-97dab294\", \"format_id\": \"ogg1\", \"ext\": \"ogg\", \"quality\": 2, \"protocol\": \"https\", \"video_ext\": \"ogg\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"ogg1 - unknown\"}, {\"url\": \"https://flac.jamendo.com/?trackid=1032330&format=flac&from=app-97dab294\", \"format_id\": \"flac\", \"ext\": \"flac\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"flac\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"flac\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flac - unknown\"}], \"license\": \"by\", \"timestamp\": 1368089771, \"view_count\": 10, \"like_count\": 2, \"average_rating\": 4, \"tags\": [\"rock\"], \"webpage_url\": \"https://www.jamendo.com/track/1032330\", \"original_url\": \"https://www.jamendo.com/track/1032330\", \"webpage_url_basename\": \"1032330\", \"webpage_url_domain\": \"jamendo.com\", \"extractor\": \"Jamendo\", \"extractor_key\": \"Jamendo\", \"playlist_count\": 2, \"playlist\": \"Duck On Cover\", \"playlist_id\": \"121486\", \"playlist_title\": \"Duck On Cover\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.jamendo.com/album/121486/duck-on-cover\", \"n_entries\": 2, \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"fulltitle\": \"Without Your Ghost\", \"duration_string\": \"3:10\", \"upload_date\": \"20130509\", \"release_year\": null, \"artists\": [\"Shearer\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://flac.jamendo.com/?trackid=1032330&format=flac&from=app-97dab294\", \"format_id\": \"flac\", \"ext\": \"flac\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"flac\", \"audio_ext\": \"none\", \"acodec\": \"flac\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flac - unknown\", \"_filename\": \"Without Your Ghost [1032330].flac\", \"filename\": \"Without Your Ghost [1032330].flac\", \"__write_download_archive\": false}], \"url\": \"https://flac.jamendo.com/?trackid=1032330&format=flac&from=app-97dab294\", \"format_id\": \"flac\", \"ext\": \"flac\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"flac\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"flac\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flac - unknown\"}], \"webpage_url\": \"https://www.jamendo.com/album/121486/duck-on-cover\", \"original_url\": \"https://www.jamendo.com/album/121486/duck-on-cover\", \"webpage_url_basename\": \"duck-on-cover\", \"webpage_url_domain\": \"jamendo.com\", \"extractor\": \"JamendoAlbum\", \"extractor_key\": \"JamendoAlbum\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.jamendo.com/album/121486/duck-on-cover",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"121486\", \"title\": \"Duck On Cover\", \"description\": \"Shearer's album\\nSecond line\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url_transparent\", \"url\": \"https://www.jamendo.com/track/1032333\", \"ie_key\": \"Jamendo\", \"id\": \"1032333\", \"album\": \"Duck On Cover\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url_transparent\", \"url\": \"https://www.jamendo.com/track/1032330\", \"ie_key\": \"Jamendo\", \"id\": \"1032330\", \"album\": \"Duck On Cover\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.jamendo.com/album/121486/duck-on-cover\", \"original_url\": \"https://www.jamendo.com/album/121486/duck-on-cover\", \"webpage_url_basename\": \"duck-on-cover\", \"webpage_url_domain\": \"jamendo.com\", \"extractor\": \"JamendoAlbum\", \"extractor_key\": \"JamendoAlbum\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.jamendo.com/album/121486",
+   "args": [
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(album)s|%(artist)s|%(extractor)s|%(webpage_url)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "121486|Duck On Cover|1|1032333|Warmachine|Duck On Cover|Shearer|Jamendo|https://www.jamendo.com/track/1032333|flac",
+    "121486|Duck On Cover|2|1032330|Without Your Ghost|Duck On Cover|Shearer|Jamendo|https://www.jamendo.com/track/1032330|flac"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.jamendo.com/album/121486",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(playlist_index)s-%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[JamendoAlbum] Extracting URL: https://www.jamendo.com/album/121486",
+    "[JamendoAlbum] 121486: Downloading JSON metadata",
+    "[download] Downloading playlist: Duck On Cover",
+    "[JamendoAlbum] Playlist Duck On Cover: Downloading 2 items of 2",
+    "[download] Downloading item 1 of 2",
+    "[Jamendo] Extracting URL: https://www.jamendo.com/track/1032333",
+    "[Jamendo] 1032333: Downloading JSON metadata",
+    "[Jamendo] 1: Downloading JSON metadata",
+    "[Jamendo] 121486: Downloading JSON metadata",
+    "[info] 1032333: Downloading 1 format(s): flac",
+    "[download] Destination: 1-1032333.flac",
+    "[download] Download completed",
+    "[download] Downloading item 2 of 2",
+    "[Jamendo] Extracting URL: https://www.jamendo.com/track/1032330",
+    "[Jamendo] 1032330: Downloading JSON metadata",
+    "[Jamendo] 1: Downloading JSON metadata",
+    "[Jamendo] 121486: Downloading JSON metadata",
+    "[info] 1032330: Downloading 1 format(s): flac",
+    "[download] Destination: 2-1032330.flac",
+    "[download] Download completed",
+    "[download] Finished downloading playlist: Duck On Cover"
+   ],
+   "stderr": [],
+   "files": {
+    "1-1032333.flac": 44,
+    "2-1032330.flac": 44
+   }
+  },
+  {
+   "url": "https://www.jamendo.com/album/5",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.jamendo.com/album/5\", \"original_url\": \"https://www.jamendo.com/album/5\", \"webpage_url_basename\": \"5\", \"webpage_url_domain\": \"jamendo.com\", \"extractor\": \"JamendoAlbum\", \"extractor_key\": \"JamendoAlbum\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.jamendo.com/track/404",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Jamendo] 404: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.jamendo.com/track/777",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.jamendo.com/track/888",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 888: An extractor error has occurred. (caused by KeyError('name')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.jamendo.com/track/889",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [Jamendo] 404: Unable to download JSON metadata: HTTP Error 404: Not Found",
+    "ERROR: 'bool' object is not subscriptable"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.jamendo.com/album/6",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  }
+ ]
+}

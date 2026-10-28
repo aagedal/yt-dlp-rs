@@ -7,6 +7,7 @@ mod archiveorg;
 mod ard;
 mod arte;
 mod audioboom;
+mod audiomack;
 mod bandcamp;
 mod beacon;
 mod behindkink;
@@ -103,6 +104,7 @@ mod internazionale;
 pub(crate) mod ism;
 mod israelnationalnews;
 mod ivoox;
+mod jamendo;
 mod jove;
 mod json_ld;
 mod jwplatform;
@@ -285,6 +287,10 @@ pub use arte::{
     playlist_suitable as artetv_playlist_suitable, suitable as artetv_suitable,
 };
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
+pub use audiomack::{
+    Audiomack, AudiomackAlbum, album_suitable as audiomack_album_suitable,
+    suitable as audiomack_suitable,
+};
 pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use beacon::{BeaconTv, suitable as beacon_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};
@@ -434,6 +440,9 @@ pub use instagram::{
 pub use internazionale::{Internazionale, suitable as internazionale_suitable};
 pub use israelnationalnews::{IsraelNationalNews, suitable as israelnationalnews_suitable};
 pub use ivoox::{Ivoox, suitable as ivoox_suitable};
+pub use jamendo::{
+    Jamendo, JamendoAlbum, album_suitable as jamendo_album_suitable, suitable as jamendo_suitable,
+};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
 pub use kaltura::{Kaltura, suitable as kaltura_suitable};

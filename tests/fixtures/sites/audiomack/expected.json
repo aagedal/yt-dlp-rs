@@ -1,0 +1,251 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.audiomack.com/song/roosh-williams/extraordinary",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"310086\", \"uploader\": \"Roosh Williams\", \"title\": \"Extraordinary\", \"url\": \"https://music.audiomack.com/tracks/roosh-williams/extraordinary.mp3?Expires=1\", \"webpage_url\": \"http://www.audiomack.com/song/roosh-williams/extraordinary\", \"original_url\": \"http://www.audiomack.com/song/roosh-williams/extraordinary\", \"webpage_url_basename\": \"extraordinary\", \"webpage_url_domain\": \"audiomack.com\", \"extractor\": \"audiomack\", \"extractor_key\": \"Audiomack\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"310086\", \"fulltitle\": \"Extraordinary\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Extraordinary [310086].mp3\", \"filename\": \"Extraordinary [310086].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://audiomack.com/roosh-williams/song/extraordinary",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[audiomack] Extracting URL: https://audiomack.com/roosh-williams/song/extraordinary",
+    "[audiomack] roosh-williams/extraordinary: Downloading JSON metadata",
+    "[info] 310086: Downloading 1 format(s): 0",
+    "[download] Destination: 310086.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "310086.mp3": 43
+   }
+  },
+  {
+   "url": "https://www.audiomack.com/song/someone/no-id",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"someone/no-id\", \"uploader\": null, \"title\": \"audiomack video #someone/no-id\", \"url\": \"https://music.audiomack.com/x/plain.m4a\", \"webpage_url\": \"https://www.audiomack.com/song/someone/no-id\", \"original_url\": \"https://www.audiomack.com/song/someone/no-id\", \"webpage_url_basename\": \"no-id\", \"webpage_url_domain\": \"audiomack.com\", \"extractor\": \"audiomack\", \"extractor_key\": \"Audiomack\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"someone/no-id\", \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"audiomack video #someone\\u29f8no-id [someone\\u29f8no-id].m4a\", \"filename\": \"audiomack video #someone\\u29f8no-id [someone\\u29f8no-id].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.audiomack.com/song/hip-hop-daily/black-mamba-freestyle",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(uploader)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "123998367|Lostin Powers - She so Heavy|ethmusic|soundcloud|https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy|http://www.audiomack.com/song/hip-hop-daily/black-mamba-freestyle"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.audiomack.com/song/hip-hop-daily/black-mamba-freestyle",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"uploader\": \"ethmusic\", \"uploader_id\": \"52984226\", \"uploader_url\": \"https://soundcloud.com/ethmusic\", \"timestamp\": 1383583279, \"title\": \"Lostin Powers - She so Heavy\", \"track\": \"Lostin Powers - She so Heavy\", \"description\": \"Some description\", \"duration\": 213.671, \"webpage_url\": \"https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy\", \"license\": \"all-rights-reserved\", \"view_count\": 12345, \"like_count\": 67, \"comment_count\": 8, \"repost_count\": 9, \"modified_timestamp\": 1672628645, \"genres\": [\"Dance\"], \"tags\": [\"house\", \"deep house\", \"tech\"], \"artists\": [\"Lostin Powers\"], \"id\": \"123998367\", \"thumbnails\": [{\"id\": \"mini\", \"url\": \"https://i1.sndcdn.com/artworks-000071811455-l4hrpp-mini.jpg\", \"width\": 16, \"height\": 16, \"resolution\": \"16x16\"}, {\"id\": \"tiny\", \"url\": \"https://i1.sndcdn.com/artworks-000071811455-l4hrpp-tiny.jpg\", \"width\": 20, \"height\": 20, \"resolution\": \"20x20\"}, {\"id\": \"small\", \"url\": \"https://i1.sndcdn.com/artworks-000071811455-l4hrpp-small.jpg\", \"width\": 32, \"height\": 32, \"resolution\": \"32x32\"}, {\"id\": \"badge\", \"url\": \"https://i1.sndcdn.com/artworks-000071811455-l4hrpp-badge.jpg\", \"width\": 47, \"height\": 47, \"resolution\": \"47x47\"}, {\"id\": \"t67x67\", \"url\": \"https://i1.sndcdn.com/artworks-000071811455-l4hrpp-t67x67.jpg\", \"width\": 67, \"height\": 67, \"resolution\": \"67x67\"}, {\"id\": \"large\", \"url\": \"https://i1.sndcdn.com/artworks-000071811455-l4hrpp-large.jpg\", \"width\": 100, \"height\": 100, \"resolution\": \"100x100\"}, {\"id\": \"t300x300\", \"url\": \"https://i1.sndcdn.com/artworks-000071811455-l4hrpp-t300x300.jpg\", \"width\": 300, \"height\": 300, \"resolution\": \"300x300\"}, {\"id\": \"crop\", \"url\": \"https://i1.sndcdn.com/artworks-000071811455-l4hrpp-crop.jpg\", \"width\": 400, \"height\": 400, \"resolution\": \"400x400\"}, {\"id\": \"t500x500\", \"url\": \"https://i1.sndcdn.com/artworks-000071811455-l4hrpp-t500x500.jpg\", \"width\": 500, \"height\": 500, \"resolution\": \"500x500\"}, {\"id\": \"original\", \"url\": \"https://i1.sndcdn.com/artworks-000071811455-l4hrpp-original.jpg\", \"preference\": 10}], \"formats\": [{\"format_id\": \"hls_mp3_1_0\", \"url\": \"https://cf-hls-media.sndcdn.com/playlist/x.128.mp3/playlist.m3u8?Policy=1\", \"ext\": \"mp3\", \"acodec\": \"mp3\", \"vcodec\": \"none\", \"abr\": 128, \"protocol\": \"m3u8_native\", \"container\": null, \"quality\": -1, \"format_note\": null, \"preference\": null, \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 3418736, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls_mp3_1_0 - audio only\"}, {\"format_id\": \"http_mp3_1_0\", \"url\": \"https://cf-media.sndcdn.com/x.128.mp3?Policy=2\", \"ext\": \"mp3\", \"acodec\": \"mp3\", \"vcodec\": \"none\", \"abr\": 128, \"protocol\": \"http\", \"container\": null, \"quality\": -1, \"format_note\": null, \"preference\": null, \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 3418736, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http_mp3_1_0 - audio only\"}, {\"format_id\": \"hls_opus_0_0\", \"url\": \"https://cf-hls-opus-media.sndcdn.com/playlist/z.64.opus/playlist.m3u8?Policy=4\", \"ext\": \"opus\", \"acodec\": \"opus\", \"vcodec\": \"none\", \"abr\": 64, \"protocol\": \"m3u8_native\", \"container\": null, \"quality\": -1, \"format_note\": null, \"preference\": null, \"audio_ext\": \"opus\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 64, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 1709368, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls_opus_0_0 - audio only\"}, {\"format_id\": \"hls_aac_160k\", \"url\": \"https://cf-hls-media.sndcdn.com/playlist/y.aac/playlist.m3u8?Policy=3\", \"ext\": \"m4a\", \"acodec\": \"mp4a.40.2\", \"vcodec\": \"none\", \"abr\": 160, \"protocol\": \"m3u8_native\", \"container\": \"m4a_dash\", \"quality\": 0, \"format_note\": null, \"preference\": null, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 160, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 4273420, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls_aac_160k - audio only\"}], \"original_url\": \"http://www.audiomack.com/song/hip-hop-daily/black-mamba-freestyle\", \"webpage_url_basename\": \"lostin-powers-she-so-heavy\", \"webpage_url_domain\": \"soundcloud.com\", \"extractor\": \"soundcloud\", \"extractor_key\": \"Soundcloud\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://i1.sndcdn.com/artworks-000071811455-l4hrpp-original.jpg\", \"display_id\": \"123998367\", \"fulltitle\": \"Lostin Powers - She so Heavy\", \"duration_string\": \"3:33\", \"upload_date\": \"20131104\", \"modified_date\": \"20230102\", \"release_year\": null, \"artist\": \"Lostin Powers\", \"genre\": \"Dance\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls_aac_160k\", \"url\": \"https://cf-hls-media.sndcdn.com/playlist/y.aac/playlist.m3u8?Policy=3\", \"ext\": \"m4a\", \"acodec\": \"mp4a.40.2\", \"vcodec\": \"none\", \"abr\": 160, \"protocol\": \"m3u8_native\", \"container\": \"m4a_dash\", \"quality\": 0, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 160, \"resolution\": \"audio only\", \"filesize_approx\": 4273420, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls_aac_160k - audio only\", \"_filename\": \"Lostin Powers - She so Heavy [123998367].m4a\", \"filename\": \"Lostin Powers - She so Heavy [123998367].m4a\", \"__write_download_archive\": false}], \"format_id\": \"hls_aac_160k\", \"url\": \"https://cf-hls-media.sndcdn.com/playlist/y.aac/playlist.m3u8?Policy=3\", \"ext\": \"m4a\", \"acodec\": \"mp4a.40.2\", \"vcodec\": \"none\", \"abr\": 160, \"protocol\": \"m3u8_native\", \"container\": \"m4a_dash\", \"quality\": 0, \"format_note\": null, \"preference\": null, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 160, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 4273420, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls_aac_160k - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.audiomack.com/song/bad/error",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [audiomack] bad/error: Invalid url http://www.audiomack.com/song/bad/error; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.audiomack.com/song/bad/empty",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [audiomack] bad/empty: Invalid url http://www.audiomack.com/song/bad/empty; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.audiomack.com/song/bad/missing",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [audiomack] bad/missing: Invalid url http://www.audiomack.com/song/bad/missing; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"entries\": [{\"id\": \"812252\", \"uploader\": \"Rich Homie Quan\", \"title\": \"Intro\", \"url\": \"https://music.audiomack.com/albums/flytunez/01-intro.mp3?x=1\", \"playlist_count\": 3, \"playlist\": \"Tha Tour: Part 2 (Official Mixtape)\", \"playlist_id\": \"812251\", \"playlist_title\": \"Tha Tour: Part 2 (Official Mixtape)\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"n_entries\": 3, \"webpage_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"webpage_url_basename\": \"tha-tour-part-2-mixtape\", \"webpage_url_domain\": \"audiomack.com\", \"playlist_index\": 1, \"__last_playlist_index\": 3, \"extractor\": \"audiomack:album\", \"extractor_key\": \"AudiomackAlbum\", \"playlist_autonumber\": 1, \"display_id\": \"812252\", \"fulltitle\": \"Intro\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Intro [812252].mp3\", \"filename\": \"Intro [812252].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"02-track.two\", \"uploader\": null, \"title\": \"02-track.two\", \"url\": \"https://music.audiomack.com/albums/flytunez/02-track.two.mp3\", \"playlist_count\": 3, \"playlist\": \"Tha Tour: Part 2 (Official Mixtape)\", \"playlist_id\": \"812251\", \"playlist_title\": \"Tha Tour: Part 2 (Official Mixtape)\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"n_entries\": 3, \"webpage_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"webpage_url_basename\": \"tha-tour-part-2-mixtape\", \"webpage_url_domain\": \"audiomack.com\", \"playlist_index\": 2, \"__last_playlist_index\": 3, \"extractor\": \"audiomack:album\", \"extractor_key\": \"AudiomackAlbum\", \"playlist_autonumber\": 2, \"display_id\": \"02-track.two\", \"fulltitle\": \"02-track.two\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"02-track.two [02-track.two].mp3\", \"filename\": \"02-track.two [02-track.two].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"None\", \"uploader\": null, \"title\": \"audiomack-album video #None\", \"url\": \"https://music.audiomack.com/albums/flytunez/03-noext\", \"playlist_count\": 3, \"playlist\": \"Tha Tour: Part 2 (Official Mixtape)\", \"playlist_id\": \"812251\", \"playlist_title\": \"Tha Tour: Part 2 (Official Mixtape)\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"n_entries\": 3, \"webpage_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"webpage_url_basename\": \"tha-tour-part-2-mixtape\", \"webpage_url_domain\": \"audiomack.com\", \"playlist_index\": 3, \"__last_playlist_index\": 3, \"extractor\": \"audiomack:album\", \"extractor_key\": \"AudiomackAlbum\", \"playlist_autonumber\": 3, \"display_id\": \"None\", \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"unknown_video\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"audiomack-album video #None [None].unknown_video\", \"filename\": \"audiomack-album video #None [None].unknown_video\", \"__write_download_archive\": false}]}], \"id\": \"812251\", \"title\": \"Tha Tour: Part 2 (Official Mixtape)\", \"webpage_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"original_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"webpage_url_basename\": \"tha-tour-part-2-mixtape\", \"webpage_url_domain\": \"audiomack.com\", \"extractor\": \"audiomack:album\", \"extractor_key\": \"AudiomackAlbum\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"entries\": [{\"id\": \"812252\", \"uploader\": \"Rich Homie Quan\", \"title\": \"Intro\", \"url\": \"https://music.audiomack.com/albums/flytunez/01-intro.mp3?x=1\", \"playlist_count\": 3, \"playlist\": \"Tha Tour: Part 2 (Official Mixtape)\", \"playlist_id\": \"812251\", \"playlist_title\": \"Tha Tour: Part 2 (Official Mixtape)\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"n_entries\": 3, \"webpage_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"webpage_url_basename\": \"tha-tour-part-2-mixtape\", \"webpage_url_domain\": \"audiomack.com\", \"playlist_index\": 1, \"__last_playlist_index\": 3, \"extractor\": \"audiomack:album\", \"extractor_key\": \"AudiomackAlbum\", \"playlist_autonumber\": 1, \"display_id\": \"812252\", \"fulltitle\": \"Intro\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Intro [812252].mp3\", \"filename\": \"Intro [812252].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"02-track.two\", \"uploader\": null, \"title\": \"02-track.two\", \"url\": \"https://music.audiomack.com/albums/flytunez/02-track.two.mp3\", \"playlist_count\": 3, \"playlist\": \"Tha Tour: Part 2 (Official Mixtape)\", \"playlist_id\": \"812251\", \"playlist_title\": \"Tha Tour: Part 2 (Official Mixtape)\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"n_entries\": 3, \"webpage_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"webpage_url_basename\": \"tha-tour-part-2-mixtape\", \"webpage_url_domain\": \"audiomack.com\", \"playlist_index\": 2, \"__last_playlist_index\": 3, \"extractor\": \"audiomack:album\", \"extractor_key\": \"AudiomackAlbum\", \"playlist_autonumber\": 2, \"display_id\": \"02-track.two\", \"fulltitle\": \"02-track.two\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"02-track.two [02-track.two].mp3\", \"filename\": \"02-track.two [02-track.two].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"None\", \"uploader\": null, \"title\": \"audiomack-album video #None\", \"url\": \"https://music.audiomack.com/albums/flytunez/03-noext\", \"playlist_count\": 3, \"playlist\": \"Tha Tour: Part 2 (Official Mixtape)\", \"playlist_id\": \"812251\", \"playlist_title\": \"Tha Tour: Part 2 (Official Mixtape)\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"n_entries\": 3, \"webpage_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"webpage_url_basename\": \"tha-tour-part-2-mixtape\", \"webpage_url_domain\": \"audiomack.com\", \"playlist_index\": 3, \"__last_playlist_index\": 3, \"extractor\": \"audiomack:album\", \"extractor_key\": \"AudiomackAlbum\", \"playlist_autonumber\": 3, \"display_id\": \"None\", \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"unknown_video\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"audiomack-album video #None [None].unknown_video\", \"filename\": \"audiomack-album video #None [None].unknown_video\", \"__write_download_archive\": false}]}], \"id\": \"812251\", \"title\": \"Tha Tour: Part 2 (Official Mixtape)\", \"webpage_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"original_url\": \"http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape\", \"webpage_url_basename\": \"tha-tour-part-2-mixtape\", \"webpage_url_domain\": \"audiomack.com\", \"extractor\": \"audiomack:album\", \"extractor_key\": \"AudiomackAlbum\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://audiomack.com/flytunezcom/album/tha-tour-part-2-mixtape",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(playlist_index)s-%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[audiomack:album] Extracting URL: https://audiomack.com/flytunezcom/album/tha-tour-part-2-mixtape",
+    "[audiomack:album] flytunezcom/tha-tour-part-2-mixtape: Querying song information (1)",
+    "[audiomack:album] flytunezcom/tha-tour-part-2-mixtape: Querying song information (2)",
+    "[audiomack:album] flytunezcom/tha-tour-part-2-mixtape: Querying song information (3)",
+    "[audiomack:album] flytunezcom/tha-tour-part-2-mixtape: Querying song information (4)",
+    "[download] Downloading playlist: Tha Tour: Part 2 (Official Mixtape)",
+    "[audiomack:album] Playlist Tha Tour: Part 2 (Official Mixtape): Downloading 3 items of 3",
+    "[download] Downloading item 1 of 3",
+    "[info] 812252: Downloading 1 format(s): 0",
+    "[download] Destination: 1-812252.mp3",
+    "[download] Download completed",
+    "[download] Downloading item 2 of 3",
+    "[info] 02-track.two: Downloading 1 format(s): 0",
+    "[download] Destination: 2-02-track.two.mp3",
+    "[download] Download completed",
+    "[download] Downloading item 3 of 3",
+    "[info] None: Downloading 1 format(s): 0",
+    "[download] Destination: 3-None.unknown_video",
+    "[download] Download completed",
+    "[download] Finished downloading playlist: Tha Tour: Part 2 (Official Mixtape)"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {
+    "1-812252.mp3": 33,
+    "2-02-track.two.mp3": 33,
+    "3-None.unknown_video": 33
+   }
+  },
+  {
+   "url": "http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape",
+   "args": [
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(uploader)s|%(ext)s|%(extractor)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "812251|Tha Tour: Part 2 (Official Mixtape)|1|812252|Intro|Rich Homie Quan|mp3|audiomack:album|http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape",
+    "812251|Tha Tour: Part 2 (Official Mixtape)|2|02-track.two|02-track.two|NA|mp3|audiomack:album|http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape",
+    "812251|Tha Tour: Part 2 (Official Mixtape)|3|None|audiomack-album video #None|NA|unknown_video|audiomack:album|http://www.audiomack.com/album/flytunezcom/tha-tour-part-2-mixtape"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.audiomack.com/album/fakeshoredrive/ppp-pistol-p-project",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"entries\": [{\"id\": \"837576\", \"uploader\": \"Lil Herb a.k.a. G Herbo\", \"title\": \"PPP (Pistol P Project) - 8. Real\", \"url\": \"https://music.audiomack.com/a/837576.mp3\", \"playlist_count\": 1, \"playlist\": null, \"playlist_id\": null, \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://www.audiomack.com/album/fakeshoredrive/ppp-pistol-p-project\", \"n_entries\": 1, \"webpage_url\": \"http://www.audiomack.com/album/fakeshoredrive/ppp-pistol-p-project\", \"webpage_url_basename\": \"ppp-pistol-p-project\", \"webpage_url_domain\": \"audiomack.com\", \"playlist_index\": 1, \"__last_playlist_index\": 1, \"extractor\": \"audiomack:album\", \"extractor_key\": \"AudiomackAlbum\", \"playlist_autonumber\": 1, \"display_id\": \"837576\", \"fulltitle\": \"PPP (Pistol P Project) - 8. Real\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"PPP (Pistol P Project) - 8. Real [837576].mp3\", \"filename\": \"PPP (Pistol P Project) - 8. Real [837576].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"http://www.audiomack.com/album/fakeshoredrive/ppp-pistol-p-project\", \"original_url\": \"http://www.audiomack.com/album/fakeshoredrive/ppp-pistol-p-project\", \"webpage_url_basename\": \"ppp-pistol-p-project\", \"webpage_url_domain\": \"audiomack.com\", \"extractor\": \"audiomack:album\", \"extractor_key\": \"AudiomackAlbum\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.audiomack.com/album/bad/first",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [audiomack:album] bad/first: Invalid url for track 0 of album url http://www.audiomack.com/album/bad/first; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.audiomack.com/album/bad/later",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [audiomack:album] bad/later: Invalid url for track 1 of album url http://www.audiomack.com/album/bad/later; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.audiomack.com/album/bad/http",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [audiomack:album] bad/http: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}
