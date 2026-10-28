@@ -3110,6 +3110,18 @@
       "scope": "TheSunIE data-video-id-pending videos as a playlist of BrightcoveNew url results titled by the OpenGraph title (with upstream's warning when missing), compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "skeb",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/skeb.py"
+      ],
+      "rust": [
+        "src/extractor/skeb.rs",
+        "tests/fixtures/sites/skeb/"
+      ],
+      "scope": "SkebIE works API playlists of mp3/mp4/wav previews with the 429 request_key cookie retry, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "sky",
       "status": "partial",
       "upstream": [

@@ -1,0 +1,74 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://skeb.jp/@u1/works/10",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"uploader_id\": \"u1\", \"description\": \"Hello\\nworld\", \"genres\": [\"video\"], \"tags\": [\"a\", \"b\"], \"uploader\": \"Uploader\", \"id\": \"10\", \"_type\": \"playlist\", \"entries\": [{\"ext\": \"mp4\", \"title\": \"10-1\", \"subtitles\": {\"ja\": [{\"ext\": \"vtt\", \"url\": \"https://skeb-media.test/1.vtt\"}]}, \"vcodec\": null, \"uploader_id\": \"u1\", \"description\": \"Hello\\nworld\", \"genres\": [\"video\"], \"tags\": [\"a\", \"b\"], \"uploader\": \"Uploader\", \"id\": \"466853\", \"thumbnail\": \"https://skeb-media.test/1.jpg\", \"url\": \"https://skeb-media.test/1.mp4\", \"duration\": 313, \"fps\": 30, \"height\": 720, \"width\": 1280, \"playlist_count\": 2, \"playlist\": \"10\", \"playlist_id\": \"10\", \"playlist_title\": null, \"playlist_uploader\": \"Uploader\", \"playlist_uploader_id\": \"u1\", \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://skeb.jp/@u1/works/10\", \"n_entries\": 2, \"webpage_url\": \"https://skeb.jp/@u1/works/10\", \"webpage_url_basename\": \"10\", \"webpage_url_domain\": \"skeb.jp\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"Skeb\", \"extractor_key\": \"Skeb\", \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://skeb-media.test/1.jpg\", \"id\": \"0\"}], \"display_id\": \"466853\", \"fulltitle\": \"10-1\", \"duration_string\": \"5:13\", \"release_year\": null, \"genre\": \"video\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 1280x720\", \"requested_downloads\": [{\"_filename\": \"10-1 [466853].mp4\", \"filename\": \"10-1 [466853].mp4\", \"__write_download_archive\": false}]}, {\"ext\": \"mp3\", \"title\": \"10-3\", \"subtitles\": null, \"vcodec\": \"none\", \"uploader_id\": \"u1\", \"description\": \"Hello\\nworld\", \"genres\": [\"video\"], \"tags\": [\"a\", \"b\"], \"uploader\": \"Uploader\", \"id\": \"489408\", \"url\": \"https://skeb-media.test/3.mp3\", \"duration\": 98, \"playlist_count\": 2, \"playlist\": \"10\", \"playlist_id\": \"10\", \"playlist_title\": null, \"playlist_uploader\": \"Uploader\", \"playlist_uploader_id\": \"u1\", \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://skeb.jp/@u1/works/10\", \"n_entries\": 2, \"webpage_url\": \"https://skeb.jp/@u1/works/10\", \"webpage_url_basename\": \"10\", \"webpage_url_domain\": \"skeb.jp\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"Skeb\", \"extractor_key\": \"Skeb\", \"playlist_autonumber\": 2, \"display_id\": \"489408\", \"fulltitle\": \"10-3\", \"duration_string\": \"1:38\", \"release_year\": null, \"genre\": \"video\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"10-3 [489408].mp3\", \"filename\": \"10-3 [489408].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://skeb.jp/@u1/works/10\", \"original_url\": \"https://skeb.jp/@u1/works/10\", \"webpage_url_basename\": \"10\", \"webpage_url_domain\": \"skeb.jp\", \"extractor\": \"Skeb\", \"extractor_key\": \"Skeb\", \"release_year\": null, \"genre\": \"video\", \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [Skeb] Skipping unsupported extension \"png\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://skeb.jp/@u1/works/10",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"ext\": \"mp4\", \"title\": \"10-1\", \"subtitles\": {\"ja\": [{\"ext\": \"vtt\", \"url\": \"https://skeb-media.test/1.vtt\"}]}, \"vcodec\": null, \"uploader_id\": \"u1\", \"description\": \"Hello\\nworld\", \"genres\": [\"video\"], \"tags\": [\"a\", \"b\"], \"uploader\": \"Uploader\", \"id\": \"466853\", \"thumbnail\": \"https://skeb-media.test/1.jpg\", \"url\": \"https://skeb-media.test/1.mp4\", \"duration\": 313, \"fps\": 30, \"height\": 720, \"width\": 1280, \"playlist_count\": 2, \"playlist\": \"10\", \"playlist_id\": \"10\", \"playlist_title\": null, \"playlist_uploader\": \"Uploader\", \"playlist_uploader_id\": \"u1\", \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://skeb.jp/@u1/works/10\", \"n_entries\": 2, \"webpage_url\": \"https://skeb.jp/@u1/works/10\", \"webpage_url_basename\": \"10\", \"webpage_url_domain\": \"skeb.jp\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"Skeb\", \"extractor_key\": \"Skeb\", \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://skeb-media.test/1.jpg\", \"id\": \"0\"}], \"display_id\": \"466853\", \"fulltitle\": \"10-1\", \"duration_string\": \"5:13\", \"release_year\": null, \"genre\": \"video\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 1280x720\", \"_filename\": \"10-1 [466853].mp4\", \"filename\": \"10-1 [466853].mp4\", \"_type\": \"video\"}",
+    "{\"ext\": \"mp3\", \"title\": \"10-3\", \"subtitles\": null, \"vcodec\": \"none\", \"uploader_id\": \"u1\", \"description\": \"Hello\\nworld\", \"genres\": [\"video\"], \"tags\": [\"a\", \"b\"], \"uploader\": \"Uploader\", \"id\": \"489408\", \"url\": \"https://skeb-media.test/3.mp3\", \"duration\": 98, \"playlist_count\": 2, \"playlist\": \"10\", \"playlist_id\": \"10\", \"playlist_title\": null, \"playlist_uploader\": \"Uploader\", \"playlist_uploader_id\": \"u1\", \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://skeb.jp/@u1/works/10\", \"n_entries\": 2, \"webpage_url\": \"https://skeb.jp/@u1/works/10\", \"webpage_url_basename\": \"10\", \"webpage_url_domain\": \"skeb.jp\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"Skeb\", \"extractor_key\": \"Skeb\", \"playlist_autonumber\": 2, \"display_id\": \"489408\", \"fulltitle\": \"10-3\", \"duration_string\": \"1:38\", \"release_year\": null, \"genre\": \"video\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"10-3 [489408].mp3\", \"filename\": \"10-3 [489408].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Skeb] Skipping unsupported extension \"png\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://skeb.jp/@u2/works/11",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"uploader_id\": \"u2\", \"age_limit\": 18, \"description\": \"Source\", \"id\": \"11\", \"_type\": \"playlist\", \"entries\": [{\"ext\": \"wav\", \"title\": \"11-1\", \"subtitles\": null, \"vcodec\": \"none\", \"uploader_id\": \"u2\", \"age_limit\": 18, \"description\": \"Source\", \"id\": \"w\", \"url\": \"https://skeb-media.test/4.wav\", \"playlist_count\": 1, \"playlist\": \"11\", \"playlist_id\": \"11\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": \"u2\", \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://skeb.jp/@u2/works/11\", \"n_entries\": 1, \"webpage_url\": \"https://skeb.jp/@u2/works/11\", \"webpage_url_basename\": \"11\", \"webpage_url_domain\": \"skeb.jp\", \"playlist_index\": 1, \"__last_playlist_index\": 1, \"extractor\": \"Skeb\", \"extractor_key\": \"Skeb\", \"playlist_autonumber\": 1, \"display_id\": \"w\", \"fulltitle\": \"11-1\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"audio_ext\": \"wav\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"11-1 [w].wav\", \"filename\": \"11-1 [w].wav\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://skeb.jp/@u2/works/11\", \"original_url\": \"https://skeb.jp/@u2/works/11\", \"webpage_url_basename\": \"11\", \"webpage_url_domain\": \"skeb.jp\", \"extractor\": \"Skeb\", \"extractor_key\": \"Skeb\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://skeb.jp/@u3/works/12",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Skeb] 12: Unable to extract request key; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://skeb.jp/@u4/works/13",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Skeb] 13: Unable to download JSON metadata: HTTP Error 500: OK (caused by <HTTPError 500: OK>)"
+   ],
+   "files": {}
+  }
+ ]
+}

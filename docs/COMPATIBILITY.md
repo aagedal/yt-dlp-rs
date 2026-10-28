@@ -1339,6 +1339,15 @@ non-empty `"ACCOUNT_ID"` (else upstream's `'NoneType' object has no attribute
 Brightcove players above. `tests/fixtures/sites/europeantour/` is compared with
 pinned upstream output.
 
+Skeb works (`skeb.jp/@USER/works/ID`) follow upstream `SkebIE`: the works
+API (a 429 page's `request_key` cookie set and the API retried, else
+`Unable to extract request key`) as a playlist with the uploader, adult flag,
+cleaned description, genre, tags and creator name, of the previews with
+`mp3`, `mp4` or `wav` extensions (others skipped with upstream's warning):
+direct URLs with their poster, Japanese VTT subtitles, duration, frame rate
+and size. `tests/fixtures/sites/skeb/` is compared with pinned upstream
+output.
+
 Sky Sports and Sky News videos (`skysports.com/watch/video/.../ID`,
 `news.sky.com/video/SLUG-ID`) follow upstream `SkySportsIE` and `SkyNewsIE`:
 the first `sdc-article-video`/`sdc-site-video` element (fatal) as a
