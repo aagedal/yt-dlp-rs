@@ -1414,6 +1414,18 @@
       "scope": "DumpertIE mobile_api info JSON, the first item's VIDEO media variants (fatal HLS with version ids or progressive URLs, qualities ranking), stills thumbnails, stats, duration and KeyError/IndexError/StopIteration paths compared with pinned upstream output through the fixture proxy; non-array item/media lists and non-string titles or URIs remain explicit native errors"
     },
     {
+      "name": "startrek",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/startrek.py"
+      ],
+      "rust": [
+        "src/extractor/startrek.rs",
+        "tests/fixtures/sites/startrek/"
+      ],
+      "scope": "StarTrekIE Next.js video data as a direct URL with metadata (YouTube hand-off not fixtured), compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "steam",
       "status": "partial",
       "upstream": [

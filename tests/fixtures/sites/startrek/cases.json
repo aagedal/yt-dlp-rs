@@ -1,0 +1,20 @@
+[
+ {
+  "url": "https://www.startrek.com/en-un/videos/official-trailer",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.startrek.com/videos/bare",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.startrek.com/videos/novideo",
+  "args": [
+   "-J"
+  ]
+ }
+]

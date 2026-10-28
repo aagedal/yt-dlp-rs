@@ -148,7 +148,14 @@ impl Extractor for MonsterSirenHypergryphMusic {
             None => Vec::new(),
         };
         let keys: Vec<&str> = fields.iter().map(|(key, _)| *key).collect();
-        let shape = format!("untyped-dict;{}", keys.join(","));
+        // Without a `title` key, processing adds the generic one after
+        // `fulltitle`.
+        let untitled = if keys.contains(&"title") {
+            ""
+        } else {
+            "-untitled"
+        };
+        let shape = format!("untyped-dict;{}{untitled}", keys.join(","));
         let mut info = dict_info(url, (NAME, KEY), fields, formats);
         if let Some(lyrics) = lyrics {
             info.subtitles.insert(

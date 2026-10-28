@@ -1,0 +1,45 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.startrek.com/en-un/videos/official-trailer",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"official-trailer\", \"series\": \"Star Trek: Lower Decks\", \"series_id\": \"star-trek-lower-decks\", \"title\": \"Official Trailer | Lower Decks\", \"alt_title\": \"Sub\", \"categories\": [\"TRAILERS\"], \"description\": \"Desc\", \"release_timestamp\": 1690033200, \"subtitles\": {\"en\": [{\"url\": \"https://st-cdn.test/s.vtt\", \"ext\": \"vtt\"}]}, \"thumbnail\": \"https://st-img.test/p.jpg\", \"url\": \"https://st-cdn.test/v.mp4\", \"webpage_url\": \"https://www.startrek.com/en-un/videos/official-trailer\", \"original_url\": \"https://www.startrek.com/en-un/videos/official-trailer\", \"webpage_url_basename\": \"official-trailer\", \"webpage_url_domain\": \"startrek.com\", \"extractor\": \"startrek\", \"extractor_key\": \"StarTrek\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://st-img.test/p.jpg\", \"id\": \"0\"}], \"display_id\": \"official-trailer\", \"fulltitle\": \"Official Trailer | Lower Decks\", \"release_date\": \"20230722\", \"release_year\": 2023, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Official Trailer \\uff5c Lower Decks [official-trailer].mp4\", \"filename\": \"Official Trailer \\uff5c Lower Decks [official-trailer].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.startrek.com/videos/bare",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"bare\", \"series\": null, \"series_id\": null, \"categories\": [], \"url\": \"https://st-cdn.test/b.mp4\", \"webpage_url\": \"https://www.startrek.com/videos/bare\", \"original_url\": \"https://www.startrek.com/videos/bare\", \"webpage_url_basename\": \"bare\", \"webpage_url_domain\": \"startrek.com\", \"extractor\": \"startrek\", \"extractor_key\": \"StarTrek\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"bare\", \"fulltitle\": null, \"title\": \"startrek video #bare\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"startrek video #bare [bare].mp4\", \"filename\": \"startrek video #bare [bare].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.startrek.com/videos/novideo",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: novideo: An extractor error has occurred. (caused by KeyError('video')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

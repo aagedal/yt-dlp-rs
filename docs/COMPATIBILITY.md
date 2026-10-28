@@ -734,6 +734,14 @@ Not covered: a selected format with its own `duration` (upstream's
 `requested_downloads` then keeps it; this port keeps one value per key).
 `tests/fixtures/sites/streamcz/` is compared with pinned upstream output.
 
+STAR TREK videos (`startrek.com[/en-ca|en-un]/videos/SLUG`, `startrek`)
+follow upstream `StarTrekIE`: the Next.js `video.data` (missing keys are
+upstream's `KeyError`s); a YouTube video ID becomes a `url` result (not
+fixtured), else the legacy video URL with the cleaned title, subhead and
+first description text, upper-cased category, publication time, English
+subtitle file, query-less poster and the series from the header tab.
+`tests/fixtures/sites/startrek/` is compared with pinned upstream output.
+
 Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
 `StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
 metadata`), its unavailable-status error, `reddit_title`/`title`, every file

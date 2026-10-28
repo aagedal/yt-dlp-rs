@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://www.startrek.com/en-un/videos/official-trailer",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"video\": {\"data\": {\"title\": [{\"text\": \"Official Trailer | <b>Lower Decks</b>\"}], \"subhead\": [{\"text\": \"Sub\"}], \"category\": {\"data\": {\"category_name\": \"Trailers\"}}, \"slices\": [{\"primary\": {}}, {\"primary\": {\"content\": [{\"text\": \"<p>Desc</p>\"}]}}], \"published\": \"2023-07-22T13:40:00+00:00\", \"legacy_subtitle_file\": \"https://st-cdn.test/s.vtt\", \"poster_frame\": {\"url\": \"https://st-img.test/p.jpg?auto=format&w=1\"}, \"legacy_video_url\": \"https://st-cdn.test/v.mp4\", \"series_and_movies\": [{\"series_or_movie\": {\"slug\": \"star-trek-lower-decks\"}}]}}, \"queried\": {\"header\": {\"tab3\": {\"slices\": [{\"items\": [{\"link\": {\"slug\": \"other\"}, \"link_copy\": \"Other\"}, {\"link\": {\"slug\": \"star-trek-lower-decks\"}, \"link_copy\": \"Star Trek: Lower Decks\"}]}]}}}}}}</script></html>"
+  },
+  {
+   "url": "https://www.startrek.com/videos/bare",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"video\": {\"data\": {\"legacy_video_url\": \"https://st-cdn.test/b.mp4\"}}}}}</script></html>"
+  },
+  {
+   "url": "https://www.startrek.com/videos/novideo",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"other\": 1}}}</script></html>"
+  }
+ ]
+}
