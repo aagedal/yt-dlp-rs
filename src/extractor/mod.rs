@@ -15,6 +15,7 @@ mod arcpublishing;
 mod ard;
 mod arnes;
 mod arte;
+mod atscaleconf;
 mod audimedia;
 mod audioboom;
 mod audiomack;
@@ -437,6 +438,7 @@ pub use arte::{
     category_suitable as artetv_category_suitable, embed_suitable as artetv_embed_suitable,
     playlist_suitable as artetv_playlist_suitable, suitable as artetv_suitable,
 };
+pub use atscaleconf::{AtScaleConfEvent, suitable as atscaleconf_suitable};
 pub use audimedia::{AudiMedia, suitable as audimedia_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
 pub use audiomack::{

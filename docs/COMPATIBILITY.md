@@ -1331,6 +1331,14 @@ master playlist, saved collection and season responses, and synthetic
 multi-stream, playlist and category responses) is compared with pinned
 upstream output.
 
+@Scale conference events (`[www.]atscaleconference.com/events/ID`) follow
+upstream `AtScaleConfEventIE`: the page's `data-url` video links
+(deduplicated, in order) as a generator playlist of generic `url` results,
+with the OpenGraph title and description (non-fatal warnings, `None` kept
+like upstream's keyword fields). The live event pages no longer carry
+`data-url` links, so `tests/fixtures/sites/atscaleconf/` (saved event page
+metadata) checks the empty playlists against pinned upstream output.
+
 Audi MediaCenter videos (`[www.]audi-mediacenter.com/en|de/audimediatv/[video/]ID`)
 follow upstream `AudiMediaIE`: the page's `amtv-embed` payload (fatal; the
 first of upstream's five patterns that matches, split into exactly four

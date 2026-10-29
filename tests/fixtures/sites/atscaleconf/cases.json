@@ -1,0 +1,15 @@
+[
+ {
+  "url": "https://atscaleconference.com/events/data-scale-spring-2022/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://atscaleconference.com/events/video-scale-2021/",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ }
+]
