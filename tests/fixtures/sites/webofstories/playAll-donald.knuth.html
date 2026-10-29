@@ -1,0 +1,3540 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+		<meta http-equiv="Content-Style-Type" content="text/css" />
+		<meta name="google-site-verification" content="0nzsZEMhUox15ekVwMQaMcMdFjpi-4R8T9aBWEzAkqo" />
+		<META name="y_key" content="4b83b80da66ae781" />
+		<meta name="msvalidate.01" content="85AC317BFC30BB9111E36AF494978DD7" />
+
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+
+		<title>Play all stories - Donald Knuth - Web of Stories</title>
+		<link href="/styles/style2.css" rel="stylesheet" type="text/css" />
+		<link href="/styles/header.css" rel="stylesheet" type="text/css" />
+		<link href="/styles/footer.css" rel="stylesheet" type="text/css" />
+		<link href="https://d3qf61oza7ty3z.cloudfront.net/siteAssets/1_0_2/images/favicon.ico" rel="shortcut icon" type="image/ico" />
+		<link href="https://d3qf61oza7ty3z.cloudfront.net/siteAssets/1_0_2/images/favicon.ico" rel="icon" type="image/ico" />
+		
+		<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.1.15/jquery.form-validator.min.js"></script>
+		<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<script type="text/javascript" src="/scripts/jquery.timer.js"></script>
+		<script type="text/javascript" src="/scripts/jquery.slimscroll.js"></script>
+		<script type="text/javascript" src="/scripts/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="/scripts/jquery_added.js"></script>
+		<script type="text/javascript" src="/scripts/functions.js"></script>
+		<script type="text/javascript" src="/scripts/pagination.js"></script>
+		<script type="text/javascript" src="/scripts/dialog.js"></script>
+		<script type="text/javascript" src="/scripts/tabs.js"></script>
+		<script type="text/javascript" src="/scripts/security.js"></script>
+		<!--script type="text/javascript" src="/scripts/global.js"></script-->
+		<!--link rel="stylesheet/less" type="text/css" href="/styles/style.less">  
+		<script src="/scripts/less.js" type="text/javascript"></script-->  
+		<link href="/styles/style.css" rel="stylesheet" type="text/css" />
+		
+	
+		<link rel="canonical" href="https://www.webofstories.com/playAll/donald.knuth"/>
+
+			
+		
+	<link rel="stylesheet" type="text/css" href="/styles/play.css" />
+
+	<meta name="description" content="All stories of donald.knuth">
+			<meta name="keywords" content="Donald Knuth, all stories">
+	
+	<!--<script src="https://content.jwplatform.com/libraries/2RrJCFh8.js"></script> <!-- player: cloud hosted-->
+	<style>
+		.jw-text-track-cue {
+			line-height: 1.4 !important
+	}
+	</style>
+
+    <script src="/scripts/jwplayer-8.4.2/jwplayer.js"></script>	<!-- player: self hosted-->
+    <script>jwplayer.key="+fSNa8NEmr0lahA/dyZF+SV82s4Juhs9qqt5UM6+08g=";</script> <!-- player: self hosted-->
+
+    <script type="text/javascript" src="/scripts/jquery.ddslick.min.js"></script>
+	<!--<script type="text/javascript" src="/scripts/clipboard/ZeroClipboard.js"></script>	-->
+
+	
+		<script type="text/javascript">
+
+			var deviceIphone = "iphone";
+var deviceIpod = "ipod";
+var deviceIpad = "ipad";
+var engineWebKit  = "webkit";
+var deviceS60 = "series60";
+var deviceSymbian = "symbian";
+var deviceAndroid = "android";
+var deviceWinMob = "windows ce";
+var deviceBB = "blackberry";
+var devicePalm = "palm";
+
+function isMobile() 
+{
+   var uagent = navigator.userAgent.toLowerCase();
+   if (uagent.search(deviceIphone) > -1 ||
+	   uagent.search(deviceIpod) > -1 ||
+	   uagent.search(deviceIpad) > -1 ||
+	   (uagent.search(engineWebKit) > -1 && (uagent.search(deviceSymbian) > -1 || uagent.search(deviceS60) > -1)) ||
+	   uagent.search(deviceAndroid) > -1 ||
+	   uagent.search(deviceWinMob) > -1 ||
+	   uagent.search(deviceBB) > -1 ||
+	   uagent.search(devicePalm) > -1)
+      return true;
+   else
+      return false;
+}
+
+
+function getLanguage() 
+{
+	var language;
+	
+    if (navigator.appName == 'Netscape') {
+        language = navigator.language;
+	}
+    else {
+        language = navigator.browserLanguage;
+	}	
+	
+	return language;
+
+}
+			$(function() {				 										
+			});
+		</script>
+	</head>
+	
+	<body>
+		
+		<script type="text/javascript">
+	var _eventType = "-";
+var _eventActivity = "-";
+
+	var recordPage = "/record";
+var uploadPage = "/story/submission?mobile=true";
+var isDetectorReady = false;
+
+var flashDiv = document.getElementById('flashDiv');
+camDiv = document.getElementById('cameraDetector');
+if (flashDiv && camDiv)
+{
+	camDiv.removeChild(flashDiv);
+
+}
+
+
+
+function shareClicked()
+{
+	if (isMobile()) {
+		window.location.href = uploadPage;
+	}
+	else {
+	
+		/**  
+		
+		We don't need any detection. The upload is integrated with recording.
+		
+		camDiv = document.getElementById('cameraDetector');
+		
+		flashDiv = document.createElement('flashDiv');
+		
+		var uagent = navigator.userAgent.toLowerCase();
+		var detectNow = "true";
+		if (uagent.search("firefox") > -1) {
+			detectNow = "false"
+		}
+		var flashHTML = '<embed height="100%" width="100%" flashvars="detect='+ detectNow +'&cameraDetectedPage=/record&amp;cameraNotDetectedPage=/story/submission" allowscriptaccess="always" quality="high" name="cameraDetector" id="cameraDetector" style="" src="/embed/CameraDetector.swf" type="application/x-shockwave-flash" />'
+		
+		flashDiv.innerHTML = flashHTML;
+		camDiv.appendChild(flashDiv);
+		if (detectNow == "false") {
+			setTimeout("detect()",100);
+		}
+		**/
+		
+		window.location.href = recordPage;
+		
+	}
+
+}
+
+function detectorReady() 
+{
+	isDetectorReady = true;
+}
+
+function detect() 
+{
+	if (!isDetectorReady) {
+		setTimeout("detect()",100);
+	}
+	else
+	{
+		detector = document.getElementsByName("cameraDetector")[0];
+		detector.detect();
+		
+	}
+}
+
+	var deviceIphone = "iphone";
+var deviceIpod = "ipod";
+var deviceIpad = "ipad";
+var engineWebKit  = "webkit";
+var deviceS60 = "series60";
+var deviceSymbian = "symbian";
+var deviceAndroid = "android";
+var deviceWinMob = "windows ce";
+var deviceBB = "blackberry";
+var devicePalm = "palm";
+
+function isMobile() 
+{
+   var uagent = navigator.userAgent.toLowerCase();
+   if (uagent.search(deviceIphone) > -1 ||
+	   uagent.search(deviceIpod) > -1 ||
+	   uagent.search(deviceIpad) > -1 ||
+	   (uagent.search(engineWebKit) > -1 && (uagent.search(deviceSymbian) > -1 || uagent.search(deviceS60) > -1)) ||
+	   uagent.search(deviceAndroid) > -1 ||
+	   uagent.search(deviceWinMob) > -1 ||
+	   uagent.search(deviceBB) > -1 ||
+	   uagent.search(devicePalm) > -1)
+      return true;
+   else
+      return false;
+}
+
+
+function getLanguage() 
+{
+	var language;
+	
+    if (navigator.appName == 'Netscape') {
+        language = navigator.language;
+	}
+    else {
+        language = navigator.browserLanguage;
+	}	
+	
+	return language;
+
+}</script>
+<script type="text/javascript">
+	    var cookieName = "clientID";
+	var clientID = -1;
+	  
+    function getClientId() {	
+		if (clientID < 0) {
+    		userId = '';
+    		var storedClientId =  readCookie(cookieName);
+    		if (storedClientId != null) {
+    			clientID = storedClientId;
+				createCookie(cookieName,clientID);
+    		}
+    		else {
+				
+				jQuery.ajax({
+    			    url: "/clientId.json?uId="+userId+"&lang="+getLanguage(),
+    			    dataType: "json",
+    			    success: function (jsonResult) {
+    			    	clientID = jsonResult.result.clientId;
+        				createCookie(cookieName,clientID);
+    		        }
+    			});
+    		}
+		}
+		return clientID;
+		
+    }
+	
+	function createCookie(name,value) {
+    	document.cookie = name+"="+value+";expires=Wednesday, 01-Aug-2040 08:00:00 GMT; path=/";
+	}
+	
+    function readCookie(name) {
+    	var nameEQ = name + "=";
+    	var ca = document.cookie.split(';');
+    	for(var i=0;i < ca.length;i++) {
+    		var c = ca[i];
+    		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+    		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    	}
+    	return null;
+    }
+	var userId = '';
+	var isMinisite = '';
+</script>		<div id="overlay">&#160;</div>
+		<div class="header-wrapper">
+
+	<div class="header">
+
+		<div id="logo" title="Web of Stories">
+			<img src="https://d3qf61oza7ty3z.cloudfront.net/siteAssets/redesign/main/logo.png"/>
+		</div>
+
+		<div id="menu" class="menu">  	
+	<span id="storyTellerMenu">
+    	Storytellers	
+    </span>
+    <span>
+    	|
+    </span>
+    <span id="themesMenu">
+    	Themes
+    </span> 
+    <span>
+    	|
+    </span>
+    <span id="blogMenu">
+    	Blog
+    </span>  	
+    <span>
+    	|
+    </span>	        
+    <span id="aboutMenu">
+    	About
+    </span>
+    <span>
+    	|
+    </span> 
+     <span id="helpMenu">   
+		Help
+    </span>    
+</div>
+
+<script>
+
+	if(window.location.href.indexOf("storyteller") > -1) {
+		$( "#storyTellerMenu" ).addClass("menuSelected");
+
+	}else if(window.location.href.indexOf("your-stories/about") > -1) {
+		$( "#yourStoriesAboutMenu" ).addClass("menuYourStoriesSelected");				
+	}else if(window.location.href.indexOf("group/about") > -1) {
+		$( "#groupAboutMenu" ).addClass("menuGroupSelected");						
+	}else if(window.location.href.indexOf("about") > -1) {
+		$( "#aboutMenu" ).addClass("menuSelected");	
+
+    }else if(window.location.href.indexOf("your-stories/help") > -1) {
+		$( "#yourStoriesHelpMenu" ).addClass("menuYourStoriesSelected");
+	}else if(window.location.href.indexOf("help") > -1) {
+		$( "#helpMenu" ).addClass("menuSelected");
+
+	}else if(window.location.href.indexOf("your-stories/themes") > -1) {
+		$( "#yourStoriesThemeMenu" ).addClass("menuYourStoriesSelected");
+	}else if(window.location.href.indexOf("themes") > -1) {
+		$( "#themesMenu" ).addClass("menuSelected");
+
+	}else if(window.location.href.indexOf("thyroid") > -1) {
+		$( "#thyroidUKMenu" ).addClass("menuGroupSelected");
+	}else if(window.location.href.indexOf("lam") > -1) {
+		$( "#lamActionMenu" ).addClass("menuGroupSelected");	
+	}else if(window.location.href.indexOf("changing-faces") > -1) {
+		$( "#changingFacesMenu" ).addClass("menuGroupSelected");			
+	}else if(window.location.href.indexOf("record") > -1) {
+		$( "#tellYourStoryMenu" ).addClass("menuYourStoriesSelected");
+	}
+
+	// WOS
+	$( "#storyTellerMenu" ).click(function() {
+		location.href="/storytellers";
+	});		
+	$( "#themesMenu" ).click(function() {
+		location.href="/themes";
+	});			
+	$( "#aboutMenu" ).click(function() {
+		location.href="/about";
+	});		
+	$( "#helpMenu" ).click(function() {
+		location.href="/help";
+	});
+
+	// groups
+	$( "#thyroidUKMenu" ).click(function() {
+		location.href="/group/thyroid";
+	});
+	$( "#lamActionMenu" ).click(function() {
+		location.href="/group/lam";
+	});
+	$( "#changingFacesMenu" ).click(function() {
+		location.href="/group/changing-faces";
+	});	
+	$( "#groupAboutMenu" ).click(function() {
+		location.href="/group/about";
+	});	
+
+	// your stories
+	$( "#yourStoriesThemeMenu" ).click(function() {
+		location.href="/your-stories/themes";
+	});
+	$( "#tellYourStoryMenu" ).click(function() {
+		location.href="/record";
+	});		
+	$( "#yourStoriesAboutMenu" ).click(function() {
+		location.href="/your-stories/about";
+	});		
+	$( "#yourStoriesHelpMenu" ).click(function() {
+		location.href="/your-stories/help";
+	});	
+
+	// blog
+	$( "#blogMenu" ).click(function() {
+		window.open('http://blog.webofstories.com/');
+	});	 							
+
+</script>
+
+		<div id="searchBox" style="width: 253px;">
+			<form id="searchForm" method="get" action="/story/search">
+				<input id="searchBoxTheme" class="searchBoxTheme" type="text" name="q" placeholder="Search" style="float: left; width: 204px !important;">
+				<input id="searchButton" type="submit" value="" style="float: right; margin-top: 0;" />
+			</form>
+		</div>
+
+		<div class="forever">a story lives forever</div>
+
+		<div class="regsignDiv">
+							<div class="register" id="register">
+					<div>Register</div>
+				</div>
+				<div class="signin" id="signin">
+					<div>Sign in</div>
+				</div>	
+					</div>
+
+		<div id="myProfileDialog">
+			<div class="border"></div>			
+			<div class="top">
+				<span>My Profile</span>				
+			</div>	
+			<div class="myProfileMenu">
+				<div><a href="/profile">Edit profile</a></div>
+				<div><a href="/changepassword">Change password</a></div>
+				<div><a href="/profile?activeTab=2">My favourites</a></div>
+				<div><a href="/profile?activeTab=3">My comments</a></div>
+				<div id="logout"><a href="#">Logout</a></div>
+			</div>
+		</div>			
+
+		<div id="signInDialog" class="toggler">
+			<div class="border"></div>
+			<div class="top">
+				<span>Sign in</span>				
+			</div>		
+			<form action="" id="signinForm" class="form">
+				<div id="loginErrorMessage">
+					<strong>Form submission failed!</strong>
+					<div></div>
+				</div>	
+				<div class="formElement">
+					<input type="text" name="j_username" id="signInEmail" data-validation="email" data-validation-error-msg="Please enter a valid email address" placeholder="Your email">
+				</div>				
+				<div class="formElement">
+					<input type="password" id="signInPassword" name="j_password" data-validation="length" data-validation-length="min6" data-validation-error-msg="Password must be at least 6 characters" placeholder="Your password" />
+				</div>
+				<p>
+					<input type="checkbox" checked="checked" id="rememberMeCheckBox" />
+					Stay signed in
+				</p>	
+				<button class="buttonCommon" id="signinBtn">Sign in</button>		
+				<div class="forgotPassword">
+					<span onclick="location.href='/forgottenpassword'">Recover your password?</span>
+				</div>				
+			</form>		
+		</div>
+
+		<div id="registerDialog">
+			<div class="border"></div>
+			<div class="top">
+				<span>Register</span>				
+			</div>
+			<form action="#" id="registerForm" class="form">
+				<div id="registerErrorMessage">
+					<strong>Form submission failed!</strong>
+					<div></div>
+				</div>	
+				<div id="registerDialogLeft">
+					<div class="formElement">
+						<input value="" type="text" name="user.displayname" id="user.displayname" placeholder="Your display name" data-validation="required" data-validation-error-msg="Please provide a display name" />
+					</div>
+					<div class="formElement">
+						<input value="" type="text" name="user.email" id="user.email" placeholder="Your email"
+						data-validation="email"  data-validation-error-msg="Please enter a valid email address" />
+					</div>				
+					<div class="formElement">
+						<input value="" placeholder="Your password" type="password" id="password" name="password" data-validation="length" data-validation-length="min6" data-validation-error-msg="Password must be at least 6 characters"/>
+					</div>				
+					<div class="formElement">
+						<input value="" placeholder="Confirm password" type="password" id="confirmPassword" name="confirmPassword" />
+					</div>
+				</div>				
+				<div id="registrationsTerm">
+					<p style="margin-top: 0;">
+						Web of Stories Ltd would like to keep you informed about our products and services.
+					</p>
+					<p>
+						<input id="user.wosMail" name="user.wosMail" checked="checked" type="checkbox">
+						Please tick here if you would like us to keep you informed about our products and services.
+					</p>
+					<p>
+						<input id="user.termsAndConditions" name="user.termsAndConditions" type="checkbox" 
+							   data-validation="required" data-validation-error-msg="You have to agree to our terms &#38; conditions" /> 						
+						I have read and accepted the <a href="/generalTerms">Terms &#38; Conditions</a>.
+					</p>
+					<p class="smallText">
+						<b>Please note:</b> Your email and any private information provided at registration will not be passed on to other individuals or organisations without your specific approval.
+					</p>	
+					<button class="buttonCommon" id="registerBtn">Register</button>
+				</div>	
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+		$(function() {
+		$( ".header #logo" ).bind( "click", function() {
+			window.location.href = document.location.protocol + "//" + document.location.hostname;
+		});
+
+		$("#myProfile").click(function(e){
+			var defoptions = {
+				"overlay" : $("#overlay"),
+				"dialog" : $("#myProfileDialog"),
+				"changeDialogPosition" : false
+			};	
+			var dialog = new Dialog();		
+			dialog.init(defoptions);			
+			dialog.showDialog();
+		});
+		
+		Security.signinToggler =  "#signin";
+		Security.registerToggler = "#register";
+		Security.logoutBtn =  "#logout";
+		Security.myProfileBtn = "#myProfile";
+		Security.signinForm = "#signinForm";
+		Security.registerForm = "#registerForm";
+		Security.registerBtn = "#registerButton";
+		
+					Security.setUpButtonsVisibility(false);
+				
+		Security.initDialogSignIn();
+		Security.initDialogRegister();
+		Security.initLogout("/logoff");
+		Security.initValidations();						
+	});
+</script>		<div class="page">							
+			
+
+	<script type="text/javascript">
+		
+		$(function () {		
+			
+			
+			$("#playlist").slimScroll({
+									height: '240px',
+								width: '620px',
+				start: $('#td_17060'),
+				alwaysVisible: true,
+				allowPageScroll: true
+			});				
+			
+			$("#buttonPrevious").click(function() {
+							});		
+
+			$("#buttonNext").click(function() {
+									getTheStoryWithVideo(17061);
+							});	
+
+			$(".title").click(function(e) {
+                getTheStoryWithVideo(e.target.id);
+			});
+
+			function getTheStoryWithVideo(id){
+			 	var fullScreen = jwplayer("player").getFullscreen();
+
+				jQuery.get("/playAll/donald.knuth?ajax=true", { sId : id , fullscreen : fullScreen},
+					function(data) {
+						$('.page').html(data);
+						if (fullScreen) {
+							$('#playAllTitle').addClass('fullscreen');
+						} else {
+							$('#playAllTitle').removeClass('fullscreen');
+						}
+					}
+				)
+			}
+
+			$("#playSingleButton").click(function() {
+				location.href='/play/donald.knuth/1';
+			});	
+
+		});						
+		
+	</script>
+
+	<div class="main">
+		<input type="hidden" id="authUserId" value="" />
+		<div style="float:left;">			
+
+						
+<img id="shareStoryBox" src="/2_0_0/images/share_icon.png" title="Share story" style="margin-left: 905px"/>
+
+<div id="shareStoryBoxDialog" style="margin-left: 407px">
+
+	<p>Video URL</p>
+
+	<input type="text" id="storyUrl" value="https://www.webofstories.com/people/donald.knuth/1?o=SH" />
+	<!--<input type="text" id="copy_button_share" data-clipboard-target="storyUrl" value="Copy me" />-->
+
+	<div>	
+		<a href="https://www.facebook.com/sharer.php?u=https://www.webofstories.com/people/donald.knuth/1?o=SH&amp;t=Family+history" rel="external,nofollow" target="_blank">
+			<img alt="" title="Share on Facebook" src="/2_0_0/images/facebook_25.png" />
+		</a>
+		<a href="https://twitter.com/share?url=https://www.webofstories.com/people/donald.knuth/1?o=SH&amp;via=webofstories&amp;text=Family+history" rel="external,nofollow" target="_blank">
+			<img alt="" title="Share on Twitter" src="/2_0_0/images/twitter_25.png" />
+		</a>
+		<a href="https://del.icio.us/post?url=https://www.webofstories.com/people/donald.knuth/1?o=SH&amp;title=Family+history" rel="external,nofollow" target="_blank">
+			<img alt="" title="Share on Delicious" src="/2_0_0/images/share/icon-delicious.png" />
+		</a>
+		<a href="https://reddit.com/submit?url=https://www.webofstories.com/people/donald.knuth/1?o=SH&amp;title=Family+history" rel="external nofollow" target='_blank'>
+			<img alt="" title="Share on Reddit" src="/2_0_0/images/share/icon-reddit.png" />
+		</a>
+		<a href="mailto:%20?subject=Video%20from%20Web%20Of%20Stories&amp;body=I%20have%20decided%20to%20share%20a%20story%20with%20you.%0AYou%20can%20see%20it%20at%20:%20https://www.webofstories.com/people/donald.knuth/1?o=SH%20." rel="external nofollow" target='_blank'>
+			<img alt="" title="Send by mail" src="/2_0_0/images/share/icon-email.png" style="margin-right: 12px;" />
+		</a>	
+	</div>
+</div>
+
+
+<script type="text/javascript">	
+
+	$(function(){	
+
+		$("#shareStoryBox").click(function (e){
+			var display = $("#shareStoryBoxDialog").css("display");
+			if(display == 'none') {				
+				
+				$("#shareStoryBox").attr("src", "/2_0_0/images/share_active.png");
+				$("#shareStoryBox").css("margin-left", "898px");
+				$("#shareStoryBoxDialog").css("display", "block");
+
+				$("#embedStoryBox").attr("src", "/2_0_0/images/embed_icon.png");
+				$("#embedStoryBox").css("margin-left", "905px");
+				$("#embedStoryBoxDialog").css("display", "none");
+
+				$("#brokenLinkStoryBox").attr("src", "/2_0_0/images/link_icon.png");
+				$("#brokenLinkStoryBox").css("margin-left", "905px");
+				$("#brokenLinkStoryBoxDialog").css("display", "none");				
+
+			} else {
+				$("#shareStoryBox").attr("src", "/2_0_0/images/share_icon.png");
+				$("#shareStoryBox").css("margin-left", "905px");
+				$("#shareStoryBoxDialog").css("display", "none");
+			}			
+		});	
+
+		$("#shareStoryBoxDialog").mouseleave(function() {
+			$("#shareStoryBox").attr("src", "/2_0_0/images/share_icon.png");
+			$("#shareStoryBox").css("margin-left", "905px");
+			$("#shareStoryBoxDialog").css("display", "none");
+		});
+	});
+
+</script>
+			
+	
+	<img id="embedStoryBox" src="/2_0_0/images/embed_icon.png" title="Embed story" style="margin-left: 905px" />
+
+			<div id="embedStoryBoxDialog" style="height: 50px; margin-top: 13px; margin-left: 392px">
+			<p style="margin-top: 14px;">
+				You must be registered to use this feature.
+				<a href="#" id="signInToEmbed">Sign in</a>
+				or
+				<a href="#" id="registerToEmbed">register</a>.
+			</p>			
+		</div>
+	
+
+<script type="text/javascript">
+
+	var selectedValue = "647 x 366";
+
+	$(function(){	
+
+		
+		$("#embedStoryBox").click(function (e){
+			var display = $("#embedStoryBoxDialog").css("display");
+			if(display == 'none') {
+
+				$("#embedStoryBox").attr("src", "/2_0_0/images/embed_active.png");
+				$("#embedStoryBox").css("margin-left", "898px");
+				$("#embedStoryBoxDialog").css("display", "block");
+				
+				$("#shareStoryBox").attr("src", "/2_0_0/images/share_icon.png");
+				$("#shareStoryBox").css("margin-left", "905px");
+				$("#shareStoryBoxDialog").css("display", "none");		
+
+				$("#brokenLinkStoryBox").attr("src", "/2_0_0/images/link_icon.png");
+				$("#brokenLinkStoryBox").css("margin-left", "905px");
+				$("#brokenLinkStoryBoxDialog").css("display", "none");							
+				
+			} else {
+				$("#embedStoryBox").attr("src", "/2_0_0/images/embed_icon.png");
+				$("#embedStoryBox").css("margin-left", "905px");
+				$("#embedStoryBoxDialog").css("display", "none");
+			}			
+		});
+
+		$("#embedStoryBoxDialog").mouseleave(function() {
+			$("#embedStoryBox").attr("src", "/2_0_0/images/embed_icon.png");
+			$("#embedStoryBox").css("margin-left", "905px");
+			$("#embedStoryBoxDialog").css("display", "none");
+		});
+	
+		$("#signInToEmbed").click(function (e){
+			$('html, body').animate({ scrollTop: 0 }, 'slow');
+			$("#signin").click();			
+			e.preventDefault();
+		});
+		
+		$("#registerToEmbed").click(function (e){
+			$('html, body').animate({ scrollTop: 0 }, 'slow');
+			$("#register").click();								
+			e.preventDefault();
+		});		
+
+		$(".sizeSelectBox .sizeSelectBoxSmall").addClass("sizeSelectBoxSelected");
+		$(".sizeSelectBox").click(function(){
+			$(".sizeSelectBox span:nth-child(2)").removeClass("sizeSelectBoxSelected");
+			$(this).children("span:nth-child(2)").addClass("sizeSelectBoxSelected");
+			updateEmbedCode($(this).children()[0].innerHTML);
+		});			
+		updateEmbedCode("647 x 366");	
+		
+		var filterData = [
+			{
+				text: '515 x 290',
+				value: '515 x 290',
+				selected: (selectedValue == '515 x 290'),
+				description: ''
+			},															
+			{
+				text: '647 x 366',
+				value: '647 x 366',
+				selected: (selectedValue == '647 x 366'),
+				description: ''
+			},	
+			{
+				text: '792 x 449',
+				value: '792 x 449',
+				selected: (selectedValue == '792 x 449'),
+				description: ''
+			},
+			{
+				text: '1188 x 664',
+				value: '1188 x 664',
+				selected: (selectedValue == '1188 x 664'),
+				description: ''
+			},
+			{
+				text: 'Customized',
+				value: 'customized',
+				selected: (selectedValue == 'customized'),
+				description: ''
+			}										
+		]; 		
+
+		$('#embedDropdown').ddslick({
+			data: filterData,
+			background: '#FFFFFF',
+			width: 150,
+			selectText: "Select media size",
+			onSelected: function(selectedData){
+				setSelectedValue(selectedData);
+			}   
+		});		
+
+		function setSelectedValue(filterData) {	
+			if(filterData.selectedData.value != selectedValue) {
+				selectedValue = filterData.selectedData.value;
+				if(selectedValue == 'customized') {
+					$(".sizeSelect").css("display", "block");
+				} else {
+					$(".sizeSelect").css("display", "none");
+					updateEmbedCode(selectedValue);	
+				}				
+			}			
+		}
+	});
+	
+	function updateEmbedCode(size) {
+	
+		$("#embedCode").html(getEmbedCode(size,
+										  1038,
+										  17060,
+										  173,
+										  'GL',
+										  true,
+										  'https://d3qf61oza7ty3z.cloudfront.net/images/1038/1038.jpg',
+										  !true,
+										  '1',
+										  1));
+	}	
+
+	function getEmbedCode(size,speakerId,storyId,storyDuration,speakerType,isFromLives,thumbnailURL,hasSubtitles,storyFileName,storyOrder) {
+		var width="0";
+		var height="0";
+		if (size == "Customised") {
+			width = document.getElementById('embedCustomWidth').value;
+			height = document.getElementById('embedCustomHeight').value;
+		} else {
+			var index = size.indexOf("x");
+			width = size.substring(0,index-1);
+			height = size.substring(index+2,size.length);
+		}
+		
+		var embedCode = "&lt;iframe src=\"https://d3qf61oza7ty3z.cloudfront.net/siteAssets/1_0_2/embedcode/embed.html?"
+		embedCode += "sp="+speakerId+"&sid="+storyId+"&d="+storyDuration
+
+		if (!isFromLives) {
+			var urlPrefix ="";
+			if (speakerType == "MS") {
+				embedCode += "&st=MS";
+			}
+			if (thumbnailURL != "" ) {
+				var i = thumbnailURL.indexOf("/",10);
+				thumbnailURL = urlPrefix + thumbnailURL.substring(i+1,thumbnailURL.length);
+				embedCode += "&i="+thumbnailURL;
+			}
+		} else {
+			if (hasSubtitles) {
+				embedCode += "&sb=t"
+			}
+		}
+		if (storyFileName != "") {
+			embedCode += "&f="+storyFileName+"x";
+		}
+		embedCode += "\"";
+		embedCode += " width=\"" + width + "\" height=\"" + height + "\" frameborder=\"0\" scrolling=\"no\" &gt; &lt;/iframe&gt;";
+		return embedCode;
+	}					
+
+</script>
+			
+<img id="brokenLinkStoryBox" src="/2_0_0/images/link_icon.png" title="Report broken link" style="margin-left: 905px" />
+
+<div id="brokenLinkStoryBoxDialog" style="margin-left: 472px"></div>
+
+<script type="text/javascript">
+
+	$(function() {	
+		
+		$("#brokenLinkStoryBox").click(function (e){
+			var display = $("#brokenLinkStoryBoxDialog").css("display");
+			if(display == 'none') {
+
+				$("#brokenLinkStoryBox").attr("src", "/2_0_0/images/link_active.png");
+				$("#brokenLinkStoryBox").css("margin-left", "898px");
+				$("#brokenLinkStoryBoxDialog").css("display", "block");
+
+				jQuery.get("/reportbrokenstory/17060?ajax=true",
+					function(data) {
+						$("#brokenLinkStoryBoxDialog").html(data);
+					}
+				);	
+				
+				$("#shareStoryBox").attr("src", "/2_0_0/images/share_icon.png");
+				$("#shareStoryBox").css("margin-left", "905px");
+				$("#shareStoryBoxDialog").css("display", "none");	
+
+				$("#embedStoryBox").attr("src", "/2_0_0/images/embed_icon.png");
+				$("#embedStoryBox").css("margin-left", "905px");
+				$("#embedStoryBoxDialog").css("display", "none");							
+				
+			} else {
+				$("#brokenLinkStoryBox").attr("src", "/2_0_0/images/link_icon.png");
+				$("#brokenLinkStoryBox").css("margin-left", "905px");
+				$("#brokenLinkStoryBoxDialog").css("display", "none");
+			}			
+		});
+
+		$("#brokenLinkStoryBoxDialog").mouseleave(function() {
+			$("#brokenLinkStoryBox").attr("src", "/2_0_0/images/link_icon.png");
+			$("#brokenLinkStoryBox").css("margin-left", "905px");
+			$("#brokenLinkStoryBoxDialog").css("display", "none");
+		});
+
+	});
+
+</script>
+			<div id="player">
+			</div>
+
+			<div id="playAllTitle" class="playAllTitle"></div>		
+
+			<div id="mainInfo" style="height: 55px;">
+
+				<div id="title" style="width: 505px;">					
+					<span>Family history</span>
+				</div>		
+				<div id="playMode" style="height: 55px; float: right; margin-top: 7px;  width: 355px; ">	
+						
+			<img class="likeStoryBox" src="/2_0_0/images/favorite_00.png" title="Like a story" id="recommendButton-17060" style=" right: 385px; " />
+	
+
+<script type="text/javascript">
+
+	$(function(){	
+		activateRecommendation("");
+	});
+
+	function activateRecommendation(userId) {
+		
+		$(".likeStoryBox").click(function(e) {
+			if(userId!="") {
+				var id=$(this).attr("id");
+				var storyId=id.substring(id.indexOf('-')+1,id.length);
+				jQuery.post("/recommend?ajax='true'", {"storyId":storyId},
+					function(data) {
+
+						if(data['result']) {											
+							
+							var result = data['result'];
+							$("#playListLikes_"+storyId).html(result['count']);
+							
+							var number = parseInt(result['count']);
+							if(number > 0) {
+								$("#playListLikes_"+storyId).removeClass("playListLikesEmpty");
+								$("#playListLikes_"+storyId).addClass("playListLikes");
+							} else {
+								$("#playListLikes_"+storyId).removeClass("playListLikes");
+								$("#playListLikes_"+storyId).addClass("playListLikesEmpty");
+							}
+											
+							if(result['increment'] == 1) {
+								$("#"+id).attr("src", "/2_0_0/images/favorite_01.png");
+							} else {
+								$("#"+id).attr("src", "/2_0_0/images/favorite_00.png");
+							}
+						}										
+					} , "json");
+			
+			} else {
+				$('html, body').animate({ scrollTop: 0 }, 'slow');
+				$("#signin").click();			
+				e.preventDefault();
+			}		
+		});
+	}
+</script>					<input type="button" id="playSingleButton" value="Single story" />						
+											<div style="float: right;">						
+							<form id="searchForm" action="/story/search" method="get">
+	<input id="searchBox" type="text" class="searchBox" placeholder="Search" name="q" />	
+	<input id="sp" type="hidden" name="sp" value="1038" />	
+	<input id="searchButton" type="submit" value="" />
+</form>						</div>
+									</div>	
+				<div id="speakerName">							
+					<span>Donald Knuth</span>	
+											<span id="primaryField">Scientist</span>
+										<!-- only for Dorothy Hodgkin... -->					
+									</div>											
+
+			</div>				
+			
+			<div style="float: left; width: 620px;">
+
+				<table class="storiesTable" style="width: 620px;">
+					<tr style="background-color: #f7f7f7;">
+						<th style="width: 500px; text-align: left; padding-left: 10px;">
+							<span class="playNavigator">
+																																	<span id="buttonNext">Next</span>        				
+															</span>			
+						</th>
+						<th id="likesTitle">
+							<!-- <img src="/2_0_0/images/recommend_16.png" title="Likes" /> -->
+							<img src="/2_0_0/images/heart_stats.png" title="Likes" />	
+						</th>						
+						<th id="viewsTitle" class="views text">
+							Views
+						</th>
+						<th id="durationTitle" class="duration text">
+							Duration
+						</th>		
+					</tr>
+				</table>
+
+				<div id="playlist">	
+					<table class="storiesTable" style="width: 100%; margin-top: 3px;">
+						<tr style="height: 0px;">
+							<th style="width: 500px; text-align: left; padding-left: 10px;">
+								<span class="playNavigator">
+								</span>			
+							</th>
+							<th id="likesTitle">
+							</th>							
+							<th id="viewsTitle" class="views text">
+							</th>
+							<th id="durationTitle" class="duration text">
+							</th>		
+						</tr>			
+						<tbody id="allStoriesContent">		
+							
+							
+								
+								<tr class="playListItem storySelected">
+									<td id="td_17060">	
+										<a id="17060" class="title" 
+										   title="Family history">
+											1.                                            Family history
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17060" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							14
+																					</span>
+									</td>									
+									<td class="views text">
+																					23741
+																			</td>
+									<td class="duration text">
+																					02:52
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17061">	
+										<a id="17061" class="title" 
+										   title="Learning to read and school">
+											2.                                            Learning to read and school
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17061" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					6076
+																			</td>
+									<td class="duration text">
+																					07:16
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17062">	
+										<a id="17062" class="title" 
+										   title="My mother">
+											3.                                            My mother
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17062" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					3339
+																			</td>
+									<td class="duration text">
+																					02:42
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17063">	
+										<a id="17063" class="title" 
+										   title="My parents' finances">
+											4.                                            My parents' finances
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17063" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					3191
+																			</td>
+									<td class="duration text">
+																					06:28
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17064">	
+										<a id="17064" class="title" 
+										   title="Interests in high school">
+											5.                                            Interests in high school
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17064" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					3807
+																			</td>
+									<td class="duration text">
+																					03:27
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17065">	
+										<a id="17065" class="title" 
+										   title="Being a nerd of nerds at high school">
+											6.                                            Being a nerd of nerds at high school
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17065" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					2926
+																			</td>
+									<td class="duration text">
+																					04:23
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17066">	
+										<a id="17066" class="title" 
+										   title="My sense of humor">
+											7.                                            My sense of humor
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17066" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					5049
+																			</td>
+									<td class="duration text">
+																					01:53
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17067">	
+										<a id="17067" class="title" 
+										   title="&quot;The Potrzebie System of Weights and Measures&quot;">
+											8.                                            <i>The Potrzebie System of Weights and Measures</i>
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17067" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					4484
+																			</td>
+									<td class="duration text">
+																					03:56
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17068">	
+										<a id="17068" class="title" 
+										   title="Feeling the need to prove myself">
+											9.                                            Feeling the need to prove myself
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17068" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							3
+																					</span>
+									</td>									
+									<td class="views text">
+																					8484
+																			</td>
+									<td class="duration text">
+																					07:41
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17069">	
+										<a id="17069" class="title" 
+										   title="Why I chose to go to Case Institute of Technology">
+											10.                                            Why I chose to go to Case Institute of Technology
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17069" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					3007
+																			</td>
+									<td class="duration text">
+																					03:16
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17070">	
+										<a id="17070" class="title" 
+										   title="University life: my basketball management system">
+											11.                                            University life: my basketball management system
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17070" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					2135
+																			</td>
+									<td class="duration text">
+																					08:09
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17071">	
+										<a id="17071" class="title" 
+										   title="University life: the fraternity system">
+											12.                                            University life: the fraternity system
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17071" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1758
+																			</td>
+									<td class="duration text">
+																					03:36
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17072">	
+										<a id="17072" class="title" 
+										   title="Meeting my wife Jill">
+											13.                                            Meeting my wife Jill
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17072" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					3699
+																			</td>
+									<td class="duration text">
+																					04:28
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17073">	
+										<a id="17073" class="title" 
+										   title="Bible study at university and a time of personal challenge">
+											14.                                            Bible study at university and a time of personal challenge
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17073" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					2645
+																			</td>
+									<td class="duration text">
+																					03:42
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17074">	
+										<a id="17074" class="title" 
+										   title="Extra-curricular activities at Case">
+											15.                                            Extra-curricular activities at Case
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17074" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1273
+																			</td>
+									<td class="duration text">
+																					05:20
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17075">	
+										<a id="17075" class="title" 
+										   title="Taking graduate classes at Case">
+											16.                                            Taking graduate classes at Case
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17075" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1388
+																			</td>
+									<td class="duration text">
+																					02:58
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17076">	
+										<a id="17076" class="title" 
+										   title="Physics, welding, astronomy and mathematics">
+											17.                                            Physics, welding, astronomy and mathematics
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17076" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1888
+																			</td>
+									<td class="duration text">
+																					04:42
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17077">	
+										<a id="17077" class="title" 
+										   title="My maths teacher at Case and a difficult problem">
+											18.                                            My maths teacher at Case and a difficult problem
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17077" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					3429
+																			</td>
+									<td class="duration text">
+																					06:16
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17078">	
+										<a id="17078" class="title" 
+										   title="My interest in graphs and my first experience of a computer">
+											19.                                            My interest in graphs and my first experience of a computer
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17078" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					3779
+																			</td>
+									<td class="duration text">
+																					05:13
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17079">	
+										<a id="17079" class="title" 
+										   title="How I got interested in programming">
+											20.                                            How I got interested in programming
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17079" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					2420
+																			</td>
+									<td class="duration text">
+																					03:41
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17080">	
+										<a id="17080" class="title" 
+										   title="Learning how to program on the IBM 650">
+											21.                                            Learning how to program on the IBM 650
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17080" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1722
+																			</td>
+									<td class="duration text">
+																					04:20
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17081">	
+										<a id="17081" class="title" 
+										   title="Writing a tic-tac-toe program">
+											22.                                            Writing a tic-tac-toe program
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17081" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							2
+																					</span>
+									</td>									
+									<td class="views text">
+																					2170
+																			</td>
+									<td class="duration text">
+																					05:12
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17082">	
+										<a id="17082" class="title" 
+										   title="Learning about Symbolic Optimum Assembly programs">
+											23.                                            Learning about Symbolic Optimum Assembly programs
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17082" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1491
+																			</td>
+									<td class="duration text">
+																					05:36
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17083">	
+										<a id="17083" class="title" 
+										   title="The Internal Translator">
+											24.                                            The Internal Translator
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17083" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1443
+																			</td>
+									<td class="duration text">
+																					06:26
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17084">	
+										<a id="17084" class="title" 
+										   title="Adding more features to RUNCIBLE">
+											25.                                            Adding more features to RUNCIBLE
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17084" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1126
+																			</td>
+									<td class="duration text">
+																					03:48
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17085">	
+										<a id="17085" class="title" 
+										   title="Wanting to be a teacher and why I chose to go to Caltech">
+											26.                                            Wanting to be a teacher and why I chose to go to Caltech
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17085" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1553
+																			</td>
+									<td class="duration text">
+																					04:31
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17086">	
+										<a id="17086" class="title" 
+										   title="Writing a compiler for the Burroughs Corporation">
+											27.                                            Writing a compiler for the Burroughs Corporation
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17086" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1996
+																			</td>
+									<td class="duration text">
+																					05:00
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17087">	
+										<a id="17087" class="title" 
+										   title="Working for the Burroughs Corporation">
+											28.                                            Working for the Burroughs Corporation
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17087" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							2
+																					</span>
+									</td>									
+									<td class="views text">
+																					1273
+																			</td>
+									<td class="duration text">
+																					05:26
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17088">	
+										<a id="17088" class="title" 
+										   title="Burroughs Corporation">
+											29.                                            Burroughs Corporation
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17088" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1200
+																			</td>
+									<td class="duration text">
+																					01:51
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17089">	
+										<a id="17089" class="title" 
+										   title="My interest in context-free languages">
+											30.                                            My interest in context-free languages
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17089" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1822
+																			</td>
+									<td class="duration text">
+																					03:23
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17090">	
+										<a id="17090" class="title" 
+										   title="Getting my PhD and the problem of symmetric block designs with lambda equals two">
+											31.                                            Getting my PhD and the problem of symmetric block designs with lambda equals two
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17090" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1547
+																			</td>
+									<td class="duration text">
+																					04:14
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17091">	
+										<a id="17091" class="title" 
+										   title="Finding a solution to an open problem about projective planes">
+											32.                                            Finding a solution to an open problem about projective planes
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17091" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1461
+																			</td>
+									<td class="duration text">
+																					05:40
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17092">	
+										<a id="17092" class="title" 
+										   title="Inception of &quot;The Art of Computer Programming&quot;">
+											33.                                            Inception of <i>The Art of Computer Programming</i>
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17092" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1910
+																			</td>
+									<td class="duration text">
+																					07:07
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17093">	
+										<a id="17093" class="title" 
+										   title="1967: a turbulent year">
+											34.                                            1967: a turbulent year
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17093" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1655
+																			</td>
+									<td class="duration text">
+																					04:34
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17094">	
+										<a id="17094" class="title" 
+										   title="Work on attribute grammars and the Knuth-Bendix Algorithm">
+											35.                                            Work on attribute grammars and the Knuth-Bendix Algorithm
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17094" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1497
+																			</td>
+									<td class="duration text">
+																					03:54
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17095">	
+										<a id="17095" class="title" 
+										   title="Being creative in the forest">
+											36.                                            Being creative in the forest
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17095" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1320
+																			</td>
+									<td class="duration text">
+																					06:04
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17096">	
+										<a id="17096" class="title" 
+										   title="A new field: analysis of algorithms">
+											37.                                            A new field: analysis of algorithms
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17096" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1316
+																			</td>
+									<td class="duration text">
+																					05:43
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17097">	
+										<a id="17097" class="title" 
+										   title="&quot;The Art of Computer Programming&quot;: underestimating the size of the book">
+											38.                                            <i>The Art of Computer Programming</i>: underestimating the size of the book
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17097" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1776
+																			</td>
+									<td class="duration text">
+																					05:45
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17098">	
+										<a id="17098" class="title" 
+										   title="The successful first release of &quot;The Art of Computer Programming&quot;">
+											39.                                            The successful first release of <i>The Art of Computer Programming</i>
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17098" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1469
+																			</td>
+									<td class="duration text">
+																					05:08
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17099">	
+										<a id="17099" class="title" 
+										   title="Inspiration to write &quot;Surreal Numbers&quot;">
+											40.                                            Inspiration to write <i>Surreal Numbers</i>
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17099" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1393
+																			</td>
+									<td class="duration text">
+																					03:56
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17100">	
+										<a id="17100" class="title" 
+										   title="Writing &quot;Surreal Numbers&quot; in a hotel room in Oslo">
+											41.                                            Writing <i>Surreal Numbers</i> in a hotel room in Oslo
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17100" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1053
+																			</td>
+									<td class="duration text">
+																					05:26
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17101">	
+										<a id="17101" class="title" 
+										   title="Finishing the &quot;Surreal Numbers&quot;">
+											42.                                            Finishing the <i>Surreal Numbers</i>
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17101" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					943
+																			</td>
+									<td class="duration text">
+																					06:30
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17102">	
+										<a id="17102" class="title" 
+										   title="The emergence of computer science as an academic subject">
+											43.                                            The emergence of computer science as an academic subject
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17102" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1192
+																			</td>
+									<td class="duration text">
+																					06:44
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17103">	
+										<a id="17103" class="title" 
+										   title="I want to do computer science instead of arguing for it">
+											44.                                            I want to do computer science instead of arguing for it
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17103" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1005
+																			</td>
+									<td class="duration text">
+																					07:58
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17104">	
+										<a id="17104" class="title" 
+										   title="A year doing National Service in Princeton">
+											45.                                            A year doing National Service in Princeton
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17104" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					921
+																			</td>
+									<td class="duration text">
+																					05:54
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17105">	
+										<a id="17105" class="title" 
+										   title="Moving to Stanford and wondering whether I'd made the right choice">
+											46.                                            Moving to Stanford and wondering whether I'd made the right choice
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17105" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1203
+																			</td>
+									<td class="duration text">
+																					02:38
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17106">	
+										<a id="17106" class="title" 
+										   title="Designing the house in Stanford">
+											47.                                            Designing the house in Stanford
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17106" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1268
+																			</td>
+									<td class="duration text">
+																					07:21
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17107">	
+										<a id="17107" class="title" 
+										   title="Volume Three of &quot;The Art of Computer Programming&quot;">
+											48.                                            Volume Three of <i>The Art of Computer Programming</i>
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17107" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1079
+																			</td>
+									<td class="duration text">
+																					03:25
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17108">	
+										<a id="17108" class="title" 
+										   title="Working on Volume Four of &quot;The Art of Computer Programming&quot;">
+											49.                                            Working on Volume Four of <i>The Art of Computer Programming</i>
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17108" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					980
+																			</td>
+									<td class="duration text">
+																					02:24
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17109">	
+										<a id="17109" class="title" 
+										   title="Poor quality typesetting on the second edition of my book">
+											50.                                            Poor quality typesetting on the second edition of my book
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17109" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1709
+																			</td>
+									<td class="duration text">
+																					05:49
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17110">	
+										<a id="17110" class="title" 
+										   title="Deciding to make my own typesetting program">
+											51.                                            Deciding to make my own typesetting program
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17110" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					2177
+																			</td>
+									<td class="duration text">
+																					02:15
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17111">	
+										<a id="17111" class="title" 
+										   title="Working on my typesetting program">
+											52.                                            Working on my typesetting program
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17111" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1870
+																			</td>
+									<td class="duration text">
+																					02:47
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17112">	
+										<a id="17112" class="title" 
+										   title="Mathematical formula for letter shapes">
+											53.                                            Mathematical formula for letter shapes
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17112" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1522
+																			</td>
+									<td class="duration text">
+																					05:41
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17113">	
+										<a id="17113" class="title" 
+										   title="Research into the history of typography">
+											54.                                            Research into the history of typography
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17113" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1486
+																			</td>
+									<td class="duration text">
+																					01:36
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17114">	
+										<a id="17114" class="title" 
+										   title="Working on my letters and problems with the S">
+											55.                                            Working on my letters and problems with the S
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17114" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1857
+																			</td>
+									<td class="duration text">
+																					04:41
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17115">	
+										<a id="17115" class="title" 
+										   title="Figuring out how to typeset and the problem with specifications">
+											56.                                            Figuring out how to typeset and the problem with specifications
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17115" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1364
+																			</td>
+									<td class="duration text">
+																					06:15
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17116">	
+										<a id="17116" class="title" 
+										   title="Working on TeX">
+											57.                                            Working on TeX
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17116" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1659
+																			</td>
+									<td class="duration text">
+																					02:36
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17117">	
+										<a id="17117" class="title" 
+										   title="Why the designer and the implementer of a program should be the same person">
+											58.                                            Why the designer and the implementer of a program should be the same person
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17117" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1739
+																			</td>
+									<td class="duration text">
+																					01:17
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17118">	
+										<a id="17118" class="title" 
+										   title="Converting Volume Two to TeX">
+											59.                                            Converting Volume Two to TeX
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17118" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1287
+																			</td>
+									<td class="duration text">
+																					03:23
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17119">	
+										<a id="17119" class="title" 
+										   title="Writing a users' manual for TeX">
+											60.                                            Writing a users' manual for TeX
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17119" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1270
+																			</td>
+									<td class="duration text">
+																					02:57
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17120">	
+										<a id="17120" class="title" 
+										   title="Giving the Gibbs lecture on my typography work">
+											61.                                            Giving the Gibbs lecture on my typography work
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17120" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1173
+																			</td>
+									<td class="duration text">
+																					02:34
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17121">	
+										<a id="17121" class="title" 
+										   title="Developing Metafont and TeX">
+											62.                                            Developing Metafont and TeX
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17121" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1299
+																			</td>
+									<td class="duration text">
+																					05:53
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17122">	
+										<a id="17122" class="title" 
+										   title="Why I chose not to retain any rights to TeX and transcribed it to Pascal">
+											63.                                            Why I chose not to retain any rights to TeX and transcribed it to Pascal
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17122" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1311
+																			</td>
+									<td class="duration text">
+																					03:59
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17123">	
+										<a id="17123" class="title" 
+										   title="Tuning up my fonts and getting funding for TeX">
+											64.                                            Tuning up my fonts and getting funding for TeX
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17123" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1028
+																			</td>
+									<td class="duration text">
+																					06:51
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17124">	
+										<a id="17124" class="title" 
+										   title="Problems with Volume Two">
+											65.                                            Problems with Volume Two
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17124" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1004
+																			</td>
+									<td class="duration text">
+																					03:37
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17125">	
+										<a id="17125" class="title" 
+										   title="Literate programming">
+											66.                                            Literate programming
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17125" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1483
+																			</td>
+									<td class="duration text">
+																					04:05
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17126">	
+										<a id="17126" class="title" 
+										   title="Re-writing TeX using the feedback I received">
+											67.                                            Re-writing TeX using the feedback I received
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17126" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1060
+																			</td>
+									<td class="duration text">
+																					04:18
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17127">	
+										<a id="17127" class="title" 
+										   title="The importance of stability for TeX">
+											68.                                            The importance of stability for TeX
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17127" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1086
+																			</td>
+									<td class="duration text">
+																					03:12
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17128">	
+										<a id="17128" class="title" 
+										   title="LaTeX and ConTeXt">
+											69.                                            LaTeX and ConTeXt
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17128" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					2671
+																			</td>
+									<td class="duration text">
+																					01:57
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17129">	
+										<a id="17129" class="title" 
+										   title="A summary of the TeX project">
+											70.                                            A summary of the TeX project
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17129" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1378
+																			</td>
+									<td class="duration text">
+																					03:53
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17130">	
+										<a id="17130" class="title" 
+										   title="A year in Boston">
+											71.                                            A year in Boston
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17130" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					862
+																			</td>
+									<td class="duration text">
+																					03:34
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17131">	
+										<a id="17131" class="title" 
+										   title="Writing a book about the Bible: &quot;3:16&quot;">
+											72.                                            Writing a book about the Bible: <i>3:16</i>
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17131" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1487
+																			</td>
+									<td class="duration text">
+																					05:13
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17132">	
+										<a id="17132" class="title" 
+										   title="The most beautiful 3:16 in the world">
+											73.                                            The most beautiful 3:16 in the world
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17132" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1083
+																			</td>
+									<td class="duration text">
+																					04:23
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17133">	
+										<a id="17133" class="title" 
+										   title="&quot;Chess master playing&quot; at Adobe Systems">
+											74.                                            <i>Chess master playing</i> at Adobe Systems
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17133" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					938
+																			</td>
+									<td class="duration text">
+																					05:22
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17134">	
+										<a id="17134" class="title" 
+										   title="Giving a lecture series on science and religion at MIT">
+											75.                                            Giving a lecture series on science and religion at MIT
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17134" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1577
+																			</td>
+									<td class="duration text">
+																					06:51
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17135">	
+										<a id="17135" class="title" 
+										   title="Back to work at Stanford and taking early retirement">
+											76.                                            Back to work at Stanford and taking early retirement
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17135" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					986
+																			</td>
+									<td class="duration text">
+																					07:19
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17136">	
+										<a id="17136" class="title" 
+										   title="Taking up swimming to help me cope with stress">
+											77.                                            Taking up swimming to help me cope with stress
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17136" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1270
+																			</td>
+									<td class="duration text">
+																					02:16
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17137">	
+										<a id="17137" class="title" 
+										   title="My graduate students and my 64th birthday">
+											78.                                            My graduate students and my 64th birthday
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17137" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1018
+																			</td>
+									<td class="duration text">
+																					03:53
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17138">	
+										<a id="17138" class="title" 
+										   title="My class on Concrete Mathematics">
+											79.                                            My class on Concrete Mathematics
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17138" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1855
+																			</td>
+									<td class="duration text">
+																					03:12
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17139">	
+										<a id="17139" class="title" 
+										   title="Writing a book on my Concrete Mathematics class">
+											80.                                            Writing a book on my Concrete Mathematics class
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17139" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1256
+																			</td>
+									<td class="duration text">
+																					06:41
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17140">	
+										<a id="17140" class="title" 
+										   title="Updating Volumes One to Three of &quot;The Art of Computer Programming&quot;">
+											81.                                            Updating Volumes One to Three of <i>The Art of Computer Programming</i>
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17140" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					908
+																			</td>
+									<td class="duration text">
+																					06:15
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17141">	
+										<a id="17141" class="title" 
+										   title="Getting started on Volume Four of &quot;The Art of Computer Programming&quot;">
+											82.                                            Getting started on Volume Four of <i>The Art of Computer Programming</i>
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17141" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1001
+																			</td>
+									<td class="duration text">
+																					04:50
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17142">	
+										<a id="17142" class="title" 
+										   title="Two final major research projects">
+											83.                                            Two final major research projects
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17142" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1118
+																			</td>
+									<td class="duration text">
+																					03:55
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17143">	
+										<a id="17143" class="title" 
+										   title="My love of writing and a lucky life">
+											84.                                            My love of writing and a lucky life
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17143" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1049
+																			</td>
+									<td class="duration text">
+																					04:22
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17144">	
+										<a id="17144" class="title" 
+										   title="Coping with cancer">
+											85.                                            Coping with cancer
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17144" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							2
+																					</span>
+									</td>									
+									<td class="views text">
+																					1951
+																			</td>
+									<td class="duration text">
+																					07:40
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17145">	
+										<a id="17145" class="title" 
+										   title="Honorary doctorates">
+											86.                                            Honorary doctorates
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17145" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					748
+																			</td>
+									<td class="duration text">
+																					02:29
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17146">	
+										<a id="17146" class="title" 
+										   title="The importance of awards and the Kyoto Prize">
+											87.                                            The importance of awards and the Kyoto Prize
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17146" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					810
+																			</td>
+									<td class="duration text">
+																					05:49
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17147">	
+										<a id="17147" class="title" 
+										   title="Pipe organ music is one of the great pleasures of life">
+											88.                                            Pipe organ music is one of the great pleasures of life
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17147" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1117
+																			</td>
+									<td class="duration text">
+																					04:52
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17148">	
+										<a id="17148" class="title" 
+										   title="The pipe organ in my living room">
+											89.                                            The pipe organ in my living room
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17148" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					832
+																			</td>
+									<td class="duration text">
+																					05:10
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17149">	
+										<a id="17149" class="title" 
+										   title="Playing the organs">
+											90.                                            Playing the organs
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17149" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					720
+																			</td>
+									<td class="duration text">
+																					03:25
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17150">	
+										<a id="17150" class="title" 
+										   title="An international symposium on algorithms in the Soviet Union">
+											91.                                            An international symposium on algorithms in the Soviet Union
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17150" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1090
+																			</td>
+									<td class="duration text">
+																					05:42
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17151">	
+										<a id="17151" class="title" 
+										   title="The Knuth-Morris-Pratt algorithm">
+											92.                                            The Knuth-Morris-Pratt algorithm
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17151" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							2
+																					</span>
+									</td>									
+									<td class="views text">
+																					2799
+																			</td>
+									<td class="duration text">
+																					05:27
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17152">	
+										<a id="17152" class="title" 
+										   title="My advice to young people">
+											93.                                            My advice to young people
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17152" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							4
+																					</span>
+									</td>									
+									<td class="views text">
+																					9907
+																			</td>
+									<td class="duration text">
+																					04:41
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17153">	
+										<a id="17153" class="title" 
+										   title="My children: John">
+											94.                                            My children: John
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17153" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					2007
+																			</td>
+									<td class="duration text">
+																					05:49
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17154">	
+										<a id="17154" class="title" 
+										   title="My children: Jenny">
+											95.                                            My children: Jenny
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17154" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					1530
+																			</td>
+									<td class="duration text">
+																					04:32
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17155">	
+										<a id="17155" class="title" 
+										   title="Working on a series of books of my collected papers">
+											96.                                            Working on a series of books of my collected papers
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17155" class=" playListLikesEmpty " title="Recommendations" style="padding-left: 18px;">
+																					</span>
+									</td>									
+									<td class="views text">
+																					721
+																			</td>
+									<td class="duration text">
+																					05:53
+																			</td>		
+								</tr>	
+							
+								
+								<tr class="playListItem ">
+									<td id="td_17156">	
+										<a id="17156" class="title" 
+										   title="Why I chose analysis of algorithms as a subject">
+											97.                                            Why I chose analysis of algorithms as a subject
+										</a>
+									</td>
+									<td class="likes text" style="text-align: left;">
+										<span id="playListLikes_17156" class=" playListLikes " title="Recommendations" style="padding-left: 18px;">
+																							1
+																					</span>
+									</td>									
+									<td class="views text">
+																					1879
+																			</td>
+									<td class="duration text">
+																					02:46
+																			</td>		
+								</tr>	
+													</tbody>			
+					</table>				
+				</div>	
+			</div>
+
+			<div style="float: right;">	
+				<script type="text/javascript">	
+
+	$(function () {	
+
+		Tabs2.init("tab");
+		$(".tabContent").slimScroll({
+			height : '740px',			
+			alwaysVisible: true,
+			allowPageScroll: true
+		});			
+
+		$(".biographyElement").hide();
+		$(".listenerBiography").hide();
+		$(".listenerToggler").click(function(e){
+			var id=$(this).attr("id");
+			var listenerId=id.substring(id.indexOf('-')+1,id.length);
+			if($('#biographyElement-'+listenerId).is(":visible")) {
+				$('#biographyElement-'+listenerId).slideUp();
+			} else {
+				$('.biographyElement').slideUp();
+				$("#bioText-"+listenerId+"-en").show();
+				$("#bioLanguageLink-"+listenerId+"-en").css("color", "#0e76bc");
+				$('#biographyElement-'+listenerId).slideDown();
+			}
+			e.preventDefault();
+		});
+
+		$(".bioLanguage-link").click(function(e){
+			var id=$(this).attr("id");
+			var listenerLanguageId=id.substring(id.indexOf('-')+1,id.length);
+			$('.listenerBiography').hide();
+			$("#bioText-"+listenerLanguageId).show();
+			$(".bioLanguage-link").css("color", "#b3b3b3");
+			$("#bioLanguageLink-"+listenerLanguageId).css("color", "#0e76bc");
+			e.preventDefault();
+			e.stopPropagation();
+		});
+
+		$(".transcriptTabContent").hide();
+		$("#ENGLISH").show();
+		$("#transcriptTab_ENGLISH").css("color", "#0e76bc");
+
+		$(".transcriptTab").click(function(e){
+			var id=$(this).attr("id");
+			var lang=id.substring(id.indexOf('_')+1,id.length);				
+			$(".transcriptTabContent").hide();
+			$("#"+lang).show();
+			$(".transcriptTab").css("color", "#b3b3b3");
+			$("#transcriptTab_"+lang).css("color", "#0e76bc");
+			e.preventDefault();
+		});			
+	});
+
+</script>
+
+<div style="float: right">
+
+	<div class="rightTop">
+
+		<div class="menu" style="height: 20px; text-transform: none; font-family: arial, sans-serif; font-weight: bold;">
+							<span id="stories_tab" class="tab"> Related </span>		
+				<span style="padding-right: 4px; padding-left: 4px;"></span>		
+										<span id="transcript_tab" class="tab"> Transcript </span>
+				<span style="padding-right: 4px; padding-left: 4px;"></span>
+										<span id="biography_tab" class="tab"> Biography </span>
+				<span style="padding-right: 4px; padding-left: 4px;"></span>
+						<span id="info_tab" class="tab"> Info </span>
+		</div>
+
+					<div id="stories" class="tabContent">
+				<div id="relatedStories">
+											<div id="relatedStoriesBox" class="storyBox storyItem" style="border-bottom: none; height: 80px; cursor: pointer;" onclick="location.href='/play/53650?o=$playOrigin'"> 
+							<div class="imgDivRelatedStories" style="float: left;">
+								<img src="https://d3qf61oza7ty3z.cloudfront.net/images/50034/50034.jpg" />
+							</div>
+						
+							<div class="description" style="margin-top:0; margin-left: 10px; float: left; height: 80px;">
+
+								<div class="first" title="Norman Greenwood - Physical chemistry: thermodynamics" style="width: 140px"> 
+									Physical chemistry: thermodynamics 
+								</div>
+							
+								<div class="second" title="Norman Greenwood" style="width: 140px">
+									Norman Greenwood
+								</div>
+
+								<div class="third">
+									01:04
+								</div>							
+
+							</div>	
+						</div>
+											<div id="relatedStoriesBox" class="storyBox storyItem" style="border-bottom: none; height: 80px; cursor: pointer;" onclick="location.href='/play/57188?o=$playOrigin'"> 
+							<div class="imgDivRelatedStories" style="float: left;">
+								<img src="https://d3qf61oza7ty3z.cloudfront.net/images/50075/50075.jpg" />
+							</div>
+						
+							<div class="description" style="margin-top:0; margin-left: 10px; float: left; height: 80px;">
+
+								<div class="first" title="John Julius Norwich - My voyage to America" style="width: 140px"> 
+									My voyage to America 
+								</div>
+							
+								<div class="second" title="John Julius Norwich" style="width: 140px">
+									John Julius Norwich
+								</div>
+
+								<div class="third">
+									00:54
+								</div>							
+
+							</div>	
+						</div>
+											<div id="relatedStoriesBox" class="storyBox storyItem" style="border-bottom: none; height: 80px; cursor: pointer;" onclick="location.href='/play/56276?o=$playOrigin'"> 
+							<div class="imgDivRelatedStories" style="float: left;">
+								<img src="https://d3qf61oza7ty3z.cloudfront.net/images/50072/50072.jpg" />
+							</div>
+						
+							<div class="description" style="margin-top:0; margin-left: 10px; float: left; height: 80px;">
+
+								<div class="first" title="Uri Avnery - Why my father decided to leave Germany " style="width: 140px"> 
+									Why my father decided to leave Germany 
+								</div>
+							
+								<div class="second" title="Uri Avnery" style="width: 140px">
+									Uri Avnery
+								</div>
+
+								<div class="third">
+									04:42
+								</div>							
+
+							</div>	
+						</div>
+											<div id="relatedStoriesBox" class="storyBox storyItem" style="border-bottom: none; height: 80px; cursor: pointer;" onclick="location.href='/play/100?o=$playOrigin'"> 
+							<div class="imgDivRelatedStories" style="float: left;">
+								<img src="https://d3qf61oza7ty3z.cloudfront.net/images/1001/1001.jpg" />
+							</div>
+						
+							<div class="description" style="margin-top:0; margin-left: 10px; float: left; height: 80px;">
+
+								<div class="first" title="Ernst Mayr - Bird watching: an exciting observation" style="width: 140px"> 
+									Bird watching: an exciting observation 
+								</div>
+							
+								<div class="second" title="Ernst Mayr" style="width: 140px">
+									Ernst Mayr
+								</div>
+
+								<div class="third">
+									02:21
+								</div>							
+
+							</div>	
+						</div>
+											<div id="relatedStoriesBox" class="storyBox storyItem" style="border-bottom: none; height: 80px; cursor: pointer;" onclick="location.href='/play/57093?o=$playOrigin'"> 
+							<div class="imgDivRelatedStories" style="float: left;">
+								<img src="https://d3qf61oza7ty3z.cloudfront.net/images/50074/50074.jpg" />
+							</div>
+						
+							<div class="description" style="margin-top:0; margin-left: 10px; float: left; height: 80px;">
+
+								<div class="first" title="W Daniel Hillis - 'Dependence' and Twist – American culture in Africa" style="width: 140px"> 
+									'Dependence' and Twist – American culture... 
+								</div>
+							
+								<div class="second" title="W Daniel Hillis" style="width: 140px">
+									W Daniel Hillis
+								</div>
+
+								<div class="third">
+									01:13
+								</div>							
+
+							</div>	
+						</div>
+											<div id="relatedStoriesBox" class="storyBox storyItem" style="border-bottom: none; height: 80px; cursor: pointer;" onclick="location.href='/play/4505?o=$playOrigin'"> 
+							<div class="imgDivRelatedStories" style="float: left;">
+								<img src="https://d3qf61oza7ty3z.cloudfront.net/images/1003/1003.jpg" />
+							</div>
+						
+							<div class="description" style="margin-top:0; margin-left: 10px; float: left; height: 80px;">
+
+								<div class="first" title="Hans Bethe - Emigrating from Germany to live in Manchester with Rudi Peierls" style="width: 140px"> 
+									Emigrating from Germany to live in... 
+								</div>
+							
+								<div class="second" title="Hans Bethe" style="width: 140px">
+									Hans Bethe
+								</div>
+
+								<div class="third">
+									01:48
+								</div>							
+
+							</div>	
+						</div>
+											<div id="relatedStoriesBox" class="storyBox storyItem" style="border-bottom: none; height: 80px; cursor: pointer;" onclick="location.href='/play/53609?o=$playOrigin'"> 
+							<div class="imgDivRelatedStories" style="float: left;">
+								<img src="https://d3qf61oza7ty3z.cloudfront.net/images/50030/50030.jpg" />
+							</div>
+						
+							<div class="description" style="margin-top:0; margin-left: 10px; float: left; height: 80px;">
+
+								<div class="first" title="Ken Adam - Chicago recce" style="width: 140px"> 
+									Chicago recce 
+								</div>
+							
+								<div class="second" title="Ken Adam" style="width: 140px">
+									Ken Adam
+								</div>
+
+								<div class="third">
+									01:43
+								</div>							
+
+							</div>	
+						</div>
+									</div>
+			</div>
+		
+					<div id="transcript" class="tabContent">
+				<div class="transcriptLanguagesLink">
+																				</div>
+									<div id="ENGLISH" class="transcriptTabContent" style="margin-right: 10px;">
+						<p>If you want to go way back, if you go&hellip; like 16 of my great-great-grandparents&hellip; in 1840 they all would have been in Germany, but by 1870 they all were in America. So if, you know&hellip; consider all the different lines. My mother&hellip; my father's&hellip; the Knuth part of my ancestry was the most diverse, in a way. He came from Schleswig-Holstein, rather near the border with Denmark, and&hellip; and he was the last to come over.&nbsp; He&hellip; during the Schleswig-Holstein crisis in 1860s &ndash; I think it was 1864, probably &ndash; he went AWOL from the army; didn't want to fight against the Prussians, and he decided to come to America, and knocked on the window one night, and told his parents, &lsquo;I'm out of here&rsquo;, and&hellip; and wound up in Illinois.&nbsp; And then worked&hellip; learned&hellip; learned to be a blacksmith at that&hellip; at that time. So&hellip; so then his wife&hellip; and&hellip; was somebody he met in America. She had come&hellip; her family had come over earlier from the&hellip; from the Hannover area, and&hellip; and she lived in Indiana, all&hellip; all very near Chicago area.&nbsp; And&hellip; and so the&hellip; that part of the family is&hellip; is from a different part of Germany.<br /><br />My mother's side came&hellip; they all emigrated in 1840s, and they were farmers in the area of what is now Niedersachsen &ndash; it's a small town in Germany called Bad Essen &ndash; and they&hellip; her family came and were farmers in Ohio, near Cleveland, Ohio. So&hellip; so they&hellip; yeah, the background then is, my father's side round Chicago, where he&hellip; where he was born and grew up, and my mother's side from Cleveland, Ohio, where&hellip; where she was born. My dad's first teaching assignment was in Cleveland, and that's where he met my mom. Then he&hellip; then he got a call to Milwaukee, which was way far from any of their, you know, anybody else in the family, because it was a job that opened up, and so he went and&hellip; and took this&hellip; this job at a school that needed a teacher.</p>
+					</div>				
+							</div>
+		
+					<div id="biography" class="tabContent" style="padding-top: 7px;">
+				<p>Born in 1938, American computing pioneer Donald Knuth is known for his greatly influential multi-volume work, 'The Art of Computer Programming', his novel 'Surreal Numbers', his invention of TeX and METAFONT electronic publishing tools and his quirky sense of humor.</p>
+			</div>
+		
+		<div id="info" class="tabContent" style="padding-top: 7px;">
+			<p class="storyInfo">
+				<strong>Title: </strong>Family history
+			</p>
+							<p>
+					<strong>Listeners:</strong>
+											<a href="#" id="toggleListener-1038" class="listenerToggler">Dikran Karagueuzian</a>
+									</p>
+									<div class="biographyElement" id="biographyElement-1038">
+																			<p class="listenerBiography" id="bioText-1038-en">
+								Trained as a journalist, Dikran Karagueuzian is the
+director of CSLI Publications, publisher of seven
+books by Donald Knuth. He has known Knuth since the
+late seventies when Knuth was developing TeX and
+Metafont, the typesetting and type designing computer programs, respectively.
+							</p>
+											</div>
+														<p>
+					<strong>Tags:</strong>
+															Germany, America, Schleswig-Holstein, Denmark, Prussians, Illinois, Hannover, Indiana, Chicago, Niedersachsen, Bad Essen, Ohio, Cleveland, Milwaukee
+				</p>
+										<p>
+					<span title="Story duration">
+						<strong>Duration:</strong>
+						2 minutes, 53 seconds
+					</span>
+				</p>
+										<p>
+											<strong>Date story recorded:</strong>
+										April 2006
+				</p>
+										<p>
+					<strong>Date story went live:</strong>
+					24 January 2008
+				</p>
+					</div>	
+	</div>
+</div>			</div>			
+
+			<script type="text/javascript">	
+	
+	$(function () {		
+										
+		activatePostComment(17060);		
+
+		$("#signInToAddComment").click(function (e){
+			$('html, body').animate({ scrollTop: 0 }, 'slow');
+			$("#signin").click();			
+			e.preventDefault();
+		});
+	
+		$("#registerToAddComment").click(function (e){
+			$('html, body').animate({ scrollTop: 0 }, 'slow');
+			$("#register").click();								
+			e.preventDefault();
+		});	
+
+	});
+
+	function activatePostComment(story_id) {
+		$("#postCommentButton").click(function(e){
+			if ($("#newCommentText").val().length > 0) {
+				jQuery.post("/comment/add?ajax=true", {commentText:$("#newCommentText").val(),storyId:story_id }, function(data){
+						$("#newCommentText").val("");
+						$("#comment-list").html(data);	
+						$("#nbOfComments").text('('+(1 + 1)+')');
+					}
+				);
+			}
+		});
+	}					
+	
+</script>
+
+<div id="comments" style="position: relative;">
+	<div class="playSection" style="height: 50px">
+		<span>Comments</span>
+		<span id="nbOfComments">(1)</span>
+					<span id="signInToComment">
+				Please <a id="signInToAddComment" href="#" style="font-weight: normal;">sign in</a> or 
+				<a id="registerToAddComment" href="#" style="font-weight: normal;">register</a> to add comments</a>							
+			</span>
+			</div>
+		
+		
+	<div class="commentList" id="comment-list" style=" margin-top:0 ">
+			<script type="text/javascript">
+		$(function(){	
+						
+			activateCommentPaginationLinks(17060,1);
+			
+			$(".readMoreToggler").click(function(e) {
+				var id=$(this).attr("id");
+				var commentId=id.substring(id.indexOf('_')+1,id.indexOf('-'));	
+				$("#commentText-"+commentId).toggle();		
+				$(this).text(function(i, text){
+					return text === "More..." ? "Less..." : "More...";
+				})		
+				return false;				
+			});						
+		});	
+
+		function activateCommentPaginationLinks(storyId, totalResults) {
+			$("#paginationBarComment li").click(function(e) {
+				var id=$(this).attr("id")
+				var pageNumber=id.substring(id.lastIndexOf('-')+1,id.length);
+				var url="/comments/"+storyId+"/page/"+pageNumber+"?ajax=true&t="+totalResults;
+				if(! $(this).hasClass("pageSelected")) {
+					jQuery.get(url,function(data) {
+						$("#comment-list").html(data);
+					});
+				}
+			});					
+		}		
+
+	</script>
+
+	<div class="commentItem">
+		<span id="commentAuthor">Jay Perkins</span><br/>
+		<span id="commentCreatedAt">Thursday, 08 September 2016 04:45 AM</span><br/>
+		<span class="commentComment" id="comment_50194">I just spent three hours on this series. Amazing. Thanks for not having a a lot of questions from an...</span>
+					<br/>
+			<a class="readMoreToggler" id="comm_50194-readMoreComment" href="#">More...</a>
+			</div>	
+			<div id="commentText-50194" class="fullComment">
+			I just spent three hours on this series. Amazing. Thanks for not having a a lot of questions from an interviewer. This was a masterfully produced autobiography. So much more than a book would be. No words. Thanks. 
+		</div>
+	
+<div id="pagination">
+	</div>
+	</div>		
+	
+</div>
+		
+			<script type="text/javascript">
+
+				var onPlayAlreadyFired = false;
+				var onCompleteAlreadyFired = false;
+				var viewReportAccuracy = 10; // Every 10%
+				var calledArray = new Array();
+				jwplayer("player").setup({
+					playlist: [{
+						//image: "https://d3qf61oza7ty3z.cloudfront.net/images/1038/1038.jpg",	--disabling thumbnails for smoother transitions between videos
+						sources: [{
+							file: "https://d2o4yifwfks2gg.cloudfront.net/stories/1038/1.mp4"
+						}]
+											}],
+					skin: "glow",
+					width: "940",
+					height: "600",
+					autostart: true
+									});
+				if (false) {
+					jwplayer('player').setFullscreen(true);
+				}
+
+				/*
+				 *	Display the story's title before play (in an absolute div)
+				 */
+				jwplayer("player").on("beforePlay", function(event) {
+					if(!onPlayAlreadyFired) {
+						var currentTitle = "Family history";
+						jwplayer("player").pause(true);
+						document.getElementById('playAllTitle').innerHTML="<p>"+currentTitle+"</p>";
+						$("#playAllTitle").fadeIn("slow").delay(3000).fadeOut("slow");
+						setTimeout(function () {
+							jwplayer("player").play(true);
+						}, 3500);
+						onPlayAlreadyFired = true;
+					}
+				});
+
+				/*
+				 *	Track the story as viewed by the logged in user
+				 */
+				jwplayer("player").on("complete", function(event) {
+					if(!onCompleteAlreadyFired && !wasCalledOn(100) && wasCalledOn(0)) {
+						jQuery.post("/tracker/story", {
+							uId: '',
+							clientId: getClientId(),
+							progress: 100,
+							stId: '17060'
+						});
+						onCompleteAlreadyFired = true;
+					}
+					// move to the next story
+					$("#buttonNext").click();
+				});
+
+				jwplayer("player").on("time", function(event) {
+					var currentPosition = jwplayer("player").getPosition();
+					var totalDuration = jwplayer("player").getDuration();
+
+					if(totalDuration > 0 && currentPosition > 0) {
+
+						var currentPrecentage = Math.floor((currentPosition * 100) / totalDuration);
+						currentPrecentage = Math.floor(currentPrecentage / viewReportAccuracy) * viewReportAccuracy;
+
+						if (!wasCalledOn(currentPrecentage)) {
+
+							var searchRequestId = getPageParam("srId");
+							var o = getPageParam("o");
+							var fullScreen = false;
+							if (!isMobile()) {
+								fullScreen = jwplayer("player").getFullscreen();
+							}
+							
+							jQuery.post("/tracker/story", {
+								uId: '',
+								clientId: getClientId(),
+								progress: currentPrecentage,
+								stId: '17060',
+								fullScreen: fullScreen,
+								referrer: document.referrer,
+								pageURL: document.location.href,
+								o: o,
+								srId: searchRequestId
+							});
+
+							calledArray.push(currentPrecentage);
+						}
+					}
+				});
+
+
+				function wasCalledOn(percentage) {
+		    		var i;
+		    		for (i in calledArray) {
+		        		if (calledArray[i] == percentage) {
+		            		return true;
+		        		}
+		    		}
+		    		return false;
+				}	
+
+				function getPageParam(name) {
+					name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+					var regexS = "[\\?&]"+name+"=([^&#]*)";
+					var regex = new RegExp( regexS );
+					var results = regex.exec( window.location.href );
+					if( results == null ) {
+						return "";				
+					} else {
+						return results[1];
+					}		
+				}							
+
+			</script>
+			
+		</div>
+	</div>
+					
+		</div>				
+		<div class="footer-wrapper">
+
+	<script>
+		$(function() {
+			$("#copy").html("&#169 "+new Date().getFullYear()+" Web of Stories unless otherwise stated <a href='mailto:info@webofstories.com' style='color: #0e76bc'>info@webofstories.com</a> ");		
+		});
+	</script>
+
+	<div class="footer">
+
+		<a href="/">
+			<img src="/2_0_0/images/logo_footer.png" class="logo" />
+		</a>	
+
+		<table class="nav">
+			<tr>
+				<td class="main bottomBorder"> 
+					<a href="/storytellers">Storytellers</a>
+				</td>
+				<td class="gap"></td>
+				<td class="main bottomBorder"> 
+					<a href="/press">Press</a>
+				</td>				
+			</tr>
+			<tr>
+				<td class="main bottomBorder"> 
+					<a href="/themes">Themes</a>
+				</td>
+				<td class="gap"></td>
+				<td class="main bottomBorder"> 
+					<a href="/help">Help / FAQs</a>
+				</td>				
+			</tr>
+			<tr>
+				<td class="main"> 
+					<a href="/about">About</a>
+				</td>
+				<td class="gap"></td>
+				<td class="main bottomBorder"> 
+					<a href="/generalTerms">Terms & Conditions</a>
+				</td>	
+			</tr>
+		</table>
+
+		<div class="social">
+			<p>Stay connected</p>
+			<div class="buttons" align="center">
+				<a href="https://twitter.com/#!/webofstories" target="_TWITTER">
+					<img src="/2_0_0/images/twitter_25.png" id="twitt" title="Twitter" />
+				</a>
+				<a href="https://www.facebook.com/webofstories" target="_FB">
+					<img src="/2_0_0/images/facebook_25.png" id="fbook" title="Facebook" />
+				</a>
+				<a href="https://www.youtube.com/user/webofstories" target="_YT">
+					<img src="/2_0_0/images/youtube_icon.png" id="youtube" title="Youtube" />
+				</a>
+			</div>
+		</div>
+
+		<span class="copy" id="copy">  </span>
+
+	</div>
+
+</div>
+
+<script>
+	$(function() {		
+		var defoptions = {
+			"overlay" : $("#overlay"),
+			"dialog" : $("#mobileAppDialog"),
+			"changeDialogPosition" : false
+		};
+
+		var dialog = new Dialog();
+		dialog.init(defoptions);
+
+		$("#appstore").click(function(e) {
+			dialog.showDialog();
+		});				
+	});
+</script>
+		<script type="text/javascript" src="/scripts/google_tracking.js"></script>
+
+	</body>
+
+</html>

@@ -2882,6 +2882,19 @@ progressive formats (with the named resolutions), the common metadata and
 stream's HLS master playlist is read without its media playlists.
 `tests/fixtures/sites/vk/` is compared with pinned upstream output.
 
+Web of Stories stories (`[www.]webofstories.com/play/[SPEAKER/]ID`) follow
+upstream `WebOfStoriesIE`: the OpenGraph title (else the fatal
+`<strong>Title:</strong>` text), the `description` meta and OpenGraph
+thumbnail (each with upstream's warning) and the fatal
+`$("#embedCode").html(getEmbedCode(...))` arguments (stripped, unpacked into
+ten with Python's bare `ValueError` text otherwise) giving the story ID,
+duration and the `eu-mobile.webofstories.com` MP4 and RTMP (`page_url`,
+`play_path`) formats for great-life and user/mini-site speakers. Speaker
+pages (`.../playAll/ID`, `WebOfStoriesPlaylist`) are playlists of the
+deduplicated `td_ID` story pages titled `SPEAKER (FIELD)` (else the fatal
+`<title>` name). `tests/fixtures/sites/webofstories/` is compared with pinned
+upstream output.
+
 Weibo posts (`weibo.com/UID/ID`, `m.weibo.cn/status|detail/ID`) follow
 upstream `WeiboIE`: the `ajax/statuses/show` JSON (a redirect to
 `passport.weibo.com` runs the visitor `genvisitor`/`incarnate` handshake for

@@ -398,6 +398,7 @@ mod vtv;
 mod washingtonpost;
 mod wat;
 mod webcamerapl;
+mod webofstories;
 mod weibo;
 mod whyp;
 mod wikimedia;
@@ -1104,6 +1105,10 @@ pub use washingtonpost::{
 };
 pub use wat::{Wat, suitable as wat_suitable};
 pub use webcamerapl::{Webcamerapl, suitable as webcamerapl_suitable};
+pub use webofstories::{
+    WebOfStories, WebOfStoriesPlaylist, playlist_suitable as webofstories_playlist_suitable,
+    suitable as webofstories_suitable,
+};
 pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
 };
