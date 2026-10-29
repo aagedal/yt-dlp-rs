@@ -1771,6 +1771,18 @@ audio-only flag), with the title (else display name), uploader, the
 `MediaServiceFastMetadata` duration and thumbnail. `tests/fixtures/sites/sharepoint/`
 is compared with pinned upstream output.
 
+Sina videos (`[SUB.]video.sina.com.cn/view/ID`, `.../...#ID`,
+`.../PATH/PSEUDO_ID.[s]html`) follow upstream `SinaIE`: a pseudo-ID page's
+`errtitle` element (upstream's `Sina said: ...`) or `video_id: 'ID'`, then the
+`s.video.sina.com.cn/video/h5play` JSON (a `code` other than 1 is upstream's
+`Sina said: MESSAGE`) and its `videos.mp4` qualities with `file_api` and
+`file_id` as `mp4` formats ranked `cif` < `sd` < `hd` < `fhd` < `ffd`, with
+the title, stripped description, image, `length` as duration and
+`create_time` as timestamp. Weibo `api/sinawebApi/outplay.php/TOKEN.swf` URLs,
+which upstream resolves through a HEAD request's redirect, are reported as
+unsupported. `tests/fixtures/sites/sina/` (pseudo-ID pages synthetic) is
+compared with pinned upstream output.
+
 ServusTV, Servus and P.M. Wissen videos (`servustv.com/[SECTION/]v[ideos]/ID`,
 `servus.com/(at|de)/p/NAME/ID`, `servus.com/tv/videos/ID`,
 `pm-wissen.com/videos/ID`) follow upstream `ServusIE`: the upper-cased ID,

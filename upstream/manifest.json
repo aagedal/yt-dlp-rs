@@ -3952,6 +3952,18 @@
       "scope": "SharePointIE g_fileInfo videomanifest DASH/HLS and source download, login redirect error, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "sina",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/sina.py"
+      ],
+      "rust": [
+        "src/extractor/sina.rs",
+        "tests/fixtures/sites/sina/"
+      ],
+      "scope": "SinaIE URL or page video ID, h5play JSON and MP4 qualities (no outplay.php token URLs). Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "skylinewebcams",
       "status": "partial",
       "upstream": [

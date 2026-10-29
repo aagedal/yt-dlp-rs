@@ -319,6 +319,7 @@ mod sen;
 mod servus;
 mod sharepoint;
 mod simplecast;
+mod sina;
 mod skeb;
 mod sky;
 mod skylinewebcams;
@@ -956,6 +957,7 @@ pub use simplecast::{
 pub(crate) use simplecast::{
     fetch_episodes as fetch_simplecast_episodes, is_pending_state as simplecast_pending_state,
 };
+pub use sina::{Sina, suitable as sina_suitable};
 pub use skeb::{Skeb, suitable as skeb_suitable};
 pub use sky::{SkyNews, news_suitable as sky_news_suitable};
 pub use sky::{
