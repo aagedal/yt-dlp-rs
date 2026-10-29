@@ -4931,6 +4931,16 @@ generic title, after `fulltitle`), description, `H:M:S:F` duration, ISO 8601
 `recordingFrom` timestamp and URL-valued thumbnail, with upstream's `KeyError`
 messages.
 
+Philharmonie de Paris concerts (`[live.]philharmoniedeparis.fr/...`,
+`pad.`/`otoplayer.philharmoniedeparis.fr/.../ID`) follow upstream
+`PhilharmonieDeParisIE`: the otoplayer `config/ID.json` as one video when
+it is titled and has `files`, else a playlist (the config title) of its
+titled chapters as `ID-N` entries; each source's distinct `mobile`/`desktop`
+HLS master playlists (non-fatal) give the formats, with the files'
+thumbnail. Sources without formats are skipped (upstream checks the unset
+`ignore_no_formats` option). `tests/fixtures/sites/philharmoniedeparis/` is
+compared with pinned upstream output.
+
 Photobucket media (`photobucket.com/..._ID.mp4|flv`) follow upstream
 `PhotobucketIE`: the page's `Pb.Data.Shared.MEDIA` JSON (`Extracting
 information`) with the embed code's unquoted `file=` URL, username, creation

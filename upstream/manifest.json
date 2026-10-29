@@ -3336,6 +3336,18 @@
       "scope": "PhotobucketIE page MEDIA JSON and embed file= URL as an untyped result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "philharmoniedeparis",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/philharmoniedeparis.py"
+      ],
+      "rust": [
+        "src/extractor/philharmoniedeparis.rs",
+        "tests/fixtures/sites/philharmoniedeparis/"
+      ],
+      "scope": "PhilharmonieDeParisIE otoplayer config as a video or a playlist of chapters with HLS formats (the chapters playlist is compared with pinned upstream output through the fixture proxy; the single-video branch is ported but has no saved fixture)"
+    },
+    {
       "name": "pgatour",
       "status": "partial",
       "upstream": [

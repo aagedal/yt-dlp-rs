@@ -267,6 +267,7 @@ mod peertube;
 mod peertv;
 mod periscope;
 mod pgatour;
+mod philharmoniedeparis;
 mod photobucket;
 mod pialive;
 mod picarto;
@@ -856,6 +857,7 @@ pub(crate) use peertube::{
 pub use peertv::{PeerTv, suitable as peertv_suitable};
 pub use periscope::{Periscope, suitable as periscope_suitable};
 pub use pgatour::{PgaTour, suitable as pgatour_suitable};
+pub use philharmoniedeparis::{PhilharmonieDeParis, suitable as philharmoniedeparis_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
 pub(crate) use pialive::post_extract as pialive_comments;
 pub use pialive::{PiaLive, suitable as pialive_suitable};

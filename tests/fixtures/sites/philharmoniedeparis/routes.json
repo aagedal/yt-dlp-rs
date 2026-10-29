@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://otoplayer.philharmoniedeparis.fr/fr/config/1129666.json?id=1129666&lang=fr-FR",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "1129666.json"
+  },
+  {
+   "url": "https://otoplayer.philharmoniedeparis.fr/fr/m3u8/1129666/01.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "01.m3u8"
+  },
+  {
+   "url": "https://otoplayer.philharmoniedeparis.fr/fr/m3u8/1129666/02.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "02.m3u8"
+  },
+  {
+   "url": "https://otoplayer.philharmoniedeparis.fr/fr/m3u8/1129666/03.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "03.m3u8"
+  },
+  {
+   "url": "https://otoplayer.philharmoniedeparis.fr/fr/m3u8/1129666/04.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "04.m3u8"
+  },
+  {
+   "url": "https://otoplayer.philharmoniedeparis.fr/fr/m3u8/1129666/05.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "05.m3u8"
+  }
+ ]
+}
