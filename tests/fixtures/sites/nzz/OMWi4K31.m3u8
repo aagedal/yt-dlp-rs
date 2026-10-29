@@ -1,0 +1,13 @@
+#EXTM3U
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=440000,RESOLUTION=480x270,CODECS="mp4a.40.2,avc1.42c015",FRAME-RATE=25.0,CLOSED-CAPTIONS=NONE
+https://videos-cloudfront-usp.jwpsrv.com/6ae3422f_8e79a9b6f0675e97cad08c3bd7486e3776ca648e/sites/YuwAxPaT/media/OMWi4K31/versions/OMWi4K31/manifest.ism/manifest-audio_0_Fl9cL42L_SOV0Imcb=112000-video_0_Fl9cL42L_CtI3uDhr=318688.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3020000,RESOLUTION=1920x1080,CODECS="mp4a.40.2,avc1.640028",FRAME-RATE=25.0,CLOSED-CAPTIONS=NONE
+https://videos-cloudfront-usp.jwpsrv.com/6ae3422f_8e79a9b6f0675e97cad08c3bd7486e3776ca648e/sites/YuwAxPaT/media/OMWi4K31/versions/OMWi4K31/manifest.ism/manifest-audio_0_Fl9cL42L_SOV0Imcb=112000-video_0_Fl9cL42L_CtI3uDhr=2904192.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=1290000,RESOLUTION=1280x720,CODECS="mp4a.40.2,avc1.4d401f",FRAME-RATE=25.0,CLOSED-CAPTIONS=NONE
+https://videos-cloudfront-usp.jwpsrv.com/6ae3422f_8e79a9b6f0675e97cad08c3bd7486e3776ca648e/sites/YuwAxPaT/media/OMWi4K31/versions/OMWi4K31/manifest.ism/manifest-audio_0_Fl9cL42L_SOV0Imcb=112000-video_0_Fl9cL42L_CtI3uDhr=1168848.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=580000,RESOLUTION=720x406,CODECS="mp4a.40.2,avc1.4d401e",FRAME-RATE=25.0,CLOSED-CAPTIONS=NONE
+https://videos-cloudfront-usp.jwpsrv.com/6ae3422f_8e79a9b6f0675e97cad08c3bd7486e3776ca648e/sites/YuwAxPaT/media/OMWi4K31/versions/OMWi4K31/manifest.ism/manifest-audio_0_Fl9cL42L_SOV0Imcb=112000-video_0_Fl9cL42L_CtI3uDhr=460392.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=310000,RESOLUTION=320x180,CODECS="mp4a.40.2,avc1.42c00d",FRAME-RATE=25.0,CLOSED-CAPTIONS=NONE
+https://videos-cloudfront-usp.jwpsrv.com/6ae3422f_8e79a9b6f0675e97cad08c3bd7486e3776ca648e/sites/YuwAxPaT/media/OMWi4K31/versions/OMWi4K31/manifest.ism/manifest-audio_0_Fl9cL42L_SOV0Imcb=112000-video_0_Fl9cL42L_CtI3uDhr=189576.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=120000,CODECS="mp4a.40.2"
+https://videos-cloudfront-usp.jwpsrv.com/6ae3422f_8e79a9b6f0675e97cad08c3bd7486e3776ca648e/sites/YuwAxPaT/media/OMWi4K31/versions/OMWi4K31/manifest.ism/manifest-audio_0_Fl9cL42L_SOV0Imcb=112000.m3u8

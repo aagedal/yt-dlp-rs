@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "http://s.video.sina.com.cn/video/h5play?video_id=250576622",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "h5play-250576622.json"
+  },
+  {
+   "url": "http://s.video.sina.com.cn/video/h5play?video_id=250587748",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "h5play-250587748.json"
+  },
+  {
+   "url": "http://s.video.sina.com.cn/video/h5play?video_id=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "h5play-1.json"
+  },
+  {
+   "url": "http://video.sina.com.cn/news/synthetic/video.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-video.html"
+  },
+  {
+   "url": "http://video.sina.com.cn/news/synthetic/error.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-error.html"
+  },
+  {
+   "url": "http://video.sina.com.cn/news/synthetic/noid.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-noid.html"
+  }
+ ]
+}

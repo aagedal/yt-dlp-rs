@@ -42,17 +42,21 @@ fn fake_ffmpeg(directory: &Path) -> String {
 }
 
 fn live_info(directory: &Path) {
-    std::fs::write(
-        directory.join("live.info.json"),
-        serde_json::json!({
-            "id": "live", "title": "Live", "ext": "mp4",
-            "url": "http://127.0.0.1:9/live/index.m3u8", "protocol": "m3u8_native",
-            "live_status": "is_live", "webpage_url": "https://example.test/live",
-            "extractor": "fixture", "extractor_key": "Fixture",
-        })
-        .to_string(),
-    )
-    .unwrap();
+    live_info_with(directory, serde_json::json!({}));
+}
+
+/// The live info JSON with `extra` fields added.
+fn live_info_with(directory: &Path, extra: serde_json::Value) {
+    let mut info = serde_json::json!({
+        "id": "live", "title": "Live", "ext": "mp4",
+        "url": "http://127.0.0.1:9/live/index.m3u8", "protocol": "m3u8_native",
+        "live_status": "is_live", "webpage_url": "https://example.test/live",
+        "extractor": "fixture", "extractor_key": "Fixture",
+    });
+    info.as_object_mut()
+        .unwrap()
+        .extend(extra.as_object().unwrap().clone());
+    std::fs::write(directory.join("live.info.json"), info.to_string()).unwrap();
 }
 
 fn command(directory: &Path) -> Command {
@@ -158,6 +162,50 @@ fn growing_live_results_are_quicktime_files() {
         .unwrap();
     assert!(output.status.success());
     assert_eq!(String::from_utf8_lossy(&output.stdout), "mov\n");
+}
+
+/// FFmpeg's MOV muxer refuses AV1 ("av1 only supported in MP4 and AVIF"),
+/// so an AV1 live stream grows as fragmented MP4, Resolve's AV1 container.
+#[test]
+fn an_av1_live_stream_grows_as_fragmented_mp4() {
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = fake_ffmpeg(tools.path());
+    let work = tempfile::tempdir().unwrap();
+    live_info_with(
+        work.path(),
+        serde_json::json!({"vcodec": "av01.0.08M.08", "acodec": "mp4a.40.2"}),
+    );
+    let child = command(work.path())
+        .args(["--ffmpeg-location", &ffmpeg])
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .unwrap();
+    let file = work.path().join("o.mp4");
+    let deadline = Instant::now() + Duration::from_secs(20);
+    while std::fs::read(&file).ok().as_deref() != Some(b"partial") {
+        assert!(Instant::now() < deadline, "FFmpeg never started");
+        std::thread::sleep(Duration::from_millis(20));
+    }
+    #[cfg(target_os = "macos")]
+    assert!(tag(&file).is_some(), "not tagged while recording");
+    let status = Command::new("kill")
+        .args(["-INT", &child.id().to_string()])
+        .status()
+        .unwrap();
+    assert!(status.success());
+    let output = child.wait_with_output().unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(std::fs::read(&file).unwrap(), b"finished");
+    let calls = std::fs::read_to_string(tools.path().join("calls.txt")).unwrap();
+    assert!(
+        calls.ends_with("\n-flush_packets\n1\n-f\nmp4\nfile:o.mp4\n--\n"),
+        "{calls}"
+    );
 }
 
 #[test]

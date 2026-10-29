@@ -98,6 +98,28 @@ pub(crate) fn from_response(
     // Upstream's generic and HTML5 DASH extraction pass no `mpd_id`, so
     // representation IDs are used as they are.
     let (manifest_url, formats, subtitle_list) = read_manifest(response)?;
+    from_manifest(manifest_url, formats, subtitle_list, original)
+}
+
+/// An MPD given as text (a library caller's inline manifest), resolved
+/// against `base`: the info [`from_response`] builds after its fetch.
+pub(crate) fn from_text(text: &str, base: &Url, original: &Url) -> Result<VideoInfo> {
+    if text.len() as u64 > MAX_MANIFEST_BYTES {
+        return Err(unsupported(
+            "DASH playlist exceeds the 2097152-byte extraction limit",
+        ));
+    }
+    let (formats, subtitles) = crate::dash::parse_with_subtitles(text, base)?;
+    from_manifest(base.clone(), formats, subtitles, original)?
+        .ok_or_else(|| unsupported("the DASH manifest has no media"))
+}
+
+fn from_manifest(
+    manifest_url: Url,
+    formats: Vec<VideoFormat>,
+    subtitle_list: crate::dash::ManifestSubtitles,
+    original: &Url,
+) -> Result<Option<VideoInfo>> {
     // `period_entry['subtitles'][lang or 'und'].append(f)`.
     let mut subtitles = crate::Subtitles::default();
     for (language, format) in subtitle_list {

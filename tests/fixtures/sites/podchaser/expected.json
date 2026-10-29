@@ -1,0 +1,63 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.podchaser.com/podcasts/cum-town-36924/episodes/ep-285-freeze-me-off-104365585",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"104365585\", \"title\": \"Ep. 285 \\u2013 freeze me off\", \"description\": \"cam ahn Learn more about your ad choices. Visit podcastchoices.com/adchoices\", \"url\": \"https://pscrb.fm/rss/p/clrtpod.com/m/mgln.ai/e/p1819/traffic.megaphone.fm/IMP7060459040.mp3?updated=1753746806\", \"thumbnail\": \"https://megaphone.imgix.net/podcasts/5aa158e0-6c0d-11f0-9ea8-3b358e684608/image/533d16ef7078f4ccd2d85fd26949d68c.jpg?ixlib=rails-4.3.1&max-w=3000&max-h=3000&fit=crop&auto=format%2Ccompress\", \"duration\": 3798, \"timestamp\": 1636531259, \"average_rating\": 4.0, \"series\": \"The Adam Friedland Show\", \"series_id\": \"36924\", \"categories\": [\"Comedy\", \"Comedy Interviews\", \"News\", \"Arts\"], \"tags\": [\"comedy\", \"dark humor\"], \"vcodec\": \"none\", \"webpage_url\": \"https://www.podchaser.com/podcasts/the-adam-friedland-show-36924/ep-285-freeze-me-off-104365585\", \"original_url\": \"https://www.podchaser.com/podcasts/cum-town-36924/episodes/ep-285-freeze-me-off-104365585\", \"webpage_url_basename\": \"ep-285-freeze-me-off-104365585\", \"webpage_url_domain\": \"podchaser.com\", \"extractor\": \"Podchaser\", \"extractor_key\": \"Podchaser\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://megaphone.imgix.net/podcasts/5aa158e0-6c0d-11f0-9ea8-3b358e684608/image/533d16ef7078f4ccd2d85fd26949d68c.jpg?ixlib=rails-4.3.1&max-w=3000&max-h=3000&fit=crop&auto=format%2Ccompress\", \"id\": \"0\"}], \"display_id\": \"104365585\", \"fulltitle\": \"Ep. 285 \\u2013 freeze me off\", \"duration_string\": \"1:03:18\", \"upload_date\": \"20211110\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"Ep. 285 \\u2013 freeze me off [104365585].mp3\", \"filename\": \"Ep. 285 \\u2013 freeze me off [104365585].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.podchaser.com/podcasts/the-bone-zone-28853",
+   "args": [
+    "-J",
+    "-I",
+    "1:2"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"28853\", \"title\": \"The Bone Zone\", \"description\": \"The official home of the Bone Zone podcast with Brendon Walsh and Randy Liedtke. You can buy a t-shirt here while they last https://www.ebay.com/itm/156396688840\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"229241337\", \"title\": \"Bonus Zone #6, WRP #221 Homefine Part 2 With John M\", \"description\": \"From episode 221 of the World Record Podcast, John M. joins us again to discuss his new Home Fine technology, then the episode takes a turn into the supernatural.\\nWatch the video: https://www.youtube.com/watch?v=z-B6UqBNqH0&t=76s\\nListen/watch the WRP: https://worldrecordpodcast.com/\\nFull episodes: https://www.patreon.com/worldrecordpodcast\\nSee more John here: https://merrimanland.com/\", \"url\": \"https://feeds.soundcloud.com/stream/1945872807-thebonezone-bonus-zone-6-wrp-221-homefine-part-2-with-john-m.mp3\", \"thumbnail\": \"https://i1.sndcdn.com/artworks-tC7NWTNos7qPpUNu-HHJaJA-t3000x3000.jpg\", \"duration\": 2584, \"timestamp\": 1730329209, \"series\": \"The Bone Zone\", \"series_id\": \"28853\", \"categories\": [\"Comedy\"], \"tags\": [\"69ing\"], \"vcodec\": \"none\", \"webpage_url\": \"https://www.podchaser.com/podcasts/the-bone-zone-28853/bonus-zone-6-wrp-221-homefine-229241337\", \"playlist_count\": null, \"playlist\": \"The Bone Zone\", \"playlist_id\": \"28853\", \"playlist_title\": \"The Bone Zone\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.podchaser.com/podcasts/the-bone-zone-28853\", \"n_entries\": 2, \"webpage_url_basename\": \"the-bone-zone-28853\", \"webpage_url_domain\": \"podchaser.com\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"Podchaser\", \"extractor_key\": \"Podchaser\", \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://i1.sndcdn.com/artworks-tC7NWTNos7qPpUNu-HHJaJA-t3000x3000.jpg\", \"id\": \"0\"}], \"display_id\": \"229241337\", \"fulltitle\": \"Bonus Zone #6, WRP #221 Homefine Part 2 With John M\", \"duration_string\": \"43:04\", \"upload_date\": \"20241030\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"Bonus Zone #6, WRP #221 Homefine Part 2 With John M [229241337].mp3\", \"filename\": \"Bonus Zone #6, WRP #221 Homefine Part 2 With John M [229241337].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"227251665\", \"title\": \"Bonus Zone #5, WRP #218: Homefine With John M\", \"description\": \"The entrepreneur who brought the world the Text Cafe franchise has a new billion dollar idea where you can drive your car using your phone!\\nWatch the video: https://www.youtube.com/watch?v=6ReTWFdnizU\\nCheck out the WRP: https://worldrecordpodcast.com/\\nGet a Bone Zone shirt: https://www.ebay.com/itm/156396688840\\n\\nSee more John here: https://merrimanland.com/\", \"url\": \"https://feeds.soundcloud.com/stream/1936789709-thebonezone-bonus-zone-5-wrp-218-homefine-with-john-m.mp3\", \"thumbnail\": \"https://i1.sndcdn.com/artworks-wBiaDuw0G61OiRuW-yj0dqA-t3000x3000.jpg\", \"duration\": 2172, \"timestamp\": 1729185464, \"series\": \"The Bone Zone\", \"series_id\": \"28853\", \"categories\": [\"Comedy\"], \"tags\": [\"69ing\"], \"vcodec\": \"none\", \"webpage_url\": \"https://www.podchaser.com/podcasts/the-bone-zone-28853/bonus-zone-5-wrp-218-homefine-227251665\", \"playlist_count\": null, \"playlist\": \"The Bone Zone\", \"playlist_id\": \"28853\", \"playlist_title\": \"The Bone Zone\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.podchaser.com/podcasts/the-bone-zone-28853\", \"n_entries\": 2, \"webpage_url_basename\": \"the-bone-zone-28853\", \"webpage_url_domain\": \"podchaser.com\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"Podchaser\", \"extractor_key\": \"Podchaser\", \"playlist_autonumber\": 2, \"thumbnails\": [{\"url\": \"https://i1.sndcdn.com/artworks-wBiaDuw0G61OiRuW-yj0dqA-t3000x3000.jpg\", \"id\": \"0\"}], \"display_id\": \"227251665\", \"fulltitle\": \"Bonus Zone #5, WRP #218: Homefine With John M\", \"duration_string\": \"36:12\", \"upload_date\": \"20241017\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"Bonus Zone #5, WRP #218\\uff1a Homefine With John M [227251665].mp3\", \"filename\": \"Bonus Zone #5, WRP #218\\uff1a Homefine With John M [227251665].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://www.podchaser.com/podcasts/the-bone-zone-28853\", \"original_url\": \"https://www.podchaser.com/podcasts/the-bone-zone-28853\", \"webpage_url_basename\": \"the-bone-zone-28853\", \"webpage_url_domain\": \"podchaser.com\", \"extractor\": \"Podchaser\", \"extractor_key\": \"Podchaser\", \"release_year\": null, \"requested_entries\": [1, 2], \"playlist_count\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.podchaser.com/podcasts/the-bone-zone-28853",
+   "args": [
+    "--print",
+    "%(id)s %(title)s %(webpage_url)s",
+    "-I",
+    "99:101"
+   ],
+   "exit": 1,
+   "stdout": [
+    "3236315 BONE ZONE #213 JOHNNY PEMBERTON - EPISODE #8 OF 2016 (SEASON #4 EP #6) https://www.podchaser.com/podcasts/the-bone-zone-28853/bone-zone-213-johnny-pemberton-3236315",
+    "3236318 BONE ZONE #212 TRIVAGO GUY (TIM WILLIAMS) EPISODE #7 OF 2016 (SEASON #4 EP #5) https://www.podchaser.com/podcasts/the-bone-zone-28853/bone-zone-212-trivago-guy-tim-3236318"
+   ],
+   "stderr": [
+    "ERROR: 28853: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.podchaser.com/podcasts/cum-town-36924/episodes/missing-1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Podchaser] 1: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

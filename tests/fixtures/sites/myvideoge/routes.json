@@ -1,0 +1,12 @@
+{
+ "routes": [
+  {
+   "url": "https://www.myvideo.ge/v/3941048",
+   "headers": {
+    "Content-Type": "text/html; charset=UTF-8",
+    "Set-Cookie": "PHPSESSID=4r3dh736imu8a64iv5o2mtms37; path=/; domain=.myvideo.ge"
+   },
+   "body_file": "3941048.html"
+  }
+ ]
+}

@@ -1,0 +1,32 @@
+[
+ {
+  "url": "https://video.tv.adobe.com/v/2456",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.tv.adobe.com/v/3463980/adobe-acrobat",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.tv.adobe.com/v/3463980/adobe-acrobat",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://video.tv.adobe.com/v/2456",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://video.tv.adobe.com/v/1",
+  "args": [
+   "-J"
+  ]
+ }
+]

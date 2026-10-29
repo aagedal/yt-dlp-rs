@@ -1,5 +1,6 @@
 mod acast;
 pub mod adobepass;
+mod adobetv;
 mod agalega;
 mod aitube;
 mod akamai;
@@ -15,8 +16,10 @@ mod arcpublishing;
 mod ard;
 mod arnes;
 mod arte;
+mod atscaleconf;
 mod audimedia;
 mod audioboom;
+mod audiodraft;
 mod audiomack;
 mod azmedien;
 mod baidu;
@@ -50,7 +53,9 @@ mod canalalpha;
 mod ccc;
 mod cellebrite;
 mod cgtn;
+mod charlierose;
 mod chaturbate;
+mod chilloutzone;
 mod ciscolive;
 mod cjsw;
 mod clipchamp;
@@ -68,9 +73,10 @@ mod cultureunplugged;
 mod dailymail;
 mod dailymotion;
 mod damtomo;
-mod dash;
+pub(crate) mod dash;
 mod daystar;
 mod dbtv;
+mod dctp;
 mod democracynow;
 mod deuxm;
 mod dfb;
@@ -95,6 +101,7 @@ mod erocast;
 mod err;
 mod ettutv;
 mod europeantour;
+mod euscreen;
 mod expressen;
 mod f4m;
 mod facebook;
@@ -119,6 +126,7 @@ mod gab;
 mod gamespot;
 mod gamestar;
 mod gaskrank;
+mod gbnews;
 mod generic_urls;
 mod genius;
 mod glide;
@@ -164,6 +172,7 @@ mod ivideon;
 mod ivoox;
 mod jamendo;
 mod jixie;
+mod joj;
 mod jove;
 mod json_ld;
 mod jstream;
@@ -219,12 +228,14 @@ mod mirrorcouk;
 mod mixcloud;
 mod mixlr;
 mod mocha;
+mod mojevideo;
 mod monstercat;
 mod moviepilot;
 mod movingimage;
 mod musescore;
 mod mux;
 mod myspass;
+mod myvideoge;
 mod myvidster;
 mod nascar;
 mod netapp;
@@ -246,6 +257,7 @@ mod nts;
 mod ntvde;
 pub mod nuxt;
 mod nzonscreen;
+mod nzz;
 mod odnoklassniki;
 mod olympics;
 mod on24;
@@ -262,6 +274,7 @@ mod peertube;
 mod peertv;
 mod periscope;
 mod pgatour;
+mod philharmoniedeparis;
 mod photobucket;
 mod pialive;
 mod picarto;
@@ -269,6 +282,7 @@ mod pinkbike;
 mod pinterest;
 mod playerfm;
 mod podbayfm;
+mod podchaser;
 mod popcorntimes;
 mod popcorntv;
 mod premiershiprugby;
@@ -277,6 +291,7 @@ mod projectveritas;
 mod pyvideo;
 mod qingting;
 mod radiokapital;
+mod radioradicale;
 mod radiozet;
 mod reddit;
 mod reverbnation;
@@ -297,12 +312,14 @@ mod s4c;
 mod sapo;
 mod sbs;
 mod screen9;
+mod screencast;
 mod screencastify;
 mod screenrec;
 mod sen;
 mod servus;
 mod sharepoint;
 mod simplecast;
+mod sina;
 mod skeb;
 mod sky;
 mod skylinewebcams;
@@ -387,6 +404,7 @@ mod vtv;
 mod washingtonpost;
 mod wat;
 mod webcamerapl;
+mod webofstories;
 mod weibo;
 mod whyp;
 mod wikimedia;
@@ -413,6 +431,7 @@ mod zype;
 pub use acast::{
     ACast, ACastChannel, channel_suitable as acast_channel_suitable, suitable as acast_suitable,
 };
+pub use adobetv::{AdobeTvVideo, suitable as adobetv_suitable};
 pub use agalega::{AGalega, suitable as agalega_suitable};
 pub use aitube::{AitubeKzVideo, suitable as aitube_suitable};
 pub use alibaba::{Alibaba, suitable as alibaba_suitable};
@@ -437,8 +456,13 @@ pub use arte::{
     category_suitable as artetv_category_suitable, embed_suitable as artetv_embed_suitable,
     playlist_suitable as artetv_playlist_suitable, suitable as artetv_suitable,
 };
+pub use atscaleconf::{AtScaleConfEvent, suitable as atscaleconf_suitable};
 pub use audimedia::{AudiMedia, suitable as audimedia_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
+pub use audiodraft::{
+    AudiodraftCustom, AudiodraftGeneric, generic_suitable as audiodraft_generic_suitable,
+    suitable as audiodraft_suitable,
+};
 pub use audiomack::{
     Audiomack, AudiomackAlbum, album_suitable as audiomack_album_suitable,
     suitable as audiomack_suitable,
@@ -484,7 +508,9 @@ pub use canalalpha::{CanalAlpha, suitable as canalalpha_suitable};
 pub use ccc::{Ccc, suitable as ccc_suitable};
 pub use cellebrite::{Cellebrite, suitable as cellebrite_suitable};
 pub use cgtn::{Cgtn, suitable as cgtn_suitable};
+pub use charlierose::{CharlieRose, suitable as charlierose_suitable};
 pub use chaturbate::{Chaturbate, suitable as chaturbate_suitable};
+pub use chilloutzone::{Chilloutzone, suitable as chilloutzone_suitable};
 pub use ciscolive::{
     CiscoLiveSearch, CiscoLiveSession, search_suitable as ciscolive_search_suitable,
     session_suitable as ciscolive_session_suitable,
@@ -523,6 +549,7 @@ pub use damtomo::{
 };
 pub use daystar::{DaystarClip, suitable as daystar_suitable};
 pub use dbtv::{Dbtv, suitable as dbtv_suitable};
+pub use dctp::{DctpTv, suitable as dctp_suitable};
 pub use democracynow::{Democracynow, suitable as democracynow_suitable};
 pub use deuxm::{
     DeuxM, DeuxMNews, news_suitable as deuxm_news_suitable, suitable as deuxm_suitable,
@@ -563,6 +590,7 @@ pub use err::{
 };
 pub use ettutv::{EttuTv, suitable as ettutv_suitable};
 pub use europeantour::{EuropeanTour, suitable as europeantour_suitable};
+pub use euscreen::{EuScreen, suitable as euscreen_suitable};
 pub use expressen::{Expressen, suitable as expressen_suitable};
 pub(crate) use f4m::fix_ampersands as fix_xml_ampersands;
 pub use facebook::{
@@ -602,6 +630,7 @@ pub use gab::{Gab, suitable as gab_suitable};
 pub use gamespot::{GameSpot, suitable as gamespot_suitable};
 pub use gamestar::{GameStar, suitable as gamestar_suitable};
 pub use gaskrank::{Gaskrank, suitable as gaskrank_suitable};
+pub use gbnews::{GbNews, suitable as gbnews_suitable};
 pub use genius::{
     Genius, GeniusLyrics, lyrics_suitable as genius_lyrics_suitable, suitable as genius_suitable,
 };
@@ -677,6 +706,7 @@ pub use ivoox::{Ivoox, suitable as ivoox_suitable};
 pub use jamendo::{
     Jamendo, JamendoAlbum, album_suitable as jamendo_album_suitable, suitable as jamendo_suitable,
 };
+pub use joj::{Joj, suitable as joj_suitable};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jstream::{JStream, suitable as jstream_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
@@ -763,6 +793,7 @@ pub use mixlr::{
     suitable as mixlr_suitable,
 };
 pub use mocha::{MochaVideo, suitable as mocha_suitable};
+pub use mojevideo::{Mojevideo, suitable as mojevideo_suitable};
 pub use monstercat::{Monstercat, suitable as monstercat_suitable};
 pub(crate) use monstercat::{
     fetch_tracks as fetch_monstercat_tracks, is_pending_state as monstercat_pending_state,
@@ -772,6 +803,7 @@ pub use movingimage::{MovingImage, suitable as movingimage_suitable};
 pub use musescore::{MuseScore, suitable as musescore_suitable};
 pub use mux::{Mux, suitable as mux_suitable};
 pub use myspass::{MySpass, suitable as myspass_suitable};
+pub use myvideoge::{MyVideoGe, suitable as myvideoge_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
 pub use nascar::{NascarClassics, suitable as nascar_classics_suitable};
 pub use netapp::{
@@ -817,6 +849,8 @@ pub use nrk::{
 pub use nts::{NtsLive, suitable as nts_suitable};
 pub use ntvde::{NtvDe, suitable as ntvde_suitable};
 pub use nzonscreen::{NzOnScreen, suitable as nzonscreen_suitable};
+pub use nzz::{Nzz, suitable as nzz_suitable};
+pub(crate) use nzz::{fetch_entries as fetch_nzz_entries, is_pending_state as nzz_pending_state};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
 pub use olympics::{OlympicsReplay, suitable as olympics_suitable};
 pub use on24::{On24, suitable as on24_suitable};
@@ -845,6 +879,7 @@ pub(crate) use peertube::{
 pub use peertv::{PeerTv, suitable as peertv_suitable};
 pub use periscope::{Periscope, suitable as periscope_suitable};
 pub use pgatour::{PgaTour, suitable as pgatour_suitable};
+pub use philharmoniedeparis::{PhilharmonieDeParis, suitable as philharmoniedeparis_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
 pub(crate) use pialive::post_extract as pialive_comments;
 pub use pialive::{PiaLive, suitable as pialive_suitable};
@@ -858,6 +893,10 @@ pub use podbayfm::{PodbayFm, suitable as podbayfm_suitable};
 pub use podbayfm::{PodbayFmChannel, channel_suitable as podbayfm_channel_suitable};
 pub(crate) use podbayfm::{
     fetch_pages as fetch_podbayfm_pages, is_pending_state as podbayfm_pending_state,
+};
+pub use podchaser::{Podchaser, suitable as podchaser_suitable};
+pub(crate) use podchaser::{
+    fetch_pages as fetch_podchaser_pages, is_pending_state as podchaser_pending_state,
 };
 pub use popcorntimes::{Popcorntimes, suitable as popcorntimes_suitable};
 pub use popcorntv::{PopcornTv, suitable as popcorntv_suitable};
@@ -873,6 +912,7 @@ pub use radiokapital::{
 pub(crate) use radiokapital::{
     fetch_pages as fetch_radiokapital_pages, is_pending_state as radiokapital_pending_state,
 };
+pub use radioradicale::{RadioRadicale, suitable as radioradicale_suitable};
 pub use radiozet::{RadioZetPodcast, suitable as radiozet_suitable};
 pub use reddit::{Reddit, suitable as reddit_suitable};
 pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};
@@ -903,6 +943,7 @@ pub use s4c::{S4c, S4cSeries, series_suitable as s4c_series_suitable, suitable a
 pub use sapo::{Sapo, suitable as sapo_suitable};
 pub use sbs::{Sbs, suitable as sbs_suitable};
 pub use screen9::{Screen9, suitable as screen9_suitable};
+pub use screencast::{Screencast, suitable as screencast_suitable};
 pub use screencastify::{Screencastify, suitable as screencastify_suitable};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
@@ -916,6 +957,7 @@ pub use simplecast::{
 pub(crate) use simplecast::{
     fetch_episodes as fetch_simplecast_episodes, is_pending_state as simplecast_pending_state,
 };
+pub use sina::{Sina, suitable as sina_suitable};
 pub use skeb::{Skeb, suitable as skeb_suitable};
 pub use sky::{SkyNews, news_suitable as sky_news_suitable};
 pub use sky::{
@@ -1075,6 +1117,10 @@ pub use washingtonpost::{
 };
 pub use wat::{Wat, suitable as wat_suitable};
 pub use webcamerapl::{Webcamerapl, suitable as webcamerapl_suitable};
+pub use webofstories::{
+    WebOfStories, WebOfStoriesPlaylist, playlist_suitable as webofstories_playlist_suitable,
+    suitable as webofstories_suitable,
+};
 pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
 };
@@ -2627,6 +2673,7 @@ fn py_splitlines(text: &str) -> Vec<&str> {
 pub fn pseudo_url(url: &str) -> bool {
     (url.starts_with("jwplatform:") && jwplatform::suitable(url))
         || (url.starts_with("jstream:") && jstream::suitable(url))
+        || (url.starts_with("joj:") && joj::suitable(url))
         || (url.starts_with("kaltura:") && kaltura::suitable(url))
         || youtube::search::suitable(url)
         || (url.starts_with("nicosearch")

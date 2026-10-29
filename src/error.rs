@@ -102,6 +102,13 @@ pub enum Error {
     InvalidRangeResponse,
     #[error("download cancelled")]
     DownloadCancelled,
+    /// A library `Interrupt::stop`: the data downloaded so far was published
+    /// at `path` (whole fragments only).
+    #[error("download stopped; partial file kept at {}", .path.display())]
+    DownloadStopped { path: std::path::PathBuf },
+    /// A library `Interrupt` ended an extraction before its next request.
+    #[error("extraction cancelled")]
+    ExtractionCancelled,
     /// A `--min-filesize`/`--max-filesize` limit skipped the transfer; upstream
     /// reports this without an error or archive record.
     #[error("{0}")]

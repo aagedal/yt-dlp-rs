@@ -1,0 +1,27 @@
+{
+ "routes": [
+  {
+   "url": "http://www.screencast.com/t/3ZEjQXlT",
+   "status": 301,
+   "headers": {
+    "Location": "https://www.screencast.com/t/3ZEjQXlT"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://www.screencast.com/t/3ZEjQXlT",
+   "status": 301,
+   "headers": {
+    "Location": "https://app.screencast.com/qpYDGgjdOfG6X"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://app.screencast.com/qpYDGgjdOfG6X",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "qpYDGgjdOfG6X.html"
+  }
+ ]
+}

@@ -250,7 +250,9 @@ pub(crate) fn download(
                     .unwrap_or(DEFAULT_CHUNK);
                 let shared = &shared;
                 let client = params.client;
+                let context = crate::control::current();
                 scope.spawn(move || {
+                    let _context = crate::control::resume(context);
                     let result = fetch(
                         client,
                         input,

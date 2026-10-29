@@ -1,0 +1,30 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://atscaleconference.com/events/data-scale-spring-2022/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Data @Scale Spring 2022 | At Scale Conferences\", \"description\": \"Data @Scale is a technical conference for engineers who are interested in building, operating, and using data systems at scale. Data already enables companies to build products with user empathy, find new market opportunities, understand trends, make better decisions, and ensure that their services and systems stay healthy. The landscape of data systems is quickly [\\u2026]\", \"id\": \"data-scale-spring-2022\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://atscaleconference.com/events/data-scale-spring-2022/\", \"original_url\": \"https://atscaleconference.com/events/data-scale-spring-2022/\", \"webpage_url_basename\": \"data-scale-spring-2022\", \"webpage_url_domain\": \"atscaleconference.com\", \"extractor\": \"AtScaleConfEvent\", \"extractor_key\": \"AtScaleConfEvent\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://atscaleconference.com/events/video-scale-2021/",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Video @Scale 2021 | At Scale Conferences\", \"description\": \"Video @Scale is an invitation-only technical conference for engineers that develop or manage large-scale video systems serving millions of people. The development of large-scale video systems includes complex, unprecedented engineering challenges. The @Scale community focuses on bringing people together to discuss these challenges and collaborate on the development of new solutions.\", \"id\": \"video-scale-2021\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://atscaleconference.com/events/video-scale-2021/\", \"original_url\": \"https://atscaleconference.com/events/video-scale-2021/\", \"webpage_url_basename\": \"video-scale-2021\", \"webpage_url_domain\": \"atscaleconference.com\", \"extractor\": \"AtScaleConfEvent\", \"extractor_key\": \"AtScaleConfEvent\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

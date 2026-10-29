@@ -47,12 +47,12 @@ impl Extractor for Vocaroo {
         // `_request_webpage(HEADRequest(url), audio_id, headers=...)`.
         crate::screen::screen(&format!("[{NAME}] {id}: Downloading webpage"));
         crate::screen::before_extraction_request();
-        let response = crate::geo::add_header(
+        let response = crate::control::prepare(crate::geo::add_header(
             client
                 .head(media.clone())
                 .header(reqwest::header::REFERER, REFERER),
             &[],
-        )
+        ))?
         .send()
         .inspect(|_| crate::screen::after_request())
         .map_err(Error::Http)

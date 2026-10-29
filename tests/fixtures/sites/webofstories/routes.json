@@ -1,0 +1,27 @@
+{
+ "routes": [
+  {
+   "url": "http://www.webofstories.com/play/hans.bethe/71",
+   "status": 301,
+   "headers": {
+    "Content-Type": "text/html; charset=iso-8859-1",
+    "Location": "https://www.webofstories.com/play/hans.bethe/71"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://www.webofstories.com/play/hans.bethe/71",
+   "headers": {
+    "Content-Type": "text/html;charset=UTF-8"
+   },
+   "body_file": "hans.bethe-71.html"
+  },
+  {
+   "url": "https://www.webofstories.com/playAll/donald.knuth",
+   "headers": {
+    "Content-Type": "text/html;charset=UTF-8"
+   },
+   "body_file": "playAll-donald.knuth.html"
+  }
+ ]
+}

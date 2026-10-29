@@ -1,0 +1,27 @@
+[
+ {
+  "url": "http://www.webofstories.com/play/hans.bethe/71",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.webofstories.com/play/hans.bethe/71",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.webofstories.com/playAll/donald.knuth",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.webofstories.com/play/1",
+  "args": [
+   "-J"
+  ]
+ }
+]

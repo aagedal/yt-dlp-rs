@@ -1,0 +1,44 @@
+[
+ {
+  "url": "http://video.sina.com.cn/news/spj/topvideoes20160504/?opsubject_id=top1#250576622",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://video.sina.com.cn/view/250587748.html",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "http://video.sina.com.cn/news/synthetic/video.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://video.sina.com.cn/view/1.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://video.sina.com.cn/news/synthetic/error.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://video.sina.com.cn/news/synthetic/noid.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://video.sina.com.cn/news/synthetic/missing.html",
+  "args": [
+   "-J"
+  ]
+ }
+]

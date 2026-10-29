@@ -1,0 +1,102 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://video.sina.com.cn/news/spj/topvideoes20160504/?opsubject_id=top1#250576622",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"250576622\", \"title\": \"\\u73b0\\u573a:\\u514b\\u9c81\\u5179\\u5ba3\\u5e03\\u9000\\u9009 \\u7279\\u6717\\u666e\\u5c06\\u7a33\\u83b7\\u63d0\\u540d\", \"description\": null, \"thumbnail\": \"https://p3.ivideo.sina.com.cn/video/250/576/622/250576622.jpg\", \"duration\": 74280, \"timestamp\": null, \"formats\": [{\"format_id\": \"sd\", \"url\": \"http://api.ivideo.sina.com.cn/v_play_ipad.php?vid=140091301\", \"quality\": 1, \"ext\": \"mp4\", \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - unknown\"}], \"webpage_url\": \"http://video.sina.com.cn/news/spj/topvideoes20160504/?opsubject_id=top1#250576622\", \"original_url\": \"http://video.sina.com.cn/news/spj/topvideoes20160504/?opsubject_id=top1#250576622\", \"webpage_url_basename\": \"topvideoes20160504\", \"webpage_url_domain\": \"video.sina.com.cn\", \"extractor\": \"Sina\", \"extractor_key\": \"Sina\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://p3.ivideo.sina.com.cn/video/250/576/622/250576622.jpg\", \"id\": \"0\"}], \"display_id\": \"250576622\", \"fulltitle\": \"\\u73b0\\u573a:\\u514b\\u9c81\\u5179\\u5ba3\\u5e03\\u9000\\u9009 \\u7279\\u6717\\u666e\\u5c06\\u7a33\\u83b7\\u63d0\\u540d\", \"duration_string\": \"20:38:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"sd\", \"url\": \"http://api.ivideo.sina.com.cn/v_play_ipad.php?vid=140091301\", \"quality\": 1, \"ext\": \"mp4\", \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - unknown\", \"_filename\": \"\\u73b0\\u573a\\uff1a\\u514b\\u9c81\\u5179\\u5ba3\\u5e03\\u9000\\u9009 \\u7279\\u6717\\u666e\\u5c06\\u7a33\\u83b7\\u63d0\\u540d [250576622].mp4\", \"filename\": \"\\u73b0\\u573a\\uff1a\\u514b\\u9c81\\u5179\\u5ba3\\u5e03\\u9000\\u9009 \\u7279\\u6717\\u666e\\u5c06\\u7a33\\u83b7\\u63d0\\u540d [250576622].mp4\", \"__write_download_archive\": false}], \"format_id\": \"sd\", \"url\": \"http://api.ivideo.sina.com.cn/v_play_ipad.php?vid=140091301\", \"quality\": 1, \"ext\": \"mp4\", \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://video.sina.com.cn/view/250587748.html",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Sina] Extracting URL: http://video.sina.com.cn/view/250587748.html",
+    "[Sina] 250587748: Downloading JSON metadata",
+    "[info] Available formats for 250587748:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "sd mp4 unknown    | http  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://video.sina.com.cn/news/synthetic/video.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"250587748\", \"title\": \"\\u77ac\\u95f4\\u6cea\\u76ee\\uff1a8\\u5e74\\u524d\\u6c76\\u5ddd\\u5730\\u9707\\u73cd\\u8d35\\u89c6\\u9891\\u9996\\u66dd\\u5149\", \"description\": null, \"thumbnail\": \"https://p2.ivideo.sina.com.cn/video/250/587/748/250587748.jpg\", \"duration\": 163400, \"timestamp\": null, \"formats\": [{\"format_id\": \"sd\", \"url\": \"http://api.ivideo.sina.com.cn/v_play_ipad.php?vid=140149322\", \"quality\": 1, \"ext\": \"mp4\", \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - unknown\"}], \"webpage_url\": \"http://video.sina.com.cn/news/synthetic/video.html\", \"original_url\": \"http://video.sina.com.cn/news/synthetic/video.html\", \"webpage_url_basename\": \"video.html\", \"webpage_url_domain\": \"video.sina.com.cn\", \"extractor\": \"Sina\", \"extractor_key\": \"Sina\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://p2.ivideo.sina.com.cn/video/250/587/748/250587748.jpg\", \"id\": \"0\"}], \"display_id\": \"250587748\", \"fulltitle\": \"\\u77ac\\u95f4\\u6cea\\u76ee\\uff1a8\\u5e74\\u524d\\u6c76\\u5ddd\\u5730\\u9707\\u73cd\\u8d35\\u89c6\\u9891\\u9996\\u66dd\\u5149\", \"duration_string\": \"45:23:20\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"sd\", \"url\": \"http://api.ivideo.sina.com.cn/v_play_ipad.php?vid=140149322\", \"quality\": 1, \"ext\": \"mp4\", \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - unknown\", \"_filename\": \"\\u77ac\\u95f4\\u6cea\\u76ee\\uff1a8\\u5e74\\u524d\\u6c76\\u5ddd\\u5730\\u9707\\u73cd\\u8d35\\u89c6\\u9891\\u9996\\u66dd\\u5149 [250587748].mp4\", \"filename\": \"\\u77ac\\u95f4\\u6cea\\u76ee\\uff1a8\\u5e74\\u524d\\u6c76\\u5ddd\\u5730\\u9707\\u73cd\\u8d35\\u89c6\\u9891\\u9996\\u66dd\\u5149 [250587748].mp4\", \"__write_download_archive\": false}], \"format_id\": \"sd\", \"url\": \"http://api.ivideo.sina.com.cn/v_play_ipad.php?vid=140149322\", \"quality\": 1, \"ext\": \"mp4\", \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://video.sina.com.cn/view/1.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Sina] 1: Sina said: 视频不存在"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://video.sina.com.cn/news/synthetic/error.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Sina] Sina said: Video missing"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://video.sina.com.cn/news/synthetic/noid.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Sina] Unable to extract video id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://video.sina.com.cn/news/synthetic/missing.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Sina] missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

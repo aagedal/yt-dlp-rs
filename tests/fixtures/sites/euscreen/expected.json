@@ -1,0 +1,33 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://euscreen.eu/item.html?id=EUS_0EBCBF356BFC4E12A014023BA41BD98C",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [EUScreen] EUS_0EBCBF356BFC4E12A014023BA41BD98C: Failed to parse JSON (caused by JSONDecodeError('Extra data in \\'mage.jpg\"})(\"$end$\")\\': line 1 column 414 (char 413)')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.euscreen.eu/item.html?id=EUS_MISSING",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [EUScreen] EUS_MISSING: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

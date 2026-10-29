@@ -16,17 +16,49 @@ use std::{
     },
 };
 
-/// The growing file's extension.
-pub(crate) const EXT: &str = "mov";
+/// The growing file's extension: QuickTime, which Resolve and other
+/// editors take as a growing clip, unless a codec FFmpeg's MOV muxer refuses
+/// is selected ("av1 only supported in MP4 and AVIF"; VP9, Opus and FLAC
+/// likewise); those are written as fragmented MP4 instead, the container
+/// Resolve expects AV1 in.
+pub(crate) fn ext(info: &crate::VideoInfo) -> &'static str {
+    let mut codecs = Vec::new();
+    if info.requested_formats.is_empty() {
+        codecs.extend([&info.vcodec, &info.acodec]);
+    }
+    for format in &info.requested_formats {
+        codecs.extend([&format.vcodec, &format.acodec]);
+    }
+    if codecs.into_iter().flatten().any(|codec| mp4_only(codec)) {
+        "mp4"
+    } else {
+        "mov"
+    }
+}
+
+/// Whether FFmpeg writes `codec` (an RFC 6381 string or codec name) in MP4
+/// but not in MOV.
+fn mp4_only(codec: &str) -> bool {
+    let name = codec
+        .split('.')
+        .next()
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+    matches!(
+        name.as_str(),
+        "av01" | "av1" | "vp09" | "vp9" | "opus" | "flac"
+    )
+}
 
 /// Blackmagic's extended attribute, `{"r":1, "uuid":"HEX"}` while recording.
 #[cfg(target_os = "macos")]
 const RECORDING_ATTRIBUTE: &str = "com.blackmagicdesign.metadata:recording";
 
 /// FFmpeg output options before the output file: progress on stdout instead
-/// of the stats line, a timecode track, and QuickTime fragments at each
-/// video keyframe (and at least every second), flushed as they are written.
-pub(crate) fn output_args(timecode: &str) -> Vec<OsString> {
+/// of the stats line, a timecode track, and fragments at each video keyframe
+/// (and at least every second), flushed as they are written, in the `ext`
+/// muxer (`mov` or `mp4`, see [`ext`]).
+pub(crate) fn output_args(timecode: &str, ext: &str) -> Vec<OsString> {
     [
         "-nostats",
         "-progress",
@@ -40,7 +72,7 @@ pub(crate) fn output_args(timecode: &str) -> Vec<OsString> {
         "-flush_packets",
         "1",
         "-f",
-        "mov",
+        ext,
     ]
     .map(OsString::from)
     .into()
@@ -349,7 +381,7 @@ mod tests {
 
     #[test]
     fn output_args_write_fragmented_quicktime_with_a_timecode() {
-        let args: Vec<String> = output_args("12:34:56:00")
+        let args: Vec<String> = output_args("12:34:56:00", "mov")
             .into_iter()
             .map(|arg| arg.into_string().unwrap())
             .collect();
@@ -358,6 +390,30 @@ mod tests {
             "-nostats -progress pipe:1 -timecode 12:34:56:00 -movflags +frag_keyframe \
              -frag_duration 1000000 -flush_packets 1 -f mov"
         );
+    }
+
+    #[test]
+    fn codecs_mov_cannot_hold_are_written_as_mp4() {
+        for codec in [
+            "av01.0.08M.08",
+            "AV1",
+            "vp09.00.40.08",
+            "vp9",
+            "opus",
+            "flac",
+        ] {
+            assert!(mp4_only(codec), "{codec}");
+        }
+        for codec in [
+            "avc1.64001F",
+            "h264",
+            "hvc1.1.6.L93.B0",
+            "mp4a.40.2",
+            "none",
+            "",
+        ] {
+            assert!(!mp4_only(codec), "{codec}");
+        }
     }
 
     #[test]

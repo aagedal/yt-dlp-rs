@@ -60,9 +60,62 @@ and counts, with cumulative assembled bytes and a per-fragment attempt number. R
 `std::ops::ControlFlow::Continue(())` to continue or `Break(())` to cancel.
 Cancellation is cooperative: it cannot interrupt an in-flight blocking request,
 read, or filesystem operation. See the compatibility inventory for checkpoints.
-`extract_result_with_options(url, None, ExtractionOptions { retries: 2 })` enables
+`extract_result_with_options(url, None, ExtractionOptions { retries: 2, ..Default::default() })` enables
 whole-extraction retries; existing extraction methods keep retries disabled.
 `YoutubeDl::with_growing_file(true)` makes `download_with_progress` record live
 results as one growing QuickTime file (see `--growing-file` in the
 [CLI table](COMPATIBILITY.md#cli)); `YoutubeDl::grows(&info)` tells whether a
 result will be recorded that way.
+
+## Call controls, request scopes and inline manifests
+
+`YoutubeDl::with_keep_partial_on_stop(true)` (`--keep-partial-on-stop`) makes
+SIGINT/SIGTERM during a download act as `Interrupt::stop()`, and fetches a
+merged download's audio-only streams first.
+
+`Interrupt` is a shareable stop/cancel handle (for example a UI's Stop and
+Cancel buttons):
+
+- `interrupt.cancel()` aborts: a download returns `Error::DownloadCancelled`
+  and removes its private temporary files.
+- `interrupt.stop()` ends early but keeps what was downloaded: the data is
+  published at the destination and the call returns
+  `Error::DownloadStopped { path }`. A whole-file transfer keeps its received
+  bytes; HLS/DASH fragment downloads keep whole fragments only; a merged
+  download merges the streams so far with FFmpeg (the last one partial);
+  FFmpeg-based downloads ask FFmpeg to finish (`q`). A stop before any data
+  arrived is a cancel.
+- During extraction either request ends the call with
+  `Error::ExtractionCancelled` before its next request.
+
+Checks run before each request and at each progress checkpoint; a blocking
+request or read already in flight finishes or times out first (see
+`HttpOptions` timeouts).
+
+`RequestScope::new(&url)` holds headers and cookies for one origin (scheme,
+host and port). `.header(name, value)` values are sent only on requests to
+that origin, so a manifest's authorization does not follow segment, key or
+variant URLs on other hosts. `.cookie(name, value)` adds a host-only session
+cookie and `.set_cookie("name=value; Domain=...; Path=...")` any cookie the
+scope's URL could set; they follow RFC 6265 domain/path matching, are added to
+the client's jar only for the duration of the call, never saved, and never
+shown in info dicts. Values are redacted from `Debug`. Note that reqwest keeps
+custom (non-`Authorization`) headers on a redirect to another host.
+`CookieJar::set_cookie(&url, "name=value; ...")` stores a cookie permanently,
+for copying another application's cookies into the shared jar.
+
+Pass both through `ExtractionOptions { interrupt, scope, .. }` to
+`extract_result_with_options`, `extract_result_unselected_with_options` or
+`extract_manifest`, and through `DownloadControl { interrupt, scope }` to
+`download_with_control(info, path, options, &control, callback)`, which
+otherwise behaves like `download_with_progress`.
+
+`YoutubeDl::extract_manifest(&Manifest, options)` turns an HLS or DASH manifest
+into a processed, unselected video result for `select_result` and the download
+calls. `Manifest::new(ManifestKind::Hls, url)` fetches it;
+`Manifest::inline(ManifestKind::Dash, base_url, text)` parses the given text
+with `base_url` resolving its relative URIs. `id`, `title` and `webpage_url`
+override the defaults (the manifest file name's stem and the manifest URL). A
+master playlist's variant playlists are fetched (with the scope). Inline
+manifests download through the native downloaders; FFmpeg and external
+downloaders read `url` themselves.

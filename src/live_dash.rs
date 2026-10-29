@@ -57,7 +57,9 @@ pub(crate) fn download(
             .enumerate()
             .map(|(index, job)| {
                 let (sender, stop) = (sender.clone(), &stop);
+                let context = crate::control::current();
                 scope.spawn(move || {
+                    let _context = crate::control::resume(context);
                     let messages = sender.clone();
                     crate::screen::forward(Some(Box::new(move |message| {
                         let _ = messages.send(Event::Message(message));

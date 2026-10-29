@@ -1,0 +1,24 @@
+{
+ "routes": [
+  {
+   "url": "https://euscreen.eu/lou/LouServlet/domain/euscreenxl/html5application/euscreenxlitem?actionlist=itempage&id=EUS_0EBCBF356BFC4E12A014023BA41BD98C",
+   "headers": {
+    "Content-Type": "text/plain; charset=UTF-8"
+   },
+   "request_body": [
+    "<screenId>-1</screenId>"
+   ],
+   "body_file": "itempage.txt"
+  },
+  {
+   "url": "https://euscreen.eu/lou/LouServlet/domain/euscreenxl/html5application/euscreenxlitem",
+   "headers": {
+    "Content-Type": "text/plain; charset=UTF-8"
+   },
+   "request_body": [
+    "<screenId>/domain/euscreenxl/html5application/euscreenxlitem/1/screen/"
+   ],
+   "body_file": "item.txt"
+  }
+ ]
+}

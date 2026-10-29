@@ -1,0 +1,48 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.chilloutzone.net/video/enemene-meck-alle-katzen-weg.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"enemene-meck-alle-katzen-weg\", \"url\": \"http://cdn22.chilloutzone.net/coz/_videos/18000/18088-enemene-meck-alle-katzen-weg.mp4\", \"ext\": \"mp4\", \"title\": \"Enemene Meck - Alle Katzen weg\", \"description\": \"Ist das der Umkehrschluss des Niesenden Panda-Babys?\", \"duration\": 24, \"width\": 640, \"height\": 360, \"webpage_url\": \"https://www.chilloutzone.net/video/enemene-meck-alle-katzen-weg.html\", \"original_url\": \"https://www.chilloutzone.net/video/enemene-meck-alle-katzen-weg.html\", \"webpage_url_basename\": \"enemene-meck-alle-katzen-weg.html\", \"webpage_url_domain\": \"chilloutzone.net\", \"extractor\": \"Chilloutzone\", \"extractor_key\": \"Chilloutzone\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"enemene-meck-alle-katzen-weg\", \"fulltitle\": \"Enemene Meck - Alle Katzen weg\", \"duration_string\": \"24\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 640x360\", \"requested_downloads\": [{\"_filename\": \"Enemene Meck - Alle Katzen weg [enemene-meck-alle-katzen-weg].mp4\", \"filename\": \"Enemene Meck - Alle Katzen weg [enemene-meck-alle-katzen-weg].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.chilloutzone.net/video/enemene-meck-alle-katzen-weg.html",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Chilloutzone] Extracting URL: https://www.chilloutzone.net/video/enemene-meck-alle-katzen-weg.html",
+    "[Chilloutzone] enemene-meck-alle-katzen-weg: Downloading webpage",
+    "[info] Available formats for enemene-meck-alle-katzen-weg:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "0  mp4 640x360    | http  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.chilloutzone.net/video/missing.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Chilloutzone] missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

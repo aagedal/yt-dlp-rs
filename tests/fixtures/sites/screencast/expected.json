@@ -1,0 +1,48 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.screencast.com/t/3ZEjQXlT",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3ZEjQXlT\", \"url\": \"https://cdn.screencast.com/uploads/g000302SxVaVbT7nAEcRAg6QWJ9Im/Color%20Measurement%20%28Web%29-desktop.m4v?sv=2026-02-06&st=2026-10-29T08%3A09%3A26Z&se=2026-10-30T08%3A09%3A26Z&sr=b&sp=r&sig=REDACTED\", \"title\": \"Color Measurement with Ocean Optics Spectrometers\", \"description\": \"In this video, we build on what you've learned in the Reflection Basics Tutorial. This tutorial will guide you through the basic steps of taking a color measurement using an Ocean Optics Spectrometer and SpectraSuite Software. To learn more, visit www.oceanoptics.com/Products/spectrometers.asp\", \"thumbnail\": \"https://app.screencast.com/qpYDGgjdOfG6X/thumbnail\", \"webpage_url\": \"http://www.screencast.com/t/3ZEjQXlT\", \"original_url\": \"http://www.screencast.com/t/3ZEjQXlT\", \"webpage_url_basename\": \"3ZEjQXlT\", \"webpage_url_domain\": \"screencast.com\", \"extractor\": \"Screencast\", \"extractor_key\": \"Screencast\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://app.screencast.com/qpYDGgjdOfG6X/thumbnail\", \"id\": \"0\"}], \"display_id\": \"3ZEjQXlT\", \"fulltitle\": \"Color Measurement with Ocean Optics Spectrometers\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4v\", \"video_ext\": \"m4v\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Color Measurement with Ocean Optics Spectrometers [3ZEjQXlT].m4v\", \"filename\": \"Color Measurement with Ocean Optics Spectrometers [3ZEjQXlT].m4v\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.screencast.com/t/3ZEjQXlT",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Screencast] Extracting URL: http://www.screencast.com/t/3ZEjQXlT",
+    "[Screencast] 3ZEjQXlT: Downloading webpage",
+    "[info] Available formats for 3ZEjQXlT:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "0  m4v unknown    | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.screencast.com/t/missing1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Screencast] missing1: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

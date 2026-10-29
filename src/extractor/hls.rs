@@ -172,6 +172,12 @@ fn vod_duration(playlist: &str) -> Option<u64> {
     Some(total.trunc() as u64).filter(|duration| *duration > 0)
 }
 
+/// Upstream's Unified Streaming Platform variant URL rates.
+static USP_RATES: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+    regex::Regex::new(r"audio.*?(?:%3D|=)(\d+)(?:-video.*?(?:%3D|=)(\d+))?")
+        .expect("static pattern")
+});
+
 static SPLIT_DISCONTINUITY: std::sync::atomic::AtomicBool =
     std::sync::atomic::AtomicBool::new(false);
 
@@ -273,6 +279,53 @@ pub(crate) fn from_response_with(
         return Ok(None);
     }
     let (manifest_url, playlist) = read_playlist_with(response, true)?;
+    from_playlist(
+        client,
+        manifest_url,
+        playlist,
+        original,
+        referer,
+        m3u8_id,
+        master_only,
+    )
+}
+
+/// A playlist given as text (a library caller's inline manifest), resolved
+/// against `base`: the info [`from_response_with`] builds after its fetch.
+pub(crate) fn from_text(
+    client: &Client,
+    text: &str,
+    base: &Url,
+    original: &Url,
+    master_only: bool,
+) -> Result<VideoInfo> {
+    if text.len() as u64 > MAX_MANIFEST_BYTES {
+        return Err(unsupported(&format!(
+            "HLS playlist exceeds the {MAX_MANIFEST_BYTES}-byte extraction limit"
+        )));
+    }
+    let playlist = crate::hls::parse_live(text, base)?;
+    from_playlist(
+        client,
+        base.clone(),
+        playlist,
+        original,
+        None,
+        None,
+        master_only,
+    )?
+    .ok_or_else(|| unsupported("the HLS playlist has no media"))
+}
+
+fn from_playlist(
+    client: &Client,
+    manifest_url: Url,
+    playlist: Playlist,
+    original: &Url,
+    referer: Option<&Url>,
+    m3u8_id: Option<&str>,
+    master_only: bool,
+) -> Result<Option<VideoInfo>> {
     let filename = manifest_url
         .path_segments()
         .and_then(|mut segments| segments.next_back())
@@ -495,7 +548,7 @@ pub(crate) fn from_response_with(
                 }
                 let codecs = variant.codecs.unwrap_or_default();
                 let known = |codec: String| (!codec.is_empty()).then_some(codec);
-                let format = VideoFormat {
+                let mut format = VideoFormat {
                     byte_index: None,
                     http_headers: None,
                     extra: hls_extra(Some(&manifest_url), "hls-variant"),
@@ -536,6 +589,22 @@ pub(crate) fn from_response_with(
                     height: variant.height,
                     fragments,
                 };
+                // Unified Streaming Platform: `audio...=ABR[-video...=VBR]` in
+                // the variant URL gives `float_or_none(..., 1000)` rates.
+                if let Some(found) = USP_RATES.captures(format.url.as_str()) {
+                    let rate = |index| {
+                        found
+                            .get(index)
+                            .and_then(|value| value.as_str().parse::<f64>().ok())
+                            .map(|value| value / 1000.0)
+                    };
+                    format.abr = rate(1);
+                    format.vbr = rate(2);
+                    format.extra.insert(
+                        crate::info_order::HLS_USP_RATES.into(),
+                        serde_json::Value::Bool(true),
+                    );
+                }
                 // `PROGRESSIVE-URI`: an `http-` copy without the manifest.
                 let progressive = variant.progressive.map(|progressive| {
                     let mut http = format.clone();

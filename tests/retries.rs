@@ -1038,7 +1038,10 @@ fn extraction_retries_selected_transient_statuses() {
             .extract_result_with_options(
                 &server.url("/clip.mp4"),
                 None,
-                ExtractionOptions { retries: 1 },
+                ExtractionOptions {
+                    retries: 1,
+                    ..Default::default()
+                },
             )
             .unwrap();
         assert_eq!(result.into_video().unwrap().ext, "mp4");
@@ -1056,7 +1059,10 @@ fn extraction_budget_is_bounded_and_returns_final_error() {
             .extract_result_with_options(
                 &server.url("/clip.mp4"),
                 None,
-                ExtractionOptions { retries },
+                ExtractionOptions {
+                    retries,
+                    ..Default::default()
+                },
             )
             .unwrap_err();
         // Reported as upstream's `Unable to download webpage`.
@@ -1098,7 +1104,10 @@ fn extraction_restarts_truncated_html_without_reusing_partial_bytes() {
         .extract_result_with_options(
             &server.url("/page.html"),
             None,
-            ExtractionOptions { retries: 1 },
+            ExtractionOptions {
+                retries: 1,
+                ..Default::default()
+            },
         )
         .unwrap()
         .into_video()
@@ -1121,7 +1130,10 @@ fn source_probe_failure_restarts_entire_playlist_and_preserves_referrer() {
         .extract_result_with_options(
             &server.url("/page.html"),
             None,
-            ExtractionOptions { retries: 1 },
+            ExtractionOptions {
+                retries: 1,
+                ..Default::default()
+            },
         )
         .unwrap();
     assert_eq!(result.into_entries().len(), 2);
@@ -1150,7 +1162,10 @@ fn extraction_does_not_retry_permanent_statuses_or_unsupported_pages() {
                 .extract_result_with_options(
                     &server.url("/page.html"),
                     None,
-                    ExtractionOptions { retries: 2 },
+                    ExtractionOptions {
+                        retries: 2,
+                        ..Default::default()
+                    },
                 )
                 .is_err()
         );
@@ -1179,7 +1194,10 @@ fn extraction_does_not_retry_format_selection_or_oversized_html() {
         downloader.extract_result_with_options(
             &server.url("/clip.mp4"),
             Some("unavailable"),
-            ExtractionOptions { retries: 2 },
+            ExtractionOptions {
+                retries: 2,
+                ..Default::default()
+            },
         ),
         Err(Error::FormatSelection(_))
     ));
@@ -1187,7 +1205,10 @@ fn extraction_does_not_retry_format_selection_or_oversized_html() {
         downloader.extract_result_with_options(
             &server.url("/large.html"),
             None,
-            ExtractionOptions { retries: 2 },
+            ExtractionOptions {
+                retries: 2,
+                ..Default::default()
+            },
         ),
         Err(Error::HtmlTooLarge(_))
     ));
@@ -1303,7 +1324,10 @@ fn custom_extractor_filesystem_errors_are_not_retried() {
         .extract_result_with_options(
             "http://127.0.0.1:1/unused.mp4",
             None,
-            ExtractionOptions { retries: 2 },
+            ExtractionOptions {
+                retries: 2,
+                ..Default::default()
+            },
         )
         .unwrap_err();
     assert!(matches!(error, Error::Io(_)));
@@ -1321,7 +1345,10 @@ fn exhausted_html_read_retries_return_final_read_error() {
         .extract_result_with_options(
             &server.url("/page.html"),
             None,
-            ExtractionOptions { retries: 2 },
+            ExtractionOptions {
+                retries: 2,
+                ..Default::default()
+            },
         )
         .unwrap_err();
     assert!(matches!(error, Error::ExtractionRead(_)), "{error}");
@@ -1370,7 +1397,10 @@ fn extraction_retry_restarts_previously_visited_custom_extractors() {
         .extract_result_with_options(
             "http://127.0.0.1:1/unused.mp4",
             None,
-            ExtractionOptions { retries: 1 },
+            ExtractionOptions {
+                retries: 1,
+                ..Default::default()
+            },
         )
         .unwrap_err();
     assert!(matches!(error, Error::ExtractionRead(_)));
@@ -1401,7 +1431,10 @@ fn retry_after_delays_extraction_and_download_recovery() {
             .extract_result_with_options(
                 &server.url("/clip.mp4"),
                 None,
-                ExtractionOptions { retries: 1 },
+                ExtractionOptions {
+                    retries: 1,
+                    ..Default::default()
+                },
             )
             .unwrap()
             .into_video()
@@ -1455,7 +1488,10 @@ fn retry_after_respects_exhausted_budgets_and_permanent_statuses() {
                     .extract_result_with_options(
                         &server.url("/clip.mp4"),
                         None,
-                        ExtractionOptions { retries },
+                        ExtractionOptions {
+                            retries,
+                            ..Default::default()
+                        },
                     )
                     .unwrap_err()
             } else {
@@ -1522,7 +1558,10 @@ fn unsupported_retry_after_values_keep_transient_failures_retryable() {
             .extract_result_with_options(
                 &server.url("/clip.mp4"),
                 None,
-                ExtractionOptions { retries: 1 },
+                ExtractionOptions {
+                    retries: 1,
+                    ..Default::default()
+                },
             )
             .unwrap();
         assert_eq!(server.requests_for("/clip.mp4").len(), 2);
@@ -1547,7 +1586,10 @@ fn expired_http_date_hints_allow_extraction_and_download_recovery() {
             .extract_result_with_options(
                 &server.url("/clip.mp4"),
                 None,
-                ExtractionOptions { retries: 1 },
+                ExtractionOptions {
+                    retries: 1,
+                    ..Default::default()
+                },
             )
             .unwrap()
             .into_video()

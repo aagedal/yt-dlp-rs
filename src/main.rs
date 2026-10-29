@@ -592,9 +592,16 @@ struct Args {
     /// editors can import while it is written, with a time-of-day timecode
     /// and the recorded duration in the progress; on macOS, DaVinci Resolve
     /// shows it as a recording clip. Prefers H.264/AAC formats after any
-    /// --format-sort fields (needs ffmpeg; yt-dlp-rs extension)
+    /// --format-sort fields; AV1, VP9, Opus and FLAC, which MOV cannot hold,
+    /// are recorded as fragmented .mp4 (needs ffmpeg; yt-dlp-rs extension)
     #[arg(long)]
     growing_file: bool,
+    /// On SIGINT or SIGTERM during a download, stop it and keep what was
+    /// downloaded as a usable file at the final name: whole fragments, or
+    /// the streams so far merged; no postprocessing or archive record
+    /// follows (yt-dlp-rs extension)
+    #[arg(long)]
+    keep_partial_on_stop: bool,
     /// Containers that may be used when merging formats, separated by "/",
     /// e.g. "mp4/mkv"; ignored if no merge is required (currently supported:
     /// avi, flv, mkv, mov, mp4, webm)
@@ -2666,6 +2673,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         downloader = downloader.with_section_timecode(processors.video.clone());
     }
     downloader = downloader.with_growing_file(args.growing_file);
+    downloader = downloader.with_keep_partial_on_stop(args.keep_partial_on_stop);
     if let Some(formats) = &args.merge_output_format {
         downloader =
             downloader.with_merge_output_format(formats.split('/').map(str::to_owned).collect());
@@ -3236,6 +3244,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 "acast:channel",
                 yt_dlp_rs::extractor::acast_channel_suitable,
             ),
+            ("adobetv", yt_dlp_rs::extractor::adobetv_suitable),
             ("agalega:videos", yt_dlp_rs::extractor::agalega_suitable),
             ("AitubeKZVideo", yt_dlp_rs::extractor::aitube_suitable),
             ("Alibaba", yt_dlp_rs::extractor::alibaba_suitable),
@@ -3273,8 +3282,20 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 "ArteTVPlaylist",
                 yt_dlp_rs::extractor::artetv_playlist_suitable,
             ),
+            (
+                "AtScaleConfEvent",
+                yt_dlp_rs::extractor::atscaleconf_suitable,
+            ),
             ("AudiMedia", yt_dlp_rs::extractor::audimedia_suitable),
             ("AudioBoom", yt_dlp_rs::extractor::audioboom_suitable),
+            (
+                "Audiodraft:custom",
+                yt_dlp_rs::extractor::audiodraft_suitable,
+            ),
+            (
+                "Audiodraft:generic",
+                yt_dlp_rs::extractor::audiodraft_generic_suitable,
+            ),
             ("audiomack", yt_dlp_rs::extractor::audiomack_suitable),
             (
                 "audiomack:album",
@@ -3329,7 +3350,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("CanalAlpha", yt_dlp_rs::extractor::canalalpha_suitable),
             ("Cellebrite", yt_dlp_rs::extractor::cellebrite_suitable),
             ("CGTN", yt_dlp_rs::extractor::cgtn_suitable),
+            ("CharlieRose", yt_dlp_rs::extractor::charlierose_suitable),
             ("Chaturbate", yt_dlp_rs::extractor::chaturbate_suitable),
+            ("Chilloutzone", yt_dlp_rs::extractor::chilloutzone_suitable),
             (
                 "CiscoLiveSearch",
                 yt_dlp_rs::extractor::ciscolive_search_suitable,
@@ -3388,6 +3411,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ("daystar:clip", yt_dlp_rs::extractor::daystar_suitable),
             ("DBTV", yt_dlp_rs::extractor::dbtv_suitable),
+            ("DctpTv", yt_dlp_rs::extractor::dctp_suitable),
             ("democracynow", yt_dlp_rs::extractor::democracynow_suitable),
             ("DeuxM", yt_dlp_rs::extractor::deuxm_suitable),
             ("DeuxMNews", yt_dlp_rs::extractor::deuxm_news_suitable),
@@ -3427,6 +3451,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("ERRJupiter", yt_dlp_rs::extractor::err_jupiter_suitable),
             ("EttuTv", yt_dlp_rs::extractor::ettutv_suitable),
             ("EuropeanTour", yt_dlp_rs::extractor::europeantour_suitable),
+            ("EUScreen", yt_dlp_rs::extractor::euscreen_suitable),
             ("Expressen", yt_dlp_rs::extractor::expressen_suitable),
             ("facebook", yt_dlp_rs::extractor::facebook_suitable),
             ("facebook:ads", yt_dlp_rs::extractor::facebook_ads_suitable),
@@ -3476,6 +3501,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("GameSpot", yt_dlp_rs::extractor::gamespot_suitable),
             ("GameStar", yt_dlp_rs::extractor::gamestar_suitable),
             ("Gaskrank", yt_dlp_rs::extractor::gaskrank_suitable),
+            ("GBNews", yt_dlp_rs::extractor::gbnews_suitable),
             ("Genius", yt_dlp_rs::extractor::genius_suitable),
             ("GeniusLyrics", yt_dlp_rs::extractor::genius_lyrics_suitable),
             ("Glide", yt_dlp_rs::extractor::glide_suitable),
@@ -3570,6 +3596,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("Ivoox", yt_dlp_rs::extractor::ivoox_suitable),
             ("Jamendo", yt_dlp_rs::extractor::jamendo_suitable),
             ("JamendoAlbum", yt_dlp_rs::extractor::jamendo_album_suitable),
+            ("Joj", yt_dlp_rs::extractor::joj_suitable),
             ("Jove", yt_dlp_rs::extractor::jove_suitable),
             ("JStream", yt_dlp_rs::extractor::jstream_suitable),
             ("JWPlatform", yt_dlp_rs::extractor::jwplatform_suitable),
@@ -3669,6 +3696,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 yt_dlp_rs::extractor::mixlr_recording_suitable,
             ),
             ("MochaVideo", yt_dlp_rs::extractor::mocha_suitable),
+            ("Mojevideo", yt_dlp_rs::extractor::mojevideo_suitable),
             ("Monstercat", yt_dlp_rs::extractor::monstercat_suitable),
             ("monstersiren", yt_dlp_rs::extractor::hypergryph_suitable),
             ("moviepilot", yt_dlp_rs::extractor::moviepilot_suitable),
@@ -3676,6 +3704,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("MuseScore", yt_dlp_rs::extractor::musescore_suitable),
             ("Mux", yt_dlp_rs::extractor::mux_suitable),
             ("MySpass", yt_dlp_rs::extractor::myspass_suitable),
+            ("MyVideoGe", yt_dlp_rs::extractor::myvideoge_suitable),
             ("MyVidster", yt_dlp_rs::extractor::myvidster_suitable),
             ("n-tv.de", yt_dlp_rs::extractor::ntvde_suitable),
             (
@@ -3744,6 +3773,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("NRKTVSeries", yt_dlp_rs::extractor::nrk_tv_series_suitable),
             ("nts.live", yt_dlp_rs::extractor::nts_suitable),
             ("NZOnScreen", yt_dlp_rs::extractor::nzonscreen_suitable),
+            ("NZZ", yt_dlp_rs::extractor::nzz_suitable),
             (
                 "Odnoklassniki",
                 yt_dlp_rs::extractor::odnoklassniki_suitable,
@@ -3771,6 +3801,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ("periscope", yt_dlp_rs::extractor::periscope_suitable),
             ("PGATour", yt_dlp_rs::extractor::pgatour_suitable),
+            (
+                "PhilharmonieDeParis",
+                yt_dlp_rs::extractor::philharmoniedeparis_suitable,
+            ),
             ("Photobucket", yt_dlp_rs::extractor::photobucket_suitable),
             ("PiaLive", yt_dlp_rs::extractor::pialive_suitable),
             ("picarto", yt_dlp_rs::extractor::picarto_suitable),
@@ -3783,6 +3817,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 "PodbayFMChannel",
                 yt_dlp_rs::extractor::podbayfm_channel_suitable,
             ),
+            ("Podchaser", yt_dlp_rs::extractor::podchaser_suitable),
             ("Popcorntimes", yt_dlp_rs::extractor::popcorntimes_suitable),
             ("PopcornTV", yt_dlp_rs::extractor::popcorntv_suitable),
             (
@@ -3800,6 +3835,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             (
                 "radiokapital:show",
                 yt_dlp_rs::extractor::radiokapital_show_suitable,
+            ),
+            (
+                "RadioRadicale",
+                yt_dlp_rs::extractor::radioradicale_suitable,
             ),
             ("RadioZetPodcast", yt_dlp_rs::extractor::radiozet_suitable),
             ("Reddit", yt_dlp_rs::extractor::reddit_suitable),
@@ -3841,6 +3880,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("Sapo", yt_dlp_rs::extractor::sapo_suitable),
             ("SBS", yt_dlp_rs::extractor::sbs_suitable),
             ("Screen9", yt_dlp_rs::extractor::screen9_suitable),
+            ("Screencast", yt_dlp_rs::extractor::screencast_suitable),
             (
                 "Screencastify",
                 yt_dlp_rs::extractor::screencastify_suitable,
@@ -3858,6 +3898,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 "simplecast:podcast",
                 yt_dlp_rs::extractor::simplecast_podcast_suitable,
             ),
+            ("Sina", yt_dlp_rs::extractor::sina_suitable),
             ("Skeb", yt_dlp_rs::extractor::skeb_suitable),
             ("sky:news", yt_dlp_rs::extractor::sky_news_suitable),
             (
@@ -4078,6 +4119,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ("wat.tv", yt_dlp_rs::extractor::wat_suitable),
             ("Webcamerapl", yt_dlp_rs::extractor::webcamerapl_suitable),
+            ("WebOfStories", yt_dlp_rs::extractor::webofstories_suitable),
+            (
+                "WebOfStoriesPlaylist",
+                yt_dlp_rs::extractor::webofstories_playlist_suitable,
+            ),
             ("Weibo", yt_dlp_rs::extractor::weibo_suitable),
             ("WeiboVideo", yt_dlp_rs::extractor::weibo_video_suitable),
             ("Whyp", yt_dlp_rs::extractor::whyp_suitable),
@@ -4223,7 +4269,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "1News: 1news.co.nz article videos\n23video\n24tv.ua\n9gag: 9GAG\n9News\nacast\nacast:channel\nagalega:videos\nAitubeKZVideo\nAlibaba\nAliExpressLive\nAlJazeera\nAmadeusTV\nAngel\nAPA\napple:podcasts: Apple Podcasts\narchive.org: archive.org video and audio\nArcPublishing\nARDAudiothek\nARDAudiothekPlaylist\nARDMediathek\nARDMediathekCollection\nArteTV\nArteTVCategory\nArteTVEmbed\nArteTVPlaylist\nAudiMedia\nAudioBoom\naudiomack\naudiomack:album\nAZMedien: AZ Medien videos\nBaiduVideo: 百度视频\nBandcamp\nBeaconTv\nBeatport\nBeeg\nBerufeTV\nbfmtv\nbfmtv:article\nbfmtv:live\nBigo\nBild: Bild.de\nBiliBili\nBitChute\nBitChuteChannel\nBitmovin\nblogger.com\nBloomberg\nBluesky\nBongaCams\nBostonGlobe\nBoxCastVideo\nBreitBart\nbrightcove:new\nBTVPlus\nBundesliga\nBundestag\nBusinessInsider\nCaltrans\nCAM4\nCanalAlpha\nCellebrite\nCGTN\nChaturbate\nCiscoLiveSearch\nCiscoLiveSession\nCJSW\nClipchamp\nCloudflareStream\nCloudyCDN\nClyp\nCNBCVideo\nCoub\nCozyTV\ncpac\ncpac:playlist\nCraftsy\nCrooksAndLiars\nCrtvg\nCultureUnplugged\nDailyMail\ndailymotion: [dailymotion]\ndailymotion:playlist: [dailymotion]\ndailymotion:search: [dailymotion]\ndailymotion:user: [dailymotion]\ndamtomo:record\ndamtomo:video\ndaystar:clip\nDBTV\ndemocracynow\nDeuxM\nDeuxMNews\nDigiteka\nDiscogsReleasePlaylist\ndlive:stream\ndlive:vod\nDouyin\nDropbox\nDrTalks\ndrtv\ndrtv:live\ndrtv:season\ndrtv:series\nDumpert\nDuoplay\nEbaumsWorld\nEbay\negghead:course: egghead.io course\negghead:lesson: egghead.io lesson\nElonet\nElPais: El País\nElTreceTV: El Trece TV (Argentina)\nEpoch\nEporner\nErocast\nERRArhiiv\nERRJupiter\nEttuTv\nEuropeanTour\nExpressen\nfacebook\nfacebook:ads\nfacebook:reel\nFacebookPluginsVideo\nFathom\nfaz.net\nFczenit\nFilmArchiv: FILMARCHIV ON\nfilmon\nfilmon:channel\nFilmweb\nFiveTV\nFlickr\nFootyRoom\nFormula1\nFrancaisFacile\nfranceinfo: franceinfo.fr (formerly francetvinfo.fr)\nfrancetv\nfrancetv:site\nFreesound\nfreespeech.org\nfreetv:series\nFreeTvMovies\nFunker530\nFuyinTV\nGab\nGameSpot\nGameStar\nGaskrank\nGenius\nGeniusLyrics\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGolem\ngoodgame:stream\nGoogleDrive\nGoogleDrive:Folder\nGoPro\nGoToStage\nGraspop\nGronkh\nGroupon\nHarpodeon\nHearThisAt\nHellPorno\nHistoricFilms\nHitRecord\nHollywoodReporter\nHollywoodReporterPlaylist\nHSEProduct\nHSEShow\nhtml5\nHuajiao: 花椒直播\nHuffPost: Huffington Post\nHypem\nHytale\niheartradio\niheartradio:podcast\nIlPost\nIltalehti\nimdb: Internet Movie Database trailers\nimdb:list: Internet Movie Database lists\nImgur\nimgur:album\nimgur:gallery\nIna\nInc\nIndavideoEmbed\nInstagram\ninstagram:story\ninstagram:tag: Instagram hashtag search URLs\nInstagramIOS: IOS instagram:// URL\nInternazionale\nIslamChannel\nIslamChannelSeries\nIsraelNationalNews\nivideon: Ivideon TV\nIvoox\nJamendo\nJamendoAlbum\nJove\nJStream\nJWPlatform\nKaltura\nkick:clip\nkick:clips\nkick:live\nkick:videos\nkick:vod\nKicker\nKickStarter\nKika: KiKA.de\nKikaPlaylist\nKinoPoisk\nKommunetv\nKompasVideo\nKTH\nKu6\nKukuluLive\nLastFM\nLastFMPlaylist\nLastFMUser\nlbry: odysee.com\nlbry:channel: odysee.com channels\nlbry:playlist: odysee.com playlists\nLCI\nLeFigaroVideoEmbed\nLeFigaroVideoSection\nLEGO\nLibsyn\nLinkedIn\nListenNotes\nLiTV\nLivestreamfails\nLnk\nloc: Library of Congress\nloom\nLRTRadio\nLRTStream\nLRTVOD\nmaariv.co.il\nMagellanTV\nmangomolo:live\nmangomolo:video\nMaoriTV\nmassengeschmack.tv\nMasters\nMatchiTV\nMatchTV\nMBN: mbn.co.kr (매일방송)\nMDR: MDR.DE\nMedalTV\nmedia.ccc.de\nMediaite\nMediaKlikk\nMediaWorksNZVOD\nmegaphone.fm: megaphone.fm embedded players\nMeipai: 美拍\nMelonVOD\nmir24.tv\nMirrorCoUK\nmixcloud\nMixlr\nMixlrRecoring\nMochaVideo\nMonstercat\nmonstersiren: 塞壬唱片\nmoviepilot: Moviepilot trailer\nMovingImage\nMuseScore\nMux\nMySpass\nMyVidster\nn-tv.de\nNascarClassics\nNetAppCollection\nNetAppVideo\nNetzkino\nNewsy\nNFHSNetwork\nNhkVod\nNhkVodProgram\nniconico: [niconico] ニコニコ動画\nniconico:history: NicoNico user history or likes. Requires cookies.\nniconico:playlist\nniconico:series\nniconico:tag: NicoNico video tag URLs\nNiconicoUser\nnicovideo:search: Nico video search; \"nicosearch:\" prefix (e.g. \"nicosearch{count1}:{example1}\")\nnicovideo:search:date: Nico video search, newest first; \"nicosearchdate:\" prefix (e.g. \"nicosearchdate{count2}:{example2}\")\nnicovideo:search_url: Nico video search URLs\nNobelPrize\nNoicePodcast\nNOSNLArticle\nNovaPlay\nNowCanal\nNpr\nNRK\nNRKPlaylist\nNRKRadioPodkast\nNRKTV: NRK TV and NRK Radio\nNRKTVDirekte: NRK TV Direkte and NRK Radio Direkte\nNRKTVEpisode\nNRKTVSeason\nNRKTVSeries\nnts.live\nNZOnScreen\nOdnoklassniki\nOlympicsReplay\non24: ON24\nOneFootball\nOnePlacePodcast\norf:on\norf:podcast\norf:radio\nOutsideTV\nParlview\nparti:livestream\nparti:video\nPearVideo\npeer.tv\nPeerTube\nPeerTube:Playlist\nperiscope: Periscope\nPGATour\nPhotobucket\nPiaLive\npicarto\npicarto:vod\nPinkbike\nPinterest\nPlayerFm\nPodbayFM\nPodbayFMChannel\nPopcorntimes\nPopcornTV\nPremiershipRugby\nPressTV\nPyvideo\nQingTing\nradiokapital\nradiokapital:show\nRadioZetPodcast\nReddit\nReverbNation\nRinseFM\nRinseFMArtistPlaylist\nRottenTomatoes\nRoyaLive\nrte: Raidió Teilifís Éireann TV\nrte:radio: Raidió Teilifís Éireann radio\nRTRFM\nrtve.es:alacarta: RTVE a la carta and Play\nrtve.es:audio: RTVE audio\nrtve.es:live: RTVE.es live streams\nrtve.es:television\nrtvslo.si\nrtvslo.si:show\nRudoVideo\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nRuv\nruv.is:spila\nS4C\nS4CSeries\nSapo: SAPO Vídeos\nSBS: sbs.com.au\nScreen9\nScreencastify\nScreenRec\nSen\nServus\nSharePoint\nsimplecast\nsimplecast:episode\nsimplecast:podcast\nSkeb\nsky:news\nsky:news:story\nsky:sports\nsky:sports:news\nSkyNewsAU\nSnapchatSpotlight\nsoundcloud: [soundcloud]\nsoundgasm\nsoundgasm:profile\nSpiegel\nSport5\nSpreaker\nSpreakerShow\nSRGSSR\nSRGSSRPlay: srf.ch, rts.ch, rsi.ch, rtr.ch and swissinfo.ch play sites\nstartrek: STAR TREK\nstartv\nSteam\nSteamCommunity\nSteamCommunityBroadcast\nStreamable\nStreamCZ\nStreetVoice\nstv:player\nstvr: Slovak Television and Radio (formerly RTVS)\nSubstack\nsverigesradio:episode\nsverigesradio:publication\nsvt:page\nsvt:play: SVT Play and Öppet arkiv\nsvt:play:series\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\nTele13\nTeleBruxelles\nTelegraaf\ntelegram:embed\nTelewebion\nTF1\nTheGuardianPodcast\nTheHighWire\nTheIntercept\nTheStar\nTheSun\nThisAmericanLife\nThreeSpeak\nThreeSpeakUser\nTikTok\ntiktok:collection\ntiktok:live\ntiktok:user\nToonGoggles\nTrtCocukVideo\nTrtWorld\nTruNews\nTumblr: [tumblr]\ntv.dfb.de\nTV2\nTV2Article\nTV2DK\nTV2DKBornholmPlay\ntv2play.hu\ntv2playseries.hu\nTV4: tv4.se and tv4play.se\nTV5MONDE\nTVANouvelles\nTVANouvellesArticle\ntvaplus: TVA+\ntvigle: Интернет-телевидение Tvigle.ru\nTVIPlayer\ntvnoe: Televize Noe\nTweakers\ntwitch:clips: [twitch]\ntwitch:collection: [twitch]\ntwitch:stream: [twitch]\ntwitch:videos: [twitch]\ntwitch:videos:clips: [twitch]\ntwitch:videos:collections: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:amplify\ntwitter:broadcast\ntwitter:card\ntwitter:shortener\ntwitter:spaces\nUDNEmbed: 聯合影音\numg:de: Universal Music Deutschland\nUnistra\nUnitedNationsWebTv\nuol.com.br\nURPlay\nUSAToday\nustudio\nustudio:embed\nVbox7\nVeo\nvideo.arnes.si\nVideoPress\nVidLii\nVidyard\nvimeo: [vimeo]\nViously\nVisir: Vísir\nvk: [vk] VK\nvk:uservideos: [vk] VK - User's Videos\nvk:wallpost: [vk]\nVKPlay\nVKPlayLive\nvm.tiktok\nVocaroo\nVODPlatform\nVTV\nVTVGo\nwashingtonpost\nwashingtonpost:article\nwat.tv\nWebcamerapl\nWeibo\nWeiboVideo\nWhyp\nwikimedia.org\nWimbledon\nWistia\nWistiaChannel\nWistiaPlaylist\nWorldStarHipHop\nWSJ: Wall Street Journal\nWSJArticle\nXboxClips\nXiaoHongShu: 小红书\nXinpianchang: 新片场\nXNXX\nXVideos\nxvideos:quickies\nYappyProfile\nyfanefa\nYleAreena\nYouJizz\nyoutube: [youtube] YouTube\nyoutube:clip: [youtube]\nyoutube:favorites: [youtube] YouTube liked videos; \":ytfav\" keyword (requires cookies)\nyoutube:history: [youtube] Youtube watch history; \":ythis\" keyword (requires cookies)\nyoutube:music:search_url: [youtube] YouTube music search URLs with selectable sections, e.g. #songs\nyoutube:notif: [youtube] YouTube notifications; \":ytnotif\" keyword (requires cookies)\nyoutube:playlist: [youtube] YouTube playlists\nyoutube:recommended: [youtube] YouTube recommended videos; \":ytrec\" keyword\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:shorts:pivot:audio: [youtube] YouTube Shorts audio pivot (Shorts using audio of a given video)\nyoutube:subscriptions: [youtube] YouTube subscriptions feed; \":ytsubs\" keyword (requires cookies)\nyoutube:tab: [youtube] YouTube Tabs\nyoutube:user: [youtube] YouTube user videos; \"ytuser:\" prefix\nyoutube:watchlater: [youtube] Youtube watch later list; \":ytwatchlater\" keyword (requires cookies)\nYoutubeLivestreamEmbed: [youtube] YouTube livestream embeds\nYoutubeYtBe: [youtube] youtu.be\nzdf\nzdf:channel\nZetlandDKArticle\nZhihu\nZype\ngeneric: Generic downloader that works on some sites"
+            "1News: 1news.co.nz article videos\n23video\n24tv.ua\n9gag: 9GAG\n9News\nacast\nacast:channel\nadobetv\nagalega:videos\nAitubeKZVideo\nAlibaba\nAliExpressLive\nAlJazeera\nAmadeusTV\nAngel\nAPA\napple:podcasts: Apple Podcasts\narchive.org: archive.org video and audio\nArcPublishing\nARDAudiothek\nARDAudiothekPlaylist\nARDMediathek\nARDMediathekCollection\nArteTV\nArteTVCategory\nArteTVEmbed\nArteTVPlaylist\nAtScaleConfEvent\nAudiMedia\nAudioBoom\nAudiodraft:custom\nAudiodraft:generic\naudiomack\naudiomack:album\nAZMedien: AZ Medien videos\nBaiduVideo: 百度视频\nBandcamp\nBeaconTv\nBeatport\nBeeg\nBerufeTV\nbfmtv\nbfmtv:article\nbfmtv:live\nBigo\nBild: Bild.de\nBiliBili\nBitChute\nBitChuteChannel\nBitmovin\nblogger.com\nBloomberg\nBluesky\nBongaCams\nBostonGlobe\nBoxCastVideo\nBreitBart\nbrightcove:new\nBTVPlus\nBundesliga\nBundestag\nBusinessInsider\nCaltrans\nCAM4\nCanalAlpha\nCellebrite\nCGTN\nCharlieRose\nChaturbate\nChilloutzone\nCiscoLiveSearch\nCiscoLiveSession\nCJSW\nClipchamp\nCloudflareStream\nCloudyCDN\nClyp\nCNBCVideo\nCoub\nCozyTV\ncpac\ncpac:playlist\nCraftsy\nCrooksAndLiars\nCrtvg\nCultureUnplugged\nDailyMail\ndailymotion: [dailymotion]\ndailymotion:playlist: [dailymotion]\ndailymotion:search: [dailymotion]\ndailymotion:user: [dailymotion]\ndamtomo:record\ndamtomo:video\ndaystar:clip\nDBTV\nDctpTv\ndemocracynow\nDeuxM\nDeuxMNews\nDigiteka\nDiscogsReleasePlaylist\ndlive:stream\ndlive:vod\nDouyin\nDropbox\nDrTalks\ndrtv\ndrtv:live\ndrtv:season\ndrtv:series\nDumpert\nDuoplay\nEbaumsWorld\nEbay\negghead:course: egghead.io course\negghead:lesson: egghead.io lesson\nElonet\nElPais: El País\nElTreceTV: El Trece TV (Argentina)\nEpoch\nEporner\nErocast\nERRArhiiv\nERRJupiter\nEttuTv\nEuropeanTour\nEUScreen\nExpressen\nfacebook\nfacebook:ads\nfacebook:reel\nFacebookPluginsVideo\nFathom\nfaz.net\nFczenit\nFilmArchiv: FILMARCHIV ON\nfilmon\nfilmon:channel\nFilmweb\nFiveTV\nFlickr\nFootyRoom\nFormula1\nFrancaisFacile\nfranceinfo: franceinfo.fr (formerly francetvinfo.fr)\nfrancetv\nfrancetv:site\nFreesound\nfreespeech.org\nfreetv:series\nFreeTvMovies\nFunker530\nFuyinTV\nGab\nGameSpot\nGameStar\nGaskrank\nGBNews: GB News clips, features and live streams\nGenius\nGeniusLyrics\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGolem\ngoodgame:stream\nGoogleDrive\nGoogleDrive:Folder\nGoPro\nGoToStage\nGraspop\nGronkh\nGroupon\nHarpodeon\nHearThisAt\nHellPorno\nHistoricFilms\nHitRecord\nHollywoodReporter\nHollywoodReporterPlaylist\nHSEProduct\nHSEShow\nhtml5\nHuajiao: 花椒直播\nHuffPost: Huffington Post\nHypem\nHytale\niheartradio\niheartradio:podcast\nIlPost\nIltalehti\nimdb: Internet Movie Database trailers\nimdb:list: Internet Movie Database lists\nImgur\nimgur:album\nimgur:gallery\nIna\nInc\nIndavideoEmbed\nInstagram\ninstagram:story\ninstagram:tag: Instagram hashtag search URLs\nInstagramIOS: IOS instagram:// URL\nInternazionale\nIslamChannel\nIslamChannelSeries\nIsraelNationalNews\nivideon: Ivideon TV\nIvoox\nJamendo\nJamendoAlbum\nJoj\nJove\nJStream\nJWPlatform\nKaltura\nkick:clip\nkick:clips\nkick:live\nkick:videos\nkick:vod\nKicker\nKickStarter\nKika: KiKA.de\nKikaPlaylist\nKinoPoisk\nKommunetv\nKompasVideo\nKTH\nKu6\nKukuluLive\nLastFM\nLastFMPlaylist\nLastFMUser\nlbry: odysee.com\nlbry:channel: odysee.com channels\nlbry:playlist: odysee.com playlists\nLCI\nLeFigaroVideoEmbed\nLeFigaroVideoSection\nLEGO\nLibsyn\nLinkedIn\nListenNotes\nLiTV\nLivestreamfails\nLnk\nloc: Library of Congress\nloom\nLRTRadio\nLRTStream\nLRTVOD\nmaariv.co.il\nMagellanTV\nmangomolo:live\nmangomolo:video\nMaoriTV\nmassengeschmack.tv\nMasters\nMatchiTV\nMatchTV\nMBN: mbn.co.kr (매일방송)\nMDR: MDR.DE\nMedalTV\nmedia.ccc.de\nMediaite\nMediaKlikk\nMediaWorksNZVOD\nmegaphone.fm: megaphone.fm embedded players\nMeipai: 美拍\nMelonVOD\nmir24.tv\nMirrorCoUK\nmixcloud\nMixlr\nMixlrRecoring\nMochaVideo\nMojevideo: mojevideo.sk\nMonstercat\nmonstersiren: 塞壬唱片\nmoviepilot: Moviepilot trailer\nMovingImage\nMuseScore\nMux\nMySpass\nMyVideoGe\nMyVidster\nn-tv.de\nNascarClassics\nNetAppCollection\nNetAppVideo\nNetzkino\nNewsy\nNFHSNetwork\nNhkVod\nNhkVodProgram\nniconico: [niconico] ニコニコ動画\nniconico:history: NicoNico user history or likes. Requires cookies.\nniconico:playlist\nniconico:series\nniconico:tag: NicoNico video tag URLs\nNiconicoUser\nnicovideo:search: Nico video search; \"nicosearch:\" prefix (e.g. \"nicosearch{count1}:{example1}\")\nnicovideo:search:date: Nico video search, newest first; \"nicosearchdate:\" prefix (e.g. \"nicosearchdate{count2}:{example2}\")\nnicovideo:search_url: Nico video search URLs\nNobelPrize\nNoicePodcast\nNOSNLArticle\nNovaPlay\nNowCanal\nNpr\nNRK\nNRKPlaylist\nNRKRadioPodkast\nNRKTV: NRK TV and NRK Radio\nNRKTVDirekte: NRK TV Direkte and NRK Radio Direkte\nNRKTVEpisode\nNRKTVSeason\nNRKTVSeries\nnts.live\nNZOnScreen\nNZZ\nOdnoklassniki\nOlympicsReplay\non24: ON24\nOneFootball\nOnePlacePodcast\norf:on\norf:podcast\norf:radio\nOutsideTV\nParlview\nparti:livestream\nparti:video\nPearVideo\npeer.tv\nPeerTube\nPeerTube:Playlist\nperiscope: Periscope\nPGATour\nPhilharmonieDeParis: Philharmonie de Paris\nPhotobucket\nPiaLive\npicarto\npicarto:vod\nPinkbike\nPinterest\nPlayerFm\nPodbayFM\nPodbayFMChannel\nPodchaser\nPopcorntimes\nPopcornTV\nPremiershipRugby\nPressTV\nPyvideo\nQingTing\nradiokapital\nradiokapital:show\nRadioRadicale\nRadioZetPodcast\nReddit\nReverbNation\nRinseFM\nRinseFMArtistPlaylist\nRottenTomatoes\nRoyaLive\nrte: Raidió Teilifís Éireann TV\nrte:radio: Raidió Teilifís Éireann radio\nRTRFM\nrtve.es:alacarta: RTVE a la carta and Play\nrtve.es:audio: RTVE audio\nrtve.es:live: RTVE.es live streams\nrtve.es:television\nrtvslo.si\nrtvslo.si:show\nRudoVideo\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nRuv\nruv.is:spila\nS4C\nS4CSeries\nSapo: SAPO Vídeos\nSBS: sbs.com.au\nScreen9\nScreencast\nScreencastify\nScreenRec\nSen\nServus\nSharePoint\nsimplecast\nsimplecast:episode\nsimplecast:podcast\nSina\nSkeb\nsky:news\nsky:news:story\nsky:sports\nsky:sports:news\nSkyNewsAU\nSnapchatSpotlight\nsoundcloud: [soundcloud]\nsoundgasm\nsoundgasm:profile\nSpiegel\nSport5\nSpreaker\nSpreakerShow\nSRGSSR\nSRGSSRPlay: srf.ch, rts.ch, rsi.ch, rtr.ch and swissinfo.ch play sites\nstartrek: STAR TREK\nstartv\nSteam\nSteamCommunity\nSteamCommunityBroadcast\nStreamable\nStreamCZ\nStreetVoice\nstv:player\nstvr: Slovak Television and Radio (formerly RTVS)\nSubstack\nsverigesradio:episode\nsverigesradio:publication\nsvt:page\nsvt:play: SVT Play and Öppet arkiv\nsvt:play:series\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\nTele13\nTeleBruxelles\nTelegraaf\ntelegram:embed\nTelewebion\nTF1\nTheGuardianPodcast\nTheHighWire\nTheIntercept\nTheStar\nTheSun\nThisAmericanLife\nThreeSpeak\nThreeSpeakUser\nTikTok\ntiktok:collection\ntiktok:live\ntiktok:user\nToonGoggles\nTrtCocukVideo\nTrtWorld\nTruNews\nTumblr: [tumblr]\ntv.dfb.de\nTV2\nTV2Article\nTV2DK\nTV2DKBornholmPlay\ntv2play.hu\ntv2playseries.hu\nTV4: tv4.se and tv4play.se\nTV5MONDE\nTVANouvelles\nTVANouvellesArticle\ntvaplus: TVA+\ntvigle: Интернет-телевидение Tvigle.ru\nTVIPlayer\ntvnoe: Televize Noe\nTweakers\ntwitch:clips: [twitch]\ntwitch:collection: [twitch]\ntwitch:stream: [twitch]\ntwitch:videos: [twitch]\ntwitch:videos:clips: [twitch]\ntwitch:videos:collections: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:amplify\ntwitter:broadcast\ntwitter:card\ntwitter:shortener\ntwitter:spaces\nUDNEmbed: 聯合影音\numg:de: Universal Music Deutschland\nUnistra\nUnitedNationsWebTv\nuol.com.br\nURPlay\nUSAToday\nustudio\nustudio:embed\nVbox7\nVeo\nvideo.arnes.si\nVideoPress\nVidLii\nVidyard\nvimeo: [vimeo]\nViously\nVisir: Vísir\nvk: [vk] VK\nvk:uservideos: [vk] VK - User's Videos\nvk:wallpost: [vk]\nVKPlay\nVKPlayLive\nvm.tiktok\nVocaroo\nVODPlatform\nVTV\nVTVGo\nwashingtonpost\nwashingtonpost:article\nwat.tv\nWebcamerapl\nWebOfStories\nWebOfStoriesPlaylist\nWeibo\nWeiboVideo\nWhyp\nwikimedia.org\nWimbledon\nWistia\nWistiaChannel\nWistiaPlaylist\nWorldStarHipHop\nWSJ: Wall Street Journal\nWSJArticle\nXboxClips\nXiaoHongShu: 小红书\nXinpianchang: 新片场\nXNXX\nXVideos\nxvideos:quickies\nYappyProfile\nyfanefa\nYleAreena\nYouJizz\nyoutube: [youtube] YouTube\nyoutube:clip: [youtube]\nyoutube:favorites: [youtube] YouTube liked videos; \":ytfav\" keyword (requires cookies)\nyoutube:history: [youtube] Youtube watch history; \":ythis\" keyword (requires cookies)\nyoutube:music:search_url: [youtube] YouTube music search URLs with selectable sections, e.g. #songs\nyoutube:notif: [youtube] YouTube notifications; \":ytnotif\" keyword (requires cookies)\nyoutube:playlist: [youtube] YouTube playlists\nyoutube:recommended: [youtube] YouTube recommended videos; \":ytrec\" keyword\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:shorts:pivot:audio: [youtube] YouTube Shorts audio pivot (Shorts using audio of a given video)\nyoutube:subscriptions: [youtube] YouTube subscriptions feed; \":ytsubs\" keyword (requires cookies)\nyoutube:tab: [youtube] YouTube Tabs\nyoutube:user: [youtube] YouTube user videos; \"ytuser:\" prefix\nyoutube:watchlater: [youtube] Youtube watch later list; \":ytwatchlater\" keyword (requires cookies)\nYoutubeLivestreamEmbed: [youtube] YouTube livestream embeds\nYoutubeYtBe: [youtube] youtu.be\nzdf\nzdf:channel\nZetlandDKArticle\nZhihu\nZype\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }
@@ -4345,6 +4391,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         let mut fallback: Option<(String, String)> = None;
         let options = ExtractionOptions {
             retries: args.extractor_retries,
+            ..Default::default()
         };
         let mut pending: Option<Cancel> = None;
         let mut header_printed = false;
@@ -6036,7 +6083,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 processed_info = result.info;
                                 (result.bytes, paths)
                             } else {
-                                let bytes = downloader.download_with_progress(
+                                let bytes = match downloader.download_with_progress(
                                     info,
                                     &path,
                                     DownloadOptions {
@@ -6055,7 +6102,34 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         overwrite: redownload,
                                     },
                                     progress,
-                                )?;
+                                ) {
+                                    // `--keep-partial-on-stop`: the partial file is
+                                    // published and moved like a finished one, without
+                                    // postprocessing or an archive record.
+                                    Err(yt_dlp_rs::Error::DownloadStopped { .. }) => {
+                                        screen!(
+                                            "[download] Download stopped; keeping the partial file"
+                                        );
+                                        // The fixups (an m3u8 download's MPEG-TS to MP4
+                                        // remux) still run; the file is kept if one fails.
+                                        if let Some(fixup) = &processors.fixup
+                                            && let Err(error) =
+                                                downloader.fixup(info, &path, &path, fixup)
+                                        {
+                                            warning!("WARNING: {error}");
+                                        }
+                                        let moved = move_files
+                                            .run(&path, true)
+                                            .map_err(yt_dlp_rs::Error::Reported)?;
+                                        move_print(&moved, info)
+                                            .map_err(yt_dlp_rs::Error::Reported)?;
+                                        return Err(yt_dlp_rs::Error::Reported(
+                                            "Interrupted by user".into(),
+                                        )
+                                        .into());
+                                    }
+                                    result => result?,
+                                };
                                 // Upstream `fixup()` for an unmerged, unprocessed download.
                                 if let Some(fixup) = &processors.fixup {
                                     downloader.fixup(info, &path, &path, fixup)?;

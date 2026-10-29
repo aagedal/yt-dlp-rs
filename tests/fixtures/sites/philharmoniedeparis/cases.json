@@ -1,0 +1,22 @@
+[
+ {
+  "url": "https://philharmoniedeparis.fr/fr/live/concert/1129666-danses-symphoniques",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://otoplayer.philharmoniedeparis.fr/fr/embed/1129666?lang=fr-FR",
+  "args": [
+   "-I",
+   "2",
+   "-F"
+  ]
+ },
+ {
+  "url": "https://live.philharmoniedeparis.fr/concert/1032066",
+  "args": [
+   "-J"
+  ]
+ }
+]

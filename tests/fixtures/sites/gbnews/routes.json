@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://www.gbnews.com/news/bbc-claudine-gay-harvard-university-antisemitism-row",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "bbc-claudine-gay-harvard-university-antisemitism-row.html"
+  },
+  {
+   "url": "https://mm-v2.simplestream.com/ssmp/api.php?id=GB004&env=production",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ssmp-GB004.json"
+  },
+  {
+   "url": "https://v2-streams-elb.simplestreamcdn.com/api/live/stream/1069?key=3Li3Nt2Qs8Ct3Xq9Fi5Uy0Mb2Bj0Qs&platform=safari",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "stream-live-1069.json"
+  },
+  {
+   "url": "https://live-gbnews.simplestreamcdn.com/s3/gbnews_subs/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "index.m3u8"
+  }
+ ]
+}

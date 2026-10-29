@@ -1,0 +1,59 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.gbnews.com/news/bbc-claudine-gay-harvard-university-antisemitism-row",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(fulltitle)s|%(description)s|%(thumbnail)s|%(is_live)s|%(live_status)s|%(format_id)s|%(ext)s|%(protocol)s|%(extractor)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1069|bbc-claudine-gay-harvard-university-antisemitism-row|BBC deletes post after furious backlash over headline downplaying antisemitism|The post was criticised by former employers of the broadcaster|https://www.gbnews.com/media-library/deleted-social-media-post-claudine-gay.png?id=50997642&width=1200&height=600&coordinates=0%2C24%2C0%2C76|True|is_live|5605|mp4|m3u8_native|GBNews|https://www.gbnews.com/news/bbc-claudine-gay-harvard-university-antisemitism-row"
+   ],
+   "stderr": [
+    "WARNING: [GBNews] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.gbnews.com/news/bbc-claudine-gay-harvard-university-antisemitism-row",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[GBNews] Extracting URL: https://www.gbnews.com/news/bbc-claudine-gay-harvard-university-antisemitism-row",
+    "[GBNews] bbc-claudine-gay-harvard-university-antisemitism-row: Downloading webpage",
+    "[GBNews] Downloading Simplestream JSON metadata",
+    "[GBNews] 1069: Downloading stream JSON",
+    "[GBNews] 1069: Downloading m3u8 information",
+    "[info] Available formats for 1069:",
+    "ID   EXT RESOLUTION FPS |   TBR PROTO | VCODEC      ACODEC",
+    "-------------------------------------------------------------",
+    "1205 mp4 640x360     25 | 1206k m3u8  | avc1.77.30  mp4a.40.2",
+    "2855 mp4 960x540     25 | 2856k m3u8  | avc1.4d401f mp4a.40.2",
+    "4065 mp4 1280x720    25 | 4066k m3u8  | avc1.4d401f mp4a.40.2",
+    "5605 mp4 1920x1080   25 | 5606k m3u8  | avc1.4d4028 mp4a.40.2"
+   ],
+   "stderr": [
+    "WARNING: [GBNews] Ignoring subtitle tracks found in the HLS manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.gbnews.com/news/missing",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [GBNews] missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

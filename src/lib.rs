@@ -7,6 +7,7 @@ pub mod cache;
 pub mod codecs;
 pub mod config;
 pub mod container;
+mod control;
 mod cookies;
 mod cover_art;
 mod crypto;
@@ -77,6 +78,7 @@ pub mod xattr;
 
 pub use archive::{DownloadArchive, archive_id};
 pub use audio::{AudioDownload, AudioOptions, audio_original_path, audio_output_path};
+pub use control::{DownloadControl, Interrupt, RequestScope};
 pub use cookies::CookieJar;
 pub use download::{
     BUFFER_SIZE, DownloadOptions, DownloadPhase, DownloadProgress, FragmentBytes, MergeFiles,
@@ -131,10 +133,64 @@ pub fn validate_format_selector(expression: &str) -> Result<()> {
 
 /// Whole-extraction retry policy, independent of download retries.
 /// Defaults to no retries to preserve existing library behavior.
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Default)]
 pub struct ExtractionOptions {
     /// Additional attempts after transient HTTP or HTML body read failures.
     pub retries: u8,
+    /// Ends the extraction with `Error::ExtractionCancelled` before its next
+    /// request once stopped or cancelled.
+    pub interrupt: Option<Interrupt>,
+    /// Headers and cookies for requests to one origin (see [`RequestScope`]).
+    pub scope: Option<RequestScope>,
+}
+
+/// The kind of a [`Manifest`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ManifestKind {
+    /// An HLS master or media playlist (M3U8).
+    Hls,
+    /// A DASH MPD.
+    Dash,
+}
+
+/// An HLS or DASH manifest for [`YoutubeDl::extract_manifest`]: fetched
+/// from `url`, or given inline as `data` with `url` as the base for its
+/// relative URIs (and the origin a [`RequestScope`] usually names).
+#[derive(Debug, Clone)]
+pub struct Manifest {
+    pub kind: ManifestKind,
+    /// The manifest's URL (HTTP or HTTPS).
+    pub url: Url,
+    /// The manifest text; `None` fetches `url`.
+    pub data: Option<String>,
+    /// The result's `id` (default: the manifest file name's stem).
+    pub id: Option<String>,
+    /// The result's `title` (default: the `id`).
+    pub title: Option<String>,
+    /// The result's `webpage_url` (default: `url`).
+    pub webpage_url: Option<Url>,
+}
+
+impl Manifest {
+    /// A manifest fetched from `url`.
+    pub fn new(kind: ManifestKind, url: Url) -> Self {
+        Self {
+            kind,
+            url,
+            data: None,
+            id: None,
+            title: None,
+            webpage_url: None,
+        }
+    }
+
+    /// An inline manifest whose relative URIs resolve against `base`.
+    pub fn inline(kind: ManifestKind, base: Url, data: impl Into<String>) -> Self {
+        Self {
+            data: Some(data.into()),
+            ..Self::new(kind, base)
+        }
+    }
 }
 
 pub struct YoutubeDl {
@@ -153,6 +209,8 @@ pub struct YoutubeDl {
     live_from_start: bool,
     /// `--growing-file` (port extension).
     growing_file: bool,
+    /// `--keep-partial-on-stop` (port extension).
+    keep_partial_on_stop: bool,
     /// The YouTube JavaScript runtime, for live-from-start refetches.
     youtube_runtime: Vec<extractor::JsRuntime>,
     format_sort: FormatSortOptions,
@@ -376,6 +434,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "9News",
     "acast",
     "acast:channel",
+    "adobetv",
     "agalega:videos",
     "AitubeKZVideo",
     "Alibaba",
@@ -395,8 +454,11 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "ArteTVEmbed",
     "ArteTV",
     "ArteTVPlaylist",
+    "AtScaleConfEvent",
     "AudiMedia",
     "AudioBoom",
+    "Audiodraft:custom",
+    "Audiodraft:generic",
     "audiomack",
     "audiomack:album",
     "AZMedien",
@@ -433,7 +495,9 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "CanalAlpha",
     "Cellebrite",
     "CGTN",
+    "CharlieRose",
     "Chaturbate",
+    "Chilloutzone",
     "CiscoLiveSearch",
     "CiscoLiveSession",
     "CJSW",
@@ -459,6 +523,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "damtomo:video",
     "daystar:clip",
     "DBTV",
+    "DctpTv",
     "democracynow",
     "DeuxM",
     "DeuxMNews",
@@ -489,6 +554,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "ERRJupiter",
     "EttuTv",
     "EuropeanTour",
+    "EUScreen",
     "Expressen",
     "facebook:ads",
     "facebook",
@@ -520,6 +586,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "GameSpot",
     "GameStar",
     "Gaskrank",
+    "GBNews",
     "Genius",
     "GeniusLyrics",
     "Golem",
@@ -574,6 +641,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Ivoox",
     "Jamendo",
     "JamendoAlbum",
+    "Joj",
     "Jove",
     "JStream",
     "JWPlatform",
@@ -640,6 +708,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Mixlr",
     "MixlrRecoring",
     "MochaVideo",
+    "Mojevideo",
     "Monstercat",
     "monstersiren",
     "moviepilot",
@@ -647,6 +716,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "MuseScore",
     "Mux",
     "MySpass",
+    "MyVideoGe",
     "MyVidster",
     "n-tv.de",
     "NascarClassics",
@@ -682,6 +752,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "NRKTVSeries",
     "nts.live",
     "NZOnScreen",
+    "NZZ",
     "Odnoklassniki",
     "OlympicsReplay",
     "on24",
@@ -700,6 +771,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "peer.tv",
     "periscope",
     "PGATour",
+    "PhilharmonieDeParis",
     "Photobucket",
     "PiaLive",
     "picarto",
@@ -709,6 +781,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "PlayerFm",
     "PodbayFM",
     "PodbayFMChannel",
+    "Podchaser",
     "Popcorntimes",
     "PopcornTV",
     "PremiershipRugby",
@@ -718,6 +791,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "QingTing",
     "radiokapital",
     "radiokapital:show",
+    "RadioRadicale",
     "RadioZetPodcast",
     "Reddit",
     "ReverbNation",
@@ -746,6 +820,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Sapo",
     "SBS",
     "Screen9",
+    "Screencast",
     "Screencastify",
     "ScreenRec",
     "Sen",
@@ -754,6 +829,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "simplecast",
     "simplecast:episode",
     "simplecast:podcast",
+    "Sina",
     "Skeb",
     "sky:news",
     "sky:news:story",
@@ -880,6 +956,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "washingtonpost:article",
     "wat.tv",
     "Webcamerapl",
+    "WebOfStories",
+    "WebOfStoriesPlaylist",
     "Weibo",
     "WeiboVideo",
     "Whyp",
@@ -1059,6 +1137,7 @@ impl YoutubeDl {
             multistreams: (false, false),
             live_from_start: false,
             growing_file: false,
+            keep_partial_on_stop: false,
             youtube_runtime,
             format_sort: FormatSortOptions::default(),
             prefer_best: false,
@@ -1094,6 +1173,7 @@ impl YoutubeDl {
                     no_playlist: youtube.no_playlist,
                 }),
                 Box::new(extractor::AGalega),
+                Box::new(extractor::AdobeTvVideo),
                 Box::new(extractor::AitubeKzVideo),
                 Box::new(extractor::AlJazeera),
                 Box::new(extractor::AliExpressLive),
@@ -1120,6 +1200,7 @@ impl YoutubeDl {
                 Box::new(extractor::Craftsy),
                 Box::new(extractor::DailyMail),
                 Box::new(extractor::Dbtv),
+                Box::new(extractor::DctpTv),
                 Box::new(extractor::DeuxM),
                 Box::new(extractor::DeuxMNews),
                 Box::new(extractor::Digiteka),
@@ -1193,9 +1274,11 @@ impl YoutubeDl {
                 Box::new(extractor::Rtvslo),
                 Box::new(extractor::RtvsloShow),
                 Box::new(extractor::RudoVideo),
+                Box::new(extractor::Screencast),
                 Box::new(extractor::Screencastify),
                 Box::new(extractor::Servus),
                 Box::new(extractor::SharePoint),
+                Box::new(extractor::Sina),
                 Box::new(extractor::Skeb),
                 Box::new(extractor::SkyNews),
                 Box::new(extractor::SkyNewsStory),
@@ -1342,6 +1425,7 @@ impl YoutubeDl {
                 Box::new(extractor::Mediaite),
                 Box::new(extractor::OneNewsNz),
                 Box::new(extractor::NzOnScreen),
+                Box::new(extractor::Nzz),
                 Box::new(extractor::CloudflareStream),
                 Box::new(extractor::CloudyCdn),
                 Box::new(extractor::Dumpert),
@@ -1485,6 +1569,7 @@ impl YoutubeDl {
                 Box::new(extractor::Angel),
                 Box::new(extractor::ApplePodcasts),
                 Box::new(extractor::AudiMedia),
+                Box::new(extractor::AtScaleConfEvent),
                 Box::new(extractor::AudioBoom),
                 Box::new(extractor::Beatport),
                 Box::new(extractor::BehindKink),
@@ -1593,6 +1678,7 @@ impl YoutubeDl {
                 Box::new(extractor::QingTing),
                 Box::new(extractor::RadioKapital),
                 Box::new(extractor::RadioKapitalShow),
+                Box::new(extractor::RadioRadicale),
                 Box::new(extractor::RadioZetPodcast),
                 Box::new(extractor::ReverbNation),
                 Box::new(extractor::RoyaLive),
@@ -1632,6 +1718,19 @@ impl YoutubeDl {
                 Box::new(extractor::MangomoloLive),
                 Box::new(extractor::MaoriTV),
                 Box::new(extractor::EuropeanTour),
+                Box::new(extractor::EuScreen),
+                Box::new(extractor::CharlieRose),
+                Box::new(extractor::MyVideoGe),
+                Box::new(extractor::PhilharmonieDeParis),
+                Box::new(extractor::AudiodraftCustom),
+                Box::new(extractor::AudiodraftGeneric),
+                Box::new(extractor::Chilloutzone),
+                Box::new(extractor::Mojevideo),
+                Box::new(extractor::Podchaser),
+                Box::new(extractor::Joj),
+                Box::new(extractor::WebOfStories),
+                Box::new(extractor::WebOfStoriesPlaylist),
+                Box::new(extractor::GbNews),
                 Box::new(extractor::SkyNewsAU),
                 Box::new(extractor::TvaNouvelles),
                 Box::new(extractor::TvaNouvellesArticle),
@@ -2128,10 +2227,8 @@ impl YoutubeDl {
         let mut attempt = 0;
         let body: Option<serde_json::Value> = loop {
             attempt += 1;
-            let result = self
-                .client
-                .get(&url)
-                .send()
+            let result = crate::control::scoped(self.client.get(&url))
+                .and_then(|request| request.send())
                 .inspect(|_| crate::screen::after_request())
                 .map_err(|error| retry::urllib_error(&error))
                 .and_then(|response| {
@@ -2386,6 +2483,16 @@ impl YoutubeDl {
         Ok(jobs)
     }
 
+    /// `--keep-partial-on-stop` (port extension): SIGINT or SIGTERM during a
+    /// download stops it like [`Interrupt::stop`]: the data so far is
+    /// published at the destination (merged streams merged) and the download
+    /// returns `Error::DownloadStopped`. Growing-file recordings keep their
+    /// own stop handling.
+    pub fn with_keep_partial_on_stop(mut self, keep: bool) -> Self {
+        self.keep_partial_on_stop = keep;
+        self
+    }
+
     /// `--growing-file` (port extension): live results are written as one
     /// growing QuickTime file (see `growing.rs`).
     pub fn with_growing_file(mut self, growing: bool) -> Self {
@@ -2504,7 +2611,9 @@ impl YoutubeDl {
             let (sender, messages) = std::sync::mpsc::channel::<screen::OwnedMessage>();
             let relay = || messages.try_iter().for_each(|message| message.emit());
             std::thread::scope(|scope| {
+                let context = control::current();
                 let feeder = scope.spawn(move || {
+                    let _context = control::resume(context);
                     screen::forward(Some(Box::new(move |message| {
                         let _ = sender.send(message);
                     })));
@@ -2597,6 +2706,8 @@ impl YoutubeDl {
                 extractor::fetch_peertube_pages
             } else if extractor::podbayfm_pending_state(&pending.state) {
                 extractor::fetch_podbayfm_pages
+            } else if extractor::podchaser_pending_state(&pending.state) {
+                extractor::fetch_podchaser_pages
             } else if extractor::yappy_pending_state(&pending.state) {
                 extractor::fetch_yappy_pages
             } else if extractor::lefigaro_pending_state(&pending.state) {
@@ -2619,6 +2730,8 @@ impl YoutubeDl {
                 extractor::fetch_ciscolive_pages
             } else if extractor::radiokapital_pending_state(&pending.state) {
                 extractor::fetch_radiokapital_pages
+            } else if extractor::nzz_pending_state(&pending.state) {
+                extractor::fetch_nzz_entries
             } else {
                 extractor::fetch_youtube_tab_pages
             };
@@ -2634,7 +2747,9 @@ impl YoutubeDl {
                 || extractor::freetv_pending_state(&pending.state)
                 || extractor::spreaker_pending_state(&pending.state)
                 || extractor::simplecast_pending_state(&pending.state)
-                || extractor::podbayfm_pending_state(&pending.state);
+                || extractor::podbayfm_pending_state(&pending.state)
+                || extractor::podchaser_pending_state(&pending.state)
+                || extractor::nzz_pending_state(&pending.state);
             playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
                 .map(|state| PendingEntries { state });
             if resolved {
@@ -3589,11 +3704,12 @@ impl YoutubeDl {
         Ok(())
     }
 
-    /// `--growing-file`: selected live results become QuickTime files.
+    /// `--growing-file`: selected live results become QuickTime files (or
+    /// fragmented MP4 for codecs MOV cannot hold, such as AV1).
     fn growing_ext(&self, mut selected: Vec<VideoInfo>) -> Vec<VideoInfo> {
         for entry in &mut selected {
             if self.grows(entry) {
-                entry.ext = growing::EXT.into();
+                entry.ext = growing::ext(entry).into();
             } else if self.growing_file && is_live(entry) {
                 screen::warning(if self.ffmpeg.is_none() {
                     "--growing-file needs ffmpeg; downloading the live stream normally"
@@ -3708,6 +3824,12 @@ impl YoutubeDl {
         input: &str,
         options: ExtractionOptions,
     ) -> Result<ExtractResult> {
+        let _context = control::enter(
+            options.interrupt.as_ref(),
+            options.scope.as_ref(),
+            &self.cookies,
+        )?;
+        control::check()?;
         let url = if has_scheme(input) {
             Url::parse(input)?
         } else {
@@ -3745,10 +3867,69 @@ impl YoutubeDl {
                         return Err(error);
                     }
                     retry::backoff(u32::from(attempt), delay);
+                    control::check()?;
                 }
             }
         }
         unreachable!("the final attempt returns success or an error")
+    }
+
+    /// Formats from an HLS or DASH [`Manifest`] (inline or fetched), as a
+    /// processed but unselected video result: pass it to
+    /// [`select_result`](Self::select_result) and download it like an
+    /// extracted one. A master playlist's variant playlists are fetched.
+    /// `options.scope` applies to the manifest and variant requests; pass the
+    /// same scope in [`DownloadControl`] for the media requests.
+    pub fn extract_manifest(
+        &self,
+        manifest: &Manifest,
+        options: ExtractionOptions,
+    ) -> Result<ExtractResult> {
+        let _context = control::enter(
+            options.interrupt.as_ref(),
+            options.scope.as_ref(),
+            &self.cookies,
+        )?;
+        control::check()?;
+        if !matches!(manifest.url.scheme(), "http" | "https") {
+            return Err(Error::UnsupportedScheme(manifest.url.scheme().into()));
+        }
+        let webpage = manifest.webpage_url.as_ref().unwrap_or(&manifest.url);
+        let mut info = match (&manifest.data, manifest.kind) {
+            (Some(text), ManifestKind::Hls) => {
+                extractor::hls::from_text(&self.client, text, &manifest.url, webpage, false)?
+            }
+            (Some(text), ManifestKind::Dash) => {
+                extractor::dash::from_text(text, &manifest.url, webpage)?
+            }
+            (None, kind) => {
+                let response = extractor::direct::probe(&self.client, &manifest.url, None)?;
+                match kind {
+                    ManifestKind::Hls => extractor::hls::from_response(
+                        &self.client,
+                        response,
+                        webpage,
+                        None,
+                        true,
+                        None,
+                    )?,
+                    ManifestKind::Dash => extractor::dash::from_response(response, webpage, true)?,
+                }
+                .ok_or_else(|| Error::UnsupportedManifest("the manifest has no media".into()))?
+            }
+        };
+        if let Some(id) = &manifest.id {
+            info.id = id.clone();
+            if manifest.title.is_none() {
+                info.title = id.clone();
+            }
+        }
+        if let Some(title) = &manifest.title {
+            info.title = title.clone();
+        }
+        let mut result = ExtractResult::Video(info);
+        self.process_result(&mut result)?;
+        Ok(result)
     }
 
     /// The extractor names in matching order (`None`: the registry order).
@@ -4297,6 +4478,41 @@ impl YoutubeDl {
         })
     }
 
+    /// [`download_with_progress`](Self::download_with_progress) with a
+    /// [`DownloadControl`]: its [`Interrupt`] can stop the download from
+    /// another thread (keeping and publishing what was downloaded, as
+    /// `Error::DownloadStopped { path }`) or cancel it (`Error::DownloadCancelled`,
+    /// private temporary files removed), and its [`RequestScope`] adds
+    /// headers and cookies to requests for its origin only.
+    ///
+    /// A stop publishes the data downloaded so far at `destination`: a
+    /// whole-file transfer's bytes, whole fragments of a fragmented stream,
+    /// the streams of a merged download so far merged with FFmpeg (the last
+    /// one partial), or FFmpeg's output after it is asked to finish (`q`).
+    /// A stop before any data arrived is a cancel.
+    pub fn download_with_control(
+        &self,
+        info: &VideoInfo,
+        destination: impl AsRef<Path>,
+        options: DownloadOptions,
+        control: &DownloadControl,
+        mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
+    ) -> Result<u64> {
+        let _context = control::enter(
+            control.interrupt.as_ref(),
+            control.scope.as_ref(),
+            &self.cookies,
+        )?;
+        let interrupt = control.interrupt.clone();
+        self.download_with_progress(info, destination, options, move |progress| {
+            if interrupt.as_ref().is_some_and(Interrupt::is_requested) {
+                std::ops::ControlFlow::Break(())
+            } else {
+                callback(progress)
+            }
+        })
+    }
+
     /// Observe download checkpoints; return `ControlFlow::Break(())` to cancel.
     /// Cancellation removes the private temporary file and never retries or publishes.
     /// Callbacks run synchronously before requests, after validated headers and each
@@ -4340,6 +4556,16 @@ impl YoutubeDl {
         if self.grows(info) {
             return self.download_growing(info, destination.as_ref(), options, &mut callback);
         }
+        // `--keep-partial-on-stop`: SIGINT/SIGTERM stop the download like
+        // `Interrupt::stop` (the outermost call holds the signal guard).
+        let _signals = self.keep_partial_on_stop.then(control::SignalStop::enter);
+        let mut callback = move |progress| {
+            if control::requested() {
+                std::ops::ControlFlow::Break(())
+            } else {
+                callback(progress)
+            }
+        };
         if ffmpeg_fd {
             let ffmpeg = self.ffmpeg.as_deref().ok_or_else(|| {
                 Error::Reported(
@@ -4734,6 +4960,9 @@ impl YoutubeDl {
         };
         let mut paths = Vec::new();
         let mut stored = 0u64;
+        // A library `Interrupt::stop` during a stream: the streams so far
+        // (the last one partial) are merged and published.
+        let mut stopped = false;
         // `get_suitable_downloader`: generated (`--live-from-start`) formats
         // download together through DashSegmentsFD, into files named with
         // the merged extension.
@@ -4775,7 +5004,31 @@ impl YoutubeDl {
             stored = sizes.iter().sum();
             paths = jobs.into_iter().map(|(_, path)| path).collect();
         }
-        for (index, stream) in streams.iter().enumerate().filter(|_| !live) {
+        // `--keep-partial-on-stop` fetches audio-only streams first, so a stop
+        // during the (larger) video stream still has the whole audio.
+        let mut order: Vec<usize> = (0..streams.len()).collect();
+        if self.keep_partial_on_stop {
+            let audio_only = |stream: &VideoFormat| {
+                stream.stream_kind == StreamKind::AudioOnly
+                    || (stream.vcodec.as_deref() == Some("none")
+                        && stream
+                            .acodec
+                            .as_deref()
+                            .is_some_and(|codec| codec != "none"))
+            };
+            order.sort_by_key(|&index| !audio_only(&streams[index]));
+        }
+        // The streams behind `paths`, in download order until sorted below.
+        let mut downloaded: Vec<usize> = if live {
+            (0..streams.len()).collect()
+        } else {
+            Vec::new()
+        };
+        for (index, stream) in order
+            .iter()
+            .map(|&index| (index, &streams[index]))
+            .filter(|_| !live)
+        {
             let path = match upstream {
                 None => workspace
                     .path()
@@ -4791,6 +5044,7 @@ impl YoutubeDl {
                 let bytes = fs::metadata(&path)?.len();
                 stored = stored.saturating_add(bytes);
                 paths.push(path);
+                downloaded.push(index);
                 if callback(DownloadProgress {
                     attempt: 1,
                     downloaded_bytes: bytes,
@@ -4905,7 +5159,22 @@ impl YoutubeDl {
                     progress.stream_count = Some(count);
                     callback(progress)
                 },
-            )?;
+            );
+            let bytes = match bytes {
+                Err(Error::DownloadStopped { .. }) => {
+                    stored = stored.saturating_add(fs::metadata(&path)?.len());
+                    paths.push(path);
+                    downloaded.push(index);
+                    stopped = true;
+                    break;
+                }
+                // Stopped before this stream had data: the earlier ones.
+                Err(Error::DownloadCancelled) if control::stopping() && !paths.is_empty() => {
+                    stopped = true;
+                    break;
+                }
+                bytes => bytes?,
+            };
             if announce.replace(false) {
                 screen::screen(&format!("[download] Destination: {}", path.display()));
             }
@@ -4913,7 +5182,12 @@ impl YoutubeDl {
                 .checked_add(bytes)
                 .ok_or_else(|| Error::Postprocess("combined stream byte count overflow".into()))?;
             paths.push(path);
+            downloaded.push(index);
         }
+        // Merge inputs follow the selection order.
+        let mut pairs: Vec<(usize, PathBuf)> = downloaded.into_iter().zip(paths).collect();
+        pairs.sort_by_key(|(index, _)| *index);
+        let (downloaded, paths): (Vec<usize>, Vec<PathBuf>) = pairs.into_iter().unzip();
         let Some(executable) = executable else {
             // No merger: the format files are the result.
             return Ok(stored);
@@ -4925,15 +5199,13 @@ impl YoutubeDl {
                 destination.display()
             ));
         }
-        let output = tempfile::Builder::new()
-            .prefix("merged-")
-            .suffix(".part")
-            .tempfile_in(workspace.path())?
-            .into_temp_path();
+        let output =
+            download::media_tempfile("merged-", ".part", workspace.path())?.into_temp_path();
         let oldest = filetime::oldest(paths.iter().map(PathBuf::as_path));
         // Each input's streams: by its kind, else upstream's codec test.
-        let inputs: Vec<merge::Input<'_>> = streams
+        let inputs: Vec<merge::Input<'_>> = downloaded
             .iter()
+            .map(|&index| &streams[index])
             .zip(&paths)
             .map(|(stream, path)| {
                 let (audio, video) = match stream.stream_kind {
@@ -4953,6 +5225,9 @@ impl YoutubeDl {
             })
             .collect();
         merge::merge_inputs(&executable, &inputs, &output, output_ext, &mut || {
+            if stopped {
+                return ControlFlow::Continue(());
+            }
             callback(DownloadProgress {
                 attempt: 1,
                 downloaded_bytes: stored,
@@ -4973,20 +5248,21 @@ impl YoutubeDl {
             .write(true)
             .open(&output)?
             .sync_all()?;
-        if callback(DownloadProgress {
-            attempt: 1,
-            downloaded_bytes: bytes,
-            total_bytes: Some(bytes),
-            total_bytes_estimate: None,
-            phase: DownloadPhase::Publishing,
-            stream_index: None,
-            stream_count: Some(count),
-            fragment_index: None,
-            fragment_count: None,
-            fragment: None,
-            recorded_ms: None,
-        })
-        .is_break()
+        if !stopped
+            && callback(DownloadProgress {
+                attempt: 1,
+                downloaded_bytes: bytes,
+                total_bytes: Some(bytes),
+                total_bytes_estimate: None,
+                phase: DownloadPhase::Publishing,
+                stream_index: None,
+                stream_count: Some(count),
+                fragment_index: None,
+                fragment_count: None,
+                fragment: None,
+                recorded_ms: None,
+            })
+            .is_break()
         {
             return Err(Error::DownloadCancelled);
         }
@@ -5003,6 +5279,11 @@ impl YoutubeDl {
                 ));
                 fs::remove_file(path)?;
             }
+        }
+        if stopped {
+            return Err(Error::DownloadStopped {
+                path: destination.to_owned(),
+            });
         }
         Ok(bytes)
     }

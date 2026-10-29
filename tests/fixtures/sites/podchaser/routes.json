@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://api.podchaser.com/podcasts/36924",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "podcast-36924.json"
+  },
+  {
+   "url": "https://api.podchaser.com/podcasts/36924/episodes/104365585/player_ids",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "episode-104365585.json"
+  },
+  {
+   "url": "https://api.podchaser.com/podcasts/28853",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "podcast-28853.json"
+  },
+  {
+   "url": "https://api.podchaser.com/list/episode",
+   "request_body": [
+    "\"start\": 0,",
+    "\"podcast_id\": \"28853\""
+   ],
+   "request_headers": {
+    "Content-Type": "application/json;charset=utf-8"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "list-28853-0.json"
+  }
+ ]
+}

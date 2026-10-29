@@ -1,0 +1,49 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.myvideo.ge/v/3941048",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3941048\", \"title\": \"The best prikol\", \"description\": \"Please subscribe to my \\u044f\\u043d\\u0434\\u0435\\u043a\\u0441 \\u044d\\u0444\\u0438\\u0440 channel, thank you in advance.\\n\\u041f\\u043e\\u0436\\u0430\\u043b\\u0443\\u0439\\u0441\\u0442\\u0430, \\u043f\\u043e\\u0434\\u043f\\u0438\\u0448\\u0438\\u0442\\u0435\\u0441\\u044c \\u043d\\u0430 \\u043c\\u043e\\u0439 \\u043a\\u0430\\u043d\\u0430\\u043b \\u044f\\u043d\\u0434\\u0435\\u043a\\u0441 \\u044d\\u0444\\u0438\\u0440, \\u0437\\u0430\\u0440\\u0430\\u043d\\u0435\\u0435 \\u0441\\u043f\\u0430\\u0441\\u0438\\u0431\\u043e.\\n\\u10d2\\u10d7\\u10ee\\u10dd\\u10d5\\u10d7 \\u10d2\\u10d0\\u10db\\u10dd\\u10d8\\u10ec\\u10d4\\u10e0\\u10dd\\u10d7 \\u10e9\\u10d4\\u10db\\u10d8 \\u044f\\u043d\\u0434\\u0435\\u043a\\u0441 \\u044d\\u0444\\u0438\\u0440 \\u10d0\\u10e0\\u10ee\\u10d8, \\u10db\\u10d0\\u10d3\\u10da\\u10dd\\u10d1\\u10d0\\u10d7 \\u10ec\\u10d8\\u10dc\\u10d0\\u10e1\\u10ec\\u10d0\\u10e0. https://yandex.ru/efir?stream_active=blogger&amp;stream_publisher=ugc_channel_3142944825415313713                     \\nPlease subscribe to my second youtube channel, thank you in advance.\\n\\u041f\\u043e\\u0436\\u0430\\u043b\\u0443\\u0439\\u0441\\u0442\\u0430, \\u043f\\u043e\\u0434\\u043f\\u0438\\u0448\\u0438\\u0442\\u0435\\u0441\\u044c \\u043d\\u0430 \\u043c\\u043e\\u0439 \\u0432\\u0442\\u043e\\u0440\\u043e\\u0439 \\u043a\\u0430\\u043d\\u0430\\u043b YouTube, \\u0437\\u0430\\u0440\\u0430\\u043d\\u0435\\u0435 \\u0441\\u043f\\u0430\\u0441\\u0438\\u0431\\u043e.\\n\\u10d2\\u10d7\\u10ee\\u10dd\\u10d5\\u10d7 \\u10d2\\u10d0\\u10db\\u10dd\\u10d8\\u10ec\\u10d4\\u10e0\\u10dd\\u10d7 \\u10e9\\u10d4\\u10db\\u10d8 \\u10db\\u10d4\\u10dd\\u10e0\\u10d4 youtube \\u10d0\\u10e0\\u10ee\\u10d8,\\u10db\\u10d0\\u10d3\\u10da\\u10dd\\u10d1\\u10d0\\u10d7 \\u10ec\\u10d8\\u10dc\\u10d0\\u10e1\\u10ec\\u10d0\\u10e0.\\nhttps://www.youtube.com/channel/UCbFw2Dmp42NcODQhIUpSq6Q  \\nPlease subscribe to my youtube channel thank you in advance\\n\\u041f\\u043e\\u0436\\u0430\\u043b\\u0443\\u0439\\u0441\\u0442\\u0430, \\u043f\\u043e\\u0434\\u043f\\u0438\\u0448\\u0438\\u0442\\u0435\\u0441\\u044c \\u043d\\u0430 \\u043c\\u043e\\u0439 \\u043a\\u0430\\u043d\\u0430\\u043b YouTube \\u0437\\u0430\\u0440\\u0430\\u043d\\u0435\\u0435 \\u0441\\u043f\\u0430\\u0441\\u0438\\u0431\\u043e\\n\\u10d2\\u10d7\\u10ee\\u10dd\\u10d5\\u10d7 \\u10d2\\u10d0\\u10db\\u10dd\\u10d8\\u10ec\\u10d4\\u10e0\\u10dd\\u10d7 \\u10e9\\u10d4\\u10db\\u10d8 youtube \\u10d0\\u10e0\\u10ee\\u10d8 \\u10db\\u10d0\\u10d3\\u10da\\u10dd\\u10d1\\u10d0\\u10d7 \\u10ec\\u10d8\\u10dc\\u10d0\\u10e1\\u10ec\\u10d0\\u10e0\\nhttps://www.youtube.com/channel/UC_tmtHViswyJZhDDfFUYdBw\\nPlease subscribe to my myvideo channel, thank you in advance.\\n\\u041f\\u043e\\u0436\\u0430\\u043b\\u0443\\u0439\\u0441\\u0442\\u0430, \\u043f\\u043e\\u0434\\u043f\\u0438\\u0448\\u0438\\u0442\\u0435\\u0441\\u044c \\u043d\\u0430 \\u043c\\u043e\\u0439 \\u043a\\u0430\\u043d\\u0430\\u043b myvideo, \\u0437\\u0430\\u0440\\u0430\\u043d\\u0435\\u0435 \\u0441\\u043f\\u0430\\u0441\\u0438\\u0431\\u043e.\\n\\u10d2\\u10d7\\u10ee\\u10dd\\u10d5\\u10d7 \\u10d2\\u10d0\\u10db\\u10dd\\u10d8\\u10ec\\u10d4\\u10e0\\u10dd\\u10d7 \\u10e9\\u10d4\\u10db\\u10d8 myvideo \\u10d0\\u10e0\\u10ee\\u10d8, \\u10db\\u10d0\\u10d3\\u10da\\u10dd\\u10d1\\u10d0\\u10d7 \\u10ec\\u10d8\\u10dc\\u10d0\\u10e1\\u10ec\\u10d0\\u10e0. http://www.myvideo.ge/?user_id=1724292\", \"uploader\": \"chixa33\", \"formats\": [{\"url\": \"http://tbs01-vod37.myvideo.ge/secure/395/360p/3941048.mp4?key=WG0Qsn9gBLbkaM64v6Tjcw&ttl=1793271462\", \"width\": null, \"height\": null, \"tbr\": null, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"SD\", \"quality\": 0, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"cookies\": \"PHPSESSID=4r3dh736imu8a64iv5o2mtms37; Domain=.myvideo.ge; Path=/\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"SD - unknown\"}, {\"url\": \"http://tbs01-vod37.myvideo.ge/secure/395/3941048.mp4?key=fLyRzGFOgYOM2bVLirT-ag&ttl=1793271462\", \"width\": null, \"height\": null, \"tbr\": null, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"HD\", \"quality\": 1, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"cookies\": \"PHPSESSID=4r3dh736imu8a64iv5o2mtms37; Domain=.myvideo.ge; Path=/\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HD - unknown\"}], \"thumbnail\": \"https://thumbs01.myvideo.ge/395/3941048.jpg\", \"upload_date\": \"20200611\", \"view_count\": null, \"like_count\": 0, \"dislike_count\": 0, \"webpage_url\": \"https://www.myvideo.ge/v/3941048\", \"original_url\": \"https://www.myvideo.ge/v/3941048\", \"webpage_url_basename\": \"3941048\", \"webpage_url_domain\": \"myvideo.ge\", \"extractor\": \"MyVideoGe\", \"extractor_key\": \"MyVideoGe\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://thumbs01.myvideo.ge/395/3941048.jpg\", \"id\": \"0\"}], \"display_id\": \"3941048\", \"fulltitle\": \"The best prikol\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"http://tbs01-vod37.myvideo.ge/secure/395/3941048.mp4?key=fLyRzGFOgYOM2bVLirT-ag&ttl=1793271462\", \"ext\": \"mp4\", \"format_id\": \"HD\", \"quality\": 1, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"cookies\": \"PHPSESSID=4r3dh736imu8a64iv5o2mtms37; Domain=.myvideo.ge; Path=/\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HD - unknown\", \"_filename\": \"The best prikol [3941048].mp4\", \"filename\": \"The best prikol [3941048].mp4\", \"__write_download_archive\": false}], \"url\": \"http://tbs01-vod37.myvideo.ge/secure/395/3941048.mp4?key=fLyRzGFOgYOM2bVLirT-ag&ttl=1793271462\", \"width\": null, \"height\": null, \"tbr\": null, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"HD\", \"quality\": 1, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"cookies\": \"PHPSESSID=4r3dh736imu8a64iv5o2mtms37; Domain=.myvideo.ge; Path=/\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HD - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.myvideo.ge/v/3941048",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[MyVideoGe] Extracting URL: https://www.myvideo.ge/v/3941048",
+    "[MyVideoGe] 3941048: Downloading webpage",
+    "[info] Available formats for 3941048:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "SD mp4 unknown    | http  | unknown unknown",
+    "HD mp4 unknown    | http  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://myvideo.ge/v/1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [MyVideoGe] 1: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

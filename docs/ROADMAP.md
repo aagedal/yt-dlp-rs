@@ -58,7 +58,7 @@ tractable for future agents.
   rate and the first shown frame (edit-list start for MP4/MOV cuts, the sought
   keyframe otherwise) become the cut's `-timecode`.
 - `src/growing.rs`: port extension `--growing-file`: FFmpegFD writes live streams
-  as one fragmented QuickTime file at the final name (`ffmpeg_fd::download_growing`;
+  as one fragmented QuickTime file (MP4 for AV1/VP9/Opus/FLAC) at the final name (`ffmpeg_fd::download_growing`;
   `--live-from-start` fragments reach it through named pipes, `live_dash::Job::pipe`),
   with `-progress` as the recorded time and, on macOS, Blackmagic's recording
   attribute while it grows.

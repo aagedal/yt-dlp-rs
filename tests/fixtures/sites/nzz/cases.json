@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://www.nzz.ch/video/nzz-standpunkte/cvp-auf-der-suche-nach-dem-mass-der-mitte-ld.1368112",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.nzz.ch/video/nzz-standpunkte/cvp-auf-der-suche-nach-dem-mass-der-mitte-ld.1368112",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "http://www.nzz.ch/zuerich/gymizyte/gymizyte-schreiben-schueler-heute-noch-diktate-ld.9153",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.nzz.ch/zuerich/gymizyte/gymizyte-schreiben-schueler-heute-noch-diktate-ld.9153",
+  "args": [
+   "--flat-playlist",
+   "-J"
+  ]
+ }
+]

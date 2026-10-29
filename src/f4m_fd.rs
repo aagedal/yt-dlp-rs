@@ -218,8 +218,8 @@ fn get(client: &Client, url: &Url, info: &VideoInfo) -> Result<(Url, Vec<u8>)> {
     if !info.is_direct() {
         request = request.header(reqwest::header::REFERER, info.webpage_url.as_str());
     }
-    let mut response = request
-        .send()
+    let mut response = crate::control::scoped(request)
+        .and_then(|request| request.send())
         .inspect(|_| crate::screen::after_request())
         .map_err(Error::Http)
         .and_then(crate::retry::check_response)?;

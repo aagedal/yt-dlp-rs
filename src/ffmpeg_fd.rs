@@ -275,7 +275,10 @@ fn arguments(
         ]);
     }
     if let Some(timecode) = growing {
-        args.extend(crate::growing::output_args(timecode));
+        args.extend(crate::growing::output_args(
+            timecode,
+            crate::growing::ext(info),
+        ));
     } else {
         if let Some(timecode) = timecode {
             args.extend(["-timecode".into(), timecode.into()]);
@@ -431,10 +434,7 @@ fn run(
             name.into()
         }
         PartFiles::Private => {
-            let file = tempfile::Builder::new()
-                .prefix(".yt-dlp-rs-")
-                .suffix(".part")
-                .tempfile_in(parent)?;
+            let file = crate::download::media_tempfile(".yt-dlp-rs-", ".part", parent)?;
             let path = file.path().to_owned();
             private = Some(file);
             path
@@ -555,9 +555,13 @@ fn run(
         if let Some(status) = child.try_wait()? {
             break status;
         }
-        let signalled = interrupt
-            .as_ref()
-            .is_some_and(crate::interrupt::Guard::interrupted);
+        // A library `Interrupt::stop` ends FFmpeg like an interrupt, so the
+        // file is finished and kept.
+        let stop = crate::control::stopping();
+        let signalled = stop
+            || interrupt
+                .as_ref()
+                .is_some_and(crate::interrupt::Guard::interrupted);
         if piped && !interrupted && signalled {
             // A piped FFmpeg is killed (`proc.kill`).
             interrupted = true;
@@ -575,7 +579,9 @@ fn run(
                 let _ = input.write_all(b"q");
             }
         }
-        let event = if growing.is_some() {
+        let event = if stop {
+            None
+        } else if growing.is_some() {
             report(&mut reported)
         } else {
             Some(progress(DownloadPhase::Downloading, 0))
@@ -610,6 +616,23 @@ fn run(
     }
     // The connection may end while FFmpeg exits.
     interrupted |= piped && ended.load(Ordering::SeqCst);
+    if interrupted && crate::control::stopping() {
+        let size = std::fs::metadata(&temporary).map_or(0, |file| file.len());
+        if size == 0 {
+            if private.is_some() {
+                let _ = std::fs::remove_file(&temporary);
+            }
+            return Err(Error::DownloadCancelled);
+        }
+        match private {
+            Some(file) => crate::download::persist(file, destination, options.overwrite)?,
+            None if temporary != destination => std::fs::rename(&temporary, destination)?,
+            None => {}
+        }
+        return Err(Error::DownloadStopped {
+            path: destination.to_owned(),
+        });
+    }
     if interrupted && !crate::is_live(info) {
         // Upstream's `KeyboardInterrupt` propagates for other downloads.
         if private.is_some() {

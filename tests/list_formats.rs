@@ -439,7 +439,10 @@ fn transient_listing_retries_complete_extraction_before_printing_once() {
         .unwrap()
         .extract_result_unselected_with_options(
             &library_server.url("/retry.html"),
-            ExtractionOptions { retries: 1 },
+            ExtractionOptions {
+                retries: 1,
+                ..Default::default()
+            },
         )
         .unwrap()
         .into_video()
