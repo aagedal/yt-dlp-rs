@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://www.radioradicale.it/scheda/471591",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(description)s|%(location)s|%(duration)s|%(timestamp)s|%(upload_date)s|%(thumbnail)s|%(width)s|%(height)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s|%(extractor)s|%(webpage_url)s"
+  ]
+ },
+ {
+  "url": "https://www.radioradicale.it/scheda/471591",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.radioradicale.it/scheda/742783/parlamento-riunito-in-seduta-comune-11a-della-xix-legislatura",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.radioradicale.it/scheda/1",
+  "args": [
+   "-J"
+  ]
+ }
+]

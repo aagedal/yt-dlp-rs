@@ -289,6 +289,7 @@ mod projectveritas;
 mod pyvideo;
 mod qingting;
 mod radiokapital;
+mod radioradicale;
 mod radiozet;
 mod reddit;
 mod reverbnation;
@@ -905,6 +906,7 @@ pub use radiokapital::{
 pub(crate) use radiokapital::{
     fetch_pages as fetch_radiokapital_pages, is_pending_state as radiokapital_pending_state,
 };
+pub use radioradicale::{RadioRadicale, suitable as radioradicale_suitable};
 pub use radiozet::{RadioZetPodcast, suitable as radiozet_suitable};
 pub use reddit::{Reddit, suitable as reddit_suitable};
 pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};

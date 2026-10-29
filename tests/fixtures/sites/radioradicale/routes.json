@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://www.radioradicale.it/scheda/471591",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "471591.html"
+  },
+  {
+   "url": "https://video.radioradicale.it/store-87/_definst_/mp4:2015/11/MQ828423.mp4/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "MQ828423.m3u8"
+  },
+  {
+   "url": "https://www.radioradicale.it/scheda/742783/parlamento-riunito-in-seduta-comune-11a-della-xix-legislatura",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "742783.html"
+  },
+  {
+   "url": "https://video.radioradicale.it/store-42/_definst_/mp4:2023/06/MQ1281802.mp4/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "MQ1281802.m3u8"
+  },
+  {
+   "url": "https://video.radioradicale.it/store-42/_definst_/mp4:2023/06/MQ1281809.mp4/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "MQ1281809.m3u8"
+  },
+  {
+   "url": "https://video.radioradicale.it/store-42/_definst_/mp4:2023/06/MQ1281816.mp4/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "MQ1281816.m3u8"
+  }
+ ]
+}

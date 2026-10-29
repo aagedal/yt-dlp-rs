@@ -1938,6 +1938,20 @@ entries until a page's `next` is `null`. A `KeyError` or failed page while
 reading them ends the playlist with upstream's reported `None` entry.
 `tests/fixtures/sites/radiokapital/` is compared with pinned upstream output.
 
+Radio Radicale pages (`[www.]radioradicale.it/scheda/ID[/SLUG]`) follow
+upstream `RadioRadicaleIE`: the `jQuery.extend(Drupal.settings, ...)` JSON's
+`RRscheda` (no match is upstream's `Unable to extract videos_info`), each
+`playlist` item with truthy `sources` as fatal HLS formats and subtitles
+(master playlists only) under `ID-N` with the item title, and the OpenGraph
+title and description, `luogo` location and JSON-LD fields (fatal; upstream's
+`Unable to extract JSON-LD`) over them. One item is a single video, several a
+`multi_video` playlist. Upstream's `subtitles` list traversal never matches
+the page's track objects; tracks nested in lists, which it would read, are
+reported as unsupported. `tests/fixtures/sites/radioradicale/` is compared
+with pinned upstream output; the single video is compared through `--print`
+and `-F`, since a JSON-LD `width`/`height` overridden by the selected format
+is not kept separately for `-J`'s `requested_downloads`.
+
 A Galega videos (`[www.]agalega.gal/videos/[detail/]ID`) follow upstream
 `agalega:videos`: an anonymous access token (POSTed to `fetch-api/jwt/token`
 and noted with the API endpoint as its ID, cached for the run and refreshed

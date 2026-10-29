@@ -3600,6 +3600,18 @@
       "scope": "RadioKapitalIE episode API JSON as a url_transparent Mixcloud result (Python-sliced release date, unescaped title, cleaned content, tags, series; non-Mixcloud URLs fail like ie_key='Mixcloud'), and RadioKapitalShowIE show metadata with a lazily paged episode generator whose KeyErrors and page errors end it with a None entry, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "radioradicale",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/radioradicale.py"
+      ],
+      "rust": [
+        "src/extractor/radioradicale.rs",
+        "tests/fixtures/sites/radioradicale/"
+      ],
+      "scope": "RadioRadicaleIE Drupal settings playlist, HLS sources, OpenGraph and JSON-LD metadata, single video or multi_video playlist. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "radiozet",
       "status": "partial",
       "upstream": [
