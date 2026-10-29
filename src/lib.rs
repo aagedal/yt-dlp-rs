@@ -741,6 +741,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "NRKTVSeries",
     "nts.live",
     "NZOnScreen",
+    "NZZ",
     "Odnoklassniki",
     "OlympicsReplay",
     "on24",
@@ -1402,6 +1403,7 @@ impl YoutubeDl {
                 Box::new(extractor::Mediaite),
                 Box::new(extractor::OneNewsNz),
                 Box::new(extractor::NzOnScreen),
+                Box::new(extractor::Nzz),
                 Box::new(extractor::CloudflareStream),
                 Box::new(extractor::CloudyCdn),
                 Box::new(extractor::Dumpert),
@@ -2690,6 +2692,8 @@ impl YoutubeDl {
                 extractor::fetch_ciscolive_pages
             } else if extractor::radiokapital_pending_state(&pending.state) {
                 extractor::fetch_radiokapital_pages
+            } else if extractor::nzz_pending_state(&pending.state) {
+                extractor::fetch_nzz_entries
             } else {
                 extractor::fetch_youtube_tab_pages
             };
@@ -2705,7 +2709,8 @@ impl YoutubeDl {
                 || extractor::freetv_pending_state(&pending.state)
                 || extractor::spreaker_pending_state(&pending.state)
                 || extractor::simplecast_pending_state(&pending.state)
-                || extractor::podbayfm_pending_state(&pending.state);
+                || extractor::podbayfm_pending_state(&pending.state)
+                || extractor::nzz_pending_state(&pending.state);
             playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
                 .map(|state| PendingEntries { state });
             if resolved {

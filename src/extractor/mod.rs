@@ -247,6 +247,7 @@ mod nts;
 mod ntvde;
 pub mod nuxt;
 mod nzonscreen;
+mod nzz;
 mod odnoklassniki;
 mod olympics;
 mod on24;
@@ -819,6 +820,8 @@ pub use nrk::{
 pub use nts::{NtsLive, suitable as nts_suitable};
 pub use ntvde::{NtvDe, suitable as ntvde_suitable};
 pub use nzonscreen::{NzOnScreen, suitable as nzonscreen_suitable};
+pub use nzz::{Nzz, suitable as nzz_suitable};
+pub(crate) use nzz::{fetch_entries as fetch_nzz_entries, is_pending_state as nzz_pending_state};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
 pub use olympics::{OlympicsReplay, suitable as olympics_suitable};
 pub use on24::{On24, suitable as on24_suitable};

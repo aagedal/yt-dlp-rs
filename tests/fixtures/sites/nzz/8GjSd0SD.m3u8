@@ -1,0 +1,13 @@
+#EXTM3U
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=420000,RESOLUTION=480x270,CODECS="mp4a.40.2,avc1.42c015",FRAME-RATE=25.0,CLOSED-CAPTIONS=NONE
+https://videos-cloudfront-usp.jwpsrv.com/6ae341e6_ee6024c24aa9f01658bbf301e6c29774056fe2d7/sites/YuwAxPaT/media/8GjSd0SD/versions/8GjSd0SD/manifest.ism/manifest-audio_0_Awra1qIV_GhfOSvtK=112000-video_0_Awra1qIV_bcAr3Eum=302048.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=2960000,RESOLUTION=1920x1080,CODECS="mp4a.40.2,avc1.640028",FRAME-RATE=25.0,CLOSED-CAPTIONS=NONE
+https://videos-cloudfront-usp.jwpsrv.com/6ae341e6_ee6024c24aa9f01658bbf301e6c29774056fe2d7/sites/YuwAxPaT/media/8GjSd0SD/versions/8GjSd0SD/manifest.ism/manifest-audio_0_Awra1qIV_GhfOSvtK=112000-video_0_Awra1qIV_bcAr3Eum=2847000.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=1230000,RESOLUTION=1280x720,CODECS="mp4a.40.2,avc1.4d401f",FRAME-RATE=25.0,CLOSED-CAPTIONS=NONE
+https://videos-cloudfront-usp.jwpsrv.com/6ae341e6_ee6024c24aa9f01658bbf301e6c29774056fe2d7/sites/YuwAxPaT/media/8GjSd0SD/versions/8GjSd0SD/manifest.ism/manifest-audio_0_Awra1qIV_GhfOSvtK=112000-video_0_Awra1qIV_bcAr3Eum=1112072.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=550000,RESOLUTION=720x406,CODECS="mp4a.40.2,avc1.4d401e",FRAME-RATE=25.0,CLOSED-CAPTIONS=NONE
+https://videos-cloudfront-usp.jwpsrv.com/6ae341e6_ee6024c24aa9f01658bbf301e6c29774056fe2d7/sites/YuwAxPaT/media/8GjSd0SD/versions/8GjSd0SD/manifest.ism/manifest-audio_0_Awra1qIV_GhfOSvtK=112000-video_0_Awra1qIV_bcAr3Eum=436688.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=300000,RESOLUTION=320x180,CODECS="mp4a.40.2,avc1.42c00d",FRAME-RATE=25.0,CLOSED-CAPTIONS=NONE
+https://videos-cloudfront-usp.jwpsrv.com/6ae341e6_ee6024c24aa9f01658bbf301e6c29774056fe2d7/sites/YuwAxPaT/media/8GjSd0SD/versions/8GjSd0SD/manifest.ism/manifest-audio_0_Awra1qIV_GhfOSvtK=112000-video_0_Awra1qIV_bcAr3Eum=179704.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=120000,CODECS="mp4a.40.2"
+https://videos-cloudfront-usp.jwpsrv.com/6ae341e6_ee6024c24aa9f01658bbf301e6c29774056fe2d7/sites/YuwAxPaT/media/8GjSd0SD/versions/8GjSd0SD/manifest.ism/manifest-audio_0_Awra1qIV_GhfOSvtK=112000.m3u8

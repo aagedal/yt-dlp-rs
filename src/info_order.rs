@@ -248,6 +248,7 @@ pub(crate) fn strip_markers(map: &mut Map<String, Value>) {
     map.shift_remove(FORMAT_SHAPE);
     map.shift_remove(INT_QUALITY);
     map.shift_remove(INT_VBR);
+    map.shift_remove(HLS_USP_RATES);
     map.shift_remove(INT_FRAGMENT_DURATIONS);
     map.shift_remove(FOLLOWED);
     map.shift_remove(OWN_URL);
@@ -387,6 +388,10 @@ pub(crate) fn mark_int_vbr(format: &mut crate::VideoFormat) {
     format.extra.insert(INT_VBR.into(), Value::Bool(true));
 }
 
+/// An HLS variant whose URL gave Unified Streaming Platform `vbr`/`abr`
+/// (set right after `RESOLUTION`'s `width`/`height`).
+pub(crate) const HLS_USP_RATES: &str = "__yt_dlp_rs_hls_usp_rates";
+
 /// `map['vbr']` as an int under an [`INT_VBR`] marker.
 fn int_vbr(map: &mut Map<String, Value>) {
     if map.shift_remove(INT_VBR).is_some()
@@ -440,6 +445,7 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         map.insert("quality".into(), (quality as i64).into());
     }
     int_vbr(&mut map);
+    let usp_rates = map.shift_remove(HLS_USP_RATES).is_some();
     let Some((shape, original)) = shape_of(map.shift_remove(FORMAT_SHAPE)) else {
         return map;
     };
@@ -764,6 +770,27 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
             ("quality", Assign),
             ("has_drm", Take),
         ],
+        // A variant with Unified Streaming Platform rates from its URL.
+        "hls-variant" if usp_rates => &[
+            ("format_id", Take),
+            ("format_index", Assign),
+            ("url", Take),
+            ("manifest_url", Take),
+            ("tbr", Assign),
+            ("ext", Take),
+            ("fps", Assign),
+            ("protocol", Take),
+            ("preference", Assign),
+            ("quality", Assign),
+            ("has_drm", Take),
+            ("width", Take),
+            ("height", Take),
+            ("vbr", Assign),
+            ("abr", Assign),
+            ("vcodec", Take),
+            ("acodec", Take),
+            ("dynamic_range", Codecs),
+        ],
         // A master playlist's variant, with `RESOLUTION` and `parse_codecs`.
         "hls-variant" => &[
             ("format_id", Take),
@@ -1062,6 +1089,7 @@ const MERGED_AUDIO_KEYS: &[&str] = &["acodec", "abr", "asr", "audio_channels"];
 /// Formats must already be ordered by [`format`].
 pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     map.shift_remove(FORMAT_SHAPE);
+    map.shift_remove(HLS_USP_RATES);
     // The selected format's int fragment durations.
     int_fragment_durations(&mut map);
     // `--ignore-no-formats-error`: `info_dict['formats'] = []` after
@@ -1215,7 +1243,9 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "generic-found-hls-entry"
             | "generic-found-dash-entry"
             | "xspf-entry"
-    ) || ((shape.starts_with("dict;") || shape.starts_with("untyped-dict;"))
+    ) || ((shape.starts_with("dict;")
+        || shape.starts_with("untyped-dict;")
+        || shape.starts_with("jwplatform;"))
         // A resolved `url` entry gets the playlist's keys after its
         // extraction's URL fields instead.
         && !transparent_entry

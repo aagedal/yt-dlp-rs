@@ -2787,6 +2787,16 @@ showcase, channel, user, likes, groups and watch-later playlists are not
 supported. `tests/fixtures/sites/vimeo/` and `tests/fixtures/sites/vimeo-login/`
 are compared with pinned upstream output.
 
+NZZ articles (`[www.]nzz.ch/[SECTION/]...-ld.ID`) follow upstream `NZZIE`:
+each `jw-video-jw*` script's `var settings` JSON (non-fatal; a missing or
+unparsable one is upstream's `{}`, so its `KeyError('title')`) goes through
+`_parse_jwplayer_data` under the article ID, as a generator playlist whose
+entries (and their HLS manifests) are fetched as it is processed. HLS
+variants whose URLs carry Unified Streaming Platform
+`audio...=ABR[-video...=VBR]` names get upstream's `abr`/`vbr`.
+`tests/fixtures/sites/nzz/` (saved article players and JW Player
+manifests) is compared with pinned upstream output.
+
 VK videos and clips (`vk.com`/`vkvideo.ru` `video|clip` IDs, `?z=` and
 `list=` shapes, `video_ext.php` embeds) follow upstream `VKIE`: the
 `al_video.php` `show` payload (`3` as login required, `8` as its message),

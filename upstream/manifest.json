@@ -3118,6 +3118,18 @@
       "scope": "NRKIE psapi playback manifest/metadata (Accept header, HTTP 400 retry without program/, nonPlayable and geo-blocked errors), unencrypted HLS master formats (adap/s/bandwidth query rewrites, one random akamaized CDN retry for the Telenor/ip-only hosts) and MP3 assets, WebVTT subtitles, thumbnails, duration, age limit, timestamp and programs-API series fields with upstream's fallbacks; NRKTVIE, NRKTVDirekteIE and NRKRadioPodkastIE nrk:ID url results; NRKTVEpisodeIE redirect or pageData ID; NRKTVSeasonIE and NRKTVSeriesIE catalog playlists (pages read eagerly; linked-season entries only with --flat-playlist) and NRKPlaylistIE article items. Akamai HD (akamaihd.net/i/) assets are an explicit native error; no geo-bypass X-Forwarded-For header; NRKSkoleIE and NRKTVEpisodesIE (dead endpoints) are not ported. Compared with pinned upstream output through the fixture proxy (--no-geo-bypass)"
     },
     {
+      "name": "nzz",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nzz.py"
+      ],
+      "rust": [
+        "src/extractor/nzz.rs",
+        "tests/fixtures/sites/nzz/"
+      ],
+      "scope": "NZZIE jw-video-jw script settings through _parse_jwplayer_data as a lazily fetched generator playlist, with Unified Streaming Platform abr/vbr for HLS variants, compared with pinned upstream output through the fixture proxy; multi-item JW Player playlists unsupported"
+    },
+    {
       "name": "ntvde",
       "status": "partial",
       "upstream": [

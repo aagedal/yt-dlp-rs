@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "https://www.nzz.ch/video/nzz-standpunkte/cvp-auf-der-suche-nach-dem-mass-der-mitte-ld.1368112",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "ld.1368112.html"
+  },
+  {
+   "url": "http://www.nzz.ch/zuerich/gymizyte/gymizyte-schreiben-schueler-heute-noch-diktate-ld.9153",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "ld.9153.html"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/manifests/8GjSd0SD.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl; charset=utf-8"
+   },
+   "body_file": "8GjSd0SD.m3u8"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/manifests/9iHKVXMF.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl; charset=utf-8"
+   },
+   "body_file": "9iHKVXMF.m3u8"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/manifests/Ejxgr4Hn.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl; charset=utf-8"
+   },
+   "body_file": "Ejxgr4Hn.m3u8"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/manifests/F11bI0iW.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl; charset=utf-8"
+   },
+   "body_file": "F11bI0iW.m3u8"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/manifests/OMWi4K31.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl; charset=utf-8"
+   },
+   "body_file": "OMWi4K31.m3u8"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/manifests/kbDXwAmO.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl; charset=utf-8"
+   },
+   "body_file": "kbDXwAmO.m3u8"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/manifests/rsM07uk7.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl; charset=utf-8"
+   },
+   "body_file": "rsM07uk7.m3u8"
+  }
+ ]
+}
