@@ -1360,6 +1360,16 @@ formatted description), duration, author and author URL, each falling back to
 upstream's OpenGraph/meta/regex lookups with their non-fatal warnings (the
 audio URL's is fatal), as an untyped result.
 
+Audiodraft contest entries (`SUB.audiodraft.com/entry/ID`, `Audiodraft:custom`;
+`www.audiodraft.com/contests/SLUG#entries&eid=ID`, `Audiodraft:generic`)
+follow upstream `AudiodraftCustomIE`/`AudiodraftGenericIE`: the entry page's
+`playAudio('player_entry_ID')` (upstream's swapped `_search_regex` arguments
+make `play entry id` the default when it is absent), or `player_entry_EID`,
+POSTed as a form to `getPlayerInfoNew.php`, whose JSON gives the MP3 `path`
+(`vcodec` `none`), entry ID and title, designer name and ID, entry URL as
+`webpage_url`, likes and rating, with upstream's `KeyError` messages.
+`tests/fixtures/sites/audiodraft/` is compared with pinned upstream output.
+
 Audiomack songs (`[www.]audiomack.com/song/ARTIST/SLUG` and
 `audiomack.com/ARTIST/song/SLUG`) follow upstream `AudiomackIE`: the extended
 `api/music/url/song/ARTIST/SLUG` JSON (a missing, empty or `error` response

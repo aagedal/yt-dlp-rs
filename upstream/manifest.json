@@ -788,6 +788,18 @@
       "scope": "AudioBoomIE React props (_search_json with unescapeHTML) and OpenGraph/meta fallbacks with warnings compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "audiodraft",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/audiodraft.py"
+      ],
+      "rust": [
+        "src/extractor/audiodraft.rs",
+        "tests/fixtures/sites/audiodraft/"
+      ],
+      "scope": "AudiodraftCustomIE entry page player ID and AudiodraftGenericIE contest eid, posted to the player info endpoint for the MP3 and entry metadata. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "audiomack",
       "status": "partial",
       "upstream": [

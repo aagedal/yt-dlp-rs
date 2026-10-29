@@ -18,6 +18,7 @@ mod arte;
 mod atscaleconf;
 mod audimedia;
 mod audioboom;
+mod audiodraft;
 mod audiomack;
 mod azmedien;
 mod baidu;
@@ -446,6 +447,10 @@ pub use arte::{
 pub use atscaleconf::{AtScaleConfEvent, suitable as atscaleconf_suitable};
 pub use audimedia::{AudiMedia, suitable as audimedia_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
+pub use audiodraft::{
+    AudiodraftCustom, AudiodraftGeneric, generic_suitable as audiodraft_generic_suitable,
+    suitable as audiodraft_suitable,
+};
 pub use audiomack::{
     Audiomack, AudiomackAlbum, album_suitable as audiomack_album_suitable,
     suitable as audiomack_suitable,

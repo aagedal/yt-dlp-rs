@@ -1,0 +1,31 @@
+{
+ "routes": [
+  {
+   "url": "http://nokiatune.audiodraft.com/entry/5874",
+   "headers": {
+    "Content-Type": "text/html; charset=UTF-8"
+   },
+   "body_file": "5874.html"
+  },
+  {
+   "url": "https://www.audiodraft.com/scripts/general/player/getPlayerInfoNew.php",
+   "headers": {
+    "Content-Type": "text/html; charset=UTF-8"
+   },
+   "request_body": [
+    "id=player_entry_9485"
+   ],
+   "body_file": "9485.json"
+  },
+  {
+   "url": "https://www.audiodraft.com/scripts/general/player/getPlayerInfoNew.php",
+   "headers": {
+    "Content-Type": "text/html; charset=UTF-8"
+   },
+   "request_body": [
+    "id=player_entry_30138"
+   ],
+   "body_file": "30138.json"
+  }
+ ]
+}
