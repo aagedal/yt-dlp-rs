@@ -1557,6 +1557,19 @@ logins, `--ap-username` without `--ap-password` (upstream prompts for it),
 compared with live providers) is compared with pinned upstream output, and
 `tests/adobepass.rs` checks the request sequences.
 
+Adobe TV videos (`video.tv.adobe.com/v/ID`) follow upstream `adobetv`
+(`AdobeTVVideoIE`): the page's `var bridge =` JSON (no match is upstream's
+`Unable to extract bridged data`), each source with a `format` other than
+`playlist` and a URL as non-fatal `hls` HLS formats (master playlist only)
+or a direct format, updated with the source's millisecond duration,
+kilobyte filesize, `FORMAT-LABEL` format ID, height, integer bitrate and
+width, and the translations' `vttPath` tracks under `language_w3c` (or
+`und`), with the cleaned title and description and the poster thumbnail.
+Translations with only an ISO 639-2 `language_medium` (upstream converts it
+with `ISO639Utils`) are reported as unsupported, and Adobe TV iframes on
+generic pages are not detected. `tests/fixtures/sites/adobetv/` is compared
+with pinned upstream output.
+
 DrTalks videos (`drtalks.com/videos/SLUG`) follow upstream `DrTalksIE`: the
 page's Next.js `video` data (missing keys are upstream's `KeyError`) as a
 `url_transparent` result of its `brightcoveVideoLink` (extracted like

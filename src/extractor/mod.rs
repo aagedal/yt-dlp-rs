@@ -1,5 +1,6 @@
 mod acast;
 pub mod adobepass;
+mod adobetv;
 mod agalega;
 mod aitube;
 mod akamai;
@@ -428,6 +429,7 @@ mod zype;
 pub use acast::{
     ACast, ACastChannel, channel_suitable as acast_channel_suitable, suitable as acast_suitable,
 };
+pub use adobetv::{AdobeTvVideo, suitable as adobetv_suitable};
 pub use agalega::{AGalega, suitable as agalega_suitable};
 pub use aitube::{AitubeKzVideo, suitable as aitube_suitable};
 pub use alibaba::{Alibaba, suitable as alibaba_suitable};
