@@ -1614,6 +1614,17 @@ Māori Television shows (`maoritelevision.com/shows/.../SLUG`) follow upstream
 player, extracted like Brightcove players above.
 `tests/fixtures/sites/maoritv/` is compared with pinned upstream output.
 
+EUscreen items (`[www.]euscreen.eu/item.html?id=ID`) follow upstream
+`EUScreenIE`: the item servlet's screen POST (`actionlist=itempage`), then
+its reply (with `screenid` renamed `screenId`) POSTed back, whose greedy
+`setVideo(...)` and `setData(...)` JSON (through `js_to_json`) gives the
+sources as formats and the original/English titles, duration, both
+summaries, series, episode, provider and screenshot. The live servlet now
+puts more `($end$)put` calls on the `setVideo` line, so upstream's greedy
+pattern captures extra data: `tests/fixtures/sites/euscreen/` (saved
+servlet replies) checks that `Failed to parse JSON` error and HTTP errors
+against pinned upstream output.
+
 European Tour videos (`europeantour.com/dpworld-tour/news/video/SLUG`) follow
 upstream `EuropeanTourIE`: the page's `brightcove-player video-id` and last
 non-empty `"ACCOUNT_ID"` (else upstream's `'NoneType' object has no attribute

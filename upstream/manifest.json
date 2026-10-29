@@ -2671,6 +2671,18 @@
       "scope": "ERRJupiterIE getContentPageData media sources (first-seen order instead of set order), DRM error, metadata and episode fields; ERRArhiivIE content/video sources and info metadata. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "euscreen",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/euscreen.py"
+      ],
+      "rust": [
+        "src/extractor/euscreen.rs",
+        "tests/fixtures/sites/euscreen/"
+      ],
+      "scope": "EUScreenIE servlet POSTs and setVideo/setData JSON (the live replies give upstream's Failed to parse JSON error, compared with pinned upstream output through the fixture proxy); the success path is ported but has no saved fixture"
+    },
+    {
       "name": "lrt",
       "status": "partial",
       "upstream": [
