@@ -69,6 +69,10 @@ result will be recorded that way.
 
 ## Call controls, request scopes and inline manifests
 
+`YoutubeDl::with_keep_partial_on_stop(true)` (`--keep-partial-on-stop`) makes
+SIGINT/SIGTERM during a download act as `Interrupt::stop()`, and fetches a
+merged download's audio-only streams first.
+
 `Interrupt` is a shareable stop/cancel handle (for example a UI's Stop and
 Cancel buttons):
 

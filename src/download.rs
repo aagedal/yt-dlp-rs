@@ -234,6 +234,21 @@ pub(crate) fn check_destination(destination: &Path, options: &DownloadOptions) -
     Ok(())
 }
 
+/// A same-directory temporary file that is published as a result: like
+/// upstream's files, its mode is 0666 reduced by the umask (tempfile's
+/// default is 0600).
+pub(crate) fn media_tempfile(
+    prefix: &str,
+    suffix: &str,
+    parent: &Path,
+) -> std::io::Result<tempfile::NamedTempFile> {
+    let mut builder = tempfile::Builder::new();
+    builder.prefix(prefix).suffix(suffix);
+    #[cfg(unix)]
+    builder.permissions(std::os::unix::fs::PermissionsExt::from_mode(0o666));
+    builder.tempfile_in(parent)
+}
+
 /// [`persist`] for a temporary path.
 pub(crate) fn persist_path(
     path: tempfile::TempPath,
@@ -529,10 +544,7 @@ pub(crate) fn download_file(
         .filter(|p| !p.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
     fs::create_dir_all(parent)?;
-    let mut temporary = tempfile::Builder::new()
-        .prefix(".yt-dlp-rs-")
-        .suffix(".part")
-        .tempfile_in(parent)?;
+    let mut temporary = media_tempfile(".yt-dlp-rs-", ".part", parent)?;
     let mut reporter = Reporter {
         callback,
         attempt: 1,
@@ -737,10 +749,7 @@ fn join_subtitle_fragments(
     if !single {
         joined.extend(packer.finish());
     }
-    let mut output = tempfile::Builder::new()
-        .prefix(".yt-dlp-rs-subtitle-")
-        .suffix(".part")
-        .tempfile_in(parent)?;
+    let mut output = media_tempfile(".yt-dlp-rs-subtitle-", ".part", parent)?;
     output.write_all(&joined)?;
     output.flush()?;
     let bytes = joined.len() as u64;
@@ -939,12 +948,7 @@ fn download_resource(
     fs::create_dir_all(parent)?;
     let mut actual = 0;
     let mut temporary = match resource.part_files {
-        PartFiles::Private => Target::Private(
-            tempfile::Builder::new()
-                .prefix(".yt-dlp-rs-")
-                .suffix(".part")
-                .tempfile_in(parent)?,
-        ),
+        PartFiles::Private => Target::Private(media_tempfile(".yt-dlp-rs-", ".part", parent)?),
         mode => {
             let (path, resume) = match mode {
                 PartFiles::NoPart { resume } => (destination.to_owned(), resume),

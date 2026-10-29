@@ -359,12 +359,11 @@ fn download_with(
         file.seek(SeekFrom::Start(resume_len))?;
         named = Some((file, resume_len));
     } else {
-        private = Some(
-            tempfile::Builder::new()
-                .prefix(".yt-dlp-rs-fragments-")
-                .suffix(".part")
-                .tempfile_in(parent)?,
-        );
+        private = Some(crate::download::media_tempfile(
+            ".yt-dlp-rs-fragments-",
+            ".part",
+            parent,
+        )?);
     }
     let resumed_bytes = named.as_ref().map_or(0, |(_, length)| *length);
     let mut stored = resumed_bytes;

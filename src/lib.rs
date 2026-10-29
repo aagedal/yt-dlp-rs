@@ -209,6 +209,8 @@ pub struct YoutubeDl {
     live_from_start: bool,
     /// `--growing-file` (port extension).
     growing_file: bool,
+    /// `--keep-partial-on-stop` (port extension).
+    keep_partial_on_stop: bool,
     /// The YouTube JavaScript runtime, for live-from-start refetches.
     youtube_runtime: Vec<extractor::JsRuntime>,
     format_sort: FormatSortOptions,
@@ -1115,6 +1117,7 @@ impl YoutubeDl {
             multistreams: (false, false),
             live_from_start: false,
             growing_file: false,
+            keep_partial_on_stop: false,
             youtube_runtime,
             format_sort: FormatSortOptions::default(),
             prefer_best: false,
@@ -2438,6 +2441,16 @@ impl YoutubeDl {
             });
         }
         Ok(jobs)
+    }
+
+    /// `--keep-partial-on-stop` (port extension): SIGINT or SIGTERM during a
+    /// download stops it like [`Interrupt::stop`]: the data so far is
+    /// published at the destination (merged streams merged) and the download
+    /// returns `Error::DownloadStopped`. Growing-file recordings keep their
+    /// own stop handling.
+    pub fn with_keep_partial_on_stop(mut self, keep: bool) -> Self {
+        self.keep_partial_on_stop = keep;
+        self
     }
 
     /// `--growing-file` (port extension): live results are written as one
@@ -4496,6 +4509,16 @@ impl YoutubeDl {
         if self.grows(info) {
             return self.download_growing(info, destination.as_ref(), options, &mut callback);
         }
+        // `--keep-partial-on-stop`: SIGINT/SIGTERM stop the download like
+        // `Interrupt::stop` (the outermost call holds the signal guard).
+        let _signals = self.keep_partial_on_stop.then(control::SignalStop::enter);
+        let mut callback = move |progress| {
+            if control::requested() {
+                std::ops::ControlFlow::Break(())
+            } else {
+                callback(progress)
+            }
+        };
         if ffmpeg_fd {
             let ffmpeg = self.ffmpeg.as_deref().ok_or_else(|| {
                 Error::Reported(
@@ -4934,7 +4957,31 @@ impl YoutubeDl {
             stored = sizes.iter().sum();
             paths = jobs.into_iter().map(|(_, path)| path).collect();
         }
-        for (index, stream) in streams.iter().enumerate().filter(|_| !live) {
+        // `--keep-partial-on-stop` fetches audio-only streams first, so a stop
+        // during the (larger) video stream still has the whole audio.
+        let mut order: Vec<usize> = (0..streams.len()).collect();
+        if self.keep_partial_on_stop {
+            let audio_only = |stream: &VideoFormat| {
+                stream.stream_kind == StreamKind::AudioOnly
+                    || (stream.vcodec.as_deref() == Some("none")
+                        && stream
+                            .acodec
+                            .as_deref()
+                            .is_some_and(|codec| codec != "none"))
+            };
+            order.sort_by_key(|&index| !audio_only(&streams[index]));
+        }
+        // The streams behind `paths`, in download order until sorted below.
+        let mut downloaded: Vec<usize> = if live {
+            (0..streams.len()).collect()
+        } else {
+            Vec::new()
+        };
+        for (index, stream) in order
+            .iter()
+            .map(|&index| (index, &streams[index]))
+            .filter(|_| !live)
+        {
             let path = match upstream {
                 None => workspace
                     .path()
@@ -4950,6 +4997,7 @@ impl YoutubeDl {
                 let bytes = fs::metadata(&path)?.len();
                 stored = stored.saturating_add(bytes);
                 paths.push(path);
+                downloaded.push(index);
                 if callback(DownloadProgress {
                     attempt: 1,
                     downloaded_bytes: bytes,
@@ -5069,6 +5117,7 @@ impl YoutubeDl {
                 Err(Error::DownloadStopped { .. }) => {
                     stored = stored.saturating_add(fs::metadata(&path)?.len());
                     paths.push(path);
+                    downloaded.push(index);
                     stopped = true;
                     break;
                 }
@@ -5086,7 +5135,12 @@ impl YoutubeDl {
                 .checked_add(bytes)
                 .ok_or_else(|| Error::Postprocess("combined stream byte count overflow".into()))?;
             paths.push(path);
+            downloaded.push(index);
         }
+        // Merge inputs follow the selection order.
+        let mut pairs: Vec<(usize, PathBuf)> = downloaded.into_iter().zip(paths).collect();
+        pairs.sort_by_key(|(index, _)| *index);
+        let (downloaded, paths): (Vec<usize>, Vec<PathBuf>) = pairs.into_iter().unzip();
         let Some(executable) = executable else {
             // No merger: the format files are the result.
             return Ok(stored);
@@ -5098,15 +5152,13 @@ impl YoutubeDl {
                 destination.display()
             ));
         }
-        let output = tempfile::Builder::new()
-            .prefix("merged-")
-            .suffix(".part")
-            .tempfile_in(workspace.path())?
-            .into_temp_path();
+        let output =
+            download::media_tempfile("merged-", ".part", workspace.path())?.into_temp_path();
         let oldest = filetime::oldest(paths.iter().map(PathBuf::as_path));
         // Each input's streams: by its kind, else upstream's codec test.
-        let inputs: Vec<merge::Input<'_>> = streams
+        let inputs: Vec<merge::Input<'_>> = downloaded
             .iter()
+            .map(|&index| &streams[index])
             .zip(&paths)
             .map(|(stream, path)| {
                 let (audio, video) = match stream.stream_kind {

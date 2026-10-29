@@ -558,10 +558,7 @@ pub(crate) fn download(
             name.into()
         }
         PartFiles::Private => {
-            let file = tempfile::Builder::new()
-                .prefix(".yt-dlp-rs-")
-                .suffix(".part")
-                .tempfile_in(parent)?;
+            let file = crate::download::media_tempfile(".yt-dlp-rs-", ".part", parent)?;
             let path = file.path().to_owned();
             private = Some(file);
             path

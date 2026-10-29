@@ -162,6 +162,47 @@ thread_local! {
 
 static NEXT_SCOPE: AtomicU64 = AtomicU64::new(1);
 
+/// `--keep-partial-on-stop`: nested downloads holding [`SignalStop`]; while
+/// any does, SIGINT/SIGTERM count as an [`Interrupt::stop`].
+static SIGNAL_STOP: std::sync::Mutex<(usize, Option<crate::interrupt::Guard>)> =
+    std::sync::Mutex::new((0, None));
+static SIGNAL_STOP_ACTIVE: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+/// Treats SIGINT/SIGTERM as a stop while held (the first holder installs
+/// the signal guard, the last one removes it).
+pub(crate) struct SignalStop;
+
+impl SignalStop {
+    pub(crate) fn enter() -> Self {
+        if let Ok(mut state) = SIGNAL_STOP.lock() {
+            if state.0 == 0 {
+                state.1 = Some(crate::interrupt::Guard::install_with_terminate());
+                SIGNAL_STOP_ACTIVE.store(true, Ordering::SeqCst);
+            }
+            state.0 += 1;
+        }
+        Self
+    }
+}
+
+impl Drop for SignalStop {
+    fn drop(&mut self) {
+        if let Ok(mut state) = SIGNAL_STOP.lock() {
+            state.0 = state.0.saturating_sub(1);
+            if state.0 == 0 {
+                SIGNAL_STOP_ACTIVE.store(false, Ordering::SeqCst);
+                state.1 = None;
+            }
+        }
+    }
+}
+
+/// Whether a signal arrived while [`SignalStop`] is held.
+fn signalled() -> bool {
+    SIGNAL_STOP_ACTIVE.load(Ordering::SeqCst) && crate::interrupt::interrupted()
+}
+
 /// Restores the previous context (and removes scoped cookies) when dropped.
 pub(crate) struct Guard {
     previous: Option<Arc<Context>>,
@@ -227,24 +268,26 @@ pub(crate) fn resume(context: Option<Arc<Context>>) -> Guard {
 
 /// Whether the active [`Interrupt`] asks to stop or cancel.
 pub(crate) fn requested() -> bool {
-    ACTIVE.with(|active| {
-        active
-            .borrow()
-            .as_ref()
-            .and_then(|context| context.interrupt.as_ref())
-            .is_some_and(Interrupt::is_requested)
-    })
+    signalled()
+        || ACTIVE.with(|active| {
+            active
+                .borrow()
+                .as_ref()
+                .and_then(|context| context.interrupt.as_ref())
+                .is_some_and(Interrupt::is_requested)
+        })
 }
 
 /// Whether the active [`Interrupt`] is a stop that keeps partial data.
 pub(crate) fn stopping() -> bool {
-    ACTIVE.with(|active| {
-        active
-            .borrow()
-            .as_ref()
-            .and_then(|context| context.interrupt.as_ref())
-            .is_some_and(Interrupt::is_stop)
-    })
+    signalled()
+        || ACTIVE.with(|active| {
+            active
+                .borrow()
+                .as_ref()
+                .and_then(|context| context.interrupt.as_ref())
+                .is_some_and(Interrupt::is_stop)
+        })
 }
 
 /// An extraction checkpoint: `Err` once an interrupt was requested.

@@ -595,6 +595,12 @@ struct Args {
     /// --format-sort fields (needs ffmpeg; yt-dlp-rs extension)
     #[arg(long)]
     growing_file: bool,
+    /// On SIGINT or SIGTERM during a download, stop it and keep what was
+    /// downloaded as a usable file at the final name: whole fragments, or
+    /// the streams so far merged; no postprocessing or archive record
+    /// follows (yt-dlp-rs extension)
+    #[arg(long)]
+    keep_partial_on_stop: bool,
     /// Containers that may be used when merging formats, separated by "/",
     /// e.g. "mp4/mkv"; ignored if no merge is required (currently supported:
     /// avi, flv, mkv, mov, mp4, webm)
@@ -2666,6 +2672,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         downloader = downloader.with_section_timecode(processors.video.clone());
     }
     downloader = downloader.with_growing_file(args.growing_file);
+    downloader = downloader.with_keep_partial_on_stop(args.keep_partial_on_stop);
     if let Some(formats) = &args.merge_output_format {
         downloader =
             downloader.with_merge_output_format(formats.split('/').map(str::to_owned).collect());
@@ -6037,7 +6044,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 processed_info = result.info;
                                 (result.bytes, paths)
                             } else {
-                                let bytes = downloader.download_with_progress(
+                                let bytes = match downloader.download_with_progress(
                                     info,
                                     &path,
                                     DownloadOptions {
@@ -6056,7 +6063,34 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         overwrite: redownload,
                                     },
                                     progress,
-                                )?;
+                                ) {
+                                    // `--keep-partial-on-stop`: the partial file is
+                                    // published and moved like a finished one, without
+                                    // postprocessing or an archive record.
+                                    Err(yt_dlp_rs::Error::DownloadStopped { .. }) => {
+                                        screen!(
+                                            "[download] Download stopped; keeping the partial file"
+                                        );
+                                        // The fixups (an m3u8 download's MPEG-TS to MP4
+                                        // remux) still run; the file is kept if one fails.
+                                        if let Some(fixup) = &processors.fixup
+                                            && let Err(error) =
+                                                downloader.fixup(info, &path, &path, fixup)
+                                        {
+                                            warning!("WARNING: {error}");
+                                        }
+                                        let moved = move_files
+                                            .run(&path, true)
+                                            .map_err(yt_dlp_rs::Error::Reported)?;
+                                        move_print(&moved, info)
+                                            .map_err(yt_dlp_rs::Error::Reported)?;
+                                        return Err(yt_dlp_rs::Error::Reported(
+                                            "Interrupted by user".into(),
+                                        )
+                                        .into());
+                                    }
+                                    result => result?,
+                                };
                                 // Upstream `fixup()` for an unmerged, unprocessed download.
                                 if let Some(fixup) = &processors.fixup {
                                     downloader.fixup(info, &path, &path, fixup)?;
