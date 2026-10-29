@@ -3656,6 +3656,19 @@ reads past the end). Episodes without a string ID remain explicit
 native errors. `tests/fixtures/sites/podbayfm/` is compared with pinned
 upstream output.
 
+Podchaser episodes (`[www.]podchaser.com/podcasts/SLUG-PODCAST/episodes/SLUG-ID`)
+follow upstream `PodchaserIE`: the `api.podchaser.com/podcasts/PODCAST` and
+`.../episodes/ID/player_ids` JSON as an untyped audio result (`vcodec: none`)
+with the title, description, audio URL, thumbnail, duration, air date
+timestamp, rating, series and series ID, the summary and podcast categories
+(deduplicated, always a list), tags and the episode page URL built from the
+slugs (each cut to 30 characters), with upstream's `Unable to extract episode
+ID` error. Podcasts (`.../podcasts/SLUG-PODCAST`) are playlists of the
+`list/episode` API's 100-episode pages (JSON POSTs), read like upstream's
+`OnDemandPagedList`: only pages holding requested entries are fetched, and a
+failed page ends the list with its error reported in place.
+`tests/fixtures/sites/podchaser/` is compared with pinned upstream output.
+
 Rinse FM episodes (`rinse.fm/episodes/SLUG`) follow upstream `RinseFMIE`: the
 query API's episode `entry` as an untyped audio result (`vcodec: none`) with
 its title, release timestamp, imgix thumbnail and episode page URL, upstream's

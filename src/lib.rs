@@ -777,6 +777,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "PlayerFm",
     "PodbayFM",
     "PodbayFMChannel",
+    "Podchaser",
     "Popcorntimes",
     "PopcornTV",
     "PremiershipRugby",
@@ -1711,6 +1712,7 @@ impl YoutubeDl {
                 Box::new(extractor::AudiodraftGeneric),
                 Box::new(extractor::Chilloutzone),
                 Box::new(extractor::Mojevideo),
+                Box::new(extractor::Podchaser),
                 Box::new(extractor::SkyNewsAU),
                 Box::new(extractor::TvaNouvelles),
                 Box::new(extractor::TvaNouvellesArticle),
@@ -2686,6 +2688,8 @@ impl YoutubeDl {
                 extractor::fetch_peertube_pages
             } else if extractor::podbayfm_pending_state(&pending.state) {
                 extractor::fetch_podbayfm_pages
+            } else if extractor::podchaser_pending_state(&pending.state) {
+                extractor::fetch_podchaser_pages
             } else if extractor::yappy_pending_state(&pending.state) {
                 extractor::fetch_yappy_pages
             } else if extractor::lefigaro_pending_state(&pending.state) {
@@ -2726,6 +2730,7 @@ impl YoutubeDl {
                 || extractor::spreaker_pending_state(&pending.state)
                 || extractor::simplecast_pending_state(&pending.state)
                 || extractor::podbayfm_pending_state(&pending.state)
+                || extractor::podchaser_pending_state(&pending.state)
                 || extractor::nzz_pending_state(&pending.state);
             playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
                 .map(|state| PendingEntries { state });

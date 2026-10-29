@@ -1,0 +1,31 @@
+[
+ {
+  "url": "https://www.podchaser.com/podcasts/cum-town-36924/episodes/ep-285-freeze-me-off-104365585",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.podchaser.com/podcasts/the-bone-zone-28853",
+  "args": [
+   "-J",
+   "-I",
+   "1:2"
+  ]
+ },
+ {
+  "url": "https://www.podchaser.com/podcasts/the-bone-zone-28853",
+  "args": [
+   "--print",
+   "%(id)s %(title)s %(webpage_url)s",
+   "-I",
+   "99:101"
+  ]
+ },
+ {
+  "url": "https://www.podchaser.com/podcasts/cum-town-36924/episodes/missing-1",
+  "args": [
+   "-J"
+  ]
+ }
+]
