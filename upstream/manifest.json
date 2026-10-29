@@ -3880,6 +3880,18 @@
       "scope": "ScreenRecIE customUrl HLS formats, OpenGraph/<title> fallback and warnings compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "screencast",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/screencast.py"
+      ],
+      "rust": [
+        "src/extractor/screencast.rs",
+        "tests/fixtures/sites/screencast/"
+      ],
+      "scope": "ScreencastIE embed, Flash variables, og:video and MediaContentUrl media URL lookups with OpenGraph metadata. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "screencastify",
       "status": "partial",
       "upstream": [

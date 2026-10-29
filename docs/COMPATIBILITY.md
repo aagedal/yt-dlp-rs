@@ -530,6 +530,16 @@ episode or program title and description, the `$$IMAGESIZE$$` thumbnail, the
 time are an unsupported error (processing would fill their `None` start).
 `tests/fixtures/sites/ruv/` is compared with pinned upstream output.
 
+Screencast videos (`[www.]screencast.com/t/ID`) follow upstream
+`ScreencastIE`: the page (after its redirects) is searched for the
+QuickTime `<embed name="Video">` source, the `flashVars` (or comma-separated
+`initParams`) `content` URL quoted like upstream, an `og:video` meta's
+`src=` value, a `MediaContentUrl` and finally the `og:video` meta itself (none
+is upstream's `Cannot find video`), as the single media URL, with the
+OpenGraph title (else the page's title patterns), thumbnail and description
+(else the `description` meta). `tests/fixtures/sites/screencast/` (media URL
+signatures redacted) is compared with pinned upstream output.
+
 Screencastify videos (`watch.screencastify.com/v/ID`,
 `app.screencastify.com/v2|v3/watch/ID`) follow upstream `ScreencastifyIE`:
 the umbrella service's watch JSON (title, description, uploader), its DASH

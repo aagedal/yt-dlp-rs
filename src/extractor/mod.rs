@@ -312,6 +312,7 @@ mod s4c;
 mod sapo;
 mod sbs;
 mod screen9;
+mod screencast;
 mod screencastify;
 mod screenrec;
 mod sen;
@@ -941,6 +942,7 @@ pub use s4c::{S4c, S4cSeries, series_suitable as s4c_series_suitable, suitable a
 pub use sapo::{Sapo, suitable as sapo_suitable};
 pub use sbs::{Sbs, suitable as sbs_suitable};
 pub use screen9::{Screen9, suitable as screen9_suitable};
+pub use screencast::{Screencast, suitable as screencast_suitable};
 pub use screencastify::{Screencastify, suitable as screencastify_suitable};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
