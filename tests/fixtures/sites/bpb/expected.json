@@ -1,0 +1,80 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.bpb.de/mediathek/podcasts/endlagersuche/315813/folge-1-eine-einfuehrung/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"315813\", \"title\": \"Folge 1: Eine Einf\\u00fchrung\", \"series\": \"Auf Endlagersuche. Der deutsche Weg zu einem sicheren Atomm\\u00fclllager\", \"description\": \"Die Podcast-Reihe steht unter dem Obertitel \\\"Auf Endlagersuche. Der deutsche Weg zu einem sicheren Atomm\\u00fclllager\\\". Warum eine gesellschaftliche Auseinandersetzung mit dem Thema so wichtig ist, erkl\\u00e4ren Martin Langebach von der Bundeszentrale f\\u00fcr politische Bildung und der Journalist Axel Schr\\u00f6der, der mit Expertinnen und Experten \\u00fcber die Zusammenh\\u00e4nge und Hintergr\\u00fcnde des Suchverfahrens gesprochen hat. In der ersten Podcastfolge erkl\\u00e4rt er, mit wem er Interviews gef\\u00fchrt hat und warum es auf eine Frage zur Endlagersuche oft viele unterschiedliche Antworten gibt.\\n\\nTon: Frank Merfort Sprecherin: Nina Schwabe Redaktion: Martin Langebach, Bundeszentrale f\\u00fcr politische Bildung Produktion: 18.09.2020 Spieldauer: 8 Min. hrsg. von: Bundeszentrale f\\u00fcr politische Bildung\", \"creators\": [\"Axel Schr\\u00f6der\"], \"uploader\": \"Bundeszentrale f\\u00fcr politische Bildung\", \"release_date\": \"20200921\", \"tags\": [\"Atomenergie\", \"Endlager\", \"hoch-radioaktiver Abfall\", \"Endlagersuche\", \"Atomm\\u00fcll\", \"Atomendlager\", \"Gorleben\", \"Deutschland\"], \"formats\": [{\"url\": \"https://mediathek.bpb.de/audio/1/315813.mp3\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"quality\": 0, \"format_note\": null, \"format_id\": \"mp3\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\"}], \"thumbnail\": \"https://www.bpb.de/cache/images/3/315813_teaser_16x9_1240.png?847B3\", \"webpage_url\": \"https://www.bpb.de/mediathek/podcasts/endlagersuche/315813/folge-1-eine-einfuehrung/\", \"original_url\": \"https://www.bpb.de/mediathek/podcasts/endlagersuche/315813/folge-1-eine-einfuehrung/\", \"webpage_url_basename\": \"folge-1-eine-einfuehrung\", \"webpage_url_domain\": \"bpb.de\", \"extractor\": \"Bpb\", \"extractor_key\": \"Bpb\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://www.bpb.de/cache/images/3/315813_teaser_16x9_1240.png?847B3\", \"id\": \"0\"}], \"display_id\": \"315813\", \"fulltitle\": \"Folge 1: Eine Einf\\u00fchrung\", \"release_year\": 2020, \"creator\": \"Axel Schr\\u00f6der\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://mediathek.bpb.de/audio/1/315813.mp3\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"quality\": 0, \"format_id\": \"mp3\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\", \"_filename\": \"Folge 1\\uff1a Eine Einf\\u00fchrung [315813].mp3\", \"filename\": \"Folge 1\\uff1a Eine Einf\\u00fchrung [315813].mp3\", \"__write_download_archive\": false}], \"url\": \"https://mediathek.bpb.de/audio/1/315813.mp3\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"quality\": 0, \"format_note\": null, \"format_id\": \"mp3\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bpb.de/mediathek/video/522184/krieg-flucht-und-falschmeldungen-wirstattdesinformation-2/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"522184\", \"title\": \"Krieg, Flucht und Falschmeldungen: #wirstattDesinformation 2\", \"series\": \"Narrative \\u00fcber den Krieg Russlands gegen die Ukraine (NUK)\", \"description\": \"#wirstattDesinformation \\u2013 das zweite Video der Reihe \\u201eNarrative \\u00fcber den Krieg Russlands gegen die Ukraine (NUK)\\u201c gibt Einblicke zu Desinformationen gegen ukrainische Gefl\\u00fcchtete, die in sichere europ\\u00e4ische L\\u00e4nder wie Deutschland fliehen wollen.\\n\\nUkrainische Kriegsfl\\u00fcchtende sollen gegen den Westen und die eigene Regierung gestimmt und von der Flucht in Sicherheit abgehalten werden. Menschen sollen davon \\u00fcberzeugt werden, dass Russland sie verteidigt und sie in Russland oder in den besetzten Gebieten bessere Chancen als in Europa haben. Zudem soll Misstrauen zwischen UkrainerInnen und Menschen in Aufnahmel\\u00e4ndern ges\\u00e4t werden, um dort die Integration zu erschweren und den sozialen Frieden zu gef\\u00e4hrden. Das Video erz\\u00e4hlt eine fiktive Geschichte, die auf authentischen Erlebnissen und Fluchterfahrungen beruht. Die Geschichte handelt von einer vierk\\u00f6pfigen Familie, die durch den Krieg auseinander gerissen wird. W\\u00e4hrend die Mutter mit den beiden Kinder \\u00fcber Polen nach Deutschland flieht, verbleibt der Vater in der Ukraine, um sich den ukrainischen Sicherheitskr\\u00e4ften anzuschlie\\u00dfen. W\\u00e4hrend ihrer Fahrt nach Deutschland werden Mutter und Kinder immer wieder mit Nachrichten aus dem Internet konfrontiert, die sie von der Flucht abhalten sollen. Hier handelt es sich um Inhalte, die Desinformation darstellen.\\nDes-, Mis- und Malinformationen stellen eine Gefahr f\\u00fcr demokratische \\u00d6ffentlichkeiten dar. Daher ist es wichtig zu verstehen, wie und welche Narrative der russischen Regierung zu welchem Zweck eingesetzt werden. Mit dem Wissen, wie sie verbreitet werden und wen sie ansprechen sollen, lassen sich Desinformation und Falschmeldungen aufkl\\u00e4ren und bek\\u00e4mpfen. Damit wird gleichzeitig einer voranschreitenden Manipulation sowie der Spaltung in zwei Lager entgegengewirkt.\\nIm Auftrag der Bundeszentrale f\\u00fcr politische Bildung/bpb produziert das Institute for Strategic Dialogue Germany gGmbH (ISD) dazu eine vierteilige Videoreihe in deutscher, russischer und arabischer Sprache, die russischen Narrativen im Zusammenhang mit dem Krieg in der Ukraine auf den Grund geht, diese analysiert und einordnet.\", \"creators\": [\"Institute for Strategic Dialogue Germany gGmbH (ISD)\"], \"uploader\": \"Bundeszentrale f\\u00fcr politische Bildung\", \"release_date\": \"20230621\", \"tags\": [], \"formats\": [{\"url\": \"https://mediathek.bpb.de/video/1/522184/mp4-av1-low.mp4\", \"ext\": \"mp4\", \"vcodec\": null, \"quality\": 0, \"format_note\": \"low\", \"format_id\": \"mp4-low-0\", \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-low-0 - 720p (low)\"}, {\"url\": \"https://mediathek.bpb.de/video/1/522184/mp4-h264-low.mp4\", \"ext\": \"mp4\", \"vcodec\": null, \"quality\": 0, \"format_note\": \"low\", \"format_id\": \"mp4-low-1\", \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-low-1 - 720p (low)\"}, {\"url\": \"https://mediathek.bpb.de/video/1/522184/mp4-av1-high.mp4\", \"ext\": \"mp4\", \"vcodec\": null, \"quality\": 10, \"format_note\": \"high\", \"format_id\": \"mp4-high-0\", \"height\": 1080, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-high-0 - 1080p (high)\"}, {\"url\": \"https://mediathek.bpb.de/video/1/522184/mp4-h264-high.mp4\", \"ext\": \"mp4\", \"vcodec\": null, \"quality\": 10, \"format_note\": \"high\", \"format_id\": \"mp4-high-1\", \"height\": 1080, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-high-1 - 1080p (high)\"}], \"thumbnail\": \"https://www.bpb.de/cache/images/4/522184_teaser_16x9_1240.png?DD6E5\", \"webpage_url\": \"https://www.bpb.de/mediathek/video/522184/krieg-flucht-und-falschmeldungen-wirstattdesinformation-2/\", \"original_url\": \"https://www.bpb.de/mediathek/video/522184/krieg-flucht-und-falschmeldungen-wirstattdesinformation-2/\", \"webpage_url_basename\": \"krieg-flucht-und-falschmeldungen-wirstattdesinformation-2\", \"webpage_url_domain\": \"bpb.de\", \"extractor\": \"Bpb\", \"extractor_key\": \"Bpb\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://www.bpb.de/cache/images/4/522184_teaser_16x9_1240.png?DD6E5\", \"id\": \"0\"}], \"display_id\": \"522184\", \"fulltitle\": \"Krieg, Flucht und Falschmeldungen: #wirstattDesinformation 2\", \"release_year\": 2023, \"creator\": \"Institute for Strategic Dialogue Germany gGmbH (ISD)\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://mediathek.bpb.de/video/1/522184/mp4-h264-high.mp4\", \"ext\": \"mp4\", \"quality\": 10, \"format_note\": \"high\", \"format_id\": \"mp4-high-1\", \"height\": 1080, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-high-1 - 1080p (high)\", \"_filename\": \"Krieg, Flucht und Falschmeldungen\\uff1a #wirstattDesinformation 2 [522184].mp4\", \"filename\": \"Krieg, Flucht und Falschmeldungen\\uff1a #wirstattDesinformation 2 [522184].mp4\", \"__write_download_archive\": false}], \"url\": \"https://mediathek.bpb.de/video/1/522184/mp4-h264-high.mp4\", \"ext\": \"mp4\", \"vcodec\": null, \"quality\": 10, \"format_note\": \"high\", \"format_id\": \"mp4-high-1\", \"height\": 1080, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-high-1 - 1080p (high)\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bpb.de/mediathek/video/522184/krieg-flucht-und-falschmeldungen-wirstattdesinformation-2/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Bpb] Extracting URL: https://www.bpb.de/mediathek/video/522184/krieg-flucht-und-falschmeldungen-wirstattdesinformation-2/",
+    "[Bpb] 522184: Downloading webpage",
+    "[info] Available formats for 522184:",
+    "ID         EXT RESOLUTION | PROTO | VCODEC  ACODEC  MORE INFO",
+    "-------------------------------------------------------------",
+    "mp4-low-0  mp4 720p       | https | unknown unknown low",
+    "mp4-low-1  mp4 720p       | https | unknown unknown low",
+    "mp4-high-0 mp4 1080p      | https | unknown unknown high",
+    "mp4-high-1 mp4 1080p      | https | unknown unknown high"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bpb.de/mediathek/video/1/synthetic-noplayer/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [Bpb] unable to extract author; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Bpb] unable to extract publisher; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Bpb] unable to extract date; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [Bpb] 1: Unable to extract bpb-player; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bpb.de/mediathek/video/404/missing/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Bpb] 404: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,41 @@
+{
+  "account_id": "4460760524001",
+  "autoplay": false,
+  "compatibility": true,
+  "embed_id": "default",
+  "flashHlsDisabledByStudio": false,
+  "fullscreenControl": true,
+  "id": "default",
+  "playOnSelect": null,
+  "player": {
+    "inactive": false,
+    "template": {
+      "locked": false,
+      "name": "single-video-template",
+      "version": "5.28.1"
+    }
+  },
+  "player_id": "default",
+  "player_name": "Brightcove Default Player",
+  "playlist": null,
+  "plugins": [
+  ],
+  "preload": "auto",
+  "scripts": [
+  ],
+  "skin": "graphite",
+  "studio_configuration": {
+    "player": {
+      "adjusted": true,
+      "height": 150,
+      "previous_version": "5.19.2",
+      "width": 300
+    }
+  },
+  "stylesheets": [
+  ],
+  "updated_at": "2017-06-24T13:21:24.261Z",
+  "video_cloud": {
+    "policy_key": "BCpkFIXTURE0004"
+  }
+}

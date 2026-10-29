@@ -1,0 +1,33 @@
+{
+ "routes": [
+  {
+   "url": "https://germanupa.de/mediathek/4-figma-beratung-deine-sprechstunde-fuer-figma-fragen",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://germanupa.de/mediathek/synthetic-members",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-members.html"
+  },
+  {
+   "url": "https://germanupa.de/mediathek/synthetic-audio",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-audio.html"
+  },
+  {
+   "url": "https://germanupa.de/mediathek/synthetic-missing",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<h1>Not found</h1>"
+  }
+ ]
+}

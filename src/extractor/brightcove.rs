@@ -60,6 +60,26 @@ pub(crate) fn unsmuggle(url: &str) -> (String, Map<String, Value>) {
     }
 }
 
+/// `_merge_subtitles(...)` as Brightcove uses it: a track whose URL the
+/// target language already has is dropped (`_merge_subtitle_items`; the
+/// data-URI key is not modelled).
+fn merge_subtitles(target: &mut crate::Subtitles, source: crate::Subtitles) {
+    for (language, tracks) in source.entries {
+        match target.entries.iter_mut().find(|(key, _)| *key == language) {
+            Some((_, existing)) => {
+                let known: Vec<String> =
+                    existing.iter().map(|track| track.url.to_string()).collect();
+                existing.extend(
+                    tracks
+                        .into_iter()
+                        .filter(|track| !known.contains(&track.url.to_string())),
+                );
+            }
+            None => target.entries.push((language, tracks)),
+        }
+    }
+}
+
 /// `BrightcoveNewIE._extract_brightcove_urls(ie, webpage)`: player iframes
 /// (protocol-relative ones as `https:`), then `<video data-video-id>` tags
 /// with a player script (or `data-account`/`data-player`/`data-embed`).
@@ -368,7 +388,7 @@ fn parse_metadata(
                 false,
             ) {
                 fmts = stream.formats;
-                super::html5::merge_subtitles(&mut subtitles, stream.subtitles);
+                merge_subtitles(&mut subtitles, stream.subtitles);
             }
         } else if ext.as_deref() == Some("mpd") {
             let Some(src) = src else { continue };
@@ -382,7 +402,7 @@ fn parse_metadata(
                 "Downloading MPD manifest",
             ) {
                 fmts = stream.formats;
-                super::html5::merge_subtitles(&mut subtitles, stream.subtitles);
+                merge_subtitles(&mut subtitles, stream.subtitles);
             }
         } else {
             let streaming_src = text("streaming_src").filter(|src| !src.is_empty());
@@ -511,7 +531,7 @@ fn parse_metadata(
                 .to_lowercase();
             let ext = super::direct::determine_ext(track_url.as_str())
                 .unwrap_or_else(|| "unknown_video".into());
-            super::html5::merge_subtitles(
+            merge_subtitles(
                 &mut subtitles,
                 crate::Subtitles {
                     entries: vec![(

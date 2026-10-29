@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://video.nest.com/api/dropcam/cameras.get_by_public_token?token=4fvYdSo8AX",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "camera-4fvYdSo8AX.json"
+  },
+  {
+   "url": "https://video.nest.com/api/dropcam/cameras.get_by_public_token?token=nouuid",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "camera-no-uuid.json"
+  },
+  {
+   "url": "https://video.nest.com/api/dropcam/cameras.get_by_public_token?token=nocamera",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "camera-empty.json"
+  },
+  {
+   "url": "https://stream-us1-alfa.dropcam.com/nexus_aac/76ef7d610ada4b61800d4d698c52fa30/playlist.m3u8?public=4fvYdSo8AX",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "playlist-4fvYdSo8AX.m3u8"
+  },
+  {
+   "url": "https://video.nest.com/api/dropcam/videos.get_by_filename?filename=34e0432adc3c46a98529443d8ad5aa76.mp4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "clip-34e0432adc3c46a98529443d8ad5aa76.json"
+  }
+ ]
+}

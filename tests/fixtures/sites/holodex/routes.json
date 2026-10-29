@@ -1,0 +1,36 @@
+{
+ "routes": [
+  {
+   "url": "https://holodex.net/api/v2/playlist/239",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 239, \"name\": \"Synthetic playlist\", \"videos\": [{\"id\": \"BaW_jenozKc\"}, {\"id\": \"dQw4w9WgXcQ\"}, {\"id\": \"BaW_jenozKc\"}]}"
+  },
+  {
+   "url": "https://holodex.net/api/v2/playlist/404",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"Not found\"}"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "youtube-watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "youtube-visionos.json"
+  }
+ ]
+}

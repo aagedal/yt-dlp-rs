@@ -1,0 +1,115 @@
+{
+ "routes": [
+  {
+   "url": "https://www.nzherald.co.nz/travel/pencarrow-coastal-trail/HDVTPJEPP46HJ2UEMK4EGD2DFI/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "00-www-nzherald-co-nz-travel-pencarrow-coastal-trail-HDVTPJEPP46HJ2UEMK4EGD2DFI.html"
+  },
+  {
+   "url": "https://players.brightcove.net/1308227299001/enb45B5M4_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "01-players-brightcove-net-1308227299001-enb45B5M4-default-config-json.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/1308227299001/videos/6261791733001",
+   "headers": {
+    "Content-Type": "application/json; charset=UTF-8"
+   },
+   "body_file": "02-edge-api-brightcove-com-playback-v1-accounts-1308227299001-videos-6261791733001.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkFIXTURE0003"
+   }
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/1308227299001/99ec7c26-2b0f-4aca-92b5-67089a88e275/10s/master.m3u8?fastly_token=NmIwODk0NjNfNjYzNGRlNTFiYTYxOWNmMjlmMTk5ZGI5NTQ0ZDkxOGIyNzMyYTBjMjJiYzQzNjA1ZGU4ODA1YmEyN2I3ZmE2Mg%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "03-manifest-prod-boltdns-net-manifest-v1-hls-v4-clear-1308227299001-99ec7c26-2b0f-4aca-92b5-6.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/1308227299001/99ec7c26-2b0f-4aca-92b5-67089a88e275/10s/master.m3u8?fastly_token=NmIwODk0NjNfNjYzNGRlNTFiYTYxOWNmMjlmMTk5ZGI5NTQ0ZDkxOGIyNzMyYTBjMjJiYzQzNjA1ZGU4ODA1YmEyN2I3ZmE2Mg%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "04-manifest-prod-boltdns-net-manifest-v1-hls-v4-clear-1308227299001-99ec7c26-2b0f-4aca-92b5-6.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/1308227299001/99ec7c26-2b0f-4aca-92b5-67089a88e275/6s/manifest.mpd?fastly_token=NmIwODk0NjNfNjY4NzI5OTJlNjVhMjUyMmNhMjg1YTU3NTM0NmYxYjIzZWE4YjA5ZTIyMmU2ZTY0YzFjMWQyZDdiYjA4YmZkOQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "05-manifest-prod-boltdns-net-manifest-v1-dash-live-baseurl-clear-1308227299001-99ec7c26-2b0f-.mpd"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/1308227299001/99ec7c26-2b0f-4aca-92b5-67089a88e275/6s/manifest.mpd?fastly_token=NmIwODk0NjNfNjY4NzI5OTJlNjVhMjUyMmNhMjg1YTU3NTM0NmYxYjIzZWE4YjA5ZTIyMmU2ZTY0YzFjMWQyZDdiYjA4YmZkOQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "06-manifest-prod-boltdns-net-manifest-v1-dash-live-baseurl-clear-1308227299001-99ec7c26-2b0f-.mpd"
+  },
+  {
+   "url": "https://www.nzherald.co.nz/nz/queen-elizabeth-death-nz-public-holiday-announced-for-september-26/CEOPBSXO2JDCLNK3H7E3BIE2FA/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "07-www-nzherald-co-nz-nz-queen-elizabeth-death-nz-public-holiday-announced-for-september-26-C.html"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/1308227299001/videos/6312191736112",
+   "headers": {
+    "Content-Type": "application/json; charset=UTF-8"
+   },
+   "body_file": "08-edge-api-brightcove-com-playback-v1-accounts-1308227299001-videos-6312191736112.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkFIXTURE0003"
+   }
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/1308227299001/fdd2b7d8-faed-41e2-bece-c2f9d5755832/10s/master.m3u8?fastly_token=NmIwODk1OTJfZDdlMjZjYjMxNTRlNTgzOGU5OTEzNzIxYzJhMWViMTA1M2E3MzQyMmUyZjNkZWZkOTA3MzgyMzA3ZTUxMGMwMw%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "09-manifest-prod-boltdns-net-manifest-v1-hls-v4-clear-1308227299001-fdd2b7d8-faed-41e2-bece-c.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/1308227299001/fdd2b7d8-faed-41e2-bece-c2f9d5755832/10s/master.m3u8?fastly_token=NmIwODk1OTJfZDdlMjZjYjMxNTRlNTgzOGU5OTEzNzIxYzJhMWViMTA1M2E3MzQyMmUyZjNkZWZkOTA3MzgyMzA3ZTUxMGMwMw%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "10-manifest-prod-boltdns-net-manifest-v1-hls-v4-clear-1308227299001-fdd2b7d8-faed-41e2-bece-c.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/1308227299001/fdd2b7d8-faed-41e2-bece-c2f9d5755832/6s/manifest.mpd?fastly_token=NmIwODk1OTJfMDY2ZWFiMmIxOTcyYTVlNjZhYzZhYmNmZWU5NjJhNDlhNjM0MmFiOWYyOTA2ODU4MWNiYTUzNTFjZWViYTViYw%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "11-manifest-prod-boltdns-net-manifest-v1-dash-live-baseurl-clear-1308227299001-fdd2b7d8-faed-.mpd"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/1308227299001/fdd2b7d8-faed-41e2-bece-c2f9d5755832/6s/manifest.mpd?fastly_token=NmIwODk1OTJfMDY2ZWFiMmIxOTcyYTVlNjZhYzZhYmNmZWU5NjJhNDlhNjM0MmFiOWYyOTA2ODU4MWNiYTUzNTFjZWViYTViYw%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "12-manifest-prod-boltdns-net-manifest-v1-dash-live-baseurl-clear-1308227299001-fdd2b7d8-faed-.mpd"
+  },
+  {
+   "url": "https://www.nzherald.co.nz/nz/synthetic/no-video/SYNTHETICNOVIDEO1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script>Fusion.globalContent = {\"video\": {}};</script></body></html>"
+  },
+  {
+   "url": "https://www.nzherald.co.nz/nz/synthetic/fusion/FUSIONBRIGHTCOVE1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script>Fusion.globalContent = {\"brightcoveId\": \"6261791733001\"};</script></body></html>"
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.lemonde.fr/police-justice/video/2016/01/19/synthetic-digiteka_4849702_1653578.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3x5x55k\", \"formats\": [{\"url\": \"https://ultimedia-pd.test/3x5x55k_360.mp4\", \"format_id\": \"mp4_360\", \"height\": 360, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4_360 - 360p\"}, {\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"https://ultimedia-hls.test/3x5x55k/360/index.m3u8\", \"manifest_url\": \"https://ultimedia-hls.test/3x5x55k/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"url\": \"https://ultimedia-pd.test/3x5x55k_720.mp4\", \"format_id\": \"mp4_720\", \"height\": 720, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4_720 - 720p\"}], \"subtitles\": {}, \"title\": \"Il est passionn\\u00e9 de DS\", \"thumbnail\": \"https://ultimedia.test/3x5x55k.jpg\", \"duration\": 89, \"timestamp\": 1760285363, \"uploader_id\": \"3pz33\", \"original_url\": \"https://www.lemonde.fr/police-justice/video/2016/01/19/synthetic-digiteka_4849702_1653578.html\", \"webpage_url\": \"https://www.ultimedia.com/deliver/generic/iframe/mdtk/01836272/src/3x5x55k/zone/1\", \"webpage_url_basename\": \"1\", \"webpage_url_domain\": \"ultimedia.com\", \"extractor\": \"Digiteka\", \"extractor_key\": \"Digiteka\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://ultimedia.test/3x5x55k.jpg\", \"id\": \"0\"}], \"display_id\": \"3x5x55k\", \"fulltitle\": \"Il est passionn\\u00e9 de DS\", \"duration_string\": \"1:29\", \"upload_date\": \"20251012\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://ultimedia-pd.test/3x5x55k_720.mp4\", \"format_id\": \"mp4_720\", \"height\": 720, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4_720 - 720p\", \"_filename\": \"Il est passionn\\u00e9 de DS [3x5x55k].mp4\", \"filename\": \"Il est passionn\\u00e9 de DS [3x5x55k].mp4\", \"__write_download_archive\": false}], \"url\": \"https://ultimedia-pd.test/3x5x55k_720.mp4\", \"format_id\": \"mp4_720\", \"height\": 720, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4_720 - 720p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.lemonde.fr/police-justice/video/2016/01/19/missing_4849702_1653578.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Lemonde] missing_4849702_1653578: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

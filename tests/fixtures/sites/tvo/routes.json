@@ -1,0 +1,90 @@
+{
+ "routes": [
+  {
+   "url": "https://hmy0rc1bo2.execute-api.ca-central-1.amazonaws.com/graphql",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "00-hmy0rc1bo2-execute-api-ca-central-1-amazonaws-com-graphql.json",
+   "request_body": [
+    "/video/how-can-ontario-survive-the-trade-war"
+   ]
+  },
+  {
+   "url": "https://players.brightcove.net/18140038001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "01-players-brightcove-net-18140038001-default-default-config-json.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/18140038001/videos/6377531034112",
+   "headers": {
+    "Content-Type": "application/json; charset=UTF-8"
+   },
+   "body_file": "02-edge-api-brightcove-com-playback-v1-accounts-18140038001-videos-6377531034112.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkFIXTURE0005"
+   }
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/18140038001/679c8d34-696d-4008-99b5-a84a83f6ec8b/10s/master.m3u8?fastly_token=NmFlYzRlOTVfM2IxOThkYmU5N2Y0ZmRhOGNjOTQ4ZmVkNjhhZTZjYzZiNTUyZDk5NDFhYWM1ZjIzZDM1NzRlZWUxOTUwMDAwMg%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "03-manifest-prod-boltdns-net-manifest-v1-hls-v4-clear-18140038001-679c8d34-696d-4008-99b5-a84.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/18140038001/679c8d34-696d-4008-99b5-a84a83f6ec8b/10s/master.m3u8?fastly_token=NmFlYzRlOTVfM2IxOThkYmU5N2Y0ZmRhOGNjOTQ4ZmVkNjhhZTZjYzZiNTUyZDk5NDFhYWM1ZjIzZDM1NzRlZWUxOTUwMDAwMg%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "04-manifest-prod-boltdns-net-manifest-v1-hls-v4-clear-18140038001-679c8d34-696d-4008-99b5-a84.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/18140038001/679c8d34-696d-4008-99b5-a84a83f6ec8b/6s/manifest.mpd?fastly_token=NmFlYzRlOTVfNzNhMDkzMjU5MmY3MmVjYmM1OTI3MTAyZDlmZGM1ZTgzOWI0OGNhMzU5OTZlYWVjNGVmMjA5ZWE2MzBjMTYyMQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "05-manifest-prod-boltdns-net-manifest-v1-dash-live-baseurl-clear-18140038001-679c8d34-696d-40.mpd"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/18140038001/679c8d34-696d-4008-99b5-a84a83f6ec8b/6s/manifest.mpd?fastly_token=NmFlYzRlOTVfNzNhMDkzMjU5MmY3MmVjYmM1OTI3MTAyZDlmZGM1ZTgzOWI0OGNhMzU5OTZlYWVjNGVmMjA5ZWE2MzBjMTYyMQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "06-manifest-prod-boltdns-net-manifest-v1-dash-live-baseurl-clear-18140038001-679c8d34-696d-40.mpd"
+  },
+  {
+   "url": "https://hmy0rc1bo2.execute-api.ca-central-1.amazonaws.com/graphql",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "07-hmy0rc1bo2-execute-api-ca-central-1-amazonaws-com-graphql.json",
+   "request_body": [
+    "/video/documentaries/the-pitch"
+   ]
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/18140038001/videos/6382500333112",
+   "status": 403,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "08-edge-api-brightcove-com-playback-v1-accounts-18140038001-videos-6382500333112.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkFIXTURE0005"
+   }
+  },
+  {
+   "url": "https://hmy0rc1bo2.execute-api.ca-central-1.amazonaws.com/graphql",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_body": [
+    "/video/synthetic-no-video"
+   ],
+   "body": "{\"data\":{\"getTVOOrgVideo\":null}}"
+  }
+ ]
+}

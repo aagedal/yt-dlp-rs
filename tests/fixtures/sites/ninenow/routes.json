@@ -1,0 +1,192 @@
+{
+ "routes": [
+  {
+   "url": "https://www.9now.com.au/today/season-2025/clip-cm8hw9h5z00080hquqa5hszq7",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "00-www-9now-com-au-today-season-2025-clip-cm8hw9h5z00080hquqa5hszq7.html"
+  },
+  {
+   "url": "https://players.brightcove.net/4460760524001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "01-players-brightcove-net-4460760524001-default-default-config-json.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/4460760524001/videos/6370295582112",
+   "headers": {
+    "Content-Type": "application/json; charset=UTF-8"
+   },
+   "body_file": "02-edge-api-brightcove-com-playback-v1-accounts-4460760524001-videos-6370295582112.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkFIXTURE0004"
+   }
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v3/clear/4460760524001/9c5f893f-e7cb-4940-92dc-f5df6ba47d14/10s/master.m3u8?fastly_token=NmFlNGZiNzRfZWVkMTdlYjE4ZWE0MmMyZTE2Mzc5NzcxMDYwYzhhMzEwYjJlMDM0NTQ5NGU1NDczODBlMDU2NTM3YjVkZDY5ZA%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "03-manifest-prod-boltdns-net-manifest-v1-hls-v3-clear-4460760524001-9c5f893f-e7cb-4940-92dc-f.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v3/clear/4460760524001/9c5f893f-e7cb-4940-92dc-f5df6ba47d14/10s/master.m3u8?fastly_token=NmFlNGZiNzRfZWVkMTdlYjE4ZWE0MmMyZTE2Mzc5NzcxMDYwYzhhMzEwYjJlMDM0NTQ5NGU1NDczODBlMDU2NTM3YjVkZDY5ZA%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "04-manifest-prod-boltdns-net-manifest-v1-hls-v3-clear-4460760524001-9c5f893f-e7cb-4940-92dc-f.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/4460760524001/9c5f893f-e7cb-4940-92dc-f5df6ba47d14/10s/master.m3u8?fastly_token=NmFlNGZiNzRfZjEyZmE3MTExYzI4OTgwYjA1ZTc4YTJhN2Q1NzAyZDFjNDA3ZTljZDgxZWIzYTYyYTEzZTQ3ZDM0MTg2MDNiNg%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "05-manifest-prod-boltdns-net-manifest-v1-hls-v4-clear-4460760524001-9c5f893f-e7cb-4940-92dc-f.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/4460760524001/9c5f893f-e7cb-4940-92dc-f5df6ba47d14/10s/master.m3u8?fastly_token=NmFlNGZiNzRfZjEyZmE3MTExYzI4OTgwYjA1ZTc4YTJhN2Q1NzAyZDFjNDA3ZTljZDgxZWIzYTYyYTEzZTQ3ZDM0MTg2MDNiNg%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "06-manifest-prod-boltdns-net-manifest-v1-hls-v4-clear-4460760524001-9c5f893f-e7cb-4940-92dc-f.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v5/clear/4460760524001/9c5f893f-e7cb-4940-92dc-f5df6ba47d14/10s/master.m3u8?fastly_token=NmFlNGZiNzRfY2IxYWJlZDk3N2I2NWZiM2QwZjI5ZGEzNjAyNTFhNDE0YjYwMmI4NzNlYTI3ZmQxYjRhNDQzMTY0NDE3OTE5OA%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "07-manifest-prod-boltdns-net-manifest-v1-hls-v5-clear-4460760524001-9c5f893f-e7cb-4940-92dc-f.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v5/clear/4460760524001/9c5f893f-e7cb-4940-92dc-f5df6ba47d14/10s/master.m3u8?fastly_token=NmFlNGZiNzRfY2IxYWJlZDk3N2I2NWZiM2QwZjI5ZGEzNjAyNTFhNDE0YjYwMmI4NzNlYTI3ZmQxYjRhNDQzMTY0NDE3OTE5OA%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "08-manifest-prod-boltdns-net-manifest-v1-hls-v5-clear-4460760524001-9c5f893f-e7cb-4940-92dc-f.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/4460760524001/9c5f893f-e7cb-4940-92dc-f5df6ba47d14/2s/manifest.mpd?fastly_token=NmFlNGZiNzRfMjZkOGEwNTdmNDU0NmRkYmEyMzcwYTQ3YzNjNjMxMWFlYTAzMDE0Zjg4MjYyNGMzZDYzYmI2OTU0ZTBmM2U4Mg%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "09-manifest-prod-boltdns-net-manifest-v1-dash-live-baseurl-clear-4460760524001-9c5f893f-e7cb-.mpd"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/4460760524001/9c5f893f-e7cb-4940-92dc-f5df6ba47d14/2s/manifest.mpd?fastly_token=NmFlNGZiNzRfMjZkOGEwNTdmNDU0NmRkYmEyMzcwYTQ3YzNjNjMxMWFlYTAzMDE0Zjg4MjYyNGMzZDYzYmI2OTU0ZTBmM2U4Mg%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "10-manifest-prod-boltdns-net-manifest-v1-dash-live-baseurl-clear-4460760524001-9c5f893f-e7cb-.mpd"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-hbbtv15/clear/4460760524001/9c5f893f-e7cb-4940-92dc-f5df6ba47d14/2s/manifest.mpd?fastly_token=NmFlNGZiNzRfM2Q5YzcyY2U0OWMyNDNhYzg3YzNmOTRhMjBhZWM1ZmEwNzgzODFmZGRhOWMxYjc3MjU0MDBhNzM2NDhhOGY4Yw%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "11-manifest-prod-boltdns-net-manifest-v1-dash-live-hbbtv15-clear-4460760524001-9c5f893f-e7cb-.mpd"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-hbbtv15/clear/4460760524001/9c5f893f-e7cb-4940-92dc-f5df6ba47d14/2s/manifest.mpd?fastly_token=NmFlNGZiNzRfM2Q5YzcyY2U0OWMyNDNhYzg3YzNmOTRhMjBhZWM1ZmEwNzgzODFmZGRhOWMxYjc3MjU0MDBhNzM2NDhhOGY4Yw%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "12-manifest-prod-boltdns-net-manifest-v1-dash-live-hbbtv15-clear-4460760524001-9c5f893f-e7cb-.mpd"
+  },
+  {
+   "url": "https://www.9now.com.au/married-at-first-sight/season-12/episode-1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "13-www-9now-com-au-married-at-first-sight-season-12-episode-1.html"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/4460760524001/videos/6367798770112",
+   "headers": {
+    "Content-Type": "application/json; charset=UTF-8"
+   },
+   "body_file": "14-edge-api-brightcove-com-playback-v1-accounts-4460760524001-videos-6367798770112.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkFIXTURE0004"
+   }
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v3/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/10s/master.m3u8?fastly_token=NmFlNTE0MjNfYzVlMmE0MzNlZDliNjllN2MwOWJkODgwNjI4NDZhZjkyM2E3M2I5NGQzZDIyZDA0YTEzZjZjMzU5NjI0YjY1YQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "15-manifest-prod-boltdns-net-manifest-v1-hls-v3-clear-4460760524001-11bd45da-cc7f-4826-8f73-7.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v3/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/10s/master.m3u8?fastly_token=NmFlNTE0MjNfYzVlMmE0MzNlZDliNjllN2MwOWJkODgwNjI4NDZhZjkyM2E3M2I5NGQzZDIyZDA0YTEzZjZjMzU5NjI0YjY1YQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "16-manifest-prod-boltdns-net-manifest-v1-hls-v3-clear-4460760524001-11bd45da-cc7f-4826-8f73-7.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/10s/master.m3u8?fastly_token=NmFlNTE0MjNfM2E0YTg4MzA3MjZiMmEzNTMyMDY5Y2EyMzZjNTdlZWY4YWVjYjhkN2NlZTg1MTk2MGNkMjA0NjZmMjYxMzlhNg%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "17-manifest-prod-boltdns-net-manifest-v1-hls-v4-clear-4460760524001-11bd45da-cc7f-4826-8f73-7.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/10s/master.m3u8?fastly_token=NmFlNTE0MjNfM2E0YTg4MzA3MjZiMmEzNTMyMDY5Y2EyMzZjNTdlZWY4YWVjYjhkN2NlZTg1MTk2MGNkMjA0NjZmMjYxMzlhNg%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "18-manifest-prod-boltdns-net-manifest-v1-hls-v4-clear-4460760524001-11bd45da-cc7f-4826-8f73-7.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v5/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/10s/master.m3u8?fastly_token=NmFlNTE0MjNfOWE4NmRhMjdkZjUzY2IyMzI0YTBiMTQ3ZWE2MmJiZmE4ZWYzN2EzODE4ZDA5Nzc4OGI5NDczZTgwNTNlNjlhNQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "19-manifest-prod-boltdns-net-manifest-v1-hls-v5-clear-4460760524001-11bd45da-cc7f-4826-8f73-7.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v5/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/10s/master.m3u8?fastly_token=NmFlNTE0MjNfOWE4NmRhMjdkZjUzY2IyMzI0YTBiMTQ3ZWE2MmJiZmE4ZWYzN2EzODE4ZDA5Nzc4OGI5NDczZTgwNTNlNjlhNQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "20-manifest-prod-boltdns-net-manifest-v1-hls-v5-clear-4460760524001-11bd45da-cc7f-4826-8f73-7.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/2s/manifest.mpd?fastly_token=NmFlNTE0MjNfZmUyOTFjZjBhNTI4NzU3NmEyMzE5MmIyMjdmOTAzOGZlMTgwY2FhMDI0MTg0OTQxMDhkZmZlZTM5MmJhYjlmYg%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "21-manifest-prod-boltdns-net-manifest-v1-dash-live-baseurl-clear-4460760524001-11bd45da-cc7f-.mpd"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/2s/manifest.mpd?fastly_token=NmFlNTE0MjNfZmUyOTFjZjBhNTI4NzU3NmEyMzE5MmIyMjdmOTAzOGZlMTgwY2FhMDI0MTg0OTQxMDhkZmZlZTM5MmJhYjlmYg%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "22-manifest-prod-boltdns-net-manifest-v1-dash-live-baseurl-clear-4460760524001-11bd45da-cc7f-.mpd"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-hbbtv15/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/2s/manifest.mpd?fastly_token=NmFlNTE0MjNfZDJiZDdhYmRhOGU2ZDcxYWRmNzhjOTlhMWIxMTI5OTAwZTQxYzBhZmZlMmUyZmE2ZDI5NjY4OTMzZWQ4NjE5OA%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "23-manifest-prod-boltdns-net-manifest-v1-dash-live-hbbtv15-clear-4460760524001-11bd45da-cc7f-.mpd"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-hbbtv15/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/2s/manifest.mpd?fastly_token=NmFlNTE0MjNfZDJiZDdhYmRhOGU2ZDcxYWRmNzhjOTlhMWIxMTI5OTAwZTQxYzBhZmZlMmUyZmE2ZDI5NjY4OTMzZWQ4NjE5OA%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "24-manifest-prod-boltdns-net-manifest-v1-dash-live-hbbtv15-clear-4460760524001-11bd45da-cc7f-.mpd"
+  },
+  {
+   "url": "https://www.9now.com.au/today/synthetic/clip-synthetic-nodata",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>No data</body></html>"
+  }
+ ]
+}

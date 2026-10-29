@@ -1,0 +1,49 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://truthsocial.com/@realDonaldTrump/posts/108779000807761862",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"108779000807761862\", \"url\": \"https://static-assets-1.truthsocial.com/tmtg:prime-ts-assets/media_attachments/files/108/779/000/704/465/407/original/0d8691160c73d663.qt\", \"title\": \"Truth video #108779000807761862\", \"description\": null, \"timestamp\": 1659835827, \"uploader\": \"Donald J. Trump\", \"uploader_id\": \"realDonaldTrump\", \"uploader_url\": \"https://truthsocial.com/@realDonaldTrump\", \"repost_count\": 3916, \"like_count\": 18853, \"comment_count\": 305, \"webpage_url\": \"https://truthsocial.com/@realDonaldTrump/posts/108779000807761862\", \"original_url\": \"https://truthsocial.com/@realDonaldTrump/posts/108779000807761862\", \"webpage_url_basename\": \"108779000807761862\", \"webpage_url_domain\": \"truthsocial.com\", \"extractor\": \"Truth\", \"extractor_key\": \"Truth\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"108779000807761862\", \"fulltitle\": \"\", \"upload_date\": \"20220807\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"qt\", \"video_ext\": \"qt\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Truth video #108779000807761862 [108779000807761862].qt\", \"filename\": \"Truth video #108779000807761862 [108779000807761862].qt\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Truth] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://truthsocial.com/@realDonaldTrump/posts/1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [Truth] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://truthsocial.com/@realDonaldTrump/posts/2",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [Truth] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [Truth] 2: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

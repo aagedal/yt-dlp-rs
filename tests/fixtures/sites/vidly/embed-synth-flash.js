@@ -1,0 +1,1 @@
+initCallback({"player":"flash","config":{}});

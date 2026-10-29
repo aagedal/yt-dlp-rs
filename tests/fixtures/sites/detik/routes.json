@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://20.detik.com/otobuzz/20220704-220704093/mulai-rp-10-jutaan-ini-skema-kredit-mitsubishi-pajero-sport",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-20detik.html"
+  },
+  {
+   "url": "https://vod.detik.com/mc/_definst_/smil:http/mc/video/detiktv/videoservice/AdminTV/2022/07/04/5d6187e402ec4a91877755a5886ff5b6.smil/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "vod-20detik.m3u8"
+  },
+  {
+   "url": "https://www.cnnindonesia.com/embed/video/846189",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-cnn-embed.html"
+  },
+  {
+   "url": "https://vod.cnnindonesia.com/mc/_definst_/smil:http/mc/video/detiktv/videoservice/CNN/2022/09/11/6a3c7f423a544a62bf2c3dd60311cc8b.smil/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "vod-cnn.m3u8"
+  },
+  {
+   "url": "https://www.cnnindonesia.com/embed/video/synthetic",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-embed.html"
+  },
+  {
+   "url": "https://www.cnnindonesia.com/embed/video/flowplayer",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-flowplayer.html"
+  }
+ ]
+}

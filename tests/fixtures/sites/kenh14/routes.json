@@ -1,0 +1,74 @@
+{
+ "routes": [
+  {
+   "url": "https://video.kenh14.vn/video/mo-hop-iphone-14-pro-max-nguon-unbox-therapy-316173.chn",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "video-316173.html"
+  },
+  {
+   "url": "https://video.kenh14.vn/video-316174.chn",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "video-316174.html"
+  },
+  {
+   "url": "https://video.kenh14.vn/playlist/tran-tinh-naked-love-mua-2-71.chn",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "playlist-71.html"
+  },
+  {
+   "url": "https://video.kenh14.vn/video/synthetic-novideo-999.chn",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-novideo.html"
+  },
+  {
+   "url": "https://api.kinghub.vn/video/api/v1/detailVideoByGet?FileName=203336854389633024/2022/5/17/P3Q5XYacz5E-1652782450168278389637.mp4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "kinghub-316173.json"
+  },
+  {
+   "url": "https://api.kinghub.vn/video/api/v1/detailVideoByGet?FileName=203336854389633024/2022/5/17/logo-k14-snhat3-16527839494602072400618.mp4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "kinghub-316174.json"
+  },
+  {
+   "url": "https://kenh14cdn.com/203336854389633024/2022/5/17/P3Q5XYacz5E-1652782450168278389637.mp4.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "cdn-316173.json"
+  },
+  {
+   "url": "https://kenh14cdn.com/203336854389633024/2022/5/17/logo-k14-snhat3-16527839494602072400618.mp4.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "cdn-316174.json"
+  },
+  {
+   "url": "https://kenh14cdn.com/203336854389633024/2022/5/17/P3Q5XYacz5E-1652782450168278389637.mp4/master.m3u8?v=2-d91f2ce6",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-316173.m3u8"
+  },
+  {
+   "url": "https://kenh14cdn.com/203336854389633024/2022/5/17/logo-k14-snhat3-16527839494602072400618.mp4/master.m3u8?v=2-5eb5e549",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-316174.m3u8"
+  }
+ ]
+}

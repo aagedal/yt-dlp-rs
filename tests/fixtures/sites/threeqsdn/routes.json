@@ -1,0 +1,9 @@
+{
+ "routes": [
+  {"url": "https://playout.3qsdn.com/config/7201c779-6b3c-11e7-a40e-002590c750be", "headers": {"Content-Type": "application/json"}, "body_file": "config-vod.json"},
+  {"url": "https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/manifest.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "vod-manifest.m3u8"},
+  {"url": "https://playout.3qsdn.com/config/66e68995-11ca-11e8-9273-002590c750be", "headers": {"Content-Type": "application/json"}, "body_file": "config-live.json"},
+  {"url": "https://sdn-global-live-streaming-packager-cache-aka.3qsdn.com/7441/7441_264_live.m3u8?latency=low", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "live-manifest.m3u8"},
+  {"url": "https://playout.3qsdn.com/config/00000000-0000-0000-0000-000000000401", "status": 401, "headers": {"Content-Type": "application/json"}, "body_file": "config-geo.json"}
+ ]
+}

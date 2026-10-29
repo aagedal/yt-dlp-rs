@@ -1,0 +1,22 @@
+[
+ {
+  "url": "http://news.cts.com.tw/cts/international/201501/201501291578999.html",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://news.cts.com.tw/cts/international/201501/201501291578888.html",
+  "args": [
+   "--no-js-runtimes",
+   "--print",
+   "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+  ]
+ },
+ {
+  "url": "http://news.cts.com.tw/cts/international/201501/201501291578777.html",
+  "args": [
+   "-J"
+  ]
+ }
+]

@@ -1,0 +1,10 @@
+{
+ "routes": [
+  {"url": "https://www.shemaroome.com/movies/dil-hai-tumhaara", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "movie.html"},
+  {"url": "https://www.shemaroome.com/movies/synthetic-premium", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "premium.html"},
+  {"url": "https://www.shemaroome.com/shows/jurm-aur-jazbaat/laalach", "status": 404, "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "shows-404.html"},
+  {"url": "https://www.shemaroome.com/users/user_all_lists", "headers": {"Content-Type": "application/json"}, "request_body": ["catalog_id=synthcat"], "body_file": "premium.json"},
+  {"url": "https://www.shemaroome.com/users/user_all_lists", "headers": {"Content-Type": "application/json"}, "body_file": "user_all_lists.json"},
+  {"url": "https://d10ywznpycs72s.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/769d1137202141eae3d2e0f7b51054ef_main_laptop_paid_us.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "movie-master.m3u8"}
+ ]
+}

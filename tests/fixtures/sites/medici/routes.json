@@ -1,0 +1,63 @@
+{
+ "routes": [
+  {
+   "url": "https://www.medici.tv/en/operas/thomas-ades-the-exterminating-angel-calixto-bieito-opera-bastille-paris",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "csrf-page.html"
+  },
+  {
+   "url": "https://edu.medici.tv/en/masterclasses/yvonne-loriod-olivier-messiaen",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "csrf-page.html"
+  },
+  {
+   "url": "https://www.medici.tv/en/operas/missing-opera",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "csrf-page.html"
+  },
+  {
+   "url": "https://api.medici.tv/satie/edito/movie-file/thomas-ades-the-exterminating-angel-calixto-bieito-opera-bastille-paris/",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-satie-thomas.json",
+   "request_headers": {
+    "Device-Type": "web",
+    "Origin": "https://www.medici.tv",
+    "Referer": "https://www.medici.tv/"
+   }
+  },
+  {
+   "url": "https://api.medici.tv/edu-satie/edito/movie-file/yvonne-loriod-olivier-messiaen/",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-edu-yvonne.json",
+   "request_headers": {
+    "Device-Type": "web",
+    "Origin": "https://edu.medici.tv",
+    "Referer": "https://edu.medici.tv/"
+   }
+  },
+  {
+   "url": "https://playout.prod.medicitv.fr/satie/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJodHRwczovL3Nkbi1nbG9iYWwtc3RyZWFtaW5nLWNhY2hlLjNxc2RuLmNvbS85Mzc4L2ZpbGVzLzI0LzAzLzIxLzk2NTE5OTUvOTM3OC1jOTg0OTI3OC1hMGQ0LTRlY2QtYTk0OC00MmQzMjZiYjU0ZjEtZHJtLWFlcy5pc20vbWFuaWZlc3QubTN1OD9zdGFydD0wJmVuZD0zNSIsImlhdCI6MTc5MzMwNDI1OSwiZXhwIjoxNzkzOTA5MDU5fQ.1vrpOJXT-K932k6krykvP-Qs9LejEqkafJm9PzLT3RA/m.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "playout-thomas.m3u8"
+  },
+  {
+   "url": "https://playout.prod.medicitv.fr/satie/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJodHRwczovL3Nkbi1nbG9iYWwtc3RyZWFtaW5nLWNhY2hlLjNxc2RuLmNvbS85Mzc4L2ZpbGVzLzE5LzA1LzEyMDE1MDQvSG1WY2ZHV2o5THg0cFgyQjdLNmhxTjNNYkpZWm5UQ1ItZHJtLWFlcy5pc20vbWFuaWZlc3QubTN1OD9zdGFydD0wJmVuZD0zNSIsImlhdCI6MTc5MzMwNDMxNiwiZXhwIjoxNzkzOTA5MTE2fQ.OBQqLpV8rmEPVl-e9T6AC0UnCCIdsNEWD2fHj8uzqtI/m.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "playout-yvonne.m3u8"
+  }
+ ]
+}

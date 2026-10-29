@@ -1,0 +1,203 @@
+{
+ "routes": [
+  {
+   "url": "https://www.thisoldhouse.com/furniture/21017078/how-to-build-a-storage-bench",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-furniture.html"
+  },
+  {
+   "url": "https://www.thisoldhouse.com/ask-this-old-house/season-24/episode-17",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-ask.html"
+  },
+  {
+   "url": "https://www.thisoldhouse.com/furniture/12346/synthetic-locked",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-locked.html"
+  },
+  {
+   "url": "https://www.thisoldhouse.com/furniture/12347/synthetic-no-video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-no-video.html"
+  },
+  {
+   "url": "https://www.thisoldhouse.com/videos/brightcove/6325298523112",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8",
+    "Location": "https://players.brightcove.net/6314471934001/default_default/index.html?videoId=6325298523112&preload=none"
+   },
+   "status": 302,
+   "body": ""
+  },
+  {
+   "url": "https://players.brightcove.net/6314471934001/default_default/index.html?videoId=6325298523112&preload=none",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://www.thisoldhouse.com/videos/brightcove/6390764156112",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8",
+    "Location": "https://players.brightcove.net/6314471934001/default_default/index.html?videoId=6390764156112&preload=none"
+   },
+   "status": 302,
+   "body": ""
+  },
+  {
+   "url": "https://players.brightcove.net/6314471934001/default_default/index.html?videoId=6390764156112&preload=none",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://players.brightcove.net/6314471934001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/6314471934001/videos/6325298523112",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playback-6325298523112.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkADawqM0QI8C_i9eJ68TR5LbyjHAE4XL7ACe57K19NrzJdG6sQnpLNym1Bkf5pkmciXB7EWddAwC5cNvfm3_sOfnfwFuLiZyg5mZsGCTQOodU9tbpqeC2_tIOcPpL9Jz-Jb5CGMsVnOxM"
+   }
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v4/aes128/6314471934001/18e14e27-6cac-4189-901a-db454e803ff1/6s/master.m3u8?fastly_token=NmFlM2I2ODNfZThlOWY1NDcxYTk3NTI2ZTcyM2ZiYjdhOWU3YTRlYmRiZTc5YzhjYTI4OTkwMTQyZGNjYzA0YTdmZDBkY2YxYw%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "manifest-hls-6325298523112.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/aes128/6314471934001/18e14e27-6cac-4189-901a-db454e803ff1/6s/master.m3u8?fastly_token=NmFlM2I2ODNfZThlOWY1NDcxYTk3NTI2ZTcyM2ZiYjdhOWU3YTRlYmRiZTc5YzhjYTI4OTkwMTQyZGNjYzA0YTdmZDBkY2YxYw%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "manifest-hls-6325298523112.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v4/aes128/6314471934001/18e14e27-6cac-4189-901a-db454e803ff1/6s/master.m3u8?fastly_token=NmFlM2I2ODNfZThlOWY1NDcxYTk3NTI2ZTcyM2ZiYjdhOWU3YTRlYmRiZTc5YzhjYTI4OTkwMTQyZGNjYzA0YTdmZDBkY2YxYw%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "manifest-hls-6325298523112.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/aes128/6314471934001/18e14e27-6cac-4189-901a-db454e803ff1/6s/master.m3u8?fastly_token=NmFlM2I2ODNfZThlOWY1NDcxYTk3NTI2ZTcyM2ZiYjdhOWU3YTRlYmRiZTc5YzhjYTI4OTkwMTQyZGNjYzA0YTdmZDBkY2YxYw%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "manifest-hls-6325298523112.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/6314471934001/18e14e27-6cac-4189-901a-db454e803ff1/6s/manifest.mpd?fastly_token=NmFlM2I2ODNfMTY3YTcxNmYwMzQ3MmEwNGY0YjRmMjFmYTNiODQ4MGEyNTQ4MjQyZjMxNDFmMzM5NDFlN2ZmNDllNGVmZDRlMQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-dash-6325298523112.mpd"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/6314471934001/18e14e27-6cac-4189-901a-db454e803ff1/6s/manifest.mpd?fastly_token=NmFlM2I2ODNfMTY3YTcxNmYwMzQ3MmEwNGY0YjRmMjFmYTNiODQ4MGEyNTQ4MjQyZjMxNDFmMzM5NDFlN2ZmNDllNGVmZDRlMQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-dash-6325298523112.mpd"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/6314471934001/18e14e27-6cac-4189-901a-db454e803ff1/6s/manifest.mpd?fastly_token=NmFlM2I2ODNfMTY3YTcxNmYwMzQ3MmEwNGY0YjRmMjFmYTNiODQ4MGEyNTQ4MjQyZjMxNDFmMzM5NDFlN2ZmNDllNGVmZDRlMQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-dash-6325298523112.mpd"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/6314471934001/18e14e27-6cac-4189-901a-db454e803ff1/6s/manifest.mpd?fastly_token=NmFlM2I2ODNfMTY3YTcxNmYwMzQ3MmEwNGY0YjRmMjFmYTNiODQ4MGEyNTQ4MjQyZjMxNDFmMzM5NDFlN2ZmNDllNGVmZDRlMQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-dash-6325298523112.mpd"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/6314471934001/videos/6390764156112",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playback-6390764156112.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkADawqM0QI8C_i9eJ68TR5LbyjHAE4XL7ACe57K19NrzJdG6sQnpLNym1Bkf5pkmciXB7EWddAwC5cNvfm3_sOfnfwFuLiZyg5mZsGCTQOodU9tbpqeC2_tIOcPpL9Jz-Jb5CGMsVnOxM"
+   }
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v4/aes128/6314471934001/1bb948c9-fb18-4caf-a2c1-a7cddc19625c/6s/master.m3u8?fastly_token=NmFlM2I2ODNfNzQxODY3OWM5MjEyNzA1MjE2ZjEwMDMyMmYzMjFiN2ViZDViM2ViY2RkODc1YjM0ZWE4OWM0NWI4YThiNDFjYg%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "manifest-hls-6390764156112.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/aes128/6314471934001/1bb948c9-fb18-4caf-a2c1-a7cddc19625c/6s/master.m3u8?fastly_token=NmFlM2I2ODNfNzQxODY3OWM5MjEyNzA1MjE2ZjEwMDMyMmYzMjFiN2ViZDViM2ViY2RkODc1YjM0ZWE4OWM0NWI4YThiNDFjYg%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "manifest-hls-6390764156112.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v4/aes128/6314471934001/1bb948c9-fb18-4caf-a2c1-a7cddc19625c/6s/master.m3u8?fastly_token=NmFlM2I2ODNfNzQxODY3OWM5MjEyNzA1MjE2ZjEwMDMyMmYzMjFiN2ViZDViM2ViY2RkODc1YjM0ZWE4OWM0NWI4YThiNDFjYg%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "manifest-hls-6390764156112.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/aes128/6314471934001/1bb948c9-fb18-4caf-a2c1-a7cddc19625c/6s/master.m3u8?fastly_token=NmFlM2I2ODNfNzQxODY3OWM5MjEyNzA1MjE2ZjEwMDMyMmYzMjFiN2ViZDViM2ViY2RkODc1YjM0ZWE4OWM0NWI4YThiNDFjYg%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "manifest-hls-6390764156112.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/6314471934001/1bb948c9-fb18-4caf-a2c1-a7cddc19625c/6s/manifest.mpd?fastly_token=NmFlM2I2ODNfYjQ3YzRjYWNjMTFiZTBmYWVkZDQ3OWU5OTFhMzcxOGFmNDk1ZDEzZGJlMmM2MDM3ZjIzMTQ4MTQ1ODk5MGE1Nw%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-dash-6390764156112.mpd"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/6314471934001/1bb948c9-fb18-4caf-a2c1-a7cddc19625c/6s/manifest.mpd?fastly_token=NmFlM2I2ODNfYjQ3YzRjYWNjMTFiZTBmYWVkZDQ3OWU5OTFhMzcxOGFmNDk1ZDEzZGJlMmM2MDM3ZjIzMTQ4MTQ1ODk5MGE1Nw%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-dash-6390764156112.mpd"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/6314471934001/1bb948c9-fb18-4caf-a2c1-a7cddc19625c/6s/manifest.mpd?fastly_token=NmFlM2I2ODNfYjQ3YzRjYWNjMTFiZTBmYWVkZDQ3OWU5OTFhMzcxOGFmNDk1ZDEzZGJlMmM2MDM3ZjIzMTQ4MTQ1ODk5MGE1Nw%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-dash-6390764156112.mpd"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/6314471934001/1bb948c9-fb18-4caf-a2c1-a7cddc19625c/6s/manifest.mpd?fastly_token=NmFlM2I2ODNfYjQ3YzRjYWNjMTFiZTBmYWVkZDQ3OWU5OTFhMzcxOGFmNDk1ZDEzZGJlMmM2MDM3ZjIzMTQ4MTQ1ODk5MGE1Nw%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-dash-6390764156112.mpd"
+  }
+ ]
+}

@@ -35,126 +35,157 @@ fn deno_available() -> bool {
 #[test]
 fn site_extractors_match_saved_upstream_output() {
     let sites = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/sites");
+    let mut directories: Vec<_> = std::fs::read_dir(&sites)
+        .unwrap()
+        .map(|entry| entry.unwrap().path())
+        .collect();
+    directories.sort();
+    // Each site has its own proxy and each case its own directories, so
+    // sites run on a pool of workers (`SITE_JOBS=N` overrides the size).
+    let jobs = std::env::var("SITE_JOBS")
+        .ok()
+        .and_then(|jobs| jobs.parse().ok())
+        .unwrap_or_else(|| std::thread::available_parallelism().map_or(4, usize::from))
+        .max(1);
+    let next = std::sync::atomic::AtomicUsize::new(0);
+    let failures = std::sync::Mutex::new(Vec::new());
+    std::thread::scope(|scope| {
+        for _ in 0..jobs {
+            scope.spawn(|| {
+                loop {
+                    let index = next.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                    let Some(directory) = directories.get(index) else {
+                        break;
+                    };
+                    let site_failures = run_site(directory);
+                    failures.lock().unwrap().extend(site_failures);
+                }
+            });
+        }
+    });
+    let failures = failures.into_inner().unwrap();
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
+}
+
+/// Every case of one fixture directory; the mismatches.
+fn run_site(directory: &std::path::Path) -> Vec<String> {
     let mut failures = Vec::new();
-    for entry in std::fs::read_dir(&sites).unwrap() {
-        let directory = entry.unwrap().path();
-        let Ok(text) = std::fs::read_to_string(directory.join("expected.json")) else {
-            continue;
-        };
-        let name = directory
-            .file_name()
-            .unwrap()
-            .to_string_lossy()
-            .into_owned();
-        // `SITES=a,b`: only these fixture directories (for local iteration).
-        if let Ok(only) = std::env::var("SITES")
-            && !only.split(',').any(|site| site == name)
-        {
+    let Ok(text) = std::fs::read_to_string(directory.join("expected.json")) else {
+        return failures;
+    };
+    let name = directory
+        .file_name()
+        .unwrap()
+        .to_string_lossy()
+        .into_owned();
+    // `SITES=a,b`: only these fixture directories (for local iteration).
+    if let Ok(only) = std::env::var("SITES")
+        && !only.split(',').any(|site| site == name)
+    {
+        return failures;
+    }
+    let proxy = site_proxy::SiteProxy::start(&name);
+    let expected: serde_json::Value = serde_json::from_str(&text).unwrap();
+    for case in expected["cases"].as_array().unwrap() {
+        // Cases solving YouTube challenges need upstream's default runtime.
+        let requires_deno = case["requires"]
+            .as_array()
+            .is_some_and(|requires| requires.iter().any(|value| value == "deno"));
+        if requires_deno && !deno_available() {
             continue;
         }
-        let proxy = site_proxy::SiteProxy::start(&name);
-        let expected: serde_json::Value = serde_json::from_str(&text).unwrap();
-        for case in expected["cases"].as_array().unwrap() {
-            // Cases solving YouTube challenges need upstream's default runtime.
-            let requires_deno = case["requires"]
-                .as_array()
-                .is_some_and(|requires| requires.iter().any(|value| value == "deno"));
-            if requires_deno && !deno_available() {
-                continue;
-            }
-            let work = tempfile::tempdir().unwrap();
-            let args: Vec<&str> = case["args"]
-                .as_array()
-                .unwrap()
-                .iter()
-                .map(|arg| arg.as_str().unwrap())
-                .collect();
-            // `--netrc-cmd` commands are captured as POSIX shell; upstream
-            // runs them with cmd.exe on Windows, where they differ.
-            if cfg!(windows) && args.contains(&"--netrc-cmd") {
-                continue;
-            }
-            // `--exec` is a native error on Windows (cmd quoting is not
-            // implemented); the captured commands are POSIX shell.
-            if cfg!(windows) && args.contains(&"--exec") {
-                continue;
-            }
-            // `copy`: input files (such as a cookies file), not compared.
-            let copied: Vec<&str> = case["copy"]
-                .as_array()
-                .into_iter()
-                .flatten()
-                .filter_map(|name| name.as_str())
-                .collect();
-            for name in &copied {
-                std::fs::copy(directory.join(name), work.path().join(name)).unwrap();
-            }
-            // A fresh cache per case, like the capture's.
-            let cache = tempfile::tempdir().unwrap();
-            let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
-                .args([
-                    "--ignore-config",
-                    "--proxy",
-                    &proxy.url,
-                    "--no-check-certificate",
-                ])
-                .args(["--user-agent", "fixture", "--cache-dir"])
-                .arg(cache.path())
-                .args(&args)
-                .arg(case["url"].as_str().unwrap())
-                .current_dir(work.path())
-                .output()
-                .unwrap();
-            let stderr: Vec<String> = String::from_utf8_lossy(&output.stderr)
-                .lines()
-                .filter(|line| line.starts_with("ERROR:") || line.starts_with("WARNING:"))
-                .map(str::to_owned)
-                .collect();
-            let mut files = serde_json::Map::new();
-            let mut names: Vec<_> = std::fs::read_dir(work.path())
-                .unwrap()
-                .map(|entry| entry.unwrap())
-                .collect();
-            names.sort_by_key(|entry| entry.file_name());
-            names.retain(|entry| !copied.iter().any(|name| entry.file_name() == **name));
-            for entry in names {
-                files.insert(
-                    entry.file_name().to_string_lossy().into_owned(),
-                    entry.metadata().unwrap().len().into(),
-                );
-            }
-            let actual = serde_json::json!({
-                "exit": output.status.code(),
-                "stdout": normalize(&String::from_utf8_lossy(&output.stdout)),
-                "stderr": stderr,
-                "files": files,
-            });
-            // Upstream was captured without impersonate targets; with the
-            // `impersonate` feature the extractors impersonate instead of
-            // warning (through the same fixture proxy).
-            #[cfg(feature = "impersonate")]
-            let case = &{
-                let mut case = case.clone();
-                if let Some(lines) = case["stderr"].as_array_mut() {
-                    lines.retain(|line| {
+        let work = tempfile::tempdir().unwrap();
+        let args: Vec<&str> = case["args"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|arg| arg.as_str().unwrap())
+            .collect();
+        // `--netrc-cmd` commands are captured as POSIX shell; upstream
+        // runs them with cmd.exe on Windows, where they differ.
+        if cfg!(windows) && args.contains(&"--netrc-cmd") {
+            continue;
+        }
+        // `--exec` is a native error on Windows (cmd quoting is not
+        // implemented); the captured commands are POSIX shell.
+        if cfg!(windows) && args.contains(&"--exec") {
+            continue;
+        }
+        // `copy`: input files (such as a cookies file), not compared.
+        let copied: Vec<&str> = case["copy"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(|name| name.as_str())
+            .collect();
+        for name in &copied {
+            std::fs::copy(directory.join(name), work.path().join(name)).unwrap();
+        }
+        // A fresh cache per case, like the capture's.
+        let cache = tempfile::tempdir().unwrap();
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args([
+                "--ignore-config",
+                "--proxy",
+                &proxy.url,
+                "--no-check-certificate",
+            ])
+            .args(["--user-agent", "fixture", "--cache-dir"])
+            .arg(cache.path())
+            .args(&args)
+            .arg(case["url"].as_str().unwrap())
+            .current_dir(work.path())
+            .output()
+            .unwrap();
+        let stderr: Vec<String> = String::from_utf8_lossy(&output.stderr)
+            .lines()
+            .filter(|line| line.starts_with("ERROR:") || line.starts_with("WARNING:"))
+            .map(str::to_owned)
+            .collect();
+        let mut files = serde_json::Map::new();
+        let mut names: Vec<_> = std::fs::read_dir(work.path())
+            .unwrap()
+            .map(|entry| entry.unwrap())
+            .collect();
+        names.sort_by_key(|entry| entry.file_name());
+        names.retain(|entry| !copied.iter().any(|name| entry.file_name() == **name));
+        for entry in names {
+            files.insert(
+                entry.file_name().to_string_lossy().into_owned(),
+                entry.metadata().unwrap().len().into(),
+            );
+        }
+        let actual = serde_json::json!({
+            "exit": output.status.code(),
+            "stdout": normalize(&String::from_utf8_lossy(&output.stdout)),
+            "stderr": stderr,
+            "files": files,
+        });
+        // Upstream was captured without impersonate targets; with the
+        // `impersonate` feature the extractors impersonate instead of
+        // warning (through the same fixture proxy).
+        #[cfg(feature = "impersonate")]
+        let case = &{
+            let mut case = case.clone();
+            if let Some(lines) = case["stderr"].as_array_mut() {
+                lines.retain(|line| {
                         !line.as_str().is_some_and(|line| {
                             line.contains("The extractor is attempting impersonation, but no impersonate target is available")
                         })
                     });
-                }
-                case
-            };
-            for key in ["exit", "stdout", "stderr", "files"] {
-                if actual[key] != case[key] {
-                    failures.push(format!(
-                        "{name} {args:?} {key}:\n  upstream {}\n  native   {}",
-                        case[key], actual[key]
-                    ));
-                }
+            }
+            case
+        };
+        for key in ["exit", "stdout", "stderr", "files"] {
+            if actual[key] != case[key] {
+                failures.push(format!(
+                    "{name} {args:?} {key}:\n  upstream {}\n  native   {}",
+                    case[key], actual[key]
+                ));
             }
         }
     }
-    assert!(failures.is_empty(), "{}", failures.join("\n"));
+    failures
 }
 
 #[test]

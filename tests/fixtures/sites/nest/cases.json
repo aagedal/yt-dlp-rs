@@ -1,0 +1,39 @@
+[
+ {
+  "url": "https://video.nest.com/embedded/live/4fvYdSo8AX?autoplay=0",
+  "args": [
+   "--print",
+   "%(id)s|%(alt_title)s|%(location)s|%(availability)s|%(live_status)s|%(thumbnail)s"
+  ]
+ },
+ {
+  "url": "https://video.nest.com/live/4fvYdSo8AX",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://video.nest.com/embedded/clip/34e0432adc3c46a98529443d8ad5aa76",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.nest.com/live/nocamera",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.nest.com/live/nouuid",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://video.nest.com/clip/missingclip",
+  "args": [
+   "-J"
+  ]
+ }
+]

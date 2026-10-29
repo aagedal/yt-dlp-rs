@@ -1,0 +1,68 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.canalsurmas.es/videos/44006-el-gran-queo-1-lora-del-rio-sevilla-20072014",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"44006\", \"formats\": [{\"url\": \"https://cdn.rtva.interactvty.com/archivo_ott/el_gran_queo/0000051496/0000051496_1080p.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}, {\"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://cdn.rtva.interactvty.com/archivo_ott/el_gran_queo/0000051496/0000051496_480p/0000051496_480p.m3u8\", \"manifest_url\": \"https://cdn.rtva.interactvty.com/archivo_ott/el_gran_queo/0000051496/0000051496_3R.m3u8\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 854, \"height\": 480, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"854x480\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1000 - 854x480\"}, {\"format_id\": \"hls-2200\", \"format_index\": null, \"url\": \"https://cdn.rtva.interactvty.com/archivo_ott/el_gran_queo/0000051496/0000051496_720p/0000051496_720p.m3u8\", \"manifest_url\": \"https://cdn.rtva.interactvty.com/archivo_ott/el_gran_queo/0000051496/0000051496_3R.m3u8\", \"tbr\": 2200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2200 - 1280x720\"}, {\"format_id\": \"hls-5000\", \"format_index\": null, \"url\": \"https://cdn.rtva.interactvty.com/archivo_ott/el_gran_queo/0000051496/0000051496_1080p/0000051496_1080p.m3u8\", \"manifest_url\": \"https://cdn.rtva.interactvty.com/archivo_ott/el_gran_queo/0000051496/0000051496_3R.m3u8\", \"tbr\": 5000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-5000 - 1920x1080\"}], \"subtitles\": {}, \"title\": \"Lora del R\\u00edo (Sevilla)\", \"description\": \"Entre los v\\u00eddeos grabados con c\\u00e1mara oculta de este \\\"Gran Queo\\\" en Lora del R\\u00edo, Sevilla destaca uno en el que Juan y Medio es un colaborador de excepci\\u00f3n. El presentador sirve de gancho para poner a prueba el amor de una pareja que est\\u00e1 a punto de casarse. La novia acude al programa de \\u201cLa tarde, aqu\\u00ed y ahora\\u201d para, presuntamente, buscar pareja. \\u00bfQu\\u00e9 cara se le queda al novio a ver a su futura mujer en el plat\\u00f3? Y si en Lora del R\\u00edo aparece Enrique S\\u00e1nchez, popular presentador de \\u201cLa B\\u00e1scula\\u201d y \\u201cC\\u00f3metelo\\u201d que es pillado in fraganti \\u201crobando\\u201d en un supermercado\\u2026 \\u00bfc\\u00f3mo reaccionan los lore\\u00f1os? En otro de los \\\"queos\\\" distintos vecinos acuden a un reconocimiento en un centro m\\u00e9dico dirigido por un doctor bastante peculiar, que les realiza un disparatado cuestionario.\\u00a0\\n\", \"thumbnail\": \"https://cdn2.rtva.interactvty.com/content_cards/00f3e8f67b0a4f3b90a4a14618a48b0d.jpg\", \"timestamp\": 1648123182, \"webpage_url\": \"https://www.canalsurmas.es/videos/44006-el-gran-queo-1-lora-del-rio-sevilla-20072014\", \"original_url\": \"https://www.canalsurmas.es/videos/44006-el-gran-queo-1-lora-del-rio-sevilla-20072014\", \"webpage_url_basename\": \"44006-el-gran-queo-1-lora-del-rio-sevilla-20072014\", \"webpage_url_domain\": \"canalsurmas.es\", \"extractor\": \"Canalsurmas\", \"extractor_key\": \"Canalsurmas\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn2.rtva.interactvty.com/content_cards/00f3e8f67b0a4f3b90a4a14618a48b0d.jpg\", \"id\": \"0\"}], \"display_id\": \"44006\", \"fulltitle\": \"Lora del R\\u00edo (Sevilla)\", \"upload_date\": \"20220324\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-5000\", \"url\": \"https://cdn.rtva.interactvty.com/archivo_ott/el_gran_queo/0000051496/0000051496_1080p/0000051496_1080p.m3u8\", \"manifest_url\": \"https://cdn.rtva.interactvty.com/archivo_ott/el_gran_queo/0000051496/0000051496_3R.m3u8\", \"tbr\": 5000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-5000 - 1920x1080\", \"_filename\": \"Lora del R\\u00edo (Sevilla) [44006].mp4\", \"filename\": \"Lora del R\\u00edo (Sevilla) [44006].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-5000\", \"format_index\": null, \"url\": \"https://cdn.rtva.interactvty.com/archivo_ott/el_gran_queo/0000051496/0000051496_1080p/0000051496_1080p.m3u8\", \"manifest_url\": \"https://cdn.rtva.interactvty.com/archivo_ott/el_gran_queo/0000051496/0000051496_3R.m3u8\", \"tbr\": 5000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-5000 - 1920x1080\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.canalsurmas.es/videos/44006-el-gran-queo-1-lora-del-rio-sevilla-20072014",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Canalsurmas] Extracting URL: https://www.canalsurmas.es/videos/44006-el-gran-queo-1-lora-del-rio-sevilla-20072014",
+    "[Canalsurmas] Downloading access token",
+    "[Canalsurmas] 44006: Downloading content API JSON",
+    "[Canalsurmas] 44006: Downloading content_resources API JSON",
+    "[Canalsurmas] 44006: Downloading m3u8 information",
+    "[info] Available formats for 44006:",
+    "ID       EXT RESOLUTION |   TBR PROTO | VCODEC  ACODEC",
+    "-------------------------------------------------------",
+    "0        mp4 unknown    |       https | unknown unknown",
+    "hls-1000 mp4 854x480    | 1000k m3u8  | unknown unknown",
+    "hls-2200 mp4 1280x720   | 2200k m3u8  | unknown unknown",
+    "hls-5000 mp4 1920x1080  | 5000k m3u8  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.canalsurmas.es/videos/44007",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Canalsurmas] 44007: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.canalsurmas.es/videos/999",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Canalsurmas] 999: Failed to download content API JSON: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

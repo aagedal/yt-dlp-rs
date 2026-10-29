@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://api.abcotvs.com/v2/content?id=472581&key=otv.web.kgo.story&station=kgo",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-472581.json"
+  },
+  {
+   "url": "https://api.abcotvs.com/v2/content?id=5725182&key=otv.web.wpvi.story&station=wpvi",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-5725182.json"
+  },
+  {
+   "url": "https://api.abcotvs.com/v2/content?id=999&key=otv.web.kgo.story&station=kgo",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"id\": 999}}"
+  },
+  {
+   "url": "https://clips.abcotvs.com/vogo/video/getByIds?ids=214814",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "clips-214814.json"
+  },
+  {
+   "url": "https://clips.abcotvs.com/synthetic/clip-214814/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "clip-master.m3u8"
+  }
+ ]
+}

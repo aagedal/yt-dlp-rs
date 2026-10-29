@@ -1,0 +1,50 @@
+{
+ "routes": [
+  {
+   "url": "http://news.cts.com.tw/cts/international/201501/201501291578999.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-ctsplayer.html"
+  },
+  {
+   "url": "http://news.cts.com.tw/cts/international/201501/201501291578888.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-youtube.html"
+  },
+  {
+   "url": "http://news.cts.com.tw/cts/international/201501/201501291578777.html",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "not found"
+  },
+  {
+   "url": "http://news.cts.com.tw/action/test_mp4feed.php?news_id=9001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "mp4feed.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "youtube-watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "youtube-visionos.json"
+  }
+ ]
+}

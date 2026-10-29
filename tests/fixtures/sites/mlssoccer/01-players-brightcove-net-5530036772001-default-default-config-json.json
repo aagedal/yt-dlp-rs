@@ -1,0 +1,130 @@
+{
+  "account_id": "5530036772001",
+  "autoadvance": null,
+  "autoplay": false,
+  "compatibility": true,
+  "css": {
+    "controlBarColor": "rgba(0, 0, 0, 0.45)",
+    "controlColor": "#fff",
+    "progressColor": "rgb(69, 137, 255)"
+  },
+  "dock": true,
+  "embed_id": "default",
+  "fullscreenControl": true,
+  "id": "default",
+  "play_button": {
+    "position": "center"
+  },
+  "player": {
+    "inactive": false,
+    "template": {
+      "locked": false,
+      "name": "single-video-template",
+      "version": "6.67.7",
+      "version_alias": null
+    }
+  },
+  "player_id": "default",
+  "player_name": "Brightcove Default Player",
+  "plugins": [
+    {
+      "injected_version": "3.14.0",
+      "name": "social",
+      "options": {
+        "deeplinking": false,
+        "description": "",
+        "displayAfterVideo": false,
+        "offset": "",
+        "services": {
+          "facebook": true,
+          "google": false,
+          "linkedin": false,
+          "pinterest": false,
+          "tumblr": false,
+          "twitter": true
+        },
+        "title": "",
+        "url": ""
+      },
+      "registry_id": "@brightcove/videojs-social",
+      "scripts": [
+        "//players.brightcove.net/videojs-social/3.14.0/videojs-social.js",
+        "//players.brightcove.net/videojs-social/3.14.0/lang/ar.js",
+        "//players.brightcove.net/videojs-social/3.14.0/lang/de.js",
+        "//players.brightcove.net/videojs-social/3.14.0/lang/es.js",
+        "//players.brightcove.net/videojs-social/3.14.0/lang/fi.js",
+        "//players.brightcove.net/videojs-social/3.14.0/lang/fr.js",
+        "//players.brightcove.net/videojs-social/3.14.0/lang/gl.js",
+        "//players.brightcove.net/videojs-social/3.14.0/lang/ja.js",
+        "//players.brightcove.net/videojs-social/3.14.0/lang/ko.js",
+        "//players.brightcove.net/videojs-social/3.14.0/lang/pt.js",
+        "//players.brightcove.net/videojs-social/3.14.0/lang/sv.js",
+        "//players.brightcove.net/videojs-social/3.14.0/lang/tr.js",
+        "//players.brightcove.net/videojs-social/3.14.0/lang/zh-Hans.js",
+        "//players.brightcove.net/videojs-social/3.14.0/lang/zh-Hant.js"
+      ],
+      "stylesheets": [
+        "//players.brightcove.net/videojs-social/3.14.0/videojs-social.css"
+      ],
+      "version": "3.x"
+    },
+    {
+      "injected_version": "3.8.2",
+      "name": "ima3",
+      "options": {
+        "adTechOrder": [
+          "html5"
+        ],
+        "hardTimeouts": true,
+        "requestMode": "onload",
+        "serverUrl": "",
+        "timeout": 5000,
+        "useMediaCuePoints": false,
+        "vpaidMode": "ENABLED"
+      },
+      "registry_id": "@brightcove/videojs-ima3",
+      "scripts": [
+        "//players.brightcove.net/videojs-ima3/3.8.2/videojs.ima3.min.js"
+      ],
+      "stylesheets": [
+        "//players.brightcove.net/videojs-ima3/3.8.2/videojs.ima3.min.css"
+      ],
+      "version": "3.x"
+    },
+    {
+      "injected_version": "1.3.4",
+      "name": "chromecastReceiver",
+      "registry_id": "@brightcove/videojs-chromecast-receiver",
+      "scripts": [
+        "//players.brightcove.net/videojs-chromecast-receiver/1.3.4/videojs-chromecast-receiver.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/1.3.4/lang/ar.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/1.3.4/lang/de.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/1.3.4/lang/es.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/1.3.4/lang/fr.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/1.3.4/lang/ja.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/1.3.4/lang/ko.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/1.3.4/lang/zh-Hans.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/1.3.4/lang/zh-Hant.js"
+      ],
+      "stylesheets": [
+        "//players.brightcove.net/videojs-chromecast-receiver/1.3.4/videojs-chromecast-receiver.css"
+      ],
+      "version": "1.x"
+    }
+  ],
+  "preload": "metadata",
+  "studio_configuration": {
+    "player": {
+      "adjusted": true,
+      "height": 56.25,
+      "previous_version": "5.28.1",
+      "responsive": true,
+      "units": "%",
+      "width": 100
+    }
+  },
+  "updated_at": "2022-03-15T14:02:05.364Z",
+  "video_cloud": {
+    "policy_key": "BCpkFIXTURE0002"
+  }
+}

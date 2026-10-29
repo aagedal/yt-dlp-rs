@@ -1,0 +1,90 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://video.nest.com/embedded/live/4fvYdSo8AX?autoplay=0",
+   "args": [
+    "--print",
+    "%(id)s|%(alt_title)s|%(location)s|%(availability)s|%(live_status)s|%(thumbnail)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "4fvYdSo8AX|Harbor|Los Angeles|NA|is_live|https://nexusapi-us1.camera.home.nest.com/get_image?uuid=76ef7d610ada4b61800d4d698c52fa30&public=4fvYdSo8AX"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://video.nest.com/live/4fvYdSo8AX",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Nest] Extracting URL: https://video.nest.com/live/4fvYdSo8AX",
+    "[Nest] 4fvYdSo8AX: Downloading JSON metadata",
+    "[Nest] 4fvYdSo8AX: Downloading m3u8 information",
+    "[info] Available formats for 4fvYdSo8AX:",
+    "ID EXT RESOLUTION |  TBR PROTO | VCODEC      VBR ACODEC",
+    "-----------------------------------------------------------",
+    "0  mp4 1920x1080  | 288k m3u8  | avc1.77.41 288k video only"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://video.nest.com/embedded/clip/34e0432adc3c46a98529443d8ad5aa76",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"34e0432adc3c46a98529443d8ad5aa76\", \"title\": \"Shootout at Veterans Boulevard at Fleur De Lis Drive\", \"thumbnail\": \"https://clips.dropcam.com/34e0432adc3c46a98529443d8ad5aa76.jpg\", \"url\": \"https://clips.dropcam.com/34e0432adc3c46a98529443d8ad5aa76.mp4\", \"timestamp\": 1692262897.191, \"webpage_url\": \"https://video.nest.com/embedded/clip/34e0432adc3c46a98529443d8ad5aa76\", \"original_url\": \"https://video.nest.com/embedded/clip/34e0432adc3c46a98529443d8ad5aa76\", \"webpage_url_basename\": \"34e0432adc3c46a98529443d8ad5aa76\", \"webpage_url_domain\": \"video.nest.com\", \"extractor\": \"NestClip\", \"extractor_key\": \"NestClip\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://clips.dropcam.com/34e0432adc3c46a98529443d8ad5aa76.jpg\", \"id\": \"0\"}], \"display_id\": \"34e0432adc3c46a98529443d8ad5aa76\", \"fulltitle\": \"Shootout at Veterans Boulevard at Fleur De Lis Drive\", \"upload_date\": \"20230817\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Shootout at Veterans Boulevard at Fleur De Lis Drive [34e0432adc3c46a98529443d8ad5aa76].mp4\", \"filename\": \"Shootout at Veterans Boulevard at Fleur De Lis Drive [34e0432adc3c46a98529443d8ad5aa76].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://video.nest.com/live/nocamera",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://video.nest.com/live/nouuid",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Nest] nouuid: Unable to construct playlist URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://video.nest.com/clip/missingclip",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [NestClip] missingclip: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

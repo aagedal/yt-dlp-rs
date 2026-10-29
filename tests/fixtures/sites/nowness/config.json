@@ -1,0 +1,70 @@
+{
+  "account_id": "2385340575001",
+  "ad_failover": false,
+  "autoadvance": null,
+  "autoplay": null,
+  "compatibility": true,
+  "css": {
+    "controlColor": "rgb(199, 169, 103)",
+    "progressColor": "rgb(255, 255, 255)"
+  },
+  "embed_id": "default",
+  "flashHlsDisabledByStudio": true,
+  "fullscreenControl": true,
+  "hls": true,
+  "id": "ce10c91c-c518-4eaf-bcca-71af09a3d116",
+  "playOnSelect": null,
+  "playback_rates": [
+    0.5,
+    0.75,
+    1,
+    1.25,
+    1.5,
+    1.75,
+    2
+  ],
+  "player": {
+    "inactive": false,
+    "template": {
+      "locked": true,
+      "name": "single-video-template",
+      "version": "7.21.0",
+      "version_alias": null
+    }
+  },
+  "player_id": "zizHCCKkX",
+  "player_name": "Nowness Current En (EMBED)",
+  "playlist": null,
+  "plugins": [
+    {
+      "name": "schema",
+      "scripts": [
+        "https://cdn.jsdelivr.net/npm/videojs-schema/dist/videojs-schema.min.js"
+      ]
+    }
+  ],
+  "preload": "metadata",
+  "scripts": [
+    "https://www.nowness.com/assets/bundle.brightcove.brightcovePlugin.js?v=9"
+  ],
+  "skin": false,
+  "studio_configuration": {
+    "player": {
+      "adjusted": true,
+      "height": 100,
+      "previous_version": "5.13.4",
+      "responsive": true,
+      "units": "%",
+      "width": 100
+    }
+  },
+  "stylesheets": [
+    "https://www.nowness.com/assets/bundle.brightcove.brightcovePlugin.css?v=8"
+  ],
+  "updated_at": "2024-06-13T07:08:01.059Z",
+  "video_cloud": {
+    "policy_key": "BCpkADawqM1ZRVKvQ7xGlfvvlZCDEyYcPaUHQju-y7rjn4k59KJL8eaD4887YX75fCHDVcXdvKv3l6rpMiI0khuD1F8W4Lo1sM2fdJd2z__3Xm99PUGN9CzE8LBLwyZs1XdgP5h6p_p9t2fO",
+    "video": null
+  },
+  "volume_orientation": "horizontal"
+}

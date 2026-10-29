@@ -1,0 +1,31 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://xxxymovies.com/videos/138669/ecstatic-orgasm-sofcore/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"138669\", \"display_id\": \"ecstatic-orgasm-sofcore\", \"url\": \"http://cdn5.xxxymovies.com/dl/0113/03508cf7d360db104c56fbac8b823991.mp4\", \"title\": \"Ecstatic Orgasm Sofcore with Sunny Leone\", \"thumbnail\": \"https://xxxymovies.com/contents/videos_screenshots/138000/138669/preview.jpg\", \"categories\": [\"solo\", \" teen\", \" babe\", \" brunette\", \" masturbation\", \" natural\", \" pornstar\", \" Sunny Leone\", \" stockings\"], \"duration\": 931, \"view_count\": 2605459, \"like_count\": 106, \"dislike_count\": 48, \"age_limit\": 18, \"webpage_url\": \"http://xxxymovies.com/videos/138669/ecstatic-orgasm-sofcore/\", \"original_url\": \"http://xxxymovies.com/videos/138669/ecstatic-orgasm-sofcore/\", \"webpage_url_basename\": \"ecstatic-orgasm-sofcore\", \"webpage_url_domain\": \"xxxymovies.com\", \"extractor\": \"XXXYMovies\", \"extractor_key\": \"XXXYMovies\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://xxxymovies.com/contents/videos_screenshots/138000/138669/preview.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Ecstatic Orgasm Sofcore with Sunny Leone\", \"duration_string\": \"15:31\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Ecstatic Orgasm Sofcore with Sunny Leone [138669].mp4\", \"filename\": \"Ecstatic Orgasm Sofcore with Sunny Leone [138669].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://xxxymovies.com/videos/1/synthetic/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [XXXYMovies] 1: Unable to extract video URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="static" mediaPresentationDuration="PT3M58.000S" minBufferTime="PT2.000S">
+  <BaseURL>https://nzmenewzealandherald.brightcovecdn.com/media/v1/dash/live/clear/1308227299001/fdd2b7d8-faed-41e2-bece-c2f9d5755832/</BaseURL>
+  <Period>
+    <AdaptationSet mimeType="audio/mp4" startWithSAP="1" segmentAlignment="true" lang="en">
+      <Label>en (Main)</Label>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
+      <SegmentTemplate duration="285696" initialization="$RepresentationID$/init.m4f?fastly_token=NmIwN2VjNmVfOWExZTA0MTMyNTY4MGZhYjc0NTVmNjczNDNmODU2MGJhY2Y2MjI5YTRkYjFiOTJhMTJlZTMxZWFiYzcyMWQ1N18vL256bWVuZXd6ZWFsYW5kaGVyYWxkLmJyaWdodGNvdmVjZG4uY29tL21lZGlhL3YxL2Rhc2gvbGl2ZS9jbGVhci8xMzA4MjI3Mjk5MDAxL2ZkZDJiN2Q4LWZhZWQtNDFlMi1iZWNlLWMyZjlkNTc1NTgzMi8%3D" media="$RepresentationID$/3x/segment$Number$.m4f?fastly_token=NmIwN2VjNmVfOWExZTA0MTMyNTY4MGZhYjc0NTVmNjczNDNmODU2MGJhY2Y2MjI5YTRkYjFiOTJhMTJlZTMxZWFiYzcyMWQ1N18vL256bWVuZXd6ZWFsYW5kaGVyYWxkLmJyaWdodGNvdmVjZG4uY29tL21lZGlhL3YxL2Rhc2gvbGl2ZS9jbGVhci8xMzA4MjI3Mjk5MDAxL2ZkZDJiN2Q4LWZhZWQtNDFlMi1iZWNlLWMyZjlkNTc1NTgzMi8%3D" startNumber="0" timescale="48000"></SegmentTemplate>
+      <Representation audioSamplingRate="48000" bandwidth="64000" codecs="mp4a.40.2" id="3806a8d0-1590-4f2f-8fc7-afdfafde8b62"></Representation>
+      <Representation audioSamplingRate="48000" bandwidth="127000" codecs="mp4a.40.2" id="88d269b8-2427-44d7-8ed9-acdf64c3c01c"></Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="video/mp4" startWithSAP="1" scanType="progressive" segmentAlignment="true">
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
+      <SegmentTemplate duration="150" initialization="$RepresentationID$/init.m4f?fastly_token=NmIwN2VjNmVfOWExZTA0MTMyNTY4MGZhYjc0NTVmNjczNDNmODU2MGJhY2Y2MjI5YTRkYjFiOTJhMTJlZTMxZWFiYzcyMWQ1N18vL256bWVuZXd6ZWFsYW5kaGVyYWxkLmJyaWdodGNvdmVjZG4uY29tL21lZGlhL3YxL2Rhc2gvbGl2ZS9jbGVhci8xMzA4MjI3Mjk5MDAxL2ZkZDJiN2Q4LWZhZWQtNDFlMi1iZWNlLWMyZjlkNTc1NTgzMi8%3D" media="$RepresentationID$/3x/segment$Number$.m4f?fastly_token=NmIwN2VjNmVfOWExZTA0MTMyNTY4MGZhYjc0NTVmNjczNDNmODU2MGJhY2Y2MjI5YTRkYjFiOTJhMTJlZTMxZWFiYzcyMWQ1N18vL256bWVuZXd6ZWFsYW5kaGVyYWxkLmJyaWdodGNvdmVjZG4uY29tL21lZGlhL3YxL2Rhc2gvbGl2ZS9jbGVhci8xMzA4MjI3Mjk5MDAxL2ZkZDJiN2Q4LWZhZWQtNDFlMi1iZWNlLWMyZjlkNTc1NTgzMi8%3D" startNumber="0" timescale="25"></SegmentTemplate>
+      <Representation bandwidth="241000" codecs="avc1.42000d" frameRate="25/1" height="216" id="80662972-aedb-4acf-8454-07077793f4ff" width="384"></Representation>
+      <Representation bandwidth="458000" codecs="avc1.4d001e" frameRate="25/1" height="360" id="1dce9a9e-e43a-4cfd-866a-108c225f84f8" width="640"></Representation>
+      <Representation bandwidth="871000" codecs="avc1.4d001f" frameRate="25/1" height="540" id="69c1ecfc-c7a5-4ec1-8f66-11aadd87a2ec" width="960"></Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>

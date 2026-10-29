@@ -1,0 +1,88 @@
+{
+ "routes": [
+  {
+   "url": "https://www.ethnos.gr/watch/101009/nikoskaprabelosdenexoymekanenanasthenhsemethmethmetallaxhomikron",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "ethnos-101009.html"
+  },
+  {
+   "url": "https://www.tvopen.gr/watch/101009/nikoskaprabelosdenexoymekanenanasthenhsemethmethmetallaxhomikron",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "tvopen-101009.html"
+  },
+  {
+   "url": "https://www.tvopen.gr/templates/data/player?cid=101009",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "player-101009.json"
+  },
+  {
+   "url": "https://openvodlw2.siliconweb.com/openTV/_definst_/openTVbase/mp4:e3e8e1b9-e372-4c4b-951e-890758c3eff3.mp4/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "playlist-101009.m3u8"
+  },
+  {
+   "url": "https://openvodlw2.siliconweb.com/openTV/_definst_/openTVbase/mp4:e3e8e1b9-e372-4c4b-951e-890758c3eff3.mp4/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-101009.mpd"
+  },
+  {
+   "url": "https://cdn.ethnos.gr/embed/100963",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "embed-100963.html"
+  },
+  {
+   "url": "https://www.tvopen.gr/watch/100963/koronoiosapotoysdieythyntestonsxoleionselftestgiaosoysdenbrhkan",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "tvopen-100963.html"
+  },
+  {
+   "url": "https://www.tvopen.gr/templates/data/player?cid=100963",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "player-100963.json"
+  },
+  {
+   "url": "https://openvodlw2.siliconweb.com/openTV/_definst_/openTVbase/mp4:4094473b-9de9-4ddd-b52e-81d0bc7b4aa6.mp4/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "playlist-100963.m3u8"
+  },
+  {
+   "url": "https://openvodlw2.siliconweb.com/openTV/_definst_/openTVbase/mp4:4094473b-9de9-4ddd-b52e-81d0bc7b4aa6.mp4/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-100963.mpd"
+  },
+  {
+   "url": "https://www.tvopen.gr/watch/999999/synthnoformats",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "tvopen-synth-nofmt.html"
+  },
+  {
+   "url": "https://www.tvopen.gr/templates/data/player?cid=999999",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "player-synth-empty.json"
+  }
+ ]
+}

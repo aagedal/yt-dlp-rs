@@ -133,12 +133,12 @@ fn announce(name: &'static str, url: &Url) {
     ));
 }
 
-fn unsupported(what: &str) -> Error {
+pub(crate) fn unsupported(what: &str) -> Error {
     Error::UnsupportedHtml5(format!("ZDF {what} are not supported natively"))
 }
 
 /// A `KeyError` reported as `ExtractorError(video_id=get_temp_id(url))`.
-fn key_error(id: &str, key: &str) -> Error {
+pub(crate) fn key_error(id: &str, key: &str) -> Error {
     Error::Reported(format!(
         "{id}: An extractor error has occurred. (caused by KeyError('{key}')); {}",
         crate::BUG_REPORTS_MESSAGE
@@ -153,7 +153,7 @@ fn extractor_error(name: &str, id: &str, message: &str) -> Error {
     ))
 }
 
-fn truthy(value: &Value) -> bool {
+pub(crate) fn truthy(value: &Value) -> bool {
     super::nuxt::truthy(value)
 }
 
@@ -168,19 +168,19 @@ fn branch(value: Option<&Value>) -> Vec<&Value> {
 }
 
 /// A `traverse_obj` path of dict keys.
-fn path<'a>(value: &'a Value, keys: &[&str]) -> Option<&'a Value> {
+pub(crate) fn path<'a>(value: &'a Value, keys: &[&str]) -> Option<&'a Value> {
     keys.iter()
         .try_fold(value, |value, key| value.get(*key))
         .filter(|value| !value.is_null())
 }
 
 /// `{str}`.
-fn text(value: Option<&Value>) -> Option<String> {
+pub(crate) fn text(value: Option<&Value>) -> Option<String> {
     value.and_then(Value::as_str).map(str::to_owned)
 }
 
 /// `int_or_none`: Python's `int()` of numbers, booleans and integer text.
-fn int_or_none(value: Option<&Value>) -> Option<i64> {
+pub(crate) fn int_or_none(value: Option<&Value>) -> Option<i64> {
     match value? {
         Value::Bool(flag) => Some(i64::from(*flag)),
         Value::Number(number) => number
@@ -241,7 +241,7 @@ fn join_nonempty(values: &[Option<&str>], delim: &str) -> String {
 /// request with `headers=` (a POST with `body`), `ERRNOTE: ...` for HTTP
 /// errors.
 #[allow(clippy::too_many_arguments)]
-fn request_json(
+pub(crate) fn request_json(
     client: &Client,
     url: &Url,
     name: &'static str,
@@ -448,17 +448,17 @@ fn extract_subtitles(captions: &[&Value]) -> Result<Subtitles> {
 
 /// A PTMD URL and whether it is a German Sign Language variant
 /// (`smuggle_url(ptmd_url, {'vod_media_type': 'DGS'})`).
-struct PtmdUrl {
-    url: String,
-    is_dgs: bool,
+pub(crate) struct PtmdUrl {
+    pub(crate) url: String,
+    pub(crate) is_dgs: bool,
 }
 
 /// `ZDFBaseIE._extract_ptmd`'s result.
-struct Ptmd {
-    content_id: Option<String>,
-    duration: Option<f64>,
-    formats: Vec<VideoFormat>,
-    subtitles: Subtitles,
+pub(crate) struct Ptmd {
+    pub(crate) content_id: Option<String>,
+    pub(crate) duration: Option<f64>,
+    pub(crate) formats: Vec<VideoFormat>,
+    pub(crate) subtitles: Subtitles,
 }
 
 /// A track's string field (`variant.get(key)`).
@@ -565,8 +565,9 @@ impl TrackInfo<'_> {
 }
 
 /// `ZDFBaseIE._extract_ptmd(ptmd_urls, video_id, api_token, aspect_ratio)`.
-fn extract_ptmd(
+pub(crate) fn extract_ptmd(
     client: &Client,
+    name: &'static str,
     ptmd_urls: &[PtmdUrl],
     video_id: &str,
     token: &str,
@@ -582,7 +583,7 @@ fn extract_ptmd(
         let ptmd = request_json(
             client,
             &url,
-            NAME,
+            name,
             Some(video_id),
             "Downloading PTMD data",
             "Failed to download PTMD data",
@@ -653,7 +654,7 @@ fn extract_ptmd(
                                 let Some(stream) = extract_m3u8_master_optional(
                                     client,
                                     &manifest,
-                                    NAME,
+                                    name,
                                     video_id,
                                     Some("hls"),
                                     false,
@@ -737,14 +738,14 @@ fn extract_ptmd(
                                     ("language", f_lang.map_or(Value::Null, Value::from)),
                                     ("language_preference", lang_pref.into()),
                                 ]);
-                                let mut format = dict_format(fields, NAME, video_id)?;
+                                let mut format = dict_format(fields, name, video_id)?;
                                 if tbr.is_some() {
                                     crate::info_order::mark_int_rates(&mut format);
                                 }
                                 formats.push(format);
                             }
                             _ => crate::screen::warning(&format!(
-                                "[{NAME}] {video_id}: Skipping unsupported extension \"{ext}\""
+                                "[{name}] {video_id}: Skipping unsupported extension \"{ext}\""
                             )),
                         }
                     }
@@ -762,7 +763,7 @@ fn extract_ptmd(
 }
 
 /// `ZDFBaseIE._extract_thumbnails(source)`: a dict's URL values by key.
-fn extract_thumbnails(source: &Value) -> Value {
+pub(crate) fn extract_thumbnails(source: &Value) -> Value {
     let Value::Object(map) = source else {
         return Value::Array(Vec::new());
     };
@@ -794,7 +795,7 @@ fn extract_thumbnails(source: &Value) -> Value {
 }
 
 /// `ZDFBaseIE._extract_chapters(data)`: anchors with a truthy offset.
-fn extract_chapters(data: Option<&Value>) -> Option<Value> {
+pub(crate) fn extract_chapters(data: Option<&Value>) -> Option<Value> {
     let chapters: Vec<Value> = branch(data)
         .into_iter()
         .filter(|anchor| anchor.get("anchorOffset").is_some_and(truthy))
@@ -813,7 +814,7 @@ fn extract_chapters(data: Option<&Value>) -> Option<Value> {
 }
 
 /// `ZDFBaseIE._parse_aspect_ratio`.
-fn parse_aspect_ratio(value: Option<&Value>) -> Result<Option<f64>> {
+pub(crate) fn parse_aspect_ratio(value: Option<&Value>) -> Result<Option<f64>> {
     let Some(Value::String(text)) = value else {
         return Ok(None);
     };
@@ -837,7 +838,7 @@ fn archive_ids(ptmd: &Ptmd, video_id: &str) -> Value {
 }
 
 /// Extend the info dict's shape (chapter and thumbnail key orders).
-fn mark_shape(info: &mut VideoInfo, suffix: &str) {
+pub(crate) fn mark_shape(info: &mut VideoInfo, suffix: &str) {
     if let Some(Value::String(shape)) = info.extra.get_mut(crate::info_order::INFO_SHAPE) {
         shape.push_str(suffix);
     }
@@ -917,6 +918,7 @@ fn extract_fallback(client: &Client, page: &Url, document_id: &str) -> Result<Vi
     let token = api_token(client, (NAME, document_id))?;
     let ptmd = extract_ptmd(
         client,
+        NAME,
         &[PtmdUrl {
             url: ptmd_url,
             is_dgs: false,
@@ -1035,7 +1037,7 @@ impl Extractor for Zdf {
             fields.push(("chapters", chapters));
         }
         let token = api_token(client, (NAME, &video_id))?;
-        let ptmd = extract_ptmd(client, &ptmd_urls, &video_id, &token, aspect_ratio)?;
+        let ptmd = extract_ptmd(client, NAME, &ptmd_urls, &video_id, &token, aspect_ratio)?;
         fields.push(("duration", ptmd.duration.map_or(Value::Null, Value::from)));
         fields.push(("formats", Value::Null));
         fields.push(("subtitles", Value::Null));

@@ -1,0 +1,32 @@
+[
+ {
+  "url": "https://vid.ly/2i3o9j/embed",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://s.vid.ly/embeded.html?link=jw_test",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://vid.ly/synthvidly",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://vid.ly/synthflash",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://vid.ly/synthmissing",
+  "args": [
+   "-J"
+  ]
+ }
+]

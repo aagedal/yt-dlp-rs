@@ -1,0 +1,53 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://adult.noodlemagazine.com/watch/-67421364_456239604",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"-67421364_456239604\", \"formats\": [{\"url\": \"https://cdn77-pr.pvvstream.pro/videos/144/-67421364_456239604.mp4?url=dmt2ZDMzOC5va2Nkbi5ydS8_ZXhwaXJlcz0xNzkzNTYzMzY1MzU2JnNyY0lwPTQ1Ljg0LjI4LjE5MyZwcj00MCZzcmNBZz1VTktOT1dOJm1zPTE3Ni4xMTIuMTcyLjIwNSZ0eXBlPTQmc2lnPU1ySVNqMm9URkRZJmN0PTAmdXJscz0xNzguMjM3LjIzLjE1NSZjbGllbnRUeXBlPTE0JmFwcElkPTUxMjAwMDM4NDM5NyZpZD0yNDIzOTkxODk2NTc4&secure=YXmhCnfr1Ci5WXZK1ztHKw%3D%3D%2C1793390565\", \"format_id\": \"144\", \"height\": 144, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"144p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"144 - 144p\"}, {\"url\": \"https://cdn77-pr.pvvstream.pro/videos/240/-67421364_456239604.mp4?url=dmt2ZDMzOC5va2Nkbi5ydS8_ZXhwaXJlcz0xNzkzNTYzMzY1MzU2JnNyY0lwPTQ1Ljg0LjI4LjE5MyZwcj00MCZzcmNBZz1VTktOT1dOJm1zPTE3Ni4xMTIuMTcyLjIwNSZ0eXBlPTAmc2lnPXUwcF9tSER2RzVFJmN0PTAmdXJscz0xNzguMjM3LjIzLjE1NSZjbGllbnRUeXBlPTE0JmFwcElkPTUxMjAwMDM4NDM5NyZpZD0yNDIzOTkxODk2NTc4&secure=mcno_R0M4_rtY02P4cRJ6A%3D%3D%2C1793390565\", \"format_id\": \"240\", \"height\": 240, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"240p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"240 - 240p\"}, {\"url\": \"https://cdn77-pr.pvvstream.pro/videos/360/-67421364_456239604.mp4?url=dmt2ZDMzOC5va2Nkbi5ydS8_ZXhwaXJlcz0xNzkzNTYzMzY1MzU2JnNyY0lwPTQ1Ljg0LjI4LjE5MyZwcj00MCZzcmNBZz1VTktOT1dOJm1zPTE3Ni4xMTIuMTcyLjIwNSZ0eXBlPTEmc2lnPXJrZ2tkY0ktcTFNJmN0PTAmdXJscz0xNzguMjM3LjIzLjE1NSZjbGllbnRUeXBlPTE0JmFwcElkPTUxMjAwMDM4NDM5NyZpZD0yNDIzOTkxODk2NTc4&secure=WoUjEr5N-A9k7weSt93SXw%3D%3D%2C1793390565\", \"format_id\": \"360\", \"height\": 360, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360 - 360p\"}, {\"url\": \"https://cdn77-pr.pvvstream.pro/videos/480/-67421364_456239604.mp4?url=dmt2ZDMzOC5va2Nkbi5ydS8_ZXhwaXJlcz0xNzkzNTYzMzY1MzU2JnNyY0lwPTQ1Ljg0LjI4LjE5MyZwcj00MCZzcmNBZz1VTktOT1dOJm1zPTE3Ni4xMTIuMTcyLjIwNSZ0eXBlPTImc2lnPVhKUDlGb1JkWVFNJmN0PTAmdXJscz0xNzguMjM3LjIzLjE1NSZjbGllbnRUeXBlPTE0JmFwcElkPTUxMjAwMDM4NDM5NyZpZD0yNDIzOTkxODk2NTc4&secure=z_qAWjrHT2EjwfskKp9DEg%3D%3D%2C1793390565\", \"format_id\": \"480\", \"height\": 480, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"480 - 480p\"}, {\"url\": \"https://cdn77-pr.pvvstream.pro/videos/720/-67421364_456239604.mp4?url=dmt2ZDMzOC5va2Nkbi5ydS8_ZXhwaXJlcz0xNzkzNTYzMzY1MzU2JnNyY0lwPTQ1Ljg0LjI4LjE5MyZwcj00MCZzcmNBZz1VTktOT1dOJm1zPTE3Ni4xMTIuMTcyLjIwNSZ0eXBlPTMmc2lnPTY0NUtYSHFUdkxFJmN0PTAmdXJscz0xNzguMjM3LjIzLjE1NSZjbGllbnRUeXBlPTE0JmFwcElkPTUxMjAwMDM4NDM5NyZpZD0yNDIzOTkxODk2NTc4&secure=qMkEhNXiA8TSm_DiS8oTQw%3D%3D%2C1793390565\", \"format_id\": \"720\", \"height\": 720, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720 - 720p\"}, {\"url\": \"https://cdn77-pr.pvvstream.pro/videos/1080/-67421364_456239604.mp4?url=dmt2ZDMzOC5va2Nkbi5ydS8_ZXhwaXJlcz0xNzkzNTYzMzY1MzU2JnNyY0lwPTQ1Ljg0LjI4LjE5MyZwcj00MCZzcmNBZz1VTktOT1dOJm1zPTE3Ni4xMTIuMTcyLjIwNSZ0eXBlPTUmc2lnPVNSVG1VcmxYQktFJmN0PTAmdXJscz0xNzguMjM3LjIzLjE1NSZjbGllbnRUeXBlPTE0JmFwcElkPTUxMjAwMDM4NDM5NyZpZD0yNDIzOTkxODk2NTc4&secure=DAQvXU-nqQSjVBnlKk9E-Q%3D%3D%2C1793390565\", \"format_id\": \"1080\", \"height\": 1080, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080 - 1080p\"}], \"title\": \"Aria alexander manojob\", \"thumbnail\": \"https://img.pvvstream.pro/preview/_zavge90M3kwhEw7wsQj-A/-67421364_456239604/450/sun9-71.userapi.com/c844321/v844321192/1b2fb3/Q0UPf2yX50o.jpg\", \"duration\": 903, \"description\": \"Aria alexander manojob\", \"tags\": [\"aria\", \"alexander\", \"manojob\"], \"view_count\": 30938, \"like_count\": 1, \"upload_date\": \"20190218\", \"age_limit\": 18, \"webpage_url\": \"https://adult.noodlemagazine.com/watch/-67421364_456239604\", \"original_url\": \"https://adult.noodlemagazine.com/watch/-67421364_456239604\", \"webpage_url_basename\": \"-67421364_456239604\", \"webpage_url_domain\": \"adult.noodlemagazine.com\", \"extractor\": \"NoodleMagazine\", \"extractor_key\": \"NoodleMagazine\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.pvvstream.pro/preview/_zavge90M3kwhEw7wsQj-A/-67421364_456239604/450/sun9-71.userapi.com/c844321/v844321192/1b2fb3/Q0UPf2yX50o.jpg\", \"id\": \"0\"}], \"display_id\": \"-67421364_456239604\", \"fulltitle\": \"Aria alexander manojob\", \"duration_string\": \"15:03\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cdn77-pr.pvvstream.pro/videos/1080/-67421364_456239604.mp4?url=dmt2ZDMzOC5va2Nkbi5ydS8_ZXhwaXJlcz0xNzkzNTYzMzY1MzU2JnNyY0lwPTQ1Ljg0LjI4LjE5MyZwcj00MCZzcmNBZz1VTktOT1dOJm1zPTE3Ni4xMTIuMTcyLjIwNSZ0eXBlPTUmc2lnPVNSVG1VcmxYQktFJmN0PTAmdXJscz0xNzguMjM3LjIzLjE1NSZjbGllbnRUeXBlPTE0JmFwcElkPTUxMjAwMDM4NDM5NyZpZD0yNDIzOTkxODk2NTc4&secure=DAQvXU-nqQSjVBnlKk9E-Q%3D%3D%2C1793390565\", \"format_id\": \"1080\", \"height\": 1080, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080 - 1080p\", \"_filename\": \"Aria alexander manojob [-67421364_456239604].mp4\", \"filename\": \"Aria alexander manojob [-67421364_456239604].mp4\", \"__write_download_archive\": false}], \"url\": \"https://cdn77-pr.pvvstream.pro/videos/1080/-67421364_456239604.mp4?url=dmt2ZDMzOC5va2Nkbi5ydS8_ZXhwaXJlcz0xNzkzNTYzMzY1MzU2JnNyY0lwPTQ1Ljg0LjI4LjE5MyZwcj00MCZzcmNBZz1VTktOT1dOJm1zPTE3Ni4xMTIuMTcyLjIwNSZ0eXBlPTUmc2lnPVNSVG1VcmxYQktFJmN0PTAmdXJscz0xNzguMjM3LjIzLjE1NSZjbGllbnRUeXBlPTE0JmFwcElkPTUxMjAwMDM4NDM5NyZpZD0yNDIzOTkxODk2NTc4&secure=DAQvXU-nqQSjVBnlKk9E-Q%3D%3D%2C1793390565\", \"format_id\": \"1080\", \"height\": 1080, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080 - 1080p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://adult.noodlemagazine.com/watch/-67421364_456239604",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[NoodleMagazine] Extracting URL: https://adult.noodlemagazine.com/watch/-67421364_456239604",
+    "[NoodleMagazine] -67421364_456239604: Downloading webpage",
+    "[info] Available formats for -67421364_456239604:",
+    "ID   EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "---------------------------------------------",
+    "144  mp4 144p       | https | unknown unknown",
+    "240  mp4 240p       | https | unknown unknown",
+    "360  mp4 360p       | https | unknown unknown",
+    "480  mp4 480p       | https | unknown unknown",
+    "720  mp4 720p       | https | unknown unknown",
+    "1080 mp4 1080p      | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://adult.noodlemagazine.com/watch/1_2",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [NoodleMagazine] 1_2: Unable to extract 1_2; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

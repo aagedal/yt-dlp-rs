@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://www.redtube.com/38864951",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://www.redtube.com/media/hls?s=eyJ2a2V5IjozODg2NDk1MSwicyI6IjU2ZTI4NjZkYTJmNmYyZjNmOGM0NzcwOGRiMzBkYThmOWUyMjRhMjNiZmMwY2VlOWU3NmM5MjE2NGE5N2UxZGIiLCJndCI6MTc5MzMwNDE2NywiZSI6ZmFsc2V9",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "media-hls.json"
+  },
+  {
+   "url": "https://ev-h-ph.rdtcdn.com/hls/videos/201912/07/266878312/221011_0233_720P_4000K_266878312.mp4/master.m3u8?validfrom=1793300568&validto=1793307768&hdl=-1&hash=Ht8FUyCYT1eX6sqRChKla%2BJ%2FF1w%3D",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-720.m3u8"
+  },
+  {
+   "url": "https://ev-h-ph.rdtcdn.com/hls/videos/201912/07/266878312/221011_0233_480P_2000K_266878312.mp4/master.m3u8?validfrom=1793300568&validto=1793307768&hdl=-1&hash=ycdETqD8FWbb2PhrReSu8jg5joE%3D",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-480.m3u8"
+  },
+  {
+   "url": "https://ev-h-ph.rdtcdn.com/hls/videos/201912/07/266878312/221011_0233_240P_1000K_266878312.mp4/master.m3u8?validfrom=1793300568&validto=1793307768&hdl=-1&hash=XjryqMZOGnSh6xQdh3BFlOV6D0E%3D",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-240.m3u8"
+  },
+  {
+   "url": "https://ev-h-ph.rdtcdn.com/hls/videos/201912/07/266878312/221011_0233_1080P_4000K_266878312.mp4/master.m3u8?validfrom=1793300568&validto=1793307768&hdl=-1&hash=fK4s3MusW51JpzcsD14vuJP1y88%3D",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-1080.m3u8"
+  },
+  {
+   "url": "https://www.redtube.com/media/mp4?s=eyJ2a2V5IjozODg2NDk1MSwicyI6IjU2ZTI4NjZkYTJmNmYyZjNmOGM0NzcwOGRiMzBkYThmOWUyMjRhMjNiZmMwY2VlOWU3NmM5MjE2NGE5N2UxZGIiLCJndCI6MTc5MzMwNDE2NywiZSI6ZmFsc2V9",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "media-mp4.json"
+  },
+  {
+   "url": "https://www.redtube.com/99999",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-removed.html"
+  }
+ ]
+}

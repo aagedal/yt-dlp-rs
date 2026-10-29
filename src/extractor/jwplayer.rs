@@ -158,11 +158,33 @@ pub(crate) fn parse_required(
     parse_with(data, video_id, base, true)
 }
 
+/// [`parse`] as `_parse_jwplayer_data(..., require_title=False)` returns it
+/// to an extractor: the entry keeps its `None` values, and a missing title
+/// stays `None`.
+pub(crate) fn parse_keeping_nulls(
+    data: &Value,
+    video_id: &str,
+    base: &Url,
+) -> Result<Option<Map<String, Value>>> {
+    parse_mode(data, video_id, base, false, true)
+}
+
 fn parse_with(
     data: &Value,
     video_id: &str,
     base: &Url,
     required: bool,
+) -> Result<Option<Map<String, Value>>> {
+    parse_mode(data, video_id, base, required, required)
+}
+
+/// `require_title` and whether `None` values are kept in the entry.
+fn parse_mode(
+    data: &Value,
+    video_id: &str,
+    base: &Url,
+    required: bool,
+    keep_nulls: bool,
 ) -> Result<Option<Map<String, Value>>> {
     let Some(object) = data.as_object() else {
         return Ok(None);
@@ -321,7 +343,7 @@ fn parse_with(
         Some(value) => {
             entry.insert(key.to_owned(), value);
         }
-        None if required => {
+        None if keep_nulls => {
             entry.insert(key.to_owned(), Value::Null);
         }
         None => {}

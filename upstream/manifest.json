@@ -5,6 +5,18 @@
   "upstream_version": "2026.10.26",
   "components": [
     {
+      "name": "abcotvs",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/abcotvs.py"
+      ],
+      "rust": [
+        "src/extractor/abcotvs.rs",
+        "tests/fixtures/sites/abcotvs/"
+      ],
+      "scope": "AbcOtvsIE station stories (HLS, m3u8 warning path, KeyError) and AbcOtvsClipsIE clip JSON (synthetic), compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "footyroom",
       "status": "partial",
       "upstream": [
@@ -607,6 +619,18 @@
       "scope": "AdobeTVVideoIE bridge JSON, HLS and direct sources, translation subtitles and metadata (no generic iframe embeds). Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "aeonco",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/aeonco.py"
+      ],
+      "rust": [
+        "src/extractor/aeonco.rs",
+        "tests/fixtures/sites/aeon/"
+      ],
+      "scope": "AeonCoIE JSON-LD embed hand-off to Vimeo (error paths only), compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "agalega",
       "status": "partial",
       "upstream": [
@@ -668,6 +692,18 @@
       "scope": "AlJazeeraIE GraphQL and page Brightcove players as url_transparent results; the GenericIE hand-off for pages without a player is not ported. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "altcensored",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/altcensored.py"
+      ],
+      "rust": [
+        "src/extractor/altcensored.rs",
+        "tests/fixtures/sites/altcensored/"
+      ],
+      "scope": "AltCensoredIE watch pages hand off to archive.org and AltCensoredChannelIE paged channel lists, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "amadeustv",
       "status": "partial",
       "upstream": [
@@ -678,6 +714,18 @@
         "tests/fixtures/sites/amadeustv/"
       ],
       "scope": "AmadeusTVIE window.__NUXT__ fetch data via _search_nuxt_data, the missing video ID error, Tencent Cloud play info source/transcode HTTP formats with Referer headers and the merged play info/item metadata compared with pinned upstream output through the fixture proxy; non-string codecs remain explicit native errors"
+    },
+    {
+      "name": "amcnetworks",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/amcnetworks.py"
+      ],
+      "rust": [
+        "src/extractor/amcnetworks.rs",
+        "tests/fixtures/sites/amcnetworks/"
+      ],
+      "scope": "AMCNetworksIE initial-data Brightcove hand-off, locked/DRM and missing-data errors, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "angel",
@@ -702,6 +750,18 @@
         "tests/fixtures/sites/apa/"
       ],
       "scope": "APAIE player JW Platform hand-off or HLS/progressive sources, and embeds, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "appleconnect",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/appleconnect.py"
+      ],
+      "rust": [
+        "src/extractor/appleconnect.rs",
+        "tests/fixtures/sites/appleconnect/"
+      ],
+      "scope": "AppleConnectIE through AppleBaseIE token lookup (synthetic JWT bundle), compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "applepodcasts",
@@ -4786,6 +4846,114 @@
       "scope": "ArnesIE public video API media files, metadata, channel URL, start time from the t query parameter, KeyError and missing-thumbnail TypeError errors, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "box",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/box.py"
+      ],
+      "rust": [
+        "src/extractor/box.rs",
+        "tests/fixtures/sites/box/"
+      ],
+      "scope": "BoxIE file and shared URLs (DASH representations, non-file and missing-config errors); HLS not handled, as upstream, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "bpb",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bpb.py"
+      ],
+      "rust": [
+        "src/extractor/bpb.rs",
+        "tests/fixtures/sites/bpb/"
+      ],
+      "scope": "BpbIE audio and video pages (bpb-player sources and metadata warnings), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "canalsurmas",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/canalsurmas.py"
+      ],
+      "rust": [
+        "src/extractor/canalsurmas.rs",
+        "tests/fixtures/sites/canalsurmas/"
+      ],
+      "scope": "CanalsurmasIE content API with an access token, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "ctsnews",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ctsnews.py"
+      ],
+      "rust": [
+        "src/extractor/ctsnews.rs",
+        "tests/fixtures/sites/ctsnews/"
+      ],
+      "scope": "CtsNewsIE CTSPlayer feed and YouTube embed hand-off, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "detik",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/detik.py"
+      ],
+      "rust": [
+        "src/extractor/detik.rs",
+        "tests/fixtures/sites/detik/"
+      ],
+      "scope": "DetikEmbedIE webpage embeds through the generic extractor (detikVideo and flowplayer players); playlists with subtitles are unsupported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "dreisat",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dreisat.py"
+      ],
+      "rust": [
+        "src/extractor/dreisat.rs",
+        "tests/fixtures/sites/dreisat/"
+      ],
+      "scope": "DreiSatIE on the ZDF base (player JSON, PTMD and HLS formats), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "eggs",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/eggs.py"
+      ],
+      "rust": [
+        "src/extractor/eggs.rs",
+        "tests/fixtures/sites/eggs/"
+      ],
+      "scope": "EggsIE songs (direct audio, YouTube hand-off) and EggsArtistIE playlists, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "embedly",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/embedly.py"
+      ],
+      "rust": [
+        "src/extractor/embedly.rs",
+        "tests/fixtures/sites/embedly/"
+      ],
+      "scope": "EmbedlyIE media.html src/url hand-off (webpage embed detection not ported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "gaia",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/gaia.py"
+      ],
+      "rust": [
+        "src/extractor/gaia.rs",
+        "tests/fixtures/sites/gaia/"
+      ],
+      "scope": "GaiaIE pathinfo/node/media APIs, HLS formats and text tracks, without login, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "videopress",
       "status": "partial",
       "upstream": [
@@ -5658,6 +5826,42 @@
       "scope": "_initialize_geo_bypass/__maybe_fake_ip_and_retry with GeoUtils' country block table and random_ipv4, --xff/--geo-bypass/--no-geo-bypass/--geo-bypass-country/--geo-bypass-ip-block (shared destination, Unsupported --xff), the X-Forwarded-For header on extraction requests, formats' http_headers and native downloads, ported extractors' _GEO_COUNTRIES/_GEO_BYPASS, GeoRestrictedError country names, raise_geo_restricted(metadata_available=True), and --ignore-no-formats-error (raise_no_formats warnings, formats: [] results, the forced dl error); smuggled geo_countries and --geo-verification-proxy are out of scope"
     },
     {
+      "name": "germanupa",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/germanupa.py"
+      ],
+      "rust": [
+        "src/extractor/germanupa.rs",
+        "tests/fixtures/sites/germanupa/"
+      ],
+      "scope": "GermanupaIE oEmbed Vimeo hand-off and members-only error; SoundCloud audio pages unsupported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "gmanetwork",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/gmanetwork.py"
+      ],
+      "rust": [
+        "src/extractor/gmanetwork.rs",
+        "tests/fixtures/sites/gmanetwork/"
+      ],
+      "scope": "GMANetworkVideoIE YouTube variable and API video files (Dailymotion branch untested), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "holodex",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/holodex.py"
+      ],
+      "rust": [
+        "src/extractor/holodex.rs",
+        "tests/fixtures/sites/holodex/"
+      ],
+      "scope": "HolodexIE watch hand-off to YouTube and playlist API (synthetic), compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "audio-extraction",
       "status": "partial",
       "upstream": [
@@ -5709,7 +5913,7 @@
         "tools/test_compare_video.py",
         "upstream/notes/video-processing.md"
       ],
-      "scope": "Pinned remux/recode target mappings, same-extension/unmapped skips, source stream-map/copy and AVI-Xvid plans, explicit bounded local FFmpeg with container defaults/faststart; ordered audio→video pipeline, all-stage keep retention, latest completed input on failure and no-clobber final publication; no generic postprocessor chains, encoder/preset configuration, separate pre-merge input retention, embedding or fixups; literal alac/vorbis video suffixes fail without a muxer"
+      "scope": "Pinned remux/recode target mappings, same-extension/unmapped skips, source stream-map/copy and AVI-Xvid plans, explicit bounded local FFmpeg with container defaults/faststart; ordered audio\u2192video pipeline, all-stage keep retention, latest completed input on failure and no-clobber final publication; no generic postprocessor chains, encoder/preset configuration, separate pre-merge input retention, embedding or fixups; literal alac/vorbis video suffixes fail without a muxer"
     },
     {
       "name": "thumbnail-processing",
@@ -5817,6 +6021,270 @@
         "tools/test_capture_info_order.py"
       ],
       "scope": "--write-info-json/--no-write-info-json video and playlist sidecars with default clean filtering, replace_extension naming, playlist template context, Python json.dump bytes, keep-existing default and ordering before media/entries; no overwrite options, --no-clean-info-json, --load-info-json, embedding, typed infojson templates or unmodeled upstream fields"
+    },
+    {
+      "name": "infoq",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/infoq.py"
+      ],
+      "rust": [
+        "src/extractor/infoq.rs",
+        "tests/fixtures/sites/infoq/"
+      ],
+      "scope": "InfoQIE RTMP, signed HTTP video and MP3 audio formats, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "kenh14",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/kenh14.py"
+      ],
+      "rust": [
+        "src/extractor/kenh14.rs",
+        "tests/fixtures/sites/kenh14/"
+      ],
+      "scope": "Kenh14VideoIE and Kenh14PlaylistIE (flat playlist), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "lemonde",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/lemonde.py"
+      ],
+      "rust": [
+        "src/extractor/lemonde.rs",
+        "tests/fixtures/sites/lemonde/"
+      ],
+      "scope": "LemondeIE Digiteka/Ultimedia player pages (other pages fall through to the generic extractor), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "medici",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/medici.py"
+      ],
+      "rust": [
+        "src/extractor/medici.rs",
+        "tests/fixtures/sites/medici/"
+      ],
+      "scope": "MediciIE www and edu presentations without login, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "mlssoccer",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mlssoccer.py"
+      ],
+      "rust": [
+        "src/extractor/mlssoccer.rs",
+        "tests/fixtures/sites/mlssoccer/"
+      ],
+      "scope": "MLSSoccerIE data-options Brightcove hand-off, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "nest",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nest.py"
+      ],
+      "rust": [
+        "src/extractor/nest.rs",
+        "tests/fixtures/sites/nest/"
+      ],
+      "scope": "NestIE live streams and NestClipIE clips, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "ninenow",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ninenow.py"
+      ],
+      "rust": [
+        "src/extractor/ninenow.rs",
+        "tests/fixtures/sites/ninenow/"
+      ],
+      "scope": "NineNowIE episodes and clips through Brightcove url_transparent results, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "noodlemagazine",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/noodlemagazine.py"
+      ],
+      "rust": [
+        "src/extractor/noodlemagazine.rs",
+        "tests/fixtures/sites/noodlemagazine/"
+      ],
+      "scope": "NoodleMagazineIE playlist sources (HLS sources unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "nowness",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nowness.py"
+      ],
+      "rust": [
+        "src/extractor/nowness.rs",
+        "tests/fixtures/sites/nowness/"
+      ],
+      "scope": "NownessIE, NownessPlaylistIE and NownessSeriesIE Brightcove players (Brightcove Legacy unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "nuvid",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nuvid.py"
+      ],
+      "rust": [
+        "src/extractor/nuvid.rs",
+        "tests/fixtures/sites/nuvid/"
+      ],
+      "scope": "NuvidIE player config formats and metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "nzherald",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nzherald.py"
+      ],
+      "rust": [
+        "src/extractor/nzherald.rs",
+        "tests/fixtures/sites/nzherald/"
+      ],
+      "scope": "NZHeraldIE Brightcove embeds and Fusion brightcoveId (customVideo unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "redtube",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/redtube.py"
+      ],
+      "rust": [
+        "src/extractor/redtube.rs",
+        "tests/fixtures/sites/redtube/"
+      ],
+      "scope": "RedTubeIE sources, mediaDefinition and HLS formats with JSON-LD metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "shemaroome",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/shemaroome.py"
+      ],
+      "rust": [
+        "src/extractor/shemaroome.rs",
+        "tests/fixtures/sites/shemaroome/"
+      ],
+      "scope": "ShemarooMeIE encrypted HLS URLs (premium and missing-page errors), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "thisoldhouse",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/thisoldhouse.py"
+      ],
+      "rust": [
+        "src/extractor/thisoldhouse.rs",
+        "tests/fixtures/sites/thisoldhouse/"
+      ],
+      "scope": "ThisOldHouseIE anonymous Brightcove pages and subscriber-locked error (no login), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "threeqsdn",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/threeqsdn.py"
+      ],
+      "rust": [
+        "src/extractor/threeqsdn.rs",
+        "tests/fixtures/sites/threeqsdn/"
+      ],
+      "scope": "ThreeQSDNIE playout configs (VOD, live, geo error); webpage embeds not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "toutiao",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/toutiao.py"
+      ],
+      "rust": [
+        "src/extractor/toutiao.rs",
+        "tests/fixtures/sites/toutiao/"
+      ],
+      "scope": "ToutiaoIE ttwid cookie initialization and RENDER_DATA formats, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "truth",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/truth.py"
+      ],
+      "rust": [
+        "src/extractor/truth.rs",
+        "tests/fixtures/sites/truth/"
+      ],
+      "scope": "TruthIE status API media, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "tvo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tvo.py"
+      ],
+      "rust": [
+        "src/extractor/tvo.rs",
+        "tests/fixtures/sites/tvo/"
+      ],
+      "scope": "TVOIE GraphQL Brightcove hand-off and geo error, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "tvopengr",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tvopengr.py"
+      ],
+      "rust": [
+        "src/extractor/tvopengr.rs",
+        "tests/fixtures/sites/tvopengr/"
+      ],
+      "scope": "TVOpenGrWatchIE and TVOpenGrEmbedIE JSON-LD and stream formats, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "vidly",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/vidly.py"
+      ],
+      "rust": [
+        "src/extractor/vidly.rs",
+        "tests/fixtures/sites/vidly/"
+      ],
+      "scope": "VidlyIE JW Player and native player embeds, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "xxxymovies",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/xxxymovies.py"
+      ],
+      "rust": [
+        "src/extractor/xxxymovies.rs",
+        "tests/fixtures/sites/xxxymovies/"
+      ],
+      "scope": "XXXYMoviesIE video URL and metadata, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "zenporn",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/zenporn.py"
+      ],
+      "rust": [
+        "src/extractor/zenporn.rs",
+        "tests/fixtures/sites/zenporn/"
+      ],
+      "scope": "ZenPornIE embed video URL, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "format-selection",

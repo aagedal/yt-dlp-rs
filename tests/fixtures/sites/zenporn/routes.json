@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://zenporn.com/video/8531117/amateur-students-having-a-fuck-fest-at-club/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://videotxxx.com/api/json/video/86400/12000000/12791000/12791908.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "info-12791908.json"
+  },
+  {
+   "url": "https://videotxxx.com/api/videofile.php?video_id=12791908&lifetime=8640000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "videofile-12791908.json"
+  },
+  {
+   "url": "https://zenporn.com/video/1/synthetic-noembed/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-noembed.html"
+  },
+  {
+   "url": "https://zenporn.com/video/2/synthetic-badurl/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-badurl.html"
+  },
+  {
+   "url": "https://videotxxx.com/api/videofile.php?video_id=999&lifetime=8640000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "videofile-999.json"
+  }
+ ]
+}

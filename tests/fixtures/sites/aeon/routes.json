@@ -1,0 +1,26 @@
+{
+ "routes": [
+  {
+   "url": "https://aeon.co/videos/raw-solar-storm-footage-is-the-punk-rock-antidote-to-sleek-james-webb-imagery",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://aeon.co/videos/synthetic-noembed",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-noembed.html"
+  },
+  {
+   "url": "https://aeon.co/videos/synthetic-missing",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<h1>Not found</h1>"
+  }
+ ]
+}

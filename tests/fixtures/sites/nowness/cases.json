@@ -1,0 +1,34 @@
+[
+ {
+  "url": "https://www.nowness.com/story/candor-the-art-of-gesticulation",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.nowness.com/series/60-seconds",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.nowness.com/playlist/3286/i-guess-thats-why-they-call-it-the-blues",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.nowness.com/story/synthetic-no-player",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.nowness.com/story/missing-story",
+  "args": [
+   "-J"
+  ]
+ }
+]

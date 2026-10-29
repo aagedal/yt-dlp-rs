@@ -1,0 +1,23 @@
+[
+ {
+  "url": "https://www.gaia.com/video/connecting-universal-consciousness?fullplayer=feature",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.gaia.com/video/connecting-universal-consciousness?fullplayer=preview",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.gaia.com/video/missing-video?fullplayer=feature",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ }
+]

@@ -1,0 +1,67 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.shemaroome.com/movies/dil-hai-tumhaara",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"dil-hai-tumhaara\", \"formats\": [{\"format_id\": \"464\", \"format_index\": null, \"url\": \"https://d10ywznpycs72s.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/640x360_500000/video.m3u8\", \"manifest_url\": \"https://d10ywznpycs72s.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/769d1137202141eae3d2e0f7b51054ef_main_laptop_paid_us.m3u8\", \"tbr\": 464.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d400d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Stream_Key\": \"eyJ1cmwiOiIvc2hlbWFyb28tdm9kL2FsdHBsYXRmb3JtL0RpbEhhaVR1bWhhYXJhRlVNSERTTlBtcDQtMzQwLyoiLCJob3N0bmFtZSI6ImQxMHl3em5weWNzNzJzLmNsb3VkZnJvbnQubmV0IiwicHJvdG9jb2wiOiJodHRwczoiLCJwb3J0IjoiNDQzIiwiZXhwaXJlcyI6MzU4NjY5NDc2Mn0=*z+94hFxtD/MReyFkyH+7RkGtQ4Rq0XNKN02KYmvnCP8=\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"format\": \"464 - 640x360\"}, {\"format_id\": \"764\", \"format_index\": null, \"url\": \"https://d10ywznpycs72s.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/854x480_800000/video.m3u8\", \"manifest_url\": \"https://d10ywznpycs72s.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/769d1137202141eae3d2e0f7b51054ef_main_laptop_paid_us.m3u8\", \"tbr\": 764.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 854, \"height\": 480, \"vcodec\": \"avc1.4d400d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Stream_Key\": \"eyJ1cmwiOiIvc2hlbWFyb28tdm9kL2FsdHBsYXRmb3JtL0RpbEhhaVR1bWhhYXJhRlVNSERTTlBtcDQtMzQwLyoiLCJob3N0bmFtZSI6ImQxMHl3em5weWNzNzJzLmNsb3VkZnJvbnQubmV0IiwicHJvdG9jb2wiOiJodHRwczoiLCJwb3J0IjoiNDQzIiwiZXhwaXJlcyI6MzU4NjY5NDc2Mn0=*z+94hFxtD/MReyFkyH+7RkGtQ4Rq0XNKN02KYmvnCP8=\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"854x480\", \"aspect_ratio\": 1.78, \"format\": \"764 - 854x480\"}, {\"format_id\": \"1378\", \"format_index\": null, \"url\": \"https://d10ywznpycs72s.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/1280x720_1500000/video.m3u8\", \"manifest_url\": \"https://d10ywznpycs72s.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/769d1137202141eae3d2e0f7b51054ef_main_laptop_paid_us.m3u8\", \"tbr\": 1378.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d400d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Stream_Key\": \"eyJ1cmwiOiIvc2hlbWFyb28tdm9kL2FsdHBsYXRmb3JtL0RpbEhhaVR1bWhhYXJhRlVNSERTTlBtcDQtMzQwLyoiLCJob3N0bmFtZSI6ImQxMHl3em5weWNzNzJzLmNsb3VkZnJvbnQubmV0IiwicHJvdG9jb2wiOiJodHRwczoiLCJwb3J0IjoiNDQzIiwiZXhwaXJlcyI6MzU4NjY5NDc2Mn0=*z+94hFxtD/MReyFkyH+7RkGtQ4Rq0XNKN02KYmvnCP8=\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"1378 - 1280x720\"}, {\"format_id\": \"2628\", \"format_index\": null, \"url\": \"https://d10ywznpycs72s.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/1920x1080_3000000/video.m3u8\", \"manifest_url\": \"https://d10ywznpycs72s.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/769d1137202141eae3d2e0f7b51054ef_main_laptop_paid_us.m3u8\", \"tbr\": 2628.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.4d400d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Stream_Key\": \"eyJ1cmwiOiIvc2hlbWFyb28tdm9kL2FsdHBsYXRmb3JtL0RpbEhhaVR1bWhhYXJhRlVNSERTTlBtcDQtMzQwLyoiLCJob3N0bmFtZSI6ImQxMHl3em5weWNzNzJzLmNsb3VkZnJvbnQubmV0IiwicHJvdG9jb2wiOiJodHRwczoiLCJwb3J0IjoiNDQzIiwiZXhwaXJlcyI6MzU4NjY5NDc2Mn0=*z+94hFxtD/MReyFkyH+7RkGtQ4Rq0XNKN02KYmvnCP8=\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"format\": \"2628 - 1920x1080\"}], \"title\": \"Dil Hai Tumhaara\", \"thumbnail\": \"https://daex9l847wg3n.cloudfront.net/shemoutputimages/Dil-Hai-Tumhaara/60599346a609d2faa3000020/large_16_9_1787223930061.jpg\", \"release_date\": \"20020905\", \"description\": \"\", \"subtitles\": {\"EN\": [{\"url\": \"https://d1hisuiegdphro.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/DilHaiTumhaara.srt\", \"ext\": \"srt\"}], \"en\": [{\"url\": \"https://d10ywznpycs72s.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/subtitles/en.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"webpage_url\": \"https://www.shemaroome.com/movies/dil-hai-tumhaara\", \"original_url\": \"https://www.shemaroome.com/movies/dil-hai-tumhaara\", \"webpage_url_basename\": \"dil-hai-tumhaara\", \"webpage_url_domain\": \"shemaroome.com\", \"extractor\": \"ShemarooMe\", \"extractor_key\": \"ShemarooMe\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://daex9l847wg3n.cloudfront.net/shemoutputimages/Dil-Hai-Tumhaara/60599346a609d2faa3000020/large_16_9_1787223930061.jpg\", \"id\": \"0\"}], \"display_id\": \"dil-hai-tumhaara\", \"fulltitle\": \"Dil Hai Tumhaara\", \"release_year\": 2002, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"2628\", \"url\": \"https://d10ywznpycs72s.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/1920x1080_3000000/video.m3u8\", \"manifest_url\": \"https://d10ywznpycs72s.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/769d1137202141eae3d2e0f7b51054ef_main_laptop_paid_us.m3u8\", \"tbr\": 2628.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.4d400d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Stream_Key\": \"eyJ1cmwiOiIvc2hlbWFyb28tdm9kL2FsdHBsYXRmb3JtL0RpbEhhaVR1bWhhYXJhRlVNSERTTlBtcDQtMzQwLyoiLCJob3N0bmFtZSI6ImQxMHl3em5weWNzNzJzLmNsb3VkZnJvbnQubmV0IiwicHJvdG9jb2wiOiJodHRwczoiLCJwb3J0IjoiNDQzIiwiZXhwaXJlcyI6MzU4NjY5NDc2Mn0=*z+94hFxtD/MReyFkyH+7RkGtQ4Rq0XNKN02KYmvnCP8=\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"format\": \"2628 - 1920x1080\", \"_filename\": \"Dil Hai Tumhaara [dil-hai-tumhaara].mp4\", \"filename\": \"Dil Hai Tumhaara [dil-hai-tumhaara].mp4\", \"__write_download_archive\": false}], \"format_id\": \"2628\", \"format_index\": null, \"url\": \"https://d10ywznpycs72s.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/1920x1080_3000000/video.m3u8\", \"manifest_url\": \"https://d10ywznpycs72s.cloudfront.net/shemaroo-vod/altplatform/DilHaiTumhaaraFUMHDSNPmp4-340/769d1137202141eae3d2e0f7b51054ef_main_laptop_paid_us.m3u8\", \"tbr\": 2628.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.4d400d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Stream_Key\": \"eyJ1cmwiOiIvc2hlbWFyb28tdm9kL2FsdHBsYXRmb3JtL0RpbEhhaVR1bWhhYXJhRlVNSERTTlBtcDQtMzQwLyoiLCJob3N0bmFtZSI6ImQxMHl3em5weWNzNzJzLmNsb3VkZnJvbnQubmV0IiwicHJvdG9jb2wiOiJodHRwczoiLCJwb3J0IjoiNDQzIiwiZXhwaXJlcyI6MzU4NjY5NDc2Mn0=*z+94hFxtD/MReyFkyH+7RkGtQ4Rq0XNKN02KYmvnCP8=\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"format\": \"2628 - 1920x1080\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.shemaroome.com/movies/dil-hai-tumhaara",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ShemarooMe] Extracting URL: https://www.shemaroome.com/movies/dil-hai-tumhaara",
+    "[ShemarooMe] dil-hai-tumhaara: Downloading webpage",
+    "[ShemarooMe] dil-hai-tumhaara: Downloading JSON metadata",
+    "[ShemarooMe] dil-hai-tumhaara: Downloading m3u8 information",
+    "[info] Available formats for dil-hai-tumhaara:",
+    "ID   EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "---------------------------------------------------------",
+    "464  mp4 640x360    |  464k m3u8  | avc1.4d400d mp4a.40.2",
+    "764  mp4 854x480    |  764k m3u8  | avc1.4d400d mp4a.40.2",
+    "1378 mp4 1280x720   | 1378k m3u8  | avc1.4d400d mp4a.40.2",
+    "2628 mp4 1920x1080  | 2628k m3u8  | avc1.4d400d mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.shemaroome.com/movies/synthetic-premium",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [ShemarooMe] synthetic-premium: Premium videos cannot be downloaded yet."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.shemaroome.com/shows/jurm-aur-jazbaat/laalach",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [ShemarooMe] jurm-aur-jazbaat_laalach: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}
