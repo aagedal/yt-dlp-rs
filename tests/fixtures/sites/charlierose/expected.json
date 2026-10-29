@@ -1,0 +1,48 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://charlierose.com/videos/27996",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"ext\": \"mp4\", \"width\": null, \"height\": null, \"tbr\": null, \"format_id\": \"0\", \"url\": \"https://pfm1hycdn01-a.akamaihd.net/MMF/I/1HYMMFI_003_xp.f4v\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://charlierose.com/video/player/27996\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"0 - unknown\"}], \"subtitles\": {\"en\": [{\"url\": \"https://charlie-p-2ac84d7056ca7f9d.s3.amazonaws.com/clips/subtitles/000/027/996/original/1HYMMFI_003.vtt?1556809179\", \"ext\": \"vtt\"}]}, \"thumbnail\": \"https://charlie-p-2ac84d7056ca7f9d.s3.amazonaws.com/clips/thumbnails/000/027/996/feat_full/1HYMMFI_003_lt.jpg?1462481235\", \"id\": \"27996\", \"title\": \"Remembering Zaha Hadid\", \"description\": \"We revisit past conversations with Zaha Hadid, in memory of the world renowned Iraqi architect.\", \"_format_sort_fields\": [\"proto\"], \"webpage_url\": \"https://charlierose.com/videos/27996\", \"original_url\": \"https://charlierose.com/videos/27996\", \"webpage_url_basename\": \"27996\", \"webpage_url_domain\": \"charlierose.com\", \"extractor\": \"CharlieRose\", \"extractor_key\": \"CharlieRose\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://charlie-p-2ac84d7056ca7f9d.s3.amazonaws.com/clips/thumbnails/000/027/996/feat_full/1HYMMFI_003_lt.jpg?1462481235\", \"id\": \"0\"}], \"display_id\": \"27996\", \"fulltitle\": \"Remembering Zaha Hadid\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"ext\": \"mp4\", \"format_id\": \"0\", \"url\": \"https://pfm1hycdn01-a.akamaihd.net/MMF/I/1HYMMFI_003_xp.f4v\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://charlierose.com/video/player/27996\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"format\": \"0 - unknown\", \"_filename\": \"Remembering Zaha Hadid [27996].mp4\", \"filename\": \"Remembering Zaha Hadid [27996].mp4\", \"__write_download_archive\": false}], \"ext\": \"mp4\", \"width\": null, \"height\": null, \"tbr\": null, \"format_id\": \"0\", \"url\": \"https://pfm1hycdn01-a.akamaihd.net/MMF/I/1HYMMFI_003_xp.f4v\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://charlierose.com/video/player/27996\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"0 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.charlierose.com/video/player/27996",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[CharlieRose] Extracting URL: https://www.charlierose.com/video/player/27996",
+    "[CharlieRose] 27996: Downloading webpage",
+    "[info] Available formats for 27996:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "0  mp4 unknown    | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://charlierose.com/episodes/30887?autoplay=true",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [CharlieRose] 30887: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

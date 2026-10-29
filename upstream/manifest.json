@@ -1173,6 +1173,18 @@
       "scope": "CGTNIE data-video HLS formats, date/section/author regexes with warnings, UTC+8 timestamp and OpenGraph metadata compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "charlierose",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/charlierose.py"
+      ],
+      "rust": [
+        "src/extractor/charlierose.rs",
+        "tests/fixtures/sites/charlierose/"
+      ],
+      "scope": "CharlieRoseIE video player page HTML5 media entry (deduplicated sources, subtitles) and OpenGraph metadata. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "ciscolive",
       "status": "partial",
       "upstream": [

@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {
+   "url": "https://charlierose.com/video/player/27996",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "27996.html"
+  }
+ ]
+}

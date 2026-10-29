@@ -1810,6 +1810,13 @@ ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the
 section as `categories`, the author as `creators`, and the OpenGraph title,
 description and thumbnail, with upstream's warnings for missing values.
 
+Charlie Rose videos and episodes (`[www.]charlierose.com/videos|episodes/ID`,
+`.../video|episode/player/ID`) follow upstream `CharlieRoseIE`: the
+`video/player/ID` page's first HTML5 media entry (duplicate source URLs
+removed, `proto` preferred in sorting) and its subtitle tracks, the
+OpenGraph title without ` - Charlie Rose`, thumbnail and description.
+`tests/fixtures/sites/charlierose/` is compared with pinned upstream output.
+
 Cisco Live on-demand library sessions (`ciscolive[.cisco].com/...#/session/ID`)
 follow upstream `CiscoLiveSessionIE`: the RainFocus `session` API (a
 form-encoded POST with its profile and widget headers) and its first item as

@@ -51,6 +51,7 @@ mod canalalpha;
 mod ccc;
 mod cellebrite;
 mod cgtn;
+mod charlierose;
 mod chaturbate;
 mod ciscolive;
 mod cjsw;
@@ -488,6 +489,7 @@ pub use canalalpha::{CanalAlpha, suitable as canalalpha_suitable};
 pub use ccc::{Ccc, suitable as ccc_suitable};
 pub use cellebrite::{Cellebrite, suitable as cellebrite_suitable};
 pub use cgtn::{Cgtn, suitable as cgtn_suitable};
+pub use charlierose::{CharlieRose, suitable as charlierose_suitable};
 pub use chaturbate::{Chaturbate, suitable as chaturbate_suitable};
 pub use ciscolive::{
     CiscoLiveSearch, CiscoLiveSession, search_suitable as ciscolive_search_suitable,
