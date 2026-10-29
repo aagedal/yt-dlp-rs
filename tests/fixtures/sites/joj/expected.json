@@ -1,0 +1,60 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://media.joj.sk/embed/a388ec4c-6019-4a4a-9312-b1bee194e932",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"a388ec4c-6019-4a4a-9312-b1bee194e932\", \"title\": \"NOV\\u00c9 B\\u00ddVANIE\", \"thumbnail\": \"https://img.joj.sk/r1200x/987913a10fb20eb091c41932fcd24560\", \"duration\": 3118, \"formats\": [{\"url\": \"https://nn.geo.joj.sk/storage/media-new/vod/2017/05/28/a388ec4c-6019-4a4a-9312-b1bee194e932-720p.mp4\", \"format_id\": \"720p\", \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\"}], \"webpage_url\": \"https://media.joj.sk/embed/a388ec4c-6019-4a4a-9312-b1bee194e932\", \"original_url\": \"https://media.joj.sk/embed/a388ec4c-6019-4a4a-9312-b1bee194e932\", \"webpage_url_basename\": \"a388ec4c-6019-4a4a-9312-b1bee194e932\", \"webpage_url_domain\": \"media.joj.sk\", \"extractor\": \"Joj\", \"extractor_key\": \"Joj\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.joj.sk/r1200x/987913a10fb20eb091c41932fcd24560\", \"id\": \"0\"}], \"display_id\": \"a388ec4c-6019-4a4a-9312-b1bee194e932\", \"fulltitle\": \"NOV\\u00c9 B\\u00ddVANIE\", \"duration_string\": \"51:58\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://nn.geo.joj.sk/storage/media-new/vod/2017/05/28/a388ec4c-6019-4a4a-9312-b1bee194e932-720p.mp4\", \"format_id\": \"720p\", \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\", \"_filename\": \"NOV\\u00c9 B\\u00ddVANIE [a388ec4c-6019-4a4a-9312-b1bee194e932].mp4\", \"filename\": \"NOV\\u00c9 B\\u00ddVANIE [a388ec4c-6019-4a4a-9312-b1bee194e932].mp4\", \"__write_download_archive\": false}], \"url\": \"https://nn.geo.joj.sk/storage/media-new/vod/2017/05/28/a388ec4c-6019-4a4a-9312-b1bee194e932-720p.mp4\", \"format_id\": \"720p\", \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "joj:CSM0Na0l0p1",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"CSM0Na0l0p1\", \"title\": \"Extr\\u00e9mne rodiny 2 - POKRA\\u010cOVANIE (2012/04/09 21:30:00)\", \"thumbnail\": \"https://img.joj.sk/r1200x/c8ea6cbc9cba6adc0b9605b86f1b9cc7\", \"duration\": 3937, \"formats\": [{\"url\": \"https://nn.geo.joj.sk/storage/media-new/vod/2012/04/09/04038863-cff2-4eac-a047-947160fb7bb2/joj-2-121010-0002-h264-pal.mp4\", \"format_id\": \"576p\", \"height\": 576, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"576p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"576p - 576p\"}], \"webpage_url\": \"joj:CSM0Na0l0p1\", \"original_url\": \"joj:CSM0Na0l0p1\", \"webpage_url_basename\": \"CSM0Na0l0p1\", \"webpage_url_domain\": null, \"extractor\": \"Joj\", \"extractor_key\": \"Joj\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.joj.sk/r1200x/c8ea6cbc9cba6adc0b9605b86f1b9cc7\", \"id\": \"0\"}], \"display_id\": \"CSM0Na0l0p1\", \"fulltitle\": \"Extr\\u00e9mne rodiny 2 - POKRA\\u010cOVANIE (2012/04/09 21:30:00)\", \"duration_string\": \"1:05:37\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://nn.geo.joj.sk/storage/media-new/vod/2012/04/09/04038863-cff2-4eac-a047-947160fb7bb2/joj-2-121010-0002-h264-pal.mp4\", \"format_id\": \"576p\", \"height\": 576, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"576p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"576p - 576p\", \"_filename\": \"Extr\\u00e9mne rodiny 2 - POKRA\\u010cOVANIE (2012\\u29f804\\u29f809 21_30_00) [CSM0Na0l0p1].mp4\", \"filename\": \"Extr\\u00e9mne rodiny 2 - POKRA\\u010cOVANIE (2012\\u29f804\\u29f809 21_30_00) [CSM0Na0l0p1].mp4\", \"__write_download_archive\": false}], \"url\": \"https://nn.geo.joj.sk/storage/media-new/vod/2012/04/09/04038863-cff2-4eac-a047-947160fb7bb2/joj-2-121010-0002-h264-pal.mp4\", \"format_id\": \"576p\", \"height\": 576, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"576p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"576p - 576p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://media.joj.sk/embed/CSM0Na0l0p1",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Joj] Extracting URL: https://media.joj.sk/embed/CSM0Na0l0p1",
+    "[Joj] CSM0Na0l0p1: Downloading webpage",
+    "[info] Available formats for CSM0Na0l0p1:",
+    "ID   EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "---------------------------------------------",
+    "576p mp4 576p       | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://media.joj.sk/embed/missing",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Joj] missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

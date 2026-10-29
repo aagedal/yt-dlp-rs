@@ -2439,6 +2439,18 @@
       "scope": "JoveIE chapters XML video URL as an untyped result, citation metas and regex warnings, and the escaped int(None) error compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "joj",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/joj.py"
+      ],
+      "rust": [
+        "src/extractor/joj.rs",
+        "tests/fixtures/sites/joj/"
+      ],
+      "scope": "JojIE embed page title, js_to_json MP4 list with heights, Video.php XML playlist fallback and joj: pseudo-URLs; _EMBED_REGEX detection is not ported. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "jstream",
       "status": "partial",
       "upstream": [

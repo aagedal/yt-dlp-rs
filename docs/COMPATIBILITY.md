@@ -3317,6 +3317,16 @@ the `citation_title`/`citation_publication_date` metas, OpenGraph thumbnail,
 summary paragraph and comment count, each with upstream's warning, and the
 escaped `int(None)` error without a comment count.
 
+JOJ videos (`media.joj.sk/embed/ID`, `joj:ID`) follow upstream `JojIE`: the
+`media.joj.sk/embed/ID` page's `videoTitle` JSON string (else the `<title>`,
+else the OpenGraph title with its warning), its `src`/`bitrates` object
+(through `js_to_json`, a parse failure warning) whose `mp4` URLs are formats
+with heights from `NNNp` or `pal.` (576), else the `services/Video.php?clip=ID`
+XML playlist's `files/file` paths under `n16.joj.sk/storage/`, with the
+OpenGraph thumbnail and `videoDuration`, each with upstream's warning.
+Iframe embeds on other pages (`_EMBED_REGEX`) are not detected.
+`tests/fixtures/sites/joj/` is compared with pinned upstream output.
+
 J-Stream Equipmedia videos (`jstream:HOST:PUBLISHER:MID`) follow upstream
 `JStreamIE`: the `PUBLISHER.eq.webcdn.stream.ne.jp/HOST/PUBLISHER/jmc_pub/eq_meta/v1/MID.jsonp`
 `metaDataResult(...)` callback (else upstream's `Unable to extract

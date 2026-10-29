@@ -169,6 +169,7 @@ mod ivideon;
 mod ivoox;
 mod jamendo;
 mod jixie;
+mod joj;
 mod jove;
 mod json_ld;
 mod jstream;
@@ -695,6 +696,7 @@ pub use ivoox::{Ivoox, suitable as ivoox_suitable};
 pub use jamendo::{
     Jamendo, JamendoAlbum, album_suitable as jamendo_album_suitable, suitable as jamendo_suitable,
 };
+pub use joj::{Joj, suitable as joj_suitable};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jstream::{JStream, suitable as jstream_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
@@ -2654,6 +2656,7 @@ fn py_splitlines(text: &str) -> Vec<&str> {
 pub fn pseudo_url(url: &str) -> bool {
     (url.starts_with("jwplatform:") && jwplatform::suitable(url))
         || (url.starts_with("jstream:") && jstream::suitable(url))
+        || (url.starts_with("joj:") && joj::suitable(url))
         || (url.starts_with("kaltura:") && kaltura::suitable(url))
         || youtube::search::suitable(url)
         || (url.starts_with("nicosearch")
