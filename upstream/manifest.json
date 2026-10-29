@@ -2985,6 +2985,18 @@
       "scope": "MonstercatIE release pages as lazily read track-stream MP3 playlists with album metadata, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "mojevideo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mojevideo.py"
+      ],
+      "rust": [
+        "src/extractor/mojevideo.rs",
+        "tests/fixtures/sites/mojevideo/"
+      ],
+      "scope": "MojevideoIE vId/vEx/vHash signed MP4 formats with OpenGraph and JSON-LD metadata. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "moviepilot",
       "status": "partial",
       "upstream": [

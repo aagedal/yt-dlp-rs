@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {
+   "url": "https://www.mojevideo.sk/video/3d17c/chlapci_dobetonovali_sme_mame_hotovo.html",
+   "headers": {
+    "Content-Type": "text/html; charset=UTF-8"
+   },
+   "body_file": "chlapci_dobetonovali_sme_mame_hotovo.html"
+  }
+ ]
+}

@@ -1,0 +1,49 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.mojevideo.sk/video/3d17c/chlapci_dobetonovali_sme_mame_hotovo.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3d17c\", \"display_id\": \"chlapci_dobetonovali_sme_mame_hotovo\", \"formats\": [{\"format_id\": \"mp4-0\", \"quality\": 0, \"format_note\": \"n\\u00edzka kvalita\", \"url\": \"https://cache01.mojevideo.sk/securevideos69/250236_lq.mp4?md5=_uUfE_844IUyqnvSshee3g&expires=1793273700\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-0 - unknown (n\\u00edzka kvalita)\"}, {\"format_id\": \"mp4-1\", \"quality\": 1, \"format_note\": \"norm\\u00e1lna kvalita\", \"url\": \"https://cache01.mojevideo.sk/securevideos69/250236.mp4?md5=Dj3F-bK0RNHzHzVgOt-3Lw&expires=1793273700\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1 - unknown (norm\\u00e1lna kvalita)\"}], \"title\": \"Chlapci dobet\\u00f3novali sme, m\\u00e1me hotovo!\", \"description\": \"Celodenn\\u00e1 pr\\u00e1ca bola za p\\u00e1r sek\\u00fand fu\\u010d. Bet\\u00f3n stiekol k susedovi, kam aj zr\\u00fatil cel\\u00fd plot, ktor\\u00fd pol\\u00e1mal aj tuje. Chlapom zostali iba o\\u010di pre pla\\u010d.\", \"timestamp\": 1695129706, \"thumbnails\": [{\"url\": \"https://fs5.mojevideo.sk/imgfb/250236.jpg\", \"id\": \"0\"}], \"duration\": 21, \"uploader\": \"luda\", \"view_count\": 19779, \"comment_count\": 68, \"like_count\": 31, \"dislike_count\": 5, \"webpage_url\": \"https://www.mojevideo.sk/video/3d17c/chlapci_dobetonovali_sme_mame_hotovo.html\", \"original_url\": \"https://www.mojevideo.sk/video/3d17c/chlapci_dobetonovali_sme_mame_hotovo.html\", \"webpage_url_basename\": \"chlapci_dobetonovali_sme_mame_hotovo.html\", \"webpage_url_domain\": \"mojevideo.sk\", \"extractor\": \"Mojevideo\", \"extractor_key\": \"Mojevideo\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://fs5.mojevideo.sk/imgfb/250236.jpg\", \"fulltitle\": \"Chlapci dobet\\u00f3novali sme, m\\u00e1me hotovo!\", \"duration_string\": \"21\", \"upload_date\": \"20230919\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"mp4-1\", \"quality\": 1, \"format_note\": \"norm\\u00e1lna kvalita\", \"url\": \"https://cache01.mojevideo.sk/securevideos69/250236.mp4?md5=Dj3F-bK0RNHzHzVgOt-3Lw&expires=1793273700\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1 - unknown (norm\\u00e1lna kvalita)\", \"_filename\": \"Chlapci dobet\\u00f3novali sme, m\\u00e1me hotovo! [3d17c].mp4\", \"filename\": \"Chlapci dobet\\u00f3novali sme, m\\u00e1me hotovo! [3d17c].mp4\", \"__write_download_archive\": false}], \"format_id\": \"mp4-1\", \"quality\": 1, \"format_note\": \"norm\\u00e1lna kvalita\", \"url\": \"https://cache01.mojevideo.sk/securevideos69/250236.mp4?md5=Dj3F-bK0RNHzHzVgOt-3Lw&expires=1793273700\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1 - unknown (norm\\u00e1lna kvalita)\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.mojevideo.sk/video/3d17c/chlapci_dobetonovali_sme_mame_hotovo.html",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Mojevideo] Extracting URL: https://www.mojevideo.sk/video/3d17c/chlapci_dobetonovali_sme_mame_hotovo.html",
+    "[Mojevideo] 3d17c: Downloading webpage",
+    "[info] Available formats for 3d17c:",
+    "ID    EXT RESOLUTION | PROTO | VCODEC  ACODEC  MORE INFO",
+    "---------------------------------------------------------------",
+    "mp4-0 mp4 unknown    | https | unknown unknown nízka kvalita",
+    "mp4-1 mp4 unknown    | https | unknown unknown normálna kvalita"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.mojevideo.sk/video/1/missing.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Mojevideo] 1: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

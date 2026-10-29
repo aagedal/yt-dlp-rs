@@ -224,6 +224,7 @@ mod mirrorcouk;
 mod mixcloud;
 mod mixlr;
 mod mocha;
+mod mojevideo;
 mod monstercat;
 mod moviepilot;
 mod movingimage;
@@ -779,6 +780,7 @@ pub use mixlr::{
     suitable as mixlr_suitable,
 };
 pub use mocha::{MochaVideo, suitable as mocha_suitable};
+pub use mojevideo::{Mojevideo, suitable as mojevideo_suitable};
 pub use monstercat::{Monstercat, suitable as monstercat_suitable};
 pub(crate) use monstercat::{
     fetch_tracks as fetch_monstercat_tracks, is_pending_state as monstercat_pending_state,

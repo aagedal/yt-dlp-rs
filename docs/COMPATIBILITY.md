@@ -4715,6 +4715,15 @@ the row's title, track number and artists; rows without both IDs warn
 `Skipping track N, ID(s) not found` when reached. `tests/fixtures/sites/monstercat/`
 is compared with pinned upstream output.
 
+Mojevideo videos (`[www.]mojevideo.sk/video/ID/SLUG.html`) follow upstream
+`MojevideoIE`: the page's `vId` (non-fatal, else the hexadecimal ID as a
+decimal), fatal `vEx` expiry and `vHash` list (through `js_to_json`) give one
+signed `cache01.mojevideo.sk/securevideos69/VID[_lq|_hd|_fhd|_2k].mp4` format
+per hash in upstream's order (`mp4-QUALITY`, Slovak format notes), with the
+OpenGraph title (else the `<title>` without ` - Mojevideo`), the non-fatal
+OpenGraph description and the merged JSON-LD metadata.
+`tests/fixtures/sites/mojevideo/` is compared with pinned upstream output.
+
 MuseScore scores (`musescore.com/user/N/scores/ID`, `musescore.com/USER/SLUG`)
 follow upstream `MuseScoreIE`: the page (downloaded without an ID), its
 fatal `og:url` (an empty one keeps the input URL) for the score ID, the
