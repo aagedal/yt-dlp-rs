@@ -1827,6 +1827,15 @@ removed, `proto` preferred in sorting) and its subtitle tracks, the
 OpenGraph title without ` - Charlie Rose`, thumbnail and description.
 `tests/fixtures/sites/charlierose/` is compared with pinned upstream output.
 
+Chilloutzone videos (`[www.]chilloutzone.net/video/ID.html`) follow upstream
+`ChilloutzoneIE`: the page's base64 `cozVidData` JSON (a fatal `video data`
+search) gives the MP4 `mediaUrl` (protocol-relative URLs become `http:`),
+title, cleaned description, truncated duration, width and height. Videos
+whose native YouTube or Vimeo ID takes priority are url results (a missing
+`nativeVideoId` is upstream's `KeyError`); pages without a media URL, which
+upstream hands to the generic extractor, are unsupported errors.
+`tests/fixtures/sites/chilloutzone/` is compared with pinned upstream output.
+
 Cisco Live on-demand library sessions (`ciscolive[.cisco].com/...#/session/ID`)
 follow upstream `CiscoLiveSessionIE`: the RainFocus `session` API (a
 form-encoded POST with its profile and widget headers) and its first item as

@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {
+   "url": "https://www.chilloutzone.net/video/enemene-meck-alle-katzen-weg.html",
+   "headers": {
+    "Content-Type": "text/html; charset=UTF-8"
+   },
+   "body_file": "enemene-meck-alle-katzen-weg.html"
+  }
+ ]
+}

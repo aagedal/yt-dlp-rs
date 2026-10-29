@@ -54,6 +54,7 @@ mod cellebrite;
 mod cgtn;
 mod charlierose;
 mod chaturbate;
+mod chilloutzone;
 mod ciscolive;
 mod cjsw;
 mod clipchamp;
@@ -498,6 +499,7 @@ pub use cellebrite::{Cellebrite, suitable as cellebrite_suitable};
 pub use cgtn::{Cgtn, suitable as cgtn_suitable};
 pub use charlierose::{CharlieRose, suitable as charlierose_suitable};
 pub use chaturbate::{Chaturbate, suitable as chaturbate_suitable};
+pub use chilloutzone::{Chilloutzone, suitable as chilloutzone_suitable};
 pub use ciscolive::{
     CiscoLiveSearch, CiscoLiveSession, search_suitable as ciscolive_search_suitable,
     session_suitable as ciscolive_session_suitable,

@@ -1209,6 +1209,18 @@
       "scope": "CharlieRoseIE video player page HTML5 media entry (deduplicated sources, subtitles) and OpenGraph metadata. Compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "chilloutzone",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/chilloutzone.py"
+      ],
+      "rust": [
+        "src/extractor/chilloutzone.rs",
+        "tests/fixtures/sites/chilloutzone/"
+      ],
+      "scope": "ChilloutzoneIE base64 cozVidData MP4 media URL and metadata, YouTube/Vimeo url results for native-priority videos. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "ciscolive",
       "status": "partial",
       "upstream": [
