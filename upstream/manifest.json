@@ -2043,6 +2043,18 @@
       "scope": "GaskrankIE HTML5 media entry with page metadata, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "gbnews",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/gbnews.py"
+      ],
+      "rust": [
+        "src/extractor/gbnews.rs",
+        "tests/fixtures/sites/gbnews/"
+      ],
+      "scope": "GBNewsIE Simplestream player element, player API host, stream JSON and HLS formats. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "genius",
       "status": "partial",
       "upstream": [

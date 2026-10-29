@@ -124,6 +124,7 @@ mod gab;
 mod gamespot;
 mod gamestar;
 mod gaskrank;
+mod gbnews;
 mod generic_urls;
 mod genius;
 mod glide;
@@ -622,6 +623,7 @@ pub use gab::{Gab, suitable as gab_suitable};
 pub use gamespot::{GameSpot, suitable as gamespot_suitable};
 pub use gamestar::{GameStar, suitable as gamestar_suitable};
 pub use gaskrank::{Gaskrank, suitable as gaskrank_suitable};
+pub use gbnews::{GbNews, suitable as gbnews_suitable};
 pub use genius::{
     Genius, GeniusLyrics, lyrics_suitable as genius_lyrics_suitable, suitable as genius_suitable,
 };

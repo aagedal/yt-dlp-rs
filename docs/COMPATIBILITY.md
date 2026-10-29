@@ -3135,6 +3135,18 @@ and the portal's `getVideoUrl.cfm` URL as an `mp4` untyped result. A
 JSON-LD script that does not parse is reported as unsupported rather than
 with upstream's Python `JSONDecodeError` text.
 
+GB News pages (`[www.]gbnews.com|uk/[SECTION/]PATH`) follow upstream
+`GBNewsIE`: the last `simplestream` player element whose class lacks
+`sidebar` (none is upstream's `Could not find video element`), the
+Simplestream `ssmp/api.php` player JSON for its `data-id`/`data-env`
+(defaults `GB003`/`production`; no `api_hostname` is upstream's `No API host
+found`), the `api/TYPE/stream/UVID` JSON (`vod` or no type requests `show`;
+truthy `drm` is upstream's DRM error) and its stream as fatal HLS formats
+(master playlist only, subtitle tracks ignored with upstream's warning),
+with the OpenGraph title, description and thumbnail and `is_live` for
+`live` players. `tests/fixtures/sites/gbnews/` (stream JSON OAuth token
+redacted) is compared with pinned upstream output.
+
 Genius videos and articles (`genius.com/videos|a/SLUG`) follow upstream
 `GeniusIE`: the `page_data` meta's JSON (fatal, HTML-unescaped), the first
 `provider_id` or `brightcove_video_id` `dfp_kv` value of the article media
