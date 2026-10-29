@@ -4636,6 +4636,15 @@ restriction and exclusive-content errors, comments and metadata. User
 uploads, playlists and favorites are not supported.
 `tests/fixtures/sites/mixcloud/` is compared with pinned upstream output.
 
+MyVideo.ge videos (`[www.]myvideo.ge/v/ID`) follow upstream `MyVideoGeIE`:
+the page's `jwplayer("mvplayer").setup(...)` sources (through `js_to_json`;
+only absolute source URLs, like `urljoin(None, ...)`) as JW Player formats
+ranked SD < HD, the OpenGraph (else `my_video_title`, else `<title>`) title,
+OpenGraph (else `long_desc_holder`, else meta) description, uploader,
+OpenGraph thumbnail, Georgian upload date (month names translated) and
+view/like/dislike counts, with upstream's warnings for missing values.
+`tests/fixtures/sites/myvideoge/` is compared with pinned upstream output.
+
 MyVidster videos (`myvidster.com/video/ID`) follow upstream `MyVidsterIE`:
 the page's fatal `rel="videolink"` URL is followed through the registry as a
 `url_result`. A link that is not an absolute URL remains an explicit native
