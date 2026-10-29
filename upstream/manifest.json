@@ -1475,6 +1475,18 @@
       "scope": "DBTVIE transparent YouTube/JWPlatform url results and embeds; the JW Platform path is compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "dctp",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dctp.py"
+      ],
+      "rust": [
+        "src/extractor/dctp.rs",
+        "tests/fixtures/sites/dctp/"
+      ],
+      "scope": "DctpTvIE REST API version, slug and media JSON, HLS/S3/CDN formats and metadata. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "deuxm",
       "status": "partial",
       "upstream": [

@@ -75,6 +75,7 @@ mod damtomo;
 pub(crate) mod dash;
 mod daystar;
 mod dbtv;
+mod dctp;
 mod democracynow;
 mod deuxm;
 mod dfb;
@@ -544,6 +545,7 @@ pub use damtomo::{
 };
 pub use daystar::{DaystarClip, suitable as daystar_suitable};
 pub use dbtv::{Dbtv, suitable as dbtv_suitable};
+pub use dctp::{DctpTv, suitable as dctp_suitable};
 pub use democracynow::{Democracynow, suitable as democracynow_suitable};
 pub use deuxm::{
     DeuxM, DeuxMNews, news_suitable as deuxm_news_suitable, suitable as deuxm_suitable,

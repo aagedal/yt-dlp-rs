@@ -4259,6 +4259,16 @@ Dagbladet videos (`dagbladet.no/video/[embed|SLUG/]ID`) follow upstream
 for `jwplatform:ID`. Dagbladet embed iframes on generic pages are embeds.
 `tests/fixtures/sites/dbtv/` is compared with pinned upstream output.
 
+dctp.tv films (`[www.]dctp.tv/[#/]filme/SLUG`) follow upstream `DctpTvIE`:
+the REST API's `version.json` (`Downloading version JSON`), the version's
+`slugs/SLUG.json` (`Downloading video info JSON`) and `media/OBJECT_ID.json`
+(`Downloading media JSON`; missing keys are upstream's `KeyError`s), and the
+UUID's `0500_4x3` (or, for wide media, `0500_16x9` and `720p`) renditions as
+`hls-`, `s3-` and `http-` formats, with the subtitle as `alt_title`, the
+description or teaser, the `created` timestamp, the duration and the image
+thumbnails. `tests/fixtures/sites/dctp/` is compared with pinned upstream
+output.
+
 2M replays and news (`2m.ma/LL/replay/single/ID`, `2m.ma/LL/news/SLUG`) follow
 upstream `DeuxMIE` and `DeuxMNewsIE`: the watch-detail API's `News` media URL
 and the articles-by-URL API's first article (an empty list is a bare

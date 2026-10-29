@@ -1,0 +1,67 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.dctp.tv/filme/videoinstallation-fuer-eine-kaufhausfassade/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"95eaa4f33dad413aa17b4ee613cccc6c\", \"display_id\": \"videoinstallation-fuer-eine-kaufhausfassade\", \"title\": \"Videoinstallation f\\u00fcr eine Kaufhausfassade\", \"alt_title\": \"Mit Comics aus der Kriegspropaganda\", \"description\": \"Kurzfilm\", \"timestamp\": null, \"duration\": 71.24, \"thumbnails\": [{\"url\": \"http://eivms.dctp.tv/wp-content/uploads/2011/04/9_1324_1326212061.jpg\", \"width\": 408, \"height\": 306, \"id\": \"0\", \"resolution\": \"408x306\"}, {\"url\": \"http://eivms.dctp.tv/wp-content/uploads/2011/04/9_1324_1539605935.jpg\", \"width\": 408, \"height\": 306, \"id\": \"1\", \"resolution\": \"408x306\"}, {\"url\": \"http://eivms.dctp.tv/wp-content/uploads/2011/04/9_1324_1539605885.jpg\", \"width\": 1280, \"height\": 720, \"id\": \"2\", \"resolution\": \"1280x720\"}, {\"url\": \"http://eivms.dctp.tv/wp-content/uploads/2011/04/9_1324_1539605936.jpg\", \"width\": 1280, \"height\": 720, \"id\": \"3\", \"resolution\": \"1280x720\"}], \"formats\": [{\"format_id\": \"hls-0500_4x3\", \"url\": \"https://cdn-segments.dctp.tv/95eaa4f33dad413aa17b4ee613cccc6c_dctp_0500_4x3.m4v/playlist.m3u8\", \"protocol\": \"m3u8_native\", \"ext\": \"m3u8\", \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-0500_4x3 - unknown\"}, {\"format_id\": \"http-0500_4x3\", \"url\": \"https://cdn-media.dctp.tv/95eaa4f33dad413aa17b4ee613cccc6c_dctp_0500_4x3.m4v\", \"protocol\": \"https\", \"ext\": \"m4v\", \"video_ext\": \"m4v\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-0500_4x3 - unknown\"}, {\"format_id\": \"s3-0500_4x3\", \"url\": \"https://completed-media.s3.amazonaws.com/95eaa4f33dad413aa17b4ee613cccc6c_dctp_0500_4x3.m4v\", \"protocol\": \"https\", \"ext\": \"m4v\", \"video_ext\": \"m4v\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"s3-0500_4x3 - unknown\"}], \"webpage_url\": \"http://www.dctp.tv/filme/videoinstallation-fuer-eine-kaufhausfassade/\", \"original_url\": \"http://www.dctp.tv/filme/videoinstallation-fuer-eine-kaufhausfassade/\", \"webpage_url_basename\": \"videoinstallation-fuer-eine-kaufhausfassade\", \"webpage_url_domain\": \"dctp.tv\", \"extractor\": \"DctpTv\", \"extractor_key\": \"DctpTv\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"http://eivms.dctp.tv/wp-content/uploads/2011/04/9_1324_1539605936.jpg\", \"fulltitle\": \"Videoinstallation f\\u00fcr eine Kaufhausfassade\", \"duration_string\": \"1:11\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"s3-0500_4x3\", \"url\": \"https://completed-media.s3.amazonaws.com/95eaa4f33dad413aa17b4ee613cccc6c_dctp_0500_4x3.m4v\", \"protocol\": \"https\", \"ext\": \"m4v\", \"video_ext\": \"m4v\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"s3-0500_4x3 - unknown\", \"_filename\": \"Videoinstallation f\\u00fcr eine Kaufhausfassade [95eaa4f33dad413aa17b4ee613cccc6c].m4v\", \"filename\": \"Videoinstallation f\\u00fcr eine Kaufhausfassade [95eaa4f33dad413aa17b4ee613cccc6c].m4v\", \"__write_download_archive\": false}], \"format_id\": \"s3-0500_4x3\", \"url\": \"https://completed-media.s3.amazonaws.com/95eaa4f33dad413aa17b4ee613cccc6c_dctp_0500_4x3.m4v\", \"protocol\": \"https\", \"ext\": \"m4v\", \"video_ext\": \"m4v\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"s3-0500_4x3 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.dctp.tv/filme/sind-youtuber-die-besseren-lehrer/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"695ee9488e6a4d67bd4e55aa9d7acb47\", \"display_id\": \"sind-youtuber-die-besseren-lehrer\", \"title\": \"Sind YouTuber die besseren Lehrer?\", \"alt_title\": \"Mai Thi Nguyen-Kim (re:publica 2018)\", \"description\": \"Mai Thi Nguyen-Kim ist Wissenschaftlerin und Youtuberin f\\u00fcr FUNK. Mit Philip Banse spricht sie \\u00fcber ihre Filme, die Zusammenarbeit mit dem SWR und ihre Rolle als Wissensvermittlerin im Internet.\", \"timestamp\": null, \"duration\": 1863.36, \"thumbnails\": [{\"url\": \"http://eivms.dctp.tv/wp-content/uploads/2018/05/9_5775_1544003362.jpg\", \"width\": 619, \"height\": 348, \"id\": \"0\", \"resolution\": \"619x348\"}, {\"url\": \"http://eivms.dctp.tv/wp-content/uploads/2018/05/9_5775_1544003364.jpg\", \"width\": 619, \"height\": 348, \"id\": \"1\", \"resolution\": \"619x348\"}, {\"url\": \"http://eivms.dctp.tv/wp-content/uploads/2018/05/9_5775_1544003363.jpg\", \"width\": 1280, \"height\": 720, \"id\": \"2\", \"resolution\": \"1280x720\"}], \"formats\": [{\"format_id\": \"hls-0500_16x9\", \"url\": \"https://cdn-segments.dctp.tv/695ee9488e6a4d67bd4e55aa9d7acb47_dctp_0500_16x9.m4v/playlist.m3u8\", \"protocol\": \"m3u8_native\", \"ext\": \"m3u8\", \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-0500_16x9 - unknown\"}, {\"format_id\": \"hls-720p\", \"url\": \"https://cdn-segments.dctp.tv/695ee9488e6a4d67bd4e55aa9d7acb47_dctp_720p.m4v/playlist.m3u8\", \"protocol\": \"m3u8_native\", \"ext\": \"m3u8\", \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-720p - unknown\"}, {\"format_id\": \"http-0500_16x9\", \"url\": \"https://cdn-media.dctp.tv/695ee9488e6a4d67bd4e55aa9d7acb47_dctp_0500_16x9.m4v\", \"protocol\": \"https\", \"ext\": \"m4v\", \"video_ext\": \"m4v\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-0500_16x9 - unknown\"}, {\"format_id\": \"http-720p\", \"url\": \"https://cdn-media.dctp.tv/695ee9488e6a4d67bd4e55aa9d7acb47_dctp_720p.m4v\", \"protocol\": \"https\", \"ext\": \"m4v\", \"video_ext\": \"m4v\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-720p - unknown\"}, {\"format_id\": \"s3-0500_16x9\", \"url\": \"https://completed-media.s3.amazonaws.com/695ee9488e6a4d67bd4e55aa9d7acb47_dctp_0500_16x9.m4v\", \"protocol\": \"https\", \"ext\": \"m4v\", \"video_ext\": \"m4v\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"s3-0500_16x9 - unknown\"}, {\"format_id\": \"s3-720p\", \"url\": \"https://completed-media.s3.amazonaws.com/695ee9488e6a4d67bd4e55aa9d7acb47_dctp_720p.m4v\", \"protocol\": \"https\", \"ext\": \"m4v\", \"video_ext\": \"m4v\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"s3-720p - unknown\"}], \"webpage_url\": \"http://www.dctp.tv/filme/sind-youtuber-die-besseren-lehrer/\", \"original_url\": \"http://www.dctp.tv/filme/sind-youtuber-die-besseren-lehrer/\", \"webpage_url_basename\": \"sind-youtuber-die-besseren-lehrer\", \"webpage_url_domain\": \"dctp.tv\", \"extractor\": \"DctpTv\", \"extractor_key\": \"DctpTv\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"http://eivms.dctp.tv/wp-content/uploads/2018/05/9_5775_1544003363.jpg\", \"fulltitle\": \"Sind YouTuber die besseren Lehrer?\", \"duration_string\": \"31:03\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"s3-720p\", \"url\": \"https://completed-media.s3.amazonaws.com/695ee9488e6a4d67bd4e55aa9d7acb47_dctp_720p.m4v\", \"protocol\": \"https\", \"ext\": \"m4v\", \"video_ext\": \"m4v\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"s3-720p - unknown\", \"_filename\": \"Sind YouTuber die besseren Lehrer\\uff1f [695ee9488e6a4d67bd4e55aa9d7acb47].m4v\", \"filename\": \"Sind YouTuber die besseren Lehrer\\uff1f [695ee9488e6a4d67bd4e55aa9d7acb47].m4v\", \"__write_download_archive\": false}], \"format_id\": \"s3-720p\", \"url\": \"https://completed-media.s3.amazonaws.com/695ee9488e6a4d67bd4e55aa9d7acb47_dctp_720p.m4v\", \"protocol\": \"https\", \"ext\": \"m4v\", \"video_ext\": \"m4v\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"s3-720p - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.dctp.tv/filme/sind-youtuber-die-besseren-lehrer/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[DctpTv] Extracting URL: http://www.dctp.tv/filme/sind-youtuber-die-besseren-lehrer/",
+    "[DctpTv] sind-youtuber-die-besseren-lehrer: Downloading version JSON",
+    "[DctpTv] sind-youtuber-die-besseren-lehrer: Downloading video info JSON",
+    "[DctpTv] sind-youtuber-die-besseren-lehrer: Downloading media JSON",
+    "[info] Available formats for 695ee9488e6a4d67bd4e55aa9d7acb47:",
+    "ID             EXT  RESOLUTION | PROTO | VCODEC  ACODEC",
+    "--------------------------------------------------------",
+    "hls-0500_16x9  m3u8 unknown    | m3u8  | unknown unknown",
+    "hls-720p       m3u8 unknown    | m3u8  | unknown unknown",
+    "http-0500_16x9 m4v  unknown    | https | unknown unknown",
+    "http-720p      m4v  unknown    | https | unknown unknown",
+    "s3-0500_16x9   m4v  unknown    | https | unknown unknown",
+    "s3-720p        m4v  unknown    | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.dctp.tv/filme/missing/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [DctpTv] missing: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

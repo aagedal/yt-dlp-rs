@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "http://dctp-ivms2-restapi.s3.amazonaws.com/version.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "version.json"
+  },
+  {
+   "url": "http://dctp-ivms2-restapi.s3.amazonaws.com/20261027094255/restapi/slugs/videoinstallation-fuer-eine-kaufhausfassade.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "slug.json"
+  },
+  {
+   "url": "http://dctp-ivms2-restapi.s3.amazonaws.com/20261027094255/restapi/media/10511.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "media.json"
+  },
+  {
+   "url": "http://dctp-ivms2-restapi.s3.amazonaws.com/20261027094255/restapi/slugs/sind-youtuber-die-besseren-lehrer.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "slug2.json"
+  },
+  {
+   "url": "http://dctp-ivms2-restapi.s3.amazonaws.com/20261027094255/restapi/media/8057.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "media2.json"
+  }
+ ]
+}
