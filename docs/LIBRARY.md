@@ -84,7 +84,13 @@ Cancel buttons):
   bytes; HLS/DASH fragment downloads keep whole fragments only; a merged
   download merges the streams so far with FFmpeg (the last one partial);
   FFmpeg-based downloads ask FFmpeg to finish (`q`). A stop before any data
-  arrived is a cancel.
+  arrived is a cancel. A fragmented MP4 cut inside a fragment is trimmed to
+  its whole fragments, and a progressive MP4 whose `moov` describes more
+  than arrived is stream-copied to the samples present. A stopped MP4/MOV
+  merge that does not read back (or fails) keeps the unmerged streams at
+  their `NAME.fID.EXT` names instead, and `path` names the video stream.
+  `download_processed_with_progress` skips the processors on a stop and
+  publishes the partial file at the destination.
 - During extraction either request ends the call with
   `Error::ExtractionCancelled` before its next request.
 

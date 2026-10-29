@@ -56,6 +56,7 @@ mod modify_chapters;
 pub mod netrc;
 pub mod no_formats;
 pub mod output;
+mod partial;
 mod playlist;
 mod postprocess;
 pub mod pp_args;
@@ -4627,10 +4628,79 @@ impl YoutubeDl {
     /// operations cannot be interrupted; existing request timeouts still apply.
     /// Byte counts may reset on whole-file/fragment retries or selected stream changes.
     /// No callback follows publication.
+    ///
+    /// A stopped single stream is repaired before `Error::DownloadStopped`
+    /// returns: a fragmented MP4 cut inside a fragment is trimmed to its
+    /// whole fragments, and a progressive MP4 whose `moov` describes more
+    /// than the file holds is stream-copied (with FFmpeg) to the samples
+    /// present.
     pub fn download_with_progress(
         &self,
         info: &VideoInfo,
         destination: impl AsRef<Path>,
+        options: DownloadOptions,
+        callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
+    ) -> Result<u64> {
+        match self.download_unrepaired(info, destination.as_ref(), options, callback) {
+            Err(Error::DownloadStopped { path })
+                if info.requested_formats.is_empty() && !self.grows(info) =>
+            {
+                self.repair_stopped(&path);
+                Err(Error::DownloadStopped { path })
+            }
+            result => result,
+        }
+    }
+
+    /// Make a stopped single-stream file readable where it can be; a
+    /// failed repair keeps the file as it is.
+    fn repair_stopped(&self, path: &Path) {
+        match partial::trim_fragmented(path) {
+            Ok(Some(bytes)) => screen::screen(&format!(
+                "[download] Trimmed {bytes} bytes of an incomplete fragment from \"{}\"",
+                path.display()
+            )),
+            Ok(None) => {}
+            Err(error) => screen::warning(&format!(
+                "Unable to trim the partial file \"{}\": {error}",
+                path.display()
+            )),
+        }
+        if !matches!(partial::mp4(path), Ok(partial::Mp4::Truncated)) {
+            return;
+        }
+        let Some(ffmpeg) = &self.ffmpeg else {
+            screen::warning(&format!(
+                "The partial file \"{}\" ends before the data its index describes; \
+                 ffmpeg is needed to repair it",
+                path.display()
+            ));
+            return;
+        };
+        screen::screen(&format!(
+            "[download] Remuxing the partial file \"{}\" to the data it holds",
+            path.display()
+        ));
+        let ext = path
+            .extension()
+            .map(|ext| ext.to_string_lossy().into_owned())
+            .unwrap_or_else(|| "mp4".into());
+        if let Err(error) =
+            fixup::copy_stream("FixupPartial", ffmpeg, path, "mp4", &ext, &mut || {
+                std::ops::ControlFlow::Continue(())
+            })
+        {
+            screen::warning(&format!(
+                "Unable to repair the partial file \"{}\": {error}",
+                path.display()
+            ));
+        }
+    }
+
+    fn download_unrepaired(
+        &self,
+        info: &VideoInfo,
+        destination: &Path,
         options: DownloadOptions,
         mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<u64> {
@@ -4659,7 +4729,7 @@ impl YoutubeDl {
             self.report_invoking(info);
         }
         if self.grows(info) {
-            return self.download_growing(info, destination.as_ref(), options, &mut callback);
+            return self.download_growing(info, destination, options, &mut callback);
         }
         // `--keep-partial-on-stop`: SIGINT/SIGTERM stop the download like
         // `Interrupt::stop` (the outermost call holds the signal guard).
@@ -4711,13 +4781,9 @@ impl YoutubeDl {
                     chunk: self.http_chunk_size,
                     timecode: timecode.as_ref(),
                 };
-                if let Some(size) = indexed_fd::download(
-                    &params,
-                    info,
-                    destination.as_ref(),
-                    &options,
-                    &mut callback,
-                )? {
+                if let Some(size) =
+                    indexed_fd::download(&params, info, destination, &options, &mut callback)?
+                {
                     return Ok(size);
                 }
             }
@@ -4728,25 +4794,19 @@ impl YoutubeDl {
                 info,
                 None,
                 timecode.as_ref(),
-                destination.as_ref(),
+                destination,
                 &options,
                 &mut callback,
             );
         }
-        if let Some(external) = self.external_downloader(info, destination.as_ref()) {
+        if let Some(external) = self.external_downloader(info, destination) {
             let params = external_fd::Params {
                 settings: &self.external_settings,
                 cookies: &self.cookies,
                 proxy: self.proxy.as_deref(),
                 options: &options,
             };
-            return external_fd::download(
-                &external,
-                &params,
-                info,
-                destination.as_ref(),
-                &mut callback,
-            );
+            return external_fd::download(&external, &params, info, destination, &mut callback);
         }
         // Upstream `PROTOCOL_MAP`'s RtmpFD and WebSocketFragmentFD.
         if info.requested_formats.is_empty()
@@ -4757,7 +4817,7 @@ impl YoutubeDl {
                 continue_download: self.external_settings.continue_download,
                 test: self.test,
             };
-            return rtmp_fd::download(&params, info, destination.as_ref(), &mut callback);
+            return rtmp_fd::download(&params, info, destination, &mut callback);
         }
         if info.requested_formats.is_empty() && info.protocol.as_deref() == Some("websocket_frag") {
             let network = ffmpeg_fd::Network {
@@ -4780,7 +4840,7 @@ impl YoutubeDl {
                 &network,
                 &self.ffmpeg_settings,
                 info,
-                destination.as_ref(),
+                destination,
                 &options,
                 &mut callback,
             );
@@ -4791,7 +4851,7 @@ impl YoutubeDl {
         {
             let bytes = self.download_live_streams(
                 info,
-                &[(info.clone(), destination.as_ref().to_path_buf())],
+                &[(info.clone(), destination.to_path_buf())],
                 options,
                 false,
                 &mut callback,
@@ -4799,7 +4859,7 @@ impl YoutubeDl {
             return Ok(bytes.iter().sum());
         }
         if !info.requested_formats.is_empty() {
-            return self.download_merged(info, destination.as_ref(), options, &mut callback);
+            return self.download_merged(info, destination, options, &mut callback);
         }
         // Upstream `IsmFD` (`--test` takes the first fragment).
         if info.protocol.as_deref() == Some("ism") {
@@ -4815,7 +4875,7 @@ impl YoutubeDl {
             return fragment::download_ism(
                 &self.client,
                 &plan,
-                destination.as_ref(),
+                destination,
                 options,
                 self.keep_fragments,
                 &params,
@@ -4827,7 +4887,7 @@ impl YoutubeDl {
             return f4m_fd::download(
                 &self.client,
                 info,
-                destination.as_ref(),
+                destination,
                 options,
                 self.keep_fragments,
                 self.test,
@@ -4843,7 +4903,7 @@ impl YoutubeDl {
             return fragment::download_mhtml(
                 &self.client,
                 &plan,
-                destination.as_ref(),
+                destination,
                 options,
                 self.keep_fragments,
                 &mut callback,
@@ -4860,7 +4920,7 @@ impl YoutubeDl {
             return fragment::download(
                 &self.client,
                 info,
-                destination.as_ref(),
+                destination,
                 options,
                 self.concurrent_fragments,
                 self.keep_fragments,
@@ -4881,12 +4941,12 @@ impl YoutubeDl {
                 .map(|size| download::Chunking { size, test: false })
         };
         if info.url.scheme() == "file" {
-            return download::download_file(info, destination.as_ref(), options, &mut callback);
+            return download::download_file(info, destination, options, &mut callback);
         }
         download::download(
             &self.client,
             info,
-            destination.as_ref(),
+            destination,
             options,
             chunk,
             &mut callback,
@@ -5329,7 +5389,7 @@ impl YoutubeDl {
                 }
             })
             .collect();
-        merge::merge_inputs(&executable, &inputs, &output, output_ext, &mut || {
+        let merged = merge::merge_inputs(&executable, &inputs, &output, output_ext, &mut || {
             if stopped {
                 return ControlFlow::Continue(());
             }
@@ -5346,7 +5406,48 @@ impl YoutubeDl {
                 fragment: None,
                 recorded_ms: None,
             })
-        })?;
+        });
+        // FFmpeg exits 0 for some unreadable stopped merges, so a stopped
+        // MP4/MOV result must walk to its `moov`. Otherwise the unmerged
+        // streams are kept at their upstream names instead.
+        let unreadable = match &merged {
+            Err(_) => true,
+            Ok(()) => matches!(partial::mp4(&output), Ok(partial::Mp4::Unreadable)),
+        };
+        if stopped && unreadable {
+            let reason = match merged {
+                Err(error) => error.to_string(),
+                Ok(()) => "the merged file is not readable".into(),
+            };
+            drop(output);
+            screen::warning(&format!(
+                "Unable to merge the stopped download ({reason}); keeping the unmerged formats"
+            ));
+            let mut kept = Vec::new();
+            for (&index, path) in downloaded.iter().zip(&paths) {
+                let target = stream_path(destination, &info.ext, &streams[index]);
+                // A rename, so a failure never removes the data.
+                if *path != target {
+                    if !options.overwrite && fs::symlink_metadata(&target).is_ok() {
+                        return Err(Error::OutputExists(target));
+                    }
+                    fs::rename(path, &target)?;
+                }
+                kept.push((index, target));
+            }
+            // The video (else the first) stream is the reported file.
+            let video = kept
+                .iter()
+                .find(|(index, _)| streams[*index].vcodec.as_deref() != Some("none"))
+                .or(kept.first())
+                .map(|(_, path)| path.clone())
+                .ok_or(Error::DownloadCancelled)?;
+            if upstream.is_some() {
+                screen::postprocessor("Merger", "finished");
+            }
+            return Err(Error::DownloadStopped { path: video });
+        }
+        merged?;
         filetime::inherit(&output, oldest);
         let bytes = fs::metadata(&output)?.len();
         fs::OpenOptions::new()

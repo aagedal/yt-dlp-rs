@@ -80,7 +80,9 @@ These options are not in upstream yt-dlp:
   keep what it has as a usable file at the final name, instead of `.part`
   files. HLS/DASH downloads keep whole fragments, and separate video and
   audio streams are merged as far as they got (audio is fetched first, so a
-  stop mid-video still has the whole audio). An app can offer Stop (keep)
+  stop mid-video still has the whole audio). A fragmented MP4 cut inside a
+  fragment is trimmed to whole fragments first, and a merge that does not read
+  back keeps the unmerged streams instead. An app can offer Stop (keep)
   next to Cancel (delete) this way; `--print after_move:filepath` reports the
   kept file.
 - **`--download-sections` for adaptive HTTPS formats** fetches only the
