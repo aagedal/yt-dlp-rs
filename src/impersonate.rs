@@ -323,6 +323,7 @@ pub(crate) fn require(requested: &[&str]) -> Result<Scope, String> {
 pub(crate) fn send(
     request: reqwest::blocking::RequestBuilder,
 ) -> crate::Result<reqwest::blocking::Response> {
+    let request = crate::control::prepare(request)?;
     #[cfg(feature = "impersonate")]
     if let Some(index) = ACTIVE.with(Cell::get) {
         return transport::send(request, &supported_targets()[index]);

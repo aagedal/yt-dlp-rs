@@ -112,6 +112,9 @@ struct State {
     next: u64,
     bytes: usize,
     warning: bool,
+    /// Library request-scope cookies (`RequestScope`), by scope: matched
+    /// like stored cookies but never saved or shown in info dicts.
+    scoped: Vec<(u64, Cookie<'static>)>,
 }
 
 /// A synchronized cookie provider. Cookie contents are omitted from Debug and
@@ -619,6 +622,61 @@ fn parse_record(line: &str, http_only: bool) -> std::result::Result<(Cookie<'sta
     Ok((cookie, nameless))
 }
 
+/// A `Set-Cookie` header value as if `url` had sent it (validated like
+/// response cookies; a `Domain` must cover `url`'s host).
+pub(crate) fn parse_set_cookie(header: &str, url: &Url) -> Result<Cookie<'static>> {
+    let invalid = || error("invalid cookie for this URL");
+    if !matches!(url.scheme(), "http" | "https")
+        || header.len() > MAX_LINE
+        || header.chars().any(char::is_control)
+    {
+        return Err(invalid());
+    }
+    let raw = RawCookie::parse(header).map_err(|_| invalid())?;
+    if !valid_name(raw.name()) || !valid_value(raw.value()) {
+        return Err(invalid());
+    }
+    Cookie::try_from_raw_cookie(&raw, url)
+        .map(Cookie::into_owned)
+        .map_err(|_| invalid())
+}
+
+impl CookieJar {
+    /// Store a cookie given in `Set-Cookie` syntax as if `url` had sent it:
+    /// host-only on `url`'s host unless a `Domain` attribute covers it, with
+    /// the attribute's path, expiry and `Secure` flag. For copying another
+    /// application's cookies into this jar.
+    pub fn set_cookie(&self, url: &Url, header: &str) -> Result<()> {
+        parse_set_cookie(header, url)?;
+        let value = HeaderValue::from_str(header).map_err(|_| error("invalid cookie value"))?;
+        self.set_cookies(&mut std::iter::once(&value), url);
+        Ok(())
+    }
+
+    /// Add a request scope's cookies until [`remove_scoped`](Self::remove_scoped).
+    pub(crate) fn push_scoped(&self, id: u64, url: &Url, headers: &[String]) -> Result<()> {
+        let cookies = headers
+            .iter()
+            .map(|header| parse_set_cookie(header, url))
+            .collect::<Result<Vec<_>>>()?;
+        let mut state = self
+            .state
+            .write()
+            .map_err(|_| error("cookie jar lock poisoned"))?;
+        state
+            .scoped
+            .extend(cookies.into_iter().map(|cookie| (id, cookie)));
+        Ok(())
+    }
+
+    /// Drop a request scope's cookies.
+    pub(crate) fn remove_scoped(&self, id: u64) {
+        if let Ok(mut state) = self.state.write() {
+            state.scoped.retain(|(scope, _)| *scope != id);
+        }
+    }
+}
+
 impl HttpCookieStore for CookieJar {
     fn set_cookies(&self, headers: &mut dyn Iterator<Item = &HeaderValue>, url: &Url) {
         let Ok(mut state) = self.state.write() else {
@@ -705,12 +763,25 @@ impl HttpCookieStore for CookieJar {
         if !matches!(url.scheme(), "http" | "https") {
             return None;
         }
+        let secure_ok = |cookie: &&Cookie<'static>| {
+            !cookie.secure().unwrap_or(false) || url.scheme() == "https"
+        };
+        let scoped: Vec<&Cookie<'static>> = state
+            .scoped
+            .iter()
+            .map(|(_, cookie)| cookie)
+            .filter(|cookie| cookie.matches(url) && !cookie.is_expired())
+            .filter(secure_ok)
+            .collect();
+        // A request-scope cookie replaces a stored one of the same name.
         let mut cookies: Vec<_> = state
             .store
             .matches(url)
             .into_iter()
-            .filter(|cookie| !cookie.secure().unwrap_or(false) || url.scheme() == "https")
+            .filter(secure_ok)
+            .filter(|cookie| !scoped.iter().any(|own| own.name() == cookie.name()))
             .collect();
+        let scoped: Vec<Cookie<'static>> = scoped.into_iter().cloned().collect();
         cookies.sort_by_key(|cookie| {
             (
                 std::cmp::Reverse(cookie.path.len()),
@@ -739,6 +810,22 @@ impl HttpCookieStore for CookieJar {
                 header.push('=');
                 header.push_str(cookie.value());
             }
+        }
+        for cookie in &scoped {
+            let length = cookie.name().len()
+                + 1
+                + cookie.value().len()
+                + if header.is_empty() { 0 } else { 2 };
+            if header.len().saturating_add(length) > MAX_HEADER {
+                state.warning = true;
+                return None;
+            }
+            if !header.is_empty() {
+                header.push_str("; ");
+            }
+            header.push_str(cookie.name());
+            header.push('=');
+            header.push_str(cookie.value());
         }
         if header.is_empty() {
             None

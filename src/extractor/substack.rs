@@ -136,20 +136,21 @@ impl Extractor for Substack {
                     ));
                     let media = Url::parse(&podcast_url)?;
                     crate::screen::before_extraction_request();
-                    let response = crate::geo::add_header(client.head(media), &[])
-                        .send()
-                        .inspect(|_| crate::screen::after_request())
-                        .map_err(Error::Http)
-                        .and_then(crate::retry::check_response)
-                        .map_err(|error| match error {
-                            Error::Http(_) | Error::HttpRetryAfter { .. } => {
-                                Error::Reported(format!(
-                                    "[{NAME}] {display_id}: Podcast URL is invalid: {}",
-                                    crate::upstream_error_text(&error)
-                                ))
-                            }
-                            error => error,
-                        })?;
+                    let response =
+                        crate::control::prepare(crate::geo::add_header(client.head(media), &[]))?
+                            .send()
+                            .inspect(|_| crate::screen::after_request())
+                            .map_err(Error::Http)
+                            .and_then(crate::retry::check_response)
+                            .map_err(|error| match error {
+                                Error::Http(_) | Error::HttpRetryAfter { .. } => {
+                                    Error::Reported(format!(
+                                        "[{NAME}] {display_id}: Podcast URL is invalid: {}",
+                                        crate::upstream_error_text(&error)
+                                    ))
+                                }
+                                error => error,
+                            })?;
                     let ext = super::direct::determine_ext(response.url().as_str())
                         .unwrap_or_else(|| "unknown_video".into());
                     fields.push(("ext", ext.into()));

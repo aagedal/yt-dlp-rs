@@ -4345,6 +4345,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         let mut fallback: Option<(String, String)> = None;
         let options = ExtractionOptions {
             retries: args.extractor_retries,
+            ..Default::default()
         };
         let mut pending: Option<Cancel> = None;
         let mut header_printed = false;

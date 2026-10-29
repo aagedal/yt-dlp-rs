@@ -273,6 +273,53 @@ pub(crate) fn from_response_with(
         return Ok(None);
     }
     let (manifest_url, playlist) = read_playlist_with(response, true)?;
+    from_playlist(
+        client,
+        manifest_url,
+        playlist,
+        original,
+        referer,
+        m3u8_id,
+        master_only,
+    )
+}
+
+/// A playlist given as text (a library caller's inline manifest), resolved
+/// against `base`: the info [`from_response_with`] builds after its fetch.
+pub(crate) fn from_text(
+    client: &Client,
+    text: &str,
+    base: &Url,
+    original: &Url,
+    master_only: bool,
+) -> Result<VideoInfo> {
+    if text.len() as u64 > MAX_MANIFEST_BYTES {
+        return Err(unsupported(&format!(
+            "HLS playlist exceeds the {MAX_MANIFEST_BYTES}-byte extraction limit"
+        )));
+    }
+    let playlist = crate::hls::parse_live(text, base)?;
+    from_playlist(
+        client,
+        base.clone(),
+        playlist,
+        original,
+        None,
+        None,
+        master_only,
+    )?
+    .ok_or_else(|| unsupported("the HLS playlist has no media"))
+}
+
+fn from_playlist(
+    client: &Client,
+    manifest_url: Url,
+    playlist: Playlist,
+    original: &Url,
+    referer: Option<&Url>,
+    m3u8_id: Option<&str>,
+    master_only: bool,
+) -> Result<Option<VideoInfo>> {
     let filename = manifest_url
         .path_segments()
         .and_then(|mut segments| segments.next_back())

@@ -398,19 +398,27 @@ fn download_with(
     if let Some((_, written)) = &mut mhtml {
         *written = true;
     }
+    let output_path = private.as_ref().map_or_else(
+        || part_path.clone(),
+        |temporary| temporary.path().to_path_buf(),
+    );
+    // The output's length after the last whole fragment, which a library
+    // `Interrupt::stop` publishes.
+    let committed = std::cell::Cell::new(None::<u64>);
     let mut appended = |_: usize| -> Result<()> {
         completed += 1;
+        committed.set(
+            fs::metadata(&output_path)
+                .ok()
+                .map(|metadata| metadata.len()),
+        );
         if upstream {
             write_state(completed, &mhtml)
         } else {
             Ok(())
         }
     };
-    let output_path = private.as_ref().map_or_else(
-        || part_path.clone(),
-        |temporary| temporary.path().to_path_buf(),
-    );
-    {
+    let assembled = (|| -> Result<()> {
         let output: &mut fs::File = match (&mut private, &mut named) {
             (Some(temporary), _) => temporary.as_file_mut(),
             (_, Some((file, _))) => file,
@@ -551,6 +559,40 @@ fn download_with(
         if options.update_time {
             crate::filetime::apply(output, filetime);
         }
+        Ok(())
+    })();
+    if let Err(error) = assembled {
+        let length = committed.get().unwrap_or(0);
+        return Err(crate::download::stop_publish(
+            error,
+            length,
+            destination,
+            || {
+                let output: &mut fs::File = match (&mut private, &mut named) {
+                    (Some(temporary), _) => temporary.as_file_mut(),
+                    (_, Some((file, _))) => file,
+                    _ => unreachable!("one output file is open"),
+                };
+                output.set_len(length)?;
+                output.sync_all()?;
+                match private.take() {
+                    Some(temporary) => {
+                        crate::download::persist(temporary, destination, options.overwrite)
+                    }
+                    None => {
+                        drop(named.take());
+                        let _ = fs::remove_file(&ytdl_path);
+                        if part_path != destination {
+                            if !options.overwrite && fs::symlink_metadata(destination).is_ok() {
+                                return Err(Error::OutputExists(destination.into()));
+                            }
+                            fs::rename(&part_path, destination)?;
+                        }
+                        Ok(())
+                    }
+                }
+            },
+        ));
     }
     reporter.report(DownloadPhase::Publishing, stored)?;
     match private {
@@ -726,7 +768,9 @@ fn download_concurrent(
     std::thread::scope(|scope| -> Result<(u64, Option<i64>)> {
         for _ in 0..concurrency.min(count - start) {
             let (next, cancelled, sender) = (next.clone(), cancelled.clone(), sender.clone());
+            let context = crate::control::current();
             scope.spawn(move || {
+                let _context = crate::control::resume(context);
                 let mut keys: HashMap<url::Url, [u8; 16]> =
                     match crate::manifest_args::external_key(info).ok().flatten() {
                         Some(key) => info
@@ -885,8 +929,8 @@ fn fetch(
             format!("bytes={}-{}", range.offset, range.offset + range.length - 1),
         );
     }
-    let mut response = request
-        .send()
+    let mut response = crate::control::scoped(request)
+        .and_then(|request| request.send())
         .inspect(|_| crate::screen::after_request())
         .map_err(Error::Http)
         .and_then(crate::retry::check_response)
@@ -1115,8 +1159,8 @@ fn fetch_key(
     if let Some(ip) = crate::geo::forwarded_for(info) {
         request = request.header("X-Forwarded-For", ip);
     }
-    let mut response = request
-        .send()
+    let mut response = crate::control::scoped(request)
+        .and_then(|request| request.send())
         .inspect(|_| crate::screen::after_request())
         .map_err(Error::Http)
         .and_then(crate::retry::check_response)

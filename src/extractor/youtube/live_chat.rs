@@ -309,7 +309,7 @@ fn fetch(
 
 fn send(request: reqwest::blocking::RequestBuilder) -> Result<reqwest::blocking::Response> {
     crate::screen::load_cookies()?;
-    let response = request.send();
+    let response = crate::control::scoped(request).and_then(|request| request.send());
     crate::screen::flush_traffic();
     crate::retry::check_response(response?)
 }

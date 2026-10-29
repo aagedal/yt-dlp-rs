@@ -892,6 +892,36 @@ impl Target {
         }
         Ok(())
     }
+
+    /// A transfer ended by `error`: on a library `Interrupt::stop` with data
+    /// written, the partial file is published at `destination` and
+    /// `Error::DownloadStopped` returned; otherwise `error` (a private
+    /// temporary file is removed when dropped).
+    fn stopped(mut self, error: Error, written: u64, destination: &Path, overwrite: bool) -> Error {
+        stop_publish(error, written, destination, || {
+            self.file().flush()?;
+            self.publish(destination, overwrite)
+        })
+    }
+}
+
+/// [`Target::stopped`] for any output: `publish` runs only for a library
+/// `Interrupt::stop` of a cancelled transfer that wrote data.
+pub(crate) fn stop_publish(
+    error: Error,
+    written: u64,
+    destination: &Path,
+    publish: impl FnOnce() -> Result<()>,
+) -> Error {
+    if !matches!(error, Error::DownloadCancelled) || !crate::control::stopping() || written == 0 {
+        return error;
+    }
+    match publish() {
+        Ok(()) => Error::DownloadStopped {
+            path: destination.to_owned(),
+        },
+        Err(error) => error,
+    }
 }
 
 fn download_resource(
@@ -954,7 +984,9 @@ fn download_resource(
     };
     for attempt in 0..=options.retries {
         reporter.attempt = u16::try_from(attempt.saturating_add(1)).unwrap_or(u16::MAX);
-        reporter.report(DownloadPhase::Requesting, actual)?;
+        if let Err(error) = reporter.report(DownloadPhase::Requesting, actual) {
+            return Err(temporary.stopped(error, actual, destination, options.overwrite));
+        }
         match download_attempt(
             client,
             resource,
@@ -990,7 +1022,17 @@ fn download_resource(
                     || crate::retry::delay(attempt, failure.retry_after),
                     |delay| delay.max(failure.retry_after),
                 );
-                reporter.wait(delay, actual)?;
+                if let Err(error) = reporter.wait(delay, actual) {
+                    return Err(temporary.stopped(error, actual, destination, options.overwrite));
+                }
+            }
+            Err(failure) if matches!(failure.error, Error::DownloadCancelled) => {
+                return Err(temporary.stopped(
+                    failure.error,
+                    actual,
+                    destination,
+                    options.overwrite,
+                ));
             }
             Err(failure) => {
                 // Upstream opens the part file only once data arrives.
@@ -1060,8 +1102,8 @@ fn chunked_attempt(
             request = request.header(USER_AGENT, agent);
         }
         crate::screen::load_cookies().map_err(AttemptFailure::from)?;
-        let mut response = request
-            .send()
+        let mut response = crate::control::scoped(request)
+            .and_then(|request| request.send())
             .inspect(|_| crate::screen::flush_traffic())
             .map_err(Error::Http)
             .and_then(crate::retry::check_response)
@@ -1207,8 +1249,8 @@ pub(crate) fn fetch_span(
                 request = request.header(REFERER, referrer.as_str());
             }
             crate::screen::load_cookies().map_err(AttemptFailure::from)?;
-            let mut response = request
-                .send()
+            let mut response = crate::control::scoped(request)
+                .and_then(|request| request.send())
                 .inspect(|_| crate::screen::flush_traffic())
                 .map_err(Error::Http)
                 .and_then(crate::retry::check_response)
@@ -1331,8 +1373,8 @@ fn download_attempt(
     // Upstream's 416 branch re-sends the same Range, so a complete part
     // file fails with that status; the part file is kept.
     crate::screen::load_cookies().map_err(AttemptFailure::from)?;
-    let mut response = build(loose)
-        .send()
+    let mut response = crate::control::scoped(build(loose))
+        .and_then(|request| request.send())
         .inspect(|_| crate::screen::flush_traffic())
         .map_err(Error::Http)
         .and_then(crate::retry::check_response)

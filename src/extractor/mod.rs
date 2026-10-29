@@ -68,7 +68,7 @@ mod cultureunplugged;
 mod dailymail;
 mod dailymotion;
 mod damtomo;
-mod dash;
+pub(crate) mod dash;
 mod daystar;
 mod dbtv;
 mod democracynow;

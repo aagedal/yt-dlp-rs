@@ -7,6 +7,7 @@ pub mod cache;
 pub mod codecs;
 pub mod config;
 pub mod container;
+mod control;
 mod cookies;
 mod cover_art;
 mod crypto;
@@ -77,6 +78,7 @@ pub mod xattr;
 
 pub use archive::{DownloadArchive, archive_id};
 pub use audio::{AudioDownload, AudioOptions, audio_original_path, audio_output_path};
+pub use control::{DownloadControl, Interrupt, RequestScope};
 pub use cookies::CookieJar;
 pub use download::{
     BUFFER_SIZE, DownloadOptions, DownloadPhase, DownloadProgress, FragmentBytes, MergeFiles,
@@ -131,10 +133,64 @@ pub fn validate_format_selector(expression: &str) -> Result<()> {
 
 /// Whole-extraction retry policy, independent of download retries.
 /// Defaults to no retries to preserve existing library behavior.
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Default)]
 pub struct ExtractionOptions {
     /// Additional attempts after transient HTTP or HTML body read failures.
     pub retries: u8,
+    /// Ends the extraction with `Error::ExtractionCancelled` before its next
+    /// request once stopped or cancelled.
+    pub interrupt: Option<Interrupt>,
+    /// Headers and cookies for requests to one origin (see [`RequestScope`]).
+    pub scope: Option<RequestScope>,
+}
+
+/// The kind of a [`Manifest`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ManifestKind {
+    /// An HLS master or media playlist (M3U8).
+    Hls,
+    /// A DASH MPD.
+    Dash,
+}
+
+/// An HLS or DASH manifest for [`YoutubeDl::extract_manifest`]: fetched
+/// from `url`, or given inline as `data` with `url` as the base for its
+/// relative URIs (and the origin a [`RequestScope`] usually names).
+#[derive(Debug, Clone)]
+pub struct Manifest {
+    pub kind: ManifestKind,
+    /// The manifest's URL (HTTP or HTTPS).
+    pub url: Url,
+    /// The manifest text; `None` fetches `url`.
+    pub data: Option<String>,
+    /// The result's `id` (default: the manifest file name's stem).
+    pub id: Option<String>,
+    /// The result's `title` (default: the `id`).
+    pub title: Option<String>,
+    /// The result's `webpage_url` (default: `url`).
+    pub webpage_url: Option<Url>,
+}
+
+impl Manifest {
+    /// A manifest fetched from `url`.
+    pub fn new(kind: ManifestKind, url: Url) -> Self {
+        Self {
+            kind,
+            url,
+            data: None,
+            id: None,
+            title: None,
+            webpage_url: None,
+        }
+    }
+
+    /// An inline manifest whose relative URIs resolve against `base`.
+    pub fn inline(kind: ManifestKind, base: Url, data: impl Into<String>) -> Self {
+        Self {
+            data: Some(data.into()),
+            ..Self::new(kind, base)
+        }
+    }
 }
 
 pub struct YoutubeDl {
@@ -2128,10 +2184,8 @@ impl YoutubeDl {
         let mut attempt = 0;
         let body: Option<serde_json::Value> = loop {
             attempt += 1;
-            let result = self
-                .client
-                .get(&url)
-                .send()
+            let result = crate::control::scoped(self.client.get(&url))
+                .and_then(|request| request.send())
                 .inspect(|_| crate::screen::after_request())
                 .map_err(|error| retry::urllib_error(&error))
                 .and_then(|response| {
@@ -2504,7 +2558,9 @@ impl YoutubeDl {
             let (sender, messages) = std::sync::mpsc::channel::<screen::OwnedMessage>();
             let relay = || messages.try_iter().for_each(|message| message.emit());
             std::thread::scope(|scope| {
+                let context = control::current();
                 let feeder = scope.spawn(move || {
+                    let _context = control::resume(context);
                     screen::forward(Some(Box::new(move |message| {
                         let _ = sender.send(message);
                     })));
@@ -3708,6 +3764,12 @@ impl YoutubeDl {
         input: &str,
         options: ExtractionOptions,
     ) -> Result<ExtractResult> {
+        let _context = control::enter(
+            options.interrupt.as_ref(),
+            options.scope.as_ref(),
+            &self.cookies,
+        )?;
+        control::check()?;
         let url = if has_scheme(input) {
             Url::parse(input)?
         } else {
@@ -3745,10 +3807,69 @@ impl YoutubeDl {
                         return Err(error);
                     }
                     retry::backoff(u32::from(attempt), delay);
+                    control::check()?;
                 }
             }
         }
         unreachable!("the final attempt returns success or an error")
+    }
+
+    /// Formats from an HLS or DASH [`Manifest`] (inline or fetched), as a
+    /// processed but unselected video result: pass it to
+    /// [`select_result`](Self::select_result) and download it like an
+    /// extracted one. A master playlist's variant playlists are fetched.
+    /// `options.scope` applies to the manifest and variant requests; pass the
+    /// same scope in [`DownloadControl`] for the media requests.
+    pub fn extract_manifest(
+        &self,
+        manifest: &Manifest,
+        options: ExtractionOptions,
+    ) -> Result<ExtractResult> {
+        let _context = control::enter(
+            options.interrupt.as_ref(),
+            options.scope.as_ref(),
+            &self.cookies,
+        )?;
+        control::check()?;
+        if !matches!(manifest.url.scheme(), "http" | "https") {
+            return Err(Error::UnsupportedScheme(manifest.url.scheme().into()));
+        }
+        let webpage = manifest.webpage_url.as_ref().unwrap_or(&manifest.url);
+        let mut info = match (&manifest.data, manifest.kind) {
+            (Some(text), ManifestKind::Hls) => {
+                extractor::hls::from_text(&self.client, text, &manifest.url, webpage, false)?
+            }
+            (Some(text), ManifestKind::Dash) => {
+                extractor::dash::from_text(text, &manifest.url, webpage)?
+            }
+            (None, kind) => {
+                let response = extractor::direct::probe(&self.client, &manifest.url, None)?;
+                match kind {
+                    ManifestKind::Hls => extractor::hls::from_response(
+                        &self.client,
+                        response,
+                        webpage,
+                        None,
+                        true,
+                        None,
+                    )?,
+                    ManifestKind::Dash => extractor::dash::from_response(response, webpage, true)?,
+                }
+                .ok_or_else(|| Error::UnsupportedManifest("the manifest has no media".into()))?
+            }
+        };
+        if let Some(id) = &manifest.id {
+            info.id = id.clone();
+            if manifest.title.is_none() {
+                info.title = id.clone();
+            }
+        }
+        if let Some(title) = &manifest.title {
+            info.title = title.clone();
+        }
+        let mut result = ExtractResult::Video(info);
+        self.process_result(&mut result)?;
+        Ok(result)
     }
 
     /// The extractor names in matching order (`None`: the registry order).
@@ -4297,6 +4418,41 @@ impl YoutubeDl {
         })
     }
 
+    /// [`download_with_progress`](Self::download_with_progress) with a
+    /// [`DownloadControl`]: its [`Interrupt`] can stop the download from
+    /// another thread (keeping and publishing what was downloaded, as
+    /// `Error::DownloadStopped { path }`) or cancel it (`Error::DownloadCancelled`,
+    /// private temporary files removed), and its [`RequestScope`] adds
+    /// headers and cookies to requests for its origin only.
+    ///
+    /// A stop publishes the data downloaded so far at `destination`: a
+    /// whole-file transfer's bytes, whole fragments of a fragmented stream,
+    /// the streams of a merged download so far merged with FFmpeg (the last
+    /// one partial), or FFmpeg's output after it is asked to finish (`q`).
+    /// A stop before any data arrived is a cancel.
+    pub fn download_with_control(
+        &self,
+        info: &VideoInfo,
+        destination: impl AsRef<Path>,
+        options: DownloadOptions,
+        control: &DownloadControl,
+        mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
+    ) -> Result<u64> {
+        let _context = control::enter(
+            control.interrupt.as_ref(),
+            control.scope.as_ref(),
+            &self.cookies,
+        )?;
+        let interrupt = control.interrupt.clone();
+        self.download_with_progress(info, destination, options, move |progress| {
+            if interrupt.as_ref().is_some_and(Interrupt::is_requested) {
+                std::ops::ControlFlow::Break(())
+            } else {
+                callback(progress)
+            }
+        })
+    }
+
     /// Observe download checkpoints; return `ControlFlow::Break(())` to cancel.
     /// Cancellation removes the private temporary file and never retries or publishes.
     /// Callbacks run synchronously before requests, after validated headers and each
@@ -4734,6 +4890,9 @@ impl YoutubeDl {
         };
         let mut paths = Vec::new();
         let mut stored = 0u64;
+        // A library `Interrupt::stop` during a stream: the streams so far
+        // (the last one partial) are merged and published.
+        let mut stopped = false;
         // `get_suitable_downloader`: generated (`--live-from-start`) formats
         // download together through DashSegmentsFD, into files named with
         // the merged extension.
@@ -4905,7 +5064,21 @@ impl YoutubeDl {
                     progress.stream_count = Some(count);
                     callback(progress)
                 },
-            )?;
+            );
+            let bytes = match bytes {
+                Err(Error::DownloadStopped { .. }) => {
+                    stored = stored.saturating_add(fs::metadata(&path)?.len());
+                    paths.push(path);
+                    stopped = true;
+                    break;
+                }
+                // Stopped before this stream had data: the earlier ones.
+                Err(Error::DownloadCancelled) if control::stopping() && !paths.is_empty() => {
+                    stopped = true;
+                    break;
+                }
+                bytes => bytes?,
+            };
             if announce.replace(false) {
                 screen::screen(&format!("[download] Destination: {}", path.display()));
             }
@@ -4953,6 +5126,9 @@ impl YoutubeDl {
             })
             .collect();
         merge::merge_inputs(&executable, &inputs, &output, output_ext, &mut || {
+            if stopped {
+                return ControlFlow::Continue(());
+            }
             callback(DownloadProgress {
                 attempt: 1,
                 downloaded_bytes: stored,
@@ -4973,20 +5149,21 @@ impl YoutubeDl {
             .write(true)
             .open(&output)?
             .sync_all()?;
-        if callback(DownloadProgress {
-            attempt: 1,
-            downloaded_bytes: bytes,
-            total_bytes: Some(bytes),
-            total_bytes_estimate: None,
-            phase: DownloadPhase::Publishing,
-            stream_index: None,
-            stream_count: Some(count),
-            fragment_index: None,
-            fragment_count: None,
-            fragment: None,
-            recorded_ms: None,
-        })
-        .is_break()
+        if !stopped
+            && callback(DownloadProgress {
+                attempt: 1,
+                downloaded_bytes: bytes,
+                total_bytes: Some(bytes),
+                total_bytes_estimate: None,
+                phase: DownloadPhase::Publishing,
+                stream_index: None,
+                stream_count: Some(count),
+                fragment_index: None,
+                fragment_count: None,
+                fragment: None,
+                recorded_ms: None,
+            })
+            .is_break()
         {
             return Err(Error::DownloadCancelled);
         }
@@ -5003,6 +5180,11 @@ impl YoutubeDl {
                 ));
                 fs::remove_file(path)?;
             }
+        }
+        if stopped {
+            return Err(Error::DownloadStopped {
+                path: destination.to_owned(),
+            });
         }
         Ok(bytes)
     }
