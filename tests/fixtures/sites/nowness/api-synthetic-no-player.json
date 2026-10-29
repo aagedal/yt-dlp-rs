@@ -1,0 +1,17 @@
+{
+ "translations": [
+  {
+   "title": "Synthetic",
+   "seoTitle": "Synthetic"
+  }
+ ],
+ "type": "video",
+ "media": [
+  {
+   "type": "video",
+   "source": "brightcove",
+   "content": "9999"
+  }
+ ],
+ "id": 1
+}

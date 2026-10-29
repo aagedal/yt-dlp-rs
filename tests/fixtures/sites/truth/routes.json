@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://truthsocial.com/api/v1/statuses/108779000807761862",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "status-108779000807761862.json"
+  },
+  {
+   "url": "https://truthsocial.com/api/v1/statuses/1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "status-no-media.json"
+  }
+ ]
+}

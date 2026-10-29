@@ -2178,7 +2178,7 @@ enum Embed {
     Info(WebpageEntry),
 }
 
-static EMBED_SITES: [EmbedSite; 40] = [
+static EMBED_SITES: [EmbedSite; 41] = [
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
@@ -2267,6 +2267,15 @@ static EMBED_SITES: [EmbedSite; 40] = [
         embed_urls: super::dbtv::embed_urls,
         temp_id: super::dbtv::temp_id,
         webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::detik::NAME,
+        key: super::detik::NAME,
+        extractor: None,
+        embed_urls: |_, _| Vec::new(),
+        temp_id: |_| None,
+        webpage: Some(super::detik::webpage_entries),
         fields: None,
     },
     EmbedSite {

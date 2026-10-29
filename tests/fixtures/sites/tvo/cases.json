@@ -1,0 +1,24 @@
+[
+ {
+  "url": "https://www.tvo.org/video/how-can-ontario-survive-the-trade-war",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(display_id)s|%(episode_id)s|%(categories)s|%(description)s|%(duration)s|%(episode)s|%(episode_number)s|%(season_number)s|%(tags)s|%(thumbnail)s|%(timestamp)s|%(series)s|%(series_id)s|%(webpage_url)s|%(uploader_id)s|%(upload_date)s|%(season)s",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.tvo.org/video/documentaries/the-pitch",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.tvo.org/video/synthetic-no-video",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ }
+]

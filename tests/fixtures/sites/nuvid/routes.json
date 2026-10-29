@@ -1,0 +1,33 @@
+{
+ "routes": [
+  {
+   "url": "https://www.nuvid.com/player_config_json/?vid=6513023&aid=0&domain_id=0&embed=0&check_speed=0",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "player-6513023.json"
+  },
+  {
+   "url": "https://www.nuvid.com/player_config_json/?vid=778&aid=0&domain_id=0&embed=0&check_speed=0",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "player-778.json"
+  },
+  {
+   "url": "http://m.nuvid.com/video/6513023",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-6513023.html"
+  },
+  {
+   "url": "https://xcdn.nuvid.com/mp4_lq/d4210a532ac7c830285c930ef4e65e3b.mp4?cdn_hash=3835e3cb71a34817c930152be1ab3782&cdn_creation_time=1793304166&cdn_ttl=3600&cdn_net=88.91.0.0.16&cdn_bw=73207&cdn_bw_fs=448814",
+   "status": 200,
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "empty.bin"
+  }
+ ]
+}

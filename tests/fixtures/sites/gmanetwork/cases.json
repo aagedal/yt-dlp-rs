@@ -1,0 +1,24 @@
+[
+ {
+  "url": "https://www.gmanetwork.com/fullepisodes/home/synthetic/87059/synthetic-episode/video",
+  "args": [
+   "--no-js-runtimes",
+   "--print",
+   "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+  ]
+ },
+ {
+  "url": "https://www.gmanetwork.com/fullepisodes/home/synthetic/87060/synthetic-api/video",
+  "args": [
+   "--no-js-runtimes",
+   "--print",
+   "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+  ]
+ },
+ {
+  "url": "https://www.gmanetwork.com/fullepisodes/home/synthetic/87061/missing/video",
+  "args": [
+   "-J"
+  ]
+ }
+]

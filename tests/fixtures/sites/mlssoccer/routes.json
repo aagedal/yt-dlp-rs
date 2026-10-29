@@ -1,0 +1,77 @@
+{
+ "routes": [
+  {
+   "url": "https://www.mlssoccer.com/video/the-octagon-can-alphonso-davies-lead-canada-to-first-world-cup-since-1986",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "00-www-mlssoccer-com-video-the-octagon-can-alphonso-davies-lead-canada-to-first-world-cup-sin.html"
+  },
+  {
+   "url": "https://players.brightcove.net/5530036772001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "01-players-brightcove-net-5530036772001-default-default-config-json.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/5530036772001/videos/6276033198001",
+   "headers": {
+    "Content-Type": "application/json; charset=UTF-8"
+   },
+   "body_file": "02-edge-api-brightcove-com-playback-v1-accounts-5530036772001-videos-6276033198001.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkFIXTURE0002"
+   }
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v3/clear/5530036772001/1bbc44f6-c63c-4981-82fa-46b0c1f891e0/10s/master.m3u8?fastly_token=NmNjNGRmMDRfZDE4NTQzMjFlYWY5MDU2MGQ5OGY5YjIxZTNjZTQ4ZDc4ZWEyY2NkNGI0NTJkZDQ4YmZhNTY2NWFiNGE1ZDY4YQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "03-manifest-prod-boltdns-net-manifest-v1-hls-v3-clear-5530036772001-1bbc44f6-c63c-4981-82fa-4.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v3/clear/5530036772001/1bbc44f6-c63c-4981-82fa-46b0c1f891e0/10s/master.m3u8?fastly_token=NmNjNGRmMDRfZDE4NTQzMjFlYWY5MDU2MGQ5OGY5YjIxZTNjZTQ4ZDc4ZWEyY2NkNGI0NTJkZDQ4YmZhNTY2NWFiNGE1ZDY4YQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "04-manifest-prod-boltdns-net-manifest-v1-hls-v3-clear-5530036772001-1bbc44f6-c63c-4981-82fa-4.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/5530036772001/1bbc44f6-c63c-4981-82fa-46b0c1f891e0/10s/master.m3u8?fastly_token=NmNjNGRmMDRfZGM3YWQ0ZTFhZTExZGRiMTEzNjdhZTE3MGY1NDA3NzZmYTEyMzJkMDUyZGJhZGU3ZTBkM2ExMjhhYjg5ODcyYQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "05-manifest-prod-boltdns-net-manifest-v1-hls-v4-clear-5530036772001-1bbc44f6-c63c-4981-82fa-4.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/5530036772001/1bbc44f6-c63c-4981-82fa-46b0c1f891e0/10s/master.m3u8?fastly_token=NmNjNGRmMDRfZGM3YWQ0ZTFhZTExZGRiMTEzNjdhZTE3MGY1NDA3NzZmYTEyMzJkMDUyZGJhZGU3ZTBkM2ExMjhhYjg5ODcyYQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "06-manifest-prod-boltdns-net-manifest-v1-hls-v4-clear-5530036772001-1bbc44f6-c63c-4981-82fa-4.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/5530036772001/1bbc44f6-c63c-4981-82fa-46b0c1f891e0/2s/manifest.mpd?fastly_token=NmNjNGRmMDRfYzYxNGY5M2M4ZDBkMWMxZWQ0NGJhNjJkYTA0ZDVkOWYwNTJjMTljZTJiZGRmODBhMDUzZWNiMzIyYjkzZWE3Zg%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "07-manifest-prod-boltdns-net-manifest-v1-dash-live-baseurl-clear-5530036772001-1bbc44f6-c63c-.mpd"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/5530036772001/1bbc44f6-c63c-4981-82fa-46b0c1f891e0/2s/manifest.mpd?fastly_token=NmNjNGRmMDRfYzYxNGY5M2M4ZDBkMWMxZWQ0NGJhNjJkYTA0ZDVkOWYwNTJjMTljZTJiZGRmODBhMDUzZWNiMzIyYjkzZWE3Zg%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "08-manifest-prod-boltdns-net-manifest-v1-dash-live-baseurl-clear-5530036772001-1bbc44f6-c63c-.mpd"
+  },
+  {
+   "url": "https://www.mlssoccer.com/video/synthetic-no-options",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>No player</body></html>"
+  }
+ ]
+}

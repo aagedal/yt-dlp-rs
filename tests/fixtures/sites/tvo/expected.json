@@ -1,0 +1,49 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.tvo.org/video/how-can-ontario-survive-the-trade-war",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(display_id)s|%(episode_id)s|%(categories)s|%(description)s|%(duration)s|%(episode)s|%(episode_number)s|%(season_number)s|%(tags)s|%(thumbnail)s|%(timestamp)s|%(series)s|%(series_id)s|%(webpage_url)s|%(uploader_id)s|%(upload_date)s|%(season)s",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "6377531034112|How Can Ontario Survive the Trade War?|how-can-ontario-survive-the-trade-war|how-can-ontario-survive-the-trade-war|NA|As Canada continues fighting against the threat of Donald Trump's tariffs, municipalities everywhere are feeling the impact. How can communities adapt in these uncertain times? And how could this moment present the opportunity to become more economically resilient? Jeyan Jeganathan is joined by Mayor Mat Siscoe, Matti Siemiatycki, and Tony Stillo.|3531|How Can Ontario Survive the Trade War?|1|1|['amo', 'tariffs', 'economy', 'trade', 'trade war', 'donald trump', 'mark carney', 'small business', 'infrastructure', 'manufacturing', 'ontario', 'government', 'politics', 'community', 'social issues crime and justice', 'tvo originals', 'ott']|https://cf-images.us-east-1.prod.boltdns.net/v1/static/18140038001/679c8d34-696d-4008-99b5-a84a83f6ec8b/7c2f38c1-b430-4d6b-bbe9-1e16d3416ca7/1280x720/match/image.jpg|1756944016|TVO at AMO|tvo-at-amo|https://www.tvo.org/video/how-can-ontario-survive-the-trade-war|18140038001|20250904|Season 1"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.tvo.org/video/documentaries/the-pitch",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [brightcove:new] Access to this resource is forbidden by access policy."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tvo.org/video/synthetic-no-video",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [TVO] synthetic-no-video: Unable to extract Brightcove ID; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

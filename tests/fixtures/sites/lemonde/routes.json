@@ -1,0 +1,33 @@
+{
+ "routes": [
+  {
+   "url": "https://www.lemonde.fr/police-justice/video/2016/01/19/synthetic-digiteka_4849702_1653578.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-digiteka.html"
+  },
+  {
+   "url": "https://www.lemonde.fr/police-justice/video/2016/01/19/missing_4849702_1653578.html",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "not found"
+  },
+  {
+   "url": "https://www.ultimedia.com/player/getConf/01836272/1/3x5x55k",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video\": {\"title\": \"Il est passionn\\u00e9 de DS\", \"image\": \"https://ultimedia.test/3x5x55k.jpg\", \"duration\": \"89\", \"creationDate\": 1760285363, \"ownerId\": \"3pz33\", \"media_sources\": {\"hls\": {\"hls_auto\": \"https://ultimedia-hls.test/3x5x55k/master.m3u8\"}, \"mp4\": {\"mp4_720\": \"https://ultimedia-pd.test/3x5x55k_720.mp4\", \"mp4_360\": \"https://ultimedia-pd.test/3x5x55k_360.mp4\", \"mp4_x\": null}}}}"
+  },
+  {
+   "url": "https://ultimedia-hls.test/3x5x55k/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  }
+ ]
+}

@@ -1,0 +1,32 @@
+[
+ {
+  "url": "https://www.bpb.de/mediathek/podcasts/endlagersuche/315813/folge-1-eine-einfuehrung/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bpb.de/mediathek/video/522184/krieg-flucht-und-falschmeldungen-wirstattdesinformation-2/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bpb.de/mediathek/video/522184/krieg-flucht-und-falschmeldungen-wirstattdesinformation-2/",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.bpb.de/mediathek/video/1/synthetic-noplayer/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bpb.de/mediathek/video/404/missing/",
+  "args": [
+   "-J"
+  ]
+ }
+]

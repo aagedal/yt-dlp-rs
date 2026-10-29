@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="static" mediaPresentationDuration="PT11M14.507S" minBufferTime="PT2.000S">
+  <BaseURL>https://fastly-signed-us-east-1-prod.brightcovecdn.com/media/v1/dash/live/clear/6314471934001/18e14e27-6cac-4189-901a-db454e803ff1/</BaseURL>
+  <Period>
+    <AdaptationSet mimeType="audio/mp4" startWithSAP="1" segmentAlignment="true" lang="en">
+      <Label>en (Main)</Label>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
+      <SegmentTemplate duration="264192" initialization="$RepresentationID$/init.m4f?fastly_token=NmFlNDAwOTBfNzdmNTBkZDIxZTE5NGYzZTBlZmY2NWFmYWVkMWYyYjA5NDhhOWFkZWNmZTQ3MWE4Njk4ODdmN2Y1ODZiMDQ0Nl8vL2Zhc3RseS1zaWduZWQtdXMtZWFzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzYzMTQ0NzE5MzQwMDEvMThlMTRlMjctNmNhYy00MTg5LTkwMWEtZGI0NTRlODAzZmYxLw%3D%3D" media="$RepresentationID$/3x/segment$Number$.m4f?fastly_token=NmFlNDAwOTBfNzdmNTBkZDIxZTE5NGYzZTBlZmY2NWFmYWVkMWYyYjA5NDhhOWFkZWNmZTQ3MWE4Njk4ODdmN2Y1ODZiMDQ0Nl8vL2Zhc3RseS1zaWduZWQtdXMtZWFzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzYzMTQ0NzE5MzQwMDEvMThlMTRlMjctNmNhYy00MTg5LTkwMWEtZGI0NTRlODAzZmYxLw%3D%3D" startNumber="0" timescale="44100"></SegmentTemplate>
+      <Representation audioSamplingRate="44100" bandwidth="63000" codecs="mp4a.40.2" id="60f865c7-4885-4364-a3d3-5501f09ca47b"></Representation>
+      <Representation audioSamplingRate="44100" bandwidth="96000" codecs="mp4a.40.2" id="e7203741-add3-46cb-8a97-f83b7ef34b12"></Representation>
+      <Representation audioSamplingRate="44100" bandwidth="128000" codecs="mp4a.40.2" id="26d6deaf-c391-4c10-9c55-d5b64030c0a0"></Representation>
+      <Representation audioSamplingRate="44100" bandwidth="192000" codecs="mp4a.40.2" id="278c9fe7-c38e-4d14-aed6-8d7f216e002e"></Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="video/mp4" startWithSAP="1" scanType="progressive" segmentAlignment="true">
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
+      <SegmentTemplate duration="180180" initialization="$RepresentationID$/init.m4f?fastly_token=NmFlNDAwOTBfNzdmNTBkZDIxZTE5NGYzZTBlZmY2NWFmYWVkMWYyYjA5NDhhOWFkZWNmZTQ3MWE4Njk4ODdmN2Y1ODZiMDQ0Nl8vL2Zhc3RseS1zaWduZWQtdXMtZWFzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzYzMTQ0NzE5MzQwMDEvMThlMTRlMjctNmNhYy00MTg5LTkwMWEtZGI0NTRlODAzZmYxLw%3D%3D" media="$RepresentationID$/3x/segment$Number$.m4f?fastly_token=NmFlNDAwOTBfNzdmNTBkZDIxZTE5NGYzZTBlZmY2NWFmYWVkMWYyYjA5NDhhOWFkZWNmZTQ3MWE4Njk4ODdmN2Y1ODZiMDQ0Nl8vL2Zhc3RseS1zaWduZWQtdXMtZWFzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzYzMTQ0NzE5MzQwMDEvMThlMTRlMjctNmNhYy00MTg5LTkwMWEtZGI0NTRlODAzZmYxLw%3D%3D" startNumber="0" timescale="30000"></SegmentTemplate>
+      <Representation bandwidth="449000" codecs="avc1.420015" frameRate="2997/100" height="270" id="9acb139b-16b0-41f9-9805-b18a03a64537" width="480"></Representation>
+      <Representation bandwidth="697000" codecs="avc1.42001e" frameRate="2997/100" height="360" id="e17d188a-b7eb-41c4-b68a-f6152ed045aa" width="640"></Representation>
+      <Representation bandwidth="898000" codecs="avc1.4d001e" frameRate="2997/100" height="360" id="82fa55a0-1ba6-4ae3-8892-b939797f5a8d" width="640"></Representation>
+      <Representation bandwidth="1196000" codecs="avc1.4d001f" frameRate="2997/100" height="540" id="c3fe0de8-4d27-4fb9-ba9e-9d61e137b89a" width="960"></Representation>
+      <Representation bandwidth="1694000" codecs="avc1.4d001f" frameRate="2997/100" height="540" id="47ee9471-30ac-4371-a3e4-4988d510a2d8" width="960"></Representation>
+      <Representation bandwidth="1993000" codecs="avc1.4d001f" frameRate="2997/100" height="720" id="e214394a-044c-4c4b-96d2-260c42c09529" width="1280"></Representation>
+      <Representation bandwidth="3491000" codecs="avc1.640028" frameRate="2997/100" height="1080" id="47247852-4bd0-46e9-8128-f9ede9de5af4" width="1920"></Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="text/vtt" lang="en-US">
+      <Label>en-US</Label>
+      <Representation bandwidth="256" id="d0521ade-a6d7-4bfe-ae24-b326af3c45bf">
+        <BaseURL>https://fastly-signed-us-east-1-prod.brightcovecdn.com/media/v1/dash/live/clear/6314471934001/18e14e27-6cac-4189-901a-db454e803ff1/d0521ade-a6d7-4bfe-ae24-b326af3c45bf.vtt?fastly_token=NmFlNDAwOTBfMjQwMzQ1NTY2M2NkMDcwOTg0ZGM4ZjVlNWQ2ZWY0MWIzMzM4MWU5MzYwYjg1M2EzOWRlNjUxNzllMjRkODllM18vL2Zhc3RseS1zaWduZWQtdXMtZWFzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzYzMTQ0NzE5MzQwMDEvMThlMTRlMjctNmNhYy00MTg5LTkwMWEtZGI0NTRlODAzZmYx</BaseURL>
+      </Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>

@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "http://xxxymovies.com/videos/138669/ecstatic-orgasm-sofcore/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "http://xxxymovies.com/videos/1/synthetic/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-novideo.html"
+  }
+ ]
+}

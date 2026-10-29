@@ -1,0 +1,31 @@
+[
+ {
+  "url": "https://holodex.net/watch/BaW_jenozKc",
+  "args": [
+   "--no-js-runtimes",
+   "--print",
+   "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+  ]
+ },
+ {
+  "url": "https://holodex.net/api/v2/playlist/239",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://holodex.net/watch/BaW_jenozKc?playlist=239",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://holodex.net/api/v2/playlist/404",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

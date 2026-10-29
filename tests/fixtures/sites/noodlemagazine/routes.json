@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://adult.noodlemagazine.com/watch/-67421364_456239604",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://adult.noodlemagazine.com/watch/1_2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-noplaylist.html"
+  }
+ ]
+}

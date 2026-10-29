@@ -1,0 +1,47 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://news.cts.com.tw/cts/international/201501/201501291578999.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"9001\", \"url\": \"https://news.cts.example.test/video/synthetic-9001.mp4\", \"title\": \"Synthetic CTSPlayer title - \\u83ef\\u8996\\u65b0\\u805e\\u7db2\", \"description\": \"Synthetic CTSPlayer description\", \"thumbnail\": \"https://news.cts.example.test/synthetic.jpg\", \"timestamp\": 1422506040, \"webpage_url\": \"http://news.cts.com.tw/cts/international/201501/201501291578999.html\", \"original_url\": \"http://news.cts.com.tw/cts/international/201501/201501291578999.html\", \"webpage_url_basename\": \"201501291578999.html\", \"webpage_url_domain\": \"news.cts.com.tw\", \"extractor\": \"CtsNews\", \"extractor_key\": \"CtsNews\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://news.cts.example.test/synthetic.jpg\", \"id\": \"0\"}], \"display_id\": \"9001\", \"fulltitle\": \"Synthetic CTSPlayer title - \\u83ef\\u8996\\u65b0\\u805e\\u7db2\", \"upload_date\": \"20150129\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Synthetic CTSPlayer title - \\u83ef\\u8996\\u65b0\\u805e\\u7db2 [9001].mp4\", \"filename\": \"Synthetic CTSPlayer title - \\u83ef\\u8996\\u65b0\\u805e\\u7db2 [9001].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://news.cts.com.tw/cts/international/201501/201501291578888.html",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|http://news.cts.com.tw/cts/international/201501/201501291578888.html"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://news.cts.com.tw/cts/international/201501/201501291578777.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [CtsNews] 201501291578777: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

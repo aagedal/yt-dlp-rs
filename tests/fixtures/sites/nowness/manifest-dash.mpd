@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="static" mediaPresentationDuration="PT3M44.057S" minBufferTime="PT2.000S">
+  <BaseURL>http://fastly-signed-eu-west-1-prod.brightcovecdn.com/media/v1/dash/live/clear/2385340575001/6aec3692-b48a-442f-aa04-4d1d5c01df9f/</BaseURL>
+  <Period>
+    <AdaptationSet mimeType="audio/mp4" startWithSAP="1" segmentAlignment="true" lang="en">
+      <Label>en (Main)</Label>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
+      <SegmentTemplate duration="264192" initialization="$RepresentationID$/init.m4f?fastly_token=NmFlM2ZlNzNfYWM4YTg4MzlhZTMxOTc4MjI5ODllNGRmYmYzNDA2Y2FiZmUyYjZmY2ZjMzAzZDRkNzQ2MmU1OGU2M2VhMzE0OV8vL2Zhc3RseS1zaWduZWQtZXUtd2VzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzIzODUzNDA1NzUwMDEvNmFlYzM2OTItYjQ4YS00NDJmLWFhMDQtNGQxZDVjMDFkZjlmLw%3D%3D" media="$RepresentationID$/3x/segment$Number$.m4f?fastly_token=NmFlM2ZlNzNfYWM4YTg4MzlhZTMxOTc4MjI5ODllNGRmYmYzNDA2Y2FiZmUyYjZmY2ZjMzAzZDRkNzQ2MmU1OGU2M2VhMzE0OV8vL2Zhc3RseS1zaWduZWQtZXUtd2VzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzIzODUzNDA1NzUwMDEvNmFlYzM2OTItYjQ4YS00NDJmLWFhMDQtNGQxZDVjMDFkZjlmLw%3D%3D" startNumber="0" timescale="44100"></SegmentTemplate>
+      <Representation audioSamplingRate="44100" bandwidth="93000" codecs="mp4a.40.2" id="359faa7b-091f-4003-8dbf-13a64edc4afe"></Representation>
+      <Representation audioSamplingRate="44100" bandwidth="125000" codecs="mp4a.40.2" id="2e41de62-ef74-41a1-9b84-9da62b7f97d4"></Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="video/mp4" startWithSAP="1" scanType="progressive" segmentAlignment="true">
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
+      <SegmentTemplate duration="144144" initialization="$RepresentationID$/init.m4f?fastly_token=NmFlM2ZlNzNfYWM4YTg4MzlhZTMxOTc4MjI5ODllNGRmYmYzNDA2Y2FiZmUyYjZmY2ZjMzAzZDRkNzQ2MmU1OGU2M2VhMzE0OV8vL2Zhc3RseS1zaWduZWQtZXUtd2VzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzIzODUzNDA1NzUwMDEvNmFlYzM2OTItYjQ4YS00NDJmLWFhMDQtNGQxZDVjMDFkZjlmLw%3D%3D" media="$RepresentationID$/3x/segment$Number$.m4f?fastly_token=NmFlM2ZlNzNfYWM4YTg4MzlhZTMxOTc4MjI5ODllNGRmYmYzNDA2Y2FiZmUyYjZmY2ZjMzAzZDRkNzQ2MmU1OGU2M2VhMzE0OV8vL2Zhc3RseS1zaWduZWQtZXUtd2VzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzIzODUzNDA1NzUwMDEvNmFlYzM2OTItYjQ4YS00NDJmLWFhMDQtNGQxZDVjMDFkZjlmLw%3D%3D" startNumber="0" timescale="24000"></SegmentTemplate>
+      <Representation bandwidth="343000" codecs="avc1.420015" frameRate="2997/125" height="268" id="2fdb4615-62e4-44a4-9ca9-6d7081dee776" width="480"></Representation>
+      <Representation bandwidth="504000" codecs="avc1.4d001e" frameRate="2997/125" height="360" id="ad129a63-4097-42c3-8caf-a40fb2c0372c" width="640"></Representation>
+      <Representation bandwidth="1181000" codecs="avc1.64001f" frameRate="2997/125" height="504" id="c590c6cc-f9c5-4577-9ef1-91b47411a681" width="896"></Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="text/vtt" lang="en">
+      <Label>English</Label>
+      <Representation bandwidth="256" id="11b28fce-20e5-4a5f-a8b8-3e541dc23695">
+        <BaseURL>http://fastly-signed-eu-west-1-prod.brightcovecdn.com/media/v1/dash/live/clear/2385340575001/6aec3692-b48a-442f-aa04-4d1d5c01df9f/11b28fce-20e5-4a5f-a8b8-3e541dc23695.vtt?fastly_token=NmFlM2ZlNzNfZTcwMWU3OGU5NGVhMGE0NjAzN2NmYzYyODkzOWQwN2Y3ZmJkYWZkY2I0N2NjMmRmOWZiZmI0MDQ0MTBkN2Q0ZV8vL2Zhc3RseS1zaWduZWQtZXUtd2VzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzIzODUzNDA1NzUwMDEvNmFlYzM2OTItYjQ4YS00NDJmLWFhMDQtNGQxZDVjMDFkZjlm</BaseURL>
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="text/vtt" lang="zh-CN">
+      <Label>中文</Label>
+      <Representation bandwidth="256" id="ab1e41b4-3682-475c-bae4-60d439c1dec3">
+        <BaseURL>http://fastly-signed-eu-west-1-prod.brightcovecdn.com/media/v1/dash/live/clear/2385340575001/6aec3692-b48a-442f-aa04-4d1d5c01df9f/ab1e41b4-3682-475c-bae4-60d439c1dec3.vtt?fastly_token=NmFlM2ZlNzNfZTcwMWU3OGU5NGVhMGE0NjAzN2NmYzYyODkzOWQwN2Y3ZmJkYWZkY2I0N2NjMmRmOWZiZmI0MDQ0MTBkN2Q0ZV8vL2Zhc3RseS1zaWduZWQtZXUtd2VzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzIzODUzNDA1NzUwMDEvNmFlYzM2OTItYjQ4YS00NDJmLWFhMDQtNGQxZDVjMDFkZjlm</BaseURL>
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="text/vtt" lang="ja">
+      <Label>日本語</Label>
+      <Representation bandwidth="256" id="e2b86dd3-927c-469f-8aec-384873f95a35">
+        <BaseURL>http://fastly-signed-eu-west-1-prod.brightcovecdn.com/media/v1/dash/live/clear/2385340575001/6aec3692-b48a-442f-aa04-4d1d5c01df9f/e2b86dd3-927c-469f-8aec-384873f95a35.vtt?fastly_token=NmFlM2ZlNzNfZTcwMWU3OGU5NGVhMGE0NjAzN2NmYzYyODkzOWQwN2Y3ZmJkYWZkY2I0N2NjMmRmOWZiZmI0MDQ0MTBkN2Q0ZV8vL2Zhc3RseS1zaWduZWQtZXUtd2VzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzIzODUzNDA1NzUwMDEvNmFlYzM2OTItYjQ4YS00NDJmLWFhMDQtNGQxZDVjMDFkZjlm</BaseURL>
+      </Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>

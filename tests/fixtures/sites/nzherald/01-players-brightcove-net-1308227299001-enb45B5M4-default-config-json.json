@@ -1,0 +1,117 @@
+{
+  "account_id": "1308227299001",
+  "ad_config_id": null,
+  "ad_failover": false,
+  "autoadvance": null,
+  "autoplay": false,
+  "compatibility": true,
+  "css": {
+    "controlBarColor": "rgba(0, 0, 0, 0.45)",
+    "controlColor": "white",
+    "progressColor": "#08088C"
+  },
+  "debugger": false,
+  "dock": true,
+  "embed_id": "default",
+  "flashHlsDisabledByStudio": false,
+  "fullscreen_control": true,
+  "id": "S1BXZn8t",
+  "picture_in_picture_control": false,
+  "playOnSelect": true,
+  "play_button": {
+    "position": "center",
+    "shape": "circle"
+  },
+  "player": {
+    "inactive": false,
+    "template": {
+      "locked": true,
+      "name": "single-video-template",
+      "version": "7.41.6",
+      "version_alias": null
+    }
+  },
+  "player_id": "enb45B5M4",
+  "player_name": "Latest Production NZH Default Web Player 7.41.6",
+  "playlist": null,
+  "plugins": [
+    {
+      "name": "skinNzherald",
+      "scripts": [
+        "https://media.nzherald.co.nz/brightcove/videojs-skin/2.1.1/videojs-skin-nzherald.min.js"
+      ],
+      "stylesheets": [
+        "https://media.nzherald.co.nz/brightcove/videojs-skin/2.1.1/videojs-skin-nzherald.min.css"
+      ]
+    },
+    {
+      "name": "imaCountdown",
+      "scripts": [
+        "https://media.nzherald.co.nz/brightcove/videojs-ima-countdown/2.0.2/videojs-ima-countdown.min.js"
+      ],
+      "stylesheets": [
+        "https://media.nzherald.co.nz/brightcove/videojs-ima-countdown/2.0.2/videojs-ima-countdown.min.css"
+      ]
+    },
+    {
+      "is_packaged": true,
+      "name": "ima3",
+      "options": {
+        "adTechOrder": [
+          "html5",
+          "flash"
+        ],
+        "hardTimeouts": true,
+        "requestMode": "onplay",
+        "serverUrl": "",
+        "showVpaidControls": true,
+        "timeout": 4000,
+        "useMediaCuePoints": false,
+        "vpaidMode": "ENABLED"
+      }
+    },
+    {
+      "is_packaged": true,
+      "name": "pinning",
+      "options": {
+        "allowOnMobile": true,
+        "manualContainerSize": true,
+        "posX": "right",
+        "viewable": 0.5
+      }
+    },
+    {
+      "is_packaged": true,
+      "name": "recommendationEndscreen",
+      "options": {
+        "autoplay": true,
+        "enableFeaturedContent": true,
+        "env": "production",
+        "hideDuringPip": false,
+        "layoutType": "central",
+        "noOfDisplayedVideos": 3,
+        "primaryRecommendationRule": "related",
+        "secondsBeforeAutoplay": 0,
+        "secondsBeforeVideoEnd": 10
+      }
+    }
+  ],
+  "preload": "none",
+  "skin": "sapphire",
+  "studio_configuration": {
+    "player": {
+      "adjusted": true,
+      "height": 168.75,
+      "previous_version": "5.8.1",
+      "responsive": true,
+      "units": "px",
+      "width": 300
+    }
+  },
+  "updated_at": "2026-03-01T22:35:09.915Z",
+  "video_cloud": {
+    "policy_key": "BCpkFIXTURE0003",
+    "video": null
+  },
+  "volume_orientation": "horizontal"
+}

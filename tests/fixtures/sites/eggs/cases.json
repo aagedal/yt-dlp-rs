@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://eggs.mu/artist/32_sunny_girl/song/0e95fd1d-4d61-4d5b-8b18-6092c551da90",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://eggs.mu/artist/32_sunny_girl",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://eggs.mu/artist/KAMO_3pband",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://eggs.mu/artist/32_sunny_girl/song/00000000-0000-0000-0000-000000000000",
+  "args": [
+   "-J"
+  ]
+ }
+]

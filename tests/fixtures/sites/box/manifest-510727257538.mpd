@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<MPD mediaPresentationDuration="PT1M14.2S" minBufferTime="PT5.0S" type="static" profiles="urn:mpeg:dash:profile:isoff-live:2011">
+<Period start="PT0.0S">
+
+
+<AdaptationSet bitstreamSwitching="true" segmentAlignment="true" contentType="video">
+<Representation frameRate="30/1" id="0" width="1280" height="720" bandwidth="8000000" codecs="avc1.640028" mimeType="video/mp4">
+<SegmentTemplate initialization="video/1080/init.m4s" media="video/1080/$Number$.m4s" duration="5000000" startNumber="1" timescale="1000000"/>
+</Representation>
+<Representation frameRate="30/1" id="1" width="854" height="480" bandwidth="2000000" codecs="avc1.42c028" mimeType="video/mp4">
+<SegmentTemplate initialization="video/480/init.m4s" media="video/480/$Number$.m4s" duration="5000000" startNumber="1" timescale="1000000"/>
+</Representation>
+</AdaptationSet>
+
+
+<AdaptationSet lang="und" bitstreamSwitching="true" segmentAlignment="true" contentType="audio">
+<Role value="1"/>
+<Representation id="2" audioSamplingRate="44100" bandwidth="128000" codecs="mp4a.40.2" mimeType="audio/mp4">
+<AudioChannelConfiguration value="2" schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011"/>
+<SegmentTemplate initialization="audio/0/init.m4s" media="audio/0/$Number$.m4s" duration="5000000" startNumber="1" timescale="1000000"/>
+</Representation>
+</AdaptationSet>
+
+</Period>
+</MPD>

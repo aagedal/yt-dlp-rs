@@ -1,0 +1,50 @@
+{
+ "routes": [
+  {
+   "url": "https://www.gmanetwork.com/fullepisodes/home/synthetic/87059/synthetic-episode/video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-youtube.html"
+  },
+  {
+   "url": "https://www.gmanetwork.com/fullepisodes/home/synthetic/87060/synthetic-api/video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-api.html"
+  },
+  {
+   "url": "https://api.gma.example.test/api/data/content/video/87060",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-video.json"
+  },
+  {
+   "url": "https://www.gmanetwork.com/fullepisodes/home/synthetic/87061/missing/video",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "not found"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "youtube-watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "youtube-visionos.json"
+  }
+ ]
+}

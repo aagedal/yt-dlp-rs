@@ -1,0 +1,49 @@
+{
+ "routes": [
+  {
+   "url": "https://api-rtva.interactvty.com/jwt/token/",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_body": [
+    "canalsur_demo"
+   ],
+   "body_file": "token.json"
+  },
+  {
+   "url": "https://api-rtva.interactvty.com/api/2.0/contents/content/44006/?optional_fields=description%2Cimage%2Cduration%2Ccreated_at%2Ctags",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "content-44006.json"
+  },
+  {
+   "url": "https://api-rtva.interactvty.com/api/2.0/contents/content_resources/44006/?optional_fields=media_url",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "resources-44006.json"
+  },
+  {
+   "url": "https://cdn.rtva.interactvty.com/archivo_ott/el_gran_queo/0000051496/0000051496_3R.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-44006.m3u8"
+  },
+  {
+   "url": "https://api-rtva.interactvty.com/api/2.0/contents/content/44007/?optional_fields=description%2Cimage%2Cduration%2Ccreated_at%2Ctags",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "content-44007.json"
+  },
+  {
+   "url": "https://api-rtva.interactvty.com/api/2.0/contents/content_resources/44007/?optional_fields=media_url",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "resources-44007.json"
+  }
+ ]
+}

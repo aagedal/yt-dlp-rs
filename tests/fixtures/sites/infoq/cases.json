@@ -1,0 +1,20 @@
+[
+ {
+  "url": "https://www.infoq.com/presentations/Simple-Made-Easy",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://www.infoq.com/presentations/A-Few-of-My-Favorite-Python-Things",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.infoq.com/presentations/synthetic-no-video",
+  "args": [
+   "-J"
+  ]
+ }
+]

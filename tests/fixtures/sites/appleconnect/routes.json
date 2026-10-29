@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://music.apple.com/us/post/1018290019",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "post-1018290019.html"
+  },
+  {
+   "url": "https://music.apple.com/us/post/1016746627",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "post-1016746627.html"
+  },
+  {
+   "url": "https://music.apple.com/us/post/1018290020",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "post-synth-nojs.html"
+  },
+  {
+   "url": "https://music.apple.com/us/post/1018290021",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "post-synth-notoken.html"
+  },
+  {
+   "url": "https://music.apple.com/assets/index~cc245af156.js",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body_file": "index-cc245af156.js"
+  },
+  {
+   "url": "https://music.apple.com/assets/index~0123abcd.js",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body_file": "index-0123abcd.js"
+  },
+  {
+   "url": "https://amp-api.music.apple.com/v1/catalog/us/uploaded-videos?ids=1018290019&l=en-US",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "uploaded-1018290019.json"
+  },
+  {
+   "url": "https://amp-api.music.apple.com/v1/catalog/us/uploaded-videos?ids=1016746627&l=en-US",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "uploaded-1016746627.json"
+  }
+ ]
+}

@@ -1,0 +1,62 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://holodex.net/watch/BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://holodex.net/watch/BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://holodex.net/api/v2/playlist/239",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"239\", \"title\": \"Synthetic playlist\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"BaW_jenozKc\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"dQw4w9WgXcQ\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://holodex.net/api/v2/playlist/239\", \"original_url\": \"https://holodex.net/api/v2/playlist/239\", \"webpage_url_basename\": \"239\", \"webpage_url_domain\": \"holodex.net\", \"extractor\": \"Holodex\", \"extractor_key\": \"Holodex\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://holodex.net/watch/BaW_jenozKc?playlist=239",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"239\", \"title\": \"Synthetic playlist\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"BaW_jenozKc\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"dQw4w9WgXcQ\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://holodex.net/watch/BaW_jenozKc?playlist=239\", \"original_url\": \"https://holodex.net/watch/BaW_jenozKc?playlist=239\", \"webpage_url_basename\": \"BaW_jenozKc\", \"webpage_url_domain\": \"holodex.net\", \"extractor\": \"Holodex\", \"extractor_key\": \"Holodex\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://holodex.net/api/v2/playlist/404",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Holodex] 404: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

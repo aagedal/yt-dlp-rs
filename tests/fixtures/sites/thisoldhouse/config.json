@@ -1,0 +1,118 @@
+{
+  "account_id": "6314471934001",
+  "ad_failover": false,
+  "compatibility": true,
+  "css": {
+    "controlBarColor": "rgba(0, 0, 0, 0.45)",
+    "controlColor": "white",
+    "progressColor": "rgb(0, 0, 145)"
+  },
+  "dock": false,
+  "embed_id": "default",
+  "fullscreen_control": true,
+  "picture_in_picture_control": true,
+  "play_button": {
+    "position": "center",
+    "shape": "square"
+  },
+  "playback_rates": [
+  ],
+  "player": {
+    "template": {
+      "locked": true,
+      "name": "single-video-template",
+      "version": "7.13.4",
+      "version_alias": null
+    }
+  },
+  "player_id": "default",
+  "player_name": "Brightcove Default Player",
+  "plugins": [
+    {
+      "injected_version": "2.0.1",
+      "name": "thumbnails",
+      "registry_id": "@brightcove/videojs-thumbnails",
+      "scripts": [
+        "//players.brightcove.net/videojs-thumbnails/2.0.1/videojs-thumbnails.js"
+      ],
+      "stylesheets": [
+        "//players.brightcove.net/videojs-thumbnails/2.0.1/videojs-thumbnails.css"
+      ],
+      "version": "2.x"
+    },
+    {
+      "injected_version": "3.4.0",
+      "name": "chromecastReceiver",
+      "registry_id": "@brightcove/videojs-chromecast-receiver",
+      "scripts": [
+        "//players.brightcove.net/videojs-chromecast-receiver/3.4.0/videojs-chromecast-receiver.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/3.4.0/lang/ar.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/3.4.0/lang/de.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/3.4.0/lang/es.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/3.4.0/lang/fr.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/3.4.0/lang/ja.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/3.4.0/lang/ko.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/3.4.0/lang/zh-Hans.js",
+        "//players.brightcove.net/videojs-chromecast-receiver/3.4.0/lang/zh-Hant.js"
+      ],
+      "stylesheets": [
+        "//players.brightcove.net/videojs-chromecast-receiver/3.4.0/videojs-chromecast-receiver.css"
+      ],
+      "version": "3.x"
+    },
+    {
+      "injected_version": "2.0.1",
+      "name": "bcAirplay",
+      "registry_id": "@brightcove/videojs-bc-airplay",
+      "scripts": [
+        "//players.brightcove.net/videojs-bc-airplay/2.0.1/videojs-bc-airplay.js"
+      ],
+      "stylesheets": [
+        "//players.brightcove.net/videojs-bc-airplay/2.0.1/videojs-bc-airplay.css"
+      ],
+      "version": "2.x"
+    },
+    {
+      "injected_version": "2.8.2",
+      "name": "ssai",
+      "options": {
+        "hideOverlays": true,
+        "trackingBeacons": false
+      },
+      "registry_id": "@brightcove/videojs-ssai",
+      "scripts": [
+        "//players.brightcove.net/videojs-ssai/2.8.2/videojs-ssai.js",
+        "//players.brightcove.net/videojs-ssai/2.8.2/lang/ar.js",
+        "//players.brightcove.net/videojs-ssai/2.8.2/lang/de.js",
+        "//players.brightcove.net/videojs-ssai/2.8.2/lang/en.js",
+        "//players.brightcove.net/videojs-ssai/2.8.2/lang/es.js",
+        "//players.brightcove.net/videojs-ssai/2.8.2/lang/fr.js",
+        "//players.brightcove.net/videojs-ssai/2.8.2/lang/ja.js",
+        "//players.brightcove.net/videojs-ssai/2.8.2/lang/ko.js",
+        "//players.brightcove.net/videojs-ssai/2.8.2/lang/zh-Hans.js",
+        "//players.brightcove.net/videojs-ssai/2.8.2/lang/zh-Hant.js"
+      ],
+      "stylesheets": [
+        "//players.brightcove.net/videojs-ssai/2.8.2/videojs-ssai.css"
+      ],
+      "version": "2.x"
+    }
+  ],
+  "scripts": [
+    "http://players.brightcove.net/6314471934001/custom_plugins/default-1a07b9e0-949b-4a72-baa5-5dd3944da654.js"
+  ],
+  "skin": "sapphire",
+  "studio_configuration": {
+    "player": {
+      "height": 540,
+      "responsive": true,
+      "units": "px",
+      "width": 960
+    }
+  },
+  "updated_at": "2026-10-29T19:29:02.626Z",
+  "video_cloud": {
+    "policy_key": "BCpkADawqM0QI8C_i9eJ68TR5LbyjHAE4XL7ACe57K19NrzJdG6sQnpLNym1Bkf5pkmciXB7EWddAwC5cNvfm3_sOfnfwFuLiZyg5mZsGCTQOodU9tbpqeC2_tIOcPpL9Jz-Jb5CGMsVnOxM"
+  },
+  "volume_orientation": "vertical"
+}

@@ -1,0 +1,10 @@
+[
+ {
+  "url": "https://cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fwww.youtube.com%2Fembed%2FBaW_jenozKc&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DBaW_jenozKc&type=text%2Fhtml&schema=youtube",
+  "args": [
+   "--no-js-runtimes",
+   "--print",
+   "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+  ]
+ }
+]

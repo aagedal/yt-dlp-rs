@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="static" mediaPresentationDuration="PT2M56.342S" minBufferTime="PT2.000S">
+  <BaseURL>https://fastly-signed-us-east-1-prod.brightcovecdn.com/media/v1/dash/live/clear/6237106050001/5629e0a4-47b5-48e8-a1f3-bd87884ab4f2/</BaseURL>
+  <Period>
+    <AdaptationSet mimeType="audio/mp4" startWithSAP="1" segmentAlignment="true" lang="en">
+      <Label>en (Main)</Label>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
+      <SegmentTemplate duration="285696" initialization="$RepresentationID$/init.m4f?pubid=6240731308001&amp;fastly_token=NmFlM2ZkZTNfNmFjMTJmOGNhOTU2OGZmYTJjYmQ2MTM3ZWJjMWVlZmI2OTExMTA2NWJiYTY3NzQ4N2FmZTRjNDUzYTc0MjFmOF8vL2Zhc3RseS1zaWduZWQtdXMtZWFzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzYyMzcxMDYwNTAwMDEvNTYyOWUwYTQtNDdiNS00OGU4LWExZjMtYmQ4Nzg4NGFiNGYyLw%3D%3D" media="$RepresentationID$/3x/segment$Number$.m4f?pubid=6240731308001&amp;fastly_token=NmFlM2ZkZTNfNmFjMTJmOGNhOTU2OGZmYTJjYmQ2MTM3ZWJjMWVlZmI2OTExMTA2NWJiYTY3NzQ4N2FmZTRjNDUzYTc0MjFmOF8vL2Zhc3RseS1zaWduZWQtdXMtZWFzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzYyMzcxMDYwNTAwMDEvNTYyOWUwYTQtNDdiNS00OGU4LWExZjMtYmQ4Nzg4NGFiNGYyLw%3D%3D" startNumber="0" timescale="48000"></SegmentTemplate>
+      <Representation audioSamplingRate="48000" bandwidth="128000" codecs="mp4a.40.2" id="a8915722-7c15-4503-8a04-01b883df642e"></Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="video/mp4" startWithSAP="1" scanType="progressive" segmentAlignment="true">
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
+      <SegmentTemplate duration="144144" initialization="$RepresentationID$/init.m4f?pubid=6240731308001&amp;fastly_token=NmFlM2ZkZTNfNmFjMTJmOGNhOTU2OGZmYTJjYmQ2MTM3ZWJjMWVlZmI2OTExMTA2NWJiYTY3NzQ4N2FmZTRjNDUzYTc0MjFmOF8vL2Zhc3RseS1zaWduZWQtdXMtZWFzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzYyMzcxMDYwNTAwMDEvNTYyOWUwYTQtNDdiNS00OGU4LWExZjMtYmQ4Nzg4NGFiNGYyLw%3D%3D" media="$RepresentationID$/3x/segment$Number$.m4f?pubid=6240731308001&amp;fastly_token=NmFlM2ZkZTNfNmFjMTJmOGNhOTU2OGZmYTJjYmQ2MTM3ZWJjMWVlZmI2OTExMTA2NWJiYTY3NzQ4N2FmZTRjNDUzYTc0MjFmOF8vL2Zhc3RseS1zaWduZWQtdXMtZWFzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzYyMzcxMDYwNTAwMDEvNTYyOWUwYTQtNDdiNS00OGU4LWExZjMtYmQ4Nzg4NGFiNGYyLw%3D%3D" startNumber="0" timescale="24000"></SegmentTemplate>
+      <Representation bandwidth="244000" codecs="avc1.4d000d" frameRate="2997/125" height="216" id="5db0857e-688a-4df1-8d09-cd7e9b89179b" width="384"></Representation>
+      <Representation bandwidth="483000" codecs="avc1.4d001f" frameRate="2997/125" height="540" id="6ff3e4db-9ff1-457d-aab0-65396fa773c8" width="960"></Representation>
+      <Representation bandwidth="872000" codecs="avc1.4d001f" frameRate="2997/125" height="648" id="25f890b6-1f7e-4d2e-9344-8281a4c275fb" width="1152"></Representation>
+      <Representation bandwidth="1747000" codecs="avc1.640028" frameRate="2997/125" height="1080" id="f06a3dff-8285-401f-bc2c-f785067a4e59" width="1920"></Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="text/vtt" lang="en">
+      <Label>en</Label>
+      <Representation bandwidth="256" id="1bd06229-b51c-479f-8738-73edaf47f468">
+        <BaseURL>https://fastly-signed-us-east-1-prod.brightcovecdn.com/media/v1/dash/live/clear/6237106050001/5629e0a4-47b5-48e8-a1f3-bd87884ab4f2/1bd06229-b51c-479f-8738-73edaf47f468.vtt?fastly_token=NmFlM2ZkZTNfZjQ0MTA1NGRiMDMyNmY4MGYzOGJkNWYxZGMyYjRiZTFlZDk4YmUyYmYzMjA4NTQ1OTQ3MjU5NWQwYTYxNTUwMF8vL2Zhc3RseS1zaWduZWQtdXMtZWFzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzYyMzcxMDYwNTAwMDEvNTYyOWUwYTQtNDdiNS00OGU4LWExZjMtYmQ4Nzg4NGFiNGYy</BaseURL>
+      </Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>

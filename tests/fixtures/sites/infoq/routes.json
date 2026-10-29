@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://www.infoq.com/presentations/Simple-Made-Easy",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "Simple-Made-Easy.html"
+  },
+  {
+   "url": "http://www.infoq.com/presentations/A-Few-of-My-Favorite-Python-Things",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "A-Few-of-My-Favorite-Python-Things.html"
+  },
+  {
+   "url": "https://www.infoq.com/presentations/synthetic-no-video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-no-video.html"
+  },
+  {
+   "url": "http://ress.infoq.com/downloads/mp3downloads/presentations/infoq-11-sep-simplemadeeasy.mp3?Policy=eyJTdGF0ZW1lbnQiOiBbeyJSZXNvdXJjZSI6IioiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTMzMTE0NTd9LCJJcEFkZHJlc3MiOnsiQVdTOlNvdXJjZUlwIjoiMC4wLjAuMC8wIn19fV19&Signature=dv2HPNdSnmsFkGi77awimiAm69a-mXWhMKMpUmciKctsTgkSEcGR99nYIZ2c7gPTI8mV10osfDMiu8PKOHtyaMoI7-ti3WfF5RYZ5NPus~5PhIVw-VNUa027WL8mGxzzlmYTF149nH939Ixq4ivwvPB0ZKggzPvV87KTm85QSQo_&Key-Pair-Id=APKAIMZVI7QH4C5YKH6Q",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body_file": "audio-probe.bin"
+  }
+ ]
+}

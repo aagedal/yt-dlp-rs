@@ -1,0 +1,76 @@
+{
+ "routes": [
+  {
+   "url": "https://www.3sat.de/dokumentation/reise/traumziele-suedostasiens-die-philippinen-und-vietnam-102.html",
+   "status": 301,
+   "headers": {
+    "Location": "/dokumentation/traumziele-suedostasiens/traumziele-suedostasiens-die-philippinen-und-vietnam-102.html"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://www.3sat.de/dokumentation/traumziele-suedostasiens/traumziele-suedostasiens-die-philippinen-und-vietnam-102.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://www.3sat.de/dokumentation/synthetic/synthetic-noplayer.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-noplayer.html"
+  },
+  {
+   "url": "https://www.3sat.de/dokumentation/synthetic/synthetic-missing.html",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<h1>Not found</h1>"
+  },
+  {
+   "url": "https://api.3sat.de/content/documents/zdf/dokumentation/traumziele-suedostasiens/traumziele-suedostasiens-die-philippinen-und-vietnam-102.json?profile=player2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "content.json"
+  },
+  {
+   "url": "https://api.3sat.de/tmd/2/android_native_6/vod/ptmd/3sat/231124_traumziele_philippinen_und_vietnam_dokreise/2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ptmd.json"
+  },
+  {
+   "url": "https://zdfvod.akamaized.net/i/mp4/dach/3sat/23/11/231124_traumziele_philippinen_und_vietnam_dokreise/1/231124_traumziele_philippinen_und_vietnam_dokreise,_508k_p9,_808k_p11,_1628k_p13,_3328k_p15,_6628k_p61,v17.mp4.csmil/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-508-6628.m3u8"
+  },
+  {
+   "url": "https://zdfvod.akamaized.net/i/mp4/dach/3sat/23/11/231124_traumziele_philippinen_und_vietnam_dokreise/1/231124_traumziele_philippinen_und_vietnam_dokreise,_1628k_p13,_3328k_p15,_6628k_p61,v17.mp4.csmil/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-1628-6628.m3u8"
+  },
+  {
+   "url": "https://zdfvod.akamaized.net/i/mp4/dach/3sat/23/11/231124_traumziele_philippinen_und_vietnam_dokreise/1/231124_traumziele_philippinen_und_vietnam_dokreise,_508k_p9,_808k_p11,_1628k_p13,v17.mp4.csmil/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-508-1628.m3u8"
+  },
+  {
+   "url": "https://zdfvod.akamaized.net/i/mp4/dach/3sat/23/11/231124_traumziele_philippinen_und_vietnam_dokreise/1/231124_traumziele_philippinen_und_vietnam_dokreise,_508k_p9,_808k_p11,v17.mp4.csmil/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-508-808.m3u8"
+  }
+ ]
+}

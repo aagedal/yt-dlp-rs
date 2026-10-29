@@ -1,0 +1,8 @@
+{
+ "routes": [
+  {"url": "https://ttwid.bytedance.com/ttwid/union/register/", "headers": {"Content-Type": "application/json", "Set-Cookie": "ttwid=1%7CSyntheticTtwid%7C1793304267%7Csynthetic; Path=/; Domain=bytedance.com; Max-Age=31536000; HttpOnly; Secure; SameSite=None"}, "body_file": "ttwid-register.json"},
+  {"url": "https://www.toutiao.com/video/7505382061495176511/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "video-7505382061495176511.html"},
+  {"url": "https://www.toutiao.com/video/7479446610359878153/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "video-7479446610359878153.html"},
+  {"url": "https://www.toutiao.com/video/1234567890/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "synthetic-no-data.html"}
+ ]
+}

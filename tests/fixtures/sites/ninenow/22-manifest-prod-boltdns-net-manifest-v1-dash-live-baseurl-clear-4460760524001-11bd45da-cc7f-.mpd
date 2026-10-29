@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="static" mediaPresentationDuration="PT1H30M15.000S" minBufferTime="PT2.000S">
+  <BaseURL>https://p-9now.akamaized.net/media/v1/dash/live/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/</BaseURL>
+  <Period>
+    <AdaptationSet mimeType="audio/mp4" startWithSAP="1" segmentAlignment="true" lang="en">
+      <Label>en (Main)</Label>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
+      <SegmentTemplate duration="88064" initialization="$RepresentationID$/init.m4f?akamai_token=exp=1793397797~acl=/media/v1/dash/live/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/*~hmac=618c6e97f8fcb9c242c08e7cb932c5cca045cd234be4f2def16e1720c985cab0" media="$RepresentationID$/1x/segment$Number$.m4f?akamai_token=exp=1793397797~acl=/media/v1/dash/live/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/*~hmac=618c6e97f8fcb9c242c08e7cb932c5cca045cd234be4f2def16e1720c985cab0" startNumber="0" timescale="44100"></SegmentTemplate>
+      <Representation audioSamplingRate="44100" bandwidth="64000" codecs="mp4a.40.2" id="ecf8c1b7-fe01-4fea-922b-77427f3c75b8"></Representation>
+      <Representation audioSamplingRate="44100" bandwidth="96000" codecs="mp4a.40.2" id="2b8cd08d-a2e4-4418-acf9-a2e193be9484"></Representation>
+      <Representation audioSamplingRate="44100" bandwidth="127000" codecs="mp4a.40.2" id="701f1384-64b1-49e1-82cb-ab229665dc8c"></Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="video/mp4" startWithSAP="1" scanType="progressive" segmentAlignment="true">
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
+      <SegmentTemplate duration="50" initialization="$RepresentationID$/init.m4f?akamai_token=exp=1793397797~acl=/media/v1/dash/live/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/*~hmac=618c6e97f8fcb9c242c08e7cb932c5cca045cd234be4f2def16e1720c985cab0" media="$RepresentationID$/1x/segment$Number$.m4f?akamai_token=exp=1793397797~acl=/media/v1/dash/live/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/*~hmac=618c6e97f8fcb9c242c08e7cb932c5cca045cd234be4f2def16e1720c985cab0" startNumber="0" timescale="25"></SegmentTemplate>
+      <Representation bandwidth="249000" codecs="avc1.420015" frameRate="25/1" height="270" id="621ce166-316d-4ab5-9d40-eb2bb8954013" width="480"></Representation>
+      <Representation bandwidth="474000" codecs="avc1.4d001e" frameRate="25/1" height="432" id="7b42dba8-5535-4aa1-ad7c-d7a945b376d1" width="768"></Representation>
+      <Representation bandwidth="757000" codecs="avc1.4d001f" frameRate="25/1" height="540" id="ab158243-884c-4a5c-bd6a-11fdb42534c0" width="960"></Representation>
+      <Representation bandwidth="989000" codecs="avc1.4d001f" frameRate="25/1" height="576" id="b0c9c22a-f525-4b15-9134-af3df53cc59a" width="1024"></Representation>
+      <Representation bandwidth="1868000" codecs="avc1.42001f" frameRate="25/1" height="720" id="309b6dbd-0614-434c-98eb-e0f56bc052b7" width="1280"></Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="text/vtt" lang="en">
+      <Label>EN</Label>
+      <Representation bandwidth="256" id="45991e17-8939-42e5-946c-6ab3d03674de">
+        <BaseURL>https://p-9now.akamaized.net/media/v1/dash/live/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1/45991e17-8939-42e5-946c-6ab3d03674de.vtt?akamai_token=exp=1793397797~acl=/media/v1/dash/live/clear/4460760524001/11bd45da-cc7f-4826-8f73-7481d1091be1*~hmac=0cb1fb696e5761fbb766cd6d3708429a7a1bd18ae469813050c0dcb09be9417c</BaseURL>
+      </Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>

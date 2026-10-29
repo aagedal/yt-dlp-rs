@@ -1,0 +1,140 @@
+{
+  "account_id": "6240731308001",
+  "ad_config_id": "8ebcf878-2abe-4ca8-8edc-9e46cdb0e6b8",
+  "ad_failover": false,
+  "autoplay": "play",
+  "compatibility": true,
+  "css": {
+    "controlBarColor": "rgba(0, 0, 0, 0.45)",
+    "controlColor": "white",
+    "progressColor": "#08088C"
+  },
+  "dock": true,
+  "embed_id": "default",
+  "hls": {
+    "captionServices": {
+      "CC1": {
+        "label": "English",
+        "language": "en"
+      }
+    },
+    "parse708captions": false
+  },
+  "play_button": {
+    "position": "center",
+    "shape": "circle"
+  },
+  "player": {
+    "template": {
+      "locked": true,
+      "name": "single-video-template",
+      "version": "6.60.0",
+      "version_alias": null
+    }
+  },
+  "player_id": "5aEeiMRq4",
+  "player_name": "Default: TVE Player",
+  "plugins": [
+    {
+      "injected_version": "1.2.4",
+      "name": "thumbnails",
+      "registry_id": "@brightcove/videojs-thumbnails",
+      "scripts": [
+        "//players.brightcove.net/videojs-thumbnails/1.2.4/videojs-thumbnails.js"
+      ],
+      "stylesheets": [
+        "//players.brightcove.net/videojs-thumbnails/1.2.4/videojs-thumbnails.css"
+      ],
+      "version": "1.x"
+    },
+    {
+      "injected_version": "5.11.1",
+      "name": "eme",
+      "registry_id": "@brightcove/videojs-drm",
+      "scripts": [
+        "//players.brightcove.net/videojs-drm/5.11.1/videojs-drm.min.js"
+      ],
+      "stylesheets": [
+        "//players.brightcove.net/videojs-drm/5.11.1/videojs-drm.css"
+      ],
+      "version": "5.x"
+    },
+    {
+      "injected_version": "1.14.0",
+      "name": "ssai",
+      "options": {
+        "hideOverlays": true,
+        "trackingBeacons": true
+      },
+      "registry_id": "@brightcove/videojs-ssai",
+      "scripts": [
+        "//players.brightcove.net/videojs-ssai/1.14.0/videojs-ssai.js",
+        "//players.brightcove.net/videojs-ssai/1.14.0/lang/ar.js",
+        "//players.brightcove.net/videojs-ssai/1.14.0/lang/de.js",
+        "//players.brightcove.net/videojs-ssai/1.14.0/lang/en.js",
+        "//players.brightcove.net/videojs-ssai/1.14.0/lang/es.js",
+        "//players.brightcove.net/videojs-ssai/1.14.0/lang/fr.js",
+        "//players.brightcove.net/videojs-ssai/1.14.0/lang/ja.js",
+        "//players.brightcove.net/videojs-ssai/1.14.0/lang/ko.js",
+        "//players.brightcove.net/videojs-ssai/1.14.0/lang/zh-Hans.js",
+        "//players.brightcove.net/videojs-ssai/1.14.0/lang/zh-Hant.js"
+      ],
+      "stylesheets": [
+        "//players.brightcove.net/videojs-ssai/1.14.0/videojs-ssai.css"
+      ],
+      "version": "1.x"
+    },
+    {
+      "name": "comscore",
+      "options": {
+        "c2": "987654321",
+        "labelmapping": "c3=parent_network,c4=MediaInfo.name, show,c6=\"web\""
+      },
+      "scripts": [
+        "http://b.scorecardresearch.com/c2/plugins/streamingtag_plugin_brightcove_player.js"
+      ]
+    },
+    {
+      "name": "youbora",
+      "options": {
+        "accountCode": "newamcn",
+        "enabled": "true"
+      },
+      "scripts": [
+        "https://smartplugin.youbora.com/v6/js/adapters/videojs/6.8.6/sp.min.js"
+      ]
+    },
+    {
+      "name": "hapyak",
+      "options": {
+        "apiKey": "c284bde248b349c4be1d"
+      },
+      "scripts": [
+        "https://d2qrdklrsxowl2.cloudfront.net/js/partners/brightcoveV2/hapyak-plugin.js"
+      ]
+    },
+    {
+      "name": "Moat",
+      "options": {
+        "partnerCode": "amcbrightcove144131812084"
+      },
+      "scripts": [
+        "https://z.moatads.com/amcbrightcove144131812084/moatvideo.js#_moatApi78206412"
+      ]
+    }
+  ],
+  "preload": "metadata",
+  "skin": "sapphire",
+  "studio_configuration": {
+    "player": {
+      "height": 540,
+      "responsive": true,
+      "units": "px",
+      "width": 960
+    }
+  },
+  "updated_at": "2024-03-12T18:43:17.598Z",
+  "video_cloud": {
+    "policy_key": "BCpkFIXTURE0001"
+  }
+}

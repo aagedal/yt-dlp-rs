@@ -1,0 +1,47 @@
+{
+ "routes": [
+  {
+   "url": "https://app-front-api.eggs.mu/v1/musics/0e95fd1d-4d61-4d5b-8b18-6092c551da90",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "music-0e95fd1d.json"
+  },
+  {
+   "url": "https://app-front-api.eggs.mu/v1/musics/00000000-0000-0000-0000-000000000000",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"message\": \"Not Found\"}"
+  },
+  {
+   "url": "https://app-front-api.eggs.mu/v1/artists/32_sunny_girl",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "artist-32_sunny_girl.json"
+  },
+  {
+   "url": "https://app-front-api.eggs.mu/v1/artists/32_sunny_girl/musics",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "artist-32_sunny_girl-musics.json"
+  },
+  {
+   "url": "https://app-front-api.eggs.mu/v1/artists/KAMO_3pband",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "artist-KAMO_3pband.json"
+  },
+  {
+   "url": "https://app-front-api.eggs.mu/v1/artists/KAMO_3pband/musics",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "artist-KAMO_3pband-musics.json"
+  }
+ ]
+}

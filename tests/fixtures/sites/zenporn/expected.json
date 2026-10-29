@@ -1,0 +1,46 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://zenporn.com/video/8531117/amateur-students-having-a-fuck-fest-at-club/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"12791908\", \"display_id\": \"8531117\", \"ext\": \"mp4\", \"url\": \"https://videotxxx.com/get_file/22/930144b23048c7da666409c5cb7f5db82904ce1d01/12791000/12791908/12791908_hq.mp4/?d=415&br=229&ti=1793304188\", \"age_limit\": 18, \"title\": \"Amateur students 18+ having a fuck fest at club\", \"description\": \"\", \"thumbnail\": \"https://tn.txxx.tube/contents/videos_screenshots/12791000/12791908/288x162/1.jpg\", \"upload_date\": \"20191005\", \"uploader\": \"Jackopenass\", \"webpage_url\": \"https://zenporn.com/video/8531117/amateur-students-having-a-fuck-fest-at-club/\", \"original_url\": \"https://zenporn.com/video/8531117/amateur-students-having-a-fuck-fest-at-club/\", \"webpage_url_basename\": \"amateur-students-having-a-fuck-fest-at-club\", \"webpage_url_domain\": \"zenporn.com\", \"extractor\": \"ZenPorn\", \"extractor_key\": \"ZenPorn\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://tn.txxx.tube/contents/videos_screenshots/12791000/12791908/288x162/1.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Amateur students 18+ having a fuck fest at club\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Amateur students 18+ having a fuck fest at club [12791908].mp4\", \"filename\": \"Amateur students 18+ having a fuck fest at club [12791908].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://zenporn.com/video/1/synthetic-noembed/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [ZenPorn] 1: Unable to extract embed info; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://zenporn.com/video/2/synthetic-badurl/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [ZenPorn] 999: Unable to download JSON metadata: HTTP Error 404: Not Found",
+    "ERROR: [ZenPorn] 2: Unable to decode the video url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,353 @@
+{
+ "routes": [
+  {
+   "url": "http://api.nowness.com/api/post/getBySlug/candor-the-art-of-gesticulation",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-story.json",
+   "request_headers": {
+    "X-Nowness-Language": "en-us"
+   }
+  },
+  {
+   "url": "https://api.nowness.com/api/post/getBySlug/candor-the-art-of-gesticulation",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-story.json",
+   "request_headers": {
+    "X-Nowness-Language": "en-us"
+   }
+  },
+  {
+   "url": "http://api.nowness.com/api/series/getBySlug/60-seconds",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-series.json",
+   "request_headers": {
+    "X-Nowness-Language": "en-us"
+   }
+  },
+  {
+   "url": "https://api.nowness.com/api/series/getBySlug/60-seconds",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-series.json",
+   "request_headers": {
+    "X-Nowness-Language": "en-us"
+   }
+  },
+  {
+   "url": "http://api.nowness.com/api/post?PlaylistId=3286",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-playlist.json",
+   "request_headers": {
+    "X-Nowness-Language": "en-us"
+   }
+  },
+  {
+   "url": "https://api.nowness.com/api/post?PlaylistId=3286",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-playlist.json",
+   "request_headers": {
+    "X-Nowness-Language": "en-us"
+   }
+  },
+  {
+   "url": "http://api.nowness.com/api/post/getBySlug/synthetic-no-player",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-synthetic-no-player.json",
+   "request_headers": {
+    "X-Nowness-Language": "en-us"
+   }
+  },
+  {
+   "url": "https://api.nowness.com/api/post/getBySlug/synthetic-no-player",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-synthetic-no-player.json",
+   "request_headers": {
+    "X-Nowness-Language": "en-us"
+   }
+  },
+  {
+   "url": "http://www.nowness.com/iframe?id=2520295746001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-2520295746001.html"
+  },
+  {
+   "url": "https://www.nowness.com/iframe?id=2520295746001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-2520295746001.html"
+  },
+  {
+   "url": "http://www.nowness.com/iframe?id=3987137566001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-3987137566001.html"
+  },
+  {
+   "url": "https://www.nowness.com/iframe?id=3987137566001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-3987137566001.html"
+  },
+  {
+   "url": "http://www.nowness.com/iframe?id=4235824340001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-4235824340001.html"
+  },
+  {
+   "url": "https://www.nowness.com/iframe?id=4235824340001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-4235824340001.html"
+  },
+  {
+   "url": "http://www.nowness.com/iframe?id=4044956630001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-4044956630001.html"
+  },
+  {
+   "url": "https://www.nowness.com/iframe?id=4044956630001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-4044956630001.html"
+  },
+  {
+   "url": "http://www.nowness.com/iframe?id=4002272716001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-4002272716001.html"
+  },
+  {
+   "url": "https://www.nowness.com/iframe?id=4002272716001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-4002272716001.html"
+  },
+  {
+   "url": "http://www.nowness.com/iframe?id=2517490945001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-2517490945001.html"
+  },
+  {
+   "url": "https://www.nowness.com/iframe?id=2517490945001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-2517490945001.html"
+  },
+  {
+   "url": "http://www.nowness.com/iframe?id=2793012307001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-2793012307001.html"
+  },
+  {
+   "url": "https://www.nowness.com/iframe?id=2793012307001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-2793012307001.html"
+  },
+  {
+   "url": "http://www.nowness.com/iframe?id=2519036167001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-2519036167001.html"
+  },
+  {
+   "url": "https://www.nowness.com/iframe?id=2519036167001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-2519036167001.html"
+  },
+  {
+   "url": "http://www.nowness.com/iframe?id=4017472854001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-4017472854001.html"
+  },
+  {
+   "url": "https://www.nowness.com/iframe?id=4017472854001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-4017472854001.html"
+  },
+  {
+   "url": "http://www.nowness.com/iframe?id=3974085541001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-3974085541001.html"
+  },
+  {
+   "url": "https://www.nowness.com/iframe?id=3974085541001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-3974085541001.html"
+  },
+  {
+   "url": "http://www.nowness.com/iframe?id=2520600375001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-2520600375001.html"
+  },
+  {
+   "url": "https://www.nowness.com/iframe?id=2520600375001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-2520600375001.html"
+  },
+  {
+   "url": "http://www.nowness.com/iframe?id=2765553682001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-2765553682001.html"
+  },
+  {
+   "url": "https://www.nowness.com/iframe?id=2765553682001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-2765553682001.html"
+  },
+  {
+   "url": "http://www.nowness.com/iframe?id=2520266301001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-2520266301001.html"
+  },
+  {
+   "url": "https://www.nowness.com/iframe?id=2520266301001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-2520266301001.html"
+  },
+  {
+   "url": "http://www.nowness.com/iframe?id=9999",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-synthetic.html"
+  },
+  {
+   "url": "https://www.nowness.com/iframe?id=9999",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "iframe-synthetic.html"
+  },
+  {
+   "url": "https://players.brightcove.net/2385340575001/zizHCCKkX_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/2385340575001/videos/2520295746001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playback-2520295746001.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkADawqM1ZRVKvQ7xGlfvvlZCDEyYcPaUHQju-y7rjn4k59KJL8eaD4887YX75fCHDVcXdvKv3l6rpMiI0khuD1F8W4Lo1sM2fdJd2z__3Xm99PUGN9CzE8LBLwyZs1XdgP5h6p_p9t2fO"
+   }
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/2385340575001/6aec3692-b48a-442f-aa04-4d1d5c01df9f/10s/master.m3u8?fastly_token=NmFlM2ZlNzNfOTBiZTg1OGVlYzRkMjI1Y2UzMDZkZDEwMzM1MmI5MWNhOTZkYWYzNjE2OTQ5M2RjODI1ZWQ4YzBmYzJjMDgxYQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "manifest-hls.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/2385340575001/6aec3692-b48a-442f-aa04-4d1d5c01df9f/10s/master.m3u8?fastly_token=NmFlM2ZlNzNfOTBiZTg1OGVlYzRkMjI1Y2UzMDZkZDEwMzM1MmI5MWNhOTZkYWYzNjE2OTQ5M2RjODI1ZWQ4YzBmYzJjMDgxYQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "manifest-hls.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/2385340575001/6aec3692-b48a-442f-aa04-4d1d5c01df9f/10s/master.m3u8?fastly_token=NmFlM2ZlNzNfOTBiZTg1OGVlYzRkMjI1Y2UzMDZkZDEwMzM1MmI5MWNhOTZkYWYzNjE2OTQ5M2RjODI1ZWQ4YzBmYzJjMDgxYQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "manifest-hls.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/2385340575001/6aec3692-b48a-442f-aa04-4d1d5c01df9f/10s/master.m3u8?fastly_token=NmFlM2ZlNzNfOTBiZTg1OGVlYzRkMjI1Y2UzMDZkZDEwMzM1MmI5MWNhOTZkYWYzNjE2OTQ5M2RjODI1ZWQ4YzBmYzJjMDgxYQ%3D%3D",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "manifest-hls.m3u8"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/2385340575001/6aec3692-b48a-442f-aa04-4d1d5c01df9f/6s/manifest.mpd?fastly_token=NmFlM2ZlNzNfYWQ3MGI5NWVlMWY5YjQwMmE3OWU5YjAyZjZhNjRlYzJjZTFiOGYyNTY2OTY3MGIyMWUxMmJjZjQxNGMwYzgxMA%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-dash.mpd"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/2385340575001/6aec3692-b48a-442f-aa04-4d1d5c01df9f/6s/manifest.mpd?fastly_token=NmFlM2ZlNzNfYWQ3MGI5NWVlMWY5YjQwMmE3OWU5YjAyZjZhNjRlYzJjZTFiOGYyNTY2OTY3MGIyMWUxMmJjZjQxNGMwYzgxMA%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-dash.mpd"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/2385340575001/6aec3692-b48a-442f-aa04-4d1d5c01df9f/6s/manifest.mpd?fastly_token=NmFlM2ZlNzNfYWQ3MGI5NWVlMWY5YjQwMmE3OWU5YjAyZjZhNjRlYzJjZTFiOGYyNTY2OTY3MGIyMWUxMmJjZjQxNGMwYzgxMA%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-dash.mpd"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/2385340575001/6aec3692-b48a-442f-aa04-4d1d5c01df9f/6s/manifest.mpd?fastly_token=NmFlM2ZlNzNfYWQ3MGI5NWVlMWY5YjQwMmE3OWU5YjAyZjZhNjRlYzJjZTFiOGYyNTY2OTY3MGIyMWUxMmJjZjQxNGMwYzgxMA%3D%3D",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-dash.mpd"
+  }
+ ]
+}

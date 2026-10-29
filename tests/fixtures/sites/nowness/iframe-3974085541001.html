@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <style>
+
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      .player-wrapper {
+        width: 1024px;
+        height: 576px;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+
+      @media (min-width: 1280px) {
+
+        .player-wrapper {
+          width: 1280px;
+          height: 720px;
+        }
+      }
+
+      @media (max-width: 1024px) {
+
+        .player-wrapper {
+          width: 100%;
+          height: calc(100vw * .5625);
+        }
+      }
+    </style>
+  </head>
+  <body class="embed-player">
+
+    <div class="player-wrapper"> <!-- player wrapper only for demo -->
+
+      <video style='width: 100%;height: 100%;'
+        data-video-id="3974085541001"
+        data-account="2385340575001"
+        data-player="zizHCCKkX"
+        data-embed="default"
+        class="video-js nowness-player" controls
+        data-setup='{"techOrder": ["html5", "hls", "flash"], "preload": "auto"}'></video>
+      <script src="//players.brightcove.net/2385340575001/zizHCCKkX_default/index.min.js"></script>
+
+
+    </div>
+
+    <script>
+      videojs('vjs_video_3_html5_api').nownessPluginDev();
+    </script>
+
+  </body>
+</html>

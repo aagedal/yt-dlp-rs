@@ -53,10 +53,9 @@ fn extractor_error(id: &str, cause: &str) -> Error {
 
 /// `jwt_encode({}, '', headers={'typ': 'JWT', 'alg': 'ES256', 'kid':
 /// KEY_ID}).split('.')[0]`.
-fn jwt_header() -> String {
-    base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(format!(
-        r#"{{"typ":"JWT","alg":"ES256","kid":"{JWT_KEY_ID}"}}"#
-    ))
+pub(crate) fn jwt_header(key_id: &str) -> String {
+    base64::engine::general_purpose::URL_SAFE_NO_PAD
+        .encode(format!(r#"{{"typ":"JWT","alg":"ES256","kid":"{key_id}"}}"#))
 }
 
 /// `_jwt_is_expired`: `jwt_decode_hs256(token)['exp'] - time.time() < 120`.
@@ -83,9 +82,17 @@ fn jwt_is_expired(token: &str, id: &str) -> Result<bool> {
     Ok(exp - now < 120.0)
 }
 
-/// `_get_token(webpage, episode_id)`.
-fn get_token(client: &Client, webpage: &str, id: &str) -> Result<String> {
-    if let Some(token) = JWT_CACHE.lock().unwrap().get(BASE_URL).cloned()
+/// `AppleBaseIE._get_token(webpage, id)` for a subclass's `IE_NAME`,
+/// `_BASE_URL` and `_JWT_KEY_ID`.
+pub(crate) fn get_token(
+    client: &Client,
+    webpage: &str,
+    id: &str,
+    name: &str,
+    base_url: &'static str,
+    key_id: &str,
+) -> Result<String> {
+    if let Some(token) = JWT_CACHE.lock().unwrap().get(base_url).cloned()
         && !jwt_is_expired(&token, id)?
     {
         return Ok(token);
@@ -95,16 +102,16 @@ fn get_token(client: &Client, webpage: &str, id: &str) -> Result<String> {
         .map(|found| found[1].to_owned())
         .ok_or_else(|| {
             Error::Reported(format!(
-                "[{NAME}] {id}: Unable to extract JS asset path; {}",
+                "[{name}] {id}: Unable to extract JS asset path; {}",
                 crate::BUG_REPORTS_MESSAGE
             ))
         })?;
-    let asset = Url::parse(BASE_URL)?.join(&path)?;
-    crate::screen::screen(&format!("[{NAME}] {id}: Downloading JS asset"));
+    let asset = Url::parse(base_url)?.join(&path)?;
+    crate::screen::screen(&format!("[{name}] {id}: Downloading JS asset"));
     let js_code = download_text(client, &asset, &[], &[], id)
-        .map_err(|error| errnote(error, id, "Unable to download JS asset"))?;
+        .map_err(|error| errnote(name, error, id, "Unable to download JS asset"))?;
     // `(["\'])(?P<jwt>HEADER(?:\.[\w-]+){2})\1`.
-    let header = regex::escape(&jwt_header());
+    let header = regex::escape(&jwt_header(key_id));
     let pattern = Regex::new(&format!(
         r#""(?P<double>{header}(?:\.[\w-]+){{2}})"|'(?P<single>{header}(?:\.[\w-]+){{2}})'"#
     ))
@@ -115,14 +122,14 @@ fn get_token(client: &Client, webpage: &str, id: &str) -> Result<String> {
         .map(|token| token.as_str().to_owned())
         .ok_or_else(|| {
             Error::Reported(format!(
-                "[{NAME}] {id}: Unable to extract JSON Web Token; {}",
+                "[{name}] {id}: Unable to extract JSON Web Token; {}",
                 crate::BUG_REPORTS_MESSAGE
             ))
         })?;
-    JWT_CACHE.lock().unwrap().insert(BASE_URL, token.clone());
+    JWT_CACHE.lock().unwrap().insert(base_url, token.clone());
     if jwt_is_expired(&token, id)? {
         return Err(Error::Reported(format!(
-            "[{NAME}] {id}: The fetched token is already expired; {}",
+            "[{name}] {id}: The fetched token is already expired; {}",
             crate::BUG_REPORTS_MESSAGE
         )));
     }
@@ -130,10 +137,10 @@ fn get_token(client: &Client, webpage: &str, id: &str) -> Result<String> {
 }
 
 /// An HTTP error as upstream's `errnote` text.
-fn errnote(error: Error, id: &str, note: &str) -> Error {
+fn errnote(name: &str, error: Error, id: &str, note: &str) -> Error {
     match error {
         Error::Http(_) | Error::HttpRetryAfter { .. } => {
-            Error::Reported(super::request_errnote_text(NAME, id, note, &error))
+            Error::Reported(super::request_errnote_text(name, id, note, &error))
         }
         error => error,
     }
@@ -307,7 +314,7 @@ fn from_api(
     id: &str,
     country: Option<&str>,
 ) -> Result<Vec<(&'static str, Value)>> {
-    let token = get_token(client, webpage, id)?;
+    let token = get_token(client, webpage, id, NAME, BASE_URL, JWT_KEY_ID)?;
     let api = Url::parse(&format!(
         "https://amp-api.podcasts.apple.com/v1/catalog/{}/podcast-episodes/{id}?extend=fullDescription&include=podcast&l=en-US",
         country.unwrap_or("us")
@@ -507,7 +514,7 @@ mod tests {
     #[test]
     fn token_header_matches_upstream_jwt_encode() {
         assert_eq!(
-            jwt_header(),
+            jwt_header(JWT_KEY_ID),
             "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IkM0SjdHQlA3NEgifQ"
         );
     }

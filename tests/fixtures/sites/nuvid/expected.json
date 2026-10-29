@@ -1,0 +1,44 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.nuvid.com/video/6513023/italian-babe",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6513023\", \"formats\": [{\"url\": \"https://xcdn.nuvid.com/mp4_lq/d4210a532ac7c830285c930ef4e65e3b.mp4?cdn_hash=3835e3cb71a34817c930152be1ab3782&cdn_creation_time=1793304166&cdn_ttl=3600&cdn_net=88.91.0.0.16&cdn_bw=73207&cdn_bw_fs=448814\", \"format_id\": \"360p\", \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 360p\"}], \"title\": \"italian babe\", \"thumbnails\": [{\"url\": \"https://g8.nvdst.com/media/videos/tmb/6513023/320_240/1.jpg\", \"id\": \"0\"}, {\"url\": \"https://g8.nvdst.com/media/videos/tmb/6513023/320_240/10.jpg\", \"id\": \"1\"}, {\"url\": \"https://g8.nvdst.com/media/videos/tmb/6513023/320_240/13.jpg\", \"id\": \"2\"}, {\"url\": \"https://g8.nvdst.com/media/videos/tmb/6513023/320_240/16.jpg\", \"id\": \"3\"}, {\"url\": \"https://g8.nvdst.com/media/videos/tmb/6513023/320_240/4.jpg\", \"id\": \"4\"}, {\"url\": \"https://g8.nvdst.com/media/videos/tmb/6513023/320_240/7.jpg\", \"id\": \"5\"}, {\"url\": \"https://g4.nvdst.com/media/videos/tmb/6513023/preview/15.jpg\", \"preference\": 1, \"id\": \"6\"}], \"duration\": 321, \"age_limit\": 18, \"webpage_url\": \"https://www.nuvid.com/video/6513023/italian-babe\", \"original_url\": \"https://www.nuvid.com/video/6513023/italian-babe\", \"webpage_url_basename\": \"italian-babe\", \"webpage_url_domain\": \"nuvid.com\", \"extractor\": \"Nuvid\", \"extractor_key\": \"Nuvid\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://g4.nvdst.com/media/videos/tmb/6513023/preview/15.jpg\", \"display_id\": \"6513023\", \"fulltitle\": \"italian babe\", \"duration_string\": \"5:21\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://xcdn.nuvid.com/mp4_lq/d4210a532ac7c830285c930ef4e65e3b.mp4?cdn_hash=3835e3cb71a34817c930152be1ab3782&cdn_creation_time=1793304166&cdn_ttl=3600&cdn_net=88.91.0.0.16&cdn_bw=73207&cdn_bw_fs=448814\", \"format_id\": \"360p\", \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 360p\", \"_filename\": \"italian babe [6513023].mp4\", \"filename\": \"italian babe [6513023].mp4\", \"__write_download_archive\": false}], \"url\": \"https://xcdn.nuvid.com/mp4_lq/d4210a532ac7c830285c930ef4e65e3b.mp4?cdn_hash=3835e3cb71a34817c930152be1ab3782&cdn_creation_time=1793304166&cdn_ttl=3600&cdn_net=88.91.0.0.16&cdn_bw=73207&cdn_bw_fs=448814\", \"format_id\": \"360p\", \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 360p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://m.nuvid.com/video/6513023",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6513023\", \"formats\": [{\"url\": \"https://xcdn.nuvid.com/mp4_lq/d4210a532ac7c830285c930ef4e65e3b.mp4?cdn_hash=3835e3cb71a34817c930152be1ab3782&cdn_creation_time=1793304166&cdn_ttl=3600&cdn_net=88.91.0.0.16&cdn_bw=73207&cdn_bw_fs=448814\", \"format_id\": \"360p\", \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 360p\"}], \"title\": \"italian babe\", \"thumbnails\": [{\"url\": \"https://g8.nvdst.com/media/videos/tmb/6513023/320_240/1.jpg\", \"id\": \"0\"}, {\"url\": \"https://g8.nvdst.com/media/videos/tmb/6513023/320_240/10.jpg\", \"id\": \"1\"}, {\"url\": \"https://g8.nvdst.com/media/videos/tmb/6513023/320_240/13.jpg\", \"id\": \"2\"}, {\"url\": \"https://g8.nvdst.com/media/videos/tmb/6513023/320_240/16.jpg\", \"id\": \"3\"}, {\"url\": \"https://g8.nvdst.com/media/videos/tmb/6513023/320_240/4.jpg\", \"id\": \"4\"}, {\"url\": \"https://g8.nvdst.com/media/videos/tmb/6513023/320_240/7.jpg\", \"id\": \"5\"}, {\"url\": \"https://g4.nvdst.com/media/videos/tmb/6513023/preview/15.jpg\", \"preference\": 1, \"id\": \"6\"}], \"duration\": 321, \"age_limit\": 18, \"webpage_url\": \"http://m.nuvid.com/video/6513023\", \"original_url\": \"http://m.nuvid.com/video/6513023\", \"webpage_url_basename\": \"6513023\", \"webpage_url_domain\": \"m.nuvid.com\", \"extractor\": \"Nuvid\", \"extractor_key\": \"Nuvid\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://g4.nvdst.com/media/videos/tmb/6513023/preview/15.jpg\", \"display_id\": \"6513023\", \"fulltitle\": \"italian babe\", \"duration_string\": \"5:21\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://xcdn.nuvid.com/mp4_lq/d4210a532ac7c830285c930ef4e65e3b.mp4?cdn_hash=3835e3cb71a34817c930152be1ab3782&cdn_creation_time=1793304166&cdn_ttl=3600&cdn_net=88.91.0.0.16&cdn_bw=73207&cdn_bw_fs=448814\", \"format_id\": \"360p\", \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 360p\", \"_filename\": \"italian babe [6513023].mp4\", \"filename\": \"italian babe [6513023].mp4\", \"__write_download_archive\": false}], \"url\": \"https://xcdn.nuvid.com/mp4_lq/d4210a532ac7c830285c930ef4e65e3b.mp4?cdn_hash=3835e3cb71a34817c930152be1ab3782&cdn_creation_time=1793304166&cdn_ttl=3600&cdn_net=88.91.0.0.16&cdn_bw=73207&cdn_bw_fs=448814\", \"format_id\": \"360p\", \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 360p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nuvid.com/video/778/synthetic",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [Nuvid] 778: Unable to download webpage: HTTP Error 404: Not Found",
+    "ERROR: 'NoneType' object has no attribute 'items'"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+[
+ {
+  "url": "https://www.9now.com.au/today/season-2025/clip-cm8hw9h5z00080hquqa5hszq7",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.9now.com.au/married-at-first-sight/season-12/episode-1",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(series)s|%(season)s|%(season_number)s|%(episode_number)s|%(timestamp)s|%(release_timestamp)s|%(duration)s|%(tags)s|%(description)s"
+  ]
+ },
+ {
+  "url": "https://www.9now.com.au/today/synthetic/clip-synthetic-nodata",
+  "args": [
+   "-J"
+  ]
+ }
+]

@@ -1,0 +1,21 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fwww.youtube.com%2Fembed%2FBaW_jenozKc&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DBaW_jenozKc&type=text%2Fhtml&schema=youtube",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fwww.youtube.com%2Fembed%2FBaW_jenozKc&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DBaW_jenozKc&type=text%2Fhtml&schema=youtube"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+{
+    "converted": 1,
+    "hls": "https://kenh14cdn.com/203336854389633024/2022/5/17/P3Q5XYacz5E-1652782450168278389637.mp4/master.m3u8?v=2-d91f2ce6",
+    "mhls": "https://kenh14cdn.com/203336854389633024/2022/5/17/P3Q5XYacz5E-1652782450168278389637.mp4/mobile.m3u8?v=2-d91f2ce6",
+    "mp3": "",
+    "mp4_qualities": [
+        "https://kenh14cdn.com/203336854389633024/2022/5/17/P3Q5XYacz5E-1652782450168278389637_480p.mp4"
+    ],
+    "mpd": "",
+    "namespace": "kenh14",
+    "thumb_url": "https://videothumbs.mediacdn.vn/kenh14/203336854389633024/2022/5/17/P3Q5XYacz5E-1652782450168278389637.jpg",
+    "video": "https://kenh14cdn.com/203336854389633024/2022/5/17/P3Q5XYacz5E-1652782450168278389637.mp4"
+}

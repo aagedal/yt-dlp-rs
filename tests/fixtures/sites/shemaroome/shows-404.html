@@ -1,0 +1,480 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ShemarooMe: Page Not Found</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
+  <style>
+  /* Font integration */
+  @font-face {
+    font-family: 'condensed-black';
+    src: url('fonts/EncodeSansCondensed-Black.ttf');
+      
+  }
+  @font-face {
+    font-family: 'condensed-bold';
+    src: url('fonts/EncodeSansCondensed-Bold.ttf');
+  }
+  @font-face {    
+    font-family: 'condensed-extra-bold';
+    src: url('fonts/EncodeSansCondensed-ExtraBold.ttf');
+  }
+  @font-face {    
+    font-family: 'condensed-extra-light';
+    src: url('fonts/EncodeSansCondensed-ExtraLight.ttf');
+  }    
+  @font-face {    
+    font-family: 'condensed-light';
+    src: url('fonts/EncodeSansCondensed-Light.ttf');
+  }
+  @font-face {
+    font-family: 'condensed-medium';
+    src: url('fonts/EncodeSansCondensed-Medium.ttf');
+      
+  }
+  @font-face {
+    font-family: 'condensed-semibold';
+    src: url('fonts/EncodeSansCondensed-SemiBold.ttf');
+  }
+
+  @font-face {    
+    font-family: 'condensed-thin';
+    src: url('fonts/EEncodeSansCondensed-Thin.ttf');
+  }
+  @font-face {    
+  font-family: 'condensed-regular';
+  src: url('fonts/EncodeSansCondensed-Regular.ttf');
+}
+
+/*
+  .rails-default-error-page {
+    background-color: #EFEFEF;
+    color: #2E2F30;
+    text-align: center;
+    font-family: arial, sans-serif;
+    margin: 0;
+  }
+
+  .rails-default-error-page div.dialog {
+    width: 95%;
+    max-width: 33em;
+    margin: 4em auto 0;
+  }
+
+  .rails-default-error-page div.dialog > div {
+    border: 1px solid #CCC;
+    border-right-color: #999;
+    border-left-color: #999;
+    border-bottom-color: #BBB;
+    border-top: #B00100 solid 4px;
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
+    background-color: white;
+    padding: 7px 12% 0;
+    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
+  }
+
+  .rails-default-error-page h1 {
+    font-size: 100%;
+    color: #730E15;
+    line-height: 1.5em;
+  }
+
+  .rails-default-error-page div.dialog > p {
+    margin: 0 0 1em;
+    padding: 1em;
+    background-color: #F7F7F7;
+    border: 1px solid #CCC;
+    border-right-color: #999;
+    border-left-color: #999;
+    border-bottom-color: #999;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-top-color: #DADADA;
+    color: #666;
+    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
+  }*/
+  body {
+    background-color: #161616;
+    float: left;
+    font-family: 'condensed-semibold';
+    font-size: 16px;
+    margin: 0;  
+    width: 100%;
+  }
+  .wrapper {
+    background-color: #161616;
+    float: left;
+    width: 100%;  
+  }
+  .inside-wrapper {
+    background-color: #fff;
+    float: left;
+    min-height: 100%;
+    width: 100%;
+  }
+  body.dark-theme, .dark-theme .wrapper, .dark-theme .inside-wrapper {
+    background-color: #222222;
+    color: #fff;
+  }
+  .container {
+    max-width: 1366px;
+    margin: 0 auto;
+    padding: 0;
+  }
+  section {
+    float: left;
+    width: 100%
+  }
+  .small-header-content .header .main-logo {
+    margin-left: 0px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    text-align: center;
+    width: 100%;
+  }
+  .small-header-content .header .main-logo img {
+    width: 120px;
+  }
+  .no-content-wrap {
+    margin: 0 auto;
+    max-width: 300px;
+    padding-bottom: 114px;
+    text-align: center;
+  }
+  .no-content-wrap img {
+    width: 166px;
+    margin-top: 114px;
+    margin-bottom: 30px;
+  }
+  .no-content-wrap p {
+    font-size: 0.825em;
+  }
+  .min-height-div {
+    align-items: center;
+    background: #F0F0F0;
+    display: flex;
+    justify-content: center;
+  }
+  .dark-theme .min-height-div {
+    background-color: #222;
+  }
+  .font-medium {
+    font-family: 'condensed-medium';
+    color: #666;
+    margin-bottom: 0px;
+    margin-top: 0px;
+  }
+  .font-light {
+    font-family: 'condensed-light';
+    color: #777;
+    margin-bottom: 20px;
+    margin-top: 3px;
+    
+  }
+  .radius-button {
+    border: 1px solid #D51E54;
+    border-radius: 20px;
+    color: #D41F54;
+    display: inline-block;
+    font-family: 'condensed-semibold';
+    font-size: 0.875em;
+    margin-top: 10px;
+    padding: 13px 18px;  
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  .radius-button:hover {
+    text-decoration: none;
+  }
+  .p .a{
+    color: #999;
+  }
+  .dark-theme .p .a{
+    color:  #fff;
+  }
+  .custom-button {
+    background-color: #007bff; /* Green */
+    border: none;
+    color: white;
+    /*padding: 12px 24px;*/
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-family: sans-serif;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    height: 40px;
+    width: 150px;
+  }
+  .custom-button:hover {
+    background-color: #007bff;
+    transform: scale(1.05);
+  }
+  .custom-button:active {
+    background-color: #3e8e41;
+    transform: scale(0.98);
+  }
+  </style>
+
+</head>
+
+<body class="rails-default-error-page">
+  <!-- This file lives in public/500.html -->
+  <div class="wrapper">
+
+    <div class="container">
+      <div class="inside-wrapper">
+        <section class="header-section small-header-content" style="" id="without_header_tabs">
+          <div class="header-border col-xl-12 col-lg-12 col-md-12 col-sm-12 col- d-none d-xl-block">
+          </div>
+          <div class="row1">
+            <div class="header col-xl-12 col-lg-12 col-md-12 col-sm-12 col-">
+              <div class="main-logo text-center">         
+                <a href="/"><img src="https://daex9l847wg3n.cloudfront.net/shemoutputimages/website_profile_images/shemaroo_logo.svg" alt="Shemaroo" title="Shemaroo"></a>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="min-height-div">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col- text-center" style="max-width: 800px; position: relative; ">
+              <img src="https://daex9l847wg3n.cloudfront.net/shemoutputimages/website_images/s3_images_list/404_error_new.png" class="" alt="page not found" title="page not found" style="max-width: 100%; height: auto;">
+              <p style="position: absolute; bottom: -40%; text-align: center; width: 100%;">Sorry! page not found</p>
+              <!-- <p style="position: absolute; bottom: -55%; text-align: center; width: 100%;">We are redirecting to <a href="/">https://www.shemaroome.com</a></p> -->
+              <p style="position: absolute; bottom: -64%; text-align: center; width: 100%;"><a href="/"><button class="custom-button">Go to home page</button></a></p>
+            </div>
+          </div>
+        </section>
+        <section class="footer-section" id="footer-section">
+          <div class="row">
+            <div class="col-xl-5 col-lg-4 col-md-12 col-sm-12 col- pull-left">
+              <ul>
+                <li class="text-uppercase "><a href="/terms-and-conditions">Terms of Use&nbsp;&nbsp;|</a></li>
+                <li class="text-uppercase "><a href="/privacy-policy">&nbsp;&nbsp;privacy policy&nbsp;&nbsp;|</a></li>
+                <li class=""><a href="/faq">&nbsp;&nbsp;FAQ&nbsp;&nbsp;|</a></li>
+                <li class="text-uppercase "><a href="/contact-us">&nbsp;&nbsp;contact us</a></li>
+              </ul>
+              <p class="d-none d-lg-block d-xl-block">Shemaroo Entertainment Ltd &copy; <span id="year"></span>, All Rights Reserved</p>
+            </div>
+            <div class="col-xl-7 col-lg-8 col-md-12 col-sm-12 col- pull-right">
+              <ul class="pull-left">
+                <!--https://www.instagram.com/shemaroome/-->
+                <li>
+                  <a href="https://www.instagram.com/shemaroome/" target="_blank">
+                    <img src="https://daex9l847wg3n.cloudfront.net/shemoutputimages/website_profile_images/instagram.png" alt="instagram" title="instagram">
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.facebook.com/ShemarooMe/" target="_blank">
+                    <img src="https://daex9l847wg3n.cloudfront.net/shemoutputimages/website_profile_images/facebook.svg" alt="facebook" title="facebook">
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/ShemarooMe" target="_blank">
+                    <img src="https://daex9l847wg3n.cloudfront.net/shemoutputimages/website_profile_images/twitter.svg" alt="twitter" title="twitter">
+                  </a>
+                </li>        
+              </ul>
+              <ul class="pull-right">
+                <!-- <li><a href="https://itunes.apple.com/in/app/shemaroome/id1439041310" target="_blank"><img src="https://daex9l847wg3n.cloudfront.net/shemoutputimages/website_profile_images/app_store.svg" alt="ios play store" title="ios play store"></a></li> -->
+                <li><a href="https://itunes.apple.com/app/apple-store/id1439041310?pt=2089066&amp;ct=Web%20Campaign&amp;mt=8" target="_blank"><img src="https://daex9l847wg3n.cloudfront.net/shemoutputimages/website_profile_images/app_store.svg" alt="ios play store" title="ios play store"></a></li>
+                <li><a href="https://play.google.com/store/apps/details?id=com.saranyu.shemarooworld" target="_blank"><img src="https://daex9l847wg3n.cloudfront.net/shemoutputimages/website_profile_images/google_play.svg" alt="google play store" title="google play store"></a></li>                
+                 <li>
+                  <a href="https://www.amazon.in/Shemaroo-Entertainment-Limited-ShemarooMe/dp/B07KZQVQB5/ref=sr_1_1?keywords=shemaroome&amp;qid=1560839694&amp;s=gateway&amp;sr=8-1" target="_blank">
+                    <img src="https://daex9l847wg3n.cloudfront.net/shemoutputimages/website_images/s3_images_list/fire_tv.png" alt="firetv" title="firetv">
+                  </a>
+                </li> 
+                <li>
+                  <a href="https://itunes.apple.com/in/app/shemaroome/id1439041310" target="_blank">
+                    <img src="https://daex9l847wg3n.cloudfront.net/shemoutputimages/website_images/s3_images_list/apple_tv.png" alt="appletv" title="appletv">
+                  </a>
+                </li>
+              </ul>              
+            </div>
+            <p class="d-block d-lg-none d-xl-none">Shemaroo Entertainment Ltd &copy; 2019, All Rights Reserved</p>
+            
+          </div>
+        </section>
+      </div>
+    </div>
+
+  </div>
+<script type="text/javascript">
+  /*var window_height = window.outerHeight;
+  var window_height = window_height - 138;
+  $('.min-height-div').css('min-height',window_height+'px');*/
+  $(document).ready(function(){
+        $("#year").text(new Date().getFullYear());
+        var window_height = window.innerHeight;
+        //var window_height = window_height - 231;
+        //alert("window_height "+window_height)
+        var x = $('.header-section').outerHeight();
+        var y = $('#footer-section').outerHeight();
+        //alert("x "+x);
+        var content_height = window_height - x - y;
+        //alert("content_height "+content_height)
+        $('.min-height-div').css('min-height',content_height+'px');     
+    })
+  var getShemarooCookies = function(){
+      var pairs = document.cookie.split("; ");
+      var cookies = {};
+      for (var i=0; i<pairs.length; i++){
+          var pair = pairs[i].split("=");
+          cookies[pair[0]] = unescape(pair[1]);
+      }
+      return cookies;
+    }
+    if (getShemarooCookies().theme_option == "dark_theme" || getShemarooCookies().theme_option == undefined){
+    $('body').addClass("dark-theme");
+  }
+</script>    
+<style>
+ @font-face {
+    font-family: 'condensed-black';
+    src: url('/fonts/EncodeSansCondensed-Black.ttf');
+      
+  }
+  @font-face {
+    font-family: 'condensed-bold';
+    src: url('/fonts/EncodeSansCondensed-Bold.ttf');
+  }
+  @font-face {    
+    font-family: 'condensed-extra-bold';
+    src: url('/fonts/EncodeSansCondensed-ExtraBold.ttf');
+  }
+  @font-face {    
+    font-family: 'condensed-extra-light';
+    src: url('/fonts/EncodeSansCondensed-ExtraLight.ttf');
+  }    
+  @font-face {    
+    font-family: 'condensed-light';
+    src: url('/fonts/EncodeSansCondensed-Light.ttf');
+  }
+  @font-face {
+    font-family: 'condensed-medium';
+    src: url('/fonts/EncodeSansCondensed-Medium.ttf');
+      
+  }
+  @font-face {
+    font-family: 'condensed-semibold';
+    src: url('/fonts/EncodeSansCondensed-SemiBold.ttf');
+  }
+
+  @font-face {    
+    font-family: 'condensed-thin';
+    src: url('/fonts/EEncodeSansCondensed-Thin.ttf');
+  }
+  .footer-section {
+    background-color: #E2E2E2;
+    padding: 0px 30px;
+  }
+  .dark-theme .footer-section {
+    background-color: #333;
+  }
+  .footer-section .pull-left {
+    padding-bottom: 9px;
+    padding-top: 25px;    
+  }
+  .footer-section .pull-left ul {
+    margin-bottom: 5px;
+  }
+  .footer-section ul {
+      float: left;
+      list-style: none;
+      padding-left: 0;
+      width: 100%;
+  }
+  .footer-section .pull-left p {
+    color: #666;
+    font-family: 'condensed-regular';
+    font-size: 0.6875em;
+    float: left;
+    width: 100%;
+  }
+  .footer-section .pull-right {
+    padding-bottom: 14px;
+    padding-top: 17px;
+  }  
+  .footer-section .pull-left ul li {
+    color: #666;
+    font-family: 'condensed-regular';
+    float: left;
+    font-size: 0.75em;
+  }
+  .footer-section .pull-right ul {
+    float: right;
+    list-style: none;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding: 0;
+    width: auto;
+  }
+  .footer-section .pull-right ul.pull-left {
+    float: left;
+    margin-left: 4%;
+  }
+  .footer-section .pull-left ul li:first-child {
+    padding-left: 0px;
+  }
+  .footer-section .pull-left ul li:last-child {
+    border-right: 0px;
+  }
+  .footer-section .pull-left ul li a {
+    color: #666;
+  }
+  .dark-theme .footer-section .pull-left ul li, 
+  .dark-theme .footer-section .pull-left ul li a,
+  .dark-theme .footer-section .pull-left p {
+    color: #999;
+  }
+  .footer-section .pull-right li {
+    float: left;
+    margin-right: 10px;
+  }
+  .footer-section .pull-right .pull-left img {
+    width: 46px;
+  }
+  .footer-section .pull-right .pull-right li:first-child img {
+    width: 151px;
+  }
+  .footer-section .pull-right .pull-right li:nth-child(2) img {
+    width: 138px;
+  }
+  .footer-section .pull-right .pull-right li:nth-child(3) img {
+    width: 46px;
+  }
+  .d-none {
+        display: none !important;
+    }
+  @media (min-width: 1200px){
+    .d-xl-block {
+      display: block !important;
+    }
+  }
+  @media (min-width: 992px){
+    .d-lg-block {
+        display: block !important;
+    }
+  }  
+    
+  @media(min-width: 992px) {
+    .footer-section .pull-right {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+  a, a:hover, a.link{
+    text-decoration: none;
+  }
+</style>
+</body>
+</html>

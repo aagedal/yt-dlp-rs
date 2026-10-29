@@ -1,0 +1,53 @@
+{
+ "routes": [
+  {
+   "url": "https://vid.ly/2i3o9j/embed",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body_file": "embed-2i3o9j.js"
+  },
+  {
+   "url": "https://vid.ly/jw_test/embed",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body_file": "embed-jw_test.js"
+  },
+  {
+   "url": "https://vid.ly/synthvidly/embed",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body_file": "embed-synth-vidly.js"
+  },
+  {
+   "url": "https://vid.ly/synthflash/embed",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body_file": "embed-synth-flash.js"
+  },
+  {
+   "url": "https://d3fenhwk93s16g.cloudfront.net/2i3o9j/hls.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "hls-2i3o9j.m3u8"
+  },
+  {
+   "url": "https://d3fenhwk93s16g.cloudfront.net/2x8m8t/iphone_stream4.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "hls-jw_test.m3u8"
+  },
+  {
+   "url": "https://d3fenhwk93s16g.cloudfront.net/synthvidly/hls.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "hls-2i3o9j.m3u8"
+  }
+ ]
+}

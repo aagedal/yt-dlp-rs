@@ -1,0 +1,29 @@
+[
+ {
+  "url": "https://www.3sat.de/dokumentation/reise/traumziele-suedostasiens-die-philippinen-und-vietnam-102.html",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.3sat.de/dokumentation/reise/traumziele-suedostasiens-die-philippinen-und-vietnam-102.html",
+  "args": [
+   "-F",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.3sat.de/dokumentation/synthetic/synthetic-noplayer.html",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.3sat.de/dokumentation/synthetic/synthetic-missing.html",
+  "args": [
+   "-J"
+  ]
+ }
+]

@@ -1,0 +1,38 @@
+[
+ {
+  "url": "https://mlssoccer.app.box.com/s/0evd2o3e08l60lr4ygukepvnkord1o1x/file/510727257538",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://utexas.app.box.com/s/2x6vanv85fdl8j2eqlcxmv0gp1wvps6e",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://utexas.app.box.com/s/2x6vanv85fdl8j2eqlcxmv0gp1wvps6e",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://utexas.app.box.com/s/synthetic-folder",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://mlssoccer.app.box.com/s/synthetic/file/99",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://mlssoccer.app.box.com/s/missing/file/1",
+  "args": [
+   "-J"
+  ]
+ }
+]

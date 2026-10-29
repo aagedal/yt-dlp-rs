@@ -1,0 +1,77 @@
+{
+ "routes": [
+  {
+   "url": "https://www.altcensored.com/watch?v=k0srjLSkga8",
+   "status": 302,
+   "headers": {
+    "Location": "https://altcensored.com/watch?v=k0srjLSkga8"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://altcensored.com/watch?v=k0srjLSkga8",
+   "status": 302,
+   "headers": {
+    "Location": "https://altcensored.com/.within.website/?redir=https://altcensored.com/watch?v=k0srjLSkga8"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://altcensored.com/.within.website/?redir=https://altcensored.com/watch?v=k0srjLSkga8",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "challenge.html"
+  },
+  {
+   "url": "https://altcensored.com/embed/k0srjLSkga8",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-embed.html"
+  },
+  {
+   "url": "https://archive.org/embed/youtube-k0srjLSkga8",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "archive-embed.html"
+  },
+  {
+   "url": "https://archive.org/metadata/youtube-k0srjLSkga8",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "archive-metadata.json"
+  },
+  {
+   "url": "https://altcensored.com/channel/UC9CcJ96HKMWn0LZlcxlpFTw",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "channel.html"
+  },
+  {
+   "url": "https://altcensored.com/channel/UC9CcJ96HKMWn0LZlcxlpFTw/page/1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "channel-page-1.html"
+  },
+  {
+   "url": "https://altcensored.com/channel/UC9CcJ96HKMWn0LZlcxlpFTw/page/2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "channel-page-2.html"
+  },
+  {
+   "url": "https://altcensored.com/channel/UCsynthetic-missing",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-missing.html"
+  }
+ ]
+}

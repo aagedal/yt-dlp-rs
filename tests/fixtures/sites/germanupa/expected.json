@@ -1,0 +1,62 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://germanupa.de/mediathek/4-figma-beratung-deine-sprechstunde-fuer-figma-fragen",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [vimeo] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [vimeo] 909179246: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://germanupa.de/mediathek/synthetic-members",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Germanupa] synthetic-members: This video is only available for members. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://germanupa.de/mediathek/synthetic-audio",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: Unsupported URL: https://germanupa.de/mediathek/synthetic-audio"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://germanupa.de/mediathek/synthetic-missing",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Germanupa] synthetic-missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

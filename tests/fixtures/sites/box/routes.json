@@ -1,0 +1,80 @@
+{
+ "routes": [
+  {
+   "url": "https://mlssoccer.app.box.com/s/0evd2o3e08l60lr4ygukepvnkord1o1x/file/510727257538",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-file.html"
+  },
+  {
+   "url": "https://utexas.app.box.com/s/2x6vanv85fdl8j2eqlcxmv0gp1wvps6e",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-shared.html"
+  },
+  {
+   "url": "https://app.box.com/app-api/enduserapp/elements/tokens",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_body": [
+    "510727257538"
+   ],
+   "body_file": "token-510727257538.json"
+  },
+  {
+   "url": "https://app.box.com/app-api/enduserapp/elements/tokens",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_body": [
+    "787379022466"
+   ],
+   "body_file": "token-787379022466.json"
+  },
+  {
+   "url": "https://api.box.com/2.0/files/510727257538?fields=authenticated_download_url%2Ccreated_at%2Ccreated_by%2Cdescription%2Cextension%2Cis_download_available%2Cname%2Crepresentations%2Csize",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "file-510727257538.json"
+  },
+  {
+   "url": "https://api.box.com/2.0/files/787379022466?fields=authenticated_download_url%2Ccreated_at%2Ccreated_by%2Cdescription%2Cextension%2Cis_download_available%2Cname%2Crepresentations%2Csize",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "file-787379022466.json"
+  },
+  {
+   "url": "https://public.boxcloud.com/api/2.0/internal_files/510727257538/versions/540795577138/representations/dash/content/manifest.mpd?access_token=1%21eJCh-S1NkwtrslKgRsUyaJ9fyBIeV6i3F38nxhwPL4qhf5NeO7qbahXI7Fw4g66NH_NNki807G8jVU0lSQr8L_L7a2rg4qw71MZ2IWJCSCD1FsUxKSp-39ruGKRdZoNfPirnMdoTXeJTej7zMsrlxPU8eyGRtiQgx_abrfO2wD4i44Wrr_5FIWOeEMZCDamQXlQA5gcHgM5s7LJNVk7AV_x6YkBtrD-uju9M9mQEaWVMibzzl-iKtLfQsUy4WSxAYwaO8Ixfd03s0tuqPt05eJloUy-10iocpWDKcoA1lzG3QV9EigeyQ7gq5PaaNhG9cPZ3E7HYlKD4zScCfjIvKzA9q2YEBbPylY_aoHXcAAbuneuB_U35aXJ_wFH8VMSnu9jBcnimuB3CZjcyst3NxZi8i1uTW3AWfPKAF1BRpONRUoOArKqQHFHEv5BX4_qGvxdhEVRY2XrFpAitqAGfWCu60HqpDYTAX5EUAgcwVeHm3_aslLs6R2R43YzDRLXX3KH5pMAfdOEz1M3_7LdaeZdgFflLY_UFcwqPROefSy-Cw6YIu27tlVsAELBS2W5g2LZXQ9mVI_lzSa3AT3EMvsEXNCquBMFiQPnnc92XeNky8C-7ySK1W9-X6SHDrjghoK52ZM1EZFNsAm0stHOx-pndOtCeu1FN6gwkQt5UlosuPqQ.&shared_link=https%3A%2F%2Fapp.box.com%2Fs%2F0evd2o3e08l60lr4ygukepvnkord1o1x",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-510727257538.mpd"
+  },
+  {
+   "url": "https://public.boxcloud.com/api/2.0/internal_files/787379022466/versions/841430946466/representations/dash/content/manifest.mpd?access_token=1%21nAqg6On6hchDHEWGMVTBwMFL9ZauK7xaXo5DBh-hZRbpa5STIPJ7TwemfL5wFU1iMAxpFArChE6RuwO7IlK7FK7r-_NlGqutI4iZ_tPUNtu15dh0HxlKnAQPJsQhEQy5_BGKu9rFnL3ZSZiAUwRnm-HYxqzTKOjM0y2n92K0-lOJfEozIj4cj3GHwX1z_vkH8Ck3VBmXamjJaClZbFZTNrNvu1TwWEcvpGMRl--bv7vW7IJ89P4x6zXYDQA5fALl7OfCDsuX-RQr1P35obHe1wjJI6rL4OASvdIr2cDNGXfdpFJKOk1f7V62xCMZtfLOIgbIx5Q2l_52V8y6hvheomaJbUloW7EJQ6wKsox50W0t_2ErSh4BZjCr-iEUnAXv6mApXnlg9r9JvUCM3NklbUPTd5hN_VKY4YK_4VKVWpDkUytEztB1q4rGMRBJBBG8XmnjzQi9zW37seq95FFbwAMmczaNTQUT1C8tFtQRC7YsGJX2c8p6KYZqjDMvqXBQZ9DA38My121uWAhxblq_0PCMEFAga0NONbo4_4xuU8cOMtaK0t4y06-vTn6QNmDGLulg5vIGohVxSu8fYx2fXkHa4hQYw3OWxskWHvC7ECTN-Uw4L_p3Gtb3QM6iifpqqOKPCKx_0fMxThws-NFFSVArcYGx30pHWkaLtALECaY.&shared_link=https%3A%2F%2Fapp.box.com%2Fs%2F2x6vanv85fdl8j2eqlcxmv0gp1wvps6e",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest-787379022466.mpd"
+  },
+  {
+   "url": "https://utexas.app.box.com/s/synthetic-folder",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-folder.html"
+  },
+  {
+   "url": "https://mlssoccer.app.box.com/s/synthetic/file/99",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-noconfig.html"
+  }
+ ]
+}

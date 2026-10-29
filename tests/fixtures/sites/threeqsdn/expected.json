@@ -1,0 +1,66 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://playout.3qsdn.com/7201c779-6b3c-11e7-a40e-002590c750be",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"7201c779-6b3c-11e7-a40e-002590c750be\", \"title\": \"Video Ads\", \"thumbnail\": \"https://sdn-global-prog-cache.3qsdn.com/3144/files/17/07/17/672975/1e0faed9-9497-404a-b747-b3f08b8933e9.jpg\", \"description\": \"Video Ads Demo\", \"timestamp\": 1500334803, \"duration\": 888.032, \"is_live\": false, \"formats\": [{\"format_id\": \"hls-137\", \"format_index\": null, \"url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/3144-QtG4X7WNDyBC96jF-drm-aes-audio=128001.m3u8\", \"manifest_url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/manifest.m3u8\", \"tbr\": 137.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vbr\": 0, \"abr\": 128.001, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-137 - audio only\"}, {\"format_id\": \"hls-243\", \"format_index\": null, \"url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/3144-QtG4X7WNDyBC96jF-drm-aes-audio=128001-video=100000.m3u8\", \"manifest_url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/manifest.m3u8\", \"tbr\": 243.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 337, \"height\": 144, \"vbr\": 100.0, \"abr\": 128.001, \"vcodec\": \"avc1.4D401F\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"337x144\", \"aspect_ratio\": 2.34, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-243 - 337x144\"}, {\"format_id\": \"hls-483\", \"format_index\": null, \"url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/3144-QtG4X7WNDyBC96jF-drm-aes-audio=128001-video=326000.m3u8\", \"manifest_url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/manifest.m3u8\", \"tbr\": 483.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 563, \"height\": 240, \"vbr\": 326.0, \"abr\": 128.001, \"vcodec\": \"avc1.4D401F\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"563x240\", \"aspect_ratio\": 2.35, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-483 - 563x240\"}, {\"format_id\": \"hls-877\", \"format_index\": null, \"url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/3144-QtG4X7WNDyBC96jF-drm-aes-audio=128001-video=698000.m3u8\", \"manifest_url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/manifest.m3u8\", \"tbr\": 877.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 844, \"height\": 360, \"vbr\": 698.0, \"abr\": 128.001, \"vcodec\": \"avc1.4D401F\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"844x360\", \"aspect_ratio\": 2.34, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-877 - 844x360\"}, {\"format_id\": \"hls-1720\", \"format_index\": null, \"url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/3144-QtG4X7WNDyBC96jF-drm-aes-audio=128001-video=1493000.m3u8\", \"manifest_url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/manifest.m3u8\", \"tbr\": 1720.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1126, \"height\": 480, \"vbr\": 1493.0, \"abr\": 128.001, \"vcodec\": \"avc1.4D401F\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1126x480\", \"aspect_ratio\": 2.35, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1720 - 1126x480\"}, {\"format_id\": \"hls-4888\", \"format_index\": null, \"url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/3144-QtG4X7WNDyBC96jF-drm-aes-audio=128001-video=4482000.m3u8\", \"manifest_url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/manifest.m3u8\", \"tbr\": 4888.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1689, \"height\": 720, \"vbr\": 4482.0, \"abr\": 128.001, \"vcodec\": \"avc1.4D401F\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1689x720\", \"aspect_ratio\": 2.35, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-4888 - 1689x720\"}], \"subtitles\": {\"en\": [{\"url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/3144-QtG4X7WNDyBC96jF-drm-aes-textstream_eng=1000.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"en-US\": [{\"url\": \"https://sdn-global-prog-cache.3qsdn.com/3144/files/17/07/672975/672975_3.srt\", \"ext\": \"srt\"}]}, \"_format_sort_fields\": [\"res\", \"source_preference\"], \"webpage_url\": \"https://playout.3qsdn.com/7201c779-6b3c-11e7-a40e-002590c750be\", \"original_url\": \"https://playout.3qsdn.com/7201c779-6b3c-11e7-a40e-002590c750be\", \"webpage_url_basename\": \"7201c779-6b3c-11e7-a40e-002590c750be\", \"webpage_url_domain\": \"playout.3qsdn.com\", \"extractor\": \"3qsdn\", \"extractor_key\": \"ThreeQSDN\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://sdn-global-prog-cache.3qsdn.com/3144/files/17/07/17/672975/1e0faed9-9497-404a-b747-b3f08b8933e9.jpg\", \"id\": \"0\"}], \"display_id\": \"7201c779-6b3c-11e7-a40e-002590c750be\", \"fulltitle\": \"Video Ads\", \"duration_string\": \"14:48\", \"upload_date\": \"20170717\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-4888\", \"url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/3144-QtG4X7WNDyBC96jF-drm-aes-audio=128001-video=4482000.m3u8\", \"manifest_url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/manifest.m3u8\", \"tbr\": 4888.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1689, \"height\": 720, \"vbr\": 4482.0, \"abr\": 128.001, \"vcodec\": \"avc1.4D401F\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1689x720\", \"aspect_ratio\": 2.35, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-4888 - 1689x720\", \"_filename\": \"Video Ads [7201c779-6b3c-11e7-a40e-002590c750be].mp4\", \"filename\": \"Video Ads [7201c779-6b3c-11e7-a40e-002590c750be].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-4888\", \"format_index\": null, \"url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/3144-QtG4X7WNDyBC96jF-drm-aes-audio=128001-video=4482000.m3u8\", \"manifest_url\": \"https://sdn-global-streaming-cache.3qsdn.com/stream/3144/files/17/07/672975/3144-QtG4X7WNDyBC96jF-drm-aes.ism/manifest.m3u8\", \"tbr\": 4888.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1689, \"height\": 720, \"vbr\": 4482.0, \"abr\": 128.001, \"vcodec\": \"avc1.4D401F\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1689x720\", \"aspect_ratio\": 2.35, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-4888 - 1689x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://playout.3qsdn.com/66e68995-11ca-11e8-9273-002590c750be",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[3qsdn] Extracting URL: https://playout.3qsdn.com/66e68995-11ca-11e8-9273-002590c750be",
+    "[3qsdn] 66e68995-11ca-11e8-9273-002590c750be: Downloading JSON metadata",
+    "[3qsdn] 66e68995-11ca-11e8-9273-002590c750be: Downloading m3u8 information",
+    "[info] Available formats for 66e68995-11ca-11e8-9273-002590c750be:",
+    "ID                   EXT RESOLUTION |   TBR PROTO | VCODEC        VBR ACODEC     MORE INFO",
+    "------------------------------------------------------------------------------------------",
+    "hls-group_a0-audio_0 mp4 audio only |       m3u8  | audio only        unknown    audio_0",
+    "hls-0                mp4 640x360    | 1774k m3u8  | avc1.4d401e 1774k video only",
+    "hls-1                mp4 852x480    | 2781k m3u8  | avc1.4d401e 2781k video only",
+    "hls-2                mp4 1280x720   | 4761k m3u8  | avc1.4d4020 4761k video only"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://playout.3qsdn.com/00000000-0000-0000-0000-000000000401",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [3qsdn] 00000000-0000-0000-0000-000000000401: This video is not available from your location due to geo restriction"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://playout.3qsdn.com/11111111-1111-1111-1111-111111111111",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [3qsdn] 11111111-1111-1111-1111-111111111111: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}
