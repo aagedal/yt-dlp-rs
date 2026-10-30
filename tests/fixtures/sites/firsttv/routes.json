@@ -1,0 +1,81 @@
+{
+ "routes": [
+  {
+   "url": "https://www.1tv.ru/shows/naedine-so-vsemi/vypuski/gost-lyudmila-senchina-naedine-so-vsemi-vypusk-ot-12-02-2015",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "1tv-001.html"
+  },
+  {
+   "url": "https://www.1tv.ru/playlist?admin=false&single=false&sort=none&video_id=40061",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "1tv-002.json"
+  },
+  {
+   "url": "https://balancer-vod.1tv.ru/promorolik/2015/02/naedine20150212.mp4,.urlset/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "1tv-003.m3u8"
+  },
+  {
+   "url": "https://www.1tv.ru/shows/dobroe-utro/pro-zdorove/vesennyaya-allergiya-dobroe-utro-fragment-vypuska-ot-07042016",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "1tv-004.html"
+  },
+  {
+   "url": "https://www.1tv.ru/playlist?admin=false&single=false&sort=none&video_id=65827",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "1tv-005.json"
+  },
+  {
+   "url": "https://balancer-vod.1tv.ru/video/multibitrate/video/2016/04/07/9ab5e363-c5c4-4e9e-81ab-6dd2677d55a8_du-20160407-2_,350,950,3800,.mp4.urlset/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "1tv-006.m3u8"
+  },
+  {
+   "url": "https://www.1tv.ru/shows/segodnya-vecherom/vypuski/avtory-odnogo-hita-segodnya-vecherom-vypusk-ot-03-05-2025",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "1tv-007.html"
+  },
+  {
+   "url": "https://www.1tv.ru/playlist?admin=false&single=false&sort=none&video_id=270411",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "1tv-008.json"
+  },
+  {
+   "url": "https://balancer-vod.1tv.ru/video/multibitrate/video/2026/10/29/945c082a-0a81-4211-bd15-7d818bd861af_1_1_segvech_,350.mp4,950.mp4,3800.mp4,8000.mp4,1_rus.vtt,.urlset/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "1tv-009.m3u8"
+  },
+  {
+   "url": "https://balancer-vod.1tv.ru/video/multibitrate/video/2026/10/29/945c082a-0a81-4211-bd15-7d818bd861af_1_1_segvech_,350,950,3800,8000,.mp4.urlset/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "1tv-010.m3u8"
+  },
+  {
+   "url": "https://www.1tv.ru/news/issue/2016-12-01/14:00",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "1tv14-001.html"
+  }
+ ]
+}

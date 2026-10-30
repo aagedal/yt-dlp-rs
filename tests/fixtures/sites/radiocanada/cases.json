@@ -1,0 +1,5 @@
+[
+ {"url": "https://ici.radio-canada.ca/widgets/mediaconsole/medianet/7754998/", "args": ["-J", "--no-geo-bypass"]},
+ {"url": "https://ici.radio-canada.ca/widgets/mediaconsole/toutv/140872", "args": ["-J", "--no-geo-bypass"]},
+ {"url": "http://ici.radio-canada.ca/audio-video/media-7527184/barack-obama-au-vietnam", "args": ["-J", "--no-geo-bypass"]}
+]

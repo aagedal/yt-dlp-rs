@@ -1,0 +1,67 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://allstar.gg/clip?clip=64482c2da9eec30008a67d1b",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"64482c2da9eec30008a67d1b\", \"display_id\": \"64482c2da9eec30008a67d1b\", \"title\": \"4K on Inferno\", \"url\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/clips/64482c2da9eec30008a67d1b.mp4\", \"thumbnails\": [{\"url\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/src/64482c2da9eec30008a67d1b_src.png\", \"id\": \"0\"}, {\"url\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/thumbs/64482c2da9eec30008a67d1b_thumb.jpg\", \"id\": \"1\"}], \"duration\": 20, \"filesize\": 21199257, \"timestamp\": 1682451501, \"uploader\": \"chrk.\", \"uploader_id\": \"62b8bdfc9021052f7905882d\", \"view_count\": 99, \"webpage_url\": \"https://allstar.gg/clip?clip=64482c2da9eec30008a67d1b\", \"extractor_key\": \"Allstar\", \"extractor\": \"Allstar\", \"uploader_url\": \"https://allstar.gg/u/62b8bdfc9021052f7905882d\", \"original_url\": \"https://allstar.gg/clip?clip=64482c2da9eec30008a67d1b\", \"webpage_url_basename\": \"clip\", \"webpage_url_domain\": \"allstar.gg\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/thumbs/64482c2da9eec30008a67d1b_thumb.jpg\", \"fulltitle\": \"4K on Inferno\", \"duration_string\": \"20\", \"upload_date\": \"20230425\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"b2\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"4K on Inferno [64482c2da9eec30008a67d1b].mp4\", \"filename\": \"4K on Inferno [64482c2da9eec30008a67d1b].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://allstar.gg/montage?montage=643e64089da7e9363e1fa66c",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"643e64089da7e9363e1fa66c\", \"display_id\": \"APQLGM2IMXW\", \"title\": \"cherokee Rapid Fire Snipers Montage\", \"url\": \"https://media.allstar.gg/62b8bdfc9021052f7905882d/montage/643e64089da7e9363e1fa66c.mp4\", \"thumbnails\": [{\"url\": \"https://media.allstar.gg/62b8bdfc9021052f7905882d/src/643e64089da7e9363e1fa6d9_src.png\", \"id\": \"0\"}, {\"url\": \"https://media.allstar.gg/62b8bdfc9021052f7905882d/thumbs/643e64089da7e9363e1fa6d9_thumb.jpg\", \"id\": \"1\"}], \"timestamp\": 1681810448, \"uploader\": \"cherokee\", \"uploader_id\": \"62b8bdfc9021052f7905882d\", \"view_count\": 25, \"webpage_url\": \"https://allstar.gg/montage?montage=643e64089da7e9363e1fa66c\", \"extractor_key\": \"Allstar\", \"extractor\": \"Allstar\", \"uploader_url\": \"https://allstar.gg/u/62b8bdfc9021052f7905882d\", \"original_url\": \"https://allstar.gg/montage?montage=643e64089da7e9363e1fa66c\", \"webpage_url_basename\": \"montage\", \"webpage_url_domain\": \"allstar.gg\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://media.allstar.gg/62b8bdfc9021052f7905882d/thumbs/643e64089da7e9363e1fa6d9_thumb.jpg\", \"fulltitle\": \"cherokee Rapid Fire Snipers Montage\", \"upload_date\": \"20230418\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"cherokee Rapid Fire Snipers Montage [643e64089da7e9363e1fa66c].mp4\", \"filename\": \"cherokee Rapid Fire Snipers Montage [643e64089da7e9363e1fa66c].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://allstar.gg/clip?clip=8LJLY4JKB",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Allstar] Missing \"id\" field in extractor result; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://allstar.gg/profile?user=62b8bdfc9021052f7905882d",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"62b8bdfc9021052f7905882d-clips\", \"title\": \"cherokee - Clips\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"6a3af5f90abdc6ae62a9d184\", \"display_id\": \"6a3af5f90abdc6ae62a9d184\", \"title\": \"Mirage AK-47 2K\", \"url\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/clips/6a3af5f90abdc6ae62a9d184.mp4\", \"thumbnails\": [{\"url\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/src/6a3af5f90abdc6ae62a9d184_src.png\", \"id\": \"0\"}, {\"url\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/thumbs/6a3af5f90abdc6ae62a9d184_thumb.jpg\", \"id\": \"1\"}], \"duration\": 12, \"filesize\": 8205879, \"timestamp\": 1782248953, \"uploader\": \"cherokee\", \"uploader_id\": \"62b8bdfc9021052f7905882d\", \"view_count\": 0, \"webpage_url\": \"https://allstar.gg/clip?clip=6a3af5f90abdc6ae62a9d184\", \"extractor_key\": \"Allstar\", \"extractor\": \"Allstar\", \"uploader_url\": \"https://allstar.gg/u/62b8bdfc9021052f7905882d\", \"playlist_count\": 2, \"playlist\": \"cherokee - Clips\", \"playlist_id\": \"62b8bdfc9021052f7905882d-clips\", \"playlist_title\": \"cherokee - Clips\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://allstar.gg/profile?user=62b8bdfc9021052f7905882d\", \"n_entries\": 2, \"webpage_url_basename\": \"profile\", \"webpage_url_domain\": \"allstar.gg\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"thumbnail\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/thumbs/6a3af5f90abdc6ae62a9d184_thumb.jpg\", \"fulltitle\": \"Mirage AK-47 2K\", \"duration_string\": \"12\", \"upload_date\": \"20260623\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"b2\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Mirage AK-47 2K [6a3af5f90abdc6ae62a9d184].mp4\", \"filename\": \"Mirage AK-47 2K [6a3af5f90abdc6ae62a9d184].mp4\", \"__write_download_archive\": false}]}, {\"id\": \"69fb9f46b2bad8489fdd3b9c\", \"display_id\": \"69fb9f46b2bad8489fdd3b9c\", \"title\": \"AWP Ace Quickscope on Cache\", \"url\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/clips/69fb9f46b2bad8489fdd3b9c.mp4\", \"thumbnails\": [{\"url\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/src/69fb9f46b2bad8489fdd3b9c_src.png\", \"id\": \"0\"}, {\"url\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/thumbs/69fb9f46b2bad8489fdd3b9c_thumb.jpg\", \"id\": \"1\"}], \"duration\": 26, \"filesize\": 30024257, \"timestamp\": 1778097991, \"uploader\": \"cherokee\", \"uploader_id\": \"62b8bdfc9021052f7905882d\", \"view_count\": 1, \"webpage_url\": \"https://allstar.gg/clip?clip=69fb9f46b2bad8489fdd3b9c\", \"extractor_key\": \"Allstar\", \"extractor\": \"Allstar\", \"uploader_url\": \"https://allstar.gg/u/62b8bdfc9021052f7905882d\", \"playlist_count\": 2, \"playlist\": \"cherokee - Clips\", \"playlist_id\": \"62b8bdfc9021052f7905882d-clips\", \"playlist_title\": \"cherokee - Clips\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://allstar.gg/profile?user=62b8bdfc9021052f7905882d\", \"n_entries\": 2, \"webpage_url_basename\": \"profile\", \"webpage_url_domain\": \"allstar.gg\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"thumbnail\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/thumbs/69fb9f46b2bad8489fdd3b9c_thumb.jpg\", \"fulltitle\": \"AWP Ace Quickscope on Cache\", \"duration_string\": \"26\", \"upload_date\": \"20260506\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"b2\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"AWP Ace Quickscope on Cache [69fb9f46b2bad8489fdd3b9c].mp4\", \"filename\": \"AWP Ace Quickscope on Cache [69fb9f46b2bad8489fdd3b9c].mp4\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://allstar.gg/profile?user=62b8bdfc9021052f7905882d\", \"original_url\": \"https://allstar.gg/profile?user=62b8bdfc9021052f7905882d\", \"webpage_url_basename\": \"profile\", \"webpage_url_domain\": \"allstar.gg\", \"extractor\": \"AllstarProfile\", \"extractor_key\": \"AllstarProfile\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://allstar.gg/u/cherokee?game=730&view=Clips",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"62b8bdfc9021052f7905882d-clips-730\", \"title\": \"cherokee - Clips - 730\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"64482c2da9eec30008a67d1b\", \"display_id\": \"64482c2da9eec30008a67d1b\", \"title\": \"4K on Inferno\", \"url\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/clips/64482c2da9eec30008a67d1b.mp4\", \"thumbnails\": [{\"url\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/src/64482c2da9eec30008a67d1b_src.png\", \"id\": \"0\"}, {\"url\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/thumbs/64482c2da9eec30008a67d1b_thumb.jpg\", \"id\": \"1\"}], \"duration\": 20, \"filesize\": 21199257, \"timestamp\": 1682451501, \"uploader\": \"chrk.\", \"uploader_id\": \"62b8bdfc9021052f7905882d\", \"view_count\": 99, \"webpage_url\": \"https://allstar.gg/clip?clip=64482c2da9eec30008a67d1b\", \"extractor_key\": \"Allstar\", \"extractor\": \"Allstar\", \"uploader_url\": \"https://allstar.gg/u/62b8bdfc9021052f7905882d\", \"playlist_count\": 1, \"playlist\": \"cherokee - Clips - 730\", \"playlist_id\": \"62b8bdfc9021052f7905882d-clips-730\", \"playlist_title\": \"cherokee - Clips - 730\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://allstar.gg/u/cherokee?game=730&view=Clips\", \"n_entries\": 1, \"webpage_url_basename\": \"cherokee\", \"webpage_url_domain\": \"allstar.gg\", \"playlist_index\": 1, \"__last_playlist_index\": 1, \"playlist_autonumber\": 1, \"thumbnail\": \"b2://allstar-cs2-clip-prod/62b8bdfc9021052f7905882d/thumbs/64482c2da9eec30008a67d1b_thumb.jpg\", \"fulltitle\": \"4K on Inferno\", \"duration_string\": \"20\", \"upload_date\": \"20230425\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"b2\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"4K on Inferno [64482c2da9eec30008a67d1b].mp4\", \"filename\": \"4K on Inferno [64482c2da9eec30008a67d1b].mp4\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://allstar.gg/u/cherokee?game=730&view=Clips\", \"original_url\": \"https://allstar.gg/u/cherokee?game=730&view=Clips\", \"webpage_url_basename\": \"cherokee\", \"webpage_url_domain\": \"allstar.gg\", \"extractor\": \"AllstarProfile\", \"extractor_key\": \"AllstarProfile\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

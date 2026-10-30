@@ -1,0 +1,268 @@
+{
+ "routes": [
+  {
+   "url": "https://subsplash.com/u/skywatchtv/media/d/5whnx5s-the-grand-delusion-taking-place-right-now",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "00-subsplash-com-u-skywatchtv-media-d-5whnx5s-the-grand-delusio.html"
+  },
+  {
+   "url": "https://core.subsplash.com/media/v1/media-items?filter%5Bshort_code%5D=5whnx5s&include=images%2Caudio.audio-outputs%2Caudio.video%2Cvideo.video-outputs%2Cvideo.playlists%2Cdocument%2Cbroadcast",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/hal+json"
+   },
+   "body_file": "01-core-subsplash-com-media-v1-media-items-filter-5bshort-code.json"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/8fce3baa-e518-4b3d-b13e-7ef4c5836329/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "02-cdn-subsplash-com-videos-nbkdps-8fce3baa-e518-4b3d-b13e-7ef4.m3u8"
+  },
+  {
+   "url": "https://subsplash.com/laiglesiadelcentro/vid/mi/+ecb6a6b?autoplay=true",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "03-subsplash-com-laiglesiadelcentro-vid-mi-ecb6a6b-autoplay-tru.html"
+  },
+  {
+   "url": "https://core.subsplash.com/media/v1/media-items?filter%5Bshort_code%5D=ecb6a6b&include=images%2Caudio.audio-outputs%2Caudio.video%2Cvideo.video-outputs%2Cvideo.playlists%2Cdocument%2Cbroadcast",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/hal+json"
+   },
+   "body_file": "04-core-subsplash-com-media-v1-media-items-filter-5bshort-code.json"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/QK427F/d26a0237-1689-47c6-8376-4db5105d48b7/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "05-cdn-subsplash-com-videos-qk427f-d26a0237-1689-47c6-8376-4db5.m3u8"
+  },
+  {
+   "url": "https://subsplash.com/skywatchtv/our-videos/ms/+dbyjzp8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "06-subsplash-com-skywatchtv-our-videos-ms-dbyjzp8.html"
+  },
+  {
+   "url": "https://core.subsplash.com/media/v1/media-series?filter%5Bshort_code%5D=dbyjzp8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/hal+json"
+   },
+   "body_file": "07-core-subsplash-com-media-v1-media-series-filter-5bshort-code.json"
+  },
+  {
+   "url": "https://core.subsplash.com/media/v1/media-items?filter%5Bbroadcast.status%7Cbroadcast.status%5D=null%7Con-demand&filter%5Bmedia_series%5D=8c7f4046-fbb6-44c8-8d5d-e7ae66621b68&filter%5Bstatus%5D=published&include=images%2Caudio.audio-outputs%2Caudio.video%2Cvideo.video-outputs%2Cvideo.playlists%2Cdocument&page%5Bnumber%5D=1&page%5Bsize%5D=15&sort=-position",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/hal+json"
+   },
+   "body_file": "08-core-subsplash-com-media-v1-media-items-filter-5bbroadcast-s.json"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/b5948dcd-e992-4a0c-9087-321f0d38b4d8/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "09-cdn-subsplash-com-videos-nbkdps-b5948dcd-e992-4a0c-9087-321f.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/8cb32d2c-72f1-4155-ab3e-e53375205e7f/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "10-cdn-subsplash-com-videos-nbkdps-8cb32d2c-72f1-4155-ab3e-e533.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/d6477109-d737-4eea-bf9b-e55c4d8951b0/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "11-cdn-subsplash-com-videos-nbkdps-d6477109-d737-4eea-bf9b-e55c.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/ed177a73-fbc4-4d17-8372-a1b756c7bb67/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "12-cdn-subsplash-com-videos-nbkdps-ed177a73-fbc4-4d17-8372-a1b7.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/b3933927-72f7-4546-8af7-51cd41cd276d/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "13-cdn-subsplash-com-videos-nbkdps-b3933927-72f7-4546-8af7-51cd.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/27926e11-1b82-40a5-943e-587200b868d9/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "14-cdn-subsplash-com-videos-nbkdps-27926e11-1b82-40a5-943e-5872.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/7b04ccff-000d-4066-b9f4-43620c9c20dc/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "15-cdn-subsplash-com-videos-nbkdps-7b04ccff-000d-4066-b9f4-4362.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/74a2b3e2-1fed-482e-a31f-9cd8cc310bd1/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "16-cdn-subsplash-com-videos-nbkdps-74a2b3e2-1fed-482e-a31f-9cd8.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/65fe974b-eda2-43eb-a6c5-3a28cbfe013b/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "17-cdn-subsplash-com-videos-nbkdps-65fe974b-eda2-43eb-a6c5-3a28.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/e6dbf09a-d056-4c6b-83b0-838a1aff391b/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "18-cdn-subsplash-com-videos-nbkdps-e6dbf09a-d056-4c6b-83b0-838a.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/e0786c9a-80d3-4487-86a2-d2fb4632801d/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "19-cdn-subsplash-com-videos-nbkdps-e0786c9a-80d3-4487-86a2-d2fb.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/b8752828-4539-4336-b4a1-3718adcabfe7/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "20-cdn-subsplash-com-videos-nbkdps-b8752828-4539-4336-b4a1-3718.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/36e06a8b-38b0-4174-877b-690c0fe2dc54/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "21-cdn-subsplash-com-videos-nbkdps-36e06a8b-38b0-4174-877b-690c.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/c19088b3-8619-4079-8a64-17178234a287/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "22-cdn-subsplash-com-videos-nbkdps-c19088b3-8619-4079-8a64-1717.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/5a1fd8da-6223-4d87-afb3-877647df30b4/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "23-cdn-subsplash-com-videos-nbkdps-5a1fd8da-6223-4d87-afb3-8776.m3u8"
+  },
+  {
+   "url": "https://core.subsplash.com/media/v1/media-items?filter%5Bbroadcast.status%7Cbroadcast.status%5D=null%7Con-demand&filter%5Bmedia_series%5D=8c7f4046-fbb6-44c8-8d5d-e7ae66621b68&filter%5Bstatus%5D=published&include=images%2Caudio.audio-outputs%2Caudio.video%2Cvideo.video-outputs%2Cvideo.playlists%2Cdocument&page%5Bnumber%5D=2&page%5Bsize%5D=15&sort=-position",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/hal+json"
+   },
+   "body_file": "24-core-subsplash-com-media-v1-media-items-filter-5bbroadcast-s.json"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/875a3fa4-0acb-45c1-8614-0bf72be77462/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "25-cdn-subsplash-com-videos-nbkdps-875a3fa4-0acb-45c1-8614-0bf7.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/aa6554c4-9ee1-4bc3-aef9-2a584a12b8a4/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "26-cdn-subsplash-com-videos-nbkdps-aa6554c4-9ee1-4bc3-aef9-2a58.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/baa2e620-063c-4db1-ad3c-ee8c4b0561d4/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "27-cdn-subsplash-com-videos-nbkdps-baa2e620-063c-4db1-ad3c-ee8c.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/1a2451da-6e84-46be-a4e3-fecff0a31f21/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "28-cdn-subsplash-com-videos-nbkdps-1a2451da-6e84-46be-a4e3-fecf.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/67b4b28c-64d9-454b-a104-48ad892cecae/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "29-cdn-subsplash-com-videos-nbkdps-67b4b28c-64d9-454b-a104-48ad.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/b0ff4bc1-4b91-4f01-875c-fb94cf8e380e/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "30-cdn-subsplash-com-videos-nbkdps-b0ff4bc1-4b91-4f01-875c-fb94.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/e54efd4a-46b9-4cf1-9225-e28c9ed22f79/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "31-cdn-subsplash-com-videos-nbkdps-e54efd4a-46b9-4cf1-9225-e28c.m3u8"
+  },
+  {
+   "url": "https://cdn.subsplash.com/videos/NBKDPS/91ae50ab-bfd6-45ae-984f-953a8f2483f3/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "32-cdn-subsplash-com-videos-nbkdps-91ae50ab-bfd6-45ae-984f-953a.m3u8"
+  }
+ ]
+}

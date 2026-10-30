@@ -1,0 +1,68 @@
+{
+ "routes": [
+  {
+   "url": "https://www.acfun.cn/v/ac35457073",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "00-www-acfun-cn-v-ac35457073.html"
+  },
+  {
+   "url": "https://tx-safety-video.acfun.cn/mediacloud/acfun/acfun_video/9c602fc35eaa04be-de1a92d176dfafc074d9d27268ff1a7c-hls_1080p_h264_60_1.m3u8?pkey=ABClEgxGHr1tSnJM51tQl6zKzEgBaMnUaXu945cIvXL8H6RD4rPg-V3wCTBXUojVoMo5t6Fn7TkQnyrUVMMHCALM3K_UoA8Amg1iFlrvr4P7AsPMmo_qIQIBfndZI5z5vbUJsBaMZL7TnwoC4Pr839Vd9DQo4RAlPTE4JEU18b1XxHPuJIAHjMQnIcAB5Fja6FQ76GGUgWRdRlROgQ0OiXMyDIot-wBoU3NcVZ-xLzbWNg&safety_id=AAIGahp5td5zkHjpQlbDGRw4",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "01-tx-safety-video-acfun-cn-mediacloud-acfun-acfun-video-9c602f.m3u8"
+  },
+  {
+   "url": "https://tx-safety-video.acfun.cn/mediacloud/acfun/acfun_video/9c602fc35eaa04be-9f0047ebc3a2a243b41088474218d9c6-hls_1080p_2.m3u8?pkey=ABAyMEovcikficNOIskUZYlzqKU4dQLQDOQzPLo_N5h35r741o0TJryV2oYhIdKYdPESwLlfAsybnDuhJpnMVvutX9s6Ynbxw1ntW927lh0GJcpe3KHSAivLWLog9GuPaYYA7_CrlputXkpS_R3DyEQaeBi0ex600LcMj2Un1urFdcsKQm3xZ58Qm3vUniOYyWI77gKdO8R9s7xB3vLVLcXHXJLaQ3SaJSMO0T6mAUMPXg&safety_id=AAIGahp5td5zkHjpQlbDGRw4",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "02-tx-safety-video-acfun-cn-mediacloud-acfun-acfun-video-9c602f.m3u8"
+  },
+  {
+   "url": "https://tx-safety-video.acfun.cn/mediacloud/acfun/acfun_video/9c602fc35eaa04be-6e92972972e954d4e27f0c0a25ae3f8c-hls_720p_h264_60_1.m3u8?pkey=ABDiB_lxqbTG_6Lzb7dlMYVMOL77xPFVI8eJxoC99EvV4GBYBMgNU6qO81UJ-2QXkCSy43HpxTDLlE9jhug2f_W3SMC4ghTE-gNW2MNX9S2kJuSs-p1JF-jpFwPHf12Qj7AufpoSvvy5hCFhSV-dxXyNcOUvwxey5N7i3Qup8J0d6BwVWTHKHwfVYiM0ERTSCtta2tjJQ329ug31_iVR7ZhRA6WAZYWAIBuVGuXc8xBjqw&safety_id=AAIGahp5td5zkHjpQlbDGRw4",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "03-tx-safety-video-acfun-cn-mediacloud-acfun-acfun-video-9c602f.m3u8"
+  },
+  {
+   "url": "https://tx-safety-video.acfun.cn/mediacloud/acfun/acfun_video/9c602fc35eaa04be-d9fa8a13eb90e18de45337c299cb7389-hls_720p_2.m3u8?pkey=ABDIatqJiFDSzgaIjW-Jxi51fc_F8i6OitTUW4Xhf6XI6ifteznSNUYB8_iXA2pChEAQ4pGL5HlZdkd_uQ40saT7RRfadYK7GizSMXz0kDsr5yGQ4f1oNIDzooa-CbIGQxUznO2xS7s57Tibj-BPIrS1xu91zWulTQ4IL7WDRsci6_3DwGsICl0j725ANkyl2lIIOclCRBDrGApHNNMDpj5vdXWhpGhzqPNdUM07R8tMSA&safety_id=AAIGahp5td5zkHjpQlbDGRw4",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "04-tx-safety-video-acfun-cn-mediacloud-acfun-acfun-video-9c602f.m3u8"
+  },
+  {
+   "url": "https://tx-safety-video.acfun.cn/mediacloud/acfun/acfun_video/9c602fc35eaa04be-21bb3df117eab84478edd5eb9e8ab1fa-hls_540p_2.m3u8?pkey=ABDWrOUQJFXp20wEGfOTiZLBP3s7InAWC6sWDOKIano55ckOkqlQ0fna5L3a4hX09OTDMvDsXS2MEMj5HP5krBTlf1Y_e06ZqcQCLJ1muob_0ZLlTRF2HsOiwCkBcucNBNHlz2sPyzp5KOeFrib7KL61H1QCyppCKpWAqrRPjOruKToOu-UXuVUHsG0NTPj5vBpbIBoh-TLNnPBddEYT8sLwC_FnSzb_HCTTW61dFnTJdA&safety_id=AAIGahp5td5zkHjpQlbDGRw4",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "05-tx-safety-video-acfun-cn-mediacloud-acfun-acfun-video-9c602f.m3u8"
+  },
+  {
+   "url": "https://tx-safety-video.acfun.cn/mediacloud/acfun/acfun_video/9c602fc35eaa04be-8b4626c3c16c11c1f005f72134cfb414-hls_360p_2.m3u8?pkey=ABA8miQGM0pfNB7DXwJ4Z8b9z_Y5EZpXSvgch2entzDfxSTworlYuRXPNIBpUwxzLOo1mrwQMcrnOShmIwG1TFu8dKlC3TMQ4y0WOgJHoLm7Bjom8WRYMZW5BG1ydqt47VKN5m8gV6czsI_55Dt5eiqjH3TU3wF_gqS6AQhbgKC-q6CpiCxubDLfRklBxAzU5ZMfYowATwTybpIQQ_ez3D_-MLitiwNMWFz5WE28dbIWzg&safety_id=AAIGahp5td5zkHjpQlbDGRw4",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "06-tx-safety-video-acfun-cn-mediacloud-acfun-acfun-video-9c602f.m3u8"
+  },
+  {
+   "url": "https://www.acfun.cn/v/ac12345",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>AcFun</title></head><body>No player here</body></html>"
+  }
+ ]
+}

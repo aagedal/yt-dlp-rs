@@ -1,0 +1,38 @@
+{
+ "routes": [
+  {
+   "url": "https://mdstrm.com/embed/6318e3f1d1d316083ae48831",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "embed.html"
+  },
+  {
+   "url": "https://mdstrm.com/video/6318e3f1d1d316083ae48831.m3u8?at=web-app&uid=Z78IOmSxQD9zORftstHgnQcbPQVVz6oI&sid=EFNap6Zquw1jMYYZEuaZg29A9GOqZzVi&pid=RF3b510xiLlVhXpDiZNrxdsH4UXVH3Ot&av=v7.1.1",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://mdstrm.com/video/6318e3f1d1d316083ae48831.mpd",
+   "status": 302,
+   "headers": {
+    "Location": "https://us-b4-p-e-mg17.cdn.mdstrm.com/video/d/5fea0d6c8bd443786977407e/6318e3f1d1d316083ae48831.mp4/manifest.mpd?es=us-b4-p-e-mg17.cdn.mdstrm.com&proto=https&access_token=SYNTHETIC"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://us-b4-p-e-mg17.cdn.mdstrm.com/video/d/5fea0d6c8bd443786977407e/6318e3f1d1d316083ae48831.mp4/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd",
+   "ignore_query": [
+    "es",
+    "proto",
+    "access_token"
+   ]
+  }
+ ]
+}

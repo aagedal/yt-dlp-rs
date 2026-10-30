@@ -1,0 +1,43 @@
+[
+ {
+  "url": "https://app.idagio.com/recordings/30576934?trackId=30576943",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://app.idagio.com/recordings/30576934",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://app.idagio.com/albums/elgar-enigma-variations-in-the-south-serenade-for-strings",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://app.idagio.com/playlists/beethoven-the-most-beautiful-piano-music",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://app.idagio.com/playlists/personal/99dad72e-7b3a-45a4-b216-867c08046ed8",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://app.idagio.com/recordings/30576934?trackId=999",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ }
+]

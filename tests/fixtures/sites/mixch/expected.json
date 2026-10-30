@@ -1,0 +1,70 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://mixch.tv/u/16943797",
+   "args": [
+    "--print",
+    "%(id)s|%(uploader)s|%(view_count)s|%(comment_count)s|%(timestamp)s|%(is_live)s|%(formats.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "16943797|Ent.View K-news🎶💕|1243|501|1793362400|True|https://0ac7260645b0.ap-northeast-1.playback.live-video.net/api/video/v1/ap-northeast-1.372653203462.channel.JjjGtT1aPEOW.m3u8"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://mixch.tv/u/1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [mixch] 1: The channel is not currently live"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://mixch.tv/m/Ve8KNkJ5",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"Ve8KNkJ5\", \"formats\": [{\"format_id\": \"mp4\", \"url\": \"https://d2jtsb989t238a.cloudfront.net/m/0b9senouou67eitgkcaf4jhnrv8mpsacoqdnrxn2ia6telydo9l0jkvkss0zw133k9ksray12ubri0td9kk6y00uzqh1hfvnap7o5r6n69u82qy3qune4bevs0gaklig/y6w9kxbk16ox3xl42hv4yes2imsud2xc_movie_mps\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\"}], \"title\": \"\\u590f\\u2600\\ufe0f\\n\\u30e0\\u30fc\\u30d3\\u30fc\\u3078\\u306e\\u30dd\\u30a4\\u30f3\\u30c8\\u306f\\u672c\\u30a4\\u30d9\\u30f3\\u30c8\\u306b\\u52a0\\u7b97\\u3055\\u308c\\u306a\\u3044\\u306e\\u3067\\u914d\\u4fe1\\u306b\\u3066\\u304a\\u9858\\u3044\\u81f4\\u3057\\u307e\\u3059\\ud83d\\ude47\\ud83c\\udffb\\u200d\\u2640\\ufe0f\\n#TGCCAMPUS #\\u30df\\u30b9\\u6771\\u5927 #\\u30df\\u30b9\\u6771\\u59272024 \", \"uploader\": \"\\u30df\\u30b9\\u6771\\u5927No.5 \\u677e\\u85e4\\u767e\\u9999\\ud83c\\udf51\\ud83d\\udcab\", \"uploader_id\": \"12299174\", \"channel_follower_count\": 3106, \"view_count\": 18510, \"like_count\": 157, \"comment_count\": 95, \"timestamp\": 1724070828, \"uploader_url\": \"https://mixch.tv/u/12299174\", \"live_status\": \"not_live\", \"webpage_url\": \"https://mixch.tv/m/Ve8KNkJ5\", \"original_url\": \"https://mixch.tv/m/Ve8KNkJ5\", \"webpage_url_basename\": \"Ve8KNkJ5\", \"webpage_url_domain\": \"mixch.tv\", \"extractor\": \"mixch:movie\", \"extractor_key\": \"MixchMovie\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"Ve8KNkJ5\", \"fulltitle\": \"\\u590f\\u2600\\ufe0f\\n\\u30e0\\u30fc\\u30d3\\u30fc\\u3078\\u306e\\u30dd\\u30a4\\u30f3\\u30c8\\u306f\\u672c\\u30a4\\u30d9\\u30f3\\u30c8\\u306b\\u52a0\\u7b97\\u3055\\u308c\\u306a\\u3044\\u306e\\u3067\\u914d\\u4fe1\\u306b\\u3066\\u304a\\u9858\\u3044\\u81f4\\u3057\\u307e\\u3059\\ud83d\\ude47\\ud83c\\udffb\\u200d\\u2640\\ufe0f\\n#TGCCAMPUS #\\u30df\\u30b9\\u6771\\u5927 #\\u30df\\u30b9\\u6771\\u59272024 \", \"upload_date\": \"20240819\", \"release_year\": null, \"is_live\": false, \"was_live\": false, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"mp4\", \"url\": \"https://d2jtsb989t238a.cloudfront.net/m/0b9senouou67eitgkcaf4jhnrv8mpsacoqdnrxn2ia6telydo9l0jkvkss0zw133k9ksray12ubri0td9kk6y00uzqh1hfvnap7o5r6n69u82qy3qune4bevs0gaklig/y6w9kxbk16ox3xl42hv4yes2imsud2xc_movie_mps\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\", \"_filename\": \"\\u590f\\u2600\\ufe0f \\u30e0\\u30fc\\u30d3\\u30fc\\u3078\\u306e\\u30dd\\u30a4\\u30f3\\u30c8\\u306f\\u672c\\u30a4\\u30d9\\u30f3\\u30c8\\u306b\\u52a0\\u7b97\\u3055\\u308c\\u306a\\u3044\\u306e\\u3067\\u914d\\u4fe1\\u306b\\u3066\\u304a\\u9858\\u3044\\u81f4\\u3057\\u307e\\u3059\\ud83d\\ude47\\ud83c\\udffb\\u200d\\u2640\\ufe0f #TGCCAMPUS #\\u30df\\u30b9\\u6771\\u5927 #\\u30df\\u30b9\\u6771\\u59272024  [Ve8KNkJ5].mp4\", \"filename\": \"\\u590f\\u2600\\ufe0f \\u30e0\\u30fc\\u30d3\\u30fc\\u3078\\u306e\\u30dd\\u30a4\\u30f3\\u30c8\\u306f\\u672c\\u30a4\\u30d9\\u30f3\\u30c8\\u306b\\u52a0\\u7b97\\u3055\\u308c\\u306a\\u3044\\u306e\\u3067\\u914d\\u4fe1\\u306b\\u3066\\u304a\\u9858\\u3044\\u81f4\\u3057\\u307e\\u3059\\ud83d\\ude47\\ud83c\\udffb\\u200d\\u2640\\ufe0f #TGCCAMPUS #\\u30df\\u30b9\\u6771\\u5927 #\\u30df\\u30b9\\u6771\\u59272024  [Ve8KNkJ5].mp4\", \"__write_download_archive\": false}], \"format_id\": \"mp4\", \"url\": \"https://d2jtsb989t238a.cloudfront.net/m/0b9senouou67eitgkcaf4jhnrv8mpsacoqdnrxn2ia6telydo9l0jkvkss0zw133k9ksray12ubri0td9kk6y00uzqh1hfvnap7o5r6n69u82qy3qune4bevs0gaklig/y6w9kxbk16ox3xl42hv4yes2imsud2xc_movie_mps\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://mixch.tv/archive/421",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [mixch:archive] 421: This video is only available for registered users. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://mixch.tv/archive/777",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"777\", \"title\": \"Synthetic archive\", \"formats\": [{\"format_id\": \"1200\", \"format_index\": null, \"url\": \"https://mixch.tv/synthetic/archive/index-360.m3u8\", \"manifest_url\": \"https://mixch.tv/synthetic/archive/master.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1200 - 640x360\"}, {\"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://mixch.tv/synthetic/archive/index-720.m3u8\", \"manifest_url\": \"https://mixch.tv/synthetic/archive/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\"}], \"thumbnail\": \"https://mixch.tv/synthetic/archive/thumb.jpg\", \"webpage_url\": \"https://mixch.tv/archive/777\", \"original_url\": \"https://mixch.tv/archive/777\", \"webpage_url_basename\": \"777\", \"webpage_url_domain\": \"mixch.tv\", \"extractor\": \"mixch:archive\", \"extractor_key\": \"MixchArchive\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://mixch.tv/synthetic/archive/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"777\", \"fulltitle\": \"Synthetic archive\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"2400\", \"url\": \"https://mixch.tv/synthetic/archive/index-720.m3u8\", \"manifest_url\": \"https://mixch.tv/synthetic/archive/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\", \"_filename\": \"Synthetic archive [777].mp4\", \"filename\": \"Synthetic archive [777].mp4\", \"__write_download_archive\": false}], \"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://mixch.tv/synthetic/archive/index-720.m3u8\", \"manifest_url\": \"https://mixch.tv/synthetic/archive/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

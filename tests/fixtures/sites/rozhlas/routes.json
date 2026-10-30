@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://wave.rozhlas.cz/papej-masicko-porcujeme-a-bilancujeme-filmy-a-serialy-ktere-letos-zabily-8891337",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "wave-8891337.html"
+  },
+  {
+   "url": "https://wave.rozhlas.cz/synthetic-8000001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "wave-synthetic.html"
+  }
+ ]
+}

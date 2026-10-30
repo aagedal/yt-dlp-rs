@@ -505,12 +505,14 @@ pub(crate) fn parse_html5_media_entries(
                 .unwrap_or_else(|| "unknown_video".into());
             let manifest = match ext.as_str() {
                 "m3u8" => Some(
-                    super::extract_m3u8_optional(
+                    // `_extract_m3u8_formats`: the master playlist only.
+                    super::extract_m3u8_master_optional(
                         client,
                         &source.url,
                         extractor,
                         video_id,
                         m3u8_id,
+                        false,
                         false,
                     )
                     .map(|mut info| {

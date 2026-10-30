@@ -1,0 +1,6 @@
+[
+ {"url": "http://www.tmz.com/videos/0-cegprt2p/", "args": ["-J"]},
+ {"url": "http://www.tmz.com/videos/0-cegprt2p/", "args": ["--print", "title,timestamp,uploader"]},
+ {"url": "https://www.tmz.com/2016/01/01/no-json-ld/", "args": ["-J"]},
+ {"url": "https://www.tmz.com/2016/01/02/no-media-url/", "args": ["-J"]}
+]

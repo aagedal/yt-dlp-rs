@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://subsplash.com/u/skywatchtv/media/d/5whnx5s-the-grand-delusion-taking-place-right-now",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://subsplash.com/laiglesiadelcentro/vid/mi/+ecb6a6b?autoplay=true",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://subsplash.com/skywatchtv/our-videos/ms/+dbyjzp8",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://subsplash.com/u/skywatchtv/media/d/nosuch-video",
+  "args": [
+   "-J"
+  ]
+ }
+]

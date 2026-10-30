@@ -1,0 +1,14 @@
+<smil xmlns="http://www.w3.org/2001/SMIL20/Language">
+    <head>
+        <meta name="title" content="" />
+        <meta name="vod" content="true" />
+        <meta name="base" base="https://uscourts-back.cdn.piksel.tech/543007" content="https://uscourts-back.cdn.piksel.tech/543007" />
+    </head>
+    <body>
+        <switch id="WAW- State of Washington vs. Donald J. Trump, et al">
+         <video src="/mm/flvmedia/3697/t/p/z/tpze0f9r_z5zj8rio_h264_548K.mp4?cid=3697&amp;aid=3279887&amp;afid=6809999&amp;apid=1032989&amp;programid=4175023" width="640" system-bitrate="560128"/>
+         <video src="/mm/flvmedia/3697/t/p/z/tpze0f9r_m32g7c41_h264_298K.mp4?cid=3697&amp;aid=3279887&amp;afid=6809997&amp;apid=1032989&amp;programid=4175023" width="640" system-bitrate="302080"/>
+
+        </switch>
+    </body>
+</smil>

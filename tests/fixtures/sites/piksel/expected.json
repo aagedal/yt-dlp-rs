@@ -1,0 +1,68 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://player.piksel.tech/v/v80kqp41",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"v80kqp41\", \"title\": \"WAW- State of Washington vs. Donald J. Trump, et al\", \"description\": \"State of Washington vs. Donald J. Trump, et al, Case Number 17-CV-00141-JLR, TRO Hearing, Civil Rights Case, 02/3/2017, 1:00 PM (PST), Seattle Federal Courthouse, Seattle, WA, Judge James L. Robart presiding.\", \"thumbnail\": \"https://thumbs.piksel.tech/thumbs/aid/t1495569155/3279887.jpg?w=640&h=360\", \"timestamp\": 1486171129, \"formats\": [{\"format_id\": \"http-295\", \"url\": \"https://uscourts-back.cdn.piksel.tech/543007/mm/flvmedia/3697/t/p/z/tpze0f9r_m32g7c41_h264_298K.mp4?cid=3697&aid=3279887&afid=6809997&assetid=3279887\", \"vbr\": 247, \"abr\": 48, \"width\": 640, \"height\": 360, \"filesize\": 150824506, \"tbr\": 295, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-295 - 640x360\"}, {\"url\": \"https://uscourts-back.cdn.piksel.tech/543007/mm/flvmedia/3697/t/p/z/tpze0f9r_m32g7c41_h264_298K.mp4?cid=3697&aid=3279887&afid=6809997&apid=1032989&programid=4175023\", \"ext\": \"mp4\", \"format_id\": \"http-302\", \"tbr\": 302.08, \"filesize\": null, \"width\": 640, \"height\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x?\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-302 - 640x?\"}, {\"format_id\": \"http-481\", \"url\": \"https://uscourts-back.cdn.piksel.tech/543007/mm/flvmedia/3697/m/F/t/mF_tpze0f9r_j04q0w90_h264_613K.mp4?cid=3697&aid=3279887&afid=6809995&assetid=3279887\", \"vbr\": 425, \"abr\": 56, \"width\": 640, \"height\": 360, \"filesize\": 245325913, \"tbr\": 481, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-481 - 640x360\"}, {\"format_id\": \"http-547\", \"url\": \"https://uscourts-back.cdn.piksel.tech/543007/mm/flvmedia/3697/t/p/z/tpze0f9r_z5zj8rio_h264_548K.mp4?cid=3697&aid=3279887&afid=6809999&assetid=3279887\", \"vbr\": 499, \"abr\": 48, \"width\": 640, \"height\": 360, \"filesize\": 278237115, \"tbr\": 547, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-547 - 640x360\"}, {\"url\": \"https://uscourts-back.cdn.piksel.tech/543007/mm/flvmedia/3697/t/p/z/tpze0f9r_z5zj8rio_h264_548K.mp4?cid=3697&aid=3279887&afid=6809999&apid=1032989&programid=4175023\", \"ext\": \"mp4\", \"format_id\": \"http-560\", \"tbr\": 560.128, \"filesize\": null, \"width\": 640, \"height\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x?\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-560 - 640x?\"}], \"subtitles\": {}, \"_format_sort_fields\": [\"tbr\"], \"webpage_url\": \"https://player.piksel.tech/v/v80kqp41\", \"original_url\": \"https://player.piksel.tech/v/v80kqp41\", \"webpage_url_basename\": \"v80kqp41\", \"webpage_url_domain\": \"player.piksel.tech\", \"extractor\": \"Piksel\", \"extractor_key\": \"Piksel\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://thumbs.piksel.tech/thumbs/aid/t1495569155/3279887.jpg?w=640&h=360\", \"id\": \"0\"}], \"display_id\": \"v80kqp41\", \"fulltitle\": \"WAW- State of Washington vs. Donald J. Trump, et al\", \"upload_date\": \"20170204\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://uscourts-back.cdn.piksel.tech/543007/mm/flvmedia/3697/t/p/z/tpze0f9r_z5zj8rio_h264_548K.mp4?cid=3697&aid=3279887&afid=6809999&apid=1032989&programid=4175023\", \"ext\": \"mp4\", \"format_id\": \"http-560\", \"tbr\": 560.128, \"width\": 640, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x?\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-560 - 640x?\", \"_filename\": \"WAW- State of Washington vs. Donald J. Trump, et al [v80kqp41].mp4\", \"filename\": \"WAW- State of Washington vs. Donald J. Trump, et al [v80kqp41].mp4\", \"__write_download_archive\": false}], \"url\": \"https://uscourts-back.cdn.piksel.tech/543007/mm/flvmedia/3697/t/p/z/tpze0f9r_z5zj8rio_h264_548K.mp4?cid=3697&aid=3279887&afid=6809999&apid=1032989&programid=4175023\", \"ext\": \"mp4\", \"format_id\": \"http-560\", \"tbr\": 560.128, \"filesize\": null, \"width\": 640, \"height\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x?\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-560 - 640x?\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.piksel.tech/v/v80kqp41",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Piksel] Extracting URL: https://player.piksel.tech/v/v80kqp41",
+    "[Piksel] v80kqp41: Downloading webpage",
+    "[Piksel] v80kqp41: Downloading JSON metadata",
+    "[Piksel] v80kqp41: Downloading SMIL file",
+    "[info] Available formats for v80kqp41:",
+    "ID       EXT RESOLUTION |   FILESIZE  TBR PROTO | VCODEC   VBR ACODEC  ABR",
+    "--------------------------------------------------------------------------",
+    "http-295 mp4 640x360    |  143.84MiB 295k https | unknown 247k unknown 48k",
+    "http-302 mp4 640x?      |            302k https | unknown      unknown",
+    "http-481 mp4 640x360    |  233.96MiB 481k https | unknown 425k unknown 56k",
+    "http-547 mp4 640x360    |  265.35MiB 547k https | unknown 499k unknown 48k",
+    "http-560 mp4 640x?      |            560k https | unknown      unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.piksel.tech/v/synthetic-error",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Piksel] synthetic-error: Program not found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.piksel.tech/v/synthetic-noid",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Piksel] synthetic-noid: Unable to extract app token; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://oc-video1.ruhr-uni-bochum.de/search/episode.json?id=ed063cd5-72c8-46b5-a60a-569243edcea8",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "episode.json"
+  },
+  {
+   "url": "https://oc-video1.ruhr-uni-bochum.de/search/episode.json?sid=cf68a4a1-36b1-4a53-a6ba-61af5705a0d0",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "series.json"
+  },
+  {
+   "url": "https://oc-video1.ruhr-uni-bochum.de/search/episode.json?id=00000000-0000-4000-8000-000000000000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "synthetic-empty.json"
+  }
+ ]
+}

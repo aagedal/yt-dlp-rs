@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "https://asobichannel-api.asobistore.jp/api/v1/vspf/token",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "asobichannel-a-0.json"
+  },
+  {
+   "url": "https://channel.microcms.io/api/v1/media/1ypp48qd32p",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "asobichannel-a-1.json"
+  },
+  {
+   "url": "https://survapi.channel.or.jp/proxy/v1/contents/d1f1bdbf/get_by_cuid",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "asobichannel-a-2.json"
+  },
+  {
+   "url": "https://dce1j8lyafk9e.cloudfront.net/asobiidolmaster/mc/51940a70-c05e-4028-803f-712a9c01bacf/index.m3u8?Expires=1793366516&Signature=E4Q0nY1SXVZqvXK0QtbtdKtlDue1OIIWKLLh2RHf0XMcCSrKxeMzBmab60gEpZJ8ARgxNLZJRwJx69xyKkzmKVBwvewOihyPNg2LjK6OG9vlJIOyucbMmy30sQl4vBW2HUR-k6Lg3T2L9LfP5kxRxRIvU7A3nF0l3MaJ3rgsM4N1C6Hgca3zlEEArr5lao71p7BCOnUqdnokS0EpEysfsUIynJK4fBuftT85Uv~syf9ba2D-I3ZrkSlc5JdOOIQEzm-pCaE4upWP5VIWGnTlGvUJAvXYQKZez773FLIbT1hTc5xCXwvGHyn70dxNCcGddta3K2Y~6dSqq9P9ljGO~w__&Key-Pair-Id=APKAICPKDW5EZGX4OD4A",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "asobichannel-a-3.m3u8"
+  },
+  {
+   "url": "https://channel.microcms.io/api/v1/media/redigiwnjzqj",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "asobichannel-b-1.json"
+  },
+  {
+   "url": "https://survapi.channel.or.jp/proxy/v1/contents/11adf9a8/get_by_cuid",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "asobichannel-b-2.json"
+  },
+  {
+   "url": "https://dce1j8lyafk9e.cloudfront.net/asobiidolmaster/mc/8f04da94-0a7a-4b49-8d1e-174122c2277a/index.m3u8?Expires=1793366518&Signature=heeNcW3F-UO3oxVqBAhG2QehXd8Y1giRsJbqxKNid6p1SJgZAq6YzyHXbfNu9wcS8PQkgDAF-Exti5htusQRNapnU1eZd3wkPAX7xFyuaafI1t2SBXEhZTRGUrWGlUw7~wpMMMvG080PS7qUaotVeVBhI6PNStWqqnH3lhKTpBn~umwLNSAFFtlKUZ2P1eirZyLu41xDVjeWQctQtuhu4kw4XJaEChy~QLRvTpQvhyUOmbOrhoYG7n0YI0vJcA4A~yCUPQ9nWSD58AiIVIcFWXpZTAbMuaHn~PGuXI0dhpbb5ixZVqWnxND8GFYNc~Bh0GHQMejhM0t2LYVLyRckTw__&Key-Pair-Id=APKAICPKDW5EZGX4OD4A",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "asobichannel-b-3.m3u8"
+  },
+  {
+   "url": "https://asobichannel.asobistore.jp/tag/bjhh-nbcja",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "asobichannel-tag-0.html"
+  },
+  {
+   "url": "https://channel.microcms.io/api/v1/media?limit=999&filters=(tag[contains]bjhh-nbcja)",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "asobichannel-tag-1.json"
+  }
+ ]
+}

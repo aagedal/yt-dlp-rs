@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {"url": "https://sovietscloset.com/video/1337", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "video-page.html"},
+  {"url": "https://sovietscloset.com/video/9999", "status": 404, "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><head><title>404</title></head><body>Not found</body></html>"},
+  {"url": "https://sovietscloset.com/_nuxt/static/1793282596/video/1337/payload.js", "headers": {"Content-Type": "application/javascript"}, "body_file": "payload-1337.js"},
+  {"url": "https://iframe.mediadelivery.net/embed/5105/2f0cfbf4-3588-43a9-a7d6-7c9ea3755e67", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "embed-5105.html"},
+  {"url": "https://vz-06a92e77-510.b-cdn.net/2f0cfbf4-3588-43a9-a7d6-7c9ea3755e67/playlist.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "playlist.m3u8"},
+  {"url": "https://sovietscloset.com/Arma-3/Zeus-Games", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "playlist-page.html"},
+  {"url": "https://sovietscloset.com/_nuxt/static/1793282596/payload.js", "headers": {"Content-Type": "application/javascript"}, "body_file": "payload-global.js"}
+ ]
+}

@@ -1,0 +1,130 @@
+{
+ "routes": [
+  {
+   "url": "https://viaggi.corriere.it/video/norvegia-il-nuovo-ponte-spettacolare-sopra-la-cascata-di-voringsfossen/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "viaggi-norvegia.html"
+  },
+  {
+   "url": "https://video.corriere.it/video-json/5b7cd134-e2c1-11ea-89b3-b56dd0df2aa2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "video-json-5b7cd134.html"
+  },
+  {
+   "url": "https://video.corriere.it/video-json/b94c0d20-70c2-11ed-9572-e4b947a0ebd2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "video-json-b94c0d20.html"
+  },
+  {
+   "url": "https://video.rcs.it/video-json/iodonna-0001585037",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "video-json-iodonna.html"
+  },
+  {
+   "url": "https://video.rcs.it/video-json/leitv-0000125151",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "video-json-leitv.html"
+  },
+  {
+   "url": "https://www.leitv.it/benessere/mal-di-testa/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "leitv-page.html"
+  },
+  {
+   "url": "https://vod.rcsobjects.it/hls/corriere/fcs.quotidiani/VAM/2020/08/20/Vringsfossen_Norwegian_Scenic_Route_Hardangervidda_20200820104247_,8,5,2,00k.mp4.urlset/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-corriere.m3u8"
+  },
+  {
+   "url": "https://vod.rcsobjects.it/corriere/fcs.quotidiani/VAM/2020/08/20/Vringsfossen_Norwegian_Scenic_Route_Hardangervidda_20200820104247_800k.mp4",
+   "headers": {
+    "Content-Length": "3000000"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vod.rcsobjects.it/corriere/fcs.quotidiani/VAM/2020/08/20/Vringsfossen_Norwegian_Scenic_Route_Hardangervidda_20200820104247_500k.mp4",
+   "headers": {
+    "Content-Length": "3123457"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vod.rcsobjects.it/corriere/fcs.quotidiani/VAM/2020/08/20/Vringsfossen_Norwegian_Scenic_Route_Hardangervidda_20200820104247_200k.mp4",
+   "headers": {
+    "Content-Length": "3246914"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vod.rcsobjects.it/hls/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_,9,5,2,10,11,00k.mp4.urlset/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-iodonna.m3u8"
+  },
+  {
+   "url": "https://vod.rcsobjects.it/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_900k.mp4",
+   "headers": {
+    "Content-Length": "3370371"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vod.rcsobjects.it/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_500k.mp4",
+   "headers": {
+    "Content-Length": "3493828"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vod.rcsobjects.it/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_200k.mp4",
+   "headers": {
+    "Content-Length": "3617285"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vod.rcsobjects.it/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_1000k.mp4",
+   "headers": {
+    "Content-Length": "3740742"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vod.rcsobjects.it/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_1100k.mp4",
+   "headers": {
+    "Content-Length": "3864199"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vod.rcsobjects.it/hls/leitv/fcs.quotidiani/2021/03/06/malditestaquandolecausesonocervicalieposturali_20210306101635.mp4/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-leitv.m3u8"
+  },
+  {
+   "url": "https://vod.rcsobjects.it/leitv/fcs.quotidiani/2021/03/06/malditestaquandolecausesonocervicalieposturali_20210306101635.mp4",
+   "headers": {
+    "Content-Length": "3987656"
+   },
+   "body": ""
+  }
+ ]
+}

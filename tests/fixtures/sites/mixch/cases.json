@@ -1,0 +1,33 @@
+[
+ {
+  "url": "https://mixch.tv/u/16943797",
+  "args": [
+   "--print",
+   "%(id)s|%(uploader)s|%(view_count)s|%(comment_count)s|%(timestamp)s|%(is_live)s|%(formats.0.url)s"
+  ]
+ },
+ {
+  "url": "https://mixch.tv/u/1",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://mixch.tv/m/Ve8KNkJ5",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://mixch.tv/archive/421",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://mixch.tv/archive/777",
+  "args": [
+   "-J"
+  ]
+ }
+]

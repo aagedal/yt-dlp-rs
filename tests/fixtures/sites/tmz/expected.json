@@ -1,0 +1,60 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.tmz.com/videos/0-cegprt2p/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"url\": \"https://ovp.tmz.com/video/32/o/2022/12/27/326797321996495aa0101feb5c482982.mp4\", \"title\": \"No Charges Against Hillary Clinton? Harvey Says It Ain't Over Yet\", \"description\": \"Harvey talks about Director Comey\\u2019s decision not to prosecute Hillary Clinton.\", \"thumbnails\": [], \"duration\": 772, \"timestamp\": 1467831837, \"uploader\": \"TMZ Staff\", \"width\": 560, \"height\": 315, \"id\": \"http://www.tmz.com/videos/0-cegprt2p/\", \"webpage_url\": \"http://www.tmz.com/videos/0-cegprt2p/\", \"original_url\": \"http://www.tmz.com/videos/0-cegprt2p/\", \"webpage_url_basename\": \"0-cegprt2p\", \"webpage_url_domain\": \"tmz.com\", \"extractor\": \"TMZ\", \"extractor_key\": \"TMZ\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"http://www.tmz.com/videos/0-cegprt2p/\", \"fulltitle\": \"No Charges Against Hillary Clinton? Harvey Says It Ain't Over Yet\", \"duration_string\": \"12:52\", \"upload_date\": \"20160706\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"560x315\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 560x315\", \"requested_downloads\": [{\"_filename\": \"No Charges Against Hillary Clinton\\uff1f Harvey Says It Ain't Over Yet [http\\uff1a\\u29f8\\u29f8www.tmz.com\\u29f8videos\\u29f80-cegprt2p\\u29f8].mp4\", \"filename\": \"No Charges Against Hillary Clinton\\uff1f Harvey Says It Ain't Over Yet [http\\uff1a\\u29f8\\u29f8www.tmz.com\\u29f8videos\\u29f80-cegprt2p\\u29f8].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.tmz.com/videos/0-cegprt2p/",
+   "args": [
+    "--print",
+    "title,timestamp,uploader"
+   ],
+   "exit": 0,
+   "stdout": [
+    "No Charges Against Hillary Clinton? Harvey Says It Ain't Over Yet",
+    "1467831837",
+    "TMZ Staff"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.tmz.com/2016/01/01/no-json-ld/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [TMZ] Unable to extract JSON-LD; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tmz.com/2016/01/02/no-media-url/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [TMZ] No video found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

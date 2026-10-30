@@ -1,0 +1,77 @@
+{
+ "routes": [
+  {
+   "url": "https://wyborcza.pl/api-video/26207634",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video.json"
+  },
+  {
+   "url": "https://rv.im-g.pl/4/26207/26207634/26207634_130820_BORNAR_W_SENACIE_d.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "video.mpd"
+  },
+  {
+   "url": "https://wyborcza.pl/api/podcast?guid=100720&type=None",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "podcast.json"
+  },
+  {
+   "url": "https://audycje.tokfm.pl/getp/391275",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "tokfm_podcast.json"
+  },
+  {
+   "url": "https://api.podcast.radioagora.pl/api4/getSongUrl?podcast_id=91275&ppre=false&audio=mp3",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "song.json",
+   "ignore_query": [
+    "device_id"
+   ]
+  },
+  {
+   "url": "https://audycje.tokfm.pl/getp/399999",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[]"
+  },
+  {
+   "url": "https://api.podcast.radioagora.pl/api4/getSeries?series_id=218",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "series.json"
+  },
+  {
+   "url": "https://api.podcast.radioagora.pl/api4/getPodcasts?series_id=218&limit=30&offset=0&with_guests=true&with_leaders_for_mobile=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page0.json"
+  },
+  {
+   "url": "https://api.podcast.radioagora.pl/api4/getPodcasts?series_id=218&limit=30&offset=1&with_guests=true&with_leaders_for_mobile=true",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[]"
+  },
+  {
+   "url": "https://api.podcast.radioagora.pl/api4/getSeries?series_id=999",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[]"
+  }
+ ]
+}

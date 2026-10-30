@@ -1,0 +1,44 @@
+{
+ "routes": [
+  {
+   "url": "https://n1info.si/novice/svet/v-srbiji-samo-ta-konec-tedna-vec-kot-200-pozarov/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "00-n1info-si-novice-svet-v-srbiji-samo-ta-konec-tedna-vec-kot-2.html"
+  },
+  {
+   "url": "https://cdn-uc.brid.tv/live/partners/26827/streaming/2182656/2182656.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "01-cdn-uc-brid-tv-live-partners-26827-streaming-2182656-2182656.m3u8"
+  },
+  {
+   "url": "https://cdn-uc.brid.tv/live/partners/26827/streaming/2182499/2182499.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "02-cdn-uc-brid-tv-live-partners-26827-streaming-2182499-2182499.m3u8"
+  },
+  {
+   "url": "https://sportklub.n1info.rs/tenis/us-open/glava-telo-igra-kako-je-novak-ispustio-istorijsku-sansu/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "03-sportklub-n1info-rs-tenis-us-open-glava-telo-igra-kako-je-no.html"
+  },
+  {
+   "url": "https://n1info.si/novice/prazno/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>N1</title></head><body><p>No video</p></body></html>"
+  }
+ ]
+}

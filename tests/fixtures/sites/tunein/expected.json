@@ -1,0 +1,62 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://tunein.com/radio/Jazz24-885-s34682/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[tunein:station] Extracting URL: https://tunein.com/radio/Jazz24-885-s34682/",
+    "[tunein:station] s34682: Downloading JSON metadata",
+    "[tunein:station] s34682: Downloading JSON metadata",
+    "[info] Available formats for s34682:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC  ABR",
+    "-----------------------------------------------",
+    "0  mp3 unknown    | https | unknown mp3    128k"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://tunein.com/podcasts/World-News/BBC-News-p14/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"p14\", \"title\": \"BBC News\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"url\": \"https://tunein.com/podcasts/World-News/BBC-News-p14/?topicId=584178744\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"https://tunein.com/podcasts/World-News/BBC-News-p14/?topicId=584174747\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"https://tunein.com/podcasts/World-News/BBC-News-p14/?topicId=584171962\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://tunein.com/podcasts/World-News/BBC-News-p14/\", \"original_url\": \"https://tunein.com/podcasts/World-News/BBC-News-p14/\", \"webpage_url_basename\": \"BBC-News-p14\", \"webpage_url_domain\": \"tunein.com\", \"extractor\": \"tunein:podcast:program\", \"extractor_key\": \"TuneInPodcast\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://tunein.com/podcasts/Technology-Podcasts/Artificial-Intelligence-p1153019/?topicId=236404354",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"t236404354\", \"display_id\": \"236404354\", \"formats\": [{\"abr\": 20, \"ext\": \"mp3\", \"url\": \"https://media.blubrry.com/takeituneasy/content.blubrry.com/takeituneasy/lex_ai_mrbeast.mp3\", \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"series\": \"Lex Fridman Podcast\", \"series_id\": \"p1153019\", \"subtitles\": {}, \"title\": \"#351 \\u2013 MrBeast: Future of YouTube, Twitter, TikTok, and Instagram\", \"alt_title\": \"Technology Podcasts >\", \"cast\": [\"Lex Fridman\"], \"description\": \"MrBeast is a legendary YouTube creator. Please support this podcast by checking out our sponsors: - House of Macadamias: https://houseofmacadamias.com/lex and use code LEX to get 20% off your first order - Eight Sleep: https://www.eightsleep.com/lex...\", \"duration\": 8330, \"thumbnail\": \"http://cdn-profiles.tunein.com/p1153019/images/logoq.png?t=1\", \"timestamp\": 1673458571, \"webpage_url\": \"https://tunein.com/podcasts/Technology-Podcasts/Artificial-Intelligence-p1153019/?topicId=236404354\", \"original_url\": \"https://tunein.com/podcasts/Technology-Podcasts/Artificial-Intelligence-p1153019/?topicId=236404354\", \"webpage_url_basename\": \"Artificial-Intelligence-p1153019\", \"webpage_url_domain\": \"tunein.com\", \"extractor\": \"tunein:podcast\", \"extractor_key\": \"TuneInPodcastEpisode\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://cdn-profiles.tunein.com/p1153019/images/logoq.png?t=1\", \"id\": \"0\"}], \"fulltitle\": \"#351 \\u2013 MrBeast: Future of YouTube, Twitter, TikTok, and Instagram\", \"duration_string\": \"2:18:50\", \"upload_date\": \"20230111\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"abr\": 20, \"ext\": \"mp3\", \"url\": \"https://media.blubrry.com/takeituneasy/content.blubrry.com/takeituneasy/lex_ai_mrbeast.mp3\", \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"acodec\": \"mp3\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"#351 \\u2013 MrBeast\\uff1a Future of YouTube, Twitter, TikTok, and Instagram [t236404354].mp3\", \"filename\": \"#351 \\u2013 MrBeast\\uff1a Future of YouTube, Twitter, TikTok, and Instagram [t236404354].mp3\", \"__write_download_archive\": false}], \"abr\": 20, \"ext\": \"mp3\", \"url\": \"https://media.blubrry.com/takeituneasy/content.blubrry.com/takeituneasy/lex_ai_mrbeast.mp3\", \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://tunein.com/radio/Empty-s777/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [tunein:station] s777: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

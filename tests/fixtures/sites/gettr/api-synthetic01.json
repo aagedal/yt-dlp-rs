@@ -1,0 +1,16 @@
+{
+ "_t": "rc",
+ "rc": 0,
+ "result": {
+  "data": {
+   "_id": "synthetic01",
+   "uid": "nobody",
+   "txt": "Synthetic post without media",
+   "cdate": 1632782451058,
+   "htgs": []
+  },
+  "aux": {
+   "uinf": {}
+  }
+ }
+}

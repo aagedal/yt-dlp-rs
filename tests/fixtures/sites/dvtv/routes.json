@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://video.aktualne.cz/dvtv/vondra-o-ceskem-stoleti-pri-pohledu-na-havla-mi-bylo-trapne/r~dc0768de855511e49e4b0025900fea04/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "dvtv-001.html"
+  },
+  {
+   "url": "https://video.aktualne.cz/dvtv/dvtv-16-12-2014-utok-talibanu-boj-o-kliniku-uprchlici/r~973eb3bc854e11e498be002590604f2e/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "dvtv-002.html"
+  },
+  {
+   "url": "https://video.aktualne.cz/dvtv/none/r~00000000000000000000000000000000/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>DVTV</title></head><body><p>No player here.</p></body></html>"
+  },
+  {
+   "url": "https://video.aktualne.cz/dvtv/synthetic-playlist/r~11111111111111111111111111111111/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-playlist.html"
+  }
+ ]
+}

@@ -1,0 +1,70 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://media.rtvc.gov.co/kalturartvc/indexSC.html",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[RTVCKaltura] Extracting URL: https://media.rtvc.gov.co/kalturartvc/indexSC.html",
+    "[RTVCKaltura] indexSC: Downloading webpage",
+    "[RTVCKaltura] indexSC: Downloading m3u8 information",
+    "[RTVCKaltura] indexSC: Downloading JSON metadata",
+    "[RTVCKaltura] indexSC: Downloading m3u8 information",
+    "[info] Available formats for indexSC:",
+    "ID     EXT RESOLUTION |   TBR PROTO | VCODEC  ACODEC",
+    "-----------------------------------------------------",
+    "500-0  mp4 unknown    |  500k m3u8  | unknown unknown",
+    "500-1  mp4 unknown    |  500k m3u8  | unknown unknown",
+    "1500-0 mp4 unknown    | 1500k m3u8  | unknown unknown",
+    "1500-1 mp4 unknown    | 1500k m3u8  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://media.rtvc.gov.co/kalturartvc/indexSC.html",
+   "args": [
+    "--print",
+    "%(id)s|%(is_live)s|%(live_status)s|%(thumbnail)s|%(description)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "indexSC|True|is_live|https://rtvcplay-v2.s3-accelerate.amazonaws.com/s3fs-public/field/logo/streaming/logo-senal-colombia.png|<p>Haz parte de toda la programación de Señal Colombia como si estuvieras al frente de tu TV.</p>",
+    ""
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://media.rtvc.gov.co/kalturartvc/noconfig.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [RTVCKaltura] noconfig: Unable to extract player_config; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://media.rtvc.gov.co/kalturartvc/missing.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [RTVCKaltura] missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

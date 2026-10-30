@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "https://api.tunein.com/profiles/s34682",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "profile-s34682.json"
+  },
+  {
+   "url": "https://opml.radiotime.com/Tune.ashx?formats=mp3%2Caac%2Cogg%2Cflash%2Chls&id=s34682&render=json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "opml-s34682.json"
+  },
+  {
+   "url": "https://api.tunein.com/profiles/p14",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "profile-p14.json"
+  },
+  {
+   "url": "https://api.tunein.com/profiles/p14/contents?filter=t%3Afree&limit=20&offset=0",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "contents-p14.json"
+  },
+  {
+   "url": "https://api.tunein.com/profiles/p1153019",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "profile-p1153019.json"
+  },
+  {
+   "url": "https://api.tunein.com/profiles/t236404354",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "profile-t236404354.json"
+  },
+  {
+   "url": "https://opml.radiotime.com/Tune.ashx?formats=mp3%2Caac%2Cogg%2Cflash%2Chls&id=t236404354&render=json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "opml-t236404354.json"
+  },
+  {
+   "url": "https://api.tunein.com/profiles/s777",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "profile-empty.json"
+  },
+  {
+   "url": "https://opml.radiotime.com/Tune.ashx?formats=mp3%2Caac%2Cogg%2Cflash%2Chls&id=s777&render=json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "opml-empty.json"
+  }
+ ]
+}

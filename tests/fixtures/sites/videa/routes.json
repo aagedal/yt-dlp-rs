@@ -1,0 +1,69 @@
+{
+ "routes": [
+  {
+   "url": "http://videa.hu/videok/allatok/az-orult-kigyasz-285-kigyot-kigyo-8YfIAjxwWGwT8HVQ",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "video-page.html"
+  },
+  {
+   "url": "http://videa.hu/player?f=5.1007274.1204470.0&amp;enableJsApi=1&amp;videoFinishedEvent=1&amp;versionChangeCompleteEvent=1&amp;enableExtensions=1&amp;lang=en&amp;s=%7B%22loc%22%3A1%7D",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "player.html"
+  },
+  {
+   "url": "http://videa.hu/player/xml?f=5.1007274.1204470.0&amp%3BenableJsApi=1&amp%3BvideoFinishedEvent=1&amp%3BversionChangeCompleteEvent=1&amp%3BenableExtensions=1&amp%3Blang=en&amp%3Bs=%7B%22loc%22%3A1%7D&_t=vcGCCMGAOXvTDRqC",
+   "headers": {
+    "Content-Type": "text/xml; charset=utf-8"
+   },
+   "body_file": "video.xml",
+   "ignore_query": [
+    "_s"
+   ]
+  },
+  {
+   "url": "http://videa.hu/player?v=8YfIAjxwWGwT8HVQ",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "player.html"
+  },
+  {
+   "url": "http://videa.hu/player/xml?v=8YfIAjxwWGwT8HVQ&_t=vcGCCMGAOXvTDRqC",
+   "headers": {
+    "Content-Type": "text/xml; charset=utf-8"
+   },
+   "body_file": "video.xml",
+   "ignore_query": [
+    "_s"
+   ]
+  },
+  {
+   "url": "http://videa.hu/videok/synthetic/missing-SYNTHMISSING0001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-page.html"
+  },
+  {
+   "url": "http://videa.hu/player?v=SYNTHMISSING0001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "player.html"
+  },
+  {
+   "url": "http://videa.hu/player/xml?v=SYNTHMISSING0001&_t=vcGCCMGAOXvTDRqC",
+   "headers": {
+    "Content-Type": "text/xml; charset=utf-8"
+   },
+   "body_file": "synthetic-missing.xml",
+   "ignore_query": [
+    "_s"
+   ]
+  }
+ ]
+}

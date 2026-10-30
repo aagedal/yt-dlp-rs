@@ -1,0 +1,28 @@
+{
+ "routes": [
+  {
+   "url": "https://www.zapiks.fr/ep2s3-bon-appetit-eh-be-viva.html",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=UTF-8"
+   },
+   "body_file": "00-www-zapiks-fr-ep2s3-bon-appetit-eh-be-viva-html.html"
+  },
+  {
+   "url": "https://www.zapiks.fr/index.php?action=playerIframe&media_id=164049",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=UTF-8"
+   },
+   "body_file": "01-www-zapiks-fr-index-php-action-playeriframe-media-id-164049.html"
+  },
+  {
+   "url": "https://www.zapiks.fr/courchevel-hiver-2025-2026.html",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=UTF-8"
+   },
+   "body_file": "02-www-zapiks-fr-courchevel-hiver-2025-2026-html.html"
+  }
+ ]
+}

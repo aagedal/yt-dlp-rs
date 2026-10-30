@@ -1,0 +1,54 @@
+{
+ "routes": [
+  {
+   "url": "https://api.idagio.com/v2.0/metadata/tracks/30576943",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "track_meta.json"
+  },
+  {
+   "url": "https://api.idagio.com/v1.8/content/track/30576943?quality=0&format=2&client_type=web-4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "track_content.json"
+  },
+  {
+   "url": "https://api.idagio.com/v2.0/metadata/recordings/30576934",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "recording.json"
+  },
+  {
+   "url": "https://api.idagio.com/v2.0/metadata/albums/elgar-enigma-variations-in-the-south-serenade-for-strings",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "album.json"
+  },
+  {
+   "url": "https://api.idagio.com/v2.0/playlists/beethoven-the-most-beautiful-piano-music",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playlist.json"
+  },
+  {
+   "url": "https://api.idagio.com/v1.0/personal-playlists/99dad72e-7b3a-45a4-b216-867c08046ed8",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "personal.json"
+  },
+  {
+   "url": "https://api.idagio.com/v2.0/metadata/tracks/999",
+   "status": 406,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error_code\": \"idagio.error.blocked.location\"}"
+  }
+ ]
+}

@@ -2150,15 +2150,31 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // An extractor's own dict that is its own (only) format, built without
     // `None` values (`traverse_obj` dict templates): `untyped-dict;KEYS`.
-    // (`;subtitle=KEYS` orders the extractor's subtitle track keys.)
+    // (`;subtitle=KEYS` orders the extractor's subtitle track keys and
+    // `;chapter=KEYS` its chapter keys.)
     if let Some(spec) = shape.strip_prefix("untyped-dict;") {
         let mut parts = spec.split(';');
         let keys = parts.next().unwrap_or_default();
         for key in keys.split(',').filter(|key| !key.is_empty()) {
             replay.take(key);
         }
-        if let Some(subtitle_keys) = parts.find_map(|part| part.strip_prefix("subtitle=")) {
-            order_subtitle_tracks(&mut replay.out, subtitle_keys);
+        for part in parts {
+            if let Some(subtitle_keys) = part.strip_prefix("subtitle=") {
+                order_subtitle_tracks(&mut replay.out, subtitle_keys);
+            } else if let Some(chapter_keys) = part.strip_prefix("chapter=")
+                && let Some(Value::Array(chapters)) = replay.out.get_mut("chapters")
+            {
+                for chapter in chapters.iter_mut().filter_map(Value::as_object_mut) {
+                    let mut ordered = Map::new();
+                    for key in chapter_keys.split(',') {
+                        if let Some(value) = chapter.shift_remove(key) {
+                            ordered.insert(key.to_owned(), value);
+                        }
+                    }
+                    ordered.append(chapter);
+                    *chapter = ordered;
+                }
+            }
         }
     }
     // `AngelIE`: `merge_dicts(info_dict, json_ld)`.
@@ -2813,7 +2829,11 @@ fn shaped_playlist(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     if !matches!(
         shape.as_str(),
-        "html5-playlist" | "rss-playlist" | "xspf-playlist" | "typed-playlist"
+        "html5-playlist"
+            | "rss-playlist"
+            | "xspf-playlist"
+            | "typed-playlist"
+            | "typed-playlist-display"
     ) {
         return map;
     }
@@ -2830,6 +2850,15 @@ fn shaped_playlist(mut map: Map<String, Value>) -> Map<String, Value> {
             ("entries", Take),
             ("title", Assign),
             ("description", Assign),
+        ]
+    } else if shape == "typed-playlist-display" {
+        // `{'_type': 'playlist', 'id', 'display_id', 'title', 'entries'}`.
+        &[
+            ("_type", Take),
+            ("id", Take),
+            ("display_id", Assign),
+            ("title", Assign),
+            ("entries", Take),
         ]
     } else if shape == "rss-playlist" {
         // `_extract_rss`'s dict.

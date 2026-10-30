@@ -1,0 +1,21 @@
+[
+ {
+  "url": "https://aloula.sba.sa/en/episode/29102",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://aloula.sba.sa/en/episode/29102",
+  "args": [
+   "--print",
+   "%(.{id,display_id,title,episode,description,series,season_number,episode_number,thumbnail,duration,age_limit,http_headers,formats.0.format_id})j"
+  ]
+ },
+ {
+  "url": "https://aloula.sba.sa/en/episode/0",
+  "args": [
+   "-J"
+  ]
+ }
+]

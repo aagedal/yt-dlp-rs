@@ -1,0 +1,17 @@
+#EXTM3U
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=945766,RESOLUTION=960x540,FRAME-RATE=25.000,CODECS="avc1.42c01e,mp4a.40.2"
+https://vod.rcsobjects.it/hls/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_900k.mp4/index-v1-a1.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=657073,RESOLUTION=640x360,FRAME-RATE=25.000,CODECS="avc1.42c01e,mp4a.40.2"
+https://vod.rcsobjects.it/hls/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_500k.mp4/index-v1-a1.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=358403,RESOLUTION=416x234,FRAME-RATE=25.000,CODECS="avc1.42c01e,mp4a.40.2"
+https://vod.rcsobjects.it/hls/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_200k.mp4/index-v1-a1.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=986540,RESOLUTION=1270x720,FRAME-RATE=25.000,CODECS="avc1.42c01e,mp4a.40.2"
+https://vod.rcsobjects.it/hls/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_1000k.mp4/index-v1-a1.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=1130317,RESOLUTION=1270x720,FRAME-RATE=25.000,CODECS="avc1.42c01e,mp4a.40.2"
+https://vod.rcsobjects.it/hls/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_1100k.mp4/index-v1-a1.m3u8
+
+#EXT-X-I-FRAME-STREAM-INF:BANDWIDTH=239004,RESOLUTION=960x540,CODECS="avc1.42c01e",URI="https://vod.rcsobjects.it/hls/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_900k.mp4/iframes-v1-a1.m3u8"
+#EXT-X-I-FRAME-STREAM-INF:BANDWIDTH=151659,RESOLUTION=640x360,CODECS="avc1.42c01e",URI="https://vod.rcsobjects.it/hls/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_500k.mp4/iframes-v1-a1.m3u8"
+#EXT-X-I-FRAME-STREAM-INF:BANDWIDTH=71863,RESOLUTION=416x234,CODECS="avc1.42c01e",URI="https://vod.rcsobjects.it/hls/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_200k.mp4/iframes-v1-a1.m3u8"
+#EXT-X-I-FRAME-STREAM-INF:BANDWIDTH=258085,RESOLUTION=1270x720,CODECS="avc1.42c01e",URI="https://vod.rcsobjects.it/hls/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_1000k.mp4/iframes-v1-a1.m3u8"
+#EXT-X-I-FRAME-STREAM-INF:BANDWIDTH=292743,RESOLUTION=1270x720,CODECS="avc1.42c01e",URI="https://vod.rcsobjects.it/hls/iodonna/2020/10/02/artist-to-icon-madonna-sky-arte_20201002154941_1100k.mp4/iframes-v1-a1.m3u8"

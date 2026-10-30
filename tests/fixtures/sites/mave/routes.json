@@ -1,0 +1,9 @@
+{
+ "routes": [
+  {"url": "https://api.mave.digital/v1/website/ochenlichnoe/", "headers": {"Content-Type": "application/json"}, "body_file": "channel-ochenlichnoe.json"},
+  {"url": "https://api.mave.digital/v1/website/ochenlichnoe/episodes/25", "headers": {"Content-Type": "application/json"}, "body_file": "episode-25.json"},
+  {"url": "https://api.mave.digital/v1/website/ochenlichnoe/episodes/999", "status": 404, "headers": {"Content-Type": "application/json"}, "body": "{\"detail\":\"Not found\"}"},
+  {"url": "https://api.mave.digital/v1/website/budem/", "headers": {"Content-Type": "application/json"}, "body_file": "channel-budem.json"},
+  {"url": "https://api.mave.digital/v1/website/budem/episodes?view=all&page=1&sort=newest&format=all", "headers": {"Content-Type": "application/json"}, "body_file": "budem-episodes.json"}
+ ]
+}

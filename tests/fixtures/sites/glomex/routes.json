@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://integration-cloudfront-eu-west-1.mes.glomex.cloud/?integration_id=19syy24xjn1oqlpc&playlist_id=v-cb24uwg77hgh&current_url=https%3A%2F%2Fvideo.glomex.com%2Fsport%2Fv-cb24uwg77hgh-nach-2-0-sieg-guardiola-mit-mancity-vor-naechstem-titel",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-v-cb24uwg77hgh.json"
+  },
+  {
+   "url": "https://video-cdn-jwt-new.mes.glomex.cloud/v2/498347/v-cb24uwg77hgh/SYNTHETIC.JWT.TOKEN/stream.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "hls-master.m3u8"
+  },
+  {
+   "url": "https://integration-cloudfront-eu-west-1.mes.glomex.cloud/?integration_id=4059a013k56vb2yd&playlist_id=v-cfa6lye0dkdd-sf&current_url=https%3A%2F%2Fplayer.glomex.com%2F",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-error.json"
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://oc-video1.ruhr-uni-bochum.de/paella/ui/watch.html?id=ed063cd5-72c8-46b5-a60a-569243edcea8",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ed063cd5-72c8-46b5-a60a-569243edcea8\", \"formats\": [{\"url\": \"https://oc-p-video.it-services.ruhr-uni-bochum.de/static/mh_default_org/engage-player/ed063cd5-72c8-46b5-a60a-569243edcea8/18fb34b4-0c31-427c-bbd4-a5a8901cc87b/search_audiovideoemi.mp4\", \"ext\": \"mp4\", \"format_note\": null, \"resolution\": \"854x480\", \"fps\": 25, \"vbr\": 539, \"vcodec\": \"H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10\", \"abr\": 64, \"asr\": 48000, \"acodec\": \"AAC (Advanced Audio Coding)\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"tbr\": 603, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 854x480\"}, {\"url\": \"https://oc-p-video.it-services.ruhr-uni-bochum.de/static/mh_default_org/engage-player/ed063cd5-72c8-46b5-a60a-569243edcea8/da6081aa-8609-4e23-b7e6-e8a7830d2c81/search_audiovideoemi.mp4\", \"ext\": \"mp4\", \"format_note\": null, \"resolution\": \"1280x720\", \"fps\": 25, \"vbr\": 1165, \"vcodec\": \"H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10\", \"abr\": 96, \"asr\": 48000, \"acodec\": \"AAC (Advanced Audio Coding)\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"tbr\": 1261, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 1280x720\"}], \"title\": \"11 - Kryptographie - 24.11.2015\", \"series\": \"Kryptographie - WiSe 15/16\", \"season_id\": \"cf68a4a1-36b1-4a53-a6ba-61af5705a0d0\", \"creator\": \"Alexander May\", \"timestamp\": 1606208400, \"thumbnail\": \"https://oc-p-video.it-services.ruhr-uni-bochum.de/static/mh_default_org/engage-player/ed063cd5-72c8-46b5-a60a-569243edcea8/9a6d0cf4-13cc-4967-810e-53f380eb5d83/search_audiovideoemi.jpg\", \"webpage_url\": \"https://oc-video1.ruhr-uni-bochum.de/paella/ui/watch.html?id=ed063cd5-72c8-46b5-a60a-569243edcea8\", \"original_url\": \"https://oc-video1.ruhr-uni-bochum.de/paella/ui/watch.html?id=ed063cd5-72c8-46b5-a60a-569243edcea8\", \"webpage_url_basename\": \"watch.html\", \"webpage_url_domain\": \"oc-video1.ruhr-uni-bochum.de\", \"extractor\": \"Opencast\", \"extractor_key\": \"Opencast\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://oc-p-video.it-services.ruhr-uni-bochum.de/static/mh_default_org/engage-player/ed063cd5-72c8-46b5-a60a-569243edcea8/9a6d0cf4-13cc-4967-810e-53f380eb5d83/search_audiovideoemi.jpg\", \"id\": \"0\"}], \"display_id\": \"ed063cd5-72c8-46b5-a60a-569243edcea8\", \"fulltitle\": \"11 - Kryptographie - 24.11.2015\", \"upload_date\": \"20201124\", \"release_year\": null, \"creators\": [\"Alexander May\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://oc-p-video.it-services.ruhr-uni-bochum.de/static/mh_default_org/engage-player/ed063cd5-72c8-46b5-a60a-569243edcea8/da6081aa-8609-4e23-b7e6-e8a7830d2c81/search_audiovideoemi.mp4\", \"ext\": \"mp4\", \"resolution\": \"1280x720\", \"fps\": 25, \"vbr\": 1165, \"vcodec\": \"H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10\", \"abr\": 96, \"asr\": 48000, \"acodec\": \"AAC (Advanced Audio Coding)\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"tbr\": 1261, \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 1280x720\", \"_filename\": \"11 - Kryptographie - 24.11.2015 [ed063cd5-72c8-46b5-a60a-569243edcea8].mp4\", \"filename\": \"11 - Kryptographie - 24.11.2015 [ed063cd5-72c8-46b5-a60a-569243edcea8].mp4\", \"__write_download_archive\": false}], \"url\": \"https://oc-p-video.it-services.ruhr-uni-bochum.de/static/mh_default_org/engage-player/ed063cd5-72c8-46b5-a60a-569243edcea8/da6081aa-8609-4e23-b7e6-e8a7830d2c81/search_audiovideoemi.mp4\", \"ext\": \"mp4\", \"format_note\": null, \"resolution\": \"1280x720\", \"fps\": 25, \"vbr\": 1165, \"vcodec\": \"H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10\", \"abr\": 96, \"asr\": 48000, \"acodec\": \"AAC (Advanced Audio Coding)\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"tbr\": 1261, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://oc-video1.ruhr-uni-bochum.de/engage/ui/index.html?epFrom=cf68a4a1-36b1-4a53-a6ba-61af5705a0d0",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: cf68a4a1-36b1-4a53-a6ba-61af5705a0d0: An extractor error has occurred. (caused by KeyError('search-results')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://oc-video1.ruhr-uni-bochum.de/paella/ui/watch.html?id=00000000-0000-4000-8000-000000000000",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Opencast] 00000000-0000-4000-8000-000000000000: Video id was not found; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

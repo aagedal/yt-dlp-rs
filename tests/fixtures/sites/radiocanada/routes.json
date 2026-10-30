@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://services.radio-canada.ca/media/meta/v1/index.ashx?client_key=773aea60-0e80-41bb-9c7f-e6d7c3ad17fb&output=json&appCode=medianet&idMedia=7754998",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "radiocanada-medianet-0.json"
+  },
+  {
+   "url": "https://services.radio-canada.ca/media/validation/v2/?connectionType=hd&deviceType=ipad&multibitrate=true&client_key=773aea60-0e80-41bb-9c7f-e6d7c3ad17fb&output=json&appCode=medianet&idMedia=7754998",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "radiocanada-medianet-1.json"
+  },
+  {
+   "url": "https://rcavmedias.akamaized.net/91132b04-59c4-4eb7-9414-6a2f86e8e44b/2017-0720-1530/master.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "radiocanada-medianet-2.m3u8"
+  },
+  {
+   "url": "https://services.radio-canada.ca/media/meta/v1/index.ashx?client_key=773aea60-0e80-41bb-9c7f-e6d7c3ad17fb&output=json&appCode=toutv&idMedia=140872",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "radiocanada-toutv-0.json"
+  },
+  {
+   "url": "https://services.radio-canada.ca/media/validation/v2/?connectionType=hd&deviceType=ipad&multibitrate=true&client_key=773aea60-0e80-41bb-9c7f-e6d7c3ad17fb&output=json&appCode=toutv&idMedia=140872",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "radiocanada-toutv-1.json"
+  },
+  {
+   "url": "https://services.radio-canada.ca/media/meta/v1/index.ashx?client_key=773aea60-0e80-41bb-9c7f-e6d7c3ad17fb&output=json&appCode=medianet&idMedia=7527184",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "radiocanada-audiovideo-0.json"
+  },
+  {
+   "url": "https://services.radio-canada.ca/media/validation/v2/?connectionType=hd&deviceType=ipad&multibitrate=true&client_key=773aea60-0e80-41bb-9c7f-e6d7c3ad17fb&output=json&appCode=medianet&idMedia=7527184",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "radiocanada-audiovideo-1.json"
+  },
+  {
+   "url": "https://rcavmedias.akamaized.net/e5e21fff-b3e9-4db6-ae5e-a6b092ed387d/2305-1243/master.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "radiocanada-audiovideo-2.m3u8"
+  }
+ ]
+}

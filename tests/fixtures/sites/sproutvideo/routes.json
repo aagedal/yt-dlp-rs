@@ -1,0 +1,47 @@
+{
+ "routes": [
+  {
+   "url": "https://videos.sproutvideo.com/embed/4c9dddb01910e3c9c4/0fc24387c4f24ee3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "embed-4c9dddb01910e3c9c4.html"
+  },
+  {
+   "url": "https://hls2.videos.sproutvideo.com/49baec34e9983ed24492919e974bd436/86f37744278646b0dc7c2f60483e8382/video/index.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9obHMyLnZpZGVvcy5zcHJvdXR2aWRlby5jb20vNDliYWVjMzRlOTk4M2VkMjQ0OTI5MTllOTc0YmQ0MzYvODZmMzc3NDQyNzg2NDZiMGRjN2MyZjYwNDgzZTgzODIvKi5tM3U4P3Nlc3Npb25JRD0wMzZmNzY5OS03ZWU5LTQ5N2EtOWJkMS0zOTI1OWM1YWQ4YTAiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTMzODgwMTV9fX1dfQ__&Signature=ApkQK2hb~3CZmqmHidmoDUHMcXcqbmZOigOwQX62eFYVplVR1dcTs8phyeBI-4InAFNexbIphZT6ao81~M4H5X2Rd9opuqC6faaeRQamwFlhID3L-0vDkEDMwQgTfG0onKyVLbRMFGFVhDMDRqZQmipkzfYMpQXF3PJZ0s7Wr8HAzSrtpVqzebP3ATWaE7Y8m32wvPZGdMrLHEbA~3XAH1t5cbHYQdzaxiDtMRkle5pou8WP5Pltvxc-v2aFiMhRo9aZp~evTwrm5CI-mrEXRbtnUROIdjiGbmYbW543Dy6pZiM-MUW-k1ujixKQk1ntnE~NIlLVeBzBYm5dpgbxZg__&Key-Pair-Id=APKAIB5DGCGAQJ4GGIUQ&sessionID=036f7699-7ee9-497a-9bd1-39259c5ad8a0",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-index.m3u8"
+  },
+  {
+   "url": "https://videos.sproutvideo.com/embed/4c9dddb01910e3c9c4/aaaaaaaaaaaaaaaa",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-embed.html"
+  },
+  {
+   "url": "https://videos.sproutvideo.com/embed/0123456789abcdef/fedcba9876543210",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-wrong.html"
+  },
+  {
+   "url": "https://how-to-video.vids.io/videos/799cd8b11c10efc1f0/how-to-video-live-streaming",
+   "status": 403,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "vids-password.html"
+  },
+  {
+   "url": "https://synthetic.vids.io/videos/0123456789abcdef01/synthetic-embed",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-vids.html"
+  }
+ ]
+}

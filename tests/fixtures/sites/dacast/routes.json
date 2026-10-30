@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://playback.dacast.com/content/info?contentId=acae82153ef4d7a7344ae4eaa86af534-vod-1c6143e3-5a06-371d-8695-19b96ea49090&provider=universe",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "vod-info.json"
+  },
+  {
+   "url": "https://playback.dacast.com/content/access?contentId=acae82153ef4d7a7344ae4eaa86af534-vod-1c6143e3-5a06-371d-8695-19b96ea49090&provider=universe",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "vod-access.json"
+  },
+  {
+   "url": "https://cdn-01.vod.adaptive.dacast.com/usp/1c6143e3-5a06-371d-8695-19b96ea49090.ism/.m3u8?context=uwIBq%2FboPZGdHthoTL4ZSqI66sQJtqwioi5ndqQUNRtXON97TcPGUa7FvPpBVMrNtXlcMHnprik3ZLv57%2Bvt%2FEIh5lgERLGS74EbEWF9u5Z86DyohvdviS8UGNG9ZBWElK12zrvbK0uBdPI6uVA3VcLVpmyynB8YTGnbYLiHQdk0wdgIFr%2FdhynAqqopmxelmVfTu3fwSdC%2BH1ttgNR0YG%2B%2BTu5EMX%2FstxsiqKJuYzFVOisvvd06c0KWSRJX8RxmFOTHKiJJVTZqDZqzBSXvb5JcnihiJwOlUdU6bGV8JnfVO67Y7V33h242DwhALFl%2Bc4HeJTPiKJf6y%2FwWVMY0RlOEGGLBesI6dcReqINCWMvN9N1z6%2BiNZoXALYfow4SjJgIzzDb0Zei%2B2rKRURjKeBwb8zDhaJAfhZ7cz6JW7UHiDrJr6HDTnL%2F%2BZ9rWFrGbs1Vxmb%2FJ4W5x91IxAH57u5ywjm62HLWiG4PRAB%2BNjnGwvTz2AowqOFihO7914VMxvDUqAfUvbheBEGTqAUD4qmySHJ48FaSKsLQ58%2B7sNX23kh3eOA%3D%3D",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "vod-hls.m3u8"
+  },
+  {
+   "url": "https://playback.dacast.com/content/info?contentId=943bb1ab3c03695ba85330d92d6d226e-playlist-b632eb053cac17a9c9a02bcfc827f2d8&provider=universe",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playlist-info.json"
+  },
+  {
+   "url": "https://playback.dacast.com/content/info?contentId=acae82153ef4d7a7344ae4eaa86af534-vod-synthetic-offline&provider=universe",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "synthetic-info.json"
+  },
+  {
+   "url": "https://playback.dacast.com/content/access?contentId=acae82153ef4d7a7344ae4eaa86af534-vod-synthetic-offline&provider=universe",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "synthetic-offline-access.json"
+  },
+  {
+   "url": "https://playback.dacast.com/content/info?contentId=acae82153ef4d7a7344ae4eaa86af534-vod-synthetic-denied&provider=universe",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "synthetic-info.json"
+  },
+  {
+   "url": "https://playback.dacast.com/content/access?contentId=acae82153ef4d7a7344ae4eaa86af534-vod-synthetic-denied&provider=universe",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "synthetic-denied-access.json"
+  }
+ ]
+}

@@ -1,0 +1,65 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://aloula.sba.sa/en/episode/29102",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Faulio] Extracting URL: https://aloula.sba.sa/en/episode/29102",
+    "[Faulio] 29102: Downloading webpage",
+    "[Faulio] 29102: Downloading JSON metadata",
+    "[Faulio] 29102: Downloading JSON metadata",
+    "[Faulio] 29102: Downloading m3u8 information",
+    "[Faulio] 29102: Downloading MPD manifest",
+    "[info] Available formats for aloula.faulio.com_29102:",
+    "ID            EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC        VBR ACODEC      ABR ASR MORE INFO",
+    "---------------------------------------------------------------------------------------------------------------------------",
+    "dash-f1-a1-x3 m4a audio only     | ~ 37.61MiB   65k dash  | audio only        mp4a.40.2   65k 48k [en] DASH audio, m4a_dash",
+    "dash-f3-a1-x3 m4a audio only     | ~ 73.89MiB  128k dash  | audio only        mp4a.40.2  128k 48k [en] DASH audio, m4a_dash",
+    "dash-f1-v1-x3 mp4 426x240     25 | ~434.07MiB  750k dash  | avc1.640015  750k video only          DASH video, mp4_dash",
+    "hls-814       mp4 426x240     25 | ~471.68MiB  815k m3u8  | avc1.640015       mp4a.40.2",
+    "dash-f2-v1-x3 mp4 640x360     25 | ~607.70MiB 1050k dash  | avc1.64001e 1050k video only          DASH video, mp4_dash",
+    "hls-1114      mp4 640x360     25 | ~645.31MiB 1115k m3u8  | avc1.64001e       mp4a.40.2",
+    "dash-f3-v1-x3 mp4 854x480     25 | ~781.33MiB 1350k dash  | avc1.64001e 1350k video only          DASH video, mp4_dash",
+    "hls-1477      mp4 854x480     25 | ~855.22MiB 1478k m3u8  | avc1.64001e       mp4a.40.2",
+    "dash-f4-v1-x3 mp4 1280x720    25 | ~  1.53GiB 2700k dash  | avc1.64001f 2700k video only          DASH video, mp4_dash",
+    "hls-2827      mp4 1280x720    25 | ~  1.60GiB 2828k m3u8  | avc1.64001f       mp4a.40.2",
+    "dash-f5-v1-x3 mp4 1920x1080   25 | ~  2.80GiB 4950k dash  | avc1.640028 4950k video only          DASH video, mp4_dash",
+    "hls-5077      mp4 1920x1080   25 | ~  2.87GiB 5078k m3u8  | avc1.640028       mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://aloula.sba.sa/en/episode/29102",
+   "args": [
+    "--print",
+    "%(.{id,display_id,title,episode,description,series,season_number,episode_number,thumbnail,duration,age_limit,http_headers,formats.0.format_id})j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"aloula.faulio.com_29102\", \"display_id\": \"\\u0647\\u0630\\u0627-\\u0645\\u0643\\u0627\\u0646\\u0643-03-004-v-29102\", \"title\": \"\\u0627\\u0644\\u062d\\u0644\\u0642\\u0629 4\", \"episode\": \"\\u0627\\u0644\\u062d\\u0644\\u0642\\u0629 4\", \"description\": \"\", \"series\": \"\\u0647\\u0630\\u0627 \\u0645\\u0643\\u0627\\u0646\\u0643\", \"season_number\": 3, \"episode_number\": 4, \"thumbnail\": \"https://embed.kwikmotion.com/VideosThumbsImages/sba/2200000/Poster-DQB5glMlwweWKxQbycXcbQ-67-715629567-1.jpg\", \"duration\": 4855, \"age_limit\": 3, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://aloula.sba.sa/en/episode/29102\", \"Origin\": \"https://aloula.sba.sa\"}, \"formats.0.format_id\": \"dash-f1-a1-x3\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://aloula.sba.sa/en/episode/0",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [Faulio] 0: Unable to download JSON metadata: HTTP Error 404: Not Found",
+    "ERROR: [Faulio] 0: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

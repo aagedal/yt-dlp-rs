@@ -1,0 +1,59 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://myspace.com/fiveminutestothestage/video/little-big-town/109594919",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"109594919\", \"title\": \"Little Big Town\", \"description\": \"This country quartet was all smiles\\u00a0while\\u00a0playing a sold out show at the Pacific\\u00a0Amphitheatre\\u00a0in Orange County, California.\", \"thumbnail\": \"https://content.myspacecdn.com/images04/2/b7322b0bab5b47fbb6eefbe609f28bba/300w.jpg\", \"uploader\": \"Five Minutes to the Stage\", \"uploader_id\": \"fiveminutestothestage\", \"duration\": 201, \"timestamp\": 1414108751, \"formats\": [{\"format_id\": \"hls\", \"url\": \"https://content.myspacecdn.com/videos01/4/5acf89af8e2342c28c42604b23240a85/wifi.mp4.m3u8?3nZE0QPP2Vd3Ap6SSzFOMQTQpYxDrK4LBbc4uleGIfvm9BHYGpcfm5ND9Blc4VGHZWuS2zmEf3pwK3PZPQvp6I4hlhsXfkPmaSAMd-yMJRrOLSd5NjqyuOtwzRnSgZnmVTIyRWKjtQRl8Q\", \"protocol\": \"m3u8_native\", \"ext\": \"mp4\", \"vcodec\": null, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - unknown\"}, {\"format_id\": \"rtmp\", \"url\": \"rtmpe://fms-videos.myspacecdn.com/\", \"play_path\": \"mp4:videos01/4/5acf89af8e2342c28c42604b23240a85/vid.mp4\", \"player_url\": \"https://x.myspacecdn.com/new/common/swf/videoPlayer.74bbdd4cf8f3974ed0986ec1ed8fadc0.swf\", \"protocol\": \"rtmp\", \"ext\": \"flv\", \"width\": 1280, \"height\": 720, \"vcodec\": null, \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"rtmp - 1280x720\"}, {\"format_id\": \"http\", \"url\": \"https://content.myspacecdn.com/videos01/4/5acf89af8e2342c28c42604b23240a85/vid.mp4?t=1793369927_c0e1ecfbd0f078da5ae91459ced36a58\", \"width\": 1280, \"height\": 720, \"vcodec\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - 1280x720\"}], \"webpage_url\": \"https://myspace.com/fiveminutestothestage/video/little-big-town/109594919\", \"original_url\": \"https://myspace.com/fiveminutestothestage/video/little-big-town/109594919\", \"webpage_url_basename\": \"109594919\", \"webpage_url_domain\": \"myspace.com\", \"extractor\": \"MySpace\", \"extractor_key\": \"MySpace\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://content.myspacecdn.com/images04/2/b7322b0bab5b47fbb6eefbe609f28bba/300w.jpg\", \"id\": \"0\"}], \"display_id\": \"109594919\", \"fulltitle\": \"Little Big Town\", \"duration_string\": \"3:21\", \"upload_date\": \"20141023\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"http\", \"url\": \"https://content.myspacecdn.com/videos01/4/5acf89af8e2342c28c42604b23240a85/vid.mp4?t=1793369927_c0e1ecfbd0f078da5ae91459ced36a58\", \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - 1280x720\", \"_filename\": \"Little Big Town [109594919].mp4\", \"filename\": \"Little Big Town [109594919].mp4\", \"__write_download_archive\": false}], \"format_id\": \"http\", \"url\": \"https://content.myspacecdn.com/videos01/4/5acf89af8e2342c28c42604b23240a85/vid.mp4?t=1793369927_c0e1ecfbd0f078da5ae91459ced36a58\", \"width\": 1280, \"height\": 720, \"vcodec\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://myspace.com/killsorrow/music/song/of-weakened-soul...-93388656-103880681",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"93388656\", \"title\": \"Of weakened soul...\", \"uploader\": \"Killsorrow\", \"uploader_id\": \"killsorrow\", \"thumbnail\": \"https://cdn.example.test/killsorrow/93388656.jpg\", \"duration\": 263, \"formats\": [{\"format_id\": \"hls\", \"url\": \"https://cdn.example.test/killsorrow/93388656/index.m3u8\", \"protocol\": \"m3u8_native\", \"ext\": \"m4a\", \"vcodec\": \"none\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - audio only\"}, {\"format_id\": \"http\", \"url\": \"https://cdn.example.test/killsorrow/93388656.mp3\", \"width\": null, \"height\": null, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - audio only\"}], \"webpage_url\": \"https://myspace.com/killsorrow/music/song/of-weakened-soul...-93388656-103880681\", \"original_url\": \"https://myspace.com/killsorrow/music/song/of-weakened-soul...-93388656-103880681\", \"webpage_url_basename\": \"of-weakened-soul...-93388656-103880681\", \"webpage_url_domain\": \"myspace.com\", \"extractor\": \"MySpace\", \"extractor_key\": \"MySpace\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.example.test/killsorrow/93388656.jpg\", \"id\": \"0\"}], \"display_id\": \"93388656\", \"fulltitle\": \"Of weakened soul...\", \"duration_string\": \"4:23\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"http\", \"url\": \"https://cdn.example.test/killsorrow/93388656.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - audio only\", \"_filename\": \"Of weakened soul... [93388656].mp3\", \"filename\": \"Of weakened soul... [93388656].mp3\", \"__write_download_archive\": false}], \"format_id\": \"http\", \"url\": \"https://cdn.example.test/killsorrow/93388656.mp3\", \"width\": null, \"height\": null, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [MySpace] unable to extract player URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://myspace.com/killsorrow/music/album/the-demo-18596029",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"id\": \"18596029\", \"display_id\": \"the-demo-18596029\", \"title\": \"The Demo\", \"entries\": [{\"ie_key\": \"MySpace\", \"_type\": \"url\", \"url\": \"https://myspace.com/killsorrow/music/song/of-weakened-soul...-93388656-103880681\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"MySpace\", \"_type\": \"url\", \"url\": \"https://myspace.com/killsorrow/music/song/second-track-93388657-103880682\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://myspace.com/killsorrow/music/album/the-demo-18596029\", \"original_url\": \"https://myspace.com/killsorrow/music/album/the-demo-18596029\", \"webpage_url_basename\": \"the-demo-18596029\", \"webpage_url_domain\": \"myspace.com\", \"extractor\": \"MySpace:album\", \"extractor_key\": \"MySpaceAlbum\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://myspace.com/killsorrow/video/no-context/555",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [MySpace] unable to extract player URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [MySpace] Unable to extract context; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

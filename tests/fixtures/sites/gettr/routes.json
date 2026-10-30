@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://www.gettr.com/post/pcf6uv838f",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "post-pcf6uv838f.html"
+  },
+  {
+   "url": "https://api.gettr.com/u/post/pcf6uv838f?incl=%22poststats%7Cuserinfo%22",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-pcf6uv838f.json"
+  },
+  {
+   "url": "https://media.gettr.com/group21/origin/2021/09/27/22/40/50a193fd-5230-5035-d413-551735d4663d/out.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://gettr.com/post/synthetic01",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic01.html"
+  },
+  {
+   "url": "https://api.gettr.com/u/post/synthetic01?incl=%22poststats%7Cuserinfo%22",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api-synthetic01.json"
+  }
+ ]
+}

@@ -1,0 +1,43 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.3cat.cat/3cat/lespot-de-la-marato-de-tv3/video/5630208/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5630208\", \"title\": \"L'espot de La Marat\\u00f3 2016: Ictus i les lesions medul\\u00b7lars i cerebrals traum\\u00e0tiques\", \"description\": \"Un instant pot canviar-ho tot. La Marat\\u00f3 2016 posa el focus en l'ictus i les lesions medul\\u00b7lars i cerebrals traum\\u00e0tiques, situacions que poden capgirar una vida de cop i que la recerca busca comprendre i tractar millor.\", \"duration\": 79, \"timestamp\": 1478608140, \"thumbnails\": [{\"url\": \"https://img.3cat.cat/multimedia/jpg/5/5/1790856367955.jpg\", \"width\": 670, \"height\": 378, \"id\": \"0\", \"resolution\": \"670x378\"}], \"subtitles\": {}, \"formats\": [{\"height\": 480, \"url\": \"https://mp4-down-medium-int.3catvideos.cat/9/5/1478536096959.mp4\", \"format_id\": \"480p\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"480p - 480p\"}, {\"height\": 720, \"url\": \"https://mp4-down-high-int.3catvideos.cat/0/3/1478536101330.mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\"}], \"age_limit\": 0, \"alt_title\": \"EsportMarat\\u00f32016WEB_PerPublicar\", \"episode_number\": null, \"categories\": [\"Divulgaci\\u00f3\"], \"series\": \"Dedicada a l'ictus i les lesions medul\\u00b7lars i cerebrals traum\\u00e0tiques\", \"webpage_url\": \"https://www.3cat.cat/3cat/lespot-de-la-marato-de-tv3/video/5630208/\", \"original_url\": \"https://www.3cat.cat/3cat/lespot-de-la-marato-de-tv3/video/5630208/\", \"webpage_url_basename\": \"5630208\", \"webpage_url_domain\": \"3cat.cat\", \"extractor\": \"CCMA\", \"extractor_key\": \"CCMA\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://img.3cat.cat/multimedia/jpg/5/5/1790856367955.jpg\", \"display_id\": \"5630208\", \"fulltitle\": \"L'espot de La Marat\\u00f3 2016: Ictus i les lesions medul\\u00b7lars i cerebrals traum\\u00e0tiques\", \"duration_string\": \"1:19\", \"upload_date\": \"20161108\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"height\": 720, \"url\": \"https://mp4-down-high-int.3catvideos.cat/0/3/1478536101330.mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\", \"_filename\": \"L'espot de La Marat\\u00f3 2016\\uff1a Ictus i les lesions medul\\u00b7lars i cerebrals traum\\u00e0tiques [5630208].mp4\", \"filename\": \"L'espot de La Marat\\u00f3 2016\\uff1a Ictus i les lesions medul\\u00b7lars i cerebrals traum\\u00e0tiques [5630208].mp4\", \"__write_download_archive\": false}], \"height\": 720, \"url\": \"https://mp4-down-high-int.3catvideos.cat/0/3/1478536101330.mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.3cat.cat/3cat/el-consell-de-savis-analitza-el-derbi/audio/943685/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"943685\", \"title\": \"El Consell de Savis analitza el derbi\", \"description\": \"Eudald Serra (Catalunya R\\u00e0dio), Xavi Torres (TV3), Rom\\u00e1n Mart\\u00ednez (L'Esportiu) i Edu Polo (Mundo Deportivo) expliquen les claus del derbi d'aquest diumenge al Camp Nou.\", \"duration\": 821, \"timestamp\": 1482011700, \"thumbnails\": [{\"url\": \"https://img.3cat.cat/multimedia/jpg/8/9/1482002602598.jpg\", \"width\": 670, \"height\": 378, \"id\": \"0\", \"resolution\": \"670x378\"}], \"subtitles\": {}, \"formats\": [{\"url\": \"https://audios.3catvideos.cat/multimedia/mp3/3/5/1482002416753.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}], \"age_limit\": null, \"alt_title\": null, \"episode_number\": null, \"categories\": [\"Esports\"], \"series\": \"Tot gira\", \"webpage_url\": \"https://www.3cat.cat/3cat/el-consell-de-savis-analitza-el-derbi/audio/943685/\", \"original_url\": \"https://www.3cat.cat/3cat/el-consell-de-savis-analitza-el-derbi/audio/943685/\", \"webpage_url_basename\": \"943685\", \"webpage_url_domain\": \"3cat.cat\", \"extractor\": \"CCMA\", \"extractor_key\": \"CCMA\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://img.3cat.cat/multimedia/jpg/8/9/1482002602598.jpg\", \"display_id\": \"943685\", \"fulltitle\": \"El Consell de Savis analitza el derbi\", \"duration_string\": \"13:41\", \"upload_date\": \"20161217\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://audios.3catvideos.cat/multimedia/mp3/3/5/1482002416753.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"El Consell de Savis analitza el derbi [943685].mp3\", \"filename\": \"El Consell de Savis analitza el derbi [943685].mp3\", \"__write_download_archive\": false}], \"url\": \"https://audios.3catvideos.cat/multimedia/mp3/3/5/1482002416753.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.3cat.cat/3cat/synthetic/video/1/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 1: An extractor error has occurred. (caused by KeyError('informacio')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

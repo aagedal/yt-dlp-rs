@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "http://api-media.3cat.cat/pvideo/media.jsp?media=video&idint=5630208&format=dm",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "media-video.json"
+  },
+  {
+   "url": "http://api-media.3cat.cat/pvideo/media.jsp?media=audio&idint=943685&format=dm",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "media-audio.json"
+  },
+  {
+   "url": "http://api-media.3cat.cat/pvideo/media.jsp?media=video&idint=1&format=dm",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "media-error.json"
+  }
+ ]
+}

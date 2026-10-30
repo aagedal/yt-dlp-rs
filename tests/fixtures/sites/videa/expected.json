@@ -1,0 +1,57 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://videa.hu/videok/allatok/az-orult-kigyasz-285-kigyot-kigyo-8YfIAjxwWGwT8HVQ",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"8YfIAjxwWGwT8HVQ\", \"title\": \"Az \\u0151r\\u00fclt k\\u00edgy\\u00e1sz 285 k\\u00edgy\\u00f3t enged szabadon\", \"thumbnail\": \"https://videa.hu/static/still/1.0.5.1007274.1204470.3\", \"duration\": 21, \"age_limit\": 0, \"formats\": [{\"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"url\": \"https://videa.hu/static/360p/5.1007274.1204470.1.0.1.1?md5=BChvRF_XXUDXWaqoCH5aEA&expires=1793395158\", \"ext\": \"mp4\", \"format_id\": \"360p\", \"width\": 640, \"height\": 360, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 640x360\"}, {\"vcodec\": \"vp9\", \"acodec\": \"opus\", \"dynamic_range\": \"SDR\", \"url\": \"https://videa.hu/static/w720p/5.1007274.1204470.1.0.1.1?md5=JfyLsC1eaWhpDJvsy2SEmg&expires=1793395158\", \"ext\": \"webm\", \"format_id\": \"720p\", \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\"}], \"webpage_url\": \"http://videa.hu/videok/allatok/az-orult-kigyasz-285-kigyot-kigyo-8YfIAjxwWGwT8HVQ\", \"original_url\": \"http://videa.hu/videok/allatok/az-orult-kigyasz-285-kigyot-kigyo-8YfIAjxwWGwT8HVQ\", \"webpage_url_basename\": \"az-orult-kigyasz-285-kigyot-kigyo-8YfIAjxwWGwT8HVQ\", \"webpage_url_domain\": \"videa.hu\", \"extractor\": \"Videa\", \"extractor_key\": \"Videa\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://videa.hu/static/still/1.0.5.1007274.1204470.3\", \"id\": \"0\"}], \"display_id\": \"8YfIAjxwWGwT8HVQ\", \"fulltitle\": \"Az \\u0151r\\u00fclt k\\u00edgy\\u00e1sz 285 k\\u00edgy\\u00f3t enged szabadon\", \"duration_string\": \"21\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"vcodec\": \"vp9\", \"acodec\": \"opus\", \"dynamic_range\": \"SDR\", \"url\": \"https://videa.hu/static/w720p/5.1007274.1204470.1.0.1.1?md5=JfyLsC1eaWhpDJvsy2SEmg&expires=1793395158\", \"ext\": \"webm\", \"format_id\": \"720p\", \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\", \"_filename\": \"Az \\u0151r\\u00fclt k\\u00edgy\\u00e1sz 285 k\\u00edgy\\u00f3t enged szabadon [8YfIAjxwWGwT8HVQ].webm\", \"filename\": \"Az \\u0151r\\u00fclt k\\u00edgy\\u00e1sz 285 k\\u00edgy\\u00f3t enged szabadon [8YfIAjxwWGwT8HVQ].webm\", \"__write_download_archive\": false}], \"vcodec\": \"vp9\", \"acodec\": \"opus\", \"dynamic_range\": \"SDR\", \"url\": \"https://videa.hu/static/w720p/5.1007274.1204470.1.0.1.1?md5=JfyLsC1eaWhpDJvsy2SEmg&expires=1793395158\", \"ext\": \"webm\", \"format_id\": \"720p\", \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://videa.hu/player?v=8YfIAjxwWGwT8HVQ",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"8YfIAjxwWGwT8HVQ\", \"title\": \"Az \\u0151r\\u00fclt k\\u00edgy\\u00e1sz 285 k\\u00edgy\\u00f3t enged szabadon\", \"thumbnail\": \"https://videa.hu/static/still/1.0.5.1007274.1204470.3\", \"duration\": 21, \"age_limit\": 0, \"formats\": [{\"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"url\": \"https://videa.hu/static/360p/5.1007274.1204470.1.0.1.1?md5=BChvRF_XXUDXWaqoCH5aEA&expires=1793395158\", \"ext\": \"mp4\", \"format_id\": \"360p\", \"width\": 640, \"height\": 360, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 640x360\"}, {\"vcodec\": \"vp9\", \"acodec\": \"opus\", \"dynamic_range\": \"SDR\", \"url\": \"https://videa.hu/static/w720p/5.1007274.1204470.1.0.1.1?md5=JfyLsC1eaWhpDJvsy2SEmg&expires=1793395158\", \"ext\": \"webm\", \"format_id\": \"720p\", \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\"}], \"webpage_url\": \"http://videa.hu/player?v=8YfIAjxwWGwT8HVQ\", \"original_url\": \"http://videa.hu/player?v=8YfIAjxwWGwT8HVQ\", \"webpage_url_basename\": \"player\", \"webpage_url_domain\": \"videa.hu\", \"extractor\": \"Videa\", \"extractor_key\": \"Videa\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://videa.hu/static/still/1.0.5.1007274.1204470.3\", \"id\": \"0\"}], \"display_id\": \"8YfIAjxwWGwT8HVQ\", \"fulltitle\": \"Az \\u0151r\\u00fclt k\\u00edgy\\u00e1sz 285 k\\u00edgy\\u00f3t enged szabadon\", \"duration_string\": \"21\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"vcodec\": \"vp9\", \"acodec\": \"opus\", \"dynamic_range\": \"SDR\", \"url\": \"https://videa.hu/static/w720p/5.1007274.1204470.1.0.1.1?md5=JfyLsC1eaWhpDJvsy2SEmg&expires=1793395158\", \"ext\": \"webm\", \"format_id\": \"720p\", \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\", \"_filename\": \"Az \\u0151r\\u00fclt k\\u00edgy\\u00e1sz 285 k\\u00edgy\\u00f3t enged szabadon [8YfIAjxwWGwT8HVQ].webm\", \"filename\": \"Az \\u0151r\\u00fclt k\\u00edgy\\u00e1sz 285 k\\u00edgy\\u00f3t enged szabadon [8YfIAjxwWGwT8HVQ].webm\", \"__write_download_archive\": false}], \"vcodec\": \"vp9\", \"acodec\": \"opus\", \"dynamic_range\": \"SDR\", \"url\": \"https://videa.hu/static/w720p/5.1007274.1204470.1.0.1.1?md5=JfyLsC1eaWhpDJvsy2SEmg&expires=1793395158\", \"ext\": \"webm\", \"format_id\": \"720p\", \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://videa.hu/videok/synthetic/missing-SYNTHMISSING0001",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Videa] SYNTHMISSING0001: Could not find XML element sources; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://videa.hu/videok/synthetic/unknown-NOROUTE000001",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Videa] NOROUTE000001: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

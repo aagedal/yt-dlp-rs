@@ -1,0 +1,54 @@
+{
+ "routes": [
+  {
+   "url": "https://iframe.mediadelivery.net/embed/113933/e73edec1-e381-4c8b-ae73-717a140e0924",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "embed-113933.html"
+  },
+  {
+   "url": "https://vz-d4aded98-bdb.b-cdn.net/e73edec1-e381-4c8b-ae73-717a140e0924/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "playlist-113933.m3u8"
+  },
+  {
+   "url": "https://vz-d4aded98-bdb.b-cdn.net/e73edec1-e381-4c8b-ae73-717a140e0924/original",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "original-113933.mp4"
+  },
+  {
+   "url": "https://iframe.mediadelivery.net/embed/200867/2e8545ec-509d-4571-b855-4cf0235ccd75",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "embed-200867.html"
+  },
+  {
+   "url": "https://vz-09b5be34-aef.b-cdn.net/bcdn_token=WYNR8YWynkVqK2w-6M-8fKrtulJ1WQ6GgYidAMoIznk&expires=1793402372&token_path=%2F2e8545ec-509d-4571-b855-4cf0235ccd75%2F/2e8545ec-509d-4571-b855-4cf0235ccd75/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "playlist-200867.m3u8"
+  },
+  {
+   "url": "https://vz-09b5be34-aef.b-cdn.net/bcdn_token=WYNR8YWynkVqK2w-6M-8fKrtulJ1WQ6GgYidAMoIznk&expires=1793402372&token_path=%2F2e8545ec-509d-4571-b855-4cf0235ccd75%2F/2e8545ec-509d-4571-b855-4cf0235ccd75/original",
+   "status": 403,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "Forbidden"
+  },
+  {
+   "url": "https://iframe.mediadelivery.net/embed/1/0000-403",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "forbidden-title.html"
+  }
+ ]
+}

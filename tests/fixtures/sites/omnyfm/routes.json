@@ -1,0 +1,53 @@
+{
+ "routes": [
+  {
+   "url": "https://omny.fm/shows/sleep-hub/cannabinoids-and-sleep",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "route-00.html"
+  },
+  {
+   "url": "https://omny.fm/shows/the-origin-of-things/a-song-of-hope/embed",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "route-01.html"
+  },
+  {
+   "url": "https://omny.fm/shows/sleep-hub/playlists/sleep-talk",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "route-02.html"
+  },
+  {
+   "url": "https://api.omny.fm/programs/sleep-hub/playlists/sleep-talk/clips?direction=AfterExclusive&pageSize=100",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "route-03.bin"
+  },
+  {
+   "url": "https://omny.fm/shows/the-origin-of-things",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "route-04.html"
+  },
+  {
+   "url": "https://api.omny.fm/orgs/e0dce4b3-2eb8-48cb-822c-af1d00e03e20/programs/df53fb75-753c-40e3-9fe9-af4d00ba5f96/clips?cursor=0&pageSize=100",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "route-05.bin"
+  },
+  {
+   "url": "https://omny.fm/shows/bayfm-program03/playlists",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "route-06.html"
+  }
+ ]
+}

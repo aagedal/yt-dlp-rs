@@ -1,0 +1,23 @@
+[
+ {
+  "url": "https://players.streaks.jp/tipness/08155cd19dc14c12bebefb69b92eafcc/index.html?m=ba2c253508914d9ea061a5f26bc58b20",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://playback.api.streaks.jp/v1/projects/ktv-news/medias/714171c4c53c409bb41e1572997ebfcf",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://players.streaks.jp/tipness/08155cd19dc14c12bebefb69b92eafcc/index.html?m=ref:synthetic-clip",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ }
+]

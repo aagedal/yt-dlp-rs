@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://www.onsen.ag/web_api/programs/onsenking",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "onsen-ep-0.json"
+  },
+  {
+   "url": "https://onsen-ma3phlsvod.sslcs.cdngc.net/onsen-ma3pvod/_definst_/202206/onsenking220627g2bj-01.mp4/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "onsen-ep-1.m3u8"
+  },
+  {
+   "url": "https://www.onsen.ag/web_api/programs/uma",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "onsen-list-0.json"
+  },
+  {
+   "url": "https://www.onsen.ag/web_api/programs/girls-band-cry-radio",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "onsen-premium-0.json"
+  }
+ ]
+}

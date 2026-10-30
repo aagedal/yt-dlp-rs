@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "http://m.ximalaya.com/tracks/47740352.json",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "track-47740352.json"
+  },
+  {
+   "url": "https://m.ximalaya.com/tracks/47740352.json",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "track-47740352.json"
+  },
+  {
+   "url": "http://m.ximalaya.com/tracks/1000000001.json",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "synthetic-no-title.json"
+  }
+ ]
+}
