@@ -24,7 +24,7 @@ cargo install --locked --path .
 The default build uses rustls. `cargo build --locked --features impersonate`
 adds browser impersonation (TLS/HTTP2 fingerprints, as upstream's
 `curl_cffi`) through `wreq`; it builds BoringSSL from source and needs CMake
-and a C/C++ compiler.
+and a C/C++ compiler. The Linux and macOS release binaries include it.
 
 Optional tools, found on `PATH` like upstream (or with `--ffmpeg-location`
 and `--ffprobe-location`):

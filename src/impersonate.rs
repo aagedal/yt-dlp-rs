@@ -138,6 +138,33 @@ pub fn target_available(target: &ImpersonateTarget) -> bool {
     resolve(supported_targets(), target).is_some()
 }
 
+/// `--impersonate`: the target (an index into [`supported_targets`]) that
+/// extraction requests impersonate unless their extractor asks for one
+/// (upstream's `urlopen` sets the `impersonate` extension from the option
+/// on requests without it). Media transfers stay on the plain client.
+static DEFAULT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(usize::MAX);
+
+/// Impersonate `target` on extraction requests (`--impersonate`); `false`
+/// when it is not available.
+pub fn set_default(target: &ImpersonateTarget) -> bool {
+    let supported = supported_targets();
+    let Some(index) = supported
+        .iter()
+        .position(|entry| entry.target.contains(target))
+    else {
+        return false;
+    };
+    DEFAULT.store(index, std::sync::atomic::Ordering::Relaxed);
+    true
+}
+
+/// The `--impersonate` target, if one is set.
+#[cfg(feature = "impersonate")]
+fn default_target() -> Option<usize> {
+    let index = DEFAULT.load(std::sync::atomic::Ordering::Relaxed);
+    (index != usize::MAX).then_some(index)
+}
+
 /// The `--list-impersonate-targets` table (upstream `render_table(['Client',
 /// 'OS', 'Source'], rows, extra_gap=2, delim='-')`): the available targets,
 /// least preferred first, after any known client that is unavailable.
@@ -325,7 +352,7 @@ pub(crate) fn send(
 ) -> crate::Result<reqwest::blocking::Response> {
     let request = crate::control::prepare(request)?;
     #[cfg(feature = "impersonate")]
-    if let Some(index) = ACTIVE.with(Cell::get) {
+    if let Some(index) = ACTIVE.with(Cell::get).or_else(default_target) {
         return transport::send(request, &supported_targets()[index]);
     }
     Ok(request.send()?)

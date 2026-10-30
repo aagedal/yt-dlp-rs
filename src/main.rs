@@ -3211,19 +3211,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Validated by `validate_accepted_options`.
         let target = yt_dlp_rs::impersonate::ImpersonateTarget::parse(&target.to_lowercase())
             .unwrap_or_default();
-        if !yt_dlp_rs::impersonate::target_available(&target) {
+        // Upstream impersonates every request; here extraction requests
+        // (pages and APIs) do, and media transfers use the plain client.
+        if !yt_dlp_rs::impersonate::set_default(&target) {
             report_error!(
                 "ERROR: Impersonate target \"{target}\" is not available. Use --list-impersonate-targets to see available targets. You may be missing dependencies required to support this target."
             );
-        } else {
-            // Upstream impersonates every request; this port's extractors
-            // and downloaders share a plain client, and only the requests
-            // extractors mark for impersonation use the `wreq` transport.
-            report_error!(
-                "ERROR: --impersonate (impersonating every request) is not supported natively; extractors that request impersonation use an available target automatically"
-            );
+            return Ok(false);
         }
-        return Ok(false);
     }
     // Upstream `print_extractor_information`, for this port's extractors
     // (sorted, `generic` last); the generic extractor lists unmatched URLs.
