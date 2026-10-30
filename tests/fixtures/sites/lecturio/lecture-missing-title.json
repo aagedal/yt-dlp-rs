@@ -1,0 +1,56 @@
+{
+ "uid": "l_39634",
+ "productId": "L_39634",
+ "content": {
+  "type": "video",
+  "media": [
+   {
+    "label": "HLS",
+    "file": "https://customer-ajptwibdektz7o1k.cloudflarestream.com/synthetic-token/manifest/video.m3u8",
+    "fileSize": 0,
+    "default": false
+   },
+   {
+    "label": "DASH",
+    "file": "https://customer-ajptwibdektz7o1k.cloudflarestream.com/synthetic-token/manifest/video.mpd",
+    "fileSize": 0,
+    "default": false
+   },
+   {
+    "label": "1080p (HD)",
+    "file": "https://vod.lecturio.com/1901041139-182129-o-20151006_01-01_Microbiology_Racaniello_v2-086489-v1-st1.mp4?Expires=1793389365&Signature=oC-rDYfUCVwUvHWZioZt6IQZHvwU-RfT9yyQoHLpdVO3Zl8uYTI74-e3jBc1rxqZvkOQwiCUslvWVYwZwX00-4mlbbSM1IrneipcC7k~tVwV87TRgGcS5mDzlUAwx4uxKTXMpp0JLh8eI9YtdMUBEf9nH0l4iH2tyhoIKE-pJ-AyhBfUmHSxp1yiPO6s4ApM2Bj1WIEmtDpNwMzqOLvyXr7ZTZ27NZM7KSoCTgr4NEd8v8Iak9qQsvK6HxDhROYrIiQCMEKY3AMiLWC6474W3QqYNbxesClas57wfrm0bDtA3mEnqdHaHkMZecdc-Kdl5RcsZGrFErg48Uc~1a04sA__&Key-Pair-Id=K2J9ZGJKBLQ39V",
+    "fileSize": 30757,
+    "default": false
+   },
+   {
+    "label": "540p (SD)",
+    "file": "https://vod.lecturio.com/1901041139-182129-o-20151006_01-01_Microbiology_Racaniello_v2-086489-v1-st2.mp4?Expires=1793389365&Signature=fkRADq-9p8FEY5PUzVZMnmq~CtTencJSRs8RxTApNvAW8QQF~VlylbRRdnSa5TNPEayHsVzbARh0Jj3-LsPM9lxsH58t3TuWVaCNEG~pl8Ls3Ax9gpssDQHuy59hd8Jd24qdp2Xmr0SmIiI2uW5EOFi~YXCgPzsfWIAIrlnAfdiX-JU9ATvXuY9ctzU13B1dkl1WFgp6yeh6ImBkBt9PpBiQVEZCfQ8M1j2OPpJ3cglKm5D-5xnO1iY~Npz42JvUI2kPf3XyO5vs~vrQ2VOvej140XRRX4rdCKTOVdGxuk8DPP9DwouHLC5fOWAhbHQJP8Ok-W29uIyoickVPAQ~tw__&Key-Pair-Id=K2J9ZGJKBLQ39V",
+    "fileSize": 21842,
+    "default": true
+   },
+   {
+    "label": "360p (LD)",
+    "file": "https://vod.lecturio.com/1901041139-182129-o-20151006_01-01_Microbiology_Racaniello_v2-086489-v1-st3.mp4?Expires=1793389365&Signature=VSMdxVge-~gOAqd5q7hf7a1bQFtmDMJu-2FABsYMrg-N1boHcWFuSwYQVS7IkyMlpuVWIi8DlHDPFPvbclKIpZ-S1YbWQu5yOeGP5XgE2V-BG2r1R4zwh0ON29Ofu9Xw~25jaJvuwWmkaX0t4nn9eCABBxGGjqsPI1V6hdVZ8CKlm5gqE-8-OBebOGdRCsfJi8ijowZYfzHijut84N2aRCrtGqZuJJGcCt-G36fQTkbQ6Sm-6YP0ApbKmHlty1IemyMs697Wlzq-J6~SEXAZA2IUXTRre2Du1BSXfqXbojv5MtoaVNDNTUIwKJADWT5wMBo2DQc6Fq1DNfk9oP0w7Q__&Key-Pair-Id=K2J9ZGJKBLQ39V",
+    "fileSize": 11391,
+    "default": false
+   }
+  ]
+ },
+ "captions": [
+  {
+   "languageCode": "ar",
+   "translatedCode": "Arabic (auto-translated)",
+   "url": "https://d175v0bqhq04hz.cloudfront.net/ar_39634_b1e583f5f044040bf233d9d7d569dada.vtt"
+  },
+  {
+   "languageCode": "en",
+   "translatedCode": "English",
+   "url": "https://d175v0bqhq04hz.cloudfront.net/39634_b1e583f5f044040bf233d9d7d569dada.vtt"
+  },
+  {
+   "languageCode": "de",
+   "translatedCode": "German",
+   "url": "https://d175v0bqhq04hz.cloudfront.net/39634_69b5ab59eb886a9145363171b92f1e8b.vtt"
+  }
+ ]
+}

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<LINK rel="apple-touch-icon" href="../favicon_wb.ico" />
+<LINK rel="SHORTCUT ICON" href="../favicon_wb.ico">
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-JP" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<title>衆議院インターネット審議中継</title>
+<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+<link href="../css/main.css?d=20160206" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="../js/ui.core.js"></script>
+<script type="text/javascript" src="../js/jquery.scrollfollowplus.js"></script>
+<script type="text/javascript" src="../js/jquery.cookie.js"></script>
+<script type="text/javascript" src="../js/jquery.scrollTo.js"></script>
+<script type="text/javascript" src="../js/jquery.url.js"></script>
+<script type="text/javascript" src="../js/jquery.textresizer.js" ></script>
+<script language="JavaScript" type="text/JavaScript">
+var jsty='2026';
+var jstm='10';
+var jstd='31';
+var now_date = jsty + jstm + jstd;
+var smu="";
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+function is_iOS(){
+
+   return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+
+}
+function is_Android(){
+
+   ////return navigator.userAgent.match(/4.1/i);
+   if (androidVersion() >= 4.1) {
+     return true;
+   } else {
+     return false;
+   }
+
+}
+function is_mbl(){
+	if(is_iOS())return true;
+	if(is_Android())return true;
+	return false;
+}
+function androidVersion() {
+	var ua = navigator.userAgent;
+	var v = 0;
+	if( ua.indexOf("Android") > 0 ){var v = parseFloat(ua.slice(ua.indexOf("Android")+8));}
+	return v;
+}
+
+
+</script>
+<script language="JavaScript" src="../js/js_video.js"></script>
+<script language="JavaScript" src="../js/js_cookie.js"></script>
+<script language="JavaScript" src="../js/js_new_win.js"></script>
+<script language="JavaScript" src="../js/js_cookie_message.js"></script>
+<script language="JavaScript" src="../js/js_hidden_check.js"></script>
+<script language="JavaScript" src="../js/js_Lpad.js"></script>
+<script language="JavaScript" src="../js/js_mojicheck.js"></script>
+<script language="JavaScript" src="../js/shutv.js?d=20190305"></script>
+</head>
+<body>
+<div id="headerBg">
+<div id="header">
+<div id="headerLeft"><a href="../index.php" target="_self"><img src="../images/maintitle.jpg" alt="衆議院インターネット審議中継" width="689" height="100" border="0"></a></div>
+<div id="headerRight" style="width:140px;">
+<div id="links">
+<div style="margin:0 0 15px 72px;"><a href="../en/index.php" target="_self" onMouseOver="MM_swapImage('goto_english','','./images/b_goto-english_on.gif',1)" onMouseOut="MM_swapImgRestore()"><img src="./images/b_goto-english.gif" alt="Go to English" name="goto_english" width="68" height="18" border="0" id="goto_english"></a></div>
+<p><a href="https://www.shugiin.go.jp/" target="_blank" >衆議院ホームページ</a></p>
+<p><a href="https://www.webtv.sangiin.go.jp/" target="_blank">参議院審議中継</a></p>
+<p><a href="https://kokkai.ndl.go.jp/" target="_blank" >国会会議録検索ページ</a></p>
+</div>
+</div><!--end #headerRight-->
+<div id="headerBottom">
+<ul class="h_menu">
+<li><a href="./index.php" id="h_menu_hm" class="goto_home">HOME</a></li>
+<li><a href="./index.php?ex=IF" id="h_menu_if">お知らせ</a></li>
+<li><a href="./index.php?ex=HT" id="h_menu_ht">利用方法</a></li>
+<li><a href="./index.php?ex=FQ" id="h_menu_fq">FAQ</a></li>
+<li style="width:9em;"><a href="./index.php?ex=QT" id="h_menu_qt">ご意見・ご感想</a></li>
+</ul>
+<div id="fontselector" class="clearfix">
+<ul id="fontsizer">
+<li>文字の大きさ：</li>
+<li><a href="#" title="標準"><img src="images/sizebt_small.jpg" alt="標準" name="small" width="29" height="18" border="0" id="small"></a></li>
+<li><a href="#" title="拡大"><img src="images/sizebt_base.jpg" alt="拡大" name="medium" width="29" height="18" border="0" id="medium"></a></li>
+<li><a href="#" title="最大"><img src="images/sizebt_big.jpg" alt="最大" name="large" width="29" height="18" border="0" id="large"></a></li>
+</ul>
+</div><!--end #fontselector-->
+</div><!--end #headerBottom-->
+</div><!--end #header-->
+</div><!--end #headerBg-->
+<div id="container">
+<div id="contents">
+     	     		<div id="library">
+<div class="titleArea"><img src="./images/maintitle_video_library.gif" alt="ビデオライブラリ" width="140" height="20"></div>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr class="s14_24" nowrap>
+  <td width="30"><img src="./images/spacer.gif" alt="" width="30" height="15"></td>
+  <td style="font-weight:bold;">開会日</td>
+  <td align="center" width="20" style="font-weight:bold;">：</td>
+  <TD>2022年3月23日 (水)</TD>
+</tr>
+<tr class="s14_24">
+  <td><img src="./images/spacer.gif" alt="" width="30" height="15"></td>
+  <td><b>会議名</b></td>
+  <td align="center" style="font-weight:bold;">：</td>
+  <td align="left">ウクライナ大統領国会演説（オンライン） (29分)</td>
+</tr>
+</table>
+</div><!--end #library-->
+
+<div style="text-align:center;">
+  <div style="margin-bottom:10px;"><A HREF="/jp/index.php?ex=VL&media_type=&deli_id=53846&time=1170.5" class="play_vod"><img src="../images/play.gif" border="0" height="26" width="26" style="vertical-align: middle;"></A>&nbsp;
+  <span class="s14_24"><A HREF="/jp/index.php?ex=VL&media_type=&deli_id=53846&time=1170.5" class="play_vod">はじめから再生</A></span></div>
+  <div id="vplayer" style="display:none; margin-bottom: 60px;">
+  <div id="player-container" class="video-js theoplayer-skin"></div>
+  <!--<div id="player-container" class="video-js theoplayer-skin theo-seekbar-above-controls"></div>-->
+  <!--div id="player-container" class="video-js vjs-fluid theoplayer theoplayer-skin theo-seekbar-above-controls"></div-->
+  <!--div id="player-container" class="video-js theoplayer theoplayer-skin theo-seekbar-above-controls"></div-->
+  </div><!--end #vplayer-->
+  <div id="vplayer2" style="display:none;"><video width="640" height="395" id="vtag" controls src=""></video>
+  </div><!--end #vplayer2-->
+  <input type="hidden" id="vtag_src_base_vod" value="http://hlsvod.shugiintv.go.jp/vod/_definst_/amlst:2022/2022-0323-1750-04/playlist.m3u8">
+</div>
+
+<div id="library2">
+<div class="item2" style="margin-bottom:5px"></div>
+  <table border="0" cellspacing="0" cellpadding="0" width="610">
+  <TR class="s14_24">
+    <TD colspan="2" width="610" style="font-weight:bold;">案件：</TD>
+  </TR>
+    <TR class="s14_24">
+    <td width="15"><IMG src="./images/spacer.gif" alt="" width="30" height="15"></td>
+    <TD  width="595" bgcolor="#CCCCFF"><IMG src="./images/spacer.gif" alt="" width="10" height="15">ゼレンスキー・ウクライナ大統領による国会演説（オンライン）<IMG src="./images/spacer.gif" alt="" width="10" height="15"></TD>
+  </TR>
+    <TR class="s14_24">
+    <TD colspan="2" width="610"><IMG src="./images/spacer.gif" alt="" width="30" height="15"></TD>
+  </TR>
+</TABLE>
+    <table width="610" border="0" cellspacing="0" cellpadding="0">
+  <tr class="s14_24">
+    <TD style="font-weight:bold;">発言者一覧</TD>
+  </tr>
+  <tr class="s14_24">
+    <td colspan="4"><img src="./images/spacer.gif" alt="" width="30" height="15"></td>
+  </tr>
+</table>
+<!--↓ 発言者情報 ↓-->
+    	<table width="610" border="0" cellspacing="0" cellpadding="0">
+			<TR class="s14_24">
+	  <TD colspan="2" width="410" style="font-weight:bold;">
+	説明・質疑者等（発言順）：
+	 </TD>
+	 <td align="center" width="100">
+	開始時刻
+	</td>
+	<td align="center" width="100">
+	所要時間
+	  </td>
+	</TR>
+		<TR class="s14_24">
+	  <TD width="30"><IMG src="./images/spacer.gif" alt="" width="30" height="15"></TD>
+	  <TD width="380" bgcolor="#CCCCFF">　<A HREF="/jp/index.php?ex=VL&media_type=&deli_id=53846&time=1790.0" class="play_vod">細田博之(衆議院議長)</a></TD>
+	  <TD align="center" bgcolor="#CCCCFF" width="100">　18時 00分  </TD>
+	  <TD align="center" bgcolor="#CCCCFF" width="100">　02分  </TD>
+	</TR>
+			<TR class="s14_24">
+	  <TD width="30"><IMG src="./images/spacer.gif" alt="" width="30" height="15"></TD>
+	  <TD width="380" bgcolor="#ffffff">　<A HREF="/jp/index.php?ex=VL&media_type=&deli_id=53846&time=1895.4" class="play_vod">ゼレンスキー(ウクライナ大統領)</a></TD>
+	  <TD align="center" bgcolor="#ffffff" width="100">　18時 02分  </TD>
+	  <TD align="center" bgcolor="#ffffff" width="100">　12分  </TD>
+	</TR>
+			<TR class="s14_24">
+	  <TD width="30"><IMG src="./images/spacer.gif" alt="" width="30" height="15"></TD>
+	  <TD width="380" bgcolor="#CCCCFF">　<A HREF="/jp/index.php?ex=VL&media_type=&deli_id=53846&time=2662.5" class="play_vod">山東昭子(参議院議長)</a></TD>
+	  <TD align="center" bgcolor="#CCCCFF" width="100">　18時 14分  </TD>
+	  <TD align="center" bgcolor="#CCCCFF" width="100">　04分  </TD>
+	</TR>
+	
+		
+	</TABLE>
+<!--↑ 発言者情報 ↑-->
+  <table width="610" border="0" cellspacing="0" cellpadding="0">
+<TR>
+  <TD><IMG src="./images/spacer.gif" alt="" width="30" height="15"></TD>
+</TR>
+  </table>
+<div class="item2" style="text-align:center;"><span class="s14_24"><A HREF="#" id="vod_back_link">戻る</A></span></div>
+<form name="form1" id="form1" action="index.php?ex=VL" method="post">
+<input type="hidden" name="my_url" value="/jp/index.php?ex=VL&media_type=&deli_id=53846">
+<input type="hidden" name="select_media_url" value="" >
+</form>
+<form name="form2" id="form2" action="index.php?ex=VL" method="post">
+</form>
+
+
+<div><img src="./images/text_caution.gif" alt="［注意事項］" width="68" height="15"></div>
+<div class="s12_14">
+<OL style="padding-left: 25px;">
+			<p>・視聴画面右下の「歯車アイコン」から[速度]をクリックすると、再生速度を変更することができます。</p>
+			<p>・発言者一覧について、説明・質疑者等の氏名がリンク表示されると、発言者頭出し機能が有効となり、クリックするとその発言者からの映像が再生されます。</p>
+        	</OL></div>
+
+</div><!--end #library2-->
+
+<script language="JavaScript" src="../js/viewer_vod_theo.js?d=20190309"></script>
+<link rel="stylesheet" type="text/css" href="/js/theoplayer/ui.css"> <!-- ads THEOplayer CSS -->
+<style>
+
+.theo-primary-color, .vjs-selected {color: #00adfc !important;}
+.theo-primary-background {color: #000000 !important;background-color: #00adfc !important;}
+/*.theo-settings-control-button {display: none !important;}*/ /*設定アイコン*/
+/*li[aria-label="Open the video speed settings menu"] {display: none !important;}*/ /*速度*/
+li[aria-label="Open the video quality settings menu"] {display: none !important;} /*画質*/
+.theo-context-menu {display: none !important;}
+.video-js:not(.vjs-fullscreen) .theo-secondary-color.vjs-control-bar {opacity: 1!important;}
+.theo-secondary-color.vjs-control-bar {bottom: -3.3em!important;}
+.video-js:not(.vjs-fullscreen) .theo-settings-control-menu {bottom: 0.8em!important;} /* 設定メニュー位置調整（全画面表示は対象外）*/
+.vjs-fullscreen .theo-secondary-color.vjs-control-bar {bottom: 0em!important;}
+.vjs-control-bar .theo-tertiary-color.theo-control-bar-shadow {background:black !important; height: 100%; background-color: #000000 !important;}
+.theo-tertiary-color.theo-control-bar-shadow {height: 42px !important;}
+
+</style>
+<script src="/js/theoplayer/THEOplayer.js?k=1e624b985e8109860156046b05834c9c5a6f0aaf"></script> <!-- ads THEOplayer library -->
+<script>
+var theoplayer_serialkey="ae6b4116-bba0-4b7d-9006-01d8d1b1040e";
+var element = document.querySelector('#player-container');
+var player = new THEOplayer.Player(element, {
+//	libraryLocation: 'https://cdn.theoplayer.com/dash/' + theoplayer_serialkey,
+	libraryLocation: 'https://cdn.myth.theoplayer.com/' + theoplayer_serialkey, //v3.0.0
+	
+	
+	ui: {
+		width: '640px',
+//		height: '360px',
+		height: '380px',
+		language: 'jp',
+		fluid: false,
+		languages: {
+			"jp": {
+				"Speed": "速度",
+				"Play": "再生",
+				"Pause": "一時停止",
+				"Current Time": "現在の再生時間",
+				"Mute": "消音",
+				"Unmute": "消音解除",
+				"Fullscreen": "全画面",
+				"Exit fullscreen":"全画面解除",
+				"Options": "設定",
+				"Settings": "設定",
+				"Quality": "画質",
+				"Automatic":"自動",
+			}
+		},
+		//速度選択肢
+		playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] 
+	},
+	persistVolume: true,
+});
+//速度選択肢表示調整
+function rateLabelAdjust(aTags){
+	for (var i = 0; i < aTags.length; i++) {
+	  if (aTags[i].textContent == "0.5") {
+	    aTags[i].innerHTML = "0.50"
+	  } else if (aTags[i].textContent == "1") {
+	    aTags[i].innerHTML = "1.00"
+	  } else if (aTags[i].textContent == "Normal") {
+	    aTags[i].innerHTML = "1.00"
+	  } else if (aTags[i].textContent == "1.5") {
+	    aTags[i].innerHTML = "1.50"
+	  } else if (aTags[i].textContent == "2") {
+	    aTags[i].innerHTML = "2.00"
+	  }
+	};
+}
+//速度初期表示時
+var aTags = document.getElementsByClassName("theo-settings-control-menu-item-value");
+rateLabelAdjust(aTags);
+//速度選択肢表示時
+var aTags = document.getElementsByClassName("theo-menu-item");
+rateLabelAdjust(aTags);
+//速度変更時
+player.addEventListener('ratechange', function(e) {
+	var aTags = document.getElementsByClassName("theo-settings-control-menu-item-value");
+	rateLabelAdjust(aTags);
+});
+var edmasta={"53846":"2920.9"};
+function end_stop(){
+	var end_time = edmasta[selected_did];
+	if ( end_time < player.currentTime ) {
+		player.pause();
+	}
+}
+var skmasta={"53846":[]};
+function skip_break(){
+	var skip_datas = skmasta[selected_did];
+	$.each(skip_datas, function(i, item){
+		if ( ( item.s < player.currentTime ) && (player.currentTime < item.e ) ){
+			player.currentTime = item.e;
+		}
+	});
+}
+</script><style>
+.fa-arrow-rotate-left {
+  order: -101;
+  /* to the left of the play/pause-button */
+  cursor: pointer;
+  margin-right: 0.8em;
+}
+.fa-arrow-rotate-right {
+  order: -100;
+  /* to the right of the play/pause-button */
+  cursor: pointer;
+  margin-left: 0.8em;
+  margin-right: 0.8em;
+}
+</style>
+<script>
+// setting up the rewind button by setting up a video-js component
+var Button = THEOplayer.videojs.getComponent("Button");
+var RewindButton = THEOplayer.videojs.extend(Button, {
+	constructor: function() {
+		Button.apply(this, arguments);
+
+		// This is your custom icon and its styling
+		var customIcon = document.createElement('img');
+		customIcon.src = "/images/rewind.png";
+		customIcon.style.height = "29px";
+		customIcon.style.width = "22px";
+
+		// add tooltip
+		var tooltipSpan = document.createElement("span");
+		tooltipSpan.className = "theo-button-tooltip vjs-hidden";
+		tooltipSpan.innerText = "10秒戻す";
+		function toggleTooltip() {
+			tooltipSpan.classList.toggle("vjs-hidden");
+		}
+		this.el().addEventListener("mouseover", toggleTooltip);
+		this.el().addEventListener("mouseout", toggleTooltip);
+		this.el().appendChild(customIcon);
+		this.el().appendChild(tooltipSpan);
+	},
+	handleClick: () => {
+		player.currentTime -= 10;
+	},
+	buildCSSClass: function() {
+		return "fa-solid fa-arrow-rotate-left vjs-button"; // insert all class names here
+	}
+});
+THEOplayer.videojs.registerComponent("RewindButton", RewindButton);
+player.ui.getChild("controlBar").addChild("RewindButton", {});
+
+// setting up the forward button by setting up a video-js component
+var Button = THEOplayer.videojs.getComponent("Button");
+var ForwardButton = THEOplayer.videojs.extend(Button, {
+	constructor: function() {
+		Button.apply(this, arguments);
+
+		// This is your custom icon and its styling
+		var customIcon = document.createElement('img');
+		customIcon.src = "/images/foward.png";
+		customIcon.style.height = "29px";
+		customIcon.style.width = "22px";
+
+		// add tooltip
+		var tooltipSpan = document.createElement("span");
+		tooltipSpan.className = "theo-button-tooltip vjs-hidden";
+		tooltipSpan.innerText = "10秒進める";
+		function toggleTooltip() {
+			tooltipSpan.classList.toggle("vjs-hidden");
+		}
+		this.el().addEventListener("mouseover", toggleTooltip);
+		this.el().addEventListener("mouseout", toggleTooltip);
+		this.el().appendChild(customIcon);
+		this.el().appendChild(tooltipSpan);
+	},
+	handleClick: () => {
+		player.currentTime += 10;
+	},
+	buildCSSClass: function() {
+		return "fa-solid fa-arrow-rotate-right vjs-button"; // insert all class names here
+	}
+});
+THEOplayer.videojs.registerComponent("ForwardButton", ForwardButton);
+player.ui.getChild("controlBar").addChild("ForwardButton", {});
+
+$('.fa-step-backward').css('cursor','pointer');
+$('.fa-step-forward').css('cursor','pointer');
+</script>		
+</div><!--end #contents-->
+
+<div id="side">
+	<div id="s_menu">
+		<!--p class="link_video"><a href="#"><img src="./images/text_select.gif" width="179" height="42" alt="配信方法選択" border="0" class="link_video_select"></a></p-->
+		<p class="link"><a href="./index.php?ex=TD#today" class="s_menu_link">今日の審議中継</a></p>
+		<p class="link"><a href="./index.php?ex=TM#tomorrow" class="s_menu_link">明日の中継予定</a></p>
+		<p class="link"><a href="./index.php#library">ビデオライブラリ</a></p>
+		<!-- カレンダー表記 -->
+		<div id="calendar">
+		</div><!--end #calendar-->
+	</div><!--end #s_menu-->
+</div><!--end #side-->
+<div id="go_top" class="s12_12"><a href="#">このページの先頭へ▲</a></div>
+<div id="f_menu" class="s12_12"><a href="./index.php" class="goto_home">HOME</a><a href="./index.php?ex=IF">お知らせ</a><a href="./index.php?ex=HT">利用方法</a><a href="./index.php?ex=FQ">FAQ</a><a href="./index.php?ex=QT">ご意見・ご感想</a></div>
+<div id="footer" class="s10_12">
+<p>このページは、JavaScriptを使用しています。ご使用中のブラウザのJavaScriptを有効にしてください。<br>
+このホームページに関するお問い合わせは<a href="index.php?ex=ML" target="_self">こちら</a>まで。</p>
+<p id="ft_cpright"><span class="">Copyright(C) 1999-2026 Shugiin All Rights Reserved.　</span><a href="index.php?ex=CR" target="_self">著作権・リンク・登録商標について</a></p>
+</div><!--end #footer-->
+</div><!--end #container-->
+</body>
+</html>
+

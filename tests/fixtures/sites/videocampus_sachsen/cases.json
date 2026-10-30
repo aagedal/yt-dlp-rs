@@ -1,0 +1,18 @@
+[
+ {
+  "url": "https://videocampus.sachsen.de/video/Was-ist-selbstgesteuertes-Lernen/fc99c527e4205b121cb7c74433469262",
+  "args": ["-J"]
+ },
+ {
+  "url": "https://videocampus.sachsen.de/media/embed?key=fc99c527e4205b121cb7c74433469262",
+  "args": ["-J"]
+ },
+ {
+  "url": "https://videocampus.sachsen.de/m/0123456789abcdef",
+  "args": ["-J"]
+ },
+ {
+  "url": "https://videocampus.sachsen.de/video/Synthetic-without-HLS/0123456789abcdef0123456789abcdef",
+  "args": ["-J"]
+ }
+]

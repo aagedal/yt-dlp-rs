@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://www.vidio.com/embed/7115874-fakta-temuan-suspek-cacar-monyet-di-jawa-tengah",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.vidio.com/watch/7115874-fakta-temuan-suspek-cacar-monyet-di-jawa-tengah",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.vidio.com/premier/2885/badai-pasti-berlalu",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.vidio.com/watch/999999-missing-video",
+  "args": [
+   "-J"
+  ]
+ }
+]

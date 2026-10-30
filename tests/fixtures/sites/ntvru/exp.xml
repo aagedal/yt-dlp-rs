@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ovs:video xmlns:ovs="http://webmaster.yandex.ru/schemas/video"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://webmaster.yandex.ru/schemas/video">
+  <ovs:content_id>1797442</ovs:content_id>
+  <ovs:url>https://www.ntv.ru/video/1797442/</ovs:url>
+  <ovs:thumbnail>https://cdn2-static.ntv.ru/home/promo/20191117/kvl_avg.jpg</ovs:thumbnail>
+  <ovs:title><![CDATA["Калоев. Седьмое доказательство бога"]]></ovs:title>
+  <ovs:description><![CDATA["Калоев. Седьмое доказательство бога"]]></ovs:description>
+  <ovs:upload_date>2019-11-17T10:49:34+04:00</ovs:upload_date>
+  <ovs:duration>2879</ovs:duration>
+  <ovs:adult>no</ovs:adult>
+  <ovs:status>published</ovs:status>
+  <ovs:is_official>yes</ovs:is_official>
+  <ovs:license>commercial</ovs:license>
+  
+  <ovs:allow_embed>no</ovs:allow_embed>
+  
+  
+  
+  <ovs:create_date>2019-11-17T10:49:34+04:00</ovs:create_date>
+  <ovs:modify_date>2019-11-17T10:49:34+04:00</ovs:modify_date>
+  <ovs:tag>интервью,убийства и покушения,Boeing,авиационные катастрофы и происшествия,Северная Осетия,мистика и оккультизм,эксклюзив,религия</ovs:tag>
+  <ovs:languages>ru</ovs:languages>
+  
+  <ovs:stats>
+      <views_total>36604</views_total>
+      <comments>0</comments>
+  </ovs:stats>
+  
+  
+  <ovs:available_format>
+     <ovs:format codecs="h.264" width="640" height="360"
+              quality="medium" bitrate="650" size="276200"/>
+     
+     <ovs:format codecs="h.264" width="1024" height="576"
+              quality="HD" bitrate="2000" size="2154900"/>
+     
+     
+  </ovs:available_format>
+  <!-- 5 ms -->
+</ovs:video>

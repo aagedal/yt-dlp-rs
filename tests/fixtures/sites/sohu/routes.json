@@ -1,0 +1,47 @@
+{
+ "routes": [
+  {
+   "url": "http://my.tv.sohu.com/us/232799889/78693464.shtml",
+   "status": 302,
+   "headers": {
+    "Location": "https://tv.sohu.com/v/dXMvMjMyNzk5ODg5Lzc4NjkzNDY0LnNodG1s.html"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://tv.sohu.com/v/dXMvMjMyNzk5ODg5Lzc4NjkzNDY0LnNodG1s.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-v.html"
+  },
+  {
+   "url": "http://my.tv.sohu.com/play/videonew.do?vid=78693464",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "vid.json"
+  },
+  {
+   "url": "http://my.tv.sohu.com/play/videonew.do?vid=78693464_1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "vid.json"
+  },
+  {
+   "url": "http://data.vod.itc.cn/?prot=9&file=http%3A%2F%2Fdata.vod.itc.cn%2F%3Fk%3DXZhuOp33OUoWXZoIyM0Gvm12ZM1GvmfiZM1GgMAS0tABRM4I95d4EO3OLC7hROdzSwWsUwIWhoV0F27oVfSqm8VRDcs5B6XWhcGzT42NMAsb4vC0TPXWB1thL8MW4A65m47fw%26a%3Dj9lvz9B3tfdWjSCGhRYRzSwW4faUsmCdhWglcS38jUjmSCjpo3km4mJ6qwj99WO74mJRtf5pERFxOHjDSp&new=%2F0%2F191%2Fbymuey1CRhqd9706LeW3YD.mp4&prod=h5n&rb=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "part.json"
+  },
+  {
+   "url": "http://tv.sohu.com/20130724/n382479172.shtml",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "no-vid.html"
+  }
+ ]
+}

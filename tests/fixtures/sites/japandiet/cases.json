@@ -1,0 +1,14 @@
+[
+ {
+  "url": "https://www.shugiintv.go.jp/jp/index.php?ex=VL&media_type=&deli_id=53846",
+  "args": ["-J"]
+ },
+ {
+  "url": "https://www.shugiintv.go.jp/jp/index.php",
+  "args": ["-J"]
+ },
+ {
+  "url": "https://www.shugiintv.go.jp/jp/index.php?ex=VL&media_type=&deli_id=1",
+  "args": ["-J"]
+ }
+]

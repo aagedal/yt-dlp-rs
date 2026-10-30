@@ -1,0 +1,27 @@
+[
+ {
+  "url": "http://player.cnevids.com/embedjs/55f9cf8b61646d1acf00000c/5511d76261646d5566020000.js",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://player.cnevids.com/embedjs/55f9cf8b61646d1acf00000c/5511d76261646d5566020000.js",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(duration)s|%(timestamp)s|%(uploader)s|%(upload_date)s"
+  ]
+ },
+ {
+  "url": "https://www.wired.com/watch/synthetic-video",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.wired.com/watch/synthetic-noplayer",
+  "args": [
+   "-J"
+  ]
+ }
+]

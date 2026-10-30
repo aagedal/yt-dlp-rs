@@ -60,10 +60,13 @@ fn duration(text: &str) -> Result<u128> {
         let amount = &rest[..end];
         let unit = rest.as_bytes()[end];
         let (rank, scale) = match (time, unit) {
-            (false, b'D') => (1, 86_400),
-            (true, b'H') => (2, 3600),
-            (true, b'M') => (3, 60),
-            (true, b'S') => (4, 1),
+            // Zero years and months contribute nothing exactly (`P0Y0M0DT...`).
+            (false, b'Y') if amount.bytes().all(|byte| byte == b'0') => (1, 0),
+            (false, b'M') if amount.bytes().all(|byte| byte == b'0') => (2, 0),
+            (false, b'D') => (3, 86_400),
+            (true, b'H') => (4, 3600),
+            (true, b'M') => (5, 60),
+            (true, b'S') => (6, 1),
             _ => return Err(bad("unsupported DASH duration unit")),
         };
         if rank <= last {

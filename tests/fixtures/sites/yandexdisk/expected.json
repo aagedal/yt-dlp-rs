@@ -1,0 +1,47 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://disk.360.yandex.ru/i/TM2xsIVsgjY4uw",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"VdOeDou8eZs6Y\", \"title\": \"Fixture clip.mp4\", \"uploader\": \"Fixture Uploader\", \"uploader_id\": \"1000000000000000002\", \"view_count\": 3, \"formats\": [{\"url\": \"https://downloader.disk.yandex.ru/disk/0000000000000000000000000000000000000000000000000000000000000000/fixture/clip.mp4?uid=0&filename=Fixture%20clip.mp4&disposition=attachment&limit=0&content_type=video%2Fmp4&fsize=51470392\", \"format_id\": \"source\", \"ext\": \"mp4\", \"quality\": 1, \"filesize\": 51470392, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\"}], \"webpage_url\": \"https://disk.360.yandex.ru/i/TM2xsIVsgjY4uw\", \"original_url\": \"https://disk.360.yandex.ru/i/TM2xsIVsgjY4uw\", \"webpage_url_basename\": \"TM2xsIVsgjY4uw\", \"webpage_url_domain\": \"disk.360.yandex.ru\", \"extractor\": \"YandexDisk\", \"extractor_key\": \"YandexDisk\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"VdOeDou8eZs6Y\", \"fulltitle\": \"Fixture clip.mp4\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://downloader.disk.yandex.ru/disk/0000000000000000000000000000000000000000000000000000000000000000/fixture/clip.mp4?uid=0&filename=Fixture%20clip.mp4&disposition=attachment&limit=0&content_type=video%2Fmp4&fsize=51470392\", \"format_id\": \"source\", \"ext\": \"mp4\", \"quality\": 1, \"filesize\": 51470392, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\", \"_filename\": \"Fixture clip.mp4 [VdOeDou8eZs6Y].mp4\", \"filename\": \"Fixture clip.mp4 [VdOeDou8eZs6Y].mp4\", \"__write_download_archive\": false}], \"url\": \"https://downloader.disk.yandex.ru/disk/0000000000000000000000000000000000000000000000000000000000000000/fixture/clip.mp4?uid=0&filename=Fixture%20clip.mp4&disposition=attachment&limit=0&content_type=video%2Fmp4&fsize=51470392\", \"format_id\": \"source\", \"ext\": \"mp4\", \"quality\": 1, \"filesize\": 51470392, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"source - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [YandexDisk] VdOeDou8eZs6Y: Unable to download JSON metadata: HTTP Error 410: OK"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://yadi.sk/i/VdOeDou8eZs6Y",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [YandexDisk] VdOeDou8eZs6Y: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://disk.360.yandex.ru/i/syntheticnostore",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [YandexDisk] syntheticnostore: Unable to extract store; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

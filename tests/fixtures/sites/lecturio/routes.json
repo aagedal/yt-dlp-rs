@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://app.lecturio.com/api/en/latest/html5/lecture/important-concepts-and-terms-introduction-to-microbiology.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "lecture.json"
+  },
+  {
+   "url": "https://app.lecturio.com/api/en/latest/html5/lecture/missing-title.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "lecture-missing-title.json"
+  }
+ ]
+}

@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://www.deutschlandfunk.de/russische-athleten-kehren-zurueck-auf-die-sportbuehne-ein-gefaehrlicher-tueroeffner-dlf-d9cc1856-100.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "audio-d9cc1856.html"
+  },
+  {
+   "url": "https://www.deutschlandfunk.de/kommentare-und-themen-der-woche-100.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "corpus-kommentare.html"
+  },
+  {
+   "url": "https://www.deutschlandfunk.de/synthetic-nobutton-dlf-0a1b2c3d-100.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-nobutton.html"
+  }
+ ]
+}

@@ -1,0 +1,77 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://player-api.p.uliza.jp/v1/players/uliza_jp_gallery_normal/promotion/admin?type=presentation&name=cookings&targetid=player1",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ae350126-5e22-4a7f-a8ac-8d0fd448b800\", \"title\": \"ae350126-5e22-4a7f-a8ac-8d0fd448b800\", \"formats\": [{\"format_id\": \"2600\", \"format_index\": null, \"url\": \"https://d1emk47wcmnuqo.cloudfront.net/5272654077626/20211006115504_340cb9c5261b07b83f61a7975536767fd5d1daad2d91878b83d560dd673bb36c_3.m3u8\", \"manifest_url\": \"https://vms-api.p.uliza.jp/v1/prog-index.m3u8?expires=1793382169&signature=12d9c0d1b1a0786a8e8266980024e629f8acd87a680da062bc6336ccdcdf700a&ss=ae350126-5e22-4a7f-a8ac-8d0fd448b800&version=1\", \"tbr\": 2600.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2600 - unknown\"}, {\"format_id\": \"4900\", \"format_index\": null, \"url\": \"https://d1emk47wcmnuqo.cloudfront.net/5272654077626/20211006115504_21109531c439859df005afd38784edd59e516f63560be5643ed05e2c816e4322_2.m3u8\", \"manifest_url\": \"https://vms-api.p.uliza.jp/v1/prog-index.m3u8?expires=1793382169&signature=12d9c0d1b1a0786a8e8266980024e629f8acd87a680da062bc6336ccdcdf700a&ss=ae350126-5e22-4a7f-a8ac-8d0fd448b800&version=1\", \"tbr\": 4900.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"4900 - unknown\"}, {\"format_id\": \"7200\", \"format_index\": null, \"url\": \"https://d1emk47wcmnuqo.cloudfront.net/5272654077626/20211006115504_cc0bd7b23fecb5447b8c250f501faa0cbc2f5be6356d9ddbe801daf0257036ce_1.m3u8\", \"manifest_url\": \"https://vms-api.p.uliza.jp/v1/prog-index.m3u8?expires=1793382169&signature=12d9c0d1b1a0786a8e8266980024e629f8acd87a680da062bc6336ccdcdf700a&ss=ae350126-5e22-4a7f-a8ac-8d0fd448b800&version=1\", \"tbr\": 7200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"7200 - unknown\"}], \"live_status\": \"not_live\", \"_old_archive_ids\": [\"piaulizaportal ae350126-5e22-4a7f-a8ac-8d0fd448b800\"], \"webpage_url\": \"https://player-api.p.uliza.jp/v1/players/uliza_jp_gallery_normal/promotion/admin?type=presentation&name=cookings&targetid=player1\", \"original_url\": \"https://player-api.p.uliza.jp/v1/players/uliza_jp_gallery_normal/promotion/admin?type=presentation&name=cookings&targetid=player1\", \"webpage_url_basename\": \"admin\", \"webpage_url_domain\": \"player-api.p.uliza.jp\", \"extractor\": \"UlizaPlayer\", \"extractor_key\": \"UlizaPlayer\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"ae350126-5e22-4a7f-a8ac-8d0fd448b800\", \"fulltitle\": \"ae350126-5e22-4a7f-a8ac-8d0fd448b800\", \"release_year\": null, \"is_live\": false, \"was_live\": false, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"7200\", \"url\": \"https://d1emk47wcmnuqo.cloudfront.net/5272654077626/20211006115504_cc0bd7b23fecb5447b8c250f501faa0cbc2f5be6356d9ddbe801daf0257036ce_1.m3u8\", \"manifest_url\": \"https://vms-api.p.uliza.jp/v1/prog-index.m3u8?expires=1793382169&signature=12d9c0d1b1a0786a8e8266980024e629f8acd87a680da062bc6336ccdcdf700a&ss=ae350126-5e22-4a7f-a8ac-8d0fd448b800&version=1\", \"tbr\": 7200.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"7200 - unknown\", \"_filename\": \"ae350126-5e22-4a7f-a8ac-8d0fd448b800 [ae350126-5e22-4a7f-a8ac-8d0fd448b800].mp4\", \"filename\": \"ae350126-5e22-4a7f-a8ac-8d0fd448b800 [ae350126-5e22-4a7f-a8ac-8d0fd448b800].mp4\", \"__write_download_archive\": false}], \"format_id\": \"7200\", \"format_index\": null, \"url\": \"https://d1emk47wcmnuqo.cloudfront.net/5272654077626/20211006115504_cc0bd7b23fecb5447b8c250f501faa0cbc2f5be6356d9ddbe801daf0257036ce_1.m3u8\", \"manifest_url\": \"https://vms-api.p.uliza.jp/v1/prog-index.m3u8?expires=1793382169&signature=12d9c0d1b1a0786a8e8266980024e629f8acd87a680da062bc6336ccdcdf700a&ss=ae350126-5e22-4a7f-a8ac-8d0fd448b800&version=1\", \"tbr\": 7200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"7200 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player-api.p.uliza.jp/v1/players/default-player/pia/admin?type=normal&name=pia_movie_uliza_fix&targetid=ulizahtml5&repeatable=true",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[UlizaPlayer] Extracting URL: https://player-api.p.uliza.jp/v1/players/default-player/pia/admin?type=normal&name=pia_movie_uliz...tml5&repeatable=true",
+    "[UlizaPlayer] pia_movie_uliza_fix: Fetching player data",
+    "[UlizaPlayer] 0644ecc8-e354-41b4-b957-3b08a2d63df1: Downloading m3u8 information",
+    "[info] Available formats for 0644ecc8-e354-41b4-b957-3b08a2d63df1:",
+    "ID   EXT RESOLUTION |   TBR PROTO | VCODEC  ACODEC",
+    "---------------------------------------------------",
+    "1200 mp4 unknown    | 1200k m3u8  | unknown unknown",
+    "2300 mp4 unknown    | 2300k m3u8  | unknown unknown",
+    "4600 mp4 unknown    | 4600k m3u8  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://ulizaportal.jp/pages/005f18b7-e810-5618-cb82-0987c5755d44",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ae350126-5e22-4a7f-a8ac-8d0fd448b800\", \"title\": \"\\u30d7\\u30ec\\u30bc\\u30f3\\u30c6\\u30fc\\u30b7\\u30e7\\u30f3\\u30d7\\u30ec\\u30a4\\u30e4\\u30fc\\u306e\\u30b5\\u30f3\\u30d7\\u30eb\", \"formats\": [{\"format_id\": \"2600\", \"format_index\": null, \"url\": \"https://d1emk47wcmnuqo.cloudfront.net/5272654077626/20211006115504_340cb9c5261b07b83f61a7975536767fd5d1daad2d91878b83d560dd673bb36c_3.m3u8\", \"manifest_url\": \"https://vms-api.p.uliza.jp/v1/prog-index.m3u8?expires=1793382169&signature=12d9c0d1b1a0786a8e8266980024e629f8acd87a680da062bc6336ccdcdf700a&ss=ae350126-5e22-4a7f-a8ac-8d0fd448b800&version=1\", \"tbr\": 2600.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2600 - unknown\"}, {\"format_id\": \"4900\", \"format_index\": null, \"url\": \"https://d1emk47wcmnuqo.cloudfront.net/5272654077626/20211006115504_21109531c439859df005afd38784edd59e516f63560be5643ed05e2c816e4322_2.m3u8\", \"manifest_url\": \"https://vms-api.p.uliza.jp/v1/prog-index.m3u8?expires=1793382169&signature=12d9c0d1b1a0786a8e8266980024e629f8acd87a680da062bc6336ccdcdf700a&ss=ae350126-5e22-4a7f-a8ac-8d0fd448b800&version=1\", \"tbr\": 4900.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"4900 - unknown\"}, {\"format_id\": \"7200\", \"format_index\": null, \"url\": \"https://d1emk47wcmnuqo.cloudfront.net/5272654077626/20211006115504_cc0bd7b23fecb5447b8c250f501faa0cbc2f5be6356d9ddbe801daf0257036ce_1.m3u8\", \"manifest_url\": \"https://vms-api.p.uliza.jp/v1/prog-index.m3u8?expires=1793382169&signature=12d9c0d1b1a0786a8e8266980024e629f8acd87a680da062bc6336ccdcdf700a&ss=ae350126-5e22-4a7f-a8ac-8d0fd448b800&version=1\", \"tbr\": 7200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"7200 - unknown\"}], \"live_status\": \"not_live\", \"_old_archive_ids\": [\"piaulizaportal ae350126-5e22-4a7f-a8ac-8d0fd448b800\"], \"original_url\": \"https://ulizaportal.jp/pages/005f18b7-e810-5618-cb82-0987c5755d44\", \"webpage_url\": \"https://ulizaportal.jp/pages/005f18b7-e810-5618-cb82-0987c5755d44\", \"webpage_url_basename\": \"005f18b7-e810-5618-cb82-0987c5755d44\", \"webpage_url_domain\": \"ulizaportal.jp\", \"extractor\": \"UlizaPlayer\", \"extractor_key\": \"UlizaPlayer\", \"display_id\": \"005f18b7-e810-5618-cb82-0987c5755d44\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"\\u30d7\\u30ec\\u30bc\\u30f3\\u30c6\\u30fc\\u30b7\\u30e7\\u30f3\\u30d7\\u30ec\\u30a4\\u30e4\\u30fc\\u306e\\u30b5\\u30f3\\u30d7\\u30eb\", \"release_year\": null, \"is_live\": false, \"was_live\": false, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"7200\", \"url\": \"https://d1emk47wcmnuqo.cloudfront.net/5272654077626/20211006115504_cc0bd7b23fecb5447b8c250f501faa0cbc2f5be6356d9ddbe801daf0257036ce_1.m3u8\", \"manifest_url\": \"https://vms-api.p.uliza.jp/v1/prog-index.m3u8?expires=1793382169&signature=12d9c0d1b1a0786a8e8266980024e629f8acd87a680da062bc6336ccdcdf700a&ss=ae350126-5e22-4a7f-a8ac-8d0fd448b800&version=1\", \"tbr\": 7200.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"7200 - unknown\", \"_filename\": \"\\u30d7\\u30ec\\u30bc\\u30f3\\u30c6\\u30fc\\u30b7\\u30e7\\u30f3\\u30d7\\u30ec\\u30a4\\u30e4\\u30fc\\u306e\\u30b5\\u30f3\\u30d7\\u30eb [ae350126-5e22-4a7f-a8ac-8d0fd448b800].mp4\", \"filename\": \"\\u30d7\\u30ec\\u30bc\\u30f3\\u30c6\\u30fc\\u30b7\\u30e7\\u30f3\\u30d7\\u30ec\\u30a4\\u30e4\\u30fc\\u306e\\u30b5\\u30f3\\u30d7\\u30eb [ae350126-5e22-4a7f-a8ac-8d0fd448b800].mp4\", \"__write_download_archive\": false}], \"format_id\": \"7200\", \"format_index\": null, \"url\": \"https://d1emk47wcmnuqo.cloudfront.net/5272654077626/20211006115504_cc0bd7b23fecb5447b8c250f501faa0cbc2f5be6356d9ddbe801daf0257036ce_1.m3u8\", \"manifest_url\": \"https://vms-api.p.uliza.jp/v1/prog-index.m3u8?expires=1793382169&signature=12d9c0d1b1a0786a8e8266980024e629f8acd87a680da062bc6336ccdcdf700a&ss=ae350126-5e22-4a7f-a8ac-8d0fd448b800&version=1\", \"tbr\": 7200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"7200 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://ulizaportal.jp/pages/005e1b23-fe93-5780-19a0-98e917cc4b7d?expires=1000&signature=f422a993b683e1068f946caf406d211c17d1ef17da8bef3df4a519502155aa91&version=1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [UlizaPortal] 005e1b23-fe93-5780-19a0-98e917cc4b7d: The link is expired"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player-api.p.uliza.jp/v1/players/default-player/pia/admin?type=normal&name=no_player_data",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [UlizaPlayer] no_player_data: Unable to extract m3u8 url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Unified Streaming Platform  (version=1.12.1-28247) -->
+<MPD
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="urn:mpeg:dash:schema:mpd:2011"
+  xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 http://standards.iso.org/ittf/PubliclyAvailableStandards/MPEG-DASH_schema_files/DASH-MPD.xsd"
+  type="static"
+  mediaPresentationDuration="PT29M40.840S"
+  maxSegmentDuration="PT4S"
+  minBufferTime="PT10S"
+  profiles="urn:mpeg:dash:profile:isoff-live:2011">
+  <Period
+    id="1"
+    duration="PT29M40.840S">
+    <BaseURL>dash/</BaseURL>
+    <AdaptationSet
+      id="1"
+      group="1"
+      contentType="audio"
+      lang="cs"
+      segmentAlignment="true"
+      audioSamplingRate="44100"
+      mimeType="audio/mp4"
+      codecs="mp4a.40.2"
+      startWithSAP="1">
+      <AudioChannelConfiguration
+        schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011"
+        value="2" />
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main" />
+      <SegmentTemplate
+        timescale="44100"
+        initialization="cze-c-sd1-sd2-sd3-sd4-hd1-hd2-zpu3LrhF-$RepresentationID$.dash"
+        media="cze-c-sd1-sd2-sd3-sd4-hd1-hd2-zpu3LrhF-$RepresentationID$-$Time$.dash">
+        <SegmentTimeline>
+          <S t="0" d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="4" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="4" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="132096" r="3" />
+          <S d="133120" />
+          <S d="81284" />
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation
+        id="audio_cze=128076"
+        bandwidth="128076">
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet
+      id="2"
+      group="2"
+      contentType="video"
+      lang="cs"
+      par="16:9"
+      minBandwidth="403000"
+      maxBandwidth="5011000"
+      maxWidth="1920"
+      maxHeight="1080"
+      segmentAlignment="true"
+      sar="1:1"
+      mimeType="video/mp4"
+      startWithSAP="1">
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main" />
+      <SegmentTemplate
+        timescale="12800"
+        initialization="cze-c-sd1-sd2-sd3-sd4-hd1-hd2-zpu3LrhF-$RepresentationID$.dash"
+        media="cze-c-sd1-sd2-sd3-sd4-hd1-hd2-zpu3LrhF-$RepresentationID$-$Time$.dash">
+        <SegmentTimeline>
+          <S t="0" d="38400" r="592" />
+          <S d="23552" />
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation
+        id="video_cze=403000"
+        bandwidth="403000"
+        width="512"
+        height="288"
+        codecs="avc1.4D4015"
+        scanType="progressive">
+      </Representation>
+      <Representation
+        id="video_cze=805000"
+        bandwidth="805000"
+        width="640"
+        height="360"
+        codecs="avc1.4D401E"
+        scanType="progressive">
+      </Representation>
+      <Representation
+        id="video_cze=1006000"
+        bandwidth="1006000"
+        width="768"
+        height="432"
+        codecs="avc1.4D401E"
+        scanType="progressive">
+      </Representation>
+      <Representation
+        id="video_cze=1508000"
+        bandwidth="1508000"
+        width="1024"
+        height="576"
+        codecs="avc1.4D401F"
+        scanType="progressive">
+      </Representation>
+      <Representation
+        id="video_cze=3515000"
+        bandwidth="3515000"
+        width="1280"
+        height="720"
+        codecs="avc1.4D401F"
+        scanType="progressive">
+      </Representation>
+      <Representation
+        id="video_cze=5011000"
+        bandwidth="5011000"
+        width="1920"
+        height="1080"
+        codecs="avc1.4D4028"
+        scanType="progressive">
+      </Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>

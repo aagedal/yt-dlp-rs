@@ -1,0 +1,26 @@
+[
+ {
+  "url": "https://app.lecturio.com/medical-courses/important-concepts-and-terms-introduction-to-microbiology.lecture#tab/videos",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://app.lecturio.com/medical-courses/important-concepts-and-terms-introduction-to-microbiology.lecture#tab/videos",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://app.lecturio.com/medical-courses/missing-title.lecture",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://app.lecturio.com/medical-courses/nonexistent-lecture.lecture",
+  "args": [
+   "-J"
+  ]
+ }
+]

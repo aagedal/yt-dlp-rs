@@ -1,0 +1,34 @@
+{
+ "data": {
+  "id": 2,
+  "title": "How Did You Develop The Internet?",
+  "description": "Vint Cerf, Google's Chief Internet Evangelist, describes how he and Bob Kahn created the internet.",
+  "rating_percentage": 96.32,
+  "type": "Interview",
+  "duration": 158,
+  "collection_id": 2,
+  "image_large": "https://img.curiositystream.com/w:1255/cHJvZHVjdGlvbi9zb3VyY2VzL3RpdGxlcy8yL2hvcml6b250YWxfaW1hZ2VfMTZfOS9lbi1VUy83YjA2MWZjYS0yZDQyLTRiNGEtYTNkMy0zYmYzOGU0MGQzNzgvbWVkaWFfaG9yaXpvbnRhbF9pbWFnZV8xNl85XzJfMzg0MHgyMTYwXzAwMDEuanBn.jpg",
+  "image_medium": "https://img.curiositystream.com/w:760/cHJvZHVjdGlvbi9zb3VyY2VzL3RpdGxlcy8yL2hvcml6b250YWxfaW1hZ2VfMTZfOS9lbi1VUy83YjA2MWZjYS0yZDQyLTRiNGEtYTNkMy0zYmYzOGU0MGQzNzgvbWVkaWFfaG9yaXpvbnRhbF9pbWFnZV8xNl85XzJfMzg0MHgyMTYwXzAwMDEuanBn.jpg",
+  "image_small": "https://img.curiositystream.com/w:278/cHJvZHVjdGlvbi9zb3VyY2VzL3RpdGxlcy8yL2hvcml6b250YWxfaW1hZ2VfMTZfOS9lbi1VUy83YjA2MWZjYS0yZDQyLTRiNGEtYTNkMy0zYmYzOGU0MGQzNzgvbWVkaWFfaG9yaXpvbnRhbF9pbWFnZV8xNl85XzJfMzg0MHgyMTYwXzAwMDEuanBn.jpg",
+  "tags": [],
+  "closed_captions": [],
+  "producer": "Curiosity Stream",
+  "primary_category": "Technology",
+  "encodings": [
+   {
+    "width": 0,
+    "height": 0,
+    "video_bitrate": 0,
+    "audio_bitrate": 0,
+    "size_in_bytes": 0,
+    "video_codec": "",
+    "audio_codec": "",
+    "container_type": "",
+    "url": "",
+    "file_url": "",
+    "master_playlist_url": "https://cdn-s3-akm.curiositystream.com/bitmovin-outputs/CM_CERF_INT_0714_03_HOW_DID_YOU_DEVELOP_THE_INTERNET.mov/678f0290f19399958844362c2e7a618b.mpd",
+    "type": "HD"
+   }
+  ]
+ }
+}

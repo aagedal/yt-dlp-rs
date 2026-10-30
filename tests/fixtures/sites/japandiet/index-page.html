@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<LINK rel="apple-touch-icon" href="../favicon_wb.ico" />
+<LINK rel="SHORTCUT ICON" href="../favicon_wb.ico">
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-JP" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<title>衆議院インターネット審議中継</title>
+<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+<link href="../css/main.css?d=20160206" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="../js/ui.core.js"></script>
+<script type="text/javascript" src="../js/jquery.scrollfollowplus.js"></script>
+<script type="text/javascript" src="../js/jquery.cookie.js"></script>
+<script type="text/javascript" src="../js/jquery.scrollTo.js"></script>
+<script type="text/javascript" src="../js/jquery.url.js"></script>
+<script type="text/javascript" src="../js/jquery.textresizer.js" ></script>
+<script language="JavaScript" type="text/JavaScript">
+var jsty='2026';
+var jstm='10';
+var jstd='31';
+var now_date = jsty + jstm + jstd;
+var smu="";
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+function is_iOS(){
+
+   return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+
+}
+function is_Android(){
+
+   ////return navigator.userAgent.match(/4.1/i);
+   if (androidVersion() >= 4.1) {
+     return true;
+   } else {
+     return false;
+   }
+
+}
+function is_mbl(){
+	if(is_iOS())return true;
+	if(is_Android())return true;
+	return false;
+}
+function androidVersion() {
+	var ua = navigator.userAgent;
+	var v = 0;
+	if( ua.indexOf("Android") > 0 ){var v = parseFloat(ua.slice(ua.indexOf("Android")+8));}
+	return v;
+}
+
+
+</script>
+<script language="JavaScript" src="../js/js_video.js"></script>
+<script language="JavaScript" src="../js/js_cookie.js"></script>
+<script language="JavaScript" src="../js/js_new_win.js"></script>
+<script language="JavaScript" src="../js/js_cookie_message.js"></script>
+<script language="JavaScript" src="../js/js_hidden_check.js"></script>
+<script language="JavaScript" src="../js/js_Lpad.js"></script>
+<script language="JavaScript" src="../js/js_mojicheck.js"></script>
+<script language="JavaScript" src="../js/shutv.js?d=20190305"></script>
+</head>
+<body>
+<div id="headerBg">
+<div id="header">
+<div id="headerLeft"><a href="../index.php" target="_self"><img src="../images/maintitle.jpg" alt="衆議院インターネット審議中継" width="689" height="100" border="0"></a></div>
+<div id="headerRight" style="width:140px;">
+<div id="links">
+<div style="margin:0 0 15px 72px;"><a href="../en/index.php" target="_self" onMouseOver="MM_swapImage('goto_english','','./images/b_goto-english_on.gif',1)" onMouseOut="MM_swapImgRestore()"><img src="./images/b_goto-english.gif" alt="Go to English" name="goto_english" width="68" height="18" border="0" id="goto_english"></a></div>
+<p><a href="https://www.shugiin.go.jp/" target="_blank" >衆議院ホームページ</a></p>
+<p><a href="https://www.webtv.sangiin.go.jp/" target="_blank">参議院審議中継</a></p>
+<p><a href="https://kokkai.ndl.go.jp/" target="_blank" >国会会議録検索ページ</a></p>
+</div>
+</div><!--end #headerRight-->
+<div id="headerBottom">
+<ul class="h_menu">
+<li><a href="./index.php" id="h_menu_hm" class="goto_home">HOME</a></li>
+<li><a href="./index.php?ex=IF" id="h_menu_if">お知らせ</a></li>
+<li><a href="./index.php?ex=HT" id="h_menu_ht">利用方法</a></li>
+<li><a href="./index.php?ex=FQ" id="h_menu_fq">FAQ</a></li>
+<li style="width:9em;"><a href="./index.php?ex=QT" id="h_menu_qt">ご意見・ご感想</a></li>
+</ul>
+<div id="fontselector" class="clearfix">
+<ul id="fontsizer">
+<li>文字の大きさ：</li>
+<li><a href="#" title="標準"><img src="images/sizebt_small.jpg" alt="標準" name="small" width="29" height="18" border="0" id="small"></a></li>
+<li><a href="#" title="拡大"><img src="images/sizebt_base.jpg" alt="拡大" name="medium" width="29" height="18" border="0" id="medium"></a></li>
+<li><a href="#" title="最大"><img src="images/sizebt_big.jpg" alt="最大" name="large" width="29" height="18" border="0" id="large"></a></li>
+</ul>
+</div><!--end #fontselector-->
+</div><!--end #headerBottom-->
+</div><!--end #header-->
+</div><!--end #headerBg-->
+<div id="container">
+<div id="contents">
+<div id="vplayer" style="display:none; margin-bottom: 60px;">
+<div id="player-container" class="video-js theoplayer-skin"></div>
+</div><!--end #vplayer-->
+<div id="vplayer2" style="display:none;"><video width="640" height="395" id="vtag" controls src=""></video>
+</div><!--end #vplayer2-->
+<input type="hidden" id="vtag_src_base_live" value="http://hlslive.shugiintv.go.jp/_roomid_/amlst:_roomid_/playlist.m3u8">
+		<!-- 開催メッセージ -->
+	<div id="kaisai">
+	<div class="s16_20" style="color:#c00; font-weight:bold;">第222回国会（臨時会）が開かれています。<br>期間は2026年10月5日から12月12日までです。</div>
+	</div><!--end #kaiasai-->
+		
+	<!-- 今日の審議中継 -->
+	<div id="today">
+	<div class="titleArea"><img src="./images/maintitle_broad_today.gif" alt="今日の審議中継" width="128" height="20"></div>
+			<table width="610" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+	<td colspan="2" class="s14_24"><B>本日は、審議中継はありません。</B></td>
+	</tr>
+	</table>
+		</div><!--end #today-->
+
+	<!-- 明日の中継予定 -->
+	<div id="tomorrow">
+	<div class="titleArea"><img src="./images/maintitle_broad_tomorrow.gif" alt="明日の中継予定" width="127" height="20"></div>
+									<p class="s14_24" style="font-weight:bold; margin-bottom:20px;">明日は、審議中継の予定はありません。</p>
+				<div><img src="./images/text_yotei_info.gif" alt="［中継予定のお知らせ］" width="129" height="15"></div>
+	  <div class="s12_14">
+		<br>
+		明日の中継予定については、原則としてその前日の午後３時以降、開会が予定された会議から順次お知らせいたします。
+	  </div>
+	</div><!--end #tomorrow-->
+
+
+	<div id="library">
+	<div class="titleArea"><img src="./images/maintitle_video_library.gif" alt="ビデオライブラリ" width="140" height="20"></div>
+	<!-- <p class="s12_16">このビデオライブラリは、国会審議テレビ中継で収録した音声と映像をそのまま提供しています。</p> -->
+	<p class="s14_24" style="margin-bottom:20px;">（第174回国会〔2010年1月18日〕以降のものを継続して提供）</p>
+	<FORM name="FORM1" method="post" action="index.php?ex=VL" id="videolib1" class="search">
+	<table border="0" cellspacing="0" cellpadding="0" width="610">
+	<tr>
+	  <td><img src="./images/text_search-condition_02.gif" alt="［条件検索］" width="68" height="15"></td>
+	  <td>&nbsp;</td>
+	</tr>
+	<tr>
+	  <td colspan="2"><img src="./images/spacer.gif" alt="" width="610" height="10"></td>
+	</tr>
+	<tr class="s12_14">
+	  <input type = "hidden" name="c_day" value="" onclick="turnoffcheck('day');">
+	  <td>開会日</td>
+	  <td nowrap>
+	    <select name="s_Year" size="1" id="s_Year">
+	        <OPTION VALUE="" SELECTED></option><option value="2010">2010</option>
+<option value="2011">2011</option>
+<option value="2012">2012</option>
+<option value="2013">2013</option>
+<option value="2014">2014</option>
+<option value="2015">2015</option>
+<option value="2016">2016</option>
+<option value="2017">2017</option>
+<option value="2018">2018</option>
+<option value="2019">2019</option>
+<option value="2020">2020</option>
+<option value="2021">2021</option>
+<option value="2022">2022</option>
+<option value="2023">2023</option>
+<option value="2024">2024</option>
+<option value="2025">2025</option>
+<option value="2026">2026</option>
+
+	    </select> 年
+	    <select name="s_Month" size="1" id="s_Month">
+	        <OPTION VALUE="" SELECTED></option><option value="01">1</option>
+<option value="02">2</option>
+<option value="03">3</option>
+<option value="04">4</option>
+<option value="05">5</option>
+<option value="06">6</option>
+<option value="07">7</option>
+<option value="08">8</option>
+<option value="09">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+
+	    </select> 月
+	    <select name="s_Day" size="1" id="s_Day">
+	        <OPTION VALUE="" SELECTED></option><option value="01">1</option>
+<option value="02">2</option>
+<option value="03">3</option>
+<option value="04">4</option>
+<option value="05">5</option>
+<option value="06">6</option>
+<option value="07">7</option>
+<option value="08">8</option>
+<option value="09">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+
+	    </select> 日〜 
+	    <select name="e_Year" size="1" id="e_Year">
+	        <OPTION VALUE="" SELECTED></option><option value="2010">2010</option>
+<option value="2011">2011</option>
+<option value="2012">2012</option>
+<option value="2013">2013</option>
+<option value="2014">2014</option>
+<option value="2015">2015</option>
+<option value="2016">2016</option>
+<option value="2017">2017</option>
+<option value="2018">2018</option>
+<option value="2019">2019</option>
+<option value="2020">2020</option>
+<option value="2021">2021</option>
+<option value="2022">2022</option>
+<option value="2023">2023</option>
+<option value="2024">2024</option>
+<option value="2025">2025</option>
+<option value="2026">2026</option>
+
+	    </select> 年
+	    <select name="e_Month" size="1" id="e_Month">
+	        <OPTION VALUE="" SELECTED></option><option value="01">1</option>
+<option value="02">2</option>
+<option value="03">3</option>
+<option value="04">4</option>
+<option value="05">5</option>
+<option value="06">6</option>
+<option value="07">7</option>
+<option value="08">8</option>
+<option value="09">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+
+	    </select> 月
+	    <select name="e_Day" size="1" id="e_Day">
+	        <OPTION VALUE="" SELECTED></option><option value="01">1</option>
+<option value="02">2</option>
+<option value="03">3</option>
+<option value="04">4</option>
+<option value="05">5</option>
+<option value="06">6</option>
+<option value="07">7</option>
+<option value="08">8</option>
+<option value="09">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+
+	    </select> 日
+	  </td>
+	</tr>
+
+	<tr>
+	  <td colspan="2"><img src="./images/spacer.gif" alt="" width="610" height="10"></td>
+	</tr>
+	<tr>
+	  <td class="s12_14"><INPUT type = "hidden" NAME="c_kaigi" VALUE="">会議名</td>
+	  <td>
+	    <select name="s_kaigi" class="s12_14" size="1" onChange="c_kaigi_check();">
+	        <OPTION VALUE="" SELECTED></option><option value="1">本会議</option>
+<option value="131">内閣委員会</option>
+<option value="963">総務委員会</option>
+<option value="135">法務委員会</option>
+<option value="110">外務委員会</option>
+<option value="964">財務金融委員会</option>
+<option value="965">文部科学委員会</option>
+<option value="966">厚生労働委員会</option>
+<option value="132">農林水産委員会</option>
+<option value="968">経済産業委員会</option>
+<option value="969">国土交通委員会</option>
+<option value="112">環境委員会</option>
+<option value="105">安全保障委員会</option>
+<option value="161">国家基本政策委員会</option>
+<option value="136">予算委員会</option>
+<option value="115">決算行政監視委員会</option>
+<option value="113">議院運営委員会</option>
+<option value="129">懲罰委員会</option>
+<option value="121">災害対策特別委員会</option>
+<option value="2932">震災復興・災害対策特別委員会</option>
+<option value="137">倫理選挙特別委員会</option>
+<option value="2931">政治改革特別委員会</option>
+<option value="109">沖縄北方特別委員会</option>
+<option value="1100">青少年問題特別委員会</option>
+<option value="2240">海賊対処・テロ防止特別委員会</option>
+<option value="1680">拉致問題特別委員会</option>
+<option value="124">消費者問題特別委員会</option>
+<option value="2300">科学技術特別委員会</option>
+<option value="2320">郵政改革特別委員会</option>
+<option value="2341">震災復興特別委員会</option>
+<option value="2440">社会保障・税特別委員会</option>
+<option value="2480">原子力問題調査特別委員会</option>
+<option value="2935">震災復興・原子力特別委員会</option>
+<option value="2560">国家安全特別委員会</option>
+<option value="2640">地方創生特別委員会</option>
+<option value="2740">平和安全特別委員会</option>
+<option value="2820">ＴＰＰ特別委員会</option>
+<option value="2923">地域・こども・デジタル特別委員会</option>
+<option value="2380">憲法審査会</option>
+<option value="2700">情報監視審査会</option>
+<option value="1340">政治倫理審査会</option>
+<option value="120">国家基本政策委員会合同審査会（党首討論）</option>
+<option value="1160">予算委員会第一分科会</option>
+<option value="1161">予算委員会第二分科会</option>
+<option value="1162">予算委員会第三分科会</option>
+<option value="1163">予算委員会第四分科会</option>
+<option value="1164">予算委員会第五分科会</option>
+<option value="1165">予算委員会第六分科会</option>
+<option value="1166">予算委員会第七分科会</option>
+<option value="1167">予算委員会第八分科会</option>
+<option value="2400">決算行政監視委員会行政監視小委員会</option>
+<option value="1180">決算行政監視委員会第一分科会</option>
+<option value="1181">決算行政監視委員会第二分科会</option>
+<option value="1182">決算行政監視委員会第三分科会</option>
+<option value="1183">決算行政監視委員会第四分科会</option>
+<option value="2282">内閣委員会公聴会</option>
+<option value="181">予算委員会公聴会</option>
+<option value="2460">社会保障・税特別委員会公聴会</option>
+<option value="2760">平和安全特別委員会公聴会</option>
+<option value="2280">内閣・総務連合審査会</option>
+<option value="2328">内閣・総務・財務金融・厚生労働連合審査会</option>
+<option value="2933">内閣・総務・安全保障連合審査会</option>
+<option value="2936">内閣・法務・外務・安全保障連合審査会</option>
+<option value="2880">内閣・文部科学・厚生労働連合審査会</option>
+<option value="2600">内閣・厚生労働連合審査会</option>
+<option value="2720">内閣・農林水産連合審査会</option>
+<option value="2020">内閣・経済産業連合審査会</option>
+<option value="2930">法務・文部科学・消費者問題連合審査会</option>
+<option value="1320">法務・厚生労働連合審査会</option>
+<option value="2322">法務・青少年問題連合審査会</option>
+<option value="2660">外務・農林水産連合審査会</option>
+<option value="2900">外務・農林水産・経済産業連合審査会</option>
+<option value="2937">財務金融・農林水産連合審査会</option>
+<option value="2360">財務金融・経済産業連合審査会</option>
+<option value="2924">財務金融・安全保障連合審査会</option>
+<option value="2680">文部科学・内閣連合審査会</option>
+<option value="2926">厚生労働・国土交通連合審査会</option>
+<option value="2283">農林水産・国土交通連合審査会</option>
+<option value="2323">経済産業・内閣連合審査会</option>
+<option value="2500">経済産業内閣財務金融消費者問題連合審査会</option>
+<option value="2340">経済産業・外務連合審査会</option>
+<option value="2928">経済産業・農林水産連合審査会</option>
+<option value="2361">経済産業・農林水産・環境連合審査会</option>
+<option value="2243">経済産業・環境連合審査会</option>
+<option value="2925">経済産業・環境・原子力問題連合審査会</option>
+<option value="2920">経済産業・原子力問題連合審査会</option>
+<option value="1420">国土交通・法務連合審査会</option>
+<option value="2281">環境・経済産業連合審査会</option>
+<option value="2620">安全保障・外務連合審査会</option>
+<option value="2922">安全保障・外務・拉致問題連合審査会</option>
+<option value="2840">地方創生・農林水産連合審査会</option>
+<option value="2927">地域こどもデジタル・厚生労働連合審査会</option>
+<option value="2381">両院議運合同協議会</option>
+<option value="2420">東京電力福島原子力発電所事故調査委員会</option>
+<option value="2934">衆議院選挙制度協議会</option>
+<option value="2382">ブ−タン王国国王陛下及び同王妃陛下歓迎会</option>
+<option value="2580">ベトナム社会主義共和国主席夫妻歓迎会</option>
+<option value="2780">エジプト・アラブ共和国大統領歓迎会</option>
+<option value="2921">ウクライナ大統領国会演説（オンライン）</option>
+<option value="2929">ベトナム社会主義共和国主席夫妻歓迎会　</option>
+
+	    </select>
+	  </td>
+	</tr>
+	<tr>
+	  <td colspan="2"><img src="./images/spacer.gif" alt="" width="610" height="10"></td>
+	</tr>
+	<tr>
+	  <td class="s12_14"><INPUT type = "hidden" name="c_anken" VALUE="">案件名</td>
+	  <td>
+	    <input name="t_anken" type="text" id="case_name" size="70" value=""><br>
+	    <input class="s12_14" type="button" value="案件一覧" onClick="newWin('anken.php',700,300)">
+	  </td>
+	</tr>
+	<tr>
+	  <td colspan="2"><img src="./images/spacer.gif" alt="" width="610" height="10"></td>
+	</tr>
+	<tr>
+	  <td class="s12_14"><INPUT type = "hidden" name="c_hatsugen" VALUE="">発言者名</td>
+	  <td>
+	    <input name="t_hatsugen" type="text" id="speaker_name" size="70"><br>
+	    <input class="s12_14" type="button" value="発言者名一覧" onClick="newWin('speaker.php',400,300)">
+	  </td>
+	</tr>
+	<tr>
+	  <td colspan="2"><img src="./images/spacer.gif" alt="" width="610" height="10"></td>
+	</tr>
+	<tr align="center">
+	  <td colspan="2" nowrap class="s12_14">
+	    <input name="r_condition" type="radio" value="1" checked>全て含む（and）　<input type="radio" name="r_condition" value="2">いずれか含む（or）
+	  </td>
+	</tr>
+	<tr>
+	  <td colspan="2"><img src="./images/spacer.gif" alt="" width="610" height="10"></td>
+	</tr>
+	<tr align="center">
+	  <td colspan="2">
+	    <input type="button" class="s12_14" name="submit3" value="検索" onclick="all_hidden_check();Kensaku();">
+	    <input class="s12_14" name="clear" type="reset" id="clear" value="クリア">
+	    <input type="hidden" name="h_page" value="1">
+	  </td>
+	</tr>
+	</table>
+	</FORM>
+</div><!--end #library-->	<div id="eizo_archive">
+	<div class="titleArea"><img src="./images/maintitle_eizo_archive.gif" alt="映像アーカイブ" width="165" height="20"></div>
+
+	<p class="s14_24">
+		第120回国会〔1991年1月〕から第173回国会〔2009年12月〕までの審議映像は、<a
+			href="/classic_vod/jp/">映像記録アーカイブ</a>からご覧いただけます。ただし、全ての会議室の中継設備が整う第152回国会〔2001年8月〕前に開かれた会議においては、映像記録がない場合があります。<br>
+		※　映像記録アーカイブは、当時の映像を復元しているため、画質が劣化しております。<br>
+		※　頭出し機能はご利用いただけず、「再生」のみとなっておりますのでご了承ください。なお、発言者等の検索は<a href="https://kokkai.ndl.go.jp/" target="_blank"
+			rel="noopener noreferrer">国会会議録検索システム（国立国会図書館HP）</a>をご利用ください。
+	</p>
+	<br>
+	<div class="video_archive_btn_parent">
+		<div class='video_archive_btn'>
+			<a href='/classic_vod/jp/'>映像記録アーカイブ</a>
+		</div>
+	</div>
+</div><!--end #library-->	
+</div><!--end #contents-->
+
+<div id="side">
+	<div id="s_menu">
+		<!--p class="link_video"><a href="#"><img src="./images/text_select.gif" width="179" height="42" alt="配信方法選択" border="0" class="link_video_select"></a></p-->
+		<p class="link"><a href="./index.php?ex=TD#today" class="s_menu_link">今日の審議中継</a></p>
+		<p class="link"><a href="./index.php?ex=TM#tomorrow" class="s_menu_link">明日の中継予定</a></p>
+		<p class="link"><a href="./index.php#library">ビデオライブラリ</a></p>
+		<!-- カレンダー表記 -->
+		<div id="calendar">
+		</div><!--end #calendar-->
+	</div><!--end #s_menu-->
+</div><!--end #side-->
+<div id="go_top" class="s12_12"><a href="#">このページの先頭へ▲</a></div>
+<div id="f_menu" class="s12_12"><a href="./index.php" class="goto_home">HOME</a><a href="./index.php?ex=IF">お知らせ</a><a href="./index.php?ex=HT">利用方法</a><a href="./index.php?ex=FQ">FAQ</a><a href="./index.php?ex=QT">ご意見・ご感想</a></div>
+<div id="footer" class="s10_12">
+<p>このページは、JavaScriptを使用しています。ご使用中のブラウザのJavaScriptを有効にしてください。<br>
+このホームページに関するお問い合わせは<a href="index.php?ex=ML" target="_self">こちら</a>まで。</p>
+<p id="ft_cpright"><span class="finalized">Copyright(C) 1999-2026 Shugiin All Rights Reserved.　</span><a href="index.php?ex=CR" target="_self">著作権・リンク・登録商標について</a></p>
+</div><!--end #footer-->
+</div><!--end #container-->
+</body>
+</html>
+

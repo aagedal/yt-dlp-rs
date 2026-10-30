@@ -1,0 +1,20 @@
+[
+ {
+  "url": "https://nekohacker.com/nekoverse/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://nekohacker.com/synthetic-empty/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://nekohacker.com/synthetic-spotify/",
+  "args": [
+   "-J"
+  ]
+ }
+]

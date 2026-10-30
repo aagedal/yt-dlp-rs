@@ -1,0 +1,15 @@
+[
+ {
+  "url": "https://v.youku.com/v_show/id_XNTA2NTA0MjA1Mg==.html",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(duration)s|%(uploader)s|%(uploader_id)s|%(format_id)s|%(url)s"
+  ]
+ },
+ {
+  "url": "http://v.youku.com/v_show/id_XNjA1NzA2Njgw.html",
+  "args": [
+   "-J"
+  ]
+ }
+]

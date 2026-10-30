@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://media.cms.nova.cz/embed/KybpWYvcgOa",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "embed-kybpwyvcgoa.html"
+  },
+  {
+   "url": "https://mediatn.cms.nova.cz/embed/EU5ELEsmOHt?autoplay=1",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "embed-eu5elesmoht.html"
+  },
+  {
+   "url": "https://media.cms.nova.cz/embed/synthetic-noplayer",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<!DOCTYPE html><html><head><title>Synthetic</title></head><body><p>No player here.</p></body></html>"
+  },
+  {
+   "url": "https://nova-ott-vod-prep-sec.ssl.cdn.cra.cz/WfPu8F0bE0woev-jUEuRyQ==,1793383762/0196/8340/cze-c-sd0-sd1-sd2-sd3-sd4-hd1-hd2-80KXuNlF.ism/.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "kyb-hls.m3u8"
+  },
+  {
+   "url": "https://nova-ott-vod-prep-sec.ssl.cdn.cra.cz/QRClU6jsg3bBTisWd7LGvw==,1793383762/0196/8340/cze-c-sd1-sd2-sd3-sd4-hd1-hd2-gZsU2n1j.ism/.mpd",
+   "headers": {"Content-Type": "application/dash+xml"},
+   "body_file": "kyb-dash.mpd"
+  },
+  {
+   "url": "https://nova-ott-vod-prep-sec.ssl.cdn.cra.cz/vn_kpsGKv2TX0gu7SH8a5w==,1793382923/0202/0654/cze-c-sd0-sd1-sd2-sd3-sd4-hd1-hd2-knkDAVf8.ism/.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "eu-hls.m3u8"
+  },
+  {
+   "url": "https://nova-ott-vod-prep-sec.ssl.cdn.cra.cz/FQJAERcPtVyOywaokTOL-g==,1793382923/0202/0654/cze-c-sd1-sd2-sd3-sd4-hd1-hd2-zpu3LrhF.ism/.mpd",
+   "headers": {"Content-Type": "application/dash+xml"},
+   "body_file": "eu-dash.mpd"
+  }
+ ]
+}

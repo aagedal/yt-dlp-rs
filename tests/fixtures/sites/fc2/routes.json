@@ -1,0 +1,48 @@
+{
+ "routes": [
+  {
+   "url": "http://video.fc2.com/en/content/20121103kUan1KHs",
+   "status": 302,
+   "headers": {
+    "Location": "http://video.fc2.com/login.php?mode=info"
+   },
+   "body": ""
+  },
+  {
+   "url": "http://video.fc2.com/login.php?mode=info",
+   "headers": {
+    "Content-Type": "text/html; charset=UTF-8"
+   },
+   "body_file": "login.html"
+  },
+  {
+   "url": "https://video.fc2.com/api/v3/videoplaylist/20121103kUan1KHs?sh=1&fs=0",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playlist.json"
+  },
+  {
+   "url": "https://video.fc2.com/api/v3/videoplaylist/synthetic-noplaylist?sh=1&fs=0",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playlist-error.json"
+  },
+  {
+   "url": "https://video.fc2.com/api/v3/videoplaylist/201403223kCqB3Ez?sh=1&fs=0",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playlist.json"
+  },
+  {
+   "url": "http://video.fc2.com/en/content/synthetic-noplaylist",
+   "status": 302,
+   "headers": {
+    "Location": "http://video.fc2.com/login.php?mode=info"
+   },
+   "body": ""
+  }
+ ]
+}

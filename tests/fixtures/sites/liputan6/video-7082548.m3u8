@@ -1,0 +1,11 @@
+#EXTM3U
+#EXT-X-VERSION:3
+
+#EXT-X-STREAM-INF:BANDWIDTH=700000,CODECS="avc1.640029,mp4a.40.2",RESOLUTION=640x360,CLOSED-CAPTIONS=NONE,NAME="360p",STABLE-VARIANT-ID="video-360p"
+https://token-media-vidio-com.akamaized.net/exp=1793389143~acl=/uploads/7082548/*~hmac=60fe2eb7d7266088083f3d6cede72df66cb6af1c5c6373edf28c8ad42aa0bc0d/uploads/7082548/etsvod_ETS2cd5dffe5bb88b918_med.m3u8
+
+#EXT-X-STREAM-INF:BANDWIDTH=900000,CODECS="avc1.640029,mp4a.40.2",RESOLUTION=854x480,CLOSED-CAPTIONS=NONE,NAME="480p",STABLE-VARIANT-ID="video-480p"
+https://token-media-vidio-com.akamaized.net/exp=1793389143~acl=/uploads/7082548/*~hmac=60fe2eb7d7266088083f3d6cede72df66cb6af1c5c6373edf28c8ad42aa0bc0d/uploads/7082548/etsvod_ETS2cd5dffe5bb88b918_med-high.m3u8
+
+#EXT-X-STREAM-INF:BANDWIDTH=1200000,CODECS="avc1.640029,mp4a.40.2",RESOLUTION=1280x720,CLOSED-CAPTIONS=NONE,NAME="720p",STABLE-VARIANT-ID="video-720p"
+https://token-media-vidio-com.akamaized.net/exp=1793389143~acl=/uploads/7082548/*~hmac=60fe2eb7d7266088083f3d6cede72df66cb6af1c5c6373edf28c8ad42aa0bc0d/uploads/7082548/etsvod_ETS2cd5dffe5bb88b918_high.m3u8

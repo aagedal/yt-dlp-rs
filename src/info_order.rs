@@ -2511,6 +2511,15 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     // count, unless the extractor's dict had it).
     replay.take("comments");
     replay.take("comment_count");
+    // A url-only dict's int `abr` and `vbr` sum to an int `tbr` (MailRuMusicIE).
+    if shape.starts_with("untyped-dict;")
+        && replay.out.get("abr").is_some_and(Value::is_i64)
+        && replay.out.get("vbr").is_some_and(Value::is_i64)
+        && let Some(tbr) = replay.out.get("tbr").and_then(Value::as_f64)
+        && tbr.fract() == 0.0
+    {
+        replay.out.insert("tbr".into(), (tbr as i64).into());
+    }
     // `-J`: `requested_downloads`, each without the keys whose values equal
     // the info dict's ("Remove copied info"); the selected format's keys are
     // merged afterwards (`info_dict.update(best_format)`), so the dict still

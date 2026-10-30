@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "https://api.curiositystream.com/v1/media/2?encodingsNew=true&encodingsFormat=m3u8",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "media-2-m3u8.json"
+  },
+  {
+   "url": "https://api.curiositystream.com/v1/media/2?encodingsNew=true&encodingsFormat=mpd",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "media-2-mpd.json"
+  },
+  {
+   "url": "https://cdn-s3-akm.curiositystream.com/bitmovin-outputs/CM_CERF_INT_0714_03_HOW_DID_YOU_DEVELOP_THE_INTERNET.mov/678f0290f19399958844362c2e7a618b.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-2.m3u8"
+  },
+  {
+   "url": "https://cdn-s3-akm.curiositystream.com/bitmovin-outputs/CM_CERF_INT_0714_03_HOW_DID_YOU_DEVELOP_THE_INTERNET.mov/678f0290f19399958844362c2e7a618b.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "master-2.mpd"
+  },
+  {
+   "url": "https://api.curiositystream.com/v1/media/3?encodingsNew=true&encodingsFormat=m3u8",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "error-3.json"
+  },
+  {
+   "url": "https://api.curiositystream.com/v1/media/4?encodingsNew=true&encodingsFormat=m3u8",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "media-4-notitle.json"
+  },
+  {
+   "url": "https://api.curiositystream.com/v1/media/4?encodingsNew=true&encodingsFormat=mpd",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "media-4-notitle.json"
+  },
+  {
+   "url": "https://api.curiositystream.com/v2/collections/86",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "collection-86.json"
+  },
+  {
+   "url": "https://api.curiositystream.com/v2/series/2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "series-2.json"
+  }
+ ]
+}

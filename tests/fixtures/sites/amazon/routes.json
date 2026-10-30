@@ -1,0 +1,26 @@
+{
+ "routes": [
+  {
+   "url": "https://www.amazon.co.uk/dp/B098XNCHLD/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://www.amazon.co.uk/dp/B000NODATA0/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-nodata.html"
+  },
+  {
+   "url": "https://www.amazon.co.uk/dp/B000MISSING0/",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>Not Found</body></html>"
+  }
+ ]
+}

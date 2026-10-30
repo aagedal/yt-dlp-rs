@@ -1,0 +1,52 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.amazon.co.uk/dp/B098XNCHLD/",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(duration)s|%(height)s|%(width)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "A1F83G8C2ARO7P|mcdodo usb c cable 100W 5a|34|1080|1920"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.amazon.co.uk/dp/B000NODATA0/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [AmazonStore] Unable to extract data. Retrying (1/3)...",
+    "WARNING: [AmazonStore] Unable to extract data. Retrying (2/3)...",
+    "WARNING: [AmazonStore] Unable to extract data. Retrying (3/3)...",
+    "ERROR: [AmazonStore] B000NODATA0: Unable to extract data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.amazon.co.uk/dp/B000MISSING0/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [AmazonStore] B000MISSING0: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,18 @@
+[
+ {
+  "url": "https://media.cms.nova.cz/embed/KybpWYvcgOa",
+  "args": ["-J"]
+ },
+ {
+  "url": "https://mediatn.cms.nova.cz/embed/EU5ELEsmOHt?autoplay=1",
+  "args": ["-F"]
+ },
+ {
+  "url": "https://media.cms.nova.cz/embed/synthetic-noplayer",
+  "args": ["-J"]
+ },
+ {
+  "url": "https://media.cms.nova.cz/embed/synthetic-missing",
+  "args": ["-J"]
+ }
+]

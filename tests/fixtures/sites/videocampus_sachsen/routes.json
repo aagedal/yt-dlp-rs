@@ -1,0 +1,29 @@
+{
+ "routes": [
+  {
+   "url": "https://videocampus.sachsen.de/video/Was-ist-selbstgesteuertes-Lernen/fc99c527e4205b121cb7c74433469262",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "video-page.html"
+  },
+  {
+   "url": "https://videocampus.sachsen.de/media/hlsMedium/key/fc99c527e4205b121cb7c74433469262/format/auto/ext/mp4/learning/0/path/m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://videocampus.sachsen.de/media/embed?key=fc99c527e4205b121cb7c74433469262",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "embed.html"
+  },
+  {
+   "url": "https://videocampus.sachsen.de/m/0123456789abcdef",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "nokey.html"
+  },
+  {
+   "url": "https://videocampus.sachsen.de/video/Synthetic-without-HLS/0123456789abcdef0123456789abcdef",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "nohls.html"
+  }
+ ]
+}

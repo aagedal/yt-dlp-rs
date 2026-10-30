@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://liveapi.huya.com/moment/getMomentContent?videoId=556054543",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "moment.json"
+  },
+  {
+   "url": "http://videotx-platform.cdn.huya.com/1048585/1099511649390/26425985/af37f9ff9f0e8327293b9fb407a70832.m3u8?bitrate=1291&client=106&definition=1300&pid=367138632&scene=vod&vid=556054543&hyvid=556054543&hyauid=367138632&hyroomid=0&hyratio=1291&hyscence=vod&appid=66&domainid=41&srckey=NjZfNDFfNTU2MDU0NTQz&",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://www.huya.com/572329",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "live.html"
+  },
+  {
+   "url": "https://www.huya.com/999001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "no-stream.html"
+  }
+ ]
+}

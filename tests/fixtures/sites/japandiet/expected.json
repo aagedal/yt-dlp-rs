@@ -1,0 +1,43 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.shugiintv.go.jp/jp/index.php?ex=VL&media_type=&deli_id=53846",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"53846\", \"title\": \"\\u30a6\\u30af\\u30e9\\u30a4\\u30ca\\u5927\\u7d71\\u9818\\u56fd\\u4f1a\\u6f14\\u8aac\\uff08\\u30aa\\u30f3\\u30e9\\u30a4\\u30f3\\uff09\", \"release_date\": \"20220323\", \"chapters\": [{\"start_time\": 0, \"end_time\": 1170.5, \"title\": \"<Untitled Chapter 1>\"}, {\"title\": \"\\u306f\\u3058\\u3081\\u304b\\u3089\\u518d\\u751f\", \"start_time\": 1170.5, \"end_time\": 1790.0}, {\"title\": \"\\u7d30\\u7530\\u535a\\u4e4b(\\u8846\\u8b70\\u9662\\u8b70\\u9577)\", \"start_time\": 1790.0, \"end_time\": 1895.4}, {\"title\": \"\\u30bc\\u30ec\\u30f3\\u30b9\\u30ad\\u30fc(\\u30a6\\u30af\\u30e9\\u30a4\\u30ca\\u5927\\u7d71\\u9818)\", \"start_time\": 1895.4, \"end_time\": 2662.5}, {\"title\": \"\\u5c71\\u6771\\u662d\\u5b50(\\u53c2\\u8b70\\u9662\\u8b70\\u9577)\", \"start_time\": 2662.5, \"end_time\": 2902.5}], \"formats\": [{\"format_id\": \"250k\", \"format_index\": null, \"url\": \"https://hlsvod.shugiintv.go.jp/vod/_definst_/amlst:2022/2022-0323-1750-04/chunklist_w529293629_b314000_t64MjUwaw==.m3u8\", \"manifest_url\": \"https://hlsvod.shugiintv.go.jp/vod/_definst_/amlst:2022/2022-0323-1750-04/playlist.m3u8\", \"tbr\": 314.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 480, \"height\": 270, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"480x270\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"250k - 480x270\"}, {\"format_id\": \"500k\", \"format_index\": null, \"url\": \"https://hlsvod.shugiintv.go.jp/vod/_definst_/amlst:2022/2022-0323-1750-04/chunklist_w529293629_b564000_t64NTAwaw==.m3u8\", \"manifest_url\": \"https://hlsvod.shugiintv.go.jp/vod/_definst_/amlst:2022/2022-0323-1750-04/playlist.m3u8\", \"tbr\": 564.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"500k - 640x360\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.shugiintv.go.jp/jp/index.php?ex=VL&media_type=&deli_id=53846\", \"original_url\": \"https://www.shugiintv.go.jp/jp/index.php?ex=VL&media_type=&deli_id=53846\", \"webpage_url_basename\": \"index.php\", \"webpage_url_domain\": \"shugiintv.go.jp\", \"extractor\": \"ShugiinItvVod\", \"extractor_key\": \"ShugiinItvVod\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"53846\", \"fulltitle\": \"\\u30a6\\u30af\\u30e9\\u30a4\\u30ca\\u5927\\u7d71\\u9818\\u56fd\\u4f1a\\u6f14\\u8aac\\uff08\\u30aa\\u30f3\\u30e9\\u30a4\\u30f3\\uff09\", \"release_year\": 2022, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"500k\", \"url\": \"https://hlsvod.shugiintv.go.jp/vod/_definst_/amlst:2022/2022-0323-1750-04/chunklist_w529293629_b564000_t64NTAwaw==.m3u8\", \"manifest_url\": \"https://hlsvod.shugiintv.go.jp/vod/_definst_/amlst:2022/2022-0323-1750-04/playlist.m3u8\", \"tbr\": 564.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"500k - 640x360\", \"_filename\": \"\\u30a6\\u30af\\u30e9\\u30a4\\u30ca\\u5927\\u7d71\\u9818\\u56fd\\u4f1a\\u6f14\\u8aac\\uff08\\u30aa\\u30f3\\u30e9\\u30a4\\u30f3\\uff09 [53846].mp4\", \"filename\": \"\\u30a6\\u30af\\u30e9\\u30a4\\u30ca\\u5927\\u7d71\\u9818\\u56fd\\u4f1a\\u6f14\\u8aac\\uff08\\u30aa\\u30f3\\u30e9\\u30a4\\u30f3\\uff09 [53846].mp4\", \"__write_download_archive\": false}], \"format_id\": \"500k\", \"format_index\": null, \"url\": \"https://hlsvod.shugiintv.go.jp/vod/_definst_/amlst:2022/2022-0323-1750-04/chunklist_w529293629_b564000_t64NTAwaw==.m3u8\", \"manifest_url\": \"https://hlsvod.shugiintv.go.jp/vod/_definst_/amlst:2022/2022-0323-1750-04/playlist.m3u8\", \"tbr\": 564.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"500k - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.shugiintv.go.jp/jp/index.php",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"All proceedings for today\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.shugiintv.go.jp/jp/index.php\", \"original_url\": \"https://www.shugiintv.go.jp/jp/index.php\", \"webpage_url_basename\": \"index.php\", \"webpage_url_domain\": \"shugiintv.go.jp\", \"extractor\": \"ShugiinItvLive\", \"extractor_key\": \"ShugiinItvLive\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.shugiintv.go.jp/jp/index.php?ex=VL&media_type=&deli_id=1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [ShugiinItvVod] 1: Unable to extract m3u8 url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

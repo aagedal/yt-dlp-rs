@@ -1,0 +1,7 @@
+{
+ "routes": [
+  {"url": "https://www.eroprofile.com/m/videos/album/BBW-2-893", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "album-1.html"},
+  {"url": "https://www.eroprofile.com/m/videos/album/BBW-2-893?pnum=2", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "album-2.html"},
+  {"url": "https://www.eroprofile.com/m/videos/album/Synthetic-1", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><head><title>Not an album</title></head><body>No playlist here</body></html>"}
+ ]
+}

@@ -1,0 +1,63 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://video.fc2.com/en/content/20121103kUan1KHs",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"20121103kUan1KHs\", \"title\": \"fc2 video #20121103kUan1KHs\", \"url\": \"https://video.fc2.com/api/v3/videoplay/pppDFBggDWwjXTDwF3W2FWDaDi2imi2Bf9LPPVP/2?signature=TWF7_E$J36-$IT2AUJ.I0SDSEQQL48$$V9--5VKI&t=1793374624\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"description\": null, \"thumbnail\": null, \"webpage_url\": \"http://video.fc2.com/en/content/20121103kUan1KHs\", \"original_url\": \"http://video.fc2.com/en/content/20121103kUan1KHs\", \"webpage_url_basename\": \"20121103kUan1KHs\", \"webpage_url_domain\": \"video.fc2.com\", \"extractor\": \"fc2\", \"extractor_key\": \"FC2\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"20121103kUan1KHs\", \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"fc2 video #20121103kUan1KHs [20121103kUan1KHs].mp4\", \"filename\": \"fc2 video #20121103kUan1KHs [20121103kUan1KHs].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [fc2] unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [fc2] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://video.fc2.com/en/content/synthetic-noplaylist",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [fc2] unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [fc2] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [fc2] synthetic-noplaylist: Unable to extract video URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://video.fc2.com/en/content/missing404",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [fc2] missing404: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://video.fc2.com/flv2.swf?t=1&i=201403223kCqB3Ez&sj=11&tl=Title%20X",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"201403223kCqB3Ez\", \"title\": \"Title X\", \"url\": \"https://video.fc2.com/api/v3/videoplay/pppDFBggDWwjXTDwF3W2FWDaDi2imi2Bf9LPPVP/2?signature=TWF7_E$J36-$IT2AUJ.I0SDSEQQL48$$V9--5VKI&t=1793374624\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"description\": null, \"thumbnail\": \"http://video11-thumbnail.fc2.com/up/pic/201403/22/E/z/201403223kCqB3Ez.jpg\", \"original_url\": \"http://video.fc2.com/flv2.swf?t=1&i=201403223kCqB3Ez&sj=11&tl=Title%20X\", \"webpage_url\": \"http://video.fc2.com/flv2.swf?t=1&i=201403223kCqB3Ez&sj=11&tl=Title%20X\", \"webpage_url_basename\": \"flv2.swf\", \"webpage_url_domain\": \"video.fc2.com\", \"extractor\": \"fc2\", \"extractor_key\": \"FC2\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://video11-thumbnail.fc2.com/up/pic/201403/22/E/z/201403223kCqB3Ez.jpg\", \"id\": \"0\"}], \"display_id\": \"201403223kCqB3Ez\", \"fulltitle\": \"Title X\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Title X [201403223kCqB3Ez].mp4\", \"filename\": \"Title X [201403223kCqB3Ez].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

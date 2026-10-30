@@ -1,0 +1,25 @@
+{
+ "data": {
+  "id": 86,
+  "title": "Staff Picks",
+  "description": "Wondering where to start? Here are a few of our favorite series and films... from our couch to yours.",
+  "media": [
+   {
+    "id": 2065,
+    "is_collection": false
+   },
+   {
+    "id": 2142,
+    "is_collection": false
+   },
+   {
+    "id": 1571,
+    "is_collection": false
+   },
+   {
+    "id": 394,
+    "is_collection": true
+   }
+  ]
+ }
+}

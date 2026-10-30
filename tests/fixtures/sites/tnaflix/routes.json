@@ -1,0 +1,7 @@
+{
+ "routes": [
+  {"url": "http://www.tnaflix.com/category/6538/video6538", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "http://www.tnaflix.com/ajax/video-player/6538", "headers": {"Content-Type": "application/json"}, "body_file": "ajax-6538.json"},
+  {"url": "https://www.tnaflix.com/ajax/video-player/6538", "headers": {"Content-Type": "application/json"}, "body_file": "ajax-6538.json"}
+ ]
+}

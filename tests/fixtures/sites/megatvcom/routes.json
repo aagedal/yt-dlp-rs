@@ -1,0 +1,24 @@
+{
+ "routes": [
+  {
+   "url": "https://www.megatv.com/tvshows/527800/epeisodio-65-12/",
+   "headers": {"Content-Type": "text/html; charset=UTF-8"},
+   "body_file": "tvshow-527800.html"
+  },
+  {
+   "url": "https://cdd1c899a94a4babbdaf6eb9b9d5f634.msvdn.net/vod/dWKmA6NMUXOF/PK6/playlist.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "playlist.m3u8"
+  },
+  {
+   "url": "https://www.megatv.com/2021/10/23/synthetic-article/",
+   "headers": {"Content-Type": "text/html; charset=UTF-8"},
+   "body": "<!DOCTYPE html><html><head><meta property=\"og:title\" content=\"Synthetic\"></head><body><article class=\"x\">No id here</article></body></html>"
+  },
+  {
+   "url": "https://www.megatv.com/tvshows/527801/synthetic-no-player/",
+   "headers": {"Content-Type": "text/html; charset=UTF-8"},
+   "body": "<!DOCTYPE html><html><head><meta property=\"og:title\" content=\"Synthetic\"></head><body><div id=\"player_div_id\" data-kwik_image=\"https://www.megatv.com/a.jpg\"></div></body></html>"
+  }
+ ]
+}

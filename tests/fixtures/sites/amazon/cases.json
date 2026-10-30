@@ -1,0 +1,24 @@
+[
+ {
+  "url": "https://www.amazon.co.uk/dp/B098XNCHLD/",
+  "args": [
+   "--flat-playlist",
+   "--print",
+   "%(id)s|%(title)s|%(duration)s|%(height)s|%(width)s"
+  ]
+ },
+ {
+  "url": "https://www.amazon.co.uk/dp/B000NODATA0/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.amazon.co.uk/dp/B000MISSING0/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

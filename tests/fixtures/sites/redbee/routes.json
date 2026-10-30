@@ -1,0 +1,8 @@
+{
+ "routes": [
+  {"url": "https://exposure.api.redbee.live/v2/customer/UKParliament/businessunit/ParliamentLive/auth/anonymous", "headers": {"Content-Type": "application/json"}, "body_file": "auth-anonymous.json"},
+  {"url": "https://exposure.api.redbee.live/v2/customer/UKParliament/businessunit/ParliamentLive/entitlement/c1e9d44d-fd6c-4263-b50f-97ed26cc998b/play", "headers": {"Content-Type": "application/json"}, "body_file": "play.json"},
+  {"url": "https://www.parliamentlive.tv/Event/GetShareVideo/c1e9d44d-fd6c-4263-b50f-97ed26cc998b", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "share.json"},
+  {"url": "https://2f0f8fc-az-westeurope-fsly.cdn.redbee.live/ukparliament/parliamentlive/assets/c1e9d44d-fd6c-4263-b50f-97ed26cc998b_0D62A9b/materials/EM41RVWvjT_0D62A9b/vod-idx.ism/.m3u8?vbegin=1395153872&vend=1395162701", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "vod-idx.m3u8"}
+ ]
+}
