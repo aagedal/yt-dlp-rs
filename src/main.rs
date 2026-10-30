@@ -1708,84 +1708,29 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         args.wait_for_video.is_some() && !args.no_wait_for_video,
     );
     yt_dlp_rs::no_formats::set_allow_unplayable(args.allow_unplayable_formats);
-    // `--extractor-args`: GenericIE's, YouTube's, YoutubeTabIE's, TwitterIE's, VimeoIE's and
-    // ORFONIE's ported arguments are used; other extractors' are not.
+    // `--extractor-args`: the ported arguments of `SUPPORTED_EXTRACTOR_ARGS`'s
+    // extractors are used; other arguments and extractors' are not.
     let extractor_args =
         yt_dlp_rs::manifest_args::parse_extractor_args(&args.extractor_args).map_err(UsageError)?;
     for (key, values) in &extractor_args {
-        match key.as_str() {
-            "generic" => {}
-            "youtube" => {
-                for name in values.keys().filter(|name| {
-                    !matches!(
-                        name.as_str(),
-                        "player_client"
-                            | "player_skip"
-                            | "max_comments"
-                            | "comment_sort"
-                            | "formats"
-                            | "include_duplicate_formats"
-                            | "skip"
-                            | "po_token"
-                            | "fetch_pot"
-                            | "pot_trace"
-                            | "visitor_data"
-                            | "data_sync_id"
-                            | "innertube_host"
-                            | "innertube_key"
-                            | "player_params"
-                            | "use_ad_playback_context"
-                            | "webpage_client"
-                            | "webpage_skip"
-                            | "player_js_version"
-                            | "player_js_variant"
-                            | "raise_incomplete_data"
-                            | "lang"
-                    )
-                }) {
-                    warning!(
-                        "WARNING: extractor argument youtube:{name} is not supported natively and is ignored"
-                    );
-                }
-            }
-            "twitter" => {
-                for name in values.keys().filter(|name| name.as_str() != "api") {
-                    warning!(
-                        "WARNING: extractor argument twitter:{name} is not supported natively and is ignored"
-                    );
-                }
-            }
-            "vimeo" => {
+        if key == "generic" {
+            continue;
+        }
+        match SUPPORTED_EXTRACTOR_ARGS
+            .iter()
+            .find(|(extractor, _)| extractor == key)
+        {
+            Some((_, supported)) => {
                 for name in values
                     .keys()
-                    .filter(|name| !matches!(name.as_str(), "client" | "original_format_policy"))
+                    .filter(|name| !supported.contains(&name.as_str()))
                 {
                     warning!(
-                        "WARNING: extractor argument vimeo:{name} is not supported natively and is ignored"
+                        "WARNING: extractor argument {key}:{name} is not supported natively and is ignored"
                     );
                 }
             }
-            "orfon" => {
-                for name in values
-                    .keys()
-                    .filter(|name| name.as_str() != "prefer_segments_playlist")
-                {
-                    warning!(
-                        "WARNING: extractor argument orfon:{name} is not supported natively and is ignored"
-                    );
-                }
-            }
-            "youtubetab" => {
-                for name in values
-                    .keys()
-                    .filter(|name| !matches!(name.as_str(), "skip" | "approximate_date"))
-                {
-                    warning!(
-                        "WARNING: extractor argument youtubetab:{name} is not supported natively and is ignored"
-                    );
-                }
-            }
-            _ => warning!(
+            None => warning!(
                 "WARNING: extractor arguments for {key} are not supported natively and are ignored"
             ),
         }
@@ -7473,6 +7418,46 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
     }
     Ok(())
 }
+
+/// The `--extractor-args` this port uses, per lowercased extractor key (upstream
+/// `_configuration_arg` reads `extractor_args[ie_key.lower()]`, where `ie_key`
+/// may name another extractor: TikTok's arguments apply to every TikTok
+/// extractor, for example). Other arguments of these extractors warn
+/// individually; other extractors' (except `generic`) warn as a whole.
+const SUPPORTED_EXTRACTOR_ARGS: &[(&str, &[&str])] = &[
+    (
+        "youtube",
+        &[
+            "player_client",
+            "player_skip",
+            "max_comments",
+            "comment_sort",
+            "formats",
+            "include_duplicate_formats",
+            "skip",
+            "po_token",
+            "fetch_pot",
+            "pot_trace",
+            "visitor_data",
+            "data_sync_id",
+            "innertube_host",
+            "innertube_key",
+            "player_params",
+            "use_ad_playback_context",
+            "webpage_client",
+            "webpage_skip",
+            "player_js_version",
+            "player_js_variant",
+            "raise_incomplete_data",
+            "lang",
+        ],
+    ),
+    ("youtubetab", &["skip", "approximate_date"]),
+    ("twitter", &["api"]),
+    ("vimeo", &["client", "original_format_policy"]),
+    ("orfon", &["prefer_segments_playlist"]),
+    ("tiktok", &["device_id"]),
+];
 
 /// Upstream `_PRESET_ALIASES`.
 const PRESET_ALIASES: [(&str, &[&str]); 5] = [

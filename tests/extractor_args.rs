@@ -205,3 +205,34 @@ fn malformed_extractor_args_are_usage_errors() {
         String::from_utf8_lossy(&output.stderr)
     );
 }
+
+/// Ported arguments are used silently; other arguments of an extractor with
+/// ported ones warn by name, other extractors' as a whole. Extractor keys
+/// are lowercased like upstream's.
+#[test]
+fn unported_extractor_args_warn() {
+    let directory = tempfile::tempdir().unwrap();
+    let output = run(
+        directory.path(),
+        &[
+            "--extractor-args",
+            "TikTok:device_id=1;app_info=x",
+            "--extractor-args",
+            "tiktokuser:device_id=1",
+        ],
+        "http://127.0.0.1:9/",
+    );
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    let warnings: Vec<&str> = stderr
+        .lines()
+        .filter(|line| line.contains("extractor arg"))
+        .collect();
+    assert_eq!(
+        warnings,
+        [
+            "WARNING: extractor argument tiktok:app_info is not supported natively and is ignored",
+            "WARNING: extractor arguments for tiktokuser are not supported natively and are ignored",
+        ],
+        "{stderr}"
+    );
+}
