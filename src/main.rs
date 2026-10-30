@@ -7458,6 +7458,7 @@ const SUPPORTED_EXTRACTOR_ARGS: &[(&str, &[&str])] = &[
     ("orfon", &["prefer_segments_playlist"]),
     ("tiktok", &["device_id"]),
     ("soundcloud", &["formats"]),
+    ("instagram", &["app_id"]),
 ];
 
 /// Upstream `_PRESET_ALIASES`.

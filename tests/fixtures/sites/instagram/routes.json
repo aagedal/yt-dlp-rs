@@ -86,6 +86,26 @@
    }
   },
   {
+   "url": "https://i.instagram.com/api/v1/media/209560351885393205/info/",
+   "body_file": "api-info-loggedin01.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_headers": {
+    "X-IG-App-ID": "124024574287414"
+   }
+  },
+  {
+   "url": "https://i.instagram.com/api/v1/media/209560351885393205/info/",
+   "body_file": "api-info-loggedin01.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_headers": {
+    "X-IG-App-ID": "1234567890"
+   }
+  },
+  {
    "url": "https://www.instagram.com/api/v1/media/209560351885393205/comments/?can_support_threading=true&permalink_enabled=false",
    "body_file": "api-comments-loggedin01.json",
    "headers": {
