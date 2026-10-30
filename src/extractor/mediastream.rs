@@ -18,7 +18,7 @@ pub struct MediaStream;
 const NAME: &str = "MediaStream";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://mdstrm\.com/(?:embed|live-stream)/(?P<id>\w+)").unwrap()
+    crate::extractor::url_regex(r"^https?://mdstrm\.com/(?:embed|live-stream)/(?P<id>\w+)").unwrap()
 });
 static OPTIONS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.MDSTRM\.OPTIONS\s*=").unwrap());

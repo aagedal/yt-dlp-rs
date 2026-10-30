@@ -15,7 +15,8 @@ pub struct Chilloutzone;
 const NAME: &str = "Chilloutzone";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?chilloutzone\.net/video/(?P<id>[\w-]+)\.html").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?chilloutzone\.net/video/(?P<id>[\w-]+)\.html")
+        .unwrap()
 });
 static VIDEO_DATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"var cozVidData\s*=\s*"([^"]+)""#).unwrap());

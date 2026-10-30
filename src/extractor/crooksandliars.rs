@@ -14,7 +14,10 @@ pub(crate) const NAME: &str = "CrooksAndLiars";
 pub(crate) const KEY: &str = "CrooksAndLiars";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://embed\.crooksandliars\.com/(?:embed|v)/(?P<id>[A-Za-z0-9]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://embed\.crooksandliars\.com/(?:embed|v)/(?P<id>[A-Za-z0-9]+)",
+    )
+    .unwrap()
 });
 /// `_EMBED_REGEX` (`\1` is one quote character, so the backreference is an
 /// alternation of both).

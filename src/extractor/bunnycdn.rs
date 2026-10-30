@@ -17,7 +17,7 @@ const NAME: &str = "BunnyCdn";
 const DEFAULT_REFERER: &str = "https://iframe.mediadelivery.net/";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:iframe|player)\.mediadelivery\.net|video\.bunnycdn\.com)/(?:embed|play)/(?P<library_id>\d+)/(?P<id>[\da-f-]+)",
     )
     .unwrap()

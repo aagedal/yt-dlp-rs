@@ -24,8 +24,10 @@ pub(crate) const KNOWN_EXTENSIONS: [&str; 42] = [
 ];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?archive\.org/(?:details|embed)/(?P<id>[^?#]+)(?:[?].*)?$")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?archive\.org/(?:details|embed)/(?P<id>[^?#]+)(?:[?].*)?$",
+    )
+    .unwrap()
 });
 
 /// `ArchiveOrgIE.suitable`.

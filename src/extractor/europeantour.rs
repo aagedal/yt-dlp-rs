@@ -13,8 +13,10 @@ pub struct EuropeanTour;
 const NAME: &str = "EuropeanTour";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?europeantour\.com/dpworld-tour/news/video/(?P<id>[^/&?#$]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?europeantour\.com/dpworld-tour/news/video/(?P<id>[^/&?#$]+)",
+    )
+    .unwrap()
 });
 static PLAYER: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?s)brightcove-player\s?video-id="([^"]+)".*"ACCOUNT_ID":"([^"]+)""#).unwrap()

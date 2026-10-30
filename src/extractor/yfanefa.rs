@@ -13,8 +13,9 @@ pub struct Yfanefa;
 const NAME: &str = "yfanefa";
 const KEY: &str = "Yfanefa";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?yfanefa\.com/(?P<id>[^?#]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?yfanefa\.com/(?P<id>[^?#]+)").unwrap()
+});
 static OPTIONS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"iwPlayer\.options\["[\w.]+"\]\s*="#).unwrap());
 

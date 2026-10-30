@@ -14,7 +14,10 @@ pub struct Harpodeon;
 const NAME: &str = "Harpodeon";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?harpodeon\.com/(?:video|preview)/\w+/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?harpodeon\.com/(?:video|preview)/\w+/(?P<id>\d+)",
+    )
+    .unwrap()
 });
 static INFO: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

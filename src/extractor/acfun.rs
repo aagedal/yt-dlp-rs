@@ -22,8 +22,9 @@ type Metadata = (
     Vec<(&'static str, Value)>,
 );
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://www\.acfun\.cn/v/ac(?P<id>[_\d]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://www\.acfun\.cn/v/ac(?P<id>[_\d]+)").unwrap()
+});
 static VIDEO_INFO: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"window.videoInfo\s*=").unwrap());
 
 /// `_match_valid_url`.

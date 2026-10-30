@@ -20,7 +20,7 @@ const STATIC_PRODUCTS_BASE: &str = "https://static.packt-cdn.com/products/";
 const PRODUCTS_API: &str = "https://services.packtpub.com/products-v1/products/";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:www\.)?packtpub\.com/mapt|subscription\.packtpub\.com)/video/[^/]+/(?P<course_id>\d+)/(?P<chapter_id>[^/]+)/(?P<id>[^/]+)(?:/(?P<display_id>[^/?&#]+))?",
     )
     .unwrap()

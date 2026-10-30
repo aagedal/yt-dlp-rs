@@ -17,7 +17,10 @@ pub(crate) const NAME: &str = "JStream";
 pub(crate) const KEY: &str = "JStream";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^jstream:(?P<host>www\d+):(?P<id>(?P<publisher>[a-z0-9]+):(?P<mid>\d+))").unwrap()
+    crate::extractor::url_regex(
+        r"^jstream:(?P<host>www\d+):(?P<id>(?P<publisher>[a-z0-9]+):(?P<mid>\d+))",
+    )
+    .unwrap()
 });
 static METADATA: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\s*metaDataResult\s*\(").unwrap());
 static SCRIPT_TAG: LazyLock<Regex> = LazyLock::new(|| {

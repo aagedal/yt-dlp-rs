@@ -17,7 +17,7 @@ const NAME: &str = "AmazonStore";
 const RETRIES: u32 = 3;
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?amazon\.(?:[a-z]{2,3})(?:\.[a-z]{2})?/(?:[^/]+/)?(?:dp|gp/product)/(?P<id>[^/&#$?]+)")
+    crate::extractor::url_regex(r"^https?://(?:www\.)?amazon\.(?:[a-z]{2,3})(?:\.[a-z]{2})?/(?:[^/]+/)?(?:dp|gp/product)/(?P<id>[^/&#$?]+)")
         .unwrap()
 });
 static DATA: LazyLock<Regex> =

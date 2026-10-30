@@ -13,8 +13,9 @@ pub struct Kth;
 
 const NAME: &str = "KTH";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://play\.kth\.se/(?:[^/]+/)+(?P<id>[a-z0-9_]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://play\.kth\.se/(?:[^/]+/)+(?P<id>[a-z0-9_]+)").unwrap()
+});
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

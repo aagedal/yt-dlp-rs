@@ -20,8 +20,10 @@ const ALBUM_NAME: &str = "ximalaya:album";
 const ALBUM_KEY: &str = "XimalayaAlbum";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.|m\.)?ximalaya\.com/(?:(?P<uid>\d+)/)?sound/(?P<id>[0-9]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.|m\.)?ximalaya\.com/(?:(?P<uid>\d+)/)?sound/(?P<id>[0-9]+)",
+    )
+    .unwrap()
 });
 
 static ALBUM_URL: LazyLock<Regex> = LazyLock::new(|| {

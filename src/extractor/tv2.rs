@@ -24,7 +24,10 @@ const GEO_COUNTRIES: [&str; 1] = ["NO"];
 const PLAY_BODY: &str = r#"{"device":{"id":"1-1-1","name":"Nettleser (HTML)"}}"#;
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?tv2\.no/v(?:ideo)?\d*/(?:[^?#]+/)*(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?tv2\.no/v(?:ideo)?\d*/(?:[^?#]+/)*(?P<id>\d+)",
+    )
+    .unwrap()
 });
 // Upstream's `(?!v(?:ideo)?\d*/)` after the host is checked in `article_id`.
 static ARTICLE_URL: LazyLock<Regex> = LazyLock::new(|| {

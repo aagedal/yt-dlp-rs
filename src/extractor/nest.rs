@@ -16,7 +16,8 @@ const NAME: &str = "Nest";
 const CLIP_NAME: &str = "NestClip";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://video\.nest\.com/(?:embedded/)?live/(?P<id>\w+)").unwrap()
+    crate::extractor::url_regex(r"^https?://video\.nest\.com/(?:embedded/)?live/(?P<id>\w+)")
+        .unwrap()
 });
 static CLIP_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://video\.nest\.com/(?:embedded/)?clip/(?P<id>\w+)").unwrap()

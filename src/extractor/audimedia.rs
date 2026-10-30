@@ -17,7 +17,7 @@ pub struct AudiMedia;
 const NAME: &str = "AudiMedia";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?audi-mediacenter\.com/(?:en|de)/audimediatv/(?:video/)?(?P<id>[^/?#]+)",
     )
     .unwrap()

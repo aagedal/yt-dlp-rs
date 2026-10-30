@@ -14,8 +14,9 @@ pub struct Ccc;
 const NAME: &str = "media.ccc.de";
 const KEY: &str = "CCC";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?media\.ccc\.de/v/(?P<id>[^/?#&]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?media\.ccc\.de/v/(?P<id>[^/?#&]+)").unwrap()
+});
 static EVENT_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-id=(?:'(?P<a>\d+)'|"(?P<b>\d+)")"#).unwrap());
 

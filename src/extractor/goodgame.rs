@@ -12,8 +12,9 @@ pub struct GoodGame;
 
 const NAME: &str = "goodgame:stream";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://goodgame\.ru/(?P<id>[\w.*-]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://goodgame\.ru/(?P<id>[\w.*-]+)").unwrap()
+});
 
 /// `_match_id` (`(?!channel/)` checked separately).
 pub fn suitable(url: &str) -> bool {

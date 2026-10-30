@@ -16,7 +16,8 @@ const KEY: &str = "Toutiao";
 const REGISTER: &str = "https://ttwid.bytedance.com/ttwid/union/register/";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://www\.toutiao\.com/video/(?P<id>\d+)/?(?:[?#]|$)").unwrap()
+    crate::extractor::url_regex(r"^https?://www\.toutiao\.com/video/(?P<id>\d+)/?(?:[?#]|$)")
+        .unwrap()
 });
 static URL_OR_NONE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^(?:(?:https?|rt(?:m(?:pt?[es]?|fp)|sp[su]?)|mms|ftps?):)?//").unwrap()

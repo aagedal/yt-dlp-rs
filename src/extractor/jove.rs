@@ -12,8 +12,9 @@ pub struct Jove;
 
 const NAME: &str = "Jove";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?jove\.com/video/(?P<id>[0-9]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?jove\.com/video/(?P<id>[0-9]+)").unwrap()
+});
 static CHAPTERS_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"/video-chapters\?videoid=([0-9]+)").unwrap());
 static DESCRIPTION: LazyLock<Regex> = LazyLock::new(|| {

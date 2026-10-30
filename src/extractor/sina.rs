@@ -14,7 +14,7 @@ const NAME: &str = "Sina";
 const QUALITIES: [&str; 5] = ["cif", "sd", "hd", "fhd", "ffd"];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(concat!(
+    crate::extractor::url_regex(concat!(
         r"^https?://(?:[^/?#]+\.)?video\.sina\.com\.cn/(?:",
         r"(?:view/|.*\#)(?P<id>\d+)|",
         r".+?/(?P<pseudo_id>[^/?#]+)(?:\.s?html)|",

@@ -16,7 +16,7 @@ pub(crate) const NAME: &str = "tvigle";
 pub(crate) const KEY: &str = "Tvigle";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?(?:tvigle\.ru/(?:[^/]+/)+(?P<display_id>[^/]+)/$|cloud\.tvigle\.ru/video/(?P<id>\d+))",
     )
     .unwrap()

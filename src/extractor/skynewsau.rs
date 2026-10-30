@@ -16,8 +16,10 @@ const NAME: &str = "SkyNewsAU";
 const API_KEY: &str = "6krsj3w249nk779d8fukqx9f";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?skynews\.com\.au/[^/]+/[^/]+/[^/]+/video/(?P<id>[a-z0-9]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?skynews\.com\.au/[^/]+/[^/]+/[^/]+/video/(?P<id>[a-z0-9]+)",
+    )
+    .unwrap()
 });
 static EMBEDCODE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"embedcode\s?=\s?"([^"]+)""#).unwrap());

@@ -16,7 +16,10 @@ const NAME: &str = "NoodleMagazine";
 const BASE: &str = "https://adult.noodlemagazine.com";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www|adult\.)?noodlemagazine\.com/watch/(?P<id>[0-9_-]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www|adult\.)?noodlemagazine\.com/watch/(?P<id>[0-9_-]+)",
+    )
+    .unwrap()
 });
 static PLAYLIST: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"window\.playlist\s*=").unwrap());
 

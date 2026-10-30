@@ -13,7 +13,10 @@ pub struct PopcornTv;
 const NAME: &str = "PopcornTV";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://[^/]+\.popcorntv\.it/guarda/(?P<display_id>[^/]+)/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://[^/]+\.popcorntv\.it/guarda/(?P<display_id>[^/]+)/(?P<id>\d+)",
+    )
+    .unwrap()
 });
 static LINK: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"(<link[^>]+itemprop=["'](?:content|embed)Url[^>]*>)"#).unwrap());

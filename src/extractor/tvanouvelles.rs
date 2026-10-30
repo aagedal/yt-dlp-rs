@@ -17,7 +17,7 @@ const NAME: &str = "TVANouvelles";
 const ARTICLE_NAME: &str = "TVANouvellesArticle";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?tvanouvelles\.ca/videos/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?tvanouvelles\.ca/videos/(?P<id>\d+)").unwrap()
 });
 static ARTICLE_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?tvanouvelles\.ca/(?:[^/]+/)+(?P<id>[^/?#&]+)").unwrap()

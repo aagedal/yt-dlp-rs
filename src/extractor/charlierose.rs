@@ -15,8 +15,10 @@ pub struct CharlieRose;
 const NAME: &str = "CharlieRose";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?charlierose\.com/(?:video|episode)(?:s|/player)/(?P<id>\d+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?charlierose\.com/(?:video|episode)(?:s|/player)/(?P<id>\d+)",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

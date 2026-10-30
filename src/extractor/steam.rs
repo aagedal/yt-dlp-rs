@@ -22,7 +22,7 @@ const COMMUNITY_NAME: &str = "SteamCommunity";
 const BROADCAST_NAME: &str = "SteamCommunityBroadcast";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://store\.steampowered\.com(?:/agecheck)?/app/(?P<id>\d+)/?(?:[^?/#]+/?)?(?:[?#]|$)",
     )
     .unwrap()

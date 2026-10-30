@@ -29,7 +29,7 @@ const USER_VIDEOS: &str = "vk:uservideos";
 const LOGIN_HINT: &str = "Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vk) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(concat!(
+    crate::extractor::url_regex(concat!(
         r"^https?://(?:",
         r"(?:(?:(?:m|new|vksport)\.)?vk(?:(?:video)?\.ru|\.com)/video_|(?:www\.)?daxab\.com/)",
         r"ext\.php\?(?P<embed_query>.*?\boid=(?P<oid>-?\d+).*?\bid=(?P<id>\d+).*)|",

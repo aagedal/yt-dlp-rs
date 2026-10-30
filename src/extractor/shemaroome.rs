@@ -20,7 +20,10 @@ const USER_LISTS: &str = "https://www.shemaroome.com/users/user_all_lists";
 const PREMIUM: &str = "Premium videos cannot be downloaded yet.";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?shemaroome\.com/(?:movies|shows)/(?P<id>[^?#]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?shemaroome\.com/(?:movies|shows)/(?P<id>[^?#]+)",
+    )
+    .unwrap()
 });
 static DESCRIPTION: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)>Synopsis(</.+?)</").unwrap());

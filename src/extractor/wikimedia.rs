@@ -16,7 +16,8 @@ const NAME: &str = "wikimedia.org";
 const KEY: &str = "Wikimedia";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://commons\.wikimedia\.org/wiki/File:(?P<id>[^/#?]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://commons\.wikimedia\.org/wiki/File:(?P<id>[^/#?]+)")
+        .unwrap()
 });
 static TYPE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"^(?P<mime>[^;]+)(?:;\s*codecs="(?P<codecs>[^"]+)")?"#).unwrap());

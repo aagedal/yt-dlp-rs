@@ -19,7 +19,8 @@ const NAME: &str = "wat.tv";
 const KEY: &str = "Wat";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?:wat:|https?://(?:www\.)?wat\.tv/video/.*-)(?P<id>[0-9a-z]+)").unwrap()
+    crate::extractor::url_regex(r"^(?:wat:|https?://(?:www\.)?wat\.tv/video/.*-)(?P<id>[0-9a-z]+)")
+        .unwrap()
 });
 
 /// `_match_id`.

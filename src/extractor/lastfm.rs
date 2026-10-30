@@ -20,7 +20,8 @@ const USER_NAME: &str = "LastFMUser";
 const PENDING_KIND: &str = "LastFM";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?last\.fm/music(?:/[^/]+){2}/(?P<id>[^/#?]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?last\.fm/music(?:/[^/]+){2}/(?P<id>[^/#?]+)")
+        .unwrap()
 });
 static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?last\.fm/(music|tag)/(?P<id>[^/]+)(?:/[^/]+)?/?(?:[?#]|$)")

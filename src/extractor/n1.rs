@@ -19,8 +19,10 @@ const NAME: &str = "N1Info:article";
 const KEY: &str = "N1InfoI";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:\w+\.)?n1info\.\w+|nova\.rs)/(?:[^/?#]+/){1,2}(?P<id>[^/?#]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:(?:\w+\.)?n1info\.\w+|nova\.rs)/(?:[^/?#]+/){1,2}(?P<id>[^/?#]+)",
+    )
+    .unwrap()
 });
 static PLAYER: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"\$bp\("(?:Brid|TargetVideo)_\d+",\s(.+)\);"#).unwrap());

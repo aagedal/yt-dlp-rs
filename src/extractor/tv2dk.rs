@@ -22,7 +22,7 @@ const NAME: &str = "TV2DK";
 const BORNHOLM_NAME: &str = "TV2DKBornholmPlay";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?(?:tvsyd|tv2ostjylland|tvmidtvest|tv2fyn|tv2east|tv2lorry|tv2nord|tv2kosmopol)\.dk/(?:[^/?#]+/)*(?P<id>[^/?\#&]+)",
     )
     .unwrap()

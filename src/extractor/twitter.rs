@@ -39,7 +39,7 @@ const BASE_REGEX: &str = r"https?://(?:(?:www|m(?:obile)?)\.)?(?:(?:twitter|x)\.
 const VMAP_NAMESPACE: &str = "http://twitter.com/schema/videoVMapV2.xsd";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+    crate::extractor::url_regex(&format!(
         r"^{BASE_REGEX}(?:(?:i/web|[^/]+)/status|statuses)/(?P<id>\d+)(?:/(?:video|photo)/(?P<index>\d+))?"
     ))
     .unwrap()

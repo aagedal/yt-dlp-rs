@@ -15,7 +15,10 @@ pub struct CanalAlpha;
 const NAME: &str = "CanalAlpha";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?canalalpha\.ch/play/[^/]+/[^/]+/(?P<id>\d+)/?.*").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?canalalpha\.ch/play/[^/]+/[^/]+/(?P<id>\d+)/?.*",
+    )
+    .unwrap()
 });
 static STATE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.__SERVER_STATE__\s?=\s?").unwrap());

@@ -15,7 +15,8 @@ const NAME: &str = "Hytale";
 const CLOUDFLARE: &str = "CloudflareStream";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?hytale\.com/news/\d+/\d+/(?P<id>[a-z0-9-]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?hytale\.com/news/\d+/\d+/(?P<id>[a-z0-9-]+)")
+        .unwrap()
 });
 static CLIPS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.__INITIAL_COMPONENTS_STATE__\s*=\s*\[\s*").unwrap());

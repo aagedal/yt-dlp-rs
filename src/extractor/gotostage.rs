@@ -14,7 +14,7 @@ pub struct GoToStage;
 const NAME: &str = "GoToStage";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?gotostage\.com/channel/[a-z0-9]+/recording/(?P<id>[a-z0-9]+)/watch",
     )
     .unwrap()

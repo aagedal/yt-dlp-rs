@@ -17,7 +17,8 @@ const NAME: &str = "DctpTv";
 const BASE_URL: &str = "http://dctp-ivms2-restapi.s3.amazonaws.com";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?dctp\.tv/(?:#/)?filme/(?P<id>[^/?#&]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?dctp\.tv/(?:#/)?filme/(?P<id>[^/?#&]+)")
+        .unwrap()
 });
 
 /// `_match_id`.

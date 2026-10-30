@@ -14,7 +14,7 @@ pub struct FilmArchiv;
 const NAME: &str = "FilmArchiv";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?filmarchiv\.at/de/filmarchiv-on/video/(?P<id>f_[0-9a-zA-Z]{5,})",
     )
     .unwrap()

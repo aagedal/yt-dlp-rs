@@ -12,7 +12,8 @@ pub struct Ku6;
 const NAME: &str = "Ku6";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://v\.ku6\.com/show/(?P<id>[a-zA-Z0-9\-\_]+)(?:\.)*html").unwrap()
+    crate::extractor::url_regex(r"^https?://v\.ku6\.com/show/(?P<id>[a-zA-Z0-9\-\_]+)(?:\.)*html")
+        .unwrap()
 });
 static TITLE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<h1 title=.*>(.*?)</h1>").unwrap());
 

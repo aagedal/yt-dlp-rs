@@ -16,7 +16,7 @@ pub struct Mbn;
 const NAME: &str = "MBN";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?mbn\.co\.kr/vod/programContents/preview(?:list)?/\d+/\d+/(?P<id>\d+)",
     )
     .unwrap()

@@ -14,7 +14,8 @@ pub struct TheIntercept;
 const NAME: &str = "TheIntercept";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://theintercept\.com/fieldofvision/(?P<id>[^/?#]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://theintercept\.com/fieldofvision/(?P<id>[^/?#]+)")
+        .unwrap()
 });
 
 static STORE: LazyLock<Regex> =

@@ -14,7 +14,7 @@ pub struct FiveTv;
 const NAME: &str = "FiveTV";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?5-tv\.ru/(?:(?:[^/]+/)+(?P<id>\d+)|(?P<path>[^/?#]+)(?:[/?#])?)",
     )
     .unwrap()

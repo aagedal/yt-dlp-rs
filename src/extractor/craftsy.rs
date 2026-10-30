@@ -14,8 +14,9 @@ pub struct Craftsy;
 
 const NAME: &str = "Craftsy";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://www\.craftsy\.com/class/(?P<id>[\w-]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://www\.craftsy\.com/class/(?P<id>[\w-]+)").unwrap()
+});
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

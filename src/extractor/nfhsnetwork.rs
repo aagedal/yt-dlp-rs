@@ -15,7 +15,7 @@ const NAME: &str = "NFHSNetwork";
 const API: &str = "https://cfunity.nfhsnetwork.com/v2";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?nfhsnetwork\.com/events/[\w-]+/(?P<id>(?:gam|evt|dd|)?[\w\d]{0,10})",
     )
     .unwrap()

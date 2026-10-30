@@ -14,7 +14,7 @@ pub struct Spiegel;
 const NAME: &str = "Spiegel";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?(?:spiegel|manager-magazin)\.de(?:/[^/]+)+/[^/]*-(?P<id>[0-9]+|[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})(?:-embed|-iframe)?(?:\.html)?(?:$|[#?])").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?(?:spiegel|manager-magazin)\.de(?:/[^/]+)+/[^/]*-(?P<id>[0-9]+|[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})(?:-embed|-iframe)?(?:\.html)?(?:$|[#?])").unwrap()
 });
 
 /// `(&#34;|["\'])mediaId\1\s*:\s*(&#34;|["\'])(?P<id>(?:(?!\2).)+)\2`, with

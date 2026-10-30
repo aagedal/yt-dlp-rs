@@ -21,8 +21,9 @@ const PLAYER_ROOT_URL: &str = "https://player.pia-live.jp/";
 const PIA_LIVE_API_URL: &str = "https://api.pia-live.jp";
 const API_KEY: &str = "kfds)FKFps-dms9e";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://player\.pia-live\.jp/stream/(?P<id>[\w-]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://player\.pia-live\.jp/stream/(?P<id>[\w-]+)").unwrap()
+});
 static START_INFO: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"(?P<date>\d{4}/\d{1,2}/\d{1,2})\([月火水木金土日]\)(?P<time>\d{2}:\d{2})").unwrap()
 });

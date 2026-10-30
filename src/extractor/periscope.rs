@@ -18,7 +18,10 @@ const KEY: &str = "Periscope";
 pub(super) const M3U8_REFERER: &str = "https://www.periscope.tv/";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?(?:periscope|pscp)\.tv/[^/?#]+/(?P<id>[^/?#]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?(?:periscope|pscp)\.tv/[^/?#]+/(?P<id>[^/?#]+)",
+    )
+    .unwrap()
 });
 
 /// `PeriscopeIE._match_valid_url`.

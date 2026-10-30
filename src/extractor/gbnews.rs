@@ -16,7 +16,8 @@ const PLATFORM: &str = "safari";
 const SSMP_URL: &str = "https://mm-v2.simplestream.com/ssmp/api.php";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?gbnews\.(?:uk|com)/(?:\w+/)?(?P<id>[^#?]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?gbnews\.(?:uk|com)/(?:\w+/)?(?P<id>[^#?]+)")
+        .unwrap()
 });
 
 /// `_match_id`.

@@ -12,7 +12,8 @@ pub struct TheStar;
 const NAME: &str = "TheStar";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?thestar\.com/(?:[^/]+/)*(?P<id>.+)\.html").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?thestar\.com/(?:[^/]+/)*(?P<id>.+)\.html")
+        .unwrap()
 });
 static BRIGHTCOVE_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"mainartBrightcoveVideoId["']?\s*:\s*["']?(\d+)"#).unwrap());

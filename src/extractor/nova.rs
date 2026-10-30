@@ -15,7 +15,8 @@ pub struct NovaEmbed;
 const NAME: &str = "NovaEmbed";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://media(?:tn)?\.cms\.nova\.cz/embed/(?P<id>[^/?#&]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://media(?:tn)?\.cms\.nova\.cz/embed/(?P<id>[^/?#&]+)")
+        .unwrap()
 });
 static PLAYER: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"player:\s*").unwrap());
 static PLAYER_END: LazyLock<Regex> = LazyLock::new(|| Regex::new(r";\s*</script>").unwrap());

@@ -12,8 +12,9 @@ pub struct Cam4;
 
 const NAME: &str = "CAM4";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:[^/]+\.)?cam4\.com/(?P<id>[a-z0-9_]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:[^/]+\.)?cam4\.com/(?P<id>[a-z0-9_]+)").unwrap()
+});
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

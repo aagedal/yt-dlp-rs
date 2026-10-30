@@ -25,7 +25,7 @@ const MIXIN_KEY_ENC_TAB: [usize; 64] = [
 ];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?bilibili\.com/(?:video/|festival/[^/?#]+\?(?:[^#]*&)?bvid=)(?P<prefix>[aAbB][vV])(?P<id>[^/?#&]+)")
+    crate::extractor::url_regex(r"^https?://(?:www\.)?bilibili\.com/(?:video/|festival/[^/?#]+\?(?:[^#]*&)?bvid=)(?P<prefix>[aAbB][vV])(?P<id>[^/?#&]+)")
         .unwrap()
 });
 static BANGUMI_URL: LazyLock<Regex> =

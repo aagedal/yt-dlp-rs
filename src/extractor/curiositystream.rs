@@ -28,7 +28,8 @@ const COLLECTIONS_API: &str = "https://api.curiositystream.com/v2/collections/";
 const SERIES_API: &str = "https://api.curiositystream.com/v2/series/";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:app\.)?curiositystream\.com/video/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:app\.)?curiositystream\.com/video/(?P<id>\d+)")
+        .unwrap()
 });
 static COLLECTIONS_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:app\.)?curiositystream\.com/collections/(?P<id>\d+)").unwrap()

@@ -18,8 +18,9 @@ pub struct Substack;
 
 const NAME: &str = "Substack";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://[\w-]+\.substack\.com/p/(?P<id>[\w-]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://[\w-]+\.substack\.com/p/(?P<id>[\w-]+)").unwrap()
+});
 /// `_search_json(r'window\._preloads\s*=\s*JSON\.parse\(', ...,
 /// contains_pattern=r'"{(?s:.+)}"')`.
 static PRELOADS: LazyLock<Regex> = LazyLock::new(|| {

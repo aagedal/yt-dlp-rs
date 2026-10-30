@@ -14,7 +14,10 @@ pub struct Monstercat;
 const NAME: &str = "Monstercat";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://www\.monstercat\.com/release/(?P<id>\d{12}|MC[A-Z]+\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://www\.monstercat\.com/release/(?P<id>\d{12}|MC[A-Z]+\d+)",
+    )
+    .unwrap()
 });
 static ROW: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<tr[^<]*>").unwrap());
 

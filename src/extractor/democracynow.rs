@@ -15,8 +15,9 @@ pub struct Democracynow;
 const NAME: &str = "democracynow";
 const KEY: &str = "Democracynow";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?democracynow\.org/(?P<id>[^?]*)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?democracynow\.org/(?P<id>[^?]*)").unwrap()
+});
 static JSON_DATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<script[^>]+type="text/json"[^>]*>\s*(\{[^>]+\})"#).unwrap());
 static QUERY: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?s)\?.*").unwrap());

@@ -16,7 +16,8 @@ pub struct Bloomberg;
 const NAME: &str = "Bloomberg";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?bloomberg\.com/(?:[^/]+/)*(?P<id>[^/?#]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?bloomberg\.com/(?:[^/]+/)*(?P<id>[^/?#]+)")
+        .unwrap()
 });
 // `(["\'])(?P<id>(?:(?!\1).)+)\1` for each quote.
 static VIDEO_ID: LazyLock<[Regex; 3]> = LazyLock::new(|| {

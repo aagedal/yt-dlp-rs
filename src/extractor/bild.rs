@@ -13,7 +13,7 @@ pub struct Bild;
 const NAME: &str = "Bild";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?bild\.de/(?:[^/]+/)+(?P<display_id>[^/]+)-(?P<id>\d+)(?:,auto=true)?\.bild\.html").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?bild\.de/(?:[^/]+/)+(?P<display_id>[^/]+)-(?P<id>\d+)(?:,auto=true)?\.bild\.html").unwrap()
 });
 
 /// `_match_id`.

@@ -29,8 +29,9 @@ const QUALITIES: [(&str, Option<i64>); 6] = [
     ("1080pHdVideo", Some(1080)),
 ];
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://music\.apple\.com/[\w-]+/post/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://music\.apple\.com/[\w-]+/post/(?P<id>\d+)").unwrap()
+});
 static SIZE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(\d+)\s*[xX×,]\s*(\d+)").unwrap());
 static WIDTH: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?:^|\D)(\d{2,5})w(?:$|[^a-zA-Z0-9])").unwrap());

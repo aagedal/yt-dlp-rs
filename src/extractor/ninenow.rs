@@ -14,7 +14,7 @@ pub struct NineNow;
 const NAME: &str = "9now.com.au";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?9now\.com\.au/(?:[^/?#]+/){2}(?P<id>(?P<type>clip|episode)-[^/?#]+)",
     )
     .unwrap()

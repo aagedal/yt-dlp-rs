@@ -15,7 +15,7 @@ pub struct Beatport;
 const NAME: &str = "Beatport";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.|pro\.)?beatport\.com/track/(?P<display_id>[^/]+)/(?P<id>[0-9]+)",
     )
     .unwrap()

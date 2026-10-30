@@ -12,8 +12,9 @@ pub struct Fczenit;
 
 const NAME: &str = "Fczenit";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?fc-zenit\.ru/video/(?P<id>[0-9]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?fc-zenit\.ru/video/(?P<id>[0-9]+)").unwrap()
+});
 
 static MSI_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)config\s*=\s*\{.+?video_id\s*:\s*'([^']+)'").unwrap());

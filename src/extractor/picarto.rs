@@ -21,7 +21,8 @@ const API: &str = "https://ptvintern.picarto.tv/ptvapi";
 const HEADERS: [(&str, &str); 2] = [("Accept", "*/*"), ("Content-Type", "application/json")];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www.)?picarto\.tv/(?P<id>[^/#?]+)/?(?:$|[?#])").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www.)?picarto\.tv/(?P<id>[^/#?]+)/?(?:$|[?#])")
+        .unwrap()
 });
 static VOD_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

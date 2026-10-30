@@ -14,7 +14,10 @@ pub struct CnbcVideo;
 const NAME: &str = "CNBCVideo";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?cnbc\.com/video/(?:[^/?#]+/)+(?P<id>[^./?#&]+)\.html").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?cnbc\.com/video/(?:[^/?#]+/)+(?P<id>[^./?#&]+)\.html",
+    )
+    .unwrap()
 });
 static S_DATA: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"window\.__s_data=").unwrap());
 

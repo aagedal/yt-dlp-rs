@@ -14,7 +14,8 @@ pub struct Newsy;
 const NAME: &str = "Newsy";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?newsy\.com/stories/(?P<id>[^/?#$&]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?newsy\.com/stories/(?P<id>[^/?#$&]+)")
+        .unwrap()
 });
 
 static DATA: LazyLock<Regex> =

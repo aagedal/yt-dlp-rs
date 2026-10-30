@@ -15,7 +15,8 @@ const NAME: &str = "Iltalehti";
 
 // Upstream's ID group is a single character.
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?iltalehti\.fi/[^/?#]+/a/(?P<id>[^/?#])").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?iltalehti\.fi/[^/?#]+/a/(?P<id>[^/?#])")
+        .unwrap()
 });
 
 static APP: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<script>\s*window.App\s*=").unwrap());

@@ -19,7 +19,7 @@ pub struct Tv4;
 const NAME: &str = "TV4";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?(?:tv4\.se/(?:[^/]+)/klipp/(?:.*)-|tv4play\.se/(?:(?:program|barn)/(?:(?:[^/]+/){1,2}|(?:[^\?]+)\?video_id=)|iframe/video/|film/|sport/|))(?P<id>[0-9]+)",
     )
     .unwrap()

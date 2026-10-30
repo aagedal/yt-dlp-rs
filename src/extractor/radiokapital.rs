@@ -19,7 +19,10 @@ const MIXCLOUD: &str = "Mixcloud";
 const PENDING_KIND: &str = "radiokapital:show";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?radiokapital\.pl/shows/[a-z\d-]+/(?P<id>[a-z\d-]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?radiokapital\.pl/shows/[a-z\d-]+/(?P<id>[a-z\d-]+)",
+    )
+    .unwrap()
 });
 static SHOW_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?radiokapital\.pl/shows/(?P<id>[a-z\d-]+)/?(?:$|[?#])").unwrap()

@@ -18,7 +18,10 @@ const NAME: &str = "1tv";
 const KEY: &str = "FirstTV";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?(?:sport)?1tv\.ru/(?:[^/?#]+/)+(?P<id>[^/?#]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?(?:sport)?1tv\.ru/(?:[^/?#]+/)+(?P<id>[^/?#]+)",
+    )
+    .unwrap()
 });
 /// `data-playlist-url=(["'])(?P<url>(?:(?!\1).)+)\1`, without a backreference.
 static PLAYLIST_URL: LazyLock<Regex> =

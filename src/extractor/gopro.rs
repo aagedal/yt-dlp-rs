@@ -13,8 +13,9 @@ pub struct GoPro;
 
 const NAME: &str = "GoPro";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(www\.)?gopro\.com/v/(?P<id>[A-Za-z0-9]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(www\.)?gopro\.com/v/(?P<id>[A-Za-z0-9]+)").unwrap()
+});
 static METADATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.__reflectData\s*=\s*").unwrap());
 static TITLE: LazyLock<Regex> =

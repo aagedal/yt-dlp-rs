@@ -13,8 +13,9 @@ pub struct Germanupa;
 
 const NAME: &str = "Germanupa";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://germanupa\.de/mediathek/(?P<id>[\w-]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://germanupa\.de/mediathek/(?P<id>[\w-]+)").unwrap()
+});
 // The upstream `\1` back-reference, as one alternative per quote style.
 static OEMBED_IFRAME: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(concat!(

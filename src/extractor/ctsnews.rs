@@ -14,7 +14,8 @@ pub struct CtsNews;
 const NAME: &str = "CtsNews";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://news\.cts\.com\.tw/[a-z]+/[a-z]+/\d+/(?P<id>\d+)\.html").unwrap()
+    crate::extractor::url_regex(r"^https?://news\.cts\.com\.tw/[a-z]+/[a-z]+/\d+/(?P<id>\d+)\.html")
+        .unwrap()
 });
 static DATETIME: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(\d{4}/\d{2}/\d{2} \d{2}:\d{2})").unwrap());

@@ -15,7 +15,10 @@ pub struct BostonGlobe;
 const NAME: &str = "BostonGlobe";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?i)^https?://(?:www\.)?bostonglobe\.com/.*/(?P<id>[^/]+)/\w+(?:\.html)?").unwrap()
+    crate::extractor::url_regex(
+        r"(?i)^https?://(?:www\.)?bostonglobe\.com/.*/(?P<id>[^/]+)/\w+(?:\.html)?",
+    )
+    .unwrap()
 });
 static VIDEO: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)(<video[^>]+>)").unwrap());
 

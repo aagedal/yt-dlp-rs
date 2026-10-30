@@ -23,7 +23,7 @@ const COMMON_MEDIA_FIELDS: &str =
     "description\n      geoblockedCountries {\n        allowed\n      }\n      xid";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"(?i)^(?:https?:)?//(?:dai\.ly/|(?:(?:(?:www|touch|geo)\.)?dailymotion\.[a-z]{2,3}|(?:www\.)?lequipe\.fr)/(?:swf/|(?:(?:crawler|embed|swf)/)?video/|player(?:/[\da-z]+)?\.html\?(?:video|(?P<is_playlist>playlist))=))(?P<id>[^/?_&#]+)(?:[\w-]*\?playlist=(?P<playlist_id>x[0-9a-z]+))?",
     )
     .unwrap()

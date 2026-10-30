@@ -19,7 +19,10 @@ const KEY: &str = "FC2";
 const EMBED_NAME: &str = "fc2:embed";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?:https?://video\.fc2\.com/(?:[^/]+/)*content/|fc2:)(?P<id>[^/]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^(?:https?://video\.fc2\.com/(?:[^/]+/)*content/|fc2:)(?P<id>[^/]+)",
+    )
+    .unwrap()
 });
 static EMBED_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^https?://video\.fc2\.com/flv2\.swf\?(?P<query>.+)").unwrap());

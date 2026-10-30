@@ -17,7 +17,7 @@ const NAME: &str = "PrankCast";
 const POST_NAME: &str = "PrankCastPost";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?prankcast\.com/[^/?#]+/showreel/(?P<id>\d+)-(?P<display_id>[^/?#]+)",
     )
     .unwrap()

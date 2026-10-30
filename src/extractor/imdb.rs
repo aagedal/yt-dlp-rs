@@ -20,7 +20,10 @@ const LIST_NAME: &str = "ImdbList";
 const LIST_IE_NAME: &str = "imdb:list";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www|m)\.imdb\.com/(?:video|title|list).*?[/-]vi(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www|m)\.imdb\.com/(?:video|title|list).*?[/-]vi(?P<id>\d+)",
+    )
+    .unwrap()
 });
 // Upstream's `(?!/videoplayer/vi\d+)` is checked in `list_id`.
 static LIST_URL: LazyLock<Regex> =

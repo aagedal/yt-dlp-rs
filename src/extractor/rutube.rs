@@ -19,7 +19,7 @@ const KEY: &str = "Rutube";
 const EMBED_NAME: &str = "rutube:embed";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://rutube\.ru/(?:(?:live/)?video(?:/private)?|(?:play/)?embed)/(?P<id>[\da-z]{32})")
+    crate::extractor::url_regex(r"^https?://rutube\.ru/(?:(?:live/)?video(?:/private)?|(?:play/)?embed)/(?P<id>[\da-z]{32})")
         .unwrap()
 });
 static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {

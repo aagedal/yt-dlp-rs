@@ -14,8 +14,9 @@ pub struct Golem;
 const NAME: &str = "Golem";
 const PREFIX: &str = "http://video.golem.de";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://video\.golem\.de/.+?/(?P<id>.+?)/").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://video\.golem\.de/.+?/(?P<id>.+?)/").unwrap()
+});
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

@@ -21,7 +21,7 @@ const PLAYLIST_NAME: &str = "nowness:playlist";
 const SERIES_NAME: &str = "nowness:series";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www|cn)\.)?nowness\.com/(?:story|(?:series|category)/[^/]+)/(?P<id>[^/]+?)(?:$|[?#])").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:(?:www|cn)\.)?nowness\.com/(?:story|(?:series|category)/[^/]+)/(?P<id>[^/]+?)(?:$|[?#])").unwrap()
 });
 static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:(?:www|cn)\.)?nowness\.com/playlist/(?P<id>\d+)").unwrap()

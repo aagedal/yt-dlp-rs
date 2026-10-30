@@ -18,7 +18,7 @@ const KEY: &str = "Arnes";
 const BASE_URL: &str = "https://video.arnes.si";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://video\.arnes\.si/(?:[a-z]{2}/)?(?:watch|embed|api/(?:asset|public/video))/(?P<id>[0-9a-zA-Z]{12})",
     )
     .unwrap()

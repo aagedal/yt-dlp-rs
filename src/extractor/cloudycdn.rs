@@ -14,7 +14,7 @@ pub struct CloudyCdn;
 const NAME: &str = "CloudyCDN";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^(?:https?:)?//embed\.(?P<domain>cloudycdn\.services|backscreen\.com)/(?P<site_id>[^/?#]+)/media/(?P<id>[\w-]+)",
     )
     .unwrap()

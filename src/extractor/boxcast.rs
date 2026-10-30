@@ -16,7 +16,7 @@ pub(crate) const NAME: &str = "BoxCastVideo";
 pub(crate) const KEY: &str = "BoxCastVideo";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://boxcast\.tv/(?:view-embed/|channel/\w+\?(?:[^#]+&)?b=|video-portal/(?:\w+/){2})(?P<id>[\w-]+)",
     )
     .unwrap()

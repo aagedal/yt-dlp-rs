@@ -13,7 +13,10 @@ pub struct OnePlacePodcast;
 const NAME: &str = "OnePlacePodcast";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://www\.oneplace\.com/[\w]+/[^/]+/listen/[\w-]+-(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://www\.oneplace\.com/[\w]+/[^/]+/listen/[\w-]+-(?P<id>\d+)",
+    )
+    .unwrap()
 });
 
 static MEDIA: LazyLock<[Regex; 2]> = LazyLock::new(|| {

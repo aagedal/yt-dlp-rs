@@ -14,8 +14,9 @@ pub struct KinoPoisk;
 
 const NAME: &str = "KinoPoisk";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?kinopoisk\.ru/film/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?kinopoisk\.ru/film/(?P<id>\d+)").unwrap()
+});
 static DATA: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?s)<script[^>]+\btype=["']application/json[^>]+>(.+?)<"#).unwrap()
 });

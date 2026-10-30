@@ -18,7 +18,8 @@ const NAME: &str = "Kika";
 const PLAYLIST_NAME: &str = "KikaPlaylist";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?kika\.de/[\w/-]+/videos/(?P<id>[a-z-]+\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?kika\.de/[\w/-]+/videos/(?P<id>[a-z-]+\d+)")
+        .unwrap()
 });
 static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?kika\.de/[\w-]+/(?P<id>[a-z-]+\d+)").unwrap()

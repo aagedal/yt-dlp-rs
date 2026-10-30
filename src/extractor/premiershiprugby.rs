@@ -13,7 +13,10 @@ pub struct PremiershipRugby;
 const NAME: &str = "PremiershipRugby";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:\w+\.)premiershiprugby\.(?:com)/watch/(?P<id>[\w-]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:\w+\.)premiershiprugby\.(?:com)/watch/(?P<id>[\w-]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

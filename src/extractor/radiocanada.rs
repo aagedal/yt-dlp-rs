@@ -20,7 +20,7 @@ const CLIENT_KEY: &str = "773aea60-0e80-41bb-9c7f-e6d7c3ad17fb";
 const GEO_COUNTRIES: [&str; 1] = ["CA"];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?:radiocanada:|https?://ici\.radio-canada\.ca/widgets/mediaconsole/)(?P<app_code>[^:/]+)[:/](?P<id>[0-9]+)")
+    crate::extractor::url_regex(r"^(?:radiocanada:|https?://ici\.radio-canada\.ca/widgets/mediaconsole/)(?P<app_code>[^:/]+)[:/](?P<id>[0-9]+)")
         .unwrap()
 });
 static AUDIO_VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {

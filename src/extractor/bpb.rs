@@ -23,7 +23,10 @@ pub struct Bpb;
 const NAME: &str = "Bpb";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.|m\.)?bpb\.de/(?:[^/?#]+/)*(?P<id>\d+)(?:[/?#]|$)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.|m\.)?bpb\.de/(?:[^/?#]+/)*(?P<id>\d+)(?:[/?#]|$)",
+    )
+    .unwrap()
 });
 /// `_TITLE_RE`, matched at the start of the opening header's content.
 static TITLE: LazyLock<Regex> =

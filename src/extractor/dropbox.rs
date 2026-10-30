@@ -16,7 +16,10 @@ pub struct Dropbox;
 const NAME: &str = "Dropbox";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?dropbox\.com/(?:(?:e/)?scl/f[io]|sh?)/(?P<id>\w+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?dropbox\.com/(?:(?:e/)?scl/f[io]|sh?)/(?P<id>\w+)",
+    )
+    .unwrap()
 });
 static PREFETCH: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"registerStreamedPrefetch\s*\(\s*"[\w/+=]+"\s*,\s*"([\w/+=]+)""#).unwrap()

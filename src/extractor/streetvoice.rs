@@ -16,7 +16,8 @@ const NAME: &str = "StreetVoice";
 const FIELDS: &str = "album,comments_count,created_at,id,image,length,likes_count,name,nickname,plays_count,profile,share_count,synopsis,user,username";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:.+?\.)?streetvoice\.com/[^/]+/songs/(?P<id>[0-9]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:.+?\.)?streetvoice\.com/[^/]+/songs/(?P<id>[0-9]+)")
+        .unwrap()
 });
 static ABR: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\.mp3\.(\d+)k").unwrap());
 

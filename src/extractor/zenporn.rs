@@ -16,8 +16,9 @@ pub struct ZenPorn;
 
 const NAME: &str = "ZenPorn";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?zenporn\.com/video/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?zenporn\.com/video/(?P<id>\d+)").unwrap()
+});
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"https://(?P<ext_domain>[\w.-]+\.\w{3})/embed/(?P<extr_id>\d+)/").unwrap()
 });

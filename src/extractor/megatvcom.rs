@@ -18,7 +18,7 @@ const NAME: &str = "megatvcom";
 const PLAYER_DIV_ID: &str = "player_div_id";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?megatv\.com/(?:\d{4}/\d{2}/\d{2}|[^/]+/(?P<id>\d+))/(?P<slug>[^/]+)",
     )
     .unwrap()

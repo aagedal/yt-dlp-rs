@@ -2707,6 +2707,61 @@ fn download_webpage_response_headers(
 /// `Content-Encoding` in reverse (`gzip` as a single member, `deflate` raw or
 /// zlib-wrapped); other encodings are left as sent. Extraction requests ask
 /// for `identity`, but some servers compress regardless.
+/// An extractor's `_VALID_URL` with ASCII `\d` and `\w`. Extractors match
+/// parsed URLs, which are ASCII (`Url` punycodes hosts and percent-encodes
+/// the rest), where both class kinds match alike; Unicode classes cost about
+/// four times as much to compile, and dispatch compiles every extractor's
+/// pattern up to the one that matches.
+pub(crate) fn url_regex(pattern: &str) -> std::result::Result<regex::Regex, regex::Error> {
+    regex::Regex::new(&ascii_classes(pattern))
+}
+
+/// `pattern` with `\d` and `\w` (inside and outside brackets) spelled as
+/// ASCII ranges; other escapes, including `\D`, `\W` and `\\`, unchanged.
+fn ascii_classes(pattern: &str) -> String {
+    let mut out = String::with_capacity(pattern.len() + 16);
+    let mut chars = pattern.chars().peekable();
+    // Nesting depth of `[...]` (a class may contain nested classes).
+    let mut depth = 0_usize;
+    while let Some(c) = chars.next() {
+        match c {
+            '\\' => {
+                let Some(next) = chars.next() else {
+                    out.push(c);
+                    break;
+                };
+                match (next, depth > 0) {
+                    ('d', false) => out.push_str("[0-9]"),
+                    ('d', true) => out.push_str("0-9"),
+                    ('w', false) => out.push_str("[0-9A-Za-z_]"),
+                    ('w', true) => out.push_str("0-9A-Za-z_"),
+                    _ => {
+                        out.push(c);
+                        out.push(next);
+                    }
+                }
+            }
+            '[' => {
+                depth += 1;
+                out.push(c);
+                // `[^` and a leading `]` are part of the class.
+                if chars.peek() == Some(&'^') {
+                    out.extend(chars.next());
+                }
+                if chars.peek() == Some(&']') {
+                    out.extend(chars.next());
+                }
+            }
+            ']' if depth > 0 => {
+                depth -= 1;
+                out.push(c);
+            }
+            _ => out.push(c),
+        }
+    }
+    out
+}
+
 pub(crate) fn decode_content(
     headers: &reqwest::header::HeaderMap,
     body: Vec<u8>,
@@ -3620,6 +3675,26 @@ pub(crate) fn dict_info(
 mod tests {
     use super::*;
     use reqwest::header::{CONTENT_ENCODING, CONTENT_TYPE, HeaderMap, HeaderValue};
+
+    #[test]
+    fn url_regexes_use_ascii_digit_and_word_classes() {
+        for (pattern, expected) in [
+            (r"/(?P<id>\d+)", r"/(?P<id>[0-9]+)"),
+            (r"[\w-]+\.(\w{3})", r"[0-9A-Za-z_-]+\.([0-9A-Za-z_]{3})"),
+            (r"[^\d/]", r"[^0-9/]"),
+            (r"[]\d]", r"[]0-9]"),
+            (r"[^]\w]", r"[^]0-9A-Za-z_]"),
+            (r"[[:alpha:]\d]x\d", r"[[:alpha:]0-9]x[0-9]"),
+            // Other escapes stay, including an escaped backslash before `d`.
+            (r"\\d\D\W\s\b\.\[\d", r"\\d\D\W\s\b\.\[[0-9]"),
+        ] {
+            assert_eq!(ascii_classes(pattern), expected, "{pattern}");
+        }
+        let id = url_regex(r"^https?://(?:www\.)?example\.com/v/(?P<id>[\w-]+)/(\d+)").unwrap();
+        let found = id.captures("https://www.example.com/v/a_B-9/42").unwrap();
+        assert_eq!(&found["id"], "a_B-9");
+        assert!(!id.is_match("https://example.com/v/a/\u{0663}"));
+    }
 
     fn headers(pairs: &[(reqwest::header::HeaderName, &'static str)]) -> HeaderMap {
         let mut map = HeaderMap::new();

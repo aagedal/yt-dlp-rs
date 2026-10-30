@@ -13,7 +13,7 @@ pub struct CultureUnplugged;
 const NAME: &str = "CultureUnplugged";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?cultureunplugged\.com/(?:documentary/watch-online/)?play/(?P<id>\d+)(?:/(?P<display_id>[^/#?]+))?",
     )
     .unwrap()

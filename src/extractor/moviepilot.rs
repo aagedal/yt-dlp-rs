@@ -15,7 +15,7 @@ const NAME: &str = "moviepilot";
 const KEY: &str = "Moviepilot";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?moviepilot\.de/movies/(?P<id>[^/]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?moviepilot\.de/movies/(?P<id>[^/]+)").unwrap()
 });
 
 /// `_match_id`.

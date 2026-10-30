@@ -14,7 +14,10 @@ pub struct Unistra;
 const NAME: &str = "Unistra";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://utv\.unistra\.fr/(?:index|video)\.php\?id_video=(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://utv\.unistra\.fr/(?:index|video)\.php\?id_video=(?P<id>\d+)",
+    )
+    .unwrap()
 });
 static FILE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"file\s*:\s*"(/[^"]+)""#).unwrap());
 static TITLE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<title>UTV - (.*?)</").unwrap());

@@ -13,7 +13,8 @@ pub struct Fathom;
 const NAME: &str = "Fathom";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?fathom\.video/share/(?P<id>[^/?#&]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?fathom\.video/share/(?P<id>[^/?#&]+)")
+        .unwrap()
 });
 
 /// `_match_id`.

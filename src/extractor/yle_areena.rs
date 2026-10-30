@@ -16,7 +16,8 @@ pub struct YleAreena;
 const NAME: &str = "YleAreena";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://areena\.yle\.fi/(?P<podcast>podcastit/)?(?P<id>[\d-]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://areena\.yle\.fi/(?P<podcast>podcastit/)?(?P<id>[\d-]+)")
+        .unwrap()
 });
 /// `K(?P<season_no>\d+),\s*J(?P<episode_no>\d+):?\s*\b(?P<episode>[^|]+)\s*|\s*(?P<series>.+)`:
 /// the top-level alternation makes either the episode groups or the series

@@ -27,7 +27,7 @@ const LOGIN_HINT: &str = "Use --cookies, --cookies-from-browser, --username and 
 const THUMB_PREFS: [&str; 6] = ["url", "middleUrl", "largeUrl", "player", "ogp", "short"];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:embed|sp|www)\.)?nicovideo\.jp/(?:shorts|watch)/(?P<id>(?:[a-z]{2})?\d+)",
     )
     .unwrap()

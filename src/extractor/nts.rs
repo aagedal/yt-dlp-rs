@@ -15,7 +15,10 @@ pub struct NtsLive;
 const NAME: &str = "nts.live";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?nts\.live/shows/[^/?#]+/episodes/(?P<id>[^/?#]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?nts\.live/shows/[^/?#]+/episodes/(?P<id>[^/?#]+)",
+    )
+    .unwrap()
 });
 static REACT_STATE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\._REACT_STATE_\s*=").unwrap());

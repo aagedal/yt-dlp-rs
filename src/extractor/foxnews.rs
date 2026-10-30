@@ -23,7 +23,7 @@ const VIDEO_NAME: &str = "FoxNewsVideo";
 const ARTICLE_NAME: &str = "foxnews:article";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://video\.(?:insider\.)?fox(?:news|business)\.com/v/(?:video-embed\.html\?video_id=)?(?P<id>\d+)")
+    crate::extractor::url_regex(r"^https?://video\.(?:insider\.)?fox(?:news|business)\.com/v/(?:video-embed\.html\?video_id=)?(?P<id>\d+)")
         .unwrap()
 });
 static VIDEO_PAGE: LazyLock<Regex> =

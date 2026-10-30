@@ -14,7 +14,10 @@ pub struct ElPais;
 const NAME: &str = "ElPais";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:[^.]+\.)?elpais\.com/.*/(?P<id>[^/#?]+)\.html(?:$|[?#])").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:[^.]+\.)?elpais\.com/.*/(?P<id>[^/#?]+)\.html(?:$|[?#])",
+    )
+    .unwrap()
 });
 static PREFIX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"var\s+url_cache\s*=\s*"([^"]+)";"#).unwrap());

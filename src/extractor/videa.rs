@@ -20,7 +20,7 @@ const STATIC_SECRET: &str = "xHb0ZvME5q8CBcoQi6AngerDu3FGO9fkUlwPmLVY_RTzj2hJIS4
 const XML_URL: &str = "http://videa.hu/player/xml";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(concat!(
+    crate::extractor::url_regex(concat!(
         r"^https?://videa(?:kid)?\.hu/",
         r"(?:videok/(?:[^/]+/)*[^?#&]+-|",
         r"(?:videojs_)?player\?.*?\bv=|",

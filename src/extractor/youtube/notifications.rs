@@ -13,7 +13,7 @@ use url::Url;
 pub(crate) const NAME: &str = "youtube:notif";
 
 static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^:ytnotif(?:ication)?s?").unwrap());
+    LazyLock::new(|| crate::extractor::url_regex(r"^:ytnotif(?:ication)?s?").unwrap());
 
 /// `YoutubeNotificationsIE.suitable`.
 pub(crate) fn suitable(url: &str) -> bool {

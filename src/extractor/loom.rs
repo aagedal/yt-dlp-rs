@@ -19,7 +19,10 @@ const KEY: &str = "Loom";
 const APOLLO_VERSION: &str = "45a5bd4";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?loom\.com/(?:share|embed)/(?P<id>[\da-f]{32})").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?loom\.com/(?:share|embed)/(?P<id>[\da-f]{32})",
+    )
+    .unwrap()
 });
 
 /// `LoomIE._GRAPHQL_QUERIES` (verbatim).

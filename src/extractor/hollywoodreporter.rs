@@ -18,7 +18,8 @@ const PLAYLIST_NAME: &str = "HollywoodReporterPlaylist";
 const PAGE_SIZE: usize = 15;
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?hollywoodreporter\.com/video/(?P<id>[\w-]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?hollywoodreporter\.com/video/(?P<id>[\w-]+)")
+        .unwrap()
 });
 static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?hollywoodreporter\.com/vcategory/(?P<slug>[\w-]+)-(?P<id>\d+)")

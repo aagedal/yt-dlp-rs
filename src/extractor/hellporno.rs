@@ -14,7 +14,10 @@ pub struct HellPorno;
 const NAME: &str = "HellPorno";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?hellporno\.(?:com/videos|net/v)/(?P<id>[^/]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?hellporno\.(?:com/videos|net/v)/(?P<id>[^/]+)",
+    )
+    .unwrap()
 });
 static VIDEO_IDS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [

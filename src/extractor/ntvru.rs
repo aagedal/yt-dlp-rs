@@ -15,7 +15,8 @@ pub struct NtvRu;
 const NAME: &str = "ntv.ru";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?ntv\.ru/(?:[^/#?]+/)*(?P<id>[^/?#&]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?ntv\.ru/(?:[^/#?]+/)*(?P<id>[^/?#&]+)")
+        .unwrap()
 });
 static FEED_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

@@ -15,7 +15,7 @@ pub struct RottenTomatoes;
 const NAME: &str = "RottenTomatoes";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?rottentomatoes\.com/m/(?P<playlist>[^/]+)(?:/(?P<tr>trailers)(?:/(?P<id>\w+))?)?",
     )
     .unwrap()

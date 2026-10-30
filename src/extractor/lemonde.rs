@@ -14,7 +14,8 @@ pub struct Lemonde;
 const NAME: &str = "Lemonde";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:.+?\.)?lemonde\.fr/(?:[^/]+/)*(?P<id>[^/]+)\.html").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:.+?\.)?lemonde\.fr/(?:[^/]+/)*(?P<id>[^/]+)\.html")
+        .unwrap()
 });
 // `url\s*:\s*(["'])(?P<url>...)\1` split into one alternative per quote.
 static DIGITEKA: LazyLock<Regex> = LazyLock::new(|| {

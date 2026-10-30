@@ -16,7 +16,8 @@ pub(crate) const KEY: &str = "TV24UAVideo";
 
 const VALID: &str = r"https?://24tv\.ua/news/showPlayer\.do.*?(?:\?|&)objectId=(?P<id>\d+)";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| Regex::new(&format!("^{VALID}")).unwrap());
+static VALID_URL: LazyLock<Regex> =
+    LazyLock::new(|| crate::extractor::url_regex(&format!("^{VALID}")).unwrap());
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(&format!(r#"<iframe[^>]+?src=["']?(?P<url>{VALID})["']?"#)).unwrap()
 });

@@ -15,7 +15,8 @@ pub struct Gronkh;
 const NAME: &str = "Gronkh";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?gronkh\.tv/(?:watch/)?streams?/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?gronkh\.tv/(?:watch/)?streams?/(?P<id>\d+)")
+        .unwrap()
 });
 
 /// `_match_id`.

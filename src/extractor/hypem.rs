@@ -14,7 +14,8 @@ pub struct Hypem;
 const NAME: &str = "Hypem";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?hypem\.com/track/(?P<id>[0-9a-z]{5})").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?hypem\.com/track/(?P<id>[0-9a-z]{5})")
+        .unwrap()
 });
 
 static TRACKS: LazyLock<Regex> = LazyLock::new(|| {

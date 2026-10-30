@@ -11,8 +11,9 @@ pub struct MovingImage;
 
 const NAME: &str = "MovingImage";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://movingimage\.nls\.uk/film/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://movingimage\.nls\.uk/film/(?P<id>\d+)").unwrap()
+});
 static MANIFEST: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"file\s*:\s*"([^"]+)""#).unwrap());
 static THUMBNAIL: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"image\s*:\s*'([^']+)'").unwrap());
 

@@ -15,7 +15,7 @@ const NAME: &str = "ToonGoggles";
 const KALTURA: &str = "Kaltura";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?toongoggles\.com/shows/(?P<show_id>\d+)(?:/[^/]+/episodes/(?P<episode_id>\d+))?",
     )
     .unwrap()

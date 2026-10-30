@@ -15,7 +15,8 @@ pub struct Joj;
 const NAME: &str = "Joj";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?:joj:|https?://media\.joj\.sk/embed/)(?P<id>[^/?#^]+)").unwrap()
+    crate::extractor::url_regex(r"^(?:joj:|https?://media\.joj\.sk/embed/)(?P<id>[^/?#^]+)")
+        .unwrap()
 });
 static VIDEO_TITLE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"(?:videoTitle\s*:)\s*(?P<json>["'].+["'])\s*"#).unwrap());

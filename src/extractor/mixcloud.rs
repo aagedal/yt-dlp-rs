@@ -64,8 +64,10 @@ const CLOUDCAST_FIELDS: &str = "audioLength
     id";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www|beta|m)\.)?mixcloud\.com/(?P<user>[^/]+)/(?P<slug>[^/]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:(?:www|beta|m)\.)?mixcloud\.com/(?P<user>[^/]+)/(?P<slug>[^/]+)",
+    )
+    .unwrap()
 });
 
 /// `MixcloudIE._match_valid_url` (`(?!stream|uploads|...)` checked apart).

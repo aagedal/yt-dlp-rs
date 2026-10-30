@@ -19,8 +19,10 @@ const NAME: &str = "Npr";
 const KNOWN_FORMATS: [&str; 5] = ["threegp", "m3u8", "smil", "mp4", "mp3"];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?npr\.org/(?:sections/[^/]+/)?\d{4}/\d{2}/\d{2}/(?P<id>\d+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?npr\.org/(?:sections/[^/]+/)?\d{4}/\d{2}/\d{2}/(?P<id>\d+)",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

@@ -19,8 +19,10 @@ const SPILA_NAME: &str = "ruv.is:spila";
 const SPILA_KEY: &str = "RuvSpila";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?ruv\.is/(?:sarpurinn/[^/]+|node)/(?P<id>[^/]+(?:/\d+)?)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?ruv\.is/(?:sarpurinn/[^/]+|node)/(?P<id>[^/]+(?:/\d+)?)",
+    )
+    .unwrap()
 });
 static SPILA_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

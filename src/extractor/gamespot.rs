@@ -16,7 +16,7 @@ pub struct GameSpot;
 const NAME: &str = "GameSpot";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?gamespot\.com/(?:video|article|review)s/(?:[^/]+/\d+-|embed/)(?P<id>\d+)",
     )
     .unwrap()

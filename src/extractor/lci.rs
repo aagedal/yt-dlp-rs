@@ -13,8 +13,10 @@ pub struct Lci;
 const NAME: &str = "LCI";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?(?:lci|tf1info)\.fr/(?:[^/?#]+/)+[\w-]+-(?P<id>\d+)\.html")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?(?:lci|tf1info)\.fr/(?:[^/?#]+/)+[\w-]+-(?P<id>\d+)\.html",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

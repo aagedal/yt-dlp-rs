@@ -20,7 +20,7 @@ pub struct Gaia;
 const NAME: &str = "Gaia";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?gaia\.com/video/(?P<id>[^/?]+).*?\bfullplayer=(?P<type>feature|preview)",
     )
     .unwrap()

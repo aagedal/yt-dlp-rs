@@ -13,7 +13,8 @@ pub struct GodTube;
 const NAME: &str = "GodTube";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?godtube\.com/watch/\?v=(?P<id>[\da-zA-Z]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?godtube\.com/watch/\?v=(?P<id>[\da-zA-Z]+)")
+        .unwrap()
 });
 
 /// `_match_valid_url`.

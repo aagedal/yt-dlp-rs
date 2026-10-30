@@ -13,8 +13,9 @@ pub struct AeonCo;
 
 const NAME: &str = "AeonCo";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?aeon\.co/videos/(?P<id>[^/?]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?aeon\.co/videos/(?P<id>[^/?]+)").unwrap()
+});
 
 /// `_match_valid_url`.
 pub fn suitable(url: &str) -> bool {

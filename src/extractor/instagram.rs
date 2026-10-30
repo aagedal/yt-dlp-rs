@@ -50,7 +50,7 @@ const COOKIE_DOMAINS: [&str; 6] = [
 ];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^(?P<url>https?://(?:www\.)?instagram\.com(?:/[^/?#]+)?/(?:p|tv|reels?)/(?P<id>[^/?#&]+))",
     )
     .unwrap()

@@ -13,8 +13,10 @@ pub struct GameStar;
 const NAME: &str = "GameStar";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?game(?P<site>pro|star)\.de/videos/.*,(?P<id>[0-9]+)\.html")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?game(?P<site>pro|star)\.de/videos/.*,(?P<id>[0-9]+)\.html",
+    )
+    .unwrap()
 });
 // `type=(["\'])application/ld\+json\1` without the backreference.
 static JSON_LD: LazyLock<Regex> = LazyLock::new(|| {

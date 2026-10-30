@@ -22,7 +22,8 @@ const HEADERS: [(&str, &str); 1] = [("Referer", "https://www.onsen.ag/")];
 const API_HEADERS: [(&str, &str); 1] = [("X-Client", "onsen-web")];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:share|www)\.)onsen\.ag/program/(?P<id>[^/?#]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:(?:share|www)\.)onsen\.ag/program/(?P<id>[^/?#]+)")
+        .unwrap()
 });
 
 /// `_get_encoded_id`: the urlsafe base64 of the program's ID.

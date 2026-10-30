@@ -17,7 +17,7 @@ const OAUTH_URL: &str = "https://www.tumblr.com/api/v2/oauth2/token";
 const LOGIN_URL: &str = "https://www.tumblr.com/login";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?P<blog1>[^/?#&]+)\.tumblr\.com/(?:post|video|(?P<blog2>[a-zA-Z\d-]+))/(?P<id>[0-9]+)(?:$|[/?#])")
+    crate::extractor::url_regex(r"^https?://(?P<blog1>[^/?#&]+)\.tumblr\.com/(?:post|video|(?P<blog2>[a-zA-Z\d-]+))/(?P<id>[0-9]+)(?:$|[/?#])")
         .unwrap()
 });
 static API_TOKEN: LazyLock<Regex> =

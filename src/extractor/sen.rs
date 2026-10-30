@@ -12,8 +12,9 @@ pub struct Sen;
 
 const NAME: &str = "Sen";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?sen\.com/video/(?P<id>[0-9a-f-]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?sen\.com/video/(?P<id>[0-9a-f-]+)").unwrap()
+});
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

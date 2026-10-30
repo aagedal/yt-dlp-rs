@@ -17,8 +17,9 @@ pub struct Nuvid;
 
 const NAME: &str = "Nuvid";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www|m)\.nuvid\.com/video/(?P<id>[0-9]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www|m)\.nuvid\.com/video/(?P<id>[0-9]+)").unwrap()
+});
 static TITLE_ATTRIBUTE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<span\s[^>]*?\btitle\s*=\s*(?:"([^"]+)"|'([^']+)'|\b([^"]+))\s*>"#).unwrap()
 });

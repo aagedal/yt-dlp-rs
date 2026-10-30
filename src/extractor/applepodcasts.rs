@@ -20,7 +20,7 @@ const BASE_URL: &str = "https://podcasts.apple.com";
 const JWT_KEY_ID: &str = "C4J7GBP74H";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://podcasts\.apple\.com/(?P<country>[^/?#]+/)?podcast(?:/[^/?#]+){1,2}/?\?(?:[^#]+&)?i=(?P<id>\d+)",
     )
     .unwrap()

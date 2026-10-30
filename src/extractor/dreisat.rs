@@ -20,7 +20,8 @@ const KEY: &str = "DreiSat";
 const PLAYER_ID: &str = "android_native_6";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?3sat\.de/(?:[^/?#]+/)*(?P<id>[^/?#&]+)\.html").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?3sat\.de/(?:[^/?#]+/)*(?P<id>[^/?#&]+)\.html")
+        .unwrap()
 });
 static PLAYER_JSON: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-zdfplayer-jsb=(["'])"#).unwrap());

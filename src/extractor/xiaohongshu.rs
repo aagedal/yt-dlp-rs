@@ -16,8 +16,10 @@ pub struct XiaoHongShu;
 const NAME: &str = "XiaoHongShu";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://www\.xiaohongshu\.com/(?:explore|discovery/item)/(?P<id>[\da-f]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://www\.xiaohongshu\.com/(?:explore|discovery/item)/(?P<id>[\da-f]+)",
+    )
+    .unwrap()
 });
 
 static INITIAL_STATE: LazyLock<Regex> =
