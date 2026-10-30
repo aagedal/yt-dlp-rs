@@ -5811,8 +5811,10 @@ after-move hooks are skipped. A pair without ffmpeg prints upstream's two
 warnings and streams the formats one after the other (upstream fails on the
 second stream with `write to closed file`); a pair with ffmpeg is an explicit
 error because upstream's FFmpegFD stdout merging is not ported. Each stream is
-received into a private temporary file and then copied to stdout, so output
-starts only after the transfer completes (upstream writes progressively).
+written to a private temporary file and copied to stdout as it downloads (a
+whole-file transfer's received bytes; a fragmented one's finished fragments), so
+a player reading the pipe starts at once. A transfer that has to restart from
+the beginning after data reached stdout is an error.
 
 ## Generic direct links
 

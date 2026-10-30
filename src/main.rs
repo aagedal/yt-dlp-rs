@@ -6360,9 +6360,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         }
                                         screen!("[download] Destination: -");
                                     }
+                                    // The stream is written to a private file and
+                                    // copied to stdout as its data is confirmed, so a
+                                    // player reading the pipe starts at once (upstream
+                                    // writes stdout directly).
                                     let temporary = tempfile::tempdir()?;
                                     let target = temporary.path().join("media");
-                                    downloader.download_with_progress(
+                                    let mut piped = StdoutPipe::new(&target);
+                                    let fragmented = !stream.fragments.is_empty();
+                                    let mut failure = None;
+                                    let result = downloader.download_with_progress(
                                         stream,
                                         &target,
                                         DownloadOptions {
@@ -6370,7 +6377,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                             max_filesize,
                                             rate_limit,
                                             update_time: false,
-                                            part_files: yt_dlp_rs::PartFiles::Private,
+                                            part_files: yt_dlp_rs::PartFiles::NoPart {
+                                                resume: false,
+                                            },
                                             retries,
                                             fragment_retries,
                                             retry_sleep,
@@ -6378,12 +6387,34 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                             merge_files: yt_dlp_rs::MergeFiles::Private,
                                             overwrite: false,
                                         },
-                                        &mut progress,
-                                    )?;
-                                    let mut media = std::fs::File::open(&target)?;
-                                    let mut out = io::stdout().lock();
-                                    io::copy(&mut media, &mut out)?;
-                                    out.flush()?;
+                                        |event: yt_dlp_rs::DownloadProgress| {
+                                            // A whole-file transfer's written bytes, or
+                                            // the fragments finished before the next one
+                                            // is requested (a fragment retry only
+                                            // truncates the one in flight).
+                                            let confirmed = match event.phase {
+                                                DownloadPhase::Downloading if !fragmented => {
+                                                    Some(Some(event.downloaded_bytes))
+                                                }
+                                                DownloadPhase::Requesting if fragmented => {
+                                                    Some(None)
+                                                }
+                                                _ => None,
+                                            };
+                                            if let Some(limit) = confirmed
+                                                && let Err(error) = piped.copy(limit)
+                                            {
+                                                failure = Some(error);
+                                                return std::ops::ControlFlow::Break(());
+                                            }
+                                            progress(event)
+                                        },
+                                    );
+                                    if let Some(error) = failure {
+                                        return Err(error.into());
+                                    }
+                                    result?;
+                                    piped.copy(None)?;
                                 }
                                 return Ok(());
                             }
@@ -9117,6 +9148,54 @@ enum ErrorMode {
     Ignore,
     OnlyDownload,
     Abort,
+}
+
+/// `-o -`: a downloading file's confirmed bytes copied to stdout.
+struct StdoutPipe {
+    path: PathBuf,
+    file: Option<std::fs::File>,
+    copied: u64,
+}
+
+impl StdoutPipe {
+    fn new(path: &Path) -> Self {
+        Self {
+            path: path.to_owned(),
+            file: None,
+            copied: 0,
+        }
+    }
+
+    /// Copy the file's bytes up to `limit` (else its end) that stdout lacks.
+    fn copy(&mut self, limit: Option<u64>) -> io::Result<()> {
+        use std::io::{Read, Seek, SeekFrom};
+        if limit.is_some_and(|limit| limit < self.copied) {
+            return Err(io::Error::other(
+                "the download restarted after its data was written to stdout",
+            ));
+        }
+        if self.file.is_none() {
+            match std::fs::File::open(&self.path) {
+                Ok(file) => self.file = Some(file),
+                Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(()),
+                Err(error) => return Err(error),
+            }
+        }
+        let Some(file) = self.file.as_mut() else {
+            return Ok(());
+        };
+        let end = file.metadata()?.len();
+        let end = limit.map_or(end, |limit| limit.min(end));
+        if end <= self.copied {
+            return Ok(());
+        }
+        file.seek(SeekFrom::Start(self.copied))?;
+        let mut out = io::stdout().lock();
+        io::copy(&mut file.take(end - self.copied), &mut out)?;
+        out.flush()?;
+        self.copied = end;
+        Ok(())
+    }
 }
 
 /// Upstream `DownloadCancelled` reasons; uncaught ones exit with 101.
