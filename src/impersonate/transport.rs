@@ -163,20 +163,16 @@ impl wreq::cookie::CookieStore for SharedCookies {
 /// `proxies`, `verify`, `source_address`, `timeout` and cookie jar).
 pub(super) fn configure(options: &HttpOptions, cookies: &Arc<CookieJar>) -> Result<()> {
     let transport = options.transport_config()?;
-    let (connect, operation) = match transport.timeout {
-        Some(timeout) => (timeout, timeout),
-        None => (
-            std::time::Duration::from_secs(15),
-            std::time::Duration::from_secs(300),
-        ),
-    };
+    // `CurlCFFIRH` uses the timeout for the connect and as a low-speed
+    // limit (1 byte/s), so a slow but moving body is not cut off.
+    let timeout = transport.socket_timeout();
     let mut builder = wreq::Client::builder()
         .cookie_provider(SharedCookies(cookies.clone()))
         // `CurlCFFIRH` follows at most 5 redirects.
         .redirect(wreq::redirect::Policy::limited(5))
         .referer(false)
-        .connect_timeout(connect)
-        .timeout(operation)
+        .connect_timeout(timeout)
+        .read_timeout(timeout)
         .tls_cert_verification(!transport.insecure);
     if let Some(address) = transport.source_address {
         builder = builder.local_address(address);
