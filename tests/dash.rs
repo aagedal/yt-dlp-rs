@@ -92,6 +92,8 @@ impl Server {
                     "/misleading.mpd" => (MPD.into(), "video/mp4", ""),
                     "/mime-only" => (MPD.into(), "application/dash+xml", ""),
                     "/page.html" => ("<title>DASH page</title><video><source src='/manifest.mpd'><source src='/second.mpd'></video>".into(), "text/html", ""),
+                    "/gzip.mpd" => (MPD.into(), "application/dash+xml", "Content-Encoding: gzip\r\n"),
+                    "/gzip.html" => ("<video src='/gzip.mpd' type='application/dash+xml'></video>".into(), "text/html", ""),
                     "/hinted.html" => ("<video src='/hinted' type='application/dash+xml'></video>".into(), "text/html", ""),
                     "/bad-hint.html" => ("<video><source src='/bad-media' type='application/dash+xml'></video>".into(), "text/html", ""),
                     "/bad-media" | "/malformed.mpd" => ("ordinary media bytes".into(), "video/mp4", ""),
@@ -109,6 +111,11 @@ impl Server {
                 };
                 let body = if path == "/utf8.mpd" {
                     vec![255]
+                } else if path == "/gzip.mpd" {
+                    let mut encoder =
+                        flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::default());
+                    encoder.write_all(body.as_bytes()).unwrap();
+                    encoder.finish().unwrap()
                 } else {
                     body.into_bytes()
                 };
@@ -147,10 +154,13 @@ impl Server {
                 !path.ends_with(".m4s") && !path.ends_with("init.mp4"),
                 "{path}"
             );
+            // Probes of the input URL may be media and ask for `identity`;
+            // pages and manifests negotiate compression like upstream.
+            let request = request.to_ascii_lowercase();
             assert!(
-                request
-                    .to_ascii_lowercase()
-                    .contains("accept-encoding: identity\r\n")
+                request.contains("accept-encoding: identity\r\n")
+                    || request.contains("accept-encoding: gzip, deflate\r\n"),
+                "{request}"
             );
         }
     }
@@ -244,6 +254,33 @@ fn html_dash_formats_preserve_identity_group_namespace_and_referer() {
                 .contains(&format!("referer: {}\r\n", server.url("/page.html")))
         );
     }
+    server.assert_no_fragments();
+}
+
+#[test]
+fn page_manifests_are_requested_and_decoded_compressed() {
+    let server = Server::new();
+    let info = YoutubeDl::new()
+        .unwrap()
+        .with_ffmpeg("unused-explicit-ffmpeg")
+        .extract_info(&server.url("/gzip.html"))
+        .unwrap();
+    assert_eq!(info.format_id.as_deref(), Some("video+audio"));
+    let requests = server.requests.lock().unwrap();
+    let encoding = |path: &str| {
+        let request = requests
+            .iter()
+            .find(|request| request.starts_with(&format!("GET {path} ")))
+            .unwrap()
+            .to_ascii_lowercase();
+        request
+            .lines()
+            .find_map(|line| line.strip_prefix("accept-encoding: ").map(str::to_owned))
+    };
+    // The input URL could be media; the manifest it names is not.
+    assert_eq!(encoding("/gzip.html").as_deref(), Some("identity"));
+    assert_eq!(encoding("/gzip.mpd").as_deref(), Some("gzip, deflate"));
+    drop(requests);
     server.assert_no_fragments();
 }
 

@@ -205,7 +205,7 @@ pub(super) fn configure(options: &HttpOptions, cookies: &Arc<CookieJar>) -> Resu
 
 /// `_get_impersonate_headers`: the global headers merged with the
 /// request's, without values equal to upstream's `std_headers` (nor this
-/// port's own `Accept-Encoding: identity`), so the target's browser
+/// port's own `Accept-Encoding` defaults), so the target's browser
 /// headers apply.
 fn impersonate_headers(
     global: &reqwest::header::HeaderMap,
@@ -232,7 +232,7 @@ fn impersonate_headers(
     }
     if merged
         .get(reqwest::header::ACCEPT_ENCODING)
-        .is_some_and(|value| value == "identity")
+        .is_some_and(|value| value == "identity" || value == "gzip, deflate")
     {
         merged.remove(reqwest::header::ACCEPT_ENCODING);
     }
