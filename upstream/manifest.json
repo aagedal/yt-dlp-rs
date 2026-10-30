@@ -6880,7 +6880,7 @@
         "src/extractor/streaks.rs",
         "tests/fixtures/sites/streaks/"
       ],
-      "scope": "StreaksIE VOD playback (SSAI/live and webpage embeds unsupported), compared with pinned upstream output through the fixture proxy"
+      "scope": "StreaksIE VOD playback with the URL or streaks:api_key API key and 403/404 error bodies (SSAI/live and webpage embeds unsupported), compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "wykop",

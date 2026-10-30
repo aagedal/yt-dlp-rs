@@ -7459,6 +7459,7 @@ const SUPPORTED_EXTRACTOR_ARGS: &[(&str, &[&str])] = &[
     ("tiktok", &["device_id"]),
     ("soundcloud", &["formats"]),
     ("instagram", &["app_id"]),
+    ("streaks", &["api_key"]),
 ];
 
 /// Upstream `_PRESET_ALIASES`.

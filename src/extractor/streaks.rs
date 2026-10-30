@@ -92,7 +92,16 @@ fn playback_json(
             ))
         });
     }
+    let reason = response.status().canonical_reason().unwrap_or_default();
     let error: Option<Value> = serde_json::from_slice(&body).ok();
+    if error.is_none() {
+        // `_parse_json(..., fatal=False)`'s warning.
+        let cause = crate::json::python_decode_error_text(&String::from_utf8_lossy(&body))
+            .unwrap_or_default();
+        crate::screen::warning(&format!(
+            "[{NAME}] {media_id}: Failed to parse JSON: {cause}"
+        ));
+    }
     let message = text(error.as_ref().and_then(|error| error.get("message")));
     let code = text(error.as_ref().and_then(|error| error.get("code")));
     let error_id = int_id(error.as_ref().and_then(|error| error.get("id")));
@@ -125,7 +134,7 @@ fn playback_json(
         )));
     }
     Err(Error::Reported(format!(
-        "[{NAME}] {media_id}: Unable to download JSON metadata: HTTP Error {status}"
+        "[{NAME}] {media_id}: Unable to download JSON metadata: HTTP Error {status}: {reason} (caused by <HTTPError {status}: {reason}>)"
     )))
 }
 

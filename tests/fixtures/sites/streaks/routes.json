@@ -21,7 +21,20 @@
    "headers": {
     "Content-Type": "application/json"
    },
-   "body_file": "route-02.json"
+   "body_file": "route-02.json",
+   "request_headers": {
+    "X-Streaks-Api-Key": "08155cd19dc14c12bebefb69b92eafcc"
+   }
+  },
+  {
+   "url": "https://playback.api.streaks.jp/v1/projects/ktv-news/medias/ref:synthetic-clip",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-02.json",
+   "request_headers": {
+    "X-Streaks-Api-Key": "0ff2ccfb6381401582d6ee60e3cb66a1"
+   }
   },
   {
    "url": "https://media.streaks.jp/synthetic/clip/master.m3u8",
