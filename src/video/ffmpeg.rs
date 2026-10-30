@@ -7,7 +7,7 @@ use std::{
     path::Path,
     time::{Duration, Instant},
 };
-const DEADLINE: Duration = Duration::from_secs(600);
+const DEADLINE: Duration = crate::merge::NO_DEADLINE;
 fn error(message: &str) -> Error {
     Error::Postprocess(message.into())
 }

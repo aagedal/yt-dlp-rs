@@ -98,10 +98,13 @@ impl Server {
         for request in self.requests.lock().unwrap().iter() {
             let path = request.split_whitespace().nth(1).unwrap();
             assert!(path.ends_with(".m3u8") || path.ends_with(".html"), "{path}");
+            // Probes of the input URL may be media and ask for `identity`;
+            // pages and manifests negotiate compression like upstream.
+            let request = request.to_ascii_lowercase();
             assert!(
-                request
-                    .to_ascii_lowercase()
-                    .contains("accept-encoding: identity\r\n")
+                request.contains("accept-encoding: identity\r\n")
+                    || request.contains("accept-encoding: gzip, deflate\r\n"),
+                "{request}"
             );
         }
     }

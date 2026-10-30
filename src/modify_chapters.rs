@@ -537,7 +537,7 @@ pub(crate) fn concat_spec(file: &str, options: &[ConcatOptions]) -> String {
     spec
 }
 
-const DEADLINE: std::time::Duration = std::time::Duration::from_secs(600);
+const DEADLINE: std::time::Duration = crate::merge::NO_DEADLINE;
 
 fn ffmpeg_error(message: impl Into<String>) -> crate::Error {
     crate::Error::Postprocess(message.into())

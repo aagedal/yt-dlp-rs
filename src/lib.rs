@@ -425,6 +425,58 @@ pub(crate) const FETCH_ERROR_COUNT: &str = "__yt_dlp_rs_fetch_error_count";
 pub(crate) const FOLLOW_TRANSPARENT: &str = "__yt_dlp_rs_follow_transparent";
 
 /// Upstream `bug_reports_message()` after a lowercase-ending text.
+/// Upstream's `InfoExtractor.extract` turns an extractor's unexpected
+/// exception into `ExtractorError('An extractor error has occurred.')`, so
+/// one broken page fails its URL, not the run. A panic is this port's bug,
+/// reported to this repository rather than upstream's.
+fn guard_extractor<T>(key: &str, url: &str, extract: impl FnOnce() -> Result<T>) -> Result<T> {
+    std::panic::catch_unwind(std::panic::AssertUnwindSafe(extract)).unwrap_or_else(|panic| {
+        let cause = panic
+            .downcast_ref::<&str>()
+            .map(|text| (*text).to_owned())
+            .or_else(|| panic.downcast_ref::<String>().cloned())
+            .unwrap_or_else(|| "unknown panic".into());
+        Err(Error::Reported(format!(
+            "[{key}] {url}: An extractor error has occurred. (caused by panic: {cause}); please report this issue on https://github.com/aagedal/yt-dlp-rs/issues"
+        )))
+    })
+}
+
+#[cfg(test)]
+mod guard_extractor_tests {
+    use super::*;
+
+    #[test]
+    fn extractor_panics_become_errors_for_their_url() {
+        let error = guard_extractor::<()>("Site", "https://example.com/v", || {
+            let entries: Vec<u8> = Vec::new();
+            let _ = entries[entries.len()];
+            Ok(())
+        })
+        .unwrap_err();
+        let text = error.to_string();
+        assert!(
+            text.starts_with(
+                "[Site] https://example.com/v: An extractor error has occurred. (caused by panic: index out of bounds"
+            ),
+            "{text}"
+        );
+        assert!(text.ends_with("https://github.com/aagedal/yt-dlp-rs/issues"));
+        let error = guard_extractor::<()>("Site", "u", || panic!("{}", String::from("owned")));
+        assert!(
+            error
+                .unwrap_err()
+                .to_string()
+                .contains("(caused by panic: owned)")
+        );
+        assert_eq!(guard_extractor("Site", "u", || Ok(1)).unwrap(), 1);
+        assert!(matches!(
+            guard_extractor::<()>("Site", "u", || Err(Error::ExtractionCancelled)),
+            Err(Error::ExtractionCancelled)
+        ));
+    }
+}
+
 pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U";
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
@@ -3146,8 +3198,10 @@ impl YoutubeDl {
                 || extractor::podbayfm_pending_state(&pending.state)
                 || extractor::podchaser_pending_state(&pending.state)
                 || extractor::nzz_pending_state(&pending.state);
-            playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
-                .map(|state| PendingEntries { state });
+            playlist.pending = guard_extractor("playlist", playlist.webpage_url.as_str(), || {
+                fetch(&self.client, pending.state, limit, &mut playlist.entries)
+            })?
+            .map(|state| PendingEntries { state });
             if resolved {
                 let unprocessed: Vec<usize> = (0..playlist.entries.len())
                     .filter(|index| !playlist.entries[*index].extra.contains_key(PROCESSED_ENTRY))
@@ -4718,11 +4772,16 @@ impl YoutubeDl {
         };
         for extractor in extractors {
             geo::begin(extractor.key(), extractor.geo());
-            let mut extracted = extractor.extract_result(&self.client, url);
+            let extract = || {
+                guard_extractor(extractor.key(), url.as_str(), || {
+                    extractor.extract_result(&self.client, url)
+                })
+            };
+            let mut extracted = extract();
             // `extract`: a geo restriction may retry with a fake IP.
             if extracted.is_err() && geo::retry_with_fake_ip() {
                 geo::restart();
-                extracted = extractor.extract_result(&self.client, url);
+                extracted = extract();
             }
             let extracted = extracted?;
             if extracted.is_none() {

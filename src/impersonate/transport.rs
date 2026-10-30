@@ -163,20 +163,16 @@ impl wreq::cookie::CookieStore for SharedCookies {
 /// `proxies`, `verify`, `source_address`, `timeout` and cookie jar).
 pub(super) fn configure(options: &HttpOptions, cookies: &Arc<CookieJar>) -> Result<()> {
     let transport = options.transport_config()?;
-    let (connect, operation) = match transport.timeout {
-        Some(timeout) => (timeout, timeout),
-        None => (
-            std::time::Duration::from_secs(15),
-            std::time::Duration::from_secs(300),
-        ),
-    };
+    // `CurlCFFIRH` uses the timeout for the connect and as a low-speed
+    // limit (1 byte/s), so a slow but moving body is not cut off.
+    let timeout = transport.socket_timeout();
     let mut builder = wreq::Client::builder()
         .cookie_provider(SharedCookies(cookies.clone()))
         // `CurlCFFIRH` follows at most 5 redirects.
         .redirect(wreq::redirect::Policy::limited(5))
         .referer(false)
-        .connect_timeout(connect)
-        .timeout(operation)
+        .connect_timeout(timeout)
+        .read_timeout(timeout)
         .tls_cert_verification(!transport.insecure);
     if let Some(address) = transport.source_address {
         builder = builder.local_address(address);
@@ -205,7 +201,7 @@ pub(super) fn configure(options: &HttpOptions, cookies: &Arc<CookieJar>) -> Resu
 
 /// `_get_impersonate_headers`: the global headers merged with the
 /// request's, without values equal to upstream's `std_headers` (nor this
-/// port's own `Accept-Encoding: identity`), so the target's browser
+/// port's own `Accept-Encoding` defaults), so the target's browser
 /// headers apply.
 fn impersonate_headers(
     global: &reqwest::header::HeaderMap,
@@ -232,7 +228,7 @@ fn impersonate_headers(
     }
     if merged
         .get(reqwest::header::ACCEPT_ENCODING)
-        .is_some_and(|value| value == "identity")
+        .is_some_and(|value| value == "identity" || value == "gzip, deflate")
     {
         merged.remove(reqwest::header::ACCEPT_ENCODING);
     }
