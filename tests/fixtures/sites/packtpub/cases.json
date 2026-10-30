@@ -1,0 +1,28 @@
+[
+ {
+  "url": "https://www.packtpub.com/mapt/video/web-development/9781787122215/20528/20530/Project+Intro",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.packtpub.com/mapt/video/web-development/9781787122215/20528/20629/Locked+Video",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.packtpub.com/mapt/video/web-development/9781787122215",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.packtpub.com/mapt/video/web-development/9780000000000",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

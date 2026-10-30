@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://nekohacker.com/nekoverse/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "nekoverse.html"
+  },
+  {
+   "url": "https://nekohacker.com/synthetic-empty/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-empty.html"
+  },
+  {
+   "url": "https://nekohacker.com/synthetic-spotify/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-spotify.html"
+  }
+ ]
+}

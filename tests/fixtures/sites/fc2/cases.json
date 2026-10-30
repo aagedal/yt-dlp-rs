@@ -1,0 +1,26 @@
+[
+ {
+  "url": "http://video.fc2.com/en/content/20121103kUan1KHs",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://video.fc2.com/en/content/synthetic-noplaylist",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://video.fc2.com/en/content/missing404",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://video.fc2.com/flv2.swf?t=1&i=201403223kCqB3Ez&sj=11&tl=Title%20X",
+  "args": [
+   "-J"
+  ]
+ }
+]

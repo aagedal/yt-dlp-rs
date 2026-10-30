@@ -1,0 +1,42 @@
+[
+ {
+  "url": "http://app.curiositystream.com/video/2",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "http://app.curiositystream.com/video/2",
+  "args": [
+   "-F",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://curiositystream.com/collections/86",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://curiositystream.com/series/2",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://app.curiositystream.com/video/3",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://app.curiositystream.com/video/4",
+  "args": [
+   "-J"
+  ]
+ }
+]

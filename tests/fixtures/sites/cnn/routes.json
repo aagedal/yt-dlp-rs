@@ -1,0 +1,47 @@
+{
+ "routes": [
+  {
+   "url": "https://edition.cnn.com/2024/05/31/sport/video/jadon-sancho-borussia-dortmund-champions-league-exclusive-spt-intl",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "edition-video.html"
+  },
+  {
+   "url": "https://fave.api.cnn.io/v1/video?id=med0e97ad0d154f56e29aa96e57192a14226734b6b&stellarUri=cms.cnn.com%2F_components%2Fvideo-resource%2Finstances%2Fclwuhmnpn000a3b6jouj9cpja%40published",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "fave-video.json"
+  },
+  {
+   "url": "https://medium.ngtv.io/v2/media/med0e97ad0d154f56e29aa96e57192a14226734b6b/desktop?appId=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXR3b3JrIjoiY25uIiwicHJvZHVjdCI6ImNubiIsInBsYXRmb3JtIjoid2ViLXRvcDIiLCJhcHBJZCI6ImNubi1jbm4td2ViLXRvcDItOWowYnI2In0.TbUdtroeG7T1gfSTUfdobssbI8vPsAX6tFEX5KI8hcA",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "medium-desktop.json"
+  },
+  {
+   "url": "https://vod-media-fly.warnermediacdn.com/cnn/v2/clips/2024-05/1553377-a930ad562ea140aebf16215cde272d8d/cmaf/master_cl_de.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master_cl_de.m3u8"
+  },
+  {
+   "url": "https://edition.cnn.com/2024/05/31/sport/video/synthetic-noplayer",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-noplayer.html"
+  },
+  {
+   "url": "https://edition.cnn.com/2024/05/31/sport/video/missing-page",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>Not Found</body></html>"
+  }
+ ]
+}

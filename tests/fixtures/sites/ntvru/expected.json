@@ -1,0 +1,65 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.ntv.ru/video/1797442",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1797442\", \"formats\": [{\"url\": \"https://ymedia-k.ntv.ru/promo/2019/20191117/01086387_hd_hqXW2R7V1HuOgKOmqa_lo.mp4?ts=1793461371&md5=yIxnCFPcXGBGW0wrjA8Vyg\", \"filesize\": 282828800, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}, {\"url\": \"https://ymedia-k.ntv.ru/promo/2019/20191117/01086387_hd_hqXW2R7V1HuOgKOmqa.mp4?ts=1793461371&md5=94jFk_Vki8BcXSe54kVQiA\", \"filesize\": 2206617600, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - unknown\"}], \"title\": \"\\\"\\u041a\\u0430\\u043b\\u043e\\u0435\\u0432. \\u0421\\u0435\\u0434\\u044c\\u043c\\u043e\\u0435 \\u0434\\u043e\\u043a\\u0430\\u0437\\u0430\\u0442\\u0435\\u043b\\u044c\\u0441\\u0442\\u0432\\u043e \\u0431\\u043e\\u0433\\u0430\\\"\", \"description\": \"\\\"\\u041a\\u0430\\u043b\\u043e\\u0435\\u0432. \\u0421\\u0435\\u0434\\u044c\\u043c\\u043e\\u0435 \\u0434\\u043e\\u043a\\u0430\\u0437\\u0430\\u0442\\u0435\\u043b\\u044c\\u0441\\u0442\\u0432\\u043e \\u0431\\u043e\\u0433\\u0430\\\"\", \"duration\": 2879, \"view_count\": 36604, \"thumbnail\": \"http://cdn2-static.ntv.ru/home/promo/20191117/kvl.jpg\", \"timestamp\": 1573973374, \"release_timestamp\": 1573973374, \"modified_timestamp\": 1573973374, \"tags\": [\"\\u0438\\u043d\\u0442\\u0435\\u0440\\u0432\\u044c\\u044e\", \"\\u0443\\u0431\\u0438\\u0439\\u0441\\u0442\\u0432\\u0430 \\u0438 \\u043f\\u043e\\u043a\\u0443\\u0448\\u0435\\u043d\\u0438\\u044f\", \"Boeing\", \"\\u0430\\u0432\\u0438\\u0430\\u0446\\u0438\\u043e\\u043d\\u043d\\u044b\\u0435 \\u043a\\u0430\\u0442\\u0430\\u0441\\u0442\\u0440\\u043e\\u0444\\u044b \\u0438 \\u043f\\u0440\\u043e\\u0438\\u0441\\u0448\\u0435\\u0441\\u0442\\u0432\\u0438\\u044f\", \"\\u0421\\u0435\\u0432\\u0435\\u0440\\u043d\\u0430\\u044f \\u041e\\u0441\\u0435\\u0442\\u0438\\u044f\", \"\\u043c\\u0438\\u0441\\u0442\\u0438\\u043a\\u0430 \\u0438 \\u043e\\u043a\\u043a\\u0443\\u043b\\u044c\\u0442\\u0438\\u0437\\u043c\", \"\\u044d\\u043a\\u0441\\u043a\\u043b\\u044e\\u0437\\u0438\\u0432\", \"\\u0440\\u0435\\u043b\\u0438\\u0433\\u0438\\u044f\"], \"comment_count\": 0, \"webpage_url\": \"https://www.ntv.ru/video/1797442\", \"original_url\": \"https://www.ntv.ru/video/1797442\", \"webpage_url_basename\": \"1797442\", \"webpage_url_domain\": \"ntv.ru\", \"extractor\": \"ntv.ru\", \"extractor_key\": \"NTVRu\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://cdn2-static.ntv.ru/home/promo/20191117/kvl.jpg\", \"id\": \"0\"}], \"display_id\": \"1797442\", \"fulltitle\": \"\\\"\\u041a\\u0430\\u043b\\u043e\\u0435\\u0432. \\u0421\\u0435\\u0434\\u044c\\u043c\\u043e\\u0435 \\u0434\\u043e\\u043a\\u0430\\u0437\\u0430\\u0442\\u0435\\u043b\\u044c\\u0441\\u0442\\u0432\\u043e \\u0431\\u043e\\u0433\\u0430\\\"\", \"duration_string\": \"47:59\", \"upload_date\": \"20191117\", \"release_date\": \"20191117\", \"modified_date\": \"20191117\", \"release_year\": 2019, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://ymedia-k.ntv.ru/promo/2019/20191117/01086387_hd_hqXW2R7V1HuOgKOmqa.mp4?ts=1793461371&md5=94jFk_Vki8BcXSe54kVQiA\", \"filesize\": 2206617600, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - unknown\", \"_filename\": \"\\uff02\\u041a\\u0430\\u043b\\u043e\\u0435\\u0432. \\u0421\\u0435\\u0434\\u044c\\u043c\\u043e\\u0435 \\u0434\\u043e\\u043a\\u0430\\u0437\\u0430\\u0442\\u0435\\u043b\\u044c\\u0441\\u0442\\u0432\\u043e \\u0431\\u043e\\u0433\\u0430\\uff02 [1797442].mp4\", \"filename\": \"\\uff02\\u041a\\u0430\\u043b\\u043e\\u0435\\u0432. \\u0421\\u0435\\u0434\\u044c\\u043c\\u043e\\u0435 \\u0434\\u043e\\u043a\\u0430\\u0437\\u0430\\u0442\\u0435\\u043b\\u044c\\u0441\\u0442\\u0432\\u043e \\u0431\\u043e\\u0433\\u0430\\uff02 [1797442].mp4\", \"__write_download_archive\": false}], \"url\": \"https://ymedia-k.ntv.ru/promo/2019/20191117/01086387_hd_hqXW2R7V1HuOgKOmqa.mp4?ts=1793461371&md5=94jFk_Vki8BcXSe54kVQiA\", \"filesize\": 2206617600, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ntv.ru/video/1797442",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ntv.ru] Extracting URL: https://www.ntv.ru/video/1797442",
+    "[ntv.ru] 1797442: Downloading webpage",
+    "[ntv.ru] 1797442: Downloading video XML",
+    "[ntv.ru] 1797442: Downloading XML metadata",
+    "[info] Available formats for 1797442:",
+    "ID EXT RESOLUTION |   FILESIZE PROTO | VCODEC  ACODEC",
+    "------------------------------------------------------",
+    "0  mp4 unknown    |  269.73MiB https | unknown unknown",
+    "1  mp4 unknown    |    2.06GiB https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ntv.ru/video/synthetic-noid",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [ntv.ru] synthetic-noid: Unable to extract video id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ntv.ru/video/synthetic-missing",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [ntv.ru] synthetic-missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,24 @@
+{
+ "routes": [
+  {
+   "url": "https://www.shugiintv.go.jp/jp/index.php?ex=VL&media_type=&deli_id=53846",
+   "headers": {"Content-Type": "text/html; charset=euc-jp"},
+   "body_file": "vod-page.html"
+  },
+  {
+   "url": "https://hlsvod.shugiintv.go.jp/vod/_definst_/amlst:2022/2022-0323-1750-04/playlist.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "vod-master.m3u8"
+  },
+  {
+   "url": "https://www.shugiintv.go.jp/jp/index.php",
+   "headers": {"Content-Type": "text/html; charset=euc-jp"},
+   "body_file": "index-page.html"
+  },
+  {
+   "url": "https://www.shugiintv.go.jp/jp/index.php?ex=VL&media_type=&deli_id=1",
+   "headers": {"Content-Type": "text/html; charset=euc-jp"},
+   "body_file": "synthetic-no-player.html"
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "routes": [
+  {"url": "https://zoomclips.zoom.us/nws/marvel/2.0/clips/share/6YEG4i_qS0eiT7UH9zPeYw", "headers": {"Content-Type": "application/json;charset=utf-8"}, "body_file": "clip.json"},
+  {"url": "https://zoomclips.zoom.us/nws/marvel/2.0/clips/share/NoMediaClip01", "headers": {"Content-Type": "application/json;charset=utf-8"}, "body_file": "clip-no-media.json"},
+  {"url": "https://zoomclips.zoom.us/nws/marvel/2.0/clips/share/MissingClip01", "status": 404, "headers": {"Content-Type": "application/json"}, "body": "{\"status\":false,\"errorCode\":404}"}
+ ]
+}

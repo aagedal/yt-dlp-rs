@@ -1,0 +1,8 @@
+{
+ "title": "Learn Nodejs by building 12 projects [Video]",
+ "type": "videos",
+ "coverImage": "https://d255esdrn735hr.cloudfront.net/sites/default/files/bookretailers/V05961.JPG",
+ "productId": "9781787122215",
+ "publicationDate": "2017-03-31T00:00:00.000Z",
+ "about": "<p>Everyone is talking about Node.js now - everybody wants to learn it, and the web development trends seem to be moving towards it. With its event-driven architecture and efficient web services capabilities, more and more companies are building their entire infrastructure around Node.js. This course is your perfect companion to learn Node.js server programming in a very practical manner, by implementing 12 carefully hand-picked, real-world projects. You will start your journey by creating a simple web server, and build a basic website using the Express framework. Use socket programming to create your own chat applications, build a user login system by combining the power of MongoDB and Node.js, and create an entire e-learning system \u2013 all this while building on your understanding of Node.js and how it can be interfaced with other technologies. If you believe in learning by doing, this course will empower you to learn Node.js and develop efficient event-driven applications with ease.</p>\r\n<h1>Style and Approach</h1>\r\n<p>This course adopts a unique, learn-as-you-do approach as the reader builds on his understanding of Node.js progressively with each project. This course is designed in such a way that implementing each project will empower you with a unique skillset, and enable you to implement the next project more confidently.</p>"
+}

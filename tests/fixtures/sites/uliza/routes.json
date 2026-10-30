@@ -1,0 +1,10 @@
+{
+ "routes": [
+  {"url": "https://player-api.p.uliza.jp/v1/players/uliza_jp_gallery_normal/promotion/admin?type=presentation&name=cookings&targetid=player1", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "player-cookings.html"},
+  {"url": "https://player-api.p.uliza.jp/v1/players/default-player/pia/admin?type=normal&name=pia_movie_uliza_fix&targetid=ulizahtml5&repeatable=true", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "player-pia.html"},
+  {"url": "https://player-api.p.uliza.jp/v1/players/default-player/pia/admin?type=normal&name=no_player_data", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><body>no player</body></html>"},
+  {"url": "https://ulizaportal.jp/pages/005f18b7-e810-5618-cb82-0987c5755d44", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "portal.html"},
+  {"url": "https://vms-api.p.uliza.jp/v1/prog-index.m3u8?expires=1793382169&signature=12d9c0d1b1a0786a8e8266980024e629f8acd87a680da062bc6336ccdcdf700a&ss=ae350126-5e22-4a7f-a8ac-8d0fd448b800&version=1", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "prog-index-cookings.m3u8"},
+  {"url": "https://vms-api.p.uliza.jp/v1/prog-index.m3u8?expires=1793389373&signature=bec968d207f9c66c1b6f1e33d8e1121e1421b7067b64046e815b7ce07fd8fe2a&ss=0644ecc8-e354-41b4-b957-3b08a2d63df1&version=1", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "prog-index-pia.m3u8"}
+ ]
+}

@@ -1,0 +1,66 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://app.lecturio.com/medical-courses/important-concepts-and-terms-introduction-to-microbiology.lecture#tab/videos",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"39634\", \"title\": \"Important Concepts and Terms \\u2014 Introduction to Microbiology\", \"formats\": [{\"url\": \"https://customer-ajptwibdektz7o1k.cloudflarestream.com/synthetic-token/manifest/video.m3u8\", \"format_id\": \"HLS\", \"filesize\": 0, \"protocol\": \"m3u8_native\", \"ext\": \"m3u8\", \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HLS - unknown\"}, {\"url\": \"https://customer-ajptwibdektz7o1k.cloudflarestream.com/synthetic-token/manifest/video.mpd\", \"format_id\": \"DASH\", \"filesize\": 0, \"protocol\": \"https\", \"ext\": \"mpd\", \"video_ext\": \"mpd\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"DASH - unknown\"}, {\"url\": \"https://vod.lecturio.com/1901041139-182129-o-20151006_01-01_Microbiology_Racaniello_v2-086489-v1-st3.mp4?Expires=1793389365&Signature=VSMdxVge-~gOAqd5q7hf7a1bQFtmDMJu-2FABsYMrg-N1boHcWFuSwYQVS7IkyMlpuVWIi8DlHDPFPvbclKIpZ-S1YbWQu5yOeGP5XgE2V-BG2r1R4zwh0ON29Ofu9Xw~25jaJvuwWmkaX0t4nn9eCABBxGGjqsPI1V6hdVZ8CKlm5gqE-8-OBebOGdRCsfJi8ijowZYfzHijut84N2aRCrtGqZuJJGcCt-G36fQTkbQ6Sm-6YP0ApbKmHlty1IemyMs697Wlzq-J6~SEXAZA2IUXTRre2Du1BSXfqXbojv5MtoaVNDNTUIwKJADWT5wMBo2DQc6Fq1DNfk9oP0w7Q__&Key-Pair-Id=K2J9ZGJKBLQ39V\", \"format_id\": \"LD\", \"filesize\": 11391000, \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"LD - 360p\"}, {\"url\": \"https://vod.lecturio.com/1901041139-182129-o-20151006_01-01_Microbiology_Racaniello_v2-086489-v1-st2.mp4?Expires=1793389365&Signature=fkRADq-9p8FEY5PUzVZMnmq~CtTencJSRs8RxTApNvAW8QQF~VlylbRRdnSa5TNPEayHsVzbARh0Jj3-LsPM9lxsH58t3TuWVaCNEG~pl8Ls3Ax9gpssDQHuy59hd8Jd24qdp2Xmr0SmIiI2uW5EOFi~YXCgPzsfWIAIrlnAfdiX-JU9ATvXuY9ctzU13B1dkl1WFgp6yeh6ImBkBt9PpBiQVEZCfQ8M1j2OPpJ3cglKm5D-5xnO1iY~Npz42JvUI2kPf3XyO5vs~vrQ2VOvej140XRRX4rdCKTOVdGxuk8DPP9DwouHLC5fOWAhbHQJP8Ok-W29uIyoickVPAQ~tw__&Key-Pair-Id=K2J9ZGJKBLQ39V\", \"format_id\": \"SD\", \"filesize\": 21842000, \"height\": 540, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"540p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"SD - 540p\"}, {\"url\": \"https://vod.lecturio.com/1901041139-182129-o-20151006_01-01_Microbiology_Racaniello_v2-086489-v1-st1.mp4?Expires=1793389365&Signature=oC-rDYfUCVwUvHWZioZt6IQZHvwU-RfT9yyQoHLpdVO3Zl8uYTI74-e3jBc1rxqZvkOQwiCUslvWVYwZwX00-4mlbbSM1IrneipcC7k~tVwV87TRgGcS5mDzlUAwx4uxKTXMpp0JLh8eI9YtdMUBEf9nH0l4iH2tyhoIKE-pJ-AyhBfUmHSxp1yiPO6s4ApM2Bj1WIEmtDpNwMzqOLvyXr7ZTZ27NZM7KSoCTgr4NEd8v8Iak9qQsvK6HxDhROYrIiQCMEKY3AMiLWC6474W3QqYNbxesClas57wfrm0bDtA3mEnqdHaHkMZecdc-Kdl5RcsZGrFErg48Uc~1a04sA__&Key-Pair-Id=K2J9ZGJKBLQ39V\", \"format_id\": \"HD\", \"filesize\": 30757000, \"height\": 1080, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HD - 1080p\"}], \"subtitles\": {\"en\": [{\"url\": \"https://d175v0bqhq04hz.cloudfront.net/39634_b1e583f5f044040bf233d9d7d569dada.vtt\", \"ext\": \"vtt\"}], \"de\": [{\"url\": \"https://d175v0bqhq04hz.cloudfront.net/39634_69b5ab59eb886a9145363171b92f1e8b.vtt\", \"ext\": \"vtt\"}]}, \"automatic_captions\": {\"ar\": [{\"url\": \"https://d175v0bqhq04hz.cloudfront.net/ar_39634_b1e583f5f044040bf233d9d7d569dada.vtt\", \"ext\": \"vtt\"}]}, \"webpage_url\": \"https://app.lecturio.com/medical-courses/important-concepts-and-terms-introduction-to-microbiology.lecture#tab/videos\", \"original_url\": \"https://app.lecturio.com/medical-courses/important-concepts-and-terms-introduction-to-microbiology.lecture#tab/videos\", \"webpage_url_basename\": \"important-concepts-and-terms-introduction-to-microbiology.lecture\", \"webpage_url_domain\": \"app.lecturio.com\", \"extractor\": \"Lecturio\", \"extractor_key\": \"Lecturio\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"39634\", \"fulltitle\": \"Important Concepts and Terms \\u2014 Introduction to Microbiology\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://vod.lecturio.com/1901041139-182129-o-20151006_01-01_Microbiology_Racaniello_v2-086489-v1-st1.mp4?Expires=1793389365&Signature=oC-rDYfUCVwUvHWZioZt6IQZHvwU-RfT9yyQoHLpdVO3Zl8uYTI74-e3jBc1rxqZvkOQwiCUslvWVYwZwX00-4mlbbSM1IrneipcC7k~tVwV87TRgGcS5mDzlUAwx4uxKTXMpp0JLh8eI9YtdMUBEf9nH0l4iH2tyhoIKE-pJ-AyhBfUmHSxp1yiPO6s4ApM2Bj1WIEmtDpNwMzqOLvyXr7ZTZ27NZM7KSoCTgr4NEd8v8Iak9qQsvK6HxDhROYrIiQCMEKY3AMiLWC6474W3QqYNbxesClas57wfrm0bDtA3mEnqdHaHkMZecdc-Kdl5RcsZGrFErg48Uc~1a04sA__&Key-Pair-Id=K2J9ZGJKBLQ39V\", \"format_id\": \"HD\", \"filesize\": 30757000, \"height\": 1080, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HD - 1080p\", \"_filename\": \"Important Concepts and Terms \\u2014 Introduction to Microbiology [39634].mp4\", \"filename\": \"Important Concepts and Terms \\u2014 Introduction to Microbiology [39634].mp4\", \"__write_download_archive\": false}], \"url\": \"https://vod.lecturio.com/1901041139-182129-o-20151006_01-01_Microbiology_Racaniello_v2-086489-v1-st1.mp4?Expires=1793389365&Signature=oC-rDYfUCVwUvHWZioZt6IQZHvwU-RfT9yyQoHLpdVO3Zl8uYTI74-e3jBc1rxqZvkOQwiCUslvWVYwZwX00-4mlbbSM1IrneipcC7k~tVwV87TRgGcS5mDzlUAwx4uxKTXMpp0JLh8eI9YtdMUBEf9nH0l4iH2tyhoIKE-pJ-AyhBfUmHSxp1yiPO6s4ApM2Bj1WIEmtDpNwMzqOLvyXr7ZTZ27NZM7KSoCTgr4NEd8v8Iak9qQsvK6HxDhROYrIiQCMEKY3AMiLWC6474W3QqYNbxesClas57wfrm0bDtA3mEnqdHaHkMZecdc-Kdl5RcsZGrFErg48Uc~1a04sA__&Key-Pair-Id=K2J9ZGJKBLQ39V\", \"format_id\": \"HD\", \"filesize\": 30757000, \"height\": 1080, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HD - 1080p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://app.lecturio.com/medical-courses/important-concepts-and-terms-introduction-to-microbiology.lecture#tab/videos",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Lecturio] Extracting URL: https://app.lecturio.com/medical-courses/important-concepts-and-terms-introduction-to-microbiology.lecture#tab/videos",
+    "[Lecturio] important-concepts-and-terms-introduction-to-microbiology: Downloading JSON metadata",
+    "[info] Available formats for 39634:",
+    "ID   EXT  RESOLUTION |  FILESIZE PROTO | VCODEC  ACODEC",
+    "--------------------------------------------------------",
+    "HLS  m3u8 unknown    |           m3u8  | unknown unknown",
+    "DASH mpd  unknown    |           https | unknown unknown",
+    "LD   mp4  360p       |  10.86MiB https | unknown unknown",
+    "SD   mp4  540p       |  20.83MiB https | unknown unknown",
+    "HD   mp4  1080p      |  29.33MiB https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://app.lecturio.com/medical-courses/missing-title.lecture",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: An extractor error has occurred. (caused by KeyError('title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://app.lecturio.com/medical-courses/nonexistent-lecture.lecture",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Lecturio] nonexistent-lecture: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

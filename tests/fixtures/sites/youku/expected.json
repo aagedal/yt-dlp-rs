@@ -1,0 +1,32 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://v.youku.com/v_show/id_XNTA2NTA0MjA1Mg==.html",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(duration)s|%(uploader)s|%(uploader_id)s|%(format_id)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "XNTA2NTA0MjA1Mg|Minecraft我的世界：建造超大巨型航空飞机，菜鸟vs高手vs黑客|542.13|皮皮游戏Game|156688084|3|http://pl-ali.youku.com/playlist/m3u8?vid=XNTA2NTA0MjA1Mg%3D%3D&type=hd3&ups_client_netip=2001x4641x88b7xx1000&utid=t6drI4tvBXgBASABRkHVDwZ8&ccode=0564&psid=f59741c8666678005bd0d13db6531bf641346&duration=542&expire=18000&drm_type=1&drm_device=0&drm_default=1&dyt=1&ups_ts=1793374649&onOff=0&encr=0&ups_key=fb166770a585d615020811721837a393&ckt=3&m_onoff=0&pn=&drm_type_value=default&v=v1&bkp=0"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://v.youku.com/v_show/id_XNjA1NzA2Njgw.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [youku] XNjA1NzA2Njgw: Youku server reported error -1002: 该视频已被屏蔽，您可以尝试搜索操作。; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

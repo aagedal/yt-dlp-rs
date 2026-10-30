@@ -1,0 +1,16 @@
+[
+ {
+  "url": "https://globoplay.globo.com/v/3607726/",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://ge.globo.com/video/ta-na-area-como-foi-assistir-ao-jogo-do-palmeiras-que-a-globo-nao-passou-10287094.ghtml",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

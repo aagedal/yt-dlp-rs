@@ -1,0 +1,17 @@
+#EXTM3U
+#EXT-X-VERSION:7
+## Created with Unified Streaming Platform  (version=1.15.1-31309)
+
+# AUDIO groups
+#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio-aacl-64",LANGUAGE="en",NAME="English",DEFAULT=YES,AUTOSELECT=YES,CHANNELS="2",URI="vod-idx-audio_eng=64001.m3u8?vbegin=1395153872&vend=1395162701"
+
+# variants
+#EXT-X-STREAM-INF:BANDWIDTH=708000,CODECS="mp4a.40.2,avc1.64001E",RESOLUTION=640x360,AUDIO="audio-aacl-64",CLOSED-CAPTIONS=NONE
+vod-idx-video_eng=606064.m3u8?vbegin=1395153872&vend=1395162701
+
+# variants
+#EXT-X-STREAM-INF:BANDWIDTH=65000,CODECS="mp4a.40.2",AUDIO="audio-aacl-64"
+vod-idx-audio_eng=64001.m3u8?vbegin=1395153872&vend=1395162701
+
+# keyframes
+#EXT-X-I-FRAME-STREAM-INF:BANDWIDTH=81000,CODECS="avc1.64001E",RESOLUTION=640x360,URI="keyframes/vod-idx-video_eng=606064.m3u8?vbegin=1395153872&vend=1395162701"

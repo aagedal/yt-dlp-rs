@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://log.mmstat.com/eg.js",
+   "headers": {
+    "Content-Type": "application/javascript",
+    "ETag": "\"t6drI4tvBXgBASABRkHVDwZ8\""
+   },
+   "body_file": "mmstat.js"
+  },
+  {
+   "url": "https://ups.youku.com/ups/get.json?vid=XNTA2NTA0MjA1Mg&ccode=0564&client_ip=192.168.1.1&utid=t6drI4tvBXgBASABRkHVDwZ8",
+   "ignore_query": [
+    "client_ts"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ups.json"
+  },
+  {
+   "url": "https://ups.youku.com/ups/get.json?vid=XNjA1NzA2Njgw&ccode=0564&client_ip=192.168.1.1&utid=t6drI4tvBXgBASABRkHVDwZ8",
+   "ignore_query": [
+    "client_ts"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ups-blocked.json"
+  }
+ ]
+}

@@ -1,0 +1,38 @@
+{
+ "routes": [
+  {
+   "url": "https://odkmedia.io/odx/api/v3/playback/1595796/",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playback-1595796.json",
+   "request_headers": {
+    "service-name": "odk"
+   },
+   "ignore_query": [
+    "did"
+   ]
+  },
+  {
+   "url": "https://odkmedia.io/odx/api/v3/playback/369531/",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playback-369531.json",
+   "request_headers": {
+    "service-name": "odk"
+   },
+   "ignore_query": [
+    "did"
+   ],
+   "status": 404
+  },
+  {
+   "url": "https://hls.ondemandkorea.com/v1/202308/korea/drama/breakup-probation-a-week/breakup-probation-a-week-e08-2023-08-29-08-07-18.mp4/HLS/master_1080p.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-1080p.m3u8"
+  }
+ ]
+}

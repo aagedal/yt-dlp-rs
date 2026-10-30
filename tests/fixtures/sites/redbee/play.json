@@ -1,0 +1,53 @@
+{
+  "accountId" : "ANONYMOUS",
+  "analytics" : {
+    "postInterval" : 60,
+    "bucket" : 0,
+    "tag" : "default",
+    "baseUrl" : "https://eventsink.api.redbee.live",
+    "percentage" : 100
+  },
+  "assetId" : "c1e9d44d-fd6c-4263-b50f-97ed26cc998b_0D62A9b",
+  "audioOnly" : false,
+  "bookmarks" : { },
+  "cdn" : {
+    "profile" : "ukp-generic-azure_westeurope",
+    "host" : "primary",
+    "provider" : "unknown"
+  },
+  "concurrentSessionsCount" : 0,
+  "contractRestrictions" : {
+    "airplayEnabled" : true,
+    "ffEnabled" : true,
+    "rwEnabled" : true,
+    "timeshiftEnabled" : true
+  },
+  "deviceId" : "28d455e3-b5f3-4061-a6d1-280b48e343d9",
+  "deviceType" : "WEB",
+  "durationInMs" : 8829000000,
+  "durationInMilliseconds" : 8829000,
+  "formats" : [ {
+    "format" : "HLS",
+    "mediaLocator" : "https://2f0f8fc-az-westeurope-fsly.cdn.redbee.live/ukparliament/parliamentlive/assets/c1e9d44d-fd6c-4263-b50f-97ed26cc998b_0D62A9b/materials/EM41RVWvjT_0D62A9b/vod-idx.ism/.m3u8?vbegin=1395153872&vend=1395162701"
+  } ],
+  "materialId" : "HRFCPJokAk_0D62A9b",
+  "materialVersion" : 2,
+  "materialProfile" : "default",
+  "markerCuePoints" : [ ],
+  "playSessionId" : "1J5vuLH1Bezde3HiPsC0",
+  "playTokenExpiration" : 1793378086,
+  "playTokenExpirationReason" : "MAX_TIME",
+  "productId" : "anonymous_product_0D62A9b",
+  "publicationId" : "c1e9d44d-fd6c-4263-b50f-97ed26cc998b_0D62A9b",
+  "sprites" : [ ],
+  "streamInfo" : {
+    "static" : true,
+    "live" : false,
+    "event" : false,
+    "persistent" : false,
+    "ssai" : false
+  },
+  "requestId" : "aPkboUMyHf",
+  "userId" : "eHZSrHYoUXsZYEScLwQnJMWMw",
+  "entitleExposure" : true
+}

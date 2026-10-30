@@ -1,0 +1,53 @@
+{
+ "routes": [
+  {
+   "url": "https://api.iwara.tv/video/k2ayoueezfkx6gvq",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video.json"
+  },
+  {
+   "url": "https://filesq.iwara.tv/file/2d8d2429-734a-4dd3-8000-5bcf6d90b509?expires=1793377435739&hash=843dd526a6f51d73be6826385fcb03e58237de5f68b1b9c9719b306c58c47be4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "files.json"
+  },
+  {
+   "url": "https://api.iwara.tv/video/syntheticunplayable",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "synthetic-unplayable.json"
+  },
+  {
+   "url": "https://api.iwara.tv/video/syntheticmessage",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "synthetic-message.json"
+  },
+  {
+   "url": "https://api.iwara.tv/profile/user792540",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "user-profile.json"
+  },
+  {
+   "url": "https://api.iwara.tv/videos?page=0&sort=date&user=0f736172-77a5-4104-8f18-ab07b8297a72&limit=32",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "user-videos.json"
+  },
+  {
+   "url": "https://api.iwara.tv/playlist/458e5486-36a4-4ac0-b233-7e9eef01025f?page=0&limit=32",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playlist.json"
+  }
+ ]
+}

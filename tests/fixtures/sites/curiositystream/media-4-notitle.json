@@ -1,0 +1,18 @@
+{
+ "data": {
+  "id": 4,
+  "description": "Vint Cerf, Google's Chief Internet Evangelist, describes how he and Bob Kahn created the internet.",
+  "rating_percentage": 96.32,
+  "type": "Interview",
+  "duration": 158,
+  "collection_id": 2,
+  "image_large": "https://img.curiositystream.com/w:1255/cHJvZHVjdGlvbi9zb3VyY2VzL3RpdGxlcy8yL2hvcml6b250YWxfaW1hZ2VfMTZfOS9lbi1VUy83YjA2MWZjYS0yZDQyLTRiNGEtYTNkMy0zYmYzOGU0MGQzNzgvbWVkaWFfaG9yaXpvbnRhbF9pbWFnZV8xNl85XzJfMzg0MHgyMTYwXzAwMDEuanBn.jpg",
+  "image_medium": "https://img.curiositystream.com/w:760/cHJvZHVjdGlvbi9zb3VyY2VzL3RpdGxlcy8yL2hvcml6b250YWxfaW1hZ2VfMTZfOS9lbi1VUy83YjA2MWZjYS0yZDQyLTRiNGEtYTNkMy0zYmYzOGU0MGQzNzgvbWVkaWFfaG9yaXpvbnRhbF9pbWFnZV8xNl85XzJfMzg0MHgyMTYwXzAwMDEuanBn.jpg",
+  "image_small": "https://img.curiositystream.com/w:278/cHJvZHVjdGlvbi9zb3VyY2VzL3RpdGxlcy8yL2hvcml6b250YWxfaW1hZ2VfMTZfOS9lbi1VUy83YjA2MWZjYS0yZDQyLTRiNGEtYTNkMy0zYmYzOGU0MGQzNzgvbWVkaWFfaG9yaXpvbnRhbF9pbWFnZV8xNl85XzJfMzg0MHgyMTYwXzAwMDEuanBn.jpg",
+  "tags": [],
+  "closed_captions": [],
+  "producer": "Curiosity Stream",
+  "primary_category": "Technology",
+  "encodings": []
+ }
+}

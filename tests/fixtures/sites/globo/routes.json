@@ -1,0 +1,40 @@
+{
+ "routes": [
+  {
+   "url": "https://cloud-jarvis.globo.com/graphql?operationName=getVideoView&variables=%7B%22videoId%22%3A+%223607726%22%7D&query=%0A++++query+getVideoView%28%24videoId%3A+ID%21%29+%7B%0A++++++++video%28id%3A+%24videoId%29+%7B%0A++++++++++++duration%0A++++++++++++description%0A++++++++++++relatedEpisodeNumber%0A++++++++++++relatedSeasonNumber%0A++++++++++++headline%0A++++++++++++title+%7B%0A++++++++++++++++originProgramId%0A++++++++++++++++headline%0A++++++++++++%7D%0A++++++++%7D%0A++++%7D%0A++++",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "graphql.json",
+   "request_headers": {
+    "x-platform-id": "web",
+    "x-device-id": "desktop",
+    "x-client-version": "2024.12-5"
+   }
+  },
+  {
+   "url": "https://playback.video.globo.com/v4/video-session",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video-session.json",
+   "request_body": [
+    "\"video_id\": \"3607726\""
+   ]
+  },
+  {
+   "url": "https://vod-cm-ah-06-15.video.globo.com/j/eyJhbGciOiJSUzUxMiIsImtpZCI6IjEiLCJ0eXAiOiJKV1QifQ.eyJjb3VudHJ5X2NvZGUiOiJOTyIsImRvbWFpbiI6InZvZC1jbS1haC0wNi0xNS52aWRlby5nbG9iby5jb20iLCJleHAiOjE3OTMzNzgzNDgsImlhdCI6MTc5MzM3NDc0OCwiaXNzIjoicGxheWJhY2stYXBpLXByb2QtZ2NwIiwib3duZXIiOiIiLCJwYXRoIjoiL3IzNjBfMTA4MC9sL3YyLzAwL2IzLzFkLzM2MDc3MjZfMWRmNjUyNTk0ODViNGJlM2MzM2JhNDk1NmMzYTdjMDA5MWE2ZDkxMi8zNjA3NzI2LTExYWJNTmYtbWFuaWZlc3QuaXNtLzM2MDc3MjYtcG9yLm0zdTgifQ.P67jmp6AvD6L26VuVEYM8KbqBVtwW7wpkrRs6fpWJXOoiN7yYGcUhIOfqbuF7UX85upcWtlUQzx9L-8GT0zlOFR2342n0TAEX0ZP_zHyrXvkMAJxViXUbn0smmApXS_3xtNSGTSLPrAsed2ckYLuz-zvedL7RSgG9N7LbCTsfYOKRqElBFEfWOSe7FpWaj0Nb-yH0dJY-6KIb72nYo5goZIyY005p7yyPajQ806ixh9gN8HdrRJW02pLyCPjtUwmLhGrdSoRFK3hpLHC0xSBoCSoeDMxj-1vwKBvyB3pWAPRVSIN-ipMrcsMikOXF7QslJAIJk10W2pm9Q50Dr3hbA/r360_1080/l/v2/00/b3/1d/3607726_1df65259485b4be3c33ba4956c3a7c0091a6d912/3607726-11abMNf-manifest.ism/3607726-por.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "manifest.m3u8"
+  },
+  {
+   "url": "https://ge.globo.com/video/ta-na-area-como-foi-assistir-ao-jogo-do-palmeiras-que-a-globo-nao-passou-10287094.ghtml",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "article.html"
+  }
+ ]
+}

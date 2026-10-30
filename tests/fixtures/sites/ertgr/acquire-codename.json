@@ -1,0 +1,258 @@
+{
+ "MediaFiles": [
+  {
+   "$type": "Insys.Video.Contracts.Messages.MediaFileResult, Insys.Video.Contracts",
+   "Id": 74212,
+   "MediaContentMediaFileId": 74293,
+   "RoleCodename": "main",
+   "RoleName": "main",
+   "Formats": [
+    {
+     "Id": 86716,
+     "Url": "https://mediaserve.ert.gr/bpk-vod/vodext/default/monogramm-praksitelis-tzanoulinos/monogramm-praksitelis-tzanoulinos/index.m3u8",
+     "Type": 2,
+     "Protection": 0,
+     "AudioBitrate": "0",
+     "VideoBitrate": "0",
+     "MediaTracks": [
+      {
+       "Type": "Audio",
+       "Index": 0,
+       "Name": "audio",
+       "DisplayName": "audio",
+       "IsVisible": true
+      },
+      {
+       "Type": "Audio",
+       "Index": 1,
+       "Name": "audio",
+       "DisplayName": "audio",
+       "IsVisible": true
+      },
+      {
+       "Type": "Audio",
+       "Index": 2,
+       "Name": "audio",
+       "DisplayName": "audio",
+       "IsVisible": true
+      },
+      {
+       "Type": "Audio",
+       "Index": 3,
+       "Name": "audio",
+       "DisplayName": "audio",
+       "IsVisible": true
+      },
+      {
+       "Type": "Audio",
+       "Index": 4,
+       "Name": "audio",
+       "DisplayName": "audio",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "mp4a.40.2,avc1.4D401E",
+       "Bitrate": 632000,
+       "Index": 5,
+       "Name": "360p",
+       "DisplayName": "360p",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "mp4a.40.2,avc1.4D401E",
+       "Bitrate": 1196000,
+       "Index": 6,
+       "Name": "432p",
+       "DisplayName": "432p",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "mp4a.40.2,avc1.64001F",
+       "Bitrate": 2324000,
+       "Index": 7,
+       "Name": "720p",
+       "DisplayName": "720p",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "mp4a.40.2,avc1.640028",
+       "Bitrate": 3451000,
+       "Index": 8,
+       "Name": "1080p",
+       "DisplayName": "1080p",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "mp4a.40.2,avc1.640028",
+       "Bitrate": 4579000,
+       "Index": 9,
+       "Name": "1080p",
+       "DisplayName": "1080p",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "mp4a.40.2",
+       "Bitrate": 102000,
+       "Index": 10,
+       "Name": "102000",
+       "DisplayName": "102000",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "mp4a.40.2",
+       "Bitrate": 136000,
+       "Index": 11,
+       "Name": "136000",
+       "DisplayName": "136000",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "mp4a.40.2",
+       "Bitrate": 204000,
+       "Index": 12,
+       "Name": "204000",
+       "DisplayName": "204000",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "mp4a.40.2",
+       "Bitrate": 272000,
+       "Index": 13,
+       "Name": "272000",
+       "DisplayName": "272000",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "mp4a.40.2",
+       "Bitrate": 340000,
+       "Index": 14,
+       "Name": "340000",
+       "DisplayName": "340000",
+       "IsVisible": true
+      }
+     ]
+    },
+    {
+     "Id": 86718,
+     "Url": "https://www.ertflix.gr/_MP4/2021/SYNENTEYKSEIS/monogramma/monogramm-praksitelis-tzanoulinos/monogramm-praksitelis-tzanoulinos_4mbps.mp4",
+     "Type": 3,
+     "Protection": 0,
+     "AudioBitrate": "0",
+     "VideoBitrate": "0",
+     "MediaTracks": []
+    },
+    {
+     "Id": 86717,
+     "Url": "https://mediaserve.ert.gr/bpk-vod/vodext/default/monogramm-praksitelis-tzanoulinos/monogramm-praksitelis-tzanoulinos/index.mpd",
+     "Type": 9,
+     "Protection": 0,
+     "AudioBitrate": "0",
+     "VideoBitrate": "0",
+     "MediaTracks": [
+      {
+       "Type": "Audio",
+       "Bitrate": 96000,
+       "Index": 0,
+       "MimeType": "audio/mp4",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "avc1.4D401E",
+       "Bitrate": 499908,
+       "Index": 1,
+       "Name": "360p",
+       "DisplayName": "360p",
+       "MimeType": "video/mp4",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "avc1.4D401E",
+       "Bitrate": 999881,
+       "Index": 2,
+       "Name": "432p",
+       "DisplayName": "432p",
+       "MimeType": "video/mp4",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "avc1.64001F",
+       "Bitrate": 1999763,
+       "Index": 3,
+       "Name": "720p",
+       "DisplayName": "720p",
+       "MimeType": "video/mp4",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "avc1.640028",
+       "Bitrate": 2999644,
+       "Index": 4,
+       "Name": "1080p",
+       "DisplayName": "1080p",
+       "MimeType": "video/mp4",
+       "IsVisible": true
+      },
+      {
+       "Type": "Video",
+       "Codec": "avc1.640028",
+       "Bitrate": 3999526,
+       "Index": 5,
+       "Name": "1080p",
+       "DisplayName": "1080p",
+       "MimeType": "video/mp4",
+       "IsVisible": true
+      }
+     ]
+    }
+   ],
+   "OrderNumber": 1,
+   "IsPaid": true,
+   "MediaFileTimeMarkers": []
+  }
+ ],
+ "Cap": {
+  "SessionId": "00000000-0000-0000-0000-000000000000",
+  "SessionTimeoutSeconds": 91,
+  "CAPPublicUrl": "https://ertflix.cap.videokit.cloud/heartbeat/v1/heartbeat/REDACTED",
+  "CAPIntervalSeconds": 30,
+  "CAPRetryCount": 1,
+  "CAPRetrySeconds": 1,
+  "CAPConnectionTimeoutSeconds": 30
+ },
+ "Signature": "F6D036E0B15ADA544F974403CC02A2C265C333F0",
+ "AdditionalInfo": {
+  "age_rating": 8,
+  "StartWithAudioLangauge": null,
+  "StartWithAudioSubtype": "",
+  "StartWithSubtitlesEnabled": false,
+  "AdProtectionMarkers": null,
+  "PvrMargines": null,
+  "GetAdverts": {
+   "$type": "Insys.Video.Adverts.Messages.GetAdvertsResponse, Insys.Video.Adverts.Contracts",
+   "AdvertItems": [],
+   "Result": {
+    "Success": true,
+    "Code": 0
+   }
+  },
+  "VmapUrl": "https://api.app.ertflix.gr/V1/Adverts/GetVmap?platformCodename=www&contentCodename=monogramma-praxitelis-tzanoylinos&token="
+ },
+ "Result": {
+  "Success": true,
+  "Code": 0
+ }
+}

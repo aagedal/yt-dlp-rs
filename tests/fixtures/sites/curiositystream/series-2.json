@@ -1,0 +1,25 @@
+{
+ "data": {
+  "id": 2,
+  "title": "Curious Minds: The Internet",
+  "description": "How is the internet shaping our lives in the 21st Century?",
+  "media": [
+   {
+    "id": 2,
+    "is_collection": false
+   },
+   {
+    "id": 143,
+    "is_collection": false
+   },
+   {
+    "id": 147,
+    "is_collection": false
+   },
+   {
+    "id": 90,
+    "is_collection": false
+   }
+  ]
+ }
+}

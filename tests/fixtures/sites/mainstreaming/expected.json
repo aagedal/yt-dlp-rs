@@ -1,0 +1,103 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/WDAF1KOWUpH3",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"WDAF1KOWUpH3\", \"title\": \"Playlist homepage\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"ie_key\": \"MainStreaming\", \"id\": \"ysx57YZbMmlF\", \"duration\": null, \"title\": \"Spot Nuovo sito\", \"url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/ysx57YZbMmlF\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"ie_key\": \"MainStreaming\", \"id\": \"tGY3a0ZFlG2k\", \"duration\": null, \"title\": \"Tg Mattina 301026\", \"url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/tGY3a0ZFlG2k\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"ie_key\": \"MainStreaming\", \"id\": \"U3fYti5aIYTP\", \"duration\": null, \"title\": \"Che si Dice al Bar - Lisa 291026\", \"url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/U3fYti5aIYTP\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"ie_key\": \"MainStreaming\", \"id\": \"CtpECoH2Y7Hc\", \"duration\": null, \"title\": \"Immagini Manifestazione Cagliari 301026\", \"url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/CtpECoH2Y7Hc\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"ie_key\": \"MainStreaming\", \"id\": \"Lt8WJwOGgs5D\", \"duration\": null, \"title\": \"Manifestazione USB CAgliari 301026\", \"url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/Lt8WJwOGgs5D\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/WDAF1KOWUpH3\", \"original_url\": \"https://webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/WDAF1KOWUpH3\", \"webpage_url_basename\": \"WDAF1KOWUpH3\", \"webpage_url_domain\": \"webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net\", \"extractor\": \"MainStreaming\", \"extractor_key\": \"MainStreaming\", \"release_year\": null, \"playlist_count\": 5, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://webtools-f5842579ff984c1c98d63b8d789673eb.msvdn.net/embed/HVvPMzy",
+   "args": [
+    "--print",
+    "%(id)s|%(live_status)s|%(description)s|%(is_live)s|%(thumbnail)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "HVvPMzy|is_live|canale all news|True|https://webtools-f5842579ff984c1c98d63b8d789673eb.msvdn.net/image/HVvPMzy/poster"
+   ],
+   "stderr": [
+    "WARNING: [MainStreaming] HVvPMzy: Failed to download MPD manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://webtools-f5842579ff984c1c98d63b8d789673eb.msvdn.net/embed/HVvPMzy",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[MainStreaming] Extracting URL: https://webtools-f5842579ff984c1c98d63b8d789673eb.msvdn.net/embed/HVvPMzy",
+    "[MainStreaming] HVvPMzy: Downloading content info API JSON",
+    "[MainStreaming] HVvPMzy: Checking stream status",
+    "[MainStreaming] HVvPMzy: Downloading m3u8 information",
+    "[MainStreaming] HVvPMzy: Downloading MPD manifest",
+    "[info] Available formats for HVvPMzy:",
+    "ID   EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "---------------------------------------------------------",
+    "692  mp4 534x300    |  692k m3u8  | avc1.4d4015 mp4a.40.2",
+    "1164 mp4 640x360    | 1164k m3u8  | avc1.4d401e mp4a.40.2",
+    "1494 mp4 854x480    | 1494k m3u8  | avc1.4d401e mp4a.40.2",
+    "2328 mp4 1024x576   | 2328k m3u8  | avc1.4d401f mp4a.40.2",
+    "3538 mp4 1280x720   | 3538k m3u8  | avc1.4d401f mp4a.40.2"
+   ],
+   "stderr": [
+    "WARNING: [MainStreaming] HVvPMzy: Failed to download MPD manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/53EN6GxbWaJC",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [MainStreaming] Ignoring alternative content ID: WDAF1KOWUpH3",
+    "ERROR: [MainStreaming] 53EN6GxbWaJC: MainStreaming said: Live event is OFFLINE"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/UNKNOWN0001",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [MainStreaming] UNKNOWN0001: Unable to download JSON metadata: HTTP Error 404: Not Found",
+    "ERROR: [MainStreaming] UNKNOWN0001: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/VODTEST0001",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"VODTEST0001\", \"title\": \"VOD test clip\", \"description\": \"Synthetic VOD fixture\", \"formats\": [{\"format_id\": \"692\", \"format_index\": null, \"url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/vod/VODTEST0001/chunklist_b632000.m3u8\", \"manifest_url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/vod/VODTEST0001/playlist.m3u8\", \"tbr\": 692.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 534, \"height\": 300, \"vcodec\": \"avc1.4d4015\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"534x300\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"692 - 534x300\"}, {\"format_id\": \"1164\", \"format_index\": null, \"url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/vod/VODTEST0001/chunklist_b1064000.m3u8\", \"manifest_url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/vod/VODTEST0001/playlist.m3u8\", \"tbr\": 1164.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1164 - 640x360\"}, {\"format_id\": \"1494\", \"format_index\": null, \"url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/vod/VODTEST0001/chunklist_b1364000.m3u8\", \"manifest_url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/vod/VODTEST0001/playlist.m3u8\", \"tbr\": 1494.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 854, \"height\": 480, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"854x480\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1494 - 854x480\"}, {\"format_id\": \"2328\", \"format_index\": null, \"url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/vod/VODTEST0001/chunklist_b2128000.m3u8\", \"manifest_url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/vod/VODTEST0001/playlist.m3u8\", \"tbr\": 2328.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1024, \"height\": 576, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1024x576\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2328 - 1024x576\"}, {\"format_id\": \"3538\", \"format_index\": null, \"url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/vod/VODTEST0001/chunklist_b3228000.m3u8\", \"manifest_url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/vod/VODTEST0001/playlist.m3u8\", \"tbr\": 3538.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3538 - 1280x720\"}, {\"url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/vod/VODTEST0001/original.mp4\", \"format_note\": \"original\", \"quality\": 1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"5\", \"format\": \"5 - unknown (original)\"}], \"live_status\": \"not_live\", \"duration\": 78.566, \"tags\": null, \"subtitles\": {}, \"thumbnail\": \"https://webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net/image/VODTEST0001/poster\", \"webpage_url\": \"https://webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/VODTEST0001\", \"original_url\": \"https://webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/VODTEST0001\", \"webpage_url_basename\": \"VODTEST0001\", \"webpage_url_domain\": \"webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net\", \"extractor\": \"MainStreaming\", \"extractor_key\": \"MainStreaming\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net/image/VODTEST0001/poster\", \"id\": \"0\"}], \"display_id\": \"VODTEST0001\", \"fulltitle\": \"VOD test clip\", \"duration_string\": \"1:18\", \"release_year\": null, \"is_live\": false, \"was_live\": false, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/vod/VODTEST0001/original.mp4\", \"format_note\": \"original\", \"quality\": 1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"5\", \"format\": \"5 - unknown (original)\", \"_filename\": \"VOD test clip [VODTEST0001].mp4\", \"filename\": \"VOD test clip [VODTEST0001].mp4\", \"__write_download_archive\": false}], \"url\": \"https://e18da6642b684f8aa9ae449862783a56.msvdn.net/vod/VODTEST0001/original.mp4\", \"format_note\": \"original\", \"quality\": 1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"5\", \"format\": \"5 - unknown (original)\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [MainStreaming] VODTEST0001: Failed to download MPD manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  }
+ ]
+}

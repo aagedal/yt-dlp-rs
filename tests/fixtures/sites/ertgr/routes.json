@@ -1,0 +1,19 @@
+{
+ "routes": [
+  {
+   "url": "https://api.app.ertflix.gr/v1/Player/AcquireContent?platformCodename=www&%24headers=%7B%22X-Api-Date-Format%22%3A+%22iso%22%2C+%22X-Api-Camel-Case%22%3A+false%7D&codename=monogramma-praxitelis-tzanoylinos",
+   "headers": {"Content-Type": "application/json; charset=utf-8"},
+   "body_file": "acquire-codename.json"
+  },
+  {
+   "url": "https://mediaserve.ert.gr/bpk-vod/vodext/default/monogramm-praksitelis-tzanoulinos/monogramm-praksitelis-tzanoulinos/index.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "index.m3u8"
+  },
+  {
+   "url": "https://mediaserve.ert.gr/bpk-vod/vodext/default/monogramm-praksitelis-tzanoulinos/monogramm-praksitelis-tzanoulinos/index.mpd",
+   "headers": {"Content-Type": "application/dash+xml"},
+   "body_file": "index.mpd"
+  }
+ ]
+}

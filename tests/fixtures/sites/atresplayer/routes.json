@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://api.atresplayer.com/client/v1/url?href=%2Flasexta%2Fprogramas%2Fel-objetivo%2Fclips%2Fmbappe-describe-como-entrenador-a-carlo-ancelotti-sabe-cuando-tiene-que-ser-padre-jefe-amigo-entrenador_67f2dfb2fb6ab0e4c7203849%2F",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "url.json"
+  },
+  {
+   "url": "https://api.atresplayer.com/client/v1/page/video/67f2dfb2fb6ab0e4c7203849",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page-video.json"
+  },
+  {
+   "url": "https://api.atresplayer.com/player/v1/video/67f2dfb2fb6ab0e4c7203849",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "player-video.json"
+  },
+  {
+   "url": "https://nogeovod-fy.atresmedia.com/vsg/_definst_/assets3/2025/04/06/EA2DD625-BDF4-404C-B100-494897113214/hls.smil/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "hls-master.m3u8"
+  },
+  {
+   "url": "https://nogeovod-fy.atresmedia.com/vsgtv/_definst_/assets3/2025/04/06/EA2DD625-BDF4-404C-B100-494897113214/smooth.smil/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "smooth-master.m3u8"
+  },
+  {
+   "url": "https://voddash-fy.atresmedia.com/vsgdash/_definst_/assets3/2025/04/06/EA2DD625-BDF4-404C-B100-494897113214/dash.smil/manifest_mvtime.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "dash-manifest.mpd"
+  }
+ ]
+}

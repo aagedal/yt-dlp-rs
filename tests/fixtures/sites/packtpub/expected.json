@@ -1,0 +1,59 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.packtpub.com/mapt/video/web-development/9781787122215/20528/20530/Project+Intro",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"20530\", \"url\": \"https://d1ft11egbn8l.cloudfront.net/Learn%20Nodejs%20by%20building%2012%20projects/Package/videos/video2_1.mp4\", \"title\": \"Project+Intro\", \"webpage_url\": \"https://www.packtpub.com/mapt/video/web-development/9781787122215/20528/20530/Project+Intro\", \"original_url\": \"https://www.packtpub.com/mapt/video/web-development/9781787122215/20528/20530/Project+Intro\", \"webpage_url_basename\": \"Project+Intro\", \"webpage_url_domain\": \"packtpub.com\", \"extractor\": \"PacktPub\", \"extractor_key\": \"PacktPub\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"20530\", \"fulltitle\": \"Project+Intro\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Project+Intro [20530].mp4\", \"filename\": \"Project+Intro [20530].mp4\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.packtpub.com/mapt/video/web-development/9781787122215/20528/20629/Locked+Video",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [PacktPub] 20629: This video is locked. Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (packtpub) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.packtpub.com/mapt/video/web-development/9781787122215",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"9781787122215\", \"title\": \"Learn Nodejs by building 12 projects [Video]\", \"description\": \"Everyone is talking about Node.js now - everybody wants to learn it, and the web development trends seem to be moving towards it. With its event-driven architecture and efficient web services capabilities, more and more companies are building their entire infrastructure around Node.js. This course is your perfect companion to learn Node.js server programming in a very practical manner, by implementing 12 carefully hand-picked, real-world projects. You will start your journey by creating a simple web server, and build a basic website using the Express framework. Use socket programming to create your own chat applications, build a user login system by combining the power of MongoDB and Node.js, and create an entire e-learning system \\u2013 all this while building on your understanding of Node.js and how it can be interfaced with other technologies. If you believe in learning by doing, this course will empower you to learn Node.js and develop efficient event-driven applications with ease. Style and Approach This course adopts a unique, learn-as-you-do approach as the reader builds on his understanding of Node.js progressively with each project. This course is designed in such a way that implementing each project will empower you with a unique skillset, and enable you to implement the next project more confidently.\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url_transparent\", \"url\": \"https://www.packtpub.com/mapt/video/web-development/9781787122215/20527/20551\", \"title\": \"Introduction\", \"description\": \"This video is an introduction to the course.\", \"thumbnail\": \"https://d255esdrn735hr.cloudfront.net/sites/default/files/bookretailers/V05961.JPG\", \"timestamp\": 1490918400, \"ie_key\": \"PacktPub\", \"chapter\": \"Introduction\", \"chapter_number\": 1, \"chapter_id\": \"20527\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url_transparent\", \"url\": \"https://www.packtpub.com/mapt/video/web-development/9781787122215/20528/20530\", \"title\": \"Project Intro\", \"description\": \"Simple Web Server: Project Intro\", \"thumbnail\": \"https://d255esdrn735hr.cloudfront.net/sites/default/files/bookretailers/V05961.JPG\", \"timestamp\": 1490918400, \"ie_key\": \"PacktPub\", \"chapter\": \"Simple Web Server\", \"chapter_number\": 2, \"chapter_id\": \"20528\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url_transparent\", \"url\": \"https://www.packtpub.com/mapt/video/web-development/9781787122215/20528/20531\", \"title\": \"Installing Nodejs\", \"description\": \"Simple Web Server: Installing Nodejs\", \"thumbnail\": \"https://d255esdrn735hr.cloudfront.net/sites/default/files/bookretailers/V05961.JPG\", \"timestamp\": 1490918400, \"ie_key\": \"PacktPub\", \"chapter\": \"Simple Web Server\", \"chapter_number\": 2, \"chapter_id\": \"20528\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.packtpub.com/mapt/video/web-development/9781787122215\", \"original_url\": \"https://www.packtpub.com/mapt/video/web-development/9781787122215\", \"webpage_url_basename\": \"9781787122215\", \"webpage_url_domain\": \"packtpub.com\", \"extractor\": \"PacktPubCourse\", \"extractor_key\": \"PacktPubCourse\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.packtpub.com/mapt/video/web-development/9780000000000",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [PacktPubCourse] 9780000000000: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,74 @@
+{
+ "routes": [
+  {
+   "url": "https://www.showroom-live.com/api/room/status?room_url_key=48_Yui_Oguri",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "room-status-offline.json"
+  },
+  {
+   "url": "https://www.showroom-live.com/api/room/status?room_url_key=synthetic-live",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "room-status-live.json"
+  },
+  {
+   "url": "https://www.showroom-live.com/api/room/profile?room_id=900001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "room-profile-live.json"
+  },
+  {
+   "url": "https://www.showroom-live.com/api/live/streaming_url?room_id=900001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "live-streaming-url.json"
+  },
+  {
+   "url": "https://hls.showroom-live.test/synthetic-live/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "live-master.m3u8"
+  },
+  {
+   "url": "https://www.showroom-live.com/episode/watch?id=214",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "episode-214.html"
+  },
+  {
+   "url": "https://www.showroom-live.com/api/episode/streaming_url?episode_id=214",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "episode-214-streaming-url.json"
+  },
+  {
+   "url": "https://hls-vod.live.showroom-live.com/hls/f3ec6bb9471e1f6fae6887efa5ef334e78818d69/video.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "episode-214-master.m3u8"
+  },
+  {
+   "url": "https://www.showroom-live.com/episode/watch?id=999999",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-episode.html"
+  },
+  {
+   "url": "https://www.showroom-live.com/api/episode/streaming_url?episode_id=999999",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "synthetic-episode-streaming-url.json"
+  }
+ ]
+}

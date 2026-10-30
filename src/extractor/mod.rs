@@ -14,6 +14,7 @@ mod aljazeera;
 mod allstar;
 mod altcensored;
 mod amadeustv;
+mod amazon;
 mod amcnetworks;
 mod americastestkitchen;
 mod angel;
@@ -27,6 +28,7 @@ mod arnes;
 mod art19;
 mod arte;
 mod asobichannel;
+mod atresplayer;
 mod atscaleconf;
 mod audimedia;
 mod audioboom;
@@ -83,6 +85,8 @@ mod cloudflarestream;
 mod cloudycdn;
 mod clyp;
 mod cnbc;
+mod cnn;
+mod condenast;
 mod coub;
 mod cozytv;
 mod cpac;
@@ -91,6 +95,7 @@ mod crooksandliars;
 mod crtvg;
 mod ctsnews;
 mod cultureunplugged;
+mod curiositystream;
 mod dacast;
 mod dailymail;
 mod dailymotion;
@@ -106,6 +111,7 @@ mod dfb;
 mod digiteka;
 pub(crate) mod direct;
 mod discogs;
+mod dlf;
 mod dlive;
 mod dreisat;
 mod dropbox;
@@ -125,7 +131,9 @@ mod embedly;
 mod epoch;
 mod eporner;
 mod erocast;
+mod eroprofile;
 mod err;
+mod ertgr;
 mod ettutv;
 mod europeantour;
 mod euscreen;
@@ -135,6 +143,7 @@ mod facebook;
 mod fathom;
 mod faulio;
 mod faz;
+mod fc2;
 mod fczenit;
 mod filmarchiv;
 mod filmon;
@@ -164,6 +173,7 @@ mod germanupa;
 mod gettr;
 mod glide;
 mod globalplayer;
+mod globo;
 mod glomex;
 mod gmanetwork;
 mod godresource;
@@ -189,9 +199,11 @@ mod hse;
 pub(crate) mod html5;
 mod huajiao;
 mod huffpost;
+mod huya;
 mod hypem;
 mod hypergryph;
 mod hytale;
+mod ichinanalive;
 mod idagio;
 mod iheart;
 mod ilpost;
@@ -209,7 +221,9 @@ pub(crate) mod ism;
 mod israelnationalnews;
 mod ivideon;
 mod ivoox;
+mod iwara;
 mod jamendo;
+mod japandiet;
 mod jixie;
 mod joj;
 mod jove;
@@ -234,12 +248,14 @@ mod kvs;
 mod lastfm;
 mod lbry;
 mod lci;
+mod lecturio;
 mod lefigaro;
 mod lego;
 mod lemonde;
 mod libraryofcongress;
 mod libsyn;
 mod linkedin;
+mod liputan6;
 mod listennotes;
 mod litv;
 mod livestreamfails;
@@ -249,6 +265,8 @@ mod loom;
 mod lrt;
 mod maariv;
 mod magellantv;
+mod mailru;
+mod mainstreaming;
 mod mangomolo;
 mod maoritv;
 mod massengeschmacktv;
@@ -265,6 +283,7 @@ mod mediastream;
 mod mediaworksnz;
 mod medici;
 mod megaphone;
+mod megatvcom;
 mod meipai;
 mod melonvod;
 mod mgtv;
@@ -287,6 +306,7 @@ mod myvideoge;
 mod myvidster;
 mod n1;
 mod nascar;
+mod nekohacker;
 mod nest;
 mod netapp;
 mod netzkino;
@@ -301,6 +321,7 @@ mod nobelprize;
 mod noice;
 mod noodlemagazine;
 mod nosnl;
+mod nova;
 mod novaplay;
 mod nowcanal;
 mod nowness;
@@ -308,6 +329,7 @@ mod npr;
 mod nrk;
 mod nts;
 mod ntvde;
+mod ntvru;
 mod nuvid;
 pub mod nuxt;
 mod nzherald;
@@ -317,6 +339,7 @@ mod odnoklassniki;
 mod olympics;
 mod omnyfm;
 mod on24;
+mod ondemandkorea;
 mod onefootball;
 mod onenewsnz;
 mod oneplace;
@@ -324,6 +347,7 @@ mod onsen;
 mod opencast;
 mod orf;
 mod outsidetv;
+mod packtpub;
 pub(crate) mod paged;
 mod parlview;
 mod parti;
@@ -355,6 +379,7 @@ mod radiokapital;
 mod radioradicale;
 mod radiozet;
 mod rcs;
+mod redbee;
 mod reddit;
 mod redgifs;
 mod redtube;
@@ -385,6 +410,7 @@ mod sen;
 mod servus;
 mod sharepoint;
 mod shemaroome;
+mod showroomlive;
 mod simplecast;
 mod sina;
 mod skeb;
@@ -393,6 +419,7 @@ mod skylinewebcams;
 mod skynewsau;
 mod smil;
 mod snapchat;
+mod sohu;
 mod soundcloud;
 mod soundgasm;
 mod sovietscloset;
@@ -434,6 +461,7 @@ mod threeqsdn;
 mod threespeak;
 mod tiktok;
 mod tmz;
+mod tnaflix;
 mod toongoggles;
 mod toutiao;
 mod toypics;
@@ -463,6 +491,7 @@ mod twentythreevideo;
 mod twitch;
 mod twitter;
 mod udn;
+mod uliza;
 mod umg;
 mod unistra;
 mod unitednations;
@@ -473,7 +502,9 @@ mod ustudio;
 mod vbox7;
 mod veo;
 mod videa;
+mod videocampus_sachsen;
 mod videopress;
+mod vidio;
 mod vidlii;
 mod vidly;
 pub(crate) mod vidyard;
@@ -505,16 +536,19 @@ mod xnxx;
 mod xspf;
 mod xvideos;
 mod xxxymovies;
+mod yandexdisk;
 mod yappy;
 mod yfanefa;
 mod yle_areena;
 mod youjizz;
+mod youku;
 pub(crate) mod youtube;
 mod zapiks;
 mod zdf;
 mod zenporn;
 mod zetland;
 mod zhihu;
+mod zoom;
 mod zype;
 
 pub use abcotvs::{
@@ -545,6 +579,7 @@ pub use altcensored::{
     suitable as altcensored_suitable,
 };
 pub use amadeustv::{AmadeusTv, suitable as amadeustv_suitable};
+pub use amazon::{AmazonStore, suitable as amazon_suitable};
 pub use amcnetworks::{AmcNetworks, suitable as amcnetworks_suitable};
 pub use americastestkitchen::{
     AmericasTestKitchen, AmericasTestKitchenSeason,
@@ -575,6 +610,7 @@ pub use asobichannel::{
     AsobiChannel, AsobiChannelTagUrl, suitable as asobichannel_suitable,
     tag_suitable as asobichannel_tag_suitable,
 };
+pub use atresplayer::{AtresPlayer, suitable as atresplayer_suitable};
 pub use atscaleconf::{AtScaleConfEvent, suitable as atscaleconf_suitable};
 pub use audimedia::{AudiMedia, suitable as audimedia_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
@@ -656,6 +692,8 @@ pub use cloudflarestream::{CloudflareStream, suitable as cloudflarestream_suitab
 pub use cloudycdn::{CloudyCdn, suitable as cloudycdn_suitable};
 pub use clyp::{Clyp, suitable as clyp_suitable};
 pub use cnbc::{CnbcVideo, suitable as cnbc_suitable};
+pub use cnn::{Cnn, suitable as cnn_suitable};
+pub use condenast::{CondeNast, suitable as condenast_suitable};
 pub use coub::{Coub, suitable as coub_suitable};
 pub use cozytv::{CozyTv, suitable as cozytv_suitable};
 pub use cpac::{
@@ -666,6 +704,11 @@ pub use crooksandliars::{CrooksAndLiars, suitable as crooksandliars_suitable};
 pub use crtvg::{Crtvg, suitable as crtvg_suitable};
 pub use ctsnews::{CtsNews, suitable as ctsnews_suitable};
 pub use cultureunplugged::{CultureUnplugged, suitable as cultureunplugged_suitable};
+pub use curiositystream::{
+    CuriosityStream, CuriosityStreamCollections, CuriosityStreamSeries,
+    collections_suitable as curiositystream_collections_suitable,
+    series_suitable as curiositystream_series_suitable, suitable as curiositystream_suitable,
+};
 pub use dacast::{
     DacastPlaylist, DacastVod, playlist_suitable as dacast_playlist_suitable,
     suitable as dacast_suitable,
@@ -696,6 +739,7 @@ pub use digiteka::{Digiteka, suitable as digiteka_suitable};
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
 pub use discogs::{DiscogsReleasePlaylist, suitable as discogs_suitable};
+pub use dlf::{Dlf, DlfCorpus, corpus_suitable as dlf_corpus_suitable, suitable as dlf_suitable};
 pub use dlive::{
     DLiveStream, DLiveVod, stream_suitable as dlive_stream_suitable,
     vod_suitable as dlive_vod_suitable,
@@ -727,10 +771,12 @@ pub use embedly::{Embedly, suitable as embedly_suitable};
 pub use epoch::{Epoch, suitable as epoch_suitable};
 pub use eporner::{Eporner, suitable as eporner_suitable};
 pub use erocast::{Erocast, suitable as erocast_suitable};
+pub use eroprofile::{EroProfileAlbum, suitable as eroprofile_album_suitable};
 pub use err::{
     ErrArhiiv, ErrJupiter, arhiiv_suitable as err_arhiiv_suitable,
     jupiter_suitable as err_jupiter_suitable,
 };
+pub use ertgr::{ERTFlixCodename, suitable as ertgr_suitable};
 pub use ettutv::{EttuTv, suitable as ettutv_suitable};
 pub use europeantour::{EuropeanTour, suitable as europeantour_suitable};
 pub use euscreen::{EuScreen, suitable as euscreen_suitable};
@@ -745,6 +791,7 @@ pub use facebook::{
 pub use fathom::{Fathom, suitable as fathom_suitable};
 pub use faulio::{Faulio, suitable as faulio_suitable};
 pub use faz::{Faz, suitable as faz_suitable};
+pub use fc2::{Fc2, Fc2Embed, embed_suitable as fc2_embed_suitable, suitable as fc2_suitable};
 pub use fczenit::{Fczenit, suitable as fczenit_suitable};
 pub use filmarchiv::{FilmArchiv, suitable as filmarchiv_suitable};
 pub use filmon::{
@@ -797,6 +844,9 @@ pub use globalplayer::{
     live_playlist_suitable as globalplayer_live_playlist_suitable,
     live_suitable as globalplayer_live_suitable, video_suitable as globalplayer_video_suitable,
 };
+pub use globo::{
+    Globo, GloboArticle, article_suitable as globo_article_suitable, suitable as globo_suitable,
+};
 pub use glomex::{
     Glomex, GlomexEmbed, embed_suitable as glomex_embed_suitable, suitable as glomex_suitable,
 };
@@ -838,9 +888,16 @@ pub use hse::{
 pub use html5::GenericHttp;
 pub use huajiao::{Huajiao, suitable as huajiao_suitable};
 pub use huffpost::{HuffPost, suitable as huffpost_suitable};
+pub use huya::{
+    HuyaLive, HuyaVideo, live_suitable as huya_live_suitable, video_suitable as huya_video_suitable,
+};
 pub use hypem::{Hypem, suitable as hypem_suitable};
 pub use hypergryph::{MonsterSirenHypergryphMusic, suitable as hypergryph_suitable};
 pub use hytale::{Hytale, suitable as hytale_suitable};
+pub use ichinanalive::{
+    IchinanaLive, IchinanaLiveClip, IchinanaLiveVod, clip_suitable as ichinana_clip_suitable,
+    live_suitable as ichinana_live_suitable, vod_suitable as ichinana_vod_suitable,
+};
 pub use idagio::{
     IdagioAlbum, IdagioPersonalPlaylist, IdagioPlaylist, IdagioRecording, IdagioTrack,
     album_suitable as idagio_album_suitable, personal_suitable as idagio_personal_suitable,
@@ -877,8 +934,17 @@ pub use islamchannel::{
 pub use israelnationalnews::{IsraelNationalNews, suitable as israelnationalnews_suitable};
 pub use ivideon::{Ivideon, suitable as ivideon_suitable};
 pub use ivoox::{Ivoox, suitable as ivoox_suitable};
+pub use iwara::{
+    Iwara, IwaraPlaylist, IwaraUser, playlist_suitable as iwara_playlist_suitable,
+    suitable as iwara_suitable, user_suitable as iwara_user_suitable,
+};
+pub(crate) use iwara::{fetch_pages as fetch_iwara_pages, is_pending_state as iwara_pending_state};
 pub use jamendo::{
     Jamendo, JamendoAlbum, album_suitable as jamendo_album_suitable, suitable as jamendo_suitable,
+};
+pub use japandiet::{
+    ShugiinItvLive, ShugiinItvVod, live_suitable as shugiinitvlive_suitable,
+    vod_suitable as shugiinitvvod_suitable,
 };
 pub use joj::{Joj, suitable as joj_suitable};
 pub use jove::{Jove, suitable as jove_suitable};
@@ -923,6 +989,7 @@ pub use lbry::{
 };
 pub(crate) use lbry::{fetch_pages as fetch_lbry_pages, is_pending_state as lbry_pending_state};
 pub use lci::{Lci, suitable as lci_suitable};
+pub use lecturio::{Lecturio, suitable as lecturio_suitable};
 pub use lefigaro::{
     LeFigaroVideoEmbed, LeFigaroVideoSection, embed_suitable as lefigaro_embed_suitable,
     section_suitable as lefigaro_section_suitable,
@@ -935,6 +1002,7 @@ pub use lemonde::{Lemonde, suitable as lemonde_suitable};
 pub use libraryofcongress::{LibraryOfCongress, suitable as libraryofcongress_suitable};
 pub use libsyn::{Libsyn, suitable as libsyn_suitable};
 pub use linkedin::{LinkedIn, suitable as linkedin_suitable};
+pub use liputan6::{Liputan6, suitable as liputan6_suitable};
 pub use listennotes::{ListenNotes, suitable as listennotes_suitable};
 pub use litv::{LiTv, suitable as litv_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
@@ -946,6 +1014,10 @@ pub use lrt::{
 };
 pub use maariv::{Maariv, suitable as maariv_suitable};
 pub use magellantv::{MagellanTv, suitable as magellantv_suitable};
+pub use mailru::{
+    MailRu, MailRuMusic, music_suitable as mailru_music_suitable, suitable as mailru_suitable,
+};
+pub use mainstreaming::{MainStreaming, suitable as mainstreaming_suitable};
 pub use mangomolo::{
     MangomoloLive, MangomoloVideo, live_suitable as mangomolo_live_suitable,
     video_suitable as mangomolo_video_suitable,
@@ -967,6 +1039,7 @@ pub use mediastream::{MediaStream, suitable as mediastream_suitable};
 pub use mediaworksnz::{MediaWorksNzVod, suitable as mediaworksnz_suitable};
 pub use medici::{Medici, suitable as medici_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
+pub use megatvcom::{MegaTVCom, suitable as megatvcom_suitable};
 pub use meipai::{Meipai, suitable as meipai_suitable};
 pub use melonvod::{MelonVod, suitable as melonvod_suitable};
 pub use mgtv::{Mgtv, suitable as mgtv_suitable};
@@ -1000,6 +1073,7 @@ pub use myvideoge::{MyVideoGe, suitable as myvideoge_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
 pub use n1::{N1InfoArticle, suitable as n1_suitable};
 pub use nascar::{NascarClassics, suitable as nascar_classics_suitable};
+pub use nekohacker::{NekoHacker, suitable as nekohacker_suitable};
 pub use nest::{Nest, NestClip, clip_suitable as nest_clip_suitable, suitable as nest_suitable};
 pub use netapp::{
     NetAppCollection, NetAppVideo, collection_suitable as netapp_collection_suitable,
@@ -1033,6 +1107,7 @@ pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use noice::{NoicePodcast, suitable as noice_suitable};
 pub use noodlemagazine::{NoodleMagazine, suitable as noodlemagazine_suitable};
 pub use nosnl::{NosNlArticle, suitable as nosnl_suitable};
+pub use nova::{NovaEmbed, suitable as nova_suitable};
 pub use novaplay::{NovaPlay, suitable as novaplay_suitable};
 pub use nowcanal::{NowCanal, suitable as nowcanal_suitable};
 pub use nowness::{
@@ -1049,6 +1124,7 @@ pub use nrk::{
 };
 pub use nts::{NtsLive, suitable as nts_suitable};
 pub use ntvde::{NtvDe, suitable as ntvde_suitable};
+pub use ntvru::{NtvRu, suitable as ntvru_suitable};
 pub use nuvid::{Nuvid, suitable as nuvid_suitable};
 pub use nzherald::{NzHerald, suitable as nzherald_suitable};
 pub use nzonscreen::{NzOnScreen, suitable as nzonscreen_suitable};
@@ -1061,6 +1137,7 @@ pub use omnyfm::{
     show_suitable as omnyfm_show_suitable, suitable as omnyfm_suitable,
 };
 pub use on24::{On24, suitable as on24_suitable};
+pub use ondemandkorea::{OnDemandKorea, suitable as ondemandkorea_suitable};
 pub use onefootball::{OneFootball, suitable as onefootball_suitable};
 pub use onenewsnz::{OneNewsNz, suitable as onenewsnz_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
@@ -1075,6 +1152,10 @@ pub use orf::{
 };
 pub(crate) use orf::{fetch_segments as fetch_orf_segments, is_pending_state as orf_pending_state};
 pub use outsidetv::{OutsideTv, suitable as outsidetv_suitable};
+pub use packtpub::{
+    PacktPub, PacktPubCourse, course_suitable as packtpub_course_suitable,
+    suitable as packtpub_suitable,
+};
 pub use parlview::{Parlview, suitable as parlview_suitable};
 pub use parti::{
     PartiLivestream, PartiVideo, livestream_suitable as parti_livestream_suitable,
@@ -1139,6 +1220,7 @@ pub use rcs::{
     RCS, RCSEmbeds, RCSVarious, embeds_suitable as rcs_embeds_suitable, rcs_suitable,
     various_suitable as rcs_various_suitable,
 };
+pub use redbee::{ParliamentLiveUk, suitable as redbee_suitable};
 pub use reddit::{Reddit, suitable as reddit_suitable};
 pub use redgifs::{RedGifs, suitable as redgifs_suitable};
 pub use redtube::{RedTube, suitable as redtube_suitable};
@@ -1179,6 +1261,10 @@ pub use sen::{Sen, suitable as sen_suitable};
 pub use servus::{Servus, suitable as servus_suitable};
 pub use sharepoint::{SharePoint, suitable as sharepoint_suitable};
 pub use shemaroome::{ShemarooMe, suitable as shemaroome_suitable};
+pub use showroomlive::{
+    ShowRoomLive, ShowRoomVod, live_suitable as showroom_live_suitable,
+    vod_suitable as showroom_vod_suitable,
+};
 pub use simplecast::{
     Simplecast, SimplecastEpisode, SimplecastPodcast,
     episode_suitable as simplecast_episode_suitable,
@@ -1197,6 +1283,7 @@ pub use sky::{
 pub use skylinewebcams::{SkylineWebcams, suitable as skylinewebcams_suitable};
 pub use skynewsau::{SkyNewsAU, suitable as skynewsau_suitable};
 pub use snapchat::{SnapchatSpotlight, suitable as snapchat_suitable};
+pub use sohu::{Sohu, SohuV, suitable as sohu_suitable, v_suitable as sohu_v_suitable};
 pub use soundcloud::{Soundcloud, suitable as soundcloud_suitable};
 pub use soundgasm::{
     Soundgasm, SoundgasmProfile, profile_suitable as soundgasm_profile_suitable,
@@ -1287,6 +1374,10 @@ pub(crate) use tiktok::{
     fetch_pages as fetch_tiktok_pages, is_pending_state as tiktok_pending_state,
 };
 pub use tmz::{Tmz, suitable as tmz_suitable};
+pub use tnaflix::{
+    TNAFlix, TNAFlixNetworkEmbed, embed_suitable as tnaflix_network_embed_suitable,
+    suitable as tnaflix_suitable,
+};
 pub use toongoggles::{ToonGoggles, suitable as toongoggles_suitable};
 pub use toutiao::{Toutiao, suitable as toutiao_suitable};
 pub use toypics::{Toypics, suitable as toypics_suitable};
@@ -1353,6 +1444,10 @@ pub use twitter::{
     spaces_suitable as twitter_spaces_suitable, suitable as twitter_suitable,
 };
 pub use udn::{UdnEmbed, suitable as udn_suitable};
+pub use uliza::{
+    UlizaPlayer, UlizaPortal, player_suitable as uliza_player_suitable,
+    portal_suitable as uliza_portal_suitable,
+};
 pub use umg::{UmgDe, suitable as umg_suitable};
 pub use unistra::{Unistra, suitable as unistra_suitable};
 pub use unitednations::{UnitedNationsWebTv, suitable as unitednations_suitable};
@@ -1364,7 +1459,11 @@ pub use ustudio::{UstudioEmbed, embed_suitable as ustudio_embed_suitable};
 pub use vbox7::{Vbox7, suitable as vbox7_suitable};
 pub use veo::{Veo, suitable as veo_suitable};
 pub use videa::{Videa, suitable as videa_suitable};
+pub use videocampus_sachsen::{VideocampusSachsen, suitable as videocampus_sachsen_suitable};
 pub use videopress::{VideoPress, suitable as videopress_suitable};
+pub use vidio::{
+    Vidio, VidioPremier, premier_suitable as vidio_premier_suitable, suitable as vidio_suitable,
+};
 pub use vidlii::{VidLii, suitable as vidlii_suitable};
 pub use vidly::{Vidly, suitable as vidly_suitable};
 pub use vidyard::{Vidyard, suitable as vidyard_suitable};
@@ -1425,6 +1524,7 @@ pub use xvideos::{
     suitable as xvideos_suitable,
 };
 pub use xxxymovies::{XXXYMovies, suitable as xxxymovies_suitable};
+pub use yandexdisk::{YandexDisk, suitable as yandexdisk_suitable};
 pub use yappy::{
     Yappy, YappyProfile, profile_suitable as yappy_profile_suitable, suitable as yappy_suitable,
 };
@@ -1432,6 +1532,7 @@ pub(crate) use yappy::{fetch_pages as fetch_yappy_pages, is_pending_state as yap
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub use yle_areena::{YleAreena, suitable as yle_areena_suitable};
 pub use youjizz::{YouJizz, suitable as youjizz_suitable};
+pub use youku::{Youku, suitable as youku_suitable};
 pub(crate) use youtube::YoutubeUnsupported;
 pub(crate) use youtube::clip::YoutubeClip;
 pub(crate) use youtube::comments::post_extract as youtube_comments;
@@ -1457,6 +1558,7 @@ pub(crate) use zdf::{fetch_pages as fetch_zdf_pages, is_pending_state as zdf_pen
 pub use zenporn::{ZenPorn, suitable as zenporn_suitable};
 pub use zetland::{ZetlandDkArticle, suitable as zetland_suitable};
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
+pub use zoom::{ZoomClips, clips_suitable as zoom_clips_suitable};
 pub use zype::{Zype, suitable as zype_suitable};
 
 use crate::{ExtractResult, Result, VideoInfo};
@@ -3002,6 +3104,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("arte://") && arte::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || (url.starts_with("ertflix:") && ertgr::suitable(url))
         || (url.starts_with("filmon:") && filmon::suitable(url))
         || (url.starts_with("francetv:") && francetv::suitable(url))
         || (url.starts_with("nrk:") && nrk::suitable(url))

@@ -5913,7 +5913,7 @@
         "tools/test_compare_video.py",
         "upstream/notes/video-processing.md"
       ],
-      "scope": "Pinned remux/recode target mappings, same-extension/unmapped skips, source stream-map/copy and AVI-Xvid plans, explicit bounded local FFmpeg with container defaults/faststart; ordered audio\u2192video pipeline, all-stage keep retention, latest completed input on failure and no-clobber final publication; no generic postprocessor chains, encoder/preset configuration, separate pre-merge input retention, embedding or fixups; literal alac/vorbis video suffixes fail without a muxer"
+      "scope": "Pinned remux/recode target mappings, same-extension/unmapped skips, source stream-map/copy and AVI-Xvid plans, explicit bounded local FFmpeg with container defaults/faststart; ordered audio→video pipeline, all-stage keep retention, latest completed input on failure and no-clobber final publication; no generic postprocessor chains, encoder/preset configuration, separate pre-merge input retention, embedding or fixups; literal alac/vorbis video suffixes fail without a muxer"
     },
     {
       "name": "thumbnail-processing",
@@ -7000,6 +7000,414 @@
         "tests/fixtures/sites/rozhlas/"
       ],
       "scope": "RozhlasVltavaIE direct audio links (RozhlasIE and MujRozhlasIE not ported; DASH/HLS links unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "amazon",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/amazon.py"
+      ],
+      "rust": [
+        "src/extractor/amazon.rs",
+        "tests/fixtures/sites/amazon/"
+      ],
+      "scope": "AmazonStoreIE product video lists (flat entries, missing-data and 404 errors); AmazonReviewsIE not ported (review pages dead upstream), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "atresplayer",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/atresplayer.py"
+      ],
+      "rust": [
+        "src/extractor/atresplayer.rs",
+        "tests/fixtures/sites/atresplayer/"
+      ],
+      "scope": "AtresPlayerIE anonymous episodes (HLS, DASH, Smooth formats, 404 error); login and registered-only 403 bodies not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "cnn",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/cnn.py"
+      ],
+      "rust": [
+        "src/extractor/cnn.rs",
+        "tests/fixtures/sites/cnn/"
+      ],
+      "scope": "CNNIE videos and playlists (player JSON, HLS, 404 error); CNNIndonesiaIE not ported (dead upstream), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "condenast",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/condenast.py"
+      ],
+      "rust": [
+        "src/extractor/condenast.rs",
+        "tests/fixtures/sites/condenast/"
+      ],
+      "scope": "CondeNastIE embedjs player API and __PRELOADED_STATE__ watch pages (synthetic) with the no-player error; series pages unsupported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "curiositystream",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/curiositystream.py"
+      ],
+      "rust": [
+        "src/extractor/curiositystream.rs",
+        "tests/fixtures/sites/curiositystream/"
+      ],
+      "scope": "CuriosityStreamIE anonymous media API (HLS, DASH, API errors) and the collections/series playlists; login and RTMP encodings not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "dlf",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dlf.py"
+      ],
+      "rust": [
+        "src/extractor/dlf.rs",
+        "tests/fixtures/sites/dlf/"
+      ],
+      "scope": "DLFIE audio pages and DLFCorpusIE multi-feed archives with missing-button errors, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "eroprofile",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/eroprofile.py"
+      ],
+      "rust": [
+        "src/extractor/eroprofile.rs",
+        "tests/fixtures/sites/eroprofile/"
+      ],
+      "scope": "EroProfileAlbumIE paged albums; EroProfileIE not ported (test video gone, login for others), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "ertgr",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ertgr.py"
+      ],
+      "rust": [
+        "src/extractor/ertgr.rs",
+        "tests/fixtures/sites/ertgr/"
+      ],
+      "scope": "ERTFlixCodenameIE (ertflix: pseudo-URLs and API); ERTFlixIE and ERTWebtvEmbedIE not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "fc2",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/fc2.py"
+      ],
+      "rust": [
+        "src/extractor/fc2.rs",
+        "tests/fixtures/sites/fc2/"
+      ],
+      "scope": "FC2IE url results (title/thumbnail warnings) and FC2EmbedIE; FC2LiveIE (WebSocket) not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "globo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/globo.py"
+      ],
+      "rust": [
+        "src/extractor/globo.rs",
+        "tests/fixtures/sites/globo/"
+      ],
+      "scope": "GloboIE (GraphQL, video session, HLS) and GloboArticleIE; DASH, DRM and subtitles return unsupported errors, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "huya",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/huya.py"
+      ],
+      "rust": [
+        "src/extractor/huya.rs",
+        "tests/fixtures/sites/huya/"
+      ],
+      "scope": "HuyaVideoIE and HuyaLiveIE (stream info, error paths); the live re-secret path returns an unsupported error, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "ichinanalive",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ichinanalive.py"
+      ],
+      "rust": [
+        "src/extractor/ichinanalive.rs",
+        "tests/fixtures/sites/ichinanalive/"
+      ],
+      "scope": "IchinanaLiveIE (ended and synthetic live, -F only for live titles), IchinanaLiveClipIE and IchinanaLiveVODIE, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "iwara",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/iwara.py"
+      ],
+      "rust": [
+        "src/extractor/iwara.rs",
+        "tests/fixtures/sites/iwara/"
+      ],
+      "scope": "IwaraIE videos (unplayable and message errors), IwaraUserIE and IwaraPlaylistIE paged listings; login not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "japandiet",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/japandiet.py"
+      ],
+      "rust": [
+        "src/extractor/japandiet.rs",
+        "tests/fixtures/sites/japandiet/"
+      ],
+      "scope": "ShugiinItvVodIE and ShugiinItvLiveIE (no running rooms); ShugiinItvLiveRoomIE, SangiinIE and SangiinInstructionIE not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "lecturio",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/lecturio.py"
+      ],
+      "rust": [
+        "src/extractor/lecturio.rs",
+        "tests/fixtures/sites/lecturio/"
+      ],
+      "scope": "LecturioIE anonymous lectures (formats, subtitles, missing title); course classes and login not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "liputan6",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/liputan6.py"
+      ],
+      "rust": [
+        "src/extractor/liputan6.rs",
+        "tests/fixtures/sites/liputan6/"
+      ],
+      "scope": "Liputan6IE article pages handing off to Vidio, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "mailru",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mailru.py"
+      ],
+      "rust": [
+        "src/extractor/mailru.rs",
+        "tests/fixtures/sites/mailru/"
+      ],
+      "scope": "MailRuIE videos and MailRuMusicIE tracks; MailRuMusicSearchIE and metadata-only embeds not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "mainstreaming",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mainstreaming.py"
+      ],
+      "rust": [
+        "src/extractor/mainstreaming.rs",
+        "tests/fixtures/sites/mainstreaming/"
+      ],
+      "scope": "MainStreamingIE playlists, live HLS, offline and unknown-id errors, VOD (synthetic); dynamic DASH unsupported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "megatvcom",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/megatvcom.py"
+      ],
+      "rust": [
+        "src/extractor/megatvcom.rs",
+        "tests/fixtures/sites/megatvcom/"
+      ],
+      "scope": "MegaTVComIE pages (HLS) and the missing article id error; MegaTVComEmbedIE not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "nekohacker",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nekohacker.py"
+      ],
+      "rust": [
+        "src/extractor/nekohacker.rs",
+        "tests/fixtures/sites/nekohacker/"
+      ],
+      "scope": "NekoHackerIE album pages (no-playlist and Spotify errors); generic iframe hand-off not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "nova",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nova.py"
+      ],
+      "rust": [
+        "src/extractor/nova.rs",
+        "tests/fixtures/sites/nova/"
+      ],
+      "scope": "NovaEmbedIE players (HLS/DASH, no-player and 404 errors); NovaIE not ported (403 upstream), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "ntvru",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ntvru.py"
+      ],
+      "rust": [
+        "src/extractor/ntvru.rs",
+        "tests/fixtures/sites/ntvru/"
+      ],
+      "scope": "NTVRuIE pages with video and metadata XML (missing id and 404 errors), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "ondemandkorea",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ondemandkorea.py"
+      ],
+      "rust": [
+        "src/extractor/ondemandkorea.rs",
+        "tests/fixtures/sites/ondemandkorea/"
+      ],
+      "scope": "OnDemandKoreaIE episodes; OnDemandKoreaProgramIE not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "packtpub",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/packtpub.py"
+      ],
+      "rust": [
+        "src/extractor/packtpub.rs",
+        "tests/fixtures/sites/packtpub/"
+      ],
+      "scope": "PacktPubIE videos (locked-video login error) and PacktPubCourseIE chapters; login not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "redbee",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/redbee.py"
+      ],
+      "rust": [
+        "src/extractor/redbee.rs",
+        "tests/fixtures/sites/redbee/"
+      ],
+      "scope": "ParliamentLiveUKIE (HLS, 404 error); DASH/Smooth/DRM formats return unsupported errors; RTBFIE not ported (_WORKING = False), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "showroomlive",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/showroomlive.py"
+      ],
+      "rust": [
+        "src/extractor/showroomlive.rs",
+        "tests/fixtures/sites/showroomlive/"
+      ],
+      "scope": "ShowRoomLiveIE (offline error, synthetic live, -F) and ShowRoomVodIE; upcoming streams unsupported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "sohu",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/sohu.py"
+      ],
+      "rust": [
+        "src/extractor/sohu.rs",
+        "tests/fixtures/sites/sohu/"
+      ],
+      "scope": "SohuIE single-part videos (dead-page error) and SohuVIE; multi-part videos unsupported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "tnaflix",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tnaflix.py"
+      ],
+      "rust": [
+        "src/extractor/tnaflix.rs",
+        "tests/fixtures/sites/tnaflix/"
+      ],
+      "scope": "TNAFlixNetworkEmbedIE and TNAFlixIE AJAX-player pages (404 error); config-XML pages unsupported; EMPFlixIE and MovieFapIE not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "uliza",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/uliza.py"
+      ],
+      "rust": [
+        "src/extractor/uliza.rs",
+        "tests/fixtures/sites/uliza/"
+      ],
+      "scope": "UlizaPlayerIE players (expired link, missing m3u8 errors) and UlizaPortalIE hand-off, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "videocampus_sachsen",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/videocampus_sachsen.py"
+      ],
+      "rust": [
+        "src/extractor/videocampus_sachsen.rs",
+        "tests/fixtures/sites/videocampus_sachsen/"
+      ],
+      "scope": "VideocampusSachsenIE (ViMP) video and embed pages (missing key, no-HLS); ViMPPlaylistIE not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "vidio",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/vidio.py"
+      ],
+      "rust": [
+        "src/extractor/vidio.rs",
+        "tests/fixtures/sites/vidio/"
+      ],
+      "scope": "VidioIE (embed and watch) and VidioPremierIE flat playlists; premium videos unsupported; VidioLiveIE not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "yandexdisk",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/yandexdisk.py"
+      ],
+      "rust": [
+        "src/extractor/yandexdisk.rs",
+        "tests/fixtures/sites/yandexdisk/"
+      ],
+      "scope": "YandexDiskIE public files (redacted store, 410 streams), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "youku",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/youku.py"
+      ],
+      "rust": [
+        "src/extractor/youku.rs",
+        "tests/fixtures/sites/youku/"
+      ],
+      "scope": "YoukuIE v_show pages (--print, as upstream -J has a random cookie); YoukuShowIE not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "zoom",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/zoom.py"
+      ],
+      "rust": [
+        "src/extractor/zoom.rs",
+        "tests/fixtures/sites/zoomclips/"
+      ],
+      "scope": "ZoomClipsIE clips (missing mediaInfo and 404 errors); ZoomIE recordings not ported (fail upstream), compared with pinned upstream output through the fixture proxy"
     }
   ]
 }

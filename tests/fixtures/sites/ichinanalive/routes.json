@@ -1,0 +1,68 @@
+{
+ "routes": [
+  {
+   "url": "https://api-dsa.17app.co/api/v1/lives/3773096/enter",
+   "status": 420,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "enter-ended.json"
+  },
+  {
+   "url": "https://api-dsa.17app.co/api/v1/lives/1000001/enter",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "enter-ok.json"
+  },
+  {
+   "url": "https://api-dsa.17app.co/api/v1/lives/1000001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "live-synthetic.json"
+  },
+  {
+   "url": "https://api-dsa.17app.co/api/v1/lives/1000002/enter",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "enter-ok.json"
+  },
+  {
+   "url": "https://api-dsa.17app.co/api/v1/lives/1000002",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "live-empty.json"
+  },
+  {
+   "url": "https://wap-api.17app.co/api/v1/vods/2cf84520-e65e-4b22-891e-1d3a00b0f068",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "vod.json"
+  },
+  {
+   "url": "http://cdn.17app.co/vod/prod/2cf84520-e65e-4b22-891e-1d3a00b0f068/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "vod-master.m3u8"
+  },
+  {
+   "url": "https://api-dsa.17app.co/api/v1/clips/1bHQSK8KUieruFXaCH4A4upCzlN",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "clip.json"
+  },
+  {
+   "url": "https://api-dsa.17app.co/api/v1/clips/syntheticnoformats",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "clip-synthetic-noformats.json"
+  }
+ ]
+}

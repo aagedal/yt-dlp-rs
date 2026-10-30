@@ -1,0 +1,1 @@
+window.goldlog=(window.goldlog||{});goldlog.Etag="t6drI4tvBXgBASABRkHVDwZ8";goldlog.stag=2;

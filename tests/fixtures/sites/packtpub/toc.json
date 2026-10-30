@@ -1,0 +1,38 @@
+{
+ "productId": "9781787122215",
+ "chapters": [
+  {
+   "id": "20527",
+   "title": "Introduction",
+   "sections": [
+    {
+     "id": "20551",
+     "title": "Introduction",
+     "metaDescription": "This video is an introduction to the course.",
+     "summary": "<p>This video is an introduction to the course.</p>",
+     "contentType": "video"
+    }
+   ]
+  },
+  {
+   "id": "20528",
+   "title": "Simple Web Server",
+   "sections": [
+    {
+     "id": "20530",
+     "title": "Project Intro",
+     "metaDescription": "Simple Web Server: Project Intro",
+     "summary": "<p>Simple Web Server: Project Intro &nbsp; &nbsp; &nbsp;&nbsp;</p>",
+     "contentType": "video"
+    },
+    {
+     "id": "20531",
+     "title": "Installing Nodejs",
+     "metaDescription": "Simple Web Server: Installing Nodejs",
+     "summary": "<p>Simple Web Server: Installing Nodejs</p>",
+     "contentType": "video"
+    }
+   ]
+  }
+ ]
+}

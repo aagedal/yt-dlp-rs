@@ -1,0 +1,33 @@
+{
+ "routes": [
+  {
+   "url": "https://services.packtpub.com/products-v1/products/9781787122215/20528/20530",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video.json"
+  },
+  {
+   "url": "https://services.packtpub.com/products-v1/products/9781787122215/20528/20629",
+   "status": 400,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "locked.json"
+  },
+  {
+   "url": "https://static.packt-cdn.com/products/9781787122215/toc",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "toc.json"
+  },
+  {
+   "url": "https://static.packt-cdn.com/products/9781787122215/summary",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "summary.json"
+  }
+ ]
+}

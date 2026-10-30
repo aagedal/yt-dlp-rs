@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://www.vidio.com/auth",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "auth.json",
+   "request_body": []
+  },
+  {
+   "url": "https://api.vidio.com/videos/7115874",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video-7115874.json",
+   "request_headers": {
+    "X-API-KEY": "fixture-api-key"
+   }
+  },
+  {
+   "url": "https://api.vidio.com/videos/7115874/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "video-7115874.m3u8"
+  },
+  {
+   "url": "https://api.vidio.com/content_profiles/2885/playlists",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "premier-playlists-2885.json",
+   "request_headers": {
+    "X-API-KEY": "fixture-api-key"
+   }
+  }
+ ]
+}

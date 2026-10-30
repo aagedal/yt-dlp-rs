@@ -1,0 +1,24 @@
+{
+ "routes": [
+  {
+   "url": "https://www.ntv.ru/video/1797442",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "page.html"
+  },
+  {
+   "url": "http://www.ntv.ru/vi1797442/",
+   "headers": {"Content-Type": "application/xml; charset=utf-8"},
+   "body_file": "vi.xml"
+  },
+  {
+   "url": "https://www.ntv.ru/exp/video/1797442",
+   "headers": {"Content-Type": "application/xml; charset=utf-8"},
+   "body_file": "exp.xml"
+  },
+  {
+   "url": "https://www.ntv.ru/video/synthetic-noid",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "synthetic-noid.html"
+  }
+ ]
+}

@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "http://player.cnevids.com/embed-api.json?videoId=55f9cf8b61646d1acf00000c&playerId=5511d76261646d5566020000&target=None&embedType=inline",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "embed-api.json"
+  },
+  {
+   "url": "http://player.cnevids.com/embed-api.json?videoId=55f9cf8b61646d1acf00000c&embedType=inline",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "embed-api.json"
+  },
+  {
+   "url": "http://dp8hsntg6do36.cloudfront.net/55f9cf8b61646d1acf00000c/34863386-8f9c-4539-82db-55c549a6a2d3manifest-ios.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "manifest-ios.m3u8"
+  },
+  {
+   "url": "https://www.wired.com/watch/synthetic-video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-watch.html"
+  },
+  {
+   "url": "https://www.wired.com/watch/synthetic-noplayer",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-noplayer.html"
+  }
+ ]
+}

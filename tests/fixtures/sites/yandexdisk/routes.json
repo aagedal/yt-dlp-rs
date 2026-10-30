@@ -1,0 +1,33 @@
+{
+ "routes": [
+  {
+   "url": "https://disk.360.yandex.ru/i/TM2xsIVsgjY4uw",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://disk.360.yandex.ru/i/syntheticnostore",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "no-store.html"
+  },
+  {
+   "url": "https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=https%3A%2F%2Fdisk.360.yandex.ru%2Fi%2FTM2xsIVsgjY4uw",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "download.json"
+  },
+  {
+   "url": "https://disk.360.yandex.ru/public/api/get-video-streams",
+   "status": 410,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": ""
+  }
+ ]
+}

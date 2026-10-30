@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://edition.cnn.com/2024/05/31/sport/video/jadon-sancho-borussia-dortmund-champions-league-exclusive-spt-intl",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://edition.cnn.com/2024/05/31/sport/video/jadon-sancho-borussia-dortmund-champions-league-exclusive-spt-intl",
+  "args": [
+   "--print",
+   "%(id)s|%(display_id)s|%(title)s|%(duration)s|%(timestamp)s|%(upload_date)s"
+  ]
+ },
+ {
+  "url": "https://edition.cnn.com/2024/05/31/sport/video/synthetic-noplayer",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://edition.cnn.com/2024/05/31/sport/video/missing-page",
+  "args": [
+   "-J"
+  ]
+ }
+]

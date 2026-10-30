@@ -1,0 +1,40 @@
+[
+ {
+  "url": "https://www.iwara.tv/video/k2ayoueezfkx6gvq",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.iwara.tv/video/k2ayoueezfkx6gvq",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.iwara.tv/video/syntheticunplayable",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.iwara.tv/video/syntheticmessage",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://iwara.tv/profile/user792540/videos",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://iwara.tv/playlist/458e5486-36a4-4ac0-b233-7e9eef01025f",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

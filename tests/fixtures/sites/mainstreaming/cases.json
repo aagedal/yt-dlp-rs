@@ -1,0 +1,40 @@
+[
+ {
+  "url": "https://webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/WDAF1KOWUpH3",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://webtools-f5842579ff984c1c98d63b8d789673eb.msvdn.net/embed/HVvPMzy",
+  "args": [
+   "--print",
+   "%(id)s|%(live_status)s|%(description)s|%(is_live)s|%(thumbnail)s"
+  ]
+ },
+ {
+  "url": "https://webtools-f5842579ff984c1c98d63b8d789673eb.msvdn.net/embed/HVvPMzy",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/53EN6GxbWaJC",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/UNKNOWN0001",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://webtools-e18da6642b684f8aa9ae449862783a56.msvdn.net/embed/VODTEST0001",
+  "args": [
+   "-J"
+  ]
+ }
+]
