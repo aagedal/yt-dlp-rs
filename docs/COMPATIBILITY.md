@@ -6662,7 +6662,11 @@ URLs, so archive identity is only as specific as the extractor's key and ID.
 Filtering follows complete extraction, including normal page/API/manifest requests,
 challenge solving and media probes, then precedes format selection. A recorded
 entry can skip even when its requested format is unavailable. Extraction errors
-still fail; no early URL-ID skip is implemented. Remaining playlist entries must
+still fail. Before extraction, like upstream's `extract_info`, a URL whose extractor
+knows its ID without extracting (YouTube videos and the embeddable sites' URLs:
+upstream `get_temp_id`) is skipped with `[download] ID: has already been
+recorded in the archive` (and `--break-on-existing` stops) when `KEY ID` is
+recorded; other URLs are filtered after extraction. Remaining playlist entries must
 all select successfully before output/download begins. Metadata, listing and
 simulation filter recorded entries too, but never append or create archives.
 Malformed selectors still fail syntax preflight even if every entry is recorded.

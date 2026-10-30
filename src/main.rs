@@ -4796,7 +4796,23 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             )?
                         }
                         Some(result) => result,
-                        None => downloader.extract_result_unselected_with_options(&url, options)?,
+                        None => {
+                            // Upstream `extract_info`: a recorded temp ID
+                            // skips the URL before extraction.
+                            if let Some(archive) = &archive
+                                && let Some((key, id)) = downloader.temp_archive_identity(&url)
+                                && archive.contains_identity(&key, &id)
+                            {
+                                screen!(
+                                    "[download] {id}: has already been recorded in the archive"
+                                );
+                                if args.break_on_existing {
+                                    pending = Some(Cancel::Existing);
+                                }
+                                return Ok(None);
+                            }
+                            downloader.extract_result_unselected_with_options(&url, options)?
+                        }
                     }
                 };
                 // Upstream `__process_playlist` names the playlist, then its

@@ -4400,6 +4400,19 @@ impl YoutubeDl {
         })
     }
 
+    /// Upstream `extract_info`'s check before extracting: the extractor key
+    /// and URL ID (`ie.get_temp_id(url)`) of `url` when its extractor is
+    /// known without extracting (YouTube videos and the embeddable sites), for
+    /// `--download-archive` to skip a recorded video without any request.
+    pub fn temp_archive_identity(&self, url: &str) -> Option<(String, String)> {
+        if self.force_generic {
+            return None;
+        }
+        extractor::html5::temp_identity(url, |key| self.extractor_allowed(key))
+            .filter(|(_, id)| !id.is_empty())
+            .map(|(key, id)| (key.to_owned(), id))
+    }
+
     fn generic_allowed(&self) -> bool {
         self.extractor_order()
             .is_none_or(|order| order.contains(&"generic"))

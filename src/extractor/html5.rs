@@ -2552,6 +2552,19 @@ static EMBED_SITES: [EmbedSite; 41] = [
     },
 ];
 
+/// Upstream `get_temp_id(url)` of the first embed site (in extractor order)
+/// whose URL `url` is, with its extractor key: the URL ID these extractors
+/// know without extracting (`YoutubeDl::temp_archive_identity`).
+pub(crate) fn temp_identity(
+    url: &str,
+    allowed: impl Fn(&str) -> bool,
+) -> Option<(&'static str, String)> {
+    EMBED_SITES
+        .iter()
+        .filter(|site| allowed(site.key))
+        .find_map(|site| (site.temp_id)(url).map(|id| (site.key, id)))
+}
+
 /// Every embed site's URLs (or webpage info dicts) with
 /// `report_detected(f'{IE_NAME} embed', n)`.
 fn embeds(client: &Client, url: &Url, html: &str) -> Result<Vec<(&'static EmbedSite, Embed)>> {

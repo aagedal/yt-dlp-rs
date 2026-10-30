@@ -80,6 +80,12 @@ impl DownloadArchive {
                     .any(|id| self.entries.contains(id))
             }))
     }
+    /// Upstream `in_download_archive({'id': temp_id, 'ie_key': key})`
+    /// before extraction: whether `key id` is recorded.
+    pub fn contains_identity(&self, key: &str, id: &str) -> bool {
+        self.entries
+            .contains(&format!("{} {id}", key.to_lowercase()))
+    }
     /// Append at most one LF-terminated identity under an exclusive lock and
     /// synchronize it before updating membership. Existing bytes are preserved;
     /// unlike upstream's raw append, a missing final CR/LF gets an LF separator.
