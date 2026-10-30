@@ -169,6 +169,8 @@ fn recover(workspace: &Path, directory: &Path) {
 mod tests {
     use super::*;
 
+    // Only Unix has the liveness check the sweep needs.
+    #[cfg(unix)]
     #[test]
     fn dead_processes_entries_are_removed_and_a_finished_download_recovered() {
         let directory = tempfile::tempdir().unwrap();
