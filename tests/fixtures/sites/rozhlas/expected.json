@@ -1,0 +1,31 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://wave.rozhlas.cz/papej-masicko-porcujeme-a-bilancujeme-filmy-a-serialy-ktere-letos-zabily-8891337",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"id\": \"8891337\", \"title\": \"Papej mas\\u00ed\\u010dko! Porcujeme a bilancujeme filmy a seri\\u00e1ly, kter\\u00e9 to letos zabily\", \"entries\": [{\"id\": \"10520988\", \"chapter\": null, \"chapter_number\": null, \"formats\": [{\"url\": \"https://portal.rozhlas.cz/sites/default/files/audios/532419c6b46041a8116ea8554ef7e9d5.mp3\", \"ext\": \"mp3\", \"format_id\": \"mp3\", \"abr\": 128, \"acodec\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 25184000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\"}], \"title\": \"Papej mas\\u00ed\\u010dko! Porcujeme a bilancujeme filmy a seri\\u00e1ly, kter\\u00e9 to letos zabily\", \"description\": \"M\\u00e1te po cel\\u00e9 sez\\u00f3n\\u011b poslouch\\u00e1n\\u00ed \\u010celist\\u00ed pr\\u00e1vo na wellness, nebo m\\u016f\\u017eete b\\u00fdt r\\u00e1di, \\u017ee jste v\\u016fbec na\\u017eivu? Poslechn\\u011bte si filmov\\u011b kritickou bilanci v\\u0161eho, co v uplynul\\u00fdch m\\u011bs\\u00edc\\u00edch st\\u00e1lo za vid\\u011bn\\u00ed\", \"duration\": 1574, \"artist\": \"Ale\\u0161 Stuchl\\u00fd\", \"channel_id\": \"radio-wave\", \"playlist_count\": 1, \"playlist\": \"Papej mas\\u00ed\\u010dko! Porcujeme a bilancujeme filmy a seri\\u00e1ly, kter\\u00e9 to letos zabily\", \"playlist_id\": \"8891337\", \"playlist_title\": \"Papej mas\\u00ed\\u010dko! Porcujeme a bilancujeme filmy a seri\\u00e1ly, kter\\u00e9 to letos zabily\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://wave.rozhlas.cz/papej-masicko-porcujeme-a-bilancujeme-filmy-a-serialy-ktere-letos-zabily-8891337\", \"n_entries\": 1, \"webpage_url\": \"https://wave.rozhlas.cz/papej-masicko-porcujeme-a-bilancujeme-filmy-a-serialy-ktere-letos-zabily-8891337\", \"webpage_url_basename\": \"papej-masicko-porcujeme-a-bilancujeme-filmy-a-serialy-ktere-letos-zabily-8891337\", \"webpage_url_domain\": \"wave.rozhlas.cz\", \"playlist_index\": 1, \"__last_playlist_index\": 1, \"extractor\": \"RozhlasVltava\", \"extractor_key\": \"RozhlasVltava\", \"playlist_autonumber\": 1, \"display_id\": \"10520988\", \"fulltitle\": \"Papej mas\\u00ed\\u010dko! Porcujeme a bilancujeme filmy a seri\\u00e1ly, kter\\u00e9 to letos zabily\", \"duration_string\": \"26:14\", \"release_year\": null, \"artists\": [\"Ale\\u0161 Stuchl\\u00fd\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://portal.rozhlas.cz/sites/default/files/audios/532419c6b46041a8116ea8554ef7e9d5.mp3\", \"ext\": \"mp3\", \"format_id\": \"mp3\", \"abr\": 128, \"acodec\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"filesize_approx\": 25184000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\", \"_filename\": \"Papej mas\\u00ed\\u010dko! Porcujeme a bilancujeme filmy a seri\\u00e1ly, kter\\u00e9 to letos zabily [10520988].mp3\", \"filename\": \"Papej mas\\u00ed\\u010dko! Porcujeme a bilancujeme filmy a seri\\u00e1ly, kter\\u00e9 to letos zabily [10520988].mp3\", \"__write_download_archive\": false}], \"url\": \"https://portal.rozhlas.cz/sites/default/files/audios/532419c6b46041a8116ea8554ef7e9d5.mp3\", \"ext\": \"mp3\", \"format_id\": \"mp3\", \"abr\": 128, \"acodec\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 25184000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\"}], \"webpage_url\": \"https://wave.rozhlas.cz/papej-masicko-porcujeme-a-bilancujeme-filmy-a-serialy-ktere-letos-zabily-8891337\", \"original_url\": \"https://wave.rozhlas.cz/papej-masicko-porcujeme-a-bilancujeme-filmy-a-serialy-ktere-letos-zabily-8891337\", \"webpage_url_basename\": \"papej-masicko-porcujeme-a-bilancujeme-filmy-a-serialy-ktere-letos-zabily-8891337\", \"webpage_url_domain\": \"wave.rozhlas.cz\", \"extractor\": \"RozhlasVltava\", \"extractor_key\": \"RozhlasVltava\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://wave.rozhlas.cz/synthetic-8000001",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [RozhlasVltava] 8000001: Unable to extract player; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

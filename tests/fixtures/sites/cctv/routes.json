@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "http://sports.cntv.cn/2016/02/12/ARTIaBRxv4rTT1yWf1frW2wi160212.shtml",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "00-sports-cntv-cn-2016-02-12-artiabrxv4rtt1ywf1frw2wi160212-sht.html"
+  },
+  {
+   "url": "http://vdn.apps.cntv.cn/api/getHttpVideoInfo.do?pid=5ecdbeab623f4973b40ff25f18b174e8&url=http%3A%2F%2Fsports.cntv.cn%2F2016%2F02%2F12%2FARTIaBRxv4rTT1yWf1frW2wi160212.shtml&idl=32&idlr=32&modifyed=false",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html;charset=UTF-8"
+   },
+   "body_file": "01-vdn-apps-cntv-cn-api-gethttpvideoinfo-do-pid-5ecdbeab623f497.html"
+  },
+  {
+   "url": "https://hls.cntv.cdn20.com/asp/hls/main/0303000a/3/default/5ecdbeab623f4973b40ff25f18b174e8/main.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "02-hls-cntv-cdn20-com-asp-hls-main-0303000a-3-default-5ecdbeab6.m3u8"
+  },
+  {
+   "url": "https://news.cctv.com/2024/02/21/ARTIcU5tKIOIF2myEGCATkLo240221.shtml",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "03-news-cctv-com-2024-02-21-articu5tkioif2myegcatklo240221-shtm.html"
+  },
+  {
+   "url": "http://vdn.apps.cntv.cn/api/getHttpVideoInfo.do?pid=5c846c0518444308ba32c4159df3b3e0&url=https%3A%2F%2Fnews.cctv.com%2F2024%2F02%2F21%2FARTIcU5tKIOIF2myEGCATkLo240221.shtml&idl=32&idlr=32&modifyed=false",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html;charset=UTF-8"
+   },
+   "body_file": "04-vdn-apps-cntv-cn-api-gethttpvideoinfo-do-pid-5c846c051844430.html"
+  },
+  {
+   "url": "https://hls.cntv.cdn20.com/asp/hls/main/0303000a/3/default/5c846c0518444308ba32c4159df3b3e0/main.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "05-hls-cntv-cdn20-com-asp-hls-main-0303000a-3-default-5c846c051.m3u8"
+  },
+  {
+   "url": "https://sports.cntv.cn/2016/02/29/nothing.shtml",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>CNTV</title></head><body>Nothing to play</body></html>"
+  }
+ ]
+}

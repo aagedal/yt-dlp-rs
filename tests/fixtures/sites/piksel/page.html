@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <!-- Matomo script -->
+    <script>
+        var haveAPIsCallAlreadyFinished = false;
+        console.log("Initial DE API call status: ", haveAPIsCallAlreadyFinished);
+
+        function checkAPICallStatuses() {
+            if (haveAPIsCallAlreadyFinished !== false) {
+                console.log("DE API calls happened, setting haveAPIsCallAlreadyFinished to:", haveAPIsCallAlreadyFinished);
+
+                setTimeout(function() {
+                    Matomo.MediaAnalytics.enableMediaAnalytics();
+                    scanForMedia(); // Execute the function immediately after enabling Media Analytics
+                    console.log('Scanning media finished.');
+                }, 1000); // just after a second that API calls happened
+
+                clearInterval(intervalId); // Stop polling once the variable has changed
+                haveAPIsCallAlreadyFinished = false; // we reset the status of this so in case multiple videos are handled it rescan media again
+            }
+        }
+
+        // Polling interval
+        var intervalId = setInterval(checkAPICallStatuses, 1000); // Check every 1 second (1000 milliseconds)
+
+
+        function scanForMedia() {
+            console.log("Scanning for media...");
+            Matomo.MediaAnalytics.scanForMedia();
+        }
+
+        var _paq = window._paq = window._paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        _paq.push(['MediaAnalytics::disableMediaAnalytics']);
+        (function() {
+            var u='//analytics.piksel.tech/';
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '269']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+        <!-- FB -->
+    <meta property="og:title" content="State of Washington vs. Donald J. Trump, et al"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:url" content="https://player.piksel.tech/v/v80kqp41"/>
+    <meta property="og:image" content="https://player.piksel.tech/thumbs/tid/w640/h/10815649.jpg"/>
+    <meta property="og:image:width" content="640"/>
+    <meta property="og:site_name" content="US Courts - Cameras Pilot"/>
+    <meta name="twitter:description" content="State of Washington vs. Donald J. Trump, et al, Case Number 17-CV-00141-JLR, TRO Hearing, Civil Rights Case, 02/3/2017, 1:00 PM (PST), Seattle Federal Courthouse, Seattle, WA, Judge James L. Robart presiding."/>	<meta name="twitter:card" content="player">
+	<meta name="twitter:image" content="https://player.piksel.tech/thumbs/tid/w435/h/10815649.jpg"/>
+	<meta name="twitter:title" content="State of Washington vs. Donald J. Trump, et al"/>
+    <meta name="twitter:player:width" content="435"/>
+    <meta name="twitter:player:height" content="251"/>
+    <meta name="twitter:player" content="https://player.piksel.tech/v/v80kqp41?&w=435&h=251&social=true&de-responsive=true&de-html-default=true&de-delivery-type=Progressive Download&de-fullscreen=false&autoPlay=true"/>
+    <style type='text/css'>
+                                    body,html {
+                                        margin-left: 0px;
+                                        margin-top: 0px;
+                                        margin-right: 0px;
+                                        margin-bottom: 0px;
+                                        height:100%;
+                                    }
+                                    </style><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- END: Meta Tags for Facebook Like -->
+    <style type="text/css">body{margin: 0px; padding: 0px;}</style>
+
+    <title>CITC Embed Codes (Production)</title>
+    <body><style type="text/css">video[data-de-hidden="true"]{display:none;}</style><video id="6ae4986ae25b5" data-de-adobe-ms="false"
+data-de-adobeHeartbeat="false"
+data-de-adobedtm="false"
+data-de-api-domain="player.piksel.tech"
+data-de-api-key="dae5e892-195f-11f0-8b80-0a9cbef903c7"
+data-de-api-protocol="https"
+data-de-appid="rzz16131_pr_v80kqp41"
+data-de-autoPlay="false"
+data-de-bitrate="false"
+data-de-cb-opacity="85"
+data-de-color-default="#FFFFFF"
+data-de-color-hover="#00a9f7"
+data-de-delivery-ie11="false"
+data-de-delivery-type="Progressive Download"
+data-de-dtm-urls="https://playerbundle.piksel.tech/static/components/adobe-analytics/1.4.0/AppMeasurement_Module_Media.js, https://playerbundle.piksel.tech/static/components/adobe-heartbeat/2.0.1/AppMeasurement.js, https://playerbundle.piksel.tech/static/components/adobe-heartbeat/2.0.1/VisitorAPI.js, https://playerbundle.piksel.tech/static/components/adobe-heartbeat/2.0.1/VideoHeartbeat.min.js"
+data-de-fluid="false"
+data-de-fullscreen="true"
+data-de-ganalytics="true"
+data-de-hidden="true"
+data-de-html-default="false"
+data-de-inserts="false"
+data-de-jumpBack="false"
+data-de-language="browser"
+data-de-logo="false"
+data-de-logo-url="No"
+data-de-logo-x="10"
+data-de-logo-y="10"
+data-de-md-button="true"
+data-de-md-hidden="true"
+data-de-md-inline="true"
+data-de-metadata="true"
+data-de-msCustomParams="TBD"
+data-de-panalytics="true"
+data-de-pl-slate="true"
+data-de-playertype="single"
+data-de-program-uuid="v80kqp41"
+data-de-project-uuid="d8125233"
+data-de-repeatvideo="false"
+data-de-repeatvideoslate="true"
+data-de-responsive="true"
+data-de-settingsmenu="true"
+data-de-sh-deepLinkURL="Permalink"
+data-de-sh-email="false"
+data-de-sh-embed="false"
+data-de-sh-facebook="false"
+data-de-sh-googleplus="false"
+data-de-sh-link="false"
+data-de-sh-linkedin="false"
+data-de-sh-twitter="false"
+data-de-share="false"
+data-de-shareslate="true"
+data-de-sl-loopDuration="10"
+data-de-sl-loopSlides="Timed"
+data-de-stretch="false"
+data-de-subtitle="false"
+data-de-subtitle-button="false"
+data-de-subtitle-lang="en"
+data-de-subtitle-on="false"
+data-de-titlebar="true"
+data-de-volume="50"
+data-de-xanalytics="false"
+data-de-skin="vjs-sp-skin"
+class="video-js vjs-default-skin" controls></video><script src="https://playerbundle.piksel.tech/static/components/de-player/vjs5/5.0.16/bundle.js"></script><script src="https://playerbundle.piksel.tech/static/components/de-skins/sp/vjs5/2.5.8/bundle.js"></script></body>
+</html>
+

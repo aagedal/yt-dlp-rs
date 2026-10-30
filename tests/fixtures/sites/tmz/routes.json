@@ -1,0 +1,7 @@
+{
+ "routes": [
+  {"url": "http://www.tmz.com/videos/0-cegprt2p/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://www.tmz.com/2016/01/01/no-json-ld/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "nocontent.html"},
+  {"url": "https://www.tmz.com/2016/01/02/no-media-url/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "nourl.html"}
+ ]
+}

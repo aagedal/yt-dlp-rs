@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<videa_video>
+  <video autoplay="1" outside="0" start="0" is_hls="0" is_paid_promotion="0">
+    <vcode>8YfIAjxwWGwT8HVQ</vcode>
+    <title>Az őrült kígyász 285 kígyót enged szabadon</title>
+    <description></description>
+    <is_adult_content>0</is_adult_content>
+    <is_disturbing_content>0</is_disturbing_content>
+    <duration>21</duration>
+    <poster_src>//videa.hu/static/still/1.0.5.1007274.1204470.3</poster_src>
+    <timeline_thumbnails_src width="2840" height="1200" column_count="20" row_count="15" image_count="22">//videa.hu/static/preview/5.1007274.1204470</timeline_thumbnails_src>
+    <jump_url>//videa.hu/videok/allatok/az-orult-kigyasz-285-kigyot-kigyo-8YfIAjxwWGwT8HVQ</jump_url>
+    <getnext_url>//videa.hu/player/getnext?f=5.1007274.1204470&amp;ntid=IxYP9wJ42rbsxDt8&amp;ssn=abcdefgh</getnext_url>
+    <category></category>
+    <channel>beerlover</channel>
+    <uploader_name>beerlover</uploader_name>
+  </video>
+  <base>
+    <skin_color>#E61031</skin_color>
+    <home_url>//videa.hu/</home_url>
+  </base>
+  <video_sources cache_id="" exp="1793395158">
+    <video_source name="360p" mimetype="video/mp4" codecs="avc1.4d401e, mp4a.40.2" width="640" height="360" streamable="1" is_hd="0" format="1" exp="1793395158">//videa.hu/static/360p/5.1007274.1204470.1.0.1.1</video_source>
+    <video_source name="720p" mimetype="video/webm" codecs="vp9, opus" width="1280" height="720" streamable="1" is_hd="1" format="4" exp="1793395158">//videa.hu/static/w720p/5.1007274.1204470.1.0.1.1</video_source>
+  </video_sources>
+  <cookies>
+    <volume is_default="1">127</volume>
+    <mute is_default="1">0</mute>
+    <stretch>1</stretch>
+    <hq>0</hq>
+    <autoplaynext>1</autoplaynext>
+    <adult>0</adult>
+    <stts>0</stts>
+  </cookies>
+  <hash_values>
+    <hash_value_360p>BChvRF_XXUDXWaqoCH5aEA</hash_value_360p>
+    <hash_value_720p>JfyLsC1eaWhpDJvsy2SEmg</hash_value_720p>
+  </hash_values>
+  <share_urls>
+    <facebook target="_blank">https://www.facebook.com/share.php?u=https%3A%2F%2Fvidea.hu%2Fvideok%2Fallatok%2Faz-orult-kigyasz-285-kigyot-kigyo-8YfIAjxwWGwT8HVQ</facebook>
+    <twitter target="_blank">https://twitter.com/home?status=https%3A%2F%2Fvidea.hu%2Fvideok%2Fallatok%2Faz-orult-kigyasz-285-kigyot-kigyo-8YfIAjxwWGwT8HVQ</twitter>
+    <tumblr target="_blank">https://www.tumblr.com/share?v=3&amp;u=https%3A%2F%2Fvidea.hu%2Fvideok%2Fallatok%2Faz-orult-kigyasz-285-kigyot-kigyo-8YfIAjxwWGwT8HVQ&amp;t=Az+%C5%91r%C3%BClt+k%C3%ADgy%C3%A1sz+285+k%C3%ADgy%C3%B3t+enged+szabadon</tumblr>
+    <reddit target="_blank">https://reddit.com/submit?url=https%3A%2F%2Fvidea.hu%2Fvideok%2Fallatok%2Faz-orult-kigyasz-285-kigyot-kigyo-8YfIAjxwWGwT8HVQ&amp;title=Az+%C5%91r%C3%BClt+k%C3%ADgy%C3%A1sz+285+k%C3%ADgy%C3%B3t+enged+szabadon</reddit>
+    <telegram target="_blank">https://t.me/share/url?url=https%3A%2F%2Fvidea.hu%2Fvideok%2Fallatok%2Faz-orult-kigyasz-285-kigyot-kigyo-8YfIAjxwWGwT8HVQ&amp;text=Az+%C5%91r%C3%BClt+k%C3%ADgy%C3%A1sz+285+k%C3%ADgy%C3%B3t+enged+szabadon</telegram>
+    <whatsapp target="_blank">https://api.whatsapp.com/send?text=Az+%C5%91r%C3%BClt+k%C3%ADgy%C3%A1sz+285+k%C3%ADgy%C3%B3t+enged+szabadon%0Ahttps%3A%2F%2Fvidea.hu%2Fvideok%2Fallatok%2Faz-orult-kigyasz-285-kigyot-kigyo-8YfIAjxwWGwT8HVQ</whatsapp>
+    <linkedin target="_blank">https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fvidea.hu%2Fvideok%2Fallatok%2Faz-orult-kigyasz-285-kigyot-kigyo-8YfIAjxwWGwT8HVQ</linkedin>
+    <mail target="_parent">javascript:VIDEA.pages.common.shareVideo(&#039;8YfIAjxwWGwT8HVQ&#039;)</mail>
+    <embed>&lt;iframe width=&quot;640&quot; height=&quot;360&quot; src=&quot;//videa.hu/player?v=8YfIAjxwWGwT8HVQ&quot; allowfullscreen=&quot;allowfullscreen&quot; webkitallowfullscreen=&quot;webkitallowfullscreen&quot; mozallowfullscreen=&quot;mozallowfullscreen&quot; frameborder=&quot;0&quot;&gt;&lt;/iframe&gt;</embed>
+  </share_urls>
+  <stat_urls>
+    <startplayback>//videa.hu/player/startplayback?f=1007274&amp;platform=</startplayback>
+    <finishplayback>//videa.hu/player/finishplayback?f=1007274&amp;platform=</finishplayback>
+    <gemius_stream_id>cjg1lgOxwP5SA6kHfDyC_dU7PzI10DrMwN1lZDqB9AT.u7</gemius_stream_id>
+    <startchromecast>https://videa.hu/player/chromecast_stat?f=5.1007274.1204470</startchromecast>
+  </stat_urls>
+  <featurelist>
+    <centerplay_button />
+    <subscribe />
+  </featurelist>
+  <teasers>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl_tmp/0.0.8.3841907.2690038.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/origo-video/wekerle-plusz-magyar-peterek-ezzel-8N3OZqMrepfbFMVu?pr=81669</jump_url>
+      <xml_url>//videa.hu/player/xml?f=8.3841907.2690038&amp;m=0&amp;pr=81669&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUywFBKz7efXnOnb%2BXGMmgO20</xml_url>
+      <title>Wekerle Plusz: Magyar Péterék ezzel is mellélőttek?</title>
+      <duration>64</duration>
+      <owner>ORIGO VIDEO</owner>
+      <view_count>2055</view_count>
+      <upload_time>7 hours</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>8.3841907.2690038</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.6.408711.1003062.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/vicces/jaj-az-nagyon-kigyo-CiTfJv7rO7dvKSKU</jump_url>
+      <xml_url>//videa.hu/player/xml?f=6.408711.1003062&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyx%2BI8vSafKdOly5XncrnvCU</xml_url>
+      <title>Jaj az nagyon kígyó</title>
+      <duration>3</duration>
+      <owner>kis.szabacsik</owner>
+      <view_count>2658</view_count>
+      <upload_time>17 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>6.408711.1003062</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.6.1270350.1979964.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/film-animacio/kigyok-a-melyben.mp4-8wqxbdZKpZYL3DIX</jump_url>
+      <xml_url>//videa.hu/player/xml?f=6.1270350.1979964&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUywFPe7MQeDwA2PUY01TifKZ</xml_url>
+      <title>Kígyók a mélyben.mp4</title>
+      <duration>4980</duration>
+      <owner>lacko9691</owner>
+      <view_count>5384</view_count>
+      <upload_time>7 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>6.1270350.1979964</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.5.728927.1529728.2</thumbnail_src>
+      <jump_url>//videa.hu/videok/tudomany-technika/mikrozott-kigyo-GLdTIVXDOOLDIf8w</jump_url>
+      <xml_url>//videa.hu/player/xml?f=5.728927.1529728&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyx6BvvgatLyDFzBdkUpq4O2</xml_url>
+      <title>Mikrózott kígyó</title>
+      <duration>19</duration>
+      <owner>videocrypt</owner>
+      <view_count>1934</view_count>
+      <upload_time>14 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>5.728927.1529728</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.8.2094653.2048275.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/film-animacio/kigyok-a-melyben-8O7PvLDadGjWBtOw</jump_url>
+      <xml_url>//videa.hu/player/xml?f=8.2094653.2048275&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUywFBajkVcjuKXfJUFYiufS2</xml_url>
+      <title>Kígyók a mélyben</title>
+      <duration>5195</duration>
+      <owner>Tompa Dénes</owner>
+      <view_count>318</view_count>
+      <upload_time>4 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>8.2094653.2048275</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.5.899828.465305.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/origo-tudomany/allatok/homokban-uszo-kigyo-TtnwbboLLtYZ2jOY</jump_url>
+      <xml_url>//videa.hu/player/xml?f=5.899828.465305&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyxpPvHDQebFBF%2F6Y1tSp%2FSY</xml_url>
+      <title>Homokban úszó kígyó</title>
+      <duration>115</duration>
+      <owner>ORIGO TUDOMÁNY</owner>
+      <view_count>3002</view_count>
+      <upload_time>11 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>5.899828.465305</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.5.699730.465305.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/origo-tudomany/emberek-vlogok/ketfeju-kigyo-1tWxwl2S1ako2BeU</jump_url>
+      <xml_url>//videa.hu/player/xml?f=5.699730.465305&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUywMPsjMVOiYGyLvUW5Sj96U</xml_url>
+      <title>Kétfejű kígyó</title>
+      <duration>70</duration>
+      <owner>ORIGO TUDOMÁNY</owner>
+      <view_count>12112</view_count>
+      <upload_time>15 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>5.699730.465305</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.6.651334.1467612.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/allatok/nagy-kigyo-SntXuh4cElh4GVc6</jump_url>
+      <xml_url>//videa.hu/player/xml?f=6.651334.1467612&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyxuJOvsVuyeK1biUjUnm9j3</xml_url>
+      <title>Nagy kígyó !</title>
+      <duration>21</duration>
+      <owner>palancsa.peter</owner>
+      <view_count>681</view_count>
+      <upload_time>15 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>6.651334.1467612</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.5.1043135.465305.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/origo-tudomany/allatok/him-kigyok-orgiaja-gHUn73LJnwAWyS75</jump_url>
+      <xml_url>//videa.hu/player/xml?f=5.1043135.465305&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyxaAsraFLfmAn35e1YZnoz0</xml_url>
+      <title>Hím kígyók orgiája</title>
+      <duration>54</duration>
+      <owner>ORIGO TUDOMÁNY</owner>
+      <view_count>860</view_count>
+      <upload_time>9 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>5.1043135.465305</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.6.81762.334891.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/allatok/a-nyul-es-kigyo-uVjn2u8QUVTbBeuZ</jump_url>
+      <xml_url>//videa.hu/player/xml?f=6.81762.334891&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyxIHPXaEfGSGUbYbmMiqM6b</xml_url>
+      <title>A nyúl és a kígyó</title>
+      <duration>62</duration>
+      <owner>guszti13</owner>
+      <view_count>1117</view_count>
+      <upload_time>19 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>6.81762.334891</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.3.923543.1150387.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/allatok/a-nyulmama-megvedi-kolyket-kigyotol-XteL6VE98F0KH7Ne</jump_url>
+      <xml_url>//videa.hu/player/xml?f=3.923543.1150387&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyxlPvr4FdLvcSvICkoo%2BvWk</xml_url>
+      <title>A nyúlmama megvédi kölykét a kígyótól</title>
+      <duration>112</duration>
+      <owner>viktoratakarító</owner>
+      <view_count>72740</view_count>
+      <upload_time>11 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>3.923543.1150387</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.6.420202.1047977.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/allatok/egy-aprocska-kigyo-8tO9Ut2bvBzzfqdL</jump_url>
+      <xml_url>//videa.hu/player/xml?f=6.420202.1047977&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUywFPtCNdvCYKmXMQHsGvN%2BN</xml_url>
+      <title>Egy aprócska kígyó</title>
+      <duration>19</duration>
+      <owner>baluguru</owner>
+      <view_count>2467</view_count>
+      <upload_time>17 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>6.420202.1047977</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.5.1169516.1902191.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/allatok/kigyoval-harcol-a-meheszborz-mxdx9zzPojvjBxeg</jump_url>
+      <xml_url>//videa.hu/player/xml?f=5.1169516.1902191&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyxQMvvMGv7QGHzkTGsitd6m</xml_url>
+      <title>Kígyóval harcol a méhészborz</title>
+      <duration>131</duration>
+      <owner>nagyon.allat</owner>
+      <view_count>21457</view_count>
+      <upload_time>8 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>5.1169516.1902191</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.6.835477.336525.6</thumbnail_src>
+      <jump_url>//videa.hu/videok/allatok/a-repulo-szarnyaban-bujt-el-0exDZsgyk2mGAFPf</jump_url>
+      <xml_url>//videa.hu/player/xml?f=6.835477.336525&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUywNL%2BfweffNMXi8V0Yhi%2Bun</xml_url>
+      <title>A repülő szárnyában bújt el a kígyó</title>
+      <duration>409</duration>
+      <owner>Döbbentő</owner>
+      <view_count>2660</view_count>
+      <upload_time>13 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>6.835477.336525</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.5.584403.952528.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/emberek-vlogok/kigyo-no-PUKSQEvNNuzvTFjR</jump_url>
+      <xml_url>//videa.hu/player/xml?f=5.584403.952528&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyxtH9TncsHcBl37QHc0i9GT</xml_url>
+      <title>Kígyó nő</title>
+      <duration>198</duration>
+      <owner>maximo</owner>
+      <view_count>740</view_count>
+      <upload_time>16 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>5.584403.952528</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.5.991787.1902191.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/allatok/kigyot-eszik-a-beka-3kJIoygzuEPR4uA0</jump_url>
+      <xml_url>//videa.hu/player/xml?f=5.991787.1902191&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUywOIdX9TP3NMmbLalNUuPrx</xml_url>
+      <title>Kígyót eszik a béka</title>
+      <duration>891</duration>
+      <owner>nagyon.allat</owner>
+      <view_count>19604</view_count>
+      <upload_time>10 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>5.991787.1902191</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.6.24811.19396.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/allatok/nyuszi-vs.-kigyo-O0qo28Y8fcK6416s</jump_url>
+      <xml_url>//videa.hu/player/xml?f=6.24811.19396&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyxyeu7bEbzzcHXtcTdU%2FI2y</xml_url>
+      <title>Nyuszi vs. Kígyó</title>
+      <duration>57</duration>
+      <owner>gabiliba</owner>
+      <view_count>4067</view_count>
+      <upload_time>19 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>6.24811.19396</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.7.445619.153849.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/allatok/szonnya-kigyonk-ebedel-ixXnsB5iERfJAJTq</jump_url>
+      <xml_url>//videa.hu/player/xml?f=7.445619.153849&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyxUMsfaUMafIVbcXEshh%2B%2Bw</xml_url>
+      <title>Szonnya kígyónk ebédel</title>
+      <duration>64</duration>
+      <owner>vfbs</owner>
+      <view_count>398</view_count>
+      <upload_time>17 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>7.445619.153849</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.5.1011974.1494219.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/life/allatok/kigyo-okozott-panikot-a-repulon-lfVJx1cZghWEbZyC</jump_url>
+      <xml_url>//videa.hu/player/xml?f=5.1011974.1494219&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyxRLMn%2BW7XJEnTmbUQCl8KC</xml_url>
+      <title>Kígyó okozott pánikot a repülőn</title>
+      <duration>27</duration>
+      <owner>Life</owner>
+      <view_count>1656</view_count>
+      <upload_time>9 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>5.1011974.1494219</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.6.209932.46051.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/allatok/egy-rakas-kigyo-pyWXN1vgQDvww7rE</jump_url>
+      <xml_url>//videa.hu/player/xml?f=6.209932.46051&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyxNM8jsbbXcL0LKTHYX%2BsmE</xml_url>
+      <title>Egy rakás kígyó</title>
+      <duration>39</duration>
+      <owner>adam</owner>
+      <view_count>725</view_count>
+      <upload_time>18 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>6.209932.46051</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.6.41407.94253.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/vicces/kigyo-vs-nyul-4ln6Koz53avcp223</jump_url>
+      <xml_url>//videa.hu/player/xml?f=6.41407.94253&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUywJJvGCaOvQfSDvTGIQ%2F4ny</xml_url>
+      <title>Kígyó vs nyúl</title>
+      <duration>57</duration>
+      <owner>Robi366</owner>
+      <view_count>2713</view_count>
+      <upload_time>19 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>6.41407.94253</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.6.278679.206961.4</thumbnail_src>
+      <jump_url>//videa.hu/videok/kreativ/kigyo-jatek-az-epuleten-gt2R92QAWvHm38zN</jump_url>
+      <xml_url>//videa.hu/player/xml?f=6.278679.206961&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyxaPq3mGrb7CUT4cmxT9cGP</xml_url>
+      <title>Kígyó játék az épületen</title>
+      <duration>112</duration>
+      <owner>eyano</owner>
+      <view_count>3579</view_count>
+      <upload_time>18 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>6.278679.206961</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.6.279216.946636.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/allatok/nyul-es-kigyo-harc-EIBdpxR51mBGatje</jump_url>
+      <xml_url>//videa.hu/player/xml?f=6.279216.946636&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUyx4A93QU%2Fz4fSLjeEYBudGk</xml_url>
+      <title>Nyúl és Kigyó harc</title>
+      <duration>57</duration>
+      <owner>PURUTTYA</owner>
+      <view_count>1663</view_count>
+      <upload_time>18 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>6.279216.946636</content_id>
+    </teaser>
+    <teaser>
+      <thumbnail_src>//videa.hu/static/thumbnail_xl/0.0.7.1355246.2004899.3</thumbnail_src>
+      <jump_url>//videa.hu/videok/film-animacio/a-feher-kigyo-3cDQvnIGhIGk5G29</jump_url>
+      <xml_url>//videa.hu/player/xml?f=7.1355246.2004899&amp;m=0&amp;_T=GH%2Fle1Finei2Z%2BNysQTuUywOKdvlVerjD3vHfWpVion4</xml_url>
+      <title>A fehér kígyó</title>
+      <duration>5485</duration>
+      <owner>Bubie5000</owner>
+      <view_count>4907</view_count>
+      <upload_time>7 years</upload_time>
+      <is_podcast>0</is_podcast>
+      <content_id_param>f</content_id_param>
+      <content_id>7.1355246.2004899</content_id>
+    </teaser>
+  </teasers>
+  <vmap stat_url="//videa.hu/player/ima_stat">//hu.adocean.pl/ad.xml?id=fVJb08MK_Hh2WZLEI8umgNHgLT5PUec0QTMY8kzN3TP.s7/alkalmazas=1/hely=embed/key=8YfIAjxwWGwT8HVQ,kigy%C3%B3/aocodetype=4/href=https%3A%2F%2Fvidea.hu%2Fvideok%2Fallatok%2Faz-orult-kigyasz-285-kigyot-kigyo-8YfIAjxwWGwT8HVQ</vmap>
+</videa_video>

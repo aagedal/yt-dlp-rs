@@ -115,10 +115,12 @@ fn attributes(input: &str) -> Result<BTreeMap<&str, &str>> {
         if tail.is_empty() {
             break;
         }
+        // Upstream's `findall` skips whitespace between attributes (`A=1, B=2`).
         rest = tail
             .strip_prefix(',')
             .filter(|v| !v.is_empty())
-            .ok_or_else(|| invalid("malformed HLS attribute separator"))?;
+            .ok_or_else(|| invalid("malformed HLS attribute separator"))?
+            .trim_start_matches([' ', '\t']);
     }
     Ok(result)
 }
@@ -308,9 +310,9 @@ fn variant(
         let (width, height) = resolution
             .split_once('x')
             .ok_or_else(|| invalid("invalid HLS resolution"))?;
-        let dimension = |value| {
-            u32::try_from(positive_integer(value)?).map_err(|_| invalid("HLS dimension overflow"))
-        };
+        // Upstream takes any `\d+` dimension: audio-only variants declare `0x0`.
+        let dimension =
+            |value| u32::try_from(unsigned(value)?).map_err(|_| invalid("HLS dimension overflow"));
         (Some(dimension(width)?), Some(dimension(height)?))
     } else {
         (None, None)
@@ -617,6 +619,8 @@ fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
             // Trick-play renditions (TED); upstream only reads `#EXT-X-STREAM-INF`
             // variants, so these never become formats.
             || line.starts_with("#EXT-X-I-FRAME-STREAM-INF:")
+            // Thumbnail renditions, which upstream never reads either.
+            || line.starts_with("#EXT-X-IMAGE-STREAM-INF:")
             // Twitch's informational vendor tags (`#EXT-X-TWITCH-INFO`,
             // `-ELAPSED-SECS`, `-TOTAL-SECS`), which upstream ignores.
             || line.starts_with("#EXT-X-TWITCH-")
@@ -1055,7 +1059,7 @@ mod tests {
             "CODECS=\"avc1,mp4a",
             "BANDWIDTH=1000,BANDWIDTH=2000",
             "BANDWIDTH=1000,",
-            "RESOLUTION=0x720",
+            "RESOLUTION=x720",
             "RESOLUTION=1280",
             "BANDWIDTH=1000 junk",
             "CODECS=\"avc1\"junk",

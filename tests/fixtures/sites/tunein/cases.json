@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://tunein.com/radio/Jazz24-885-s34682/",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://tunein.com/podcasts/World-News/BBC-News-p14/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://tunein.com/podcasts/Technology-Podcasts/Artificial-Intelligence-p1153019/?topicId=236404354",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://tunein.com/radio/Empty-s777/",
+  "args": [
+   "-J"
+  ]
+ }
+]

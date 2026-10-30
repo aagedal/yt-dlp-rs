@@ -1,0 +1,8 @@
+{
+ "routes": [
+  {"url": "https://myspace.com/fiveminutestothestage/video/little-big-town/109594919", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "video-page.html"},
+  {"url": "https://myspace.com/killsorrow/music/song/of-weakened-soul...-93388656-103880681", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "song-page.html"},
+  {"url": "https://myspace.com/killsorrow/music/album/the-demo-18596029", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "album-page.html"},
+  {"url": "https://myspace.com/killsorrow/video/no-context/555", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "nocontext-page.html"}
+ ]
+}

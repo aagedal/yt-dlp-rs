@@ -1,0 +1,57 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.americastestkitchen.com/episode/705-simple-chicken-dinner",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5fbe8c61bda2010001c6763b\", \"display_id\": \"atktv_2103_simple-chicken-dinner_full-episode_web-mp4\", \"title\": \"Simple Chicken Dinner\", \"thumbnails\": [{\"url\": \"https://image.c.cdn.zype.com/5b0820fbdc4390132f0001ca/5fbe8c61bda2010001c6763b/custom_thumbnail/240.jpg?1610651319\", \"width\": 426, \"height\": 240, \"id\": \"0\", \"resolution\": \"426x240\"}, {\"url\": \"https://image.c.cdn.zype.com/5b0820fbdc4390132f0001ca/5fbe8c61bda2010001c6763b/custom_thumbnail/480.jpg?1610651319\", \"width\": 854, \"height\": 480, \"id\": \"1\", \"resolution\": \"854x480\"}, {\"url\": \"https://image.c.cdn.zype.com/5b0820fbdc4390132f0001ca/5fbe8c61bda2010001c6763b/custom_thumbnail/720.jpg?1610651319\", \"width\": 1280, \"height\": 720, \"id\": \"2\", \"resolution\": \"1280x720\"}, {\"url\": \"https://image.c.cdn.zype.com/5b0820fbdc4390132f0001ca/5fbe8c61bda2010001c6763b/custom_thumbnail/1080.jpg?1610651319\", \"width\": 1920, \"height\": 1080, \"id\": \"3\", \"resolution\": \"1920x1080\"}], \"description\": \"\", \"timestamp\": null, \"duration\": 1397, \"view_count\": null, \"average_rating\": 0, \"season_number\": 21, \"episode_number\": 3, \"formats\": [{\"format_id\": \"hls-360\", \"format_index\": null, \"url\": \"https://mf.zype.com/vod/playlist.m3u8?jwt=SYNTHETIC\", \"manifest_url\": \"https://player.zype.com/manifest/5fbe8c61bda2010001c6763b.m3u8?api_key=jZ9GUhRmxcPvX7M3SlfejB6Hle9jyHTdk2jVxG7wOHPLODgncEKVdPYBhuz9iWXQ&player=web&player_request_id=6ae498fbbf698389abd3117f&signature=SYNTHETIC&ts=1793366267\", \"tbr\": 360.448, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 426, \"height\": 240, \"vcodec\": \"avc1.42001e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"426x240\", \"aspect_ratio\": 1.77, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-360 - 426x240\"}, {\"format_id\": \"hls-1126\", \"format_index\": null, \"url\": \"https://mf.zype.com/vod/playlist.m3u8?jwt=SYNTHETIC\", \"manifest_url\": \"https://player.zype.com/manifest/5fbe8c61bda2010001c6763b.m3u8?api_key=jZ9GUhRmxcPvX7M3SlfejB6Hle9jyHTdk2jVxG7wOHPLODgncEKVdPYBhuz9iWXQ&player=web&player_request_id=6ae498fbbf698389abd3117f&signature=SYNTHETIC&ts=1793366267\", \"tbr\": 1126.4, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 854, \"height\": 480, \"vcodec\": \"avc1.4d001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"854x480\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1126 - 854x480\"}, {\"format_id\": \"hls-2928\", \"format_index\": null, \"url\": \"https://mf.zype.com/vod/playlist.m3u8?jwt=SYNTHETIC\", \"manifest_url\": \"https://player.zype.com/manifest/5fbe8c61bda2010001c6763b.m3u8?api_key=jZ9GUhRmxcPvX7M3SlfejB6Hle9jyHTdk2jVxG7wOHPLODgncEKVdPYBhuz9iWXQ&player=web&player_request_id=6ae498fbbf698389abd3117f&signature=SYNTHETIC&ts=1793366267\", \"tbr\": 2928.64, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2928 - 1280x720\"}, {\"format_id\": \"hls-4280\", \"format_index\": null, \"url\": \"https://mf.zype.com/vod/playlist.m3u8?jwt=SYNTHETIC\", \"manifest_url\": \"https://player.zype.com/manifest/5fbe8c61bda2010001c6763b.m3u8?api_key=jZ9GUhRmxcPvX7M3SlfejB6Hle9jyHTdk2jVxG7wOHPLODgncEKVdPYBhuz9iWXQ&player=web&player_request_id=6ae498fbbf698389abd3117f&signature=SYNTHETIC&ts=1793366267\", \"tbr\": 4280.32, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-4280 - 1920x1080\"}], \"subtitles\": {}, \"original_url\": \"https://www.americastestkitchen.com/episode/705-simple-chicken-dinner\", \"webpage_url\": \"https://www.americastestkitchen.com/episode/705-simple-chicken-dinner\", \"webpage_url_basename\": \"705-simple-chicken-dinner\", \"webpage_url_domain\": \"americastestkitchen.com\", \"extractor\": \"Zype\", \"extractor_key\": \"Zype\", \"episode\": \"Simple Chicken Dinner\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://image.c.cdn.zype.com/5b0820fbdc4390132f0001ca/5fbe8c61bda2010001c6763b/custom_thumbnail/1080.jpg?1610651319\", \"fulltitle\": \"Simple Chicken Dinner\", \"duration_string\": \"23:17\", \"release_year\": null, \"season\": \"Season 21\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-4280\", \"url\": \"https://mf.zype.com/vod/playlist.m3u8?jwt=SYNTHETIC\", \"manifest_url\": \"https://player.zype.com/manifest/5fbe8c61bda2010001c6763b.m3u8?api_key=jZ9GUhRmxcPvX7M3SlfejB6Hle9jyHTdk2jVxG7wOHPLODgncEKVdPYBhuz9iWXQ&player=web&player_request_id=6ae498fbbf698389abd3117f&signature=SYNTHETIC&ts=1793366267\", \"tbr\": 4280.32, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-4280 - 1920x1080\", \"_filename\": \"Simple Chicken Dinner [5fbe8c61bda2010001c6763b].mp4\", \"filename\": \"Simple Chicken Dinner [5fbe8c61bda2010001c6763b].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-4280\", \"format_index\": null, \"url\": \"https://mf.zype.com/vod/playlist.m3u8?jwt=SYNTHETIC\", \"manifest_url\": \"https://player.zype.com/manifest/5fbe8c61bda2010001c6763b.m3u8?api_key=jZ9GUhRmxcPvX7M3SlfejB6Hle9jyHTdk2jVxG7wOHPLODgncEKVdPYBhuz9iWXQ&player=web&player_request_id=6ae498fbbf698389abd3117f&signature=SYNTHETIC&ts=1793366267\", \"tbr\": 4280.32, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-4280 - 1920x1080\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.americastestkitchen.com/episodes/season-26",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"season_26\", \"title\": \"Season 26\", \"_type\": \"playlist\", \"entries\": [{\"season_number\": 26, \"ie_key\": \"AmericasTestKitchen\", \"id\": \"1147\", \"title\": \"Grilled Flank Steak and Chili Crisp Noodles\", \"_type\": \"url\", \"url\": \"https://www.americastestkitchen.com/episode/1147-grilled-flank-steak-and-chili-crisp-noodles\", \"__x_forwarded_for_ip\": null}, {\"season_number\": 26, \"ie_key\": \"AmericasTestKitchen\", \"id\": \"1144\", \"title\": \"Petite French Pastries\", \"_type\": \"url\", \"url\": \"https://www.americastestkitchen.com/episode/1144-petite-french-pastries\", \"__x_forwarded_for_ip\": null}, {\"season_number\": 26, \"ie_key\": \"AmericasTestKitchen\", \"id\": \"1142\", \"title\": \"Tandoori Salmon and Broiled Zucchini\", \"_type\": \"url\", \"url\": \"https://www.americastestkitchen.com/episode/1142-tandoori-salmon-and-broiled-zucchini\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.americastestkitchen.com/episodes/season-26\", \"original_url\": \"https://www.americastestkitchen.com/episodes/season-26\", \"webpage_url_basename\": \"season-26\", \"webpage_url_domain\": \"americastestkitchen.com\", \"extractor\": \"AmericasTestKitchenSeason\", \"extractor_key\": \"AmericasTestKitchenSeason\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.americastestkitchen.com/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"americastestkitchen\", \"title\": \"America's Test Kitchen\", \"_type\": \"playlist\", \"entries\": [{\"season_number\": 1, \"ie_key\": \"AmericasTestKitchen\", \"id\": \"1\", \"title\": \"Synthetic First\", \"_type\": \"url\", \"url\": \"https://www.americastestkitchen.com/episode/1-synthetic-first\", \"__x_forwarded_for_ip\": null}, {\"season_number\": 1, \"ie_key\": \"AmericasTestKitchen\", \"id\": \"2\", \"title\": \"Synthetic & Second\", \"_type\": \"url\", \"url\": \"https://www.americastestkitchen.com/cookscountry/episode/2-synthetic-second\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.americastestkitchen.com/\", \"original_url\": \"https://www.americastestkitchen.com/\", \"webpage_url_basename\": \"\", \"webpage_url_domain\": \"americastestkitchen.com\", \"extractor\": \"AmericasTestKitchenSeason\", \"extractor_key\": \"AmericasTestKitchenSeason\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.americastestkitchen.com/episode/999999-missing",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [AmericasTestKitchen] 999999: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://player.piksel.tech/v/v80kqp41",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://player.piksel.tech/ws/ws_program/api/dae5e892-195f-11f0-8b80-0a9cbef903c7/mode/json/apiv/5?v=v80kqp41",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "program.json"
+  },
+  {
+   "url": "https://api-ovp.piksel.tech/ws/get_smilv2/od/http/tr_projectuuid_d8125233/tr_programuuid_v80kqp41/3279887.smil",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body_file": "smil.xml"
+  },
+  {
+   "url": "https://player.piksel.tech/v/synthetic-error",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-error.html"
+  },
+  {
+   "url": "https://player.piksel.tech/ws/ws_program/api/dae5e892-195f-11f0-8b80-0a9cbef903c7/mode/json/apiv/5?v=synthetic-error",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "synthetic-error-program.json"
+  },
+  {
+   "url": "https://player.piksel.tech/v/synthetic-noid",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-noid.html"
+  }
+ ]
+}

@@ -6400,6 +6400,606 @@
         "tools/test_upstream_report.py"
       ],
       "scope": "The upstream change report used for update tasks"
+    },
+    {
+      "name": "tv5unis",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tv5unis.py"
+      ],
+      "rust": [
+        "src/extractor/tv5unis.rs",
+        "tests/fixtures/sites/tv5unis/"
+      ],
+      "scope": "TV5UnisVideoIE and TV5UnisIE GraphQL products, including geo-restricted responses, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "onsen",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/onsen.py"
+      ],
+      "rust": [
+        "src/extractor/onsen.rs",
+        "tests/fixtures/sites/onsen/"
+      ],
+      "scope": "OnsenIE episode HLS, uma playlist and the premium-login error (login and the 404 mapping unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "radiocanada",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/radiocanada.py"
+      ],
+      "rust": [
+        "src/extractor/radiocanada.rs",
+        "tests/fixtures/sites/radiocanada/"
+      ],
+      "scope": "RadioCanadaIE medianet (DRM warning, captions, premium error) and RadioCanadaAudioVideoIE hand-off (401/422 API error mapping not ported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "blerp",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/blerp.py"
+      ],
+      "rust": [
+        "src/extractor/blerp.rs",
+        "tests/fixtures/sites/blerp/"
+      ],
+      "scope": "BlerpIE soundbites, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "asobichannel",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/asobichannel.py"
+      ],
+      "rust": [
+        "src/extractor/asobichannel.rs",
+        "tests/fixtures/sites/asobichannel/"
+      ],
+      "scope": "AsobiChannelIE VOD and AsobiChannelTagURLIE playlists (live videos unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "prankcast",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/prankcast.py"
+      ],
+      "rust": [
+        "src/extractor/prankcast.rs",
+        "tests/fixtures/sites/prankcast/"
+      ],
+      "scope": "PrankCastIE showreels and PrankCastPostIE posts, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "firsttv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/firsttv.py"
+      ],
+      "rust": [
+        "src/extractor/firsttv.rs",
+        "tests/fixtures/sites/firsttv/"
+      ],
+      "scope": "FirstTVIE pages (FirstTVLiveIE unsupported: dynamic DASH), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "mixch",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mixch.py"
+      ],
+      "rust": [
+        "src/extractor/mixch.rs",
+        "tests/fixtures/sites/mixch/"
+      ],
+      "scope": "MixchIE live, MixchArchiveIE and MixchMovieIE (live comments unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "mgtv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mgtv.py"
+      ],
+      "rust": [
+        "src/extractor/mgtv.rs",
+        "tests/fixtures/sites/mgtv/"
+      ],
+      "scope": "MGTVIE HLS formats and geo-restriction (subtitles unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "dvtv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dvtv.py"
+      ],
+      "rust": [
+        "src/extractor/dvtv.rs",
+        "tests/fixtures/sites/dvtv/"
+      ],
+      "scope": "DVTVIE single videos and playlist.push playlists, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "piksel",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/piksel.py"
+      ],
+      "rust": [
+        "src/extractor/piksel.rs",
+        "tests/fixtures/sites/piksel/"
+      ],
+      "scope": "PikselIE asset files, HLS and SMIL formats (captions and RTMP unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "ccma",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ccma.py"
+      ],
+      "rust": [
+        "src/extractor/ccma.rs",
+        "tests/fixtures/sites/ccma/"
+      ],
+      "scope": "CCMAIE video, audio and MPD media (subtitles unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "dacast",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dacast.py"
+      ],
+      "rust": [
+        "src/extractor/dacast.rs",
+        "tests/fixtures/sites/dacast/"
+      ],
+      "scope": "DacastVODIE and DacastPlaylistIE (webpage embeds and the 403 retry loop not ported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "foxnews",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/foxnews.py"
+      ],
+      "rust": [
+        "src/extractor/foxnews.rs",
+        "tests/fixtures/sites/foxnews/"
+      ],
+      "scope": "FoxNewsIE AMP feed, FoxNewsVideoIE and FoxNewsArticleIE hand-offs, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "opencast",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/opencast.py"
+      ],
+      "rust": [
+        "src/extractor/opencast.rs",
+        "tests/fixtures/sites/opencast/"
+      ],
+      "scope": "OpencastIE and OpencastPlaylistIE (SMIL tracks unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "bunnycdn",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bunnycdn.py"
+      ],
+      "rust": [
+        "src/extractor/bunnycdn.rs",
+        "tests/fixtures/sites/bunnycdn/"
+      ],
+      "scope": "BunnyCdnIE embed pages (MediaCage activation streams and webpage embeds unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "sovietscloset",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/sovietscloset.py"
+      ],
+      "rust": [
+        "src/extractor/sovietscloset.rs",
+        "tests/fixtures/sites/sovietscloset/"
+      ],
+      "scope": "SovietsClosetIE (BunnyCdn hand-off) and SovietsClosetPlaylistIE, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "mave",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mave.py"
+      ],
+      "rust": [
+        "src/extractor/mave.rs",
+        "tests/fixtures/sites/mave/"
+      ],
+      "scope": "MaveIE episodes and MaveChannelIE (eager paging), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "tmz",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tmz.py"
+      ],
+      "rust": [
+        "src/extractor/tmz.rs",
+        "tests/fixtures/sites/tmz/"
+      ],
+      "scope": "TMZIE JSON-LD videos and YouTube/tweet hand-offs, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "myspace",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/myspace.py"
+      ],
+      "rust": [
+        "src/extractor/myspace.rs",
+        "tests/fixtures/sites/myspace/"
+      ],
+      "scope": "MySpaceIE video and song pages and MySpaceAlbumIE (RTMP-only streams and Vevo/YouTube song hand-offs unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "subsplash",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/subsplash.py"
+      ],
+      "rust": [
+        "src/extractor/subsplash.rs",
+        "tests/fixtures/sites/subsplash/"
+      ],
+      "scope": "SubsplashIE and SubsplashPlaylistIE (eager paging), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "acfun",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/acfun.py"
+      ],
+      "rust": [
+        "src/extractor/acfun.rs",
+        "tests/fixtures/sites/acfun/"
+      ],
+      "scope": "AcFunVideoIE (AcFunBangumiIE not ported: test URLs dead upstream), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "cctv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/cctv.py"
+      ],
+      "rust": [
+        "src/extractor/cctv.rs",
+        "tests/fixtures/sites/cctv/"
+      ],
+      "scope": "CCTVIE videos, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "n1",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/n1.py"
+      ],
+      "rust": [
+        "src/extractor/n1.rs",
+        "tests/fixtures/sites/n1/"
+      ],
+      "scope": "N1InfoIIE articles (N1InfoAssetIE and the old <video data-url> player not ported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "zapiks",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/zapiks.py"
+      ],
+      "rust": [
+        "src/extractor/zapiks.rs",
+        "tests/fixtures/sites/zapiks/"
+      ],
+      "scope": "ZapiksIE pages and media_id URLs, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "videa",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/videa.py"
+      ],
+      "rust": [
+        "src/extractor/videa.rs",
+        "tests/fixtures/sites/videa/"
+      ],
+      "scope": "VideaIE plaintext and RC4-encrypted player XML, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "ximalaya",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ximalaya.py"
+      ],
+      "rust": [
+        "src/extractor/ximalaya.rs",
+        "tests/fixtures/sites/ximalaya/"
+      ],
+      "scope": "XimalayaIE free sounds (VIP sounds and XimalayaAlbumIE unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "gettr",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/gettr.py"
+      ],
+      "rust": [
+        "src/extractor/gettr.rs",
+        "tests/fixtures/sites/gettr/"
+      ],
+      "scope": "GettrIE posts (GettrStreamingIE unsupported: fails upstream at the pin), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "sproutvideo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/sproutvideo.py"
+      ],
+      "rust": [
+        "src/extractor/sproutvideo.rs",
+        "tests/fixtures/sites/sproutvideo/"
+      ],
+      "scope": "SproutVideoIE embeds and VidsIoIE (password submission unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "tvw",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tvw.py"
+      ],
+      "rust": [
+        "src/extractor/tvw.rs",
+        "tests/fixtures/sites/tvw/"
+      ],
+      "scope": "TvwIE, TvwNewsIE and TvwTvChannelsIE, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "mediastream",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mediastream.py"
+      ],
+      "rust": [
+        "src/extractor/mediastream.rs",
+        "tests/fixtures/sites/mediastream/"
+      ],
+      "scope": "MediaStreamIE embeds (WinSportsVideoIE and webpage embeds not ported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "americastestkitchen",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/americastestkitchen.py"
+      ],
+      "rust": [
+        "src/extractor/americastestkitchen.rs",
+        "tests/fixtures/sites/americastestkitchen/"
+      ],
+      "scope": "AmericasTestKitchenIE (Zype hand-off) and AmericasTestKitchenSeasonIE, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "glomex",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/glomex.py"
+      ],
+      "rust": [
+        "src/extractor/glomex.rs",
+        "tests/fixtures/sites/glomex/"
+      ],
+      "scope": "GlomexIE and GlomexEmbedIE single videos (playlists and webpage embeds unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "faulio",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/faulio.py"
+      ],
+      "rust": [
+        "src/extractor/faulio.rs",
+        "tests/fixtures/sites/faulio/"
+      ],
+      "scope": "FaulioIE episodes (FaulioLiveIE not ported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "globalplayer",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/globalplayer.py"
+      ],
+      "rust": [
+        "src/extractor/globalplayer.rs",
+        "tests/fixtures/sites/globalplayer/"
+      ],
+      "scope": "GlobalPlayerLiveIE, GlobalPlayerLivePlaylistIE, GlobalPlayerAudioIE, GlobalPlayerAudioEpisodeIE and GlobalPlayerVideoIE, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "agora",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/agora.py"
+      ],
+      "rust": [
+        "src/extractor/agora.rs",
+        "tests/fixtures/sites/agora/"
+      ],
+      "scope": "WyborczaVideoIE, WyborczaPodcastIE, TokFMPodcastIE and TokFMAuditionIE (eager paging), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "allstar",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/allstar.py"
+      ],
+      "rust": [
+        "src/extractor/allstar.rs",
+        "tests/fixtures/sites/allstar/"
+      ],
+      "scope": "AllstarIE clips and montages and AllstarProfileIE, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "boosty",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/boosty.py"
+      ],
+      "rust": [
+        "src/extractor/boosty.rs",
+        "tests/fixtures/sites/boosty/"
+      ],
+      "scope": "BoostyIE single-video posts (YouTube hand-off and multi-video posts untested), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "idagio",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/idagio.py"
+      ],
+      "rust": [
+        "src/extractor/idagio.rs",
+        "tests/fixtures/sites/idagio/"
+      ],
+      "scope": "IdagioTrackIE, IdagioRecordingIE, IdagioAlbumIE, IdagioPlaylistIE and IdagioPersonalPlaylistIE, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "streaks",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/streaks.py"
+      ],
+      "rust": [
+        "src/extractor/streaks.rs",
+        "tests/fixtures/sites/streaks/"
+      ],
+      "scope": "StreaksIE VOD playback (SSAI/live and webpage embeds unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "wykop",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/wykop.py"
+      ],
+      "rust": [
+        "src/extractor/wykop.rs",
+        "tests/fixtures/sites/wykop/"
+      ],
+      "scope": "WykopDigIE, WykopDigCommentIE, WykopPostIE and WykopPostCommentIE (token cache not ported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "omnyfm",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/omnyfm.py"
+      ],
+      "rust": [
+        "src/extractor/omnyfm.rs",
+        "tests/fixtures/sites/omnyfm/"
+      ],
+      "scope": "OmnyfmIE episodes, OmnyfmPlaylistIE and OmnyfmShowIE (webpage embeds not ported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "audius",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/audius.py"
+      ],
+      "rust": [
+        "src/extractor/audius.rs",
+        "tests/fixtures/sites/audius/"
+      ],
+      "scope": "AudiusIE, AudiusTrackIE, AudiusPlaylistIE and AudiusProfileIE, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "taptap",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/taptap.py"
+      ],
+      "rust": [
+        "src/extractor/taptap.rs",
+        "tests/fixtures/sites/taptap/"
+      ],
+      "scope": "TapTapMomentIE, TapTapAppIE, TapTapAppIntlIE and TapTapPostIntlIE (up to four videos per set), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "art19",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/art19.py"
+      ],
+      "rust": [
+        "src/extractor/art19.rs",
+        "tests/fixtures/sites/art19/"
+      ],
+      "scope": "Art19IE episodes (Art19ShowIE not ported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "redgifs",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/redgifs.py"
+      ],
+      "rust": [
+        "src/extractor/redgifs.rs",
+        "tests/fixtures/sites/redgifs/"
+      ],
+      "scope": "RedGifsIE (RedGifsSearchIE and RedGifsUserIE not ported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "rtvcplay",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rtvcplay.py"
+      ],
+      "rust": [
+        "src/extractor/rtvcplay.rs",
+        "tests/fixtures/sites/rtvcplay/"
+      ],
+      "scope": "RTVCKalturaIE live channels (RTVCPlayIE and RTVCPlayEmbedIE not ported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "rcs",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rcs.py"
+      ],
+      "rust": [
+        "src/extractor/rcs.rs",
+        "tests/fixtures/sites/rcs/"
+      ],
+      "scope": "RCSEmbedsIE, RCSIE and RCSVariousIE, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "tunein",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tunein.py"
+      ],
+      "rust": [
+        "src/extractor/tunein.rs",
+        "tests/fixtures/sites/tunein/"
+      ],
+      "scope": "TuneInStationIE direct streams, TuneInPodcastIE and TuneInPodcastEpisodeIE (HLS stations, TuneInEmbedIE and TuneInShortenerIE unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "rozhlas",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rozhlas.py"
+      ],
+      "rust": [
+        "src/extractor/rozhlas.rs",
+        "tests/fixtures/sites/rozhlas/"
+      ],
+      "scope": "RozhlasVltavaIE direct audio links (RozhlasIE and MujRozhlasIE not ported; DASH/HLS links unsupported), compared with pinned upstream output through the fixture proxy"
     }
   ]
 }

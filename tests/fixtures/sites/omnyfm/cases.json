@@ -1,0 +1,35 @@
+[
+ {
+  "url": "https://omny.fm/shows/sleep-hub/cannabinoids-and-sleep",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://omny.fm/shows/the-origin-of-things/a-song-of-hope/embed",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://omny.fm/shows/sleep-hub/playlists/sleep-talk",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://omny.fm/shows/the-origin-of-things",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://omny.fm/shows/bayfm-program03/playlists",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

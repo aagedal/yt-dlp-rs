@@ -1,0 +1,46 @@
+[
+ {
+  "url": "https://www.globalplayer.com/live/heart/uk/",
+  "args": [
+   "--print",
+   "%(id)s|%(url)s|%(ext)s|%(vcodec)s|%(is_live)s|%(thumbnail)s|%(description)s"
+  ]
+ },
+ {
+  "url": "https://www.globalplayer.com/playlists/8bLk/",
+  "args": [
+   "--print",
+   "%(id)s|%(url)s|%(ext)s|%(vcodec)s|%(is_live)s|%(thumbnail)s|%(description)s"
+  ]
+ },
+ {
+  "url": "https://www.globalplayer.com/podcasts/42KuaM/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.globalplayer.com/catchup/lbc/uk/46vyD7z/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.globalplayer.com/podcasts/episodes/7DrorSc/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.globalplayer.com/videos/2JsSZ7Gm2uP/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.globalplayer.com/videos/missing/",
+  "args": [
+   "-J"
+  ]
+ }
+]

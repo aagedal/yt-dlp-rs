@@ -1,0 +1,26 @@
+{
+ "routes": [
+  {
+   "url": "https://prankcast.com/Devonanustart/showreel/1561-Beverly-is-back-like-a-heart-attack-",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "showreel-1561.html"
+  },
+  {
+   "url": "https://prankcast.com/devonanustart/posts/6214-happy-national-rachel-day-",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "post-6214.html"
+  },
+  {
+   "url": "https://prankcast.com/Devonanustart/showreel/1-missing",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>Not found</body></html>"
+  }
+ ]
+}

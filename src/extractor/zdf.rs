@@ -473,7 +473,7 @@ fn track_text(variant: &Value, key: &str, what: &str) -> Result<Option<String>> 
 /// `parse_codecs(mime_codec)` as format dict fields in upstream's order:
 /// `vcodec`, `acodec`, `dynamic_range` (and `scodec`), just the two codecs
 /// for the two-unknown-codecs fallback, or nothing.
-fn codec_fields(mime_codec: Option<&Value>) -> Vec<(&'static str, Value)> {
+pub(crate) fn codec_fields(mime_codec: Option<&Value>) -> Vec<(&'static str, Value)> {
     let text = mime_codec.and_then(Value::as_str);
     let mut warnings = 0;
     let codecs = crate::codecs::parse_codecs(text, &mut |warning| {

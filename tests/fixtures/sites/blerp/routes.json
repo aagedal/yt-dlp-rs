@@ -1,0 +1,24 @@
+{
+ "routes": [
+  {
+   "url": "https://api.blerp.com/graphql",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "blerp-a-0.json",
+   "request_body": [
+    "6320fe8745636cb4dd677a5a"
+   ]
+  },
+  {
+   "url": "https://api.blerp.com/graphql",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "blerp-b-0.json",
+   "request_body": [
+    "5bc94ef4796001000498429f"
+   ]
+  }
+ ]
+}

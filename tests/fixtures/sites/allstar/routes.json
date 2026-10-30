@@ -1,0 +1,74 @@
+{
+ "routes": [
+  {
+   "url": "https://a1.allstar.gg/graphql",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_body": [
+    "getClip",
+    "64482c2da9eec30008a67d1b"
+   ],
+   "body_file": "clip.json"
+  },
+  {
+   "url": "https://a1.allstar.gg/graphql",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_body": [
+    "getMontage",
+    "643e64089da7e9363e1fa66c"
+   ],
+   "body_file": "montage.json"
+  },
+  {
+   "url": "https://a1.allstar.gg/graphql",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_body": [
+    "getClip",
+    "8LJLY4JKB"
+   ],
+   "body_file": "share.json"
+  },
+  {
+   "url": "https://a1.allstar.gg/graphql",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_body": [
+    "clips(search",
+    "62b8bdfc9021052f7905882d",
+    "730"
+   ],
+   "body_file": "game_clips.json"
+  },
+  {
+   "url": "https://a1.allstar.gg/graphql",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_body": [
+    "clips(search",
+    "62b8bdfc9021052f7905882d"
+   ],
+   "body_file": "profile_clips.json"
+  },
+  {
+   "url": "https://api.allstar.gg/v1/users/profile/62b8bdfc9021052f7905882d",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "profile.json"
+  },
+  {
+   "url": "https://api.allstar.gg/v1/users/profile/cherokee",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "cherokee.json"
+  }
+ ]
+}

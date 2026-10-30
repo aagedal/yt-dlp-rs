@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!-- MPD file Generated with GPAC version 0.5.1-DEV-rev4065  on 2020-08-13T12:50:22Z-->
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" minBufferTime="PT1.500000S" type="static" mediaPresentationDuration="PT0H41M14.20S" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011">
+ <ProgramInformation moreInformationURL="http://gpac.sourceforge.net">
+  <Title>http://www.gazeta.pl/</Title>
+ </ProgramInformation>
+
+ <Period duration="PT0H41M14.20S">
+  <AdaptationSet segmentAlignment="true" maxWidth="1050" maxHeight="576" maxFrameRate="25" par="1050:576" lang="eng" subsegmentStartsWithSAP="1">
+   <Representation id="1" mimeType="video/mp4" codecs="avc1.4d401e" width="1050" height="576" frameRate="25" sar="1:1" startWithSAP="1" bandwidth="1488142">
+    <BaseURL>26207634_130820_BORNAR_W_SENACIE_d576high_video.mp4</BaseURL>
+    <SegmentBase indexRangeExact="true" indexRange="902-15789">
+      <Initialization range="0-901"/>
+    </SegmentBase>
+   </Representation>
+  </AdaptationSet>
+  <AdaptationSet segmentAlignment="true" maxWidth="1050" maxHeight="576" maxFrameRate="25" par="1050:576" lang="eng" subsegmentStartsWithSAP="1">
+   <Representation id="2" mimeType="video/mp4" codecs="avc1.4d401e" width="1050" height="576" frameRate="25" sar="1:1" startWithSAP="1" bandwidth="492975">
+    <BaseURL>26207634_130820_BORNAR_W_SENACIE_d576low_video.mp4</BaseURL>
+    <SegmentBase indexRangeExact="true" indexRange="902-15789">
+      <Initialization range="0-901"/>
+    </SegmentBase>
+   </Representation>
+   <Representation id="3" mimeType="video/mp4" codecs="avc1.42c01e" width="524" height="288" frameRate="25" sar="525:524" startWithSAP="1" bandwidth="797531">
+    <BaseURL>26207634_130820_BORNAR_W_SENACIE_d288high_video.mp4</BaseURL>
+    <SegmentBase indexRangeExact="true" indexRange="922-15809">
+      <Initialization range="0-921"/>
+    </SegmentBase>
+   </Representation>
+   <Representation id="4" mimeType="video/mp4" codecs="avc1.42c01e" width="524" height="288" frameRate="25" sar="525:524" startWithSAP="1" bandwidth="298874">
+    <BaseURL>26207634_130820_BORNAR_W_SENACIE_d288low_video.mp4</BaseURL>
+    <SegmentBase indexRangeExact="true" indexRange="920-15807">
+      <Initialization range="0-919"/>
+    </SegmentBase>
+   </Representation>
+  </AdaptationSet>
+  <AdaptationSet segmentAlignment="true" lang="eng" subsegmentStartsWithSAP="1">
+   <Representation id="5" mimeType="audio/mp4" codecs="mp4a.40.2" audioSamplingRate="44100" startWithSAP="1" bandwidth="153557">
+    <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="2"/>
+    <BaseURL>26207634_130820_BORNAR_W_SENACIE_d576high_audio.mp4</BaseURL>
+    <SegmentBase indexRangeExact="true" indexRange="837-15748">
+      <Initialization range="0-836"/>
+    </SegmentBase>
+   </Representation>
+   <Representation id="6" mimeType="audio/mp4" codecs="mp4a.40.2" audioSamplingRate="44100" startWithSAP="1" bandwidth="129612">
+    <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="2"/>
+    <BaseURL>26207634_130820_BORNAR_W_SENACIE_d288high_audio.mp4</BaseURL>
+    <SegmentBase indexRangeExact="true" indexRange="837-15748">
+      <Initialization range="0-836"/>
+    </SegmentBase>
+   </Representation>
+  </AdaptationSet>
+ </Period>
+</MPD>

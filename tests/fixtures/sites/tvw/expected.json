@@ -1,0 +1,65 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://tvw.org/video/ebeys-landing-state-park-2024081007/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2024081007\", \"display_id\": \"ebeys-landing-state-park-2024081007\", \"formats\": [{\"format_id\": \"hls-418\", \"format_index\": null, \"url\": \"https://invintus-otfp.global.ssl.fastly.net/9375922947/ebb0e4cbd8288e35d9c07e6d775a33f4aea4c117_160p_30fps.m3u8\", \"manifest_url\": \"https://api.v3.invintus.com/StreamURI/hls/9375922947/2024081007/media.m3u8\", \"tbr\": 418.099, \"ext\": \"mp4\", \"fps\": 29.97, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 284, \"height\": 160, \"vcodec\": \"avc1.4d400c\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"284x160\", \"aspect_ratio\": 1.77, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-418 - 284x160\"}, {\"format_id\": \"hls-885\", \"format_index\": null, \"url\": \"https://invintus-otfp.global.ssl.fastly.net/9375922947/ebb0e4cbd8288e35d9c07e6d775a33f4aea4c117_360p_30fps.m3u8\", \"manifest_url\": \"https://api.v3.invintus.com/StreamURI/hls/9375922947/2024081007/media.m3u8\", \"tbr\": 885.683, \"ext\": \"mp4\", \"fps\": 29.97, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-885 - 640x360\"}, {\"format_id\": \"hls-1617\", \"format_index\": null, \"url\": \"https://invintus-otfp.global.ssl.fastly.net/9375922947/ebb0e4cbd8288e35d9c07e6d775a33f4aea4c117_480p_30fps.m3u8\", \"manifest_url\": \"https://api.v3.invintus.com/StreamURI/hls/9375922947/2024081007/media.m3u8\", \"tbr\": 1617.582, \"ext\": \"mp4\", \"fps\": 29.97, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 854, \"height\": 480, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"854x480\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1617 - 854x480\"}, {\"format_id\": \"hls-2345\", \"format_index\": null, \"url\": \"https://invintus-otfp.global.ssl.fastly.net/9375922947/ebb0e4cbd8288e35d9c07e6d775a33f4aea4c117_720p_30fps.m3u8\", \"manifest_url\": \"https://api.v3.invintus.com/StreamURI/hls/9375922947/2024081007/media.m3u8\", \"tbr\": 2345.119, \"ext\": \"mp4\", \"fps\": 29.97, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d4028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2345 - 1280x720\"}, {\"format_id\": \"hls-3217\", \"format_index\": null, \"url\": \"https://invintus-otfp.global.ssl.fastly.net/9375922947/ebb0e4cbd8288e35d9c07e6d775a33f4aea4c117.m3u8\", \"manifest_url\": \"https://api.v3.invintus.com/StreamURI/hls/9375922947/2024081007/media.m3u8\", \"tbr\": 3217.425, \"ext\": \"mp4\", \"fps\": 29.97, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.64002a\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3217 - 1920x1080\"}], \"subtitles\": {}, \"title\": \"Ebey's Landing State Park\", \"description\": \"This day use park sits at the end of Ebey Road and is one of the trailheads for the popular Bluff Loop Trail.\\u00a0Featuring dramatic, sweeping views of the Olympic Mountains, visitors can begin the 3.5 mile hike up to the top of the bluff and along the beach - one of the most popular hikes in the state.\", \"categories\": [\"Washington State Parks\", \"SERIES\", \"AIR-ON-TV\"], \"thumbnail\": \"https://invintus-client-images.s3.amazonaws.com/9375922947/ebb0e4cbd8288e35d9c07e6d775a33f4aea4c117.jpg\", \"timestamp\": 1724310900, \"location\": \"Ebey\\u2019s Landing State Park\", \"is_live\": false, \"webpage_url\": \"https://tvw.org/video/ebeys-landing-state-park-2024081007/\", \"original_url\": \"https://tvw.org/video/ebeys-landing-state-park-2024081007/\", \"webpage_url_basename\": \"ebeys-landing-state-park-2024081007\", \"webpage_url_domain\": \"tvw.org\", \"extractor\": \"tvw\", \"extractor_key\": \"Tvw\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://invintus-client-images.s3.amazonaws.com/9375922947/ebb0e4cbd8288e35d9c07e6d775a33f4aea4c117.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Ebey's Landing State Park\", \"upload_date\": \"20240822\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-3217\", \"url\": \"https://invintus-otfp.global.ssl.fastly.net/9375922947/ebb0e4cbd8288e35d9c07e6d775a33f4aea4c117.m3u8\", \"manifest_url\": \"https://api.v3.invintus.com/StreamURI/hls/9375922947/2024081007/media.m3u8\", \"tbr\": 3217.425, \"ext\": \"mp4\", \"fps\": 29.97, \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.64002a\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3217 - 1920x1080\", \"_filename\": \"Ebey's Landing State Park [2024081007].mp4\", \"filename\": \"Ebey's Landing State Park [2024081007].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-3217\", \"format_index\": null, \"url\": \"https://invintus-otfp.global.ssl.fastly.net/9375922947/ebb0e4cbd8288e35d9c07e6d775a33f4aea4c117.m3u8\", \"manifest_url\": \"https://api.v3.invintus.com/StreamURI/hls/9375922947/2024081007/media.m3u8\", \"tbr\": 3217.425, \"ext\": \"mp4\", \"fps\": 29.97, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.64002a\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3217 - 1920x1080\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://tvw.org/video/synthetic-no-event/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [tvw] synthetic-no-event: Unable to extract clientID; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://tvw.org/2024/06/the-impact-water-rights-and-the-skookumchuck-dam-debate/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"the-impact-water-rights-and-the-skookumchuck-dam-debate\", \"title\": \"The Impact - Water Rights and the Skookumchuck Dam Debate\", \"description\": \"It takes a lot of water to produce electricity with steam. What happens to all the water when the power plant shuts down? That question is at the heart of a\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Tvw\", \"_type\": \"url\", \"url\": \"https://tvw.org/watch?eventID=2024061241\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://tvw.org/2024/06/the-impact-water-rights-and-the-skookumchuck-dam-debate/\", \"original_url\": \"https://tvw.org/2024/06/the-impact-water-rights-and-the-skookumchuck-dam-debate/\", \"webpage_url_basename\": \"the-impact-water-rights-and-the-skookumchuck-dam-debate\", \"webpage_url_domain\": \"tvw.org\", \"extractor\": \"tvw:news\", \"extractor_key\": \"TvwNews\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://tvw.org/tvchannels/tvw2/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[tvw:tvchannels] Extracting URL: https://tvw.org/tvchannels/tvw2/",
+    "[tvw:tvchannels] tvw2: Downloading webpage",
+    "[tvw:tvchannels] tvw2: Downloading m3u8 information",
+    "[info] Available formats for tvw2:",
+    "ID    EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "----------------------------------------------------------",
+    "hls-0 mp4 288x160    |  678k m3u8  | avc1.4d400d mp4a.40.2",
+    "hls-1 mp4 640x360    |  978k m3u8  | avc1.4d401e mp4a.40.2",
+    "hls-2 mp4 1280x720   | 1428k m3u8  | avc1.4d401f mp4a.40.2",
+    "hls-3 mp4 1920x1080  | 6128k m3u8  | avc1.640028 mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

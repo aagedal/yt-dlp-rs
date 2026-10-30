@@ -1,0 +1,39 @@
+[
+ {
+  "url": "https://wyborcza.pl/video/26207634",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://wyborcza.pl/podcast/0,172673.html?podcast=100720",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://audycje.tokfm.pl/podcast/91275,-Systemowy-rasizm",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://audycje.tokfm.pl/audycja/218,Analizy",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://audycje.tokfm.pl/podcast/99999,missing",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://audycje.tokfm.pl/audycja/999,missing",
+  "args": [
+   "-J"
+  ]
+ }
+]

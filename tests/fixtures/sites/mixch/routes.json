@@ -1,0 +1,47 @@
+{
+ "routes": [
+  {
+   "url": "https://mixch.tv/api-web/users/16943797/live",
+   "headers": {
+    "Content-Type": "application/json; charset=UTF-8"
+   },
+   "body_file": "mixch-001.json"
+  },
+  {
+   "url": "https://mixch.tv/api-web/movies/Ve8KNkJ5",
+   "headers": {
+    "Content-Type": "application/json; charset=UTF-8"
+   },
+   "body_file": "mixchx-001.json"
+  },
+  {
+   "url": "https://mixch.tv/api-web/users/1/live",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://mixch.tv/api-web/archive/421",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "status": 401,
+   "body": "{\"message\":\"unauthorized\"}"
+  },
+  {
+   "url": "https://mixch.tv/api-web/archive/777",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"archive\": {\"title\": \"Synthetic archive\", \"archiveURL\": \"https://mixch.tv/synthetic/archive/master.m3u8\", \"thumbnailURL\": \"https://mixch.tv/synthetic/archive/thumb.jpg\"}}"
+  },
+  {
+   "url": "https://mixch.tv/synthetic/archive/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "synthetic-archive-master.m3u8"
+  }
+ ]
+}

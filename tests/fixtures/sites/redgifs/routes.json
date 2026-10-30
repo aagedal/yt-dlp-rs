@@ -1,0 +1,6 @@
+{
+ "routes": [
+  {"url": "https://api.redgifs.com/v2/auth/temporary", "headers": {"Content-Type": "application/json"}, "body_file": "auth.json"},
+  {"url": "https://api.redgifs.com/v2/gifs/squeakyhelplesswisent?views=yes", "headers": {"Content-Type": "application/json"}, "body_file": "gif.json"}
+ ]
+}

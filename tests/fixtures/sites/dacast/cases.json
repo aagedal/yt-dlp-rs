@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://iframe.dacast.com/vod/acae82153ef4d7a7344ae4eaa86af534/1c6143e3-5a06-371d-8695-19b96ea49090",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://iframe.dacast.com/playlist/943bb1ab3c03695ba85330d92d6d226e/b632eb053cac17a9c9a02bcfc827f2d8",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://iframe.dacast.com/vod/acae82153ef4d7a7344ae4eaa86af534/synthetic-offline",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://iframe.dacast.com/vod/acae82153ef4d7a7344ae4eaa86af534/synthetic-denied",
+  "args": [
+   "-J"
+  ]
+ }
+]

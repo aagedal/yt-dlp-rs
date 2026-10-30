@@ -1,0 +1,26 @@
+[
+ {
+  "url": "https://player.piksel.tech/v/v80kqp41",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://player.piksel.tech/v/v80kqp41",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://player.piksel.tech/v/synthetic-error",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://player.piksel.tech/v/synthetic-noid",
+  "args": [
+   "-J"
+  ]
+ }
+]

@@ -1,0 +1,129 @@
+{
+ "routes": [
+  {
+   "url": "https://www.taptap.cn/webapiv2/moment/v3/detail?id=194618230982052443",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "route-00.bin",
+   "ignore_query": [
+    "X-UA"
+   ]
+  },
+  {
+   "url": "https://www.taptap.cn/webapiv2/video-resource/v1/multi-get?video_ids=2202584",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "route-01.bin",
+   "ignore_query": [
+    "X-UA"
+   ]
+  },
+  {
+   "url": "https://pl.taptap.cn/hls/lgdysebLkLd-cmIRNya9X9R3WXqC.h265.m3u8?device_id=a12cd88d-aeba-4438-9466-44b3c8116ac5&sign=c95d594580b6c47acf2f0beeedab445443cce160&ts=1793381024",
+   "headers": {
+    "Content-Type": "application/x-mpegurl"
+   },
+   "body_file": "route-02.m3u8"
+  },
+  {
+   "url": "https://www.taptap.cn/webapiv2/app/v4/detail?id=168332",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "route-03.bin",
+   "ignore_query": [
+    "X-UA"
+   ]
+  },
+  {
+   "url": "https://www.taptap.cn/webapiv2/video-resource/v1/multi-get?video_ids=5896874",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "route-04.bin",
+   "ignore_query": [
+    "X-UA"
+   ]
+  },
+  {
+   "url": "https://pl.taptap.cn/hls/lvCvIk3q84XPYgP5a_ZqIvngPFgz.h265.m3u8?device_id=2f0d4cbe-6178-4a8b-8d36-ae201ac66f9d&sign=3c85344bc7f42a33a426a5759981803bac5489c7&ts=1793381029",
+   "headers": {
+    "Content-Type": "application/x-mpegurl"
+   },
+   "body_file": "route-05.m3u8"
+  },
+  {
+   "url": "https://www.taptap.cn/webapiv2/video-resource/v1/multi-get?video_ids=4058443",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "route-06.bin",
+   "ignore_query": [
+    "X-UA"
+   ]
+  },
+  {
+   "url": "https://pl.taptap.cn/hls/luh5GP16AMhKBkNJx5enkYTlStu2.h265.m3u8?device_id=87e6844a-f4e0-4642-982f-7616fa1b2711&sign=06b394ed1ce658905ab4bdb46a4ac180257d11d0&ts=1793381032",
+   "headers": {
+    "Content-Type": "application/x-mpegurl"
+   },
+   "body_file": "route-07.m3u8"
+  },
+  {
+   "url": "https://www.taptap.io/webapiv2/i/app/v5/detail?id=233287",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "route-08.bin",
+   "ignore_query": [
+    "X-UA"
+   ]
+  },
+  {
+   "url": "https://www.taptap.io/webapiv2/video-resource/v1/multi-get?video_ids=2149708997",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "route-09.bin",
+   "ignore_query": [
+    "X-UA"
+   ]
+  },
+  {
+   "url": "https://pl.tap.io/hls/lj3tkxxuLOOwcN9vj3vXJ5awqIo3.h265.m3u8?device_id=7b2930b0-7d84-4cba-8347-2ffb1196cf2d&sign=15b9e209e5a71f9ab3f995dc97c1f04192961088&ts=1793381039",
+   "headers": {
+    "Content-Type": "application/x-mpegurl"
+   },
+   "body_file": "route-10.m3u8"
+  },
+  {
+   "url": "https://www.taptap.io/webapiv2/creation/post/v1/detail?id_str=571785",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "route-11.bin",
+   "ignore_query": [
+    "X-UA"
+   ]
+  },
+  {
+   "url": "https://www.taptap.io/webapiv2/video-resource/v1/multi-get?video_ids=2149491903",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "route-12.bin",
+   "ignore_query": [
+    "X-UA"
+   ]
+  },
+  {
+   "url": "https://pl.tap.io/hls/ls9IfzWYBDXF8pxBhfyGPloQTN74.h265.m3u8?device_id=635696bf-a0bc-4836-bcc4-a449d567cb80&sign=e2a99b541406729c138cf9a08d1b8e463af2e760&ts=1793381043",
+   "headers": {
+    "Content-Type": "application/x-mpegurl"
+   },
+   "body_file": "route-13.m3u8"
+  }
+ ]
+}

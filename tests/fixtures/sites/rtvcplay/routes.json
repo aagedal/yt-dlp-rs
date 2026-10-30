@@ -1,0 +1,8 @@
+{
+ "routes": [
+  {"url": "https://media.rtvc.gov.co/kalturartvc/indexSC.html", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "indexSC.html"},
+  {"url": "https://media.rtvc.gov.co/kalturartvc/noconfig.html", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<!DOCTYPE html><html><head><title>Señal</title></head><body><div id=\"player\"></div></body></html>"},
+  {"url": "https://streaming.rtvc.gov.co/TV_Senal_Colombia_live/smil:live.smil/playlist.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "senal-master.m3u8"},
+  {"url": "https://cms.rtvcplay.co/api/v1/taxonomy_term/streaming/68", "headers": {"Content-Type": "application/json"}, "body_file": "channel68.json"}
+ ]
+}

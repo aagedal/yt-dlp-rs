@@ -1,0 +1,21 @@
+[
+ {
+  "url": "https://oc-video1.ruhr-uni-bochum.de/paella/ui/watch.html?id=ed063cd5-72c8-46b5-a60a-569243edcea8",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://oc-video1.ruhr-uni-bochum.de/engage/ui/index.html?epFrom=cf68a4a1-36b1-4a53-a6ba-61af5705a0d0",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://oc-video1.ruhr-uni-bochum.de/paella/ui/watch.html?id=00000000-0000-4000-8000-000000000000",
+  "args": [
+   "-J"
+  ]
+ }
+]

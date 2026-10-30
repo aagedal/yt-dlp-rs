@@ -1,0 +1,6 @@
+[
+ {"url": "https://media.rtvc.gov.co/kalturartvc/indexSC.html", "args": ["-F"]},
+ {"url": "https://media.rtvc.gov.co/kalturartvc/indexSC.html", "args": ["--print", "%(id)s|%(is_live)s|%(live_status)s|%(thumbnail)s|%(description)s"]},
+ {"url": "https://media.rtvc.gov.co/kalturartvc/noconfig.html", "args": ["-J"]},
+ {"url": "https://media.rtvc.gov.co/kalturartvc/missing.html", "args": ["-J"]}
+]

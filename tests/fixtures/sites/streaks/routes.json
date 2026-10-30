@@ -1,0 +1,34 @@
+{
+ "routes": [
+  {
+   "url": "https://playback.api.streaks.jp/v1/projects/tipness/medias/ba2c253508914d9ea061a5f26bc58b20",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "route-00.bin",
+   "status": 403
+  },
+  {
+   "url": "https://playback.api.streaks.jp/v1/projects/ktv-news/medias/714171c4c53c409bb41e1572997ebfcf",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "route-01.bin",
+   "status": 404
+  },
+  {
+   "url": "https://playback.api.streaks.jp/v1/projects/tipness/medias/ref:synthetic-clip",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-02.json"
+  },
+  {
+   "url": "https://media.streaks.jp/synthetic/clip/master.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "route-03.bin"
+  }
+ ]
+}

@@ -1,0 +1,29 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://blerp.com/soundbites/6320fe8745636cb4dd677a5a",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6320fe8745636cb4dd677a5a\", \"url\": \"https://cdn.blerp.com/normalized/19420090-33b0-11ed-8b48-8184b2249fa0\", \"title\": \"Samsung Galaxy S8 Over the Horizon Ringtone 2016\", \"uploader\": \"luminousaj\", \"uploader_id\": \"5fb81e51aa66ae000c395478\", \"ext\": \"mp3\", \"tags\": [\"samsung\", \"galaxy\", \"s8\", \"over the horizon\", \"2016\", \"ringtone\"], \"webpage_url\": \"https://blerp.com/soundbites/6320fe8745636cb4dd677a5a\", \"original_url\": \"https://blerp.com/soundbites/6320fe8745636cb4dd677a5a\", \"webpage_url_basename\": \"6320fe8745636cb4dd677a5a\", \"webpage_url_domain\": \"blerp.com\", \"extractor\": \"blerp\", \"extractor_key\": \"Blerp\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"6320fe8745636cb4dd677a5a\", \"fulltitle\": \"Samsung Galaxy S8 Over the Horizon Ringtone 2016\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Samsung Galaxy S8 Over the Horizon Ringtone 2016 [6320fe8745636cb4dd677a5a].mp3\", \"filename\": \"Samsung Galaxy S8 Over the Horizon Ringtone 2016 [6320fe8745636cb4dd677a5a].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://blerp.com/soundbites/5bc94ef4796001000498429f",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5bc94ef4796001000498429f\", \"url\": \"https://cdn.blerp.com/normalized/cd4e4a10-d34e-11e8-a867-4741c3fed662\", \"title\": \"Yee\", \"uploader\": \"179617322678353920\", \"uploader_id\": \"5ba99cf71386730004552c42\", \"ext\": \"mp3\", \"tags\": [\"YEE\", \"YEET\", \"wo ha haah catchy tune yee\", \"yee\"], \"webpage_url\": \"https://blerp.com/soundbites/5bc94ef4796001000498429f\", \"original_url\": \"https://blerp.com/soundbites/5bc94ef4796001000498429f\", \"webpage_url_basename\": \"5bc94ef4796001000498429f\", \"webpage_url_domain\": \"blerp.com\", \"extractor\": \"blerp\", \"extractor_key\": \"Blerp\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"5bc94ef4796001000498429f\", \"fulltitle\": \"Yee\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Yee [5bc94ef4796001000498429f].mp3\", \"filename\": \"Yee [5bc94ef4796001000498429f].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

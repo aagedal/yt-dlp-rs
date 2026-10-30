@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://api.tv5unis.ca/graphql?query=%7B%0A++productById%28id%3A+144041%29+%7B%0A++++title%0A++++summary%0A++++tags%0A++++duration%0A++++seasonNumber%0A++++episodeNumber%0A++++collection+%7B%0A++++++title%0A++++%7D%0A++++rating+%7B%0A++++++name%0A++++%7D%0A++++videoElement+%7B%0A++++++__typename%0A++++++...+on+Video+%7B%0A++++++++mediaId%0A++++++++encodings+%7B%0A++++++++++hls+%7B%0A++++++++++++url%0A++++++++++%7D%0A++++++++%7D%0A++++++%7D%0A++++++...+on+RestrictedVideo+%7B%0A++++++++code%0A++++++++reason%0A++++++%7D%0A++++%7D%0A++%7D%0A%7D",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "tv5-video-0.json"
+  },
+  {
+   "url": "https://content.uplynk.com/56862325352147149dce0ae139afced6.m3u8?thumbsray=1&cid=56862325352147149dce0ae139afced6&ct=a&exp=1793369919&rn=325215&tc=1&sig=ad030c0106bff8e61a850423168f552dfabe4d996e5ee32bc07e47606a755924",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "tv5-video-1.m3u8"
+  },
+  {
+   "url": "https://api.tv5unis.ca/graphql?query=%7B%0A++productByRootProductSlug%28rootProductSlug%3A+%22boite-a-savon%22%29+%7B%0A++++title%0A++++summary%0A++++tags%0A++++duration%0A++++seasonNumber%0A++++episodeNumber%0A++++collection+%7B%0A++++++title%0A++++%7D%0A++++rating+%7B%0A++++++name%0A++++%7D%0A++++videoElement+%7B%0A++++++__typename%0A++++++...+on+Video+%7B%0A++++++++mediaId%0A++++++++encodings+%7B%0A++++++++++hls+%7B%0A++++++++++++url%0A++++++++++%7D%0A++++++++%7D%0A++++++%7D%0A++++++...+on+RestrictedVideo+%7B%0A++++++++code%0A++++++++reason%0A++++++%7D%0A++++%7D%0A++%7D%0A%7D",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "tv5-geo-0.json"
+  },
+  {
+   "url": "https://api.tv5unis.ca/graphql?query=%7B%0A++productByRootProductSlug%28rootProductSlug%3A+%22watatatow%22%2C+seasonNumber%3A+11%2C+episodeNumber%3A+1%29+%7B%0A++++title%0A++++summary%0A++++tags%0A++++duration%0A++++seasonNumber%0A++++episodeNumber%0A++++collection+%7B%0A++++++title%0A++++%7D%0A++++rating+%7B%0A++++++name%0A++++%7D%0A++++videoElement+%7B%0A++++++__typename%0A++++++...+on+Video+%7B%0A++++++++mediaId%0A++++++++encodings+%7B%0A++++++++++hls+%7B%0A++++++++++++url%0A++++++++++%7D%0A++++++++%7D%0A++++++%7D%0A++++++...+on+RestrictedVideo+%7B%0A++++++++code%0A++++++++reason%0A++++++%7D%0A++++%7D%0A++%7D%0A%7D",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "tv5-series-0.json"
+  }
+ ]
+}

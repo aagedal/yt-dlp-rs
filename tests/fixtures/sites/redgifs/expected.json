@@ -1,0 +1,62 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.redgifs.com/watch/squeakyhelplesswisent",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"squeakyhelplesswisent\", \"webpage_url\": \"https://redgifs.com/watch/squeakyhelplesswisent\", \"extractor_key\": \"RedGifs\", \"extractor\": \"RedGifs\", \"title\": \"Hotwife Legs Thick\", \"timestamp\": 1636287915, \"uploader\": \"ignored52\", \"duration\": 16, \"view_count\": 8647, \"like_count\": 8, \"categories\": [\"Hotwife\", \"Legs\", \"Thick\"], \"tags\": [\"Hotwife\", \"Legs\", \"Thick\"], \"age_limit\": 18, \"formats\": [{\"url\": \"https://media.redgifs.com/SqueakyHelplessWisent-mobile.mp4\", \"format_id\": \"sd\", \"width\": 270, \"height\": 480, \"quality\": 1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"270x480\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - 270x480\"}, {\"url\": \"https://media.redgifs.com/SqueakyHelplessWisent.mp4\", \"format_id\": \"hd\", \"width\": 608, \"height\": 1080, \"quality\": 2, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"608x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - 608x1080\"}], \"original_url\": \"https://www.redgifs.com/watch/squeakyhelplesswisent\", \"webpage_url_basename\": \"squeakyhelplesswisent\", \"webpage_url_domain\": \"redgifs.com\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"squeakyhelplesswisent\", \"fulltitle\": \"Hotwife Legs Thick\", \"duration_string\": \"16\", \"upload_date\": \"20211107\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://media.redgifs.com/SqueakyHelplessWisent.mp4\", \"format_id\": \"hd\", \"width\": 608, \"height\": 1080, \"quality\": 2, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"608x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - 608x1080\", \"_filename\": \"Hotwife Legs Thick [squeakyhelplesswisent].mp4\", \"filename\": \"Hotwife Legs Thick [squeakyhelplesswisent].mp4\", \"__write_download_archive\": false}], \"url\": \"https://media.redgifs.com/SqueakyHelplessWisent.mp4\", \"format_id\": \"hd\", \"width\": 608, \"height\": 1080, \"quality\": 2, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"608x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - 608x1080\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://thumbs2.redgifs.com/SqueakyHelplessWisent-mobile.mp4#t=0",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[RedGifs] Extracting URL: https://thumbs2.redgifs.com/SqueakyHelplessWisent-mobile.mp4#t=0",
+    "[RedGifs] squeakyhelplesswisent: Fetching temporary token",
+    "[RedGifs] squeakyhelplesswisent: Downloading video info",
+    "[info] Available formats for squeakyhelplesswisent:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "sd mp4 270x480    | https | unknown unknown",
+    "hd mp4 608x1080   | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.redgifs.com/ifr/squeakyhelplesswisent",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"squeakyhelplesswisent\", \"webpage_url\": \"https://redgifs.com/watch/squeakyhelplesswisent\", \"extractor_key\": \"RedGifs\", \"extractor\": \"RedGifs\", \"title\": \"Hotwife Legs Thick\", \"timestamp\": 1636287915, \"uploader\": \"ignored52\", \"duration\": 16, \"view_count\": 8647, \"like_count\": 8, \"categories\": [\"Hotwife\", \"Legs\", \"Thick\"], \"tags\": [\"Hotwife\", \"Legs\", \"Thick\"], \"age_limit\": 18, \"formats\": [{\"url\": \"https://media.redgifs.com/SqueakyHelplessWisent-mobile.mp4\", \"format_id\": \"sd\", \"width\": 270, \"height\": 480, \"quality\": 1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"270x480\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - 270x480\"}, {\"url\": \"https://media.redgifs.com/SqueakyHelplessWisent.mp4\", \"format_id\": \"hd\", \"width\": 608, \"height\": 1080, \"quality\": 2, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"608x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - 608x1080\"}], \"original_url\": \"https://www.redgifs.com/ifr/squeakyhelplesswisent\", \"webpage_url_basename\": \"squeakyhelplesswisent\", \"webpage_url_domain\": \"redgifs.com\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"squeakyhelplesswisent\", \"fulltitle\": \"Hotwife Legs Thick\", \"duration_string\": \"16\", \"upload_date\": \"20211107\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://media.redgifs.com/SqueakyHelplessWisent.mp4\", \"format_id\": \"hd\", \"width\": 608, \"height\": 1080, \"quality\": 2, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"608x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - 608x1080\", \"_filename\": \"Hotwife Legs Thick [squeakyhelplesswisent].mp4\", \"filename\": \"Hotwife Legs Thick [squeakyhelplesswisent].mp4\", \"__write_download_archive\": false}], \"url\": \"https://media.redgifs.com/SqueakyHelplessWisent.mp4\", \"format_id\": \"hd\", \"width\": 608, \"height\": 1080, \"quality\": 2, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"608x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - 608x1080\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.redgifs.com/watch/nosuchgifxyz",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [RedGifs] nosuchgifxyz: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://aloula.sba.sa/en/episode/29102",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "episode-29102.html"
+  },
+  {
+   "url": "https://aloula.sba.sa/en/episode/0",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "episode-29102.html"
+  },
+  {
+   "url": "https://aloula.faulio.com/api/v1/video/29102",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video-29102.json"
+  },
+  {
+   "url": "https://aloula.faulio.com/api/v1/video/29102/player",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "player-29102.json"
+  },
+  {
+   "url": "https://clvod.itworkscdn.net/sbavod/smil:itwfcdn/sba/2234996-Q5a7943SU5VbJY5.smil/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "playlist.m3u8"
+  },
+  {
+   "url": "https://clvod.itworkscdn.net/sbavod/smil:itwfcdn/sba/2234996-Q5a7943SU5VbJY5.smil/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  }
+ ]
+}

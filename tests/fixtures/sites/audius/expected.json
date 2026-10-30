@@ -1,0 +1,69 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://audius.co/voltra/radar-103692",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"KKdy2\", \"title\": \"RADAR\", \"url\": \"https://api.audius.co/v1/tracks/KKdy2/stream\", \"ext\": \"mp3\", \"description\": null, \"duration\": 318, \"track\": \"RADAR\", \"artist\": \"voltra\", \"genre\": \"Trance\", \"thumbnails\": [{\"url\": \"https://audius-content-13.figment.io/content/QmRC9A2zyoBDtmy8kyCDiP4T1Y3V6bxt3iA2ErEAFtiBSo/150x150.jpg\", \"preference\": 150, \"id\": \"0\"}, {\"url\": \"https://audius-content-13.figment.io/content/QmRC9A2zyoBDtmy8kyCDiP4T1Y3V6bxt3iA2ErEAFtiBSo/480x480.jpg\", \"preference\": 480, \"id\": \"1\"}, {\"url\": \"https://audius-content-13.figment.io/content/QmRC9A2zyoBDtmy8kyCDiP4T1Y3V6bxt3iA2ErEAFtiBSo/1000x1000.jpg\", \"preference\": 1000, \"id\": \"2\"}], \"view_count\": 11314, \"like_count\": 129, \"repost_count\": 59, \"webpage_url\": \"https://audius.co/voltra/radar-103692\", \"original_url\": \"https://audius.co/voltra/radar-103692\", \"webpage_url_basename\": \"radar-103692\", \"webpage_url_domain\": \"audius.co\", \"extractor\": \"Audius\", \"extractor_key\": \"Audius\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://audius-content-13.figment.io/content/QmRC9A2zyoBDtmy8kyCDiP4T1Y3V6bxt3iA2ErEAFtiBSo/1000x1000.jpg\", \"display_id\": \"KKdy2\", \"fulltitle\": \"RADAR\", \"duration_string\": \"5:18\", \"release_year\": null, \"artists\": [\"voltra\"], \"genres\": [\"Trance\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"RADAR [KKdy2].mp3\", \"filename\": \"RADAR [KKdy2].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://audius.co/test_acc/t%D0%B5%D0%B5%D0%B5est-1.%5E_%7B%7D/%22%3C%3E.%E2%84%96~%60-198631",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"xd8gY\", \"title\": \"T\\u0435\\u0435\\u0435est/ 1.!@#$%^&*()_+=[]{};'\\\\\\\":<>,.?/\\u2116~`\", \"url\": \"https://api.audius.co/v1/tracks/xd8gY/stream\", \"ext\": \"mp3\", \"description\": \"Description\", \"duration\": 30, \"track\": \"T\\u0435\\u0435\\u0435est/ 1.!@#$%^&*()_+=[]{};'\\\\\\\":<>,.?/\\u2116~`\", \"artist\": \"test\", \"genre\": \"Electronic\", \"thumbnails\": [{\"url\": \"https://audius-content-9.figment.io/content/QmPiSU28Rx8kGw9ViiJQLxPzwzSCXYQi1YJPt7yLk6X5bG/150x150.jpg\", \"preference\": 150, \"id\": \"0\"}, {\"url\": \"https://audius-content-9.figment.io/content/QmPiSU28Rx8kGw9ViiJQLxPzwzSCXYQi1YJPt7yLk6X5bG/480x480.jpg\", \"preference\": 480, \"id\": \"1\"}, {\"url\": \"https://audius-content-9.figment.io/content/QmPiSU28Rx8kGw9ViiJQLxPzwzSCXYQi1YJPt7yLk6X5bG/1000x1000.jpg\", \"preference\": 1000, \"id\": \"2\"}], \"view_count\": 9022, \"like_count\": 3, \"repost_count\": 1, \"webpage_url\": \"https://audius.co/test_acc/t%D0%B5%D0%B5%D0%B5est-1.%5E_%7B%7D/%22%3C%3E.%E2%84%96~%60-198631\", \"original_url\": \"https://audius.co/test_acc/t%D0%B5%D0%B5%D0%B5est-1.%5E_%7B%7D/%22%3C%3E.%E2%84%96~%60-198631\", \"webpage_url_basename\": \"%22%3C%3E.%E2%84%96~%60-198631\", \"webpage_url_domain\": \"audius.co\", \"extractor\": \"Audius\", \"extractor_key\": \"Audius\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://audius-content-9.figment.io/content/QmPiSU28Rx8kGw9ViiJQLxPzwzSCXYQi1YJPt7yLk6X5bG/1000x1000.jpg\", \"display_id\": \"xd8gY\", \"fulltitle\": \"T\\u0435\\u0435\\u0435est/ 1.!@#$%^&*()_+=[]{};'\\\\\\\":<>,.?/\\u2116~`\", \"duration_string\": \"30\", \"release_year\": null, \"artists\": [\"test\"], \"genres\": [\"Electronic\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"T\\u0435\\u0435\\u0435est\\u29f8 1.!@#$%^&\\uff0a()_+=[]{};'\\u29f9\\uff02\\uff1a\\uff1c\\uff1e,.\\uff1f\\u29f8\\u2116~` [xd8gY].mp3\", \"filename\": \"T\\u0435\\u0435\\u0435est\\u29f8 1.!@#$%^&\\uff0a()_+=[]{};'\\u29f9\\uff02\\uff1a\\uff1c\\uff1e,.\\uff1f\\u29f8\\u2116~` [xd8gY].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://audius.co/test_acc/playlist/test-playlist-22910",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"DNvjN\", \"title\": \"test playlist\", \"description\": \"Test description\\n\\nlol\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"AudiusTrack\", \"id\": \"aNzxr\", \"_type\": \"url\", \"url\": \"audius:aNzxr\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"AudiusTrack\", \"id\": \"91Na2\", \"_type\": \"url\", \"url\": \"audius:91Na2\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"AudiusTrack\", \"id\": \"lZVKQ\", \"_type\": \"url\", \"url\": \"audius:lZVKQ\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://audius.co/test_acc/playlist/test-playlist-22910\", \"original_url\": \"https://audius.co/test_acc/playlist/test-playlist-22910\", \"webpage_url_basename\": \"test-playlist-22910\", \"webpage_url_domain\": \"audius.co\", \"extractor\": \"audius:playlist\", \"extractor_key\": \"AudiusPlaylist\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://audius.co/pzl/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ezRo7\", \"title\": \"pzl\", \"description\": \"TAMALE\\n\\nContact: officialpzl@gmail.com\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"AudiusTrack\", \"id\": \"Axp47\", \"_type\": \"url\", \"url\": \"audius:Axp47\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"AudiusTrack\", \"id\": \"V4Zp9\", \"_type\": \"url\", \"url\": \"audius:V4Zp9\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"AudiusTrack\", \"id\": \"9RzGk\", \"_type\": \"url\", \"url\": \"audius:9RzGk\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://audius.co/pzl/\", \"original_url\": \"https://audius.co/pzl/\", \"webpage_url_basename\": \"pzl\", \"webpage_url_domain\": \"audius.co\", \"extractor\": \"audius:artist\", \"extractor_key\": \"AudiusProfile\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://audius.co/voltra/this-track-does-not-exist-zz",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Audius] Unexpected API response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

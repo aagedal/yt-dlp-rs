@@ -1,0 +1,6 @@
+{
+ "routes": [
+  {"url": "https://art19.com/episodes/5ba1413c-48b8-472b-9cc3-cfd952340bdb", "headers": {"Content-Type": "application/json"}, "body_file": "player.json"},
+  {"url": "https://rss.art19.com/episodes/5ba1413c-48b8-472b-9cc3-cfd952340bdb.json", "headers": {"Content-Type": "application/json"}, "body_file": "rss.json"}
+ ]
+}

@@ -1,0 +1,54 @@
+{
+ "routes": [
+  {
+   "url": "https://wykop.pl/api/v3/auth",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-00.json"
+  },
+  {
+   "url": "https://wykop.pl/api/v3/links/6912923",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-01.json"
+  },
+  {
+   "url": "https://wykop.pl/api/v3/entries/68893343",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-02.json"
+  },
+  {
+   "url": "https://wykop.pl/api/v3/links/6992589/comments/114540527",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-03.json"
+  },
+  {
+   "url": "https://wykop.pl/api/v3/entries/70084873/comments/249303979",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-04.json"
+  },
+  {
+   "url": "https://wykop.pl/cdn/c3397993/synthetic-clip.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "route-05.mp4"
+  },
+  {
+   "url": "https://wykop.pl/api/v3/links/999999999",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-06.json",
+   "status": 404
+  }
+ ]
+}

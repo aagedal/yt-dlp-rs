@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://tvw.org/video/ebeys-landing-state-park-2024081007/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://tvw.org/video/synthetic-no-event/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://tvw.org/2024/06/the-impact-water-rights-and-the-skookumchuck-dam-debate/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://tvw.org/tvchannels/tvw2/",
+  "args": [
+   "-F"
+  ]
+ }
+]

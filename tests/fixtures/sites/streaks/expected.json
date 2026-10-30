@@ -1,0 +1,48 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://players.streaks.jp/tipness/08155cd19dc14c12bebefb69b92eafcc/index.html?m=ba2c253508914d9ea061a5f26bc58b20",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Streaks] ba2c253508914d9ea061a5f26bc58b20: REQUEST_FAILED: 141: この動画の視聴は許可されていません。; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://playback.api.streaks.jp/v1/projects/ktv-news/medias/714171c4c53c409bb41e1572997ebfcf",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Streaks] 714171c4c53c409bb41e1572997ebfcf: MEDIA_NOT_FOUND: 対象が存在しません"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://players.streaks.jp/tipness/08155cd19dc14c12bebefb69b92eafcc/index.html?m=ref:synthetic-clip",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5c6f1a2b3d4e4f607182930a1b2c3d4e\", \"display_id\": \"ref:synthetic-clip\", \"formats\": [{\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://media.streaks.jp/synthetic/clip/sd/index.m3u8\", \"manifest_url\": \"https://media.streaks.jp/synthetic/clip/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360\"}, {\"format_id\": \"hls-2500\", \"format_index\": null, \"url\": \"https://media.streaks.jp/synthetic/clip/hd/index.m3u8\", \"manifest_url\": \"https://media.streaks.jp/synthetic/clip/master.m3u8\", \"tbr\": 2500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2500 - 1280x720\"}], \"live_status\": \"not_live\", \"subtitles\": {\"ja\": [{\"url\": \"https://media.streaks.jp/synthetic/clip/ja.vtt\", \"ext\": \"vtt\"}]}, \"uploader_id\": \"tipness\", \"title\": \"Synthetic clip\", \"description\": \"Synthetic fixture\", \"duration\": 12.5, \"modified_timestamp\": 1735877106, \"tags\": [\"synthetic\", \"fixture\"], \"thumbnail\": \"https://media.streaks.jp/synthetic/clip/thumb.jpg\", \"timestamp\": 1735787045, \"webpage_url\": \"https://players.streaks.jp/tipness/08155cd19dc14c12bebefb69b92eafcc/index.html?m=ref:synthetic-clip\", \"original_url\": \"https://players.streaks.jp/tipness/08155cd19dc14c12bebefb69b92eafcc/index.html?m=ref:synthetic-clip\", \"webpage_url_basename\": \"index.html\", \"webpage_url_domain\": \"players.streaks.jp\", \"extractor\": \"Streaks\", \"extractor_key\": \"Streaks\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://media.streaks.jp/synthetic/clip/thumb.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Synthetic clip\", \"duration_string\": \"12\", \"upload_date\": \"20250102\", \"modified_date\": \"20250103\", \"release_year\": null, \"is_live\": false, \"was_live\": false, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-2500\", \"url\": \"https://media.streaks.jp/synthetic/clip/hd/index.m3u8\", \"manifest_url\": \"https://media.streaks.jp/synthetic/clip/master.m3u8\", \"tbr\": 2500.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2500 - 1280x720\", \"_filename\": \"Synthetic clip [5c6f1a2b3d4e4f607182930a1b2c3d4e].mp4\", \"filename\": \"Synthetic clip [5c6f1a2b3d4e4f607182930a1b2c3d4e].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-2500\", \"format_index\": null, \"url\": \"https://media.streaks.jp/synthetic/clip/hd/index.m3u8\", \"manifest_url\": \"https://media.streaks.jp/synthetic/clip/master.m3u8\", \"tbr\": 2500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640028\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2500 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,96 @@
+{
+ "routes": [
+  {
+   "url": "https://www.globalplayer.com/live/heart/uk/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "live.html"
+  },
+  {
+   "url": "https://bff-web-guacamole.musicradio.com/playables/2mwx4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "heart_https_-_bff-web-guacamole.musicradio.com_playables_2mwx4.dump"
+  },
+  {
+   "url": "https://www.globalplayer.com/playlists/8bLk/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "playlist.html"
+  },
+  {
+   "url": "https://www.globalplayer.com/podcasts/42KuaM/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "podcast.html"
+  },
+  {
+   "url": "https://bff-web-guacamole.musicradio.com/playables/7DrorSU",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "42KuaM_https_-_bff-web-guacamole.musicradio.com_playables_7DrorSU.dump"
+  },
+  {
+   "url": "https://bff-web-guacamole.musicradio.com/playables/7Drr6Nh",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "42KuaM_https_-_bff-web-guacamole.musicradio.com_playables_7Drr6Nh.dump"
+  },
+  {
+   "url": "https://www.globalplayer.com/catchup/lbc/uk/46vyD7z/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "catchup.html"
+  },
+  {
+   "url": "https://bff-web-guacamole.musicradio.com/playables/2zGpiV5pywZFkSLNrRWAuvzMbp",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "46vyD7z_https_-_bff-web-guacamole.musicradio.com_playables_2zGpiV5pywZFkSLNrRWAuvzMbp.dump"
+  },
+  {
+   "url": "https://bff-web-guacamole.musicradio.com/playables/2zGn9XXP9NiKiAU9jsLFKYWJRN",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "46vyD7z_https_-_bff-web-guacamole.musicradio.com_playables_2zGn9XXP9NiKiAU9jsLFKYWJRN.dump"
+  },
+  {
+   "url": "https://www.globalplayer.com/podcasts/episodes/7DrorSc/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "episode.html"
+  },
+  {
+   "url": "https://bff-web-guacamole.musicradio.com/playables/7DrorSc",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "7DrorSc_https_-_bff-web-guacamole.musicradio.com_playables_7DrorSc.dump"
+  },
+  {
+   "url": "https://www.globalplayer.com/videos/2JsSZ7Gm2uP/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "video.html"
+  },
+  {
+   "url": "https://www.globalplayer.com/videos/missing/",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "status": 404,
+   "body": "not found"
+  }
+ ]
+}

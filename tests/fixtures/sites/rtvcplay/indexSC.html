@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <title>Title</title>
+    <script src="https://assets.adobedtm.com/e933046cf85b/45e29238fc59/launch-cc01473ed6af.min.js" async></script>
+    <script src="/kalturartvc/kantarmedia-streaming-js-2.5.6/springstreams.js" type="text/javascript"></script>
+    <script src="/kalturartvc/kaltura-ovp-playerv2.1.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        (function (e, t) {
+            var n = e.amplitude || { _q: [], _iq: {} }; var r = t.createElement("script")
+                ; r.type = "text/javascript"
+                ; r.integrity = "sha384-girahbTbYZ9tT03PWWj0mEVgyxtZoyDF9KVZdL+R53PP5wCY0PiVUKq0jeRlMx9M"
+                ; r.crossOrigin = "anonymous"; r.async = true
+                ; r.src = "https://cdn.amplitude.com/libs/amplitude-7.2.1-min.gz.js"
+                ; r.onload = function () {
+                    if (!e.amplitude.runQueuedFunctions) {
+                        console.log("[Amplitude] Error: could not load SDK")
+                    }
+                }
+                ; var i = t.getElementsByTagName("script")[0]; i.parentNode.insertBefore(r, i)
+                ; function s(e, t) {
+                    e.prototype[t] = function () {
+                        this._q.push([t].concat(Array.prototype.slice.call(arguments, 0))); return this
+                    }
+                }
+            var o = function () { this._q = []; return this }
+                ; var a = ["add", "append", "clearAll", "prepend", "set", "setOnce", "unset"]
+                ; for (var c = 0; c < a.length; c++) { s(o, a[c]) } n.Identify = o; var u = function () {
+                    this._q = []
+                        ; return this
+                }
+                ; var l = ["setProductId", "setQuantity", "setPrice", "setRevenueType", "setEventProperties"]
+                ; for (var p = 0; p < l.length; p++) { s(u, l[p]) } n.Revenue = u
+                ; var d = ["init", "logEvent", "logRevenue", "setUserId", "setUserProperties", "setOptOut", "setVersionName", "setDomain", "setDeviceId", "enableTracking", "setGlobalUserProperties", "identify", "clearUserProperties", "setGroup", "logRevenueV2", "regenerateDeviceId", "groupIdentify", "onInit", "logEventWithTimestamp", "logEventWithGroups", "setSessionId", "resetSessionId"]
+                ; function v(e) {
+                    function t(t) {
+                        e[t] = function () {
+                            e._q.push([t].concat(Array.prototype.slice.call(arguments, 0)))
+                        }
+                    }
+                    for (var n = 0; n < d.length; n++) { t(d[n]) }
+                } v(n); n.getInstance = function (e) {
+                    e = (!e || e.length === 0 ? "$default_instance" : e).toLowerCase()
+                        ; if (!n._iq.hasOwnProperty(e)) { n._iq[e] = { _q: [] }; v(n._iq[e]) } return n._iq[e]
+                }
+                ; e.amplitude = n
+        })(window, document);
+
+        amplitude.getInstance().init("ec290833e095cb1f53d922f9ccfbc407");
+        amplitude.getInstance().logEvent('SenalColombia');
+    </script>
+</head>
+
+<body>
+    <div id="player-placeholder" style="width:100%;height:100%"></div>
+    <style>
+        #player-pĺaceholder {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+    <script>
+        /*if (window.top.location.host != "senalcolombia.io" &&
+            window.top.location.host != "localhost:8080" &&
+            window.top.location.host != "cal-senalcolombia2.rtvc.gov.co" &&
+            window.top.location.host != "www.senalcolombia.tv" &&
+            window.top.location.host != "cal-rtvcplay.rtvc.gov.co" &&
+            window.top.location.host != "s3.amazonaws.com" &&
+            window.top.location.host != "rtvcplay-v2.s3.amazonaws.com" &&
+            window.top.location.host != "rtvcplay-media-content.s3.amazonaws.com" &&
+            window.top.location.host != "rtvcplay.co") {
+            document.body.innerHTML = "Access Denied";
+        }*/
+        var config = {
+            targetId: 'player-placeholder',
+            provider: {
+            },
+            logLevel: "ERROR",
+            adobe: {
+                name: "Senal Colombia Original",
+                player: "rtvcplay",
+                production: "Senal Colombia Original",
+                type: "live",
+                duration: 1800
+            },
+            rtvcplay: {
+                isLive: true,
+                channelId: 68
+            },
+            sources: {
+                hls: [
+                    {
+                        mimetype: 'application/x-mpegurl',
+                        url: 'https://streaming.rtvc.gov.co/TV_Senal_Colombia_live/smil:live.smil/playlist.m3u8'
+                    }
+                ]
+            }
+        };
+
+        try {
+            var kalturaPlayer = KalturaPlayer.setup(config);
+            //kalturaPlayer.loadMedia({ entryId: '0_wifqaipd' });
+        } catch (e) {
+            console.error(e.message)
+        }
+    </script>
+    <script type="text/javascript">_satellite.pageBottom();</script>
+</body>
+
+</html>

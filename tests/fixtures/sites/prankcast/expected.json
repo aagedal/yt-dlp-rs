@@ -1,0 +1,43 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://prankcast.com/Devonanustart/showreel/1561-Beverly-is-back-like-a-heart-attack-",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1561\", \"title\": \"Beverly is back like a heart attack!\", \"display_id\": \"Beverly-is-back-like-a-heart-attack-\", \"url\": \"https://prankcastlive.s3.amazonaws.com/streams/0/1000/1561/82ae1418-4596-4106-bb90-2c11c577f723/48be008d-61ad-487d-aef6-008fc96edd41.mp3\", \"timestamp\": 1661391575, \"uploader\": \"Devonanustart\", \"channel_id\": \"4\", \"duration\": 7918, \"cast\": [\"Devonanustart\", \"Phonelosers\"], \"description\": \"\", \"categories\": [\"prank\"], \"tags\": [\"prank call\", \"prank\", \"live show\"], \"webpage_url\": \"https://prankcast.com/Devonanustart/showreel/1561-Beverly-is-back-like-a-heart-attack-\", \"original_url\": \"https://prankcast.com/Devonanustart/showreel/1561-Beverly-is-back-like-a-heart-attack-\", \"webpage_url_basename\": \"1561-Beverly-is-back-like-a-heart-attack-\", \"webpage_url_domain\": \"prankcast.com\", \"extractor\": \"PrankCast\", \"extractor_key\": \"PrankCast\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Beverly is back like a heart attack!\", \"duration_string\": \"2:11:58\", \"upload_date\": \"20220825\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Beverly is back like a heart attack! [1561].mp3\", \"filename\": \"Beverly is back like a heart attack! [1561].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://prankcast.com/devonanustart/posts/6214-happy-national-rachel-day-",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6214\", \"display_id\": \"happy-national-rachel-day-\", \"title\": \"Happy National Rachel Day!\", \"description\": \"\", \"channel_id\": \"4\", \"uploader\": \"Devonanustart\", \"url\": \"https://prankcastlive.s3.amazonaws.com/streams/0/6000/6165/157ede75-c8aa-42d3-90af-8649b00460e7/43e5749a-a496-458f-8d0b-68b4b69d36da.mp3\", \"timestamp\": 1704333938, \"duration\": 13175.0, \"categories\": [\"prank call\"], \"cast\": [\"Devonanustart\"], \"webpage_url\": \"https://prankcast.com/devonanustart/posts/6214-happy-national-rachel-day-\", \"original_url\": \"https://prankcast.com/devonanustart/posts/6214-happy-national-rachel-day-\", \"webpage_url_basename\": \"6214-happy-national-rachel-day-\", \"webpage_url_domain\": \"prankcast.com\", \"extractor\": \"PrankCastPost\", \"extractor_key\": \"PrankCastPost\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Happy National Rachel Day!\", \"duration_string\": \"3:39:35\", \"upload_date\": \"20240104\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Happy National Rachel Day! [6214].mp3\", \"filename\": \"Happy National Rachel Day! [6214].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://prankcast.com/Devonanustart/showreel/1-missing",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [PrankCast] 1: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

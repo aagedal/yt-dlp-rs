@@ -1,0 +1,30 @@
+[
+ {
+  "url": "http://www.ximalaya.com/sound/47740352/",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.ximalaya.com/sound/47740352",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "http://www.ximalaya.com/sound/1000000001/",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "http://www.ximalaya.com/sound/1000000002/",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ }
+]

@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://tvw.org/video/ebeys-landing-state-park-2024081007/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "event-video.html"
+  },
+  {
+   "url": "https://tvw.org/video/synthetic-no-event/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "no-meta.html"
+  },
+  {
+   "url": "https://api.v3.invintus.com/v2/Event/getDetailed",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "event-2024081007.json",
+   "request_headers": {
+    "authorization": "embedder",
+    "wsc-api-key": "7WhiEBzijpritypp8bqcU7pfU9uicDR"
+   },
+   "request_body": [
+    "2024081007"
+   ]
+  },
+  {
+   "url": "https://api.v3.invintus.com/StreamURI/hls/9375922947/2024081007/media.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "stream-2024081007.m3u8"
+  },
+  {
+   "url": "https://tvw.org/2024/06/the-impact-water-rights-and-the-skookumchuck-dam-debate/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "news.html"
+  },
+  {
+   "url": "https://tvw.org/tvchannels/tvw2/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "channel.html"
+  },
+  {
+   "url": "https://api.v3.invintus.com/StreamURI/persis/9375922947/TVW2/media.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "stream-tvw2.m3u8"
+  }
+ ]
+}

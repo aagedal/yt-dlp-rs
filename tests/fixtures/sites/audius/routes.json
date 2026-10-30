@@ -1,0 +1,61 @@
+{
+ "routes": [
+  {
+   "url": "https://api.audius.co/",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-00.json"
+  },
+  {
+   "url": "https://api.audius.co/v1/resolve?url=https://audius.co/voltra/radar-103692",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-01.json"
+  },
+  {
+   "url": "https://api.audius.co/v1/resolve?url=https://audius.co/test_acc/t%D0%B5%D0%B5%D0%B5est-1.%5E_%7B%7D%5C%22%3C%3E.%E2%84%96~%60-198631",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-02.json"
+  },
+  {
+   "url": "https://api.audius.co/v1/resolve?url=https://audius.co/test_acc/playlist/test-playlist-22910",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-03.json"
+  },
+  {
+   "url": "https://api.audius.co/v1/playlists/DNvjN/tracks",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-04.json"
+  },
+  {
+   "url": "https://api.audius.co/v1/full/users/handle/pzl",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-05.json"
+  },
+  {
+   "url": "https://api.audius.co/v1/full/users/handle/pzl/tracks",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-06.json"
+  },
+  {
+   "url": "https://api.audius.co/v1/resolve?url=https://audius.co/voltra/this-track-does-not-exist-zz",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-07.json",
+   "status": 404
+  }
+ ]
+}

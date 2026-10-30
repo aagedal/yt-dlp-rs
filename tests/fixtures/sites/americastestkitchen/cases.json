@@ -1,0 +1,28 @@
+[
+ {
+  "url": "https://www.americastestkitchen.com/episode/705-simple-chicken-dinner",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.americastestkitchen.com/episodes/season-26",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.americastestkitchen.com/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.americastestkitchen.com/episode/999999-missing",
+  "args": [
+   "-J"
+  ]
+ }
+]

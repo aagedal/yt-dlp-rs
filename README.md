@@ -5,7 +5,7 @@ extensions for video editing workflows. Extraction and downloads run entirely
 in Rust: the binary never invokes Python or an installed yt-dlp.
 
 This is a beta. The port follows upstream release **2026.10.26** (pinned in
-[upstream/manifest.json](upstream/manifest.json)) and covers over 550 extractors
+[upstream/manifest.json](upstream/manifest.json)) and covers over 700 extractors
 (`yt-dlp-rs --list-extractors`). Each one is checked against pinned upstream
 output on saved responses. That is tested behavior, not a general promise of
 yt-dlp compatibility: options this port does not implement are rejected with

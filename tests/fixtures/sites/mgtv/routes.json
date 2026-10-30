@@ -1,0 +1,57 @@
+{
+ "routes": [
+  {
+   "url": "https://pcweb.api.mgtv.com/player/video?video_id=3116640&type=pch5",
+   "headers": {
+    "Content-Type": "application/json;charset=UTF-8"
+   },
+   "body_file": "mgtv-001.json",
+   "ignore_query": [
+    "tk2"
+   ]
+  },
+  {
+   "url": "https://tinker.glb.mgtv.com/player/getSource?_support=10000000&video_id=3116640&type=pch5&auth_mode=1&cxid=&supportMse=1&src=intelmgtv&abroad=10&allowedRC=1",
+   "headers": {
+    "Content-Type": "application/json;charset=UTF-8"
+   },
+   "body_file": "mgtv-002.json",
+   "ignore_query": [
+    "tk2",
+    "pm2"
+   ]
+  },
+  {
+   "url": "https://disp-glb.titan.mgtv.com/atcl?pm2=UGq5QxR3p3Q8wdHN7zlrskXfLx2tnbgGHFBJGLbzjv2yD4Z8hCmRc9vZP2oUC44JvF_~vq4caxZaD7sndSuliKNZ_qiptRxSw4PyC3N2TcpxJbPbX6aWRbaIa3yTRWcH_wFq_jaXNLzkYE7oIkQSP8ev_JFeFq4UmVfNKyC0j4fpNKONxbo6UKCbImPUbfvD1eHGmA4bVKjBISrVoHaNl0DhSv6rzEK~iz4_HeNSEsXUMNGhnzcaSyTWDGcc~~ZuOSjFXcX5NXde92f0urR1uwd~u1xdL31aPxEcIXjSB2FjW1U7htuhFPCoVn~0x~xPFdu2UqbSOvuBtO4UmEdrIE4Lt9eLKI9BO47VJCZe8idEN3uaWmGl8tz_XMF0XKUdkokX8a9Aewq1rcIGinVmMAUYi6mM6IbhRA4UJIGAvc5~p3eszAPQcpspWK2oQkOrK7zv4F1Noml1rOriAwqExzrNdhuM7Os~PFry44rvFwXiT6rdATonj8nAYoocG5r3lq6vJxIVKkMJLhaRV840hBHhwEF8Je_gDLyfUrEW4phDUG1yH3mBkb4xADjqEZxSh~ze8dA_d4myxSacg~N90EH__q6YTSvtQ78VA5NnyRCumzd5&gsid=1371f5ee-e405-4b5c-91ac-28424304aa6b&pno=1030&arange=0",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "mgtv-003.json"
+  },
+  {
+   "url": "https://disp-glb.titan.mgtv.com/atcl?pm2=tFmNoshoKl3qD4Ij1GHKnclSXwLeP~eMGOgHHV49TbB04TyNZyJP7u5kq_U2A27VVLJFSUjQ2cpn1E2sAdF6sWmv1uM8Nn2rP3ysS~Vdvl5DcLWbG5kxSO2Y08H9POwr_~xeSE2C4qLT5o1H7FBOsWHNknwoNIJAq40p_pcOlFReIJpjfDYlRwLOJbobGqckqYu5lpMKY8kYJGZMMg5z5MRGj2UBojwBT8MUkv7EkaoAzJCSW~AVPKJvVU0CqDsAi1PVHOYChzsonRqn9GuvAAf0WpxHEIXWdfQi0aacqae7VJ_Dk_emvjyuXTcoR2qGwTl48kPCdFPTZt0iP50ULIzYQnFC_5DWwyoticy5PvSDEPMxh1GBFuq3ix69~lZI5~~AQg5hsa6qVkRYGyztP2Y0KrdGjxJAdACmzQV_nGSO0_4n~9nb5CFNYAxHxdv~dBf8u_swe140yV2Snzz7YpgRgsDEYjbs1IrmxPpTJc1Tz6RPpKhbdH7_41t3b_7CQGDIRnEdC~RojU9r790EM2O99L1WzMAEdxMLmutKuHV~xSmqD5qys2emzN5~s9dYNNCv2zMyjzN1jZMGoy5mdibc1RGVcpn72IT5WBqTV0VhBlBL&gsid=7b9a7443-e9b6-401d-8971-5e53103e346f&pno=1030&arange=0",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "mgtv-004.json"
+  },
+  {
+   "url": "https://disp-glb.titan.mgtv.com/atcl?pm2=gOQpbGJOeaff50DxYZlR8is6Nc7frJRUV1GBbMYTEfsZGu4Bth0IVZCwJr9VS5MD9iQVvew8MgxFMVNVbwys242A7OQsJ9oDSl2XTo9EVkaPauDlfCraiNZ7p~P0V7PhJzahD_G4uqss5VjMt2TOHMS5sZvyK17OxKl7sMMdexTxAWDTJsd3cSdSPC0ZBgbCBrwKqjR7XropKweKQNHESHppAhnLwX7GnC~GEvEkUBanJKanZx9OC9XriHHiWzLTqdX80dJWE5J9ixasuM4~W14aeMr8AK67obdmKL7gnx_si9KddXHs~f3nnukJjWuB4ernzCJ6Tp5ocupPQT5MA7kmWaVt1XK0oa1ZwFo3LWZjfO2WM0lsr7ujMjgRtv8D9jkwaDkEHH~PVHdaR3D6kXoGcQcXGK7EHBz6LiDqxre_is1F5oqs8TqgG2w8oxmjl7B87jQcFfQkDv42UqmqcH5jsGnCnwrhRxFaLMBR35TzUm5YtkcViZ3zhOaBQ1oa9nVyLfO7hVN158~qEqNWLwXTRdemQt028_LaqSuRya0IEI7Wgz6opzUsDAmw7g7JEA7cZG357VA4GCXmKsvv0k6NpxPlr8t7nkayJb97Fjo_jD79&gsid=8cab2d42-25c6-4807-8f90-3c90d1e0fbbb&pno=1030&arange=0",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "mgtv-005.json"
+  },
+  {
+   "url": "https://pcweb.api.mgtv.com/player/video?video_id=9999999&type=pch5",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "status": 401,
+   "body": "{\"code\":40005,\"msg\":\"unavailable\"}",
+   "ignore_query": [
+    "tk2"
+   ]
+  }
+ ]
+}
