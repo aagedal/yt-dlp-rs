@@ -9921,7 +9921,10 @@ fn main() -> std::process::ExitCode {
         .spawn(cli)
         .expect("spawn the CLI thread")
         .join()
-        .unwrap_or_else(|panic| std::panic::resume_unwind(panic))
+        // The panic hook has printed the message. Exit 1 like an upstream
+        // crash; 101 (Rust's panic status) means `--break-on-existing` or
+        // `--max-downloads` here.
+        .unwrap_or(std::process::ExitCode::FAILURE)
 }
 
 fn cli() -> std::process::ExitCode {
