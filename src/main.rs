@@ -831,7 +831,7 @@ struct Args {
     use_extractors: Vec<String>,
     #[arg(long, hide = true)]
     force_generic_extractor: bool,
-    /// Prefix for unqualified URLs ("error", "fixup_error"; search prefixes are unsupported)
+    /// Prefix for unqualified URLs ("auto", "auto_warning", "error", "fixup_error" or a search prefix)
     #[arg(long, value_name = "PREFIX")]
     default_search: Option<String>,
     /// Make sure formats are selected only from those that are actually downloadable
@@ -935,10 +935,10 @@ struct Args {
     plugin_dirs: Vec<String>,
     #[arg(long, hide = true)]
     no_plugin_dirs: bool,
-    /// Compatibility options (validated; not supported natively)
+    /// Compatibility options (upstream's --compat-options values)
     #[arg(long, value_name = "OPTS")]
     compat_options: Vec<String>,
-    /// Extractor arguments (not supported natively)
+    /// Extractor arguments (EXTRACTOR:ARGS; see the compatibility inventory for supported keys)
     #[arg(long, value_name = "IE_KEY:ARGS")]
     extractor_args: Vec<String>,
     /// Client to impersonate for requests (only targets from the optional
@@ -960,7 +960,7 @@ struct Args {
     allow_unplayable_formats: bool,
     #[arg(long, hide = true, overrides_with = "allow_unplayable_formats")]
     no_allow_unplayable_formats: bool,
-    /// Download all formats (unsupported: equivalent to -f all)
+    /// Download all formats (equivalent to -f all)
     #[arg(long)]
     all_formats: bool,
     /// Account credentials (for the extractors supporting logins)
@@ -1010,7 +1010,7 @@ struct Args {
     /// Password for an encrypted client certificate key (not supported natively)
     #[arg(long, value_name = "PASSWORD")]
     client_certificate_password: Option<String>,
-    /// Display progress in the console titlebar (not supported natively)
+    /// Display progress in the console titlebar
     #[arg(long)]
     console_title: bool,
     /// Force the specified encoding (only UTF-8 is supported natively)

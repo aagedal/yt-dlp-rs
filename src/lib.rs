@@ -4103,8 +4103,8 @@ impl YoutubeDl {
         self.extract_info_with_format(input, None)
     }
 
-    /// Extract and select a supported single source, two-stream pair, or fallback.
-    /// Full upstream selector grammar and ranking are unsupported.
+    /// Extract a video and select its formats with an upstream format
+    /// selector (`-f`; `None` for the default) after upstream's sorting.
     pub fn extract_info_with_format(&self, input: &str, format: Option<&str>) -> Result<VideoInfo> {
         self.extract_result_with_format(input, format)?.into_video()
     }
