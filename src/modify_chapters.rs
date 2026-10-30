@@ -762,7 +762,7 @@ pub(crate) fn concat_files(
         .unwrap_or(Path::new("."));
     std::fs::create_dir_all(parent)?;
     let workspace = tempfile::Builder::new()
-        .prefix(".yt-dlp-rs-concat-")
+        .prefix(&crate::scratch::prefix(".yt-dlp-rs-concat-", parent))
         .tempdir_in(parent)?;
     let ext = output
         .extension()

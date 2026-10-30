@@ -142,8 +142,8 @@ generic extractor: direct media, HLS and DASH manifests, and HTML5
 - Generic-page features beyond HTML5 media elements and known embeds, such as
   JavaScript-built players.
 - Chromium cookies on Windows (DPAPI) and from the GNOME keyring.
-- Resuming partial downloads across separate runs: an interrupted transfer
-  resumes only within the same run.
+- Graceful Ctrl+C on Windows: there it ends the process at once (on other
+  platforms `.part` files are kept for `--continue`, as upstream).
 - Upstream options this port has not implemented: they are errors, never
   silently ignored.
 

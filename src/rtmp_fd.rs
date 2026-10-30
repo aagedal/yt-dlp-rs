@@ -288,7 +288,7 @@ pub(crate) fn download(
         }
         PartFiles::Private => {
             let file = tempfile::Builder::new()
-                .prefix(".yt-dlp-rs-")
+                .prefix(&crate::scratch::prefix(".yt-dlp-rs-", parent))
                 .suffix(".part")
                 .tempfile_in(parent)?;
             let path = file.path().to_owned();

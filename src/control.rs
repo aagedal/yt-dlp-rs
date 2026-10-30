@@ -203,6 +203,50 @@ fn signalled() -> bool {
     SIGNAL_STOP_ACTIVE.load(Ordering::SeqCst) && crate::interrupt::interrupted()
 }
 
+static SIGNAL_INTERRUPT_ACTIVE: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+/// The CLI's SIGINT/SIGTERM handling for a whole run, upstream's
+/// `KeyboardInterrupt`: while held, a signal ends extraction and downloads
+/// at their next checkpoint (a blocked read waits for the socket timeout)
+/// like a cancel, but keeps files as a failure does: upstream `.part` files
+/// and completed postprocessing stages stay, private temporary files are
+/// removed. A second signal exits at once. Not for library callers, which
+/// use [`Interrupt`]; Windows keeps the default Ctrl+C behavior.
+#[doc(hidden)]
+pub struct SignalInterrupt {
+    _guard: crate::interrupt::Guard,
+}
+
+impl SignalInterrupt {
+    pub fn install() -> Self {
+        let guard = crate::interrupt::install_run_wide();
+        SIGNAL_INTERRUPT_ACTIVE.store(true, Ordering::SeqCst);
+        Self { _guard: guard }
+    }
+
+    /// Run `wait`, a prompt blocked on input, with a signal ending the
+    /// process at once.
+    pub fn prompt<T>(wait: impl FnOnce() -> T) -> T {
+        crate::interrupt::exit_at_once(wait)
+    }
+
+    /// Whether a signal ended the run.
+    pub fn interrupted() -> bool {
+        SIGNAL_INTERRUPT_ACTIVE.load(Ordering::SeqCst)
+            && crate::interrupt::interrupted()
+            // A live download, wait, recording or `--keep-partial-on-stop`
+            // download handles the signal itself.
+            && !crate::interrupt::handled_elsewhere()
+    }
+}
+
+impl Drop for SignalInterrupt {
+    fn drop(&mut self) {
+        SIGNAL_INTERRUPT_ACTIVE.store(false, Ordering::SeqCst);
+    }
+}
+
 /// Restores the previous context (and removes scoped cookies) when dropped.
 pub(crate) struct Guard {
     previous: Option<Arc<Context>>,
@@ -269,6 +313,7 @@ pub(crate) fn resume(context: Option<Arc<Context>>) -> Guard {
 /// Whether the active [`Interrupt`] asks to stop or cancel.
 pub(crate) fn requested() -> bool {
     signalled()
+        || SignalInterrupt::interrupted()
         || ACTIVE.with(|active| {
             active
                 .borrow()

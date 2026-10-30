@@ -369,7 +369,8 @@ pub fn write_info_json_with(path: &Path, value: &Value, overwrite: bool) -> Resu
         .unwrap_or(Path::new("."));
     std::fs::create_dir_all(parent)?;
     let mut builder = tempfile::Builder::new();
-    builder.prefix(".yt-dlp-rs-").suffix(".info.json.tmp");
+    let prefix = crate::scratch::prefix(".yt-dlp-rs-", parent);
+    builder.prefix(&prefix).suffix(".info.json.tmp");
     // Like upstream, publish with the default 0666 mode reduced by the umask.
     #[cfg(unix)]
     builder.permissions(std::os::unix::fs::PermissionsExt::from_mode(0o666));

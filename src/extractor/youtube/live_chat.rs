@@ -339,7 +339,7 @@ pub(crate) fn download(
         .filter(|parent| !parent.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
     let mut output = tempfile::Builder::new()
-        .prefix(".yt-dlp-rs-subtitle-")
+        .prefix(&crate::scratch::prefix(".yt-dlp-rs-subtitle-", parent))
         .suffix(".part")
         .tempfile_in(parent)?;
     let mut written = 0_u64;

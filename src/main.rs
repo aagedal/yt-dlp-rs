@@ -94,7 +94,11 @@ static LAST_ERROR: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None
 macro_rules! report_error {
     ($($arg:tt)*) => {{
         let line = format!($($arg)*);
-        eprintln!("{line}");
+        // After Ctrl+C, the work it cut short fails with no error of its own,
+        // as upstream's `KeyboardInterrupt` ends the run.
+        if !yt_dlp_rs::SignalInterrupt::interrupted() {
+            eprintln!("{line}");
+        }
         *LAST_ERROR.lock().unwrap() = Some(line);
     }};
 }
@@ -4692,7 +4696,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut inputs: std::collections::VecDeque<_> = inputs.into();
     // Outer playlists whose nested playlists are being processed.
     let mut outer_playlists: Vec<OuterPlaylist> = Vec::new();
-    while let Some(input) = inputs.pop_front() {
+    // Upstream's `KeyboardInterrupt`: SIGINT/SIGTERM end the run at the next
+    // checkpoint, keeping `.part` files and completed processing stages
+    // (`cli` reports it). The handler stays until the process exits.
+    SIGNALS.get_or_init(yt_dlp_rs::SignalInterrupt::install);
+    'inputs: while let Some(input) = inputs.pop_front() {
+        if yt_dlp_rs::SignalInterrupt::interrupted() {
+            break;
+        }
         let (url, loaded, nested) = match input {
             Input::Url(url, loaded) => (url, loaded.map(|loaded| *loaded), None),
             Input::Nested { playlist, item } => {
@@ -5094,6 +5105,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         let mut extraction_failures = 0;
         let failed_before = failed;
         for (entry_index, mut info) in extracted.into_entries().into_iter().enumerate() {
+            if yt_dlp_rs::SignalInterrupt::interrupted() {
+                break 'inputs;
+            }
             // A paged entry whose page failed to download: upstream reported
             // the error while reading it, and skips the `None` entry.
             if let Some(error) = YoutubeDl::fetch_error(&info) {
@@ -5304,7 +5318,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         )?;
                         stdout.flush()?;
                         let mut answer = String::new();
-                        if io::stdin().read_line(&mut answer)? == 0 {
+                        // Ctrl+C quits at once, as upstream's `input()`.
+                        let read = yt_dlp_rs::SignalInterrupt::prompt(|| {
+                            io::stdin().read_line(&mut answer)
+                        });
+                        if read? == 0 {
                             return Err(
                                 EntryExtractionError("EOF when reading a line".into()).into()
                             );
@@ -5430,7 +5448,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         stdout.flush()?;
                                         drop(stdout);
                                         let mut reply = String::new();
-                                        if io::stdin().read_line(&mut reply)? == 0 {
+                                        let read = yt_dlp_rs::SignalInterrupt::prompt(|| {
+                                            io::stdin().read_line(&mut reply)
+                                        });
+                                        if read? == 0 {
                                             return Err(yt_dlp_rs::Error::Reported(
                                                 "EOF when reading a line".into(),
                                             )
@@ -7042,6 +7063,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     Ok(!failed)
 }
+
+/// The run-wide signal handler, installed once the inputs are known.
+static SIGNALS: std::sync::OnceLock<yt_dlp_rs::SignalInterrupt> = std::sync::OnceLock::new();
 
 /// Run `--parse-metadata`/`--replace-in-metadata` actions for `when`.
 fn run_metadata_parser(
@@ -9925,7 +9949,14 @@ fn main() -> std::process::ExitCode {
 }
 
 fn cli() -> std::process::ExitCode {
-    match run() {
+    let result = run();
+    // Upstream `main`: `sys.exit('\nERROR: Interrupted by user')`, whatever
+    // the interrupted work returned.
+    if yt_dlp_rs::SignalInterrupt::interrupted() {
+        eprintln!("\nERROR: Interrupted by user");
+        return std::process::ExitCode::FAILURE;
+    }
+    match result {
         Ok(true) => std::process::ExitCode::SUCCESS,
         Ok(false) => std::process::ExitCode::FAILURE,
         Err(error) if error.is::<Cancel>() => std::process::ExitCode::from(101),
