@@ -77,21 +77,26 @@ fn merge_with_deadline(
         ],
         output,
         output_ext,
+        false,
         callback,
         deadline,
     )
 }
 
 /// Upstream `FFmpegMergerPP` over any number of inputs (`--video-multistreams`
-/// and `--audio-multistreams`).
+/// and `--audio-multistreams`). `shortest` (a stopped download, port
+/// extension) ends the output with its shortest stream (`-shortest`).
 pub(crate) fn merge_inputs(
     executable: &Path,
     inputs: &[Input<'_>],
     output: &Path,
     output_ext: &str,
+    shortest: bool,
     callback: &mut dyn FnMut() -> ControlFlow<()>,
 ) -> Result<()> {
-    merge_inputs_with_deadline(executable, inputs, output, output_ext, callback, DEADLINE)
+    merge_inputs_with_deadline(
+        executable, inputs, output, output_ext, shortest, callback, DEADLINE,
+    )
 }
 
 fn merge_inputs_with_deadline(
@@ -99,6 +104,7 @@ fn merge_inputs_with_deadline(
     inputs: &[Input<'_>],
     output: &Path,
     output_ext: &str,
+    shortest: bool,
     callback: &mut dyn FnMut() -> ControlFlow<()>,
     deadline: Duration,
 ) -> Result<()> {
@@ -189,6 +195,9 @@ fn merge_inputs_with_deadline(
         }
     }
     args.extend(["-c", "copy", "-f", muxer].into_iter().map(OsString::from));
+    if shortest {
+        args.push("-shortest".into());
+    }
     args.extend(crate::pp_args::output("Merger"));
     args.push(output.clone().into_os_string());
     execute(&executable, &args, &directory, started, deadline, callback)?;

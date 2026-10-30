@@ -254,7 +254,11 @@ fn printed(stdout: &str, file: &Path, stderr: &str) {
 #[test]
 fn a_stopped_merged_download_merges_the_audio_and_the_partial_video() {
     let tools = tempfile::tempdir().unwrap();
-    let ffmpeg = fake_ffmpeg(tools.path(), CONCAT);
+    let calls = tools.path().join("calls.txt");
+    let ffmpeg = fake_ffmpeg(
+        tools.path(),
+        &format!("echo \"$@\" >> '{}'; {CONCAT}", calls.display()),
+    );
     let (port, requests) = server(|path| match path {
         "/video" => Some(Body::Trickle(packets(9, 400))),
         "/audio" => Some(Body::Whole(b"audio-bytes".to_vec())),
@@ -297,6 +301,9 @@ fn a_stopped_merged_download_merges_the_audio_and_the_partial_video() {
     );
     assert_eq!(video, &packets(9, 400)[..video.len()]);
     assert_eq!(names(work.path()), ["m.info.json", "o.mp4"]);
+    // The audio ends with the partial video.
+    let calls = std::fs::read_to_string(&calls).unwrap();
+    assert!(calls.contains(" -c copy -f mp4 -shortest "), "{calls}");
 }
 
 #[test]

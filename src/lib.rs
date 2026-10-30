@@ -5170,7 +5170,7 @@ impl YoutubeDl {
             paths = jobs.into_iter().map(|(_, path)| path).collect();
         }
         // `--keep-partial-on-stop` fetches audio-only streams first, so a stop
-        // during the (larger) video stream still has the whole audio.
+        // during the (larger) video stream still has audio for all of it.
         let mut order: Vec<usize> = (0..streams.len()).collect();
         if self.keep_partial_on_stop {
             let audio_only = |stream: &VideoFormat| {
@@ -5389,24 +5389,33 @@ impl YoutubeDl {
                 }
             })
             .collect();
-        let merged = merge::merge_inputs(&executable, &inputs, &output, output_ext, &mut || {
-            if stopped {
-                return ControlFlow::Continue(());
-            }
-            callback(DownloadProgress {
-                attempt: 1,
-                downloaded_bytes: stored,
-                total_bytes: Some(stored),
-                total_bytes_estimate: None,
-                phase: DownloadPhase::Merging,
-                stream_index: None,
-                stream_count: Some(count),
-                fragment_index: None,
-                fragment_count: None,
-                fragment: None,
-                recorded_ms: None,
-            })
-        });
+        // A stopped download's streams end together: the whole audio
+        // fetched first would otherwise run on past the partial video.
+        let merged = merge::merge_inputs(
+            &executable,
+            &inputs,
+            &output,
+            output_ext,
+            stopped,
+            &mut || {
+                if stopped {
+                    return ControlFlow::Continue(());
+                }
+                callback(DownloadProgress {
+                    attempt: 1,
+                    downloaded_bytes: stored,
+                    total_bytes: Some(stored),
+                    total_bytes_estimate: None,
+                    phase: DownloadPhase::Merging,
+                    stream_index: None,
+                    stream_count: Some(count),
+                    fragment_index: None,
+                    fragment_count: None,
+                    fragment: None,
+                    recorded_ms: None,
+                })
+            },
+        );
         // FFmpeg exits 0 for some unreadable stopped merges, so a stopped
         // MP4/MOV result must walk to its `moov`. Otherwise the unmerged
         // streams are kept at their upstream names instead.

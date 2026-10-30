@@ -82,7 +82,8 @@ Cancel buttons):
   published at the destination and the call returns
   `Error::DownloadStopped { path }`. A whole-file transfer keeps its received
   bytes; HLS/DASH fragment downloads keep whole fragments only; a merged
-  download merges the streams so far with FFmpeg (the last one partial);
+  download merges the streams so far with FFmpeg (the last one partial),
+  ending with the shortest stream (`-shortest`);
   FFmpeg-based downloads ask FFmpeg to finish (`q`). A stop before any data
   arrived is a cancel. A fragmented MP4 cut inside a fragment is trimmed to
   its whole fragments, and a progressive MP4 whose `moov` describes more
