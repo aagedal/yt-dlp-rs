@@ -6072,6 +6072,42 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         .keep(yt_dlp_rs::stream_path(&path, &info.ext, format));
                                 }
                             }
+                            // `--keep-partial-on-stop`: the partial file is published
+                            // and moved like a finished one, without postprocessing or
+                            // an archive record.
+                            macro_rules! keep_stopped {
+                                ($stopped:expr) => {{
+                                    let stopped: PathBuf = $stopped;
+                                    screen!(
+                                        "[download] Download stopped; keeping the partial file"
+                                    );
+                                    // The fixups (an m3u8 download's MPEG-TS to MP4
+                                    // remux) still run; the file is kept if one fails.
+                                    if stopped == path
+                                        && let Some(fixup) = &processors.fixup
+                                        && let Err(error) =
+                                            downloader.fixup(info, &path, &path, fixup)
+                                    {
+                                        warning!("WARNING: {error}");
+                                    }
+                                    // A stopped merge FFmpeg could not finish keeps
+                                    // every format file.
+                                    for format in &info.requested_formats {
+                                        let kept = yt_dlp_rs::stream_path(&path, &info.ext, format);
+                                        if kept != stopped && kept.exists() {
+                                            move_files.keep(kept);
+                                        }
+                                    }
+                                    let moved = move_files
+                                        .run(&stopped, true)
+                                        .map_err(yt_dlp_rs::Error::Reported)?;
+                                    move_print(&moved, info).map_err(yt_dlp_rs::Error::Reported)?;
+                                    return Err(yt_dlp_rs::Error::Reported(
+                                        "Interrupted by user".into(),
+                                    )
+                                    .into());
+                                }};
+                            }
                             let mut changed_chapters = None;
                             // The info dict as `post_process` processors changed it.
                             let mut processed_info = None;
@@ -6113,7 +6149,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     },
                                     &processors,
                                     progress,
-                                )?;
+                                );
+                                let result = match result {
+                                    Err(yt_dlp_rs::Error::DownloadStopped { path }) => {
+                                        keep_stopped!(path)
+                                    }
+                                    result => result?,
+                                };
                                 for warning in result.warnings {
                                     warning!("WARNING: {warning}");
                                 }
@@ -6174,30 +6216,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     },
                                     progress,
                                 ) {
-                                    // `--keep-partial-on-stop`: the partial file is
-                                    // published and moved like a finished one, without
-                                    // postprocessing or an archive record.
-                                    Err(yt_dlp_rs::Error::DownloadStopped { .. }) => {
-                                        screen!(
-                                            "[download] Download stopped; keeping the partial file"
-                                        );
-                                        // The fixups (an m3u8 download's MPEG-TS to MP4
-                                        // remux) still run; the file is kept if one fails.
-                                        if let Some(fixup) = &processors.fixup
-                                            && let Err(error) =
-                                                downloader.fixup(info, &path, &path, fixup)
-                                        {
-                                            warning!("WARNING: {error}");
-                                        }
-                                        let moved = move_files
-                                            .run(&path, true)
-                                            .map_err(yt_dlp_rs::Error::Reported)?;
-                                        move_print(&moved, info)
-                                            .map_err(yt_dlp_rs::Error::Reported)?;
-                                        return Err(yt_dlp_rs::Error::Reported(
-                                            "Interrupted by user".into(),
-                                        )
-                                        .into());
+                                    Err(yt_dlp_rs::Error::DownloadStopped { path }) => {
+                                        keep_stopped!(path)
                                     }
                                     result => result?,
                                 };

@@ -181,28 +181,49 @@ fn a_stopped_hls_download_keeps_its_whole_fragments_at_the_final_name() {
     assert_eq!(names(work.path()), ["o.mp4"]);
 }
 
-#[test]
-fn a_stopped_merged_download_merges_the_audio_and_the_partial_video() {
+/// A fake FFmpeg in `directory`: `-version` prints a banner; otherwise
+/// `run` (a shell snippet) gets the `-i` inputs in `$inputs` and the output
+/// (the last argument) in `$out`.
+fn fake_ffmpeg(directory: &Path, run: &str) -> String {
     use std::os::unix::fs::PermissionsExt;
-    let tools = tempfile::tempdir().unwrap();
-    let ffmpeg = tools.path().join("ffmpeg");
-    // Concatenates its inputs into the output (the last argument).
+    let ffmpeg = directory.join("ffmpeg");
     std::fs::write(
         &ffmpeg,
-        "#!/bin/sh\n\
-         case \"$1\" in -version) echo 'ffmpeg version keep-partial-fixture'; exit 0;; esac\n\
-         prev=; inputs=\n\
-         for a; do [ \"$prev\" = -i ] && inputs=\"$inputs ${a#file:}\"; prev=$a; out=$a; done\n\
-         cat $inputs > \"${out#file:}\"\n",
+        format!(
+            "#!/bin/sh\n\
+             case \"$1\" in -version) echo 'ffmpeg version keep-partial-fixture'; exit 0;; esac\n\
+             prev=; inputs=\n\
+             for a; do [ \"$prev\" = -i ] && inputs=\"$inputs ${{a#file:}}\"; prev=$a; out=${{a#file:}}; done\n\
+             {run}\n"
+        ),
     )
     .unwrap();
     std::fs::set_permissions(&ffmpeg, std::fs::Permissions::from_mode(0o755)).unwrap();
-    let (port, requests) = server(|path| match path {
-        "/video" => Some(Body::Trickle(packets(9, 400))),
-        "/audio" => Some(Body::Whole(b"audio-bytes".to_vec())),
-        _ => None,
-    });
-    let work = tempfile::tempdir().unwrap();
+    ffmpeg.to_string_lossy().into_owned()
+}
+
+/// Concatenates its inputs into the output.
+const CONCAT: &str = "cat $inputs > \"$out\"";
+
+/// An ISO-BMFF box.
+fn atom(kind: &[u8; 4], body: &[u8]) -> Vec<u8> {
+    let mut out = ((body.len() + 8) as u32).to_be_bytes().to_vec();
+    out.extend_from_slice(kind);
+    out.extend_from_slice(body);
+    out
+}
+
+/// A fragmented MP4 header and its whole fragments (`moof` and `mdat`).
+fn fragmented(count: usize) -> (Vec<u8>, Vec<Vec<u8>>) {
+    let head = [atom(b"ftyp", b"isom\0\0\x02\0"), atom(b"moov", &[0; 32])].concat();
+    let fragments = (0..count)
+        .map(|index| [atom(b"moof", &[index as u8; 16]), atom(b"mdat", &[7; 150])].concat())
+        .collect();
+    (head, fragments)
+}
+
+/// An info JSON for a video-only `v` and an audio-only `a` at `/video` and `/audio`.
+fn merged_info(directory: &Path, port: u16) {
     let base = format!("http://127.0.0.1:{port}");
     let formats = serde_json::json!([
         {"format_id": "v", "url": format!("{base}/video"), "ext": "mp4",
@@ -211,7 +232,7 @@ fn a_stopped_merged_download_merges_the_audio_and_the_partial_video() {
          "vcodec": "none", "acodec": "mp4a.40.2", "protocol": "http"},
     ]);
     std::fs::write(
-        work.path().join("m.info.json"),
+        directory.join("m.info.json"),
         serde_json::json!({
             "id": "m", "title": "M", "ext": "mp4",
             "webpage_url": format!("{base}/"), "extractor": "fixture",
@@ -220,7 +241,31 @@ fn a_stopped_merged_download_merges_the_audio_and_the_partial_video() {
         .to_string(),
     )
     .unwrap();
-    let ffmpeg = ffmpeg.to_string_lossy().into_owned();
+}
+
+fn printed(stdout: &str, file: &Path, stderr: &str) {
+    assert_eq!(
+        std::fs::canonicalize(stdout.trim_end()).unwrap(),
+        std::fs::canonicalize(file).unwrap(),
+        "{stderr}"
+    );
+}
+
+#[test]
+fn a_stopped_merged_download_merges_the_audio_and_the_partial_video() {
+    let tools = tempfile::tempdir().unwrap();
+    let calls = tools.path().join("calls.txt");
+    let ffmpeg = fake_ffmpeg(
+        tools.path(),
+        &format!("echo \"$@\" >> '{}'; {CONCAT}", calls.display()),
+    );
+    let (port, requests) = server(|path| match path {
+        "/video" => Some(Body::Trickle(packets(9, 400))),
+        "/audio" => Some(Body::Whole(b"audio-bytes".to_vec())),
+        _ => None,
+    });
+    let work = tempfile::tempdir().unwrap();
+    merged_info(work.path(), port);
     let (success, stdout, stderr) = stop_when(
         work.path(),
         &[
@@ -256,4 +301,193 @@ fn a_stopped_merged_download_merges_the_audio_and_the_partial_video() {
     );
     assert_eq!(video, &packets(9, 400)[..video.len()]);
     assert_eq!(names(work.path()), ["m.info.json", "o.mp4"]);
+    // The audio ends with the partial video.
+    let calls = std::fs::read_to_string(&calls).unwrap();
+    assert!(calls.contains(" -c copy -f mp4 -shortest "), "{calls}");
+}
+
+#[test]
+fn a_stopped_download_with_postprocessors_keeps_the_partial_file_unprocessed() {
+    let tools = tempfile::tempdir().unwrap();
+    // Any FFmpeg run besides `-version` would fail.
+    let ffmpeg = fake_ffmpeg(tools.path(), "exit 1");
+    let (port, requests) = server(|path| match path {
+        "/v.ts" => Some(Body::Trickle(packets(5, 400))),
+        _ => None,
+    });
+    let work = tempfile::tempdir().unwrap();
+    let url = format!("http://127.0.0.1:{port}/v.ts");
+    let (success, stdout, stderr) = stop_when(
+        work.path(),
+        &["--ffmpeg-location", &ffmpeg, "--embed-metadata", &url],
+        &requests,
+        |paths| paths.iter().any(|path| path == "/v.ts"),
+    );
+    assert!(!success);
+    assert!(stderr.contains("ERROR: Interrupted by user"), "{stderr}");
+    let file = work.path().join("o.ts");
+    printed(&stdout, &file, &stderr);
+    let kept = std::fs::read(&file).unwrap();
+    assert!(!kept.is_empty() && kept.len() < 400 * 188, "{}", kept.len());
+    assert_eq!(kept, packets(5, 400)[..kept.len()]);
+    assert_eq!(names(work.path()), ["o.ts"]);
+}
+
+#[test]
+fn a_stopped_merge_with_postprocessors_prints_the_merged_file() {
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = fake_ffmpeg(tools.path(), CONCAT);
+    let (port, requests) = server(|path| match path {
+        "/video" => Some(Body::Trickle(packets(9, 400))),
+        "/audio" => Some(Body::Whole(b"audio-bytes".to_vec())),
+        _ => None,
+    });
+    let work = tempfile::tempdir().unwrap();
+    merged_info(work.path(), port);
+    let (success, stdout, stderr) = stop_when(
+        work.path(),
+        &[
+            "--ffmpeg-location",
+            &ffmpeg,
+            "--load-info-json",
+            "m.info.json",
+            "-f",
+            "v+a",
+            "--embed-metadata",
+        ],
+        &requests,
+        |paths| paths.iter().any(|path| path == "/video"),
+    );
+    assert!(!success);
+    assert!(stderr.contains("ERROR: Interrupted by user"), "{stderr}");
+    let file = work.path().join("o.mp4");
+    printed(&stdout, &file, &stderr);
+    assert!(std::fs::read(&file).unwrap().ends_with(b"audio-bytes"));
+    assert_eq!(names(work.path()), ["m.info.json", "o.mp4"]);
+}
+
+#[test]
+fn a_fragmented_video_cut_mid_fragment_is_trimmed_before_the_merge() {
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = fake_ffmpeg(tools.path(), CONCAT);
+    let (head, fragments) = fragmented(400);
+    let video = [head.clone(), fragments.concat()].concat();
+    let audio = atom(b"free", b"audio-bytes");
+    let served = audio.clone();
+    let (port, requests) = server(move |path| match path {
+        "/video" => Some(Body::Trickle(video.clone())),
+        "/audio" => Some(Body::Whole(served.clone())),
+        _ => None,
+    });
+    let work = tempfile::tempdir().unwrap();
+    merged_info(work.path(), port);
+    let (success, stdout, stderr) = stop_when(
+        work.path(),
+        &[
+            "--ffmpeg-location",
+            &ffmpeg,
+            "--load-info-json",
+            "m.info.json",
+            "-f",
+            "v+a",
+        ],
+        &requests,
+        |paths| paths.iter().any(|path| path == "/video"),
+    );
+    assert!(!success);
+    assert!(stderr.contains("ERROR: Interrupted by user"), "{stderr}");
+    let file = work.path().join("o.mp4");
+    printed(&stdout, &file, &stderr);
+    // The video ends after a whole fragment.
+    let merged = std::fs::read(&file).unwrap();
+    assert!(merged.ends_with(&audio), "{stderr}");
+    let kept = &merged[..merged.len() - audio.len()];
+    let whole = (kept.len() - head.len()) / fragments[0].len();
+    assert!((1..400).contains(&whole), "{whole}");
+    assert_eq!(
+        kept,
+        [head, fragments[..whole].concat()].concat(),
+        "{stderr}"
+    );
+}
+
+#[test]
+fn an_unreadable_stopped_merge_keeps_the_unmerged_formats() {
+    let tools = tempfile::tempdir().unwrap();
+    // FFmpeg's output from a fragment cut mid-box: `ftyp`, then an `mdat`
+    // whose size points past the end. It still exits 0.
+    let mut broken = atom(b"ftyp", b"isom\0\0\x02\0");
+    broken.extend(1u32.to_be_bytes());
+    broken.extend(b"mdat");
+    broken.extend(u64::MAX.to_be_bytes());
+    broken.extend([0; 64]);
+    let bad = tools.path().join("bad.mp4");
+    std::fs::write(&bad, &broken).unwrap();
+    let ffmpeg = fake_ffmpeg(tools.path(), &format!("cat '{}' > \"$out\"", bad.display()));
+    let (port, requests) = server(|path| match path {
+        "/video" => Some(Body::Trickle(packets(9, 400))),
+        "/audio" => Some(Body::Whole(b"audio-bytes".to_vec())),
+        _ => None,
+    });
+    let work = tempfile::tempdir().unwrap();
+    merged_info(work.path(), port);
+    let (success, stdout, stderr) = stop_when(
+        work.path(),
+        &[
+            "--ffmpeg-location",
+            &ffmpeg,
+            "--load-info-json",
+            "m.info.json",
+            "-f",
+            "v+a",
+            "--embed-metadata",
+        ],
+        &requests,
+        |paths| paths.iter().any(|path| path == "/video"),
+    );
+    assert!(!success);
+    assert!(stderr.contains("ERROR: Interrupted by user"), "{stderr}");
+    assert!(stderr.contains("keeping the unmerged formats"), "{stderr}");
+    printed(&stdout, &work.path().join("o.fv.mp4"), &stderr);
+    assert_eq!(
+        std::fs::read(work.path().join("o.fa.m4a")).unwrap(),
+        b"audio-bytes"
+    );
+    let video = std::fs::read(work.path().join("o.fv.mp4")).unwrap();
+    assert_eq!(video, packets(9, 400)[..video.len()]);
+    assert_eq!(names(work.path()), ["m.info.json", "o.fa.m4a", "o.fv.mp4"]);
+}
+
+#[test]
+fn a_truncated_progressive_mp4_is_remuxed_to_the_data_it_holds() {
+    let tools = tempfile::tempdir().unwrap();
+    // The stream copy: marks the output so the test sees it ran.
+    let ffmpeg = fake_ffmpeg(tools.path(), "{ cat $inputs; printf remuxed; } > \"$out\"");
+    let progressive = [
+        atom(b"ftyp", b"isom\0\0\x02\0"),
+        atom(b"moov", &[0; 32]),
+        atom(b"mdat", &[7; 400 * 188]),
+    ]
+    .concat();
+    let (port, requests) = server(move |path| match path {
+        "/v.mp4" => Some(Body::Trickle(progressive.clone())),
+        _ => None,
+    });
+    let work = tempfile::tempdir().unwrap();
+    let url = format!("http://127.0.0.1:{port}/v.mp4");
+    let (success, stdout, stderr) = stop_when(
+        work.path(),
+        &["--ffmpeg-location", &ffmpeg, &url],
+        &requests,
+        |paths| paths.iter().any(|path| path == "/v.mp4"),
+    );
+    assert!(!success);
+    assert!(stderr.contains("ERROR: Interrupted by user"), "{stderr}");
+    let file = work.path().join("o.mp4");
+    printed(&stdout, &file, &stderr);
+    assert!(
+        std::fs::read(&file).unwrap().ends_with(b"remuxed"),
+        "{stderr}"
+    );
+    assert_eq!(names(work.path()), ["o.mp4"]);
 }

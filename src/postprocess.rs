@@ -182,6 +182,48 @@ fn publish(source: &Path, destination: &Path) -> Result<()> {
         .map_err(|error| Error::Io(error.error))?;
     Ok(())
 }
+/// Move a stopped download's files out of the private workspace: `input`
+/// to `destination`, or (an unmerged stopped merge) every `source.fID.EXT`
+/// to `NAME.fID.EXT` beside it, by renaming so a failure keeps the data
+/// where it is. Returns where `stopped` went.
+fn publish_stopped(
+    workspace: &Path,
+    input: &Path,
+    stopped: &Path,
+    destination: &Path,
+) -> Result<PathBuf> {
+    let publish = |source: &Path, destination: &Path| -> Result<()> {
+        writable(destination)?;
+        Ok(fs::rename(source, destination)?)
+    };
+    if stopped == input {
+        publish(input, destination)?;
+        return Ok(destination.into());
+    }
+    let stem = destination
+        .file_stem()
+        .unwrap_or_default()
+        .to_string_lossy()
+        .into_owned();
+    let mut published = None;
+    for entry in fs::read_dir(workspace)? {
+        let path = entry?.path();
+        let name = path
+            .file_name()
+            .unwrap_or_default()
+            .to_string_lossy()
+            .into_owned();
+        let Some(rest) = name.strip_prefix("source.f") else {
+            continue;
+        };
+        let target = destination.with_file_name(format!("{stem}.f{rest}"));
+        publish(&path, &target)?;
+        if path == stopped {
+            published = Some(target);
+        }
+    }
+    published.ok_or_else(|| Error::Postprocess("the stopped download left no file".into()))
+}
 fn checkpoint(
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
     bytes: u64,
@@ -357,13 +399,23 @@ pub(crate) fn download(
             merge_files: crate::MergeFiles::Private,
             ..options
         };
-        downloader.download_with_progress(info, &input, options, |progress| {
+        let result = downloader.download_with_progress(info, &input, options, |progress| {
             if progress.phase == DownloadPhase::Publishing {
                 ControlFlow::Continue(())
             } else {
                 callback(progress)
             }
-        })?
+        });
+        match result {
+            // A stopped download skips the processors: the partial file
+            // leaves the workspace for the destination.
+            Err(Error::DownloadStopped { path }) => {
+                return Err(Error::DownloadStopped {
+                    path: publish_stopped(workspace.path(), &input, &path, destination)?,
+                });
+            }
+            result => result?,
+        }
     };
     // Upstream `process_info` fixes the download (after its progress ends)
     // before `post_process` and its prints.
