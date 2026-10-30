@@ -8781,8 +8781,11 @@ struct ProgressOptions {
 struct ProgressReporter<'a> {
     options: &'a ProgressOptions,
     active: Option<ActiveDownload>,
-    /// `info` and `progress.filename` for `--progress-template`.
-    info: serde_json::Value,
+    /// `{"info": ..., "progress": ...}` for `--progress-template` and console
+    /// titles, built once per download; each status replaces `progress`
+    /// (copying a large info dict per status would dominate fragmented
+    /// downloads).
+    dict: std::cell::RefCell<serde_json::Value>,
     filename: Option<String>,
 }
 
@@ -8809,7 +8812,7 @@ impl<'a> ProgressReporter<'a> {
         Self {
             options,
             active: None,
-            info: serde_json::Value::Object(Default::default()),
+            dict: std::cell::RefCell::new(serde_json::json!({"info": {}, "progress": null})),
             filename: None,
         }
     }
@@ -8817,7 +8820,10 @@ impl<'a> ProgressReporter<'a> {
     /// The video and file a `--progress-template` describes.
     fn for_download(mut self, info: &yt_dlp_rs::VideoInfo, filename: &std::path::Path) -> Self {
         if self.options.template.is_some() || console_title() {
-            self.info = yt_dlp_rs::info_value(info).unwrap_or_default();
+            self.dict = std::cell::RefCell::new(serde_json::json!({
+                "info": yt_dlp_rs::info_value(info).unwrap_or_default(),
+                "progress": null,
+            }));
             self.filename = Some(filename.to_string_lossy().into_owned());
         }
         self
@@ -8828,7 +8834,8 @@ impl<'a> ProgressReporter<'a> {
     fn render(&self, progress: serde_json::Value) -> String {
         match &self.options.template {
             Some(template) => {
-                let dict = serde_json::json!({"info": self.info, "progress": progress});
+                let mut dict = self.dict.borrow_mut();
+                dict["progress"] = progress;
                 yt_dlp_rs::output::evaluate_dict_template(
                     template,
                     &dict,
@@ -8851,13 +8858,16 @@ impl<'a> ProgressReporter<'a> {
         };
         let finished = progress["status"] == "finished";
         let percent = progress["_percent"].as_f64();
-        let dict = serde_json::json!({"info": self.info, "progress": progress});
-        let message = yt_dlp_rs::output::evaluate_dict_template(
-            console.download_title.as_deref().unwrap_or(DEFAULT_TITLE),
-            &dict,
-            &TemplateOptions::default(),
-        )
-        .unwrap_or_default();
+        let message = {
+            let mut dict = self.dict.borrow_mut();
+            dict["progress"] = progress;
+            yt_dlp_rs::output::evaluate_dict_template(
+                console.download_title.as_deref().unwrap_or(DEFAULT_TITLE),
+                &dict,
+                &TemplateOptions::default(),
+            )
+            .unwrap_or_default()
+        };
         let state = if finished || percent.is_none() {
             PROGRESS_INDETERMINATE
         } else {
