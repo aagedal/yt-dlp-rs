@@ -129,19 +129,37 @@ fn client_certificates_authenticate_tls_requests() {
         "{}",
         String::from_utf8_lossy(&output.stderr)
     );
-    let encrypted = fixture("encrypted-key.pem");
-    let output = run(
-        port,
-        &[
-            "--client-certificate",
-            cert.to_str().unwrap(),
-            "--client-certificate-key",
-            encrypted.to_str().unwrap(),
-            "--client-certificate-password",
-            "secret",
-        ],
-        directory.path(),
-    );
-    assert_eq!(output.status.code(), Some(1));
-    assert!(String::from_utf8_lossy(&output.stderr).contains("encrypted client certificate keys"));
+    // Encrypted keys: PKCS#8 (PBES2) and OpenSSL's legacy `Proc-Type` PEM.
+    for key in ["encrypted-key.pem", "legacy-encrypted-key.pem"] {
+        std::fs::remove_file(directory.path().join("o.mp4")).unwrap();
+        let encrypted = fixture(key);
+        let with_password = |password: &str| {
+            run(
+                port,
+                &[
+                    "--client-certificate",
+                    cert.to_str().unwrap(),
+                    "--client-certificate-key",
+                    encrypted.to_str().unwrap(),
+                    "--client-certificate-password",
+                    password,
+                ],
+                directory.path(),
+            )
+        };
+        let output = with_password("secret");
+        assert!(
+            output.status.success(),
+            "{key}: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let output = with_password("wrong");
+        assert_eq!(output.status.code(), Some(1));
+        assert!(
+            String::from_utf8_lossy(&output.stderr)
+                .contains("unable to decrypt the client certificate key (wrong password?)"),
+            "{key}: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
 }

@@ -77,6 +77,159 @@ impl TransportConfig {
     }
 }
 
+/// The PEM with its encrypted private key decrypted, as Python's
+/// `load_cert_chain(certfile, keyfile, password)` reads it: PKCS#8
+/// `ENCRYPTED PRIVATE KEY` (PBES2) or OpenSSL's legacy `Proc-Type:
+/// 4,ENCRYPTED` with AES-CBC. Without `password`, OpenSSL's `Enter PEM pass
+/// phrase:` prompt asks for it.
+fn decrypt_keys(pem: &[u8], password: Option<&str>) -> Result<Vec<u8>> {
+    static BLOCK: std::sync::LazyLock<regex::bytes::Regex> = std::sync::LazyLock::new(|| {
+        regex::bytes::Regex::new(
+            r"(?s)-----BEGIN ([A-Z0-9 ]+)-----\r?\n(.*?)-----END ([A-Z0-9 ]+)-----",
+        )
+        .unwrap()
+    });
+    let mut password = password.map(str::to_owned);
+    let mut passphrase = || -> Result<String> {
+        if password.is_none() {
+            password = Some(
+                crate::getpass::getpass("Enter PEM pass phrase:")
+                    .map_err(|_| error("no password for the encrypted client certificate key"))?,
+            );
+        }
+        Ok(password.clone().unwrap_or_default())
+    };
+    let wrong = || error("unable to decrypt the client certificate key (wrong password?)");
+    let mut out = Vec::with_capacity(pem.len());
+    let mut last = 0;
+    for found in BLOCK.captures_iter(pem) {
+        let whole = found.get(0).expect("match");
+        let label = String::from_utf8_lossy(&found[1]).into_owned();
+        let body = &found[2];
+        let headers: Vec<&[u8]> = body
+            .split(|&byte| byte == b'\n')
+            .take_while(|line| line.contains(&b':'))
+            .collect();
+        let encrypted_legacy = headers
+            .iter()
+            .any(|line| line.starts_with(b"Proc-Type: 4,ENCRYPTED"));
+        let replacement = if label == "ENCRYPTED PRIVATE KEY" {
+            let der = base64_body(body).ok_or_else(wrong)?;
+            let info = pkcs8::EncryptedPrivateKeyInfo::try_from(der.as_slice())
+                .map_err(|_| error("the client certificate key is not valid PKCS#8"))?;
+            let document = info.decrypt(passphrase()?).map_err(|_| wrong())?;
+            Some(pem_block("PRIVATE KEY", document.as_bytes()))
+        } else if label.ends_with("PRIVATE KEY") && encrypted_legacy {
+            let info = headers
+                .iter()
+                .find_map(|line| line.strip_prefix(b"DEK-Info: "))
+                .map(|value| String::from_utf8_lossy(value).trim().to_owned())
+                .ok_or_else(wrong)?;
+            let (cipher, iv) = info.split_once(',').ok_or_else(wrong)?;
+            let key_length = match cipher {
+                "AES-128-CBC" => 16,
+                "AES-192-CBC" => 24,
+                "AES-256-CBC" => 32,
+                other => {
+                    return Err(error(&format!(
+                        "client certificate keys encrypted with {other} are not supported natively"
+                    )));
+                }
+            };
+            let iv = (0..iv.len())
+                .step_by(2)
+                .map(|index| u8::from_str_radix(iv.get(index..index + 2)?, 16).ok())
+                .collect::<Option<Vec<u8>>>()
+                .filter(|iv| iv.len() == 16)
+                .ok_or_else(wrong)?;
+            let encoded: Vec<u8> = body
+                .split(|&byte| byte == b'\n')
+                .skip(headers.len())
+                .flatten()
+                .copied()
+                .collect();
+            let data = base64_body(&encoded).ok_or_else(wrong)?;
+            let key = bytes_to_key(passphrase()?.as_bytes(), &iv[..8], key_length);
+            let der = decrypt_cbc(&key, &iv, data).ok_or_else(wrong)?;
+            Some(pem_block(&label, &der))
+        } else {
+            None
+        };
+        if let Some(replacement) = replacement {
+            out.extend_from_slice(&pem[last..whole.start()]);
+            out.extend_from_slice(replacement.as_bytes());
+            last = whole.end();
+        }
+    }
+    out.extend_from_slice(&pem[last..]);
+    Ok(out)
+}
+
+fn base64_body(body: &[u8]) -> Option<Vec<u8>> {
+    use base64::Engine as _;
+    let text: Vec<u8> = body
+        .iter()
+        .copied()
+        .filter(|byte| !byte.is_ascii_whitespace())
+        .collect();
+    base64::engine::general_purpose::STANDARD.decode(text).ok()
+}
+
+fn pem_block(label: &str, der: &[u8]) -> String {
+    use base64::Engine as _;
+    let encoded = base64::engine::general_purpose::STANDARD.encode(der);
+    let mut block = format!("-----BEGIN {label}-----\n");
+    for line in encoded.as_bytes().chunks(64) {
+        block.push_str(&String::from_utf8_lossy(line));
+        block.push('\n');
+    }
+    block.push_str(&format!("-----END {label}-----"));
+    block
+}
+
+/// OpenSSL `EVP_BytesToKey(cipher, md5, salt, password, count=1)`.
+fn bytes_to_key(password: &[u8], salt: &[u8], length: usize) -> Vec<u8> {
+    let mut key = Vec::with_capacity(length + 16);
+    let mut previous: Vec<u8> = Vec::new();
+    while key.len() < length {
+        let mut input = previous.clone();
+        input.extend_from_slice(password);
+        input.extend_from_slice(salt);
+        let hex = crate::md5::hex(&input);
+        previous = (0..32)
+            .step_by(2)
+            .map(|index| u8::from_str_radix(&hex[index..index + 2], 16).unwrap_or(0))
+            .collect();
+        key.extend_from_slice(&previous);
+    }
+    key.truncate(length);
+    key
+}
+
+fn decrypt_cbc(key: &[u8], iv: &[u8], mut data: Vec<u8>) -> Option<Vec<u8>> {
+    use aes::cipher::{BlockModeDecrypt, KeyIvInit, block_padding::Pkcs7};
+    let length = match key.len() {
+        16 => cbc::Decryptor::<aes::Aes128>::new_from_slices(key, iv)
+            .ok()?
+            .decrypt_padded::<Pkcs7>(&mut data)
+            .ok()?
+            .len(),
+        24 => cbc::Decryptor::<aes::Aes192>::new_from_slices(key, iv)
+            .ok()?
+            .decrypt_padded::<Pkcs7>(&mut data)
+            .ok()?
+            .len(),
+        32 => cbc::Decryptor::<aes::Aes256>::new_from_slices(key, iv)
+            .ok()?
+            .decrypt_padded::<Pkcs7>(&mut data)
+            .ok()?
+            .len(),
+        _ => return None,
+    };
+    data.truncate(length);
+    Some(data)
+}
+
 fn error(message: &str) -> Error {
     // Never include supplied values: headers can contain credentials.
     Error::HttpConfiguration(message.into())
@@ -144,15 +297,7 @@ impl HttpOptions {
             pem.push(b'\n');
             pem.extend(read(key)?);
         }
-        if pem
-            .windows(b"ENCRYPTED PRIVATE KEY".len())
-            .any(|window| window == b"ENCRYPTED PRIVATE KEY")
-            || self.client_certificate_password.is_some()
-        {
-            return Err(error(
-                "encrypted client certificate keys (--client-certificate-password) are not supported natively",
-            ));
-        }
+        let pem = decrypt_keys(&pem, self.client_certificate_password.as_deref())?;
         reqwest::Identity::from_pem(&pem).map(Some).map_err(|_| {
             error("the client certificate must be PEM with a certificate and its private key")
         })
