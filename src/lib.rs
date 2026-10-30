@@ -4404,14 +4404,33 @@ impl YoutubeDl {
                 .extract_result_unselected_with_options(&format!("https://{input}"), options);
         }
         let quoted = output::traverse::py_repr_str(input);
+        if matches!(search, "auto" | "auto_warning") {
+            if search == "auto_warning" {
+                if matches!(input, "url" | "URL") {
+                    return Err(Error::Reported(format!(
+                        "[generic] Invalid URL:  {quoted} . Call yt-dlp like this:  yt-dlp -v \"https://www.youtube.com/watch?v=YE7VzlLtp-4\"  "
+                    )));
+                }
+                screen::warning(&format!(
+                    "[generic] Falling back to youtube search for  {input} . Set --default-search \"auto\" to suppress this warning."
+                ));
+            }
+            return self
+                .extract_result_unselected_with_options(&format!("ytsearch:{input}"), options);
+        }
         if matches!(search, "error" | "fixup_error") {
             return Err(Error::Reported(format!(
                 "[generic] {quoted} is not a valid URL"
             )));
         }
-        Err(Error::Reported(format!(
-            "[generic] {quoted}: search extractors ({search}) are not supported natively"
-        )))
+        // A search prefix (`ytsearch5`, `nicosearch:`): its search
+        // extractor, or the unsupported-URL error when there is none.
+        let prefix = if search.contains(':') {
+            search.to_owned()
+        } else {
+            format!("{search}:")
+        };
+        self.extract_result_unselected_with_options(&format!("{prefix}{input}"), options)
     }
 
     /// The extraction error of a playlist entry whose processing failed
