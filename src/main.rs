@@ -1007,7 +1007,7 @@ struct Args {
     /// Path to the private key file for the client certificate
     #[arg(long, value_name = "KEYFILE")]
     client_certificate_key: Option<PathBuf>,
-    /// Password for an encrypted client certificate key (not supported natively)
+    /// Password for an encrypted client certificate key (prompted for when omitted)
     #[arg(long, value_name = "PASSWORD")]
     client_certificate_password: Option<String>,
     /// Display progress in the console titlebar (not supported natively)
