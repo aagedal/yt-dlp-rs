@@ -4696,9 +4696,10 @@
       "rust": [
         "src/extractor/twitch.rs",
         "tests/fixtures/sites/twitch/",
+        "tests/fixtures/sites/twitch-args/",
         "tests/fixtures/sites/twitch-login/"
       ],
-      "scope": "TwitchVodIE GraphQL metadata/chapters/storyboards, access token and usher HLS formats with source preference, usher 403 JSON errors (subscriber-only login hint) and live_from_start format marking; TwitchStreamIE stream GraphQL, stream access token, live usher HLS master, rerun/live titles, offline/missing-channel errors and --live-from-start VOD resolution; TwitchClipsIE signed qualities, thumbnails and metadata; TwitchVideosIE, TwitchVideosClipsIE and TwitchVideosCollectionsIE lazily paged GraphQL channel lists and TwitchCollectionIE, all as url_transparent entries; no login (_perform_login) or client_id extractor-arg; compared with pinned upstream output through the fixture proxy; TwitchBaseIE login (login page hidden inputs posted as JSON to the form action, Twitch errors, redirect page, two-factor authy token step) for every Twitch extractor, the auth-token cookie authorizing GraphQL, compared with pinned upstream through tests/fixtures/sites/twitch-login/"
+      "scope": "TwitchVodIE GraphQL metadata/chapters/storyboards, access token and usher HLS formats with source preference, usher 403 JSON errors (subscriber-only login hint) and live_from_start format marking; TwitchStreamIE stream GraphQL, stream access token, live usher HLS master, rerun/live titles, offline/missing-channel errors and --live-from-start VOD resolution; TwitchClipsIE signed qualities, thumbnails and metadata; TwitchVideosIE, TwitchVideosClipsIE and TwitchVideosCollectionsIE lazily paged GraphQL channel lists and TwitchCollectionIE, all as url_transparent entries; the twitch:client_id extractor argument (tests/fixtures/sites/twitch-args/); compared with pinned upstream output through the fixture proxy; TwitchBaseIE login (login page hidden inputs posted as JSON to the form action, Twitch errors, redirect page, two-factor authy token step) for every Twitch extractor, the auth-token cookie authorizing GraphQL, compared with pinned upstream through tests/fixtures/sites/twitch-login/"
     },
     {
       "name": "twitter",

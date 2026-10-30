@@ -181,6 +181,15 @@ fn fail(name: &str, id: &str, message: &str) -> Error {
     Error::Reported(format!("[{name}] {id}: {message}"))
 }
 
+/// `_CLIENT_ID`: the `twitch:client_id` extractor argument (read with
+/// `ie_key='Twitch'` for every Twitch extractor, case-sensitively), else the
+/// web client's.
+fn client_id() -> String {
+    crate::manifest_args::configuration_arg("twitch", "client_id", true)
+        .and_then(|values| values.into_iter().next())
+        .unwrap_or_else(|| CLIENT_ID.to_owned())
+}
+
 /// `_download_base_gql(video_id, ops, note)`.
 fn base_gql(
     client: &Client,
@@ -193,7 +202,7 @@ fn base_gql(
     crate::screen::screen(&format!("[{name}] {id}: {note}"));
     let mut headers = vec![
         ("Content-Type", "text/plain;charset=UTF-8".to_owned()),
-        ("Client-ID", CLIENT_ID.to_owned()),
+        ("Client-ID", client_id()),
     ];
     if let Some(token) = crate::cookies::get_cookie("https://gql.twitch.tv", "auth-token") {
         headers.push(("Authorization", format!("OAuth {token}")));
@@ -1141,7 +1150,7 @@ fn perform_login(
         &[
             ("username", username),
             ("password", password),
-            ("client_id", CLIENT_ID),
+            ("client_id", &client_id()),
         ],
     )?
     else {

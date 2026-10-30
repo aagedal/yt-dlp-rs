@@ -1,0 +1,6 @@
+[
+ {"url": "https://clips.twitch.tv/FaintLightGullWholeWheat", "args": ["--extractor-args", "twitch:client_id=AbCdEfGhIjKlMnOpQrStUvWxYz0123", "--print", "%(id)s|%(display_id)s|%(title)s|%(uploader)s|%(format_id)s"]},
+ {"url": "https://www.twitch.tv/someone/clip/FaintLightGullWholeWheat", "args": ["--extractor-args", "Twitch:client_id=AbCdEfGhIjKlMnOpQrStUvWxYz0123", "--print", "%(id)s|%(display_id)s|%(title)s|%(uploader)s|%(format_id)s"]},
+ {"url": "https://clips.twitch.tv/FaintLightGullWholeWheat", "args": ["--extractor-args", "twitch:client_id=abcdefghijklmnopqrstuvwxyz0123", "--print", "%(id)s|%(display_id)s|%(title)s|%(uploader)s|%(format_id)s"]},
+ {"url": "https://clips.twitch.tv/FaintLightGullWholeWheat", "args": ["--print", "%(id)s|%(display_id)s|%(title)s|%(uploader)s|%(format_id)s"]}
+]

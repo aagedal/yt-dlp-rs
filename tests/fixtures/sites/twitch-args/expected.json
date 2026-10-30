@@ -1,0 +1,63 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://clips.twitch.tv/FaintLightGullWholeWheat",
+   "args": [
+    "--extractor-args",
+    "twitch:client_id=AbCdEfGhIjKlMnOpQrStUvWxYz0123",
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(uploader)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "396245304|FaintLightGullWholeWheat|Clip title|Curator|1080"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/someone/clip/FaintLightGullWholeWheat",
+   "args": [
+    "--extractor-args",
+    "Twitch:client_id=AbCdEfGhIjKlMnOpQrStUvWxYz0123",
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(uploader)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "396245304|FaintLightGullWholeWheat|Clip title|Curator|1080"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://clips.twitch.tv/FaintLightGullWholeWheat",
+   "args": [
+    "--extractor-args",
+    "twitch:client_id=abcdefghijklmnopqrstuvwxyz0123",
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(uploader)s|%(format_id)s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [twitch:clips] FaintLightGullWholeWheat: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://clips.twitch.tv/FaintLightGullWholeWheat",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(uploader)s|%(format_id)s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [twitch:clips] FaintLightGullWholeWheat: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}
