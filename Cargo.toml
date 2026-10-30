@@ -38,6 +38,13 @@ tokio = { version = "1", default-features = false, features = ["rt-multi-thread"
 wreq = { version = "=6.0.0-rc.31", default-features = false, features = ["webpki-roots", "tokio-rt", "cookies", "socks", "gzip", "brotli", "deflate", "zstd"], optional = true }
 wreq-util = { version = "=3.0.0-rc.14", features = ["emulation-compression"], optional = true }
 
+[profile.release]
+# Whole-program optimization and a stripped binary. Keep `panic = "unwind"`:
+# extractor panics are caught per URL, and thread joins report worker panics.
+lto = "thin"
+codegen-units = 1
+strip = true
+
 [features]
 default = []
 impersonate = ["dep:tokio", "dep:wreq", "dep:wreq-util"]
