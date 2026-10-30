@@ -2966,6 +2966,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if rate_limit == Some(0) {
         return Err(usage("rate limit \"0\" must be positive").into());
     }
+    // Validated by `validate_accepted_options`.
+    let throttled_rate = args.throttled_rate.as_deref().and_then(parse_bytes);
     let http_chunk_size =
         size_option("http chunk size", args.http_chunk_size.as_deref()).map_err(usage)?;
     // Upstream `--downloader` (`_dict_from_options_callback`) validation.
@@ -6348,6 +6350,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                             min_filesize,
                                             max_filesize,
                                             rate_limit,
+                                            throttled_rate,
                                             update_time: false,
                                             part_files: yt_dlp_rs::PartFiles::Private,
                                             retries,
@@ -6437,6 +6440,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         min_filesize,
                                         max_filesize,
                                         rate_limit,
+                                        throttled_rate,
                                         update_time: args.mtime,
                                         part_files,
                                         retries,
@@ -6504,6 +6508,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         min_filesize,
                                         max_filesize,
                                         rate_limit,
+                                        throttled_rate,
                                         update_time: args.mtime,
                                         part_files,
                                         retries,
@@ -7456,6 +7461,16 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
         (args.legacy_server_connect, "--legacy-server-connect"),
         (args.bidi_workaround, "--bidi-workaround"),
         (!args.plugin_dirs.is_empty(), "--plugin-dirs"),
+        // HTTP-scheme preferences of a few upstream extractors.
+        (args.prefer_insecure, "--prefer-insecure"),
+        // The EJS challenge solver is bundled (pinned), never downloaded.
+        (!args.remote_components.is_empty(), "--remote-components"),
+        // The `Ytdl-request-proxy` header of upstream's geo verification
+        // requests.
+        (
+            args.geo_verification_proxy.is_some(),
+            "--geo-verification-proxy",
+        ),
     ] {
         if given {
             warning!("WARNING: {what} is not supported natively and is ignored");
