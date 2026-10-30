@@ -8,7 +8,7 @@ use std::{
     path::Path,
     time::{Duration, Instant},
 };
-const DEADLINE: Duration = Duration::from_secs(60);
+const DEADLINE: Duration = crate::merge::NO_DEADLINE;
 const MAX_OUTPUT: u64 = 16 * 1024 * 1024;
 fn error(message: &str) -> Error {
     Error::Postprocess(message.into())

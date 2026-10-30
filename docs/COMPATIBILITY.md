@@ -5949,8 +5949,8 @@ both sources into a private destination-directory workspace, then stream copying
 with explicit video/audio maps. Inputs use fixed local demuxers and the file-only
 protocol whitelist. The executable is canonicalized; its version banner is checked.
 No shell is used, environment is cleared except Windows system directories, stdin
-is closed, and process output and elapsed time are bounded (64 KiB stdout,
-256 KiB stderr, ten minutes shared by version check and merge). A process error,
+is closed, and process output is bounded (64 KiB stdout, 256 KiB stderr). Like
+upstream there is no time limit; cancellation stops FFmpeg. A process error,
 nonempty error diagnostics, or empty output fails explicitly. No codec fallback
 or transcoding occurs. A bad tool may fail after source downloads.
 
@@ -7340,8 +7340,8 @@ skip-download do not run audio tools.
 Local input demuxers cover MP4/M4A/MOV, WebM/Matroska, MP3, AAC, Ogg/Opus, WAV,
 FLAC, MPEG-TS, AVI, FLV and AIFF. Other containers fail explicitly. Tools receive
 local regular files and a file-only protocol whitelist; remote I/O stays native.
-Each probe has a 30-second budget and each conversion ten minutes including
-version checks. Output capture, JSON, stderr and process cleanup are bounded.
+Each probe has a 30-second budget; conversions, like upstream, have no time
+limit. Output capture, JSON, stderr and process cleanup are bounded.
 Missing audio or tool diagnostics fail rather than guessing successful output.
 
 Output replaces only a suffix matching the source extension; otherwise it
@@ -7486,7 +7486,7 @@ Ordinary local inputs support SRT, VTT, ASS/SSA and LRC through explicit
 demuxer and first-subtitle map feed explicit SRT/WebVTT/ASS/LRC muxers, with
 source faststart output flags. The native first-subtitle map is deliberate;
 these inputs are single subtitle sidecars. Tools use file-only protocols, closed
-stdin, bounded output pipes, a 60-second overall version/conversion deadline and
+stdin, bounded output pipes, no time limit (as upstream) and
 cooperative cancellation. Inputs and produced UTF-8 files are capped at 16 MiB;
 output growth is monitored while the child runs. Missing tools, diagnostics,
 invalid UTF-8 and empty FFmpeg outputs fail.
@@ -7555,7 +7555,7 @@ container represents them. All inputs have fixed local demuxers and file-only
 protocols; output muxers and faststart are explicit. FFprobe is unnecessary.
 
 `--ffmpeg-location PATH` is inspected only for an eligible embedding. The version
-check and embedding share a ten-minute deadline, bounded process pipes and
+check and embedding have no time limit (as upstream), bounded process pipes and
 cooperative cancellation. Track count is capped at 1000, language at 128 bytes,
 name at 4096 bytes and extension at 1..32 ASCII alphanumerics; metadata controls
 are rejected. Active sidecars must be regular nonsymlink files, at most 16 MiB

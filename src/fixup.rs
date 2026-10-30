@@ -8,7 +8,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-const DEADLINE: Duration = Duration::from_secs(600);
+const DEADLINE: Duration = crate::merge::NO_DEADLINE;
 
 fn failure(message: impl Into<String>) -> Error {
     Error::Postprocess(message.into())
