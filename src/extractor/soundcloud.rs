@@ -241,6 +241,24 @@ fn call_api(
     unreachable!("the second attempt returns")
 }
 
+/// `_is_requested`: the `soundcloud:formats` extractor argument's patterns
+/// (`*` a wildcard, `default` the default formats), else the defaults.
+fn requested_formats() -> Regex {
+    let patterns = crate::manifest_args::configuration_arg("soundcloud", "formats", false)
+        .unwrap_or_else(|| vec!["default".into()]);
+    let alternatives: Vec<String> = patterns
+        .iter()
+        .map(|pattern| {
+            if pattern == "default" {
+                DEFAULT_FORMATS.map(regex::escape).join("|")
+            } else {
+                regex::escape(pattern).replace(r"\*", ".*")
+            }
+        })
+        .collect();
+    Regex::new(&format!("^(?:{})$", alternatives.join("|"))).expect("escaped patterns")
+}
+
 /// `_extract_thumbnails`.
 fn thumbnails(client: &Client, info: &Value, track_id: &str) -> Value {
     let artwork = info
@@ -323,6 +341,7 @@ fn info_dict(
     let mut formats = Vec::new();
     let mut seen: Vec<String> = Vec::new();
     let mut has_drm = false;
+    let requested = requested_formats();
     let mut query: Vec<(&str, &str)> = Vec::new();
     if let Some(token) = secret_token {
         query.push(("secret_token", token));
@@ -369,7 +388,7 @@ fn info_dict(
             crate::screen::debug(&format!("Skipping broken \"{short}\" format"));
             continue;
         }
-        if !DEFAULT_FORMATS.contains(&short.as_str()) {
+        if !requested.is_match(&short) {
             crate::screen::debug(&format!("\"{short}\" is not a requested format, skipping"));
             continue;
         }

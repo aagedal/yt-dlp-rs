@@ -7457,6 +7457,7 @@ const SUPPORTED_EXTRACTOR_ARGS: &[(&str, &[&str])] = &[
     ("vimeo", &["client", "original_format_policy"]),
     ("orfon", &["prefer_segments_playlist"]),
     ("tiktok", &["device_id"]),
+    ("soundcloud", &["formats"]),
 ];
 
 /// Upstream `_PRESET_ALIASES`.
