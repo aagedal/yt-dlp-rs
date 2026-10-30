@@ -234,6 +234,8 @@ pub struct YoutubeDl {
     force_generic: bool,
     /// `--default-search`.
     default_search: Option<String>,
+    /// `--wait-for-video`: wait for videos without formats yet.
+    wait_for_video: Option<extractor::WaitForVideo>,
     check_formats: CheckFormats,
     /// `-N`/`--concurrent-fragments`.
     concurrent_fragments: usize,
@@ -1343,6 +1345,7 @@ impl YoutubeDl {
     /// Configure global HTTP defaults together with YouTube extraction.
     /// Per-request extractor and transport headers override these defaults.
     pub fn with_options(youtube: YoutubeOptions, http: HttpOptions) -> Result<Self> {
+        let wait_for_video = youtube.wait_for_video;
         let headers = http.header_map()?;
         let proxy_url = http.proxy.clone();
         let proxy = http.transport_config()?;
@@ -1409,6 +1412,7 @@ impl YoutubeDl {
             allowed_extractors: None,
             force_generic: false,
             default_search: None,
+            wait_for_video,
             check_formats: CheckFormats::Default,
             concurrent_fragments: 1,
             keep_fragments: false,
@@ -4794,6 +4798,23 @@ impl YoutubeDl {
             // `extract`: a geo restriction may retry with a fake IP.
             if extracted.is_err() && geo::retry_with_fake_ip() {
                 geo::restart();
+                extracted = extract();
+            }
+            // `_wait_for_video`: a video without formats yet (an upcoming
+            // stream whose extractor raised an expected no-formats error)
+            // waits and is extracted again (`ReExtractInfo`).
+            while let (Some(wait), Ok(Some(ExtractResult::Video(video)))) =
+                (self.wait_for_video.as_ref(), &extracted)
+                && video.formats.is_empty()
+                && video.extra.contains_key(info::NO_FORMATS)
+            {
+                let release = video
+                    .extra
+                    .get("release_timestamp")
+                    .and_then(serde_json::Value::as_i64);
+                let upcoming = video.metadata.live_status.as_deref() == Some("is_upcoming");
+                let message = extractor::youtube::wait_for_video(wait, release, upcoming);
+                screen::screen(&format!("{message}; Re-extracting data"));
                 extracted = extract();
             }
             let extracted = extracted?;

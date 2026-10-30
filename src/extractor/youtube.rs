@@ -426,7 +426,11 @@ impl Extractor for YoutubeUnsupported {
 /// `_wait_for_video`: sleep until the release time (within the requested
 /// bounds), showing the remaining time; an interrupt ends it early. Returns
 /// the `ReExtractInfo` message.
-fn wait_for_video(wait: &WaitForVideo, release_timestamp: Option<i64>, upcoming: bool) -> String {
+pub(crate) fn wait_for_video(
+    wait: &WaitForVideo,
+    release_timestamp: Option<i64>,
+    upcoming: bool,
+) -> String {
     let now = || {
         std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
