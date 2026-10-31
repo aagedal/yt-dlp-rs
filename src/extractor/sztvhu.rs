@@ -12,7 +12,7 @@ pub struct SztvHu;
 const NAME: &str = "SztvHu";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:www\.)?sztv\.hu|www\.tvszombathely\.hu)/(?:[^/]+)/.+-(?P<id>[0-9]+)",
     )
     .unwrap()

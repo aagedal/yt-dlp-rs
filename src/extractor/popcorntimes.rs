@@ -16,8 +16,10 @@ pub struct Popcorntimes;
 const NAME: &str = "Popcorntimes";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://popcorntimes\.tv/[^/]+/m/(?P<id>[^/]+)/(?P<display_id>[^/?#&]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://popcorntimes\.tv/[^/]+/m/(?P<id>[^/]+)/(?P<display_id>[^/?#&]+)",
+    )
+    .unwrap()
 });
 static HEADING: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<h1>([^<]+)").unwrap());
 static LOC: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"PCTMLOC\s*=\s*(["'])"#).unwrap());

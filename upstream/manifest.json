@@ -990,7 +990,7 @@
         "src/extractor/bilibili.rs",
         "tests/fixtures/sites/bilibili/"
       ],
-      "scope": "BiliBiliIE initial state, anthology playlists and parts, WBI-signed playurl DASH and legacy durl formats, chapters, danmaku subtitles, multi-part FLV multi_video results and errors; no interactive videos, prefer_multi_flv, SRT subtitles, comments or other Bilibili extractors; compared with pinned upstream output through the fixture proxy"
+      "scope": "BiliBiliIE initial state, anthology playlists and parts, WBI-signed playurl DASH and legacy durl formats, chapters, danmaku subtitles, multi-part FLV multi_video results, the prefer_multi_flv extractor argument and errors; no interactive videos, SRT subtitles, comments or other Bilibili extractors; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "bitchute",
@@ -4071,7 +4071,7 @@
         "src/extractor/html5.rs",
         "tests/fixtures/sites/soundcloud-embeds/"
       ],
-      "scope": "SoundcloudEmbedIE widget URLs (url/secret_token url results, KeyError) and its _EMBED_REGEX iframes on generic pages; SoundcloudIE client ID discovery, resolved track JSON, default transcoding formats, artwork thumbnails and metadata, DRM/geo errors; `--username oauth --password TOKEN` and oauth_token cookie verification (connect/session) authorizing API requests, with upstream password-login error and invalid-token warnings; no original downloads, comments, sets, users or search; compared with pinned upstream output through the fixture proxy"
+      "scope": "SoundcloudEmbedIE widget URLs (url/secret_token url results, KeyError) and its _EMBED_REGEX iframes on generic pages; SoundcloudIE client ID discovery, resolved track JSON, default or soundcloud:formats-requested transcoding formats, artwork thumbnails and metadata, DRM/geo errors; `--username oauth --password TOKEN` and oauth_token cookie verification (connect/session) authorizing API requests, with upstream password-login error and invalid-token warnings; no original downloads, comments, sets, users or search; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "soundgasm",
@@ -4527,11 +4527,12 @@
       "rust": [
         "src/extractor/tiktok.rs",
         "tests/fixtures/sites/tiktok/",
+        "tests/fixtures/sites/tiktok-args/",
         "tests/fixtures/sites/douyin/",
         "src/extractor/html5.rs",
         "tests/fixtures/sites/tiktok-embeds/"
       ],
-      "scope": "TikTokIE webpage universal data with the native JS challenge solver, _parse_aweme_video_web formats/metadata, webpage/feed subtitles, slideshows as their audio track, status-code errors, __needs_testing format checks; TikTokVMIE short-link redirects; TikTokUserIE (user page, embed-page secUid fallback, creator item_list pages) and TikTokCollectionIE as lazy flat url playlists; DouyinIE web detail API through _parse_aweme_video_app (no signature/verification challenge); no app API, aweme/detail SRT-data captions, TikTokSoundIE/TikTokEffectIE/TikTokTagIE (app API, _WORKING=False); TikTokLiveIE webcast room info with FLV/HLS pull formats and the live detail fallback; TikTokIE _EMBED_REGEX script/iframe embeds on generic pages; compared with pinned upstream output through the fixture proxy"
+      "scope": "TikTokIE webpage universal data with the native JS challenge solver, _parse_aweme_video_web formats/metadata, webpage/feed subtitles, slideshows as their audio track, status-code errors, __needs_testing format checks; TikTokVMIE short-link redirects; TikTokUserIE (user page, embed-page secUid fallback, creator item_list pages, the tiktok:device_id extractor argument) and TikTokCollectionIE as lazy flat url playlists; DouyinIE web detail API through _parse_aweme_video_app (no signature/verification challenge); no app API, aweme/detail SRT-data captions, TikTokSoundIE/TikTokEffectIE/TikTokTagIE (app API, _WORKING=False); TikTokLiveIE webcast room info with FLV/HLS pull formats and the live detail fallback; TikTokIE _EMBED_REGEX script/iframe embeds on generic pages; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "toypics",
@@ -4711,9 +4712,10 @@
       "rust": [
         "src/extractor/twitch.rs",
         "tests/fixtures/sites/twitch/",
+        "tests/fixtures/sites/twitch-args/",
         "tests/fixtures/sites/twitch-login/"
       ],
-      "scope": "TwitchVodIE GraphQL metadata/chapters/storyboards, access token and usher HLS formats with source preference, usher 403 JSON errors (subscriber-only login hint) and live_from_start format marking; TwitchStreamIE stream GraphQL, stream access token, live usher HLS master, rerun/live titles, offline/missing-channel errors and --live-from-start VOD resolution; TwitchClipsIE signed qualities, thumbnails and metadata; TwitchVideosIE, TwitchVideosClipsIE and TwitchVideosCollectionsIE lazily paged GraphQL channel lists and TwitchCollectionIE, all as url_transparent entries; no login (_perform_login) or client_id extractor-arg; compared with pinned upstream output through the fixture proxy; TwitchBaseIE login (login page hidden inputs posted as JSON to the form action, Twitch errors, redirect page, two-factor authy token step) for every Twitch extractor, the auth-token cookie authorizing GraphQL, compared with pinned upstream through tests/fixtures/sites/twitch-login/"
+      "scope": "TwitchVodIE GraphQL metadata/chapters/storyboards, access token and usher HLS formats with source preference, usher 403 JSON errors (subscriber-only login hint) and live_from_start format marking; TwitchStreamIE stream GraphQL, stream access token, live usher HLS master, rerun/live titles, offline/missing-channel errors and --live-from-start VOD resolution; TwitchClipsIE signed qualities, thumbnails and metadata; TwitchVideosIE, TwitchVideosClipsIE and TwitchVideosCollectionsIE lazily paged GraphQL channel lists and TwitchCollectionIE, all as url_transparent entries; the twitch:client_id extractor argument (tests/fixtures/sites/twitch-args/); compared with pinned upstream output through the fixture proxy; TwitchBaseIE login (login page hidden inputs posted as JSON to the form action, Twitch errors, redirect page, two-factor authy token step) for every Twitch extractor, the auth-token cookie authorizing GraphQL, compared with pinned upstream through tests/fixtures/sites/twitch-login/"
     },
     {
       "name": "twitter",
@@ -6899,7 +6901,7 @@
         "src/extractor/streaks.rs",
         "tests/fixtures/sites/streaks/"
       ],
-      "scope": "StreaksIE VOD playback (SSAI/live and webpage embeds unsupported), compared with pinned upstream output through the fixture proxy"
+      "scope": "StreaksIE VOD playback with the URL or streaks:api_key API key and 403/404 error bodies (SSAI/live and webpage embeds unsupported), compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "wykop",

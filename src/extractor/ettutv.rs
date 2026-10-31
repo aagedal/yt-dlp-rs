@@ -13,7 +13,8 @@ pub struct EttuTv;
 const NAME: &str = "EttuTv";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?ettu\.tv/[^?#]+/playerpage/(?P<id>[0-9]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?ettu\.tv/[^?#]+/playerpage/(?P<id>[0-9]+)")
+        .unwrap()
 });
 
 /// `_match_id`.

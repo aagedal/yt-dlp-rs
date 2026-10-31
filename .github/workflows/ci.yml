@@ -26,6 +26,25 @@ jobs:
       - run: cargo fmt --all -- --check
       - run: cargo clippy --locked --all-targets -- -D warnings
       - run: cargo test --locked --no-fail-fast
+  impersonate:
+    # The `impersonate` feature (wreq on BoringSSL: CMake and a C/C++
+    # toolchain, both on the runners) that Linux and macOS releases ship.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: impersonate
+      - run: cargo clippy --locked --all-targets --features impersonate -- -D warnings
+      - run: cargo test --locked --features impersonate --test impersonate
+      - run: cargo test --locked --features impersonate --lib impersonate
   upstream-tooling:
     runs-on: ubuntu-latest
     steps:

@@ -16,7 +16,7 @@ pub(crate) const NAME: &str = "HuffPost";
 pub(crate) const KEY: &str = "HuffPost";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(embed\.)?live\.huffingtonpost\.com/(?:r/segment/[^/]+/|HPLEmbedPlayer/\?segmentId=)(?P<id>[0-9a-f]+)",
     )
     .unwrap()

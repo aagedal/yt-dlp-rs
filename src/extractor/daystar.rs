@@ -13,8 +13,9 @@ pub struct DaystarClip;
 
 const NAME: &str = "daystar:clip";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://player\.daystar\.tv/(?P<id>\w+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://player\.daystar\.tv/(?P<id>\w+)").unwrap()
+});
 
 static IFRAME: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<iframe[^>]+src="([^"]+)""#).unwrap());

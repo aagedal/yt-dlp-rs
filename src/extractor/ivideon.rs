@@ -16,7 +16,7 @@ const KEY: &str = "Ivideon";
 const QUALITIES: [&str; 3] = ["low", "mid", "hi"];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?ivideon\.com/tv/(?:[^/]+/)*camera/(?P<id>\d+-[\da-f]+)/(?P<camera_id>\d+)",
     )
     .unwrap()

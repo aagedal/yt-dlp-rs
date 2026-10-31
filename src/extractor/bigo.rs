@@ -13,7 +13,8 @@ pub struct Bigo;
 const NAME: &str = "Bigo";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?bigo\.tv/(?:[a-z]{2,}/)?(?P<id>[^/]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?bigo\.tv/(?:[a-z]{2,}/)?(?P<id>[^/]+)")
+        .unwrap()
 });
 
 /// `_match_id`.

@@ -16,8 +16,9 @@ pub struct Xinpianchang;
 
 const NAME: &str = "Xinpianchang";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(www\.)?xinpianchang\.com/(?P<id>a\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(www\.)?xinpianchang\.com/(?P<id>a\d+)").unwrap()
+});
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

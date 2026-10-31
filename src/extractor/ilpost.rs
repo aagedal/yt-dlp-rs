@@ -15,7 +15,7 @@ pub struct IlPost;
 const NAME: &str = "IlPost";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?ilpost\.it/episodes/(?P<id>[^/?#]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?ilpost\.it/episodes/(?P<id>[^/?#]+)").unwrap()
 });
 static METADATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"var\s+ilpostpodcast\s*=").unwrap());

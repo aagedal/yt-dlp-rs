@@ -14,7 +14,10 @@ pub struct MelonVod;
 const NAME: &str = "MelonVOD";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://vod\.melon\.com/video/detail2\.html?\?.*?mvId=(?P<id>[0-9]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://vod\.melon\.com/video/detail2\.html?\?.*?mvId=(?P<id>[0-9]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

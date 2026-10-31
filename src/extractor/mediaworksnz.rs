@@ -17,8 +17,9 @@ pub(crate) const KEY: &str = "MediaWorksNZVOD";
 
 const BASE: &str = r"https?://vodupload-api\.mediaworks\.nz/library/asset/published/";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(&format!(r"^{BASE}(?P<id>[A-Za-z0-9-]+)")).unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(&format!(r"^{BASE}(?P<id>[A-Za-z0-9-]+)")).unwrap()
+});
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(&format!(
         r#"<div\s+\bid=["']Player-Attributes-JWID[^>]+\bdata-request-url=["']{BASE}["'][^>]+\bdata-asset-id=["'](?P<id>[A-Za-z0-9-]+)["']"#

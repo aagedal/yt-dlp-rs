@@ -15,7 +15,7 @@ pub struct NoicePodcast;
 const NAME: &str = "NoicePodcast";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://open\.noice\.id/content/(?P<id>[a-fA-F0-9-]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://open\.noice\.id/content/(?P<id>[a-fA-F0-9-]+)").unwrap()
 });
 
 /// `_match_id`.

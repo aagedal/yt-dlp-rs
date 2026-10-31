@@ -19,5 +19,33 @@
    "-J",
    "--no-geo-bypass"
   ]
+ },
+ {
+  "url": "https://playback.api.streaks.jp/v1/projects/ktv-news/medias/ref:synthetic-clip",
+  "args": [
+   "--no-geo-bypass",
+   "--extractor-args",
+   "streaks:api_key=0FF2CCFB6381401582D6EE60E3CB66A1",
+   "--print",
+   "%(id)s|%(title)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "https://playback.api.streaks.jp/v1/projects/ktv-news/medias/ref:synthetic-clip",
+  "args": [
+   "--no-geo-bypass",
+   "--print",
+   "%(id)s|%(title)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "https://players.streaks.jp/tipness/08155cd19dc14c12bebefb69b92eafcc/index.html?m=ref:synthetic-clip",
+  "args": [
+   "--no-geo-bypass",
+   "--extractor-args",
+   "streaks:api_key=0ff2ccfb6381401582d6ee60e3cb66a1",
+   "--print",
+   "%(id)s|%(title)s|%(format_id)s"
+  ]
  }
 ]

@@ -16,8 +16,9 @@ pub struct IslamChannelSeries;
 const NAME: &str = "IslamChannel";
 const SERIES_NAME: &str = "IslamChannelSeries";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://watch\.islamchannel\.tv/watch/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://watch\.islamchannel\.tv/watch/(?P<id>\d+)").unwrap()
+});
 static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://watch\.islamchannel\.tv/series/(?P<id>[a-f\d-]+)").unwrap()
 });

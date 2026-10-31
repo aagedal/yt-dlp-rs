@@ -14,7 +14,8 @@ pub struct Nzz;
 const NAME: &str = "NZZ";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?nzz\.ch/(?:[^/]+/)*[^/?#]+-ld\.(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?nzz\.ch/(?:[^/]+/)*[^/?#]+-ld\.(?P<id>\d+)")
+        .unwrap()
 });
 static SCRIPT: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?s)<script[^>]* data-hid="jw-video-jw[^>]+>(.+?)</script>"#).unwrap()

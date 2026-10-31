@@ -71,5 +71,61 @@
   "args": [
    "--list-subs"
   ]
+ },
+ {
+  "url": "https://www.bilibili.com/video/BV1mix",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/video/BV1mix",
+  "args": [
+   "--extractor-args",
+   "bilibili:prefer_multi_flv",
+   "--print",
+   "playlist:%(_type)s|%(id)s|%(title)s|%(duration)s|%(playlist_count)s",
+   "--print",
+   "%(id)s|%(title)s|%(format_id)s|%(duration)s|%(filesize)s|%(url)s",
+   "--concat-playlist",
+   "never",
+   "-s"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/video/BV1mix",
+  "args": [
+   "--extractor-args",
+   "BiliBili:prefer_multi_flv=32",
+   "--print",
+   "playlist:%(_type)s|%(id)s|%(title)s|%(duration)s|%(playlist_count)s",
+   "--print",
+   "%(id)s|%(title)s|%(format_id)s|%(duration)s|%(filesize)s|%(url)s",
+   "--concat-playlist",
+   "never",
+   "-s"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/video/BV1mix",
+  "args": [
+   "--extractor-args",
+   "bilibili:prefer_multi_flv=80",
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/video/BV1mix",
+  "args": [
+   "--extractor-args",
+   "bilibili:prefer_multi_flv=best",
+   "--print",
+   "playlist:%(_type)s|%(id)s|%(title)s|%(duration)s|%(playlist_count)s",
+   "--print",
+   "%(id)s|%(title)s|%(format_id)s|%(duration)s|%(filesize)s|%(url)s",
+   "--concat-playlist",
+   "never",
+   "-s"
+  ]
  }
 ]

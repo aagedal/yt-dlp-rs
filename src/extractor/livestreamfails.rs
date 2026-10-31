@@ -13,7 +13,10 @@ pub struct Livestreamfails;
 const NAME: &str = "Livestreamfails";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?livestreamfails\.com/(?:clip|post)/(?P<id>[0-9]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?livestreamfails\.com/(?:clip|post)/(?P<id>[0-9]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

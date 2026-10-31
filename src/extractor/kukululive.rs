@@ -15,8 +15,9 @@ pub struct KukuluLive;
 const NAME: &str = "KukuluLive";
 const BASE: &str = "https://live.erinn.biz";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://live\.erinn\.biz/live\.php\?h(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://live\.erinn\.biz/live\.php\?h(?P<id>\d+)").unwrap()
+});
 static LIVESTREAM: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"var\s+timeshift\s*=\s*false").unwrap());
 static SOURCE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"var\s+fplayer_source\s*=").unwrap());

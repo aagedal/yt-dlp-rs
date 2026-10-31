@@ -10,8 +10,10 @@ use url::Url;
 pub struct Formula1;
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?formula1\.com/en/latest/video\.[^.]+\.(?P<id>\d+)\.html")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?formula1\.com/en/latest/video\.[^.]+\.(?P<id>\d+)\.html",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

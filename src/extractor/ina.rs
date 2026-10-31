@@ -14,7 +14,8 @@ pub struct Ina;
 const NAME: &str = "Ina";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www|m)\.)?ina\.fr/(?:[^?#]+/)(?P<id>[\w-]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:(?:www|m)\.)?ina\.fr/(?:[^?#]+/)(?P<id>[\w-]+)")
+        .unwrap()
 });
 static API_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"asset-details-url\s*=\s*["'](?P<api_url>[^"']+)"#).unwrap());

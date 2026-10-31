@@ -14,7 +14,8 @@ pub struct MySpass;
 const NAME: &str = "MySpass";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?myspass\.de/(?:[^/]+/)*(?P<id>\d+)/?[^/]*$").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?myspass\.de/(?:[^/]+/)*(?P<id>\d+)/?[^/]*$")
+        .unwrap()
 });
 static PATH_NUMBERS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"/myspass2009/\d+/(\d+)/(\d+)/(\d+)/").unwrap());

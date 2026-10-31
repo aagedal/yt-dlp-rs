@@ -16,7 +16,7 @@ pub(crate) const NAME: &str = "Vbox7";
 pub(crate) const KEY: &str = "Vbox7";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:[^/]+\.)?vbox7\.com/(?:play:|(?:emb/external\.php|player/ext\.swf)\?.*?\bvid=)(?P<id>[\da-fA-F]+)",
     )
     .unwrap()

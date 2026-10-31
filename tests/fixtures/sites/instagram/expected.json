@@ -465,6 +465,66 @@
     "WARNING: Requested format is not available"
    ],
    "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/p/LoggedIn01/",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "--extractor-args",
+    "instagram:app_id=IOS",
+    "--print",
+    "%(id)s|%(title)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "LoggedIn01|Video by naomipq|840"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/p/LoggedIn01/",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "--extractor-args",
+    "instagram:app_id=1234567890",
+    "--print",
+    "%(id)s|%(title)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "LoggedIn01|Video by naomipq|840"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/p/LoggedIn01/",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "--extractor-args",
+    "instagram:app_id=web",
+    "--print",
+    "%(id)s|%(title)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "LoggedIn01|Video by naomipq|840"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

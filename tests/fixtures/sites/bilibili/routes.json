@@ -181,6 +181,90 @@
     "Content-Type": "application/json"
    },
    "body": "{\"code\": 0, \"data\": {\"subtitle\": {\"subtitles\": []}}}"
+  },
+  {
+   "url": "https://www.bilibili.com/video/BV1mix",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><head><title>bilibili</title></head><body><script>window.__INITIAL_STATE__={\"videoData\": {\"bvid\": \"BV1mix\", \"aid\": 7002, \"cid\": 44, \"title\": \"Mixed\", \"desc\": \"MP4 and FLV qualities\", \"pubdate\": 1600000500, \"pic\": \"https://i0.hdslb.test/flv.jpg\", \"stat\": {\"view\": 5, \"reply\": 2}, \"pages\": [{\"cid\": 44, \"page\": 1, \"part\": \"Only\"}]}, \"upData\": {\"name\": \"uploader\", \"mid\": 42}};(function(){var s;}());</script></body></html>"
+  },
+  {
+   "url": "https://api.bilibili.com/x/player/pagelist?bvid=BV1mix&jsonp=jsonp",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": 0, \"data\": [{\"cid\": 44, \"page\": 1, \"part\": \"Only\"}]}"
+  },
+  {
+   "url": "https://api.bilibili.com/x/player/wbi/playurl?bvid=BV1mix&cid=44&dm_img_list=%5B%5D&fnval=4048&try_look=1",
+   "ignore_query": [
+    "wts",
+    "w_rid",
+    "dm_img_str",
+    "dm_cover_img_str",
+    "dm_img_inter"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": 0, \"data\": {\"quality\": 80, \"timelength\": 12000, \"accept_quality\": [80, 64, 32], \"support_formats\": [{\"quality\": 80, \"new_description\": \"1080P 高清\"}, {\"quality\": 64, \"new_description\": \"720P 准高清\"}, {\"quality\": 32, \"new_description\": \"480P 清晰\"}], \"durl\": [{\"url\": \"https://upos.bilivideo.test/mix-80.mp4?e=4\", \"length\": 12000, \"size\": 900}]}}"
+  },
+  {
+   "url": "https://api.bilibili.com/x/player/wbi/playurl?bvid=BV1mix&cid=44&dm_img_list=%5B%5D&fnval=4048&qn=64",
+   "ignore_query": [
+    "wts",
+    "w_rid",
+    "dm_img_str",
+    "dm_cover_img_str",
+    "dm_img_inter"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": 0, \"data\": {\"quality\": 64, \"timelength\": 12000, \"accept_quality\": [80, 64, 32], \"support_formats\": [{\"quality\": 80, \"new_description\": \"1080P 高清\"}, {\"quality\": 64, \"new_description\": \"720P 准高清\"}, {\"quality\": 32, \"new_description\": \"480P 清晰\"}], \"durl\": [{\"url\": \"https://upos.bilivideo.test/mix-64-1.flv?e=4\", \"length\": 7000, \"size\": 640}, {\"url\": \"https://upos.bilivideo.test/mix-64-2.flv?e=4\", \"length\": 5000, \"size\": 320}]}}"
+  },
+  {
+   "url": "https://api.bilibili.com/x/player/wbi/playurl?bvid=BV1mix&cid=44&dm_img_list=%5B%5D&fnval=4048&qn=32",
+   "ignore_query": [
+    "wts",
+    "w_rid",
+    "dm_img_str",
+    "dm_cover_img_str",
+    "dm_img_inter"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": 0, \"data\": {\"quality\": 32, \"timelength\": 12000, \"accept_quality\": [80, 64, 32], \"support_formats\": [{\"quality\": 80, \"new_description\": \"1080P 高清\"}, {\"quality\": 64, \"new_description\": \"720P 准高清\"}, {\"quality\": 32, \"new_description\": \"480P 清晰\"}], \"durl\": [{\"url\": \"https://upos.bilivideo.test/mix-32-1.flv?e=4\", \"length\": 7000, \"size\": 320}, {\"url\": \"https://upos.bilivideo.test/mix-32-2.flv?e=4\", \"length\": 5000, \"size\": 160}]}}"
+  },
+  {
+   "url": "https://api.bilibili.com/x/player/wbi/v2?aid=7002&cid=44",
+   "ignore_query": [
+    "wts",
+    "w_rid",
+    "dm_img_str",
+    "dm_cover_img_str",
+    "dm_img_inter"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": 0, \"data\": {\"subtitle\": {\"subtitles\": []}}}"
+  },
+  {
+   "url": "https://api.bilibili.com/x/player/wbi/v2?bvid=BV1mix&cid=44",
+   "ignore_query": [
+    "wts",
+    "w_rid",
+    "dm_img_str",
+    "dm_cover_img_str",
+    "dm_img_inter"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": 0, \"data\": {\"subtitle\": {\"subtitles\": []}}}"
   }
  ]
 }

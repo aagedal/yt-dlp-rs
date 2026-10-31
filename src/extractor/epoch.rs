@@ -13,7 +13,8 @@ pub struct Epoch;
 const NAME: &str = "Epoch";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://www.theepochtimes\.com/[\w-]+_(?P<id>\d+).html").unwrap()
+    crate::extractor::url_regex(r"^https?://www.theepochtimes\.com/[\w-]+_(?P<id>\d+).html")
+        .unwrap()
 });
 
 /// `_match_id`.

@@ -18,7 +18,7 @@ pub struct Faulio;
 const NAME: &str = "Faulio";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:aloula\.sba\.sa|bahry\.com|maraya\.sba\.net\.ae|sat7plus\.org)/(?:(?:ar|en|fa)/)?(?:episode|media)/(?P<id>[a-zA-Z0-9-]+)",
     )
     .unwrap()

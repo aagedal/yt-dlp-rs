@@ -14,7 +14,10 @@ const NAME: &str = "NowCanal";
 const KEY: &str = "NowCanal";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?nowcanal\.pt(?:/[\w-]+)+/detalhe/(?P<id>[\w-]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?nowcanal\.pt(?:/[\w-]+)+/detalhe/(?P<id>[\w-]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

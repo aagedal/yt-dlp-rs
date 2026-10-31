@@ -1,4 +1,5 @@
-//! `--max-downloads` and `--min/max-filesize` through local HTTP media and the CLI.
+//! `--max-downloads`, `--min/max-filesize`, `--limit-rate` and `--throttled-rate`
+//! through local HTTP media and the CLI.
 use std::{
     io::{Read, Write},
     net::TcpListener,
@@ -244,6 +245,33 @@ fn limit_rate_slows_media_transfers_and_rejects_zero() {
     let zero = cli(&["--limit-rate", "0", &url], directory.path(), None);
     assert!(!zero.status.success());
     assert!(stderr(&zero).contains("rate limit \"0\" must be positive"));
+}
+
+#[test]
+fn throttled_rate_retries_a_transfer_slower_than_it() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let url = server.url("/big.mp4");
+    // `--limit-rate` keeps the transfer below the throttle limit; after
+    // three seconds it is throttled, and without retries that is an error.
+    let output = cli(
+        &["-r", "16K", "--throttled-rate", "1M", "-R", "0", &url],
+        directory.path(),
+        None,
+    );
+    assert!(!output.status.success());
+    assert!(
+        stderr(&output).contains("The download speed is below throttle limit"),
+        "{}",
+        stderr(&output)
+    );
+    // A transfer faster than the limit is unaffected.
+    let output = cli(
+        &["--throttled-rate", "1K", &server.url("/a.mp4")],
+        directory.path(),
+        None,
+    );
+    assert!(output.status.success(), "{}", stderr(&output));
 }
 
 #[test]

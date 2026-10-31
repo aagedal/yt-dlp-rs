@@ -13,8 +13,9 @@ pub struct Meipai;
 
 const NAME: &str = "Meipai";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?meipai\.com/media/(?P<id>[0-9]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?meipai\.com/media/(?P<id>[0-9]+)").unwrap()
+});
 /// `file:\s*encodeURIComponent\((["\'])(?P<url>(?:(?!\1).)+)\1\)` without
 /// backreferences.
 static M3U8_URL: LazyLock<Regex> = LazyLock::new(|| {

@@ -14,7 +14,10 @@ pub struct OneFootball;
 const NAME: &str = "OneFootball";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?onefootball\.com/[a-z]{2}/video/[^/&?#]+-(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?onefootball\.com/[a-z]{2}/video/[^/&?#]+-(?P<id>\d+)",
+    )
+    .unwrap()
 });
 
 static M3U8: LazyLock<Regex> =

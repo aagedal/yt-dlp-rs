@@ -617,6 +617,40 @@ fn concurrent_fragments_assemble_in_order_with_per_fragment_retries() {
 }
 
 #[test]
+fn a_failed_append_stops_concurrent_workers() {
+    let server = Server::new(|request, _| {
+        thread::sleep(Duration::from_millis(20));
+        let name = request.split_whitespace().nth(1).unwrap().to_owned();
+        Response::media(name.into_bytes())
+    });
+    let fragments: Vec<_> = (0..40)
+        .map(|index| serde_json::json!({"url": format!("{}/f{index}", server.url)}))
+        .collect();
+    let info = server.info(serde_json::Value::Array(fragments));
+    let directory = tempfile::tempdir().unwrap();
+    // Keeping the first fragment fails: its file name is taken by a directory.
+    std::fs::create_dir(directory.path().join("o.ts.part-Frag1")).unwrap();
+    let result = YoutubeDl::new()
+        .unwrap()
+        .with_concurrent_fragments(2)
+        .with_keep_fragments(true)
+        .download_with_progress(
+            &info,
+            directory.path().join("o.ts"),
+            DownloadOptions {
+                part_files: yt_dlp_rs::PartFiles::Part { resume: false },
+                ..Default::default()
+            },
+            |_| ControlFlow::Continue(()),
+        );
+    assert!(result.is_err());
+    // The workers stop instead of fetching all 40 fragments (how many
+    // finish first depends on scheduling; slow runners see more).
+    let requests = server.requests().len();
+    assert!(requests < 30, "{requests} requests");
+}
+
+#[test]
 fn keep_fragments_writes_upstream_frag_files_sequentially_and_concurrently() {
     for concurrency in [1, 3] {
         let server = Server::new(|request, _| {

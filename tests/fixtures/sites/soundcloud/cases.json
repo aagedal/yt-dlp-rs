@@ -4,5 +4,9 @@
  {"url": "https://api.soundcloud.com/tracks/123998367", "args": ["--print", "%(id)s|%(title)s|%(uploader_id)s|%(tags)s|%(genres)s|%(webpage_url)s"]},
  {"url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy", "args": ["-f", "http_mp3_1_0", "--no-progress", "-o", "%(id)s.%(ext)s"]},
  {"url": "https://api.soundcloud.com/tracks/777", "args": ["-j"]},
- {"url": "https://api.soundcloud.com/tracks/777", "args": ["--ignore-no-formats-error", "-j"]}
+ {"url": "https://api.soundcloud.com/tracks/777", "args": ["--ignore-no-formats-error", "-j"]},
+ {"url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy", "args": ["--extractor-args", "soundcloud:formats=*_mp3", "-F"]},
+ {"url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy", "args": ["--extractor-args", "soundcloud:formats=*", "-F"]},
+ {"url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy", "args": ["--extractor-args", "SoundCloud:formats=HLS-AES_*,default", "--print", "%(formats.:.format_id)s"]},
+ {"url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy", "args": ["--extractor-args", "soundcloud:formats=hls_opus", "-j"]}
 ]

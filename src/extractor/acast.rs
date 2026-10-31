@@ -22,7 +22,7 @@ const API: &str = "https://feeder.acast.com/api/v1/shows/";
 const VALID_URL_BODY: &str = r#"https?://(?:(?:(?:embed|www|shows)\.)?acast\.com/|play\.acast\.com/s/)(?P<channel>[^/?#]+)/(?:episodes/)?(?P<id>[^/#?"]+)"#;
 
 static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(&format!("^{VALID_URL_BODY}")).unwrap());
+    LazyLock::new(|| crate::extractor::url_regex(&format!("^{VALID_URL_BODY}")).unwrap());
 static CHANNEL_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:(?:(?:www|shows)\.)?acast\.com/|play\.acast\.com/s/)(?P<id>[^/#?]+)")
         .unwrap()

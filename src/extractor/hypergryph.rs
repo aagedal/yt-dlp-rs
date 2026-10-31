@@ -16,7 +16,8 @@ const KEY: &str = "MonsterSirenHypergryphMusic";
 const API_BASE: &str = "https://monster-siren.hypergryph.com/api";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://monster-siren\.hypergryph\.com/music/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://monster-siren\.hypergryph\.com/music/(?P<id>\d+)")
+        .unwrap()
 });
 
 /// `_match_id`.

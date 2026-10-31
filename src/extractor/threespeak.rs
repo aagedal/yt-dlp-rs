@@ -20,7 +20,8 @@ const NAME: &str = "ThreeSpeak";
 const USER_NAME: &str = "ThreeSpeakUser";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?3speak\.tv/watch\?v=[^/]+/(?P<id>[^/$&#?]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?3speak\.tv/watch\?v=[^/]+/(?P<id>[^/$&#?]+)")
+        .unwrap()
 });
 static USER_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?3speak\.tv/user/(?P<id>[^/$&?#]+)").unwrap());

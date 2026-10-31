@@ -15,7 +15,7 @@ pub struct BtvPlus;
 const NAME: &str = "BTVPlus";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?btvplus\.bg/produkt/(?:predavaniya|seriali|novini)/(?P<id>\d+)",
     )
     .unwrap()

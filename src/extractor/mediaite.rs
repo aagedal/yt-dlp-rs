@@ -14,8 +14,9 @@ pub struct Mediaite;
 const NAME: &str = "Mediaite";
 
 // `(?!/category)` as a check on the first path segment.
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?mediaite\.com(?:/[\w-]+){2}").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?mediaite\.com(?:/[\w-]+){2}").unwrap()
+});
 static CATEGORY: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?mediaite\.com/category").unwrap());
 static VIDEO_ID: LazyLock<[Regex; 2]> = LazyLock::new(|| {

@@ -13,8 +13,9 @@ pub struct Toypics;
 
 const NAME: &str = "Toypics";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://videos\.toypics\.net/view/(?P<id>[0-9]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://videos\.toypics\.net/view/(?P<id>[0-9]+)").unwrap()
+});
 static TITLES: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [
         Regex::new(r#"<h1[^>]+class=["']view-video-title[^>]+>([^<]+)</h"#).unwrap(),

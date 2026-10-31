@@ -14,8 +14,10 @@ pub struct MatchiTv;
 const NAME: &str = "MatchiTV";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?matchi\.tv/watch/?\?(?:[^#]+&)?s=(?P<id>[0-9a-zA-Z]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?matchi\.tv/watch/?\?(?:[^#]+&)?s=(?P<id>[0-9a-zA-Z]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

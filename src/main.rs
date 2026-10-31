@@ -1011,7 +1011,7 @@ struct Args {
     /// Path to the private key file for the client certificate
     #[arg(long, value_name = "KEYFILE")]
     client_certificate_key: Option<PathBuf>,
-    /// Password for an encrypted client certificate key (not supported natively)
+    /// Password for an encrypted client certificate key (prompted for when omitted)
     #[arg(long, value_name = "PASSWORD")]
     client_certificate_password: Option<String>,
     /// Display progress in the console titlebar
@@ -1712,84 +1712,29 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         args.wait_for_video.is_some() && !args.no_wait_for_video,
     );
     yt_dlp_rs::no_formats::set_allow_unplayable(args.allow_unplayable_formats);
-    // `--extractor-args`: GenericIE's, YouTube's, YoutubeTabIE's, TwitterIE's, VimeoIE's and
-    // ORFONIE's ported arguments are used; other extractors' are not.
+    // `--extractor-args`: the ported arguments of `SUPPORTED_EXTRACTOR_ARGS`'s
+    // extractors are used; other arguments and extractors' are not.
     let extractor_args =
         yt_dlp_rs::manifest_args::parse_extractor_args(&args.extractor_args).map_err(UsageError)?;
     for (key, values) in &extractor_args {
-        match key.as_str() {
-            "generic" => {}
-            "youtube" => {
-                for name in values.keys().filter(|name| {
-                    !matches!(
-                        name.as_str(),
-                        "player_client"
-                            | "player_skip"
-                            | "max_comments"
-                            | "comment_sort"
-                            | "formats"
-                            | "include_duplicate_formats"
-                            | "skip"
-                            | "po_token"
-                            | "fetch_pot"
-                            | "pot_trace"
-                            | "visitor_data"
-                            | "data_sync_id"
-                            | "innertube_host"
-                            | "innertube_key"
-                            | "player_params"
-                            | "use_ad_playback_context"
-                            | "webpage_client"
-                            | "webpage_skip"
-                            | "player_js_version"
-                            | "player_js_variant"
-                            | "raise_incomplete_data"
-                            | "lang"
-                    )
-                }) {
-                    warning!(
-                        "WARNING: extractor argument youtube:{name} is not supported natively and is ignored"
-                    );
-                }
-            }
-            "twitter" => {
-                for name in values.keys().filter(|name| name.as_str() != "api") {
-                    warning!(
-                        "WARNING: extractor argument twitter:{name} is not supported natively and is ignored"
-                    );
-                }
-            }
-            "vimeo" => {
+        if key == "generic" {
+            continue;
+        }
+        match SUPPORTED_EXTRACTOR_ARGS
+            .iter()
+            .find(|(extractor, _)| extractor == key)
+        {
+            Some((_, supported)) => {
                 for name in values
                     .keys()
-                    .filter(|name| !matches!(name.as_str(), "client" | "original_format_policy"))
+                    .filter(|name| !supported.contains(&name.as_str()))
                 {
                     warning!(
-                        "WARNING: extractor argument vimeo:{name} is not supported natively and is ignored"
+                        "WARNING: extractor argument {key}:{name} is not supported natively and is ignored"
                     );
                 }
             }
-            "orfon" => {
-                for name in values
-                    .keys()
-                    .filter(|name| name.as_str() != "prefer_segments_playlist")
-                {
-                    warning!(
-                        "WARNING: extractor argument orfon:{name} is not supported natively and is ignored"
-                    );
-                }
-            }
-            "youtubetab" => {
-                for name in values
-                    .keys()
-                    .filter(|name| !matches!(name.as_str(), "skip" | "approximate_date"))
-                {
-                    warning!(
-                        "WARNING: extractor argument youtubetab:{name} is not supported natively and is ignored"
-                    );
-                }
-            }
-            _ => warning!(
+            None => warning!(
                 "WARNING: extractor arguments for {key} are not supported natively and are ignored"
             ),
         }
@@ -2970,6 +2915,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if rate_limit == Some(0) {
         return Err(usage("rate limit \"0\" must be positive").into());
     }
+    // Validated by `validate_accepted_options`.
+    let throttled_rate = args.throttled_rate.as_deref().and_then(parse_bytes);
     let http_chunk_size =
         size_option("http chunk size", args.http_chunk_size.as_deref()).map_err(usage)?;
     // Upstream `--downloader` (`_dict_from_options_callback`) validation.
@@ -3215,19 +3162,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Validated by `validate_accepted_options`.
         let target = yt_dlp_rs::impersonate::ImpersonateTarget::parse(&target.to_lowercase())
             .unwrap_or_default();
-        if !yt_dlp_rs::impersonate::target_available(&target) {
+        // Upstream impersonates every request; here extraction requests
+        // (pages and APIs) do, and media transfers use the plain client.
+        if !yt_dlp_rs::impersonate::set_default(&target) {
             report_error!(
                 "ERROR: Impersonate target \"{target}\" is not available. Use --list-impersonate-targets to see available targets. You may be missing dependencies required to support this target."
             );
-        } else {
-            // Upstream impersonates every request; this port's extractors
-            // and downloaders share a plain client, and only the requests
-            // extractors mark for impersonation use the `wreq` transport.
-            report_error!(
-                "ERROR: --impersonate (impersonating every request) is not supported natively; extractors that request impersonation use an available target automatically"
-            );
+            return Ok(false);
         }
-        return Ok(false);
     }
     // Upstream `print_extractor_information`, for this port's extractors
     // (sorted, `generic` last); the generic extractor lists unmatched URLs.
@@ -6401,6 +6343,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                             min_filesize,
                                             max_filesize,
                                             rate_limit,
+                                            throttled_rate,
                                             update_time: false,
                                             part_files: yt_dlp_rs::PartFiles::NoPart {
                                                 resume: false,
@@ -6514,6 +6457,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         min_filesize,
                                         max_filesize,
                                         rate_limit,
+                                        throttled_rate,
                                         update_time: args.mtime,
                                         part_files,
                                         retries,
@@ -6581,6 +6525,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         min_filesize,
                                         max_filesize,
                                         rate_limit,
+                                        throttled_rate,
                                         update_time: args.mtime,
                                         part_files,
                                         retries,
@@ -7536,6 +7481,16 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
         (args.legacy_server_connect, "--legacy-server-connect"),
         (args.bidi_workaround, "--bidi-workaround"),
         (!args.plugin_dirs.is_empty(), "--plugin-dirs"),
+        // HTTP-scheme preferences of a few upstream extractors.
+        (args.prefer_insecure, "--prefer-insecure"),
+        // The EJS challenge solver is bundled (pinned), never downloaded.
+        (!args.remote_components.is_empty(), "--remote-components"),
+        // The `Ytdl-request-proxy` header of upstream's geo verification
+        // requests.
+        (
+            args.geo_verification_proxy.is_some(),
+            "--geo-verification-proxy",
+        ),
     ] {
         if given {
             warning!("WARNING: {what} is not supported natively and is ignored");
@@ -7548,6 +7503,51 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
     }
     Ok(())
 }
+
+/// The `--extractor-args` this port uses, per lowercased extractor key (upstream
+/// `_configuration_arg` reads `extractor_args[ie_key.lower()]`, where `ie_key`
+/// may name another extractor: TikTok's arguments apply to every TikTok
+/// extractor, for example). Other arguments of these extractors warn
+/// individually; other extractors' (except `generic`) warn as a whole.
+const SUPPORTED_EXTRACTOR_ARGS: &[(&str, &[&str])] = &[
+    (
+        "youtube",
+        &[
+            "player_client",
+            "player_skip",
+            "max_comments",
+            "comment_sort",
+            "formats",
+            "include_duplicate_formats",
+            "skip",
+            "po_token",
+            "fetch_pot",
+            "pot_trace",
+            "visitor_data",
+            "data_sync_id",
+            "innertube_host",
+            "innertube_key",
+            "player_params",
+            "use_ad_playback_context",
+            "webpage_client",
+            "webpage_skip",
+            "player_js_version",
+            "player_js_variant",
+            "raise_incomplete_data",
+            "lang",
+        ],
+    ),
+    ("youtubetab", &["skip", "approximate_date"]),
+    ("twitter", &["api"]),
+    ("vimeo", &["client", "original_format_policy"]),
+    ("orfon", &["prefer_segments_playlist"]),
+    ("tiktok", &["device_id"]),
+    ("soundcloud", &["formats"]),
+    ("instagram", &["app_id"]),
+    ("streaks", &["api_key"]),
+    ("twitch", &["client_id"]),
+    ("bilibili", &["prefer_multi_flv"]),
+];
 
 /// Upstream `_PRESET_ALIASES`.
 const PRESET_ALIASES: [(&str, &[&str]); 5] = [
@@ -8856,8 +8856,11 @@ struct ProgressOptions {
 struct ProgressReporter<'a> {
     options: &'a ProgressOptions,
     active: Option<ActiveDownload>,
-    /// `info` and `progress.filename` for `--progress-template`.
-    info: serde_json::Value,
+    /// `{"info": ..., "progress": ...}` for `--progress-template` and console
+    /// titles, built once per download; each status replaces `progress`
+    /// (copying a large info dict per status would dominate fragmented
+    /// downloads).
+    dict: std::cell::RefCell<serde_json::Value>,
     filename: Option<String>,
 }
 
@@ -8884,7 +8887,7 @@ impl<'a> ProgressReporter<'a> {
         Self {
             options,
             active: None,
-            info: serde_json::Value::Object(Default::default()),
+            dict: std::cell::RefCell::new(serde_json::json!({"info": {}, "progress": null})),
             filename: None,
         }
     }
@@ -8892,7 +8895,10 @@ impl<'a> ProgressReporter<'a> {
     /// The video and file a `--progress-template` describes.
     fn for_download(mut self, info: &yt_dlp_rs::VideoInfo, filename: &std::path::Path) -> Self {
         if self.options.template.is_some() || console_title() {
-            self.info = yt_dlp_rs::info_value(info).unwrap_or_default();
+            self.dict = std::cell::RefCell::new(serde_json::json!({
+                "info": yt_dlp_rs::info_value(info).unwrap_or_default(),
+                "progress": null,
+            }));
             self.filename = Some(filename.to_string_lossy().into_owned());
         }
         self
@@ -8903,7 +8909,8 @@ impl<'a> ProgressReporter<'a> {
     fn render(&self, progress: serde_json::Value) -> String {
         match &self.options.template {
             Some(template) => {
-                let dict = serde_json::json!({"info": self.info, "progress": progress});
+                let mut dict = self.dict.borrow_mut();
+                dict["progress"] = progress;
                 yt_dlp_rs::output::evaluate_dict_template(
                     template,
                     &dict,
@@ -8926,13 +8933,16 @@ impl<'a> ProgressReporter<'a> {
         };
         let finished = progress["status"] == "finished";
         let percent = progress["_percent"].as_f64();
-        let dict = serde_json::json!({"info": self.info, "progress": progress});
-        let message = yt_dlp_rs::output::evaluate_dict_template(
-            console.download_title.as_deref().unwrap_or(DEFAULT_TITLE),
-            &dict,
-            &TemplateOptions::default(),
-        )
-        .unwrap_or_default();
+        let message = {
+            let mut dict = self.dict.borrow_mut();
+            dict["progress"] = progress;
+            yt_dlp_rs::output::evaluate_dict_template(
+                console.download_title.as_deref().unwrap_or(DEFAULT_TITLE),
+                &dict,
+                &TemplateOptions::default(),
+            )
+            .unwrap_or_default()
+        };
         let state = if finished || percent.is_none() {
             PROGRESS_INDETERMINATE
         } else {

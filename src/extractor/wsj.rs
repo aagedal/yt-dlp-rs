@@ -17,7 +17,7 @@ const NAME: &str = "WSJ";
 const ARTICLE_NAME: &str = "WSJArticle";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^(?:https?://video-api\.wsj\.com/api-video/player/iframe\.html\?.*?\bguid=|https?://(?:www\.)?(?:wsj|barrons)\.com/video/(?:[^/]+/)+|wsj:)(?P<id>[a-fA-F0-9-]{36})",
     )
     .unwrap()

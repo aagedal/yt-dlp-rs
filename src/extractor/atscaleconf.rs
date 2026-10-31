@@ -15,7 +15,10 @@ pub struct AtScaleConfEvent;
 const NAME: &str = "AtScaleConfEvent";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?atscaleconference\.com/events/(?P<id>[^/&$?]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?atscaleconference\.com/events/(?P<id>[^/&$?]+)",
+    )
+    .unwrap()
 });
 static VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"data-url\s*=\s*"(https?://(?:www\.)?atscaleconference\.com/videos/[^"]+)""#)

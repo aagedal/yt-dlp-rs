@@ -15,8 +15,10 @@ pub struct VidLii;
 const NAME: &str = "VidLii";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?vidlii\.com/(?:watch|embed)\?.*?\bv=(?P<id>[0-9A-Za-z_-]{11})")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?vidlii\.com/(?:watch|embed)\?.*?\bv=(?P<id>[0-9A-Za-z_-]{11})",
+    )
+    .unwrap()
 });
 static SOURCE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"src\s*:\s*(?:"(?P<dq>(?:https?://)?[^"\n]+)"|'(?P<sq>(?:https?://)?[^'\n]+)')"#)

@@ -20,7 +20,7 @@ pub struct YandexDisk;
 const NAME: &str = "YandexDisk";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?P<domain>yadi\.sk|disk\.(?:360\.)?yandex\.(?:az|by|co(?:m(?:\.(?:am|ge|tr))?|\.il)|ee|fr|k[gz]|l[tv]|md|t[jm]|u[az]|ru))/(?:[di]/|public.*?\bhash=)(?P<id>[^/?#&]+)",
     )
     .unwrap()

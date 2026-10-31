@@ -15,8 +15,10 @@ pub struct Whyp;
 const NAME: &str = "Whyp";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?whyp\.it/tracks/(?:(?P<id>\d{5,})/)?(?P<display_id>[^/?#]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?whyp\.it/tracks/(?:(?P<id>\d{5,})/)?(?P<display_id>[^/?#]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_valid_url`.

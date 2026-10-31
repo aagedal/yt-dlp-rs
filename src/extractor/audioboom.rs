@@ -14,7 +14,8 @@ pub struct AudioBoom;
 const NAME: &str = "AudioBoom";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?audioboom\.com/(?:boos|posts)/(?P<id>[0-9]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?audioboom\.com/(?:boos|posts)/(?P<id>[0-9]+)")
+        .unwrap()
 });
 static STORE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"data-react-class="V5DetailPagePlayer"\s*data-react-props=["']"#).unwrap()

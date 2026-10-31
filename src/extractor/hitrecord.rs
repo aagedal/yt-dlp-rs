@@ -13,7 +13,7 @@ pub struct HitRecord;
 const NAME: &str = "HitRecord";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?hitrecord\.org/records/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?hitrecord\.org/records/(?P<id>\d+)").unwrap()
 });
 
 /// `_match_id`.

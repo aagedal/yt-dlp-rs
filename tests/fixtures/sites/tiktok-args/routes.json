@@ -1,0 +1,40 @@
+{
+ "routes": [
+  {
+   "url": "https://www.tiktok.com/@devicer",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "user-devicer.html"
+  },
+  {
+   "url": "https://www.tiktok.com/@repeater",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "user-repeater.html"
+  },
+  {
+   "url": "https://www.tiktok.com/api/creator/item_list/?aid=1988&app_language=en&app_name=tiktok_web&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0+%28Windows%29&channel=tiktok_web&cookie_enabled=true&count=15&device_id=7250000000000000042&device_platform=web_pc&focus_state=true&from_page=user&history_len=2&is_fullscreen=false&is_page_visible=true&language=en&os=windows&priority_region=&referer=&region=US&screen_height=1080&screen_width=1920&secUid=MS4wLjABAAAA_devicer&type=1&tz_name=UTC&webcast_language=en",
+   "ignore_query": [
+    "cursor",
+    "verifyFp"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "devicer-page.json"
+  },
+  {
+   "url": "https://www.tiktok.com/api/creator/item_list/?aid=1988&app_language=en&app_name=tiktok_web&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0+%28Windows%29&channel=tiktok_web&cookie_enabled=true&count=15&device_id=7250000000000000042&device_platform=web_pc&focus_state=true&from_page=user&history_len=2&is_fullscreen=false&is_page_visible=true&language=en&os=windows&priority_region=&referer=&region=US&screen_height=1080&screen_width=1920&secUid=MS4wLjABAAAA_repeater&type=1&tz_name=UTC&webcast_language=en",
+   "ignore_query": [
+    "cursor",
+    "verifyFp"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "repeater-page.json"
+  }
+ ]
+}

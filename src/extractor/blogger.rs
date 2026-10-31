@@ -15,7 +15,8 @@ pub(crate) const NAME: &str = "blogger.com";
 pub(crate) const KEY: &str = "Blogger";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?blogger\.com/video\.g\?token=(?P<id>.+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?blogger\.com/video\.g\?token=(?P<id>.+)")
+        .unwrap()
 });
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<iframe[^>]+src=["'](?P<url>(?:https?:)?//(?:www\.)?blogger\.com/video\.g\?token=[^"']+)["']"#)

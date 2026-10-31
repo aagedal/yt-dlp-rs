@@ -205,3 +205,48 @@ fn malformed_extractor_args_are_usage_errors() {
         String::from_utf8_lossy(&output.stderr)
     );
 }
+
+/// Ported arguments are used silently; other arguments of an extractor with
+/// ported ones warn by name, other extractors' as a whole. Extractor keys
+/// are lowercased like upstream's.
+#[test]
+fn unported_extractor_args_warn() {
+    let directory = tempfile::tempdir().unwrap();
+    let output = run(
+        directory.path(),
+        &[
+            "--extractor-args",
+            "TikTok:device_id=1;app_info=x",
+            "--extractor-args",
+            "tiktokuser:device_id=1",
+            "--extractor-args",
+            "soundcloud:formats=*;comments_sort_by=newest",
+            "--extractor-args",
+            "twitch:client_id=X",
+            "--extractor-args",
+            "BiliBili:prefer_multi_flv",
+            "--extractor-args",
+            "instagram:app_id=ios",
+            "--extractor-args",
+            "streaks:api_key=0",
+            "--extractor-args",
+            "nhkradirulive:area=osaka",
+        ],
+        "http://127.0.0.1:9/",
+    );
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    let warnings: Vec<&str> = stderr
+        .lines()
+        .filter(|line| line.contains("extractor arg"))
+        .collect();
+    assert_eq!(
+        warnings,
+        [
+            "WARNING: extractor arguments for nhkradirulive are not supported natively and are ignored",
+            "WARNING: extractor argument soundcloud:comments_sort_by is not supported natively and is ignored",
+            "WARNING: extractor argument tiktok:app_info is not supported natively and is ignored",
+            "WARNING: extractor arguments for tiktokuser are not supported natively and are ignored",
+        ],
+        "{stderr}"
+    );
+}

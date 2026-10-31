@@ -21,7 +21,7 @@ const CLIPS_NAME: &str = "abcotvs:clips";
 const CLIPS_KEY: &str = "ABCOTVSClips";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?P<site>abc(?:7(?:news|ny|chicago)?|11|13|30)|6abc)\.com(?:(?:/[^/]+)*/(?P<display_id>[^/]+))?/(?P<id>\d+)",
     )
     .unwrap()

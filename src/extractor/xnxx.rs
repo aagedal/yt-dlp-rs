@@ -15,7 +15,8 @@ pub struct Xnxx;
 const NAME: &str = "XNXX";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:video|www)\.xnxx3?\.com/video-?(?P<id>[0-9a-z]+)/").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:video|www)\.xnxx3?\.com/video-?(?P<id>[0-9a-z]+)/")
+        .unwrap()
 });
 // `(?P<q>["'])(?P<url>(?:https?:)?//.+?)(?P=q)` without a backreference.
 static VIDEO: LazyLock<Regex> = LazyLock::new(|| {

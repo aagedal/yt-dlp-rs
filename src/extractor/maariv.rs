@@ -16,7 +16,8 @@ pub(crate) const KEY: &str = "Maariv";
 const VALID: &str =
     r"https?://player\.maariv\.co\.il/public/player\.html\?(?:[^#]+&)?media=(?P<id>\d+)";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| Regex::new(&format!("^{VALID}")).unwrap());
+static VALID_URL: LazyLock<Regex> =
+    LazyLock::new(|| crate::extractor::url_regex(&format!("^{VALID}")).unwrap());
 static EMBED: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(&format!(r#"<iframe[^>]+\bsrc=['"](?P<url>{VALID})"#)).unwrap());
 

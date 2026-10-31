@@ -13,7 +13,8 @@ pub struct Crtvg;
 const NAME: &str = "Crtvg";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?crtvg\.es/tvg/a-carta/(?P<id>[^/#?]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?crtvg\.es/tvg/a-carta/(?P<id>[^/#?]+)")
+        .unwrap()
 });
 static VIDEO_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"var\s+url\s*=\s*["']([^"']+)"#).unwrap());

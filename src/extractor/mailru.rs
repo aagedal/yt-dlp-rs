@@ -18,7 +18,7 @@ const NAME: &str = "mailru";
 const MUSIC_NAME: &str = "MailRuMusic";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(concat!(
+    crate::extractor::url_regex(concat!(
         r"https?://(?:(?:www|m|videoapi)\.)?my\.mail\.ru/+(?:",
         r"video/.*#video=/?(?P<idv1>(?:[^/]+/){3}\d+)|",
         r"(?:videos/embed/)?(?:(?P<idv2prefix>(?:[^/]+/+){2})(?:video/(?:embed/)?)?(?P<idv2suffix>[^/]+/\d+))(?:\.html)?|",

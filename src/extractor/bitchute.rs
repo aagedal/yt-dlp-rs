@@ -36,7 +36,7 @@ const SEEDS: [&str; 16] = [
 ];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www|old)\.)?bitchute\.com/(?:video|embed|torrent/[^/?#]+)/(?P<id>[^/?#&]+)")
+    crate::extractor::url_regex(r"^https?://(?:(?:www|old)\.)?bitchute\.com/(?:video|embed|torrent/[^/?#]+)/(?P<id>[^/?#&]+)")
         .unwrap()
 });
 static SEED: LazyLock<Regex> =

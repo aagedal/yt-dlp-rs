@@ -20,7 +20,7 @@ const NAME: &str = "Box";
 const FILE_FIELDS: &str = "authenticated_download_url,created_at,created_by,description,extension,is_download_available,name,representations,size";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:[^.]+\.)?(?P<service>app|ent)\.box\.com/s/(?P<shared_name>[^/?#]+)(?:/file/(?P<id>\d+))?",
     )
     .unwrap()

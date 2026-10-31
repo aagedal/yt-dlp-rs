@@ -15,7 +15,7 @@ pub struct Holodex;
 const NAME: &str = "Holodex";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.|staging\.)?holodex\.net/(?:api/v2/playlist/(?P<playlist>\d+)|watch/(?P<id>[\w-]{11})(?:\?(?:[^#]+&)?playlist=(?P<playlist2>\d+))?)",
     )
     .unwrap()

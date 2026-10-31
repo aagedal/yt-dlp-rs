@@ -26,7 +26,7 @@ const COMMON_MEDIA_FIELDS: &str =
 /// the `video/` alternative (the only one overlapping it) and refused apart.
 const URL_RE: &str = r"(?:https?:)?//(?:dai\.ly/|(?:(?:(?:www|touch|geo)\.)?dailymotion\.[a-z]{2,3}|(?:www\.)?lequipe\.fr)/(?:(?:(?:crawler|embed|swf)/)?video/|(?P<swf>swf/)|player(?:/[\da-z]+)?\.html\?(?:video|(?P<is_playlist>playlist))=))(?P<id>[^/?_&#]+)(?:[\w-]*\?playlist=(?P<playlist_id>x[0-9a-z]+))?";
 static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(&format!("(?i)^{URL_RE}")).unwrap());
+    LazyLock::new(|| crate::extractor::url_regex(&format!("(?i)^{URL_RE}")).unwrap());
 static H264: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"/H264-(\d+)x(\d+)(?:-(60)/)?").unwrap());
 

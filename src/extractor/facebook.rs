@@ -31,7 +31,7 @@ const SUPPORTED_PAGELETS: &str =
     r"(?:pagelet_group_mall|permalink_video_pagelet|hyperfeed_story_id_[0-9a-f]+)";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^(?:https?://(?:[\w-]+\.)?(?:facebook\.com|facebookwkhpilnemxj7asaniu7vnjjbiltxjqhye3mhbshg7kx5tfyd\.onion)/(?:[^#]*?\#!/)?(?:(?:permalink\.php|video/video\.php|photo\.php|video\.php|video/embed|story\.php|watch(?:/live)?/?)\?(?:.*?)(?:v|video_id|story_fbid)=|[^/]+/videos/(?:[^/]+/)?|[^/]+/posts/|events/(?:[^/]+/)?|groups/[^/]+/(?:permalink|posts)/(?:[\da-f]+/)?|watchparty/)|facebook:)(?P<id>pfbid[A-Za-z0-9]+|\d+)",
     )
     .unwrap()

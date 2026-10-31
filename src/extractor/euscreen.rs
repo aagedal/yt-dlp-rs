@@ -20,7 +20,8 @@ const SERVLET: &str =
 const PAYLOAD: &str = "<fsxml><screen><properties><screenId>-1</screenId></properties><capabilities id=\"1\"><properties><platform>Win32</platform><appcodename>Mozilla</appcodename><appname>Netscape</appname><appversion>5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36</appversion><useragent>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36</useragent><cookiesenabled>true</cookiesenabled><screenwidth>784</screenwidth><screenheight>758</screenheight><orientation>undefined</orientation><smt_browserid>Sat, 07 Oct 2021 08:56:50 GMT</smt_browserid><smt_sessionid>1633769810758</smt_sessionid></properties></capabilities></screen></fsxml>";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?euscreen\.eu/item.html\?id=(?P<id>[^&?$/]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?euscreen\.eu/item.html\?id=(?P<id>[^&?$/]+)")
+        .unwrap()
 });
 static VIDEO_JSON: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"setVideo\((\{.+\})\)\(\$end\$\)put").unwrap());

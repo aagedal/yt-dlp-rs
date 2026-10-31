@@ -20,7 +20,7 @@ const PLAYLIST_KEY: &str = "CPACPlaylist";
 const API: &str = "https://www.cpac.ca/api/1/services/contentModel.json?url=/site/website/";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?cpac\.ca/(?P<fr>l-)?episode\?id=(?P<id>[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12})",
     )
     .unwrap()

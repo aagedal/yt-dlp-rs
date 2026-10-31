@@ -12,8 +12,9 @@ pub struct Streamable;
 
 const NAME: &str = "Streamable";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://streamable\.com/(?:[es]/)?(?P<id>\w+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://streamable\.com/(?:[es]/)?(?P<id>\w+)").unwrap()
+});
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

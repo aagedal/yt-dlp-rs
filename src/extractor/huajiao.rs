@@ -12,8 +12,9 @@ pub struct Huajiao;
 
 const NAME: &str = "Huajiao";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?huajiao\.com/l/(?P<id>[0-9]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?huajiao\.com/l/(?P<id>[0-9]+)").unwrap()
+});
 static FEED: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"var\s+feed\s*=\s*(\{.+\})").unwrap());
 
 /// `_match_id`.

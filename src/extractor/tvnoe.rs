@@ -16,8 +16,9 @@ pub struct TvNoe;
 const NAME: &str = "tvnoe";
 const KEY: &str = "TVNoe";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?tvnoe\.cz/porad/(?P<id>[\w-]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?tvnoe\.cz/porad/(?P<id>[\w-]+)").unwrap()
+});
 static INIT_PLAYER: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"var\s+INIT_PLAYER\s*=").unwrap());
 static DESCRIPTION: LazyLock<Regex> =

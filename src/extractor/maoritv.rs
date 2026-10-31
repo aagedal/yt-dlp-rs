@@ -12,8 +12,10 @@ pub struct MaoriTV;
 const NAME: &str = "MaoriTV";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?maoritelevision\.com/shows/(?:[^/]+/)+(?P<id>[^/?&#]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?maoritelevision\.com/shows/(?:[^/]+/)+(?P<id>[^/?&#]+)",
+    )
+    .unwrap()
 });
 static BRIGHTCOVE_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-main-video-id=["'](\d+)"#).unwrap());

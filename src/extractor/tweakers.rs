@@ -12,8 +12,9 @@ pub struct Tweakers;
 
 const NAME: &str = "Tweakers";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://tweakers\.net/video/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://tweakers\.net/video/(?P<id>\d+)").unwrap()
+});
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

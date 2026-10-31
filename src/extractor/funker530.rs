@@ -14,7 +14,8 @@ pub struct Funker530;
 const NAME: &str = "Funker530";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?funker530\.com/video/(?P<id>[^/?#]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?funker530\.com/video/(?P<id>[^/?#]+)")
+        .unwrap()
 });
 static DESCRIPTION: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)(.+)About the Author").unwrap());

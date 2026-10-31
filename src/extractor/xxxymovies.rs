@@ -15,8 +15,10 @@ pub struct XXXYMovies;
 const NAME: &str = "XXXYMovies";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?xxxymovies\.com/videos/(?P<id>\d+)/(?P<display_id>[^/]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?xxxymovies\.com/videos/(?P<id>\d+)/(?P<display_id>[^/]+)",
+    )
+    .unwrap()
 });
 static VIDEO_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"video_url\s*:\s*'([^']+)'").unwrap());

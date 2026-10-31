@@ -28,7 +28,8 @@ const NAME: &str = "orf:on";
 const KEY: &str = "ORFON";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://on\.orf\.at/video/(?P<id>\d+)(?:/(?P<segment>\d+))?").unwrap()
+    crate::extractor::url_regex(r"^https?://on\.orf\.at/video/(?P<id>\d+)(?:/(?P<segment>\d+))?")
+        .unwrap()
 });
 
 /// `ORFRadioIE.STATION_INFO`: the station's API name, loop channel and

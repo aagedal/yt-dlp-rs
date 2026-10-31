@@ -15,7 +15,10 @@ pub struct Mdr;
 const NAME: &str = "MDR";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?mdr\.de/(?:.*)/[a-z-]+-?(?P<id>\d+)(?:_.+?)?\.html").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?mdr\.de/(?:.*)/[a-z-]+-?(?P<id>\d+)(?:_.+?)?\.html",
+    )
+    .unwrap()
 });
 static DATA_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

@@ -13,8 +13,9 @@ pub struct AliExpressLive;
 
 const NAME: &str = "AliExpressLive";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://live\.aliexpress\.com/live/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://live\.aliexpress\.com/live/(?P<id>\d+)").unwrap()
+});
 static RUN_PARAMS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)runParams\s*=\s*(\{.+?\})\s*;?\s*var").unwrap());
 

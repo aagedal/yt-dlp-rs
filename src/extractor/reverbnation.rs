@@ -13,7 +13,8 @@ pub struct ReverbNation;
 const NAME: &str = "ReverbNation";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?reverbnation\.com/.*?/song/(?P<id>\d+).*?$").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?reverbnation\.com/.*?/song/(?P<id>\d+).*?$")
+        .unwrap()
 });
 
 /// `_match_id`.

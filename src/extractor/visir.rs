@@ -20,7 +20,7 @@ const VALID_PATTERN: &str =
     r"https?://(?:www\.)?visir\.is/(?P<type>k|player)/(?P<id>[\da-f-]+)(?:/(?P<slug>[\w.-]+))?";
 
 static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(&format!("^{VALID_PATTERN}")).unwrap());
+    LazyLock::new(|| crate::extractor::url_regex(&format!("^{VALID_PATTERN}")).unwrap());
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(&format!(r#"<iframe[^>]+src=["'](?P<url>{VALID_PATTERN})"#)).unwrap()
 });

@@ -14,7 +14,10 @@ pub struct Wimbledon;
 const NAME: &str = "Wimbledon";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?wimbledon\.com/\w+/video/media/(?P<id>\d+)\.html").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?wimbledon\.com/\w+/video/media/(?P<id>\d+)\.html",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

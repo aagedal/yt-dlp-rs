@@ -18,7 +18,7 @@ const ALBUM_NAME: &str = "MySpace:album";
 const ALBUM_KEY: &str = "MySpaceAlbum";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://myspace\.com/[^/]+/(?P<mediatype>video/[^/]+/(?P<video_id>\d+)|music/song/[^/?#&]+-(?P<song_id>\d+)-\d+(?:[/?#&]|$))",
     )
     .unwrap()

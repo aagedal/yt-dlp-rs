@@ -36,7 +36,7 @@ const PAGE_SIZE: usize = 100;
 const GRAPHQL: &str = "https://api.ardaudiothek.de/graphql";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:beta|www)\.)?ardmediathek\.de/(?:[^/]+/)?(?:player|live|video)/(?:[^?#]+/)?(?P<id>[a-zA-Z0-9]+)/?(?:[?#]|$)",
     )
     .unwrap()

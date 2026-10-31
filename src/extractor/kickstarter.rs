@@ -14,7 +14,8 @@ pub struct KickStarter;
 const NAME: &str = "KickStarter";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?kickstarter\.com/projects/(?P<id>[^/]*)/.*").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?kickstarter\.com/projects/(?P<id>[^/]*)/.*")
+        .unwrap()
 });
 static TITLE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"<title>\s*(.*?)(?:\s*&mdash;\s*Kickstarter)?\s*</title>").unwrap()

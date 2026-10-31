@@ -1,0 +1,5 @@
+[
+ {"url": "https://www.tiktok.com/@devicer", "args": ["--extractor-args", "tiktok:device_id=7250000000000000042", "--flat-playlist", "-J"]},
+ {"url": "https://www.tiktok.com/@devicer", "args": ["--extractor-args", "TikTok:device_id=7250000000000000042", "--flat-playlist", "--print", "%(id)s|%(title)s|%(playlist_id)s"]},
+ {"url": "https://www.tiktok.com/@repeater", "args": ["--extractor-args", "tiktok:device_id=7250000000000000042", "--flat-playlist", "-I", "2", "--print", "%(id)s"]}
+]

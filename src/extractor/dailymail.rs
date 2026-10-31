@@ -16,7 +16,7 @@ pub(crate) const NAME: &str = "DailyMail";
 pub(crate) const KEY: &str = "DailyMail";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?dailymail\.co\.uk/(?:video/[^/]+/video-|embed/video/)(?P<id>[0-9]+)",
     )
     .unwrap()

@@ -17,7 +17,7 @@ pub struct Piksel;
 const NAME: &str = "Piksel";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:player\.(?:olympusattelecom|vibebyvista)|(?:api|player)\.multicastmedia|(?:api-ovp|player)\.piksel)\.(?:com|tech)|(?:mz-edge\.stream\.co|movie-s\.nhk\.or)\.jp|vidego\.baltimorecity\.gov)/v/(?:refid/(?P<refid>[^/]+)/prefid/)?(?P<id>[\w-]+)",
     )
     .unwrap()

@@ -14,7 +14,7 @@ pub struct FrancaisFacile;
 const NAME: &str = "FrancaisFacile";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://francaisfacile\.rfi\.fr/[a-z]{2}/(?:actualit%C3%A9|podcasts/[^/#?]+)/(?P<id>[^/#?]+)",
     )
     .unwrap()

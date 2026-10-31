@@ -14,8 +14,10 @@ pub struct TheGuardianPodcast;
 const NAME: &str = "TheGuardianPodcast";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?theguardian\.com/\w+/audio/\d{4}/\w{3}/\d{1,2}/(?P<id>[\w-]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?theguardian\.com/\w+/audio/\d{4}/\w{3}/\d{1,2}/(?P<id>[\w-]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

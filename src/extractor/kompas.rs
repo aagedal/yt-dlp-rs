@@ -12,7 +12,8 @@ pub struct KompasVideo;
 const NAME: &str = "KompasVideo";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://video\.kompas\.com/\w+/(?P<id>\d+)/(?P<slug>[\w-]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://video\.kompas\.com/\w+/(?P<id>\d+)/(?P<slug>[\w-]+)")
+        .unwrap()
 });
 
 /// `_match_valid_url`.

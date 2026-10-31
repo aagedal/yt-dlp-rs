@@ -14,7 +14,10 @@ pub struct Bandcamp;
 const NAME: &str = "Bandcamp";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?P<uploader>[^/]+)\.bandcamp\.com/track/(?P<id>[^/?#&]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?P<uploader>[^/]+)\.bandcamp\.com/track/(?P<id>[^/?#&]+)",
+    )
+    .unwrap()
 });
 static ALBUM_ARTIST: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<h3 class="albumTitle">[\S\s]*?by\s*<span>\s*<a href="[^>]+">\s*([^>]+?)\s*</a>"#)

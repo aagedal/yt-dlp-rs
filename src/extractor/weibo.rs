@@ -19,7 +19,7 @@ const KEY: &str = "Weibo";
 const VIDEO_NAME: &str = "WeiboVideo";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:m\.weibo\.cn/(?:status|detail)|(?:www\.)?weibo\.com/\d+)/(?P<id>[a-zA-Z0-9]+)")
+    crate::extractor::url_regex(r"^https?://(?:m\.weibo\.cn/(?:status|detail)|(?:www\.)?weibo\.com/\d+)/(?P<id>[a-zA-Z0-9]+)")
         .unwrap()
 });
 static VIDEO_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {

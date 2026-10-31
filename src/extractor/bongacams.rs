@@ -13,8 +13,10 @@ pub struct BongaCams;
 const NAME: &str = "BongaCams";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?P<host>(?:[^/]+\.)?bongacams\d*\.(?:com|net))/(?P<id>[^/?&#]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?P<host>(?:[^/]+\.)?bongacams\d*\.(?:com|net))/(?P<id>[^/?&#]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_valid_url`.

@@ -12,8 +12,9 @@ pub struct Webcamerapl;
 
 const NAME: &str = "Webcamerapl";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?P<id>[\w-]+)\.webcamera\.pl").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?P<id>[\w-]+)\.webcamera\.pl").unwrap()
+});
 static MANIFEST: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-src\s*=\s*"(uggc[^"]+\.z3h8)""#).unwrap());
 static TITLE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<h1\b[^>]*>([^>]+)</h1>").unwrap());

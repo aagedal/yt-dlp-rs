@@ -64,6 +64,13 @@
    "body": "{\"url\": \"https://cf-hls-opus-media.sndcdn.com/playlist/z.64.opus/playlist.m3u8?Policy=4\"}"
   },
   {
+   "url": "https://api-v2.soundcloud.com/media/soundcloud:tracks:123998367/ggg/stream/encrypted-hls?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"https://cf-hls-aes-media.sndcdn.com/playlist/w.aac/playlist.m3u8?Policy=5\"}"
+  },
+  {
    "url": "https://i1.sndcdn.com/artworks-000071811455-l4hrpp-original.png",
    "status": 404,
    "headers": {},

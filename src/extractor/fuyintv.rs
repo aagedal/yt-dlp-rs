@@ -13,7 +13,8 @@ pub struct FuyinTv;
 const NAME: &str = "FuyinTV";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?fuyin\.tv/html/(?:\d+)/(?P<id>\d+)\.html").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?fuyin\.tv/html/(?:\d+)/(?P<id>\d+)\.html")
+        .unwrap()
 });
 
 /// `_match_id`.

@@ -15,7 +15,7 @@ pub struct ElTreceTv;
 const NAME: &str = "ElTreceTV";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?eltrecetv\.com\.ar/[\w-]+/capitulos/temporada-\d+/(?P<id>[\w-]+)",
     )
     .unwrap()

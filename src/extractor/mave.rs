@@ -21,7 +21,10 @@ const API_BASE_STORAGE_URL: &str = "https://store.cloud.mts.ru/mave/";
 const PAGE_SIZE: usize = 50;
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?P<channel_id>[\w-]+)\.mave\.digital/ep-(?P<episode_code>\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?P<channel_id>[\w-]+)\.mave\.digital/ep-(?P<episode_code>\d+)",
+    )
+    .unwrap()
 });
 static CHANNEL_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^https?://(?P<id>[\w-]+)\.mave\.digital/?(?:$|[?#])").unwrap());

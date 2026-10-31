@@ -13,7 +13,10 @@ pub struct Caltrans;
 const NAME: &str = "Caltrans";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:[^/]+\.)?ca\.gov/vm/loc/[^/]+/(?P<id>[a-z0-9_]+)\.htm").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:[^/]+\.)?ca\.gov/vm/loc/[^/]+/(?P<id>[a-z0-9_]+)\.htm",
+    )
+    .unwrap()
 });
 static GLOBAL_VARS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"<script[^<]+?([^<]+\.m3u8[^<]+)</script>").unwrap());

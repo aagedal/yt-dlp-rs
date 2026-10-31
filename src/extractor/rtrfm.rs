@@ -13,8 +13,10 @@ pub struct Rtrfm;
 const NAME: &str = "RTRFM";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?rtrfm\.com\.au/(?:shows|show-episode)/(?P<id>[^/?\#&]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?rtrfm\.com\.au/(?:shows|show-episode)/(?P<id>[^/?\#&]+)",
+    )
+    .unwrap()
 });
 
 static DETAILS: LazyLock<Regex> = LazyLock::new(|| {

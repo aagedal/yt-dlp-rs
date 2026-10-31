@@ -1,0 +1,59 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.tiktok.com/@devicer",
+   "args": [
+    "--extractor-args",
+    "tiktok:device_id=7250000000000000042",
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"MS4wLjABAAAA_devicer\", \"title\": \"devicer\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"7300000000000000077\", \"formats\": null, \"subtitles\": null, \"http_headers\": {\"Referer\": \"https://www.tiktok.com/@devicer/video/7300000000000000077\"}, \"channel\": \"Devicer\", \"channel_id\": \"MS4wLjABAAAA_devicer\", \"uploader\": \"devicer\", \"uploader_id\": \"6800000000000000077\", \"channel_url\": \"https://www.tiktok.com/@MS4wLjABAAAA_devicer\", \"uploader_url\": \"https://www.tiktok.com/@devicer\", \"title\": \"Clip by devicer\", \"description\": \"Clip by devicer\", \"duration\": 12, \"timestamp\": 1700000000, \"view_count\": 7, \"thumbnails\": [], \"ie_key\": \"TikTok\", \"_type\": \"url\", \"url\": \"https://www.tiktok.com/@devicer/video/7300000000000000077\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.tiktok.com/@devicer\", \"original_url\": \"https://www.tiktok.com/@devicer\", \"webpage_url_basename\": \"@devicer\", \"webpage_url_domain\": \"tiktok.com\", \"extractor\": \"tiktok:user\", \"extractor_key\": \"TikTokUser\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:user] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@devicer",
+   "args": [
+    "--extractor-args",
+    "TikTok:device_id=7250000000000000042",
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(playlist_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "7300000000000000077|Clip by devicer|MS4wLjABAAAA_devicer"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:user] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@repeater",
+   "args": [
+    "--extractor-args",
+    "tiktok:device_id=7250000000000000042",
+    "--flat-playlist",
+    "-I",
+    "2",
+    "--print",
+    "%(id)s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [tiktok:user] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: TikTok API keeps sending the same page. Try again with a different device_id"
+   ],
+   "files": {}
+  }
+ ]
+}

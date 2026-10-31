@@ -16,7 +16,10 @@ pub struct Elonet;
 const NAME: &str = "Elonet";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://elonet\.finna\.fi/Record/kavi\.elonet_elokuva_(?P<id>[0-9]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://elonet\.finna\.fi/Record/kavi\.elonet_elokuva_(?P<id>[0-9]+)",
+    )
+    .unwrap()
 });
 static SOURCES: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"id='video-data'[^>]+data-video-sources="([^"]+)""#).unwrap());

@@ -15,7 +15,7 @@ pub struct YouJizz;
 const NAME: &str = "YouJizz";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:\w+\.)?youjizz\.com/videos/(?:[^/#?]*-(?P<id>\d+)\.html|embed/(?P<embed_id>\d+))",
     )
     .unwrap()

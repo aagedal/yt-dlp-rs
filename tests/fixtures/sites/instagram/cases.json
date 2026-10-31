@@ -26,5 +26,8 @@
  {"url": "https://instagram.com/porsche", "args": ["-J", "--flat-playlist"]},
  {"url": "https://instagram.com/porsche", "args": ["--playlist-items", "1", "-j"]},
  {"url": "https://instagram.com/explore/tags/lolcats", "args": ["-J", "--flat-playlist"]},
- {"url": "https://www.instagram.com/p/PhotoOnly1/", "args": ["--ignore-no-formats-error", "-j"]}
+ {"url": "https://www.instagram.com/p/PhotoOnly1/", "args": ["--ignore-no-formats-error", "-j"]},
+ {"url": "https://www.instagram.com/p/LoggedIn01/", "copy": ["cookies.txt"], "args": ["--cookies", "cookies.txt", "--extractor-args", "instagram:app_id=IOS", "--print", "%(id)s|%(title)s|%(format_id)s"]},
+ {"url": "https://www.instagram.com/p/LoggedIn01/", "copy": ["cookies.txt"], "args": ["--cookies", "cookies.txt", "--extractor-args", "instagram:app_id=1234567890", "--print", "%(id)s|%(title)s|%(format_id)s"]},
+ {"url": "https://www.instagram.com/p/LoggedIn01/", "copy": ["cookies.txt"], "args": ["--cookies", "cookies.txt", "--extractor-args", "instagram:app_id=web", "--print", "%(id)s|%(title)s|%(format_id)s"]}
 ]

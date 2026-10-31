@@ -15,8 +15,9 @@ pub struct TelegramEmbed;
 const NAME: &str = "telegram:embed";
 const KEY: &str = "TelegramEmbed";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://t\.me/(?P<channel_id>[^/]+)/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://t\.me/(?P<channel_id>[^/]+)/(?P<id>\d+)").unwrap()
+});
 static TIMESTAMP: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<time[^>]*datetime="([^"]*)""#).unwrap());
 static VIDEO_PLAYER: LazyLock<Regex> = LazyLock::new(|| {

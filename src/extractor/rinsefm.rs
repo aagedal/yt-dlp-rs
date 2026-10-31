@@ -17,7 +17,7 @@ const PLAYLIST_NAME: &str = "RinseFMArtistPlaylist";
 const API_BASE: &str = "https://rinse.fm/api/query/v1";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?rinse\.fm/episodes/(?P<id>[^/?#]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?rinse\.fm/episodes/(?P<id>[^/?#]+)").unwrap()
 });
 static PLAYLIST_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?rinse\.fm/shows/(?P<id>[^/?#]+)").unwrap());

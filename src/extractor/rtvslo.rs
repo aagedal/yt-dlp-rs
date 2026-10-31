@@ -26,7 +26,7 @@ const GEO_MESSAGE: &str = "This video is not available from your location due to
 const SKIP_PROTOCOLS: &[&str] = &["smil", "f4m", "dash"];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:365|4d)\.rtvslo.si/arhiv/[^/?#&;]+|(?:www\.)?rtvslo\.si/rtv365/arhiv)/(?P<id>\d+)",
     )
     .unwrap()

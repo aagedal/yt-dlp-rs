@@ -12,7 +12,7 @@ pub struct Kicker;
 const NAME: &str = "Kicker";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)kicker\.(?:de)/(?P<id>[\w-]+)/video").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)kicker\.(?:de)/(?P<id>[\w-]+)/video").unwrap()
 });
 static PRIVATE_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-dmprivateid\s*=\s*['"](?P<video_id>\w+)"#).unwrap());

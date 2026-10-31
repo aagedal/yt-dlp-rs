@@ -18,7 +18,7 @@ pub(crate) const KEY: &str = "APA";
 const UUID: &str = r"[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+    crate::extractor::url_regex(&format!(
         r"^(?P<base_url>https?://[^/]+\.apa\.at)/embed/(?P<id>{UUID})"
     ))
     .unwrap()

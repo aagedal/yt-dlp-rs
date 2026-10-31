@@ -26,7 +26,7 @@ const PODCAST_KEY: &str = "SimplecastPodcast";
 const UUID: &str = r"[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12}";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+    crate::extractor::url_regex(&format!(
         r"^https?://(?:api\.simplecast\.com/episodes|player\.simplecast\.com)/(?P<id>{UUID})"
     ))
     .unwrap()

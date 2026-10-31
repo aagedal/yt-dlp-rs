@@ -13,8 +13,9 @@ pub struct Clyp;
 
 const NAME: &str = "Clyp";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?clyp\.it/(?P<id>[a-z0-9]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?clyp\.it/(?P<id>[a-z0-9]+)").unwrap()
+});
 static WAV_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"var\s*wavStreamUrl\s*=\s*["'](?P<url>https?://[^'"]+)"#).unwrap()
 });

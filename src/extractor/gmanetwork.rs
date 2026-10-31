@@ -13,7 +13,7 @@ pub struct GmaNetworkVideo;
 const NAME: &str = "GMANetworkVideo";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www)\.gmanetwork\.com/(?:\w+/){3}(?P<id>\d+)/(?P<display_id>[\w-]+)/video",
     )
     .unwrap()

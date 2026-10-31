@@ -15,7 +15,10 @@ pub struct MagellanTv;
 const NAME: &str = "MagellanTV";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?magellantv\.com/(?:watch|video)/(?P<id>[\w-]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?magellantv\.com/(?:watch|video)/(?P<id>[\w-]+)",
+    )
+    .unwrap()
 });
 
 /// `url_or_none`'s scheme check.

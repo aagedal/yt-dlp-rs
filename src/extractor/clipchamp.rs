@@ -18,7 +18,7 @@ pub struct Clipchamp;
 const NAME: &str = "Clipchamp";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?clipchamp\.com/watch/(?P<id>[\w-]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?clipchamp\.com/watch/(?P<id>[\w-]+)").unwrap()
 });
 static SUBDOMAIN: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"\bcustomer-domain-prefix=(?:"(?P<a>[\w-]+)"|'(?P<b>[\w-]+)')"#).unwrap()

@@ -15,7 +15,7 @@ pub struct Liputan6;
 const NAME: &str = "Liputan6";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"https?://www\.liputan6\.com/\w+/read/\d+/(?P<id>[\w-]+)").unwrap()
+    crate::extractor::url_regex(r"https?://www\.liputan6\.com/\w+/read/\d+/(?P<id>[\w-]+)").unwrap()
 });
 static GTM: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"window\.kmklabs\.gtm\s*=").unwrap());
 

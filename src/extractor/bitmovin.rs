@@ -13,8 +13,9 @@ pub struct Bitmovin;
 pub(crate) const NAME: &str = "Bitmovin";
 pub(crate) const KEY: &str = "Bitmovin";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://streams\.bitmovin\.com/(?P<id>\w+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://streams\.bitmovin\.com/(?P<id>\w+)").unwrap()
+});
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(
         r#"<iframe\b[^>]+\bsrc=["'](?P<url>(?:https?:)?//streams\.bitmovin\.com/(?P<id>\w+)[^"']+)"#,

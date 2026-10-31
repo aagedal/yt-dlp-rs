@@ -14,7 +14,10 @@ pub struct Sport5;
 const NAME: &str = "Sport5";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www|vod)?\.sport5\.co\.il/.*\b(?:Vi|docID)=(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www|vod)?\.sport5\.co\.il/.*\b(?:Vi|docID)=(?P<id>\d+)",
+    )
+    .unwrap()
 });
 static CLIP_ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"clipId=([\w-]+)").unwrap());
 

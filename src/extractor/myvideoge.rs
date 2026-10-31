@@ -14,8 +14,9 @@ pub struct MyVideoGe;
 
 const NAME: &str = "MyVideoGe";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?myvideo\.ge/v/(?P<id>[0-9]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?myvideo\.ge/v/(?P<id>[0-9]+)").unwrap()
+});
 static SOURCES: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(
         r#"(?s)jwplayer\s*\(\s*['"]mvplayer['"]\s*\)\s*\.\s*setup\s*\(.*?\bsources\s*:\s*(\[.*?])\s*[,});]"#,

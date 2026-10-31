@@ -21,7 +21,7 @@ const NAME: &str = "AtresPlayer";
 const API_BASE: &str = "https://api.atresplayer.com/";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?atresplayer\.com/(?:[^/?#]+/){4}(?P<display_id>.+?)_(?P<id>[0-9a-f]{24})",
     )
     .unwrap()

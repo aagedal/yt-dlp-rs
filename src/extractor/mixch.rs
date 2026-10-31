@@ -24,7 +24,7 @@ const MOVIE_KEY: &str = "MixchMovie";
 const LOGIN_HINT: &str = "Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies";
 
 static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://mixch\.tv/u/(?P<id>\d+)").unwrap());
+    LazyLock::new(|| crate::extractor::url_regex(r"^https?://mixch\.tv/u/(?P<id>\d+)").unwrap());
 static ARCHIVE_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^https?://mixch\.tv/archive/(?P<id>\d+)").unwrap());
 static MOVIE_URL: LazyLock<Regex> =

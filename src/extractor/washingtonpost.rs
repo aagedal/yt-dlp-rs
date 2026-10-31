@@ -19,7 +19,7 @@ const ARTICLE_NAME: &str = "washingtonpost:article";
 const ARTICLE_KEY: &str = "WashingtonPostArticle";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^(?:washingtonpost:|https?://(?:www\.)?washingtonpost\.com/(?:video|posttv)/(?:[^/]+/)*)(?P<id>[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})",
     )
     .unwrap()

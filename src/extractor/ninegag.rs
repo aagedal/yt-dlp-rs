@@ -16,8 +16,9 @@ pub struct NineGag;
 
 const NAME: &str = "9gag";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?9gag\.com/gag/(?P<id>[^/?&#]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?9gag\.com/gag/(?P<id>[^/?&#]+)").unwrap()
+});
 
 /// `_match_valid_url`.
 pub fn suitable(url: &str) -> bool {

@@ -20,7 +20,7 @@ const NAME: &str = "Canalsurmas";
 const API_BASE: &str = "https://api-rtva.interactvty.com";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?canalsurmas\.es/videos/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?canalsurmas\.es/videos/(?P<id>\d+)").unwrap()
 });
 
 /// `_match_valid_url`.

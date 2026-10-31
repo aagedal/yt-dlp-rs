@@ -26,7 +26,7 @@ const CUSTOMER: &str = "UKParliament";
 const BUSINESS_UNIT: &str = "ParliamentLive";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"(?i)https?://(?:www\.)?parliamentlive\.tv/Event/Index/(?P<id>[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})",
     )
     .unwrap()

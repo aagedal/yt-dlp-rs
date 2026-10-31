@@ -13,8 +13,9 @@ pub struct NovaPlay;
 
 const NAME: &str = "NovaPlay";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://play\.nova\.bg/video/[^?#]+/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://play\.nova\.bg/video/[^?#]+/(?P<id>\d+)").unwrap()
+});
 
 /// The class attribute `_access_token`, kept for later URLs.
 static ACCESS_TOKEN: Mutex<Option<String>> = Mutex::new(None);

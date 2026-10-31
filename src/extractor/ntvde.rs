@@ -16,7 +16,7 @@ const NAME: &str = "n-tv.de";
 const KEY: &str = "NTVDe";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?n-tv\.de/mediathek/(?:videos|magazine)/[^/?#]+/[^/?#]+-article(?P<id>[^/?#]+)\.html",
     )
     .unwrap()

@@ -15,7 +15,10 @@ pub struct Alibaba;
 const NAME: &str = "Alibaba";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?alibaba\.com/product-detail/[\w-]+_(?P<id>\d+)\.html").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?alibaba\.com/product-detail/[\w-]+_(?P<id>\d+)\.html",
+    )
+    .unwrap()
 });
 static DETAIL_DATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.detailData\s*=\s*").unwrap());

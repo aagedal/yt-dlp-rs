@@ -14,7 +14,7 @@ const NAME: &str = "MochaVideo";
 const API: &str = "http://apivideo.mocha.com.vn:8081/onMediaBackendBiz/mochavideo/getVideoDetail";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://video\.mocha\.com\.vn/(?P<video_slug>[\w-]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://video\.mocha\.com\.vn/(?P<video_slug>[\w-]+)").unwrap()
 });
 
 /// `_match_valid_url`.

@@ -14,8 +14,10 @@ pub struct ProjectVeritas;
 const NAME: &str = "ProjectVeritas";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?projectveritas\.com/(?P<type>news|video)/(?P<id>[^/?#]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?projectveritas\.com/(?P<type>news|video)/(?P<id>[^/?#]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_valid_url`.

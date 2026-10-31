@@ -16,7 +16,8 @@ const NAME: &str = "Tele13";
 const LABELS: [&str; 3] = ["Móvil", "SD", "HD"];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?t13\.cl/videos(?:/[^/]+)+/(?P<id>[\w-]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?t13\.cl/videos(?:/[^/]+)+/(?P<id>[\w-]+)")
+        .unwrap()
 });
 static SETUP: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)jwplayer\('player-vivo'\).setup\((\{.*?\})\)").unwrap());

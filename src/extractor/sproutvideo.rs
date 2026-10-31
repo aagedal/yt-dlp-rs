@@ -25,7 +25,10 @@ const M3U8_URL_TEMPLATE: &str =
 const QUALITIES: [&str; 3] = ["hd", "uhd", "source"];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://videos\.sproutvideo\.com/embed/(?P<id>[\da-f]+)/[\da-f]+").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://videos\.sproutvideo\.com/embed/(?P<id>[\da-f]+)/[\da-f]+",
+    )
+    .unwrap()
 });
 
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {

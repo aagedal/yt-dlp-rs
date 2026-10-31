@@ -32,7 +32,7 @@ fn instances_re() -> String {
 }
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+    crate::extractor::url_regex(&format!(
         r"^(?:peertube:(?P<host>[^:]+):|https?://(?P<host_2>{})/(?:videos/(?:watch|embed)|api/v\d/videos|w)/)(?P<id>{UUID_RE})",
         instances_re()
     ))

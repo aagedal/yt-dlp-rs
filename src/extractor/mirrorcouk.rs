@@ -15,7 +15,8 @@ pub struct MirrorCoUk;
 const NAME: &str = "MirrorCoUK";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?mirror\.co\.uk/[/+\[\w-]+-(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?mirror\.co\.uk/[/+\[\w-]+-(?P<id>\d+)")
+        .unwrap()
 });
 static DATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"div\s+class="json-placeholder"\s+data-json=""#).unwrap());

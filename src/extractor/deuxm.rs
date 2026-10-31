@@ -16,7 +16,10 @@ const NAME: &str = "DeuxM";
 const NEWS_NAME: &str = "DeuxMNews";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?2m\.ma/[^/]+/replay/single/(?P<id>([\w.]{1,24})+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?2m\.ma/[^/]+/replay/single/(?P<id>([\w.]{1,24})+)",
+    )
+    .unwrap()
 });
 static NEWS_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?2m\.ma/(?P<lang>\w+)/news/(?P<id>[^/#?]+)").unwrap()

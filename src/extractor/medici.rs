@@ -18,8 +18,10 @@ pub struct Medici;
 const NAME: &str = "Medici";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?P<sub>www|edu)\.)?medici\.tv/[a-z]{2}/[\w.-]+/(?P<id>[^/?#&]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:(?P<sub>www|edu)\.)?medici\.tv/[a-z]{2}/[\w.-]+/(?P<id>[^/?#&]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_valid_url`.

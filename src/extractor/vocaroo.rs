@@ -15,7 +15,10 @@ const NAME: &str = "Vocaroo";
 const REFERER: &str = "https://vocaroo.com/";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?(?:vocaroo\.com|voca\.ro)/(?:embed/)?(?P<id>\w+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?(?:vocaroo\.com|voca\.ro)/(?:embed/)?(?P<id>\w+)",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

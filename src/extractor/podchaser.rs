@@ -18,7 +18,7 @@ const PAGE_SIZE: usize = 100;
 type Fields = Vec<(&'static str, Value)>;
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?podchaser\.com/podcasts/[\w-]+-(?P<podcast_id>\d+)(?:/episodes/[\w-]+-(?P<id>\d+))?",
     )
     .unwrap()

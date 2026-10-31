@@ -11,8 +11,9 @@ pub struct MyVidster;
 
 const NAME: &str = "MyVidster";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?myvidster\.com/video/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?myvidster\.com/video/(?P<id>\d+)").unwrap()
+});
 static VIDEO_LINK: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"rel="videolink" href="(?P<real_url>.*)">"#).unwrap());
 

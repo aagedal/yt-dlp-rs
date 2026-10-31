@@ -343,13 +343,21 @@ mod transport {
         ] {
             assert!(lines.contains(&row), "{row}\n{stdout}");
         }
-        // An available `--impersonate` target is not applied to every
-        // request (unlike upstream); that stays an error.
-        let output = run(&["--impersonate", "chrome", "https://example.invalid/"]);
-        assert_eq!(output.status.code(), Some(1));
-        assert!(
-            stderr(&output)
-                .contains("--impersonate (impersonating every request) is not supported natively")
+    }
+
+    #[test]
+    fn an_impersonate_option_applies_to_extraction_requests() {
+        // The generic extractor's request for a plain URL is impersonated.
+        let (chrome, output) = captured(
+            &[b"h2", b"http/1.1"],
+            &["--impersonate", "chrome", "-s"],
+            PLAIN,
         );
+        assert!(
+            chrome.cipher_suites.iter().any(|&suite| is_grease(suite)),
+            "{}",
+            stderr(&output)
+        );
+        assert_eq!(chrome.alpn.as_deref(), Some(&b"h2"[..]));
     }
 }

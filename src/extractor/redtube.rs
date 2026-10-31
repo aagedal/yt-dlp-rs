@@ -20,7 +20,7 @@ const NAME: &str = "RedTube";
 const BASE: &str = "https://www.redtube.com";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:\w+\.)?redtube\.com(?:\.br)?/|embed\.redtube\.com/\?.*?\bid=)(?P<id>[0-9]+)",
     )
     .unwrap()

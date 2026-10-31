@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "ShareClipRenderStatus",
+    "FaintLightGullWholeWheat"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "clip.json",
+   "request_headers": {
+    "Client-ID": "AbCdEfGhIjKlMnOpQrStUvWxYz0123"
+   }
+  }
+ ]
+}

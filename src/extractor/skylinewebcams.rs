@@ -14,7 +14,7 @@ pub struct SkylineWebcams;
 const NAME: &str = "SkylineWebcams";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?skylinewebcams\.com/[^/]+/webcam/(?:[^/]+/)+(?P<id>[^/]+)\.html",
     )
     .unwrap()

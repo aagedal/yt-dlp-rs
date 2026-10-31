@@ -21,7 +21,7 @@ const COMMON: &str =
     r"//player\.zype\.com/embed/{ID}\.(?:js|json|html)\?.*?(?:access_token|(?:ap[ip]|player)_key)=";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+    crate::extractor::url_regex(&format!(
         "^https?:{}[^&]+",
         COMMON.replace("{ID}", r"(?P<id>[\da-fA-F]+)")
     ))

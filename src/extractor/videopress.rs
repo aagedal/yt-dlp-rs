@@ -17,7 +17,8 @@ const QUALITIES: [&str; 3] = ["std", "dvd", "hd"];
 const FIELDS: &str = "description,duration,file_url_base,files,height,original,poster,rating,title,upload_date,width";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://video(?:\.word)?press\.com/embed/(?P<id>[\da-zA-Z]{8})").unwrap()
+    crate::extractor::url_regex(r"^https?://video(?:\.word)?press\.com/embed/(?P<id>[\da-zA-Z]{8})")
+        .unwrap()
 });
 
 /// `_match_id`.

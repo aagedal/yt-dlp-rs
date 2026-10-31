@@ -14,7 +14,8 @@ pub struct BaiduVideo;
 const NAME: &str = "BaiduVideo";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://v\.baidu\.com/(?P<type>[a-z]+)/(?P<id>\d+)\.htm").unwrap()
+    crate::extractor::url_regex(r"^https?://v\.baidu\.com/(?P<type>[a-z]+)/(?P<id>\d+)\.htm")
+        .unwrap()
 });
 
 /// `_match_valid_url`.

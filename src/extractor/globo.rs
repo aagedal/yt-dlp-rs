@@ -43,7 +43,10 @@ const VIDEO_VIEW: &str = r#"
     "#;
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?:globo:|https?://[^/?#]+?\.globo\.com/(?:[^/?#]+/))(?P<id>\d{7,})").unwrap()
+    crate::extractor::url_regex(
+        r"(?:globo:|https?://[^/?#]+?\.globo\.com/(?:[^/?#]+/))(?P<id>\d{7,})",
+    )
+    .unwrap()
 });
 /// `GloboArticleIE._VALID_URL` without its `(?!globoplay)` lookahead, which
 /// `article_suitable` applies by hand.

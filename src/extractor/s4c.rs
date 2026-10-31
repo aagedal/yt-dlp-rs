@@ -17,7 +17,8 @@ const NAME: &str = "S4C";
 const SERIES_NAME: &str = "S4CSeries";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?s4c\.cymru/clic/programme/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?s4c\.cymru/clic/programme/(?P<id>\d+)")
+        .unwrap()
 });
 static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?s4c\.cymru/clic/series/(?P<id>\d+)").unwrap()

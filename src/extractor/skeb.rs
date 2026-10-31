@@ -14,7 +14,8 @@ pub struct Skeb;
 const NAME: &str = "Skeb";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://skeb\.jp/@(?P<uploader_id>[^/?#]+)/works/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://skeb\.jp/@(?P<uploader_id>[^/?#]+)/works/(?P<id>\d+)")
+        .unwrap()
 });
 static REQUEST_KEY: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"document\.cookie\s*=\s*["']request_key=([^;"']+)"#).unwrap());

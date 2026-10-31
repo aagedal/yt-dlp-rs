@@ -15,7 +15,7 @@ const SAPO_NS: &str = "http://videos.sapo.pt/mrss/";
 const MRSS_NS: &str = "http://search.yahoo.com/mrss/";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:v2|www)\.)?videos\.sapo\.(?:pt|cv|ao|mz|tl)/(?P<id>[\da-zA-Z]{20})",
     )
     .unwrap()

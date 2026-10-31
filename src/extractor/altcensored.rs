@@ -20,7 +20,10 @@ const CHANNEL_KEY: &str = "AltCensoredChannel";
 const PAGE_SIZE: usize = 24;
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?altcensored\.com/(?:watch\?v=|embed/)(?P<id>[^/?#]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?altcensored\.com/(?:watch\?v=|embed/)(?P<id>[^/?#]+)",
+    )
+    .unwrap()
 });
 static CHANNEL_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?altcensored\.com/channel/(?P<id>[^/?#]+)").unwrap()

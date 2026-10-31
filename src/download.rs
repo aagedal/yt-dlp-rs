@@ -214,6 +214,10 @@ pub struct DownloadOptions {
     /// `--limit-rate`: maximum bytes per second for each media transfer or
     /// fragment request (upstream `slow_down`).
     pub rate_limit: Option<u64>,
+    /// `--throttled-rate`: a whole-file transfer whose speed stays below
+    /// this many bytes per second for over three seconds is retried (upstream
+    /// `ThrottledDownload`, which re-extracts instead).
+    pub throttled_rate: Option<u64>,
     /// `--mtime`: set media and subtitle modification times from the
     /// response `Last-Modified` header.
     pub update_time: bool,
@@ -348,6 +352,54 @@ impl RateLimit {
     }
 }
 
+/// Upstream `HttpFD`'s throttle check: the attempt's average speed is
+/// below the limit for more than three seconds.
+struct Throttle {
+    limit: Option<u64>,
+    start: Instant,
+    bytes: u64,
+    below_since: Option<Instant>,
+}
+
+impl Throttle {
+    fn new(limit: Option<u64>) -> Self {
+        Self {
+            limit: limit.filter(|&limit| limit > 0),
+            start: Instant::now(),
+            bytes: 0,
+            below_since: None,
+        }
+    }
+
+    /// Count `count` more bytes; `Err` once the transfer is throttled.
+    fn check(&mut self, count: usize) -> std::result::Result<(), AttemptFailure> {
+        let Some(limit) = self.limit else {
+            return Ok(());
+        };
+        self.bytes = self.bytes.saturating_add(count as u64);
+        let now = Instant::now();
+        let elapsed = now.duration_since(self.start).as_secs_f64();
+        // Upstream `calc_speed` has no speed in the first millisecond.
+        if elapsed < 0.001 {
+            return Ok(());
+        }
+        if (self.bytes as f64 / elapsed) < limit as f64 {
+            match self.below_since {
+                None => self.below_since = Some(now),
+                Some(since) if now.duration_since(since) > Duration::from_secs(3) => {
+                    return Err(AttemptFailure::retry(Error::Reported(
+                        "The download speed is below throttle limit".into(),
+                    )));
+                }
+                Some(_) => {}
+            }
+        } else {
+            self.below_since = None;
+        }
+        Ok(())
+    }
+}
+
 impl Default for DownloadOptions {
     fn default() -> Self {
         Self {
@@ -358,6 +410,7 @@ impl Default for DownloadOptions {
             min_filesize: None,
             max_filesize: None,
             rate_limit: None,
+            throttled_rate: None,
             update_time: false,
             part_files: PartFiles::Private,
             merge_files: MergeFiles::Private,
@@ -515,6 +568,7 @@ pub(crate) fn download(
             subtitle: false,
             limits: (options.min_filesize, options.max_filesize),
             rate_limit: options.rate_limit,
+            throttled_rate: options.throttled_rate,
             update_time: options.update_time,
             part_files: options.part_files,
             chunk,
@@ -600,6 +654,7 @@ pub(crate) fn download_subtitle(
             subtitle: true,
             limits: (None, None),
             rate_limit: None,
+            throttled_rate: None,
             update_time: options.update_time,
             part_files: PartFiles::Private,
             chunk: None,
@@ -710,6 +765,7 @@ fn join_subtitle_fragments(
                 subtitle: true,
                 limits: (None, None),
                 rate_limit: None,
+                throttled_rate: None,
                 update_time: false,
                 part_files: PartFiles::Private,
                 chunk: None,
@@ -797,6 +853,7 @@ pub(crate) fn download_thumbnail(
             subtitle: false,
             limits: (None, None),
             rate_limit: None,
+            throttled_rate: None,
             // Upstream writes thumbnails without the downloader's utime.
             update_time: false,
             part_files: PartFiles::Private,
@@ -826,6 +883,7 @@ struct HttpResource<'a> {
     /// Minimum/maximum declared total length in bytes.
     limits: (Option<u64>, Option<u64>),
     rate_limit: Option<u64>,
+    throttled_rate: Option<u64>,
     update_time: bool,
     part_files: PartFiles,
     /// Upstream chunked HTTP downloading (`http_chunk_size` or `--test`).
@@ -1173,6 +1231,7 @@ fn chunked_attempt(
         reporter.total = whole;
         reporter.report(DownloadPhase::Downloading, *actual)?;
         let mut limiter = RateLimit::new(resource.rate_limit);
+        let mut throttle = Throttle::new(resource.throttled_rate);
         let mut blocks = Blocks::new();
         loop {
             let limit = data_len.map(|length| length.saturating_sub(*actual));
@@ -1190,6 +1249,7 @@ fn chunked_attempt(
             limiter.consume(count);
             blocks.finished(count);
             reporter.report(DownloadPhase::Downloading, *actual)?;
+            throttle.check(count)?;
         }
         if !chunk.test
             && let Some(length) = content_len
@@ -1445,6 +1505,7 @@ fn download_attempt(
     reporter.total = expected;
     reporter.report(DownloadPhase::Downloading, *actual)?;
     let mut limiter = RateLimit::new(resource.rate_limit);
+    let mut throttle = Throttle::new(resource.throttled_rate);
     let mut blocks = Blocks::new();
     loop {
         // Separate network reads from filesystem writes: only the former retry.
@@ -1465,6 +1526,7 @@ fn download_attempt(
         limiter.consume(count);
         blocks.finished(count);
         reporter.report(DownloadPhase::Downloading, *actual)?;
+        throttle.check(count)?;
     }
     if let Some(expected) = expected
         && *actual != expected

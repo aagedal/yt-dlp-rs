@@ -15,7 +15,8 @@ pub struct Beeg;
 const NAME: &str = "Beeg";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?beeg\.(?:com(?:/video)?)/-?(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?beeg\.(?:com(?:/video)?)/-?(?P<id>\d+)")
+        .unwrap()
 });
 static HEIGHT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"fl_cdn_(\d+)").unwrap());
 
