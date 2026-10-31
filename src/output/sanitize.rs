@@ -343,6 +343,16 @@ pub fn windows_sanitize_path(path: &str) -> String {
     }
 }
 
+/// A path saved from upstream on a POSIX host as this host gives it: on
+/// Windows, upstream's `get_output_path` also runs `sanitize_path`.
+pub fn host_path(path: &str) -> String {
+    if cfg!(windows) {
+        windows_sanitize_path(path)
+    } else {
+        path.to_owned()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -374,7 +384,7 @@ mod tests {
                 .map_or_else(|| default_template(restrict), str::to_owned);
             let actual = render_template_with_options(&template, &info, &options)
                 .map(|path| path.to_string_lossy().into_owned());
-            if actual.as_deref().ok() != case["expected"].as_str() {
+            if actual.as_ref().ok() != case["expected"].as_str().map(host_path).as_ref() {
                 failures.push(format!(
                     "{}: {actual:?} != {}",
                     case["name"], case["expected"]

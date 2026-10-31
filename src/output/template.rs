@@ -1499,7 +1499,7 @@ mod tests {
         info.title = "../../bad\\name\n%(id)s".into();
         assert_eq!(
             output("directory/%(title)s.%(ext)s", &info),
-            "directory/..⧸..⧸bad⧹name %(id)s.mp4"
+            super::super::sanitize::host_path("directory/..⧸..⧸bad⧹name %(id)s.mp4")
         );
         assert_eq!(output("%(format_id|../../bad)s", &info), "..⧸..⧸bad");
         info.title = ". .x".into();
@@ -1530,7 +1530,7 @@ mod tests {
         options.filename_mode = FilenameMode::Minimal;
         assert_eq!(
             render_with("%(title)s.%(ext)s", &options),
-            "Épisode: a⧸b <c>.mp4"
+            super::super::sanitize::host_path("Épisode: a⧸b <c>.mp4")
         );
         options.windows_filenames = true;
         assert_eq!(
@@ -1598,7 +1598,11 @@ mod tests {
                 Source::Video(&info),
                 &options,
             ) {
-                Ok(actual) if actual.to_string_lossy() == case["expected"].as_str().unwrap() => {}
+                Ok(actual)
+                    if actual.to_string_lossy()
+                        == super::super::sanitize::host_path(
+                            case["expected"].as_str().unwrap(),
+                        ) => {}
                 actual => failures.push(format!(
                     "{}: {actual:?}, expected {}",
                     case["name"], case["expected"]

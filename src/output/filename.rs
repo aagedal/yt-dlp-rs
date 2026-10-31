@@ -258,7 +258,7 @@ mod tests {
                 let actual = text(templates.prepare(&info, kind, &options).unwrap());
                 assert_eq!(
                     actual,
-                    expected[key].as_str().unwrap(),
+                    crate::output::host_path(expected[key].as_str().unwrap()),
                     "{} {key}",
                     case["name"]
                 );
