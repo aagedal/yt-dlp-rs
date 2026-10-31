@@ -14,6 +14,7 @@ cookie = "0.18"
 cookie_store = { version = "0.22", default-features = false }
 encoding_rs = "0.8"
 flate2 = "1"
+http = "1"
 httpdate = "1"
 log = { version = "0.4", features = ["std"] }
 icu_normalizer = "2.3"
@@ -33,14 +34,20 @@ url = { version = "2", features = ["serde"] }
 webpki-roots = "1"
 # `--features impersonate`: browser TLS/HTTP2 impersonation (BoringSSL;
 # needs cmake and a C/C++ toolchain to build).
-http = { version = "1", optional = true }
 tokio = { version = "1", default-features = false, features = ["rt-multi-thread", "time", "net"], optional = true }
 wreq = { version = "=6.0.0-rc.31", default-features = false, features = ["webpki-roots", "tokio-rt", "cookies", "socks", "gzip", "brotli", "deflate", "zstd"], optional = true }
 wreq-util = { version = "=3.0.0-rc.14", features = ["emulation-compression"], optional = true }
 
+[profile.release]
+# Whole-program optimization and a stripped binary. Keep `panic = "unwind"`:
+# extractor panics are caught per URL, and thread joins report worker panics.
+lto = "thin"
+codegen-units = 1
+strip = true
+
 [features]
 default = []
-impersonate = ["dep:http", "dep:tokio", "dep:wreq", "dep:wreq-util"]
+impersonate = ["dep:tokio", "dep:wreq", "dep:wreq-util"]
 
 
 [dev-dependencies]

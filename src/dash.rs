@@ -1,4 +1,4 @@
-//! Pure, bounded static single-period DASH plans. No network or SIDX discovery.
+//! Pure, bounded static DASH plans. No network or SIDX discovery.
 use crate::{ByteRange, Error, Fragment, Result, StreamKind, VideoFormat};
 use roxmltree::{Document, Node, ParsingOptions};
 use std::collections::BTreeMap;
@@ -646,9 +646,398 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
 /// Subtitles by language, in manifest order.
 pub(crate) type ManifestSubtitles = Vec<(String, crate::SubtitleFormat)>;
 
-/// Upstream `_parse_mpd_formats_and_subtitles`: the formats and, from text
-/// representations with a direct resource, the subtitles by language
-/// (`und` without one). Segmented text tracks are not represented.
+/// Each Period's duration in nanoseconds, when known: its `duration`, else
+/// up to the next Period's start or, for the last, the presentation end.
+/// A missing start is 0 for the first Period and the previous Period's end
+/// when that is known. Known starts must increase, and the last Period's
+/// explicit end must be the presentation's.
+fn period_durations(root: Node<'_, '_>, periods: &[Node<'_, '_>]) -> Result<Vec<Option<u128>>> {
+    let total = root
+        .attribute("mediaPresentationDuration")
+        .map(duration)
+        .transpose()?;
+    let mut bounds: Vec<(Option<u128>, Option<u128>)> = Vec::new();
+    let mut last_start = None;
+    for period in periods {
+        let start = match period.attribute("start").map(duration).transpose()? {
+            Some(start) => Some(start),
+            None => match bounds.last() {
+                None => Some(0),
+                Some((Some(start), Some(length))) => Some(add(*start, *length)?),
+                Some(_) => None,
+            },
+        };
+        let length = period.attribute("duration").map(duration).transpose()?;
+        if let Some(start) = start {
+            if last_start.is_some_and(|previous| start <= previous) {
+                return Err(bad("DASH Periods must start in increasing order"));
+            }
+            if total.is_some_and(|total| start > total) {
+                return Err(bad("DASH Period starts after presentation end"));
+            }
+            last_start = Some(start);
+        }
+        bounds.push((start, length));
+    }
+    if let (Some(total), Some((Some(start), Some(length)))) = (total, bounds.last())
+        && add(*start, *length)? != total
+    {
+        return Err(bad("DASH Period end disagrees with presentation duration"));
+    }
+    let mut durations = Vec::new();
+    for (index, (start, length)) in bounds.iter().enumerate() {
+        let end = bounds.get(index + 1).map_or(total, |(next, _)| *next);
+        // Known adjacent bounds are ordered, so the difference cannot wrap.
+        let duration = length.or_else(|| Some(end? - (*start)?));
+        if duration == Some(0) {
+            return Err(bad("empty DASH period"));
+        }
+        durations.push(duration);
+    }
+    Ok(durations)
+}
+
+/// Upstream `is_drm_protected`: a direct `ContentProtection` child.
+fn protected(node: Node<'_, '_>) -> bool {
+    node.children()
+        .any(|child| child.is_element() && child.tag_name().name() == "ContentProtection")
+}
+
+/// Upstream `_parse_mpd_periods` as `_merge_mpd_periods` combines it.
+#[derive(Default)]
+struct Periods {
+    formats: Vec<VideoFormat>,
+    /// Upstream `format_key`: a format without its `format_id`, `fragments`
+    /// and `manifest_stream_number`, and its index in `formats`.
+    keys: std::collections::HashMap<String, usize>,
+    subtitles: ManifestSubtitles,
+    /// Upstream `stream_numbers[f['url']]`: video, audio and image
+    /// representations count in manifest order per format URL (the MPD, or
+    /// an unfragmented representation's own resource), across Periods.
+    stream_numbers: BTreeMap<String, usize>,
+    total_fragments: usize,
+}
+
+impl Periods {
+    /// Upstream `_merge_mpd_periods`: a format equal to an earlier one but
+    /// for `format_id`, `fragments` and `manifest_stream_number` appends its
+    /// fragments to that one (a repeated direct resource adds nothing).
+    fn merge(&mut self, mut format: VideoFormat) -> Result<()> {
+        let fragments = std::mem::take(&mut format.fragments);
+        let format_id = std::mem::take(&mut format.format_id);
+        let stream_number = format.manifest_stream_number.take();
+        let key = serde_json::to_string(&format)
+            .map_err(|error| bad(format!("invalid DASH format: {error}")))?;
+        if let Some(&index) = self.keys.get(&key) {
+            self.formats[index].fragments.extend(fragments);
+            return Ok(());
+        }
+        if self.formats.len() == 256 {
+            return Err(bad("DASH representation limit exceeded"));
+        }
+        format.fragments = fragments;
+        format.format_id = format_id;
+        format.manifest_stream_number = stream_number;
+        self.keys.insert(key, self.formats.len());
+        self.formats.push(format);
+        Ok(())
+    }
+
+    fn period(
+        &mut self,
+        root: Node<'_, '_>,
+        period: Node<'_, '_>,
+        manifest: &Url,
+        (root_base, root_explicit): (&Url, bool),
+        duration_ns: Option<u128>,
+    ) -> Result<()> {
+        let (period_base, period_explicit) = base_url(period, root_base, root_explicit)?;
+        let address = Address::default().inherit(root)?.inherit(period)?;
+        let mut representations = 0;
+        for adaptation in children(period, "AdaptationSet") {
+            let (adaptation_base, adaptation_explicit) =
+                base_url(adaptation, &period_base, period_explicit)?;
+            let address = address.inherit(adaptation)?;
+            for representation in children(adaptation, "Representation") {
+                if representations == 256 {
+                    return Err(bad("DASH representation limit exceeded"));
+                }
+                let (base, explicit) =
+                    base_url(representation, &adaptation_base, adaptation_explicit)?;
+                let address = address.inherit(representation)?;
+                let has_drm = protected(adaptation) || protected(representation);
+                let mut attrs = BTreeMap::new();
+                for node in [root, period, adaptation, representation] {
+                    for attr in node.attributes() {
+                        if attr.namespace().is_none() {
+                            attrs.insert(attr.name(), attr.value());
+                        }
+                    }
+                    if let Some(language) =
+                        node.attribute(("http://www.w3.org/XML/1998/namespace", "lang"))
+                    {
+                        attrs.insert("lang", language);
+                    }
+                }
+                let mime = attrs
+                    .get("mimeType")
+                    .copied()
+                    .ok_or_else(|| bad("DASH representation has no MIME type"))?;
+                // Upstream: `contentType`, else the MIME type's major type; other
+                // types are classified by their `parse_codecs` result.
+                let codecs = crate::codecs::parse(attrs.get("codecs").copied());
+                let declared = attrs
+                    .get("contentType")
+                    .copied()
+                    .unwrap_or_else(|| mime.split_once('/').map_or(mime, |(kind, _)| kind));
+                let content_type = match declared {
+                    "video" | "audio" | "text" => declared,
+                    _ if matches!(mime, "image/avif" | "image/jpeg") => {
+                        let key = if address.kind.is_none() {
+                            &base
+                        } else {
+                            manifest
+                        };
+                        *self.stream_numbers.entry(key.to_string()).or_default() += 1;
+                        continue;
+                    }
+                    _ => match &codecs {
+                        Some(codecs) if codecs.vcodec != "none" => "video",
+                        Some(codecs) if codecs.acodec != "none" => "audio",
+                        Some(codecs) if codecs.scodec.is_some() => "text",
+                        _ if matches!(
+                            crate::extractor::direct::mimetype2ext_or(mime, None).as_str(),
+                            "tt" | "dfxp" | "ttml" | "xml" | "json"
+                        ) =>
+                        {
+                            "text"
+                        }
+                        _ => {
+                            crate::screen::warning(&format!(
+                                "Unknown MIME type {mime} in DASH manifest"
+                            ));
+                            continue;
+                        }
+                    },
+                };
+                if content_type == "text" {
+                    let language = attrs.get("lang").map_or("und", |lang| *lang).to_owned();
+                    let ext = crate::extractor::direct::mimetype2ext_or(mime, None);
+                    if address.kind.is_none() {
+                        // "Assuming direct URL to unfragmented media."
+                        if explicit && !directory(&base) {
+                            let mut extra = text_extra(manifest, None);
+                            if has_drm {
+                                extra.insert("has_drm".into(), true.into());
+                            }
+                            self.subtitles.push((
+                                language,
+                                crate::SubtitleFormat {
+                                    extra,
+                                    fragments: Vec::new(),
+                                    name: None,
+                                    url: base.clone(),
+                                    ext,
+                                    protocol: None,
+                                },
+                            ));
+                        }
+                    } else {
+                        // Segmented text: the manifest URL with its fragments.
+                        let bandwidth = attrs
+                            .get("bandwidth")
+                            .and_then(|value| positive(value).ok());
+                        let fragments = plans(
+                            &address,
+                            &base,
+                            explicit,
+                            duration_ns,
+                            representation.attribute("id"),
+                            bandwidth,
+                        )?;
+                        let mut extra = text_extra(
+                            manifest,
+                            Some(if explicit {
+                                base.clone()
+                            } else {
+                                base.join(".")?
+                            }),
+                        );
+                        if has_drm {
+                            extra.insert("has_drm".into(), true.into());
+                        }
+                        self.subtitles.push((
+                            language,
+                            crate::SubtitleFormat {
+                                extra,
+                                fragments,
+                                name: None,
+                                url: manifest.clone(),
+                                ext,
+                                protocol: Some("http_dash_segments".into()),
+                            },
+                        ));
+                    }
+                    continue;
+                }
+                // Selection kinds follow upstream's codec fields (`none` marks a
+                // missing stream); without codecs the stream counts as complete.
+                let kind = match &codecs {
+                    Some(codecs) if codecs.vcodec == "none" => StreamKind::AudioOnly,
+                    Some(codecs) if codecs.acodec == "none" => StreamKind::VideoOnly,
+                    _ => StreamKind::Standalone,
+                };
+                let bandwidth = attrs
+                    .get("bandwidth")
+                    .map(|value| positive(value))
+                    .transpose()?;
+                // Upstream `mimetype2ext(mime_type)`, also naming the `EXT_dash` container.
+                let ext = crate::extractor::direct::mimetype2ext_or(mime, None);
+                let tbr = bandwidth.map(|value| value as f64 / 1000.0);
+                let dimension = |name| {
+                    attrs
+                        .get(name)
+                        .map(|value| {
+                            u32::try_from(positive(value)?)
+                                .map_err(|_| bad("DASH dimension overflow"))
+                        })
+                        .transpose()
+                };
+                let fragments = plans(
+                    &address,
+                    &base,
+                    explicit,
+                    duration_ns,
+                    representation.attribute("id"),
+                    bandwidth,
+                )?;
+                // "Assuming direct URL to unfragmented media": upstream's `url`
+                // is the resource itself, without a protocol or fragments.
+                let (direct, fragments) = if address.kind.is_none() {
+                    (
+                        fragments.into_iter().next().map(|fragment| fragment.url),
+                        Vec::new(),
+                    )
+                } else {
+                    (None, fragments)
+                };
+                let stream_number = {
+                    let counter = self
+                        .stream_numbers
+                        .entry(direct.as_ref().unwrap_or(manifest).to_string())
+                        .or_default();
+                    *counter += 1;
+                    *counter - 1
+                };
+                self.total_fragments = self
+                    .total_fragments
+                    .checked_add(fragments.len())
+                    .filter(|count| *count <= LIMIT)
+                    .ok_or_else(|| bad("DASH total fragment limit exceeded"))?;
+                // Upstream: the representation ID, else the content type.
+                let format_id = match representation.attribute("id") {
+                    Some(id) => id.to_owned(),
+                    None => content_type.to_owned(),
+                };
+                // Upstream `**parse_codecs(codecs)`: no codec keys without one.
+                // Upstream keys: the MPD as `manifest_url`, `has_drm` for a
+                // protected representation, the representation base for
+                // relative fragment paths, and `_merge_mpd_periods`'s
+                // `is_dash_periods`.
+                let mut extra = serde_json::Map::new();
+                extra.insert(
+                    crate::info_order::FORMAT_SHAPE.into(),
+                    if direct.is_some() {
+                        "dash-direct"
+                    } else {
+                        "dash"
+                    }
+                    .into(),
+                );
+                extra.insert("manifest_url".into(), manifest.as_str().into());
+                if has_drm {
+                    extra.insert("has_drm".into(), true.into());
+                }
+                if address.kind.is_some() {
+                    // Without a BaseURL, upstream's base is the MPD's directory.
+                    let directory;
+                    let fragment_base = if explicit {
+                        base.as_str()
+                    } else {
+                        directory = base.join(".")?;
+                        directory.as_str()
+                    };
+                    extra.insert("fragment_base_url".into(), fragment_base.into());
+                }
+                extra.insert("is_dash_periods".into(), true.into());
+                representations += 1;
+                self.merge(VideoFormat {
+                    byte_index: None,
+                    http_headers: None,
+                    extra,
+                    protocol: direct.is_none().then(|| "http_dash_segments".into()),
+                    vcodec: codecs.as_ref().map(|codecs| codecs.vcodec.clone()),
+                    acodec: codecs.as_ref().map(|codecs| codecs.acodec.clone()),
+                    dynamic_range: codecs
+                        .as_ref()
+                        .and_then(|codecs| codecs.dynamic_range)
+                        .map(str::to_owned),
+                    video_ext: None,
+                    audio_ext: None,
+                    vbr: None,
+                    source_preference: None,
+                    quality: None,
+                    // Upstream `int_or_none(frameRate)` (fractions stay unknown)
+                    // and `int_or_none(audioSamplingRate)`.
+                    fps: attrs
+                        .get("frameRate")
+                        .and_then(|value| value.trim().parse::<i64>().ok())
+                        .map(crate::info::PyNumber::Int),
+                    asr: attrs
+                        .get("audioSamplingRate")
+                        .and_then(|value| value.trim().parse().ok()),
+                    audio_channels: None,
+                    resolution: None,
+                    format: None,
+                    aspect_ratio: None,
+                    format_id,
+                    url: direct.clone().unwrap_or_else(|| manifest.clone()),
+                    // Upstream `mimetype2ext(mime_type)`.
+                    ext: ext.clone(),
+                    stream_kind: kind,
+                    audio_group: (kind != StreamKind::Standalone).then(|| "dash-period-0".into()),
+                    // Upstream drops the `mul`/`und`/`zxx`/`mis` language codes.
+                    language: attrs
+                        .get("lang")
+                        .filter(|lang| !matches!(**lang, "mul" | "und" | "zxx" | "mis"))
+                        .map(|value| (*value).to_owned()),
+                    format_note: Some(format!("DASH {content_type}")),
+                    audio_default: false,
+                    audio_autoselect: false,
+                    downloader_options: None,
+                    manifest_stream_number: Some(stream_number),
+                    format_index: None,
+                    container: Some(format!("{ext}_dash")),
+                    abr: if kind == StreamKind::AudioOnly {
+                        tbr
+                    } else {
+                        None
+                    },
+                    tbr,
+                    width: dimension("width")?,
+                    height: dimension("height")?,
+                    filesize: None,
+                    fragments,
+                })?;
+            }
+        }
+        Ok(())
+    }
+}
+
+/// Upstream `_parse_mpd_formats_and_subtitles`: each Period's formats and,
+/// from text representations, the subtitles by language (`und` without
+/// one), merged across Periods like `_merge_mpd_periods`.
 pub(crate) fn parse_with_subtitles(
     text: &str,
     manifest: &Url,
@@ -688,6 +1077,17 @@ pub(crate) fn parse_with_subtitles(
         return Err(bad("dynamic DASH is unsupported"));
     }
     for node in root.descendants().filter(Node::is_element) {
+        if node.ancestors().take(66).count() > 65 {
+            return Err(bad("DASH XML nesting exceeds 64 element levels"));
+        }
+        // Like upstream, only a ContentProtection element's presence is read
+        // (`has_drm`); its scheme data, often namespaced, is not interpreted.
+        if node.ancestors().skip(1).any(|ancestor| {
+            ancestor.tag_name().name() == "ContentProtection"
+                && ancestor.tag_name().namespace() == root.tag_name().namespace()
+        }) {
+            continue;
+        }
         if matches!(
             node.tag_name().name(),
             "SegmentTemplate"
@@ -701,9 +1101,6 @@ pub(crate) fn parse_with_subtitles(
             .any(|attribute| attribute.namespace().is_some())
         {
             return Err(bad("namespaced DASH addressing attributes are unsupported"));
-        }
-        if node.ancestors().take(66).count() > 65 {
-            return Err(bad("DASH XML nesting exceeds 64 element levels"));
         }
         // Upstream never reads `SegmentBase` (or its index ranges and
         // `Initialization`): such a representation is its direct `BaseURL`.
@@ -746,6 +1143,8 @@ pub(crate) fn parse_with_subtitles(
                 matches!(parent, Some("SegmentTemplate" | "SegmentList"))
             }
             "SegmentURL" => parent == Some("SegmentList"),
+            // Upstream reads it on AdaptationSets and Representations only.
+            "ContentProtection" => matches!(parent, Some("AdaptationSet" | "Representation")),
             "S" => parent == Some("SegmentTimeline"),
             _ => true,
         };
@@ -755,11 +1154,9 @@ pub(crate) fn parse_with_subtitles(
         if node.tag_name().namespace() != root.tag_name().namespace() {
             return Err(bad("unsupported DASH extension namespace"));
         }
-        if matches!(
-            node.tag_name().name(),
-            "ContentProtection" | "RepresentationIndex"
-        ) {
-            return Err(bad("DASH encryption and SIDX addressing are unsupported"));
+        // Upstream never reads RepresentationIndex (SIDX) addressing.
+        if node.tag_name().name() == "RepresentationIndex" {
+            return Err(bad("DASH RepresentationIndex addressing is unsupported"));
         }
         if node.attributes().any(|a| {
             a.namespace() == Some("http://www.w3.org/1999/xlink")
@@ -770,313 +1167,34 @@ pub(crate) fn parse_with_subtitles(
         }
     }
     let periods = children(root, "Period");
-    if periods.len() != 1 {
-        return Err(bad("DASH requires exactly one Period"));
+    if periods.is_empty() {
+        return Err(bad("DASH requires a Period"));
     }
-    let period = periods[0];
-    let start = period
-        .attribute("start")
-        .map(duration)
-        .transpose()?
-        .unwrap_or(0);
-    // Parse both declarations even if the Period supplies its own duration.
-    // This single-period subset requires the presentation to end with that Period.
-    let presentation_duration = root
-        .attribute("mediaPresentationDuration")
-        .map(duration)
-        .transpose()?;
-    let period_duration = period.attribute("duration").map(duration).transpose()?;
-    if let Some(total) = presentation_duration {
-        if start > total {
-            return Err(bad("DASH Period starts after presentation end"));
-        }
-        if let Some(length) = period_duration
-            && add(start, length)? != total
-        {
-            return Err(bad("DASH Period end disagrees with presentation duration"));
-        }
-    }
-    let duration_ns = match (period_duration, presentation_duration) {
-        (Some(length), _) => Some(length),
-        (None, Some(total)) => Some(total - start),
-        (None, None) => None,
-    };
-    if duration_ns == Some(0) {
-        return Err(bad("empty DASH period"));
-    }
+    let durations = period_durations(root, &periods)?;
     let (root_base, root_explicit) = base_url(root, manifest, false)?;
-    let (period_base, period_explicit) = base_url(period, &root_base, root_explicit)?;
-    let address = Address::default().inherit(root)?.inherit(period)?;
-    let mut formats = Vec::new();
-    let mut subtitles = Vec::new();
-    let mut total_fragments = 0usize;
-    // Upstream `stream_numbers[f['url']]`: video, audio and image
-    // representations count in manifest order per format URL (the MPD, or
-    // an unfragmented representation's own resource).
-    let mut stream_numbers: BTreeMap<String, usize> = BTreeMap::new();
-    for adaptation in children(period, "AdaptationSet") {
-        let (adaptation_base, adaptation_explicit) =
-            base_url(adaptation, &period_base, period_explicit)?;
-        let address = address.inherit(adaptation)?;
-        for representation in children(adaptation, "Representation") {
-            if formats.len() == 256 {
-                return Err(bad("DASH representation limit exceeded"));
-            }
-            let (base, explicit) = base_url(representation, &adaptation_base, adaptation_explicit)?;
-            let address = address.inherit(representation)?;
-            let mut attrs = BTreeMap::new();
-            for node in [root, period, adaptation, representation] {
-                for attr in node.attributes() {
-                    if attr.namespace().is_none() {
-                        attrs.insert(attr.name(), attr.value());
-                    }
-                }
-                if let Some(language) =
-                    node.attribute(("http://www.w3.org/XML/1998/namespace", "lang"))
-                {
-                    attrs.insert("lang", language);
-                }
-            }
-            let mime = attrs
-                .get("mimeType")
-                .copied()
-                .ok_or_else(|| bad("DASH representation has no MIME type"))?;
-            // Upstream: `contentType`, else the MIME type's major type; other
-            // types are classified by their `parse_codecs` result.
-            let codecs = crate::codecs::parse(attrs.get("codecs").copied());
-            let declared = attrs
-                .get("contentType")
-                .copied()
-                .unwrap_or_else(|| mime.split_once('/').map_or(mime, |(kind, _)| kind));
-            let content_type = match declared {
-                "video" | "audio" | "text" => declared,
-                _ if matches!(mime, "image/avif" | "image/jpeg") => {
-                    let key = if address.kind.is_none() {
-                        &base
-                    } else {
-                        manifest
-                    };
-                    *stream_numbers.entry(key.to_string()).or_default() += 1;
-                    continue;
-                }
-                _ => match &codecs {
-                    Some(codecs) if codecs.vcodec != "none" => "video",
-                    Some(codecs) if codecs.acodec != "none" => "audio",
-                    Some(codecs) if codecs.scodec.is_some() => "text",
-                    _ if matches!(
-                        crate::extractor::direct::mimetype2ext_or(mime, None).as_str(),
-                        "tt" | "dfxp" | "ttml" | "xml" | "json"
-                    ) =>
-                    {
-                        "text"
-                    }
-                    _ => {
-                        crate::screen::warning(&format!(
-                            "Unknown MIME type {mime} in DASH manifest"
-                        ));
-                        continue;
-                    }
-                },
-            };
-            if content_type == "text" {
-                let language = attrs.get("lang").map_or("und", |lang| *lang).to_owned();
-                let ext = crate::extractor::direct::mimetype2ext_or(mime, None);
-                if address.kind.is_none() {
-                    // "Assuming direct URL to unfragmented media."
-                    if explicit && !directory(&base) {
-                        subtitles.push((
-                            language,
-                            crate::SubtitleFormat {
-                                extra: text_extra(manifest, None),
-                                fragments: Vec::new(),
-                                name: None,
-                                url: base.clone(),
-                                ext,
-                                protocol: None,
-                            },
-                        ));
-                    }
-                } else {
-                    // Segmented text: the manifest URL with its fragments.
-                    let bandwidth = attrs
-                        .get("bandwidth")
-                        .and_then(|value| positive(value).ok());
-                    let fragments = plans(
-                        &address,
-                        &base,
-                        explicit,
-                        duration_ns,
-                        representation.attribute("id"),
-                        bandwidth,
-                    )?;
-                    subtitles.push((
-                        language,
-                        crate::SubtitleFormat {
-                            extra: text_extra(
-                                manifest,
-                                Some(if explicit {
-                                    base.clone()
-                                } else {
-                                    base.join(".")?
-                                }),
-                            ),
-                            fragments,
-                            name: None,
-                            url: manifest.clone(),
-                            ext,
-                            protocol: Some("http_dash_segments".into()),
-                        },
-                    ));
-                }
-                continue;
-            }
-            // Selection kinds follow upstream's codec fields (`none` marks a
-            // missing stream); without codecs the stream counts as complete.
-            let kind = match &codecs {
-                Some(codecs) if codecs.vcodec == "none" => StreamKind::AudioOnly,
-                Some(codecs) if codecs.acodec == "none" => StreamKind::VideoOnly,
-                _ => StreamKind::Standalone,
-            };
-            let bandwidth = attrs
-                .get("bandwidth")
-                .map(|value| positive(value))
-                .transpose()?;
-            // Upstream `mimetype2ext(mime_type)`, also naming the `EXT_dash` container.
-            let ext = crate::extractor::direct::mimetype2ext_or(mime, None);
-            let tbr = bandwidth.map(|value| value as f64 / 1000.0);
-            let dimension = |name| {
-                attrs
-                    .get(name)
-                    .map(|value| {
-                        u32::try_from(positive(value)?).map_err(|_| bad("DASH dimension overflow"))
-                    })
-                    .transpose()
-            };
-            let fragments = plans(
-                &address,
-                &base,
-                explicit,
-                duration_ns,
-                representation.attribute("id"),
-                bandwidth,
-            )?;
-            // "Assuming direct URL to unfragmented media": upstream's `url`
-            // is the resource itself, without a protocol or fragments.
-            let (direct, fragments) = if address.kind.is_none() {
-                (
-                    fragments.into_iter().next().map(|fragment| fragment.url),
-                    Vec::new(),
-                )
-            } else {
-                (None, fragments)
-            };
-            let stream_number = {
-                let counter = stream_numbers
-                    .entry(direct.as_ref().unwrap_or(manifest).to_string())
-                    .or_default();
-                *counter += 1;
-                *counter - 1
-            };
-            total_fragments = total_fragments
-                .checked_add(fragments.len())
-                .filter(|count| *count <= LIMIT)
-                .ok_or_else(|| bad("DASH total fragment limit exceeded"))?;
-            // Upstream: the representation ID, else the content type.
-            let format_id = match representation.attribute("id") {
-                Some(id) => id.to_owned(),
-                None => content_type.to_owned(),
-            };
-            // Upstream `**parse_codecs(codecs)`: no codec keys without one.
-            // Upstream keys: the MPD as `manifest_url`, the representation
-            // base for relative fragment paths, and `_merge_mpd_periods`'s
-            // `is_dash_periods`.
-            let mut extra = serde_json::Map::new();
-            extra.insert(
-                crate::info_order::FORMAT_SHAPE.into(),
-                if direct.is_some() {
-                    "dash-direct"
-                } else {
-                    "dash"
-                }
-                .into(),
-            );
-            extra.insert("manifest_url".into(), manifest.as_str().into());
-            if address.kind.is_some() {
-                // Without a BaseURL, upstream's base is the MPD's directory.
-                let directory;
-                let fragment_base = if explicit {
-                    base.as_str()
-                } else {
-                    directory = base.join(".")?;
-                    directory.as_str()
-                };
-                extra.insert("fragment_base_url".into(), fragment_base.into());
-            }
-            extra.insert("is_dash_periods".into(), true.into());
-            formats.push(VideoFormat {
-                byte_index: None,
-                http_headers: None,
-                extra,
-                protocol: direct.is_none().then(|| "http_dash_segments".into()),
-                vcodec: codecs.as_ref().map(|codecs| codecs.vcodec.clone()),
-                acodec: codecs.as_ref().map(|codecs| codecs.acodec.clone()),
-                dynamic_range: codecs
-                    .as_ref()
-                    .and_then(|codecs| codecs.dynamic_range)
-                    .map(str::to_owned),
-                video_ext: None,
-                audio_ext: None,
-                vbr: None,
-                source_preference: None,
-                quality: None,
-                // Upstream `int_or_none(frameRate)` (fractions stay unknown)
-                // and `int_or_none(audioSamplingRate)`.
-                fps: attrs
-                    .get("frameRate")
-                    .and_then(|value| value.trim().parse::<i64>().ok())
-                    .map(crate::info::PyNumber::Int),
-                asr: attrs
-                    .get("audioSamplingRate")
-                    .and_then(|value| value.trim().parse().ok()),
-                audio_channels: None,
-                resolution: None,
-                format: None,
-                aspect_ratio: None,
-                format_id,
-                url: direct.clone().unwrap_or_else(|| manifest.clone()),
-                // Upstream `mimetype2ext(mime_type)`.
-                ext: ext.clone(),
-                stream_kind: kind,
-                audio_group: (kind != StreamKind::Standalone).then(|| "dash-period-0".into()),
-                // Upstream drops the `mul`/`und`/`zxx`/`mis` language codes.
-                language: attrs
-                    .get("lang")
-                    .filter(|lang| !matches!(**lang, "mul" | "und" | "zxx" | "mis"))
-                    .map(|value| (*value).to_owned()),
-                format_note: Some(format!("DASH {content_type}")),
-                audio_default: false,
-                audio_autoselect: false,
-                downloader_options: None,
-                manifest_stream_number: Some(stream_number),
-                format_index: None,
-                container: Some(format!("{ext}_dash")),
-                abr: if kind == StreamKind::AudioOnly {
-                    tbr
-                } else {
-                    None
-                },
-                tbr,
-                width: dimension("width")?,
-                height: dimension("height")?,
-                filesize: None,
-                fragments,
-            });
+    let mut parsed = Periods::default();
+    for (period, duration_ns) in periods.into_iter().zip(durations) {
+        let earlier = parsed.subtitles.len();
+        parsed.period(
+            root,
+            period,
+            manifest,
+            (&root_base, root_explicit),
+            duration_ns,
+        )?;
+        if earlier > 0 && parsed.subtitles.len() > earlier {
+            crate::screen::extractor_warning_once(&format!(
+                "[{}] Found subtitles in multiple periods in the DASH manifest; \
+                 if part of the subtitles are missing, {}",
+                crate::screen::extractor(),
+                crate::BUG_REPORTS_MESSAGE
+            ));
         }
     }
-    if formats.is_empty() {
+    if parsed.formats.is_empty() {
         return Err(bad("DASH has no supported representations"));
     }
-    Ok((formats, subtitles))
+    Ok((parsed.formats, parsed.subtitles))
 }
 
 #[cfg(test)]
@@ -1359,8 +1477,14 @@ mod tests {
         let text = template("");
         for changed in [
             text.replace("type=\"static\"", "type=\"dynamic\""),
+            // The first Period's end is unknown, so its template has no count.
             text.replace("</MPD>", "<Period/></MPD>"),
-            text.replace("<Representation ", "<ContentProtection/><Representation "),
+            text.replace("<Period>", "<Period><ContentProtection/>"),
+            text.replace("<Period>", "<Period/>"),
+            text.replace(
+                "/></AdaptationSet>",
+                "><RepresentationIndex sourceURL=\"index.sidx\"/></Representation></AdaptationSet>",
+            ),
             text.replace(
                 "<Representation ",
                 "<BaseURL>a/</BaseURL><BaseURL>b/</BaseURL><Representation ",
@@ -1600,5 +1724,225 @@ mod tests {
             "<Representation id=\"other\" bandwidth=\"2000000\"/></AdaptationSet>",
         );
         assert!(parse(&text, &manifest()).is_err());
+    }
+    fn periods(body: &str) -> String {
+        format!(
+            "<MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" type=\"static\" mediaPresentationDuration=\"PT6S\">{body}</MPD>"
+        )
+    }
+    fn paths(format: &VideoFormat) -> Vec<&str> {
+        format
+            .fragments
+            .iter()
+            .map(|f| f.url.path().trim_start_matches("/path/"))
+            .collect()
+    }
+    #[test]
+    fn periods_merge_equal_formats_and_keep_counting_streams_like_upstream() {
+        let video = |period: &str, id: &str| {
+            format!(
+                "<AdaptationSet mimeType=\"video/mp4\" codecs=\"avc1.42001e\" width=\"640\" height=\"360\"><SegmentTemplate timescale=\"1\" duration=\"2\" initialization=\"{period}/$RepresentationID$/init.mp4\" media=\"{period}/$RepresentationID$/$Number$.m4s\"/><Representation id=\"{id}\" bandwidth=\"400000\"/></AdaptationSet>"
+            )
+        };
+        let audio = |lang: &str, id: &str, file: &str| {
+            format!(
+                "<AdaptationSet mimeType=\"audio/mp4\" codecs=\"mp4a.40.2\" lang=\"{lang}\"><Representation id=\"{id}\" bandwidth=\"128000\"><BaseURL>{file}</BaseURL></Representation></AdaptationSet>"
+            )
+        };
+        let subtitle = |file: &str| {
+            format!(
+                "<AdaptationSet contentType=\"text\" mimeType=\"text/vtt\" lang=\"en\"><Representation bandwidth=\"1\"><BaseURL>{file}</BaseURL></Representation></AdaptationSet>"
+            )
+        };
+        let text = periods(&format!(
+            "<Period duration=\"PT4S\">{}{}{}</Period><Period duration=\"PT2S\">{}{}{}{}</Period>",
+            video("p0", "v0"),
+            audio("en", "a0", "a.m4a"),
+            subtitle("p0.vtt"),
+            video("p1", "v1"),
+            audio("en", "a1", "a.m4a"),
+            audio("de", "a1de", "de.m4a"),
+            subtitle("p1.vtt"),
+        ));
+        let (formats, subtitles) = parse_with_subtitles(&text, &manifest()).unwrap();
+        // Pinned upstream: the first Period's IDs and stream numbers; the
+        // second Period's fragments, initialization included, are appended,
+        // the repeated direct resource adds nothing and stream numbers count on.
+        let summary: Vec<_> = formats
+            .iter()
+            .map(|f| (f.format_id.as_str(), f.manifest_stream_number, paths(f)))
+            .collect();
+        assert_eq!(
+            summary,
+            [
+                (
+                    "v0",
+                    Some(0),
+                    vec![
+                        "p0/v0/init.mp4",
+                        "p0/v0/1.m4s",
+                        "p0/v0/2.m4s",
+                        "p1/v1/init.mp4",
+                        "p1/v1/1.m4s"
+                    ]
+                ),
+                ("a0", Some(0), vec![]),
+                ("a1de", Some(0), vec![]),
+            ]
+        );
+        assert!(formats.iter().all(|f| f.extra["is_dash_periods"] == true));
+        let subtitles: Vec<_> = subtitles
+            .iter()
+            .map(|(language, format)| (language.as_str(), format.url.path()))
+            .collect();
+        assert_eq!(subtitles, [("en", "/path/p0.vtt"), ("en", "/path/p1.vtt")]);
+        // Formats differing in a merged field (here the fragment base) stay
+        // separate, and within one Period equal formats merge too.
+        let based = text.replace(
+            "<Period duration=\"PT2S\">",
+            "<Period duration=\"PT2S\"><BaseURL>other/</BaseURL>",
+        );
+        let ids: Vec<_> = parse(&based, &manifest())
+            .unwrap()
+            .into_iter()
+            .map(|f| (f.format_id, f.manifest_stream_number))
+            .collect();
+        let ids: Vec<_> = ids.iter().map(|(id, n)| (id.as_str(), *n)).collect();
+        assert_eq!(
+            ids,
+            [
+                ("v0", Some(0)),
+                ("a0", Some(0)),
+                ("v1", Some(1)),
+                ("a1", Some(0)),
+                ("a1de", Some(0))
+            ]
+        );
+        let duplicates = wrap(
+            "<AdaptationSet mimeType=\"video/mp4\" codecs=\"avc1.42001e\"><SegmentTemplate timescale=\"1\" duration=\"1\" media=\"$RepresentationID$/$Number$.m4s\"/><Representation id=\"x\" bandwidth=\"1000\"/><Representation id=\"y\" bandwidth=\"1000\"/><Representation id=\"z\" bandwidth=\"2000\"/></AdaptationSet>",
+        );
+        let formats = parse(&duplicates, &manifest()).unwrap();
+        assert_eq!(formats.len(), 2);
+        assert_eq!(formats[0].fragments.len(), 6);
+        assert_eq!(formats[1].manifest_stream_number, Some(2));
+    }
+    #[test]
+    fn period_spans_come_from_durations_starts_and_the_presentation_end() {
+        let numbered = |attributes: &str, prefix: &str| {
+            format!(
+                "<Period {attributes}><AdaptationSet mimeType=\"video/mp4\"><SegmentTemplate timescale=\"1\" duration=\"2\" media=\"{prefix}-$Number$.m4s\"/><Representation id=\"v\" bandwidth=\"1\"/></AdaptationSet></Period>"
+            )
+        };
+        let fragments = |text: &str| -> Vec<String> {
+            parse(text, &manifest()).unwrap()[0]
+                .fragments
+                .iter()
+                .map(|f| f.url.path().trim_start_matches("/path/").to_owned())
+                .collect()
+        };
+        // Pinned upstream gives every Period without a duration the whole
+        // presentation (three segments each); this port uses each Period's span.
+        let text = periods(&format!(
+            "{}{}",
+            numbered("start=\"PT0S\"", "p0"),
+            numbered("start=\"PT2S\"", "p1")
+        ));
+        assert_eq!(fragments(&text), ["p0-1.m4s", "p1-1.m4s", "p1-2.m4s"]);
+        // A missing start follows the previous Period's duration.
+        let text = periods(&format!(
+            "{}{}",
+            numbered("duration=\"PT4S\"", "p0"),
+            numbered("", "p1")
+        ));
+        assert_eq!(fragments(&text), ["p0-1.m4s", "p0-2.m4s", "p1-1.m4s"]);
+        for invalid in [
+            // Out of order, after the presentation, a late explicit end, an
+            // empty Period, and unknown spans for a duration template.
+            format!(
+                "{}{}",
+                numbered("start=\"PT2S\"", "a"),
+                numbered("start=\"PT2S\"", "b")
+            ),
+            format!("{}{}", numbered("", "a"), numbered("start=\"PT7S\"", "b")),
+            format!(
+                "{}{}",
+                numbered("", "a"),
+                numbered("start=\"PT2S\" duration=\"PT5S\"", "b")
+            ),
+            format!(
+                "{}{}",
+                numbered("duration=\"PT0S\"", "a"),
+                numbered("", "b")
+            ),
+            format!("{}{}", numbered("", "a"), numbered("", "b")),
+        ] {
+            assert!(parse(&periods(&invalid), &manifest()).is_err(), "{invalid}");
+        }
+        // Spans only matter where a count needs them.
+        let listed = "<AdaptationSet mimeType=\"video/mp4\"><SegmentList><SegmentURL media=\"one.m4s\"/></SegmentList><Representation id=\"v\" bandwidth=\"1\"/></AdaptationSet>";
+        let text = periods(&format!(
+            "<Period>{listed}</Period><Period>{listed}</Period>"
+        ));
+        assert_eq!(fragments(&text), ["one.m4s", "one.m4s"]);
+    }
+    #[test]
+    fn content_protection_marks_formats_has_drm_like_upstream() {
+        let text = periods(
+            "<Period xmlns:cenc=\"urn:mpeg:cenc:2013\"><AdaptationSet mimeType=\"video/mp4\" codecs=\"avc1.42001e\"><ContentProtection schemeIdUri=\"urn:mpeg:dash:mp4protection:2011\" value=\"cenc\" cenc:default_KID=\"10000000-1000-1000-1000-100000000001\"/><ContentProtection schemeIdUri=\"urn:uuid:edef8ba9-79d6-4ace-a3c8-27dcd51d21ed\"><cenc:pssh>AAAA</cenc:pssh></ContentProtection><Representation id=\"v\" bandwidth=\"1\"><BaseURL>v.mp4</BaseURL></Representation></AdaptationSet>\
+             <AdaptationSet mimeType=\"audio/mp4\" codecs=\"mp4a.40.2\"><Representation id=\"a\" bandwidth=\"1\"><ContentProtection schemeIdUri=\"urn:x\"/><BaseURL>a.m4a</BaseURL></Representation><Representation id=\"clear\" bandwidth=\"1\"><BaseURL>c.m4a</BaseURL></Representation></AdaptationSet>\
+             <AdaptationSet contentType=\"text\" mimeType=\"text/vtt\"><ContentProtection schemeIdUri=\"urn:x\"/><Representation bandwidth=\"1\"><BaseURL>s.vtt</BaseURL></Representation></AdaptationSet></Period>",
+        );
+        let (formats, subtitles) = parse_with_subtitles(&text, &manifest()).unwrap();
+        let drm: Vec<_> = formats
+            .iter()
+            .map(|f| (f.format_id.as_str(), f.extra.get("has_drm").cloned()))
+            .collect();
+        assert_eq!(
+            drm,
+            [
+                ("v", Some(true.into())),
+                ("a", Some(true.into())),
+                ("clear", None)
+            ]
+        );
+        assert_eq!(subtitles[0].1.extra["has_drm"], true);
+        // Foreign elements stay unsupported outside ContentProtection.
+        assert!(
+            parse(
+                &text.replace(
+                    "<cenc:pssh>AAAA</cenc:pssh></ContentProtection>",
+                    "</ContentProtection><cenc:pssh>AAAA</cenc:pssh>"
+                ),
+                &manifest()
+            )
+            .is_err()
+        );
+    }
+    #[test]
+    fn representation_limits_count_each_period_and_the_merged_formats() {
+        let distinct = |count: usize, offset: usize| {
+            (0..count)
+                .map(|index| {
+                    format!(
+                        "<Representation id=\"r{index}\" bandwidth=\"{}\"><BaseURL>r.mp4</BaseURL></Representation>",
+                        index + offset + 1
+                    )
+                })
+                .collect::<String>()
+        };
+        let text = |first: String, second: String| {
+            periods(&format!(
+                "<Period><AdaptationSet mimeType=\"video/mp4\">{first}</AdaptationSet></Period><Period><AdaptationSet mimeType=\"video/mp4\">{second}</AdaptationSet></Period>"
+            ))
+        };
+        // Equal Periods merge into 200 formats; 400 distinct ones exceed 256.
+        assert_eq!(
+            parse(&text(distinct(200, 0), distinct(200, 0)), &manifest())
+                .unwrap()
+                .len(),
+            200
+        );
+        assert!(parse(&text(distinct(200, 0), distinct(200, 200)), &manifest()).is_err());
+        assert!(parse(&text(distinct(257, 0), String::new()), &manifest()).is_err());
     }
 }

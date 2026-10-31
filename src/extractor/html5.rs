@@ -1357,12 +1357,13 @@ impl GenericHttp {
             None => return Ok(None),
             Some(Found::Redirect(target)) => {
                 crate::screen::screen(&format!("[redirect] Following redirect to {target}"));
-                if super::youtube_suitable(target.as_str()) {
-                    return Err(unsupported(
-                        "redirects to YouTube are not supported natively",
-                    ));
-                }
-                return self.extract_result(client, &target);
+                // `[self.url_result(new_url)]`: followed with every extractor.
+                let mut info = direct::build_at(target.clone(), &target, String::new());
+                info.formats.clear();
+                info.direct = None;
+                info.extra
+                    .insert(crate::FOLLOW_URL.into(), target.as_str().into());
+                return Ok(Some(ExtractResult::Video(info)));
             }
             Some(Found::Urls(name, urls)) => {
                 // `report_detected(name)` (no count).
@@ -1383,10 +1384,37 @@ impl GenericHttp {
         let count = urls.len();
         let mut entries = Vec::new();
         for (index, media) in urls.into_iter().enumerate() {
+            // "Sometimes, jwplayer extraction will result in a YouTube URL":
+            // `url_result(video_url, 'Youtube')`, followed when it is the
+            // only one, else a playlist entry (without a numbered title).
             if super::youtube_suitable(media.as_str()) {
-                return Err(unsupported(
-                    "embedded YouTube URLs are not supported natively",
-                ));
+                let mut info = direct::build_at(media.clone(), &media, String::new());
+                info.formats.clear();
+                info.direct = None;
+                if count == 1 {
+                    info.extra
+                        .insert(crate::FOLLOW_URL.into(), media.as_str().into());
+                } else {
+                    info.id = super::youtube::temp_id(media.as_str()).unwrap_or_default();
+                    info.extra.insert(
+                        crate::TRANSPARENT.into(),
+                        serde_json::json!({
+                            "url": media.as_str(),
+                            "force_videoid": null,
+                            "fields": {},
+                            "ie_key": "Youtube",
+                            "extractor": "youtube",
+                            // `url_result(video_url, 'Youtube')` as is.
+                            "entry": {
+                                "ie_key": "Youtube",
+                                "_type": "url",
+                                "url": media.as_str(),
+                            },
+                        }),
+                    );
+                }
+                entries.push(info);
+                continue;
             }
             if media.scheme().starts_with("rtmp") {
                 return Err(unsupported("RTMP URLs are not supported natively"));
@@ -2180,7 +2208,16 @@ enum Embed {
     Info(WebpageEntry),
 }
 
-static EMBED_SITES: [EmbedSite; 41] = [
+static EMBED_SITES: [EmbedSite; 53] = [
+    EmbedSite {
+        name: "youtube",
+        key: "Youtube",
+        extractor: None,
+        embed_urls: super::youtube::embed_urls,
+        temp_id: super::youtube::temp_id,
+        webpage: None,
+        fields: None,
+    },
     EmbedSite {
         name: super::acast::NAME,
         key: super::acast::KEY,
@@ -2254,6 +2291,15 @@ static EMBED_SITES: [EmbedSite; 41] = [
         fields: None,
     },
     EmbedSite {
+        name: super::dbtv::NAME,
+        key: super::dbtv::KEY,
+        extractor: Some(&super::dbtv::Dbtv),
+        embed_urls: super::dbtv::embed_urls,
+        temp_id: super::dbtv::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
         name: super::dailymail::NAME,
         key: super::dailymail::KEY,
         extractor: Some(&super::dailymail::DailyMail),
@@ -2263,11 +2309,20 @@ static EMBED_SITES: [EmbedSite; 41] = [
         fields: None,
     },
     EmbedSite {
-        name: super::dbtv::NAME,
-        key: super::dbtv::KEY,
-        extractor: Some(&super::dbtv::Dbtv),
-        embed_urls: super::dbtv::embed_urls,
-        temp_id: super::dbtv::temp_id,
+        name: super::dailymotion::NAME,
+        key: super::dailymotion::KEY,
+        extractor: Some(&super::dailymotion::Dailymotion),
+        embed_urls: super::dailymotion::embed_urls,
+        temp_id: super::dailymotion::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::dailymotion::PLAYLIST_NAME,
+        key: super::dailymotion::PLAYLIST_KEY,
+        extractor: Some(&super::dailymotion::DailymotionPlaylist),
+        embed_urls: super::dailymotion::playlist_embed_urls,
+        temp_id: super::dailymotion::playlist_temp_id,
         webpage: None,
         fields: None,
     },
@@ -2299,6 +2354,15 @@ static EMBED_SITES: [EmbedSite; 41] = [
         fields: None,
     },
     EmbedSite {
+        name: super::facebook::NAME,
+        key: super::facebook::KEY,
+        extractor: Some(&super::facebook::Facebook),
+        embed_urls: super::facebook::embed_urls,
+        temp_id: super::facebook::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
         name: super::googledrive::NAME,
         key: super::googledrive::KEY,
         extractor: Some(&super::googledrive::GoogleDrive),
@@ -2317,15 +2381,6 @@ static EMBED_SITES: [EmbedSite; 41] = [
         fields: None,
     },
     EmbedSite {
-        name: "JWPlatform",
-        key: "JWPlatform",
-        extractor: Some(&super::jwplatform::JwPlatform),
-        embed_urls: super::jwplatform::embed_urls,
-        temp_id: super::jwplatform::temp_id,
-        webpage: None,
-        fields: None,
-    },
-    EmbedSite {
         name: super::indavideo::NAME,
         key: super::indavideo::KEY,
         extractor: Some(&super::indavideo::IndavideoEmbed),
@@ -2335,11 +2390,29 @@ static EMBED_SITES: [EmbedSite; 41] = [
         fields: None,
     },
     EmbedSite {
+        name: super::instagram::NAME,
+        key: super::instagram::NAME,
+        extractor: Some(&super::instagram::Instagram),
+        embed_urls: super::instagram::embed_urls,
+        temp_id: super::instagram::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
         name: super::jstream::NAME,
         key: super::jstream::KEY,
         extractor: Some(&super::jstream::JStream),
         embed_urls: super::jstream::embed_urls,
         temp_id: super::jstream::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: "JWPlatform",
+        key: "JWPlatform",
+        extractor: Some(&super::jwplatform::JwPlatform),
+        embed_urls: super::jwplatform::embed_urls,
+        temp_id: super::jwplatform::temp_id,
         webpage: None,
         fields: None,
     },
@@ -2398,11 +2471,38 @@ static EMBED_SITES: [EmbedSite; 41] = [
         fields: None,
     },
     EmbedSite {
+        name: super::peertube::NAME,
+        key: super::peertube::NAME,
+        extractor: Some(&super::peertube::PeerTube),
+        embed_urls: super::peertube::embed_urls,
+        temp_id: super::peertube::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
         name: super::rudovideo::NAME,
         key: super::rudovideo::KEY,
         extractor: Some(&super::rudovideo::RudoVideo),
         embed_urls: super::rudovideo::embed_urls,
         temp_id: super::rudovideo::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::rumble::EMBED_NAME,
+        key: super::rumble::EMBED_NAME,
+        extractor: Some(&super::rumble::RumbleEmbed),
+        embed_urls: super::rumble::embed_urls,
+        temp_id: super::rumble::embed_temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::rumble::NAME,
+        key: super::rumble::NAME,
+        extractor: Some(&super::rumble::Rumble),
+        embed_urls: super::rumble::embed_page_urls,
+        temp_id: super::rumble::temp_id,
         webpage: None,
         fields: None,
     },
@@ -2425,6 +2525,15 @@ static EMBED_SITES: [EmbedSite; 41] = [
         fields: None,
     },
     EmbedSite {
+        name: super::soundcloud::EMBED_NAME,
+        key: super::soundcloud::EMBED_NAME,
+        extractor: Some(&super::soundcloud::SoundcloudEmbed),
+        embed_urls: super::soundcloud::embed_urls,
+        temp_id: super::soundcloud::embed_temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
         name: "Streamable",
         key: "Streamable",
         extractor: Some(&super::streamable::Streamable),
@@ -2439,6 +2548,24 @@ static EMBED_SITES: [EmbedSite; 41] = [
         extractor: Some(&super::tv24ua::Tv24UaVideo),
         embed_urls: super::tv24ua::embed_urls,
         temp_id: super::tv24ua::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::ted::EMBED,
+        key: super::ted::EMBED,
+        extractor: Some(&super::ted::TedEmbed),
+        embed_urls: super::ted::embed_urls,
+        temp_id: super::ted::embed_temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::tiktok::NAME,
+        key: super::tiktok::NAME,
+        extractor: Some(&super::tiktok::TikTok),
+        embed_urls: super::tiktok::embed_urls,
+        temp_id: super::tiktok::temp_id,
         webpage: None,
         fields: None,
     },
@@ -2461,6 +2588,24 @@ static EMBED_SITES: [EmbedSite; 41] = [
         fields: None,
     },
     EmbedSite {
+        name: super::vk::NAME,
+        key: super::vk::KEY,
+        extractor: Some(&super::vk::Vk),
+        embed_urls: super::vk::embed_urls,
+        temp_id: super::vk::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::vodplatform::NAME,
+        key: super::vodplatform::KEY,
+        extractor: Some(&super::vodplatform::VodPlatform),
+        embed_urls: super::vodplatform::embed_urls,
+        temp_id: super::vodplatform::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
         name: super::vbox7::NAME,
         key: super::vbox7::KEY,
         extractor: Some(&super::vbox7::Vbox7),
@@ -2479,6 +2624,15 @@ static EMBED_SITES: [EmbedSite; 41] = [
         fields: None,
     },
     EmbedSite {
+        name: super::vimeo::NAME,
+        key: super::vimeo::KEY,
+        extractor: Some(&super::vimeo::Vimeo),
+        embed_urls: super::vimeo::embed_urls,
+        temp_id: super::vimeo::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
         name: super::viously::NAME,
         key: super::viously::NAME,
         extractor: None,
@@ -2493,15 +2647,6 @@ static EMBED_SITES: [EmbedSite; 41] = [
         extractor: None,
         embed_urls: super::visir::embed_urls,
         temp_id: super::visir::temp_id,
-        webpage: None,
-        fields: None,
-    },
-    EmbedSite {
-        name: super::vodplatform::NAME,
-        key: super::vodplatform::KEY,
-        extractor: Some(&super::vodplatform::VodPlatform),
-        embed_urls: super::vodplatform::embed_urls,
-        temp_id: super::vodplatform::temp_id,
         webpage: None,
         fields: None,
     },
@@ -2533,15 +2678,6 @@ static EMBED_SITES: [EmbedSite; 41] = [
         fields: None,
     },
     EmbedSite {
-        name: "youtube",
-        key: "Youtube",
-        extractor: None,
-        embed_urls: super::youtube::embed_urls,
-        temp_id: super::youtube::temp_id,
-        webpage: None,
-        fields: None,
-    },
-    EmbedSite {
         name: super::zype::NAME,
         key: super::zype::KEY,
         extractor: Some(&super::zype::Zype),
@@ -2551,6 +2687,19 @@ static EMBED_SITES: [EmbedSite; 41] = [
         fields: None,
     },
 ];
+
+/// Upstream `get_temp_id(url)` of the first embed site (in extractor order)
+/// whose URL `url` is, with its extractor key: the URL ID these extractors
+/// know without extracting (`YoutubeDl::temp_archive_identity`).
+pub(crate) fn temp_identity(
+    url: &str,
+    allowed: impl Fn(&str) -> bool,
+) -> Option<(&'static str, String)> {
+    EMBED_SITES
+        .iter()
+        .filter(|site| allowed(site.key))
+        .find_map(|site| (site.temp_id)(url).map(|id| (site.key, id)))
+}
 
 /// Every embed site's URLs (or webpage info dicts) with
 /// `report_detected(f'{IE_NAME} embed', n)`.

@@ -235,6 +235,8 @@ pub struct YoutubeDl {
     force_generic: bool,
     /// `--default-search`.
     default_search: Option<String>,
+    /// `--wait-for-video`: wait for videos without formats yet.
+    wait_for_video: Option<extractor::WaitForVideo>,
     check_formats: CheckFormats,
     /// `-N`/`--concurrent-fragments`.
     concurrent_fragments: usize,
@@ -426,6 +428,66 @@ pub(crate) const FETCH_ERROR_COUNT: &str = "__yt_dlp_rs_fetch_error_count";
 pub(crate) const FOLLOW_TRANSPARENT: &str = "__yt_dlp_rs_follow_transparent";
 
 /// Upstream `bug_reports_message()` after a lowercase-ending text.
+/// Upstream's `InfoExtractor.extract` turns an extractor's unexpected
+/// exception into `ExtractorError('An extractor error has occurred.')`, so
+/// one broken page fails its URL, not the run. A panic is this port's bug,
+/// reported to this repository rather than upstream's.
+fn guard_extractor<T>(key: &str, url: &str, extract: impl FnOnce() -> Result<T>) -> Result<T> {
+    std::panic::catch_unwind(std::panic::AssertUnwindSafe(extract)).unwrap_or_else(|panic| {
+        let cause = panic
+            .downcast_ref::<&str>()
+            .map(|text| (*text).to_owned())
+            .or_else(|| panic.downcast_ref::<String>().cloned())
+            .unwrap_or_else(|| "unknown panic".into());
+        Err(Error::Reported(format!(
+            "[{key}] {url}: An extractor error has occurred. (caused by panic: {cause}); please report this issue on https://github.com/aagedal/yt-dlp-rs/issues"
+        )))
+    })
+}
+
+#[cfg(test)]
+mod guard_extractor_tests {
+    use super::*;
+
+    #[test]
+    fn extractor_panics_become_errors_for_their_url() {
+        let error = guard_extractor::<()>("Site", "https://example.com/v", || {
+            let entries: Vec<u8> = Vec::new();
+            let _ = entries[entries.len()];
+            Ok(())
+        })
+        .unwrap_err();
+        let text = error.to_string();
+        assert!(
+            text.starts_with(
+                "[Site] https://example.com/v: An extractor error has occurred. (caused by panic: index out of bounds"
+            ),
+            "{text}"
+        );
+        assert!(text.ends_with("https://github.com/aagedal/yt-dlp-rs/issues"));
+        let error = guard_extractor::<()>("Site", "u", || panic!("{}", String::from("owned")));
+        assert!(
+            error
+                .unwrap_err()
+                .to_string()
+                .contains("(caused by panic: owned)")
+        );
+        assert_eq!(guard_extractor("Site", "u", || Ok(1)).unwrap(), 1);
+        assert!(matches!(
+            guard_extractor::<()>("Site", "u", || Err(Error::ExtractionCancelled)),
+            Err(Error::ExtractionCancelled)
+        ));
+    }
+}
+
+/// Upstream `UserNotLive` (a channel or user not live): every extractor
+/// raising it here uses its default message.
+fn user_not_live(error: &Error) -> bool {
+    error
+        .to_string()
+        .ends_with("The channel is not currently live")
+}
+
 pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U";
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
@@ -985,6 +1047,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Sohu",
     "SohuV",
     "soundcloud",
+    "SoundcloudEmbed",
     "soundgasm",
     "soundgasm:profile",
     "SovietsCloset",
@@ -1292,6 +1355,7 @@ impl YoutubeDl {
     /// Configure global HTTP defaults together with YouTube extraction.
     /// Per-request extractor and transport headers override these defaults.
     pub fn with_options(youtube: YoutubeOptions, http: HttpOptions) -> Result<Self> {
+        let wait_for_video = youtube.wait_for_video;
         let headers = http.header_map()?;
         let proxy_url = http.proxy.clone();
         let proxy = http.transport_config()?;
@@ -1358,6 +1422,7 @@ impl YoutubeDl {
             allowed_extractors: None,
             force_generic: false,
             default_search: None,
+            wait_for_video,
             check_formats: CheckFormats::Default,
             concurrent_fragments: 1,
             keep_fragments: false,
@@ -1658,6 +1723,7 @@ impl YoutubeDl {
                 Box::new(extractor::DailymotionSearch),
                 Box::new(extractor::DailymotionUser),
                 Box::new(extractor::Soundcloud),
+                Box::new(extractor::SoundcloudEmbed),
                 Box::new(extractor::Soundgasm),
                 Box::new(extractor::SoundgasmProfile),
                 Box::new(extractor::TwitchVod),
@@ -3147,8 +3213,10 @@ impl YoutubeDl {
                 || extractor::podbayfm_pending_state(&pending.state)
                 || extractor::podchaser_pending_state(&pending.state)
                 || extractor::nzz_pending_state(&pending.state);
-            playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
-                .map(|state| PendingEntries { state });
+            playlist.pending = guard_extractor("playlist", playlist.webpage_url.as_str(), || {
+                fetch(&self.client, pending.state, limit, &mut playlist.entries)
+            })?
+            .map(|state| PendingEntries { state });
             if resolved {
                 let unprocessed: Vec<usize> = (0..playlist.entries.len())
                     .filter(|index| !playlist.entries[*index].extra.contains_key(PROCESSED_ENTRY))
@@ -4046,8 +4114,8 @@ impl YoutubeDl {
         self.extract_info_with_format(input, None)
     }
 
-    /// Extract and select a supported single source, two-stream pair, or fallback.
-    /// Full upstream selector grammar and ranking are unsupported.
+    /// Extract a video and select its formats with an upstream format
+    /// selector (`-f`; `None` for the default) after upstream's sorting.
     pub fn extract_info_with_format(&self, input: &str, format: Option<&str>) -> Result<VideoInfo> {
         self.extract_result_with_format(input, format)?.into_video()
     }
@@ -4345,6 +4413,19 @@ impl YoutubeDl {
                 .take_while(|item| **item != "end")
                 .any(|item| item.eq_ignore_ascii_case(name))
         })
+    }
+
+    /// Upstream `extract_info`'s check before extracting: the extractor key
+    /// and URL ID (`ie.get_temp_id(url)`) of `url` when its extractor is
+    /// known without extracting (YouTube videos and the embeddable sites), for
+    /// `--download-archive` to skip a recorded video without any request.
+    pub fn temp_archive_identity(&self, url: &str) -> Option<(String, String)> {
+        if self.force_generic {
+            return None;
+        }
+        extractor::html5::temp_identity(url, |key| self.extractor_allowed(key))
+            .filter(|(_, id)| !id.is_empty())
+            .map(|(key, id)| (key.to_owned(), id))
     }
 
     fn generic_allowed(&self) -> bool {
@@ -4719,11 +4800,43 @@ impl YoutubeDl {
         };
         for extractor in extractors {
             geo::begin(extractor.key(), extractor.geo());
-            let mut extracted = extractor.extract_result(&self.client, url);
+            let extract = || {
+                guard_extractor(extractor.key(), url.as_str(), || {
+                    extractor.extract_result(&self.client, url)
+                })
+            };
+            let mut extracted = extract();
             // `extract`: a geo restriction may retry with a fake IP.
             if extracted.is_err() && geo::retry_with_fake_ip() {
                 geo::restart();
-                extracted = extractor.extract_result(&self.client, url);
+                extracted = extract();
+            }
+            // `_wait_for_video`: a video without formats yet (an upcoming
+            // stream whose extractor raised an expected no-formats error)
+            // waits and is extracted again (`ReExtractInfo`).
+            while let Some(wait) = self.wait_for_video.as_ref() {
+                let message = match &extracted {
+                    Ok(Some(ExtractResult::Video(video)))
+                        if video.formats.is_empty()
+                            && video.extra.contains_key(info::NO_FORMATS) =>
+                    {
+                        let release = video
+                            .extra
+                            .get("release_timestamp")
+                            .and_then(serde_json::Value::as_i64);
+                        let upcoming = video.metadata.live_status.as_deref() == Some("is_upcoming");
+                        extractor::youtube::wait_for_video(wait, release, upcoming, true)
+                    }
+                    // `UserNotLive`: reported as a warning, then
+                    // `_wait_for_video()` without an info dict.
+                    Err(error) if user_not_live(error) => {
+                        screen::warning(&error.to_string());
+                        extractor::youtube::wait_for_video(wait, None, false, false)
+                    }
+                    _ => break,
+                };
+                screen::screen(&format!("{message}; Re-extracting data"));
+                extracted = extract();
             }
             let extracted = extracted?;
             if extracted.is_none() {
@@ -4764,10 +4877,43 @@ impl YoutubeDl {
                     // The outer result's fake IP is among its forced fields.
                     let outer_ip = geo::fake_ip();
                     let merge = |result: &mut ExtractResult| -> Result<()> {
-                        let ExtractResult::Video(inner) = result else {
-                            return Err(Error::UnsupportedHtml5(
-                                "url_transparent playlists are not supported natively".into(),
-                            ));
+                        let inner = match result {
+                            ExtractResult::Video(inner) => inner,
+                            // `new_result = info.copy(); new_result.update(
+                            // force_properties)`: a playlist takes the outer
+                            // result's fields and page URL too.
+                            ExtractResult::Playlist(playlist) => {
+                                let added: Vec<serde_json::Value> = fields
+                                    .iter()
+                                    .map(|(key, _)| key.as_str())
+                                    .filter(|key| {
+                                        !matches!(*key, "title" | "webpage_url")
+                                            && !playlist.extra.contains_key(*key)
+                                    })
+                                    .map(serde_json::Value::from)
+                                    .collect();
+                                playlist
+                                    .extra
+                                    .insert(info_order::FORCED_KEYS.into(), added.into());
+                                for (key, value) in &fields {
+                                    match key.as_str() {
+                                        "title" => {
+                                            playlist.title =
+                                                value.as_str().unwrap_or_default().to_owned();
+                                        }
+                                        _ => {
+                                            playlist.extra.insert(key.clone(), value.clone());
+                                        }
+                                    }
+                                }
+                                playlist.webpage_url = outer.clone();
+                                if let Some(ip) = &outer_ip {
+                                    playlist
+                                        .extra
+                                        .insert(geo::FAKE_IP_FIELD.into(), ip.clone().into());
+                                }
+                                return before_processing(result);
+                            }
                         };
                         let mut inner_shape = match inner.extra.get(info_order::INFO_SHAPE) {
                             Some(serde_json::Value::String(shape)) => shape.clone(),

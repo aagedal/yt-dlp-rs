@@ -45,7 +45,7 @@ tractable for future agents.
 - `src/http.rs`: validated global request headers and User-Agent/Referer defaults, shared by normal and bounded player clients.
 - `src/download.rs`: streaming HTTP transfer, byte-progress/cancellation checkpoints, and no-clobber publication.
 - `src/hls.rs` and `src/extractor/hls.rs`: pure VOD HLS parsing and generic/HTML5 manifest acquisition.
-- `src/dash.rs` and `src/extractor/dash.rs`: bounded static single-period MPD parsing and generic/HTML5 acquisition.
+- `src/dash.rs` and `src/extractor/dash.rs`: bounded static (multi-period) MPD parsing and generic/HTML5 acquisition.
 - `src/fragment.rs`: ordered native fragment/range transport and atomic publication.
 - `src/rtmp_fd.rs` and `src/websocket_fd.rs`: upstream's RtmpFD (`rtmpdump`) and
   WebSocketFragmentFD (a websocket client piped into FFmpegFD's stdin, reusable by
@@ -95,8 +95,9 @@ upstream's full sorter. `ExtractResult` distinguishes a video from a fully extra
 deferred entry pages (`PlaylistInfo::pending`) are processed by the CLI's input queue;
 a `MULTI_VIDEO` marker makes a playlist upstream's `_type: multi_video`
 (`PlaylistInfo::result_type`), which the default `--concat-playlist` joins;
-unresolved URL results resolving to playlists, and other site playlists
-remain outside the current result contract.
+a top-level `url_transparent` result resolving to a playlist takes the outer
+fields like upstream, while a playlist entry resolving to a playlist (upstream's
+inline nested processing) remains an explicit error.
 
 ## Milestones
 
@@ -120,16 +121,16 @@ remain outside the current result contract.
    extraction lazy. Typed filename templates support represented root fields,
    string/integer/fixed-point conversions, width/precision/flags, alternatives and
    missing-value defaults with upstream filename sanitization, restricted/Windows/
-   minimal modes, name trimming, typed `-o` templates and `-P` paths; full template expressions, conversions and
-   Windows-host path sanitization remain open. `--print` video-stage field lists/templates and
+   minimal modes, name trimming, typed `-o` templates and `-P` paths; upstream's full template expressions and
+   conversions followed, and Windows-host path sanitization remains open. `--print` video-stage field lists/templates and
    the title/ID/URL/filename `--get-*` aliases print unsanitized values with
    quiet simulation; `--print-to-file` appends video-stage lines to output-template
    destinations without implying simulation. All upstream print stages are implemented.
    `-a/--batch-file` URL lists follow upstream `get_urls` parsing, and the
    `-w`/`--force-overwrites` modes follow upstream existing-file decisions.
-   Full upstream ranking and general selector
-   expressions remain open. Site
-   playlists and nested/unresolved results require further explicit result types.
+   Upstream FormatSorter ranking and the full selector grammar followed, each
+   compared with pinned upstream on saved cases; site playlists, nested
+   playlists and URL results have explicit result types.
 3. **Resilient transport and media protocols.** Retry policy, range/resume with
    validator checks, HLS/DASH parsing and fragments, format selection, ffmpeg
    integration, and download progress/cancellation. Do not label manifest text
@@ -154,9 +155,9 @@ remain outside the current result contract.
    streaming decryption are implemented with exact local media fixtures.
    External audio groups, metadata and compatible video/audio selection now
    feed native fragment downloads and explicit FFmpeg copy merging, including
-   MPEG-TS video and AAC/TS audio. Static single-period DASH templates/timelines/lists/ranges and native
+   MPEG-TS video and AAC/TS audio. Static DASH templates/timelines/lists/ranges, multi-period merging, `has_drm` marking and native
    representation downloads are implemented; explicit FFmpeg merges separate
-   tracks. Dynamic/multi-period/SIDX DASH, SAMPLE-AES/DRM and native (non-FFmpeg) live HLS,
+   tracks. Dynamic/SIDX DASH, SAMPLE-AES/DRM decryption and native (non-FFmpeg) live HLS,
    and external video renditions remain open. On Unix, SIGINT/SIGTERM end a
    CLI run like upstream's `KeyboardInterrupt`, keeping `.part` files.
    `--continue`/`.part` whole-file resume (also for downloads to be
@@ -243,7 +244,7 @@ remain outside the current result contract.
    tools, no-clobber publication and original/intermediate retention.
    Subtitle embedding now follows audio/video processing for MP4/MOV/M4A/WebM/
    Matroska, preserving source container/language policies and sidecar retention.
-   Other-site/manifest subtitles remain open.
+   HLS/DASH manifest subtitles and other sites' subtitles followed.
    Video/playlist `--write-info-json` sidecars follow upstream clean filtering,
    naming and ordering for the represented metadata subset, and
    `--load-info-json` reprocesses saved dictionaries; `--embed-info-json`

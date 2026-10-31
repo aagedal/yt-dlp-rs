@@ -17,8 +17,8 @@ use url::Url;
 
 pub struct Vimeo;
 
-const NAME: &str = "vimeo";
-const KEY: &str = "Vimeo";
+pub(crate) const NAME: &str = "vimeo";
+pub(crate) const KEY: &str = "Vimeo";
 const QUALITIES: [&str; 3] = ["low", "medium", "high"];
 
 static HOST: LazyLock<Regex> =
@@ -47,6 +47,15 @@ static VIMEO_CONFIG: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"vimeo\.config\s*=\s*(?:(\{.+?\})|_extend\([^,]+,\s+(\{.+?\})\));").unwrap()
 });
 static SEP: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"/sep/video/").unwrap());
+/// `_EMBED_REGEX` (each `(["\'])...\\1` as one alternative per quote).
+static EMBED: LazyLock<[Regex; 3]> = LazyLock::new(|| {
+    [
+        r#"<iframe[^>]+?src=(?:"(?P<url>(?:https?:)?//player\.vimeo\.com/video/\d+.*?)"|'(?P<url2>(?:https?:)?//player\.vimeo\.com/video/\d+.*?)')"#,
+        r#"<embed[^>]+?src=(?:"(?P<url>(?:https?:)?//(?:www\.)?vimeo\.com/moogaloop\.swf.+?)"|'(?P<url2>(?:https?:)?//(?:www\.)?vimeo\.com/moogaloop\.swf.+?)')"#,
+        r#"<video[^>]+src=(?:"(?P<url>(?:https?:)?//(?:www\.)?vimeo\.com/[0-9]+)"|'(?P<url2>(?:https?:)?//(?:www\.)?vimeo\.com/[0-9]+)')"#,
+    ]
+    .map(|pattern| Regex::new(pattern).unwrap())
+});
 static AUDIO_QUALITY: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"audio-(low|medium|high)").unwrap());
 
@@ -103,6 +112,24 @@ fn match_url(url: &str) -> Option<(String, Option<String>)> {
 /// `VimeoIE.suitable`.
 pub fn suitable(url: &str) -> bool {
     match_url(url).is_some()
+}
+
+/// `get_temp_id`.
+pub(crate) fn temp_id(url: &str) -> Option<String> {
+    match_url(url).map(|(id, _)| id)
+}
+
+/// `VimeoIE._extract_embed_urls`: the `_EMBED_REGEX` embeds, each
+/// smuggled with the page as its `referer` (`_smuggle_referrer`).
+pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
+    super::embed_regex_urls(url, webpage, &*EMBED, suitable)
+        .into_iter()
+        .filter_map(|embed| {
+            let smuggled =
+                super::brightcove::smuggle(embed.as_str(), &json!({"referer": url.as_str()}));
+            Url::parse(&smuggled).ok()
+        })
+        .collect()
 }
 
 fn int(value: Option<&Value>) -> Option<i64> {
@@ -1601,10 +1628,17 @@ impl Extractor for Vimeo {
         if let Some(hash) = unlisted_hash.as_deref() {
             return extract_from_api(client, url, &video_id, Some(hash)).map(Some);
         }
-        let mut page = url.clone();
+        // `_unsmuggle_headers`: an embed's smuggled `referer`, else the URL.
+        let (bare, smuggled) = super::brightcove::unsmuggle(url.as_str());
+        let bare = if smuggled.is_empty() {
+            url.clone()
+        } else {
+            Url::parse(&bare)?
+        };
+        let mut page = bare.clone();
         if ["play_redirect_hls", "moogaloop.swf"]
             .iter()
-            .any(|marker| url.as_str().contains(marker))
+            .any(|marker| bare.as_str().contains(marker))
         {
             page = Url::parse(&format!("https://vimeo.com/{video_id}"))?;
         }
@@ -1620,7 +1654,10 @@ impl Extractor for Vimeo {
                 crate::screen::warning_once(&format!("[{NAME}] {message}"));
             })
         });
-        let referer = url.as_str().to_owned();
+        let referer = match smuggled.get("referer") {
+            Some(Value::String(referer)) => referer.clone(),
+            _ => bare.as_str().to_owned(),
+        };
         crate::screen::screen(&format!("[{NAME}] {video_id}: Downloading webpage"));
         let response =
             super::direct::request_with_headers(client, &page, None, &[("Referer", &referer)])
@@ -1692,7 +1729,7 @@ impl Extractor for Vimeo {
         let mut config_url: Option<String> = None;
         static CHANNEL: LazyLock<Regex> =
             LazyLock::new(|| Regex::new(r"vimeo\.com/channels/([^/?#]+)").unwrap());
-        if let Some(found) = CHANNEL.captures(url.as_str()) {
+        if let Some(found) = CHANNEL.captures(bare.as_str()) {
             static CONFIG_URL: LazyLock<Regex> =
                 LazyLock::new(|| Regex::new(r#"\bdata-config-url="([^"]+)""#).unwrap());
             config_url = CONFIG_URL
@@ -1797,13 +1834,13 @@ impl Extractor for Vimeo {
                 .into(),
         );
         info_dict.insert("description".into(), description.into());
-        info_dict.insert("webpage_url".into(), url.as_str().into());
+        info_dict.insert("webpage_url".into(), bare.as_str().into());
         info_dict.insert("view_count".into(), count(r"UserPlays:(\d+)").into());
         info_dict.insert("like_count".into(), count(r"UserLikes:(\d+)").into());
         info_dict.insert("comment_count".into(), count(r"UserComments:(\d+)").into());
         info_dict.insert("license".into(), license.unwrap_or(Value::Null));
         let dict = merge_dicts(vec![info_dict, config_info]);
-        Ok(Some(video_info(url, dict, formats, subtitles)))
+        Ok(Some(video_info(&bare, dict, formats, subtitles)))
     }
 
     fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {

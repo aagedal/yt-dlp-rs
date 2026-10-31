@@ -13,6 +13,12 @@ const MPD: &str = r#"<?xml version="1.0"?>
 <Period><AdaptationSet mimeType="video/mp4" contentType="video"><Representation id="v1" bandwidth="1000" width="640" height="360" codecs="avc1.4d401e"><SegmentList duration="2" timescale="1"><Initialization sourceURL="init.mp4"/><SegmentURL media="v1.m4s"/></SegmentList></Representation></AdaptationSet>
 <AdaptationSet contentType="text" mimeType="text/vtt" lang="en"><Representation id="en" bandwidth="1"><BaseURL>en.vtt</BaseURL></Representation></AdaptationSet>
 <AdaptationSet contentType="text" mimeType="text/vtt" lang="fr"><Representation id="fr" bandwidth="1"><SegmentList duration="2" timescale="1"><SegmentURL media="s1.vtt"/><SegmentURL media="s2.vtt"/></SegmentList></Representation></AdaptationSet></Period></MPD>"#;
+/// Three Periods, each with the same English track.
+const PERIODS: &str = r#"<?xml version="1.0"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" type="static" mediaPresentationDuration="PT6S">
+<Period duration="PT2S"><AdaptationSet mimeType="video/mp4"><Representation id="v" bandwidth="1"><BaseURL>v.mp4</BaseURL></Representation></AdaptationSet><AdaptationSet contentType="text" mimeType="text/vtt" lang="en"><Representation id="en" bandwidth="1"><BaseURL>en.vtt</BaseURL></Representation></AdaptationSet></Period>
+<Period duration="PT2S"><AdaptationSet contentType="text" mimeType="text/vtt" lang="en"><Representation id="en" bandwidth="1"><BaseURL>en.vtt</BaseURL></Representation></AdaptationSet></Period>
+<Period duration="PT2S"><AdaptationSet contentType="text" mimeType="text/vtt" lang="en"><Representation id="en" bandwidth="1"><BaseURL>en.vtt</BaseURL></Representation></AdaptationSet></Period></MPD>"#;
 const EN: &str = "WEBVTT\n\n00:00:00.500 --> 00:00:01.500\nDash cue\n";
 const S1: &str = "WEBVTT\n\n00:00:00.500 --> 00:00:01.500\nOne\n";
 const S2: &str = "WEBVTT\n\n00:00:02.500 --> 00:00:03.500\nTwo\n";
@@ -29,6 +35,7 @@ fn serve() -> String {
             let path = request.split_whitespace().nth(1).unwrap_or("/").to_owned();
             let (mime, body): (&str, &[u8]) = match path.as_str() {
                 "/v.mpd" => ("application/dash+xml", MPD.as_bytes()),
+                "/periods.mpd" => ("application/dash+xml", PERIODS.as_bytes()),
                 "/en.vtt" => ("text/vtt", EN.as_bytes()),
                 "/s1.vtt" => ("text/vtt", S1.as_bytes()),
                 "/s2.vtt" => ("text/vtt", S2.as_bytes()),
@@ -72,5 +79,30 @@ fn text_tracks_are_listed_and_downloaded() {
     assert_eq!(
         std::fs::read_to_string(directory.path().join("o.fr.vtt")).unwrap(),
         format!("{S1}{S2}")
+    );
+}
+
+/// Upstream `_merge_mpd_periods` lists every Period's tracks and warns once
+/// when more than one Period has subtitles (pinned upstream's output).
+#[test]
+fn subtitles_from_several_periods_are_listed_with_upstream_warning() {
+    let origin = serve();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--ignore-config", "--print", "subtitles.en.:.url"])
+        .arg(format!("{origin}/periods.mpd"))
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    assert_eq!(
+        String::from_utf8_lossy(&output.stdout),
+        format!("['{origin}/en.vtt', '{origin}/en.vtt', '{origin}/en.vtt']\n")
+    );
+    assert_eq!(
+        String::from_utf8_lossy(&output.stderr),
+        "WARNING: [generic] Falling back on generic information extractor\n\
+         WARNING: [generic] Found subtitles in multiple periods in the DASH manifest; \
+         if part of the subtitles are missing, please report this issue on  \
+         https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue \
+         template. Confirm you are on the latest version using  yt-dlp -U\n"
     );
 }

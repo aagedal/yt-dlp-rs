@@ -20,8 +20,14 @@ fn regex(pattern: &str) -> Regex {
     Regex::new(pattern).expect("static pattern")
 }
 
-/// Upstream `determine_ext(path, None)` exclusions (`check_video`).
+/// Upstream `check_video`: YouTube and RTMP URLs, else URLs whose
+/// `determine_ext(path, None)` is not excluded.
 fn check_video(url: &str) -> bool {
+    static RTMP: std::sync::LazyLock<Regex> =
+        std::sync::LazyLock::new(|| regex(r"(?i)^rtmp[est]?://.+"));
+    if super::youtube_suitable(url) || RTMP.is_match(url) {
+        return true;
+    }
     let path = Url::parse(url)
         .map(|url| url.path().to_owned())
         .unwrap_or_else(|_| url.split(['?', '#']).next().unwrap_or(url).to_owned());

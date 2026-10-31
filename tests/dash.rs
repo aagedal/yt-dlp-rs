@@ -92,11 +92,14 @@ impl Server {
                     "/misleading.mpd" => (MPD.into(), "video/mp4", ""),
                     "/mime-only" => (MPD.into(), "application/dash+xml", ""),
                     "/page.html" => ("<title>DASH page</title><video><source src='/manifest.mpd'><source src='/second.mpd'></video>".into(), "text/html", ""),
+                    "/gzip.mpd" => (MPD.into(), "application/dash+xml", "Content-Encoding: gzip\r\n"),
+                    "/gzip.html" => ("<video src='/gzip.mpd' type='application/dash+xml'></video>".into(), "text/html", ""),
                     "/hinted.html" => ("<video src='/hinted' type='application/dash+xml'></video>".into(), "text/html", ""),
                     "/bad-hint.html" => ("<video><source src='/bad-media' type='application/dash+xml'></video>".into(), "text/html", ""),
                     "/bad-media" | "/malformed.mpd" => ("ordinary media bytes".into(), "video/mp4", ""),
                     "/dynamic.mpd" => (MPD.replace("type=\"static\"", "type=\"dynamic\""), "application/dash+xml", ""),
                     "/drm.mpd" => (MPD.replace("<Representation id=\"video\"", "<ContentProtection schemeIdUri=\"urn:mpeg:dash:mp4protection:2011\"/><Representation id=\"video\""), "application/dash+xml", ""),
+                    "/drm-all.mpd" => (MPD.replace("<Representation ", "<ContentProtection schemeIdUri=\"urn:mpeg:dash:mp4protection:2011\"/><Representation "), "application/dash+xml", ""),
                     "/multi.mpd" => (MPD.replace("</Period></MPD>", "</Period><Period duration=\"PT1S\"/></MPD>"), "application/dash+xml", ""),
                     "/dtd.mpd" => (MPD.replace("<MPD ", "<!DOCTYPE MPD [<!ENTITY injected 'value'>]><MPD "), "application/dash+xml", ""),
                     "/duplicate-type.mpd" => (MPD.into(), "application/dash+xml", "Content-Type: application/dash+xml\r\n"),
@@ -109,6 +112,11 @@ impl Server {
                 };
                 let body = if path == "/utf8.mpd" {
                     vec![255]
+                } else if path == "/gzip.mpd" {
+                    let mut encoder =
+                        flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::default());
+                    encoder.write_all(body.as_bytes()).unwrap();
+                    encoder.finish().unwrap()
                 } else {
                     body.into_bytes()
                 };
@@ -147,10 +155,13 @@ impl Server {
                 !path.ends_with(".m4s") && !path.ends_with("init.mp4"),
                 "{path}"
             );
+            // Probes of the input URL may be media and ask for `identity`;
+            // pages and manifests negotiate compression like upstream.
+            let request = request.to_ascii_lowercase();
             assert!(
-                request
-                    .to_ascii_lowercase()
-                    .contains("accept-encoding: identity\r\n")
+                request.contains("accept-encoding: identity\r\n")
+                    || request.contains("accept-encoding: gzip, deflate\r\n"),
+                "{request}"
             );
         }
     }
@@ -244,6 +255,33 @@ fn html_dash_formats_preserve_identity_group_namespace_and_referer() {
                 .contains(&format!("referer: {}\r\n", server.url("/page.html")))
         );
     }
+    server.assert_no_fragments();
+}
+
+#[test]
+fn page_manifests_are_requested_and_decoded_compressed() {
+    let server = Server::new();
+    let info = YoutubeDl::new()
+        .unwrap()
+        .with_ffmpeg("unused-explicit-ffmpeg")
+        .extract_info(&server.url("/gzip.html"))
+        .unwrap();
+    assert_eq!(info.format_id.as_deref(), Some("video+audio"));
+    let requests = server.requests.lock().unwrap();
+    let encoding = |path: &str| {
+        let request = requests
+            .iter()
+            .find(|request| request.starts_with(&format!("GET {path} ")))
+            .unwrap()
+            .to_ascii_lowercase();
+        request
+            .lines()
+            .find_map(|line| line.strip_prefix("accept-encoding: ").map(str::to_owned))
+    };
+    // The input URL could be media; the manifest it names is not.
+    assert_eq!(encoding("/gzip.html").as_deref(), Some("identity"));
+    assert_eq!(encoding("/gzip.mpd").as_deref(), Some("gzip, deflate"));
+    drop(requests);
     server.assert_no_fragments();
 }
 
@@ -353,7 +391,7 @@ fn unsupported_dash_and_invalid_response_metadata_fail_before_publication() {
     let server = Server::new();
     for path in [
         "/dynamic.mpd",
-        "/drm.mpd",
+        // The second Period ends after the presentation.
         "/multi.mpd",
         "/dtd.mpd",
         "/duplicate-type.mpd",
@@ -372,13 +410,68 @@ fn unsupported_dash_and_invalid_response_metadata_fail_before_publication() {
             "{path}"
         );
     }
-    let directory = tempfile::tempdir().unwrap();
-    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
-        .arg(server.url("/drm.mpd"))
-        .current_dir(directory.path())
-        .output()
+    server.assert_no_fragments();
+}
+
+/// Upstream `has_drm` for an AdaptationSet or Representation with a
+/// ContentProtection child: such formats are dropped unless
+/// `--allow-unplayable-formats`. Outputs match pinned upstream for the same
+/// manifests.
+#[test]
+fn protected_dash_formats_are_dropped_like_upstream() {
+    let server = Server::new();
+    let info = YoutubeDl::new()
+        .unwrap()
+        .extract_info(&server.url("/drm.mpd"))
         .unwrap();
-    assert!(!output.status.success());
+    let ids: Vec<_> = info.formats.iter().map(|f| f.format_id.as_str()).collect();
+    assert_eq!(ids, ["audio"]);
+    assert_eq!(info.format_id.as_deref(), Some("audio"));
+    let directory = tempfile::tempdir().unwrap();
+    let run = |args: &[&str]| {
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .arg("--ignore-config")
+            .args(args)
+            .arg(server.url("/drm-all.mpd"))
+            .current_dir(directory.path())
+            .output()
+            .unwrap();
+        (
+            output.status.code(),
+            String::from_utf8(output.stdout).unwrap(),
+            String::from_utf8(output.stderr).unwrap(),
+        )
+    };
+    let (code, stdout, stderr) = run(&[]);
+    assert_eq!(code, Some(1));
+    assert_eq!(
+        stdout,
+        format!(
+            "[generic] Extracting URL: {}\n[generic] drm-all: Downloading webpage\n\
+             [generic] drm-all: Extracting information\n",
+            server.url("/drm-all.mpd")
+        )
+    );
+    assert_eq!(
+        stderr,
+        "WARNING: [generic] Falling back on generic information extractor\n\
+         ERROR: [generic] drm-all: This video is DRM protected\n"
+    );
+    let (code, _, stderr) = run(&["-s", "--ignore-no-formats-error"]);
+    assert_eq!(code, Some(0));
+    assert!(
+        stderr.ends_with(
+            "WARNING: This video is DRM protected\nWARNING: Requested format is not available\n"
+        ),
+        "{stderr}"
+    );
+    let (code, stdout, _) = run(&[
+        "--allow-unplayable-formats",
+        "--print",
+        "format_id,formats.0.has_drm",
+    ]);
+    assert_eq!(code, Some(0));
+    assert_eq!(stdout, "video+audio\nTrue\n");
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     server.assert_no_fragments();
 }

@@ -570,3 +570,44 @@ fn force_write_archive_records_simulated_videos_and_no_download_archive_disables
         1
     );
 }
+
+#[test]
+fn recorded_youtube_urls_are_skipped_before_any_request() {
+    let directory = tempfile::tempdir().unwrap();
+    let archive = directory.path().join("archive.txt");
+    std::fs::write(&archive, "youtube jNQXAC9IVRw\n").unwrap();
+    // A dead proxy: any request would fail the run.
+    let run = |extra: &[&str]| {
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .current_dir(directory.path())
+            .args(["--ignore-config", "--proxy", "http://127.0.0.1:9"])
+            .args(["--download-archive", archive.to_str().unwrap()])
+            .args(extra)
+            .arg("https://www.youtube.com/watch?v=jNQXAC9IVRw")
+            .output()
+            .unwrap()
+    };
+    let output = run(&[]);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(
+        String::from_utf8_lossy(&output.stdout),
+        "[download] jNQXAC9IVRw: has already been recorded in the archive\n"
+    );
+    let output = run(&["--break-on-existing"]);
+    assert_eq!(output.status.code(), Some(101));
+    assert!(
+        String::from_utf8_lossy(&output.stdout).contains(
+            "[info] Encountered a video that is already in the archive, stopping due to --break-on-existing"
+        ),
+        "{}",
+        String::from_utf8_lossy(&output.stdout)
+    );
+    // `--force-generic-extractor` dispatches to the generic extractor,
+    // whose URL has no temp ID: the request is made (and fails).
+    let output = run(&["--force-generic-extractor"]);
+    assert!(!output.status.success());
+}
