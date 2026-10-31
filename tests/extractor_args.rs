@@ -219,6 +219,18 @@ fn unported_extractor_args_warn() {
             "TikTok:device_id=1;app_info=x",
             "--extractor-args",
             "tiktokuser:device_id=1",
+            "--extractor-args",
+            "soundcloud:formats=*;comments_sort_by=newest",
+            "--extractor-args",
+            "twitch:client_id=X",
+            "--extractor-args",
+            "BiliBili:prefer_multi_flv",
+            "--extractor-args",
+            "instagram:app_id=ios",
+            "--extractor-args",
+            "streaks:api_key=0",
+            "--extractor-args",
+            "nhkradirulive:area=osaka",
         ],
         "http://127.0.0.1:9/",
     );
@@ -230,6 +242,8 @@ fn unported_extractor_args_warn() {
     assert_eq!(
         warnings,
         [
+            "WARNING: extractor arguments for nhkradirulive are not supported natively and are ignored",
+            "WARNING: extractor argument soundcloud:comments_sort_by is not supported natively and is ignored",
             "WARNING: extractor argument tiktok:app_info is not supported natively and is ignored",
             "WARNING: extractor arguments for tiktokuser are not supported natively and are ignored",
         ],
