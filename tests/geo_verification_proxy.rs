@@ -70,3 +70,35 @@ fn geo_verification_requests_use_their_proxy() {
     );
     assert!(main_lines.lock().unwrap().is_empty());
 }
+
+/// Chaturbate's API and page requests send `geo_verification_headers()` and
+/// attempt impersonation: with the `impersonate` feature, the impersonated
+/// requests use the proxy too.
+#[test]
+fn impersonated_geo_verification_requests_use_their_proxy() {
+    let (geo, geo_lines) = recording_proxy();
+    let (main, main_lines) = recording_proxy();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "--proxy",
+            &main,
+            "--geo-verification-proxy",
+            &geo,
+            "--extractor-retries",
+            "0",
+            "-s",
+            "https://chaturbate.com/siswet19/",
+        ])
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(!output.status.success());
+    let geo_lines = geo_lines.lock().unwrap().clone();
+    assert!(
+        geo_lines
+            .iter()
+            .any(|line| line.starts_with("CONNECT chaturbate.com:443 ")),
+        "{geo_lines:?} {stderr}"
+    );
+    assert!(main_lines.lock().unwrap().is_empty(), "{stderr}");
+}

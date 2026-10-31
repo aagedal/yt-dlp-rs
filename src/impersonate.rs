@@ -357,6 +357,31 @@ pub(crate) fn require(requested: &[&str]) -> Result<Scope, String> {
     select(requested, true)
 }
 
+thread_local! {
+    /// Requests upstream sends with `geo_verification_headers()`.
+    static GEO: Cell<bool> = const { Cell::new(false) };
+}
+
+/// While alive, impersonated requests on this thread use
+/// `--geo-verification-proxy` like upstream's `Ytdl-request-proxy` header
+/// (plain requests use [`crate::extractor::geo_verification_client`]).
+pub(crate) struct GeoScope(bool);
+
+pub(crate) fn geo_scope() -> GeoScope {
+    GeoScope(GEO.with(|geo| geo.replace(true)))
+}
+
+impl Drop for GeoScope {
+    fn drop(&mut self) {
+        GEO.with(|geo| geo.set(self.0));
+    }
+}
+
+#[cfg_attr(not(feature = "impersonate"), allow(dead_code))]
+fn geo_active() -> bool {
+    GEO.with(Cell::get)
+}
+
 /// Send an extraction request, through the impersonating transport when a
 /// [`Scope`] is active on this thread.
 pub(crate) fn send(
