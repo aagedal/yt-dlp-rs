@@ -1,0 +1,60 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.rtvcplay.co/en-vivo/canal-institucional",
+   "args": [
+    "--print",
+    "id",
+    "--print",
+    "is_live",
+    "--print",
+    "description",
+    "--print",
+    "thumbnail"
+   ],
+   "exit": 0,
+   "stdout": [
+    "canal-institucional",
+    "True",
+    "<p>Viaja a cada región colombiana a través de Canal Institucional y descubre nuestra cultura en vivo.</p>",
+    "",
+    "https://rtvcplay-v2.s3-accelerate.amazonaws.com/s3fs-public/field/logo/streaming/logo-canal-institucional_0.png"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.rtvcplay.co/en-vivo/canal-institucional",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[RTVCPlay] Extracting URL: https://www.rtvcplay.co/en-vivo/canal-institucional",
+    "[RTVCPlay] canal-institucional: Downloading webpage",
+    "[RTVCPlay] canal-institucional: Downloading m3u8 information",
+    "[info] Available formats for canal-institucional:",
+    "ID   EXT RESOLUTION |   TBR PROTO | VCODEC  ACODEC",
+    "---------------------------------------------------",
+    "1500 mp4 unknown    | 1500k m3u8  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.rtvcplay.co/en-vivo/missing-channel",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [RTVCPlay] missing-channel: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

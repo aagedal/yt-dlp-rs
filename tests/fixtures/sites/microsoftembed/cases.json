@@ -1,0 +1,26 @@
+[
+ {
+  "url": "https://learn.microsoft.com/en-us/shows/bash-for-beginners/what-is-the-difference-between-a-terminal-and-a-shell-2-of-20-bash-for-beginners/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://learn.microsoft.com/en-us/shows/bash-for-beginners/what-is-the-difference-between-a-terminal-and-a-shell-2-of-20-bash-for-beginners/",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://learn.microsoft.com/en-us/shows/bash-for-beginners/synthetic-noentry/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://learn.microsoft.com/en-us/shows/bash-for-beginners/synthetic-missing/",
+  "args": [
+   "-J"
+  ]
+ }
+]

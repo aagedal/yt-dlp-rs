@@ -1,0 +1,45 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.ertflix.gr/vod/vod.173258-aoratoi-ergates",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(episode_id)s|%(timestamp)s|%(upload_date)s|%(duration)s|%(age_limit)s|%(thumbnail)s|%(description)s|%(alt_title)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "aoratoi-ergates|Ghost Workers|vod.173258|1661364000|20220824|3166|8|https://files2.app.ertflix.gr/files/xena-docs/ghost-workers/ghost-workers-ertflix-img.jpg|A meal delivered with a click, friends on the screen, robots at the service of humans: Google, Facebook, Uber... have revolutionised our lives.|NA|https://www.ertflix.gr/vod/vod.173258-aoratoi-ergates"
+   ],
+   "stderr": [
+    "WARNING: [ertflix:codename] aoratoi-ergates: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [ertflix:codename] aoratoi-ergates: Failed to download MPD manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ertflix.gr/vod/vod.173258-aoratoi-ergates",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ertflix] Extracting URL: https://www.ertflix.gr/vod/vod.173258-aoratoi-ergates",
+    "[ertflix] vod.173258: Downloading JSON metadata",
+    "[ertflix:codename] Extracting URL: ertflix:aoratoi-ergates",
+    "[ertflix:codename] aoratoi-ergates: Downloading JSON metadata",
+    "[ertflix:codename] aoratoi-ergates: Downloading m3u8 information",
+    "[ertflix:codename] aoratoi-ergates: Downloading MPD manifest",
+    "[info] Available formats for aoratoi-ergates:",
+    "ID    EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "----------------------------------------------",
+    "96985 mp4 unknown    | https | unknown unknown"
+   ],
+   "stderr": [
+    "WARNING: [ertflix:codename] aoratoi-ergates: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [ertflix:codename] aoratoi-ergates: Failed to download MPD manifest: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -3,8 +3,11 @@
 //! direct MP4 qualities, and a music track's search entry (the track's
 //! direct audio URL). The music search page (`MailRuMusicSearchIE`) pages
 //! through every result and is not ported natively.
-use super::{Extractor, dict_format, dict_info, download_json_note, download_webpage};
-use crate::{Error, Result, VideoInfo};
+use super::{
+    Extractor, dict_format, dict_info, download_json_note, download_json_note_headers,
+    download_webpage,
+};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
@@ -13,6 +16,15 @@ use url::Url;
 
 pub struct MailRu;
 pub struct MailRuMusic;
+pub struct MailRuMusicSearch;
+
+const SEARCH_NAME: &str = "mailru:music:search";
+const SEARCH_KEY: &str = "MailRuMusicSearch";
+/// `MailRuMusicSearchBaseIE`'s `LIMIT`.
+const SEARCH_LIMIT: i64 = 100;
+static SEARCH_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"https?://my\.mail\.ru/+music/+search/+(?P<id>[^/?#&]+)").unwrap()
+});
 
 const NAME: &str = "mailru";
 const MUSIC_NAME: &str = "MailRuMusic";
@@ -428,6 +440,244 @@ fn duration_value(text: Option<&Value>) -> Value {
     }
 }
 
+/// `MailRuMusicSearchIE._VALID_URL`.
+pub fn search_suitable(url: &str) -> bool {
+    SEARCH_URL.is_match(url)
+}
+
+/// `urllib.parse.unquote` of a path segment.
+fn unquote(text: &str) -> String {
+    let bytes = text.as_bytes();
+    let mut out = Vec::with_capacity(bytes.len());
+    let mut i = 0;
+    while i < bytes.len() {
+        let escaped = (bytes[i] == b'%' && i + 2 < bytes.len())
+            .then(|| std::str::from_utf8(&bytes[i + 1..i + 3]).ok())
+            .flatten()
+            .and_then(|hex| u8::from_str_radix(hex, 16).ok());
+        match escaped {
+            Some(byte) => {
+                out.push(byte);
+                i += 3;
+            }
+            None => {
+                out.push(bytes[i]);
+                i += 1;
+            }
+        }
+    }
+    String::from_utf8_lossy(&out).into_owned()
+}
+
+/// `MailRuMusicSearchBaseIE._search(query, url, audio_id, limit, offset)`:
+/// the first object of the `music.search` ajax answer.
+fn search_page(
+    client: &Client,
+    page: &Url,
+    query: &str,
+    audio_id: &str,
+    offset: i64,
+) -> Result<Value> {
+    let ajax = Url::parse_with_params(
+        "https://my.mail.ru/cgi-bin/my/ajax",
+        &[
+            ("xemail", ""),
+            ("ajax_call", "1"),
+            ("func_name", "music.search"),
+            ("mna", ""),
+            ("mnb", ""),
+            ("arg_query", query),
+            ("arg_extended", "1"),
+            (
+                "arg_search_params",
+                &format!(r#"{{"music": {{"limit": {SEARCH_LIMIT}, "offset": {offset}}}}}"#),
+            ),
+            ("arg_limit", &SEARCH_LIMIT.to_string()),
+            ("arg_offset", &offset.to_string()),
+        ],
+    )?;
+    let answer = download_json_note_headers(
+        client,
+        &ajax,
+        SEARCH_NAME,
+        audio_id,
+        &format!("Downloading songs JSON page {}", offset / SEARCH_LIMIT + 1),
+        &[
+            ("Referer", page.as_str()),
+            ("X-Requested-With", "XMLHttpRequest"),
+        ],
+    )?;
+    answer
+        .as_array()
+        .and_then(|items| items.iter().find(|item| item.is_object()).cloned())
+        .ok_or_else(|| super::clyp::key_error(audio_id, "MusicData"))
+}
+
+/// `_extract_track(t, fatal=False)`: a search answer's track as a playlist
+/// entry (`untyped-dict` with its direct audio URL).
+fn search_track(track: &Value, page: &Url) -> Result<Option<VideoInfo>> {
+    let Some(audio_url) = track
+        .get("URL")
+        .and_then(Value::as_str)
+        .filter(|text| !text.is_empty())
+    else {
+        return Ok(None);
+    };
+    let Some(audio_id) = track
+        .get("File")
+        .and_then(Value::as_str)
+        .filter(|text| !text.is_empty())
+    else {
+        return Ok(None);
+    };
+    let thumbnail = or_get(track, "AlbumCoverURL", "FiledAlbumCover")
+        .cloned()
+        .unwrap_or(Value::Null);
+    let uploader = or_get(track, "OwnerName", "OwnerName_Text_HTML")
+        .cloned()
+        .unwrap_or(Value::Null);
+    let uploader_id = track.get("UploaderID").cloned().unwrap_or(Value::Null);
+    let seconds = int_field(track.get("DurationInSeconds"));
+    let duration = if truthy(Some(&seconds)) {
+        seconds
+    } else {
+        duration_value(track.get("Duration").or_else(|| track.get("DurationStr")))
+    };
+    let view_count = int_field(track.get("PlayCount").or_else(|| track.get("PlayCount_hr")));
+    let track_name = or_get(track, "Name", "Name_Text_HTML")
+        .and_then(Value::as_str)
+        .map(str::to_owned);
+    let artist = or_get(track, "Author", "Author_Text_HTML")
+        .and_then(Value::as_str)
+        .map(str::to_owned);
+    let title = match (&track_name, &artist) {
+        (Some(name), Some(artist)) => format!("{artist} - {name}"),
+        (Some(name), None) => name.clone(),
+        (None, _) => audio_id.to_owned(),
+    };
+    let bitrate = int_field(track.get("BitRate"));
+    let audio = super::proto_relative_http(audio_url);
+
+    let mut fields = Map::new();
+    fields.insert("extractor_key".into(), Value::from(MUSIC_NAME));
+    fields.insert("id".into(), Value::from(audio_id));
+    fields.insert("title".into(), Value::from(title));
+    fields.insert("thumbnail".into(), thumbnail);
+    fields.insert("uploader".into(), uploader);
+    fields.insert("uploader_id".into(), uploader_id);
+    fields.insert("duration".into(), duration);
+    fields.insert("view_count".into(), view_count);
+    fields.insert("vcodec".into(), Value::from("none"));
+    fields.insert("abr".into(), bitrate.clone());
+    fields.insert("track".into(), track_name.map_or(Value::Null, Value::from));
+    fields.insert("artist".into(), artist.map_or(Value::Null, Value::from));
+    fields.insert(
+        "album".into(),
+        track.get("Album").cloned().unwrap_or(Value::Null),
+    );
+    fields.insert("url".into(), Value::from(audio.clone()));
+    let keys = fields.keys().cloned().collect::<Vec<_>>().join(",");
+
+    let media = Url::parse(&audio)?;
+    let mut info = super::direct::with_format(
+        super::direct::build_at(media.clone(), &media, "mp3".into()),
+        "",
+    );
+    let mut format = dict_format(
+        vec![
+            ("url", Value::from(audio.clone())),
+            ("ext", Value::from("mp3")),
+            ("format_id", Value::from("")),
+            ("vcodec", Value::from("none")),
+            ("abr", bitrate.clone()),
+            ("tbr", bitrate),
+        ],
+        MUSIC_NAME,
+        audio_id,
+    )?;
+    crate::info_order::mark_int_rates(&mut format);
+    info.formats = vec![format];
+    info.format_id = None;
+    info.id = audio_id.to_owned();
+    info.title = fields["title"].as_str().unwrap_or_default().to_owned();
+    for (key, value) in &fields {
+        if !matches!(key.as_str(), "id" | "title" | "url" | "extractor_key") {
+            crate::metadata_parser::set_field(&mut info, key, value.clone());
+        }
+    }
+    info.direct = None;
+    info.webpage_url = page.clone();
+    info.extractor = SEARCH_NAME.into();
+    info.extractor_key = MUSIC_NAME.into();
+    Ok(Some(crate::info_order::mark_info(
+        info,
+        &format!("untyped-dict;{keys}"),
+    )))
+}
+
+impl Extractor for MailRuMusicSearch {
+    fn key(&self) -> &'static str {
+        SEARCH_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = SEARCH_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let query = unquote(&found["id"]);
+        start(SEARCH_NAME, url);
+        let mut entries = Vec::new();
+        let mut offset = 0;
+        loop {
+            let search = search_page(client, url, &query, &query, offset)?;
+            let Some(music_data) = search.get("MusicData").and_then(Value::as_array) else {
+                break;
+            };
+            if music_data.is_empty() {
+                break;
+            }
+            for track in music_data {
+                if let Some(entry) = search_track(track, url)? {
+                    entries.push(entry);
+                }
+            }
+            // `try_get(search, lambda x: x['Results']['music']['Total'], int)`.
+            let total = search
+                .pointer("/Results/music/Total")
+                .and_then(|value| match value {
+                    Value::String(text) => text.trim().parse::<i64>().ok(),
+                    Value::Number(number) => number.as_i64(),
+                    _ => None,
+                });
+            if total.is_some_and(|total| offset > total) {
+                break;
+            }
+            offset += SEARCH_LIMIT;
+        }
+
+        let mut extra = Map::new();
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            "playlist-dict;id".into(),
+        );
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: query,
+            title: String::new(),
+            webpage_url: url.clone(),
+            extractor: SEARCH_NAME.into(),
+            extractor_key: SEARCH_KEY.into(),
+            nested: Vec::new(),
+            pending: None,
+            entries,
+            extra,
+        })))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -451,6 +701,16 @@ mod tests {
         ));
         assert!(!music_suitable(
             "https://my.mail.ru/music/search/black%20shadow"
+        ));
+    }
+
+    #[test]
+    fn search_urls_follow_upstream_valid_url() {
+        assert!(search_suitable(
+            "https://my.mail.ru/music/search/black%20shadow"
+        ));
+        assert!(!search_suitable(
+            "https://my.mail.ru/music/songs/track-15732b7aa7e1f182e8d89646f98b079d"
         ));
     }
 }

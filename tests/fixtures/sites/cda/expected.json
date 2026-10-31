@@ -1,0 +1,66 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.cda.pl/video/57413289",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(average_rating)s|%(thumbnail)s|%(duration)s|%(age_limit)s|%(timestamp)s|%(uploader)s|%(width)s|%(height)s|%(format_id)s|%(formats.:.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "57413289|Lądowanie na lotnisku na Maderze|Wrażenia murowane!|4.0|https://icdn.2cda.pl/vid/thumbs/c15c357f945c7e320d7806c9ac98582f-41.jpg_ooooxooxox_1280x720.jpg|137|0|1455964618|crash404|854|480|dash-0+dash-1|['https://vwaw619.cda.pl/NegNXGFyMxxGQvFHXiLcEA/1793478172/16na/aaac1e3cc28/33/574132raw/a_lqc15c357f945c7e320d7806c9ac98582f.mp4', 'https://vwaw619.cda.pl/NegNXGFyMxxGQvFHXiLcEA/1793478172/16na/aaac1e3cc28/33/574132raw/lqc15c357f945c7e320d7806c9ac98582f.mp4']"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.cda.pl/video/57413289",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[CDA] Extracting URL: http://www.cda.pl/video/57413289",
+    "[CDA] 57413289: Downloading webpage",
+    "[CDA] 57413289: Fetching 480p url",
+    "[CDA] 57413289: Downloading MPD manifest",
+    "[info] Available formats for 57413289:",
+    "ID     EXT RESOLUTION | FILESIZE  TBR PROTO | VCODEC       VBR ACODEC      ABR ASR MORE INFO",
+    "-------------------------------------------------------------------------------------------------------",
+    "dash-1 m4a audio only | ~2.14MiB 131k https | audio only       mp4a.40.2  131k 44k DASH audio, m4a_dash",
+    "dash-0 mp4 854x480    | ~7.82MiB 479k https | avc1.42c01e 479k video only          DASH video, mp4_dash"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.cda.pl/video/8753244",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [CDA] 8753244: This video is only available for premium users. Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (cdapl) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://m.cda.pl/video/617297677",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [CDA] 617297677: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

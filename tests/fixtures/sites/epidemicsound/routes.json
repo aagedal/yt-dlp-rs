@@ -1,0 +1,9 @@
+{
+  "routes": [
+    {
+      "url": "https://www.epidemicsound.com/json/track/mj8GTTwsZd",
+      "headers": {"Content-Type": "application/json"},
+      "body_file": "track-mj8GTTwsZd.json"
+    }
+  ]
+}

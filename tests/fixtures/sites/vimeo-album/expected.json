@@ -1,0 +1,48 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://vimeo.com/showcase/10677689/embed#__youtubedl_smuggle=%7B%22referer%22%3A+%22https%3A%2F%2Fwww.riccardomutimusic.com%2F%22%7D",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"10677689\", \"title\": \"La Traviata - la serie completa\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Vimeo\", \"id\": \"505682113\", \"_type\": \"url\", \"url\": \"https://player.vimeo.com/video/505682113#__youtubedl_smuggle=%7B%22referer%22%3A+%22https%3A%2F%2Fwww.riccardomutimusic.com%2F%22%7D\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"505587883\", \"_type\": \"url\", \"url\": \"https://player.vimeo.com/video/505587883#__youtubedl_smuggle=%7B%22referer%22%3A+%22https%3A%2F%2Fwww.riccardomutimusic.com%2F%22%7D\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"505580976\", \"_type\": \"url\", \"url\": \"https://player.vimeo.com/video/505580976#__youtubedl_smuggle=%7B%22referer%22%3A+%22https%3A%2F%2Fwww.riccardomutimusic.com%2F%22%7D\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"505573348\", \"_type\": \"url\", \"url\": \"https://player.vimeo.com/video/505573348#__youtubedl_smuggle=%7B%22referer%22%3A+%22https%3A%2F%2Fwww.riccardomutimusic.com%2F%22%7D\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"505288059\", \"_type\": \"url\", \"url\": \"https://player.vimeo.com/video/505288059#__youtubedl_smuggle=%7B%22referer%22%3A+%22https%3A%2F%2Fwww.riccardomutimusic.com%2F%22%7D\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"505276087\", \"_type\": \"url\", \"url\": \"https://player.vimeo.com/video/505276087#__youtubedl_smuggle=%7B%22referer%22%3A+%22https%3A%2F%2Fwww.riccardomutimusic.com%2F%22%7D\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"505264093\", \"_type\": \"url\", \"url\": \"https://player.vimeo.com/video/505264093#__youtubedl_smuggle=%7B%22referer%22%3A+%22https%3A%2F%2Fwww.riccardomutimusic.com%2F%22%7D\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"505252156\", \"_type\": \"url\", \"url\": \"https://player.vimeo.com/video/505252156#__youtubedl_smuggle=%7B%22referer%22%3A+%22https%3A%2F%2Fwww.riccardomutimusic.com%2F%22%7D\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"395393052\", \"_type\": \"url\", \"url\": \"https://player.vimeo.com/video/395393052#__youtubedl_smuggle=%7B%22referer%22%3A+%22https%3A%2F%2Fwww.riccardomutimusic.com%2F%22%7D\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://vimeo.com/showcase/10677689/embed#__youtubedl_smuggle=%7B%22referer%22%3A+%22https%3A%2F%2Fwww.riccardomutimusic.com%2F%22%7D\", \"original_url\": \"https://vimeo.com/showcase/10677689/embed#__youtubedl_smuggle=%7B%22referer%22%3A+%22https%3A%2F%2Fwww.riccardomutimusic.com%2F%22%7D\", \"webpage_url_basename\": \"embed\", \"webpage_url_domain\": \"vimeo.com\", \"extractor\": \"vimeo:album\", \"extractor_key\": \"VimeoAlbum\", \"release_year\": null, \"playlist_count\": 9, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/showcase/10677689/embed",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [vimeo:album] 10677689: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vimeo.com/album/2632481",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [vimeo:album] 2632481: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

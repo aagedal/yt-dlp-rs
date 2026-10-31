@@ -1,0 +1,26 @@
+{
+ "routes": [
+  {
+   "url": "https://samizdat-graphql.nytimes.com/graphql/v2",
+   "request_headers": {
+    "nyt-token": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuNIzKBOFB77aT/jN/FQ+/QVKWq5V1ka1AYmCR9hstz1pGNPH5ajOU9gAqta0T89iPnhjwla+3oec/Z3kGjxbpv6miQXufHFq3u2RC6HyU458cLat5kVPSOQCe3VVB5NRpOlRuwKHqn0txfxnwSSj8mqzstR997d3gKB//RO9zE16y3PoWlDQXkASngNJEWvL19iob/xwAkfEWCjyRILWFY0JYX3AvLMSbq7wsqOCE5srJpo7rRU32zsByhsp1D5W9OYqqwDmflsgCEQy2vqTsJjrJohuNg+urMXNNZ7Y3naMoqttsGDrWVxtPBafKMI8pM2ReNZBbGQsQXRzQNo7+QIDAQAB",
+    "nyt-app-type": "vhs",
+    "content-type": "application/json"
+   },
+   "request_body": [
+    "nyt://video/88a5c80d-0382-575f-a377-8e6e7d63eb60"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "graphql.json"
+  },
+  {
+   "url": "https://vp.nyt.com/video/2014/04/28/27731_1_opdoc-verbatim1_wg_hls/video.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "video.m3u8"
+  }
+ ]
+}

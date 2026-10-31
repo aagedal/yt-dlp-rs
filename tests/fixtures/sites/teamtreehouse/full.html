@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en" class="application-layout videos-show videos-controller show-action has-stage-progress visitor chrome webkit windows" id="layout" data-featurette="application-layout"  >
+  <head>
+    <title>Application Overview (How To) | Introduction to User Authentication in PHP | Treehouse</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=yes" />
+    <meta name="google-site-verification" content="4Ga-viQvIZUFNQXu323xpp_24RDlLooxwlpnXhinjPA" />
+    <meta name="msvalidate.01" content="F0716E70B7DD3B8C892B48891CA4B541" />
+    <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="fixture-csrf-token" />
+      <meta name="description" content="Application Overview. We are going to be building the Authentication and Authorization for a book voting website that you can share among your book..." />
+      <meta name="image" content="https://videos.teamtreehouse.com/stills/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-stills-9.jpg?token=fixture" />
+      <meta name="twitter:site" content="@treehouse" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:description" content="We are going to be building the Authentication and Authorization for a book voting website that you can share among your book club to decide what people want to read next. We&#39;ll be using authentication to allow only registered users to vote on books. We&#39;ll be using authentication to allow all users to add and edit their own books, and allow administrators to modify ANY books. Let&#39;s dig into the application and see how it works" />
+      <meta name="twitter:image" content="https://videos.teamtreehouse.com/stills/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-stills-9.jpg?token=fixture" />
+      <meta name="title" content="Application Overview" />
+      <meta name="twitter:url" content="https://teamtreehouse.com/library/introduction-to-user-authentication-in-php/application-overview" />
+      <meta name="twitter:title" content="Application Overview" />
+      <meta property="fb:app_id" content="1447543992198627" />
+      <meta property="og:site_name" content="Treehouse" />
+      <meta property="og:description" content="We are going to be building the Authentication and Authorization for a book voting website that you can share among your book club to decide what people want to read next. We&#39;ll be using authentication to allow only registered users to vote on books. We&#39;ll be using authentication to allow all users to add and edit their own books, and allow administrators to modify ANY books. Let&#39;s dig into the application and see how it works" />
+      <meta property="og:image" content="https://videos.teamtreehouse.com/stills/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-stills-9.jpg?token=fixture" />
+      <meta property="og:url" content="https://teamtreehouse.com/library/introduction-to-user-authentication-in-php/application-overview" />
+      <meta property="og:title" content="Application Overview" />
+      <meta property="og:type" content="article" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoObject","name":"Application Overview","description":"We are going to be building the Authentication and Authorization for a book voting website that you can share among your book club to decide what people want to read next. We'll be using authentication to allow only registered users to vote on books. We'll be using authentication to allow all users to add and edit their own books, and allow administrators to modify ANY books. Let's dig into the application and see how it works","thumbnailUrl":"https://videos.teamtreehouse.com/thumbnails/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-thumbnails-9.jpg?token=fixture","contentUrl":"http://teamtreehouse.com/library/introduction-to-user-authentication-in-php/application-overview/download.mp4","uploadDate":"2019-03-13T11:32:25Z","duration":"PT258S"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Treehouse","url":"https://teamtreehouse.com","description":"Treehouse is an online coding education platform that teaches students to code through a browser-based coding environment with live instructor support, ACE-credited college courses, and financial scholarships. The platform offers 300+ courses spanning web development, Python, data analysis, UX design, and AI, along with bootcamp-style Techdegree programs that include human-graded projects, career coaching, and digital certificates. Students build job-ready portfolios and gain the skills to launch careers in tech. Treehouse is also available for free through participating public libraries nationwide."}</script>
+    <link rel="preload" href="https://ecs-static.teamtreehouse.com/assets/vendor-2166caf7f5362d83df5e38b3d9945873f5e3e4ed0bc6645569e11f94de587246.css" as="style" type="text/css" crossorigin="anonymous" integrity="true">
+    <link rel="preload" href="https://ecs-static.teamtreehouse.com/assets/application-4a4f75e443ef4834572258439c1affafc85d93c9e5ba744680e41f9aea3ea037.css" as="style" type="text/css" crossorigin="anonymous" integrity="true">
+    <link rel="stylesheet" media="all" href="https://ecs-static.teamtreehouse.com/assets/vendor-2166caf7f5362d83df5e38b3d9945873f5e3e4ed0bc6645569e11f94de587246.css" crossorigin="true" integrity="sha256-IWbK9/U2LYPfXjiz2ZRYc/Xj5O0LxmRVaeEflN5YckY=" />
+<link rel="stylesheet" media="all" href="https://ecs-static.teamtreehouse.com/assets/application-4a4f75e443ef4834572258439c1affafc85d93c9e5ba744680e41f9aea3ea037.css" crossorigin="true" integrity="sha256-Sk915EPvSDRXIlhDnBr/r8hdk8nlunRGgOQfmuo+oDc=" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+    
+    <style media="print">
+      header, footer, .graph, .nav, svg {
+        display: none
+      }
+    </style>
+    <link rel="shortcut icon" href="/assets/favicon-pride.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://ecs-static.teamtreehouse.com/assets/apple-touch-icon-60x60-precomposed-05be36fef4d37c9642a8923eb00325c9d680150d26954e868ddded6b7976a032.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://ecs-static.teamtreehouse.com/assets/apple-touch-icon-76x76-precomposed-7283cd247847d1f21be0e79c52e3524c89adabf69cfc331046319f4ab19be058.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://ecs-static.teamtreehouse.com/assets/apple-touch-icon-120x120-precomposed-dda60d87f49aa928ff86379bb50d9514d4b5f19502ff562b453e3d254730f682.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://ecs-static.teamtreehouse.com/assets/apple-touch-icon-152x152-precomposed-1f486d33d1fe181adce0689d370d7dab9e777fab99b244e15b8c785239410674.png" />
+    <link href="https://teamtreehouse.com/library/introduction-to-user-authentication-in-php/application-overview" rel="canonical" />
+    <link rel="preload" href="https://ecs-static.teamtreehouse.com/assets/application_vendor-190e58c76a02c6db7ade130f3dd31bde5c398709b1af3261fd56a768836c437c.js" as="script" type="text/javascript" crossorigin="anonymous">
+    <link rel="preload" href="https://ecs-static.teamtreehouse.com/assets/application-95d65aa55d87acc3ebb09ec77a59dcac0e542d529176cf98aebd31f54b59980f.js" as="script" type="text/javascript" crossorigin="anonymous">
+      <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+      <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+      <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
+      <link rel="dns-prefetch" href="https://www.google-analytics.com">
+
+    <link rel="preconnect" href="https://www.google.com/recaptcha/api.js" crossorigin>
+    <link rel="dns-prefetch" href="https://www.google.com/recaptcha/api.js">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://cdn.usefathom.com/script.js" data-site="JATZEBKX" defer></script>
+    <script>(function(w,r){w._rwq=r;w[r]=w[r]||function(){(w[r].q=w[r].q||[]).push(arguments)}})(window,"rewardful");</script>
+    <script async src="https://r.wdfl.co/rw.js" data-rewardful="5ba892"></script>
+    
+  </head>
+<body>
+  <div class="stage">
+      <video data-autoplay="true" data-playback-rate="1.0" data-minimum-time-for-completion="206" data-step-video="" id="video-player" class="fixed-controls connect-to-box padded-when-max-width-reached has-stage-progress" playsinline="" style="width: 100%; height: 100%" preload="none" poster="https://videos.teamtreehouse.com/stills/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-stills-9.jpg?token=fixture" data-featurette="video-player" data-video-id="109559" data-duration="258058" data-play-icon="&amp;lt;svg preserveAspectRatio=&amp;quot;xMinYMin meet&amp;quot; viewBox=&amp;quot;0 0 11 12&amp;quot; class=&amp;quot;play-icon&amp;quot; aria-labelledby=&amp;quot;playIcon794336&amp;quot; role=&amp;quot;img&amp;quot;&amp;gt;
+&amp;lt;title id=&amp;quot;playIcon794336&amp;quot;&amp;gt;Play&amp;lt;/title&amp;gt;
+&amp;lt;path d=&amp;quot;M10.5,5.1l-9-5C1.3,0,1.2,0,1,0C0.8,0,0.6,0,0.5,0.1C0.2,0.3,0,0.6,0,1v10c0,0.4,0.2,0.7,0.5,0.9C0.6,12,0.8,12,1,12
+	c0.2,0,0.3,0,0.5-0.1l9-5C10.8,6.7,11,6.3,11,6C11,5.6,10.8,5.3,10.5,5.1z&amp;quot;&amp;gt;&amp;lt;/path&amp;gt;
+
+&amp;lt;/svg&amp;gt;" data-pause-icon="&amp;lt;svg preserveAspectRatio=&amp;quot;xMinYMin meet&amp;quot; viewBox=&amp;quot;0 0 16 20&amp;quot; class=&amp;quot;pause-icon&amp;quot; aria-labelledby=&amp;quot;pauseIcon6996088&amp;quot; role=&amp;quot;img&amp;quot;&amp;gt;
+
+
+
+&amp;lt;title id=&amp;quot;pauseIcon6996088&amp;quot;&amp;gt;Pause&amp;lt;/title&amp;gt;
+&amp;lt;path d=&amp;quot;M14,20c-1.1,0-2-0.9-2-2V2c0-1.1,0.9-2,2-2s2,0.9,2,2v16C16,19.1,15.1,20,14,20z
+   M2,20c-1.1,0-2-0.9-2-2V2c0-1.1,0.9-2,2-2s2,0.9,2,2v16C4,19.1,3.1,20,2,20z&amp;quot;&amp;gt;&amp;lt;/path&amp;gt;
+
+&amp;lt;/svg&amp;gt;" data-speed-icon="&amp;lt;svg preserveAspectRatio=&amp;quot;xMinYMin meet&amp;quot; viewBox=&amp;quot;0 0 22 22&amp;quot; class=&amp;quot;speed-icon&amp;quot; aria-labelledby=&amp;quot;speedIcon9412224&amp;quot; role=&amp;quot;img&amp;quot;&amp;gt;
+
+
+
+&amp;lt;title id=&amp;quot;speedIcon9412224&amp;quot;&amp;gt;Speed&amp;lt;/title&amp;gt;
+&amp;lt;path d=&amp;quot;M11,22C4.9,22,0,17.1,0,11C0,4.9,4.9,0,11,0c6.1,0,11,4.9,11,11
+  C22,17.1,17.2,22,11,22z M11,2c-5,0-9,4-9,9c0,5,4,9,9,9c5,0,9-4,9-9C20,6,16,2,11,2z M18.5,11.5h-1c-0.3,0-0.5-0.2-0.5-0.5
+  c0-0.3,0.2-0.5,0.5-0.5h1c0.3,0,0.5,0.2,0.5,0.5C19,11.3,18.8,11.5,18.5,11.5z M16,16.6l-0.7-0.7c-0.2-0.2-0.2-0.5,0-0.7
+  s0.5-0.2,0.7,0l0.7,0.7c0.2,0.2,0.2,0.5,0,0.7C16.5,16.8,16.1,16.8,16,16.6z M15.9,6.8c-0.2,0.2-0.5,0.2-0.7,0
+  c-0.2-0.2-0.2-0.5,0-0.7L16,5.4c0.2-0.2,0.5-0.2,0.7,0c0.2,0.2,0.2,0.5,0,0.7L15.9,6.8z M10.6,18.1c-1.1-0.2-1.8-1.3-1.6-2.4
+  c0.2-1.1,2.9-7.2,3.4-7.1c0.5,0.1,0.8,6.8,0.6,7.9C12.8,17.5,11.7,18.3,10.6,18.1z M11.1,15.1c-0.5-0.1-1,0.2-1.1,0.8
+  c-0.1,0.5,0.2,1,0.8,1.1c0.5,0.1,1-0.2,1.1-0.8C12,15.7,11.7,15.1,11.1,15.1z M11,5c-0.3,0-0.5-0.2-0.5-0.5v-1C10.5,3.2,10.7,3,11,3
+  c0.3,0,0.5,0.2,0.5,0.5v1C11.5,4.8,11.3,5,11,5z M6,16.6c-0.2,0.2-0.5,0.2-0.7,0c-0.2-0.2-0.2-0.5,0-0.7l0.7-0.7
+  c0.2-0.2,0.5-0.2,0.7,0c0.2,0.2,0.2,0.5,0,0.7L6,16.6z M6.1,6.8L5.4,6c-0.2-0.2-0.2-0.5,0-0.7c0.2-0.2,0.5-0.2,0.7,0l0.7,0.7
+  C7,6.3,7,6.6,6.8,6.8C6.6,7,6.3,7,6.1,6.8z M4.5,11.5h-1C3.2,11.5,3,11.3,3,11c0-0.3,0.2-0.5,0.5-0.5h1C4.8,10.5,5,10.7,5,11
+  C5,11.3,4.8,11.5,4.5,11.5z&amp;quot;&amp;gt;&amp;lt;/path&amp;gt;
+
+&amp;lt;/svg&amp;gt;" data-rewind-icon="&amp;lt;svg preserveAspectRatio=&amp;quot;xMinYMin meet&amp;quot; viewBox=&amp;quot;0 0 22 25&amp;quot; class=&amp;quot;rewind-icon&amp;quot; aria-labelledby=&amp;quot;rewindIcon3991353&amp;quot; role=&amp;quot;img&amp;quot;&amp;gt;
+
+
+
+&amp;lt;title id=&amp;quot;rewindIcon3991353&amp;quot;&amp;gt;Rewind&amp;lt;/title&amp;gt;
+&amp;lt;path d=&amp;quot;M13.1,10.1c1.8,0,3,1.7,3,3.9v0c0,2.2-1.2,3.9-3,3.9c-1.8,0-3-1.7-3-3.9v0
+  C10.1,11.8,11.3,10.1,13.1,10.1z M11.4,14c0,1.5,0.7,2.7,1.8,2.7c1.1,0,1.8-1.2,1.8-2.7v0c0-1.5-0.7-2.7-1.8-2.7
+  C12,11.3,11.4,12.5,11.4,14L11.4,14z M22,14c0,6.1-4.9,11-11,11c-5.6,0-10.3-4.2-10.9-9.7C0,15.2,0,15.1,0,15c0-0.6,0.4-1,1-1
+  c0.6,0,1,0.4,1,1h0c0.5,4.5,4.3,8,8.9,8c5,0,9-4,9-9s-4-9-9-9H9.4l1.3,1.3c0.4,0.4,0.4,1,0,1.4c-0.4,0.4-1,0.4-1.4,0l-3-3
+  c-0.4-0.4-0.4-1,0-1.4l3-3c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4L9.4,3H11C17,3,22,7.9,22,14z M6.8,10.1C7.1,10.1,7.3,10,7.5,10h0
+  c0.4,0,0.7,0.3,0.7,0.7v6.6c0,0.4-0.3,0.7-0.7,0.7c-0.4,0-0.7-0.3-0.7-0.7v-5.9L6,11.7c-0.1,0-0.2,0-0.3,0c-0.3,0-0.6-0.3-0.6-0.6
+  c0-0.3,0.2-0.5,0.5-0.6L6.8,10.1z M3.4,4l2.3,2.3c0.4,0.4,0.4,1,0,1.4c-0.4,0.4-1,0.4-1.4,0l-3-3c-0.4-0.4-0.4-1,0-1.4l3-3
+  c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4L3.4,4z&amp;quot;&amp;gt;&amp;lt;/path&amp;gt;
+
+&amp;lt;/svg&amp;gt;" data-volume-icon="&amp;lt;svg preserveAspectRatio=&amp;quot;xMinYMin meet&amp;quot; viewBox=&amp;quot;0 0 22 22&amp;quot; class=&amp;quot;volume-icon&amp;quot; aria-labelledby=&amp;quot;volumeIcon8379852&amp;quot; role=&amp;quot;img&amp;quot;&amp;gt;
+
+
+
+&amp;lt;title id=&amp;quot;volumeIcon8379852&amp;quot;&amp;gt;Volume&amp;lt;/title&amp;gt;
+&amp;lt;path d=&amp;quot;M19.1,21.2c-0.5,0.7-1.2,1.1-1.7,0.7c-0.4-0.3-0.4-1.1,0-1.8
+  c3.4-5.6,3.4-12.6,0-18.2c-0.4-0.7-0.4-1.4,0-1.8c0.4-0.3,1.2,0,1.7,0.7C22.9,7.1,22.9,14.9,19.1,21.2z M14.2,18.1
+  c-0.5-0.3-0.6-0.9-0.4-1.4c1.6-3.6,1.6-7.7,0-11.2c-0.2-0.5-0.1-1.2,0.4-1.4c0.5-0.3,1.1,0,1.4,0.6c1.9,4.1,1.9,8.8,0,12.9
+  C15.3,18.1,14.7,18.3,14.2,18.1z M10,19L10,19L10,19c-0.1,0-0.1-0.1-0.2-0.2L5,15l0,0H1c-0.6,0-1-1.8-1-4s0.4-4,1-4h4v0l4.8-3.8
+  C9.9,3.1,9.9,3,10,3c0.6,0,1,3.6,1,8S10.5,19,10,19z&amp;quot;&amp;gt;&amp;lt;/path&amp;gt;
+
+&amp;lt;/svg&amp;gt;" data-captions-icon="&amp;lt;svg preserveAspectRatio=&amp;quot;xMinYMin meet&amp;quot; viewBox=&amp;quot;0 0 22 22&amp;quot; class=&amp;quot;captions-icon&amp;quot; aria-labelledby=&amp;quot;captionsIcon7457265&amp;quot; role=&amp;quot;img&amp;quot;&amp;gt;
+
+
+
+&amp;lt;title id=&amp;quot;captionsIcon7457265&amp;quot;&amp;gt;Captions&amp;lt;/title&amp;gt;
+&amp;lt;path d=&amp;quot;M18,22H4c-2.2,0-4-1.8-4-4V4c0-2.2,1.8-4,4-4h14c2.2,0,4,1.8,4,4v14
+  C22,20.2,20.2,22,18,22z M20,5c0-1.7-1.3-3-3-3H5C3.3,2,2,3.3,2,5v12c0,1.7,1.3,3,3,3h12c1.7,0,3-1.3,3-3V5z M14.9,13.7
+  c0.4,0,0.7-0.1,1-0.4c0.3-0.3,0.5-0.6,0.6-1.2c0.3-0.8,1.6-0.5,1.5,0.5c0,0.4-0.6,1.5-1.1,1.9c-0.5,0.4-1.2,0.6-2,0.6
+  c-1,0-1.8-0.3-2.4-1c-0.6-0.7-1-1.7-1-2.9c0-1.3,0.3-2.3,1-3C13.1,7.4,14,7,15,7c0.9,0,1.6,0.3,2.2,0.8c0.3,0.3,0.6,0.7,0.8,1.4
+  c0.1,0.8-1,1.1-1.5,0.4c-0.1-0.5-0.3-0.7-0.5-0.9c-0.3-0.2-0.6-0.3-1-0.3c-0.5,0-1,0.2-1.3,0.6c-0.3,0.4-0.5,1.1-0.5,2
+  c0,1,0.2,1.7,0.5,2.1C13.9,13.4,14.4,13.7,14.9,13.7z M7.3,13.7c0.4,0,0.7-0.1,1-0.4C8.7,13,8.9,12.6,9,12c0.3-0.8,1.6-0.5,1.5,0.5
+  c0,0.4-0.6,1.5-1.1,1.9c-0.5,0.4-1.2,0.6-2,0.6c-1,0-1.8-0.3-2.4-1c-0.6-0.7-1-1.7-1-2.9c0-1.3,0.3-2.3,1-3C5.6,7.4,6.4,7,7.4,7
+  c0.9,0,1.6,0.3,2.2,0.8c0.3,0.3,0.6,0.7,0.8,1.4c0.1,0.8-1,1.1-1.5,0.4C8.8,9.1,8.7,8.9,8.4,8.7c-0.3-0.2-0.6-0.3-1-0.3
+  C6.8,8.3,6.4,8.5,6,9C5.7,9.4,5.5,10,5.5,11c0,1,0.2,1.7,0.5,2.1C6.4,13.4,6.8,13.7,7.3,13.7z&amp;quot;&amp;gt;&amp;lt;/path&amp;gt;
+
+&amp;lt;/svg&amp;gt;" data-fullscreen-icon="&amp;lt;svg preserveAspectRatio=&amp;quot;xMinYMin meet&amp;quot; viewBox=&amp;quot;0 0 18 18&amp;quot; class=&amp;quot;fullscreen-icon&amp;quot; aria-labelledby=&amp;quot;fullscreenIcon5617721&amp;quot; role=&amp;quot;img&amp;quot;&amp;gt;
+
+
+
+&amp;lt;title id=&amp;quot;fullscreenIcon5617721&amp;quot;&amp;gt;Full Screen&amp;lt;/title&amp;gt;
+&amp;lt;path d=&amp;quot;M17,9c-0.6,0-1-0.4-1-1V3.4l-4.2,4.2c-0.4,0.4-1,0.4-1.4,0c-0.4-0.4-0.4-1,0-1.4
+  L14.6,2H10C9.4,2,9,1.6,9,1s0.4-1,1-1h7c0.6,0,1,0.4,1,1v7C18,8.6,17.6,9,17,9z M8,18H1c-0.6,0-1-0.4-1-1v-7c0-0.6,0.4-1,1-1
+  c0.6,0,1,0.4,1,1v4.6l4.2-4.2c0.4-0.4,1-0.4,1.4,0c0.4,0.4,0.4,1,0,1.4L3.4,16H8c0.6,0,1,0.4,1,1S8.6,18,8,18z&amp;quot;&amp;gt;&amp;lt;/path&amp;gt;
+
+&amp;lt;/svg&amp;gt;" data-workspaces-icon="&amp;lt;svg preserveAspectRatio=&amp;quot;xMinYMin meet&amp;quot; viewBox=&amp;quot;0 0 22 22&amp;quot; class=&amp;quot;workspaces-outline-icon&amp;quot; aria-labelledby=&amp;quot;workspacesOutlineIcon6434911&amp;quot; role=&amp;quot;img&amp;quot;&amp;gt;
+
+
+
+&amp;lt;title id=&amp;quot;workspacesOutlineIcon6434911&amp;quot;&amp;gt;Workspaces&amp;lt;/title&amp;gt;
+&amp;lt;path d=&amp;quot;M18,22H4c-2.2,0-4-1.8-4-4V4c0-2.2,1.8-4,4-4h14c2.2,0,4,1.8,4,4v14
+  C22,20.2,20.2,22,18,22z M17,2H5C3.7,2,2.6,2.8,2.2,4h17.6C19.4,2.8,18.3,2,17,2z M20,6H2v11c0,1.7,1.3,3,3,3h12c1.7,0,3-1.3,3-3V6z
+   M13.9,16.6c-0.4,0.4-1,0.4-1.4,0c-0.4-0.4-0.4-1,0-1.4l2.1-2.1l-2.1-2.1c-0.4-0.4-0.4-1,0-1.4c0.4-0.4,1-0.4,1.4,0l2.8,2.8
+  c0.4,0.4,0.4,1,0,1.4L13.9,16.6z M9.5,16.5c-0.4,0.4-1,0.4-1.4,0l-2.8-2.8c-0.4-0.4-0.4-1,0-1.4l2.8-2.8c0.4-0.4,1-0.4,1.4,0
+  c0.4,0.4,0.4,1,0,1.4L7.4,13l2.1,2.1C9.9,15.5,9.9,16.1,9.5,16.5z&amp;quot;&amp;gt;&amp;lt;/path&amp;gt;
+
+&amp;lt;/svg&amp;gt;" data-workspaces-path="/videos/109559/launch_workspace" data-track-video-view-url="/videos/109559/track/progress" data-track-video-segment-url="/videos/109559/track/segment"><source type="video/webm" src="https://videos.teamtreehouse.com/videos/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-720p-clip.webm?token=fixture" /><source type="video/mp4" src="https://videos.teamtreehouse.com/videos/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-720p-clip.mp4?token=fixture" /><track kind="captions" src="/videos/109559/captions?lang=en&amp;preview=1" srclang="en" label="English" default="default" /></video>
+  </div>
+</body>
+</html>

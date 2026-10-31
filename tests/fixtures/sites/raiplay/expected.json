@@ -1,0 +1,43 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.raiplay.it/video/2014/04/Report-del-07042014-cb27157f-9dd0-4aee-b788-b1f67643a391.html",
+   "args": [
+    "-F",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[RaiPlay] Extracting URL: https://www.raiplay.it/video/2014/04/Report-del-07042014-cb27157f-9dd0-4aee-b788-b1f67643a391.html",
+    "[RaiPlay] cb27157f-9dd0-4aee-b788-b1f67643a391: Downloading video JSON",
+    "[RaiPlay] cb27157f-9dd0-4aee-b788-b1f67643a391: Downloading XML metadata",
+    "[RaiPlay] cb27157f-9dd0-4aee-b788-b1f67643a391: Downloading m3u8 information",
+    "[RaiPlay] cb27157f-9dd0-4aee-b788-b1f67643a391: Checking MP4 availability",
+    "[info] Available formats for cb27157f-9dd0-4aee-b788-b1f67643a391:",
+    "ID             EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC ACODEC",
+    "--------------------------------------------------------------------------",
+    "hls-Italiano-0 mp4 512x288        | ~573.51MiB  781k m3u8  | avc1   mp4a",
+    "https-800      mp4 512x288     25 | ≈573.51MiB  781k https | avc1   mp4a",
+    "hls-Italiano-1 mp4 928x522        | ~  1.26GiB 1758k m3u8  | avc1   mp4a",
+    "https-1800     mp4 928x522     25 | ≈  1.26GiB 1758k https | avc1   mp4a"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.raiplay.it/video/2014/04/Report-del-07042014-cb27157f-9dd0-4aee-b788-b1f67643a391.html",
+   "args": [
+    "--print",
+    "\"%(id)s|%(display_id)s|%(title)s|%(alt_title)s|%(description)s|%(uploader)s|%(creator)s|%(duration)s|%(timestamp)s|%(series)s|%(season_number)s|%(season)s|%(episode)s|%(episode_number)s|%(release_year)s\"",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "\"cb27157f-9dd0-4aee-b788-b1f67643a391|cb27157f-9dd0-4aee-b788-b1f67643a391|Report del 07/04/2014|St 2013/14 - Report - Espresso nel caffè - 07/04/2014|Gli italiani, a loro insaputa, bevono un caffè di bassa qualità. I torrefattori fanno spesso abuso della robusta: una qualità che costa la metà di quella arabica ed ha aromi legnosi, se proviene dal Vietnam, e di terra se di origine Africana. Durante la puntata interverranno i rappresentanti di grandi aziende, come Lavazza e Kimbo. Bernardo Iovene, insieme con gli assaggiatori autorizzati dell'Associazione europea dei caffè speciali SCAE, ha girato per alcuni bar italiani, anche molto noti, tra cui il Gambrinus a Napoli e il Greco a Roma, per valutare il caffè in tazza.|Rai 3|Rai 3|6160|1396919880|Report|NA|2013/14|Espresso nel caffè - 07/04/2014|NA|2026\""
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,186 @@
+{
+ "routes": [
+  {
+   "url": "https://api.rctiplus.com/api/v1/visitor?platform=web",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "visitor.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v1/program/615/detail",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "detail-615.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v1/program/615/season",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "season-615.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=0",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-0.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-1.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-2.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=3",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-3.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-4.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=5",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-5.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=6",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-6.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=7",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-7.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=8",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-8.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=9",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-9.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=10",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-10.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=11",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-11.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=12",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-12.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=13",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-13.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=14",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-14.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=15",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-15.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=16",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-16.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=17",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-17.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=18",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-18.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=19",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-19.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/extra?content_id=0&length=20&page=20",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-20.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/clip?content_id=0&length=20&page=0",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "clip-0.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v2/program/615/clip?content_id=0&length=20&page=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "clip-1.json"
+  }
+ ]
+}

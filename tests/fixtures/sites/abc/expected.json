@@ -1,0 +1,76 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.abc.net.au/news/2015-10-23/nab-lifts-interest-rates-following-westpac-and-cba/6880080",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6880080\", \"title\": \"NAB lifts interest rates, following Westpac and CBA - ABC listen\", \"formats\": [{\"url\": \"https://abcmedia.akamaized.net/news/audio/twt/201510/20151023-twt01-ratesreax.mp3\", \"vcodec\": \"none\", \"width\": null, \"height\": null, \"tbr\": 64, \"filesize\": null, \"format_id\": \"0\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 64, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - audio only\"}], \"description\": \"Three of Australia's big four banks have now raised home loan interest rates. The National Australia Bank has followed it competitors Westpac and the Commonwealth Bank, lifting its variable mortgage rate.\", \"thumbnail\": \"https://live-production.wcms.abc-cdn.net.au/2193d7437c84b25eafd6360c82b5fa21?impolicy=wcms_watermark_abc&cropH=674&cropW=1200&xPos=0&yPos=0&width=862&height=485&imformat=generic\", \"webpage_url\": \"http://www.abc.net.au/news/2015-10-23/nab-lifts-interest-rates-following-westpac-and-cba/6880080\", \"original_url\": \"http://www.abc.net.au/news/2015-10-23/nab-lifts-interest-rates-following-westpac-and-cba/6880080\", \"webpage_url_basename\": \"6880080\", \"webpage_url_domain\": \"abc.net.au\", \"extractor\": \"abc.net.au\", \"extractor_key\": \"ABC\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://live-production.wcms.abc-cdn.net.au/2193d7437c84b25eafd6360c82b5fa21?impolicy=wcms_watermark_abc&cropH=674&cropW=1200&xPos=0&yPos=0&width=862&height=485&imformat=generic\", \"id\": \"0\"}], \"display_id\": \"6880080\", \"fulltitle\": \"NAB lifts interest rates, following Westpac and CBA - ABC listen\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://abcmedia.akamaized.net/news/audio/twt/201510/20151023-twt01-ratesreax.mp3\", \"vcodec\": \"none\", \"tbr\": 64, \"format_id\": \"0\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 64, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - audio only\", \"_filename\": \"NAB lifts interest rates, following Westpac and CBA - ABC listen [6880080].mp3\", \"filename\": \"NAB lifts interest rates, following Westpac and CBA - ABC listen [6880080].mp3\", \"__write_download_archive\": false}], \"url\": \"https://abcmedia.akamaized.net/news/audio/twt/201510/20151023-twt01-ratesreax.mp3\", \"vcodec\": \"none\", \"width\": null, \"height\": null, \"tbr\": 64, \"filesize\": null, \"format_id\": \"0\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 64, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.abc.net.au/news/2015-10-23/nab-lifts-interest-rates-following-westpac-and-cba/6880080",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[abc.net.au] Extracting URL: http://www.abc.net.au/news/2015-10-23/nab-lifts-interest-rates-following-westpac-and-cba/6880080",
+    "[abc.net.au] 6880080: Downloading webpage",
+    "[info] Available formats for 6880080:",
+    "ID EXT RESOLUTION | TBR PROTO | VCODEC     ACODEC ABR",
+    "-----------------------------------------------------",
+    "0  mp3 audio only | 64k https | audio only mp3    64k"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.abc.net.au/news/synthetic/expired/10000001",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [abc.net.au] 10000001: abc.net.au said: This clip has expired"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.abc.net.au/news/synthetic/nomedia/10000002",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [abc.net.au] 10000002: Unable to extract video urls; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.abc.net.au/news/synthetic/missing/10000003",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [abc.net.au] 10000003: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

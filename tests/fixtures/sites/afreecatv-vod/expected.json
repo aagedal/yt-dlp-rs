@@ -1,0 +1,31 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://vod.sooplive.com/PLAYER/STATION/20515605",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"\\ud63c\\uc790\\uc0ac\\ub294\\uc5ec\\uc790\\uc9d1\", \"uploader\": \"\\u2665\\uc774\\uc2ac\\uc774\", \"uploader_id\": \"dasl8121\", \"duration\": 213, \"thumbnails\": [{\"url\": \"https://videoimg.afreecatv.com/php/SnapshotLoad.php?rowKey=20170411_BE689A0E_190960999_1_2_h_r\", \"ext\": \"jpg\", \"id\": \"0\"}], \"id\": \"BE689A0E_190960999_1_2_A\", \"formats\": [{\"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://vod-normal-global-cdn-z02.sooplive.com/spkt/highlight/20170411/999/BE689A0E_190960999_1_2_A.mp4/manifest.m3u8?rp=o00&ut=0\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - unknown\"}], \"timestamp\": 1491897465, \"webpage_url\": \"https://vod.sooplive.com/PLAYER/STATION/20515605\", \"original_url\": \"https://vod.sooplive.com/PLAYER/STATION/20515605\", \"webpage_url_basename\": \"20515605\", \"webpage_url_domain\": \"vod.sooplive.com\", \"extractor\": \"soop\", \"extractor_key\": \"AfreecaTV\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://videoimg.afreecatv.com/php/SnapshotLoad.php?rowKey=20170411_BE689A0E_190960999_1_2_h_r\", \"display_id\": \"BE689A0E_190960999_1_2_A\", \"fulltitle\": \"\\ud63c\\uc790\\uc0ac\\ub294\\uc5ec\\uc790\\uc9d1\", \"duration_string\": \"3:33\", \"upload_date\": \"20170411\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls\", \"url\": \"https://vod-normal-global-cdn-z02.sooplive.com/spkt/highlight/20170411/999/BE689A0E_190960999_1_2_A.mp4/manifest.m3u8?rp=o00&ut=0\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - unknown\", \"_filename\": \"\\ud63c\\uc790\\uc0ac\\ub294\\uc5ec\\uc790\\uc9d1 [BE689A0E_190960999_1_2_A].mp4\", \"filename\": \"\\ud63c\\uc790\\uc0ac\\ub294\\uc5ec\\uc790\\uc9d1 [BE689A0E_190960999_1_2_A].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://vod-normal-global-cdn-z02.sooplive.com/spkt/highlight/20170411/999/BE689A0E_190960999_1_2_A.mp4/manifest.m3u8?rp=o00&ut=0\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vod.sooplive.com/player/999999",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [soop] 999999: The VOD does not exist"
+   ],
+   "files": {}
+  }
+ ]
+}

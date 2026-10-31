@@ -1,0 +1,24 @@
+{
+ "routes": [
+  {
+   "url": "https://videocampus.sachsen.de/category/online-tutorials-onyx/91",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "rec-000.bin"
+  },
+  {
+   "url": "https://videocampus.sachsen.de/media/ajax/component/boxList/category/online-tutorials-onyx/category_id/91?page=0&page_only=1",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "rec-001.bin",
+   "method": "POST",
+   "request_body": [
+    "vars%5Bmode%5D=category&vars%5Bcategory%5D=91&vars%5Bcontext%5D=1&vars%5Bcontext_id%5D=91&vars%5Blayout%5D=thumb&vars%5Bper_page%5D%5Bthumb%5D=10"
+   ]
+  }
+ ]
+}

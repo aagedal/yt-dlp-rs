@@ -3,7 +3,7 @@
 //! XOR-encrypted stream URLs (progressive, HLS, DASH), comments and
 //! metadata.
 use super::Extractor;
-use crate::{Error, ExtractResult, Result, VideoInfo};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -402,6 +402,279 @@ impl Extractor for Mixcloud {
     }
 }
 
+// Upstream `MixcloudUserIE` and `MixcloudPlaylistIE` (`MixcloudPlaylistBaseIE`):
+// paged GraphQL `userLookup` / `playlistLookup` results of cloudcast URLs.
+
+const USER_NAME: &str = "mixcloud:user";
+const USER_KEY: &str = "MixcloudUser";
+const PLAYLIST_NAME: &str = "mixcloud:playlist";
+const PLAYLIST_KEY: &str = "MixcloudPlaylist";
+const USER_NODE: &str = "slug
+          url
+          owner { username }";
+const PLAYLIST_NODE: &str = "cloudcast {
+            slug
+            url
+            owner { username }
+          }";
+
+static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?mixcloud\.com/(?P<id>[^/]+)/(?P<type>uploads|favorites|listens|stream)?/?$",
+    )
+    .unwrap()
+});
+static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?mixcloud\.com/(?P<user>[^/]+)/playlists/(?P<playlist>[^/]+)/?$",
+    )
+    .unwrap()
+});
+
+/// `MixcloudUserIE.suitable`.
+pub fn user_suitable(url: &str) -> bool {
+    USER_URL.is_match(url)
+}
+
+/// `MixcloudPlaylistIE.suitable`.
+pub fn playlist_suitable(url: &str) -> bool {
+    PLAYLIST_URL.is_match(url)
+}
+
+/// `url_result(url, MixcloudIE, video_id)` as a playlist entry.
+fn url_entry(target: &str, id: Option<String>) -> Result<VideoInfo> {
+    let url = Url::parse(target)?;
+    let mut info = super::direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    let mut entry = Map::new();
+    entry.insert("ie_key".into(), KEY.into());
+    if let Some(id) = id {
+        entry.insert("id".into(), id.into());
+    }
+    entry.insert("_type".into(), "url".into());
+    entry.insert("url".into(), target.into());
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": {},
+            "ie_key": KEY,
+            "extractor": NAME,
+            "entry": Value::Object(entry),
+        }),
+    );
+    Ok(info)
+}
+
+/// `MixcloudPlaylistBaseIE._call_api` plus its `_real_extract` paging for
+/// the `user` (`userLookup`, slug = uploads, favorites, ...) or `playlist`
+/// (`playlistLookup`) root.
+fn playlist_extract(
+    client: &Client,
+    url: &Url,
+    (name, key): (&'static str, &'static str),
+    username: &str,
+    slug: &str,
+) -> Result<Option<ExtractResult>> {
+    let is_playlist = name == PLAYLIST_NAME;
+    let (root, title_key, description_key, node) = if is_playlist {
+        ("playlist", "name", "description", PLAYLIST_NODE)
+    } else {
+        ("user", "displayName", "biog", USER_NODE)
+    };
+    let list_type = if is_playlist { "items" } else { slug };
+    let lookup_key = format!("{root}Lookup");
+    let lookup_slug = if is_playlist {
+        format!(", slug: \"{slug}\"")
+    } else {
+        String::new()
+    };
+    let playlist_id = format!("{username}_{slug}");
+    crate::screen::set_extractor(name);
+    crate::screen::screen(&format!(
+        "[{name}] Extracting URL: {}",
+        crate::screen::extracting_url(url.as_str())
+    ));
+
+    let mut entries = Vec::new();
+    let mut after: Option<String> = None;
+    let playlist = loop {
+        let list_filter = after
+            .as_deref()
+            .map_or_else(String::new, |cursor| format!(", after: \"{cursor}\""));
+        let query = format!(
+            "{{\n  {lookup_key}(lookup: {{username: \"{username}\"{lookup_slug}}}) {{\n    {title_key}\n    {description_key}\n    {list_type}(first: 100{list_filter}) {{\n      edges {{\n        node {{\n          {node}\n        }}\n      }}\n      pageInfo {{\n        endCursor\n        hasNextPage\n      }}\n    }}\n  }}\n}}"
+        );
+        let mut api = Url::parse("https://app.mixcloud.com/graphql")?;
+        api.query_pairs_mut().append_pair("query", &query);
+        let response = {
+            let _impersonate = crate::impersonate::attempt(crate::impersonate::ANY, |message| {
+                crate::screen::warning_once(&format!("[{name}] {message}"));
+            });
+            super::download_json(client, &api, name, &playlist_id)?
+        };
+        let playlist = response
+            .pointer(&format!("/data/{lookup_key}"))
+            .filter(|value| value.is_object())
+            .cloned()
+            .ok_or_else(|| key_error(&playlist_id, "data"))?;
+        let items = playlist
+            .get(list_type)
+            .filter(|value| truthy(Some(value)))
+            .cloned()
+            .unwrap_or_else(|| json!({}));
+        for edge in items
+            .get("edges")
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+        {
+            let node = edge
+                .get("node")
+                .filter(|value| truthy(Some(value)))
+                .cloned()
+                .unwrap_or_else(|| json!({}));
+            let cloudcast = if is_playlist {
+                node.get("cloudcast")
+                    .filter(|value| truthy(Some(value)))
+                    .cloned()
+                    .unwrap_or_else(|| json!({}))
+            } else {
+                node
+            };
+            let Some(cloudcast_url) = cloudcast
+                .get("url")
+                .and_then(Value::as_str)
+                .filter(|target| !target.is_empty())
+            else {
+                continue;
+            };
+            let item_slug = cloudcast.get("slug").and_then(Value::as_str);
+            let owner = cloudcast.pointer("/owner/username").and_then(Value::as_str);
+            let video_id = match (item_slug, owner) {
+                (Some(item_slug), Some(owner)) if !item_slug.is_empty() && !owner.is_empty() => {
+                    Some(format!("{owner}_{item_slug}"))
+                }
+                _ => None,
+            };
+            entries.push(url_entry(cloudcast_url, video_id)?);
+        }
+        let page_info = items
+            .get("pageInfo")
+            .ok_or_else(|| key_error(&playlist_id, "pageInfo"))?;
+        let has_next_page = truthy(page_info.get("hasNextPage"));
+        after = page_info
+            .get("endCursor")
+            .and_then(Value::as_str)
+            .map(str::to_owned);
+        if !has_next_page {
+            break playlist;
+        }
+    };
+
+    let raw_title = playlist
+        .get(title_key)
+        .and_then(Value::as_str)
+        .unwrap_or_default();
+    let title = if is_playlist {
+        raw_title.to_owned()
+    } else {
+        format!("{raw_title} ({slug})")
+    };
+    let description = playlist
+        .get(description_key)
+        .filter(|value| truthy(Some(value)))
+        .cloned();
+    let mut shape = vec!["id", "title"];
+    let mut extra = Map::new();
+    if let Some(description) = description {
+        extra.insert("description".into(), description);
+        shape.push("description");
+    }
+    extra.insert(
+        crate::info_order::INFO_SHAPE.into(),
+        format!("playlist-dict;{}", shape.join(",")).into(),
+    );
+    Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+        id: playlist_id,
+        title,
+        webpage_url: url.clone(),
+        extractor: name.into(),
+        extractor_key: key.into(),
+        nested: Vec::new(),
+        pending: None,
+        entries,
+        extra,
+    })))
+}
+
+/// Python's truthiness for a JSON value.
+fn truthy(value: Option<&Value>) -> bool {
+    match value {
+        None | Some(Value::Null) => false,
+        Some(Value::Bool(flag)) => *flag,
+        Some(Value::Number(number)) => number.as_f64().is_some_and(|number| number != 0.0),
+        Some(Value::String(text)) => !text.is_empty(),
+        Some(Value::Array(items)) => !items.is_empty(),
+        Some(Value::Object(map)) => !map.is_empty(),
+    }
+}
+
+/// `KeyError` from a missing field: no `[IE]` prefix.
+fn key_error(id: &str, key: &str) -> Error {
+    Error::Reported(format!(
+        "{id}: An extractor error has occurred. (caused by KeyError('{key}')); {}",
+        crate::BUG_REPORTS_MESSAGE
+    ))
+}
+
+pub struct MixcloudUser;
+
+impl Extractor for MixcloudUser {
+    fn key(&self) -> &'static str {
+        USER_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = USER_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let username = found["id"].to_owned();
+        let slug = found
+            .name("type")
+            .map_or("uploads", |kind| kind.as_str())
+            .to_owned();
+        playlist_extract(client, url, (USER_NAME, USER_KEY), &username, &slug)
+    }
+}
+
+pub struct MixcloudPlaylist;
+
+impl Extractor for MixcloudPlaylist {
+    fn key(&self) -> &'static str {
+        PLAYLIST_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = PLAYLIST_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let username = found["user"].to_owned();
+        let slug = found["playlist"].to_owned();
+        playlist_extract(client, url, (PLAYLIST_NAME, PLAYLIST_KEY), &username, &slug)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -429,5 +702,18 @@ mod tests {
             .collect();
         let encoded = base64::engine::general_purpose::STANDARD.encode(cipher);
         assert_eq!(decrypt(&encoded).as_deref(), Some(plain));
+    }
+
+    #[test]
+    fn user_and_playlist_urls_follow_upstream_valid_url() {
+        assert!(user_suitable("http://www.mixcloud.com/dholbach/"));
+        assert!(user_suitable("https://www.mixcloud.com/FirstEar/stream/"));
+        assert!(!user_suitable(
+            "https://www.mixcloud.com/dholbach/cryptkeeper/"
+        ));
+        assert!(playlist_suitable(
+            "https://www.mixcloud.com/maxvibes/playlists/jazzcat-on-ness-radio/"
+        ));
+        assert!(!playlist_suitable("https://www.mixcloud.com/maxvibes/"));
     }
 }

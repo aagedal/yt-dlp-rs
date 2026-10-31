@@ -1,0 +1,33 @@
+{
+ "routes": [
+  {
+   "url": "https://www.jiosaavn.com/api.php?__call=webapi.get&_format=json&_marker=0&ctx=web6dot0&token=XFMcKICOCgc_&type=episode",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "episode.json"
+  },
+  {
+   "url": "https://www.jiosaavn.com/api.php",
+   "request_body": [
+    "__call=song.generateAuthToken",
+    "bitrate=128"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "auth-128.json"
+  },
+  {
+   "url": "https://www.jiosaavn.com/api.php",
+   "request_body": [
+    "__call=song.generateAuthToken",
+    "bitrate=320"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "auth-320.json"
+  }
+ ]
+}

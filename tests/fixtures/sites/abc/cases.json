@@ -1,0 +1,7 @@
+[
+ {"url": "http://www.abc.net.au/news/2015-10-23/nab-lifts-interest-rates-following-westpac-and-cba/6880080", "args": ["-J"]},
+ {"url": "http://www.abc.net.au/news/2015-10-23/nab-lifts-interest-rates-following-westpac-and-cba/6880080", "args": ["-F"]},
+ {"url": "http://www.abc.net.au/news/synthetic/expired/10000001", "args": ["-J"]},
+ {"url": "http://www.abc.net.au/news/synthetic/nomedia/10000002", "args": ["-J"]},
+ {"url": "http://www.abc.net.au/news/synthetic/missing/10000003", "args": ["-J"]}
+]

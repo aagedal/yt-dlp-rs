@@ -1,0 +1,26 @@
+{
+ "routes": [
+  {
+   "url": "https://www.bandlab.com/api/v1.3/posts/04b37e88dba24967b9dac8eb8567ff39_07d7f906fc96ee11b75e000d3a428fff",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "post-track.json"
+  },
+  {
+   "url": "https://www.bandlab.com/api/v1.3/revisions/02d7f906-fc96-ee11-b75e-000d3a428fff?edit=false",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "revision.json"
+  },
+  {
+   "url": "https://www.bandlab.com/api/v1.3/posts/00000000000000000000000000000000",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body": "{\"message\":\"Post not found\"}"
+  }
+ ]
+}

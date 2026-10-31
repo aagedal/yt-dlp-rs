@@ -1,0 +1,43 @@
+{
+ "data": {
+  "userLookup": {
+   "displayName": "dholbach",
+   "biog": "As a DJ I was socialised with techno music in my early days and moved on, almost exclusively to Drum'n'Bass music. I loved the energy of broken beats and enjoyed playing those tunes at parties.\n\nThese days, I enjoy whatever music makes me want to move to it, whatever style it might be. I love getting feedback, so please comment on the mixes and let me know what you think. Also all kinds of music suggestions are appreciated.",
+   "uploads": {
+    "edges": [
+     {
+      "node": {
+       "slug": "the-real-bellydance-2026-xxl-dj-session-mit-root-olivenbaum",
+       "url": "https://www.mixcloud.com/dholbach/the-real-bellydance-2026-xxl-dj-session-mit-root-olivenbaum/",
+       "owner": {
+        "username": "dholbach"
+       }
+      }
+     },
+     {
+      "node": {
+       "slug": "something-like-something-like-bellydance-2026-fragments-of-the-rest-of-the-night",
+       "url": "https://www.mixcloud.com/dholbach/something-like-something-like-bellydance-2026-fragments-of-the-rest-of-the-night/",
+       "owner": {
+        "username": "dholbach"
+       }
+      }
+     },
+     {
+      "node": {
+       "slug": "something-like-something-like-bellydance-2026-aftershow",
+       "url": "https://www.mixcloud.com/dholbach/something-like-something-like-bellydance-2026-aftershow/",
+       "owner": {
+        "username": "dholbach"
+       }
+      }
+     }
+    ],
+    "pageInfo": {
+     "endCursor": "YXJyYXljb25uZWN0aW9uOjU0",
+     "hasNextPage": false
+    }
+   }
+  }
+ }
+}

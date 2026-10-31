@@ -3,18 +3,22 @@
 //! (`config.json`, else `index.min.js`), the Playback API and
 //! `_parse_brightcove_metadata`; plus `_extract_brightcove_urls` for pages
 //! embedding the player (followed with the page as the smuggled
-//! `referrer`). Playlists, TV Everywhere (Adobe Pass) videos and
-//! `BrightcoveLegacyIE` URLs are explicit unsupported errors.
+//! `referrer`). Playlists and TV Everywhere (Adobe Pass) videos are explicit
+//! unsupported errors. `BrightcoveLegacyIE` (`federated_f9`/`htmlFederated`
+//! viewer URLs) resolves the publisher ID (the query's `playerKey`, else the
+//! player page's) and follows the `players.brightcove.net` player.
 use super::Extractor;
-use crate::{Error, Result, VideoInfo};
+use crate::{Error, ExtractResult, Result, VideoInfo};
+use base64::Engine;
 use regex::Regex;
 use reqwest::blocking::Client;
-use serde_json::{Map, Value};
+use serde_json::{Map, Value, json};
 use std::io::Read;
 use std::sync::LazyLock;
 use url::Url;
 
 pub struct BrightcoveNew;
+pub struct BrightcoveLegacy;
 
 pub(crate) const NAME: &str = "brightcove:new";
 pub(crate) const KEY: &str = "BrightcoveNew";
@@ -829,6 +833,177 @@ impl Extractor for BrightcoveNew {
     }
 }
 
+const LEGACY_NAME: &str = "brightcove:legacy";
+const LEGACY_KEY: &str = "BrightcoveLegacy";
+
+static LEGACY_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(
+        r"^(?:https?://.*brightcove\.com/(?:services|viewer).*?\?|brightcove:)(?P<query>.*)",
+    )
+    .unwrap()
+});
+/// `(?<=[?&])(videoI(d|D)|idVideo|bctid)` with the prefix kept.
+static LEGACY_VIDEO_ID: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(?P<pre>[?&])(?:videoI(?:d|D)|idVideo|bctid)").unwrap());
+/// `(?<=[?&])bckey`.
+static LEGACY_BCKEY: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?P<pre>[?&])bckey").unwrap());
+static LEGACY_PLAYER_ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"/bcpid(\d+)").unwrap());
+static LEGACY_PLAYER_KEY: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"<param\s+name="playerKey"\s+value="([\w~,-]+)""#).unwrap());
+
+/// `BrightcoveLegacyIE._VALID_URL`.
+pub fn legacy_suitable(url: &str) -> bool {
+    LEGACY_URL.is_match(url)
+}
+
+/// `_download_webpage(..., headers=..., fatal=False)` of the player page:
+/// a request error is a warning and an empty page.
+fn optional_player_page(client: &Client, url: &Url, id: &str, referer: &str) -> Result<String> {
+    match super::download_webpage_note_headers(
+        client,
+        url,
+        LEGACY_NAME,
+        id,
+        "Downloading webpage",
+        &[("Referer", referer)],
+    ) {
+        Ok(text) => Ok(text),
+        Err(Error::ExtractorRequest { source, .. }) => {
+            crate::screen::warning(&format!(
+                "[{LEGACY_NAME}] {id}: Unable to download webpage: {}",
+                crate::upstream_error_text(&source)
+            ));
+            Ok(String::new())
+        }
+        Err(error) => Err(error),
+    }
+}
+
+/// Python's `parse_qs` (blank values dropped) of a query string.
+fn parse_query(query: &str) -> Vec<(String, String)> {
+    url::form_urlencoded::parse(query.as_bytes())
+        .filter(|(_, value)| !value.is_empty())
+        .map(|(key, value)| (key.into_owned(), value.into_owned()))
+        .collect()
+}
+
+/// `query.get(key)[0]`.
+fn first<'a>(query: &'a [(String, String)], key: &str) -> Option<&'a str> {
+    query
+        .iter()
+        .find(|(name, _)| name == key)
+        .map(|(_, value)| value.as_str())
+}
+
+impl Extractor for BrightcoveLegacy {
+    fn key(&self) -> &'static str {
+        LEGACY_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        if !legacy_suitable(url.as_str()) {
+            return Ok(None);
+        }
+        crate::screen::set_extractor(LEGACY_NAME);
+        let (bare, smuggled) = unsmuggle(url.as_str());
+        // The `videoId`/`idVideo`/`bctid` parameters are `@videoPlayer`, and `bckey` is `playerKey`.
+        let modified = LEGACY_VIDEO_ID.replace_all(&bare, "${pre}%40videoPlayer");
+        let modified = LEGACY_BCKEY
+            .replace_all(&modified, "${pre}playerKey")
+            .into_owned();
+        let Some(query_str) = LEGACY_URL
+            .captures(&modified)
+            .map(|found| found["query"].to_owned())
+        else {
+            return Err(Error::UnsupportedUrl(modified));
+        };
+        let mut query = parse_query(&query_str);
+
+        let Some(video_id) = first(&query, "@videoPlayer").map(str::to_owned) else {
+            return Err(Error::UnsupportedUrl(modified));
+        };
+        // `query.get('linkBaseURL', [None])[0] or smuggled_data.get('Referer', url)`.
+        let referer = first(&query, "linkBaseURL")
+            .map(str::to_owned)
+            .or_else(|| {
+                smuggled
+                    .get("Referer")
+                    .and_then(Value::as_str)
+                    .map(str::to_owned)
+            })
+            .unwrap_or_else(|| modified.clone());
+        if first(&query, "playerID").is_none()
+            && let Some(found) = LEGACY_PLAYER_ID.captures(&modified)
+        {
+            query.push(("playerID".into(), found[1].to_owned()));
+        }
+
+        let mut publisher_id = match first(&query, "publisherId") {
+            Some(text) if text.chars().all(|c| c.is_ascii_digit()) => Some(text.to_owned()),
+            Some(_) => return Err(Error::UnsupportedUrl(modified)),
+            None => None,
+        };
+        if publisher_id.is_none() {
+            // A `playerKey` with a publisher ID after its comma is used directly;
+            // else the player page's `playerKey` parameter.
+            let mut player_key = first(&query, "playerKey")
+                .filter(|key| key.contains(','))
+                .map(str::to_owned);
+            if player_key.is_none()
+                && let Some(player_id) = first(&query, "playerID")
+                && !player_id.is_empty()
+                && player_id.chars().all(|c| c.is_ascii_digit())
+            {
+                let player_url = Url::parse(&format!(
+                    "https://link.brightcove.com/services/player/bcpid{player_id}"
+                ))?;
+                let page = optional_player_page(client, &player_url, &video_id, &referer)?;
+                if !page.is_empty() {
+                    player_key = LEGACY_PLAYER_KEY
+                        .captures(&page)
+                        .map(|found| found[1].to_owned());
+                    if player_key.is_none() {
+                        super::search_warning(LEGACY_NAME, "player key");
+                    }
+                }
+            }
+            if let Some(player_key) = player_key {
+                let encoded = player_key
+                    .split(',')
+                    .nth(1)
+                    .unwrap_or_default()
+                    .replace('~', "=");
+                // `struct.unpack('>Q', base64.urlsafe_b64decode(enc_pub_id))[0]`.
+                let decoded = base64::engine::general_purpose::URL_SAFE_NO_PAD
+                    .decode(encoded.trim_end_matches('='))
+                    .ok()
+                    .and_then(|bytes| <[u8; 8]>::try_from(bytes).ok())
+                    .ok_or_else(|| {
+                        Error::Reported(format!(
+                            "[{LEGACY_NAME}] {video_id}: Unable to decode the publisher ID; {}",
+                            crate::BUG_REPORTS_MESSAGE
+                        ))
+                    })?;
+                publisher_id = Some(u64::from_be_bytes(decoded).to_string());
+            }
+        }
+
+        let Some(publisher_id) = publisher_id else {
+            return Err(Error::UnsupportedUrl(modified));
+        };
+        // `url_result(smuggle_url(new_url, {'referrer': referer}), BrightcoveNew)`.
+        let new_url = format!(
+            "https://players.brightcove.net/{publisher_id}/default_default/index.html?videoId={video_id}"
+        );
+        let target = smuggle(&new_url, &json!({"referrer": referer}));
+        Ok(Some(super::follow_url(url, target)))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -884,5 +1059,16 @@ mod tests {
         assert!(
             brightcove_urls(r#"<video data-video-id="5" data-account="9"></video>"#).is_empty()
         );
+    }
+
+    #[test]
+    fn legacy_urls_follow_upstream_valid_url() {
+        assert!(legacy_suitable(
+            "http://c.brightcove.com/services/viewer/federated_f9?&playerID=1265504713001&publisherID=AQ%7E%7E%2CAAABBzUwv1E%7E%2CxP-xFHVUstiMFlNYfvF4G9yFnNaqCw_9&videoID=2750934548001"
+        ));
+        assert!(legacy_suitable("brightcove:1265504713001"));
+        assert!(!legacy_suitable(
+            "https://players.brightcove.net/1130468786001/default_default/index.html?videoId=2750934548001"
+        ));
     }
 }

@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://www.jiosaavn.com/shows/talking-music/1/PjReFP-Sguk_",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "show.html"
+  },
+  {
+   "url": "https://www.jiosaavn.com/api.php?__call=show.getAllEpisodes&_format=json&_marker=0&ctx=web6dot0&token=62&type=show&p=1&show_id=62&season_number=1&api_version=4&sort_order=desc",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "episodes-1.json"
+  },
+  {
+   "url": "https://www.jiosaavn.com/api.php?__call=show.getAllEpisodes&_format=json&_marker=0&ctx=web6dot0&token=62&type=show&p=2&show_id=62&season_number=1&api_version=4&sort_order=desc",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "episodes-2.json"
+  }
+ ]
+}

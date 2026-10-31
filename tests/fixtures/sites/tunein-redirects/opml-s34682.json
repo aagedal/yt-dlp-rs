@@ -1,0 +1,14 @@
+ { "head": {	"status": "200"}, "body": [
+ { "element" : "audio", 
+"url": "https://knkx-live-a.edge.audiocdn.com/6285_128k?source=TuneIn&gdpr=0",
+"reliability": 100,
+"bitrate": 128,
+"media_type": "mp3",
+"position": 0,
+"player_width": 640,
+"player_height": 480,
+"is_hls_advanced": "false",
+"live_seek_stream": "false",
+"guide_id": "e647478767",
+"is_ad_clipped_content_enabled": "false",
+"is_direct": true }] }

@@ -1,0 +1,16 @@
+[
+ {
+  "url": "https://space.bilibili.com/313580179/upload/audio",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://space.bilibili.com/313580179/upload/audio",
+  "args": [
+   "--print",
+   "%(id)s|%(_type)s|%(playlist_count)s"
+  ]
+ }
+]

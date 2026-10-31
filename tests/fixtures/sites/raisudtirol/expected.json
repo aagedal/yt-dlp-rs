@@ -1,0 +1,18 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://raisudtirol.rai.it/la/index.php?media=Ptv1619729460",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"Ptv1619729460\", \"title\": \"Euro: trasmisciun d'economia - 29-04-2021 20:51\", \"series\": \"Euro: trasmisciun d'economia\", \"upload_date\": \"20210429\", \"thumbnail\": \"https://raisudtirol.rai.it/img/radio_posterimg.jpg\", \"uploader\": \"raisudtirol\", \"formats\": [{\"format_id\": \"https-mp4\", \"url\": \"https://raibz.rai.it/streaming/20210429_Euro_718c88d3-4c80-4018-85f4-fdf21013a154.mp4\", \"width\": 1024, \"height\": 576, \"fps\": 25, \"vcodec\": \"avc1\", \"acodec\": \"mp4a\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1024x576\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-mp4 - 1024x576\"}], \"webpage_url\": \"https://raisudtirol.rai.it/la/index.php?media=Ptv1619729460\", \"original_url\": \"https://raisudtirol.rai.it/la/index.php?media=Ptv1619729460\", \"webpage_url_basename\": \"index.php\", \"webpage_url_domain\": \"raisudtirol.rai.it\", \"extractor\": \"RaiSudtirol\", \"extractor_key\": \"RaiSudtirol\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://raisudtirol.rai.it/img/radio_posterimg.jpg\", \"id\": \"0\"}], \"display_id\": \"Ptv1619729460\", \"fulltitle\": \"Euro: trasmisciun d'economia - 29-04-2021 20:51\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"https-mp4\", \"url\": \"https://raibz.rai.it/streaming/20210429_Euro_718c88d3-4c80-4018-85f4-fdf21013a154.mp4\", \"width\": 1024, \"height\": 576, \"fps\": 25, \"vcodec\": \"avc1\", \"acodec\": \"mp4a\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1024x576\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-mp4 - 1024x576\", \"_filename\": \"Euro\\uff1a trasmisciun d'economia - 29-04-2021 20_51 [Ptv1619729460].mp4\", \"filename\": \"Euro\\uff1a trasmisciun d'economia - 29-04-2021 20_51 [Ptv1619729460].mp4\", \"__write_download_archive\": false}], \"format_id\": \"https-mp4\", \"url\": \"https://raibz.rai.it/streaming/20210429_Euro_718c88d3-4c80-4018-85f4-fdf21013a154.mp4\", \"width\": 1024, \"height\": 576, \"fps\": 25, \"vcodec\": \"avc1\", \"acodec\": \"mp4a\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1024x576\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-mp4 - 1024x576\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

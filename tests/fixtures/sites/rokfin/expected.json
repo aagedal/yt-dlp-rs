@@ -1,0 +1,47 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://rokfin.com/post/223/Julian-Assange-Arrested-Streaming-In-Real-Time",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"post/223\", \"formats\": [{\"url\": \"https://media.production.rokfin.com/%2Fuser/10/post/b03993e0-5edf-482e-bff5-dbc6fda34e34/media/9376404d-dc91-4bdf-8eee-94fd24edc7e5.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"title\": \"Julian Assange Arrested: Streaming In Real Time\", \"thumbnail\": \"https://img.production.rokfin.com/eyJidWNrZXQiOiJya2ZuLXByb2R1Y3Rpb24tbWVkaWEiLCJrZXkiOiIvdXNlci8xMC9wb3N0L2IwMzk5M2UwLTVlZGYtNDgyZS1iZmY1LWRiYzZmZGEzNGUzNC90aHVtYm5haWwvMDYyMGE3ZTgtZTljYS00OWY2LTgwNTUtN2M5YWE3MmZlN2ZiIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo2MDAsImhlaWdodCI6MzM3LCJmaXQiOiJjb3ZlciJ9fX0=\", \"description\": null, \"like_count\": 0, \"dislike_count\": 0, \"channel\": \"Ron Placone\", \"channel_id\": \"10\", \"channel_url\": \"https://rokfin.com/RonPlacone\", \"timestamp\": 1555052644, \"release_timestamp\": null, \"tags\": [\"FreeThinkingMedia^\"], \"live_status\": \"not_live\", \"availability\": \"public\", \"webpage_url\": \"https://rokfin.com/post/223/Julian-Assange-Arrested-Streaming-In-Real-Time\", \"original_url\": \"https://rokfin.com/post/223/Julian-Assange-Arrested-Streaming-In-Real-Time\", \"webpage_url_basename\": \"Julian-Assange-Arrested-Streaming-In-Real-Time\", \"webpage_url_domain\": \"rokfin.com\", \"extractor\": \"Rokfin\", \"extractor_key\": \"Rokfin\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.production.rokfin.com/eyJidWNrZXQiOiJya2ZuLXByb2R1Y3Rpb24tbWVkaWEiLCJrZXkiOiIvdXNlci8xMC9wb3N0L2IwMzk5M2UwLTVlZGYtNDgyZS1iZmY1LWRiYzZmZGEzNGUzNC90aHVtYm5haWwvMDYyMGE3ZTgtZTljYS00OWY2LTgwNTUtN2M5YWE3MmZlN2ZiIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo2MDAsImhlaWdodCI6MzM3LCJmaXQiOiJjb3ZlciJ9fX0=\", \"id\": \"0\"}], \"display_id\": \"post/223\", \"fulltitle\": \"Julian Assange Arrested: Streaming In Real Time\", \"upload_date\": \"20190412\", \"release_year\": null, \"is_live\": false, \"was_live\": false, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://media.production.rokfin.com/%2Fuser/10/post/b03993e0-5edf-482e-bff5-dbc6fda34e34/media/9376404d-dc91-4bdf-8eee-94fd24edc7e5.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Julian Assange Arrested\\uff1a Streaming In Real Time [post\\u29f8223].mp4\", \"filename\": \"Julian Assange Arrested\\uff1a Streaming In Real Time [post\\u29f8223].mp4\", \"__write_download_archive\": false}], \"url\": \"https://media.production.rokfin.com/%2Fuser/10/post/b03993e0-5edf-482e-bff5-dbc6fda34e34/media/9376404d-dc91-4bdf-8eee-94fd24edc7e5.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.rokfin.com/stack/271/Tulsi-Gabbard-Portsmouth-Townhall-FULL--Feb-9-2020",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"271\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"post/8481\", \"title\": \"How many Democrats, Republicans & Independents in the room?\", \"_type\": \"url\", \"url\": \"https://rokfin.com/post/8481\", \"__x_forwarded_for_ip\": null}, {\"id\": \"post/8482\", \"title\": \"Tulsi Gabbard ALARMED by foreign policy answers in Dem debate...\", \"_type\": \"url\", \"url\": \"https://rokfin.com/post/8482\", \"__x_forwarded_for_ip\": null}, {\"id\": \"post/8483\", \"title\": \"Tulsi Gabbard on Criminal Justice Reform\", \"_type\": \"url\", \"url\": \"https://rokfin.com/post/8483\", \"__x_forwarded_for_ip\": null}, {\"id\": \"post/8484\", \"title\": \"9-Year Old: \\\"Do you think you have a good shot at being President?\\\"\", \"_type\": \"url\", \"url\": \"https://rokfin.com/post/8484\", \"__x_forwarded_for_ip\": null}, {\"id\": \"post/8485\", \"title\": \"What can we do about gun violence in our country?\", \"_type\": \"url\", \"url\": \"https://rokfin.com/post/8485\", \"__x_forwarded_for_ip\": null}, {\"id\": \"post/8486\", \"title\": \"VP role if Bernie wins? & Does a President Gabbard include a Republican/Independent as VP?\", \"_type\": \"url\", \"url\": \"https://rokfin.com/post/8486\", \"__x_forwarded_for_ip\": null}, {\"id\": \"post/8487\", \"title\": \"Does Tulsi Gabbard support a ban on Assault Weapons?\", \"_type\": \"url\", \"url\": \"https://rokfin.com/post/8487\", \"__x_forwarded_for_ip\": null}, {\"id\": \"post/8488\", \"title\": \"Government's role in the Opioid Epidemic?\", \"_type\": \"url\", \"url\": \"https://rokfin.com/post/8488\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.rokfin.com/stack/271/Tulsi-Gabbard-Portsmouth-Townhall-FULL--Feb-9-2020\", \"original_url\": \"https://www.rokfin.com/stack/271/Tulsi-Gabbard-Portsmouth-Townhall-FULL--Feb-9-2020\", \"webpage_url_basename\": \"Tulsi-Gabbard-Portsmouth-Townhall-FULL--Feb-9-2020\", \"webpage_url_domain\": \"rokfin.com\", \"extractor\": \"rokfin:stack\", \"extractor_key\": \"RokfinStack\", \"release_year\": null, \"playlist_count\": 8, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://rokfin.com/post/999999/missing",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Rokfin] post/999999: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

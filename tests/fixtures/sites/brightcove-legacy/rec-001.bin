@@ -1,0 +1,18 @@
+{
+  "account_id": "1130468786001",
+  "compatibility": true,
+  "embed_id": "default",
+  "player": {
+    "template": {
+      "name": "single-video-template",
+      "version": "5.28.1"
+    }
+  },
+  "player_id": "default",
+  "player_name": "Brightcove Default Player",
+  "skin": "graphite",
+  "updated_at": "2014-12-01T17:49:14.324Z",
+  "video_cloud": {
+    "policy_key": "BCpkADawqM2s05uk-DYloAYxDCdlGMHbzUCv3ZSPZlY-abwpRZ_fmedsuQJJY78NQ8Pgatv63-BKH6vq07QEpKElbArb6ByOwXiZS_g925Bt9q5crrF4RKYdyft_SKYkZ6N4xkb8HyFRYY38"
+  }
+}

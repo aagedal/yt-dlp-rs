@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://rutube.ru/api/video/person/639184/?page=1&format=json&origin__type=rtb,rst,ifrm,rspa",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "rtc-page1.json"
+  },
+  {
+   "url": "https://rutube.ru/api/video/person/313878/?page=1&format=json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "rtp-page1.json"
+  },
+  {
+   "url": "https://rutube.ru/api/playlist/custom/308547/videos?page=1&format=json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "rtl-page1.json"
+  }
+ ]
+}

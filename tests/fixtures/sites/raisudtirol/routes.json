@@ -1,0 +1,11 @@
+{
+  "routes": [
+    {
+      "url": "https://raisudtirol.rai.it/la/index.php?media=Ptv1619729460",
+      "headers": {
+        "Content-Type": "text/html; charset=UTF-8"
+      },
+      "body_file": "b2ddf9597464.bin"
+    }
+  ]
+}

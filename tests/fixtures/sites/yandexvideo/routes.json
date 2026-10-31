@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://dzen.ru/video/watch/63344d3e1709370076f7a145",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "video-page.html"
+  },
+  {
+   "url": "https://vd594.okcdn.ru/video.m3u8?srcIp=192.0.2.10&pr=70&expires=1793916015277&srcAg=CHROME&fromCache=1&ch=-536166974&ms=192.0.2.11&mid=10307887908496&type=2&subId=7802328582800&sig=ztPWVK_nrS0&ct=8&du=1349173&urls=192.0.2.12&clientType=33&asubs=y&zs=43&cmd=videoPlayerCdn&id=7802328582800",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "video.m3u8"
+  },
+  {
+   "url": "https://vd594.okcdn.ru/?srcIp=192.0.2.10&pr=70&expires=1793916015277&srcAg=CHROME&fromCache=1&ch=-1610167797&ms=192.0.2.11&mid=10307887908496&type=1&subId=7802328582800&sig=8eu72Dp2PMc&ct=6&urls=192.0.2.12&clientType=33&asubs=y&zs=43&id=7802328582800",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "video.mpd"
+  },
+  {
+   "url": "https://zen.yandex.ru/id/606fd806cc13cb3c58c05cf5",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "channel-page.html"
+  },
+  {
+   "url": "https://dzen.ru/api/web/v1/channel-more?sort_type=regular&country_code=ru&next_page_id=longs%2F-5416297395108246306%2F1624222800000%2Cshorts%2F3%2F1624914000000%2Carticles%2F25%2F1624914000000&clid=1400&_csrf=d70bd71ef3c7e5720970a7c800bc7812879698b8-1793456784957-0-4564512081793456783%3A0&channel_version=welcome_infinity&lang=ru&channel_id=606fd806cc13cb3c58c05cf5",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "channel-more.json"
+  }
+ ]
+}

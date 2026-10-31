@@ -1,0 +1,7 @@
+{
+ "routes": [
+  {"url": "https://teamtreehouse.com/library/application-overview-2", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://teamtreehouse.com/library/synthetic-full", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "full.html"},
+  {"url": "https://teamtreehouse.com/library/synthetic-empty", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "empty.html"}
+ ]
+}

@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://txxx.com/api/videofile.php?video_id=16574965&lifetime=8640000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "videofile.json"
+  },
+  {
+   "url": "https://txxx.com/api/json/video/86400/16000000/16574000/16574965.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video-info.json"
+  }
+ ]
+}

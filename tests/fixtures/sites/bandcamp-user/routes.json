@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "http://dotscale.bandcamp.com",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "root.html"
+  },
+  {
+   "url": "http://dotscale.bandcamp.com/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "root.html"
+  }
+ ]
+}

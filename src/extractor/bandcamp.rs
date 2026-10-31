@@ -2,7 +2,7 @@
 //! `data-tralbum`/`data-embed` JSON, its streaming files and, for free
 //! downloads, the download page's formats through their stat URLs.
 use super::Extractor;
-use crate::{Error, ExtractResult, Result, VideoInfo};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
@@ -30,16 +30,32 @@ pub fn suitable(url: &str) -> bool {
 }
 
 fn fail(id: &str, message: &str) -> Error {
-    Error::Reported(format!("[{NAME}] {id}: {message}"))
+    fail_in(NAME, id, message)
+}
+
+/// [`fail`] for one of the module's classes (`[Bandcamp:album] ID: ...`).
+fn fail_in(extractor: &str, id: &str, message: &str) -> Error {
+    Error::Reported(format!("[{extractor}] {id}: {message}"))
 }
 
 /// `_extract_data_attr(webpage, id, attr)`: `data-ATTR="{...}"` JSON.
 fn data_attr(webpage: &str, id: &str, attr: &str, fatal: bool) -> Result<Value> {
+    data_attr_in(NAME, webpage, id, attr, fatal)
+}
+
+fn data_attr_in(
+    extractor: &str,
+    webpage: &str,
+    id: &str,
+    attr: &str,
+    fatal: bool,
+) -> Result<Value> {
     let pattern = Regex::new(&format!(r#"data-{attr}=(?:"(\{{.+?\}})"|'(\{{.+?\}})')"#))
         .map_err(|error| Error::Reported(error.to_string()))?;
     // The search is fatal; `fatal` only covers the JSON parse.
     let Some(found) = pattern.captures(webpage) else {
-        return Err(fail(
+        return Err(fail_in(
+            extractor,
             id,
             &format!(
                 "Unable to extract {attr} data; {}",
@@ -51,13 +67,14 @@ fn data_attr(webpage: &str, id: &str, attr: &str, fatal: bool) -> Result<Value> 
     let text = crate::html::unescape_html(raw);
     serde_json::from_str(&text).or_else(|error| {
         if fatal {
-            Err(fail(
+            Err(fail_in(
+                extractor,
                 id,
                 &format!("Failed to parse JSON  (caused by {error})"),
             ))
         } else {
             crate::screen::warning(&format!(
-                "[{NAME}] {id}: Failed to parse JSON  (caused by {error})"
+                "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
             ));
             Ok(json!({}))
         }
@@ -67,14 +84,24 @@ fn data_attr(webpage: &str, id: &str, attr: &str, fatal: bool) -> Result<Value> 
 /// `BandcampBaseIE._download_webpage`: a page without a title warns
 /// (`_html_extract_title`), and a client challenge needs impersonation.
 fn fetch_page(client: &Client, url: &Url, id: &str, note: &str) -> Result<String> {
-    let page = super::download_webpage_note(client, url, NAME, id, note)?;
+    fetch_page_in(NAME, client, url, id, note)
+}
+
+fn fetch_page_in(
+    extractor: &'static str,
+    client: &Client,
+    url: &Url,
+    id: &str,
+    note: &str,
+) -> Result<String> {
+    let page = super::download_webpage_note(client, url, extractor, id, note)?;
     match crate::html::html_extract_title(&page).as_deref() {
         Some("Client Challenge") => Err(Error::UnsupportedHtml5(
             "Bandcamp's client challenge needs browser impersonation, which is unavailable".into(),
         )),
         Some(_) => Ok(page),
         None => {
-            super::search_warning(NAME, "title");
+            super::search_warning(extractor, "title");
             Ok(page)
         }
     }
@@ -431,6 +458,473 @@ impl Extractor for Bandcamp {
     }
 }
 
+// Upstream `BandcampAlbumIE`, `BandcampWeeklyIE` and `BandcampUserIE`.
+
+const ALBUM_NAME: &str = "Bandcamp:album";
+const ALBUM_KEY: &str = "BandcampAlbum";
+const WEEKLY_NAME: &str = "Bandcamp:weekly";
+const WEEKLY_KEY: &str = "BandcampWeekly";
+const USER_NAME: &str = "Bandcamp:user";
+const USER_KEY: &str = "BandcampUser";
+
+static ALBUM_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(
+        r"^https?://(?:(?P<subdomain>[^.]+)\.)?bandcamp\.com/album/(?P<id>[^/?#&]+)",
+    )
+    .unwrap()
+});
+static WEEKLY_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?bandcamp\.com/radio/?\?(?:[^#]+&)?show=(?P<id>\d+)",
+    )
+    .unwrap()
+});
+/// The `(?!www\.)` lookahead is applied by [`user_suitable`].
+static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?P<id>[^.]+)\.bandcamp\.com(?:/music)?/?(?:[#?]|$)")
+        .unwrap()
+});
+/// `_yield_items`: `<li data-item-id=...><a href=...>`, minus merch links
+/// (the `(?!...)` lookahead is checked in [`is_merch`]).
+static ITEM_LINK: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"<li data-item-id=["'][^>]+>\s*<a href=["']([^"']+)"#).unwrap());
+static TRACK_TITLE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"<div[^>]+trackTitle["'][^"']+["']([^"']+)"#).unwrap());
+static MUSIC_GRID: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"<[^>]+id=["']music-grid["'][^>]*>"#).unwrap());
+
+/// `BandcampAlbumIE.suitable`: never a track or weekly show URL.
+pub fn album_suitable(url: &str) -> bool {
+    ALBUM_URL.is_match(url) && !suitable(url) && !WEEKLY_URL.is_match(url)
+}
+
+/// `BandcampWeeklyIE.suitable`.
+pub fn weekly_suitable(url: &str) -> bool {
+    WEEKLY_URL.is_match(url)
+}
+
+/// `BandcampUserIE.suitable`: `(?!www\.)`.
+pub fn user_suitable(url: &str) -> bool {
+    USER_URL
+        .captures(url)
+        .is_some_and(|found| &found["id"] != "www")
+}
+
+/// Python's truthiness for an info-dict value.
+fn truthy(value: Option<&Value>) -> bool {
+    match value {
+        None | Some(Value::Null) => false,
+        Some(Value::Bool(flag)) => *flag,
+        Some(Value::Number(number)) => number.as_f64().is_some_and(|number| number != 0.0),
+        Some(Value::String(text)) => !text.is_empty(),
+        Some(Value::Array(items)) => !items.is_empty(),
+        Some(Value::Object(map)) => !map.is_empty(),
+    }
+}
+
+/// `str_or_none` for an ID that may be a JSON number.
+fn id_text(value: Option<&Value>) -> Option<String> {
+    match value? {
+        Value::String(text) => Some(text.clone()),
+        Value::Number(number) => Some(number.to_string()),
+        _ => None,
+    }
+}
+
+/// `url_result(url, ie, id=..., video_title=...)` as a playlist entry; with
+/// no `ie` the entry only carries its URL (`_type: url`).
+fn url_entry(
+    target: &str,
+    ie: Option<&str>,
+    id: Option<String>,
+    title: Option<Value>,
+) -> Result<VideoInfo> {
+    let url = Url::parse(target)?;
+    let mut info = super::direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    let mut entry = Map::new();
+    if let Some(ie) = ie {
+        entry.insert("ie_key".into(), ie.into());
+    }
+    if let Some(id) = id {
+        entry.insert("id".into(), id.into());
+    }
+    if let Some(title) = title {
+        entry.insert("title".into(), title);
+    }
+    entry.insert("_type".into(), "url".into());
+    entry.insert("url".into(), target.into());
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": {},
+            "ie_key": ie,
+            "extractor": ie.map(str::to_lowercase),
+            "entry": Value::Object(entry),
+        }),
+    );
+    Ok(info)
+}
+
+/// `KeyError` from a missing field: no `[IE]` prefix.
+fn key_error(id: &str, key: &str) -> Error {
+    Error::Reported(format!(
+        "{id}: An extractor error has occurred. (caused by KeyError('{key}')); {}",
+        crate::BUG_REPORTS_MESSAGE
+    ))
+}
+
+/// `BandcampUserIE._yield_items`: `(?!/merch)` links, then the track titles
+/// when there are none, then the `music-grid` element's `page_url`s.
+fn user_items(webpage: &str) -> Vec<String> {
+    let is_merch = |href: &str| {
+        href.find('/')
+            .is_some_and(|index| href[index..].starts_with("/merch"))
+    };
+    let mut items: Vec<String> = ITEM_LINK
+        .captures_iter(webpage)
+        .map(|found| found[1].to_owned())
+        .filter(|href| !is_merch(href))
+        .collect();
+    if items.is_empty() {
+        items = TRACK_TITLE
+            .captures_iter(webpage)
+            .map(|found| found[1].to_owned())
+            .collect();
+    }
+    if let Some(grid) = MUSIC_GRID.find(webpage) {
+        let attributes = crate::html_elements::extract_attributes(grid.as_str());
+        if let Some(Value::Array(list)) = attributes
+            .get("data-client-items")
+            .and_then(Value::as_str)
+            .and_then(|raw| serde_json::from_str::<Value>(raw).ok())
+        {
+            items.extend(
+                list.iter()
+                    .filter_map(|item| item.get("page_url")?.as_str().map(str::to_owned)),
+            );
+        }
+    }
+    items
+}
+
+pub struct BandcampAlbum;
+
+impl Extractor for BandcampAlbum {
+    fn key(&self) -> &'static str {
+        ALBUM_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = ALBUM_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let uploader_id = found.name("subdomain").map(|name| name.as_str().to_owned());
+        let album_id = found["id"].to_owned();
+        crate::screen::set_extractor(ALBUM_NAME);
+        crate::screen::screen(&format!(
+            "[{ALBUM_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        let webpage = fetch_page_in(ALBUM_NAME, client, url, &album_id, "Downloading webpage")?;
+        let tralbum = data_attr_in(ALBUM_NAME, &webpage, &album_id, "tralbum", true)?;
+        let track_info = tralbum
+            .get("trackinfo")
+            .and_then(Value::as_array)
+            .filter(|tracks| !tracks.is_empty())
+            .ok_or_else(|| {
+                fail_in(
+                    ALBUM_NAME,
+                    &album_id,
+                    &format!(
+                        "The page doesn't contain any tracks; {}",
+                        crate::BUG_REPORTS_MESSAGE
+                    ),
+                )
+            })?;
+        // Only tracks with duration info have songs.
+        let mut entries = Vec::new();
+        for track in track_info
+            .iter()
+            .filter(|track| truthy(track.get("duration")))
+        {
+            let link = track
+                .get("title_link")
+                .and_then(Value::as_str)
+                .ok_or_else(|| key_error(&album_id, "title_link"))?;
+            let target = url.join(link)?;
+            let id = if truthy(track.get("track_id")) {
+                id_text(track.get("track_id"))
+            } else {
+                id_text(track.get("id"))
+            };
+            entries.push(url_entry(
+                target.as_str(),
+                Some("Bandcamp"),
+                id,
+                track.get("title").cloned(),
+            )?);
+        }
+
+        let current = tralbum
+            .get("current")
+            .filter(|current| truthy(Some(current)))
+            .cloned()
+            .unwrap_or_else(|| json!({}));
+        let mut extra = Map::new();
+        extra.insert(
+            "uploader_id".into(),
+            uploader_id.map_or(Value::Null, Value::from),
+        );
+        extra.insert(
+            "description".into(),
+            current.get("about").cloned().unwrap_or(Value::Null),
+        );
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            "playlist-dict;_type,uploader_id,id,title,description".into(),
+        );
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: album_id,
+            title: current
+                .get("title")
+                .and_then(Value::as_str)
+                .unwrap_or_default()
+                .to_owned(),
+            webpage_url: url.clone(),
+            extractor: ALBUM_NAME.into(),
+            extractor_key: ALBUM_KEY.into(),
+            nested: Vec::new(),
+            pending: None,
+            entries,
+            extra,
+        })))
+    }
+}
+
+pub struct BandcampWeekly;
+
+impl Extractor for BandcampWeekly {
+    fn key(&self) -> &'static str {
+        WEEKLY_KEY
+    }
+
+    fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        let Some(found) = WEEKLY_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let show_id = found["id"].to_owned();
+        crate::screen::set_extractor(WEEKLY_NAME);
+        crate::screen::screen(&format!(
+            "[{WEEKLY_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        let item_id: i64 = show_id.parse().unwrap_or_default();
+        let api = Url::parse("https://bandcamp.com/api/player/2/player_data_web")?;
+        let response = super::post_json_note_headers(
+            client,
+            &api,
+            WEEKLY_NAME,
+            &show_id,
+            "Downloading radio show JSON",
+            &[("Content-Type", "application/json")],
+            json!({"item_id": item_id, "item_type": "radio"}).to_string(),
+        )?;
+        let show_data = response
+            .get("tracklist")
+            .ok_or_else(|| key_error(&show_id, "tracklist"))?;
+        let audio_data = show_data
+            .get("compiledTrack")
+            .ok_or_else(|| key_error(&show_id, "compiledTrack"))?;
+        let stream_url = audio_data
+            .get("streamUrl")
+            .and_then(Value::as_str)
+            .ok_or_else(|| key_error(&show_id, "streamUrl"))?
+            .to_owned();
+        // `traverse_obj(stream_url, ({parse_qs}, 'enc', -1))`
+        let format_id = Url::parse(&stream_url).ok().and_then(|parsed| {
+            parsed
+                .query_pairs()
+                .filter(|(name, _)| name == "enc")
+                .last()
+                .map(|(_, value)| value.into_owned())
+        });
+        let format_text = format_id.clone().unwrap_or_default();
+        let (encoding, bitrate_str) = format_text.split_once('-').unwrap_or((&format_text, ""));
+
+        let series_title = show_data
+            .get("subtitle")
+            .and_then(Value::as_str)
+            .map(str::to_owned);
+        let release_timestamp = show_data
+            .get("date")
+            .and_then(Value::as_str)
+            .and_then(|date| crate::dates::unified_timestamp(date, false));
+        let release_date = release_timestamp.and_then(|timestamp| {
+            crate::dates::strftime_or_none(
+                crate::dates::StrftimeInput::Integer(timestamp),
+                "%Y-%m-%d",
+            )
+            .ok()
+            .flatten()
+        });
+        let title = [series_title.clone(), release_date]
+            .into_iter()
+            .flatten()
+            .filter(|part| !part.is_empty())
+            .collect::<Vec<_>>()
+            .join(", ");
+        let thumbnail = match show_data.get("imageId") {
+            value if truthy(value) => {
+                id_text(value).map(|id| format!("https://f4.bcbits.com/img/{id}_0.jpg"))
+            }
+            _ => None,
+        };
+
+        let mut format = Map::new();
+        format.insert("url".into(), stream_url.clone().into());
+        format.insert(
+            "format_id".into(),
+            format_id.clone().map_or(Value::Null, Value::from),
+        );
+        format.insert(
+            "ext".into(),
+            if encoding.is_empty() { "mp3" } else { encoding }.into(),
+        );
+        format.insert(
+            "acodec".into(),
+            if encoding.is_empty() {
+                Value::Null
+            } else {
+                encoding.into()
+            },
+        );
+        format.insert("vcodec".into(), "none".into());
+        format.insert("abr".into(), bitrate_str.parse::<i64>().ok().into());
+        let formats = vec![format_from(format, &show_id)?];
+
+        let mut dict = Map::new();
+        dict.insert("id".into(), show_id.clone().into());
+        dict.insert("episode_id".into(), show_id.clone().into());
+        dict.insert(
+            "episode".into(),
+            show_data.get("title").cloned().unwrap_or(Value::Null),
+        );
+        dict.insert("title".into(), title.into());
+        dict.insert(
+            "series".into(),
+            series_title.map_or(Value::Null, Value::from),
+        );
+        dict.insert(
+            "thumbnail".into(),
+            thumbnail.map_or(Value::Null, Value::from),
+        );
+        dict.insert(
+            "description".into(),
+            show_data.get("description").cloned().unwrap_or(Value::Null),
+        );
+        dict.insert(
+            "duration".into(),
+            float(audio_data.get("duration")).map_or(Value::Null, |duration| json!(duration)),
+        );
+        dict.insert(
+            "release_timestamp".into(),
+            release_timestamp.map_or(Value::Null, Value::from),
+        );
+        dict.insert("formats".into(), json!([]));
+
+        let first = formats
+            .first()
+            .map_or_else(|| url.clone(), |format| format.url.clone());
+        let mut info = super::direct::build_at(first.clone(), &first, String::new());
+        info.direct = None;
+        info.formats = formats;
+        info.webpage_url = url.clone();
+        info.extractor = WEEKLY_NAME.into();
+        info.extractor_key = WEEKLY_KEY.into();
+        let mut keys = Vec::new();
+        for (key, value) in dict {
+            keys.push(key.clone());
+            match key.as_str() {
+                "id" => info.id = value.as_str().unwrap_or_default().to_owned(),
+                "title" => info.title = value.as_str().unwrap_or_default().to_owned(),
+                "formats" => {}
+                _ if value.is_null() => {
+                    info.extra.insert(key, Value::Null);
+                }
+                _ => crate::metadata_parser::set_field(&mut info, &key, value),
+            }
+        }
+        Ok(Some(crate::info_order::mark_info(
+            info,
+            &format!("dict;{}", keys.join(",")),
+        )))
+    }
+}
+
+pub struct BandcampUser;
+
+impl Extractor for BandcampUser {
+    fn key(&self) -> &'static str {
+        USER_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        if !user_suitable(url.as_str()) {
+            return Ok(None);
+        }
+        let Some(found) = USER_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let uploader = found["id"].to_owned();
+        crate::screen::set_extractor(USER_NAME);
+        crate::screen::screen(&format!(
+            "[{USER_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        let webpage = fetch_page_in(USER_NAME, client, url, &uploader, "Downloading webpage")?;
+        // `playlist_from_matches`: `orderedSet` of the joined URLs.
+        let mut targets: Vec<String> = Vec::new();
+        for item in user_items(&webpage) {
+            let target = url.join(&item)?.to_string();
+            if !targets.contains(&target) {
+                targets.push(target);
+            }
+        }
+        let mut entries = Vec::new();
+        for target in &targets {
+            entries.push(url_entry(target, None, None, None)?);
+        }
+        let mut extra = Map::new();
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            "playlist-dict;id,title".into(),
+        );
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: uploader.clone(),
+            title: format!("Discography of {uploader}"),
+            webpage_url: url.clone(),
+            extractor: USER_NAME.into(),
+            extractor_key: USER_KEY.into(),
+            nested: Vec::new(),
+            pending: None,
+            entries,
+            extra,
+        })))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -447,5 +941,32 @@ mod tests {
     fn download_sizes_follow_parse_filesize() {
         assert_eq!(parse_filesize("7.2MB"), Some(7_200_000));
         assert_eq!(parse_filesize("1.5 MiB"), Some(1_572_864));
+    }
+
+    #[test]
+    fn album_weekly_and_user_urls_follow_upstream_valid_url() {
+        assert!(album_suitable(
+            "http://blazo.bandcamp.com/album/jazz-format-mixtape-vol-1"
+        ));
+        assert!(!album_suitable(
+            "http://youtube-dl.bandcamp.com/track/youtube-dl-test-song"
+        ));
+        assert!(weekly_suitable("https://bandcamp.com/radio?show=224"));
+        assert!(weekly_suitable(
+            "https://bandcamp.com/radio/?foo=bar&show=224"
+        ));
+        assert!(!weekly_suitable("https://bandcamp.com/radio"));
+        assert!(user_suitable("http://dotscale.bandcamp.com"));
+        assert!(user_suitable("https://steviasphere.bandcamp.com/music"));
+        assert!(!user_suitable("https://www.bandcamp.com"));
+        assert!(!user_suitable("http://blazo.bandcamp.com/album/jazz"));
+    }
+
+    #[test]
+    fn user_items_skip_merch_and_read_the_music_grid() {
+        let page = r#"<li data-item-id="a"><a href="/album/one">x</a></li><li data-item-id="b"><a href="/merch/shirt">m</a></li>"#;
+        assert_eq!(user_items(page), vec!["/album/one".to_owned()]);
+        let grid = r#"<div id="music-grid" data-client-items="[{&quot;page_url&quot;: &quot;/album/two&quot;}]"></div>"#;
+        assert_eq!(user_items(grid), vec!["/album/two".to_owned()]);
     }
 }

@@ -1,0 +1,17 @@
+{
+ "routes": [
+  {
+   "url": "https://bandcamp.com/api/player/2/player_data_web",
+   "request_headers": {
+    "Content-Type": "application/json"
+   },
+   "request_body": [
+    "224"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "player_data.json"
+  }
+ ]
+}

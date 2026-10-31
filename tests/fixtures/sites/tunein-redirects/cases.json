@@ -1,0 +1,4 @@
+[
+ {"url": "https://tunein.com/embed/player/s34682/", "args": ["--print", "%(id)s|%(alt_title)s|%(live_status)s|%(location)s|%(formats.:.format_id)s"]},
+ {"url": "http://tun.in/ser7s", "args": ["--print", "%(id)s|%(alt_title)s|%(live_status)s|%(location)s|%(formats.:.format_id)s"]}
+]

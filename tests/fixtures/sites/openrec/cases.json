@@ -1,0 +1,41 @@
+[
+ {
+  "url": "https://www.mellow-fan.com/capture/l2q00vxl8q8",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.mellow-fan.com/capture/l2q00vxl8q8",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.mellow-fan.com/capture/nosuchcapture",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.mellow-fan.com/user/sagara_mayu/playlist/xngNMzv71yLjGdW",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.mellow-fan.com/user/DbD_BPF/search/capture?search_query=%E3%81%82%E3%81%A3%E3%81%95%E3%82%8A%E3%81%97%E3%82%87%E3%81%93",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.mellow-fan.com/user/DbD_BPF/search?search_query=%E3%81%82%E3%81%A3%E3%81%95%E3%82%8A%E3%81%97%E3%82%87%E3%81%93",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

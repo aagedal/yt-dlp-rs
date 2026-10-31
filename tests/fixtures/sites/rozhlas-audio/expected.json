@@ -1,0 +1,17 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://prehravac.rozhlas.cz/audio/3421320",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3421320\", \"url\": \"http://media.rozhlas.cz/_audio/3421320.mp3\", \"title\": \"Echo Pavla Klus\\u00e1ka (30. 6. 2015 09:00)\", \"description\": \"Osmdes\\u00e1tiny Terryho Rileyho jsou skv\\u011blou p\\u0159\\u00edle\\u017eitost\\u00ed prolet\\u011bt se elektronick\\u00fdmi i akustick\\u00fdmi d\\u00edly zakladatatele minimalismu, kter\\u00fd je aktivn\\u00ed u\\u017e p\\u0159es pades\\u00e1t let\", \"duration\": 3599, \"vcodec\": \"none\", \"webpage_url\": \"http://prehravac.rozhlas.cz/audio/3421320\", \"original_url\": \"http://prehravac.rozhlas.cz/audio/3421320\", \"webpage_url_basename\": \"3421320\", \"webpage_url_domain\": \"prehravac.rozhlas.cz\", \"extractor\": \"Rozhlas\", \"extractor_key\": \"Rozhlas\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"3421320\", \"fulltitle\": \"Echo Pavla Klus\\u00e1ka (30. 6. 2015 09:00)\", \"duration_string\": \"59:59\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"http\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"Echo Pavla Klus\\u00e1ka (30. 6. 2015 09_00) [3421320].mp3\", \"filename\": \"Echo Pavla Klus\\u00e1ka (30. 6. 2015 09_00) [3421320].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,43 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.bilibili.com/audio/au1003142",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1003142\", \"title\": \"\\u3010tsukimi\\u3011YELLOW / \\u795e\\u5c71\\u7f8a\", \"formats\": [{\"url\": \"https://upos-sz-mirrorcos.bilivideo.com/ugaxcode/m190803ws1km1tod6301g71oln0pwltu-192k.m4a?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEV4NC8xNEV4N03eN0B5tZlqNxTEto8BTrNvNeZVuJ10Kj_g2UB02J0mN0B5tZlqNCNEto8BTrNvNC7MTX502C8f2jmMQJ6mqF2fka1mqx6gqj0eN0B599M=&uipk=5&nbs=1&deadline=1793467584&gen=playurlv2&os=cosbv&oi=3252931624&trid=3209fd6c69bd4b0c967a4d0b6ad587b8B&mid=0&platform=pc&og=cos&upsig=0186b2c4dc035c6e7b3b2c0cca050fca&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform,og&bvc=vod&nettype=0&orderid=0,1&logo=00000000\", \"filesize\": 4428595, \"vcodec\": \"none\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.bilibili.com/audio/au1003142\"}, \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"format_id\": \"0\", \"format\": \"0 - audio only\"}], \"artist\": \"tsukimi\", \"comment_count\": 52, \"description\": \"YELLOW\\u7684mp3\\u7248\\uff01\", \"duration\": 183, \"subtitles\": {\"origin\": [{\"url\": \"http://i0.hdslb.com/bfs/music/15648361161003142.lrc\", \"ext\": \"lrc\"}]}, \"thumbnail\": \"http://i0.hdslb.com/bfs/music/59444d4279c5aef3e3303a84560b83974dd1a003.jpg\", \"timestamp\": 1564836614, \"uploader\": \"\\u5341\\u516d\\u591ctsukimi\\u3064\\u304d\\u307f\\u3050\", \"view_count\": 274964, \"webpage_url\": \"https://www.bilibili.com/audio/au1003142\", \"original_url\": \"https://www.bilibili.com/audio/au1003142\", \"webpage_url_basename\": \"au1003142\", \"webpage_url_domain\": \"bilibili.com\", \"extractor\": \"BilibiliAudio\", \"extractor_key\": \"BilibiliAudio\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://i0.hdslb.com/bfs/music/59444d4279c5aef3e3303a84560b83974dd1a003.jpg\", \"id\": \"0\"}], \"display_id\": \"1003142\", \"fulltitle\": \"\\u3010tsukimi\\u3011YELLOW / \\u795e\\u5c71\\u7f8a\", \"duration_string\": \"3:03\", \"upload_date\": \"20190803\", \"release_year\": null, \"artists\": [\"tsukimi\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://upos-sz-mirrorcos.bilivideo.com/ugaxcode/m190803ws1km1tod6301g71oln0pwltu-192k.m4a?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEV4NC8xNEV4N03eN0B5tZlqNxTEto8BTrNvNeZVuJ10Kj_g2UB02J0mN0B5tZlqNCNEto8BTrNvNC7MTX502C8f2jmMQJ6mqF2fka1mqx6gqj0eN0B599M=&uipk=5&nbs=1&deadline=1793467584&gen=playurlv2&os=cosbv&oi=3252931624&trid=3209fd6c69bd4b0c967a4d0b6ad587b8B&mid=0&platform=pc&og=cos&upsig=0186b2c4dc035c6e7b3b2c0cca050fca&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform,og&bvc=vod&nettype=0&orderid=0,1&logo=00000000\", \"filesize\": 4428595, \"vcodec\": \"none\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.bilibili.com/audio/au1003142\"}, \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"resolution\": \"audio only\", \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"\\u3010tsukimi\\u3011YELLOW \\u29f8 \\u795e\\u5c71\\u7f8a [1003142].m4a\", \"filename\": \"\\u3010tsukimi\\u3011YELLOW \\u29f8 \\u795e\\u5c71\\u7f8a [1003142].m4a\", \"__write_download_archive\": false}], \"url\": \"https://upos-sz-mirrorcos.bilivideo.com/ugaxcode/m190803ws1km1tod6301g71oln0pwltu-192k.m4a?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEV4NC8xNEV4N03eN0B5tZlqNxTEto8BTrNvNeZVuJ10Kj_g2UB02J0mN0B5tZlqNCNEto8BTrNvNC7MTX502C8f2jmMQJ6mqF2fka1mqx6gqj0eN0B599M=&uipk=5&nbs=1&deadline=1793467584&gen=playurlv2&os=cosbv&oi=3252931624&trid=3209fd6c69bd4b0c967a4d0b6ad587b8B&mid=0&platform=pc&og=cos&upsig=0186b2c4dc035c6e7b3b2c0cca050fca&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform,og&bvc=vod&nettype=0&orderid=0,1&logo=00000000\", \"filesize\": 4428595, \"vcodec\": \"none\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.bilibili.com/audio/au1003142\"}, \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bilibili.com/audio/au1003142",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(artist)s|%(duration)s|%(uploader)s|%(timestamp)s|%(view_count)s|%(comment_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1003142|【tsukimi】YELLOW / 神山羊|tsukimi|183|十六夜tsukimiつきみぐ|1564836614|274964|52"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bilibili.com/audio/au999999",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [BilibiliAudio] 999999: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

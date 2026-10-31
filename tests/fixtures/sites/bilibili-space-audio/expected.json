@@ -1,0 +1,31 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://space.bilibili.com/313580179/upload/audio",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"313580179\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"BilibiliAudio\", \"id\": \"2344407\", \"_type\": \"url\", \"url\": \"https://www.bilibili.com/audio/au2344407\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://space.bilibili.com/313580179/upload/audio\", \"original_url\": \"https://space.bilibili.com/313580179/upload/audio\", \"webpage_url_basename\": \"audio\", \"webpage_url_domain\": \"space.bilibili.com\", \"extractor\": \"BilibiliSpaceAudio\", \"extractor_key\": \"BilibiliSpaceAudio\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://space.bilibili.com/313580179/upload/audio",
+   "args": [
+    "--print",
+    "%(id)s|%(_type)s|%(playlist_count)s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [BilibiliAudio] 2344407: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

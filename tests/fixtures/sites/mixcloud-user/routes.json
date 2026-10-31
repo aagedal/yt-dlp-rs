@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {
+   "url": "https://app.mixcloud.com/graphql?query=%7B%0A++userLookup%28lookup%3A+%7Busername%3A+%22dholbach%22%7D%29+%7B%0A++++displayName%0A++++biog%0A++++uploads%28first%3A+100%29+%7B%0A++++++edges+%7B%0A++++++++node+%7B%0A++++++++++slug%0A++++++++++url%0A++++++++++owner+%7B+username+%7D%0A++++++++%7D%0A++++++%7D%0A++++++pageInfo+%7B%0A++++++++endCursor%0A++++++++hasNextPage%0A++++++%7D%0A++++%7D%0A++%7D%0A%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "user.json"
+  }
+ ]
+}

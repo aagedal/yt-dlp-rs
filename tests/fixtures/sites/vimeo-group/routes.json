@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {
+   "url": "https://vimeo.com/groups/meetup/videos/page:1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page1.html"
+  }
+ ]
+}

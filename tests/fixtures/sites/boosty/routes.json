@@ -8,14 +8,14 @@
    "body_file": "post.json"
   },
   {
-   "url": "https://vd400.okcdn.ru/?expires=1793453970333&srcIp=193.227.204.40&pr=42&srcAg=CHROME&ch=-1610167797&ms=176.112.172.121&type=1&sig=EIYWAYwL1UY&ct=6&urls=185.180.203.49&clientType=18&zs=43&id=2470213126852",
+   "url": "https://vd400.okcdn.ru/?expires=1793453970333&srcIp=192.0.2.1&pr=42&srcAg=CHROME&ch=-1610167797&ms=176.112.172.121&type=1&sig=EIYWAYwL1UY&ct=6&urls=185.180.203.49&clientType=18&zs=43&id=2470213126852",
    "headers": {
     "Content-Type": "application/dash+xml"
    },
    "body_file": "dash.mpd"
   },
   {
-   "url": "https://vd400.okcdn.ru/video.m3u8?cmd=videoPlayerCdn&expires=1793453970333&srcIp=193.227.204.40&pr=42&srcAg=CHROME&ch=-865914528&ms=176.112.172.121&type=2&sig=7lmdt2FEcT8&ct=8&urls=185.180.203.49&clientType=18&zs=43&id=2470213126852",
+   "url": "https://vd400.okcdn.ru/video.m3u8?cmd=videoPlayerCdn&expires=1793453970333&srcIp=192.0.2.1&pr=42&srcAg=CHROME&ch=-865914528&ms=176.112.172.121&type=2&sig=7lmdt2FEcT8&ct=8&urls=185.180.203.49&clientType=18&zs=43&id=2470213126852",
    "headers": {
     "Content-Type": "application/vnd.apple.mpegurl"
    },

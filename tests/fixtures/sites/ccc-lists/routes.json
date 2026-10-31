@@ -1,0 +1,12 @@
+{
+ "routes": [
+  {
+   "url": "https://media.ccc.de/public/conferences/30c3",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "rec-000.bin"
+  }
+ ]
+}

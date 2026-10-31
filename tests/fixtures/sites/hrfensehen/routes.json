@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://www.hessenschau.de/tv-sendung/hessenschau-vom-26082020,video-130546.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page-130546.html"
+  },
+  {
+   "url": "https://www.hessenschau.de/tv-sendung/synthetic-noloader,video-130547.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-noloader.html"
+  }
+ ]
+}

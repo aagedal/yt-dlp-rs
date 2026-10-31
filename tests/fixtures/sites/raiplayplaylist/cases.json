@@ -1,0 +1,10 @@
+[
+ {
+  "url": "https://www.raiplay.it/programmi/nondirloalmiocapo/",
+  "args": [
+   "-J",
+   "--flat-playlist",
+   "--no-geo-bypass"
+  ]
+ }
+]

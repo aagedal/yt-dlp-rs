@@ -1,0 +1,29 @@
+<Mediapolis>
+	<url type="content">
+		<![CDATA[https://vod4-rai-it.akamaized.net/podcastcdn/NewsVod/TG1/6097899.mp4/playlist.m3u8?hdnea=st=1793459633~exp=1793459783~acl=/*~hmac=0ea2e06160af797213f8c61eb539a2b425932286af068658265369978bd9cada]]>
+	</url>
+	<url type="bumper"></url>
+	<url type="bumperend"></url>
+	<ct>m3u8</ct>
+	<bitrate>0</bitrate>
+	<smooth>N</smooth>
+	<is_live>N</is_live>
+	<description>Rai</description>
+	<geoprotection>N</geoprotection>
+	<category>522</category>
+	<plVod></plVod>
+	<plLive></plLive>
+	<logo></logo>
+	<poster>https://www.rai.it/dl/RaiTV/2012/images/ogImage.jpg</poster>
+	<duration>00:36:54</duration>
+	<krpano></krpano>
+	<channel></channel>
+	<ads_tecnico></ads_tecnico>
+	<license_url>
+		<![CDATA[{}]]>
+	</license_url>
+	<thumbs_array>
+<![CDATA[{}]]>
+	</thumbs_array>
+	<vtt_poster_thumbs_url><![CDATA[]]></vtt_poster_thumbs_url>
+</Mediapolis>

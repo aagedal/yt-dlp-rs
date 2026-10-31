@@ -1,0 +1,47 @@
+{
+ "routes": [
+  {
+   "url": "https://www.jiosaavn.com/api.php?__call=webapi.get&_format=json&_marker=0&ctx=web6dot0&token=ByUKVSBKU0A&type=song",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "song-ByUKVSBKU0A.json"
+  },
+  {
+   "url": "https://www.jiosaavn.com/api.php?__call=webapi.get&_format=json&_marker=0&ctx=web6dot0&token=buIOjYZDrNA_&type=album",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "album-buIOjYZDrNA_.json"
+  },
+  {
+   "url": "https://www.jiosaavn.com/api.php?__call=webapi.get&_format=json&_marker=0&ctx=web6dot0&token=SYNTHETIC1&type=song",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "synthetic-empty.json"
+  },
+  {
+   "url": "https://www.jiosaavn.com/api.php",
+   "request_body": [
+    "__call=song.generateAuthToken",
+    "bitrate=128"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "auth-128.json"
+  },
+  {
+   "url": "https://www.jiosaavn.com/api.php",
+   "request_body": [
+    "__call=song.generateAuthToken",
+    "bitrate=320"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "auth-320.json"
+  }
+ ]
+}

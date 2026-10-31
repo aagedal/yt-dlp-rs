@@ -1,0 +1,33 @@
+{
+ "routes": [
+  {
+   "url": "http://abcnews.go.com/video/itemfeed?id=20411932",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "itemfeed-20411932.json"
+  },
+  {
+   "url": "https://service-pkgabcnews.akamaized.net/opp/hls/abcnews/130929_tw_zarif_1003_,500,700,900,1200,1600,2000,2500,.mp4.csmil/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "playlist-130929.m3u8"
+  },
+  {
+   "url": "https://service-pkgabcnews.akamaized.net/opp/hls/abcnews/130929_tw_zarif_1003_,500,700,900,1200,1600,2000,2500,.mp4.csmil/manifest.f4m?hdcore=3.4.0&plugin=aasp-3.4.0.132.124",
+   "status": 400,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "Bad Request"
+  },
+  {
+   "url": "http://abcnews.go.com/video/itemfeed?id=1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "synthetic-error.json"
+  }
+ ]
+}

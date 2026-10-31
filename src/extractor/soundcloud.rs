@@ -13,7 +13,7 @@ pub struct Soundcloud;
 
 const NAME: &str = "soundcloud";
 const KEY: &str = "Soundcloud";
-const API_V2_BASE: &str = "https://api-v2.soundcloud.com/";
+pub(super) const API_V2_BASE: &str = "https://api-v2.soundcloud.com/";
 const DEFAULT_FORMATS: [&str; 6] = [
     "http_aac",
     "hls_aac",
@@ -87,7 +87,7 @@ pub fn suitable(url: &str) -> bool {
     API_URL.is_match(url) || track_match(url).is_some()
 }
 
-fn int(value: Option<&Value>) -> Option<i64> {
+pub(super) fn int(value: Option<&Value>) -> Option<i64> {
     let value = value?;
     value
         .as_i64()
@@ -201,7 +201,7 @@ fn client_id(client: &Client) -> Result<String> {
 
 /// `_call_api(url, id, note, query)`: retried once with a new client ID
 /// after a 401/403.
-fn call_api(
+pub(super) fn call_api(
     client: &Client,
     url: &str,
     id: &str,
@@ -260,7 +260,7 @@ fn requested_formats() -> Regex {
 }
 
 /// `_extract_thumbnails`.
-fn thumbnails(client: &Client, info: &Value, track_id: &str) -> Value {
+pub(super) fn thumbnails(client: &Client, info: &Value, track_id: &str) -> Value {
     let artwork = info
         .get("artwork_url")
         .and_then(Value::as_str)
@@ -496,6 +496,14 @@ fn info_dict(
             )?;
         }
     }
+    let mut dict = track_dict(client, info, &track_id);
+    dict.insert("formats".into(), json!([]));
+    Ok(video(url, dict, formats))
+}
+
+/// `_extract_info_dict`'s info dict (`dict;KEYS`) without `formats`: the
+/// track's metadata, thumbnails and `id`, in upstream's order.
+pub(super) fn track_dict(client: &Client, info: &Value, track_id: &str) -> Map<String, Value> {
     let text = |key: &str| info.get(key).and_then(Value::as_str);
     let timestamp =
         |key: &str| text(key).and_then(|date| crate::dates::unified_timestamp(date, false));
@@ -592,7 +600,7 @@ fn info_dict(
                 .collect()
         })
         .unwrap_or_default();
-    if text("tag_list").is_some() {
+    if !tags.is_empty() {
         put("tags", Some(Value::Array(tags)));
     }
     put(
@@ -602,10 +610,9 @@ fn info_dict(
             .filter(|artist| !artist.is_empty())
             .map(|artist| json!([artist])),
     );
-    dict.insert("id".into(), track_id.clone().into());
-    dict.insert("thumbnails".into(), thumbnails(client, info, &track_id));
-    dict.insert("formats".into(), json!([]));
-    Ok(video(url, dict, formats))
+    dict.insert("id".into(), track_id.into());
+    dict.insert("thumbnails".into(), thumbnails(client, info, track_id));
+    dict
 }
 
 /// A video from upstream's dict (`dict;KEYS` order).

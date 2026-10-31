@@ -1,0 +1,35 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.antenna.gr/templates/pages/player?cid=3f_li_c_az_jw_y_u=&w=670&h=377",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3f_li_c_az_jw_y_u=\", \"title\": \"NO GR\", \"thumbnails\": [], \"formats\": [{\"url\": \"https://antennavodgcp.antenna.gr/VODS2/noGR.mp4\", \"format_id\": \"mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.antenna.gr/templates/pages/player?cid=3f_li_c_az_jw_y_u=&w=670&h=377\", \"original_url\": \"https://www.antenna.gr/templates/pages/player?cid=3f_li_c_az_jw_y_u=&w=670&h=377\", \"webpage_url_basename\": \"player\", \"webpage_url_domain\": \"antenna.gr\", \"extractor\": \"ant1newsgr:embed\", \"extractor_key\": \"Ant1NewsGrEmbed\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"3f_li_c_az_jw_y_u=\", \"fulltitle\": \"NO GR\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://antennavodgcp.antenna.gr/VODS2/noGR.mp4\", \"format_id\": \"mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\", \"_filename\": \"NO GR [3f_li_c_az_jw_y_u=].mp4\", \"filename\": \"NO GR [3f_li_c_az_jw_y_u=].mp4\", \"__write_download_archive\": false}], \"url\": \"https://antennavodgcp.antenna.gr/VODS2/noGR.mp4\", \"format_id\": \"mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.antenna.gr/templates/pages/player?cid=3f_li_c_az_jw_y_u=&w=670&h=377",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ant1newsgr:embed] Extracting URL: https://www.antenna.gr/templates/pages/player?cid=3f_li_c_az_jw_y_u=&w=670&h=377",
+    "[ant1newsgr:embed] 3f_li_c_az_jw_y_u=: Resolve canonical player URL",
+    "[ant1newsgr:embed] 3f_li_c_az_jw_y_u=: Downloading JSON metadata",
+    "[info] Available formats for 3f_li_c_az_jw_y_u=:",
+    "ID  EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "--------------------------------------------",
+    "mp4 mp4 unknown    | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

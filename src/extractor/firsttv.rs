@@ -1,9 +1,9 @@
 //! Upstream `FirstTVIE` (`yt_dlp/extractor/firsttv.py`): a page's playlist URL
 //! and its items' HLS, DASH and MP4 sources with chapters. `FirstTVLiveIE`
-//! (a dynamic DASH manifest) is not ported.
+//! (`1tv.ru/live`): the live channel's DASH manifest from the streams playlist.
 use super::{
     Extractor, dict_format, dict_info, direct, download_json, download_webpage,
-    extract_m3u8_master_optional, extract_mpd_optional,
+    extract_m3u8_master_optional, extract_mpd_fatal_id, extract_mpd_optional,
 };
 use crate::{Error, ExtractResult, PlaylistInfo, Result, Subtitles, VideoInfo};
 use regex::Regex;
@@ -282,6 +282,76 @@ impl Extractor for FirstTv {
     }
 }
 
+pub struct FirstTvLive;
+
+const LIVE_NAME: &str = "1tv:live";
+const LIVE_KEY: &str = "FirstTVLive";
+const LIVE_PLAYLIST: &str = "https://stream.1tv.ru/api/playlist/1tvch-v1_as_array.json";
+
+static LIVE_VALID_URL: LazyLock<Regex> =
+    LazyLock::new(|| crate::extractor::url_regex(r"^https?://(?:www\.)?1tv\.ru/live").unwrap());
+
+/// `_match_id` for `FirstTVLiveIE`.
+pub fn live_suitable(url: &str) -> bool {
+    LIVE_VALID_URL.is_match(url)
+}
+
+impl Extractor for FirstTvLive {
+    fn key(&self) -> &'static str {
+        LIVE_KEY
+    }
+
+    fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        if !LIVE_VALID_URL.is_match(url.as_str()) {
+            return Ok(None);
+        }
+        let display_id = "live";
+        crate::screen::set_extractor(LIVE_NAME);
+        crate::screen::screen(&format!(
+            "[{LIVE_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        // `_download_webpage(url, display_id, fatal=False)`: only the title needs it.
+        let webpage = download_webpage(client, url, LIVE_NAME, display_id).ok();
+        let streams = download_json(client, &Url::parse(LIVE_PLAYLIST)?, LIVE_NAME, display_id)?;
+        // `traverse_obj(streams_list, ('mpd', ..., {url_or_none}, any, {require('mpd url')}))`.
+        let mpd = streams
+            .get("mpd")
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+            .filter_map(|value| value.as_str().and_then(super::json_ld::url_or_none))
+            .next()
+            .ok_or_else(|| {
+                Error::Reported(format!(
+                    "[{LIVE_NAME}] {display_id}: Unable to extract mpd url; {}",
+                    crate::BUG_REPORTS_MESSAGE
+                ))
+            })?;
+        let manifest = Url::parse(&mpd)?;
+        let stream = extract_mpd_fatal_id(client, &manifest, LIVE_NAME, display_id, "dash", true)?;
+
+        let title = webpage
+            .as_deref()
+            .and_then(crate::html::html_extract_title)
+            .map_or(Value::Null, Value::from);
+        let mut info = dict_info(
+            url,
+            (LIVE_NAME, LIVE_KEY),
+            vec![
+                ("id", display_id.into()),
+                ("title", title),
+                ("formats", Value::Null),
+            ],
+            stream.formats,
+        );
+        // `'is_live': True`; the subtitle tracks of the manifest are not returned.
+        crate::metadata_parser::set_field(&mut info, "is_live", Value::Bool(true));
+        info.subtitles = Default::default();
+        Ok(Some(info))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -296,5 +366,12 @@ mod tests {
             "https://www.sport1tv.ru/sport/chempionat-rossii-po-figurnomu-kataniyu-2025"
         ));
         assert!(!suitable("https://www.1tv.ru/"));
+    }
+
+    #[test]
+    fn live_urls_follow_upstream_valid_url() {
+        assert!(live_suitable("https://www.1tv.ru/live"));
+        assert!(live_suitable("http://1tv.ru/live"));
+        assert!(!live_suitable("https://www.1tv.ru/shows/naedine-so-vsemi"));
     }
 }

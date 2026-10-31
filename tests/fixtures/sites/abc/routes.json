@@ -1,0 +1,9 @@
+{
+ "routes": [
+  {"url": "http://www.abc.net.au/news/2015-10-23/nab-lifts-interest-rates-following-westpac-and-cba/6880080", "status": 302, "headers": {"Location": "https://www.abc.net.au/listen/programs/worldtoday/nab-lifts-interest-rates-following-westpac-and-cba/6880080"}, "body": ""},
+  {"url": "https://www.abc.net.au/listen/programs/worldtoday/nab-lifts-interest-rates-following-westpac-and-cba/6880080", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "http://www.abc.net.au/news/synthetic/expired/10000001", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "synthetic-expired.html"},
+  {"url": "http://www.abc.net.au/news/synthetic/nomedia/10000002", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "synthetic-nomedia.html"},
+  {"url": "http://www.abc.net.au/news/synthetic/missing/10000003", "status": 404, "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><body>Not found</body></html>"}
+ ]
+}

@@ -231,6 +231,62 @@ impl Extractor for N1InfoArticle {
     }
 }
 
+/// Upstream `N1InfoAssetIE` (`yt_dlp/extractor/n1.py`): an old-player asset
+/// stream URL (`best-vod.umn.cdn.united.cloud/stream?asset=...`) as its HLS
+/// master playlist (`hls` formats, non-fatal) with the asset ID as title.
+pub struct N1InfoAsset;
+
+const ASSET_NAME: &str = "N1InfoAsset";
+const ASSET_KEY: &str = "N1InfoAsset";
+
+static ASSET_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(
+        r"^https?://best-vod\.umn\.cdn\.united\.cloud/stream\?asset=(?P<id>[^&]+)",
+    )
+    .unwrap()
+});
+
+/// `N1InfoAssetIE._VALID_URL`.
+pub fn asset_suitable(url: &str) -> bool {
+    ASSET_URL.is_match(url)
+}
+
+impl Extractor for N1InfoAsset {
+    fn key(&self) -> &'static str {
+        ASSET_KEY
+    }
+
+    fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        let Some(found) = ASSET_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let video_id = found["id"].to_owned();
+        crate::screen::set_extractor(ASSET_NAME);
+        crate::screen::screen(&format!(
+            "[{ASSET_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        // `_extract_m3u8_formats(url, video_id, 'mp4', entry_protocol='m3u8_native', m3u8_id='hls', fatal=False)`.
+        let formats = extract_m3u8_master_optional(
+            client,
+            url,
+            ASSET_NAME,
+            &video_id,
+            Some("hls"),
+            false,
+            false,
+        )
+        .map(|stream| stream.formats)
+        .unwrap_or_default();
+        Ok(Some(dict_info(
+            url,
+            (ASSET_NAME, ASSET_KEY),
+            vec![("id", video_id.clone().into()), ("title", video_id.into())],
+            formats,
+        )))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -247,5 +303,18 @@ mod tests {
             "https://nova.rs/vesti/politika/zaklina-tatalovic-ani-brnabic-pricate-lazi-video/"
         ));
         assert!(!suitable("https://n1info.si/"));
+    }
+}
+
+#[cfg(test)]
+mod asset_tests {
+    use super::*;
+
+    #[test]
+    fn asset_urls_follow_upstream_valid_url() {
+        assert!(asset_suitable(
+            "https://best-vod.umn.cdn.united.cloud/stream?asset=ljsottomazilirija3060921-n1info-si-worldwide&stream=hp1400&t=0&player=m3u8v&sp=n1info&u=n1info&p=n1Sh4redSecre7iNf0"
+        ));
+        assert!(!asset_suitable("https://n1info.si/novice/svet/x/"));
     }
 }

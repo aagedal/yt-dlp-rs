@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="cs" dir="ltr">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<title>Český rozhlas Radio Wave (archiv - Echo Pavla Klusáka)</title>
+
+	<meta name="description" content="Přehrávač stanice Český rozhlas Radio Wave (Děláme vlny)">
+	<meta name="keywords" content="Český rozhlas Radio Wave, Český rozhlas, Czech radio, média, veřejnoprávní, audio, live, stream, mp3, wma, Ogg, Ogg Vorbis">
+	<meta name="googlebot" content="nosnippet">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta name="og:title" content="Radio Wave - Echo Pavla Klusáka (2015-06-30 21:00:00)">
+	<meta name="og:type" content="article">
+	<meta name="og:image" content="https://media.rozhlas.cz/_obrazek/2936340.jpeg">
+	<meta name="og:url" content="https://prehravac.rozhlas.cz/audio/3421320">
+
+	<link rel="icon" href="/favicon.ico" type="image/ico">
+
+	<link rel="stylesheet" href="/css/src/normalize.css">
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/qtip2/2.2.1/jquery.qtip.min.css">
+
+			<link rel="stylesheet" href="https://crodata.cz/pack/css/jquery.cro.box.schedule.player-2.0.1.css">
+	
+	<link rel="stylesheet" href="/css/src/main.css?20190930.a">
+
+	<script><!--// <![CDATA[
+		var croplayer = { mode: 'track', station: 'radiowave', station_normalized: 'radio-wave', track: 3421320, edition: 'Echo Pavla Klusáka', schedule: 1, playlist: 1 };
+	// ]]> --></script>
+	<script>
+		var googletag = googletag || {};
+		googletag.cmd = googletag.cmd || [];
+		(function() {
+			var gads = document.createElement('script');
+			gads.async = true;
+			gads.type = 'text/javascript';
+			var useSSL = 'https:' == document.location.protocol;
+			gads.src = (useSSL ? 'https:' : 'http:') +
+			'//www.googletagservices.com/tag/js/gpt.js';
+			var node = document.getElementsByTagName('script')[0];
+			node.parentNode.insertBefore(gads, node);
+		})();
+	</script>
+	<script>
+		googletag.cmd.push(function() {
+		googletag.defineSlot('/40021396/player_radiowave', [320, 160], 'ad-main').addService(googletag.pubads());
+		googletag.pubads().enableSingleRequest();
+		googletag.pubads().collapseEmptyDivs();
+		googletag.enableServices();
+		});
+	</script>
+	<script>
+		dataLayer = [];
+	</script>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5NW64R');</script>
+<!-- End Google Tag Manager -->
+
+<!-- Google Tag Manager --> 
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-WXJSC5M');</script> 
+<!-- End Google Tag Manager -->
+
+</head>
+<body id="page-prehravac-radiowave" class="web-prehravac mode-track station-radiowave">
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5NW64R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- Google Tag Manager (noscript) --> 
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WXJSC5M" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> 
+<!-- End Google Tag Manager (noscript) -->
+
+<div id="wrapper">
+
+<div id="main">
+	<div id="main-wrapper">
+		<div id="header">
+			<h1><a href="http://www.rozhlas.cz/radiowave/portal/" title="Český rozhlas Radio Wave" target="_blank">Český rozhlas Radio Wave</a></h1>
+				<ul>
+		<li><a href="/radiowave/archiv" class="active">Archiv</a></li>
+		<li><a href="/radiowave">Živě</a></li>
+	</ul>
+		</div>
+		<div id="content">
+				<div id="block-track-player" class="block">
+		<div class="header clearfix">
+			<h2>Přehrávání</h2>
+				<div class="addons">
+		<a href="http://www.rozhlas.cz/iradio/archiv/?p_po=3749" id="tip-archive-links-trigger" target="_blank" class="icon-arrow">Archiv pořadu</a> | <a href="_porad/3749" target="_blank" class="icon-arrow" title="Echo Pavla Klusáka">Stránka pořadu</a>
+	</div>
+	<div id="tip-archive-links-content" style="display: none;">
+		<div class="item"><a href="http://www.rozhlas.cz/iradio/archiv/?p_po=3749" target="_blank" class="icon-arrow"><strong>iRadio</strong> - zvukový archiv pořadu ve formátu MP3</a></div>
+		<div class="item"><a href="http://www2.rozhlas.cz/podcast/podcast_porady.php?p_po=3749" target="_blank" class="icon-arrow"><strong>Podcast</strong> - stáhněte si podcast pro nejnovější audio záznamy tohoto pořadu</a></div>
+		<div class="item item-last"><a href="itpc://www2.rozhlas.cz/podcast/podcast_porady.php?p_po=3749" target="_blank" class="icon-arrow"><strong>iTunes</strong> - import pořadu do programu iTunes</a></div>
+	</div>
+		</div>
+		<div class="content">
+				<h3>Echo Pavla Klusáka <em>(30. 6. 2015 09:00)</em></h3>
+	<p title="Osmdesátiny Terryho Rileyho jsou skvělou příležitostí proletět se elektronickými i akustickými díly zakladatatele minimalismu, který je aktivní už přes padesát let">Osmdesátiny Terryho Rileyho jsou skvělou příležitostí proletět se elektronickými i akustickými díly…</p>
+<div id="player-track"   data-uuid="a1f371d6-4d38-3b77-8011-5615ee81315d"   class="player uniplayer" data-mode="audio" data-type="ondemand" data-autostart="1"  data-id="3421320"  data-event_label="Echo Pavla Klusáka [3421320]" data-duration="3599" data-primary="html5" data-debug="1"></div>
+			<div class="clearfix">
+				<div id="sharing">
+					<span class="label">Sdílet:</span>
+					<a href="http://www.addthis.com/bookmark.php?v=250" class="item addthis_button_facebook">Facebook</a>
+					<a href="http://www.addthis.com/bookmark.php?v=250" class="item addthis_button_twitter">Twitter</a>
+					<a href="http://www.addthis.com/bookmark.php?v=250" class="item addthis_button_email">E-mail</a>
+				</div>
+				<div id="actions">
+					<a href="/audio/3421320/embed" id="tip-track-embed-trigger">Vložit na svůj web</a>				</div>
+				<div id="tip-track-embed-content" style="display: none;">
+<p><strong>Zkopírujte níže uvedený kód a použijte toto audio na svých webových stránkách nebo blogu.</strong></p>
+<p class="color-switch"><strong>Odstín</strong> <label for="track-embed-color-light"><input type="radio" name="color" value="light" id="track-embed-color-light" checked="checked"> světlý</label> <label for="track-embed-color-dark"><input type="radio" name="color" value="dark" id="track-embed-color-dark"> tmavý</label></p>
+<textarea id="track-embed-source" readonly="readonly"><iframe src="https://prehravac.rozhlas.cz/audio/3421320/embedded" scrolling="no" style="border:none;height:160px;width:100%;overflow:hidden"></iframe></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+		<div id="block-track-listing" class="block block-listing">
+		<div class="header clearfix">
+			<h2>Další záznamy</h2>
+			<div class="addons">
+				<a href="http://www.rozhlas.cz/iradio/radiowave" target="_blank" class="icon-arrow">Více v iRadiu</a>
+			</div>
+		</div>
+		<div class="content">
+			<ul>
+			<li>
+			<h3><a href="https://wave.rozhlas.cz/napodruhe-vyrazne-lepsi-reality-show-circle-ma-i-po-roce-s-koronavirem-co-8492862?player=on#file-9756759" target="_blank">Kompot <em>(17.5.2021 19:10)</em></a></h3>
+			<p title="Napodruhé výrazně lepší! Reality show The Circle má i po roce s koronavirem co nabídnout">Napodruhé výrazně lepší! Reality show The Circle má i po roce s koronavirem co nabídnout</p>
+		</li>
+				<li>
+			<h3><a href="https://wave.rozhlas.cz/s-dogecoinem-az-na-mesic-parodicka-kryptomena-zije-diky-memum-8492196?player=on#file-9756198" target="_blank">Fenomem <em>(17.5.2021 16:20)</em></a></h3>
+			<p title="S dogecoinem až na Měsíc. Parodická kryptoměna žije díky memům">S dogecoinem až na Měsíc. Parodická kryptoměna žije díky memům</p>
+		</li>
+				<li>
+			<h3><a href="https://wave.rozhlas.cz/k-cemu-nahravat-velkou-desku-srdcari-kruhy-prichazi-se-svym-ctvrtym-ep-8492529?player=on#file-9756174" target="_blank">Špína <em>(17.5.2021 11:30)</em></a></h3>
+			<p title="K čemu nahrávat velkou desku? Srdcaři Kruhy přichází se svým čtvrtým EP">K čemu nahrávat velkou desku? Srdcaři Kruhy přichází se svým čtvrtým EP</p>
+		</li>
+				<li>
+			<h3><a href="https://wave.rozhlas.cz/cesi-prijedou-zamiluji-si-tu-a-pomahaji-rika-o-gruzinskem-thussku-slavomir-horak-8492445?player=on#file-9756096" target="_blank">Casablanca <em>(17.5.2021 11:00)</em></a></h3>
+			<p title="Češi přijedou, zamilují si to tu a pomáhají, říká o gruzínském Thušsku Slavomír Horák">Češi přijedou, zamilují si to tu a pomáhají, říká o gruzínském Thušsku Slavomír Horák</p>
+		</li>
+	</ul>
+		</div>
+	</div>
+		</div>
+					<div id="ad-main" style="display:none;">
+				<script type="text/javascript">googletag.cmd.push(function() { googletag.display("ad-main"); });</script>
+			</div>
+			</div>
+	<div id="footer"><a href="http://www.rozhlas.cz/portal/portal" target="_blank">Český rozhlas</a></div>
+</div>
+
+<div id="aside">
+	<div id="block-stations-allover" class="block">
+	<div class="header clearfix">
+		<h2>Celoplošné stanice</h2>
+	</div>
+	<div class="content">
+		<ul>
+							<li><h3><a href="/radiozurnal/archiv">Radiožurnál</a></h3></li>
+							<li><h3><a href="/dvojka/archiv">Dvojka</a></h3></li>
+							<li><h3><a href="/vltava/archiv">Vltava</a></h3></li>
+							<li><h3><a href="/plus/archiv">Plus</a></h3></li>
+							<li><h3><a href="/radiozurnal-sport/archiv">Radiožurnál Sport</a></h3></li>
+							<li><h3><a href="/radiowave/archiv" class="active">Radio Wave</a></h3></li>
+							<li><h3><a href="/radiojunior/archiv">Rádio Junior</a></h3></li>
+							<li><h3><a href="/d-dur/archiv">D-dur</a></h3></li>
+							<li><h3><a href="/jazz/archiv">Jazz</a></h3></li>
+							<li><h3><a href="/pohoda/archiv">Pohoda</a></h3></li>
+					</ul>
+	</div>
+</div>
+
+<div id="block-stations-regional" class="block">
+	<div class="header clearfix">
+		<h2>Regionální stanice</h2>
+	</div>
+	<div class="content">
+		<ul>
+							<li><h3><a href="/brno/archiv">Brno</a></h3></li>
+							<li><h3><a href="/cb/archiv">České Budějovice</a></h3></li>
+							<li><h3><a href="/hradec/archiv">Hradec Králové</a></h3></li>
+							<li><h3><a href="/kv/archiv">Karlovy Vary</a></h3></li>
+							<li><h3><a href="/liberec/archiv">Liberec</a></h3></li>
+							<li><h3><a href="/olomouc/archiv">Olomouc</a></h3></li>
+							<li><h3><a href="/ostrava/archiv">Ostrava</a></h3></li>
+							<li><h3><a href="/pardubice/archiv">Pardubice</a></h3></li>
+							<li><h3><a href="/plzen/archiv">Plzeň</a></h3></li>
+							<li><h3><a href="/regina/archiv">Rádio Praha</a></h3></li>
+							<li><h3><a href="/strednicechy/archiv">Střední Čechy</a></h3></li>
+							<li><h3><a href="/sever/archiv">Sever</a></h3></li>
+							<li><h3><a href="/vysocina/archiv">Vysočina</a></h3></li>
+							<li><h3><a href="/zlin/archiv">Zlín</a></h3></li>
+					</ul>
+	</div>
+</div>
+
+<div id="block-stations-foreign" class="block">
+	<div class="header clearfix">
+		<h2>Zahraniční vysílání</h2>
+	</div>
+	<div class="content">
+		<ul>
+							<li><h3><a href="/cro7/archiv">Radio Prague Int.</a></h3></li>
+					</ul>
+	</div>
+</div>
+
+<div id="block-stations-webradio" class="block">
+	<div class="header clearfix">
+		<h2>Webrádia a projekty</h2>
+	</div>
+	<div class="content">
+		<ul>
+					</ul>
+	</div>
+</div>
+
+<div id="block-help" class="block">
+	<div class="content">
+		<ul>
+			<li class="item-instructions"><a href="http://www.rozhlas.cz/_zprava/969517" target="_blank"><span></span>Návod</a></li>
+			<li class="item-help"><a href="http://www.rozhlas.cz/_zprava/969517#help" target="_blank"><span></span>Pomoc při potížích</a></li>
+			<li class="item-favorites"><a href="http://www.addthis.com/bookmark.php?v=250" target="_blank" class="addthis_button_favorites">Přidat do oblíbených</a></li>
+		</ul>
+	</div>
+</div>
+</div>
+
+</div><!-- /#wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+
+<script src="//cdn.jsdelivr.net/qtip2/2.2.1/jquery.qtip.min.js"></script>
+<script src="https://crodata.cz/static/jquery/jquery.timers-1.2.js"></script>
+<script src="https://crodata.cz/pack/js/jquery.cro-2.0.19.js"></script>
+
+	<script src="https://crodata.cz/pack/js/jquery.cro.box.schedule.player-2.0.1.js"></script>
+
+<!--[if lt IE 9]>
+<script src="https://crodata.cz/static/jwplayer/6/10/jwplayer.js"></script>
+<script>jwplayer.key="kIQqFviA2fR1Gmsu9WGccPUNgaIpKWjRYfd51Pu+kyY=";</script>
+<script src="https://crodata.cz/static/uniplayer/js/jquery.uniplayer-2.2.5.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+<script src="https://crodata.cz/static/flowplayer/6/0/5/flowplayer-patched-v4.min.js"></script>
+
+<script src="https://crodata.cz/static/uniplayer/js/jquery.uniplayer-4.0.5.js"></script>
+<!--<![endif]-->
+
+<script src="/js/src/main.js?20191126.b"></script>
+
+<!-- AddThis Widget -->
+<script type="text/javascript">
+var addthis_config = {
+	username: "rozhlascz",
+	ui_language: "cs",
+	ui_click: true,
+	services_compact: 'favorites, google, digg, delicious, linkuj, more'
+}
+</script>
+<script type="text/javascript" src="https://s7.addthis.com/js/250/addthis_widget.js"></script>
+
+<!-- (C)2000-2014 Gemius SA - gemiusAudience / rozhlas.cz / Homepage -->
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var pp_gemius_identifier = '1007Kyu3eKDCWPmyXkyZa6PeTGS6ssQud9B76nrEwsb._7';
+// lines below shouldn't be edited
+function gemius_pending(i) { window[i] = window[i] || function() {var x = window[i+'_pdata'] = window[i+'_pdata'] || []; x[x.length]=arguments;};};
+gemius_pending('gemius_hit'); gemius_pending('gemius_event'); gemius_pending('pp_gemius_hit'); gemius_pending('pp_gemius_event');
+(function(d,t) {try {var gt=d.createElement(t),s=d.getElementsByTagName(t)[0],l='http'+((location.protocol=='https:')?'s':''); gt.setAttribute('async','async');
+gt.setAttribute('defer','defer'); gt.src=l+'://spir.hit.gemius.pl/xgemius.js'; s.parentNode.insertBefore(gt,s);} catch (e) {}})(document,'script');
+//--><!]]>
+</script>
+
+<!-- Customized Google Analytics tracking code by H1.cz -->
+<script type="text/javascript" src="https://crodata.cz/static/global-analytics.js"></script>
+<script type="text/javascript"><!--
+_ga.create('UA-18201801-1', '.rozhlas.cz');
+_gaq.push(['_trackPageview']);
+//--></script>
+
+</body>
+</html>
+<!-- track/3421320_radiowave_0.html 20261031@160615 -->

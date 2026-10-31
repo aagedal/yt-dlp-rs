@@ -1,0 +1,8 @@
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-STREAM-INF:BANDWIDTH=3427616,CODECS="avc1.4d4029,mp4a.40.2",RESOLUTION=1280x720
+../../../598326/rainews1/rainews1/rainews_2400/exp=1793546038~acl=%2fhls%2flive%2f598326%2frainews1%2f*!%2fhls%2flive%2f598326-b%2frainews1%2f*!%2f*.key~data=hdntl~hmac=fa3a56a98fb46fa91e0d148c58d8a1110c91a640f50e2240c7f8501af4067c2f/chunklist.m3u8?aka_me_session_id=AAAAAAAAAAA2V+dqAAAAAGzh8o4hkYU2CZVziryQYek3U6gupswUoppiugalOFoQhPGBUftI2%2fta+zC1+40c9mjyOEuJSsno&aka_media_format_type=hls
+#EXT-X-STREAM-INF:BANDWIDTH=2440992,CODECS="avc1.4d401f,mp4a.40.2",RESOLUTION=1024x576
+../../../598326/rainews1/rainews1/rainews_1800/exp=1793546038~acl=%2fhls%2flive%2f598326%2frainews1%2f*!%2fhls%2flive%2f598326-b%2frainews1%2f*!%2f*.key~data=hdntl~hmac=fa3a56a98fb46fa91e0d148c58d8a1110c91a640f50e2240c7f8501af4067c2f/chunklist.m3u8?aka_me_session_id=AAAAAAAAAAA2V+dqAAAAAGzh8o4hkYU2CZVziryQYek3U6gupswUoppiugalOFoQhPGBUftI2%2fta+zC1+40c9mjyOEuJSsno&aka_media_format_type=hls
+#EXT-X-STREAM-INF:BANDWIDTH=1640864,CODECS="avc1.4d401f,mp4a.40.2",RESOLUTION=768x432
+../../../598326/rainews1/rainews1/rainews_1200/exp=1793546038~acl=%2fhls%2flive%2f598326%2frainews1%2f*!%2fhls%2flive%2f598326-b%2frainews1%2f*!%2f*.key~data=hdntl~hmac=fa3a56a98fb46fa91e0d148c58d8a1110c91a640f50e2240c7f8501af4067c2f/chunklist.m3u8?aka_me_session_id=AAAAAAAAAAA2V+dqAAAAAGzh8o4hkYU2CZVziryQYek3U6gupswUoppiugalOFoQhPGBUftI2%2fta+zC1+40c9mjyOEuJSsno&aka_media_format_type=hls

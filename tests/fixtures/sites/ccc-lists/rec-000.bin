@@ -1,0 +1,701 @@
+{
+ "acronym": "30c3",
+ "aspect_ratio": "16:9",
+ "created_at": "2014-05-10T15:26:10.192+02:00",
+ "updated_at": "2026-10-31T13:45:09.451+01:00",
+ "title": "30C3",
+ "schedule_url": "https://events.ccc.de/congress/2013/Fahrplan/",
+ "slug": "congress/2013",
+ "event_last_released_at": "2014-01-13T01:00:00.000+01:00",
+ "link": null,
+ "description": null,
+ "webgen_location": "congress/2013",
+ "logo_url": "https://static.media.ccc.de/media/congress/2013/folder-30c3.png",
+ "images_url": "https://static.media.ccc.de/media/congress/2013",
+ "images": [
+  {
+   "type": "logo",
+   "url": "https://static.media.ccc.de/media/congress/2013/folder-30c3.png",
+   "mime_type": "image/png"
+  }
+ ],
+ "recordings_url": "https://cdn.media.ccc.de/congress/2013",
+ "url": "https://media.ccc.de/public/conferences/30c3",
+ "events": [
+  {
+   "guid": "BAKqlbEKHMpBMr22KlDsEg",
+   "title": "To Protect And Infect",
+   "subtitle": "The militarization of the Internet",
+   "slug": "30C3_-_5439_-_en_-_saal_1_-_201312292105_-_to_protect_and_infect_-_claudio_guarnieri_-_morgan_marquis-boire",
+   "link": "http://events.ccc.de/congress/2013/Fahrplan/events/5439.html",
+   "description": "2013 will be remembered as the year that the Internet lost its innocence for nearly everyone as light was shed on the widespread use of dragnet surveillance by the NSA and intelligence agencies globally. With the uprisings of the Arab Spring where people raided the offices of their regimes to bring evidence to light, we've seen a tremendous phenomenon: a large numbers of whistleblowers have taken action to inform the public about important details. The WikiLeaks SpyFiles series also shows us important details to corroborate these claims. There is ample evidence about the use and abuses of a multi-billion dollar industry that have now come to light. This evidence includes increasing use of targeted attacks to establish even more invasive control over corporate, government or other so-called legitimate targets.\n",
+   "original_language": "eng",
+   "persons": [
+    "Claudio Guarnieri",
+    "Morgan Marquis-Boire"
+   ],
+   "view_count": 1485,
+   "promoted": false,
+   "date": "2013-12-29T01:00:00.000+01:00",
+   "release_date": "2014-01-13T01:00:00.000+01:00",
+   "updated_at": "2026-10-21T23:45:10.204+02:00",
+   "tags": [
+    "30c3",
+    "Security & Safety"
+   ],
+   "length": 2752,
+   "duration": 2752,
+   "thumb_url": "https://static.media.ccc.de/media/congress/2013/5439-opus.jpg",
+   "poster_url": "https://static.media.ccc.de/media/congress/2013/5439-opus_preview.jpg",
+   "timeline_url": "https://static.media.ccc.de/media/congress/2013/BAKqlbEKHMpBMr22KlDsEg-timeline.jpg",
+   "thumbnails_url": "https://static.media.ccc.de/media/congress/2013/BAKqlbEKHMpBMr22KlDsEg-thumbnails.vtt",
+   "frontend_link": "https://media.ccc.de/v/30C3_-_5439_-_en_-_saal_1_-_201312292105_-_to_protect_and_infect_-_claudio_guarnieri_-_morgan_marquis-boire",
+   "url": "https://media.ccc.de/public/events/BAKqlbEKHMpBMr22KlDsEg",
+   "conference_title": "30C3",
+   "conference_url": "https://media.ccc.de/public/conferences/30c3",
+   "related": [
+    {
+     "event_id": 212,
+     "event_guid": "import-6934edc539ff86b236",
+     "weight": 1
+    },
+    {
+     "event_id": 433,
+     "event_guid": "import-8b428ff51202ec0f50",
+     "weight": 1
+    },
+    {
+     "event_id": 435,
+     "event_guid": "import-c5444cff9f339666f1",
+     "weight": 1
+    },
+    {
+     "event_id": 506,
+     "event_guid": "import-a63d71f889863720da",
+     "weight": 1
+    },
+    {
+     "event_id": 692,
+     "event_guid": "import-3782fc040147a211ac",
+     "weight": 1
+    },
+    {
+     "event_id": 731,
+     "event_guid": "import-bf118c75c91fbf6195",
+     "weight": 1
+    },
+    {
+     "event_id": 792,
+     "event_guid": "import-c9abd3b976735dc512",
+     "weight": 2
+    },
+    {
+     "event_id": 1270,
+     "event_guid": "import-b01de4e5ea4f6f641f",
+     "weight": 1
+    },
+    {
+     "event_id": 1285,
+     "event_guid": "import-26776631dc04cd3c55",
+     "weight": 1
+    },
+    {
+     "event_id": 1368,
+     "event_guid": "import-2f5b6d9d75ad65da1d",
+     "weight": 1
+    },
+    {
+     "event_id": 1443,
+     "event_guid": "import-efd5abc0c512df9166",
+     "weight": 1
+    },
+    {
+     "event_id": 1445,
+     "event_guid": "import-0f91b102d5f60dfe13",
+     "weight": 1
+    },
+    {
+     "event_id": 1462,
+     "event_guid": "import-b9197fb95bae24cee3",
+     "weight": 1
+    },
+    {
+     "event_id": 1475,
+     "event_guid": "import-6494b3c268a64f31b0",
+     "weight": 1
+    },
+    {
+     "event_id": 1501,
+     "event_guid": "import-ff92b8bbffb2bdb1ac",
+     "weight": 1
+    },
+    {
+     "event_id": 1512,
+     "event_guid": "import-79dd14a9f3d562f20e",
+     "weight": 2
+    },
+    {
+     "event_id": 1733,
+     "event_guid": "QszoY6oJD6rpkbsTRQinRA",
+     "weight": 1
+    },
+    {
+     "event_id": 1737,
+     "event_guid": "OT5cFvmp4WvV3cjuoH1gtQ",
+     "weight": 2
+    },
+    {
+     "event_id": 1743,
+     "event_guid": "i5TMBRf_-3TiDrceuY3osQ",
+     "weight": 31
+    },
+    {
+     "event_id": 1746,
+     "event_guid": "il4lmTSfWPAY3ks_KW7SHg",
+     "weight": 3
+    },
+    {
+     "event_id": 1749,
+     "event_guid": "YYw-34ht9mf83cFWsxTCAw",
+     "weight": 1
+    },
+    {
+     "event_id": 1751,
+     "event_guid": "rP-d3RdgW3DkgejXmeWAeQ",
+     "weight": 2
+    },
+    {
+     "event_id": 1756,
+     "event_guid": "a-xJCEtToBTndlcjWvCAKQ",
+     "weight": 2
+    },
+    {
+     "event_id": 1764,
+     "event_guid": "PuDWTZPratvP-gVrrPScWQ",
+     "weight": 2
+    },
+    {
+     "event_id": 1765,
+     "event_guid": "sh_vDLYCDlmW5sFWsI4KSg",
+     "weight": 1
+    },
+    {
+     "event_id": 1769,
+     "event_guid": "wkZOlAmoT5ydaMLNV0xCSw",
+     "weight": 1
+    },
+    {
+     "event_id": 1776,
+     "event_guid": "bucvwuHzaSgt7x_L06ZcFA",
+     "weight": 1
+    },
+    {
+     "event_id": 1778,
+     "event_guid": "7abembel5Nwrd3h_pRjeOQ",
+     "weight": 3
+    },
+    {
+     "event_id": 1788,
+     "event_guid": "-isG7Swsi8DaA62qztr0Kw",
+     "weight": 2
+    },
+    {
+     "event_id": 1792,
+     "event_guid": "HsPfR-yh7Zg-N6kQo58UIQ",
+     "weight": 1
+    },
+    {
+     "event_id": 1798,
+     "event_guid": "0wIAXwCTvHhMFKucqslNxg",
+     "weight": 1
+    },
+    {
+     "event_id": 1799,
+     "event_guid": "Lv-uOMbLZH1T17ZxxJ-TEQ",
+     "weight": 5
+    },
+    {
+     "event_id": 1802,
+     "event_guid": "PPVcroSxtnY9RfXjkEmxGA",
+     "weight": 1
+    },
+    {
+     "event_id": 1809,
+     "event_guid": "tbP0pE8M3Do-9jVyC04sXg",
+     "weight": 1
+    },
+    {
+     "event_id": 1814,
+     "event_guid": "3HEv_YYlkY2P_y1pKfU7fA",
+     "weight": 1
+    },
+    {
+     "event_id": 1819,
+     "event_guid": "tQIsDXIK4trNIxm5cVv5-Q",
+     "weight": 1
+    },
+    {
+     "event_id": 1828,
+     "event_guid": "kkMSS4JoEJtzbF9jc2JJ4A",
+     "weight": 3
+    },
+    {
+     "event_id": 1830,
+     "event_guid": "is-GStnCnMQnnba7Nu_pVA",
+     "weight": 2
+    },
+    {
+     "event_id": 1831,
+     "event_guid": "shKT8wmGW3LurqOCDmbZyg",
+     "weight": 2
+    },
+    {
+     "event_id": 1837,
+     "event_guid": "ZYk9lubJJBkqDWJBOZpWyw",
+     "weight": 4
+    },
+    {
+     "event_id": 1844,
+     "event_guid": "qkjXyXK2qXXjRYOUI9nT0Q",
+     "weight": 1
+    },
+    {
+     "event_id": 1845,
+     "event_guid": "HimAg2Mox6GCcmhbE0NWkQ",
+     "weight": 3
+    },
+    {
+     "event_id": 2145,
+     "event_guid": "8c4e647f-813e-41ef-b05b-65469dd841c3",
+     "weight": 1
+    },
+    {
+     "event_id": 2179,
+     "event_guid": "e8e29f6a-11df-491a-acae-1253879ae8f9",
+     "weight": 1
+    },
+    {
+     "event_id": 2222,
+     "event_guid": "Z4htibNZxLewwCmPKSdeqA",
+     "weight": 1
+    },
+    {
+     "event_id": 2256,
+     "event_guid": "z84bCyzZ-xiYlyM83L5dig",
+     "weight": 1
+    },
+    {
+     "event_id": 2269,
+     "event_guid": "C4w30id6HpMnzKM2xcrT4g",
+     "weight": 1
+    },
+    {
+     "event_id": 2290,
+     "event_guid": "e604e540-90d0-4910-920a-1c23ea83e341",
+     "weight": 1
+    },
+    {
+     "event_id": 2292,
+     "event_guid": "6b94aab7-5909-4662-99f8-1a990c247bb1",
+     "weight": 1
+    },
+    {
+     "event_id": 2538,
+     "event_guid": "a5f996a3-d0a7-44e7-ac1b-6373a297ccf3",
+     "weight": 2
+    },
+    {
+     "event_id": 2814,
+     "event_guid": "3cb4101c-2042-4883-b6fb-6591994a70c0",
+     "weight": 1
+    },
+    {
+     "event_id": 2861,
+     "event_guid": "01da121b-bd49-4805-aaaf-a6ec1f4f941f",
+     "weight": 1
+    },
+    {
+     "event_id": 2884,
+     "event_guid": "fb537cde-7f1d-484b-971b-1d30a543ecfb",
+     "weight": 1
+    },
+    {
+     "event_id": 2886,
+     "event_guid": "088e3078-bab2-433d-8be2-f1a4b37b4d5c",
+     "weight": 1
+    },
+    {
+     "event_id": 2894,
+     "event_guid": "9d3ce896-1ee6-47c5-b616-1ebcf6860690",
+     "weight": 1
+    },
+    {
+     "event_id": 2899,
+     "event_guid": "0c8f0e98-92ee-42ba-aa75-04fc50344904",
+     "weight": 2
+    },
+    {
+     "event_id": 2905,
+     "event_guid": "f193e1eb-5f67-43bc-a42a-c2c9b0c8d57f",
+     "weight": 1
+    },
+    {
+     "event_id": 2907,
+     "event_guid": "3b16ddc9-499b-44b1-9084-b3e328daea30",
+     "weight": 1
+    },
+    {
+     "event_id": 2927,
+     "event_guid": "f6149460-a278-4600-bf9d-61ea737c46de",
+     "weight": 1
+    },
+    {
+     "event_id": 2937,
+     "event_guid": "b89b8cff-c496-4885-8e72-1461e8b274f7",
+     "weight": 1
+    },
+    {
+     "event_id": 3331,
+     "event_guid": "41452287-6fc1-595a-a59a-12bd117de029",
+     "weight": 1
+    },
+    {
+     "event_id": 3356,
+     "event_guid": "f2441a62-9871-573d-9852-acd7191b974f",
+     "weight": 1
+    },
+    {
+     "event_id": 3604,
+     "event_guid": "1275f046-e52e-4b0b-9f5b-7eb2008b2ec4",
+     "weight": 1
+    },
+    {
+     "event_id": 3652,
+     "event_guid": "60b52369-b0ee-455f-904a-4dfef49596eb",
+     "weight": 2
+    },
+    {
+     "event_id": 3766,
+     "event_guid": "2b9b6095-9dcd-49f3-9792-cf74aab88b16",
+     "weight": 1
+    },
+    {
+     "event_id": 4430,
+     "event_guid": "bcae2b4e-90de-44fc-8dbb-8d4de94d6d7c",
+     "weight": 1
+    },
+    {
+     "event_id": 4602,
+     "event_guid": "d1b68561-492d-4eb8-88fe-8040d9b12d39",
+     "weight": 1
+    },
+    {
+     "event_id": 4680,
+     "event_guid": "196e78e5-f6c5-42b0-84a9-f05428ddd550",
+     "weight": 1
+    },
+    {
+     "event_id": 4923,
+     "event_guid": "58ffa60d-607b-405f-9363-213097ef3920",
+     "weight": 1
+    }
+   ]
+  },
+  {
+   "guid": "WbqegbTKG5YheKse8X4ZUw",
+   "title": "30C3 Infrastructure Review",
+   "subtitle": "Presentation of MOC/NOC/VOC/SOC/*OC",
+   "slug": "30C3_-_5609_-_en_-_saal_6_-_201312301430_-_infrastructure_review_-_kay_-_peter_stuge_-_florolf_-_sebastian_-_m",
+   "link": "http://events.ccc.de/congress/2013/Fahrplan/events/5609.html",
+   "description": "",
+   "original_language": "eng",
+   "persons": [
+    "kay",
+    "Peter Stuge",
+    "florolf",
+    "Sebastian",
+    "*m"
+   ],
+   "view_count": 1229,
+   "promoted": false,
+   "date": "2013-12-30T01:00:00.000+01:00",
+   "release_date": "2014-01-06T01:00:00.000+01:00",
+   "updated_at": "2026-09-24T16:45:11.248+02:00",
+   "tags": [
+    "30c3",
+    "CCC"
+   ],
+   "length": 4297,
+   "duration": 4297,
+   "thumb_url": "https://static.media.ccc.de/media/congress/2013/5609-h264-hq.jpg",
+   "poster_url": "https://static.media.ccc.de/media/congress/2013/5609-h264-hq_preview.jpg",
+   "timeline_url": "https://static.media.ccc.de/media/congress/2013/WbqegbTKG5YheKse8X4ZUw-timeline.jpg",
+   "thumbnails_url": "https://static.media.ccc.de/media/congress/2013/WbqegbTKG5YheKse8X4ZUw-thumbnails.vtt",
+   "frontend_link": "https://media.ccc.de/v/30C3_-_5609_-_en_-_saal_6_-_201312301430_-_infrastructure_review_-_kay_-_peter_stuge_-_florolf_-_sebastian_-_m",
+   "url": "https://media.ccc.de/public/events/WbqegbTKG5YheKse8X4ZUw",
+   "conference_title": "30C3",
+   "conference_url": "https://media.ccc.de/public/conferences/30c3",
+   "related": [
+    {
+     "event_id": 213,
+     "event_guid": "import-fc85a6ebd72be60c70",
+     "weight": 3
+    },
+    {
+     "event_id": 1108,
+     "event_guid": "import-8f7bed0042eb4f1860",
+     "weight": 2
+    },
+    {
+     "event_id": 1624,
+     "event_guid": "import-db10023d490c5866ad",
+     "weight": 3
+    },
+    {
+     "event_id": 1640,
+     "event_guid": "import-97f89b47751cce2a41",
+     "weight": 9
+    },
+    {
+     "event_id": 1749,
+     "event_guid": "YYw-34ht9mf83cFWsxTCAw",
+     "weight": 2
+    },
+    {
+     "event_id": 1767,
+     "event_guid": "BK1ziXHv5du-_NJN24p9lA",
+     "weight": 2
+    },
+    {
+     "event_id": 1820,
+     "event_guid": "glr14-wGaYxsV63N4TJZDQ",
+     "weight": 4
+    },
+    {
+     "event_id": 1844,
+     "event_guid": "qkjXyXK2qXXjRYOUI9nT0Q",
+     "weight": 2
+    },
+    {
+     "event_id": 2295,
+     "event_guid": "e192e98a-90ca-44c8-9cfd-86b94a79f4d1",
+     "weight": 9
+    },
+    {
+     "event_id": 2953,
+     "event_guid": "7bf4c7a5-779e-4591-8d9b-f5f38d3dc879",
+     "weight": 3
+    },
+    {
+     "event_id": 3318,
+     "event_guid": "c0ba3db4-f8b8-57c3-bab9-9d60be316632",
+     "weight": 3
+    },
+    {
+     "event_id": 3761,
+     "event_guid": "b598ebbf-0fc6-4127-bb9d-20ae18f1171d",
+     "weight": 4
+    },
+    {
+     "event_id": 3762,
+     "event_guid": "25e2df7d-5740-4c2f-bc34-986326d606fe",
+     "weight": 2
+    }
+   ]
+  },
+  {
+   "guid": "nu_IEETazySR5xcJobNckw",
+   "title": "Hacking as Artistic Practice",
+   "subtitle": "!Mediengruppe Bitnik about their recent works",
+   "slug": "30C3_-_5425_-_en_-_saal_6_-_201312281900_-_hacking_as_artistic_practice_-_mediengruppe_bitnik_-_mediengruppe_bitnik",
+   "link": "http://events.ccc.de/congress/2013/Fahrplan/events/5425.html",
+   "description": "!Mediengruppe Bitnik are contemporary artists. In their talk they will show two examples of their work, illustrating the translation of hacking from the computer field into an artistic practice. Bitnik will show how to hack the opera in ten easy steps and what happens when you send a parcel with a hidden live webcam to Julian Assange at the Ecuadorian Embassy in London. \n\nUsing the strategies of hacking, !Mediengrupppe Bitnik intervenes into settings with the aim of opening them up to re-evaluation and new perspectives.\n",
+   "original_language": "eng",
+   "persons": [
+    "!Mediengruppe Bitnik",
+    "!Mediengruppe Bitnik"
+   ],
+   "view_count": 339,
+   "promoted": false,
+   "date": "2013-12-28T01:00:00.000+01:00",
+   "release_date": "2014-01-06T01:00:00.000+01:00",
+   "updated_at": "2026-10-18T15:45:05.392+02:00",
+   "tags": [
+    "30c3",
+    "Art & Beauty"
+   ],
+   "length": 1985,
+   "duration": 1985,
+   "thumb_url": "https://static.media.ccc.de/media/congress/2013/5425-h264-hq.jpg",
+   "poster_url": "https://static.media.ccc.de/media/congress/2013/5425-h264-hq_preview.jpg",
+   "timeline_url": "https://static.media.ccc.de/media/congress/2013/nu_IEETazySR5xcJobNckw-timeline.jpg",
+   "thumbnails_url": "https://static.media.ccc.de/media/congress/2013/nu_IEETazySR5xcJobNckw-thumbnails.vtt",
+   "frontend_link": "https://media.ccc.de/v/30C3_-_5425_-_en_-_saal_6_-_201312281900_-_hacking_as_artistic_practice_-_mediengruppe_bitnik_-_mediengruppe_bitnik",
+   "url": "https://media.ccc.de/public/events/nu_IEETazySR5xcJobNckw",
+   "conference_title": "30C3",
+   "conference_url": "https://media.ccc.de/public/conferences/30c3",
+   "related": [
+    {
+     "event_id": 714,
+     "event_guid": "import-72f36f6e2f89c8ba36",
+     "weight": 1
+    },
+    {
+     "event_id": 769,
+     "event_guid": "import-b2af0e61f8de12a218",
+     "weight": 1
+    },
+    {
+     "event_id": 947,
+     "event_guid": "import-57a636234323b47cae",
+     "weight": 1
+    },
+    {
+     "event_id": 966,
+     "event_guid": "import-e31124eb287156c040",
+     "weight": 1
+    },
+    {
+     "event_id": 976,
+     "event_guid": "import-53997037a1b9e9ceb3",
+     "weight": 1
+    },
+    {
+     "event_id": 1176,
+     "event_guid": "import-aeca1d442393997d98",
+     "weight": 1
+    },
+    {
+     "event_id": 1579,
+     "event_guid": "import-def6598c84e42db15e",
+     "weight": 1
+    },
+    {
+     "event_id": 1710,
+     "event_guid": "import-23969f74f61375b2c6",
+     "weight": 1
+    },
+    {
+     "event_id": 1744,
+     "event_guid": "0eXymhGD4B5LSOSwUFnPfg",
+     "weight": 2
+    },
+    {
+     "event_id": 1745,
+     "event_guid": "-YZGB3qZIZOBwlhaU_GHrg",
+     "weight": 3
+    },
+    {
+     "event_id": 1789,
+     "event_guid": "rglYVLzBOIMfYpF873lgjQ",
+     "weight": 1
+    },
+    {
+     "event_id": 1793,
+     "event_guid": "H_FrxWgE7lz3DIkh_j8TbA",
+     "weight": 1
+    },
+    {
+     "event_id": 1799,
+     "event_guid": "Lv-uOMbLZH1T17ZxxJ-TEQ",
+     "weight": 2
+    },
+    {
+     "event_id": 1800,
+     "event_guid": "gL8lRFVpn8NFFfATsOn7Bw",
+     "weight": 2
+    },
+    {
+     "event_id": 1818,
+     "event_guid": "hsTftEgTn8vhPMLEZF2DVA",
+     "weight": 3
+    },
+    {
+     "event_id": 1838,
+     "event_guid": "d9mVPvxx94qGILfKtmCAwA",
+     "weight": 2
+    },
+    {
+     "event_id": 1842,
+     "event_guid": "zUDh6XccjgDg7g1WP6Kpvw",
+     "weight": 2
+    },
+    {
+     "event_id": 2241,
+     "event_guid": "4f9TGtkPJafH9LU7RqsZnw",
+     "weight": 1
+    },
+    {
+     "event_id": 2256,
+     "event_guid": "z84bCyzZ-xiYlyM83L5dig",
+     "weight": 1
+    },
+    {
+     "event_id": 2376,
+     "event_guid": "0bc12fad-8cb0-4c89-b1b5-f9087325d0f9",
+     "weight": 2
+    },
+    {
+     "event_id": 2811,
+     "event_guid": "fa0727ab-81a7-4197-bc7d-0ce5e9dc4526",
+     "weight": 1
+    },
+    {
+     "event_id": 2884,
+     "event_guid": "fb537cde-7f1d-484b-971b-1d30a543ecfb",
+     "weight": 2
+    },
+    {
+     "event_id": 2906,
+     "event_guid": "550b8e16-3394-40d2-b47c-7cfe0031945b",
+     "weight": 1
+    },
+    {
+     "event_id": 2934,
+     "event_guid": "b08bddb1-9370-4392-a8ca-8e49ad4a3911",
+     "weight": 2
+    },
+    {
+     "event_id": 3625,
+     "event_guid": "65d150d3-f432-4a36-b3e3-20ee80ad913c",
+     "weight": 2
+    },
+    {
+     "event_id": 3677,
+     "event_guid": "46f1b3cf-5cd4-4a6c-bb07-6ead116c2475",
+     "weight": 1
+    },
+    {
+     "event_id": 3743,
+     "event_guid": "72e44333-c59a-47a4-9ef3-d5e8c9637eb6",
+     "weight": 1
+    },
+    {
+     "event_id": 3767,
+     "event_guid": "0c197c9a-35eb-4780-a38d-9c53b7ff9bea",
+     "weight": 1
+    },
+    {
+     "event_id": 4244,
+     "event_guid": "28840060-781a-4143-a9b3-fe19a0eaf06d",
+     "weight": 1
+    },
+    {
+     "event_id": 4275,
+     "event_guid": "227de42b-dba0-4ef4-9207-96f370155244",
+     "weight": 1
+    },
+    {
+     "event_id": 4790,
+     "event_guid": "edd02e52-28f8-4f3e-8b17-75cffecb6d7f",
+     "weight": 8
+    },
+    {
+     "event_id": 4914,
+     "event_guid": "d8db120c-29f7-48f6-b9de-27ea8d1e9a9b",
+     "weight": 2
+    }
+   ]
+  }
+ ]
+}

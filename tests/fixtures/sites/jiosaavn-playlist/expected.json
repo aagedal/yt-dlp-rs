@@ -1,0 +1,18 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.jiosaavn.com/s/playlist/2279fbe391defa793ad7076929a2f5c9/mood-english/LlJ8ZWT1ibN5084vKHRj2Q__",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"LlJ8ZWT1ibN5084vKHRj2Q__\", \"title\": \"Mood English\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"Ji2u0F4D\", \"title\": \"Love Me Again\", \"album\": \"Tribute\", \"duration\": 240, \"channel\": \"Universal-Island Records Ltd.\", \"channel_id\": \"852641\", \"channel_url\": \"https://www.jiosaavn.com/label/universal-island-records-ltd.-albums/DPpVm1dDMvk_\", \"release_date\": \"20130101\", \"release_year\": 2013, \"thumbnail\": \"https://c.saavncdn.com/593/Tribute-English-2013-20241218151538-500x500.jpg\", \"view_count\": 1336550, \"language\": \"eng\", \"webpage_url\": \"https://www.jiosaavn.com/song/love-me-again/OgFZRER2A3c\", \"artists\": [\"John Newman\"], \"display_id\": \"OgFZRER2A3c\", \"_old_archive_ids\": [\"jiosaavnsong OgFZRER2A3c\"], \"ie_key\": \"JioSaavnSong\", \"_type\": \"url_transparent\", \"url\": \"https://www.jiosaavn.com/song/love-me-again/OgFZRER2A3c#__youtubedl_smuggle=%7B%22id%22%3A+%22Ji2u0F4D%22%2C+%22encrypted_media_url%22%3A+%22ID2ieOjCrwfgWvL5sXl4B1ImC5QfbsDyyJttCofMBx0i0IKdKsmvLke24Y2j1erK5RnqXzwmTZuRWRP%2FnB2IsBw7tS9a8Gtq%22%7D\", \"__x_forwarded_for_ip\": null}, {\"id\": \"sAgLWyn9\", \"title\": \"Scream\", \"album\": \"Looking 4 Myself (Expanded Edition)\", \"duration\": 235, \"channel\": \"RCA Records Label\", \"channel_id\": \"35299\", \"channel_url\": \"https://www.jiosaavn.com/label/rca-records-label-albums/pNms9lY2pSI_\", \"release_date\": \"20120612\", \"release_year\": 2012, \"thumbnail\": \"https://c.saavncdn.com/189/Looking-4-Myself-Expanded-Edition--English-2012-20190107163450-500x500.jpg\", \"view_count\": 317158, \"language\": \"eng\", \"webpage_url\": \"https://www.jiosaavn.com/song/scream/AykMfSNJWQo\", \"artists\": [\"Usher\"], \"display_id\": \"AykMfSNJWQo\", \"_old_archive_ids\": [\"jiosaavnsong AykMfSNJWQo\"], \"ie_key\": \"JioSaavnSong\", \"_type\": \"url_transparent\", \"url\": \"https://www.jiosaavn.com/song/scream/AykMfSNJWQo#__youtubedl_smuggle=%7B%22id%22%3A+%22sAgLWyn9%22%2C+%22encrypted_media_url%22%3A+%22ID2ieOjCrwfgWvL5sXl4B1ImC5QfbsDyX2UTEanE3kcDcshCtV0UGtyWXTohBEhjZAXh9H4XCSwmnGBH7FbE9Rw7tS9a8Gtq%22%7D\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.jiosaavn.com/s/playlist/2279fbe391defa793ad7076929a2f5c9/mood-english/LlJ8ZWT1ibN5084vKHRj2Q__\", \"original_url\": \"https://www.jiosaavn.com/s/playlist/2279fbe391defa793ad7076929a2f5c9/mood-english/LlJ8ZWT1ibN5084vKHRj2Q__\", \"webpage_url_basename\": \"LlJ8ZWT1ibN5084vKHRj2Q__\", \"webpage_url_domain\": \"jiosaavn.com\", \"extractor\": \"jiosaavn:playlist\", \"extractor_key\": \"JioSaavnPlaylist\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

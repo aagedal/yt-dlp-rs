@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<MPD
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="urn:mpeg:dash:schema:mpd:2011"
+    xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 http://standards.iso.org/ittf/PubliclyAvailableStandards/MPEG-DASH_schema_files/DASH-MPD.xsd"
+    type="static"
+    mediaPresentationDuration="PT300.032S"
+    minBufferTime="PT4S"
+    profiles="urn:mpeg:dash:profile:isoff-main:2011">
+  <Period>
+    <AdaptationSet
+        id="1"
+        segmentAlignment="true"
+        maxWidth="1920"
+        maxHeight="1080"
+        maxFrameRate="25">
+        <SegmentTemplate
+            timescale="1000"
+            media="nv-dash-frag-vod4-$Number$-$RepresentationID$.m4s"
+            initialization="nv-dash-init-vod4-$RepresentationID$.mp4"
+            startNumber="1">
+            <SegmentTimeline>
+                <S d="4000"/>
+                <S d="6960"/>
+                <S d="2120"/>
+                <S d="3080"/>
+                <S d="4000"/>
+                <S d="6800"/>
+                <S d="4000"/>
+                <S d="3040"/>
+                <S d="4000" r="2"/>
+                <S d="3400"/>
+                <S d="4000" r="3"/>
+                <S d="2800"/>
+                <S d="4000" r="3"/>
+                <S d="3800"/>
+                <S d="4000"/>
+                <S d="7440"/>
+                <S d="4000" r="2"/>
+                <S d="3680"/>
+                <S d="2040"/>
+                <S d="4000"/>
+                <S d="5080"/>
+                <S d="3360"/>
+                <S d="4000" r="12"/>
+                <S d="2560"/>
+                <S d="4000" r="2"/>
+                <S d="7080"/>
+                <S d="4000"/>
+                <S d="3080"/>
+                <S d="4000" r="3"/>
+                <S d="3960"/>
+                <S d="4000"/>
+                <S d="2480"/>
+                <S d="4000"/>
+                <S d="3800"/>
+                <S d="4000"/>
+                <S d="6800"/>
+                <S d="3320"/>
+                <S d="4000" r="9"/>
+                <S d="1320"/>
+            </SegmentTimeline>
+        </SegmentTemplate>
+      <Representation
+          id="f1-v1-x3"
+          mimeType="video/mp4"
+          codecs="avc1.42c01f"
+          width="400"
+          height="224"
+          frameRate="25"
+          sar="1:1"
+          startWithSAP="1"
+          bandwidth="395156">
+      </Representation>
+      <Representation
+          id="f2-v1-x3"
+          mimeType="video/mp4"
+          codecs="avc1.42c01f"
+          width="480"
+          height="272"
+          frameRate="25"
+          sar="1:1"
+          startWithSAP="1"
+          bandwidth="595096">
+      </Representation>
+      <Representation
+          id="f3-v1-x3"
+          mimeType="video/mp4"
+          codecs="avc1.4d401f"
+          width="640"
+          height="360"
+          frameRate="25"
+          sar="1:1"
+          startWithSAP="1"
+          bandwidth="791200">
+      </Representation>
+      <Representation
+          id="f4-v1-x3"
+          mimeType="video/mp4"
+          codecs="avc1.4d401f"
+          width="800"
+          height="448"
+          frameRate="25"
+          sar="1:1"
+          startWithSAP="1"
+          bandwidth="1191630">
+      </Representation>
+      <Representation
+          id="f5-v1-x3"
+          mimeType="video/mp4"
+          codecs="avc1.4d401f"
+          width="960"
+          height="540"
+          frameRate="25"
+          sar="1:1"
+          startWithSAP="1"
+          bandwidth="2093561">
+      </Representation>
+      <Representation
+          id="f6-v1-x3"
+          mimeType="video/mp4"
+          codecs="avc1.64001f"
+          width="1280"
+          height="720"
+          frameRate="25"
+          sar="1:1"
+          startWithSAP="1"
+          bandwidth="3503268">
+      </Representation>
+      <Representation
+          id="f7-v1-x3"
+          mimeType="video/mp4"
+          codecs="avc1.640029"
+          width="1920"
+          height="1080"
+          frameRate="25"
+          sar="1:1"
+          startWithSAP="1"
+          bandwidth="5004993">
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet
+        id="2"
+        segmentAlignment="true">
+      <AudioChannelConfiguration
+          schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011"
+          value="1"/>
+        <SegmentTemplate
+            timescale="1000"
+            media="nv-dash-frag-vod4-$Number$-$RepresentationID$.m4s"
+            initialization="nv-dash-init-vod4-$RepresentationID$.mp4"
+            startNumber="1">
+            <SegmentTimeline>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="3989"/>
+                <S d="4011"/>
+                <S d="21"/>
+            </SegmentTimeline>
+        </SegmentTemplate>
+      <Representation
+          id="f1-a1-x3"
+          mimeType="audio/mp4"
+          codecs="mp4a.40.2"
+          audioSamplingRate="48000"
+          startWithSAP="1"
+          bandwidth="127722">
+      </Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>

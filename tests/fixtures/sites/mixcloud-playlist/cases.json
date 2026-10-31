@@ -1,0 +1,17 @@
+[
+ {
+  "url": "https://www.mixcloud.com/maxvibes/playlists/jazzcat-on-ness-radio/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.mixcloud.com/maxvibes/playlists/jazzcat-on-ness-radio/",
+  "args": [
+   "--flat-playlist",
+   "--print",
+   "playlist_count,title,id"
+  ]
+ }
+]

@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "http://www.empflix.com/amateur-porn/Amateur-Finger-Fuck/video33051",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "video33051.html"
+  },
+  {
+   "url": "http://www.empflix.com/ajax/video-player/33051",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "player-33051.json"
+  }
+ ]
+}

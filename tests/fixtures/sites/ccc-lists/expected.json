@@ -1,0 +1,48 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://media.ccc.de/c/30c3",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"30c3\", \"title\": \"30C3\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"CCC\", \"_type\": \"url\", \"url\": \"https://media.ccc.de/v/30C3_-_5439_-_en_-_saal_1_-_201312292105_-_to_protect_and_infect_-_claudio_guarnieri_-_morgan_marquis-boire\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"CCC\", \"_type\": \"url\", \"url\": \"https://media.ccc.de/v/30C3_-_5609_-_en_-_saal_6_-_201312301430_-_infrastructure_review_-_kay_-_peter_stuge_-_florolf_-_sebastian_-_m\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"CCC\", \"_type\": \"url\", \"url\": \"https://media.ccc.de/v/30C3_-_5425_-_en_-_saal_6_-_201312281900_-_hacking_as_artistic_practice_-_mediengruppe_bitnik_-_mediengruppe_bitnik\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://media.ccc.de/c/30c3\", \"original_url\": \"https://media.ccc.de/c/30c3\", \"webpage_url_basename\": \"30c3\", \"webpage_url_domain\": \"media.ccc.de\", \"extractor\": \"media.ccc.de:lists\", \"extractor_key\": \"CCCPlaylist\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://media.ccc.de/c/30c3",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "--playlist-items",
+    "2"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"30c3\", \"title\": \"30C3\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"CCC\", \"_type\": \"url\", \"url\": \"https://media.ccc.de/v/30C3_-_5609_-_en_-_saal_6_-_201312301430_-_infrastructure_review_-_kay_-_peter_stuge_-_florolf_-_sebastian_-_m\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://media.ccc.de/c/30c3\", \"original_url\": \"https://media.ccc.de/c/30c3\", \"webpage_url_basename\": \"30c3\", \"webpage_url_domain\": \"media.ccc.de\", \"extractor\": \"media.ccc.de:lists\", \"extractor_key\": \"CCCPlaylist\", \"release_year\": null, \"requested_entries\": [2], \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://media.ccc.de/c/missing-conf",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [media.ccc.de:lists] missing-conf: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

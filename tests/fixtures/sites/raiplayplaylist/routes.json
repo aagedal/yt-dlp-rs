@@ -1,0 +1,46 @@
+{
+  "routes": [
+    {
+      "url": "https://www.raiplay.it/programmi/nondirloalmiocapo.json",
+      "headers": {
+        "Content-Type": "application/json;charset=UTF-8"
+      },
+      "body_file": "0fe062c43d87.bin"
+    },
+    {
+      "url": "https://www.raiplay.it/programmi/nondirloalmiocapo/ContentSet-1fc7b504-c871-410e-bf6f-9b1b16146077.json",
+      "headers": {
+        "Content-Type": "application/json;charset=UTF-8"
+      },
+      "body_file": "21baa5fcd514.bin"
+    },
+    {
+      "url": "https://www.raiplay.it/programmi/nondirloalmiocapo/ContentSet-262062be-168b-49e5-aeeb-da740df7e5d1.json",
+      "headers": {
+        "Content-Type": "application/json;charset=UTF-8"
+      },
+      "body_file": "3e353ae80808.bin"
+    },
+    {
+      "url": "https://www.raiplay.it/programmi/nondirloalmiocapo/ContentSet-508b1586-0dd1-46b9-b67f-97873acb6f8e.json",
+      "headers": {
+        "Content-Type": "application/json;charset=UTF-8"
+      },
+      "body_file": "16924e637b39.bin"
+    },
+    {
+      "url": "https://www.raiplay.it/programmi/nondirloalmiocapo/ContentSet-69b3eea6-1a78-40b9-bd13-3d15ec175070.json",
+      "headers": {
+        "Content-Type": "application/json;charset=UTF-8"
+      },
+      "body_file": "87ee0440f029.bin"
+    },
+    {
+      "url": "https://www.raiplay.it/programmi/nondirloalmiocapo/ContentSet-e37139c0-1e33-4084-b9d4-e0970e6285d1.json",
+      "headers": {
+        "Content-Type": "application/json;charset=UTF-8"
+      },
+      "body_file": "e9ed37c74994.bin"
+    }
+  ]
+}

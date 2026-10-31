@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://vod.tvp.pl/api/products/vods/311357?lang=pl&platform=BROWSER",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r001.body"
+  },
+  {
+   "url": "https://vod.tvp.pl/api/products/311357/videos/playlist?lang=pl&platform=BROWSER&videoType=MOVIE",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r002.body"
+  },
+  {
+   "url": "https://sdt-l3-02-187.tvp.pl/token/video/vod/60468609/20261031/3252931624/RQmM3ICL-O439H3ybtgtHUsCRPbTvtD_joBkcw5k20azBEhVlUX5MPKmzGAnvjSAYJ79dvX0W8bR6UhHwzOvdvPK7rxkHbUvesoMEc_J3y3X7uR1vSZw9fNdNiHU7fGzbPhzMMciGlwysAm3APOBVZ9vC7NZqHV-bG9UaXkQ11o/video.ism/video-fmp4.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "r003.body"
+  },
+  {
+   "url": "https://sdt-l3-02-187.tvp.pl/token/video/vod/60468609/20261031/3252931624/RQmM3ICL-O439H3ybtgtHUsCRPbTvtD_joBkcw5k20azBEhVlUX5MPKmzGAnvjSAYJ79dvX0W8bR6UhHwzOvdvPK7rxkHbUvesoMEc_J3y3X7uR1vSZw9fNdNiHU7fGzbPhzMMciGlwysAm3APOBVZ9vC7NZqHV-bG9UaXkQ11o/video.ism/video.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "r004.body"
+  }
+ ]
+}

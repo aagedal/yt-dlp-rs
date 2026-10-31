@@ -1,0 +1,17 @@
+[
+ {
+  "url": "https://www.rainews.it/video/2024/02/membri-della-croce-rossa-evacuano-gli-abitanti-di-un-villaggio-nella-regione-ucraina-di-kharkiv-il-filmato-dallucraina--31e8017c-845c-43f5-9c48-245b43c3a079.html",
+  "args": [
+   "-F",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.rainews.it/video/2024/02/membri-della-croce-rossa-evacuano-gli-abitanti-di-un-villaggio-nella-regione-ucraina-di-kharkiv-il-filmato-dallucraina--31e8017c-845c-43f5-9c48-245b43c3a079.html",
+  "args": [
+   "--print",
+   "\"%(id)s|%(title)s|%(upload_date)s|%(uploader)s|%(duration)s|%(is_live)s\"",
+   "--no-geo-bypass"
+  ]
+ }
+]

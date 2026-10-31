@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<screen>  <itemInfo>
+	<title><![CDATA[Spot 02 Wippe]]></title>
+    <id>elefantenkino_wippe</id>
+    <type>movie</type>
+    <colorSet>red</colorSet>
+</itemInfo>
+<pageAudio>
+      <audio></audio>
+  
+	<delay></delay>
+	<repeat></repeat>
+</pageAudio>  
+  
+<adultInfo>
+    <title><![CDATA[Spot Wippe]]></title>
+    <text><![CDATA[Elefant und Hase haben eine Idee, wie sie die Wippe in Schwung bringen können.]]></text>
+    <instruction_url><![CDATA[]]></instruction_url>
+    <adultPages_url><![CDATA[]]></adultPages_url>
+</adultInfo> 
+ 
+<custom_colors>      <button_color>       </button_color>
+</custom_colors>
+  
+  
+  
+ 
+      
+<previewInfo>          <thumbnail_1x>image_gen/data/xml/filme/Elefantenkino/elefantenkino_spot_002_wippe/02_wippe_th_212x120.jpg</thumbnail_1x>
+        <thumbnail_2x>image_gen/data/xml/filme/Elefantenkino/elefantenkino_spot_002_wippe/02_wippe_th_424x240.jpg</thumbnail_2x>
+        <thumbnail_app>image_gen/data/xml/filme/Elefantenkino/elefantenkino_spot_002_wippe/02_wippe_th_624x351.jpg</thumbnail_app>        <audio>assets/audio/zum_film.mp3</audio>
+    
+</previewInfo>
+
+<movie>      <sophora_id>mdb-1198320</sophora_id>
+    <sophora_url>https://kinder.wdr.de/tv/die-sendung-mit-dem-elefanten/video-wippe-100.assetjsonp</sophora_url>
+    <zmdb_url>https://deviceids-medp.wdr.de/ondemand/119/1198320.js</zmdb_url>
+    <title><![CDATA[Wippe]]></title>
+    <airdate>2007-10-03T07:25</airdate>
+    <duration>00:01:11</duration>
+    <pubstart>2024-02-29T09:04</pubstart>
+    <pubende>2025-10-12T07:25</pubende>
+</movie>
+
+  
+  
+<related>
+      <selection>
+        <target>filme</target>
+          <audio></audio>
+  
+    </selection>        <movieSelection>
+        <target>filmauswahl_elefantenkino</target>
+          <audio></audio>
+  
+    </movieSelection>                        
+</related>  
+   </screen>

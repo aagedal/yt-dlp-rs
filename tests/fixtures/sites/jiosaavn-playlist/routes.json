@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://www.jiosaavn.com/api.php?__call=webapi.get&_format=json&_marker=0&ctx=web6dot0&token=LlJ8ZWT1ibN5084vKHRj2Q__&type=playlist&p=1&n=50",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page-1.json"
+  },
+  {
+   "url": "https://www.jiosaavn.com/api.php?__call=webapi.get&_format=json&_marker=0&ctx=web6dot0&token=LlJ8ZWT1ibN5084vKHRj2Q__&type=playlist&p=2&n=50",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page-2.json"
+  }
+ ]
+}

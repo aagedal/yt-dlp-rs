@@ -1,15 +1,21 @@
 //! Upstream `CCCIE` (`yt_dlp/extractor/ccc.py`): a media.ccc.de event page's
-//! `data-id`, the `public/events/ID` JSON and its recordings as formats.
+//! `data-id`, the `public/events/ID` JSON and its recordings as formats; and
+//! `CCCPlaylistIE`: a conference's `public/conferences/ID` JSON events as
+//! `CCC` url entries.
 use super::clyp::key_error;
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage};
-use crate::{Error, Result, VideoInfo};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
-use serde_json::Value;
+use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
 use url::Url;
 
 pub struct Ccc;
+pub struct CccPlaylist;
+
+const PLAYLIST_NAME: &str = "media.ccc.de:lists";
+const PLAYLIST_KEY: &str = "CCCPlaylist";
 
 const NAME: &str = "media.ccc.de";
 const KEY: &str = "CCC";
@@ -20,9 +26,42 @@ static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
 static EVENT_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-id=(?:'(?P<a>\d+)'|"(?P<b>\d+)")"#).unwrap());
 
+static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"https?://(?:www\.)?media\.ccc\.de/c/(?P<id>[^/?#&]+)").unwrap()
+});
+
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
+}
+
+/// `CCCPlaylistIE._VALID_URL`.
+pub fn playlist_suitable(url: &str) -> bool {
+    PLAYLIST_URL.is_match(url)
+}
+
+/// `url_result(event_url, ie=CCCIE.ie_key())` as a playlist entry.
+fn url_entry(target: &str) -> Result<VideoInfo> {
+    let url = Url::parse(target)?;
+    let mut info = super::direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    let mut entry = Map::new();
+    entry.insert("ie_key".into(), KEY.into());
+    entry.insert("_type".into(), "url".into());
+    entry.insert("url".into(), target.into());
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": {},
+            "ie_key": KEY,
+            "extractor": NAME,
+            "entry": Value::Object(entry),
+        }),
+    );
+    Ok(info)
 }
 
 fn unsupported(what: &str) -> Error {
@@ -176,6 +215,65 @@ impl Extractor for Ccc {
     }
 }
 
+impl Extractor for CccPlaylist {
+    fn key(&self) -> &'static str {
+        PLAYLIST_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = PLAYLIST_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let playlist_id = found["id"].to_owned();
+        crate::screen::set_extractor(PLAYLIST_NAME);
+        crate::screen::screen(&format!(
+            "[{PLAYLIST_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        let api = Url::parse(&format!(
+            "https://media.ccc.de/public/conferences/{playlist_id}"
+        ))?;
+        let conf = download_json(client, &api, PLAYLIST_NAME, &playlist_id)?;
+        let mut entries = Vec::new();
+        if let Some(events) = conf.get("events").and_then(Value::as_array) {
+            for event in events {
+                let link = event
+                    .get("frontend_link")
+                    .and_then(Value::as_str)
+                    .filter(|link| link.starts_with("http://") || link.starts_with("https://"));
+                if let Some(link) = link {
+                    entries.push(url_entry(link)?);
+                }
+            }
+        }
+        let title = conf
+            .get("title")
+            .and_then(Value::as_str)
+            .map(str::to_owned)
+            .unwrap_or_default();
+        let mut extra = Map::new();
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            "playlist-dict;id,title".into(),
+        );
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: playlist_id,
+            title,
+            webpage_url: url.clone(),
+            extractor: PLAYLIST_NAME.into(),
+            extractor_key: PLAYLIST_KEY.into(),
+            nested: Vec::new(),
+            pending: None,
+            entries,
+            extra,
+        })))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -186,5 +284,7 @@ mod tests {
             "https://media.ccc.de/v/32c3-7368-shopshifting#download"
         ));
         assert!(!suitable("https://media.ccc.de/c/30c3"));
+        assert!(playlist_suitable("https://media.ccc.de/c/30c3"));
+        assert!(!playlist_suitable("https://media.ccc.de/v/30c3"));
     }
 }

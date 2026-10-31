@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {
+   "url": "https://www.polskieradio.pl/8/2382/Artykul/2534482,Zagarysci-Poezja-jak-spoiwo",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "r001.body"
+  }
+ ]
+}

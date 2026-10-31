@@ -1,0 +1,18 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.sooplive.com/station/devil0108/vod/review",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"devil0108\", \"title\": \"devil0108 - review\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"AfreecaTV\", \"id\": \"211339345\", \"title\": \"1031 \\uc624\\ud504\\ub2dd\\ud1a0\\ud06c\", \"_type\": \"url\", \"url\": \"https://vod.sooplive.com/player/211339345/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"AfreecaTV\", \"id\": \"211183963\", \"title\": \"\\uac10\\uc2a4\\ud2b8 \\uc6d0\\ud0dc\\u2665\\uc608\\ub2c8 \\ucd94\\uc801\\ubc29\\uc1a12\", \"_type\": \"url\", \"url\": \"https://vod.sooplive.com/player/211183963/\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.sooplive.com/station/devil0108/vod/review\", \"original_url\": \"https://www.sooplive.com/station/devil0108/vod/review\", \"webpage_url_basename\": \"review\", \"webpage_url_domain\": \"sooplive.com\", \"extractor\": \"soop:user\", \"extractor_key\": \"AfreecaTVUser\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

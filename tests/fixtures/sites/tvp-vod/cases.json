@@ -1,0 +1,9 @@
+[
+ {
+  "url": "https://vod.tvp.pl/dla-dzieci,24/laboratorium-alchemika-odcinki,309338/odcinek-24,S01E24,311357",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(age_limit)s|%(duration)s|%(episode_number)s|%(series)s|%(is_live)s|%(description)s|%(thumbnail)s"
+  ]
+ }
+]

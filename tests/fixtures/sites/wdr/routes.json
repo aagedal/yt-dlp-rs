@@ -1,0 +1,10 @@
+{
+ "routes": [
+  {"url": "https://www.wdrmaus.de/elefantenseite/data/tableOfContentsJS.php5", "headers": {"Content-Type": "application/json"}, "body_file": "toc.json"},
+  {"url": "https://www.wdrmaus.de/elefantenseite/data/xml/filme/Elefantenkino/elefantenkino_spot_002_wippe.xml", "headers": {"Content-Type": "text/xml"}, "body_file": "wippe.xml"},
+  {"url": "https://www.wdrmaus.de/elefantenseite/data/xml/synthetic_nonvideo.xml", "headers": {"Content-Type": "text/xml"}, "body_file": "nonvideo.xml"},
+  {"url": "https://deviceids-medp.wdr.de/ondemand/119/1198320.js", "headers": {"Content-Type": "application/javascript"}, "body_file": "wippe.js"},
+  {"url": "https://wdradaptiv-vh.akamaihd.net/i/medp/ondemand/weltweit/fsk0/119/1198320/,1198320_13850992,1198320_13850994,1198320_13850991,1198320_13850990,1198320_13850993,.mp4.csmil/master.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "master.m3u8"},
+  {"url": "http://wdradaptiv-vh.akamaihd.net/i/medp/ondemand/weltweit/fsk0/119/1198320/,1198320_13850992,1198320_13850994,1198320_13850991,1198320_13850990,1198320_13850993,.mp4.csmil/master.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "master.m3u8"}
+ ]
+}

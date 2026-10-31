@@ -1,0 +1,41 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.raicultura.it/letteratura/articoli/2018/12/Alberto-Asor-Rosa-Letteratura-e-potere-05ba8775-82b5-45c5-a89d-dd955fbde1fb.html",
+   "args": [
+    "-F",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[RaiCultura] Extracting URL: https://www.raicultura.it/letteratura/articoli/2018/12/Alberto-Asor-Rosa-Letteratura-e-potere-05b...9d-dd955fbde1fb.html",
+    "[RaiCultura] 05ba8775-82b5-45c5-a89d-dd955fbde1fb: Downloading webpage",
+    "[RaiCultura] 05ba8775-82b5-45c5-a89d-dd955fbde1fb: Downloading XML metadata",
+    "[RaiCultura] 05ba8775-82b5-45c5-a89d-dd955fbde1fb: Downloading m3u8 information",
+    "[RaiCultura] 05ba8775-82b5-45c5-a89d-dd955fbde1fb: Checking MP4 availability",
+    "[info] Available formats for 05ba8775-82b5-45c5-a89d-dd955fbde1fb:",
+    "ID         EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC ACODEC",
+    "----------------------------------------------------------------------",
+    "hls-1800   mp4 1024x576       | ~368.00MiB 1758k m3u8  | avc1   mp4a",
+    "https-1700 mp4 1024x576    25 | ≈368.00MiB 1758k https | avc1   mp4a"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.raicultura.it/letteratura/articoli/2018/12/Alberto-Asor-Rosa-Letteratura-e-potere-05ba8775-82b5-45c5-a89d-dd955fbde1fb.html",
+   "args": [
+    "--print",
+    "\"%(id)s|%(title)s|%(upload_date)s|%(uploader)s|%(duration)s|%(is_live)s\"",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "\"05ba8775-82b5-45c5-a89d-dd955fbde1fb|Alberto Asor Rosa: Letteratura e potere|20181206|raicultura|1756|False\""
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

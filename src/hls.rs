@@ -486,8 +486,22 @@ fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
     let mut discontinuity = Vec::new();
     let mut discontinuities = 0u32;
     for line in lines.into_iter().skip(1) {
-        if endlist && (line.starts_with("#EXT") || !line.starts_with('#')) {
-            return Err(invalid("HLS ENDLIST must terminate the media playlist"));
+        if endlist {
+            // Upstream's line loop ignores informational tags after ENDLIST
+            // (e.g. SOOP's #EXT-X-TOTAL_DURATION); media after it stays an error.
+            const MEDIA_TAGS: [&str; 7] = [
+                "#EXTINF:",
+                "#EXT-X-BYTERANGE:",
+                "#EXT-X-MAP:",
+                "#EXT-X-KEY:",
+                "#EXT-X-STREAM-INF:",
+                "#EXT-X-DISCONTINUITY",
+                "#EXT-X-ENDLIST",
+            ];
+            if !line.starts_with('#') || MEDIA_TAGS.iter().any(|tag| line.starts_with(tag)) {
+                return Err(invalid("HLS ENDLIST must terminate the media playlist"));
+            }
+            continue;
         }
         if line == "#EXT-X-ENDLIST" {
             if endlist || pending_duration || pending_range.is_some() || pending_variant.is_some() {
@@ -970,9 +984,20 @@ mod tests {
             "#EXTM3U\n#EXTINF:1,\na.m3u8\n#EXT-X-ENDLIST",
             "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000",
             "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000\na.m3u8\n#EXTINF:1,\na.ts\n#EXT-X-ENDLIST",
+            "#EXTM3U\n#EXTINF:1,\na.ts\n#EXT-X-ENDLIST\nb.ts",
+            "#EXTM3U\n#EXTINF:1,\na.ts\n#EXT-X-ENDLIST\n#EXTINF:1,\nb.ts",
+            "#EXTM3U\n#EXTINF:1,\na.ts\n#EXT-X-ENDLIST\n#EXT-X-ENDLIST",
         ] {
             assert!(parse(text, &base()).is_err(), "{text}");
         }
+    }
+    #[test]
+    fn informational_tags_after_endlist_are_ignored() {
+        let text = "#EXTM3U\n#EXTINF:1,\na.ts\n#EXT-X-ENDLIST\n#EXT-X-TOTAL_DURATION:1";
+        let Playlist::Media { fragments, .. } = parse(text, &base()).unwrap() else {
+            panic!("media playlist expected");
+        };
+        assert_eq!(fragments.len(), 1);
     }
     #[test]
     fn discontinuities_are_counted_per_fragment_and_select_sections() {
@@ -1003,12 +1028,8 @@ mod tests {
     fn endlist_is_terminal_and_media_keys_cannot_appear_in_master() {
         let text = "#EXTM3U\n#EXTINF:1,\na.ts\n#EXT-X-ENDLIST";
         assert!(parse(&format!("{text}\n# trailing comment"), &base()).is_ok());
-        for trailing in [
-            "#EXT-X-KEY:METHOD=NONE",
-            "#EXT-X-VERSION:3",
-            "#EXT-X-ENDLIST",
-            "b.ts",
-        ] {
+        assert!(parse(&format!("{text}\n#EXT-X-VERSION:3"), &base()).is_ok());
+        for trailing in ["#EXT-X-KEY:METHOD=NONE", "#EXT-X-ENDLIST", "b.ts"] {
             assert!(parse(&format!("{text}\n{trailing}"), &base()).is_err());
         }
         assert!(

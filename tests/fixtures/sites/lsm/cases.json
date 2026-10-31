@@ -1,0 +1,38 @@
+[
+ {
+  "url": "https://ltv.lsm.lv/embed?enablesdkjs=1&c=synthetic-backscreen",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://ltv.lsm.lv/embed?enablesdkjs=1&c=synthetic-backscreen",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://ltv.lsm.lv/embed?c=synthetic-unsupported",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://ltv.lsm.lv/embed?c=synthetic-missing",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://replay.lsm.lv/lv/klausies/ieraksts/lr/183522/138-nepilniga-kompensejamo-zalu-sistema-pat-menesiem-dzena-pacientus-pa-aptiekam",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://replay.lsm.lv/lv/skaties/ieraksts/ltv/311130/4-studija-zolitudes-tragedija-un-incupes-stacija",
+  "args": [
+   "-J"
+  ]
+ }
+]

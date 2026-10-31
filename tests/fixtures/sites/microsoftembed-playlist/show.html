@@ -1,0 +1,850 @@
+ <!DOCTYPE html>
+		<html
+			class="layout layout-single    show show-breadcrumb default-focus"
+			lang="en-us"
+			dir="ltr"
+			data-authenticated="false"
+			data-auth-status-determined="false"
+			data-target="docs"
+			x-ms-format-detection="none"
+		>
+			
+		<head>
+			<title>Bash for Beginners | Microsoft Learn</title>
+			<meta charset="utf-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+			<meta name="color-scheme" content="light dark" />
+
+			<meta name="description" content="Bash is considered a universal language when it comes to cloud computing and programming. Many languages support Bash commands to pass data and information and when it comes to the Cloud, all platforms support using it to interact with your environment. Even though we won&#39;t cover everything there is to know about this language in the course, we want to make sure we give you the foundation on scripting in Bash. At the end of the course, you&#39;ll be able to create your own scripts and automate tasks with the help of Bash. " />
+			<link rel="canonical" href="https://learn.microsoft.com/en-us/shows/bash-for-beginners/" /> 
+
+			<!-- Non-customizable open graph and sharing-related metadata -->
+			<meta name="twitter:card" content="summary_large_image" />
+			<meta name="twitter:site" content="@MicrosoftLearn" />
+			<meta property="og:type" content="website" />
+			<meta property="og:image:alt" content="Microsoft Learn" />
+			<meta property="og:image" content="https://learn.microsoft.com/en-us/media/open-graph-image.png" />
+			<!-- Page specific open graph and sharing-related metadata -->
+			<meta property="og:title" content="Bash for Beginners" />
+			<meta property="og:url" content="https://learn.microsoft.com/en-us/shows/bash-for-beginners/" />
+			<meta property="og:description" content="Bash is considered a universal language when it comes to cloud computing and programming. Many languages support Bash commands to pass data and information and when it comes to the Cloud, all platforms support using it to interact with your environment. Even though we won&#39;t cover everything there is to know about this language in the course, we want to make sure we give you the foundation on scripting in Bash. At the end of the course, you&#39;ll be able to create your own scripts and automate tasks with the help of Bash. " />
+			<meta name="platform_id" content="0e0febf9-82ca-0b95-01cd-b8b023db41c3" /> 
+			<meta name="locale" content="en-us" />
+			 
+			<meta name="uhfHeaderId" content="MSDocsHeader-Shows" />
+
+			<meta name="page_type" content="show" />
+
+			<!--page specific meta tags-->
+			
+
+			<!-- custom meta tags -->
+			
+		<meta name="type" content="series" />
+	
+		<meta name="uid" content="bash-for-beginners" />
+	
+		<meta name="imageUrl" content="media/beg_bash-banner-511.png" />
+	
+		<meta name="presentedLocale" content="en" />
+	
+		<meta name="schema" content="Show" />
+	
+		<meta name="breadcrumb_path" content="/shows/breadcrumb/toc.json" />
+	
+		<meta name="ms.topic" content="episode" />
+	
+		<meta name="feedback_system" content="None" />
+	
+		<meta name="ms.localizationpriority" content="medium" />
+	
+		<meta name="author" content="v-trmyl" />
+	
+		<meta name="document_id" content="e4942419-0e6f-25d2-d0ce-29c7ea5916ee" />
+	
+		<meta name="document_version_independent_id" content="e4942419-0e6f-25d2-d0ce-29c7ea5916ee" />
+	
+		<meta name="updated_at" content="2023-02-15T15:28:00Z" />
+	
+		<meta name="original_content_git_url" content="https://github.com/MicrosoftDocs/show-pr/blob/live/shows/bash-for-beginners/index.yml" />
+	
+		<meta name="gitcommit" content="https://github.com/MicrosoftDocs/show-pr/blob/276725e9b319bc47195032b359d4de42ad67fcc9/shows/bash-for-beginners/index.yml" />
+	
+		<meta name="git_commit_id" content="276725e9b319bc47195032b359d4de42ad67fcc9" />
+	
+		<meta name="site_name" content="Docs" />
+	
+		<meta name="depot_name" content="MSDN.show" />
+	
+		<meta name="feedback_product_url" content="" />
+	
+		<meta name="feedback_help_link_type" content="" />
+	
+		<meta name="feedback_help_link_url" content="" />
+	
+		<meta name="asset_id" content="bash-for-beginners/index" />
+	
+		<meta name="moniker_range_name" content="" />
+	
+		<meta name="item_type" content="Content" />
+	
+		<meta name="source_path" content="shows/bash-for-beginners/index.yml" />
+	
+		<meta name="github_feedback_content_git_url" content="https://github.com/MicrosoftDocs/show-pr/blob/live/shows/bash-for-beginners/index.yml" />
+	
+		<meta name="markdown_url" content="https://learn.microsoft.com/en-us/shows/bash-for-beginners/?accept=text/markdown" />
+	 
+
+			<!-- Apply persisted/system theme before first paint to prevent wrong-theme flash when scripts are deferred. -->
+			<script id="theme-preference">
+				(function () {
+			try {
+				var stored = localStorage.getItem('theme');
+				var theme = /^(light|dark|high-contrast)$/.test(stored)
+					? stored
+					: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+				document.documentElement.classList.add('theme-' + theme);
+			} catch (e) {}
+		})();;
+			</script>
+
+			<script id="atlas-layout-preferences">
+				(function () {
+			try {
+				var state = JSON.parse(localStorage.getItem('atlas-layout-preferences') || '{}');
+				var view = state["Show"] || {};
+				var excludesKey = "";
+				var blocked = {};
+				if (excludesKey) {
+					var exclusions = JSON.parse(localStorage.getItem('atlas-layout-exclusions') || '{}');
+					if (Object.prototype.hasOwnProperty.call(exclusions, excludesKey)) {
+						var scoped = exclusions[excludesKey];
+						if (scoped) {
+							if (typeof scoped === 'object') blocked = scoped;
+						}
+					}
+				}
+				var html = document.documentElement;
+				for (var c in view) {
+					if (Object.prototype.hasOwnProperty.call(blocked, c)) continue;
+					if (view[c]) html.classList.add(c);
+					else html.classList.remove(c);
+				}
+			} catch (e) {}
+		})();;
+			</script>
+
+			<!-- assets and js globals -->
+			
+			<link rel="stylesheet" href="/static/assets/0.4.03585.8329-a252cb59/styles/site.css" />
+			
+			<script src="https://wcpstatic.microsoft.com/mscc/lib/v2/wcp-consent.js"></script>
+			<!-- Keep this URL in sync with oneDSScriptSelector in instrumentation/one-ds.ts. -->
+			<script async src="https://js.monitor.azure.com/scripts/c/ms.jsll-4.min.js"></script>
+			
+
+			<!-- msdocs global object -->
+			<script id="msdocs-script">
+		var msDocs = {
+  "environment": {
+    "accessLevel": "online",
+    "azurePortalHostname": "portal.azure.com",
+    "reviewFeatures": false,
+    "supportLevel": "production",
+    "systemContent": true,
+    "siteName": "learn",
+    "legacyHosting": false
+  },
+  "data": {
+    "contentLocale": "en-us",
+    "contentDir": "ltr",
+    "userLocale": "en-us",
+    "userDir": "ltr",
+    "pageTemplate": "Show",
+    "layoutStateStorageKey": "Show",
+    "brand": "",
+    "context": {},
+    "standardFeedback": false,
+    "showFeedbackReport": false,
+    "feedbackHelpLinkType": "",
+    "feedbackHelpLinkUrl": "",
+    "feedbackSystem": "None",
+    "feedbackGitHubRepo": "",
+    "feedbackProductUrl": "",
+    "extendBreadcrumb": false,
+    "isEditDisplayable": false,
+    "isPrivateUnauthorized": false,
+    "hideViewSource": false,
+    "isPermissioned": false,
+    "hasRecommendations": false
+  },
+  "functions": {}
+};;
+	</script>
+
+			<!-- base scripts, msdocs global should be before this -->
+			<script
+				src="/static/assets/0.4.03585.8329-a252cb59/scripts/en-us/index-docs.js"
+				async
+			></script>
+			
+
+			<!-- json-ld -->
+			
+		<script >bazadebezolkohpepadr="1084188705"</script><script type="text/javascript" src="https://learn.microsoft.com/akam/13/409f6b29"  defer></script></head>
+	
+			<body
+				id="body"
+				data-bi-name="body"
+				class="layout-body "
+				lang="en-us"
+				dir="ltr"
+			>
+				<header class="layout-body-header background-color-body-medium">
+		<div class="header-holder has-default-focus">
+			
+		<a
+			href="#main"
+			
+			style="z-index: 1070"
+			class="outline-color-text visually-hidden-until-focused position-fixed inner-focus focus-visible top-0 left-0 right-0 padding-xs text-align-center background-color-body"
+			
+		>
+			Skip to main content
+		</a>
+	
+
+			<div hidden id="cookie-consent-holder" data-test-id="cookie-consent-container"></div>
+			<!-- Unsupported browser warning -->
+			<div
+				id="unsupported-browser"
+				style="background-color: white; color: black; padding: 16px; border-bottom: 1px solid grey;"
+				hidden
+			>
+				<div style="max-width: 800px; margin: 0 auto;">
+					<p style="font-size: 24px">This browser is no longer supported.</p>
+					<p style="font-size: 16px; margin-top: 16px;">
+						Upgrade to Microsoft Edge to take advantage of the latest features, security updates, and technical support.
+					</p>
+					<div style="margin-top: 12px;">
+						<a
+							href="https://go.microsoft.com/fwlink/p/?LinkID=2092881 "
+							style="background-color: #0078d4; border: 1px solid #0078d4; color: white; padding: 6px 12px; border-radius: 2px; display: inline-block;"
+						>
+							Download Microsoft Edge
+						</a>
+						<a
+							href="https://learn.microsoft.com/en-us/lifecycle/faq/internet-explorer-microsoft-edge"
+							style="background-color: white; padding: 6px 12px; border: 1px solid #505050; color: #171717; border-radius: 2px; display: inline-block;"
+						>
+							More info about Internet Explorer and Microsoft Edge
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- site header -->
+			<div
+				id="ms--site-header"
+				data-test-id="site-header-wrapper"
+				itemscope="itemscope"
+				itemtype="http://schema.org/Organization"
+			>
+				<div
+					id="ms--mobile-nav"
+					class="site-header display-none-tablet padding-inline-none gap-none"
+					data-bi-name="mobile-header"
+					data-test-id="mobile-header"
+				></div>
+				<div
+					id="ms--primary-nav"
+					class="site-header display-none display-flex-tablet"
+					data-bi-name="L1-header"
+					data-test-id="primary-header"
+				></div>
+				<div
+					id="ms--secondary-nav"
+					class="site-header display-none display-flex-tablet"
+					data-bi-name="L2-header"
+					data-test-id="secondary-header"
+					
+				></div>
+			</div>
+			
+		<!-- banner -->
+		<div data-banner>
+			<div id="disclaimer-holder"></div>
+			
+		</div>
+		<!-- banner end -->
+	
+		</div>
+	</header>
+				 
+
+				<main
+					id="main"
+					role="main"
+					class="layout-body-main background-color-body-medium"
+					data-bi-name="content"
+					lang="en-us"
+					dir="ltr"
+				>
+					
+			<div
+				data-main-column
+				class=""
+			>
+				<div class="">
+					
+		<div id="article-header" class="background-color-body display-none-print">
+			<div class="display-flex align-items-center justify-content-space-between uhf-container">
+				
+		<details
+			id="article-header-breadcrumbs-overflow-popover"
+			class="popover popover-left"
+			data-for="article-header-breadcrumbs"
+		>
+			<summary
+				class="button button-clear button-primary button-sm inner-focus"
+				aria-label="All breadcrumbs"
+			>
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-more"></span>
+				</span>
+			</summary>
+			<div id="article-header-breadcrumbs-overflow" class="popover-content"></div>
+		</details>
+
+		<bread-crumbs
+			id="article-header-breadcrumbs"
+			role="group"
+			aria-label="Breadcrumbs"
+			data-test-id="article-header-breadcrumbs"
+			class="overflow-hidden flex-grow-1 margin-right-sm margin-right-md-tablet margin-right-lg-desktop margin-left-negative-xxs padding-left-xxs"
+		></bread-crumbs>
+	 
+		<div
+			id="article-header-page-actions"
+			class="opacity-none margin-left-auto display-flex flex-wrap-no-wrap align-items-stretch"
+		>
+			 
+
+			<details class="popover popover-right" id="article-header-page-actions-overflow">
+				<summary
+					class="justify-content-flex-start button button-clear button-sm button-primary inner-focus"
+					aria-label="More actions"
+					aria-expanded="false"
+					title="More actions"
+				>
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-more-vertical"></span>
+					</span>
+				</summary>
+				<div class="popover-content">
+					  
+		<a
+			id="lang-link-overflow"
+			class="button-sm inner-focus button button-clear button-block justify-content-flex-start text-align-left"
+			data-bi-name="language-toggle"
+			data-page-action-item="overflow-all"
+			data-check-hidden="true"
+			data-read-in-link
+			href="#"
+			hidden
+		>
+			<span class="icon" aria-hidden="true" data-read-in-link-icon>
+				<span class="docon docon-locale-globe"></span>
+			</span>
+			<span data-read-in-link-text>Read in English</span>
+		</a>
+	
+					
+		<button
+			type="button"
+			class="collection button button-clear button-sm button-block justify-content-flex-start text-align-left inner-focus"
+			data-list-type="collection"
+			data-bi-name="collection"
+			data-page-action-item="overflow-all"
+			data-check-hidden="true"
+			data-popover-close
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="collection-status">Add</span>
+		</button>
+	 
+		<button
+			type="button"
+			class="collection button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus"
+			data-list-type="plan"
+			data-bi-name="plan"
+			data-page-action-item="overflow-all"
+			data-check-hidden="true"
+			data-popover-close
+			hidden
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="plan-status">Add to Plans</span>
+		</button>
+	 
+					  
+				</div>
+			</details>
+		</div>
+	
+			</div>
+		</div>
+	 
+					<div data-page-content class=""><div>
+	<section>
+		<div class="uhf-container padding-top-lg-tablet">
+			<div class="columns">
+				<div class="column is-7">
+					<div class="column is-half">
+						<figure>
+							<img src="media/beg_bash-banner-511.png" role="presentation" alt="" data-linktype="relative-path">
+						</figure>
+					</div>
+					<div class="column is-full">
+						<div class="margin-top-sm">
+							<p class="supertitle is-uppercase letter-spacing-wide font-size-xs is-spaced margin-bottom-xxs">Series</p>
+							<h1 class="title font-size-h2 font-weight-bold margin-bottom-xxs">Bash for Beginners</h1>
+							<div id="show-details" class="is-invisible margin-top-xxs">
+								<ul class="metadata page-metadata">
+									<li class="last-episode is-hidden"></li>
+									<li>English</li>
+								</ul>
+							</div>
+						</div>
+						<div>
+							<div id="description-container" class="margin-top-xs content" aria-live="polite" aria-relevant="additions">
+								<div id="truncated-html"><p>Bash is considered a universal language when it comes to cloud computing and programming. Many languages support Bash commands to pass data and information and when it comes to the Cloud, all platforms support using it to interact with your environment.</p>
+<p>Even though we won't cover everything there is...</p></div>
+								<div id="full-html" class="is-hidden"><p>Bash is considered a universal language when it comes to cloud computing and programming. Many languages support Bash commands to pass data and information and when it comes to the Cloud, all platforms support using it to interact with your environment.</p>
+<p>Even though we won't cover everything there is to know about this language in the course, we want to make sure we give you the foundation on scripting in Bash. At the end of the course, you'll be able to create your own scripts and automate tasks with the help of Bash.</p>
+</div>
+							</div>
+								<button id="show-more-button" class="button margin-top-xs" aria-controls="description-container" aria-expanded="false" data-truncated-show-more-button="">Show more</button>
+						</div>
+					</div>
+				</div>
+				<div class="column is-4 is-offset-1">
+				</div>
+			</div>
+			<hr class="hr margin-top-xs margin-bottom-sm">
+		</div>
+	</section>
+	<section id="episodes-section" class="column">
+		<div class="uhf-container margin-bottom-lg">
+			<h2 class="title font-size-h3 margin-bottom-lg">Episodes<span class="episode-count font-size-md color-text-subtle margin-left-xxs"></span></h2>
+			<div class="episodes">
+				<ul class="columns is-multiline">
+	<li class="column is-4">
+		<article class="media-card position-relative has-loading-skeleton">
+			<a href="" tabindex="-1" aria-hidden="true">
+				<figure class="media-card-image">
+					<img src="">
+					<time class="duration tag theme-dark background-color-body border-none position-absolute bottom-0 right-0 margin-bottom-xxs margin-right-xxs"></time>
+				</figure>
+			</a>
+			<div class="media-card-content">
+				<div class="media-card-content-titles padding-bottom-md padding-top-sm">
+					<p class="margin-bottom-xxs color-text-subtle"></p>
+					<a href="" class="media-card-content-titles">
+						<span class="title is-5"></span>
+					</a>
+					<p class="media-card-content-titles"></p>
+				</div>
+				<p class="font-size-sm color-text-subtle margin-top-xxs"></p>
+			</div>
+		</article>
+	</li>
+	<li class="column is-4">
+		<article class="media-card position-relative has-loading-skeleton">
+			<a href="" tabindex="-1" aria-hidden="true">
+				<figure class="media-card-image">
+					<img src="">
+					<time class="duration tag theme-dark background-color-body border-none position-absolute bottom-0 right-0 margin-bottom-xxs margin-right-xxs"></time>
+				</figure>
+			</a>
+			<div class="media-card-content">
+				<div class="media-card-content-titles padding-bottom-md padding-top-sm">
+					<p class="margin-bottom-xxs color-text-subtle"></p>
+					<a href="" class="media-card-content-titles">
+						<span class="title is-5"></span>
+					</a>
+					<p class="media-card-content-titles"></p>
+				</div>
+				<p class="font-size-sm color-text-subtle margin-top-xxs"></p>
+			</div>
+		</article>
+	</li>
+	<li class="column is-4">
+		<article class="media-card position-relative has-loading-skeleton">
+			<a href="" tabindex="-1" aria-hidden="true">
+				<figure class="media-card-image">
+					<img src="">
+					<time class="duration tag theme-dark background-color-body border-none position-absolute bottom-0 right-0 margin-bottom-xxs margin-right-xxs"></time>
+				</figure>
+			</a>
+			<div class="media-card-content">
+				<div class="media-card-content-titles padding-bottom-md padding-top-sm">
+					<p class="margin-bottom-xxs color-text-subtle"></p>
+					<a href="" class="media-card-content-titles">
+						<span class="title is-5"></span>
+					</a>
+					<p class="media-card-content-titles"></p>
+				</div>
+				<p class="font-size-sm color-text-subtle margin-top-xxs"></p>
+			</div>
+		</article>
+	</li>
+	<li class="column is-4">
+		<article class="media-card position-relative has-loading-skeleton">
+			<a href="" tabindex="-1" aria-hidden="true">
+				<figure class="media-card-image">
+					<img src="">
+					<time class="duration tag theme-dark background-color-body border-none position-absolute bottom-0 right-0 margin-bottom-xxs margin-right-xxs"></time>
+				</figure>
+			</a>
+			<div class="media-card-content">
+				<div class="media-card-content-titles padding-bottom-md padding-top-sm">
+					<p class="margin-bottom-xxs color-text-subtle"></p>
+					<a href="" class="media-card-content-titles">
+						<span class="title is-5"></span>
+					</a>
+					<p class="media-card-content-titles"></p>
+				</div>
+				<p class="font-size-sm color-text-subtle margin-top-xxs"></p>
+			</div>
+		</article>
+	</li>
+	<li class="column is-4">
+		<article class="media-card position-relative has-loading-skeleton">
+			<a href="" tabindex="-1" aria-hidden="true">
+				<figure class="media-card-image">
+					<img src="">
+					<time class="duration tag theme-dark background-color-body border-none position-absolute bottom-0 right-0 margin-bottom-xxs margin-right-xxs"></time>
+				</figure>
+			</a>
+			<div class="media-card-content">
+				<div class="media-card-content-titles padding-bottom-md padding-top-sm">
+					<p class="margin-bottom-xxs color-text-subtle"></p>
+					<a href="" class="media-card-content-titles">
+						<span class="title is-5"></span>
+					</a>
+					<p class="media-card-content-titles"></p>
+				</div>
+				<p class="font-size-sm color-text-subtle margin-top-xxs"></p>
+			</div>
+		</article>
+	</li>
+	<li class="column is-4">
+		<article class="media-card position-relative has-loading-skeleton">
+			<a href="" tabindex="-1" aria-hidden="true">
+				<figure class="media-card-image">
+					<img src="">
+					<time class="duration tag theme-dark background-color-body border-none position-absolute bottom-0 right-0 margin-bottom-xxs margin-right-xxs"></time>
+				</figure>
+			</a>
+			<div class="media-card-content">
+				<div class="media-card-content-titles padding-bottom-md padding-top-sm">
+					<p class="margin-bottom-xxs color-text-subtle"></p>
+					<a href="" class="media-card-content-titles">
+						<span class="title is-5"></span>
+					</a>
+					<p class="media-card-content-titles"></p>
+				</div>
+				<p class="font-size-sm color-text-subtle margin-top-xxs"></p>
+			</div>
+		</article>
+	</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+</div>
+</div>
+					
+				</div>
+				
+			</div>
+		
+				</main>
+				  <div class="layout-body-footer " data-bi-name="layout-footer">
+		<footer
+			id="footer"
+			data-test-id="footer"
+			data-bi-name="footer"
+			class="footer-layout padding-xs padding-sm-desktop has-default-focus border-top"
+			role="contentinfo"
+		>
+			<div class="display-flex gap-xs flex-wrap-wrap is-full-height padding-right-lg-desktop">
+				
+		<a
+			data-mscc-ic="false"
+			href="#"
+			data-bi-name="select-locale"
+			class="locale-selector-link flex-shrink-0 button button-sm button-clear external-link-indicator"
+			id=""
+			title=""
+			><span class="icon" aria-hidden="true"
+				><span class="docon docon-world"></span></span
+			><span class="local-selector-link-text">en-us</span></a
+		>
+	 <div class="ccpa-privacy-link" data-ccpa-privacy-link hidden>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://aka.ms/yourcaliforniaprivacychoices"
+			data-bi-name="your-privacy-choices"
+			class="button button-sm button-clear flex-shrink-0 external-link-indicator"
+			id=""
+			title=""
+			>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 30 14"
+			xml:space="preserve"
+			height="16"
+			width="43"
+			aria-hidden="true"
+			focusable="false"
+		>
+			<path
+				d="M7.4 12.8h6.8l3.1-11.6H7.4C4.2 1.2 1.6 3.8 1.6 7s2.6 5.8 5.8 5.8z"
+				style="fill-rule:evenodd;clip-rule:evenodd;fill:#fff"
+			></path>
+			<path
+				d="M22.6 0H7.4c-3.9 0-7 3.1-7 7s3.1 7 7 7h15.2c3.9 0 7-3.1 7-7s-3.2-7-7-7zm-21 7c0-3.2 2.6-5.8 5.8-5.8h9.9l-3.1 11.6H7.4c-3.2 0-5.8-2.6-5.8-5.8z"
+				style="fill-rule:evenodd;clip-rule:evenodd;fill:#06f"
+			></path>
+			<path
+				d="M24.6 4c.2.2.2.6 0 .8L22.5 7l2.2 2.2c.2.2.2.6 0 .8-.2.2-.6.2-.8 0l-2.2-2.2-2.2 2.2c-.2.2-.6.2-.8 0-.2-.2-.2-.6 0-.8L20.8 7l-2.2-2.2c-.2-.2-.2-.6 0-.8.2-.2.6-.2.8 0l2.2 2.2L23.8 4c.2-.2.6-.2.8 0z"
+				style="fill:#fff"
+			></path>
+			<path
+				d="M12.7 4.1c.2.2.3.6.1.8L8.6 9.8c-.1.1-.2.2-.3.2-.2.1-.5.1-.7-.1L5.4 7.7c-.2-.2-.2-.6 0-.8.2-.2.6-.2.8 0L8 8.6l3.8-4.5c.2-.2.6-.2.9 0z"
+				style="fill:#06f"
+			></path>
+		</svg>
+	
+			<span>Your Privacy Choices</span></a
+		>
+	
+	</div>
+				<div class="flex-shrink-0">
+		<div class="dropdown has-caret-up">
+			<button
+				data-test-id="theme-selector-button"
+				class="dropdown-trigger button button-clear button-sm inner-focus theme-dropdown-trigger"
+				aria-controls="{{ themeMenuId }}"
+				aria-haspopup="true"
+				aria-expanded="false"
+				data-bi-name="theme"
+			>
+				<span class="icon" aria-hidden="true"><span class="docon docon-sun"></span></span>
+				<span>Theme</span>
+				<span class="icon expanded-indicator" aria-hidden="true">
+					<span class="docon docon-chevron-down-light"></span>
+				</span>
+			</button>
+			<div class="dropdown-menu" id="{{ themeMenuId }}" role="menu">
+				<ul class="theme-selector padding-xxs" data-test-id="theme-dropdown-menu" role="none">
+					<li class="theme display-block" role="none">
+						<button
+							class="button button-clear button-sm theme-control button-block justify-content-flex-start text-align-left"
+							role="menuitemradio"
+							aria-checked="false"
+							data-theme-to="light"
+							tabindex="-1"
+						>
+							<span class="theme-light margin-right-xxs">
+								<span
+									class="theme-selector-icon border display-inline-block has-body-background"
+									aria-hidden="true"
+								>
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+										<rect width="22" height="14" class="has-fill-body-background" />
+										<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
+										<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
+										<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
+										<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
+										<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
+									</svg>
+								</span>
+							</span>
+							<span> Light </span>
+						</button>
+					</li>
+					<li class="theme display-block" role="none">
+						<button
+							class="button button-clear button-sm theme-control button-block justify-content-flex-start text-align-left"
+							role="menuitemradio"
+							aria-checked="false"
+							data-theme-to="dark"
+							tabindex="-1"
+						>
+							<span class="theme-dark margin-right-xxs">
+								<span
+									class="border theme-selector-icon display-inline-block has-body-background"
+									aria-hidden="true"
+								>
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+										<rect width="22" height="14" class="has-fill-body-background" />
+										<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
+										<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
+										<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
+										<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
+										<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
+									</svg>
+								</span>
+							</span>
+							<span> Dark </span>
+						</button>
+					</li>
+					<li class="theme display-block" role="none">
+						<button
+							class="button button-clear button-sm theme-control button-block justify-content-flex-start text-align-left"
+							role="menuitemradio"
+							aria-checked="false"
+							data-theme-to="high-contrast"
+							tabindex="-1"
+						>
+							<span class="theme-high-contrast margin-right-xxs">
+								<span
+									class="border theme-selector-icon display-inline-block has-body-background"
+									aria-hidden="true"
+								>
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+										<rect width="22" height="14" class="has-fill-body-background" />
+										<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
+										<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
+										<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
+										<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
+										<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
+									</svg>
+								</span>
+							</span>
+							<span> High contrast </span>
+						</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+			</div>
+			<ul class="links" data-bi-name="footerlinks">
+				<li class="manage-cookies-holder" hidden=""></li>
+				<li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/principles-for-ai-generated-content"
+			data-bi-name="aiDisclaimer"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>AI Disclaimer</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/previous-versions/"
+			data-bi-name="archivelink"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Previous Versions</a
+		>
+	
+	</li> <li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://techcommunity.microsoft.com/t5/microsoft-learn-blog/bg-p/MicrosoftLearnBlog"
+			data-bi-name="bloglink"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Blog</a
+		>
+	
+	</li> <li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/contribute"
+			data-bi-name="contributorGuide"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Contribute</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://go.microsoft.com/fwlink/?LinkId=521839"
+			data-bi-name="privacy"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Privacy</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://go.microsoft.com/fwlink/?linkid=2259814"
+			data-bi-name="consumer-health-privacy"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Consumer Health Privacy</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/legal/termsofuse"
+			data-bi-name="termsofuse"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Terms of Use</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://www.microsoft.com/legal/intellectualproperty/Trademarks/"
+			data-bi-name="trademarks"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Trademarks</a
+		>
+	
+	</li>
+				<li>&copy; Microsoft 2026</li>
+			</ul>
+		</footer>
+	</footer>
+			<noscript><img src="https://learn.microsoft.com/akam/13/pixel_409f6b29?a=dD04MjA0ODFhNjExNTI3NzEyMTFiYzZiZGI0MDQ1ZTlkZDg3YWZmMmU2JmpzPW9mZg==" style="visibility: hidden; position: absolute; left: -999px; top: -999px;" /></noscript></body>
+		</html>

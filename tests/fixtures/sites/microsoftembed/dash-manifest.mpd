@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" type="static" mediaPresentationDuration="PT1M39.712S" minBufferTime="PT2S" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011">
+ <Period>
+  <AdaptationSet mimeType="video/mp4" segmentAlignment="true">
+   <Representation id="video-1280" bandwidth="1280000" width="1280" height="720" codecs="avc1.4d401f">
+    <BaseURL>video_1280x720.mp4</BaseURL>
+    <SegmentBase indexRange="0-1000"/>
+   </Representation>
+  </AdaptationSet>
+ </Period>
+</MPD>

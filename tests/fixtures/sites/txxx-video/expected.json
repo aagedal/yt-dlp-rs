@@ -1,0 +1,49 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://txxx.com/videos/16574965/digital-desire-malena-morgan/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"16574965\", \"display_id\": \"digital-desire-malena-morgan\", \"title\": \"Digital Desire - Malena Morgan\", \"uploader\": \"Lois Argentum\", \"duration\": 694, \"view_count\": 6318, \"like_count\": 10, \"dislike_count\": 0, \"age_limit\": 18, \"thumbnail\": \"https://tn.txxx.tube/contents/videos_screenshots/16574000/16574965/preview.jpg\", \"formats\": [{\"url\": \"https://txxx.com/get_file/22/51cd02a718a6f12fe988ea0d69616dc88bf5163c9c/16574000/16574965/16574965_hq.mp4/?d=694&br=195&ti=1793460515\", \"format_id\": \"hq.mp4\", \"quality\": 0, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hq.mp4 - unknown\"}], \"webpage_url\": \"https://txxx.com/videos/16574965/digital-desire-malena-morgan/\", \"original_url\": \"https://txxx.com/videos/16574965/digital-desire-malena-morgan/\", \"webpage_url_basename\": \"digital-desire-malena-morgan\", \"webpage_url_domain\": \"txxx.com\", \"extractor\": \"Txxx\", \"extractor_key\": \"Txxx\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://tn.txxx.tube/contents/videos_screenshots/16574000/16574965/preview.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Digital Desire - Malena Morgan\", \"duration_string\": \"11:34\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://txxx.com/get_file/22/51cd02a718a6f12fe988ea0d69616dc88bf5163c9c/16574000/16574965/16574965_hq.mp4/?d=694&br=195&ti=1793460515\", \"format_id\": \"hq.mp4\", \"quality\": 0, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hq.mp4 - unknown\", \"_filename\": \"Digital Desire - Malena Morgan [16574965].mp4\", \"filename\": \"Digital Desire - Malena Morgan [16574965].mp4\", \"__write_download_archive\": false}], \"url\": \"https://txxx.com/get_file/22/51cd02a718a6f12fe988ea0d69616dc88bf5163c9c/16574000/16574965/16574965_hq.mp4/?d=694&br=195&ti=1793460515\", \"format_id\": \"hq.mp4\", \"quality\": 0, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hq.mp4 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://txxx.com/videos/16574965/digital-desire-malena-morgan/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Txxx] Extracting URL: https://txxx.com/videos/16574965/digital-desire-malena-morgan/",
+    "[Txxx] 16574965: Downloading video file info",
+    "[Txxx] 16574965: Downloading video info",
+    "[info] Available formats for 16574965:",
+    "ID     EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-----------------------------------------------",
+    "hq.mp4 mp4 unknown    | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://txxx.com/videos/16574966/nosuch-video/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Txxx] 16574966: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "http://music.163.com/api/mv/detail?id=10958064&type=mp4",
+   "headers": {
+    "Content-Type": "application/json;charset=UTF-8"
+   },
+   "body_file": "mv-detail.json"
+  },
+  {
+   "url": "http://music.163.com/api/mv/detail?id=1&type=mp4",
+   "headers": {
+    "Content-Type": "application/json;charset=UTF-8"
+   },
+   "body_file": "mv-error.json"
+  },
+  {
+   "url": "http://music.163.com/api/dj/program/detail?id=10109055",
+   "headers": {
+    "Content-Type": "application/json;charset=UTF-8"
+   },
+   "body_file": "program-detail.json"
+  },
+  {
+   "url": "https://interface3.music.163.com/eapi/song/enhance/player/url/v1",
+   "headers": {
+    "Content-Type": "application/json;charset=UTF-8"
+   },
+   "body_file": "player-url-v1.json"
+  },
+  {
+   "url": "http://music.163.com/api/dj/program/byradio?asc=false&limit=1000&radioId=42&offset=0",
+   "headers": {
+    "Content-Type": "application/json;charset=UTF-8"
+   },
+   "body_file": "djradio-programs.json"
+  }
+ ]
+}

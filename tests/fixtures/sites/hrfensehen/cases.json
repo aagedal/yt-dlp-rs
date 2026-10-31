@@ -1,0 +1,31 @@
+[
+ {
+  "url": "https://www.hessenschau.de/tv-sendung/hessenschau-vom-26082020,video-130546.html",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(description)s|%(timestamp)s|%(upload_date)s|%(thumbnail)s|%(duration)s|%(extractor)s",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.hessenschau.de/tv-sendung/hessenschau-vom-26082020,video-130546.html",
+  "args": [
+   "-F",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.hessenschau.de/tv-sendung/synthetic-noloader,video-130547.html",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.hessenschau.de/tv-sendung/synthetic-missing,video-130548.html",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ }
+]

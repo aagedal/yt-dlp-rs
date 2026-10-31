@@ -1,0 +1,11 @@
+[
+ {
+  "url": "https://podcasty.polskieradio.pl/podcast/8/",
+  "args": [
+   "-J",
+   "--flat-playlist",
+   "-I",
+   "1:2"
+  ]
+ }
+]

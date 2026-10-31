@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://vimeo.com/_next/viewer",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "viewer.json"
+  },
+  {
+   "url": "https://api.vimeo.com/albums/10677689?is_embed=true&referrer=www.riccardomutimusic.com&fields=description%2Cname%2Cprivacy",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "album.json"
+  },
+  {
+   "url": "https://api.vimeo.com/albums/10677689/videos?is_embed=true&referrer=www.riccardomutimusic.com&fields=link%2Curi&page=1&per_page=100",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "videos.json"
+  }
+ ]
+}

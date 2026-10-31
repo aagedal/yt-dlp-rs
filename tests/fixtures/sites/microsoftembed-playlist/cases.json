@@ -1,0 +1,9 @@
+[
+ {
+  "url": "https://learn.microsoft.com/en-us/shows/bash-for-beginners",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

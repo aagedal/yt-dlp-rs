@@ -1,0 +1,28 @@
+{
+ "routes": [
+  {
+   "url": "https://www.rtvcplay.co/en-vivo/canal-institucional",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "rec-000.bin"
+  },
+  {
+   "url": "https://rtvcplay.co/en-vivo/canal-institucional",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "rec-000.bin"
+  },
+  {
+   "url": "https://streaming.rtvc.gov.co/TV_CanalInstitucional_live/smil:live.smil/playlist.m3u8",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "rec-001.bin"
+  }
+ ]
+}

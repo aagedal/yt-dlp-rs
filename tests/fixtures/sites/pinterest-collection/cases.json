@@ -1,0 +1,17 @@
+[
+ {
+  "url": "https://www.pinterest.ca/mashal0407/cool-diys/",
+  "args": [
+   "-J",
+   "--flat-playlist",
+   "--no-check-formats"
+  ]
+ },
+ {
+  "url": "https://www.pinterest.ca/mashal0407/nosuchboard/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

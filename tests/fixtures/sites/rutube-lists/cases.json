@@ -1,0 +1,30 @@
+[
+ {
+  "url": "https://rutube.ru/channel/639184/videos/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://rutube.ru/video/person/313878/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://rutube.ru/plst/308547/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://rutube.ru/channel/639184/playlists/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

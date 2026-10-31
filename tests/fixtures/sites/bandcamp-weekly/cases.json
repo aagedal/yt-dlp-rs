@@ -1,0 +1,4 @@
+[
+ {"url": "https://bandcamp.com/radio?show=224", "args": ["-J"]},
+ {"url": "https://bandcamp.com/radio?show=224", "args": ["--print", "title,series,episode,release_date,duration", "--format", "mp3-128"]}
+]

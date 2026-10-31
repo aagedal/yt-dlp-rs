@@ -1,0 +1,31 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.radiofrance.fr/franceculture/podcasts/science-en-questions/la-physique-d-einstein-aiderait-elle-a-comprendre-le-cerveau-8440487",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"8440487\", \"display_id\": \"la-physique-d-einstein-aiderait-elle-a-comprendre-le-cerveau\", \"url\": \"https://media.radiofrance-podcast.net/podcast09/23118-14.05.2022-ITEMA_23026189-2022C22785S0134-21.mp3\", \"vcodec\": null, \"duration\": 2750, \"title\": \"La physique d\\u2019Einstein aiderait-elle \\u00e0 comprendre le cerveau ?\", \"description\": \"Existerait-il un pont conceptuel entre la physique de l\\u2019espace-temps et les neurosciences ?\", \"thumbnail\": \"https://www.radiofrance.fr/pikapi/images/d184e7a3-4827-4494-bf94-04ed7b120db4/1200x680\", \"uploader\": null, \"upload_date\": \"20220514\", \"webpage_url\": \"https://www.radiofrance.fr/franceculture/podcasts/science-en-questions/la-physique-d-einstein-aiderait-elle-a-comprendre-le-cerveau-8440487\", \"original_url\": \"https://www.radiofrance.fr/franceculture/podcasts/science-en-questions/la-physique-d-einstein-aiderait-elle-a-comprendre-le-cerveau-8440487\", \"webpage_url_basename\": \"la-physique-d-einstein-aiderait-elle-a-comprendre-le-cerveau-8440487\", \"webpage_url_domain\": \"radiofrance.fr\", \"extractor\": \"FranceCulture\", \"extractor_key\": \"FranceCulture\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://www.radiofrance.fr/pikapi/images/d184e7a3-4827-4494-bf94-04ed7b120db4/1200x680\", \"id\": \"0\"}], \"fulltitle\": \"La physique d\\u2019Einstein aiderait-elle \\u00e0 comprendre le cerveau ?\", \"duration_string\": \"45:50\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"La physique d\\u2019Einstein aiderait-elle \\u00e0 comprendre le cerveau \\uff1f [8440487].mp3\", \"filename\": \"La physique d\\u2019Einstein aiderait-elle \\u00e0 comprendre le cerveau \\uff1f [8440487].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.radiofrance.fr/franceculture/podcasts/synthetic/synthetic-noaudio-1234567",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [FranceCulture] 1234567: Unable to extract audio data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

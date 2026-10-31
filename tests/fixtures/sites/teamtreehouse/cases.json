@@ -1,0 +1,6 @@
+[
+ {"url": "https://teamtreehouse.com/library/application-overview-2", "args": ["-J"]},
+ {"url": "https://teamtreehouse.com/library/application-overview-2", "args": ["--print", "%(title)s|%(description)s|%(duration)s|%(id)s"]},
+ {"url": "https://teamtreehouse.com/library/synthetic-full", "args": ["-J"]},
+ {"url": "https://teamtreehouse.com/library/synthetic-empty", "args": ["-J"]}
+]

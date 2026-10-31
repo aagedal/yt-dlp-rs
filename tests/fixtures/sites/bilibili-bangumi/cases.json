@@ -1,0 +1,22 @@
+[
+ {
+  "url": "https://www.bilibili.com/bangumi/play/ep21495/",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/bangumi/play/ep21495/",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(series)s|%(season_number)s|%(episode_number)s|%(duration)s"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/bangumi/play/ep999999/",
+  "args": [
+   "--print",
+   "id"
+  ]
+ }
+]

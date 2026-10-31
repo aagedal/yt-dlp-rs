@@ -1,0 +1,61 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.bandlab.com/track/04b37e88dba24967b9dac8eb8567ff39_07d7f906fc96ee11b75e000d3a428fff",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"vcodec\": \"none\", \"media_type\": \"revision\", \"extractor_key\": \"Bandlab\", \"extractor\": \"Bandlab\", \"webpage_url\": \"https://www.bandlab.com/track/04b37e88dba24967b9dac8eb8567ff39_07d7f906fc96ee11b75e000d3a428fff\", \"id\": \"02d7f906-fc96-ee11-b75e-000d3a428fff\", \"title\": \"sweet black\", \"track\": \"sweet black\", \"url\": \"https://static.bandlab.com/revisions-formatted/338e0033-b50d-475c-bc5e-aa9c26587172/338e0033-b50d-475c-bc5e-aa9c26587172.m4a\", \"thumbnail\": \"https://bl-prod-images.azureedge.net/v1.0/songs/fa082beb-b856-4730-9170-a57e4e32cc2c/\", \"description\": \"by juanJn/endermilze 11/12/23\", \"uploader\": \"ender milze\", \"uploader_id\": \"ender_milze\", \"timestamp\": 1702171963, \"duration\": 54.63, \"view_count\": 59, \"like_count\": 2, \"comment_count\": 0, \"genres\": [\"Lofi\"], \"original_url\": \"https://www.bandlab.com/track/04b37e88dba24967b9dac8eb8567ff39_07d7f906fc96ee11b75e000d3a428fff\", \"webpage_url_basename\": \"04b37e88dba24967b9dac8eb8567ff39_07d7f906fc96ee11b75e000d3a428fff\", \"webpage_url_domain\": \"bandlab.com\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://bl-prod-images.azureedge.net/v1.0/songs/fa082beb-b856-4730-9170-a57e4e32cc2c/\", \"id\": \"0\"}], \"display_id\": \"02d7f906-fc96-ee11-b75e-000d3a428fff\", \"fulltitle\": \"sweet black\", \"duration_string\": \"54\", \"upload_date\": \"20231210\", \"release_year\": null, \"genre\": \"Lofi\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"sweet black [02d7f906-fc96-ee11-b75e-000d3a428fff].m4a\", \"filename\": \"sweet black [02d7f906-fc96-ee11-b75e-000d3a428fff].m4a\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bandlab.com/revision/02d7f906-fc96-ee11-b75e-000d3a428fff",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"vcodec\": \"none\", \"media_type\": \"revision\", \"extractor_key\": \"Bandlab\", \"extractor\": \"Bandlab\", \"webpage_url\": \"https://www.bandlab.com/revision/02d7f906-fc96-ee11-b75e-000d3a428fff\", \"id\": \"02d7f906-fc96-ee11-b75e-000d3a428fff\", \"title\": \"sweet black\", \"track\": \"sweet black\", \"url\": \"https://static.bandlab.com/revisions-formatted/338e0033-b50d-475c-bc5e-aa9c26587172/338e0033-b50d-475c-bc5e-aa9c26587172.m4a\", \"thumbnail\": \"https://bl-prod-images.azureedge.net/v1.0/songs/fa082beb-b856-4730-9170-a57e4e32cc2c/\", \"description\": \"by juanJn/endermilze 11/12/23\", \"uploader\": \"ender milze\", \"uploader_id\": \"ender_milze\", \"timestamp\": 1702171963, \"duration\": 54.63, \"view_count\": 59, \"like_count\": 2, \"comment_count\": 0, \"genres\": [\"Lofi\"], \"original_url\": \"https://www.bandlab.com/revision/02d7f906-fc96-ee11-b75e-000d3a428fff\", \"webpage_url_basename\": \"02d7f906-fc96-ee11-b75e-000d3a428fff\", \"webpage_url_domain\": \"bandlab.com\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://bl-prod-images.azureedge.net/v1.0/songs/fa082beb-b856-4730-9170-a57e4e32cc2c/\", \"id\": \"0\"}], \"display_id\": \"02d7f906-fc96-ee11-b75e-000d3a428fff\", \"fulltitle\": \"sweet black\", \"duration_string\": \"54\", \"upload_date\": \"20231210\", \"release_year\": null, \"genre\": \"Lofi\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"sweet black [02d7f906-fc96-ee11-b75e-000d3a428fff].m4a\", \"filename\": \"sweet black [02d7f906-fc96-ee11-b75e-000d3a428fff].m4a\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bandlab.com/track/04b37e88dba24967b9dac8eb8567ff39_07d7f906fc96ee11b75e000d3a428fff",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Bandlab] Extracting URL: https://www.bandlab.com/track/04b37e88dba24967b9dac8eb8567ff39_07d7f906fc96ee11b75e000d3a428fff",
+    "[Bandlab] 04b37e88dba24967b9dac8eb8567ff39_07d7f906fc96ee11b75e000d3a428fff: Downloading post data",
+    "[Bandlab] 02d7f906-fc96-ee11-b75e-000d3a428fff: Downloading revision data",
+    "[info] Available formats for 02d7f906-fc96-ee11-b75e-000d3a428fff:",
+    "ID EXT RESOLUTION | PROTO | VCODEC     ACODEC",
+    "----------------------------------------------",
+    "0  m4a audio only | https | audio only unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bandlab.com/post/00000000000000000000000000000000",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Bandlab] 00000000000000000000000000000000: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

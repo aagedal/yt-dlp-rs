@@ -1,0 +1,654 @@
+
+{
+  "type": "video",
+  "state":"A",
+  "date": "2014-07-21T22:10:00-0400",
+  "id": "34698933",
+  "noIndex": false,
+  "kicker": "Highlight Mariners",
+  "mediaPlaybackId": "34698933",
+  "title": "Ackley's spectacular catch",
+  "description": "7/21/14: Dustin Ackley runs back, leaps up and reaches his glove over the left-field wall to rob Travis d'Arnaud of a home run",
+  "headline": "Ackley's spectacular catch",
+  "blurb": "NYM@SEA: Ackley robs a home run with an amazing catch",
+  "seoTitle": "Ackley's spectacular catch",
+  "slug": "ackleys-spectacular-catch",  
+  "authFlow": false,
+  
+  "duration": "00:01:06",
+  "language": "en",
+  "gamePk" : "382025",
+  "mediaState":"MEDIA_ARCHIVE",
+
+
+  "image": {
+  
+    "title": "",
+    "altText": "",
+    "cuts": [{
+		
+		"aspectRatio": "16:9",
+		"width": 167,
+		"height": 94,
+		"type": 1,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_1.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_1.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_1.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 215,
+		"height": 121,
+		"type": 2,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_2.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_2.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_2.jpg"
+		},{
+		
+		"aspectRatio": "4:3",
+		"width": 305,
+		"height": 229,
+		"type": 3,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_3.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_3.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_3.jpg"
+		},{
+		
+		"aspectRatio": "4:3",
+		"width": 167,
+		"height": 125,
+		"type": 4,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_4.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_4.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_4.jpg"
+		},{
+		
+		"aspectRatio": "4:3",
+		"width": 215,
+		"height": 161,
+		"type": 5,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_5.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_5.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_5.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 305,
+		"height": 171,
+		"type": 6,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_6.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_6.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_6.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 124,
+		"height": 70,
+		"type": 7,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_7.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_7.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_7.jpg"
+		},{
+		
+		"aspectRatio": "4:3",
+		"width": 120,
+		"height": 88,
+		"type": 8,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_8.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_8.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_8.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 236,
+		"height": 132,
+		"type": 10,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_10.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_10.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_10.jpg"
+		},{
+		
+		"aspectRatio": "",
+		"width": 720,
+		"height": 480,
+		"type": 13,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_13.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_13.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_13.jpg"
+		},{
+		
+		"aspectRatio": "4:3",
+		"width": 184,
+		"height": 135,
+		"type": 19,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_19.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_19.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_19.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 265,
+		"height": 150,
+		"type": 22,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_22.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_22.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_22.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 176,
+		"height": 96,
+		"type": 23,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_23.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_23.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_23.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 480,
+		"height": 270,
+		"type": 25,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_25.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_25.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_25.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 144,
+		"height": 80,
+		"type": 29,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_29.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_29.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_29.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 135,
+		"height": 77,
+		"type": 30,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_30.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_30.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_30.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 270,
+		"height": 154,
+		"type": 31,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_31.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_31.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_31.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 209,
+		"height": 118,
+		"type": 32,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_32.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_32.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_32.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 256,
+		"height": 144,
+		"type": 33,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_33.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_33.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_33.jpg"
+		},{
+		
+		"aspectRatio": "4:3",
+		"width": 96,
+		"height": 72,
+		"type": 34,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_34.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_34.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_34.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 400,
+		"height": 224,
+		"type": 35,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_35.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_35.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_35.jpg"
+		},{
+		
+		"aspectRatio": "",
+		"width": 235,
+		"height": 270,
+		"type": 36,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_36.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_36.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_36.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 160,
+		"height": 90,
+		"type": 37,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_37.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_37.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_37.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 96,
+		"height": 54,
+		"type": 38,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_38.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_38.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_38.jpg"
+		},{
+		
+		"aspectRatio": "",
+		"width": 76,
+		"height": 88,
+		"type": 39,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_39.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_39.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_39.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 248,
+		"height": 138,
+		"type": 40,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_40.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_40.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_40.jpg"
+		},{
+		
+		"aspectRatio": "4:3",
+		"width": 240,
+		"height": 174,
+		"type": 41,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_41.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_41.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_41.jpg"
+		},{
+		
+		"aspectRatio": "4:3",
+		"width": 190,
+		"height": 146,
+		"type": 42,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_42.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_42.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_42.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 640,
+		"height": 360,
+		"type": 43,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_43.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_43.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_43.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 320,
+		"height": 180,
+		"type": 44,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_44.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_44.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_44.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 1280,
+		"height": 720,
+		"type": 45,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_45.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_45.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_45.jpg"
+		},{
+		
+		"aspectRatio": "4:3",
+		"width": 960,
+		"height": 720,
+		"type": 46,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_46.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_46.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_46.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 430,
+		"height": 142,
+		"type": 47,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_47.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_47.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_47.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 960,
+		"height": 540,
+		"type": 48,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_48.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_48.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_48.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 496,
+		"height": 276,
+		"type": 49,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_49.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_49.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_49.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 418,
+		"height": 236,
+		"type": 50,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_50.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_50.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_50.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 352,
+		"height": 192,
+		"type": 51,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_51.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_51.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_51.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 288,
+		"height": 160,
+		"type": 52,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_52.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_52.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_52.jpg"
+		},{
+		
+		"aspectRatio": "16:9",
+		"width": 990,
+		"height": 557,
+		"type": 53,
+		"src": "https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_53.jpg",
+		"at2x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_53.jpg",
+		"at3x":"https://mediadownloads.mlb.com/mlbam/2014/07/22/images/mlbf_34698933_th_53.jpg"
+		}]
+  
+  },
+  "keywordsDisplay": [
+  
+  {
+  "type" : "mmtax",
+  "value": "2014",
+  "displayName": "2014"
+  },
+  {
+  "type" : "team_id",
+  "value": "136",
+  "displayName": "Seattle Mariners"
+  },
+  {
+  "type" : "mlbtax",
+  "value": "vtp_outstandings",
+  "displayName": "Outstandings"
+  },
+  {
+  "type" : "mlbtax",
+  "value": "highlight",
+  "displayName": "highlight"
+  },
+  {
+  "type" : "game_pk",
+  "value": "382025",
+  "displayName": "2014/07/21/nynmlb-seamlb-1"
+  },
+  {
+  "type" : "mmtax",
+  "value": "embeddable",
+  "displayName": "Embed Button (internal)"
+  },
+  {
+  "type" : "mlbtax",
+  "value": "defense",
+  "displayName": "defense"
+  },
+  {
+  "type" : "player_id",
+  "value": "554429",
+  "displayName": "Dustin Ackley"
+  },
+  {
+  "type" : "mmtax",
+  "value": "shareable",
+  "displayName": "Social Shareable (internal)"
+  },
+  {
+  "type" : "mmtax",
+  "value": "facebook_inline",
+  "displayName": "Facebook Inline"
+  }
+  ],
+  "keywordsAll": [
+  
+  {
+  "type" : "mmtax",
+  "value": "2014",
+  "displayName": "2014"
+  },
+  {
+  "type" : "run_scoring_plays_location_plist",
+  "value": "http://gdx.mlb.com/components/game/mlb/year_2014/month_07/day_21/gid_2014_07_21_nynmlb_seamlb_1/runScoringPlays.plist",
+  "displayName": ""
+  },
+  {
+  "type" : "authflow",
+  "value": "false",
+  "displayName": "false"
+  },
+  {
+  "type" : "subject",
+  "value": "MLBMOBILE_APPLICATION_HIGHLIGHT",
+  "displayName": "MLBMOBILE_APPLICATION_HIGHLIGHT"
+  },
+  {
+  "type" : "subject",
+  "value": "PARTNER_SETTOP",
+  "displayName": "PARTNER_SETTOP"
+  },
+  {
+  "type" : "team_id",
+  "value": "136",
+  "displayName": "Seattle Mariners"
+  },
+  {
+  "type" : "sv_id",
+  "value": "140721_205123",
+  "displayName": "field_out | Travis d'Arnaud lines out sharply to left fielder Dustin Ackley."
+  },
+  {
+  "type" : "combined_media_state",
+  "value": "MEDIA_ARCHIVE",
+  "displayName": "MEDIA_ARCHIVE"
+  },
+  {
+  "type" : "mlbtax",
+  "value": "vtp_outstandings",
+  "displayName": "Outstandings"
+  },
+  {
+  "type" : "subject",
+  "value": "MLBMOBILE_REALTIME_HIGHLIGHT",
+  "displayName": "MLBMOBILE_REALTIME_HIGHLIGHT"
+  },
+  {
+  "type" : "away_team_id",
+  "value": "121",
+  "displayName": ""
+  },
+  {
+  "type" : "mlbtax",
+  "value": "highlight",
+  "displayName": "highlight"
+  },
+  {
+  "type" : "calendar_event_id",
+  "value": "14-382025-2014-07-21",
+  "displayName": ""
+  },
+  {
+  "type" : "event_date",
+  "value": "2014-07-21T22:10:00-0400",
+  "displayName": "2014-07-21T22:10:00-0400"
+  },
+  {
+  "type" : "game_pk",
+  "value": "382025",
+  "displayName": "2014/07/21/nynmlb-seamlb-1"
+  },
+  {
+  "type" : "cbssports_player_id",
+  "value": "1699742",
+  "displayName": "554429"
+  },
+  {
+  "type" : "mmtax",
+  "value": "embeddable",
+  "displayName": "Embed Button (internal)"
+  },
+  {
+  "type" : "mlbtax",
+  "value": "defense",
+  "displayName": "defense"
+  },
+  {
+  "type" : "player_id",
+  "value": "554429",
+  "displayName": "Dustin Ackley"
+  },
+  {
+  "type" : "home_team_id",
+  "value": "136",
+  "displayName": ""
+  },
+  {
+  "type" : "game_id",
+  "value": "2014/07/21/nynmlb-seamlb-1",
+  "displayName": ""
+  },
+  {
+  "type" : "inning_index_location_plist",
+  "value": "http://mlb.mlb.com/mlb/mmls2014/382025.plist",
+  "displayName": ""
+  },
+  {
+  "type" : "mmtax",
+  "value": "shareable",
+  "displayName": "Social Shareable (internal)"
+  },
+  {
+  "type" : "inning_index_location_xml",
+  "value": "http://mlb.mlb.com/mlb/mmls2014/382025.xml",
+  "displayName": ""
+  },
+  {
+  "type" : "game_events_location_plist",
+  "value": "http://gdx.mlb.com/components/game/mlb/year_2014/month_07/day_21/gid_2014_07_21_nynmlb_seamlb_1/game_events.plist",
+  "displayName": ""
+  },
+  {
+  "type" : "subject",
+  "value": "MLBCOM_TOP_PLAY",
+  "displayName": "MLBCOM_TOP_PLAY"
+  },
+  {
+  "type" : "subject",
+  "value": "MLBCOM_REALTIME_HIGHLIGHT",
+  "displayName": "MLBCOM_REALTIME_HIGHLIGHT"
+  },
+  {
+  "type" : "mmtax",
+  "value": "facebook_inline",
+  "displayName": "Facebook Inline"
+  }
+  ]
+  ,"playbacks":[
+  
+  {
+  "name":"3GP_H264_128K_320X240",
+  "width":"320","height":"240",                        
+  "url":"https://mediadownloads.mlb.com/mlbam/2014/07/22/mlbtv_nynsea_34698933_3gpp_128K.3gp"
+  }
+  ,
+  {
+  "name":"3GP_H264_200K_320X240",
+  "width":"320","height":"240",                        
+  "url":"rtsp://a870.v10869f.c10869.g.vq.akamaistream.net/7/870/10869/v0001/mlb2003.download.akamai.com/10869/2014/open/mlbam/2014/07/22/mlbtv_nynsea_34698933_3gpp_200K.3gp"
+  }
+  ,
+  {
+  "name":"3GP_H264_550K_320X240",
+  "width":"320","height":"240",                        
+  "url":"https://mediadownloads.mlb.com/mlbam/2014/07/22/mlbtv_nynsea_34698933_3gpp_550K.3gp"
+  }
+  ,
+  {
+  "name":"FLASH_1200K_640X360",
+  "width":"640","height":"360",                        
+  "url":"https://mediadownloads.mlb.com/mlbam/2014/07/22/mlbtv_nynsea_34698933_1200K.mp4"
+  }
+  ,
+  {
+  "name":"FLASH_128K_256X144",
+  "width":"256","height":"144",                        
+  "url":"https://mediadownloads.mlb.com/mlbam/2014/07/22/14-382025-2014-07-21/web_cut/rth_nynsea_34698933_300k.mp4"
+  }
+  ,
+  {
+  "name":"FLASH_1800K_960X540",
+  "width":"960","height":"540",                        
+  "url":"https://mediadownloads.mlb.com/mlbam/2014/07/22/mlbtv_nynsea_34698933_1800K.mp4"
+  }
+  ,
+  {
+  "name":"FLASH_300K_320X180",
+  "width":"320","height":"180",                        
+  "url":"https://mediadownloads.mlb.com/mlbam/2014/07/22/mlbtv_nynsea_34698933_300K.mp4"
+  }
+  ,
+  {
+  "name":"FLASH_600K_400X224",
+  "width":"400","height":"224",                        
+  "url":"https://mediadownloads.mlb.com/mlbam/2014/07/22/mlbtv_nynsea_34698933_600K.mp4"
+  }
+  ,
+  {
+  "name":"HTTP_CLOUD_ANDROID_TABLET",
+  "width":"","height":"",                        
+  "url":"https://mediadownloads.mlb.com/mlbam/2014/07/22/34698933_m3u8/master_android_tablet.m3u8"
+  }
+  ,
+  {
+  "name":"HTTP_CLOUD_MOBILE",
+  "width":"","height":"",                        
+  "url":"https://mediadownloads.mlb.com/mlbam/2014/07/22/34698933_m3u8/master_mobile.m3u8"
+  }
+  ,
+  {
+  "name":"HTTP_CLOUD_TABLET",
+  "width":"","height":"",                        
+  "url":"https://mediadownloads.mlb.com/mlbam/2014/07/22/34698933_m3u8/master_tablet.m3u8"
+  }
+  ,
+  {
+  "name":"HTTP_CLOUD_WIRED",
+  "width":"","height":"",                        
+  "url":"https://mediadownloads.mlb.com/mlbam/2014/07/22/34698933_m3u8/master_wired.m3u8"
+  }
+  
+  ]     
+}
+	

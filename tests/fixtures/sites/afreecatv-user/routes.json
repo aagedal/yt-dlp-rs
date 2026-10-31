@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {
+   "url": "https://chapi.sooplive.com/api/devil0108/vods/review?page=1&per_page=60&orderby=reg_date",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "vods-review-page1.json"
+  }
+ ]
+}

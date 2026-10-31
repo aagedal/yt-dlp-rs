@@ -1,0 +1,66 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.biobiochile.cl/noticias/bbtv/comentarios-bio-bio/2016/07/08/edecanes-del-congreso-figuras-decorativas-que-le-cuestan-muy-caro-a-los-chilenos.shtml",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"b4xd0LK3SK\", \"title\": \"Edecanes del Congreso: Figuras decorativas que le cuestan muy caro a los chilenos\", \"creator\": \"BioBioTV\", \"thumbnail\": \"https://media.biobiochile.cl/wp-content/uploads/2016/07/IMG_20160708_221043-730x350.jpg\", \"formats\": [{\"format_id\": \"1250\", \"format_index\": null, \"url\": \"https://jireh-2-vod-us-isp.dps.live/hls-video-vod/bbtv/cl4/79350/smil:b4xd0LK3SK.smil/b4xd0LK3SK__320.mp4_chunk.m3u8?dpssid=b218214454576ae5fa0e5f0ce&sid=ba5t1l1xb21153872536ae5fa0e5f0cc&ndvc=1\", \"manifest_url\": \"https://jireh-2-vod-us-isp.dps.live/hls-video-vod/bbtv/cl4/79350/smil:b4xd0LK3SK.smil/playlist.m3u8?dpssid=b218214454576ae5fa0e5f0ce&sid=ba5t1l1xb21153872536ae5fa0e5f0cc&ndvc=1\", \"tbr\": 1250.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 534, \"height\": 320, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"534x320\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.67, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1250 - 534x320\"}, {\"format_id\": \"2500\", \"format_index\": null, \"url\": \"https://jireh-2-vod-us-isp.dps.live/hls-video-vod/bbtv/cl4/79350/smil:b4xd0LK3SK.smil/b4xd0LK3SK__480.mp4_chunk.m3u8?dpssid=b218214454576ae5fa0e5f0ce&sid=ba5t1l1xb21153872536ae5fa0e5f0cc&ndvc=1\", \"manifest_url\": \"https://jireh-2-vod-us-isp.dps.live/hls-video-vod/bbtv/cl4/79350/smil:b4xd0LK3SK.smil/playlist.m3u8?dpssid=b218214454576ae5fa0e5f0ce&sid=ba5t1l1xb21153872536ae5fa0e5f0cc&ndvc=1\", \"tbr\": 2500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 800, \"height\": 480, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"800x480\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.67, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2500 - 800x480\"}], \"is_live\": false, \"original_url\": \"http://www.biobiochile.cl/noticias/bbtv/comentarios-bio-bio/2016/07/08/edecanes-del-congreso-figuras-decorativas-que-le-cuestan-muy-caro-a-los-chilenos.shtml\", \"webpage_url\": \"http://www.biobiochile.cl/noticias/bbtv/comentarios-bio-bio/2016/07/08/edecanes-del-congreso-figuras-decorativas-que-le-cuestan-muy-caro-a-los-chilenos.shtml\", \"webpage_url_basename\": \"edecanes-del-congreso-figuras-decorativas-que-le-cuestan-muy-caro-a-los-chilenos.shtml\", \"webpage_url_domain\": \"biobiochile.cl\", \"extractor\": \"RudoVideo\", \"extractor_key\": \"RudoVideo\", \"uploader\": \"Juan Pablo Echenique\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://media.biobiochile.cl/wp-content/uploads/2016/07/IMG_20160708_221043-730x350.jpg\", \"id\": \"0\"}], \"display_id\": \"b4xd0LK3SK\", \"fulltitle\": \"Edecanes del Congreso: Figuras decorativas que le cuestan muy caro a los chilenos\", \"release_year\": null, \"creators\": [\"BioBioTV\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"2500\", \"url\": \"https://jireh-2-vod-us-isp.dps.live/hls-video-vod/bbtv/cl4/79350/smil:b4xd0LK3SK.smil/b4xd0LK3SK__480.mp4_chunk.m3u8?dpssid=b218214454576ae5fa0e5f0ce&sid=ba5t1l1xb21153872536ae5fa0e5f0cc&ndvc=1\", \"manifest_url\": \"https://jireh-2-vod-us-isp.dps.live/hls-video-vod/bbtv/cl4/79350/smil:b4xd0LK3SK.smil/playlist.m3u8?dpssid=b218214454576ae5fa0e5f0ce&sid=ba5t1l1xb21153872536ae5fa0e5f0cc&ndvc=1\", \"tbr\": 2500.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 800, \"height\": 480, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"800x480\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.67, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2500 - 800x480\", \"_filename\": \"Edecanes del Congreso\\uff1a Figuras decorativas que le cuestan muy caro a los chilenos [b4xd0LK3SK].mp4\", \"filename\": \"Edecanes del Congreso\\uff1a Figuras decorativas que le cuestan muy caro a los chilenos [b4xd0LK3SK].mp4\", \"__write_download_archive\": false}], \"format_id\": \"2500\", \"format_index\": null, \"url\": \"https://jireh-2-vod-us-isp.dps.live/hls-video-vod/bbtv/cl4/79350/smil:b4xd0LK3SK.smil/b4xd0LK3SK__480.mp4_chunk.m3u8?dpssid=b218214454576ae5fa0e5f0ce&sid=ba5t1l1xb21153872536ae5fa0e5f0cc&ndvc=1\", \"manifest_url\": \"https://jireh-2-vod-us-isp.dps.live/hls-video-vod/bbtv/cl4/79350/smil:b4xd0LK3SK.smil/playlist.m3u8?dpssid=b218214454576ae5fa0e5f0ce&sid=ba5t1l1xb21153872536ae5fa0e5f0cc&ndvc=1\", \"tbr\": 2500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 800, \"height\": 480, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"800x480\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.67, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2500 - 800x480\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.biobiochile.cl/noticias/bbtv/comentarios-bio-bio/2016/07/08/edecanes-del-congreso-figuras-decorativas-que-le-cuestan-muy-caro-a-los-chilenos.shtml",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[BioBioChileTV] Extracting URL: http://www.biobiochile.cl/noticias/bbtv/comentarios-bio-bio/2016/07/08/edecanes-del-congreso-figu...a-los-chilenos.shtml",
+    "[BioBioChileTV] edecanes-del-congreso-figuras-decorativas-que-le-cuestan-muy-caro-a-los-chilenos: Downloading webpage",
+    "[RudoVideo] Extracting URL: http://rudo.video/vod/b4xd0LK3SK",
+    "[RudoVideo] b4xd0LK3SK: Downloading webpage",
+    "[RudoVideo] b4xd0LK3SK: Downloading m3u8 information",
+    "[info] Available formats for b4xd0LK3SK:",
+    "ID   EXT RESOLUTION |   TBR PROTO | VCODEC  ACODEC",
+    "---------------------------------------------------",
+    "1250 mp4 534x320    | 1250k m3u8  | unknown unknown",
+    "2500 mp4 800x480    | 2500k m3u8  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.biobiochile.cl/noticias/bbtv/synthetic/noframe.shtml",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [BioBioChileTV] noframe: No videos found; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.biobiochile.cl/noticias/bbtv/synthetic/missing.shtml",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [BioBioChileTV] missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

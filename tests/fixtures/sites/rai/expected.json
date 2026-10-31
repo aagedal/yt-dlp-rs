@@ -1,0 +1,56 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.rai.it/dl/RaiTV/programmi/media/ContentItem-efb17665-691c-45d5-a60c-5301333cbb0c.html",
+   "args": [
+    "-F",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Rai] Extracting URL: https://www.rai.it/dl/RaiTV/programmi/media/ContentItem-efb17665-691c-45d5-a60c-5301333cbb0c.html",
+    "[Rai] efb17665-691c-45d5-a60c-5301333cbb0c: Downloading video JSON",
+    "[Rai] efb17665-691c-45d5-a60c-5301333cbb0c: Downloading XML metadata",
+    "[Rai] efb17665-691c-45d5-a60c-5301333cbb0c: Downloading m3u8 information",
+    "[Rai] efb17665-691c-45d5-a60c-5301333cbb0c: Checking MP4 availability",
+    "[info] Available formats for efb17665-691c-45d5-a60c-5301333cbb0c:",
+    "ID         EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC ACODEC",
+    "----------------------------------------------------------------------",
+    "hls-1800   mp4 1024x576       | ~463.99MiB 1758k m3u8  | avc1   mp4a",
+    "https-1700 mp4 1024x576    25 | ≈463.99MiB 1758k https | avc1   mp4a"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.rai.it/dl/RaiTV/programmi/media/ContentItem-efb17665-691c-45d5-a60c-5301333cbb0c.html",
+   "args": [
+    "--print",
+    "\"%(id)s|%(title)s|%(description)s|%(uploader)s|%(upload_date)s|%(duration)s\"",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "\"efb17665-691c-45d5-a60c-5301333cbb0c|TG1 ore 20:00 del 03/11/2016|TG1 edizione integrale ore 20:00 del giorno 03/11/2016|NA|20161103|2214\""
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.rai.it/dl/RaiTV/programmi/media/ContentItem-00000000-0000-4000-8000-000000000001.html",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Rai] 00000000-0000-4000-8000-000000000001: not a media file; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

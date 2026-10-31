@@ -1,0 +1,15 @@
+[
+ {
+  "url": "https://www.1tv.ru/live",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.1tv.ru/live",
+  "args": [
+   "--print",
+   "%(id)s|%(live_status)s|%(was_live)s|%(extractor)s|%(ext)s|%(webpage_url)s"
+  ]
+ }
+]

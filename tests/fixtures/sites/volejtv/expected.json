@@ -1,0 +1,44 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://volej.tv/kategorie/chance-cesky-pohar",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"chance-cesky-pohar\", \"title\": \"Chance \\u010cesk\\u00fd poh\\u00e1r\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/4229351\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/4229348\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/4229347\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/4229346\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/4229350\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/4229349\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629300\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629317\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629297\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629301\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629316\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629298\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629095\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629299\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3946749\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629312\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629314\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629311\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629296\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629310\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://volej.tv/kategorie/chance-cesky-pohar\", \"original_url\": \"https://volej.tv/kategorie/chance-cesky-pohar\", \"webpage_url_basename\": \"chance-cesky-pohar\", \"webpage_url_domain\": \"volej.tv\", \"extractor\": \"volejtv:category\", \"extractor_key\": \"VolejTVCategoryPlaylist\", \"release_year\": null, \"playlist_count\": 20, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://volej.tv/match/798209",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"798209\", \"series\": \"Chance \\u010cesk\\u00fd poh\\u00e1r\", \"season\": \"2024-2025\", \"timestamp\": 1727884800, \"categories\": [\"mu\\u017ei\"], \"formats\": [{\"url\": \"https://vtv-prd-htz.b-cdn.net/videos/2024/10/chance_cesky_pohar/muzi/SK_VOLEJBAL_Usti_nad_Labem/10.02.2024/kvalita/20241002-849152-Z-USL-BEN_1500.mp4\", \"tbr\": 1500, \"format_id\": \"6811\", \"height\": 480, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"6811 - 480p\"}], \"title\": \"USL-BEN (2024-10-02)\", \"webpage_url\": \"https://volej.tv/match/798209\", \"original_url\": \"https://volej.tv/match/798209\", \"webpage_url_basename\": \"798209\", \"webpage_url_domain\": \"volej.tv\", \"extractor\": \"volejtv:match\", \"extractor_key\": \"VolejTV\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"798209\", \"fulltitle\": \"USL-BEN (2024-10-02)\", \"upload_date\": \"20241002\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://vtv-prd-htz.b-cdn.net/videos/2024/10/chance_cesky_pohar/muzi/SK_VOLEJBAL_Usti_nad_Labem/10.02.2024/kvalita/20241002-849152-Z-USL-BEN_1500.mp4\", \"tbr\": 1500, \"format_id\": \"6811\", \"height\": 480, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"6811 - 480p\", \"_filename\": \"USL-BEN (2024-10-02) [798209].mp4\", \"filename\": \"USL-BEN (2024-10-02) [798209].mp4\", \"__write_download_archive\": false}], \"url\": \"https://vtv-prd-htz.b-cdn.net/videos/2024/10/chance_cesky_pohar/muzi/SK_VOLEJBAL_Usti_nad_Labem/10.02.2024/kvalita/20241002-849152-Z-USL-BEN_1500.mp4\", \"tbr\": 1500, \"format_id\": \"6811\", \"height\": 480, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"6811 - 480p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://volej.tv/match/1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [volejtv:match] 1: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

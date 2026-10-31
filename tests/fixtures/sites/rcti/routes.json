@@ -1,0 +1,44 @@
+{
+ "routes": [
+  {
+   "url": "https://api.rctiplus.com/api/v1/visitor?platform=web",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "visitor.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v1/extra/9438/url",
+   "ignore_query": [
+    "appierid"
+   ],
+   "request_headers": {
+    "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2aWQiOjAsInRva2VuIjoiZDU3OTZmYzkyMGZkNGNmMiIsInBsIjoid2ViIiwiZGV2aWNlX2lkIjoiYzZkNTBlYzYtYzcwYi00YjU2LWIwYzUtODIzNzJlOGMwMTE1IiwibHR5cGUiOiIiLCJpYXQiOjE3OTM0NTY4MTZ9.GnzOD2ovIoLr4-vYRt8K7LmsyfssKDHhlz-KOFlqiuY"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-url.json"
+  },
+  {
+   "url": "https://api.rctiplus.com/api/v1/extra/9438",
+   "request_headers": {
+    "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2aWQiOjAsInRva2VuIjoiZDU3OTZmYzkyMGZkNGNmMiIsInBsIjoid2ViIiwiZGV2aWNlX2lkIjoiYzZkNTBlYzYtYzcwYi00YjU2LWIwYzUtODIzNzJlOGMwMTE1IiwibHR5cGUiOiIiLCJpYXQiOjE3OTM0NTY4MTZ9.GnzOD2ovIoLr4-vYRt8K7LmsyfssKDHhlz-KOFlqiuY"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "extra-meta.json"
+  },
+  {
+   "url": "https://vodaw.rctiplus.com/vod/eds/extra_inews_malam_616_9438/_/sa_hls/extra_inews_malam_616_9438.m3u8",
+   "request_headers": {
+    "Referer": "https://www.rctiplus.com/"
+   },
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "extra.m3u8"
+  }
+ ]
+}

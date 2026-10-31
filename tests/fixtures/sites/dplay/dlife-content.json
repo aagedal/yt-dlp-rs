@@ -1,0 +1,293 @@
+{
+  "data" : {
+    "attributes" : {
+      "availabilityWindows" : [ {
+        "package" : "DiscoveryLife",
+        "playableEnd" : "2038-01-18T00:00:00Z",
+        "playableStart" : "2023-07-21T04:00:00Z"
+      }, {
+        "package" : "Free",
+        "playableEnd" : "2038-01-18T00:00:00Z",
+        "playableStart" : "2023-07-21T04:00:00Z"
+      } ],
+      "description" : "The staff at Charity Hospital treat a serious foot infection.",
+      "episodeNumber" : 1,
+      "longDescription" : "When he's on call, staff Dr. Eduardo Marvez supervises the ER.  With a reputation for being rambunctious and loud, he admits that he can be difficult to deal with.  Marvez loves what he does and he's one of the best. In a place where making snap decisions is essential, being powerfully opinionated is a good thing. But when a frightened and agitated Edwinna Tanner comes in with a badly infected foot, Marvez treats her with dignity and gentle kindness.  \r\nOne of Marvez's students is Dr. Patrick Hymel  -- a cocky, self-assured resident who was born and raised in New Orleans. Since Charity requires that all of its emergency medicine residents spend time with paramedics, this month Patrick is riding shotgun in an ambulance. He admits that, It gives us a better appreciation of what happens before the patient arrives at our door.  For Patrick, being out on the streets is a real eye-opener.  Nothing can prepare him for the accidental shooting of nine-year-old Chavez Jackson. When Patrick comes barreling into the ER with Chavez you can see how shaken the young doctor is. Marvez and Hymel are faced with tragedy resulting from violence on a daily basis, yet the heartbreak of the child's senseless death jolts them both.  But as night falls, Patrick returns with his ambulance to the streets and Marvez prepares for the next patient.",
+      "name" : "Sweet Charity",
+      "publishStart" : "2023-07-21T04:00:00Z",
+      "rights" : {
+        "embeddable" : false
+      },
+      "seasonNumber" : 1,
+      "videoDuration" : 2364261
+    },
+    "id" : "2347614",
+    "relationships" : {
+      "contentPackages" : {
+        "data" : [ {
+          "id" : "DiscoveryLife",
+          "type" : "package"
+        }, {
+          "id" : "Free",
+          "type" : "package"
+        } ]
+      },
+      "images" : {
+        "data" : [ {
+          "id" : "6de35229-6ce8-4e1c-b9b2-51b99ca4c1b6",
+          "type" : "image"
+        } ]
+      },
+      "primaryChannel" : {
+        "data" : {
+          "id" : "164",
+          "type" : "channel"
+        }
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "6f7187c3-9502-452c-bce4-41c21fc3887c",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "b83e94f1d1abcff1347247362c8b1b3a1145c057c9957a16649727871024d7c3",
+          "type" : "route"
+        } ]
+      },
+      "season" : {
+        "data" : {
+          "id" : "18057",
+          "type" : "season"
+        }
+      },
+      "show" : {
+        "data" : {
+          "id" : "17108",
+          "type" : "show"
+        }
+      },
+      "txGenres" : {
+        "data" : [ {
+          "id" : "4483ce3f-cd64-415b-a2cc-547eca3fb9cd",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "video"
+  },
+  "included" : [ {
+    "attributes" : {
+      "name" : "Discovery Life"
+    },
+    "id" : "164",
+    "relationships" : {
+      "contentPackages" : {
+        "data" : [ {
+          "id" : "DiscoveryLife",
+          "type" : "package"
+        } ]
+      },
+      "images" : {
+        "data" : [ {
+          "id" : "1fcdfcd0-270b-451b-8470-b5dcd03e85ad",
+          "type" : "image"
+        }, {
+          "id" : "2f4adc6f-5508-4dad-8465-f331dbe13204",
+          "type" : "image"
+        }, {
+          "id" : "362fa76e-d62b-4650-81f6-15e67de7d3c2",
+          "type" : "image"
+        }, {
+          "id" : "7e42ab1f-17c9-4501-bb41-34c62dcb0102",
+          "type" : "image"
+        }, {
+          "id" : "a6b4759a-af03-4ec9-abb6-b0f90e33dcc5",
+          "type" : "image"
+        }, {
+          "id" : "a8b90e06-0dc6-4857-a91e-8544186138ed",
+          "type" : "image"
+        }, {
+          "id" : "2fd0283c-b386-414f-89f4-a6e4a1eda5a5",
+          "type" : "image"
+        }, {
+          "id" : "3f321dc2-fc9e-4ce4-936d-c3de67b06f56",
+          "type" : "image"
+        }, {
+          "id" : "85bd2c46-4a00-4ab8-ada5-cfdd877d0717",
+          "type" : "image"
+        }, {
+          "id" : "93261fb2-f66d-4205-9464-dff76ee82e3b",
+          "type" : "image"
+        }, {
+          "id" : "b0633f38-86b0-4bf5-a68b-70f5cba4229d",
+          "type" : "image"
+        }, {
+          "id" : "ef627b1c-155f-4872-9080-94a7db8cde41",
+          "type" : "image"
+        } ]
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "a15afd95-b428-4c6e-a49a-0ab98cfdef18",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "af67bce1ef8bed1f7e7b0e27f50b564391a57046fe13a9e70baefd7b58230e06",
+          "type" : "route"
+        } ]
+      },
+      "txFeedPreview" : {
+        "data" : [ {
+          "id" : "3dfa1ed6-ecd0-47c8-8315-a81ef1381d21",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "channel"
+  }, {
+    "attributes" : {
+      "height" : 1079,
+      "kind" : "default",
+      "src" : "https://us1-prod-images.disco-api.com/2021/03/16/4b6f0124-360b-3546-b6a4-5552db886b86.jpeg",
+      "width" : 1920
+    },
+    "id" : "6de35229-6ce8-4e1c-b9b2-51b99ca4c1b6",
+    "type" : "image"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/show/er-files-discovery-life-atve-us"
+    },
+    "id" : "8ead3bb8298e511265ac344a5996bfda4bad102d417a8bd2a21dbd688d32f31b",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/channel/discovery-life"
+    },
+    "id" : "af67bce1ef8bed1f7e7b0e27f50b564391a57046fe13a9e70baefd7b58230e06",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/video/er-files-discovery-life-atve-us/sweet-charity"
+    },
+    "id" : "b83e94f1d1abcff1347247362c8b1b3a1145c057c9957a16649727871024d7c3",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "customAttributes" : { },
+      "description" : "This series delves deep into the exciting world of emergency room cases.",
+      "longDescription" : "This series delves deep into the exciting world of emergency room cases from different hospitals and accident victims.",
+      "name" : "ER Files"
+    },
+    "id" : "17108",
+    "relationships" : {
+      "images" : {
+        "data" : [ {
+          "id" : "1452d282-32ba-4ba6-8db4-6f0077dfbed4",
+          "type" : "image"
+        }, {
+          "id" : "16229182-f0a6-4ef1-bd5a-6a20c3a8b35d",
+          "type" : "image"
+        }, {
+          "id" : "9d4e9c4f-538c-47f3-a384-1815b8434587",
+          "type" : "image"
+        }, {
+          "id" : "a0f776fa-0461-4b14-a930-230c97fcd903",
+          "type" : "image"
+        }, {
+          "id" : "bb76ac08-9dc0-48be-95de-d1f3883cd8ec",
+          "type" : "image"
+        }, {
+          "id" : "fe526ace-6687-4468-b7fa-f70aaccc7087",
+          "type" : "image"
+        }, {
+          "id" : "3c4d8c5f-fb3b-4e38-93bc-c0282abb9a92",
+          "type" : "image"
+        }, {
+          "id" : "4cda259e-d31d-444c-b197-7c1b4de36d09",
+          "type" : "image"
+        }, {
+          "id" : "60ed0fc3-d4ea-4cca-9062-67aa55696087",
+          "type" : "image"
+        }, {
+          "id" : "7c1879ac-1db6-4483-aa5b-841095081b90",
+          "type" : "image"
+        }, {
+          "id" : "9c34dd56-0afc-44cc-a858-7ee71b111fc7",
+          "type" : "image"
+        }, {
+          "id" : "da937fca-56f7-45bd-9c44-d428fd6357a8",
+          "type" : "image"
+        } ]
+      },
+      "primaryChannel" : {
+        "data" : {
+          "id" : "164",
+          "type" : "channel"
+        }
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "6f7187c3-9502-452c-bce4-41c21fc3887c",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "8ead3bb8298e511265ac344a5996bfda4bad102d417a8bd2a21dbd688d32f31b",
+          "type" : "route"
+        } ]
+      },
+      "seasons" : {
+        "data" : [ {
+          "id" : "18057",
+          "type" : "season"
+        } ]
+      },
+      "txCategory" : {
+        "data" : [ {
+          "id" : "66252c09-c582-4549-8007-98a10f68823b",
+          "type" : "taxonomyNode"
+        } ]
+      },
+      "txFeedPreview" : {
+        "data" : [ {
+          "id" : "19a23236-c8ae-48b0-80fc-02fb043b88c4",
+          "type" : "taxonomyNode"
+        }, {
+          "id" : "3dfa1ed6-ecd0-47c8-8315-a81ef1381d21",
+          "type" : "taxonomyNode"
+        } ]
+      },
+      "txGenres" : {
+        "data" : [ {
+          "id" : "1e5858cd-e0f8-4da9-a3ae-d4078c433e15",
+          "type" : "taxonomyNode"
+        }, {
+          "id" : "4483ce3f-cd64-415b-a2cc-547eca3fb9cd",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "show"
+  } ],
+  "meta" : {
+    "site" : {
+      "attributes" : {
+        "brand" : "go",
+        "brandId" : "dlf",
+        "mainTerritoryCode" : "us",
+        "theme" : "dlf",
+        "websiteHostName" : ""
+      },
+      "id" : "dlf",
+      "type" : "site"
+    }
+  }
+}

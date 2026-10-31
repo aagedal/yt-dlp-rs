@@ -1,0 +1,287 @@
+{
+  "data" : {
+    "attributes" : {
+      "availabilityWindows" : [ {
+        "package" : "Free",
+        "playableEnd" : "2029-12-31T05:00:00Z",
+        "playableStart" : "2023-01-28T05:00:00Z"
+      }, {
+        "package" : "Science",
+        "playableEnd" : "2029-12-31T05:00:00Z",
+        "playableStart" : "2023-01-28T05:00:00Z"
+      } ],
+      "description" : "Astronomers unmask the truly destructive nature of the cosmos.",
+      "episodeNumber" : 1,
+      "longDescription" : "Astronomers are laying the groundwork to locate a new planet for the human race to inhabit, and the more alien worlds they discover and encounter, the more they unmask the mysterious and truly destructive nature of the cosmos.",
+      "name" : "Mystery of the Dead Planets",
+      "publishStart" : "2023-01-28T05:00:00Z",
+      "rights" : {
+        "embeddable" : false
+      },
+      "seasonNumber" : 7,
+      "videoDuration" : 2524989
+    },
+    "id" : "2347335",
+    "relationships" : {
+      "contentPackages" : {
+        "data" : [ {
+          "id" : "Free",
+          "type" : "package"
+        }, {
+          "id" : "Science",
+          "type" : "package"
+        } ]
+      },
+      "images" : {
+        "data" : [ {
+          "id" : "9d05d7d8-5388-4805-8bcd-b69923c04cd5",
+          "type" : "image"
+        } ]
+      },
+      "primaryChannel" : {
+        "data" : {
+          "id" : "166",
+          "type" : "channel"
+        }
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "6f7187c3-9502-452c-bce4-41c21fc3887c",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "1d078945312d272b1a1eb72c5256021c7dd6f2286e299bfb140d97924b9543b9",
+          "type" : "route"
+        } ]
+      },
+      "season" : {
+        "data" : {
+          "id" : "18041",
+          "type" : "season"
+        }
+      },
+      "show" : {
+        "data" : {
+          "id" : "14503",
+          "type" : "show"
+        }
+      },
+      "txGenres" : {
+        "data" : [ {
+          "id" : "0a1f2f51-0cfe-4be1-b8cc-843fe42963ba",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "video"
+  },
+  "included" : [ {
+    "attributes" : {
+      "name" : "Science"
+    },
+    "id" : "166",
+    "relationships" : {
+      "contentPackages" : {
+        "data" : [ {
+          "id" : "Science",
+          "type" : "package"
+        } ]
+      },
+      "images" : {
+        "data" : [ {
+          "id" : "018809b2-a470-4450-8361-f60fa89af7e9",
+          "type" : "image"
+        }, {
+          "id" : "35ace232-857c-4926-baae-2359b4abc892",
+          "type" : "image"
+        }, {
+          "id" : "6c467b6b-612a-4a93-9c8d-fd7c0c0ebc29",
+          "type" : "image"
+        }, {
+          "id" : "77d1f43d-457b-47dd-adc2-21f64502979a",
+          "type" : "image"
+        }, {
+          "id" : "b2892839-c70c-465d-9318-b2c864159fae",
+          "type" : "image"
+        }, {
+          "id" : "b9c8eafb-4378-4951-8b12-93f78c49da4a",
+          "type" : "image"
+        }, {
+          "id" : "13cb47ae-6d6d-4b9d-b375-10eb9ccd8c13",
+          "type" : "image"
+        }, {
+          "id" : "494c5c32-8a65-46c3-9f95-79db6af8cfea",
+          "type" : "image"
+        }, {
+          "id" : "78d44d08-cbb1-41ab-89a3-94758c97f566",
+          "type" : "image"
+        }, {
+          "id" : "9436d881-a731-49d7-b87a-5f5a047e8c7a",
+          "type" : "image"
+        }, {
+          "id" : "a61c8e4d-902c-4742-9631-30d59709651f",
+          "type" : "image"
+        }, {
+          "id" : "ec32316e-c74a-4fec-8cdd-8eabba968398",
+          "type" : "image"
+        } ]
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "b4821276-a965-4e59-9328-eda965e38d6f",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "88eaafb04056656cdef07e4255a7753c3377ff63fd3e4181bfc2f137c05c58ce",
+          "type" : "route"
+        } ]
+      },
+      "txFeedPreview" : {
+        "data" : [ {
+          "id" : "3dfa1ed6-ecd0-47c8-8315-a81ef1381d21",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "channel"
+  }, {
+    "attributes" : {
+      "height" : 1080,
+      "kind" : "default",
+      "src" : "https://us1-prod-images.disco-api.com/2021/03/30/3796829d-aead-3f9a-bd8d-e49048b3cdca.jpeg",
+      "width" : 1920
+    },
+    "id" : "9d05d7d8-5388-4805-8bcd-b69923c04cd5",
+    "type" : "image"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/video/spaces-deepest-secrets-science-atve-us/mystery-of-the-dead-planets"
+    },
+    "id" : "1d078945312d272b1a1eb72c5256021c7dd6f2286e299bfb140d97924b9543b9",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/channel/science"
+    },
+    "id" : "88eaafb04056656cdef07e4255a7753c3377ff63fd3e4181bfc2f137c05c58ce",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/show/spaces-deepest-secrets-science-atve-us"
+    },
+    "id" : "a624ba3e1c44dcc896bf393ca379d509603368381afa1d88743b4597c74dfa28",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "customAttributes" : { },
+      "description" : "Explore groundbreaking findings in the history of space exploration.",
+      "longDescription" : "Men and women have pushed their ingenuity and curiosity beyond the limits to uncover some of the most-groundbreaking findings in the history of space exploration.",
+      "name" : "Space's Deepest Secrets"
+    },
+    "id" : "14503",
+    "relationships" : {
+      "images" : {
+        "data" : [ {
+          "id" : "0801eb3e-f1fa-44a4-815b-2edca935fbe9",
+          "type" : "image"
+        }, {
+          "id" : "257f6626-018d-4ec2-bf25-64edf2e9e73b",
+          "type" : "image"
+        }, {
+          "id" : "5ef0a1ba-92d2-48a2-9de8-eba72c1dd651",
+          "type" : "image"
+        }, {
+          "id" : "a10a3183-e234-4f6e-ab98-bf945651596d",
+          "type" : "image"
+        }, {
+          "id" : "aa1e663e-3c27-4179-9efc-d5828d015c35",
+          "type" : "image"
+        }, {
+          "id" : "d96687cc-32de-4ae9-82dc-0ed7c8db15e6",
+          "type" : "image"
+        }, {
+          "id" : "3bdcd5ca-4675-472e-8153-d29551d44ed3",
+          "type" : "image"
+        }, {
+          "id" : "6b674acb-deae-4ca3-9e48-9065d0159b9f",
+          "type" : "image"
+        }, {
+          "id" : "75015eca-6364-44e3-ae8b-292022a494a4",
+          "type" : "image"
+        }, {
+          "id" : "77ef8090-ae17-47bd-aba6-5bb289f1676a",
+          "type" : "image"
+        }, {
+          "id" : "e77ab3de-941b-430a-85de-7b1507514976",
+          "type" : "image"
+        }, {
+          "id" : "f1388e62-8ed3-4c11-82a8-340b53475048",
+          "type" : "image"
+        } ]
+      },
+      "primaryChannel" : {
+        "data" : {
+          "id" : "166",
+          "type" : "channel"
+        }
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "6f7187c3-9502-452c-bce4-41c21fc3887c",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "a624ba3e1c44dcc896bf393ca379d509603368381afa1d88743b4597c74dfa28",
+          "type" : "route"
+        } ]
+      },
+      "seasons" : {
+        "data" : [ {
+          "id" : "14383",
+          "type" : "season"
+        }, {
+          "id" : "18041",
+          "type" : "season"
+        } ]
+      },
+      "txCategory" : {
+        "data" : [ {
+          "id" : "0e1ccd50-89cd-4599-b610-b450ca84962d",
+          "type" : "taxonomyNode"
+        } ]
+      },
+      "txGenres" : {
+        "data" : [ {
+          "id" : "0802f2f2-c1d7-4808-bfe0-87e5f065989d",
+          "type" : "taxonomyNode"
+        }, {
+          "id" : "0a1f2f51-0cfe-4be1-b8cc-843fe42963ba",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "show"
+  } ],
+  "meta" : {
+    "site" : {
+      "attributes" : {
+        "brand" : "go",
+        "brandId" : "sci",
+        "mainTerritoryCode" : "us",
+        "theme" : "sci",
+        "websiteHostName" : ""
+      },
+      "id" : "sci",
+      "type" : "site"
+    }
+  }
+}

@@ -1,0 +1,5 @@
+[
+ {"url": "https://www.rtvcplay.co/en-vivo/canal-institucional", "args": ["--print", "id", "--print", "is_live", "--print", "description", "--print", "thumbnail"]},
+ {"url": "https://www.rtvcplay.co/en-vivo/canal-institucional", "args": ["-F"]},
+ {"url": "https://www.rtvcplay.co/en-vivo/missing-channel", "args": ["-J"]}
+]

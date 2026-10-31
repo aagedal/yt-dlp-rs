@@ -1,0 +1,33 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.rtve.es/play/videos/saber-vivir/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"111570\", \"title\": \"Saber vivir - Programa de ciencia y futuro en RTVE Play\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"16909076\", \"title\": \"Saber vivir - 25/01/26\", \"description\": \"En estas fechas de fr\\u00edo, cuida tu piel. Explicamos c\\u00f3mo desequilibra el estr\\u00e9s la salud mental y emocional y a perder los kilos de m\\u00e1s tras la Navidad.\", \"duration\": 2095.56, \"series\": \"Saber vivir - 25/01/26\", \"episode_number\": 0, \"episode\": \"Saber vivir - 25/01/26\", \"thumbnail\": \"https://img.rtve.es/imagenes/saber-vivir-250126/01769340848350.jpg\", \"ie_key\": \"RTVEALaCarta\", \"_type\": \"url_transparent\", \"url\": \"https://www.rtve.es/play/videos/saber-vivir/25-01-26/16909076/\", \"__x_forwarded_for_ip\": null}, {\"id\": \"16899209\", \"title\": \"Saber vivir - 18/01/26\", \"description\": \"Explicamos c\\u00f3mo da\\u00f1a el az\\u00facar al organismo, haremos deporte frente al fr\\u00edo, a cuidar nuestros huesos con la alimentaci\\u00f3n y un men\\u00fa para desayunar\", \"duration\": 2146.21, \"series\": \"Saber vivir - 18/01/26\", \"episode_number\": 0, \"episode\": \"Saber vivir - 18/01/26\", \"thumbnail\": \"https://img.rtve.es/imagenes/saber-vivir-180126/01768736422303.jpg\", \"ie_key\": \"RTVEALaCarta\", \"_type\": \"url_transparent\", \"url\": \"https://www.rtve.es/play/videos/saber-vivir/18-01-26/16899209/\", \"__x_forwarded_for_ip\": null}, {\"id\": \"16889966\", \"title\": \"Saber vivir - 11/01/26\", \"description\": \"Gripe intestinal o catarro estomacal: la infecci\\u00f3n v\\u00edrica que afecta al aparato digestivo. Sonrisas y l\\u00e1grimas: qu\\u00e9 efectos tienen en el cerebro, y c\\u00f3mo repercuten en nuestra salud f\\u00edsica y mental.\\u00a0\", \"duration\": 2110.44, \"series\": \"Saber vivir - 11/01/26\", \"episode_number\": 0, \"episode\": \"Saber vivir - 11/01/26\", \"thumbnail\": \"https://img.rtve.es/imagenes/saber-vivir-110126/01768131763140.jpg\", \"ie_key\": \"RTVEALaCarta\", \"_type\": \"url_transparent\", \"url\": \"https://www.rtve.es/play/videos/saber-vivir/11-01-26/16889966/\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.rtve.es/play/videos/saber-vivir/\", \"original_url\": \"https://www.rtve.es/play/videos/saber-vivir/\", \"webpage_url_basename\": \"saber-vivir\", \"webpage_url_domain\": \"rtve.es\", \"extractor\": \"rtve.es:program\", \"extractor_key\": \"RTVEProgram\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.rtve.es/play/videos/missing-program/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [rtve.es:program] missing-program: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,71 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.hessenschau.de/tv-sendung/hessenschau-vom-26082020,video-130546.html",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(timestamp)s|%(upload_date)s|%(thumbnail)s|%(duration)s|%(extractor)s",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "130546|hessenschau vom 26.08.2020|Sturmtief Kirsten fegt über Hessen / Die Corona-Pandemie – eine Chronologie / Sterbehilfe: Die Lage in Hessen / Miss Hessen leitet zwei eigene Unternehmen / Pop-Up Museum zeigt Schwarze Unterhaltung und Black Music|1598400000|20200826|https://www.hessenschau.de/tv-sendung/hs_ganz-1554~_t-1598465545029_v-16to9.jpg|NA|hrfernsehen"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.hessenschau.de/tv-sendung/hessenschau-vom-26082020,video-130546.html",
+   "args": [
+    "-F",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[hrfernsehen] Extracting URL: https://www.hessenschau.de/tv-sendung/hessenschau-vom-26082020,video-130546.html",
+    "[hrfernsehen] 130546: Downloading webpage",
+    "[info] Available formats for 130546:",
+    "ID    EXT RESOLUTION FPS |   TBR PROTO | VCODEC  ACODEC",
+    "--------------------------------------------------------",
+    "480p  mp4 480x270     25 |  250k https | unknown unknown",
+    "640p  mp4 640x360     25 | 1000k https | unknown unknown",
+    "960p  mp4 960x540     50 | 1800k https | unknown unknown",
+    "1280p mp4 1280x720    50 | 5000k https | unknown unknown",
+    "1920p mp4 1920x1080   50 | 8000k https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.hessenschau.de/tv-sendung/synthetic-noloader,video-130547.html",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [hrfernsehen] 130547: Unable to extract ardloader; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.hessenschau.de/tv-sendung/synthetic-missing,video-130548.html",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [hrfernsehen] 130548: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://dotscale.bandcamp.com/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"dotscale\", \"title\": \"Discography of dotscale\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"url\": \"http://dotscale.bandcamp.com/album/loom\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"http://dotscale.bandcamp.com/\", \"original_url\": \"http://dotscale.bandcamp.com/\", \"webpage_url_basename\": \"\", \"webpage_url_domain\": \"dotscale.bandcamp.com\", \"extractor\": \"Bandcamp:user\", \"extractor_key\": \"BandcampUser\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://nodiscography.bandcamp.com",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Bandcamp:user] nodiscography: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

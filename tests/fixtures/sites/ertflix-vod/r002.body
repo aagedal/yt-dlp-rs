@@ -1,0 +1,508 @@
+{
+  "MediaFiles": [
+    {
+      "$type": "Insys.Video.Contracts.Messages.MediaFileResult, Insys.Video.Contracts",
+      "Id": 77579,
+      "MediaContentMediaFileId": 77678,
+      "RoleCodename": "main",
+      "RoleName": "main",
+      "Formats": [
+        {
+          "Id": 96983,
+          "Url": "https://mediaserve.ert.gr/bpk-vod/vodext/default/ghost_workers/ghost_workers/index.m3u8",
+          "Type": 2,
+          "Protection": 0,
+          "AudioBitrate": "0",
+          "VideoBitrate": "0",
+          "MediaTracks": [
+            {
+              "Type": "Audio",
+              "Index": 0,
+              "Name": "audio",
+              "DisplayName": "audio",
+              "ManifestId": "audio",
+              "IsVisible": true
+            },
+            {
+              "Type": "Audio",
+              "Index": 1,
+              "Name": "audio",
+              "DisplayName": "audio",
+              "ManifestId": "audio",
+              "IsVisible": true
+            },
+            {
+              "Type": "Audio",
+              "Index": 2,
+              "Name": "audio",
+              "DisplayName": "audio",
+              "ManifestId": "audio",
+              "IsVisible": true
+            },
+            {
+              "Type": "Audio",
+              "Index": 3,
+              "Name": "audio",
+              "DisplayName": "audio",
+              "ManifestId": "audio",
+              "IsVisible": true
+            },
+            {
+              "Type": "Audio",
+              "Index": 4,
+              "Name": "audio",
+              "DisplayName": "audio",
+              "ManifestId": "audio",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2,avc1.4D401F",
+              "Bitrate": 643000,
+              "Index": 5,
+              "Name": "360p",
+              "DisplayName": "360p",
+              "ManifestId": "360p",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2,avc1.4D401F",
+              "Bitrate": 1233000,
+              "Index": 6,
+              "Name": "432p",
+              "DisplayName": "432p",
+              "ManifestId": "432p",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2,avc1.640029",
+              "Bitrate": 2400000,
+              "Index": 7,
+              "Name": "720p",
+              "DisplayName": "720p",
+              "ManifestId": "720p",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2,avc1.640029",
+              "Bitrate": 3515000,
+              "Index": 8,
+              "Name": "1080p",
+              "DisplayName": "1080p",
+              "ManifestId": "1080p",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2,avc1.640029",
+              "Bitrate": 4702000,
+              "Index": 9,
+              "Name": "1080p",
+              "DisplayName": "1080p",
+              "ManifestId": "1080p",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2",
+              "Bitrate": 99000,
+              "Index": 10,
+              "Name": "99000",
+              "DisplayName": "99000",
+              "ManifestId": "99000",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2",
+              "Bitrate": 133000,
+              "Index": 11,
+              "Name": "133000",
+              "DisplayName": "133000",
+              "ManifestId": "133000",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2",
+              "Bitrate": 201000,
+              "Index": 12,
+              "Name": "201000",
+              "DisplayName": "201000",
+              "ManifestId": "201000",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2",
+              "Bitrate": 269000,
+              "Index": 13,
+              "Name": "269000",
+              "DisplayName": "269000",
+              "ManifestId": "269000",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2",
+              "Bitrate": 337000,
+              "Index": 14,
+              "Name": "337000",
+              "DisplayName": "337000",
+              "ManifestId": "337000",
+              "IsVisible": true
+            }
+          ]
+        },
+        {
+          "Id": 96984,
+          "Url": "https://mediaserve.ert.gr/bpk-vod/vodext/default/ghost_workers/ghost_workers/index.mpd",
+          "Type": 9,
+          "Protection": 0,
+          "AudioBitrate": "0",
+          "VideoBitrate": "0",
+          "MediaTracks": [
+            {
+              "Type": "Audio",
+              "Bitrate": 93374,
+              "Index": 0,
+              "MimeType": "audio/mp4",
+              "ManifestId": "audio=93374",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "avc1.4D401F",
+              "Bitrate": 513000,
+              "Index": 1,
+              "Name": "360p",
+              "DisplayName": "360p",
+              "MimeType": "video/mp4",
+              "ManifestId": "video=513000",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "avc1.4D401F",
+              "Bitrate": 1037000,
+              "Index": 2,
+              "Name": "432p",
+              "DisplayName": "432p",
+              "MimeType": "video/mp4",
+              "ManifestId": "video=1037000",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "avc1.640029",
+              "Bitrate": 2074000,
+              "Index": 3,
+              "Name": "720p",
+              "DisplayName": "720p",
+              "MimeType": "video/mp4",
+              "ManifestId": "video=2074000",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "avc1.640029",
+              "Bitrate": 3062000,
+              "Index": 4,
+              "Name": "1080p",
+              "DisplayName": "1080p",
+              "MimeType": "video/mp4",
+              "ManifestId": "video=3062000",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "avc1.640029",
+              "Bitrate": 4118000,
+              "Index": 5,
+              "Name": "1080p",
+              "DisplayName": "1080p",
+              "MimeType": "video/mp4",
+              "ManifestId": "video=4118000",
+              "IsVisible": true
+            }
+          ]
+        },
+        {
+          "Id": 96985,
+          "Url": "https://www.ertflix.gr/_MP4\\2021\\DOCUMENTARIES\\ghost_workers\\ghost_workers_4mbps.mp4",
+          "Type": 3,
+          "Protection": 0,
+          "AudioBitrate": "0",
+          "VideoBitrate": "0",
+          "MediaTracks": []
+        }
+      ],
+      "Duration": "00:52:46",
+      "DurationSeconds": 3166,
+      "OrderNumber": 1,
+      "IsPaid": true,
+      "MediaFileTimeMarkers": []
+    },
+    {
+      "$type": "Insys.Video.Contracts.Messages.MediaFileResult, Insys.Video.Contracts",
+      "Id": 79090,
+      "MediaContentMediaFileId": 79261,
+      "RoleCodename": "trailer",
+      "RoleName": "trailer",
+      "Formats": [
+        {
+          "Id": 101618,
+          "Url": "https://www.ertflix.gr/_MP4\\2021\\TRAILER\\ERT3\\aoratoi_ergates_for_web\\aoratoi_ergates_for_web_4mbps.mp4",
+          "Type": 3,
+          "Protection": 0,
+          "AudioBitrate": "0",
+          "VideoBitrate": "0",
+          "MediaTracks": []
+        },
+        {
+          "Id": 101616,
+          "Url": "https://mediaserve.ert.gr/bpk-vod/vodext/default/aoratoi_ergates_for_web/aoratoi_ergates_for_web/index.m3u8",
+          "Type": 2,
+          "Protection": 0,
+          "AudioBitrate": "0",
+          "VideoBitrate": "0",
+          "MediaTracks": [
+            {
+              "Type": "Audio",
+              "Index": 0,
+              "Name": "en",
+              "DisplayName": "en",
+              "IsVisible": true
+            },
+            {
+              "Type": "Audio",
+              "Index": 1,
+              "Name": "en",
+              "DisplayName": "en",
+              "IsVisible": true
+            },
+            {
+              "Type": "Audio",
+              "Index": 2,
+              "Name": "en",
+              "DisplayName": "en",
+              "IsVisible": true
+            },
+            {
+              "Type": "Audio",
+              "Index": 3,
+              "Name": "en",
+              "DisplayName": "en",
+              "IsVisible": true
+            },
+            {
+              "Type": "Audio",
+              "Index": 4,
+              "Name": "en",
+              "DisplayName": "en",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2,avc1.4D401F",
+              "Bitrate": 651000,
+              "Index": 5,
+              "Name": "360p",
+              "DisplayName": "360p",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2,avc1.4D401F",
+              "Bitrate": 1243000,
+              "Index": 6,
+              "Name": "432p",
+              "DisplayName": "432p",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2,avc1.640029",
+              "Bitrate": 2403000,
+              "Index": 7,
+              "Name": "720p",
+              "DisplayName": "720p",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2,avc1.640029",
+              "Bitrate": 3535000,
+              "Index": 8,
+              "Name": "1080p",
+              "DisplayName": "1080p",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2,avc1.640029",
+              "Bitrate": 4741000,
+              "Index": 9,
+              "Name": "1080p",
+              "DisplayName": "1080p",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2",
+              "Bitrate": 99000,
+              "Index": 10,
+              "Name": "99000",
+              "DisplayName": "99000",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2",
+              "Bitrate": 133000,
+              "Index": 11,
+              "Name": "133000",
+              "DisplayName": "133000",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2",
+              "Bitrate": 201000,
+              "Index": 12,
+              "Name": "201000",
+              "DisplayName": "201000",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2",
+              "Bitrate": 269000,
+              "Index": 13,
+              "Name": "269000",
+              "DisplayName": "269000",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "mp4a.40.2",
+              "Bitrate": 337000,
+              "Index": 14,
+              "Name": "337000",
+              "DisplayName": "337000",
+              "IsVisible": true
+            }
+          ]
+        },
+        {
+          "Id": 101617,
+          "Url": "https://mediaserve.ert.gr/bpk-vod/vodext/default/aoratoi_ergates_for_web/aoratoi_ergates_for_web/index.mpd",
+          "Type": 9,
+          "Protection": 0,
+          "AudioBitrate": "0",
+          "VideoBitrate": "0",
+          "MediaTracks": [
+            {
+              "Type": "Audio",
+              "Bitrate": 93344,
+              "Index": 0,
+              "Name": "en",
+              "DisplayName": "en",
+              "MimeType": "audio/mp4",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "avc1.4D401F",
+              "Bitrate": 520000,
+              "Index": 1,
+              "Name": "360p",
+              "DisplayName": "360p",
+              "MimeType": "video/mp4",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "avc1.4D401F",
+              "Bitrate": 1047000,
+              "Index": 2,
+              "Name": "432p",
+              "DisplayName": "432p",
+              "MimeType": "video/mp4",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "avc1.640029",
+              "Bitrate": 2077000,
+              "Index": 3,
+              "Name": "720p",
+              "DisplayName": "720p",
+              "MimeType": "video/mp4",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "avc1.640029",
+              "Bitrate": 3081000,
+              "Index": 4,
+              "Name": "1080p",
+              "DisplayName": "1080p",
+              "MimeType": "video/mp4",
+              "IsVisible": true
+            },
+            {
+              "Type": "Video",
+              "Codec": "avc1.640029",
+              "Bitrate": 4155000,
+              "Index": 5,
+              "Name": "1080p",
+              "DisplayName": "1080p",
+              "MimeType": "video/mp4",
+              "IsVisible": true
+            }
+          ]
+        }
+      ],
+      "Duration": "00:00:56",
+      "DurationSeconds": 56,
+      "OrderNumber": 2,
+      "IsPaid": false,
+      "MediaFileTimeMarkers": []
+    }
+  ],
+  "Cap": {
+    "SessionId": "c0390e04-be98-40f0-aea2-d36f27e9aba4",
+    "SessionTimeoutSeconds": 91,
+    "CAPPublicUrl": "https://ertflix.cap.videokit.cloud/heartbeat/v1/heartbeat/61f0be03-0365-4df6-a306-a556573d2ba3",
+    "CAPIntervalSeconds": 30,
+    "CAPRetryCount": 1,
+    "CAPRetrySeconds": 1,
+    "CAPConnectionTimeoutSeconds": 30
+  },
+  "Signature": "CF33F197D38122CE1103985925DC6976B5CAB5B8",
+  "AdditionalInfo": {
+    "age_rating": 8,
+    "StartWithAudioLangauge": null,
+    "StartWithAudioSubtype": "",
+    "StartWithSubtitlesEnabled": false,
+    "AdProtectionMarkers": null,
+    "PvrMargines": null,
+    "GetAdverts": {
+      "$type": "Insys.Video.Adverts.Messages.GetAdvertsResponse, Insys.Video.Adverts.Contracts",
+      "AdvertItems": [],
+      "Result": {
+        "Success": true,
+        "Code": 0
+      }
+    },
+    "VmapUrl": "https://api.app.ertflix.gr/V1/Adverts/GetVmap?platformCodename=www&contentCodename=aoratoi-ergates&token="
+  },
+  "Result": {
+    "Success": true,
+    "Code": 0
+  }
+}

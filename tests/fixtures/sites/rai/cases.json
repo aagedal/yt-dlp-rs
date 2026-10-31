@@ -1,0 +1,24 @@
+[
+ {
+  "url": "https://www.rai.it/dl/RaiTV/programmi/media/ContentItem-efb17665-691c-45d5-a60c-5301333cbb0c.html",
+  "args": [
+   "-F",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.rai.it/dl/RaiTV/programmi/media/ContentItem-efb17665-691c-45d5-a60c-5301333cbb0c.html",
+  "args": [
+   "--print",
+   "\"%(id)s|%(title)s|%(description)s|%(uploader)s|%(upload_date)s|%(duration)s\"",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.rai.it/dl/RaiTV/programmi/media/ContentItem-00000000-0000-4000-8000-000000000001.html",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ }
+]

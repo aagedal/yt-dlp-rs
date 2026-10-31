@@ -1,0 +1,92 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://ltv.lsm.lv/embed?enablesdkjs=1&c=synthetic-backscreen",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"46k_d23-6000-105\", \"formats\": [{\"format_id\": \"600\", \"format_index\": null, \"url\": \"https://cdn.cloudycdn.test/ltv/46k/chunklist_b600000_slv.m3u8\", \"manifest_url\": \"https://cdn.cloudycdn.test/ltv/46k/playlist.m3u8\", \"tbr\": 600.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"600 - 640x360\"}, {\"format_id\": \"1200\", \"format_index\": null, \"url\": \"https://cdn.cloudycdn.test/ltv/46k/chunklist_b1200000_vo_slv.m3u8\", \"manifest_url\": \"https://cdn.cloudycdn.test/ltv/46k/playlist.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1200.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1200 - 1280x720\"}], \"subtitles\": {}, \"title\": \"D23-6000-105_cetstud\", \"duration\": 1442, \"timestamp\": 1700589151, \"thumbnail\": \"https://store.bstrm.net/tmsp00060/assets/media/660858/placeholder1700589200.jpg\", \"original_url\": \"https://ltv.lsm.lv/embed?enablesdkjs=1&c=synthetic-backscreen\", \"webpage_url\": \"https://embed.cloudycdn.services/ltv/media/46k_d23-6000-105\", \"webpage_url_basename\": \"46k_d23-6000-105\", \"webpage_url_domain\": \"embed.cloudycdn.services\", \"extractor\": \"CloudyCDN\", \"extractor_key\": \"CloudyCDN\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://store.bstrm.net/tmsp00060/assets/media/660858/placeholder1700589200.jpg\", \"id\": \"0\"}], \"display_id\": \"46k_d23-6000-105\", \"fulltitle\": \"D23-6000-105_cetstud\", \"duration_string\": \"24:02\", \"upload_date\": \"20231121\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"600\", \"url\": \"https://cdn.cloudycdn.test/ltv/46k/chunklist_b600000_slv.m3u8\", \"manifest_url\": \"https://cdn.cloudycdn.test/ltv/46k/playlist.m3u8\", \"tbr\": 600.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"600 - 640x360\", \"_filename\": \"D23-6000-105_cetstud [46k_d23-6000-105].mp4\", \"filename\": \"D23-6000-105_cetstud [46k_d23-6000-105].mp4\", \"__write_download_archive\": false}], \"format_id\": \"600\", \"format_index\": null, \"url\": \"https://cdn.cloudycdn.test/ltv/46k/chunklist_b600000_slv.m3u8\", \"manifest_url\": \"https://cdn.cloudycdn.test/ltv/46k/playlist.m3u8\", \"tbr\": 600.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"600 - 640x360\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://ltv.lsm.lv/embed?enablesdkjs=1&c=synthetic-backscreen",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[LSMLTVEmbed] Extracting URL: https://ltv.lsm.lv/embed?enablesdkjs=1&c=synthetic-backscreen",
+    "[LSMLTVEmbed] synthetic-backscreen: Downloading webpage",
+    "[CloudyCDN] Extracting URL: https://embed.cloudycdn.services/ltv/media/46k_d23-6000-105",
+    "[CloudyCDN] 46k_d23-6000-105: Downloading JSON metadata",
+    "[CloudyCDN] 46k_d23-6000-105: Downloading m3u8 information",
+    "[info] Available formats for 46k_d23-6000-105:",
+    "ID   EXT RESOLUTION |   FILESIZE   TBR PROTO | VCODEC        VBR ACODEC",
+    "---------------------------------------------------------------------------",
+    "600  mp4 640x360    | ~103.14MiB  600k m3u8  | unknown           unknown",
+    "1200 mp4 1280x720   | ~206.28MiB 1200k m3u8  | avc1.4d401f 1200k video only"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://ltv.lsm.lv/embed?c=synthetic-unsupported",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [LSMLTVEmbed] synthetic-unsupported: Unsupported embed type 'vimeo'; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://ltv.lsm.lv/embed?c=synthetic-missing",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [LSMLTVEmbed] synthetic-missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://replay.lsm.lv/lv/klausies/ieraksts/lr/183522/138-nepilniga-kompensejamo-zalu-sistema-pat-menesiem-dzena-pacientus-pa-aptiekam",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"183522\", \"formats\": [{\"format_id\": \"126\", \"format_index\": null, \"url\": \"https://muste.latvijasradio.lv/lr0/_definst_/mp4:342781.m4a/chunklist_w888375343.m3u8\", \"manifest_url\": \"https://muste.latvijasradio.lv/lr0/_definst_/mp4:342781.m4a/playlist.m3u8\", \"tbr\": 126.517, \"ext\": \"m4a\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 126.517, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"126 - audio only\"}], \"title\": \"#138 Nepiln\\u012bg\\u0101 kompens\\u0113jamo z\\u0101\\u013cu sist\\u0113ma pat m\\u0113ne\\u0161iem dzen\\u0101 pacientus pa aptiek\\u0101m\", \"description\": \"Raid\\u012bjums Atv\\u0113rtie faili \\u0161oned\\u0113\\u013c piev\\u0113r\\u0161as kompens\\u0113jamo medikamentu pieejam\\u012bbai. P\\u0113t\\u0101m, k\\u0101p\\u0113c nereti dien\\u0101m, bet reiz\\u0113m pat m\\u0113ne\\u0161iem aptiek\\u0101s nevar ieg\\u0101d\\u0101ties valsts kompens\\u0113t\\u0101s z\\u0101les.\", \"duration\": 1823, \"timestamp\": 1698913860, \"thumbnail\": \"https://pic.lsm.lv/media/9/d/large_fd4675ac.jpg\", \"webpage_url\": \"https://replay.lsm.lv/lv/klausies/ieraksts/lr/183522/138-nepilniga-kompensejamo-zalu-sistema-pat-menesiem-dzena-pacientus-pa-aptiekam\", \"original_url\": \"https://replay.lsm.lv/lv/klausies/ieraksts/lr/183522/138-nepilniga-kompensejamo-zalu-sistema-pat-menesiem-dzena-pacientus-pa-aptiekam\", \"webpage_url_basename\": \"138-nepilniga-kompensejamo-zalu-sistema-pat-menesiem-dzena-pacientus-pa-aptiekam\", \"webpage_url_domain\": \"replay.lsm.lv\", \"extractor\": \"LSMReplay\", \"extractor_key\": \"LSMReplay\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://pic.lsm.lv/media/9/d/large_fd4675ac.jpg\", \"id\": \"0\"}], \"display_id\": \"183522\", \"fulltitle\": \"#138 Nepiln\\u012bg\\u0101 kompens\\u0113jamo z\\u0101\\u013cu sist\\u0113ma pat m\\u0113ne\\u0161iem dzen\\u0101 pacientus pa aptiek\\u0101m\", \"duration_string\": \"30:23\", \"upload_date\": \"20231102\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"126\", \"url\": \"https://muste.latvijasradio.lv/lr0/_definst_/mp4:342781.m4a/chunklist_w888375343.m3u8\", \"manifest_url\": \"https://muste.latvijasradio.lv/lr0/_definst_/mp4:342781.m4a/playlist.m3u8\", \"tbr\": 126.517, \"ext\": \"m4a\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 126.517, \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"126 - audio only\", \"_filename\": \"#138 Nepiln\\u012bg\\u0101 kompens\\u0113jamo z\\u0101\\u013cu sist\\u0113ma pat m\\u0113ne\\u0161iem dzen\\u0101 pacientus pa aptiek\\u0101m [183522].m4a\", \"filename\": \"#138 Nepiln\\u012bg\\u0101 kompens\\u0113jamo z\\u0101\\u013cu sist\\u0113ma pat m\\u0113ne\\u0161iem dzen\\u0101 pacientus pa aptiek\\u0101m [183522].m4a\", \"__write_download_archive\": false}], \"format_id\": \"126\", \"format_index\": null, \"url\": \"https://muste.latvijasradio.lv/lr0/_definst_/mp4:342781.m4a/chunklist_w888375343.m3u8\", \"manifest_url\": \"https://muste.latvijasradio.lv/lr0/_definst_/mp4:342781.m4a/playlist.m3u8\", \"tbr\": 126.517, \"ext\": \"m4a\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 126.517, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"126 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://replay.lsm.lv/lv/skaties/ieraksts/ltv/311130/4-studija-zolitudes-tragedija-un-incupes-stacija",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [LSMReplay] 311130: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

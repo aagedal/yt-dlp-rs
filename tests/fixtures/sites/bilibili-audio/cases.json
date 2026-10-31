@@ -1,0 +1,22 @@
+[
+ {
+  "url": "https://www.bilibili.com/audio/au1003142",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/audio/au1003142",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(artist)s|%(duration)s|%(uploader)s|%(timestamp)s|%(view_count)s|%(comment_count)s"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/audio/au999999",
+  "args": [
+   "--print",
+   "id"
+  ]
+ }
+]

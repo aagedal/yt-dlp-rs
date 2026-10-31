@@ -1,0 +1,9 @@
+[
+ {
+  "url": "https://www.raiplaysound.it/radio2",
+  "args": [
+   "-F",
+   "--no-geo-bypass"
+  ]
+ }
+]

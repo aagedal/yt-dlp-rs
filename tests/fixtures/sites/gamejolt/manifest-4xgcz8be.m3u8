@@ -1,0 +1,7 @@
+#EXTM3U
+## Generated with https://github.com/google/shaka-packager version v2.4.3-dd98700-release
+
+#EXT-X-MEDIA:TYPE=AUDIO,URI="480p-ak4neczu.audio-stream.m3u8",GROUP-ID="default-audio-group",NAME="stream_0",AUTOSELECT=YES,CHANNELS="2"
+
+#EXT-X-STREAM-INF:BANDWIDTH=955600,AVERAGE-BANDWIDTH=852886,CODECS="avc1.4d401f,mp4a.40.2",RESOLUTION=854x480,FRAME-RATE=30.000,AUDIO="default-audio-group"
+480p-ak4neczu.video-stream.m3u8

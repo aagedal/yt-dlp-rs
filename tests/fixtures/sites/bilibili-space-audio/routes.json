@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {
+   "url": "https://api.bilibili.com/audio/music-service/web/song/upper?uid=313580179&pn=1&ps=30&order=1&jsonp=jsonp",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "upper-313580179-p1.json"
+  }
+ ]
+}

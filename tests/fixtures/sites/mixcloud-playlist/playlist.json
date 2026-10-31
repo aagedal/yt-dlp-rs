@@ -1,0 +1,49 @@
+{
+ "data": {
+  "playlistLookup": {
+   "name": "Ness Radio sessions",
+   "description": null,
+   "items": {
+    "edges": [
+     {
+      "node": {
+       "cloudcast": {
+        "slug": "jazzcat-on-ness-radio-programme-01",
+        "url": "https://www.mixcloud.com/maxvibes/jazzcat-on-ness-radio-programme-01/",
+        "owner": {
+         "username": "maxvibes"
+        }
+       }
+      }
+     },
+     {
+      "node": {
+       "cloudcast": {
+        "slug": "jazzcat-on-ness-radio-programme-02",
+        "url": "https://www.mixcloud.com/maxvibes/jazzcat-on-ness-radio-programme-02/",
+        "owner": {
+         "username": "maxvibes"
+        }
+       }
+      }
+     },
+     {
+      "node": {
+       "cloudcast": {
+        "slug": "jazzcat-on-ness-radio-programme-03-25022015",
+        "url": "https://www.mixcloud.com/maxvibes/jazzcat-on-ness-radio-programme-03-25022015/",
+        "owner": {
+         "username": "maxvibes"
+        }
+       }
+      }
+     }
+    ],
+    "pageInfo": {
+     "endCursor": "YXJyYXljb25uZWN0aW9uOjU3",
+     "hasNextPage": false
+    }
+   }
+  }
+ }
+}

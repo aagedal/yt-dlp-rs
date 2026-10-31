@@ -1,0 +1,32 @@
+{
+  "routes": [
+    {
+      "url": "https://www.raicultura.it/letteratura/articoli/2018/12/Alberto-Asor-Rosa-Letteratura-e-potere-05ba8775-82b5-45c5-a89d-dd955fbde1fb.html",
+      "headers": {
+        "Content-Type": "text/html;charset=UTF-8"
+      },
+      "body_file": "8e59173cc9f1.bin"
+    },
+    {
+      "url": "https://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=2lvyuKLpPpPlussxwEeeqqEEqual&output=64",
+      "headers": {
+        "Content-Type": "text/xml;charset=ISO-8859-1"
+      },
+      "body_file": "0ed6343f2e0b.bin"
+    },
+    {
+      "url": "https://vod3-rai-it.akamaized.net/podcastcdn/Rai/RaiCultura/9730180.mp4/playlist.m3u8?hdnea=st=1793459564~exp=1793459714~acl=/*~hmac=90995b5723c63d7343924924cf30472410ebd9ed361ac709f3c1111f4399d63b",
+      "headers": {
+        "Content-Type": "application/x-mpegURL"
+      },
+      "body_file": "c19b8e3db835.bin"
+    },
+    {
+      "url": "https://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=2lvyuKLpPpPlussxwEeeqqEEqual&overrideUserAgentRule=mp4-*",
+      "headers": {
+        "Content-Type": "video/mp4"
+      },
+      "body_file": "7eb1e96e872d.bin"
+    }
+  ]
+}

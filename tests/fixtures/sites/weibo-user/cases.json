@@ -1,0 +1,16 @@
+[
+ {
+  "url": "https://weibo.com/u/2066652961?tabtype=video",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://weibo.com/u/9999999999?tabtype=video",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

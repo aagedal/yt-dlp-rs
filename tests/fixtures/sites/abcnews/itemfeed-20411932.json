@@ -1,0 +1,199 @@
+{
+	"@attributes" : {
+		"version" : "2.0"
+	},
+	"channel" : {
+		"category" : "",
+		"pubDate" : "",
+		"language" : "en",
+		"ttl" : "10",
+		"item" : {
+			"shareEnabled" : true,
+			"media-group" : {
+				"media-content" : [
+					{
+						"temporalType" : "vod",
+						"media-category" : {
+							"@attributes" : {
+								"schema" : "http:\/\/mrss.akamai.com\/user_agent_hint",
+								"label" : "HDS_ALL"
+							}
+						},
+						"@attributes" : {
+							"isLive" : "false",
+							"url" : "https:\/\/service-pkgabcnews.akamaized.net\/opp\/hls\/abcnews\/130929_tw_zarif_1003_,500,700,900,1200,1600,2000,2500,.mp4.csmil\/manifest.f4m",
+							"type" : "video\/f4m",
+							"medium" : "video",
+							"duration" : 180,
+							"isDefault" : "true"
+						}
+					},
+					{
+						"temporalType" : "vod",
+						"media-category" : {
+							"@attributes" : {
+								"schema" : "http:\/\/mrss.akamai.com\/user_agent_hint",
+								"label" : "HLS_ALL"
+							}
+						},
+						"@attributes" : {
+							"isLive" : "false",
+							"url" : "https:\/\/service-pkgabcnews.akamaized.net\/opp\/hls\/abcnews\/130929_tw_zarif_1003_,500,700,900,1200,1600,2000,2500,.mp4.csmil\/playlist.m3u8",
+							"type" : "application\/x-mpegURL",
+							"medium" : "video",
+							"duration" : 180
+						}
+					},
+					{
+						"temporalType" : "vod",
+						"media-category" : {
+							"@attributes" : {
+								"schema" : "http:\/\/mrss.akamai.com\/user_agent_hint",
+								"label" : "PDL_MED"
+							}
+						},
+						"@attributes" : {
+							"isLive" : "false",
+							"url" : "https:\/\/ondemand.abcnews.com\/playback\/abcnews\/130929_tw_zarif_1003_700.mp4",
+							"type" : "video\/mp4",
+							"medium" : "video",
+							"duration" : 180
+						}
+					},
+					{
+						"temporalType" : "vod",
+						"media-category" : {
+							"@attributes" : {
+								"schema" : "http:\/\/mrss.akamai.com\/user_agent_hint",
+								"label" : "PDL_LOW"
+							}
+						},
+						"@attributes" : {
+							"isLive" : "false",
+							"url" : "https:\/\/ondemand.abcnews.com\/playback\/abcnews\/130929_tw_zarif_1003_700.mp4",
+							"type" : "video\/mp4",
+							"medium" : "video",
+							"duration" : 180
+						}
+					}
+				],
+				"media-title" : "'This Week' Exclusive: Iran's Foreign Minister Zarif",
+				"media-description" : "George Stephanopoulos goes one-on-one with Iranian Foreign Minister Dr. Javad Zarif.",
+				"media-genre" : "",
+				"media-asset-title" : "130929_tw_zarif_1003_video",
+				"media-subTitle" : {
+					"@attributes" : {
+						"type" : "application\/ttml+xml",
+						"lang" : "en",
+						"href" : "https:\/\/abcnews.com\/xmldata\/caption?id=20411932"
+					}
+				},
+				"media-thumbnail" : {
+					"@attributes" : {
+						"url" : "https:\/\/s.abcnews.com\/images\/ThisWeek\/abc_tw_zarif_130929_wg.jpg",
+						"width" : "640",
+						"height" : "360"
+					}
+				},
+				"media-thumbnails" : [
+					{
+						"@attributes" : {
+							"url" : "https:\/\/s.abcnews.com\/images\/ThisWeek\/abc_tw_zarif_130929_wg.jpg",
+							"width" : "640",
+							"height" : "360"
+						}
+					},
+					{
+						"@attributes" : {
+							"url" : "https:\/\/s.abcnews.com\/images\/ThisWeek\/abc_tw_zarif_130929_wg.jpg",
+							"width" : "360",
+							"height" : "640"
+						}
+					},
+					{
+						"@attributes" : {
+							"url" : "https:\/\/s.abcnews.com\/images\/ThisWeek\/abc_tw_zarif_130929_640x480.jpg",
+							"width" : "360",
+							"height" : "360"
+						}
+					}
+				],
+				"media-embed" : {
+					"@attributes" : {
+						"url" : "https:\/\/abcnews.com\/video\/embed",
+						"width" : "640",
+						"height" : "360"
+					},
+					"media-param" : {
+						"@attributes" : {
+							"name" : "type"
+						},
+						"#text" : "text\/javascript"
+					}
+				}
+			},
+			"temporalType" : "vod",
+			"thumb" : "https:\/\/s.abcnews.com\/images\/ThisWeek\/abc_tw_zarif_130929_wg.jpg",
+			"link" : "https:\/\/abcnews.com\/video\/20411932\/",
+			"description" : "",
+			"aspectRatio" : "16x9",
+			"title" : "'This Week' Exclusive: Iran's Foreign Minister Zarif",
+			"omniture" : {
+				"channel" : "abcn:thisweek",
+				"event1" : "event1",
+				"prop4" : "video",
+				"prop3" : "20411932|130929_tw_zarif_1003_video|sec_live|&apos;This Week&apos; Exclusive: Iran&apos;s Foreign Minister Zarif",
+				"eVar2" : "20411932|130929_tw_zarif_1003_video|sec_live|&apos;This Week&apos; Exclusive: Iran&apos;s Foreign Minister Zarif",
+				"prop25" : "20411932",
+				"eVar12" : "20411932",
+				"prop18" : "player|videoindex",
+				"eVar15" : "player|videoindex",
+				"prop16" : "",
+				"prop31" : "abcn:live",
+				"prop32" : "",
+				"prop33" : "",
+				"prop34" : "",
+				"eVar32" : "",
+				"eVar40" : "\\&apos;This Week\\&apos; Exclusive: Iran\\&apos;s Foreign Minister Zarif",
+				"prop40" : "\\&apos;This Week\\&apos; Exclusive: Iran\\&apos;s Foreign Minister Zarif",
+				"eVar42" : "09-29-2013",
+				"prop42" : "09-29-2013",
+				"eVar43" : "15:30",
+				"prop43" : "15:30",
+				"eVar45" : "This Week, George Stephanopoulos, Terry Moran, Javad Zarif, Iran, Foreign Minister, nuclear",
+				"eVar46" : "https:\/\/abcnews.com\/ThisWeek\/video\/week-exclusive-irans-foreign-minister-zarif-20411932",
+				"eVar47" : "",
+				"prop47" : "",
+				"eVar49" : "09-30-2013",
+				"prop49" : "09-30-2013",
+				"event12" : "event12",
+				"eVar20" : "",
+				"prop54" : "ShortForm",
+				"eVar54" : "ShortForm",
+				"prop56" : "180",
+				"eVar56" : "180"
+			},
+			"transcript" : "",
+			"videoContentType" : "sf",
+			"freewheel" : {
+				"videoAssetId" : "news-20411932"
+			},
+			"comscore" : {
+				"show" : "THW"
+			},
+			"nielsenDate" : "20130929 11:30:38",
+			"timestamp" : "Sun, 29 Sep 2013 11:30:38 -0400",
+			"kalturaId" : null,
+			"canonicalUrl" : "https:\/\/abcnews.com\/video\/20411932\/",
+			"outbrainSrcUrl" : "http:\/\/abcnews.com\/ThisWeek\/video",
+			"pubDate" : "Sep 29, 2013, 11:30 AM",
+			"adTags" : "",
+			"isLiveVideo" : false,
+			"guid" : "20411932",
+			"shareUrl" : "https:\/\/abcnews.com\/ThisWeek\/video\/week-exclusive-irans-foreign-minister-zarif-20411932",
+			"category" : "thisweek",
+			"unicorn" : "http:\/\/once.unicornmedia.com\/now\/od\/auto\/98330877-5095-4ac9-9a8c-7cdcd3944274\/15a750c8-e7be-4371-b5c3-dd911c0d8bb0\/thisweek-20411932\/content.once",
+			"mediatype" : "default"
+		}
+	}
+}

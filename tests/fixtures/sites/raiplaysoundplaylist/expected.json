@@ -1,0 +1,19 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.raiplaysound.it/programmi/ilruggitodelconiglio",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ilruggitodelconiglio\", \"title\": \"Il Ruggito del Coniglio\", \"description\": \"Nato nel 1995, il programma cult di Rai Radio 2 quest'anno spegne 30 candeline. Da tre decenni Marco Presta e Antonello Dose, con la regia di Paolo Restuccia, ci accompagnano ogni mattina trasformando l'attualit\\u00e0 in comicit\\u00e0: notizie e fatti del giorno diventano gag irresistibili e personaggi indimenticabili, interpretati da Paola Minaccioni, Max Paiella e Giancarlo Ratti. Alle musiche originali del Maestro Attilio Di Giovanni si aggiunge quest'anno la splendida voce di Ilaria Della Bidia, gi\\u00e0 protagonista di alcune delle indimenticabili canzoni del Coniglio. Ma i veri protagonisti restano sempre loro: gli ascoltatori. Con le loro voci, le loro storie e le loro risate, rendono il programma ogni giorno unico e inimitabile. Il Ruggito del Coniglio non \\u00e8 solo una trasmissione radiofonica: \\u00e8 un rituale mattutino, un punto di ritrovo, una grande famiglia allargata che da 30 anni ride di s\\u00e9 stessa e dell'Italia intera. Condotto da Marco Presta e Antonello Dose. Regia di Paolo Restuccia.  A cura di Ludovica Rossetti, Angelica De Rossi e Maria Lucia Schito.  \", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"RaiPlaySound\", \"_type\": \"url\", \"url\": \"https://www.raiplaysound.it/audio/2026/10/Il-Ruggito-del-Coniglio-del-30102026-3315acfb-decc-49ce-bec4-77eb9c52daa5.json\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"RaiPlaySound\", \"_type\": \"url\", \"url\": \"https://www.raiplaysound.it/audio/2026/10/Il-Ruggito-del-Coniglio-del-29102026-5fe91f94-9797-41f6-85fe-e71938f62046.json\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.raiplaysound.it/programmi/ilruggitodelconiglio\", \"original_url\": \"https://www.raiplaysound.it/programmi/ilruggitodelconiglio\", \"webpage_url_basename\": \"ilruggitodelconiglio\", \"webpage_url_domain\": \"raiplaysound.it\", \"extractor\": \"RaiPlaySoundPlaylist\", \"extractor_key\": \"RaiPlaySoundPlaylist\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

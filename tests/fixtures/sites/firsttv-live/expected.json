@@ -1,0 +1,43 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.1tv.ru/live",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[1tv:live] Extracting URL: https://www.1tv.ru/live",
+    "[1tv:live] live: Downloading webpage",
+    "[1tv:live] live: Downloading JSON metadata",
+    "[1tv:live] live: Downloading MPD manifest",
+    "[info] Available formats for live:",
+    "ID     EXT RESOLUTION |   TBR PROTO | VCODEC        VBR ACODEC      ABR ASR MORE INFO",
+    "------------------------------------------------------------------------------------------------------",
+    "dash-6 m4a audio only |   64k dash  | audio only        mp4a.40.2   64k 48k [rus] DASH audio, m4a_dash",
+    "dash-7 m4a audio only |  128k dash  | audio only        mp4a.40.2  128k 48k [rus] DASH audio, m4a_dash",
+    "dash-5 mp4 640x360    |  350k dash  | avc1.4d401e  350k video only          DASH video, mp4_dash",
+    "dash-4 mp4 640x360    |  950k dash  | avc1.4d401e  950k video only          DASH video, mp4_dash",
+    "dash-3 mp4 1280x720   | 1250k dash  | avc1.64001f 1250k video only          DASH video, mp4_dash",
+    "dash-2 mp4 1280x720   | 2400k dash  | avc1.64001f 2400k video only          DASH video, mp4_dash",
+    "dash-1 mp4 1280x720   | 3800k dash  | avc1.64001f 3800k video only          DASH video, mp4_dash"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.1tv.ru/live",
+   "args": [
+    "--print",
+    "%(id)s|%(live_status)s|%(was_live)s|%(extractor)s|%(ext)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "live|is_live|False|1tv:live|mp4|https://www.1tv.ru/live"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

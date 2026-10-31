@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {
+   "url": "http://prehravac.rozhlas.cz/audio/3421320",
+   "headers": {
+    "Content-Type": "text/html; charset=UTF-8"
+   },
+   "body_file": "r001.body"
+  }
+ ]
+}

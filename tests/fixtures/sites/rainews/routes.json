@@ -1,0 +1,32 @@
+{
+  "routes": [
+    {
+      "url": "https://www.rainews.it/video/2024/02/membri-della-croce-rossa-evacuano-gli-abitanti-di-un-villaggio-nella-regione-ucraina-di-kharkiv-il-filmato-dallucraina--31e8017c-845c-43f5-9c48-245b43c3a079.html",
+      "headers": {
+        "Content-Type": "text/html;charset=UTF-8"
+      },
+      "body_file": "6ce9529d9b8f.bin"
+    },
+    {
+      "url": "http://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=YeV73EnfJHgcRFHt1PCeOgeeqqEEqualeeqqEEqual&output=64",
+      "headers": {
+        "Content-Type": "text/xml;charset=ISO-8859-1"
+      },
+      "body_file": "7ee1929d8739.bin"
+    },
+    {
+      "url": "https://vod8-rai-it.akamaized.net/podcastcdn/rai24_vod/22484252_,1200/playlist.m3u8?auth=daEamaHaib8d.c0dvdzbzalc.bmdYcJbkaT-bQ5GwZ-c0-CjuuzFn&aifp=V001",
+      "headers": {
+        "Content-Type": "application/x-mpegURL"
+      },
+      "body_file": "90d4c11dd8e1.bin"
+    },
+    {
+      "url": "http://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=YeV73EnfJHgcRFHt1PCeOgeeqqEEqualeeqqEEqual&overrideUserAgentRule=mp4-*",
+      "headers": {
+        "Content-Type": "video/mp4"
+      },
+      "body_file": "23e7564a432e.bin"
+    }
+  ]
+}
