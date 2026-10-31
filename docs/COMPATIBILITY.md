@@ -6330,8 +6330,10 @@ bounded static MPD subset with one or more Periods, and dynamic (live) MPDs as
 pinned upstream reads them (below). Original/final MPD paths and explicit
 hints force parsing even with a conflicting media MIME, preventing MPD text from
 being published as media. Read at most 2 MiB of identity-encoded UTF-8 XML;
-ambiguous/invalid headers, DTDs, foreign element namespaces and external XML
-references fail. No schema, xlink, initialization or media URL is fetched during
+ambiguous/invalid headers and DTDs fail. Like upstream's namespaced `find`
+lookups, elements of other namespaces (`cenc:pssh`, vendor extensions) and
+their contents are ignored, as are xlink and `xml:base` references, which are
+never followed. No schema, xlink, initialization or media URL is fetched during
 extraction or JSON/simulation. XML nodes/depth are bounded at 100000/64.
 
 `BaseURL` resolves through MPD, Period, AdaptationSet and Representation, with one
@@ -6453,10 +6455,14 @@ upstream's (apart from `Referer`); FFmpeg's own DASH demuxer is not exercised
 available local dynamic manifest without ending), so no live recording
 reliability is claimed.
 
-Reject RepresentationIndex and index attributes
-(upstream ignores them), dependent/scalable representations, SubRepresentation,
-EssentialProperty, remapping, multiple BaseURL alternatives, mixed inherited
-addressing schemes and unsupported state. SegmentBase representations are their
+Like upstream, elements and attributes it does not read are ignored:
+RepresentationIndex and index attributes, dependent/scalable representation
+attributes, SubRepresentation, Essential/SupplementalProperty, `Location`/
+`PatchLocation`, other SegmentTemplate/SegmentList attributes (`endNumber`,
+availability hints) and children, and namespaced attributes (an `Initialization`
+or `SegmentURL` without its `sourceURL`/`media`, or this port's ranges, is
+upstream's `KeyError`). Multiple BaseURL alternatives, misplaced addressing,
+mixed inherited addressing schemes and unsupported state are rejected. SegmentBase representations are their
 direct BaseURL, as upstream. YouTube MPD discovery remains outside
 its extractor. No live/site reliability or general DASH parity is implied.
 

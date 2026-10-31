@@ -108,9 +108,13 @@ fn duration(text: &str) -> Result<u128> {
     Ok(total)
 }
 
+/// Upstream `find(_add_ns(name))`: elements in the MPD's own namespace only.
 fn children<'a, 'input>(node: Node<'a, 'input>, name: &str) -> Vec<Node<'a, 'input>> {
+    let namespace = node.document().root_element().tag_name().namespace();
     node.children()
-        .filter(|n| n.is_element() && n.tag_name().name() == name)
+        .filter(|n| {
+            n.is_element() && n.tag_name().name() == name && n.tag_name().namespace() == namespace
+        })
         .collect()
 }
 fn one<'a, 'input>(node: Node<'a, 'input>, name: &str) -> Result<Option<Node<'a, 'input>>> {
@@ -121,6 +125,12 @@ fn one<'a, 'input>(node: Node<'a, 'input>, name: &str) -> Result<Option<Node<'a,
         )));
     }
     Ok(nodes.into_iter().next())
+}
+/// ElementTree's `get(name)`: an attribute without a namespace.
+fn plain<'a>(node: Node<'a, '_>, name: &str) -> Option<&'a str> {
+    node.attributes()
+        .find(|attr| attr.namespace().is_none() && attr.name() == name)
+        .map(|attr| attr.value())
 }
 fn uri(base: &Url, value: &str) -> Result<Url> {
     if value.is_empty() || value.contains(['\r', '\n']) || value.len() > 16_384 {
@@ -210,8 +220,6 @@ struct Entry {
 }
 #[derive(Clone, Default)]
 struct Address {
-    /// A dynamic MPD's addressing (availability hints are then ignored).
-    dynamic: bool,
     kind: Option<String>,
     attrs: BTreeMap<String, String>,
     timeline: Option<Vec<Entry>>,
@@ -234,57 +242,30 @@ impl Address {
         }
         let mut inherited = self.clone();
         inherited.kind = Some(kind.into());
+        // Like upstream, other attributes (`endNumber`, `indexRange`,
+        // availability hints, namespaced ones, ...) and child elements are
+        // not read.
         for attr in source.attributes() {
-            if attr.namespace().is_some() {
-                return Err(bad("namespaced DASH addressing attributes are unsupported"));
-            }
-            // Live availability hints; upstream never reads them.
-            if inherited.dynamic
+            if attr.namespace().is_none()
                 && matches!(
                     attr.name(),
-                    "availabilityTimeOffset" | "availabilityTimeComplete"
+                    "timescale"
+                        | "duration"
+                        | "startNumber"
+                        | "presentationTimeOffset"
+                        | "media"
+                        | "initialization"
                 )
             {
-                continue;
-            }
-            if !matches!(
-                attr.name(),
-                "timescale"
-                    | "duration"
-                    | "startNumber"
-                    | "presentationTimeOffset"
-                    | "media"
-                    | "initialization"
-            ) {
-                return Err(bad(format!(
-                    "unsupported DASH addressing attribute {}",
-                    attr.name()
-                )));
-            }
-            inherited
-                .attrs
-                .insert(attr.name().into(), attr.value().into());
-        }
-        for child in source.children().filter(Node::is_element) {
-            if !matches!(
-                child.tag_name().name(),
-                "SegmentTimeline" | "Initialization" | "SegmentURL"
-            ) {
-                return Err(bad("unsupported DASH addressing element"));
+                inherited
+                    .attrs
+                    .insert(attr.name().into(), attr.value().into());
             }
         }
         if let Some(timeline) = one(source, "SegmentTimeline")? {
             let mut entries = Vec::new();
-            for entry in timeline.children().filter(Node::is_element) {
-                if entry.tag_name().name() != "S"
-                    || entry
-                        .attributes()
-                        .any(|a| !matches!(a.name(), "t" | "d" | "r"))
-                {
-                    return Err(bad("unsupported DASH timeline element"));
-                }
-                let r = entry
-                    .attribute("r")
+            for entry in children(timeline, "S") {
+                let r = plain(entry, "r")
                     .unwrap_or("0")
                     .parse::<i64>()
                     .map_err(|_| bad("invalid DASH repeat"))?;
@@ -292,10 +273,9 @@ impl Address {
                     return Err(bad("invalid DASH negative repeat"));
                 }
                 entries.push(Entry {
-                    t: entry.attribute("t").map(number).transpose()?,
+                    t: plain(entry, "t").map(number).transpose()?,
                     d: positive(
-                        entry
-                            .attribute("d")
+                        plain(entry, "d")
                             .ok_or_else(|| bad("DASH timeline duration is required"))?,
                     )?,
                     r,
@@ -307,15 +287,14 @@ impl Address {
             inherited.timeline = Some(entries);
         }
         if let Some(init) = one(source, "Initialization")? {
-            if init
-                .attributes()
-                .any(|a| !matches!(a.name(), "sourceURL" | "range"))
-            {
-                return Err(bad("unsupported DASH initialization attribute"));
+            // Upstream's `attrib['sourceURL']` (a KeyError without one); a
+            // byte range of the representation's own resource is also read.
+            if plain(init, "sourceURL").is_none() && plain(init, "range").is_none() {
+                return Err(bad("DASH Initialization has no sourceURL"));
             }
             inherited.initialization = Some((
-                init.attribute("sourceURL").map(str::to_owned),
-                init.attribute("range").map(str::to_owned),
+                plain(init, "sourceURL").map(str::to_owned),
+                plain(init, "range").map(str::to_owned),
             ));
         }
         let urls = children(source, "SegmentURL");
@@ -331,15 +310,14 @@ impl Address {
         if !urls.is_empty() {
             let mut segments = Vec::new();
             for url in urls {
-                if url
-                    .attributes()
-                    .any(|a| !matches!(a.name(), "media" | "mediaRange"))
-                {
-                    return Err(bad("DASH index/SIDX attributes are unsupported"));
+                // Upstream's `attrib['media']`; a byte range of the
+                // representation's own resource is also read.
+                if plain(url, "media").is_none() && plain(url, "mediaRange").is_none() {
+                    return Err(bad("DASH SegmentURL has no media"));
                 }
                 segments.push((
-                    url.attribute("media").map(str::to_owned),
-                    url.attribute("mediaRange").map(str::to_owned),
+                    plain(url, "media").map(str::to_owned),
+                    plain(url, "mediaRange").map(str::to_owned),
                 ));
             }
             inherited.segments = Some(segments);
@@ -903,12 +881,7 @@ impl Periods {
         mut span: Span,
     ) -> Result<()> {
         let (period_base, period_explicit) = base_url(period, root_base, root_explicit)?;
-        let address = Address {
-            dynamic: span.dynamic,
-            ..Address::default()
-        }
-        .inherit(root)?
-        .inherit(period)?;
+        let address = Address::default().inherit(root)?.inherit(period)?;
         // Upstream `if not period_duration: period_duration = try_get(...)`
         // after each fragmented representation (dynamic MPDs only: static
         // ones need a known duration).
@@ -1286,31 +1259,27 @@ pub(crate) fn parse_manifest(text: &str, manifest: &Url) -> Result<Manifest> {
             dynamic,
         });
     }
+    let namespace = root.tag_name().namespace();
     for node in root.descendants().filter(Node::is_element) {
         if node.ancestors().take(66).count() > 65 {
             return Err(bad("DASH XML nesting exceeds 64 element levels"));
         }
-        // Like upstream, only a ContentProtection element's presence is read
-        // (`has_drm`); its scheme data, often namespaced, is not interpreted.
-        if node.ancestors().skip(1).any(|ancestor| {
-            ancestor.tag_name().name() == "ContentProtection"
-                && ancestor.tag_name().namespace() == root.tag_name().namespace()
-        }) {
+        // Upstream's `find(_add_ns(...))` lookups never see elements of other
+        // namespaces (`cenc:pssh`, vendor extensions, ...) or their contents.
+        if node
+            .ancestors()
+            .any(|ancestor| ancestor.is_element() && ancestor.tag_name().namespace() != namespace)
+        {
             continue;
         }
-        if matches!(
-            node.tag_name().name(),
-            "SegmentTemplate"
-                | "SegmentList"
-                | "SegmentTimeline"
-                | "S"
-                | "Initialization"
-                | "SegmentURL"
-        ) && node
-            .attributes()
-            .any(|attribute| attribute.namespace().is_some())
+        // Like upstream, only a ContentProtection element's presence is read
+        // (`has_drm`); its scheme data is not interpreted.
+        if node
+            .ancestors()
+            .skip(1)
+            .any(|ancestor| ancestor.tag_name().name() == "ContentProtection")
         {
-            return Err(bad("namespaced DASH addressing attributes are unsupported"));
+            continue;
         }
         // Upstream never reads `SegmentBase` (or its index ranges and
         // `Initialization`): such a representation is its direct `BaseURL`.
@@ -1318,38 +1287,12 @@ pub(crate) fn parse_manifest(text: &str, manifest: &Url) -> Result<Manifest> {
             .ancestors()
             .any(|ancestor| ancestor.tag_name().name() == "SegmentBase")
         {
-            if node.tag_name().namespace() != root.tag_name().namespace() {
-                return Err(bad("unsupported DASH extension namespace"));
-            }
             continue;
         }
-        // A dynamic MPD's refresh locations only matter to its refetches,
-        // which upstream leaves to FFmpeg; it never reads them.
-        if dynamic && matches!(node.tag_name().name(), "Location" | "PatchLocation") {
-            if node.tag_name().namespace() != root.tag_name().namespace()
-                || node.parent_element() != Some(root)
-            {
-                return Err(bad("misplaced DASH location"));
-            }
-            continue;
-        }
-        if matches!(
-            node.tag_name().name(),
-            "EssentialProperty" | "SubRepresentation" | "Location" | "PatchLocation"
-        ) || node.attributes().any(|a| {
-            matches!(
-                a.name(),
-                "dependencyId"
-                    | "dependencyLevel"
-                    | "scalableEnhancement"
-                    | "indexRange"
-                    | "indexRangeExact"
-            )
-        }) {
-            return Err(bad(
-                "DASH dependent representations, essential properties, location remapping and indexes are unsupported",
-            ));
-        }
+        // Other elements and attributes upstream does not read (refresh
+        // locations, properties, sub- and dependent representations,
+        // `RepresentationIndex`, xlink and `xml:base`) are ignored like
+        // upstream's; misplaced addressing stays an error.
         let parent = node.parent_element().map(|parent| parent.tag_name().name());
         let valid_parent = match node.tag_name().name() {
             "Period" => parent == Some("MPD"),
@@ -1370,20 +1313,6 @@ pub(crate) fn parse_manifest(text: &str, manifest: &Url) -> Result<Manifest> {
         };
         if !valid_parent {
             return Err(bad("misplaced DASH addressing or representation element"));
-        }
-        if node.tag_name().namespace() != root.tag_name().namespace() {
-            return Err(bad("unsupported DASH extension namespace"));
-        }
-        // Upstream never reads RepresentationIndex (SIDX) addressing.
-        if node.tag_name().name() == "RepresentationIndex" {
-            return Err(bad("DASH RepresentationIndex addressing is unsupported"));
-        }
-        if node.attributes().any(|a| {
-            a.namespace() == Some("http://www.w3.org/1999/xlink")
-                || a.namespace() == Some("http://www.w3.org/XML/1998/namespace")
-                    && a.name() == "base"
-        }) {
-            return Err(bad("DASH xlink/xml:base is unsupported"));
         }
     }
     let periods = children(root, "Period");
@@ -1695,13 +1624,15 @@ mod tests {
         );
         // A bare directory base is still no resource.
         assert!(parse(&text.replace("?type=4&amp;ct=21", "dir/"), &manifest).is_err());
-        // Index ranges outside SegmentBase stay unsupported.
-        assert!(
+        // Upstream never reads index ranges outside SegmentBase either.
+        assert_eq!(
             parse(
                 &text.replace("id=\"0\"", "id=\"0\" indexRange=\"0-1\""),
                 &manifest
             )
-            .is_err()
+            .unwrap()
+            .len(),
+            3
         );
     }
     #[test]
@@ -1726,29 +1657,15 @@ mod tests {
         let text = template("");
         for changed in [
             text.replace("type=\"static\"", "type=\"event\""),
-            // A static MPD's refresh location is not followed.
-            text.replace(
-                "<Period>",
-                "<Location>https://example.com/next.mpd</Location><Period>",
-            ),
             // The first Period's end is unknown, so its template has no count.
             text.replace("</MPD>", "<Period/></MPD>"),
             text.replace("<Period>", "<Period><ContentProtection/>"),
             text.replace("<Period>", "<Period/>"),
             text.replace(
-                "/></AdaptationSet>",
-                "><RepresentationIndex sourceURL=\"index.sidx\"/></Representation></AdaptationSet>",
-            ),
-            text.replace(
                 "<Representation ",
                 "<BaseURL>a/</BaseURL><BaseURL>b/</BaseURL><Representation ",
             ),
             text.replace("<Representation ", "<SegmentList/><Representation "),
-            text.replace(
-                "<Period>",
-                "<Period xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"other.xml\">",
-            ),
-            text.replace("<Period>", "<Period xml:base=\"other/\">"),
             format!("<!DOCTYPE MPD [<!ENTITY x 'bad'>]>{text}"),
         ] {
             assert!(parse(&changed, &manifest()).is_err(), "{changed}");
@@ -1760,6 +1677,26 @@ mod tests {
             )
             .is_err()
         );
+        // Upstream does not read these either: the same plan results.
+        let plain = parse(&text, &manifest()).unwrap();
+        for changed in [
+            text.replace(
+                "<Period>",
+                "<Location>https://example.com/next.mpd</Location><Period>",
+            ),
+            text.replace(
+                "/></AdaptationSet>",
+                "><RepresentationIndex sourceURL=\"index.sidx\"/></Representation></AdaptationSet>",
+            ),
+            text.replace(
+                "<Period>",
+                "<Period xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"other.xml\">",
+            ),
+            text.replace("<Period>", "<Period xml:base=\"other/\">"),
+        ] {
+            let formats = parse(&changed, &manifest()).unwrap();
+            assert_eq!(urls(&formats[0]), urls(&plain[0]), "{changed}");
+        }
     }
     #[test]
     fn initialization_sequence_tokens_and_combined_media_tokens_are_rejected_without_misreading_escapes()
@@ -1830,37 +1767,47 @@ mod tests {
         assert!(parse(&timeline, &manifest()).is_err());
     }
     #[test]
-    fn dependent_representations_essential_properties_remapping_and_deep_xml_fail_closed() {
+    fn dependent_representations_properties_and_locations_are_ignored_like_upstream() {
         let text = template("");
+        let plain = parse(&text, &manifest()).unwrap();
         for attribute in [
             "dependencyId=\"base\"",
             "dependencyLevel=\"1\"",
             "scalableEnhancement=\"true\"",
             "indexRange=\"0-10\"",
         ] {
-            assert!(
-                parse(
-                    &text.replace("id=\"v\"", &format!("id=\"v\" {attribute}")),
-                    &manifest()
-                )
-                .is_err()
-            );
+            let formats = parse(
+                &text.replace("id=\"v\"", &format!("id=\"v\" {attribute}")),
+                &manifest(),
+            )
+            .unwrap();
+            assert_eq!(urls(&formats[0]), urls(&plain[0]), "{attribute}");
         }
         for element in [
             "<EssentialProperty schemeIdUri=\"unknown\"/>",
+            "<SupplementalProperty schemeIdUri=\"unknown\"/>",
             "<SubRepresentation/>",
-            "<SegmentURL media=\"ignored.m4s\"/>",
             "<Location>other.mpd</Location>",
             "<PatchLocation>other.mpd</PatchLocation>",
         ] {
-            assert!(
-                parse(
-                    &text.replace("<Representation ", &format!("{element}<Representation ")),
-                    &manifest()
-                )
-                .is_err()
-            );
+            let formats = parse(
+                &text.replace("<Representation ", &format!("{element}<Representation ")),
+                &manifest(),
+            )
+            .unwrap();
+            assert_eq!(urls(&formats[0]), urls(&plain[0]), "{element}");
         }
+        // Misplaced addressing stays an error.
+        assert!(
+            parse(
+                &text.replace(
+                    "<Representation ",
+                    "<SegmentURL media=\"ignored.m4s\"/><Representation "
+                ),
+                &manifest()
+            )
+            .is_err()
+        );
         let deep = text
             .replace(
                 "<Representation ",
@@ -1902,15 +1849,34 @@ mod tests {
                     "<SegmentTemplate xmlns:x=\"urn:foreign\" ",
                 )
                 .replace(from, to);
-            assert!(parse(&text, &manifest()).is_err(), "{to}");
+            // Like upstream's `get(name)`, a namespaced attribute is unread:
+            // a missing `media`/`duration` fails, a missing initialization
+            // only drops the initialization fragment.
+            match parse(&text, &manifest()) {
+                Err(_) => assert_ne!(from, "initialization=\"", "{to}"),
+                Ok(formats) => {
+                    assert_eq!(from, "initialization=\"", "{to}");
+                    assert!(urls(&formats[0]).iter().all(|url| !url.contains("init")));
+                }
+            }
         }
         for text in [
             "<SegmentList><Initialization xmlns:x=\"urn:foreign\" x:sourceURL=\"init.mp4\"/><SegmentURL media=\"one.m4s\"/></SegmentList>",
             "<SegmentList><Initialization sourceURL=\"init.mp4\"/><SegmentURL xmlns:x=\"urn:foreign\" x:media=\"one.m4s\"/></SegmentList>",
-            "<SegmentTemplate initialization=\"init.mp4\" media=\"$Time$.m4s\"><SegmentTimeline><S xmlns:x=\"urn:foreign\" x:t=\"0\" d=\"1\"/></SegmentTimeline></SegmentTemplate>",
         ] {
+            // Upstream's `attrib['sourceURL']`/`attrib['media']` KeyErrors.
             assert!(parse(&wrap(&format!("<AdaptationSet mimeType=\"video/mp4\">{text}<Representation/></AdaptationSet>")), &manifest()).is_err());
         }
+        // `int(s.get('t', 0))`: an unread namespaced `t` is the default.
+        let timeline = "<SegmentTemplate initialization=\"init.mp4\" media=\"$Time$.m4s\"><SegmentTimeline><S xmlns:x=\"urn:foreign\" x:t=\"5\" d=\"1\"/></SegmentTimeline></SegmentTemplate>";
+        let formats = parse(
+            &wrap(&format!(
+                "<AdaptationSet mimeType=\"video/mp4\">{timeline}<Representation/></AdaptationSet>"
+            )),
+            &manifest(),
+        )
+        .unwrap();
+        assert!(urls(&formats[0])[1].ends_with("/0.m4s"));
     }
 
     #[test]
@@ -2160,8 +2126,9 @@ mod tests {
             ]
         );
         assert_eq!(subtitles[0].1.extra["has_drm"], true);
-        // Foreign elements stay unsupported outside ContentProtection.
-        assert!(
+        // Like upstream's namespaced lookups, foreign elements are ignored
+        // outside ContentProtection too.
+        assert_eq!(
             parse(
                 &text.replace(
                     "<cenc:pssh>AAAA</cenc:pssh></ContentProtection>",
@@ -2169,7 +2136,9 @@ mod tests {
                 ),
                 &manifest()
             )
-            .is_err()
+            .unwrap()
+            .len(),
+            formats.len()
         );
     }
     #[test]
@@ -2350,7 +2319,7 @@ mod tests {
         );
     }
     #[test]
-    fn dynamic_only_location_and_availability_hints_are_ignored() {
+    fn locations_and_availability_hints_are_ignored() {
         let hinted = NUMBER.replace(
             "duration=",
             "availabilityTimeOffset=\"1.5\" availabilityTimeComplete=\"false\" duration=",
@@ -2361,14 +2330,10 @@ mod tests {
         );
         let formats = parse(&dynamic("", &body), &manifest()).unwrap();
         assert_eq!(paths(&formats[0]), ["init-v.mp4", "v-1.m4s"]);
+        // Upstream reads neither in static MPDs either.
         let fixed = dynamic("", &body).replace("type=\"dynamic\"", "type=\"static\"");
-        assert!(parse(&fixed, &manifest()).is_err());
-        assert!(parse(
-            &fixed.replace("<Location>https://example.com/next.mpd</Location><PatchLocation>patch.mpp</PatchLocation>", ""),
-            &manifest()
-        )
-        .is_err());
-        // A Location must be the MPD's.
+        assert!(parse(&fixed, &manifest()).is_ok());
+        // Nor a Location elsewhere.
         let misplaced = dynamic(
             "",
             &format!(
@@ -2376,7 +2341,7 @@ mod tests {
                 video(NUMBER)
             ),
         );
-        assert!(parse(&misplaced, &manifest()).is_err());
+        assert!(parse(&misplaced, &manifest()).is_ok());
         // Without a timeline upstream needs `$Number$` (`KeyError: 's'`).
         let time = NUMBER.replace("$Number$", "$Time$");
         assert!(
