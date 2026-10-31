@@ -15,8 +15,10 @@ pub struct TviPlayer;
 const NAME: &str = "TVIPlayer";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://tviplayer\.iol\.pt(/programa/[\w-]+/[a-f0-9]+)?/\w+/(?P<id>\w+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://tviplayer\.iol\.pt(/programa/[\w-]+/[a-f0-9]+)?/\w+/(?P<id>\w+)",
+    )
+    .unwrap()
 });
 static JSON_DATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"\sopts\s*=\s*\{\s*video\s*:\s*\[").unwrap());

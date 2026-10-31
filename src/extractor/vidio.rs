@@ -20,7 +20,7 @@ const PREMIER: &str = "VidioPremier";
 const AUTH_URL: &str = "https://www.vidio.com/auth";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"https?://(?:www\.)?vidio\.com/(?:watch|embed)/(?P<id>\d+)-(?P<display_id>[^/?#&]+)",
     )
     .unwrap()

@@ -15,7 +15,10 @@ const NAME: &str = "1News";
 const KEY: &str = "OneNewsNZ";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?(?:1|one)news\.co\.nz/\d+/\d+/\d+/(?P<id>[^/?#&]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?(?:1|one)news\.co\.nz/\d+/\d+/\d+/(?P<id>[^/?#&]+)",
+    )
+    .unwrap()
 });
 static FUSION: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"Fusion\.globalContent\s*=\s*").unwrap());

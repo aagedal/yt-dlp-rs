@@ -22,7 +22,7 @@ pub struct TikTokUser;
 pub struct TikTokCollection;
 pub struct TikTokLive;
 
-const NAME: &str = "TikTok";
+pub(crate) const NAME: &str = "TikTok";
 const VM_NAME: &str = "vm.tiktok";
 const DOUYIN_NAME: &str = "Douyin";
 const USER_NAME: &str = "tiktok:user";
@@ -40,7 +40,7 @@ const DOUYIN_HOST: &str = "https://www.douyin.com/";
 const LOGIN_HINT: &str = "Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://www\.tiktokv?\.com/(?:embed|(?:share|@(?P<user_id>[\w\.-]+)?)/video)/(?P<id>\d+)",
     )
     .unwrap()
@@ -78,6 +78,21 @@ static ARTISTS: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?:, | & )").unw
 /// `TikTokIE._match_valid_url`.
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
+}
+
+/// `get_temp_id`.
+pub(crate) fn temp_id(url: &str) -> Option<String> {
+    VALID_URL.captures(url).map(|found| found["id"].to_owned())
+}
+
+/// `_EMBED_REGEX`: `_VALID_URL` in a script or iframe `src`.
+static EMBED: LazyLock<[Regex; 1]> = LazyLock::new(|| {
+    [Regex::new(r#"<(?:script|iframe)[^>]+\bsrc=["'](?P<url>https?://www\.tiktokv?\.com/(?:embed|(?:share|@(?P<user_id>[\w\.-]+)?)/video)/(?P<id>\d+))"#).unwrap()]
+});
+
+/// `_extract_embed_urls` under `orderedSet`.
+pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
+    super::embed_regex_urls(url, webpage, &*EMBED, suitable)
 }
 
 /// `TikTokVMIE._match_valid_url`.

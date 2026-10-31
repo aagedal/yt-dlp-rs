@@ -14,7 +14,10 @@ const NAME: &str = "KankaNews";
 const SECRET: &str = "&28c8edde3d61a0411511d3b1866f0636";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?kankanews\.com/a/\d+-\d+-\d+/(?P<id>\d+)\.shtml").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?kankanews\.com/a/\d+-\d+-\d+/(?P<id>\d+)\.shtml",
+    )
+    .unwrap()
 });
 static VIDEO_ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"omsid\s*=\s*"(\d+)""#).unwrap());
 static TITLE: LazyLock<Regex> =

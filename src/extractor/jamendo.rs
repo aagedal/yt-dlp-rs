@@ -17,7 +17,7 @@ const NAME: &str = "Jamendo";
 const ALBUM_NAME: &str = "JamendoAlbum";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:licensing\.jamendo\.com/[^/]+|(?:www\.)?jamendo\.com)/track/(?P<id>[0-9]+)(?:/(?P<display_id>[^/?#&]+))?",
     )
     .unwrap()

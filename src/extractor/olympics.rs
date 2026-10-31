@@ -19,7 +19,7 @@ const NAME: &str = "OlympicsReplay";
 const GEO_MESSAGE: &str = "This video is not available from your location due to geo restriction";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?olympics\.com/[a-z]{2}/(?:paris-2024/)?(?:replay|videos?|original-series/episode)/(?P<id>[\w-]+)",
     )
     .unwrap()

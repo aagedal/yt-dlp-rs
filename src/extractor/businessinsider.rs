@@ -12,8 +12,10 @@ pub struct BusinessInsider;
 const NAME: &str = "BusinessInsider";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:[^/]+\.)?businessinsider\.(?:com|nl)/(?:[^/]+/)*(?P<id>[^/?#&]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:[^/]+\.)?businessinsider\.(?:com|nl)/(?:[^/]+/)*(?P<id>[^/?#&]+)",
+    )
+    .unwrap()
 });
 static JWPLATFORM_IDS: LazyLock<[Regex; 4]> = LazyLock::new(|| {
     [

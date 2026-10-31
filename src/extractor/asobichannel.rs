@@ -24,7 +24,8 @@ const MICROCMS_HEADER: [(&str, &str); 1] =
     [("X-MICROCMS-API-KEY", "qRaKehul9AHU8KtL0dnq1OCLKnFec6yrbcz3")];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://asobichannel\.asobistore\.jp/watch/(?P<id>[\w-]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://asobichannel\.asobistore\.jp/watch/(?P<id>[\w-]+)")
+        .unwrap()
 });
 static TAG_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://asobichannel\.asobistore\.jp/tag/(?P<id>[a-z0-9-_]+)").unwrap()

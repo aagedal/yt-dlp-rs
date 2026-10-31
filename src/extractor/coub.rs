@@ -16,7 +16,7 @@ const QUALITIES: [&str; 4] = ["low", "med", "high", "higher"];
 const SOURCES: [&str; 3] = ["mobile", "iphone", "html5"];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?:coub:|https?://(?:coub\.com/(?:view|embed|coubs)/|c-cdn\.coub\.com/fb-player\.swf\?.*\bcoub(?:ID|id)=))(?P<id>[\da-z]+)")
+    crate::extractor::url_regex(r"^(?:coub:|https?://(?:coub\.com/(?:view|embed|coubs)/|c-cdn\.coub\.com/fb-player\.swf\?.*\bcoub(?:ID|id)=))(?P<id>[\da-z]+)")
         .unwrap()
 });
 

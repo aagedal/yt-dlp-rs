@@ -24,7 +24,7 @@ const ARTICLE_KEY: &str = "BFMTVArticle";
 const BASE: &str = r"^https?://(?:www\.|rmc\.)?bfmtv\.com/";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+    crate::extractor::url_regex(&format!(
         r"{BASE}(?:[^/]+/)*[^/?&#]+_V[A-Z]-(?P<id>\d{{12}})\.html"
     ))
     .unwrap()

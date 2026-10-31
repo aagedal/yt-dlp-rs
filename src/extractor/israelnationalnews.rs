@@ -14,7 +14,8 @@ pub struct IsraelNationalNews;
 const NAME: &str = "IsraelNationalNews";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?israelnationalnews\.com/news/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?israelnationalnews\.com/news/(?P<id>\d+)")
+        .unwrap()
 });
 
 /// `_match_id`.

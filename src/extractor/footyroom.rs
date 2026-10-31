@@ -14,8 +14,9 @@ pub struct FootyRoom;
 const NAME: &str = "FootyRoom";
 const STREAMABLE: &str = "Streamable";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://footyroom\.com/matches/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://footyroom\.com/matches/(?P<id>\d+)").unwrap()
+});
 static MEDIA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"DataStore\.media\s*=\s*([^;]+)").unwrap());
 static STREAMABLE_EMBED: LazyLock<Regex> = LazyLock::new(|| {

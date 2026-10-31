@@ -16,7 +16,7 @@ const NAME: &str = "RedGifs";
 const TOKEN_URL: &str = "https://api.redgifs.com/v2/auth/temporary";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:www\.)?redgifs\.com/(?:watch|ifr)/|thumbs2\.redgifs\.com/)(?P<id>[^-/?#.]+)",
     )
     .unwrap()

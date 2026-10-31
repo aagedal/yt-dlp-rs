@@ -14,7 +14,7 @@ pub struct RadioZetPodcast;
 const NAME: &str = "RadioZetPodcast";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://player\.radiozet\.pl/Podcasty/.*?/(?P<id>.+)").unwrap()
+    crate::extractor::url_regex(r"^https?://player\.radiozet\.pl/Podcasty/.*?/(?P<id>.+)").unwrap()
 });
 static PODCAST_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<div.*?\sid="player".*?\sdata-id=['"]([^'"]+)['"]"#).unwrap());

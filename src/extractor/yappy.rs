@@ -20,8 +20,9 @@ const NAME: &str = "Yappy";
 const PROFILE_NAME: &str = "YappyProfile";
 const PAGE_SIZE: usize = 15;
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://yappy\.media/video/(?P<id>\w+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://yappy\.media/video/(?P<id>\w+)").unwrap()
+});
 static PROFILE_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^https?://yappy\.media/profile/(?P<id>\w+)").unwrap());
 

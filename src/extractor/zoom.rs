@@ -18,7 +18,8 @@ const NAME: &str = "zoom:clips";
 const KEY: &str = "ZoomClips";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"https?://(?:[^.]+\.)?zoom\.us/clips/share/(?P<id>[\w.-]+)").unwrap()
+    crate::extractor::url_regex(r"https?://(?:[^.]+\.)?zoom\.us/clips/share/(?P<id>[\w.-]+)")
+        .unwrap()
 });
 
 /// `_match_id`.

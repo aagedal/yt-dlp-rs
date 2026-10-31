@@ -15,7 +15,8 @@ const NAME: &str = "dvtv";
 const KEY: &str = "DVTV";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://video\.aktualne\.cz/(?:[^/]+/)+r~(?P<id>[0-9a-f]{32})").unwrap()
+    crate::extractor::url_regex(r"^https?://video\.aktualne\.cz/(?:[^/]+/)+r~(?P<id>[0-9a-f]{32})")
+        .unwrap()
 });
 static PLAYLIST_ITEM: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)playlist\.push\((\{.+?\})\);").unwrap());

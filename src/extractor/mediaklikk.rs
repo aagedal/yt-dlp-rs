@@ -15,7 +15,7 @@ pub struct MediaKlikk;
 const NAME: &str = "MediaKlikk";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?(?:mediaklikk|m4sport|hirado)\.hu/.*?(?:videok?|cikk)/(?:(?P<year>[0-9]{4})/(?P<month>[0-9]{1,2})/(?P<day>[0-9]{1,2})/)?(?P<id>[^/#?_]+)",
     )
     .unwrap()

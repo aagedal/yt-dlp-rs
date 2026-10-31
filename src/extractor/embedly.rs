@@ -15,7 +15,7 @@ pub struct Embedly;
 const NAME: &str = "Embedly";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www|cdn\.)?embedly\.com/widgets/media\.html\?(?:[^#]*?&)?(?:src|url)=(?:[^#&]+)",
     )
     .unwrap()

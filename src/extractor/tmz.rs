@@ -14,7 +14,7 @@ pub struct Tmz;
 const NAME: &str = "TMZ";
 
 static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?tmz\.com/.*").unwrap());
+    LazyLock::new(|| crate::extractor::url_regex(r"^https?://(?:www\.)?tmz\.com/.*").unwrap());
 static CUE_VIDEO: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"\.cueVideoById\(\s*(?:'(?P<sq>.*?)'|"(?P<dq>.*?)")"#).unwrap());
 static TWEET_LINK: LazyLock<Regex> =

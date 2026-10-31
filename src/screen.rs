@@ -362,6 +362,11 @@ pub(crate) fn set_extractor(name: &'static str) {
     EXTRACTOR.with(|extractor| extractor.set(name));
 }
 
+/// The extractor name set with [`set_extractor`] (`generic` by default).
+pub(crate) fn extractor() -> &'static str {
+    EXTRACTOR.with(Cell::get)
+}
+
 /// Upstream `_request_webpage`: sleep before every extraction request but the
 /// first, announcing it like `[EXTRACTOR] Sleeping SECONDS seconds ...`.
 pub(crate) fn before_extraction_request() {

@@ -14,8 +14,9 @@ pub struct Cellebrite;
 
 const NAME: &str = "Cellebrite";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://cellebrite\.com/(?:\w+)?/(?P<id>[\w-]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://cellebrite\.com/(?:\w+)?/(?P<id>[\w-]+)").unwrap()
+});
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

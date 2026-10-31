@@ -14,7 +14,8 @@ pub struct Netzkino;
 const NAME: &str = "Netzkino";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?netzkino\.de/details/(?P<id>[^/?#]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?netzkino\.de/details/(?P<id>[^/?#]+)")
+        .unwrap()
 });
 static ABSOLUTE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^(?:[a-zA-Z][a-zA-Z0-9+.-]*:)?//").unwrap());

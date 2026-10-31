@@ -13,8 +13,8 @@ use url::Url;
 pub struct RumbleEmbed;
 pub struct Rumble;
 
-const EMBED_NAME: &str = "RumbleEmbed";
-const NAME: &str = "Rumble";
+pub(crate) const EMBED_NAME: &str = "RumbleEmbed";
+pub(crate) const NAME: &str = "Rumble";
 
 static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?rumble\.com/embed/(?:[0-9a-z]+\.)?(?P<id>[0-9a-z]+)").unwrap()
@@ -53,6 +53,51 @@ pub fn suitable(url: &str) -> bool {
     VIDEO_URL
         .captures(url)
         .is_some_and(|found| !found["id"].starts_with("videos"))
+}
+
+/// `RumbleEmbedIE.get_temp_id`.
+pub(crate) fn embed_temp_id(url: &str) -> Option<String> {
+    EMBED_URL.captures(url).map(|found| found["id"].to_owned())
+}
+
+/// `RumbleIE.get_temp_id`.
+pub(crate) fn temp_id(url: &str) -> Option<String> {
+    VIDEO_URL.captures(url).map(|found| found["id"].to_owned())
+}
+
+/// `RumbleEmbedIE._extract_embed_urls` under `orderedSet`: the
+/// `_EMBED_REGEX` embeds, else every `Rumble("play", {video: ID})` script's.
+pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
+    let found = super::embed_regex_urls(
+        url,
+        webpage,
+        std::slice::from_ref(&*EMBED_IN_PAGE),
+        embed_suitable,
+    );
+    if !found.is_empty() {
+        return found;
+    }
+    let mut found = Vec::new();
+    for captures in PLAY_SCRIPT.captures_iter(webpage) {
+        if let Ok(embed) = Url::parse(&format!("https://rumble.com/embed/{}", &captures["id"])) {
+            super::push_unique(&mut found, embed);
+        }
+    }
+    found
+}
+
+/// `RumbleIE._EMBED_REGEX`: video links of listing pages.
+static VIDEO_LINKS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+    [
+        r"<a class=video-item--a href=(?P<url>/v[\w.-]+\.html)>",
+        r#"<a[^>]+class="videostream__link link"[^>]+href=(?P<url>/v[\w.-]+\.html)[^>]*>"#,
+    ]
+    .map(|pattern| Regex::new(pattern).unwrap())
+});
+
+/// `RumbleIE._extract_embed_urls` under `orderedSet`.
+pub(crate) fn embed_page_urls(url: &Url, webpage: &str) -> Vec<Url> {
+    super::embed_regex_urls(url, webpage, &*VIDEO_LINKS, suitable)
 }
 
 fn int(value: Option<&Value>) -> Option<i64> {

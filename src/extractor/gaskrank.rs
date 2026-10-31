@@ -14,8 +14,10 @@ pub struct Gaskrank;
 const NAME: &str = "Gaskrank";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?gaskrank\.tv/tv/(?P<categories>[^/]+)/(?P<id>[^/]+)\.htm")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?gaskrank\.tv/tv/(?P<categories>[^/]+)/(?P<id>[^/]+)\.htm",
+    )
+    .unwrap()
 });
 static UPLOADER: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

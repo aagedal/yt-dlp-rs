@@ -16,7 +16,7 @@ const NAME: &str = "loc";
 const KEY: &str = "LibraryOfCongress";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?loc\.gov/(?:item/|today/cyberlc/feature_wdesc\.php\?.*\brec=)(?P<id>[0-9a-z_.]+)",
     )
     .unwrap()

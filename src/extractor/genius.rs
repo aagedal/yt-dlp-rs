@@ -17,8 +17,10 @@ const NAME: &str = "Genius";
 const LYRICS_NAME: &str = "GeniusLyrics";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?genius\.com/(?:videos|(?P<article>a))/(?P<id>[^?/#]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?genius\.com/(?:videos|(?P<article>a))/(?P<id>[^?/#]+)",
+    )
+    .unwrap()
 });
 static LYRICS_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?genius\.com/(?P<id>[^?/#]+)-lyrics(?:[?/#]|$)").unwrap()

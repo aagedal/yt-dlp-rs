@@ -14,7 +14,10 @@ pub struct Freesound;
 const NAME: &str = "Freesound";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?freesound\.org/people/[^/]+/sounds/(?P<id>[^/]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?freesound\.org/people/[^/]+/sounds/(?P<id>[^/]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

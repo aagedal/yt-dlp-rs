@@ -22,7 +22,10 @@ const CLIENT_ID: &str = "546c25a59c58ad7";
 
 // `(?!(?:a|gallery|t|topic|r)/)` is checked in `media_id`.
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:i\.)?imgur\.com/(?P<rest>)(?:[^/?#]+-)?(?P<id>[a-zA-Z0-9]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:i\.)?imgur\.com/(?P<rest>)(?:[^/?#]+-)?(?P<id>[a-zA-Z0-9]+)",
+    )
+    .unwrap()
 });
 static GALLERY_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:i\.)?imgur\.com/(?:gallery|(?:t(?:opic)?|r)/[^/?#]+)/(?:[^/?#]+-)?(?P<id>[a-zA-Z0-9]+)")

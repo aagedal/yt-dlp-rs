@@ -15,7 +15,10 @@ pub struct Mux;
 const NAME: &str = "Mux";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:stream\.new/v|player\.mux\.com)/(?P<id>[A-Za-z0-9-]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:stream\.new/v|player\.mux\.com)/(?P<id>[A-Za-z0-9-]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

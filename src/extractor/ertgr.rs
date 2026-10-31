@@ -20,7 +20,7 @@ const API: &str = "https://api.app.ertflix.gr/v1/Player/AcquireContent";
 const API_HEADERS: &str = r#"{"X-Api-Date-Format": "iso", "X-Api-Camel-Case": false}"#;
 
 static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^ertflix:(?P<id>[\w-]+)").unwrap());
+    LazyLock::new(|| crate::extractor::url_regex(r"^ertflix:(?P<id>[\w-]+)").unwrap());
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

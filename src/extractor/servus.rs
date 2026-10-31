@@ -17,7 +17,7 @@ pub struct Servus;
 const NAME: &str = "Servus";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?(?:servus\.com/(?:(?:at|de)/p/[^/]+|tv/videos)|(?:servustv|pm-wissen)\.com/(?:[^/]+/)?v(?:ideos)?)/(?P<id>[aA]{2}-?\w+|\d+-\d+)",
     )
     .unwrap()

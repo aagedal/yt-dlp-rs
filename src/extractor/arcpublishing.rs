@@ -19,7 +19,7 @@ pub(crate) const KEY: &str = "ArcPublishing";
 const UUID: &str = r"[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12}";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(r"^arcpublishing:(?P<org>[a-z]+):(?P<id>{UUID})")).unwrap()
+    crate::extractor::url_regex(&format!(r"^arcpublishing:(?P<org>[a-z]+):(?P<id>{UUID})")).unwrap()
 });
 static POWA: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(&format!(

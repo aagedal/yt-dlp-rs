@@ -14,7 +14,7 @@ pub struct DrTalks;
 const NAME: &str = "DrTalks";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?drtalks\.com/videos/(?P<id>[\w-]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?drtalks\.com/videos/(?P<id>[\w-]+)").unwrap()
 });
 
 /// `_match_id`.

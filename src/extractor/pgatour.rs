@@ -12,7 +12,10 @@ pub struct PgaTour;
 const NAME: &str = "PGATour";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?pgatour\.com/video/[\w-]+/(?P<tc>T)?(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?pgatour\.com/video/[\w-]+/(?P<tc>T)?(?P<id>\d+)",
+    )
+    .unwrap()
 });
 
 /// `_match_valid_url`.

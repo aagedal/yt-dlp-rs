@@ -15,7 +15,8 @@ const NAME: &str = "faz.net";
 const KEY: &str = "Faz";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?faz\.net/(?:[^/]+/)*.*?-(?P<id>\d+)\.html").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?faz\.net/(?:[^/]+/)*.*?-(?P<id>\d+)\.html")
+        .unwrap()
 });
 static MEDIA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"data-videojs-media='([^']+)").unwrap());

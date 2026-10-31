@@ -19,7 +19,8 @@ const API: &str = "https://api.blerp.com/graphql";
 const QUERY: &str = "query webBitePageGetBite($_id: MongoID!) { web { biteById(_id: $_id) { ...bitePageFrag __typename } __typename } } fragment bitePageFrag on Bite { _id title userKeywords keywords color visibility isPremium owned price extraReview isAudioExists image { filename original { url __typename } __typename } userReactions { _id reactions createdAt __typename } topReactions totalSaveCount saved blerpLibraryType license licenseMetaData playCount totalShareCount totalFavoriteCount totalAddedToBoardCount userCategory userAudioQuality audioCreationState transcription userTranscription description createdAt updatedAt author listingType ownerObject { _id username profileImage { filename original { url __typename } __typename } __typename } transcription favorited visibility isCurated sourceUrl audienceRating strictAudienceRating ownerId reportObject { reportedContentStatus __typename } giphy { mp4 gif __typename } audio { filename original { url __typename } mp3 { url __typename } __typename } __typename }";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?blerp\.com/soundbites/(?P<id>[0-9a-zA-Z]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?blerp\.com/soundbites/(?P<id>[0-9a-zA-Z]+)")
+        .unwrap()
 });
 
 /// `strip_or_none` of a string value (`expected_type=str`).

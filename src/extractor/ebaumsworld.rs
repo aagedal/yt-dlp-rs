@@ -13,7 +13,8 @@ pub struct EbaumsWorld;
 const NAME: &str = "EbaumsWorld";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?ebaumsworld\.com/videos/[^/]+/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?ebaumsworld\.com/videos/[^/]+/(?P<id>\d+)")
+        .unwrap()
 });
 
 /// `_match_id`.

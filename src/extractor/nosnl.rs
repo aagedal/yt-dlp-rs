@@ -16,7 +16,10 @@ pub struct NosNlArticle;
 const NAME: &str = "NOSNLArticle";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://nos\.nl/(?P<type>video|(\w+/)?\w+)/?\d+-(?P<display_id>[\w-]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://nos\.nl/(?P<type>video|(\w+/)?\w+)/?\d+-(?P<display_id>[\w-]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_valid_url`.

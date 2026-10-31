@@ -18,7 +18,7 @@ use url::Url;
 pub struct PeerTube;
 pub struct PeerTubePlaylist;
 
-const NAME: &str = "PeerTube";
+pub(crate) const NAME: &str = "PeerTube";
 const PLAYLIST_NAME: &str = "PeerTube:Playlist";
 const PLAYLIST_KEY: &str = "PeerTubePlaylist";
 const PAGE_SIZE: usize = 30;
@@ -32,7 +32,7 @@ fn instances_re() -> String {
 }
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+    crate::extractor::url_regex(&format!(
         r"^(?:peertube:(?P<host>[^:]+):|https?://(?P<host_2>{})/(?:videos/(?:watch|embed)|api/v\d/videos|w)/)(?P<id>{UUID_RE})",
         instances_re()
     ))
@@ -55,6 +55,50 @@ static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
 /// `PeerTubeIE._match_valid_url`.
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
+}
+
+/// `get_temp_id`.
+pub(crate) fn temp_id(url: &str) -> Option<String> {
+    VALID_URL.captures(url).map(|found| found["id"].to_owned())
+}
+
+/// `_EMBED_REGEX`. Upstream interpolates `_UUID_RE` ungrouped, so its
+/// dashed alternative stands alone (a bare UUID `src`, which `suitable`
+/// then refuses) and only short IDs match after `/videos/embed/`.
+static EMBED: LazyLock<[Regex; 1]> = LazyLock::new(|| {
+    [Regex::new(&format!(
+        r#"<iframe[^>]+\bsrc=["'](?P<url>(?:https?:)?//{}/videos/embed/{UUID_RE})"#,
+        instances_re()
+    ))
+    .unwrap()]
+});
+
+/// `PeerTubeIE._extract_embed_urls`: the `_EMBED_REGEX` embeds, else the
+/// page itself as `peertube:HOST:ID` when its URL is a video URL and it
+/// looks like a PeerTube page (`_extract_peertube_url`).
+pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
+    let found = super::embed_regex_urls(url, webpage, &*EMBED, suitable);
+    if !found.is_empty() {
+        return found;
+    }
+    static PAGE_URL: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(&format!(
+            r"^https?://(?P<host>[^/]+)/(?:videos/(?:watch|embed)|w)/(?P<id>{UUID_RE})"
+        ))
+        .unwrap()
+    });
+    const MARKERS: [&str; 4] = [
+        r#"meta property="og:platform" content="PeerTube""#,
+        "<title>PeerTube<",
+        "There will be other non JS-based clients to access PeerTube",
+        ">We are sorry but it seems that PeerTube is not compatible with your web browser.<",
+    ];
+    PAGE_URL
+        .captures(url.as_str())
+        .filter(|_| MARKERS.iter().any(|marker| webpage.contains(marker)))
+        .and_then(|found| Url::parse(&format!("peertube:{}:{}", &found["host"], &found["id"])).ok())
+        .into_iter()
+        .collect()
 }
 
 /// `PeerTubePlaylistIE._match_valid_url`.

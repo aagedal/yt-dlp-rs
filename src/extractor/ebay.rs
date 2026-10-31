@@ -15,8 +15,9 @@ pub struct Ebay;
 
 const NAME: &str = "Ebay";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?ebay\.com/itm/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?ebay\.com/itm/(?P<id>\d+)").unwrap()
+});
 static VIDEO_JSON: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#""video":"#).unwrap());
 
 /// `_match_id`.

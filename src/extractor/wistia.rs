@@ -24,7 +24,7 @@ const PLAYLIST_NAME: &str = "WistiaPlaylist";
 const EMBED_BASE_URL: &str = "http://fast.wistia.net/embed/";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^(?:wistia:|https?://(?:\w+\.)?wistia\.(?:net|com)/(?:embed/)?(?:iframe|medias)/)(?P<id>[a-z0-9]{10})",
     )
     .unwrap()

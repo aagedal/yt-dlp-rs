@@ -14,7 +14,7 @@ pub struct UmgDe;
 const NAME: &str = "umg:de";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?universal-music\.de/[^/?#]+/videos/(?P<slug>[^/?#]+-(?P<id>\d+))",
     )
     .unwrap()

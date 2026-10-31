@@ -13,8 +13,10 @@ pub struct PlayerFm;
 const NAME: &str = "PlayerFm";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?P<url>https?://(?:www\.)?player\.fm/(?:series/)?[\w-]+/(?P<id>[\w-]+))")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^(?P<url>https?://(?:www\.)?player\.fm/(?:series/)?[\w-]+/(?P<id>[\w-]+))",
+    )
+    .unwrap()
 });
 
 /// Upstream `clean_podcast_url`'s tracking prefixes.

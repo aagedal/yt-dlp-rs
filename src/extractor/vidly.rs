@@ -14,8 +14,10 @@ pub struct Vidly;
 const NAME: &str = "Vidly";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:vid\.ly/|(?:s\.)?vid\.ly/embeded\.html\?(?:[^#]+&)?link=)(?P<id>\w+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:vid\.ly/|(?:s\.)?vid\.ly/embeded\.html\?(?:[^#]+&)?link=)(?P<id>\w+)",
+    )
+    .unwrap()
 });
 static INIT_CALLBACK: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"initCallback\(").unwrap());
 

@@ -17,7 +17,10 @@ const NAME: &str = "Flickr";
 const API_BASE_URL: &str = "https://api.flickr.com/services/rest?";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.|secure\.)?flickr\.com/photos/[\w\-_@]+/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.|secure\.)?flickr\.com/photos/[\w\-_@]+/(?P<id>\d+)",
+    )
+    .unwrap()
 });
 
 const QUALITIES: [&str; 10] = [

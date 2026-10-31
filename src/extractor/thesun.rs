@@ -14,7 +14,8 @@ pub struct TheSun;
 const NAME: &str = "TheSun";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?the-?sun(\.co\.uk|\.com)/[^/]+/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?the-?sun(\.co\.uk|\.com)/[^/]+/(?P<id>\d+)")
+        .unwrap()
 });
 static VIDEO: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"<video[^>]+data-video-id-pending=[^>]+>").unwrap());

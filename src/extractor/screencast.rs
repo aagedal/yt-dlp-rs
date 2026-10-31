@@ -14,7 +14,8 @@ pub struct Screencast;
 const NAME: &str = "Screencast";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?screencast\.com/t/(?P<id>[a-zA-Z0-9]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?screencast\.com/t/(?P<id>[a-zA-Z0-9]+)")
+        .unwrap()
 });
 static EMBED: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<embed name="Video".*?src="([^"]+)""#).unwrap());

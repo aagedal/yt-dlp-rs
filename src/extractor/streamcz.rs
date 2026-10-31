@@ -15,7 +15,7 @@ pub struct StreamCz;
 const NAME: &str = "StreamCZ";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?(?:stream|televizeseznam)\.cz/[^?#]+/(?P<display_id>[^?#]+)-(?P<id>[0-9]+)",
     )
     .unwrap()

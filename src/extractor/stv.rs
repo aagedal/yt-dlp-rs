@@ -16,7 +16,10 @@ const NAME: &str = "stv:player";
 const KEY: &str = "STVPlayer";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://player\.stv\.tv/(?P<type>episode|video)/(?P<id>[a-z0-9]{4})").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://player\.stv\.tv/(?P<type>episode|video)/(?P<id>[a-z0-9]{4})",
+    )
+    .unwrap()
 });
 
 /// `_match_valid_url`.

@@ -13,7 +13,7 @@ pub struct WorldStarHipHop;
 const NAME: &str = "WorldStarHipHop";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www|m)\.worldstar(?:candy|hiphop)\.com/(?:videos|android)/video\.php\?.*?\bv=(?P<id>[^&]+)",
     )
     .unwrap()

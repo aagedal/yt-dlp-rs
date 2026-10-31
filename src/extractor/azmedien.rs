@@ -15,7 +15,7 @@ const NAME: &str = "AZMedien";
 const PARTNER_ID: &str = "1719221";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.|tv\.)?(?:telezueri\.ch|telebaern\.tv|telem1\.ch|tvo-online\.ch)/[^/?#]+/(?P<id>[^/?#]+-\d+)(?:\#video=(?P<kaltura_id>[_0-9a-z]+))?",
     )
     .unwrap()

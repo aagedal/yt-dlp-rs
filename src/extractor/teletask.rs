@@ -14,7 +14,10 @@ pub struct TeleTask;
 const NAME: &str = "TeleTask";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?tele-task\.de/archive/video/html5/(?P<id>[0-9]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?tele-task\.de/archive/video/html5/(?P<id>[0-9]+)",
+    )
+    .unwrap()
 });
 static TITLE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"itemprop="name">([^<]+)</a>"#).unwrap());

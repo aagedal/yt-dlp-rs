@@ -16,7 +16,7 @@ pub(crate) const NAME: &str = "Expressen";
 pub(crate) const KEY: &str = "Expressen";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?(?:expressen|di)\.se/(?:(?:tvspelare/video|video-?player/embed)/)?(?:tv|nyheter)/(?:[^/?#]+/)*(?P<id>[^/?#&]+)",
     )
     .unwrap()

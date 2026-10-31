@@ -16,7 +16,7 @@ pub(crate) const NAME: &str = "Digiteka";
 pub(crate) const KEY: &str = "Digiteka";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?(?:digiteka\.net|ultimedia\.com)/(?:deliver/(?P<embed_type>generic|musique)(?:/[^/]+)*/(?:src|article)|default/index/video(?P<site_type>generic|music)/id)/(?P<id>[\d+a-z]+)",
     )
     .unwrap()

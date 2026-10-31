@@ -22,7 +22,10 @@ const ALBUM_IE_NAME: &str = "audiomack:album";
 /// `(?:song/|(?=.+/song/))(?P<id>[\w/-]+)`: the lookahead as a check that
 /// the rest contains `/song/`.
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?audiomack\.com/(?P<song>song/)?(?P<id>[\w/-]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?audiomack\.com/(?P<song>song/)?(?P<id>[\w/-]+)",
+    )
+    .unwrap()
 });
 static ALBUM_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?audiomack\.com/(?P<album>album/)?(?P<id>[\w/-]+)").unwrap()

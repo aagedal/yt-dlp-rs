@@ -14,7 +14,8 @@ pub struct NzHerald;
 const NAME: &str = "nzherald";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?nzherald\.co\.nz/[\w/-]+/(?P<id>[A-Z0-9]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?nzherald\.co\.nz/[\w/-]+/(?P<id>[A-Z0-9]+)")
+        .unwrap()
 });
 /// `BrightcoveNewIE._VALID_URL` as an `embedUrl` JSON-LD value.
 static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {

@@ -19,7 +19,7 @@ const EMBED_NAME: &str = "ustudio:embed";
 const EMBED_KEY: &str = "UstudioEmbed";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:www|v1)\.)?ustudio\.com/video/(?P<id>[^/]+)/(?P<display_id>[^/?#&]+)",
     )
     .unwrap()

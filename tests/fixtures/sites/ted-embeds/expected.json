@@ -1,0 +1,67 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://blog.example.test/ted-one",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"86532\", \"title\": \"How to break down barriers\", \"uploader\": \"Candace Parker\", \"thumbnail\": \"https://pi.tedcdn.test/r/thumb.jpg\", \"description\": \"Talk description\", \"subtitles\": {}, \"formats\": [{\"url\": \"https://download.ted.test/audio/86532.mp3\", \"format_id\": \"audio\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"audio - audio only\"}, {\"url\": \"https://download.ted.test/86532-320k.mp4\", \"format_id\": \"h264-320k\", \"tbr\": 320, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": 34120000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"h264-320k - unknown\"}, {\"url\": \"https://download.ted.test/86532-1500k.mp4\", \"format_id\": \"h264-1500k\", \"tbr\": 1500, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": 159937500, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"h264-1500k - unknown\"}, {\"format_id\": \"hls-1200\", \"format_index\": null, \"url\": \"https://hls.ted.test/talks/86532/1200k.m3u8\", \"manifest_url\": \"https://hls.ted.test/talks/86532.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1200 - 1280x720\"}], \"duration\": 853, \"view_count\": 2051413, \"upload_date\": \"20230112\", \"release_date\": \"20221202\", \"tags\": [\"sports\", \"women\", \"basketball\"], \"original_url\": \"https://blog.example.test/ted-one\", \"webpage_url\": \"https://www.ted.com/talks/candace_parker_barriers\", \"webpage_url_basename\": \"candace_parker_barriers\", \"webpage_url_domain\": \"ted.com\", \"extractor\": \"TedTalk\", \"extractor_key\": \"TedTalk\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://pi.tedcdn.test/r/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"86532\", \"fulltitle\": \"How to break down barriers\", \"duration_string\": \"14:13\", \"release_year\": 2022, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-1200\", \"format_index\": null, \"url\": \"https://hls.ted.test/talks/86532/1200k.m3u8\", \"manifest_url\": \"https://hls.ted.test/talks/86532.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1200 - 1280x720\", \"_filename\": \"How to break down barriers [86532].mp4\", \"filename\": \"How to break down barriers [86532].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/ted-one",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "86532|How to break down barriers|TedTalk|https://www.ted.com/talks/candace_parker_barriers|https://blog.example.test/ted-one"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/ted-many",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ted-many\", \"title\": \"TED embeds\", \"timestamp\": null, \"description\": null, \"thumbnail\": null, \"age_limit\": null, \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"TedEmbed\", \"_type\": \"url\", \"url\": \"https://embed-ssl.ted.com/talks/lang/en/brene_brown_the_power_of_vulnerability.html\", \"extractor\": \"TedEmbed\", \"extractor_key\": \"TedEmbed\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"TedEmbed\", \"_type\": \"url\", \"url\": \"https://embed.ted.com/playlists/171/popular?language=en\", \"extractor\": \"TedEmbed\", \"extractor_key\": \"TedEmbed\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"TedEmbed\", \"_type\": \"url\", \"url\": \"https://embed.ted.com/talks/candace_parker_barriers\", \"extractor\": \"TedEmbed\", \"extractor_key\": \"TedEmbed\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://blog.example.test/ted-many\", \"original_url\": \"https://blog.example.test/ted-many\", \"webpage_url_basename\": \"ted-many\", \"webpage_url_domain\": \"blog.example.test\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/ted-many",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(url)s|%(ie_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|NA|https://embed-ssl.ted.com/talks/lang/en/brene_brown_the_power_of_vulnerability.html|TedEmbed",
+    "2|NA|https://embed.ted.com/playlists/171/popular?language=en|TedEmbed",
+    "3|NA|https://embed.ted.com/talks/candace_parker_barriers|TedEmbed"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  }
+ ]
+}

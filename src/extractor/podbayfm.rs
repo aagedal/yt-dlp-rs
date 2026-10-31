@@ -17,8 +17,9 @@ const NAME: &str = "PodbayFM";
 const CHANNEL_NAME: &str = "PodbayFMChannel";
 const PAGE_SIZE: usize = 10;
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://podbay\.fm/p/[^/?#]+/e/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://podbay\.fm/p/[^/?#]+/e/(?P<id>\d+)").unwrap()
+});
 static CHANNEL_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^https?://podbay\.fm/p/(?P<id>[^/?#]+)/?(?:$|[?#])").unwrap());
 

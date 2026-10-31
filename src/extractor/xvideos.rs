@@ -18,7 +18,7 @@ const QUICKIES_NAME: &str = "XVideosQuickies";
 const QUICKIES_IE_NAME: &str = "xvideos:quickies";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:[^/]+\.)?xvideos2?\.com/video\.?|(?:www\.)?xvideos\.es/video\.?|(?:www|flashservice)\.xvideos\.com/embedframe/|static-hw\.xvideos\.com/swf/xv-player\.swf\?.*?\bid_video=)(?P<id>[0-9a-z]+)",
     )
     .unwrap()

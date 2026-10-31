@@ -423,10 +423,17 @@ impl Extractor for YoutubeUnsupported {
         ))
     }
 }
-/// `_wait_for_video`: sleep until the release time (within the requested
-/// bounds), showing the remaining time; an interrupt ends it early. Returns
-/// the `ReExtractInfo` message.
-fn wait_for_video(wait: &WaitForVideo, release_timestamp: Option<i64>, upcoming: bool) -> String {
+/// `_wait_for_video(ie_result)`: sleep until the release time (within the
+/// requested bounds), showing the remaining time; an interrupt ends it
+/// early. Returns the `ReExtractInfo` message. `info` is whether there is an
+/// info dict (a `UserNotLive` error waits without one, and without the
+/// release-time warnings).
+pub(crate) fn wait_for_video(
+    wait: &WaitForVideo,
+    release_timestamp: Option<i64>,
+    upcoming: bool,
+    info: bool,
+) -> String {
     let now = || {
         std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
@@ -459,7 +466,7 @@ fn wait_for_video(wait: &WaitForVideo, release_timestamp: Option<i64>, upcoming:
             None => min,
         });
         crate::screen::warning("Release time of video is not known");
-    } else if diff.unwrap_or(0.0) <= 0.0 {
+    } else if info && diff.unwrap_or(0.0) <= 0.0 {
         crate::screen::warning("Video should already be available according to extracted info");
     }
     let diff = diff
@@ -1740,7 +1747,7 @@ impl Extractor for ConfiguredYoutube {
                     upcoming,
                 } => {
                     let wait = self.wait_for_video.unwrap_or_default();
-                    let message = wait_for_video(&wait, release_timestamp, upcoming);
+                    let message = wait_for_video(&wait, release_timestamp, upcoming, true);
                     // `ReExtractInfo(expected=True)`.
                     crate::screen::screen(&format!("{message}; Re-extracting data"));
                 }

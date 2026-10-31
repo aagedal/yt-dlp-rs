@@ -154,7 +154,7 @@
         "src/extractor/ism.rs",
         "src/ism_fd.rs"
       ],
-      "scope": "Direct HTTP media and uncompressed UTF-8/ASCII HTML5 pages with audio/video elements, typed progressive HTTP sources, explicit zero-based source-ID selection per entry, and fully extracted playlists for multiple elements; optional positive source width/height/res attributes and bounded resolution-based default/best/worst ranking; no embedded players, full upstream ranking, nested/site playlists; bounded static single-period DASH and finite clear/identity-AES-128 HLS VOD sources supported through dedicated parser/transport; GenericIE/InfoExtractor screen lines and fallback/direct-link warnings through a library message sink; upstream HLS/DASH format IDs (m3u8 NAME/VIDEO-group/tbr naming, renditions first, representation IDs, process_video_result sanitize/dedupe/f-prefix); direct results with upstream single generic format (Content-Type subtype ID or 0, audio/* audio-only); first-response Last-Modified timestamp via actual-fixture unified_timestamp (pinned DATE_FORMATS, extract_timezone, parsedate_tz; ASCII digits only) and _fill_common_fields upload_date; single-entry page og:description, og:image fallback and _rta_search age_limit with unescapeHTML; no playlist-level page fields; GenericIE --extractor-args fragment_query/key_query/variant_query/hls_key/is_live (_extra_manifest_info, applied by HlsFD/DashSegmentsFD), with is_live/was_live and the live title suffix; other extractors' arguments warn; _extract_embeds' URL patterns (flashvars, JW Player file options, file=/source=, JS loader, Flow Player, Cinerama, twitter:player:stream, og:video/og:audio), meta refresh and twitter:player redirects for direct media; JW Player setup data (js_to_json, one item of direct sources); Video.js embeds (first direct source, addRemoteTextTrack subtitles); JSON-LD url_transparent direct media; KVS players via _extract_kvs/_kvs_get_real_url (site fixture tests/fixtures/sites/kvs/); UnsupportedError's message; RSS feeds as lazily resolved url_transparent playlist entries (flat-playlist raw entries); XSPF documents as _parse_xspf playlists (site fixture tests/fixtures/sites/xspf/); SMIL documents via _parse_smil for HTTP sources (validity checks, head meta, unified_strdate, images, textstreams; site fixture tests/fixtures/sites/smil/), SMIL HLS/DASH sources through the manifest parsers; RTMP/F4M/ISM/imagestream SMIL sources unsupported; a single found SMIL URL via _extract_smil_info merged with the page fields; F4M documents via _parse_f4m_formats (protocol f4m formats; F4mFD HDS downloads (no live streams); nested manifests unsupported; site fixture tests/fixtures/sites/f4m/); ISM documents via _parse_ism_formats_and_subtitles (protocol ism formats and ismt subtitles; IsmFD downloads with PIFF headers; site fixture tests/fixtures/sites/ism/)"
+      "scope": "Direct HTTP media and uncompressed UTF-8/ASCII HTML5 pages with audio/video elements, typed progressive HTTP sources, explicit zero-based source-ID selection per entry, and fully extracted playlists for multiple elements; optional positive source width/height/res attributes and bounded resolution-based default/best/worst ranking; no embedded players, full upstream ranking, nested/site playlists; bounded static single-period DASH and finite clear/identity-AES-128 HLS VOD sources supported through dedicated parser/transport; GenericIE/InfoExtractor screen lines and fallback/direct-link warnings through a library message sink; upstream HLS/DASH format IDs (m3u8 NAME/VIDEO-group/tbr naming, renditions first, representation IDs, process_video_result sanitize/dedupe/f-prefix); direct results with upstream single generic format (Content-Type subtype ID or 0, audio/* audio-only); first-response Last-Modified timestamp via actual-fixture unified_timestamp (pinned DATE_FORMATS, extract_timezone, parsedate_tz; ASCII digits only) and _fill_common_fields upload_date; single-entry page og:description, og:image fallback and _rta_search age_limit with unescapeHTML; no playlist-level page fields; GenericIE --extractor-args fragment_query/key_query/variant_query/hls_key/is_live (_extra_manifest_info, applied by HlsFD/DashSegmentsFD), with is_live/was_live and the live title suffix; other extractors' arguments warn; _extract_embeds' URL patterns (flashvars, JW Player file options, file=/source=, JS loader, Flow Player, Cinerama, twitter:player:stream, og:video/og:audio), meta refresh and twitter:player redirects for direct media; JW Player setup data (js_to_json, one item of direct sources); Video.js embeds (first direct source, addRemoteTextTrack subtitles); JSON-LD url_transparent direct media; KVS players via _extract_kvs/_kvs_get_real_url (site fixture tests/fixtures/sites/kvs/); UnsupportedError's message; RSS feeds as lazily resolved url_transparent playlist entries (flat-playlist raw entries); XSPF documents as _parse_xspf playlists (site fixture tests/fixtures/sites/xspf/); SMIL documents via _parse_smil for HTTP sources (validity checks, head meta, unified_strdate, images, textstreams; site fixture tests/fixtures/sites/smil/), SMIL HLS/DASH sources through the manifest parsers; RTMP/F4M/ISM/imagestream SMIL sources unsupported; a single found SMIL URL via _extract_smil_info merged with the page fields; F4M documents via _parse_f4m_formats (protocol f4m formats; F4mFD HDS downloads (no live streams); nested manifests unsupported; site fixture tests/fixtures/sites/f4m/); ISM documents via _parse_ism_formats_and_subtitles (protocol ism formats and ismt subtitles; IsmFD downloads with PIFF headers; site fixture tests/fixtures/sites/ism/); _extract_embeds asks the ported extractors' _extract_from_webpage in the downloader's _ies (gen_extractor_classes) order, YouTube first (tests/fixtures/sites/youtube-embeds/ mixed page)"
     },
     {
       "name": "extractor-contract",
@@ -1482,9 +1482,11 @@
       "rust": [
         "src/extractor/dailymotion.rs",
         "tests/fixtures/sites/dailymotion/",
-        "tests/fixtures/sites/dailymotion-login/"
+        "tests/fixtures/sites/dailymotion-login/",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/dailymotion-embeds/"
       ],
-      "scope": "DailymotionIE token, GraphQL media and player metadata, randomized-header HLS with PROGRESSIVE-URI formats, progressive H264 formats, subtitles, thumbnails and metadata, geo/API errors, the family filter from the ff cookie or --age-limit, ?playlist= url results for DailymotionPlaylist (_yes_playlist); DailymotionPlaylistIE, DailymotionUserIE and DailymotionSearchIE (DailymotionPlaylistBaseIE) GraphQL collection/channel video pages of 100 and SEARCH_QUERY pages of 20 as OnDemandPagedList url playlists (random-access pending pages through the shared extractor/paged.rs, including upstream lazy page errors: the read entry None and the list ended before the failed page), their API error messages; not ported: DailymotionPlaylistIE jukebox embeds on generic pages; compared with pinned upstream output through the fixture proxy; account tokens through _get_login_info (password grant, 400 error_description) compared with pinned upstream through tests/fixtures/sites/dailymotion-login/"
+      "scope": "DailymotionIE token, GraphQL media and player metadata, randomized-header HLS with PROGRESSIVE-URI formats, progressive H264 formats, subtitles, thumbnails and metadata, geo/API errors, the family filter from the ff cookie or --age-limit, ?playlist= url results for DailymotionPlaylist (_yes_playlist); DailymotionPlaylistIE, DailymotionUserIE and DailymotionSearchIE (DailymotionPlaylistBaseIE) GraphQL collection/channel video pages of 100 and SEARCH_QUERY pages of 20 as OnDemandPagedList url playlists (random-access pending pages through the shared extractor/paged.rs, including upstream lazy page errors: the read entry None and the list ended before the failed page), their API error messages; DailymotionIE._extract_embed_urls (_EMBED_REGEX with the swf/(?!video) lookahead, DM.player and player scripts) and DailymotionPlaylistIE jukebox widgets on generic pages; compared with pinned upstream output through the fixture proxy; account tokens through _get_login_info (password grant, 400 error_description) compared with pinned upstream through tests/fixtures/sites/dailymotion-login/"
     },
     {
       "name": "damtomo",
@@ -1978,9 +1980,11 @@
       ],
       "rust": [
         "src/extractor/facebook.rs",
-        "tests/fixtures/sites/facebook/"
+        "tests/fixtures/sites/facebook/",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/facebook-embeds/"
       ],
-      "scope": "FacebookIE server JS (handleServerJS/s.handle) and bigPipe pagelet VideoConfig instances (src formats, inline DASH, subtitles_src, multi-video url playlists), relay prefetched data (parse_graphql_video legacy/delivery formats, inline DASH, progressive/HLS URLs, captions), watch party livingRoom recaps (GraphQL POST with lsd/RelayAPIConfigDefaults) and the tahoe POST fallback, merged with extract_metadata including JSON-LD, login/interstitial/Cannot parse data errors; FacebookReelIE, FacebookPluginsVideoIE and FacebookRedirectURLIE redirects; FacebookAdsIE snapshots (current and old paths, markup descriptions, videos/cards as formats or playlists) without the 403 client-challenge retry; SegmentBase DASH representations are refused and BaseURL-only ones shaped as one-fragment DASH by the shared parser (upstream: unfragmented https); compared with pinned upstream output through the fixture proxy"
+      "scope": "FacebookIE server JS (handleServerJS/s.handle) and bigPipe pagelet VideoConfig instances (src formats, inline DASH, subtitles_src, multi-video url playlists), relay prefetched data (parse_graphql_video legacy/delivery formats, inline DASH, progressive/HLS URLs, captions), watch party livingRoom recaps (GraphQL POST with lsd/RelayAPIConfigDefaults) and the tahoe POST fallback, merged with extract_metadata including JSON-LD, login/interstitial/Cannot parse data errors; FacebookReelIE, FacebookPluginsVideoIE and FacebookRedirectURLIE redirects; FacebookAdsIE snapshots (current and old paths, markup descriptions, videos/cards as formats or playlists) without the 403 client-challenge retry; SegmentBase DASH representations are refused and BaseURL-only ones shaped as one-fragment DASH by the shared parser (upstream: unfragmented https); FacebookIE _EMBED_REGEX iframes and fb-video/fb-post embeds on generic pages; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "fathom",
@@ -2458,9 +2462,11 @@
       ],
       "rust": [
         "src/extractor/instagram.rs",
-        "tests/fixtures/sites/instagram/"
+        "tests/fixtures/sites/instagram/",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/instagram-embeds/"
       ],
-      "scope": "InstagramIE without impersonation: logged-out LSD session token, accessibility check warnings/errors and post page prefetched media; logged-in (sessionid cookie) media info API with the stale-cookie fallback, app_id extractor argument and --write-comments comments API; _extract_product formats, inline DASH manifests (direct BaseURL representations), thumbnails, metadata, comments and carousel playlists; InstagramIOSIE; InstagramStoryIE (stories/highlights page user and reels_media API, --no-playlist); InstagramTagIE and InstagramUserIE (broken upstream) sharedData and GIS-signed GraphQL timeline pages; no GraphQL post query (needs impersonation), embeds or comments of logged-in carousels; compared with pinned upstream output through the fixture proxy"
+      "scope": "InstagramIE without impersonation: logged-out LSD session token, accessibility check warnings/errors and post page prefetched media; logged-in (sessionid cookie) media info API with the stale-cookie fallback, app_id extractor argument and --write-comments comments API; _extract_product formats, inline DASH manifests (direct BaseURL representations), thumbnails, metadata, comments and carousel playlists; InstagramIOSIE; InstagramStoryIE (stories/highlights page user and reels_media API, --no-playlist); InstagramTagIE and InstagramUserIE (broken upstream) sharedData and GIS-signed GraphQL timeline pages; InstagramIE._extract_embed_urls on generic pages (embed iframes, else the instagram-media link when absolute); no GraphQL post query (needs impersonation) or comments of logged-in carousels; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "israelnationalnews",
@@ -3451,9 +3457,11 @@
         "src/extractor/peertube.rs",
         "src/extractor/peertube/instances.rs",
         "tools/generate_peertube_instances.py",
-        "tests/fixtures/sites/peertube/"
+        "tests/fixtures/sites/peertube/",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/peertube-embeds/"
       ],
-      "scope": "PeerTubeIE _VALID_URL with the generated _INSTANCES_RE host list and peertube:HOST:ID URLs, the videos API JSON (live-style non-fatal HLS master formats, files and streaming-playlist files with parse_resolution/filesize/fps or 0p audio-only), long-description and captions endpoints, metadata, is_live and --video-password headers; PeerTubePlaylistIE accounts, video channels and video playlists as paged url playlists (OnDemandPagedList pages fetched lazily: only the pages of the requested entries, in request order, every page once a selection reads past the end). Not ported: _EMBED_REGEX/og:platform detection on generic pages. Compared with pinned upstream output through the fixture proxy"
+      "scope": "PeerTubeIE _VALID_URL with the generated _INSTANCES_RE host list and peertube:HOST:ID URLs, the videos API JSON (live-style non-fatal HLS master formats, files and streaming-playlist files with parse_resolution/filesize/fps or 0p audio-only), long-description and captions endpoints, metadata, is_live and --video-password headers; PeerTubePlaylistIE accounts, video channels and video playlists as paged url playlists (OnDemandPagedList pages fetched lazily: only the pages of the requested entries, in request order, every page once a selection reads past the end). PeerTubeIE._extract_embed_urls on generic pages (_EMBED_REGEX as upstream interpolates it, matching short IDs only, else _extract_peertube_url on any host with the PeerTube markers). Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "peertv",
@@ -3851,9 +3859,11 @@
       ],
       "rust": [
         "src/extractor/rumble.rs",
-        "tests/fixtures/sites/rumble/"
+        "tests/fixtures/sites/rumble/",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/rumble-embeds/"
       ],
-      "scope": "RumbleEmbedIE embed JS formats, live status, captions, thumbnails and metadata; RumbleIE pages as url_transparent embeds with page counts; no channels; compared with pinned upstream output through the fixture proxy"
+      "scope": "RumbleEmbedIE embed JS formats, live status, captions, thumbnails and metadata; RumbleIE pages as url_transparent embeds with page counts; RumbleEmbedIE._extract_embed_urls and RumbleIE _EMBED_REGEX listing links on generic pages; no channels; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "rutube",
@@ -4057,9 +4067,11 @@
       "rust": [
         "src/extractor/soundcloud.rs",
         "tests/fixtures/sites/soundcloud/",
-        "tests/fixtures/sites/soundcloud-login/"
+        "tests/fixtures/sites/soundcloud-login/",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/soundcloud-embeds/"
       ],
-      "scope": "SoundcloudIE client ID discovery, resolved track JSON, default or soundcloud:formats-requested transcoding formats, artwork thumbnails and metadata, DRM/geo errors; `--username oauth --password TOKEN` and oauth_token cookie verification (connect/session) authorizing API requests, with upstream password-login error and invalid-token warnings; no original downloads, comments, sets, users or search; compared with pinned upstream output through the fixture proxy"
+      "scope": "SoundcloudEmbedIE widget URLs (url/secret_token url results, KeyError) and its _EMBED_REGEX iframes on generic pages; SoundcloudIE client ID discovery, resolved track JSON, default or soundcloud:formats-requested transcoding formats, artwork thumbnails and metadata, DRM/geo errors; `--username oauth --password TOKEN` and oauth_token cookie verification (connect/session) authorizing API requests, with upstream password-login error and invalid-token warnings; no original downloads, comments, sets, users or search; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "soundgasm",
@@ -4235,9 +4247,11 @@
       ],
       "rust": [
         "src/extractor/ted.rs",
-        "tests/fixtures/sites/ted/"
+        "tests/fixtures/sites/ted/",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/ted-embeds/"
       ],
-      "scope": "TedTalkIE Next.js video data formats, external url results and metadata; TedPlaylistIE, TedSeriesIE and TedEmbedIE; compared with pinned upstream output through the fixture proxy"
+      "scope": "TedTalkIE Next.js video data formats, external url results and metadata; TedPlaylistIE, TedSeriesIE and TedEmbedIE (with its _EMBED_REGEX iframes on generic pages); compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "tele13",
@@ -4514,9 +4528,11 @@
         "src/extractor/tiktok.rs",
         "tests/fixtures/sites/tiktok/",
         "tests/fixtures/sites/tiktok-args/",
-        "tests/fixtures/sites/douyin/"
+        "tests/fixtures/sites/douyin/",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/tiktok-embeds/"
       ],
-      "scope": "TikTokIE webpage universal data with the native JS challenge solver, _parse_aweme_video_web formats/metadata, webpage/feed subtitles, slideshows as their audio track, status-code errors, __needs_testing format checks; TikTokVMIE short-link redirects; TikTokUserIE (user page, embed-page secUid fallback, creator item_list pages, the tiktok:device_id extractor argument) and TikTokCollectionIE as lazy flat url playlists; DouyinIE web detail API through _parse_aweme_video_app (no signature/verification challenge); no app API, aweme/detail SRT-data captions, TikTokSoundIE/TikTokEffectIE/TikTokTagIE (app API, _WORKING=False); TikTokLiveIE webcast room info with FLV/HLS pull formats and the live detail fallback; compared with pinned upstream output through the fixture proxy"
+      "scope": "TikTokIE webpage universal data with the native JS challenge solver, _parse_aweme_video_web formats/metadata, webpage/feed subtitles, slideshows as their audio track, status-code errors, __needs_testing format checks; TikTokVMIE short-link redirects; TikTokUserIE (user page, embed-page secUid fallback, creator item_list pages, the tiktok:device_id extractor argument) and TikTokCollectionIE as lazy flat url playlists; DouyinIE web detail API through _parse_aweme_video_app (no signature/verification challenge); no app API, aweme/detail SRT-data captions, TikTokSoundIE/TikTokEffectIE/TikTokTagIE (app API, _WORKING=False); TikTokLiveIE webcast room info with FLV/HLS pull formats and the live detail fallback; TikTokIE _EMBED_REGEX script/iframe embeds on generic pages; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "toypics",
@@ -5025,9 +5041,11 @@
         "src/extractor/vimeo.rs",
         "tests/fixtures/sites/vimeo/",
         "tests/fixtures/sites/vimeo-login/",
-        "tests/login.rs"
+        "tests/login.rs",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/vimeo-embeds/"
       ],
-      "scope": "VimeoIE: player page playerConfig and clip page config through _parse_config (progressive, per-CDN HLS/DASH incl. sep variants, text tracks, thumbnails, chapters, live status) merged with page metadata; VimeoBaseInfoExtractor login (_fetch_viewer_info with _jwt_is_expired, the xsrft token posted to /log_in, 404/405/418 bad-credential and generic Unable to log in errors, skipped with a vimeo cookie), _real_initialize, _get_requested_client (vimeo:client, Unsupported API client error), _call_videos_api for the web client (REQUIRES_AUTH login-required error, jwt viewer authorization, client headers and fields), _extract_from_api (config_url through _parse_config else _parse_api_response with API text tracks, video password 400 retry through _verify_video_password, 5460 location error, API metadata), _extract_original_format (download config source_file, privacy/download API fields, vimeo:original_format_policy) and album/showcase video password checks (_get_album_data_and_hashed_pass with the viewer JWT); the android client is only upstream's no-cached-token error (a cached token is an unsupported native error); player check-password, VimeoAlbumIE/ChannelIE/UserIE/WatchLaterIE/LikesIE/GroupsIE/ReviewIE/ProIE/OndemandIE/EventIE, rented trailers and JSON-LD merging are not ported; compared with pinned upstream output through the fixture proxy (tests/fixtures/sites/vimeo/ and vimeo-login/)"
+      "scope": "VimeoIE: player page playerConfig and clip page config through _parse_config (progressive, per-CDN HLS/DASH incl. sep variants, text tracks, thumbnails, chapters, live status) merged with page metadata; VimeoBaseInfoExtractor login (_fetch_viewer_info with _jwt_is_expired, the xsrft token posted to /log_in, 404/405/418 bad-credential and generic Unable to log in errors, skipped with a vimeo cookie), _real_initialize, _get_requested_client (vimeo:client, Unsupported API client error), _call_videos_api for the web client (REQUIRES_AUTH login-required error, jwt viewer authorization, client headers and fields), _extract_from_api (config_url through _parse_config else _parse_api_response with API text tracks, video password 400 retry through _verify_video_password, 5460 location error, API metadata), _extract_original_format (download config source_file, privacy/download API fields, vimeo:original_format_policy) and album/showcase video password checks (_get_album_data_and_hashed_pass with the viewer JWT); the android client is only upstream's no-cached-token error (a cached token is an unsupported native error); _EMBED_REGEX player iframes and moogaloop embeds on generic pages through _extract_embed_urls (_smuggle_referrer, the smuggled referer unsmuggled by _real_extract; the <video src> pattern always meets HTML5 media, refused natively); player check-password, VimeoAlbumIE/ChannelIE/UserIE/WatchLaterIE/LikesIE/GroupsIE/ReviewIE/ProIE/OndemandIE/EventIE, rented trailers and JSON-LD merging are not ported; compared with pinned upstream output through the fixture proxy (tests/fixtures/sites/vimeo/ and vimeo-login/)"
     },
     {
       "name": "jsinterp",
@@ -5054,9 +5072,11 @@
         "src/extractor/vk.rs",
         "src/extractor/vkplay.rs",
         "tests/fixtures/sites/vk/",
-        "tests/fixtures/sites/vk-login/"
+        "tests/fixtures/sites/vk-login/",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/vk-embeds/"
       ],
-      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; VKWallPostIE wkview payload as a playlist of data-audio tracks and linked videos; VKUserVideosIE sections and playlists through load_videos_silent pages (fetched lazily like the upstream generator; playlist_count unknown unless exhausted); VKPlayIE records and VKPlayLiveIE streams from the API or the initial-state script; the JS challenge (challenge.html salt function run by the native JSInterpreter, md5 key submission and the request repeated with its cookie; missing hash/salt and interpreter errors); no other embeds; compared with pinned upstream output through the fixture proxy; VKBaseIE login (home page hidden inputs, cp1251 email/pass, first remixlhk Set-Cookie, onLoginFailed error) for VKIE, VKWallPostIE and VKUserVideosIE, compared with pinned upstream through tests/fixtures/sites/vk-login/"
+      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; VKWallPostIE wkview payload as a playlist of data-audio tracks and linked videos; VKUserVideosIE sections and playlists through load_videos_silent pages (fetched lazily like the upstream generator; playlist_count unknown unless exhausted); VKPlayIE records and VKPlayLiveIE streams from the API or the initial-state script; the JS challenge (challenge.html salt function run by the native JSInterpreter, md5 key submission and the request repeated with its cookie; missing hash/salt and interpreter errors); no other embeds in VK pages; VKIE _EMBED_REGEX video_ext iframes on generic pages; compared with pinned upstream output through the fixture proxy; VKBaseIE login (home page hidden inputs, cp1251 email/pass, first remixlhk Set-Cookie, onLoginFailed error) for VKIE, VKWallPostIE and VKUserVideosIE, compared with pinned upstream through tests/fixtures/sites/vk-login/"
     },
     {
       "name": "vocaroo",
@@ -5543,7 +5563,7 @@
         "tests/hls_subtitles.rs",
         "tests/dash_subtitles.rs"
       ],
-      "scope": "Native finite clear/identity-AES-128 HLS master/media parsing, direct and HTML5 acquisition, single initialization map, TS/AAC/fMP4 ordered assembly, exact byte ranges, per-fragment whole retries/cancellation and no-clobber publication; pinned offline HlsFD fragment-plan comparison; extra_param_to_segment_url/extra_param_to_key_url (parse_qs + update_url_query) on every fragment, initialization and key URL, keys falling back to the segment query; lazy exact-length key retrieval/cache, sequence/explicit IVs, rotation and bounded RustCrypto CBC/PKCS7 decryption; external AUDIO rendition groups with language/name/default metadata, compatible automatic pair selection, audio-only masters and copy merging; parse_codecs vcodec/acodec/dynamic_range for HLS/DASH formats; upstream protocol fields (m3u8_native/http_dash_segments/determine_protocol, +-joined merges) and single-download [hlsnative]/[dashsegments] Total fragments lines (no HlsFD manifest refetch line); static single-period DASH BaseURL inheritance, templates/timelines, lists/ranges, explicit resources and native fragment representation downloads/merging; no dynamic/multi-period/SIDX/DRM DASH, SAMPLE-AES/DRM, live, discontinuities, external video/subtitle renditions, nested masters or remux parity; FragmentFD FILE.part/FILE.ytdl resume across invocations; HLS SUBTITLES renditions as m3u8_native WebVTT subtitles joined by HlsFD WebVTT packing; DASH text representations as subtitles (direct, or segmented through DashSegmentsFD)"
+      "scope": "Native finite clear/identity-AES-128 HLS master/media parsing, direct and HTML5 acquisition, single initialization map, TS/AAC/fMP4 ordered assembly, exact byte ranges, per-fragment whole retries/cancellation and no-clobber publication; pinned offline HlsFD fragment-plan comparison; extra_param_to_segment_url/extra_param_to_key_url (parse_qs + update_url_query) on every fragment, initialization and key URL, keys falling back to the segment query; lazy exact-length key retrieval/cache, sequence/explicit IVs, rotation and bounded RustCrypto CBC/PKCS7 decryption; external AUDIO rendition groups with language/name/default metadata, compatible automatic pair selection, audio-only masters and copy merging; parse_codecs vcodec/acodec/dynamic_range for HLS/DASH formats; upstream protocol fields (m3u8_native/http_dash_segments/determine_protocol, +-joined merges) and single-download [hlsnative]/[dashsegments] Total fragments lines (no HlsFD manifest refetch line); static DASH BaseURL inheritance, templates/timelines, lists/ranges, explicit resources and native fragment representation downloads/merging; multi-period MPDs merged like _merge_mpd_periods and ContentProtection formats marked has_drm; no dynamic/SIDX DASH, DASH decryption, SAMPLE-AES/DRM, live, discontinuities, external video/subtitle renditions, nested masters or remux parity; FragmentFD FILE.part/FILE.ytdl resume across invocations; HLS SUBTITLES renditions as m3u8_native WebVTT subtitles joined by HlsFD WebVTT packing; DASH text representations as subtitles (direct, or segmented through DashSegmentsFD)"
     },
     {
       "name": "direct-stream-merging",

@@ -18,7 +18,7 @@ const PROFILE_NAME: &str = "SoundgasmProfile";
 const PROFILE_IE_NAME: &str = "soundgasm:profile";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?soundgasm\.net/u/(?P<user>[0-9a-zA-Z_-]+)/(?P<display_id>[0-9a-zA-Z_-]+)",
     )
     .unwrap()

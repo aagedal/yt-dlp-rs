@@ -14,7 +14,8 @@ pub struct Truth;
 const NAME: &str = "Truth";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://truthsocial\.com/@[^/?#]+(?:/posts)?/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://truthsocial\.com/@[^/?#]+(?:/posts)?/(?P<id>\d+)")
+        .unwrap()
 });
 
 /// `_match_id`'s pattern is a match, so no ID is extracted from other URLs.

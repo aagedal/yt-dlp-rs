@@ -19,7 +19,7 @@ static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://player\.(?P<host>tnaflix)\.com/video/(?P<id>\d+)").unwrap()
 });
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?(?P<host>tnaflix)\.com/[^/]+/(?P<display_id>[^/]+)/video(?P<id>\d+)",
     )
     .unwrap()

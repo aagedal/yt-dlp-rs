@@ -22,7 +22,7 @@ const PAGE_SIZE: usize = 10;
 /// Upstream's `(?P<type>...)\?(?P=type)=`: the query key must repeat the type,
 /// which the regex crate cannot express, so the two are compared.
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?allstar\.gg/(?P<type>clip|montage)\?(?P<key>clip|montage)=(?P<id>[^/?#&]+)",
     )
     .unwrap()

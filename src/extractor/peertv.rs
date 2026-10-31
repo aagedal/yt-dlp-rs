@@ -12,8 +12,9 @@ pub struct PeerTv;
 
 const NAME: &str = "peer.tv";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?peer\.tv/(?:de|it|en)/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?peer\.tv/(?:de|it|en)/(?P<id>\d+)").unwrap()
+});
 static VIDEO_KEY: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"player\.peer\.tv/js/([a-zA-Z0-9]+)").unwrap());
 static SESSION_ID: LazyLock<Regex> =

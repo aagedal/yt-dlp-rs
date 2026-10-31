@@ -14,7 +14,10 @@ pub struct HistoricFilms;
 const NAME: &str = "HistoricFilms";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?historicfilms\.com/(?:tapes/|play)(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?historicfilms\.com/(?:tapes/|play)(?P<id>\d+)",
+    )
+    .unwrap()
 });
 
 static TAPE_ID: LazyLock<[Regex; 2]> = LazyLock::new(|| {

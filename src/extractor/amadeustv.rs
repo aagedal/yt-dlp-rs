@@ -16,7 +16,8 @@ const NAME: &str = "AmadeusTV";
 const REFERER: &str = "http://www.amadeus.tv/";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?amadeus\.tv/library/(?P<id>[\da-f]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?amadeus\.tv/library/(?P<id>[\da-f]+)")
+        .unwrap()
 });
 
 /// `_match_id`.

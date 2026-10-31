@@ -14,7 +14,10 @@ pub struct Pyvideo;
 const NAME: &str = "Pyvideo";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?pyvideo\.org/(?P<category>[^/]+)/(?P<id>[^/?#&.]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?pyvideo\.org/(?P<category>[^/]+)/(?P<id>[^/?#&.]+)",
+    )
+    .unwrap()
 });
 static MEDIA_URLS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)Media URL:(.+?)</li>").unwrap());

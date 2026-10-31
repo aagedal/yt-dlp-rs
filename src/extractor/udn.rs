@@ -16,7 +16,8 @@ pub(crate) const NAME: &str = "UDNEmbed";
 pub(crate) const KEY: &str = "UDNEmbed";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://video\.udn\.com/(?:embed|play)/news/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://video\.udn\.com/(?:embed|play)/news/(?P<id>\d+)")
+        .unwrap()
 });
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

@@ -16,7 +16,7 @@ pub struct ThisOldHouse;
 const NAME: &str = "ThisOldHouse";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?thisoldhouse\.com/(?:(?:watch|how-to|tv-episode|(?:[^/?#]+/)?\d+)/(?P<id>[^/?#]+)|ask-this-old-house/(?P<ask_id>season-\d+/episode-\d+))",
     )
     .unwrap()

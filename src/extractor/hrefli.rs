@@ -12,7 +12,7 @@ pub struct HrefLiRedirect;
 const NAME: &str = "href.li";
 
 static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://href\.li/\?(?P<url>.+)").unwrap());
+    LazyLock::new(|| crate::extractor::url_regex(r"^https?://href\.li/\?(?P<url>.+)").unwrap());
 
 /// `_match_valid_url`.
 pub fn suitable(url: &str) -> bool {

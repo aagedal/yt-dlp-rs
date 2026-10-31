@@ -14,7 +14,7 @@ pub struct Groupon;
 const NAME: &str = "Groupon";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?groupon\.com/deals/(?P<id>[^/?#&]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?groupon\.com/deals/(?P<id>[^/?#&]+)").unwrap()
 });
 static PAYLOAD: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?:var\s+|window\.)payload\s*=\s*(.*?);\n").unwrap());

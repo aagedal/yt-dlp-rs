@@ -16,7 +16,7 @@ pub struct InfoQ;
 const NAME: &str = "InfoQ";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?infoq\.com/(?:[^/]+/)+(?P<id>[^/]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?infoq\.com/(?:[^/]+/)+(?P<id>[^/]+)").unwrap()
 });
 static JSCLASSREF: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"jsclassref\s*=\s*'([^']*)'").unwrap());

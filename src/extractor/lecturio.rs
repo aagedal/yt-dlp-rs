@@ -15,7 +15,7 @@ const NAME: &str = "Lecturio";
 const API_BASE: &str = "https://app.lecturio.com/api/en/latest/html5/";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https://(?:app\.lecturio\.com/(?:[^/?#]+/(?P<nt>[^/?#&]+)\.lecture|(?:\#/)?lecture/c/\d+/(?P<id>\d+))|(?:www\.)?lecturio\.de/(?:[^/?#]+/)+(?P<nt_de>[^/?#&]+)\.vortrag)",
     )
     .unwrap()

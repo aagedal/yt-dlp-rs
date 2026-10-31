@@ -34,7 +34,7 @@ const API_TOKEN: &str =
 const VALIDATED_AGE: (&str, &str) = ("x-validated-age", "18");
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^(?:https?://(?:(?:www\.)?arte\.tv/(?P<lang>fr|de|en|es|it|pl)/videos|api\.arte\.tv/api/player/v\d+/config/(?P<lang_2>fr|de|en|es|it|pl))|arte://program)/(?P<id>\d{6}-\d{3}-[AF]|LIVE)",
     )
     .unwrap()

@@ -14,7 +14,7 @@ pub struct ZetlandDkArticle;
 const NAME: &str = "ZetlandDKArticle";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://www\.zetland\.dk/\w+/(?P<id>(?P<story_id>\w{8})-(?P<uploader_id>\w{8})-(?:\w{5}))",
     )
     .unwrap()

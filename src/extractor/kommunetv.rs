@@ -12,8 +12,9 @@ pub struct Kommunetv;
 
 const NAME: &str = "Kommunetv";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://\w+\.kommunetv\.no/archive/(?P<id>\w+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://\w+\.kommunetv\.no/archive/(?P<id>\w+)").unwrap()
+});
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

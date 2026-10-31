@@ -94,7 +94,11 @@ static LAST_ERROR: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None
 macro_rules! report_error {
     ($($arg:tt)*) => {{
         let line = format!($($arg)*);
-        eprintln!("{line}");
+        // After Ctrl+C, the work it cut short fails with no error of its own,
+        // as upstream's `KeyboardInterrupt` ends the run.
+        if !yt_dlp_rs::SignalInterrupt::interrupted() {
+            eprintln!("{line}");
+        }
         *LAST_ERROR.lock().unwrap() = Some(line);
     }};
 }
@@ -831,7 +835,7 @@ struct Args {
     use_extractors: Vec<String>,
     #[arg(long, hide = true)]
     force_generic_extractor: bool,
-    /// Prefix for unqualified URLs ("error", "fixup_error"; search prefixes are unsupported)
+    /// Prefix for unqualified URLs ("auto", "auto_warning", "error", "fixup_error" or a search prefix)
     #[arg(long, value_name = "PREFIX")]
     default_search: Option<String>,
     /// Make sure formats are selected only from those that are actually downloadable
@@ -935,10 +939,10 @@ struct Args {
     plugin_dirs: Vec<String>,
     #[arg(long, hide = true)]
     no_plugin_dirs: bool,
-    /// Compatibility options (validated; not supported natively)
+    /// Compatibility options (upstream's --compat-options values)
     #[arg(long, value_name = "OPTS")]
     compat_options: Vec<String>,
-    /// Extractor arguments (not supported natively)
+    /// Extractor arguments (EXTRACTOR:ARGS; see the compatibility inventory for supported keys)
     #[arg(long, value_name = "IE_KEY:ARGS")]
     extractor_args: Vec<String>,
     /// Client to impersonate for requests (only targets from the optional
@@ -960,7 +964,7 @@ struct Args {
     allow_unplayable_formats: bool,
     #[arg(long, hide = true, overrides_with = "allow_unplayable_formats")]
     no_allow_unplayable_formats: bool,
-    /// Download all formats (unsupported: equivalent to -f all)
+    /// Download all formats (equivalent to -f all)
     #[arg(long)]
     all_formats: bool,
     /// Account credentials (for the extractors supporting logins)
@@ -1007,10 +1011,10 @@ struct Args {
     /// Path to the private key file for the client certificate
     #[arg(long, value_name = "KEYFILE")]
     client_certificate_key: Option<PathBuf>,
-    /// Password for an encrypted client certificate key (not supported natively)
+    /// Password for an encrypted client certificate key (prompted for when omitted)
     #[arg(long, value_name = "PASSWORD")]
     client_certificate_password: Option<String>,
-    /// Display progress in the console titlebar (not supported natively)
+    /// Display progress in the console titlebar
     #[arg(long)]
     console_title: bool,
     /// Force the specified encoding (only UTF-8 is supported natively)
@@ -2911,6 +2915,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if rate_limit == Some(0) {
         return Err(usage("rate limit \"0\" must be positive").into());
     }
+    // Validated by `validate_accepted_options`.
+    let throttled_rate = args.throttled_rate.as_deref().and_then(parse_bytes);
     let http_chunk_size =
         size_option("http chunk size", args.http_chunk_size.as_deref()).map_err(usage)?;
     // Upstream `--downloader` (`_dict_from_options_callback`) validation.
@@ -3156,19 +3162,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Validated by `validate_accepted_options`.
         let target = yt_dlp_rs::impersonate::ImpersonateTarget::parse(&target.to_lowercase())
             .unwrap_or_default();
-        if !yt_dlp_rs::impersonate::target_available(&target) {
+        // Upstream impersonates every request; here extraction requests
+        // (pages and APIs) do, and media transfers use the plain client.
+        if !yt_dlp_rs::impersonate::set_default(&target) {
             report_error!(
                 "ERROR: Impersonate target \"{target}\" is not available. Use --list-impersonate-targets to see available targets. You may be missing dependencies required to support this target."
             );
-        } else {
-            // Upstream impersonates every request; this port's extractors
-            // and downloaders share a plain client, and only the requests
-            // extractors mark for impersonation use the `wreq` transport.
-            report_error!(
-                "ERROR: --impersonate (impersonating every request) is not supported natively; extractors that request impersonation use an available target automatically"
-            );
+            return Ok(false);
         }
-        return Ok(false);
     }
     // Upstream `print_extractor_information`, for this port's extractors
     // (sorted, `generic` last); the generic extractor lists unmatched URLs.
@@ -4134,6 +4135,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("Sohu", yt_dlp_rs::extractor::sohu_suitable),
             ("SohuV", yt_dlp_rs::extractor::sohu_v_suitable),
             ("soundcloud", yt_dlp_rs::extractor::soundcloud_suitable),
+            (
+                "SoundcloudEmbed",
+                yt_dlp_rs::extractor::soundcloud_embed_suitable,
+            ),
             ("soundgasm", yt_dlp_rs::extractor::soundgasm_suitable),
             (
                 "soundgasm:profile",
@@ -4591,7 +4596,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "17live\n17live:clip\n17live:vod\n1News: 1news.co.nz article videos\n1tv: Первый канал\n23video\n24tv.ua\n3qsdn: 3Q SDN\n3sat\n9gag: 9GAG\n9News\n9now.com.au\nabcotvs: ABC Owned Television Stations\nabcotvs:clips\nacast\nacast:channel\nAcFunVideo\nadobetv\nAeonCo\nagalega:videos\nAitubeKZVideo\nAlibaba\nAliExpressLive\nAlJazeera\nAllstar\nAllstarProfile\naltcensored\naltcensored:channel\nAmadeusTV\nAmazonStore\nAMCNetworks\nAmericasTestKitchen\nAmericasTestKitchenSeason\nAngel\nAPA\napple:music:connect: Apple Music Connect\napple:podcasts: Apple Podcasts\narchive.org: archive.org video and audio\nArcPublishing\nARDAudiothek\nARDAudiothekPlaylist\nARDMediathek\nARDMediathekCollection\nArt19\nArteTV\nArteTVCategory\nArteTVEmbed\nArteTVPlaylist\nasobichannel: ASOBI CHANNEL\nasobichannel:tag: ASOBI CHANNEL\nAtresPlayer: [atresplayer]\nAtScaleConfEvent\nAudiMedia\nAudioBoom\nAudiodraft:custom\nAudiodraft:generic\naudiomack\naudiomack:album\nAudius: Audius.co\naudius:artist: Audius.co profile/artist pages\naudius:playlist: Audius.co playlists\naudius:track: Audius track ID or API link. Prepend with \"audius:\"\nAZMedien: AZ Medien videos\nBaiduVideo: 百度视频\nBandcamp\nBeaconTv\nBeatport\nBeeg\nBerufeTV\nbfmtv\nbfmtv:article\nbfmtv:live\nBigo\nBild: Bild.de\nBiliBili\nBitChute\nBitChuteChannel\nBitmovin\nblerp\nblogger.com\nBloomberg\nBluesky\nBongaCams\nBoosty\nBostonGlobe\nBox\nBoxCastVideo\nBpb: Bundeszentrale für politische Bildung\nBreitBart\nbrightcove:new\nBTVPlus\nBundesliga\nBundestag\nBunnyCdn\nBusinessInsider\nCaltrans\nCAM4\nCanalAlpha\nCanalsurmas\nCCMA: 3Cat, TV3 and Catalunya Ràdio\nCCTV: 央视网\nCellebrite\nCGTN\nCharlieRose\nChaturbate\nChilloutzone\nCiscoLiveSearch\nCiscoLiveSession\nCJSW\nClipchamp\nCloudflareStream\nCloudyCDN\nClyp\nCNBCVideo\nCNN\nCondeNast: Condé Nast media group: Allure, Architectural Digest, Ars Technica, Bon Appétit, Brides, Condé Nast, Condé Nast Traveler, Details, Epicurious, GQ, Glamour, Golf Digest, SELF, Teen Vogue, The New Yorker, Vanity Fair, Vogue, W Magazine, WIRED\nCoub\nCozyTV\ncpac\ncpac:playlist\nCraftsy\nCrooksAndLiars\nCrtvg\nCtsNews: 華視新聞\nCultureUnplugged\ncuriositystream: [curiositystream]\ncuriositystream:collections: [curiositystream]\ncuriositystream:series: [curiositystream]\nDacastPlaylist\nDacastVOD\nDailyMail\ndailymotion: [dailymotion]\ndailymotion:playlist: [dailymotion]\ndailymotion:search: [dailymotion]\ndailymotion:user: [dailymotion]\ndamtomo:record\ndamtomo:video\ndaystar:clip\nDBTV\nDctpTv\ndemocracynow\nDetikEmbed\nDeuxM\nDeuxMNews\nDigiteka\nDiscogsReleasePlaylist\ndlf\ndlf:corpus: DLF Multi-feed Archives\ndlive:stream\ndlive:vod\nDouyin\nDropbox\nDrTalks\ndrtv\ndrtv:live\ndrtv:season\ndrtv:series\nDumpert\nDuoplay\ndvtv: http://video.aktualne.cz/\nEbaumsWorld\nEbay\negghead:course: egghead.io course\negghead:lesson: egghead.io lesson\neggs:artist\neggs:single\nElonet\nElPais: El País\nElTreceTV: El Trece TV (Argentina)\nEmbedly\nEpoch\nEporner\nErocast\nEroProfile:album\nERRArhiiv\nERRJupiter\nertflix:codename: ERTFLIX videos by codename\nEttuTv\nEuropeanTour\nEUScreen\nExpressen\nfacebook\nfacebook:ads\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFaulio\nfaz.net\nfc2: [fc2]\nfc2:embed\nFczenit\nFilmArchiv: FILMARCHIV ON\nfilmon\nfilmon:channel\nFilmweb\nFiveTV\nFlickr\nFootyRoom\nFormula1\nfoxnews: Fox News and Fox Business Video\nfoxnews:article\nFoxNewsVideo\nFrancaisFacile\nfranceinfo: franceinfo.fr (formerly francetvinfo.fr)\nfrancetv\nfrancetv:site\nFreesound\nfreespeech.org\nfreetv:series\nFreeTvMovies\nFunker530\nFuyinTV\nGab\nGaia: [gaia]\nGameSpot\nGameStar\nGaskrank\nGBNews: GB News clips, features and live streams\nGenius\nGeniusLyrics\nGermanupa: germanupa.de\nGettr\nGettrStreaming\nGlide: Glide mobile video messages (glide.me)\nGlobalPlayerAudio\nGlobalPlayerAudioEpisode\nGlobalPlayerLive\nGlobalPlayerLivePlaylist\nGlobalPlayerVideo\nGlobo: [globo]\nGloboArticle\nglomex: Glomex videos\nglomex:embed: Glomex embedded videos\nGMANetworkVideo\nGodResource\nGolem\ngoodgame:stream\nGoogleDrive\nGoogleDrive:Folder\nGoPro\nGoToStage\nGraspop\nGronkh\nGroupon\nHarpodeon\nHearThisAt\nHellPorno\nHistoricFilms\nHitRecord\nHollywoodReporter\nHollywoodReporterPlaylist\nHolodex\nHSEProduct\nHSEShow\nhtml5\nHuajiao: 花椒直播\nHuffPost: Huffington Post\nhuya:live: 虎牙直播\nhuya:video: 虎牙视频\nHypem\nHytale\nIdagioAlbum\nIdagioPersonalPlaylist\nIdagioPlaylist\nIdagioRecording\nIdagioTrack\niheartradio\niheartradio:podcast\nIlPost\nIltalehti\nimdb: Internet Movie Database trailers\nimdb:list: Internet Movie Database lists\nImgur\nimgur:album\nimgur:gallery\nIna\nInc\nIndavideoEmbed\nInfoQ\nInstagram\ninstagram:story\ninstagram:tag: Instagram hashtag search URLs\nInstagramIOS: IOS instagram:// URL\nInternazionale\nIslamChannel\nIslamChannelSeries\nIsraelNationalNews\nivideon: Ivideon TV\nIvoox\niwara: [iwara]\niwara:playlist: [iwara]\niwara:user: [iwara]\nJamendo\nJamendoAlbum\nJoj\nJove\nJStream\nJWPlatform\nKaltura\nKenh14Playlist\nKenh14Video\nkick:clip\nkick:clips\nkick:live\nkick:videos\nkick:vod\nKicker\nKickStarter\nKika: KiKA.de\nKikaPlaylist\nKinoPoisk\nKommunetv\nKompasVideo\nKTH\nKu6\nKukuluLive\nLastFM\nLastFMPlaylist\nLastFMUser\nlbry: odysee.com\nlbry:channel: odysee.com channels\nlbry:playlist: odysee.com playlists\nLCI\nLecturio: [lecturio]\nLeFigaroVideoEmbed\nLeFigaroVideoSection\nLEGO\nLemonde\nLibsyn\nLinkedIn\nLiputan6\nListenNotes\nLiTV\nLivestreamfails\nLnk\nloc: Library of Congress\nloom\nLRTRadio\nLRTStream\nLRTVOD\nmaariv.co.il\nMagellanTV\nmailru: Видео@Mail.Ru\nmailru:music: Музыка@Mail.Ru\nMainStreaming: MainStreaming Player\nmangomolo:live\nmangomolo:video\nMangoTV: 芒果TV\nMaoriTV\nmassengeschmack.tv\nMasters\nMatchiTV\nMatchTV\nmave\nmave:channel\nMBN: mbn.co.kr (매일방송)\nMDR: MDR.DE\nMedalTV\nmedia.ccc.de\nMediaite\nMediaKlikk\nMediaStream\nMediaWorksNZVOD\nMedici\nmegaphone.fm: megaphone.fm embedded players\nmegatvcom: megatv.com videos\nMeipai: 美拍\nMelonVOD\nmir24.tv\nMirrorCoUK\nmixch\nmixch:archive\nmixch:movie\nmixcloud\nMixlr\nMixlrRecoring\nMLSSoccer\nMochaVideo\nMojevideo: mojevideo.sk\nMonstercat\nmonstersiren: 塞壬唱片\nmoviepilot: Moviepilot trailer\nMovingImage\nMuseScore\nMux\nMySpace\nMySpace:album\nMySpass\nMyVideoGe\nMyVidster\nn-tv.de\nN1Info:article\nNascarClassics\nNekoHacker\nNest\nNestClip\nNetAppCollection\nNetAppVideo\nNetzkino\nNewsy\nNFHSNetwork\nNhkVod\nNhkVodProgram\nniconico: [niconico] ニコニコ動画\nniconico:history: NicoNico user history or likes. Requires cookies.\nniconico:playlist\nniconico:series\nniconico:tag: NicoNico video tag URLs\nNiconicoUser\nnicovideo:search: Nico video search; \"nicosearch:\" prefix (e.g. \"nicosearch{count1}:{example1}\")\nnicovideo:search:date: Nico video search, newest first; \"nicosearchdate:\" prefix (e.g. \"nicosearchdate{count2}:{example2}\")\nnicovideo:search_url: Nico video search URLs\nNobelPrize\nNoicePodcast\nNoodleMagazine\nNOSNLArticle\nNovaEmbed\nNovaPlay\nNowCanal\nnowness\nnowness:playlist\nnowness:series\nNpr\nNRK\nNRKPlaylist\nNRKRadioPodkast\nNRKTV: NRK TV and NRK Radio\nNRKTVDirekte: NRK TV Direkte and NRK Radio Direkte\nNRKTVEpisode\nNRKTVSeason\nNRKTVSeries\nnts.live\nntv.ru\nNuvid\nnzherald\nNZOnScreen\nNZZ\nOdnoklassniki\nOlympicsReplay\nOmnyfm\nOmnyfmPlaylist\nOmnyfmShow\non24: ON24\nOnDemandKorea\nOneFootball\nOnePlacePodcast\nonsen: [onsen] インターネットラジオステーション＜音泉＞\nOpencast\nOpencastPlaylist\norf:on\norf:podcast\norf:radio\nOutsideTV\nPacktPub: [packtpub]\nPacktPubCourse\nparliamentlive.tv: UK parliament videos\nParlview\nparti:livestream\nparti:video\nPearVideo\npeer.tv\nPeerTube\nPeerTube:Playlist\nperiscope: Periscope\nPGATour\nPhilharmonieDeParis: Philharmonie de Paris\nPhotobucket\nPiaLive\npicarto\npicarto:vod\nPiksel\nPinkbike\nPinterest\nPlayerFm\nPodbayFM\nPodbayFMChannel\nPodchaser\nPopcorntimes\nPopcornTV\nPrankCast\nPrankCastPost\nPremiershipRugby\nPressTV\nPyvideo\nQingTing\nradiocanada\nradiocanada:audiovideo\nradiokapital\nradiokapital:show\nRadioRadicale\nRadioZetPodcast\nRCS\nRCSEmbeds\nRCSVarious\nReddit\nRedGifs\nRedTube\nReverbNation\nRinseFM\nRinseFMArtistPlaylist\nRottenTomatoes\nRoyaLive\nRozhlasVltava\nrte: Raidió Teilifís Éireann TV\nrte:radio: Raidió Teilifís Éireann radio\nRTRFM\nRTVCKaltura\nrtve.es:alacarta: RTVE a la carta and Play\nrtve.es:audio: RTVE audio\nrtve.es:live: RTVE.es live streams\nrtve.es:television\nrtvslo.si\nrtvslo.si:show\nRudoVideo\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nRuv\nruv.is:spila\nS4C\nS4CSeries\nSapo: SAPO Vídeos\nSBS: sbs.com.au\nScreen9\nScreencast\nScreencastify\nScreenRec\nSen\nServus\nSharePoint\nShemarooMe\nshowroom:live: SHOWROOM\nshowroom:vod\nShugiinItvLive: 衆議院インターネット審議中継\nShugiinItvVod: 衆議院インターネット審議中継 (ビデオライブラリ)\nsimplecast\nsimplecast:episode\nsimplecast:podcast\nSina\nSkeb\nsky:news\nsky:news:story\nsky:sports\nsky:sports:news\nSkyNewsAU\nSnapchatSpotlight\nSohu\nSohuV\nsoundcloud: [soundcloud]\nsoundgasm\nsoundgasm:profile\nSovietsCloset\nSovietsClosetPlaylist\nSpiegel\nSport5\nSpreaker\nSpreakerShow\nSproutVideo\nSRGSSR\nSRGSSRPlay: srf.ch, rts.ch, rsi.ch, rtr.ch and swissinfo.ch play sites\nstartrek: STAR TREK\nstartv\nSteam\nSteamCommunity\nSteamCommunityBroadcast\nStreaks\nStreamable\nStreamCZ\nStreetVoice\nstv:player\nstvr: Slovak Television and Radio (formerly RTVS)\nSubsplash\nsubsplash:playlist\nSubstack\nsverigesradio:episode\nsverigesradio:publication\nsvt:page\nsvt:play: SVT Play and Öppet arkiv\nsvt:play:series\nSztvHu\nTapTapApp\nTapTapAppIntl\nTapTapMoment\nTapTapPostIntl\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\nTele13\nTeleBruxelles\nTelegraaf\ntelegram:embed\nTelewebion\nTF1\nTheGuardianPodcast\nTheHighWire\nTheIntercept\nTheStar\nTheSun\nThisAmericanLife\nThisOldHouse: [thisoldhouse]\nThreeSpeak\nThreeSpeakUser\nTikTok\ntiktok:collection\ntiktok:live\ntiktok:user\nTMZ\nTNAFlix\nTNAFlixNetworkEmbed\ntokfm:audition\ntokfm:podcast\nToonGoggles\ntoutiao: 今日头条\nTrtCocukVideo\nTrtWorld\nTruNews\nTruth\nTumblr: [tumblr]\ntunein:podcast\ntunein:podcast:program\ntunein:station\ntv.dfb.de\nTV2\nTV2Article\nTV2DK\nTV2DKBornholmPlay\ntv2play.hu\ntv2playseries.hu\nTV4: tv4.se and tv4play.se\nTV5MONDE\ntv5unis\ntv5unis:video\nTVANouvelles\nTVANouvellesArticle\ntvaplus: TVA+\ntvigle: Интернет-телевидение Tvigle.ru\nTVIPlayer\ntvnoe: Televize Noe\nTVO\ntvopengr:embed: tvopen.gr embedded videos\ntvopengr:watch: tvopen.gr (and ethnos.gr) videos\ntvw\ntvw:news\ntvw:tvchannels\nTweakers\ntwitch:clips: [twitch]\ntwitch:collection: [twitch]\ntwitch:stream: [twitch]\ntwitch:videos: [twitch]\ntwitch:videos:clips: [twitch]\ntwitch:videos:collections: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:amplify\ntwitter:broadcast\ntwitter:card\ntwitter:shortener\ntwitter:spaces\nUDNEmbed: 聯合影音\nUlizaPlayer\nUlizaPortal: ulizaportal.jp\numg:de: Universal Music Deutschland\nUnistra\nUnitedNationsWebTv\nuol.com.br\nURPlay\nUSAToday\nustudio\nustudio:embed\nVbox7\nVeo\nVidea\nvideo.arnes.si\nVideoPress\nVidio: [vidio]\nVidioPremier: [vidio]\nVidLii\nVidly\nvids.io\nVidyard\nvimeo: [vimeo]\nViMP\nViously\nVisir: Vísir\nvk: [vk] VK\nvk:uservideos: [vk] VK - User's Videos\nvk:wallpost: [vk]\nVKPlay\nVKPlayLive\nvm.tiktok\nVocaroo\nVODPlatform\nVTV\nVTVGo\nwashingtonpost\nwashingtonpost:article\nwat.tv\nWebcamerapl\nWebOfStories\nWebOfStoriesPlaylist\nWeibo\nWeiboVideo\nWhyp\nwikimedia.org\nWimbledon\nWistia\nWistiaChannel\nWistiaPlaylist\nWorldStarHipHop\nWSJ: Wall Street Journal\nWSJArticle\nwyborcza:video\nWyborczaPodcast\nwykop:dig\nwykop:dig:comment\nwykop:post\nwykop:post:comment\nXboxClips\nXiaoHongShu: 小红书\nximalaya: 喜马拉雅FM\nximalaya:album: 喜马拉雅FM 专辑\nXinpianchang: 新片场\nXNXX\nXVideos\nxvideos:quickies\nXXXYMovies\nYandexDisk\nYappyProfile\nyfanefa\nYleAreena\nYouJizz\nyouku: 优酷\nyoutube: [youtube] YouTube\nyoutube:clip: [youtube]\nyoutube:favorites: [youtube] YouTube liked videos; \":ytfav\" keyword (requires cookies)\nyoutube:history: [youtube] Youtube watch history; \":ythis\" keyword (requires cookies)\nyoutube:music:search_url: [youtube] YouTube music search URLs with selectable sections, e.g. #songs\nyoutube:notif: [youtube] YouTube notifications; \":ytnotif\" keyword (requires cookies)\nyoutube:playlist: [youtube] YouTube playlists\nyoutube:recommended: [youtube] YouTube recommended videos; \":ytrec\" keyword\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:shorts:pivot:audio: [youtube] YouTube Shorts audio pivot (Shorts using audio of a given video)\nyoutube:subscriptions: [youtube] YouTube subscriptions feed; \":ytsubs\" keyword (requires cookies)\nyoutube:tab: [youtube] YouTube Tabs\nyoutube:user: [youtube] YouTube user videos; \"ytuser:\" prefix\nyoutube:watchlater: [youtube] Youtube watch later list; \":ytwatchlater\" keyword (requires cookies)\nYoutubeLivestreamEmbed: [youtube] YouTube livestream embeds\nYoutubeYtBe: [youtube] youtu.be\nZapiks\nzdf\nzdf:channel\nZenPorn\nZetlandDKArticle\nZhihu\nzoom:clips\nZype\ngeneric: Generic downloader that works on some sites"
+            "17live\n17live:clip\n17live:vod\n1News: 1news.co.nz article videos\n1tv: Первый канал\n23video\n24tv.ua\n3qsdn: 3Q SDN\n3sat\n9gag: 9GAG\n9News\n9now.com.au\nabcotvs: ABC Owned Television Stations\nabcotvs:clips\nacast\nacast:channel\nAcFunVideo\nadobetv\nAeonCo\nagalega:videos\nAitubeKZVideo\nAlibaba\nAliExpressLive\nAlJazeera\nAllstar\nAllstarProfile\naltcensored\naltcensored:channel\nAmadeusTV\nAmazonStore\nAMCNetworks\nAmericasTestKitchen\nAmericasTestKitchenSeason\nAngel\nAPA\napple:music:connect: Apple Music Connect\napple:podcasts: Apple Podcasts\narchive.org: archive.org video and audio\nArcPublishing\nARDAudiothek\nARDAudiothekPlaylist\nARDMediathek\nARDMediathekCollection\nArt19\nArteTV\nArteTVCategory\nArteTVEmbed\nArteTVPlaylist\nasobichannel: ASOBI CHANNEL\nasobichannel:tag: ASOBI CHANNEL\nAtresPlayer: [atresplayer]\nAtScaleConfEvent\nAudiMedia\nAudioBoom\nAudiodraft:custom\nAudiodraft:generic\naudiomack\naudiomack:album\nAudius: Audius.co\naudius:artist: Audius.co profile/artist pages\naudius:playlist: Audius.co playlists\naudius:track: Audius track ID or API link. Prepend with \"audius:\"\nAZMedien: AZ Medien videos\nBaiduVideo: 百度视频\nBandcamp\nBeaconTv\nBeatport\nBeeg\nBerufeTV\nbfmtv\nbfmtv:article\nbfmtv:live\nBigo\nBild: Bild.de\nBiliBili\nBitChute\nBitChuteChannel\nBitmovin\nblerp\nblogger.com\nBloomberg\nBluesky\nBongaCams\nBoosty\nBostonGlobe\nBox\nBoxCastVideo\nBpb: Bundeszentrale für politische Bildung\nBreitBart\nbrightcove:new\nBTVPlus\nBundesliga\nBundestag\nBunnyCdn\nBusinessInsider\nCaltrans\nCAM4\nCanalAlpha\nCanalsurmas\nCCMA: 3Cat, TV3 and Catalunya Ràdio\nCCTV: 央视网\nCellebrite\nCGTN\nCharlieRose\nChaturbate\nChilloutzone\nCiscoLiveSearch\nCiscoLiveSession\nCJSW\nClipchamp\nCloudflareStream\nCloudyCDN\nClyp\nCNBCVideo\nCNN\nCondeNast: Condé Nast media group: Allure, Architectural Digest, Ars Technica, Bon Appétit, Brides, Condé Nast, Condé Nast Traveler, Details, Epicurious, GQ, Glamour, Golf Digest, SELF, Teen Vogue, The New Yorker, Vanity Fair, Vogue, W Magazine, WIRED\nCoub\nCozyTV\ncpac\ncpac:playlist\nCraftsy\nCrooksAndLiars\nCrtvg\nCtsNews: 華視新聞\nCultureUnplugged\ncuriositystream: [curiositystream]\ncuriositystream:collections: [curiositystream]\ncuriositystream:series: [curiositystream]\nDacastPlaylist\nDacastVOD\nDailyMail\ndailymotion: [dailymotion]\ndailymotion:playlist: [dailymotion]\ndailymotion:search: [dailymotion]\ndailymotion:user: [dailymotion]\ndamtomo:record\ndamtomo:video\ndaystar:clip\nDBTV\nDctpTv\ndemocracynow\nDetikEmbed\nDeuxM\nDeuxMNews\nDigiteka\nDiscogsReleasePlaylist\ndlf\ndlf:corpus: DLF Multi-feed Archives\ndlive:stream\ndlive:vod\nDouyin\nDropbox\nDrTalks\ndrtv\ndrtv:live\ndrtv:season\ndrtv:series\nDumpert\nDuoplay\ndvtv: http://video.aktualne.cz/\nEbaumsWorld\nEbay\negghead:course: egghead.io course\negghead:lesson: egghead.io lesson\neggs:artist\neggs:single\nElonet\nElPais: El País\nElTreceTV: El Trece TV (Argentina)\nEmbedly\nEpoch\nEporner\nErocast\nEroProfile:album\nERRArhiiv\nERRJupiter\nertflix:codename: ERTFLIX videos by codename\nEttuTv\nEuropeanTour\nEUScreen\nExpressen\nfacebook\nfacebook:ads\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFaulio\nfaz.net\nfc2: [fc2]\nfc2:embed\nFczenit\nFilmArchiv: FILMARCHIV ON\nfilmon\nfilmon:channel\nFilmweb\nFiveTV\nFlickr\nFootyRoom\nFormula1\nfoxnews: Fox News and Fox Business Video\nfoxnews:article\nFoxNewsVideo\nFrancaisFacile\nfranceinfo: franceinfo.fr (formerly francetvinfo.fr)\nfrancetv\nfrancetv:site\nFreesound\nfreespeech.org\nfreetv:series\nFreeTvMovies\nFunker530\nFuyinTV\nGab\nGaia: [gaia]\nGameSpot\nGameStar\nGaskrank\nGBNews: GB News clips, features and live streams\nGenius\nGeniusLyrics\nGermanupa: germanupa.de\nGettr\nGettrStreaming\nGlide: Glide mobile video messages (glide.me)\nGlobalPlayerAudio\nGlobalPlayerAudioEpisode\nGlobalPlayerLive\nGlobalPlayerLivePlaylist\nGlobalPlayerVideo\nGlobo: [globo]\nGloboArticle\nglomex: Glomex videos\nglomex:embed: Glomex embedded videos\nGMANetworkVideo\nGodResource\nGolem\ngoodgame:stream\nGoogleDrive\nGoogleDrive:Folder\nGoPro\nGoToStage\nGraspop\nGronkh\nGroupon\nHarpodeon\nHearThisAt\nHellPorno\nHistoricFilms\nHitRecord\nHollywoodReporter\nHollywoodReporterPlaylist\nHolodex\nHSEProduct\nHSEShow\nhtml5\nHuajiao: 花椒直播\nHuffPost: Huffington Post\nhuya:live: 虎牙直播\nhuya:video: 虎牙视频\nHypem\nHytale\nIdagioAlbum\nIdagioPersonalPlaylist\nIdagioPlaylist\nIdagioRecording\nIdagioTrack\niheartradio\niheartradio:podcast\nIlPost\nIltalehti\nimdb: Internet Movie Database trailers\nimdb:list: Internet Movie Database lists\nImgur\nimgur:album\nimgur:gallery\nIna\nInc\nIndavideoEmbed\nInfoQ\nInstagram\ninstagram:story\ninstagram:tag: Instagram hashtag search URLs\nInstagramIOS: IOS instagram:// URL\nInternazionale\nIslamChannel\nIslamChannelSeries\nIsraelNationalNews\nivideon: Ivideon TV\nIvoox\niwara: [iwara]\niwara:playlist: [iwara]\niwara:user: [iwara]\nJamendo\nJamendoAlbum\nJoj\nJove\nJStream\nJWPlatform\nKaltura\nKenh14Playlist\nKenh14Video\nkick:clip\nkick:clips\nkick:live\nkick:videos\nkick:vod\nKicker\nKickStarter\nKika: KiKA.de\nKikaPlaylist\nKinoPoisk\nKommunetv\nKompasVideo\nKTH\nKu6\nKukuluLive\nLastFM\nLastFMPlaylist\nLastFMUser\nlbry: odysee.com\nlbry:channel: odysee.com channels\nlbry:playlist: odysee.com playlists\nLCI\nLecturio: [lecturio]\nLeFigaroVideoEmbed\nLeFigaroVideoSection\nLEGO\nLemonde\nLibsyn\nLinkedIn\nLiputan6\nListenNotes\nLiTV\nLivestreamfails\nLnk\nloc: Library of Congress\nloom\nLRTRadio\nLRTStream\nLRTVOD\nmaariv.co.il\nMagellanTV\nmailru: Видео@Mail.Ru\nmailru:music: Музыка@Mail.Ru\nMainStreaming: MainStreaming Player\nmangomolo:live\nmangomolo:video\nMangoTV: 芒果TV\nMaoriTV\nmassengeschmack.tv\nMasters\nMatchiTV\nMatchTV\nmave\nmave:channel\nMBN: mbn.co.kr (매일방송)\nMDR: MDR.DE\nMedalTV\nmedia.ccc.de\nMediaite\nMediaKlikk\nMediaStream\nMediaWorksNZVOD\nMedici\nmegaphone.fm: megaphone.fm embedded players\nmegatvcom: megatv.com videos\nMeipai: 美拍\nMelonVOD\nmir24.tv\nMirrorCoUK\nmixch\nmixch:archive\nmixch:movie\nmixcloud\nMixlr\nMixlrRecoring\nMLSSoccer\nMochaVideo\nMojevideo: mojevideo.sk\nMonstercat\nmonstersiren: 塞壬唱片\nmoviepilot: Moviepilot trailer\nMovingImage\nMuseScore\nMux\nMySpace\nMySpace:album\nMySpass\nMyVideoGe\nMyVidster\nn-tv.de\nN1Info:article\nNascarClassics\nNekoHacker\nNest\nNestClip\nNetAppCollection\nNetAppVideo\nNetzkino\nNewsy\nNFHSNetwork\nNhkVod\nNhkVodProgram\nniconico: [niconico] ニコニコ動画\nniconico:history: NicoNico user history or likes. Requires cookies.\nniconico:playlist\nniconico:series\nniconico:tag: NicoNico video tag URLs\nNiconicoUser\nnicovideo:search: Nico video search; \"nicosearch:\" prefix (e.g. \"nicosearch{count1}:{example1}\")\nnicovideo:search:date: Nico video search, newest first; \"nicosearchdate:\" prefix (e.g. \"nicosearchdate{count2}:{example2}\")\nnicovideo:search_url: Nico video search URLs\nNobelPrize\nNoicePodcast\nNoodleMagazine\nNOSNLArticle\nNovaEmbed\nNovaPlay\nNowCanal\nnowness\nnowness:playlist\nnowness:series\nNpr\nNRK\nNRKPlaylist\nNRKRadioPodkast\nNRKTV: NRK TV and NRK Radio\nNRKTVDirekte: NRK TV Direkte and NRK Radio Direkte\nNRKTVEpisode\nNRKTVSeason\nNRKTVSeries\nnts.live\nntv.ru\nNuvid\nnzherald\nNZOnScreen\nNZZ\nOdnoklassniki\nOlympicsReplay\nOmnyfm\nOmnyfmPlaylist\nOmnyfmShow\non24: ON24\nOnDemandKorea\nOneFootball\nOnePlacePodcast\nonsen: [onsen] インターネットラジオステーション＜音泉＞\nOpencast\nOpencastPlaylist\norf:on\norf:podcast\norf:radio\nOutsideTV\nPacktPub: [packtpub]\nPacktPubCourse\nparliamentlive.tv: UK parliament videos\nParlview\nparti:livestream\nparti:video\nPearVideo\npeer.tv\nPeerTube\nPeerTube:Playlist\nperiscope: Periscope\nPGATour\nPhilharmonieDeParis: Philharmonie de Paris\nPhotobucket\nPiaLive\npicarto\npicarto:vod\nPiksel\nPinkbike\nPinterest\nPlayerFm\nPodbayFM\nPodbayFMChannel\nPodchaser\nPopcorntimes\nPopcornTV\nPrankCast\nPrankCastPost\nPremiershipRugby\nPressTV\nPyvideo\nQingTing\nradiocanada\nradiocanada:audiovideo\nradiokapital\nradiokapital:show\nRadioRadicale\nRadioZetPodcast\nRCS\nRCSEmbeds\nRCSVarious\nReddit\nRedGifs\nRedTube\nReverbNation\nRinseFM\nRinseFMArtistPlaylist\nRottenTomatoes\nRoyaLive\nRozhlasVltava\nrte: Raidió Teilifís Éireann TV\nrte:radio: Raidió Teilifís Éireann radio\nRTRFM\nRTVCKaltura\nrtve.es:alacarta: RTVE a la carta and Play\nrtve.es:audio: RTVE audio\nrtve.es:live: RTVE.es live streams\nrtve.es:television\nrtvslo.si\nrtvslo.si:show\nRudoVideo\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nRuv\nruv.is:spila\nS4C\nS4CSeries\nSapo: SAPO Vídeos\nSBS: sbs.com.au\nScreen9\nScreencast\nScreencastify\nScreenRec\nSen\nServus\nSharePoint\nShemarooMe\nshowroom:live: SHOWROOM\nshowroom:vod\nShugiinItvLive: 衆議院インターネット審議中継\nShugiinItvVod: 衆議院インターネット審議中継 (ビデオライブラリ)\nsimplecast\nsimplecast:episode\nsimplecast:podcast\nSina\nSkeb\nsky:news\nsky:news:story\nsky:sports\nsky:sports:news\nSkyNewsAU\nSnapchatSpotlight\nSohu\nSohuV\nsoundcloud: [soundcloud]\nSoundcloudEmbed\nsoundgasm\nsoundgasm:profile\nSovietsCloset\nSovietsClosetPlaylist\nSpiegel\nSport5\nSpreaker\nSpreakerShow\nSproutVideo\nSRGSSR\nSRGSSRPlay: srf.ch, rts.ch, rsi.ch, rtr.ch and swissinfo.ch play sites\nstartrek: STAR TREK\nstartv\nSteam\nSteamCommunity\nSteamCommunityBroadcast\nStreaks\nStreamable\nStreamCZ\nStreetVoice\nstv:player\nstvr: Slovak Television and Radio (formerly RTVS)\nSubsplash\nsubsplash:playlist\nSubstack\nsverigesradio:episode\nsverigesradio:publication\nsvt:page\nsvt:play: SVT Play and Öppet arkiv\nsvt:play:series\nSztvHu\nTapTapApp\nTapTapAppIntl\nTapTapMoment\nTapTapPostIntl\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\nTele13\nTeleBruxelles\nTelegraaf\ntelegram:embed\nTelewebion\nTF1\nTheGuardianPodcast\nTheHighWire\nTheIntercept\nTheStar\nTheSun\nThisAmericanLife\nThisOldHouse: [thisoldhouse]\nThreeSpeak\nThreeSpeakUser\nTikTok\ntiktok:collection\ntiktok:live\ntiktok:user\nTMZ\nTNAFlix\nTNAFlixNetworkEmbed\ntokfm:audition\ntokfm:podcast\nToonGoggles\ntoutiao: 今日头条\nTrtCocukVideo\nTrtWorld\nTruNews\nTruth\nTumblr: [tumblr]\ntunein:podcast\ntunein:podcast:program\ntunein:station\ntv.dfb.de\nTV2\nTV2Article\nTV2DK\nTV2DKBornholmPlay\ntv2play.hu\ntv2playseries.hu\nTV4: tv4.se and tv4play.se\nTV5MONDE\ntv5unis\ntv5unis:video\nTVANouvelles\nTVANouvellesArticle\ntvaplus: TVA+\ntvigle: Интернет-телевидение Tvigle.ru\nTVIPlayer\ntvnoe: Televize Noe\nTVO\ntvopengr:embed: tvopen.gr embedded videos\ntvopengr:watch: tvopen.gr (and ethnos.gr) videos\ntvw\ntvw:news\ntvw:tvchannels\nTweakers\ntwitch:clips: [twitch]\ntwitch:collection: [twitch]\ntwitch:stream: [twitch]\ntwitch:videos: [twitch]\ntwitch:videos:clips: [twitch]\ntwitch:videos:collections: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:amplify\ntwitter:broadcast\ntwitter:card\ntwitter:shortener\ntwitter:spaces\nUDNEmbed: 聯合影音\nUlizaPlayer\nUlizaPortal: ulizaportal.jp\numg:de: Universal Music Deutschland\nUnistra\nUnitedNationsWebTv\nuol.com.br\nURPlay\nUSAToday\nustudio\nustudio:embed\nVbox7\nVeo\nVidea\nvideo.arnes.si\nVideoPress\nVidio: [vidio]\nVidioPremier: [vidio]\nVidLii\nVidly\nvids.io\nVidyard\nvimeo: [vimeo]\nViMP\nViously\nVisir: Vísir\nvk: [vk] VK\nvk:uservideos: [vk] VK - User's Videos\nvk:wallpost: [vk]\nVKPlay\nVKPlayLive\nvm.tiktok\nVocaroo\nVODPlatform\nVTV\nVTVGo\nwashingtonpost\nwashingtonpost:article\nwat.tv\nWebcamerapl\nWebOfStories\nWebOfStoriesPlaylist\nWeibo\nWeiboVideo\nWhyp\nwikimedia.org\nWimbledon\nWistia\nWistiaChannel\nWistiaPlaylist\nWorldStarHipHop\nWSJ: Wall Street Journal\nWSJArticle\nwyborcza:video\nWyborczaPodcast\nwykop:dig\nwykop:dig:comment\nwykop:post\nwykop:post:comment\nXboxClips\nXiaoHongShu: 小红书\nximalaya: 喜马拉雅FM\nximalaya:album: 喜马拉雅FM 专辑\nXinpianchang: 新片场\nXNXX\nXVideos\nxvideos:quickies\nXXXYMovies\nYandexDisk\nYappyProfile\nyfanefa\nYleAreena\nYouJizz\nyouku: 优酷\nyoutube: [youtube] YouTube\nyoutube:clip: [youtube]\nyoutube:favorites: [youtube] YouTube liked videos; \":ytfav\" keyword (requires cookies)\nyoutube:history: [youtube] Youtube watch history; \":ythis\" keyword (requires cookies)\nyoutube:music:search_url: [youtube] YouTube music search URLs with selectable sections, e.g. #songs\nyoutube:notif: [youtube] YouTube notifications; \":ytnotif\" keyword (requires cookies)\nyoutube:playlist: [youtube] YouTube playlists\nyoutube:recommended: [youtube] YouTube recommended videos; \":ytrec\" keyword\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:shorts:pivot:audio: [youtube] YouTube Shorts audio pivot (Shorts using audio of a given video)\nyoutube:subscriptions: [youtube] YouTube subscriptions feed; \":ytsubs\" keyword (requires cookies)\nyoutube:tab: [youtube] YouTube Tabs\nyoutube:user: [youtube] YouTube user videos; \"ytuser:\" prefix\nyoutube:watchlater: [youtube] Youtube watch later list; \":ytwatchlater\" keyword (requires cookies)\nYoutubeLivestreamEmbed: [youtube] YouTube livestream embeds\nYoutubeYtBe: [youtube] youtu.be\nZapiks\nzdf\nzdf:channel\nZenPorn\nZetlandDKArticle\nZhihu\nzoom:clips\nZype\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }
@@ -4637,7 +4642,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut inputs: std::collections::VecDeque<_> = inputs.into();
     // Outer playlists whose nested playlists are being processed.
     let mut outer_playlists: Vec<OuterPlaylist> = Vec::new();
-    while let Some(input) = inputs.pop_front() {
+    // Upstream's `KeyboardInterrupt`: SIGINT/SIGTERM end the run at the next
+    // checkpoint, keeping `.part` files and completed processing stages
+    // (`cli` reports it). The handler stays until the process exits.
+    SIGNALS.get_or_init(yt_dlp_rs::SignalInterrupt::install);
+    'inputs: while let Some(input) = inputs.pop_front() {
+        if yt_dlp_rs::SignalInterrupt::interrupted() {
+            break;
+        }
         let (url, loaded, nested) = match input {
             Input::Url(url, loaded) => (url, loaded.map(|loaded| *loaded), None),
             Input::Nested { playlist, item } => {
@@ -4741,7 +4753,23 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             )?
                         }
                         Some(result) => result,
-                        None => downloader.extract_result_unselected_with_options(&url, options)?,
+                        None => {
+                            // Upstream `extract_info`: a recorded temp ID
+                            // skips the URL before extraction.
+                            if let Some(archive) = &archive
+                                && let Some((key, id)) = downloader.temp_archive_identity(&url)
+                                && archive.contains_identity(&key, &id)
+                            {
+                                screen!(
+                                    "[download] {id}: has already been recorded in the archive"
+                                );
+                                if args.break_on_existing {
+                                    pending = Some(Cancel::Existing);
+                                }
+                                return Ok(None);
+                            }
+                            downloader.extract_result_unselected_with_options(&url, options)?
+                        }
                     }
                 };
                 // Upstream `__process_playlist` names the playlist, then its
@@ -5039,6 +5067,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         let mut extraction_failures = 0;
         let failed_before = failed;
         for (entry_index, mut info) in extracted.into_entries().into_iter().enumerate() {
+            if yt_dlp_rs::SignalInterrupt::interrupted() {
+                break 'inputs;
+            }
             // A paged entry whose page failed to download: upstream reported
             // the error while reading it, and skips the `None` entry.
             if let Some(error) = YoutubeDl::fetch_error(&info) {
@@ -5249,7 +5280,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         )?;
                         stdout.flush()?;
                         let mut answer = String::new();
-                        if io::stdin().read_line(&mut answer)? == 0 {
+                        // Ctrl+C quits at once, as upstream's `input()`.
+                        let read = yt_dlp_rs::SignalInterrupt::prompt(|| {
+                            io::stdin().read_line(&mut answer)
+                        });
+                        if read? == 0 {
                             return Err(
                                 EntryExtractionError("EOF when reading a line".into()).into()
                             );
@@ -5375,7 +5410,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         stdout.flush()?;
                                         drop(stdout);
                                         let mut reply = String::new();
-                                        if io::stdin().read_line(&mut reply)? == 0 {
+                                        let read = yt_dlp_rs::SignalInterrupt::prompt(|| {
+                                            io::stdin().read_line(&mut reply)
+                                        });
+                                        if read? == 0 {
                                             return Err(yt_dlp_rs::Error::Reported(
                                                 "EOF when reading a line".into(),
                                             )
@@ -6289,17 +6327,27 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         }
                                         screen!("[download] Destination: -");
                                     }
+                                    // The stream is written to a private file and
+                                    // copied to stdout as its data is confirmed, so a
+                                    // player reading the pipe starts at once (upstream
+                                    // writes stdout directly).
                                     let temporary = tempfile::tempdir()?;
                                     let target = temporary.path().join("media");
-                                    downloader.download_with_progress(
+                                    let mut piped = StdoutPipe::new(&target);
+                                    let fragmented = !stream.fragments.is_empty();
+                                    let mut failure = None;
+                                    let result = downloader.download_with_progress(
                                         stream,
                                         &target,
                                         DownloadOptions {
                                             min_filesize,
                                             max_filesize,
                                             rate_limit,
+                                            throttled_rate,
                                             update_time: false,
-                                            part_files: yt_dlp_rs::PartFiles::Private,
+                                            part_files: yt_dlp_rs::PartFiles::NoPart {
+                                                resume: false,
+                                            },
                                             retries,
                                             fragment_retries,
                                             retry_sleep,
@@ -6307,12 +6355,34 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                             merge_files: yt_dlp_rs::MergeFiles::Private,
                                             overwrite: false,
                                         },
-                                        &mut progress,
-                                    )?;
-                                    let mut media = std::fs::File::open(&target)?;
-                                    let mut out = io::stdout().lock();
-                                    io::copy(&mut media, &mut out)?;
-                                    out.flush()?;
+                                        |event: yt_dlp_rs::DownloadProgress| {
+                                            // A whole-file transfer's written bytes, or
+                                            // the fragments finished before the next one
+                                            // is requested (a fragment retry only
+                                            // truncates the one in flight).
+                                            let confirmed = match event.phase {
+                                                DownloadPhase::Downloading if !fragmented => {
+                                                    Some(Some(event.downloaded_bytes))
+                                                }
+                                                DownloadPhase::Requesting if fragmented => {
+                                                    Some(None)
+                                                }
+                                                _ => None,
+                                            };
+                                            if let Some(limit) = confirmed
+                                                && let Err(error) = piped.copy(limit)
+                                            {
+                                                failure = Some(error);
+                                                return std::ops::ControlFlow::Break(());
+                                            }
+                                            progress(event)
+                                        },
+                                    );
+                                    if let Some(error) = failure {
+                                        return Err(error.into());
+                                    }
+                                    result?;
+                                    piped.copy(None)?;
                                 }
                                 return Ok(());
                             }
@@ -6387,6 +6457,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         min_filesize,
                                         max_filesize,
                                         rate_limit,
+                                        throttled_rate,
                                         update_time: args.mtime,
                                         part_files,
                                         retries,
@@ -6454,6 +6525,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         min_filesize,
                                         max_filesize,
                                         rate_limit,
+                                        throttled_rate,
                                         update_time: args.mtime,
                                         part_files,
                                         retries,
@@ -6988,6 +7060,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     Ok(!failed)
 }
 
+/// The run-wide signal handler, installed once the inputs are known.
+static SIGNALS: std::sync::OnceLock<yt_dlp_rs::SignalInterrupt> = std::sync::OnceLock::new();
+
 /// Run `--parse-metadata`/`--replace-in-metadata` actions for `when`.
 fn run_metadata_parser(
     actions: &yt_dlp_rs::metadata_parser::MetadataActions,
@@ -7406,6 +7481,16 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
         (args.legacy_server_connect, "--legacy-server-connect"),
         (args.bidi_workaround, "--bidi-workaround"),
         (!args.plugin_dirs.is_empty(), "--plugin-dirs"),
+        // HTTP-scheme preferences of a few upstream extractors.
+        (args.prefer_insecure, "--prefer-insecure"),
+        // The EJS challenge solver is bundled (pinned), never downloaded.
+        (!args.remote_components.is_empty(), "--remote-components"),
+        // The `Ytdl-request-proxy` header of upstream's geo verification
+        // requests.
+        (
+            args.geo_verification_proxy.is_some(),
+            "--geo-verification-proxy",
+        ),
     ] {
         if given {
             warning!("WARNING: {what} is not supported natively and is ignored");
@@ -8771,8 +8856,11 @@ struct ProgressOptions {
 struct ProgressReporter<'a> {
     options: &'a ProgressOptions,
     active: Option<ActiveDownload>,
-    /// `info` and `progress.filename` for `--progress-template`.
-    info: serde_json::Value,
+    /// `{"info": ..., "progress": ...}` for `--progress-template` and console
+    /// titles, built once per download; each status replaces `progress`
+    /// (copying a large info dict per status would dominate fragmented
+    /// downloads).
+    dict: std::cell::RefCell<serde_json::Value>,
     filename: Option<String>,
 }
 
@@ -8799,7 +8887,7 @@ impl<'a> ProgressReporter<'a> {
         Self {
             options,
             active: None,
-            info: serde_json::Value::Object(Default::default()),
+            dict: std::cell::RefCell::new(serde_json::json!({"info": {}, "progress": null})),
             filename: None,
         }
     }
@@ -8807,7 +8895,10 @@ impl<'a> ProgressReporter<'a> {
     /// The video and file a `--progress-template` describes.
     fn for_download(mut self, info: &yt_dlp_rs::VideoInfo, filename: &std::path::Path) -> Self {
         if self.options.template.is_some() || console_title() {
-            self.info = yt_dlp_rs::info_value(info).unwrap_or_default();
+            self.dict = std::cell::RefCell::new(serde_json::json!({
+                "info": yt_dlp_rs::info_value(info).unwrap_or_default(),
+                "progress": null,
+            }));
             self.filename = Some(filename.to_string_lossy().into_owned());
         }
         self
@@ -8818,7 +8909,8 @@ impl<'a> ProgressReporter<'a> {
     fn render(&self, progress: serde_json::Value) -> String {
         match &self.options.template {
             Some(template) => {
-                let dict = serde_json::json!({"info": self.info, "progress": progress});
+                let mut dict = self.dict.borrow_mut();
+                dict["progress"] = progress;
                 yt_dlp_rs::output::evaluate_dict_template(
                     template,
                     &dict,
@@ -8841,13 +8933,16 @@ impl<'a> ProgressReporter<'a> {
         };
         let finished = progress["status"] == "finished";
         let percent = progress["_percent"].as_f64();
-        let dict = serde_json::json!({"info": self.info, "progress": progress});
-        let message = yt_dlp_rs::output::evaluate_dict_template(
-            console.download_title.as_deref().unwrap_or(DEFAULT_TITLE),
-            &dict,
-            &TemplateOptions::default(),
-        )
-        .unwrap_or_default();
+        let message = {
+            let mut dict = self.dict.borrow_mut();
+            dict["progress"] = progress;
+            yt_dlp_rs::output::evaluate_dict_template(
+                console.download_title.as_deref().unwrap_or(DEFAULT_TITLE),
+                &dict,
+                &TemplateOptions::default(),
+            )
+            .unwrap_or_default()
+        };
         let state = if finished || percent.is_none() {
             PROGRESS_INDETERMINATE
         } else {
@@ -9091,6 +9186,54 @@ enum ErrorMode {
     Ignore,
     OnlyDownload,
     Abort,
+}
+
+/// `-o -`: a downloading file's confirmed bytes copied to stdout.
+struct StdoutPipe {
+    path: PathBuf,
+    file: Option<std::fs::File>,
+    copied: u64,
+}
+
+impl StdoutPipe {
+    fn new(path: &Path) -> Self {
+        Self {
+            path: path.to_owned(),
+            file: None,
+            copied: 0,
+        }
+    }
+
+    /// Copy the file's bytes up to `limit` (else its end) that stdout lacks.
+    fn copy(&mut self, limit: Option<u64>) -> io::Result<()> {
+        use std::io::{Read, Seek, SeekFrom};
+        if limit.is_some_and(|limit| limit < self.copied) {
+            return Err(io::Error::other(
+                "the download restarted after its data was written to stdout",
+            ));
+        }
+        if self.file.is_none() {
+            match std::fs::File::open(&self.path) {
+                Ok(file) => self.file = Some(file),
+                Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(()),
+                Err(error) => return Err(error),
+            }
+        }
+        let Some(file) = self.file.as_mut() else {
+            return Ok(());
+        };
+        let end = file.metadata()?.len();
+        let end = limit.map_or(end, |limit| limit.min(end));
+        if end <= self.copied {
+            return Ok(());
+        }
+        file.seek(SeekFrom::Start(self.copied))?;
+        let mut out = io::stdout().lock();
+        io::copy(&mut file.take(end - self.copied), &mut out)?;
+        out.flush()?;
+        self.copied = end;
+        Ok(())
+    }
 }
 
 /// Upstream `DownloadCancelled` reasons; uncaught ones exit with 101.
@@ -9918,7 +10061,14 @@ fn main() -> std::process::ExitCode {
 }
 
 fn cli() -> std::process::ExitCode {
-    match run() {
+    let result = run();
+    // Upstream `main`: `sys.exit('\nERROR: Interrupted by user')`, whatever
+    // the interrupted work returned.
+    if yt_dlp_rs::SignalInterrupt::interrupted() {
+        eprintln!("\nERROR: Interrupted by user");
+        return std::process::ExitCode::FAILURE;
+    }
+    match result {
         Ok(true) => std::process::ExitCode::SUCCESS,
         Ok(false) => std::process::ExitCode::FAILURE,
         Err(error) if error.is::<Cancel>() => std::process::ExitCode::from(101),

@@ -16,30 +16,31 @@ use url::Url;
 
 pub struct Dailymotion;
 
-const NAME: &str = "dailymotion";
+pub(crate) const NAME: &str = "dailymotion";
 const MACHINE: &str = "dailymotion";
-const KEY: &str = "Dailymotion";
+pub(crate) const KEY: &str = "Dailymotion";
 const COMMON_MEDIA_FIELDS: &str =
     "description\n      geoblockedCountries {\n        allowed\n      }\n      xid";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
-        r"(?i)^(?:https?:)?//(?:dai\.ly/|(?:(?:(?:www|touch|geo)\.)?dailymotion\.[a-z]{2,3}|(?:www\.)?lequipe\.fr)/(?:swf/|(?:(?:crawler|embed|swf)/)?video/|player(?:/[\da-z]+)?\.html\?(?:video|(?P<is_playlist>playlist))=))(?P<id>[^/?_&#]+)(?:[\w-]*\?playlist=(?P<playlist_id>x[0-9a-z]+))?",
-    )
-    .unwrap()
-});
+/// `_VALID_URL` without its `(?ix)` flags. `swf/(?!video)` is tried after
+/// the `video/` alternative (the only one overlapping it) and refused apart.
+const URL_RE: &str = r"(?:https?:)?//(?:dai\.ly/|(?:(?:(?:www|touch|geo)\.)?dailymotion\.[a-z]{2,3}|(?:www\.)?lequipe\.fr)/(?:(?:(?:crawler|embed|swf)/)?video/|(?P<swf>swf/)|player(?:/[\da-z]+)?\.html\?(?:video|(?P<is_playlist>playlist))=))(?P<id>[^/?_&#]+)(?:[\w-]*\?playlist=(?P<playlist_id>x[0-9a-z]+))?";
+static VALID_URL: LazyLock<Regex> =
+    LazyLock::new(|| crate::extractor::url_regex(&format!("(?i)^{URL_RE}")).unwrap());
 static H264: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"/H264-(\d+)x(\d+)(?:-(60)/)?").unwrap());
 
-/// `_match_valid_url` (`swf/(?!video)` checked apart).
+/// The `swf/(?!video)` lookahead: a `swf/` match whose ID starts with
+/// `video` fails.
+fn swf_video(found: &regex::Captures) -> bool {
+    found.name("swf").is_some() && found["id"].to_lowercase().starts_with("video")
+}
+
+/// `_match_valid_url`.
 fn match_url(url: &str) -> Option<(String, bool, Option<String>)> {
-    let found = VALID_URL.captures(url)?;
-    let id = found["id"].to_owned();
-    if url.contains("/swf/") && !url.contains("/swf/video/") && id.eq_ignore_ascii_case("video") {
-        return None;
-    }
+    let found = VALID_URL.captures(url).filter(|found| !swf_video(found))?;
     Some((
-        id,
+        found["id"].to_owned(),
         found.name("is_playlist").is_some(),
         found.name("playlist_id").map(|id| id.as_str().to_owned()),
     ))
@@ -48,6 +49,82 @@ fn match_url(url: &str) -> Option<(String, bool, Option<String>)> {
 /// `DailymotionIE.suitable`.
 pub fn suitable(url: &str) -> bool {
     match_url(url).is_some()
+}
+
+/// `get_temp_id`.
+pub(crate) fn temp_id(url: &str) -> Option<String> {
+    match_url(url).map(|(id, _, _)| id)
+}
+
+/// `_EMBED_REGEX`: `_VALID_URL` in an embed/iframe `src` or the
+/// `dmcloudUrlEmissionSelect` input's value.
+static EMBED: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(&format!(
+        r#"(?i)<(?:(?:embed|iframe)[^>]+?src=|input[^>]+id=['"]dmcloudUrlEmissionSelect['"][^>]+value=)["'](?P<url>{URL_RE})"#
+    ))
+    .unwrap()
+});
+static DM_PLAYER: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        r#"(?s)DM\.player\([^,]+,\s*\{.*?video['"]?\s*:\s*["']?(?P<id>[0-9a-zA-Z]+).+?\}\s*\);"#,
+    )
+    .unwrap()
+});
+/// A `<script src=//*.dailymotion.com/player/...>` tag (`(?:(?!\1).)+\1`
+/// as one alternative per quote).
+static PLAYER_SCRIPT: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r#"(?s)<script [^>]*\bsrc=(?:"(?:https?:)?//[\w-]+\.dailymotion\.com/player/[^"]+"|'(?:https?:)?//[\w-]+\.dailymotion\.com/player/[^']+')[^>]*>"#)
+        .unwrap()
+});
+
+/// `DailymotionIE._extract_embed_urls` under `orderedSet`: the
+/// `_EMBED_REGEX` embeds, `DM.player(...)` video IDs and player scripts'
+/// `data-video`/`data-playlist` (these two unchecked by `suitable`).
+pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
+    let mut found = Vec::new();
+    for captures in EMBED.captures_iter(webpage) {
+        if swf_video(&captures) {
+            continue;
+        }
+        if let Ok(embed) = url.join(&crate::html::unescape_html(&captures["url"]))
+            && suitable(embed.as_str())
+        {
+            super::push_unique(&mut found, embed);
+        }
+    }
+    for captures in DM_PLAYER.captures_iter(webpage) {
+        if let Ok(embed) = Url::parse(&format!(
+            "https://www.dailymotion.com/embed/video/{}",
+            &captures["id"]
+        )) {
+            super::push_unique(&mut found, embed);
+        }
+    }
+    for tag in PLAYER_SCRIPT.find_iter(webpage) {
+        let attrs = crate::html_elements::extract_attributes(tag.as_str());
+        let text = |name: &str| {
+            attrs
+                .get(name)
+                .and_then(Value::as_str)
+                .filter(|value| !value.is_empty())
+        };
+        let Some(player) = text("src").and_then(super::json_ld::url_or_none) else {
+            continue;
+        };
+        let player = super::proto_relative(&player.replace(".js", ".html"));
+        let query = if let Some(video) = text("data-video") {
+            format!("video={video}")
+        } else if let Some(playlist) = text("data-playlist") {
+            format!("playlist={playlist}")
+        } else {
+            continue;
+        };
+        if let Ok(mut embed) = Url::parse(&player) {
+            embed.set_query(Some(&query));
+            super::push_unique(&mut found, embed);
+        }
+    }
+    found
 }
 
 fn int(value: Option<&Value>) -> Option<i64> {
@@ -666,8 +743,8 @@ pub struct DailymotionPlaylist;
 pub struct DailymotionUser;
 pub struct DailymotionSearch;
 
-const PLAYLIST_NAME: &str = "dailymotion:playlist";
-const PLAYLIST_KEY: &str = "DailymotionPlaylist";
+pub(crate) const PLAYLIST_NAME: &str = "dailymotion:playlist";
+pub(crate) const PLAYLIST_KEY: &str = "DailymotionPlaylist";
 const USER_NAME: &str = "dailymotion:user";
 const USER_KEY: &str = "DailymotionUser";
 const SEARCH_NAME: &str = "dailymotion:search";
@@ -697,6 +774,40 @@ static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
 /// `DailymotionPlaylistIE.suitable`.
 pub fn playlist_suitable(url: &str) -> bool {
     PLAYLIST_URL.is_match(url)
+}
+
+/// `DailymotionPlaylistIE`'s `get_temp_id`.
+pub(crate) fn playlist_temp_id(url: &str) -> Option<String> {
+    PLAYLIST_URL
+        .captures(url)
+        .map(|found| found["id"].to_owned())
+}
+
+/// `DailymotionPlaylistIE._extract_embed_urls` under `orderedSet`: the
+/// playlists of jukebox widget iframes (`//dailymotion.com/playlist/ID`,
+/// with processing's `https:`).
+pub(crate) fn playlist_embed_urls(_url: &Url, webpage: &str) -> Vec<Url> {
+    static JUKEBOX: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(r#"<iframe[^>]+?src=(?:"(?P<url>(?:https?:)?//(?:www\.)?dailymotion\.[a-z]{2,3}/widget/jukebox\?.+?)"|'(?P<url2>(?:https?:)?//(?:www\.)?dailymotion\.[a-z]{2,3}/widget/jukebox\?.+?)')"#)
+            .unwrap()
+    });
+    static LIST: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"list\[\]=/playlist/([^/]+)/").unwrap());
+    let mut found = Vec::new();
+    for captures in JUKEBOX.captures_iter(webpage) {
+        let Some(widget) = captures.name("url").or_else(|| captures.name("url2")) else {
+            continue;
+        };
+        for playlist in LIST.captures_iter(&crate::html::unescape_html(widget.as_str())) {
+            if let Ok(embed) = Url::parse(&format!(
+                "https://dailymotion.com/playlist/{}",
+                &playlist[1]
+            )) {
+                super::push_unique(&mut found, embed);
+            }
+        }
+    }
+    found
 }
 
 /// `DailymotionSearchIE.suitable`.
@@ -1058,6 +1169,22 @@ paged_extractor!(DailymotionUser, USER_NAME, USER_KEY, user_id);
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn swf_urls_follow_upstream_lookahead() {
+        let id = |url: &str| match_url(url).map(|(id, _, _)| id);
+        assert_eq!(
+            id("https://www.dailymotion.com/swf/video/x3n92nf").as_deref(),
+            Some("x3n92nf")
+        );
+        assert_eq!(
+            id("https://www.dailymotion.com/swf/x3ss1m_funny-magic-trick-barry-and-stuart_fun")
+                .as_deref(),
+            Some("x3ss1m")
+        );
+        assert_eq!(id("https://www.dailymotion.com/swf/videoabc"), None);
+        assert_eq!(id("https://www.dailymotion.com/swf/VIDEO"), None);
+    }
 
     #[test]
     fn playlist_urls_follow_upstream_valid_urls() {

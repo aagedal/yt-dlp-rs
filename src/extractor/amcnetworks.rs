@@ -14,7 +14,7 @@ pub struct AmcNetworks;
 const NAME: &str = "AMCNetworks";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?(?:amc|bbcamerica|ifc|(?:we|sundance)tv)\.com/(?P<id>(?:movies|shows(?:/[^/?#]+)+)/[^/?#&]+)",
     )
     .unwrap()

@@ -15,8 +15,9 @@ pub struct Megaphone;
 pub(crate) const NAME: &str = "megaphone.fm";
 pub(crate) const KEY: &str = "Megaphone";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://player\.megaphone\.fm/(?P<id>[A-Z0-9]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://player\.megaphone\.fm/(?P<id>[A-Z0-9]+)").unwrap()
+});
 
 /// `_EMBED_REGEX`: the `_VALID_URL` prefix of an iframe's `src`.
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {

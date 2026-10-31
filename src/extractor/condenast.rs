@@ -41,7 +41,7 @@ const SITES: [&str; 19] = [
 ];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+    crate::extractor::url_regex(&format!(
         concat!(
             r"^https?://(?:video|www|player(?:-backend)?)\.(?:{sites})\.com/",
             r"(?:",

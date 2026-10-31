@@ -14,7 +14,10 @@ pub struct Telewebion;
 const NAME: &str = "Telewebion";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?telewebion\.ir/episode/(?P<id>(?:0x[a-fA-F\d]+|\d+))").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?telewebion\.ir/episode/(?P<id>(?:0x[a-fA-F\d]+|\d+))",
+    )
+    .unwrap()
 });
 
 /// `textwrap.dedent` of the episode query.

@@ -15,8 +15,10 @@ const NAME: &str = "tvaplus";
 const KEY: &str = "TVA";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?tvaplus\.ca/(?:[^/?#]+/)*[\w-]+-(?P<id>\d+)(?:$|[#?])")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?tvaplus\.ca/(?:[^/?#]+/)*[\w-]+-(?P<id>\d+)(?:$|[#?])",
+    )
+    .unwrap()
 });
 static SEASON: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"/s(?:ai|ea)son-(\d+)/").unwrap());
 

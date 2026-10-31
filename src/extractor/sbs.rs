@@ -19,7 +19,7 @@ pub(crate) const KEY: &str = "SBS";
 const PLAYER_API: &str = "https://www.sbs.com.au/api/v3";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?sbs\.com\.au/(?:ondemand(?:/video/(?:single/)?|/(?:movie|tv-program)/[^/]+/|/(?:tv|news)-series/(?:[^/]+/){3}|.*?\bplay=|/watch/)|news/(?:embeds/)?video/)(?P<id>[0-9]+)",
     )
     .unwrap()

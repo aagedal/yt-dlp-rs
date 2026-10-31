@@ -17,8 +17,9 @@ pub struct Telegraaf;
 
 const NAME: &str = "Telegraaf";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?telegraaf\.nl/video/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?telegraaf\.nl/video/(?P<id>\d+)").unwrap()
+});
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

@@ -15,7 +15,7 @@ pub struct BerufeTv;
 const NAME: &str = "BerufeTV";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?web\.arbeitsagentur\.de/berufetv/[^?#]+/film;filmId=(?P<id>[\w-]+)",
     )
     .unwrap()

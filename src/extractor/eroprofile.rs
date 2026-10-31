@@ -15,7 +15,8 @@ const NAME: &str = "EroProfile:album";
 const VIEW_IE: &str = "EroProfile";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?eroprofile\.com/m/videos/album/(?P<id>[^/]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?eroprofile\.com/m/videos/album/(?P<id>[^/]+)")
+        .unwrap()
 });
 static VIEW_LINK: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"href=".*?(/m/videos/view/[^"]+)""#).unwrap());

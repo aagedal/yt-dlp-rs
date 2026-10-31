@@ -211,7 +211,7 @@ pub(crate) fn download(
         .iter()
         .map(|_| {
             tempfile::Builder::new()
-                .prefix(".yt-dlp-rs-")
+                .prefix(&crate::scratch::prefix(".yt-dlp-rs-", parent))
                 .suffix(".part")
                 .tempfile_in(parent)
         })

@@ -18,7 +18,8 @@ pub struct RtvcKaltura;
 const NAME: &str = "RTVCKaltura";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://media\.rtvc\.gov\.co/kalturartvc/(?P<id>[\w-]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://media\.rtvc\.gov\.co/kalturartvc/(?P<id>[\w-]+)")
+        .unwrap()
 });
 /// `_extract_player_config`'s start pattern.
 static PLAYER_CONFIG: LazyLock<Regex> =

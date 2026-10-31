@@ -19,7 +19,7 @@ const NAME: &str = "OnDemandKorea";
 const DEVICE_ID: &str = "00000000-0000-4000-8000-000000000000";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"https?://(?:www\.)?ondemandkorea\.com/(?:en/)?player/vod/[a-z0-9-]+\?(?:[^#]+&)?contentId=(?P<id>\d+)",
     )
     .unwrap()

@@ -24,7 +24,10 @@ const FILE_SECRET: &str = "mSvL05GfEmeEmsEYfGCnVpEjYgTJraJN";
 const QUALITIES: [&str; 4] = ["preview", "360", "540", "Source"];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.|ecchi\.)?iwara\.tv/videos?/(?P<id>[a-zA-Z0-9]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.|ecchi\.)?iwara\.tv/videos?/(?P<id>[a-zA-Z0-9]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_valid_url` for the video URLs.

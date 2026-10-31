@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" type="static" mediaPresentationDuration="PT6S">
+<Period id="p0" duration="PT4S">
+<AdaptationSet mimeType="video/mp4" codecs="avc1.42001e" width="640" height="360">
+<SegmentTemplate timescale="1" duration="2" startNumber="1" initialization="p0/$RepresentationID$/init.mp4" media="p0/$RepresentationID$/$Number$.m4s"/>
+<Representation id="v0" bandwidth="400000"/></AdaptationSet>
+<AdaptationSet mimeType="audio/mp4" codecs="mp4a.40.2" lang="en">
+<SegmentTemplate timescale="1" duration="2" startNumber="1" initialization="p0/$RepresentationID$/init.mp4" media="p0/$RepresentationID$/$Number$.m4s"/>
+<Representation id="a0" bandwidth="128000" audioSamplingRate="48000"/></AdaptationSet>
+<AdaptationSet contentType="text" mimeType="text/vtt" lang="en"><Representation id="s0" bandwidth="1"><BaseURL>p0/en.vtt</BaseURL></Representation></AdaptationSet>
+</Period>
+<Period id="p1" duration="PT2S">
+<AdaptationSet mimeType="video/mp4" codecs="avc1.42001e" width="640" height="360">
+<SegmentTemplate timescale="1" duration="2" startNumber="1" initialization="p1/$RepresentationID$/init.mp4" media="p1/$RepresentationID$/$Number$.m4s"/>
+<Representation id="v1" bandwidth="400000"/></AdaptationSet>
+<AdaptationSet mimeType="audio/mp4" codecs="mp4a.40.2" lang="en">
+<SegmentTemplate timescale="1" duration="2" startNumber="1" initialization="p1/$RepresentationID$/init.mp4" media="p1/$RepresentationID$/$Number$.m4s"/>
+<Representation id="a1" bandwidth="128000" audioSamplingRate="48000"/></AdaptationSet>
+<AdaptationSet mimeType="audio/mp4" codecs="mp4a.40.2" lang="de">
+<SegmentTemplate timescale="1" duration="2" startNumber="1" initialization="p1/$RepresentationID$/init.mp4" media="p1/$RepresentationID$/$Number$.m4s"/>
+<Representation id="a1de" bandwidth="128000" audioSamplingRate="48000"/></AdaptationSet>
+<AdaptationSet contentType="text" mimeType="text/vtt" lang="en"><Representation id="s1" bandwidth="1"><BaseURL>p1/en.vtt</BaseURL></Representation></AdaptationSet>
+</Period>
+</MPD>

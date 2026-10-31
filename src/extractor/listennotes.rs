@@ -14,7 +14,10 @@ pub struct ListenNotes;
 const NAME: &str = "ListenNotes";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?listennotes\.com/podcasts/[^/]+/[^/]+-(?P<id>.+)/").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?listennotes\.com/podcasts/[^/]+/[^/]+-(?P<id>.+)/",
+    )
+    .unwrap()
 });
 static CONTENT: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<script id="original-content"[^>]+\btype="application/json">"#).unwrap()

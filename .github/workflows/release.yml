@@ -13,17 +13,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Linux and macOS binaries include browser impersonation (wreq on
+        # BoringSSL), which sites such as Dailymotion's CDN require.
         include:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
+            features: --features impersonate
           - target: aarch64-unknown-linux-gnu
             os: ubuntu-24.04-arm
+            features: --features impersonate
           - target: aarch64-apple-darwin
             os: macos-latest
+            features: --features impersonate
           - target: x86_64-apple-darwin
             os: macos-latest  # cross-builds x86_64 (macos-13 runners are retired)
+            features: --features impersonate
           - target: x86_64-pc-windows-msvc
             os: windows-latest
+            features: ''
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -33,7 +40,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           key: release-${{ matrix.target }}
-      - run: cargo build --locked --release --target ${{ matrix.target }}
+      - run: cargo build --locked --release --target ${{ matrix.target }} ${{ matrix.features }}
       - name: Package
         shell: bash
         run: |

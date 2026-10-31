@@ -15,7 +15,10 @@ pub struct MedalTv;
 const NAME: &str = "MedalTV";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?medal\.tv/games/[^/?#&]+/clips/(?P<id>[^/?#&]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?medal\.tv/games/[^/?#&]+/clips/(?P<id>[^/?#&]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

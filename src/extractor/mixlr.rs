@@ -19,7 +19,10 @@ const NAME: &str = "Mixlr";
 const RECORDING_NAME: &str = "MixlrRecoring";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?(?P<username>[\w-]+)\.mixlr\.com/events/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?(?P<username>[\w-]+)\.mixlr\.com/events/(?P<id>\d+)",
+    )
+    .unwrap()
 });
 static RECORDING_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?(?P<username>[\w-]+)\.mixlr\.com/recordings/(?P<id>\d+)")

@@ -14,7 +14,8 @@ const NAME: &str = "mir24.tv";
 const KEY: &str = "Mir24Tv";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?mir24\.tv/news/(?P<id>[0-9]+)/[^/?#]+").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?mir24\.tv/news/(?P<id>[0-9]+)/[^/?#]+")
+        .unwrap()
 });
 static IFRAME: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<iframe\b[^>]+\bsrc=["'](https?://mir24\.tv/players/[^"']+)"#).unwrap()

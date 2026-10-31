@@ -13,7 +13,7 @@ pub struct ScreenRec;
 const NAME: &str = "ScreenRec";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?screenrec\.com/share/(?P<id>\w{10})").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?screenrec\.com/share/(?P<id>\w{10})").unwrap()
 });
 /// `customUrl\s*:\s*(["\'])(?P<url>(?:(?!\1).)+)\1` as one alternative per
 /// quote.

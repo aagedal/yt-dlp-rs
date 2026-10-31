@@ -14,7 +14,8 @@ pub struct BreitBart;
 const NAME: &str = "BreitBart";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?breitbart\.com/videos/v/(?P<id>[^/?#]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?breitbart\.com/videos/v/(?P<id>[^/?#]+)")
+        .unwrap()
 });
 
 /// `_match_id`.

@@ -20,7 +20,7 @@ const SERVICE_URL: &str = "http://cdnapi.kaltura.com";
 const SERVICE_BASE: &str = "/api_v3/service/multirequest";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^(?:kaltura:(?P<partner_id>\w+):(?P<id>\w+)(?::(?P<player_type>\w+))?|https?://(?:(?:www|cdnapi(?:sec)?)\.)?kaltura\.com(?::\d+)?/(?:(?:index\.php/(?:kwidget|extwidget/preview)|html5/html5lib/[^/]+/mwEmbedFrame\.php))(?:/(?P<path>[^?]+))?(?:\?(?P<query>.*))?)",
     )
     .unwrap()

@@ -13,7 +13,7 @@ pub struct Filmweb;
 const NAME: &str = "Filmweb";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?filmweb\.no/(?P<type>trailere|filmnytt)/article(?P<id>\d+)\.ece",
     )
     .unwrap()

@@ -13,7 +13,7 @@ pub struct Screen9;
 const NAME: &str = "Screen9";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:\w+\.screen9\.(?:tv|com)|play\.su\.se)/(?:embed|media)/(?P<id>[^?#/]+)",
     )
     .unwrap()

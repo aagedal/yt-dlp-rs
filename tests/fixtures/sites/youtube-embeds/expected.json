@@ -50,6 +50,24 @@
     "WARNING: [generic] Falling back on generic information extractor"
    ],
    "files": {}
+  },
+  {
+   "url": "https://blog.example.test/mixed",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(url)s|%(ie_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|BaW_jenozKc|https://www.youtube.com/embed/BaW_jenozKc|Youtube",
+    "2|a6ndpko1wg|https://fast.wistia.net/embed/iframe/a6ndpko1wg|Wistia",
+    "3|5vd7p4bct5|wistia:5vd7p4bct5|Wistia"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
   }
  ]
 }

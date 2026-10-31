@@ -39,7 +39,7 @@ const SERIES_KEY: &str = "DRTVSeries";
 const SERIES_API: &str = "https://production-cdn.dr-massive.com/api/page?device=web_browser&item_detail_expand=all&lang=da&max_list_prefetch=3&path=";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:www\.)?dr\.dk/tv/se(?:/ondemand)?/(?:[^/?#]+/)*|(?:www\.)?(?:dr\.dk|dr-massive\.com)/drtv/(?:se|episode|program)/)(?P<id>[\da-z_-]+)",
     )
     .unwrap()

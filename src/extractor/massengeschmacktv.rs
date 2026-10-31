@@ -16,7 +16,8 @@ const NAME: &str = "massengeschmack.tv";
 const KEY: &str = "MassengeschmackTV";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?massengeschmack\.tv/play/(?P<id>[^?&#]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?massengeschmack\.tv/play/(?P<id>[^?&#]+)")
+        .unwrap()
 });
 
 static MEDIA: LazyLock<Regex> =

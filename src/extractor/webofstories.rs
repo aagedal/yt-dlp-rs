@@ -20,7 +20,10 @@ const GREAT_LIFE_STREAMER: &str = "rtmp://eu-cdn1.webofstories.com/cfx/st/";
 const USER_STREAMER: &str = "rtmp://eu-users.webofstories.com/cfx/st/";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?webofstories\.com/play/(?:[^/]+/)?(?P<id>[0-9]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?webofstories\.com/play/(?:[^/]+/)?(?P<id>[0-9]+)",
+    )
+    .unwrap()
 });
 static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?webofstories\.com/playAll/(?P<id>[^/]+)").unwrap()

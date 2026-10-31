@@ -12,8 +12,9 @@ pub struct Erocast;
 
 const NAME: &str = "Erocast";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?erocast\.me/track/(?P<id>[0-9]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?erocast\.me/track/(?P<id>[0-9]+)").unwrap()
+});
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

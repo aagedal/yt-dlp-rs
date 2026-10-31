@@ -14,8 +14,10 @@ pub struct NineNews;
 const NAME: &str = "9News";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?9news\.com\.au/(?:[\w-]+/){2,3}(?P<id>[\w-]+)/?(?:$|[?#])")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?9news\.com\.au/(?:[\w-]+/){2,3}(?P<id>[\w-]+)/?(?:$|[?#])",
+    )
+    .unwrap()
 });
 static INITIAL_STATE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"var\s+__INITIAL_STATE__\s*=\s*").unwrap());

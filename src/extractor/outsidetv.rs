@@ -13,7 +13,7 @@ const NAME: &str = "OutsideTV";
 const KEY: &str = "OutsideTV";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?outsidetv\.com/(?:[^/]+/)*?play/[a-zA-Z0-9]{8}/\d+/\d+/(?P<id>[a-zA-Z0-9]{8})").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?outsidetv\.com/(?:[^/]+/)*?play/[a-zA-Z0-9]{8}/\d+/\d+/(?P<id>[a-zA-Z0-9]{8})").unwrap()
 });
 
 /// `_match_id`.

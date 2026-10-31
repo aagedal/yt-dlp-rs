@@ -15,7 +15,7 @@ pub struct PhilharmonieDeParis;
 const NAME: &str = "PhilharmonieDeParis";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:live\.philharmoniedeparis\.fr/(?:[Cc]oncert/|embed(?:app)?/|misc/Playlist\.ashx\?id=)|pad\.philharmoniedeparis\.fr/(?:doc/CIMU/|player\.aspx\?id=)|philharmoniedeparis\.fr/fr/live/concert/|otoplayer\.philharmoniedeparis\.fr/fr/embed/)(?P<id>\d+)",
     )
     .unwrap()

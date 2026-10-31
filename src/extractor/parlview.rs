@@ -13,7 +13,7 @@ pub struct Parlview;
 const NAME: &str = "Parlview";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?aph\.gov\.au/News_and_Events/Watch_Read_Listen/ParlView/video/(?P<id>[^/?#]+)",
     )
     .unwrap()

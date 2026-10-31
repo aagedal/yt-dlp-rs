@@ -14,7 +14,10 @@ pub struct Tvo;
 const NAME: &str = "TVO";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?tvo\.org/video(?:/documentaries)?/(?P<id>[\w-]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?tvo\.org/video(?:/documentaries)?/(?P<id>[\w-]+)",
+    )
+    .unwrap()
 });
 
 const GRAPHQL_URL: &str = "https://hmy0rc1bo2.execute-api.ca-central-1.amazonaws.com/graphql";

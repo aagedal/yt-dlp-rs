@@ -26,7 +26,8 @@ static GO_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     ]
 });
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?vtv\.vn/video/[\w-]*?(?P<id>\d+)\.htm").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?vtv\.vn/video/[\w-]*?(?P<id>\d+)\.htm")
+        .unwrap()
 });
 static M3U8: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?:var\s+link\s*=\s*|addPlayer\()["'](https://[^"']+/index\.m3u8)["']"#).unwrap()

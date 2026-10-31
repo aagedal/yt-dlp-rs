@@ -12,8 +12,9 @@ pub struct Glide;
 
 const NAME: &str = "Glide";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://share\.glide\.me/(?P<id>[A-Za-z0-9\-=_+]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://share\.glide\.me/(?P<id>[A-Za-z0-9\-=_+]+)").unwrap()
+});
 
 static SOURCE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<source[^>]+src=(?:"(?P<a>.+?)"|'(?P<b>.+?)')"#).unwrap());

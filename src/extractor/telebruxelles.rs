@@ -15,7 +15,10 @@ pub struct TeleBruxelles;
 const NAME: &str = "TeleBruxelles";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?(?:telebruxelles|bx1)\.be/(?:[^/]+/)*(?P<id>[^/#?]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?(?:telebruxelles|bx1)\.be/(?:[^/]+/)*(?P<id>[^/#?]+)",
+    )
+    .unwrap()
 });
 static ARTICLE_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<article[^>]+\bid=["']post-(\d+)"#).unwrap());

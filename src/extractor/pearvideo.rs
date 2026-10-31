@@ -14,8 +14,9 @@ pub struct PearVideo;
 const NAME: &str = "PearVideo";
 const QUALITIES: [&str; 7] = ["ldflv", "ld", "sdflv", "sd", "hdflv", "hd", "src"];
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?pearvideo\.com/video_(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?pearvideo\.com/video_(?P<id>\d+)").unwrap()
+});
 // `(?P<id>[a-zA-Z]+)Url\s*=\s*(["\'])(?P<url>(?:https?:)?//.+?)\2`.
 static FORMAT_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

@@ -13,8 +13,9 @@ pub struct NzOnScreen;
 
 const NAME: &str = "NZOnScreen";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://www\.nzonscreen\.com/title/(?P<id>[^/?#]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://www\.nzonscreen\.com/title/(?P<id>[^/?#]+)").unwrap()
+});
 static CONFIG: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"data-video-config='([^']+)'").unwrap());
 static TITLE: LazyLock<Regex> =

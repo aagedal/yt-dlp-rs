@@ -20,7 +20,7 @@ pub(crate) const NAME: &str = "brightcove:new";
 pub(crate) const KEY: &str = "BrightcoveNew";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://players\.brightcove\.net/(?P<account_id>\d+)/(?P<player_id>[^/]+)_(?P<embed>[^/]+)/index\.html\?.*(?P<content_type>video|playlist)Id=(?P<video_id>\d+|ref:[^&]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://players\.brightcove\.net/(?P<account_id>\d+)/(?P<player_id>[^/]+)_(?P<embed>[^/]+)/index\.html\?.*(?P<content_type>video|playlist)Id=(?P<video_id>\d+|ref:[^&]+)").unwrap()
 });
 
 /// `_match_valid_url`.

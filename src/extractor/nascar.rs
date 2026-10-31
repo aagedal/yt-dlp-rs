@@ -15,7 +15,8 @@ pub struct NascarClassics;
 const NAME: &str = "NascarClassics";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?classics\.nascar\.com/video/(?P<id>[\w~-]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?classics\.nascar\.com/video/(?P<id>[\w~-]+)")
+        .unwrap()
 });
 
 /// `_match_id`.

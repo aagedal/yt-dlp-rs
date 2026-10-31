@@ -808,7 +808,7 @@ fn download_concurrent(
                     };
                     let result = (|| {
                         let mut file = tempfile::Builder::new()
-                            .prefix(".yt-dlp-rs-fragment-")
+                            .prefix(&crate::scratch::prefix(".yt-dlp-rs-fragment-", parent))
                             .tempfile_in(parent)?;
                         let mut stored = 0;
                         let outcome = fetch_with_retries(
@@ -834,6 +834,15 @@ fn download_concurrent(
             });
         }
         drop(sender);
+        // Any early return (a failed append) stops the workers too, instead
+        // of leaving them to fetch every remaining fragment.
+        struct StopWorkers<'a>(&'a AtomicBool);
+        impl Drop for StopWorkers<'_> {
+            fn drop(&mut self) {
+                self.0.store(true, Ordering::Relaxed);
+            }
+        }
+        let _stop = StopWorkers(&cancelled);
         // Assemble in order while reporting the in-flight total.
         let mut finished: HashMap<usize, Option<(tempfile::NamedTempFile, Option<String>)>> =
             HashMap::new();

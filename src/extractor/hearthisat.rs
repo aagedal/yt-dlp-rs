@@ -14,7 +14,10 @@ pub struct HearThisAt;
 const NAME: &str = "HearThisAt";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?hearthis\.at/(?P<artist>[^/?#]+)/(?P<title>[\w.-]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?hearthis\.at/(?P<artist>[^/?#]+)/(?P<title>[\w.-]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_valid_url`.

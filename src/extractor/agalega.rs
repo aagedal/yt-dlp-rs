@@ -17,7 +17,10 @@ const KEY: &str = "AGalega";
 const TOKEN_URL: &str = "https://www.agalega.gal/api/fetch-api/jwt/token";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?agalega\.gal/videos/(?:detail/)?(?P<id>[0-9]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?agalega\.gal/videos/(?:detail/)?(?P<id>[0-9]+)",
+    )
+    .unwrap()
 });
 
 /// `AGalegaBaseIE._access_token`: shared by every extraction of the run.

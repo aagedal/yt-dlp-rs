@@ -15,7 +15,8 @@ pub struct TrtWorld;
 const NAME: &str = "TrtWorld";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://www\.trtworld\.com/video/[\w-]+/[\w-]+-(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://www\.trtworld\.com/video/[\w-]+/[\w-]+-(?P<id>\d+)")
+        .unwrap()
 });
 
 /// `_match_id`.

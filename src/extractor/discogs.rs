@@ -14,7 +14,10 @@ pub struct DiscogsReleasePlaylist;
 const NAME: &str = "DiscogsReleasePlaylist";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?discogs\.com/(?P<type>release|master)/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?discogs\.com/(?P<type>release|master)/(?P<id>\d+)",
+    )
+    .unwrap()
 });
 
 /// `_match_valid_url`.

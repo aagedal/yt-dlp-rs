@@ -17,7 +17,8 @@ const NAME: &str = "TV5MONDE";
 const KEY: &str = "TV5MondePlus";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?tv5monde\.com/tv/video/(?P<id>[^/?#]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?tv5monde\.com/tv/video/(?P<id>[^/?#]+)")
+        .unwrap()
 });
 static LOADER: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"(<[^>]+class="video_player_loader"[^>]+>)"#).unwrap());

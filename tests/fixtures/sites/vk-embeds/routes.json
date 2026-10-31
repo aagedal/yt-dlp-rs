@@ -1,0 +1,411 @@
+{
+ "routes": [
+  {
+   "url": "https://blog.example.test/vk-one",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>One VK embed</title></head><body><iframe src=\"https://vk.com/video_ext.php?oid=-1&amp;id=7&amp;hash=abc\" width=\"640\" height=\"360\" frameborder=\"0\" allowfullscreen></iframe></body></html>"
+  },
+  {
+   "url": "https://blog.example.test/vk-many",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>VK embeds</title></head><body>\n<iframe src='https://vkvideo.ru/video_ext.php?oid=-2&amp;id=5&amp;hd=2' width='640'></iframe>\n<iframe src=\"https://vk.ru/video_ext.php?oid=-1&id=8\"></iframe>\n<iframe src=\"https://vk.com/video_ext.php?list=abc\"></iframe>\n<iframe src=\"https://vk.com/video_ext.php?oid=-1&amp;id=7&amp;hash=abc\"></iframe>\n</body></html>"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "video=-77521_162222515"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [0, [\"\", \"<div class=\\\"mv_info\\\"><div class=\\\"mv_info_date\\\">2 Jun 2013</div><span class=\\\"mv_views_count\\\">12,345 views</span></div>\", null, {\"mvData\": {\"title\": \"Ignored title\", \"desc\": \"\", \"duration\": 229, \"likes\": 77, \"commcount\": \"5\"}, \"player\": {\"params\": [{\"md_title\": \"Elvis &amp; friends\", \"md_author\": \"Elvis Presley &amp; co\", \"author_id\": -77521, \"jpg\": \"https://sun9.userapi.test/thumb.jpg\", \"duration\": 230, \"date\": 1370000000, \"description\": \"<b>First</b> line<br>second\", \"live\": 0, \"url240\": \"https://vkvd.test/v-240.mp4\", \"url720\": \"https://vkvd.test/v-720.mp4\", \"cache480\": \"https://vkvd.test/c-480.mp4\", \"hls\": \"https://vkvd.test/video.m3u8\", \"hls_live_playback\": \"https://vkvd.test/live.m3u8\", \"dash_uni\": \"https://vkvd.test/uni.mpd\", \"rtmp\": \"rtmp://vkvd.test/live/stream\", \"jpg_big\": \"not a url\", \"subs\": [{\"lang\": \"ru\", \"title\": \"Russian.vtt\", \"url\": \"https://vkvd.test/ru.vtt\"}, {\"url\": \"https://vkvd.test/en.srt\"}], \"time_codes\": [{\"time\": 0, \"text\": \"Start &amp; intro\"}, {\"time\": \"x\", \"text\": \"bad\"}, {\"time\": 60, \"text\": \"Song\"}]}]}}]]}"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "video=1_3",
+    "list=ln-abc"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [\"8\", [\"\\\"<b>Access</b> denied\\\"\"]]}"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "video=1_4"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [\"3\", []]}"
+  },
+  {
+   "url": "https://vkvd.test/video.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1500000,RESOLUTION=1280x720,CODECS=\"avc1.64001f,mp4a.40.2\"\nhttps://vkvd.test/hls-720.m3u8\n"
+  },
+  {
+   "url": "https://vkvd.test/hls-720.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXTINF:10,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://vk.com/video_ext.php?oid=-1&id=7&hash=abc",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>\nvar playerParams = {\"params\": [{\"md_title\": \"Embedded clip\", \"url360\": \"https://vkvd.test/e-360.mp4\", \"date\": 1600000000}]};\n</script></html>"
+  },
+  {
+   "url": "https://vk.com/video_ext.php?oid=-1&id=8",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><!>This video is no longer available, because it has been deleted.</body></html>"
+  },
+  {
+   "url": "https://vk.com/video_ext.php?oid=-1&id=9",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div class=\"x\" id=\"video_ext_msg\"><b>Video</b> is private</div></body></html>"
+  },
+  {
+   "url": "https://vkvd.test/v-720.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-vk"
+  },
+  {
+   "url": "https://vk.com/wkview.php",
+   "request_body": [
+    "w=wall-23538238_35&"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [0, [\"\", \"<div class=\\\"wall_post_cont\\\"><div class=\\\"PostHeaderTitle__authorName\\\">Black &amp; Shadow</div><div id=\\\"wl_post_body\\\" class=\\\"wl_post_body\\\"><div class=\\\"wall_post_text\\\">Post <b>text</b><br>line two</div><div class=\\\"audio_row\\\" data-audio=\\\"{&quot;id&quot;: 111806521, &quot;owner_id&quot;: 135220665, &quot;url&quot;: &quot;https://cs1.vkuseraudio.test/a1.mp3&quot;, &quot;title&quot;: &quot;Слепое &amp;amp; Верование&quot;, &quot;artist&quot;: &quot;Black Shadow&quot;, &quot;duration&quot;: 370, &quot;coverUrl&quot;: &quot;https://sun.vkuseraudio.test/c1.jpg,https://sun.vkuseraudio.test/c2.jpg&quot;}\\\"></div><div class=\\\"audio_row\\\" data-audio=\\\"{&quot;id&quot;: 2, &quot;owner_id&quot;: 135220665, &quot;url&quot;: &quot;&quot;, &quot;title&quot;: &quot;Gone&quot;}\\\"></div><div class=\\\"audio_row\\\" data-audio=\\\"{&quot;id&quot;: 111802303, &quot;owner_id&quot;: 135220665, &quot;url&quot;: &quot;https://cs1.vkuseraudio.test/a2.mp3&quot;, &quot;title&quot;: &quot;Война&quot;, &quot;duration&quot;: &quot;423&quot;}\\\"></div><a href=\\\"/video-77521_162222515\\\" class=\\\"page_post_thumb_video\\\">video</a> <a href='/video-77521_162222515'>again</a></div></div>\"]]}"
+  },
+  {
+   "url": "https://vk.com/wkview.php",
+   "request_body": [
+    "w=wall-1_2&"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [0, [\"\", \"<div class=\\\"PostHeaderTitle__authorName\\\">Nobody</div><div class=\\\"wall_post_text\\\">no body</div>\"]]}"
+  },
+  {
+   "url": "https://vk.com/wkview.php",
+   "request_body": [
+    "w=wall-1_3&"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [\"8\", [\"\\\"<b>Post</b> was deleted\\\"\"]]}"
+  },
+  {
+   "url": "https://vk.com/wkview.php",
+   "request_body": [
+    "w=wall5_6&"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [0, [\"\", \"<div id=\\\"wl_post_body\\\"><p>Only text</p></div>\"]]}"
+  },
+  {
+   "url": "https://vk.com/video/@mobidevices",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>var newCur = {\"oid\": -17892518, \"section\": \"all\", \"name\": \"x\"};\nvar other = {};</script><h1 class=\"VideoInfoPanel__title\">Mobi&amp;Devices <b>videos</b></h1></html>"
+  },
+  {
+   "url": "https://vk.com/video/@mobidevices?section=uploaded",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>var newCur = {\"oid\": -17892518};</script></html>"
+  },
+  {
+   "url": "https://vkvideo.ru/playlist/-204353299_426",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><div class=\"VideoInfoPanel__title\">My list</div></html>"
+  },
+  {
+   "url": "https://vk.com/video/@nocursor",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>nothing</html>"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "act=load_videos_silent",
+    "offset=0&",
+    "oid=-17892518&",
+    "section=all&"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [0, [{\"all\": {\"count\": 2, \"total\": 3, \"list\": [[-17892518, 456239001, \"a\"], [-17892518, 456239002]]}}]]}"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "act=load_videos_silent",
+    "offset=2&",
+    "oid=-17892518&",
+    "section=all&"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [0, [{\"all\": {\"count\": 1, \"total\": 3, \"list\": [[-77521, 162222515]]}}]]}"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "act=load_videos_silent",
+    "offset=0&",
+    "oid=-17892518&",
+    "section=uploaded&"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [0, [{\"uploaded\": {\"count\": 1, \"total\": 3, \"list\": [[-77521, 162222515]]}}]]}"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "act=load_videos_silent",
+    "offset=1&",
+    "oid=-17892518&",
+    "section=uploaded&"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [0, [{\"uploaded\": {\"count\": 0, \"total\": 3, \"list\": []}}]]}"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "act=load_videos_silent",
+    "offset=0&",
+    "oid=-204353299&",
+    "section=playlist_426&"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [0, [{\"playlist_426\": {\"count\": 1, \"total\": 1, \"list\": [[-204353299, 456239017]]}}]]}"
+  },
+  {
+   "url": "https://api.vkplay.live/v1/blog/zitsmann/public_video_stream/record/f5e6e3b5-dc52-4d14-965d-0680dd2882da",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"record\": {\"id\": \"f5e6e3b5-dc52-4d14-965d-0680dd2882da\", \"title\": \"Atomic Heart (пробуем!)\", \"startTime\": 1683461378, \"previewUrl\": \"https://images.vkplay.test/public_video_stream/record/f5e6e3b5/preview\", \"count\": {\"views\": 1234, \"likes\": 56}, \"category\": {\"title\": \"Atomic Heart\"}, \"blog\": {\"owner\": {\"nick\": \"ZitsmanN\", \"id\": 13159830}}, \"duration\": 10608, \"isOnline\": false, \"data\": [{\"playerUrls\": [{\"type\": \"hls\", \"url\": \"https://vod.vkplay.test/rec/master.m3u8\"}, {\"type\": \"high\", \"url\": \"https://vod.vkplay.test/rec/high.mp4\"}, {\"type\": \"live_dash\", \"url\": \"https://vod.vkplay.test/rec/live.mpd\"}, {\"type\": \"tiny\", \"url\": \"\"}, {\"type\": \"\", \"url\": \"https://vod.vkplay.test/rec/none.mp4\"}, {\"type\": \"audio_only\", \"url\": \"https://vod.vkplay.test/rec/audio.mp4\"}]}]}}}"
+  },
+  {
+   "url": "https://vod.vkplay.test/rec/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=2500000,RESOLUTION=1280x720,CODECS=\"avc1.64001f,mp4a.40.2\"\nhttps://vod.vkplay.test/rec/720.m3u8\n"
+  },
+  {
+   "url": "https://api.vkplay.live/v1/blog/lebwa/public_video_stream/record/33a4e4ce-e3ef-49db-bb14-f006cc6fabc9",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"not_found\"}"
+  },
+  {
+   "url": "https://live.vkplay.ru/lebwa/record/33a4e4ce-e3ef-49db-bb14-f006cc6fabc9/records",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script id=\"initial-state\" type=\"application/json\">{\"record\": {\"currentRecord\": {\"data\": {\"id\": \"33a4e4ce-e3ef-49db-bb14-f006cc6fabc9\", \"title\": \"Old stream\", \"user\": {\"nick\": \"Lebwa\", \"id\": 77}, \"category\": {\"title\": \"\"}, \"count\": {\"views\": \"9\"}, \"data\": [{\"playerUrls\": [{\"type\": \"full_hd\", \"url\": \"https://vod.vkplay.test/lebwa/1080.mp4\"}]}]}}}}</script></html>"
+  },
+  {
+   "url": "https://api.vkplay.live/v1/blog/panterka/public_video_stream",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"f02c321e-427b-408d-b12f-ae34e53e0ea2\", \"title\": \"эскапизм\", \"startTime\": 1687209962, \"previewUrl\": \"https://images.vkplay.test/public_video_stream/12279401/preview\", \"count\": {\"views\": 100, \"likes\": 7, \"viewers\": 42}, \"category\": {\"title\": \"EVE Online\"}, \"user\": {\"nick\": \"Panterka\", \"id\": 12279401}, \"isOnline\": true, \"data\": [{\"playerUrls\": [{\"type\": \"live_hls\", \"url\": \"https://live.vkplay.test/panterka/live.m3u8\"}, {\"type\": \"live_playback_dash\", \"url\": \"https://live.vkplay.test/panterka/live.mpd\"}]}]}"
+  },
+  {
+   "url": "https://live.vkplay.test/panterka/live.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=3000000,RESOLUTION=1920x1080\nhttps://live.vkplay.test/panterka/1080.m3u8\n"
+  },
+  {
+   "url": "https://api.vkplay.live/v1/blog/bayda/public_video_stream",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"x\", \"isOnline\": false, \"data\": []}"
+  },
+  {
+   "url": "https://vod.vkplay.test/rec/720.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXTINF:10,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://live.vkplay.test/panterka/1080.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:2\n#EXT-X-MEDIA-SEQUENCE:100\n#EXTINF:2,\nlive100.ts\n"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "video=-5_100&"
+   ],
+   "request_headers": {
+    "Cookie": "solution429=ok"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [0, [\"\", \"<div class=\\\"mv_info\\\"></div>\", null, {\"mvData\": {\"title\": \"Ignored\", \"duration\": 10}, \"player\": {\"params\": [{\"md_title\": \"Challenged clip\", \"author_id\": -5, \"date\": 1370000000, \"url720\": \"https://vkvd.test/v-720.mp4\"}]}}]]}"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "video=-5_100&"
+   ],
+   "status": 302,
+   "headers": {
+    "Location": "https://vk.com/challenge.html?hash429=feedc0de"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vk.com/challenge.html?hash429=feedc0de",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script>\nvar salt = (function(){ var a = \"dGVzdA\", b = [], c = 0; for (var i = 0; i < a.length; i++) { c = (c + a.charCodeAt(i) * 31) ^ i; b.push(String.fromCharCode(97 + c % 26)); } return b.reverse().join(\"\") + c; })();\nvar hash = \"x\";\n</script></head><body>Checking your browser</body></html>"
+  },
+  {
+   "url": "https://vk.com/challenge.html?hash429=feedc0de&key=68da9aced45ae524988bd46eff9db4f5",
+   "headers": {
+    "Set-Cookie": "solution429=ok; Domain=.vk.com; Path=/",
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "ok"
+  },
+  {
+   "url": "https://vk.com/video_ext.php?oid=-5&id=101&hash=h",
+   "request_headers": {
+    "Cookie": "solution429=ok"
+   },
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>\nvar playerParams = {\"params\": [{\"md_title\": \"Embed after challenge\", \"url360\": \"https://vkvd.test/e-360.mp4\", \"date\": 1600000000}]};\n</script></html>"
+  },
+  {
+   "url": "https://vk.com/video_ext.php?oid=-5&id=101&hash=h",
+   "status": 302,
+   "headers": {
+    "Location": "https://vk.com/challenge.html?hash429=0ff1ce&hash429=ab12"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vk.com/challenge.html?hash429=0ff1ce&hash429=ab12",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script>\nvar salt = (function(){ var r = \"\"; var k = [3, 1, 4, 1, 5]; for (var i = 0; i < k.length; i++) { switch (k[i]) { case 1: r += \"a\"; break; case 3: r += \"b\"; break; default: r += String.fromCharCode(48 + k[i]); } } try { throw r } catch(e){ r = r + \"!\" } return r.split(\"\").reverse().join(\"\") + (1 << 5 ^ 7); })();\nvar hash = \"x\";\n</script></head><body>Checking your browser</body></html>"
+  },
+  {
+   "url": "https://vk.com/challenge.html?hash429=0ff1ce&hash429=ab12&key=7b0b1c632967b92876eef53d29808c2f",
+   "headers": {
+    "Set-Cookie": "solution429=ok; Domain=.vk.com; Path=/",
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "ok"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "video=-5_102&"
+   ],
+   "status": 302,
+   "headers": {
+    "Location": "https://vk.com/challenge.html?hash429=nosalt"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vk.com/challenge.html?hash429=nosalt",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>no salt</html>"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "video=-5_103&"
+   ],
+   "status": 302,
+   "headers": {
+    "Location": "https://vk.com/challenge.html?hash429=throws"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vk.com/challenge.html?hash429=throws",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script>\nvar salt = (function(){ throw \"nope\" })();\nvar hash = \"x\";\n</script></head><body>Checking your browser</body></html>"
+  },
+  {
+   "url": "https://vk.com/video_ext.php?oid=-5&id=104",
+   "status": 302,
+   "headers": {
+    "Location": "https://vk.com/challenge.html?other=1"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vk.com/challenge.html?other=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script>\nvar salt = (function(){ var a = \"dGVzdA\", b = [], c = 0; for (var i = 0; i < a.length; i++) { c = (c + a.charCodeAt(i) * 31) ^ i; b.push(String.fromCharCode(97 + c % 26)); } return b.reverse().join(\"\") + c; })();\nvar hash = \"x\";\n</script></head><body>Checking your browser</body></html>"
+  }
+ ]
+}

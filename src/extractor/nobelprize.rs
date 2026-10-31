@@ -13,7 +13,8 @@ pub struct NobelPrize;
 const NAME: &str = "NobelPrize";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:mediaplayer|www)\.)?nobelprize\.org/mediaplayer/").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:(?:mediaplayer|www)\.)?nobelprize\.org/mediaplayer/")
+        .unwrap()
 });
 
 static DESCRIPTION: LazyLock<Regex> = LazyLock::new(|| {

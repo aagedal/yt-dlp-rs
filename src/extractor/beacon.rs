@@ -16,8 +16,9 @@ const NAME: &str = "BeaconTv";
 const MEMBER_TIER: &str = "MemberTier:65b258d178f89be87b4dc0a4";
 const LOGIN_HINT: &str = "Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?beacon\.tv/content/(?P<id>[\w-]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?beacon\.tv/content/(?P<id>[\w-]+)").unwrap()
+});
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

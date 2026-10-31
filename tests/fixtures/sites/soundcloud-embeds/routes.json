@@ -1,0 +1,115 @@
+{
+ "routes": [
+  {
+   "url": "https://blog.example.test/sc-one",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>One SoundCloud embed</title></head><body><iframe width=\"100%\" height=\"166\" scrolling=\"no\" frameborder=\"no\" allow=\"autoplay\" src=\"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/123998367&amp;color=%23ff5500&amp;auto_play=false\"></iframe></body></html>"
+  },
+  {
+   "url": "https://blog.example.test/sc-secret",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Secret SoundCloud embed</title></head><body><iframe src='https://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F777&amp;secret_token=s-Secret1&amp;visual=true'></iframe></body></html>"
+  },
+  {
+   "url": "https://blog.example.test/sc-many",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>SoundCloud embeds</title></head><body>\n<iframe src=\"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/123998367&amp;color=%23ff5500\"></iframe>\n<iframe src=\"https://w.soundcloud.com/player/?visual=true&url=https%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F922213810&show_artwork=true\"></iframe>\n<iframe src=\"w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1\"></iframe>\n<iframe src=\"https://soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2\"></iframe>\n</body></html>"
+  },
+  {
+   "url": "https://soundcloud.com/",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "../soundcloud/home.html"
+  },
+  {
+   "url": "https://a-v2.sndcdn.com/assets/1-second.js",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body": "var x={client_id:\"aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB\",y:1};"
+  },
+  {
+   "url": "https://a-v2.sndcdn.com/assets/0-first.js",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body": "var nothing=1;"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/resolve?url=https%3A%2F%2Fsoundcloud.com%2Fethmusic%2Flostin-powers-she-so-heavy&client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "../soundcloud/track.json"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/tracks/123998367?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "../soundcloud/track.json"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/media/soundcloud:tracks:123998367/aaa/stream/hls?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"https://cf-hls-media.sndcdn.com/playlist/x.128.mp3/playlist.m3u8?Policy=1\"}"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/media/soundcloud:tracks:123998367/bbb/stream/progressive?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"https://cf-media.sndcdn.com/x.128.mp3?Policy=2\"}"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/media/soundcloud:tracks:123998367/ccc/stream/hls?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"https://cf-hls-media.sndcdn.com/playlist/y.aac/playlist.m3u8?Policy=3\"}"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/media/soundcloud:tracks:123998367/ddd/stream/hls?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"https://cf-hls-opus-media.sndcdn.com/playlist/z.64.opus/playlist.m3u8?Policy=4\"}"
+  },
+  {
+   "url": "https://i1.sndcdn.com/artworks-000071811455-l4hrpp-original.png",
+   "status": 404,
+   "headers": {},
+   "body": ""
+  },
+  {
+   "url": "https://cf-media.sndcdn.com/x.128.mp3?Policy=2",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3-fake-mp3-bytes"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/tracks/777?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 777, \"title\": \"Blocked here\", \"duration\": 1000, \"created_at\": \"2014-01-02T03:04:05Z\", \"permalink_url\": \"https://soundcloud.com/ethmusic/blocked\", \"policy\": \"BLOCK\", \"user\": {\"id\": 52984226, \"username\": \"ethmusic\", \"permalink\": \"ethmusic\"}, \"media\": {\"transcodings\": []}}"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/tracks/777?secret_token=s-Secret1&client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 777, \"title\": \"Blocked here\", \"duration\": 1000, \"created_at\": \"2014-01-02T03:04:05Z\", \"permalink_url\": \"https://soundcloud.com/ethmusic/blocked\", \"policy\": \"BLOCK\", \"user\": {\"id\": 52984226, \"username\": \"ethmusic\", \"permalink\": \"ethmusic\"}, \"media\": {\"transcodings\": []}}"
+  }
+ ]
+}

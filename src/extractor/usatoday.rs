@@ -15,7 +15,8 @@ pub struct UsaToday;
 const NAME: &str = "USAToday";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?usatoday\.com/(?:[^/]+/)*(?P<id>[^?/#]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?usatoday\.com/(?:[^/]+/)*(?P<id>[^?/#]+)")
+        .unwrap()
 });
 
 /// `_match_id`.

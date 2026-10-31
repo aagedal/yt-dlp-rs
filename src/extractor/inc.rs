@@ -15,7 +15,8 @@ pub struct Inc;
 const NAME: &str = "Inc";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?inc\.com/(?:[^/]+/)+(?P<id>[^.]+).html").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?inc\.com/(?:[^/]+/)+(?P<id>[^.]+).html")
+        .unwrap()
 });
 static PARTNER: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"var\s+_?bizo_data_partner_id\s*=\s*["'](\d+)"#).unwrap());

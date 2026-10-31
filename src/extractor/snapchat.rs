@@ -14,7 +14,7 @@ pub struct SnapchatSpotlight;
 const NAME: &str = "SnapchatSpotlight";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?snapchat\.com/spotlight/(?P<id>\w+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?snapchat\.com/spotlight/(?P<id>\w+)").unwrap()
 });
 
 /// `_VALID_URL`.

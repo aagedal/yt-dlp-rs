@@ -21,7 +21,10 @@ const NAME: &str = "MangoTV";
 const KEY: &str = "MGTV";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:w(?:ww)?\.)?mgtv\.com/[bv]/(?:[^/]+/)*(?P<id>\d+)\.html").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:w(?:ww)?\.)?mgtv\.com/[bv]/(?:[^/]+/)*(?P<id>\d+)\.html",
+    )
+    .unwrap()
 });
 static TBR: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"_(\d+)_mp4/").unwrap());
 

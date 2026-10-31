@@ -13,7 +13,7 @@ pub struct ThisAmericanLife;
 const NAME: &str = "ThisAmericanLife";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:www\.)?thisamericanlife\.org/(?:radio-archives/episode/|play_full\.php\?play=)(?P<id>\d+)",
     )
     .unwrap()

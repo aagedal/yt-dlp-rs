@@ -15,7 +15,7 @@ const NAME: &str = "23video";
 const KEY: &str = "TwentyThreeVideo";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?P<domain>[^.]+\.(?:twentythree\.net|23video\.com|filmweb\.no))/v\.ihtml/player\.html\?(?P<query>.*?\bphoto(?:_|%5f)id=(?P<id>\d+).*)",
     )
     .unwrap()

@@ -13,7 +13,7 @@ const NAME: &str = "freespeech.org";
 const KEY: &str = "Freespeech";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?freespeech\.org/stories/(?P<id>.+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?freespeech\.org/stories/(?P<id>.+)").unwrap()
 });
 
 /// `_match_id`.

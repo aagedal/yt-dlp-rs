@@ -15,7 +15,8 @@ pub struct RadioRadicale;
 const NAME: &str = "RadioRadicale";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?radioradicale\.it/scheda/(?P<id>[0-9]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://(?:www\.)?radioradicale\.it/scheda/(?P<id>[0-9]+)")
+        .unwrap()
 });
 static SETTINGS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"jQuery\.extend\(Drupal\.settings\s*,").unwrap());

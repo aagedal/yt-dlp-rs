@@ -16,7 +16,7 @@ pub(crate) const NAME: &str = "IndavideoEmbed";
 pub(crate) const KEY: &str = "IndavideoEmbed";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:embed\.)?indavideo\.hu/player/video/|assets\.indavideo\.hu/swf/player\.swf\?.*\b(?:v(?:ID|id))=)(?P<id>[\da-f]+)",
     )
     .unwrap()

@@ -14,7 +14,7 @@ pub struct Veo;
 const NAME: &str = "Veo";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://app\.veo\.co/matches/(?P<id>[0-9A-Za-z\-_]+)").unwrap()
+    crate::extractor::url_regex(r"^https?://app\.veo\.co/matches/(?P<id>[0-9A-Za-z\-_]+)").unwrap()
 });
 
 /// `_match_id`.

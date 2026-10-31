@@ -13,7 +13,10 @@ pub struct UnitedNationsWebTv;
 const NAME: &str = "UnitedNationsWebTv";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://webtv\.un\.org/(?:ar|zh|en|fr|ru|es)/asset/\w+/(?P<id>\w+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://webtv\.un\.org/(?:ar|zh|en|fr|ru|es)/asset/\w+/(?P<id>\w+)",
+    )
+    .unwrap()
 });
 static PARTNER: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"partnerId:\s*(\d+)").unwrap());
 static ENTRY: LazyLock<Regex> =

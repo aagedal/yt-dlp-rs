@@ -18,8 +18,10 @@ pub struct UrPlay;
 const NAME: &str = "URPlay";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?ur(?:play|skola)\.se/(?:program|Produkter)/(?P<id>[0-9]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?ur(?:play|skola)\.se/(?:program|Produkter)/(?P<id>[0-9]+)",
+    )
+    .unwrap()
 });
 static REACT_PROPS: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

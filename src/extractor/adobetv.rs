@@ -16,8 +16,9 @@ pub struct AdobeTvVideo;
 const NAME: &str = "adobetv";
 const KEY: &str = "AdobeTVVideo";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://video\.tv\.adobe\.com/v/(?P<id>\d+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://video\.tv\.adobe\.com/v/(?P<id>\d+)").unwrap()
+});
 static BRIDGE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"var\s+bridge\s*=").unwrap());
 
 /// `_match_id`.

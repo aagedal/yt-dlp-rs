@@ -20,7 +20,7 @@ pub struct MainStreaming;
 const NAME: &str = "MainStreaming";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"https?://(?:webtools-?)?(?P<host>[A-Za-z0-9-]*\.msvdn\.net)/(?:embed|amp_embed|content)/(?P<id>\w+)",
     )
     .unwrap()

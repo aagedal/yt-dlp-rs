@@ -16,8 +16,10 @@ const NAME: &str = "startrek";
 const KEY: &str = "StarTrek";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?startrek\.com(?:/en-(?:ca|un))?/videos/(?P<id>[^/?#]+)")
-        .unwrap()
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?startrek\.com(?:/en-(?:ca|un))?/videos/(?P<id>[^/?#]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

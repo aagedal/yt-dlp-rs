@@ -15,8 +15,9 @@ pub struct NekoHacker;
 const NAME: &str = "NekoHacker";
 const ARTIST: &str = "Neko Hacker";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?nekohacker\.com/(?P<id>[\w-]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?nekohacker\.com/(?P<id>[\w-]+)").unwrap()
+});
 static IFRAME: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?is)<iframe\b[^>]*>").unwrap());
 static TRACK: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(<li[^>]+data-audiopath[^>]+>)").unwrap());

@@ -16,7 +16,7 @@ pub(crate) const NAME: &str = "VODPlatform";
 pub(crate) const KEY: &str = "VODPlatform";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^https?://(?:(?:www\.)?vod-platform\.net|embed\.kwikmotion\.com)/[eE]mbed/(?P<id>[^/?#]+)",
     )
     .unwrap()

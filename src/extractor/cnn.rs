@@ -17,7 +17,7 @@ pub struct Cnn;
 const NAME: &str = "CNN";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:edition|www|money|cnnespanol)\.)?cnn\.com/(?P<display_id>[^?#]+?)(?:[?#]|$|/index\.html)")
+    crate::extractor::url_regex(r"^https?://(?:(?:edition|www|money|cnnespanol)\.)?cnn\.com/(?P<display_id>[^?#]+?)(?:[?#]|$|/index\.html)")
         .unwrap()
 });
 static WINDOW_ENV: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"window\.env\s*=").unwrap());

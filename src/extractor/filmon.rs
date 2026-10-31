@@ -19,7 +19,8 @@ const CHANNEL_NAME: &str = "filmon:channel";
 const CHANNEL_KEY: &str = "FilmOnChannel";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?:https?://(?:www\.)?filmon\.com/vod/view/|filmon:)(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^(?:https?://(?:www\.)?filmon\.com/vod/view/|filmon:)(?P<id>\d+)")
+        .unwrap()
 });
 static CHANNEL_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?filmon\.com/(?:tv|channel)/(?P<id>[a-z0-9-]+)").unwrap()

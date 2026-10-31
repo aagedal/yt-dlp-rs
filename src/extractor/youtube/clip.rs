@@ -10,8 +10,9 @@ use url::Url;
 
 const NAME: &str = "youtube:clip";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?youtube\.com/clip/(?P<id>[^/?#]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?youtube\.com/clip/(?P<id>[^/?#]+)").unwrap()
+});
 
 /// `YoutubeClipIE.suitable`.
 pub(crate) fn suitable(url: &str) -> bool {

@@ -40,7 +40,7 @@ const ACCEPT: &str =
     "application/vnd.nrk.psapi+json; version=9; player=tv-player; device=player-core";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+    crate::extractor::url_regex(
         r"^(?:nrk:|https?://(?:(?:www\.)?nrk\.no/video/(?:PS\*|[^_]+_)|v8[-.]psapi\.nrk\.no/mediaelement/))(?P<id>[^?#&]+)",
     )
     .unwrap()

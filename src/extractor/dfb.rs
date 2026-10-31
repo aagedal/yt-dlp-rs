@@ -14,7 +14,8 @@ pub struct Dfb;
 const NAME: &str = "tv.dfb.de";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://tv\.dfb\.de/video/(?P<display_id>[^/]+)/(?P<id>\d+)").unwrap()
+    crate::extractor::url_regex(r"^https?://tv\.dfb\.de/video/(?P<display_id>[^/]+)/(?P<id>\d+)")
+        .unwrap()
 });
 
 /// `_match_valid_url`.

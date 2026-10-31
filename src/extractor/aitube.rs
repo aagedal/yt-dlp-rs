@@ -14,7 +14,10 @@ pub struct AitubeKzVideo;
 const NAME: &str = "AitubeKZVideo";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://aitube\.kz/(?:video|embed/)\?(?:[^\?]+)?id=(?P<id>[\w-]+)").unwrap()
+    crate::extractor::url_regex(
+        r"^https?://aitube\.kz/(?:video|embed/)\?(?:[^\?]+)?id=(?P<id>[\w-]+)",
+    )
+    .unwrap()
 });
 
 /// `_match_id`.

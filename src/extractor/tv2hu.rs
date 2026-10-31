@@ -18,8 +18,9 @@ const KEY: &str = "TV2Hu";
 const SERIES_NAME: &str = "tv2playseries.hu";
 const SERIES_KEY: &str = "TV2HuSeries";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?tv2play\.hu/(?P<id>[^#&?]+)").unwrap());
+static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(r"^https?://(?:www\.)?tv2play\.hu/(?P<id>[^#&?]+)").unwrap()
+});
 static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:www\.)?tv2play\.hu/szalag/(?P<id>[^#&?]+)").unwrap()
 });
