@@ -1,24 +1,30 @@
-//! Upstream `MicrosoftLearnEpisodeIE` (`yt_dlp/extractor/microsoftembed.py`):
+//! Upstream `MicrosoftLearnEpisodeIE` and `MicrosoftLearnPlaylistIE`
+//! (`yt_dlp/extractor/microsoftembed.py`): a show's or event's episode list
+//! (paged `contentbrowser` search, as `url` entries), and
 //! learn.microsoft.com show episodes through the page's `entryId` and the
 //! public video entry API, with the non-fatal HLS and DASH manifests, the
 //! `video-http-*` progressive qualities, the audio track, thumbnails and
 //! captions. Smooth Streaming (`adaptiveVideoUrl`) manifests are not
 //! supported natively.
 use super::{
-    Extractor, dict_format, dict_info, download_json, download_webpage,
+    Extractor, dict_format, dict_info, download_json, download_json_note, download_webpage,
     extract_m3u8_master_optional, extract_mpd_optional_note, html5::parse_resolution,
-    search_warning,
+    search_warning, update_url_query,
 };
-use crate::{Error, Result, SubtitleFormat, Subtitles, VideoFormat, VideoInfo};
+use crate::{
+    Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoFormat, VideoInfo,
+};
 use regex::Regex;
 use reqwest::blocking::Client;
-use serde_json::{Value, json};
+use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
 use url::Url;
 
 pub struct MicrosoftLearnEpisode;
+pub struct MicrosoftLearnPlaylist;
 
 const NAME: &str = "MicrosoftLearnEpisode";
+const PLAYLIST_NAME: &str = "MicrosoftLearnPlaylist";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
     crate::extractor::url_regex(
@@ -27,9 +33,21 @@ static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
     .unwrap()
 });
 
+static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(
+        r"^https?://learn\.microsoft\.com/(?:[\w-]+/)?(?P<type>shows|events)/(?P<id>[\w-]+)/?(?:[?#]|$)",
+    )
+    .unwrap()
+});
+
 /// `_match_valid_url` for the episode pattern.
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
+}
+
+/// `_match_valid_url` for the show and event playlist pattern.
+pub fn playlist_suitable(url: &str) -> bool {
+    PLAYLIST_URL.is_match(url)
 }
 
 fn unsupported(what: &str) -> Error {
@@ -229,6 +247,127 @@ impl Extractor for MicrosoftLearnEpisode {
     }
 }
 
+/// `url_result(f'https://learn.microsoft.com/en-us{url_path}')`: a plain
+/// URL entry (no extractor named), as upstream's `url` results.
+fn url_entry(target: &str) -> Result<VideoInfo> {
+    let url = Url::parse(target)?;
+    let mut info = super::direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": {},
+            "ie_key": null,
+            "entry": {"_type": "url", "url": target},
+        }),
+    );
+    Ok(info)
+}
+
+impl Extractor for MicrosoftLearnPlaylist {
+    fn key(&self) -> &'static str {
+        PLAYLIST_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = PLAYLIST_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let playlist_id = found["id"].to_owned();
+        let playlist_type = found["type"].to_owned();
+        crate::screen::set_extractor(PLAYLIST_NAME);
+        crate::screen::screen(&format!(
+            "[{PLAYLIST_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        let webpage = download_webpage(client, url, PLAYLIST_NAME, &playlist_id)?;
+        let title = crate::html::og_search_property(&webpage, "title");
+        let description = crate::html::og_search_property(&webpage, "description");
+
+        let sub_type = if playlist_type == "shows" {
+            "episodes"
+        } else {
+            "sessions"
+        };
+        let url_base = format!(
+            "https://learn.microsoft.com/api/contentbrowser/search/{playlist_type}/{playlist_id}/{sub_type}"
+        );
+        let entries = playlist_entries(client, &url_base, &playlist_id)?;
+
+        // playlist_result(..., **metainfo): metainfo keys come before the id.
+        let mut keys = Vec::new();
+        let mut extra = Map::new();
+        if title.is_some() {
+            keys.push("title");
+        }
+        if let Some(description) = &description {
+            keys.push("description");
+            extra.insert("description".into(), description.clone().into());
+        }
+        keys.push("id");
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            format!("playlist-dict;{}", keys.join(",")).into(),
+        );
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: playlist_id,
+            title: title.unwrap_or_default(),
+            webpage_url: url.clone(),
+            extractor: PLAYLIST_NAME.into(),
+            extractor_key: PLAYLIST_NAME.into(),
+            nested: Vec::new(),
+            pending: None,
+            entries,
+            extra,
+        })))
+    }
+}
+
+/// `MicrosoftLearnPlaylistIE._entries`: the search API's pages of `$skip`
+/// results until the reported `count` (or an empty page).
+fn playlist_entries(client: &Client, url_base: &str, playlist_id: &str) -> Result<Vec<VideoInfo>> {
+    let mut entries = Vec::new();
+    let mut skip: usize = 0;
+    loop {
+        let api = update_url_query(
+            &Url::parse(url_base)?,
+            &[("locale", "en-us"), ("$skip", &skip.to_string())],
+        );
+        let info = download_json_note(
+            client,
+            &api,
+            PLAYLIST_NAME,
+            playlist_id,
+            &format!("Downloading entries {skip}"),
+        )?;
+        let paths: Vec<&str> = info
+            .get("results")
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+            .filter_map(|result| result.get("url")?.as_str())
+            .collect();
+        for path in &paths {
+            entries.push(url_entry(&format!(
+                "https://learn.microsoft.com/en-us{path}"
+            ))?);
+        }
+        skip += paths.len();
+        let count = info.get("count").and_then(Value::as_i64).unwrap_or(0);
+        if skip as i64 >= count || paths.is_empty() {
+            break;
+        }
+    }
+    Ok(entries)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -247,6 +386,15 @@ mod tests {
         ));
         assert!(!suitable(
             "https://learn.microsoft.com/en-us/events/build-2022"
+        ));
+        assert!(playlist_suitable(
+            "https://learn.microsoft.com/en-us/shows/bash-for-beginners"
+        ));
+        assert!(playlist_suitable(
+            "https://learn.microsoft.com/en-us/events/build-2022"
+        ));
+        assert!(!playlist_suitable(
+            "https://learn.microsoft.com/en-us/shows/bash-for-beginners/what-is-the-difference/"
         ));
     }
 }

@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youporn.com/watch/16290308/tinderspecial-trailer1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "yp-01.html"
+  },
+  {
+   "url": "https://www.youporn.com/media/hls/?s=eyJ2a2V5Ijo0Njk0OTEyMSwicyI6Ijg3ZTNjOWE0YmE5MzM4NDE2NTQxYjg2M2FjMTY4YjBjOTMwMmMyNzk4ZGZlYTdmN2VjZTczYjYwZGE4M2U1NWEiLCJndCI6MTc5MzQ2MDEwOCwiZSI6ZmFsc2V9",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "yp-02.json"
+  },
+  {
+   "url": "https://ev-h.ypncdn.com/hls/202011/23/16290308/720p_1500k_16290308.mp4/master.m3u8?validfrom=1793456508&validto=1793463708&hdl=-1&hash=JGjBubuve7vaPDIjr%2F2Oxo7ooPI%3D",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "yp-03.m3u8"
+  },
+  {
+   "url": "https://ev-h.ypncdn.com/hls/202011/23/16290308/480p_750k_16290308.mp4/master.m3u8?validfrom=1793456508&validto=1793463708&hdl=-1&hash=E1KhuBepxkP0Z%2BmSwBq%2B8UsLF6M%3D",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "yp-04.m3u8"
+  },
+  {
+   "url": "https://ev-h.ypncdn.com/hls/202011/23/16290308/240p_240k_16290308.mp4/master.m3u8?validfrom=1793456508&validto=1793463708&hdl=-1&hash=QlAO1xcs9SZwS1h6h%2BlbVd8fxbo%3D",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "yp-05.m3u8"
+  },
+  {
+   "url": "https://ev-h.ypncdn.com/hls/202011/23/16290308/1080p_9000k_16290308.mp4/master.m3u8?validfrom=1793456508&validto=1793463708&hdl=-1&hash=bE4AVBBraIL9dg%2BdPCDFnbinE80%3D",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "yp-06.m3u8"
+  },
+  {
+   "url": "https://www.youporn.com/media/mp4/?s=eyJ2a2V5Ijo0Njk0OTEyMSwicyI6Ijg3ZTNjOWE0YmE5MzM4NDE2NTQxYjg2M2FjMTY4YjBjOTMwMmMyNzk4ZGZlYTdmN2VjZTczYjYwZGE4M2U1NWEiLCJndCI6MTc5MzQ2MDEwOCwiZSI6ZmFsc2V9",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "yp-07.json"
+  },
+  {
+   "url": "https://www.youporn.com/watch/16290308",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "yp-01.html"
+  }
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "routes": [
+  {"url": "https://tunein.com/station/?stationid=34682", "status": 301, "headers": {"Location": "/radio/Jazz24-88-s34682/"}, "body": ""},
+  {"url": "https://tunein.com/radio/Jazz24-88-s34682/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "radio.html"},
+  {"url": "http://tun.in/ser7s", "status": 301, "headers": {"Location": "https://tunein.com/radio/Jazz24-88-s34682/"}, "body": ""},
+  {"url": "https://api.tunein.com/profiles/s34682", "headers": {"Content-Type": "application/json"}, "body_file": "profile-s34682.json"},
+  {"url": "https://opml.radiotime.com/Tune.ashx?formats=mp3%2Caac%2Cogg%2Cflash%2Chls&id=s34682&render=json", "headers": {"Content-Type": "application/json"}, "body_file": "opml-s34682.json"}
+ ]
+}

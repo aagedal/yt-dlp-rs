@@ -1,0 +1,190 @@
+{
+ "routes": [
+  {
+   "url": "https://us1-prod-direct.watch.cookingchanneltv.com/token?realm=go",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "cook-token.json",
+   "ignore_query": [
+    "deviceId"
+   ]
+  },
+  {
+   "url": "https://us1-prod-direct.watch.cookingchanneltv.com/content/videos/bobbys-triple-threat-food-network-atve-us/titans-vs-marcus-samuelsson?fields%5Bchannel%5D=name&fields%5Bimage%5D=height%2Csrc%2Cwidth&fields%5Bshow%5D=name&fields%5Btag%5D=name&fields%5Bvideo%5D=description%2CepisodeNumber%2Cname%2CpublishStart%2CseasonNumber%2CvideoDuration&include=images%2CprimaryChannel%2Cshow%2Ctags",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "cook-content.json"
+  },
+  {
+   "url": "https://us1-prod-direct.watch.cookingchanneltv.com/playback/v3/videoPlaybackInfo",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "cook-playback.json"
+  },
+  {
+   "url": "https://dplus-northamerica.media-edge.prod-vod.h264.io/49a612c8-ca53-4f35-811c-745905158c33/hls_clear_ts/edge-cache-token=Expires=1793545875&KeyName=media-edge-key-prod-northamerica-200d417&Signature=l-0eOYYeXvAxEwM8XAuurOBH9m4JFUre4kwvTar3H94effsBpoCJOS47tFHTTSsMDVaWGyw3xwN1wVsMoiPbAA/master.m3u8",
+   "headers": {
+    "Content-Type": "text/plain; charset=utf-8"
+   },
+   "body_file": "cook-hls.m3u8"
+  },
+  {
+   "url": "https://us1-prod-direct.discoverylife.com/token?realm=go",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "dlife-token.json",
+   "ignore_query": [
+    "deviceId"
+   ]
+  },
+  {
+   "url": "https://us1-prod-direct.discoverylife.com/content/videos/er-files-discovery-life-atve-us/sweet-charity?fields%5Bchannel%5D=name&fields%5Bimage%5D=height%2Csrc%2Cwidth&fields%5Bshow%5D=name&fields%5Btag%5D=name&fields%5Bvideo%5D=description%2CepisodeNumber%2Cname%2CpublishStart%2CseasonNumber%2CvideoDuration&include=images%2CprimaryChannel%2Cshow%2Ctags",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "dlife-content.json"
+  },
+  {
+   "url": "https://us1-prod-direct.discoverylife.com/playback/v3/videoPlaybackInfo",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "dlife-playback.json"
+  },
+  {
+   "url": "https://dplus-northamerica.media-edge.prod-vod.h264.io/d87790b4-28a9-4a10-bc1d-b3c628406503/hls_clear_ts/edge-cache-token=Expires=1793545917&KeyName=media-edge-key-prod-northamerica-200d417&Signature=eUNH2MBmzPVXPNih1mIiPXWCezFfgCckB-h4ow52oK13sginp1guIWVOiFoKGZxeiQAHHgvbWuHFmWk-cTgLCw/master.m3u8",
+   "headers": {
+    "Content-Type": "text/plain; charset=utf-8"
+   },
+   "body_file": "dlife-hls.m3u8"
+  },
+  {
+   "url": "https://us1-prod-direct.go.discovery.com/token?realm=go",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "godisc-token.json",
+   "ignore_query": [
+    "deviceId"
+   ]
+  },
+  {
+   "url": "https://us1-prod-direct.go.discovery.com/content/videos/in-the-eye-of-the-storm-discovery-atve-us/trapped-in-a-twister?fields%5Bchannel%5D=name&fields%5Bimage%5D=height%2Csrc%2Cwidth&fields%5Bshow%5D=name&fields%5Btag%5D=name&fields%5Bvideo%5D=description%2CepisodeNumber%2Cname%2CpublishStart%2CseasonNumber%2CvideoDuration&include=images%2CprimaryChannel%2Cshow%2Ctags",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "godisc-content.json"
+  },
+  {
+   "url": "https://us1-prod-direct.go.discovery.com/playback/v3/videoPlaybackInfo",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "godisc-playback.json"
+  },
+  {
+   "url": "https://dplus-northamerica-cloudfront-gcs.prod-vod.h264.io/6707bc52-494d-4446-99c2-fa8eb1458c38/hls_clear_ts/x-discovery-token=Expires=1793545924&KeyName=primary&Signature=9kWtvG6G1_HfJxp4rIHXJmAqQqY/master.m3u8",
+   "headers": {
+    "Content-Type": "text/plain; charset=utf-8"
+   },
+   "body_file": "godisc-hls.m3u8"
+  },
+  {
+   "url": "https://us1-prod-direct.watch.hgtv.com/token?realm=go",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "hgtv-token.json",
+   "ignore_query": [
+    "deviceId"
+   ]
+  },
+  {
+   "url": "https://us1-prod-direct.watch.hgtv.com/content/videos/flip-or-flop-the-final-flip-hgtv-atve-us/flip-or-flop-the-final-flip?fields%5Bchannel%5D=name&fields%5Bimage%5D=height%2Csrc%2Cwidth&fields%5Bshow%5D=name&fields%5Btag%5D=name&fields%5Bvideo%5D=description%2CepisodeNumber%2Cname%2CpublishStart%2CseasonNumber%2CvideoDuration&include=images%2CprimaryChannel%2Cshow%2Ctags",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "hgtv-content.json"
+  },
+  {
+   "url": "https://us1-prod-direct.watch.hgtv.com/playback/v3/videoPlaybackInfo",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "hgtv-playback.json"
+  },
+  {
+   "url": "https://dplus-northamerica.media-edge.prod-vod.h264.io/a942e6af-14ce-4b26-b708-6a95ef8ce972/hls_clear_ts/edge-cache-token=Expires=1793545926&KeyName=media-edge-key-prod-northamerica-200d417&Signature=jvvSlwADvQeEzqQDRetzF6K7wGk7_981Ybj_x58Lq7DvVr55yrZvahPfDOsio4VEiDhz5FkKMC_m3dO2qy02Aw/master.m3u8",
+   "headers": {
+    "Content-Type": "text/plain; charset=utf-8"
+   },
+   "body_file": "hgtv-hls.m3u8"
+  },
+  {
+   "url": "https://us1-prod-direct.investigationdiscovery.com/token?realm=go",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ids-token.json",
+   "ignore_query": [
+    "deviceId"
+   ]
+  },
+  {
+   "url": "https://us1-prod-direct.investigationdiscovery.com/content/videos/deadly-influence-the-social-media-murders-investigation-discovery-atve-us/rip-bianca?fields%5Bchannel%5D=name&fields%5Bimage%5D=height%2Csrc%2Cwidth&fields%5Bshow%5D=name&fields%5Btag%5D=name&fields%5Bvideo%5D=description%2CepisodeNumber%2Cname%2CpublishStart%2CseasonNumber%2CvideoDuration&include=images%2CprimaryChannel%2Cshow%2Ctags",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ids-content.json"
+  },
+  {
+   "url": "https://us1-prod-direct.investigationdiscovery.com/playback/v3/videoPlaybackInfo",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ids-playback.json"
+  },
+  {
+   "url": "https://dplus-northamerica.media-edge.prod-vod.h264.io/b3d28309-b1f4-4d36-a924-86a195789aa1/hls_clear_ts/edge-cache-token=Expires=1793545928&KeyName=media-edge-key-prod-northamerica-200d417&Signature=0FhFGuJa0pI2tLgN295fIdxxUsMbDlCloyZctSL01bGo86J2hMOh6tUL6ubGZ4cRpDXuyvA7VhQOZ0F514rdCA/master.m3u8",
+   "headers": {
+    "Content-Type": "text/plain; charset=utf-8"
+   },
+   "body_file": "ids-hls.m3u8"
+  },
+  {
+   "url": "https://us1-prod-direct.sciencechannel.com/token?realm=go",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "sci-token.json",
+   "ignore_query": [
+    "deviceId"
+   ]
+  },
+  {
+   "url": "https://us1-prod-direct.sciencechannel.com/content/videos/spaces-deepest-secrets-science-atve-us/mystery-of-the-dead-planets?fields%5Bchannel%5D=name&fields%5Bimage%5D=height%2Csrc%2Cwidth&fields%5Bshow%5D=name&fields%5Btag%5D=name&fields%5Bvideo%5D=description%2CepisodeNumber%2Cname%2CpublishStart%2CseasonNumber%2CvideoDuration&include=images%2CprimaryChannel%2Cshow%2Ctags",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "sci-content.json"
+  },
+  {
+   "url": "https://us1-prod-direct.sciencechannel.com/playback/v3/videoPlaybackInfo",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "sci-playback.json"
+  },
+  {
+   "url": "https://dplus-northamerica.media-edge.prod-vod.h264.io/91c5e8c3-9b7c-4251-b65a-3984f7d534fc/hls_clear_ts/edge-cache-token=Expires=1793545931&KeyName=media-edge-key-prod-northamerica-200d417&Signature=652RUju6dfPekSw-WpSjIEdatojDbsy1jIY30AwK0jVxuaQyJ2rdhZs7FJjw8V006gxxqk2DF52DktZFOrcGAw/master.m3u8",
+   "headers": {
+    "Content-Type": "text/plain; charset=utf-8"
+   },
+   "body_file": "sci-hls.m3u8"
+  }
+ ]
+}

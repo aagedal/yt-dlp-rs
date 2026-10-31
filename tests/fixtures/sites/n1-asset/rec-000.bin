@@ -1,0 +1,8 @@
+#EXTM3U
+#EXT-X-VERSION:7
+#EXT-X-INDEPENDENT-SEGMENTS
+
+#EXT-X-STREAM-INF:BANDWIDTH=1496000,FRAME-RATE=25.000,RESOLUTION=1024x576,CODECS="avc1.4D4029,mp4a.40.2"
+https://n1-bg-ku-h1-2.umn.cdn.united.cloud/stream?i=THJAc9-H7jn9N_d1ps-MGw&a=FymgagkL_9-cCKQ-Xul_9GAMfOdGHZUXEG26jaXLyyW-G9mUvzhs9njIJqL3tslZAiqdDrYCnUEJsksYPtvQ7ZNVmlWSYjxjk0AgXz6PJKuYwgEntnYPp2OSbxfVTRymaOiPWfzxxopFmTRU7-fdK7cufPfq7RPSQxQHqJi8qrhphy6pjhia1Vy5xv4Uvmn7J-ygbeR4nWL3qT9TmCOjW4Rl41h5l7gegAkQRUxGmvBwPz-sNaya_UutV5beIfHeBVO2bGK8cVNW6fL4ke1moLslfeZZftxF6-AaW4JS6zU&sp=n1info&u=n1info&session=988534b3-ce52-0dfd-1089-2d03a90e684a&player=m3u8v
+#EXT-X-STREAM-INF:BANDWIDTH=446000,FRAME-RATE=25.000,RESOLUTION=512x288,CODECS="avc1.42C01E,mp4a.40.2"
+https://n1-bg-ku-h1-2.umn.cdn.united.cloud/stream/playlist/hls/?session=988534b3-ce52-0dfd-1089-2d03a90e684a&stream=hp350&player=m3u8v

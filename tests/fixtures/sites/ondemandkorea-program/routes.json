@@ -1,0 +1,12 @@
+{
+ "routes": [
+  {
+   "url": "https://odkmedia.io/odx/api/v3/program/uskn-news/episodes/?page=1&page_size=100",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "rec-000.bin"
+  }
+ ]
+}

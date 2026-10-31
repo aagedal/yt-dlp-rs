@@ -1,0 +1,4 @@
+[
+ {"url": "http://www.bbc.co.uk/programmes/b00mfl7n/clips?page=1", "args": ["-J", "--flat-playlist"]},
+ {"url": "http://www.bbc.co.uk/programmes/b00mfl7n/clips?page=2", "args": ["-J", "--flat-playlist"]}
+]

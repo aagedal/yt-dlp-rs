@@ -1,0 +1,90 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.mellow-fan.com/capture/l2q00vxl8q8",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"l2q00vxl8q8\", \"formats\": [{\"format_id\": \"360p\", \"format_index\": null, \"url\": \"https://public.mellow-fan.com/external/api/v5/captures/l2q00vxl8q8/chunklist_low/chunklist.m3u8\", \"manifest_url\": \"https://public.mellow-fan.com/external/api/v5/captures/l2q00vxl8q8/playlist.m3u8\", \"tbr\": 757.0, \"ext\": \"mp4\", \"fps\": 30.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.mellow-fan.com/\"}, \"format\": \"360p - 640x360\"}, {\"format_id\": \"720p\", \"format_index\": null, \"url\": \"https://public.mellow-fan.com/external/api/v5/captures/l2q00vxl8q8/chunklist_high/chunklist.m3u8\", \"manifest_url\": \"https://public.mellow-fan.com/external/api/v5/captures/l2q00vxl8q8/playlist.m3u8\", \"tbr\": 2548.0, \"ext\": \"mp4\", \"fps\": 30.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d4029\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.mellow-fan.com/\"}, \"format\": \"720p - 1280x720\"}, {\"format_id\": \"Source\", \"format_index\": null, \"url\": \"https://public.mellow-fan.com/external/api/v5/captures/l2q00vxl8q8/chunklist_source/chunklist.m3u8\", \"manifest_url\": \"https://public.mellow-fan.com/external/api/v5/captures/l2q00vxl8q8/playlist.m3u8\", \"tbr\": 10000.0, \"ext\": \"mp4\", \"fps\": 60.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.64002a\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.mellow-fan.com/\"}, \"format\": \"Source - 1920x1080\"}], \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.mellow-fan.com/\"}, \"channel\": \"\\u5e03\\u56e3\\u3061\\u3083\\u3093\", \"channel_id\": \"indegnasen\", \"title\": \"\\uff1f\\uff1f\\uff1f\\uff1f\", \"duration\": 89, \"thumbnail\": \"https://image-handler.mellow-fan.com/eyJidWNrZXQiOiJvcGVucmVjLWFwcGRhdGEiLCJrZXkiOiJ0aHVtYm5haWxzL2NhcHR1cmUvMjUxMjE5NS0wMjMwMTgvY2FwdHVyZV8zLmpwZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJpbnNpZGUiLCJ3aWR0aCI6IjM1MCJ9fSwib3V0cHV0Rm9ybWF0IjoianBnIn0=\", \"timestamp\": 1637589871, \"webpage_url\": \"https://www.mellow-fan.com/capture/l2q00vxl8q8\", \"original_url\": \"https://www.mellow-fan.com/capture/l2q00vxl8q8\", \"webpage_url_basename\": \"l2q00vxl8q8\", \"webpage_url_domain\": \"mellow-fan.com\", \"extractor\": \"mellowfan:capture\", \"extractor_key\": \"OpenRecCapture\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://image-handler.mellow-fan.com/eyJidWNrZXQiOiJvcGVucmVjLWFwcGRhdGEiLCJrZXkiOiJ0aHVtYm5haWxzL2NhcHR1cmUvMjUxMjE5NS0wMjMwMTgvY2FwdHVyZV8zLmpwZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJpbnNpZGUiLCJ3aWR0aCI6IjM1MCJ9fSwib3V0cHV0Rm9ybWF0IjoianBnIn0=\", \"id\": \"0\"}], \"display_id\": \"l2q00vxl8q8\", \"fulltitle\": \"\\uff1f\\uff1f\\uff1f\\uff1f\", \"duration_string\": \"1:29\", \"upload_date\": \"20211122\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.mellow-fan.com/\"}, \"format_id\": \"Source\", \"url\": \"https://public.mellow-fan.com/external/api/v5/captures/l2q00vxl8q8/chunklist_source/chunklist.m3u8\", \"manifest_url\": \"https://public.mellow-fan.com/external/api/v5/captures/l2q00vxl8q8/playlist.m3u8\", \"tbr\": 10000.0, \"ext\": \"mp4\", \"fps\": 60.0, \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.64002a\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"format\": \"Source - 1920x1080\", \"_filename\": \"\\uff1f\\uff1f\\uff1f\\uff1f [l2q00vxl8q8].mp4\", \"filename\": \"\\uff1f\\uff1f\\uff1f\\uff1f [l2q00vxl8q8].mp4\", \"__write_download_archive\": false}], \"format_id\": \"Source\", \"format_index\": null, \"url\": \"https://public.mellow-fan.com/external/api/v5/captures/l2q00vxl8q8/chunklist_source/chunklist.m3u8\", \"manifest_url\": \"https://public.mellow-fan.com/external/api/v5/captures/l2q00vxl8q8/playlist.m3u8\", \"tbr\": 10000.0, \"ext\": \"mp4\", \"fps\": 60.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.64002a\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"format\": \"Source - 1920x1080\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.mellow-fan.com/capture/l2q00vxl8q8",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[mellowfan:capture] Extracting URL: https://www.mellow-fan.com/capture/l2q00vxl8q8",
+    "[mellowfan:capture] l2q00vxl8q8: Downloading webpage",
+    "[mellowfan:capture] l2q00vxl8q8: Downloading m3u8 information",
+    "[info] Available formats for l2q00vxl8q8:",
+    "ID     EXT RESOLUTION FPS |   FILESIZE    TBR PROTO | VCODEC      ACODEC",
+    "---------------------------------------------------------------------------",
+    "360p   mp4 640x360     30 | ~  8.03MiB   757k m3u8  | avc1.42c01e mp4a.40.2",
+    "720p   mp4 1280x720    30 | ~ 27.03MiB  2548k m3u8  | avc1.4d4029 mp4a.40.2",
+    "Source mp4 1920x1080   60 | ~106.10MiB 10000k m3u8  | avc1.64002a mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.mellow-fan.com/capture/nosuchcapture",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [mellowfan:capture] nosuchcapture: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.mellow-fan.com/user/sagara_mayu/playlist/xngNMzv71yLjGdW",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"xngNMzv71yLjGdW\", \"title\": \"\\u76f8\\u826f\\u8309\\u512a\\u306eFAN!FUN!FACTORY!\\u30ad\\u30e3\\u30d7\\u30c1\\u30e3\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"url\": \"https://www.mellow-fan.com/capture/j1d1z8jrn2k?playlist_id=xngNMzv71yLjGdW\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"https://www.mellow-fan.com/capture/j1d1z8v8n2k?playlist_id=xngNMzv71yLjGdW\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"https://www.mellow-fan.com/capture/l2q0pjo0d8p?playlist_id=xngNMzv71yLjGdW\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"https://www.mellow-fan.com/capture/emnrj9ekq4o?playlist_id=xngNMzv71yLjGdW\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.mellow-fan.com/user/sagara_mayu/playlist/xngNMzv71yLjGdW\", \"original_url\": \"https://www.mellow-fan.com/user/sagara_mayu/playlist/xngNMzv71yLjGdW\", \"webpage_url_basename\": \"xngNMzv71yLjGdW\", \"webpage_url_domain\": \"mellow-fan.com\", \"extractor\": \"mellowfan:playlist\", \"extractor_key\": \"OpenRecPlaylist\", \"release_year\": null, \"playlist_count\": 4, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.mellow-fan.com/user/DbD_BPF/search/capture?search_query=%E3%81%82%E3%81%A3%E3%81%95%E3%82%8A%E3%81%97%E3%82%87%E3%81%93",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"DbD_BPF\", \"title\": \"DbD_BPF:\\u3042\\u3063\\u3055\\u308a\\u3057\\u3087\\u3053:capture\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"OpenRecCapture\", \"_type\": \"url\", \"url\": \"https://www.mellow-fan.com/capture/opqye5rjd7r\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"OpenRecCapture\", \"_type\": \"url\", \"url\": \"https://www.mellow-fan.com/capture/j1d1o1g4q2k\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"OpenRecCapture\", \"_type\": \"url\", \"url\": \"https://www.mellow-fan.com/capture/emnro7l3n4o\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.mellow-fan.com/user/DbD_BPF/search/capture?search_query=%E3%81%82%E3%81%A3%E3%81%95%E3%82%8A%E3%81%97%E3%82%87%E3%81%93\", \"original_url\": \"https://www.mellow-fan.com/user/DbD_BPF/search/capture?search_query=%E3%81%82%E3%81%A3%E3%81%95%E3%82%8A%E3%81%97%E3%82%87%E3%81%93\", \"webpage_url_basename\": \"capture\", \"webpage_url_domain\": \"mellow-fan.com\", \"extractor\": \"mellowfan:channel:search\", \"extractor_key\": \"OpenRecChannelSearch\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.mellow-fan.com/user/DbD_BPF/search?search_query=%E3%81%82%E3%81%A3%E3%81%95%E3%82%8A%E3%81%97%E3%82%87%E3%81%93",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"DbD_BPF\", \"title\": \"DbD_BPF:\\u3042\\u3063\\u3055\\u308a\\u3057\\u3087\\u3053\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"OpenRecChannelSearch\", \"_type\": \"url\", \"url\": \"https://www.mellow-fan.com/user/DbD_BPF/search/capture?search_query=%E3%81%82%E3%81%A3%E3%81%95%E3%82%8A%E3%81%97%E3%82%87%E3%81%93\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"OpenRecChannelSearch\", \"_type\": \"url\", \"url\": \"https://www.mellow-fan.com/user/DbD_BPF/search/movie?search_query=%E3%81%82%E3%81%A3%E3%81%95%E3%82%8A%E3%81%97%E3%82%87%E3%81%93\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.mellow-fan.com/user/DbD_BPF/search?search_query=%E3%81%82%E3%81%A3%E3%81%95%E3%82%8A%E3%81%97%E3%82%87%E3%81%93\", \"original_url\": \"https://www.mellow-fan.com/user/DbD_BPF/search?search_query=%E3%81%82%E3%81%A3%E3%81%95%E3%82%8A%E3%81%97%E3%82%87%E3%81%93\", \"webpage_url_basename\": \"search\", \"webpage_url_domain\": \"mellow-fan.com\", \"extractor\": \"mellowfan:channel:search\", \"extractor_key\": \"OpenRecChannelSearch\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

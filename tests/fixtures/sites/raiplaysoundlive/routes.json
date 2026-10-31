@@ -1,0 +1,25 @@
+{
+  "routes": [
+    {
+      "url": "https://www.raiplaysound.it/radio2.json",
+      "headers": {
+        "Content-Type": "application/json;charset=UTF-8"
+      },
+      "body_file": "bb1115cd81b3.bin"
+    },
+    {
+      "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=162063&output=64",
+      "headers": {
+        "Content-Type": "text/xml;charset=ISO-8859-1"
+      },
+      "body_file": "43096f268cf6.bin"
+    },
+    {
+      "url": "https://8e7439fdb1694c8da3a0fd63e4dda518.msvdn.net/radiodue1/hls/playlist_mo.m3u8?auth=daEcBa5bBdPdOaIb9dpcebCcwaeakbQazai-bQ5Gw4-c0-HjyvyHo&aifp=V001",
+      "headers": {
+        "Content-Type": "application/vnd.apple.mpegurl"
+      },
+      "body_file": "14d0691fde39.bin"
+    }
+  ]
+}

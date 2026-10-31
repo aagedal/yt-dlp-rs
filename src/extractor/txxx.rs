@@ -1,23 +1,34 @@
-//! Upstream `PornTopIE` (`yt_dlp/extractor/txxx.py`): a PornTop video page's
-//! `schemaJson` JSON-LD, and the `initPlayer` call's base64 JSON of its
-//! `video_url` MP4 files.
+//! Upstream `PornTopIE` and `TxxxIE` (`yt_dlp/extractor/txxx.py`): a PornTop
+//! video page's `schemaJson` JSON-LD and the `initPlayer` call's base64 JSON
+//! of its `video_url` MP4 files, and the Txxx network's video API (the file
+//! list and the video's metadata JSON) with the same base64 MP4 URLs.
 use super::{Extractor, dict_format, dict_info, download_webpage};
 use crate::{Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
 use reqwest::blocking::Client;
-use serde_json::Value;
+use serde_json::{Value, json};
 use std::sync::LazyLock;
 use url::Url;
 
 pub struct PornTop;
+pub struct Txxx;
 
 const NAME: &str = "PornTop";
+const TXXX_NAME: &str = "Txxx";
+/// `TxxxIE._DOMAINS` (regex alternation).
+const TXXX_DOMAINS: &str = r"hclips\.com|hdzog\.com|hdzog\.tube|hotmovs\.com|hotmovs\.tube|inporn\.com|privatehomeclips\.com|tubepornclassic\.com|txxx\.com|txxx\.tube|upornia\.com|upornia\.tube|vjav\.com|vjav\.tube|vxxx\.com|voyeurhit\.com|voyeurhit\.tube";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
     crate::extractor::url_regex(concat!(
         r"^https?://(?P<host>(?:www\.)?porntop\.com)/video/(?P<id>\d+)",
         r"(?:/(?P<display_id>[^/?]+))?",
+    ))
+    .unwrap()
+});
+static TXXX_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(&format!(
+        r"^https?://(?:www\.)?(?P<host>{TXXX_DOMAINS})/(?:videos?[/-]|embed/)(?P<id>\d+)(?:/(?P<display_id>[^/?#]+))?"
     ))
     .unwrap()
 });
@@ -80,6 +91,7 @@ fn format_id(video: &Value) -> Option<String> {
 /// `get_formats(host, video_file)`: one MP4 per non-empty `video_url`, with
 /// the list index as its `quality`.
 fn get_formats(
+    name: &'static str,
     host: &str,
     video_file: &[Value],
     video_id: &str,
@@ -96,7 +108,7 @@ fn get_formats(
         };
         let decoded = decode_base64(encoded).ok_or_else(|| {
             crate::Error::Reported(format!(
-                "[{NAME}] {video_id}: Unable to extract video_url; {}",
+                "[{name}] {video_id}: Unable to extract video_url; {}",
                 crate::BUG_REPORTS_MESSAGE
             ))
         })?;
@@ -110,7 +122,7 @@ fn get_formats(
                 ),
                 ("quality", (index as i64).into()),
             ],
-            NAME,
+            name,
             video_id,
         )?);
     }
@@ -170,7 +182,7 @@ impl Extractor for PornTop {
                 ))
             })?;
         let video_file = video_file.as_array().cloned().unwrap_or_default();
-        let formats = get_formats(&host, &video_file, &video_id)?;
+        let formats = get_formats(NAME, &host, &video_file, &video_id)?;
 
         // `merge_dicts({'id': ..., 'display_id': ..., 'age_limit': 18,
         // 'formats': ...}, json_ld)`: the first dict's keys win.
@@ -193,6 +205,139 @@ impl Extractor for PornTop {
     }
 }
 
+/// `int_or_none(value)` for a JSON field.
+fn int_or_none(value: Option<&Value>) -> Value {
+    match value {
+        Some(Value::Number(number)) => number
+            .as_i64()
+            .or_else(|| number.as_f64().map(|float| float as i64))
+            .map_or(Value::Null, Value::from),
+        Some(Value::String(text)) => text.trim().parse::<i64>().map_or(Value::Null, Value::from),
+        _ => Value::Null,
+    }
+}
+
+/// `TxxxIE._call_api(url, video_id, fatal, ...)` with its `error` check.
+fn call_api(
+    client: &Client,
+    url: &Url,
+    video_id: &str,
+    note: &str,
+    headers: &[(&str, &str)],
+) -> Result<Value> {
+    let content =
+        super::download_json_note_headers(client, url, TXXX_NAME, video_id, note, headers)?;
+    if let Some(error) = content.get("error").filter(|error| !is_falsy(error)) {
+        let text = match error {
+            Value::String(text) => text.clone(),
+            other => other.to_string(),
+        };
+        return Err(crate::Error::Reported(format!("Txxx said: {text}")));
+    }
+    Ok(content)
+}
+
+/// Python's falsiness for a JSON value.
+fn is_falsy(value: &Value) -> bool {
+    match value {
+        Value::Null => true,
+        Value::Bool(flag) => !flag,
+        Value::Number(number) => number.as_f64() == Some(0.0),
+        Value::String(text) => text.is_empty(),
+        Value::Array(items) => items.is_empty(),
+        Value::Object(map) => map.is_empty(),
+    }
+}
+
+/// `txxx_suitable`: `TxxxIE.suitable`.
+pub fn txxx_suitable(url: &str) -> bool {
+    TXXX_URL.is_match(url)
+}
+
+impl Extractor for Txxx {
+    fn key(&self) -> &'static str {
+        TXXX_NAME
+    }
+
+    fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        let Some(found) = TXXX_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let video_id = found["id"].to_owned();
+        let host = found["host"].to_owned();
+        let display_id = found
+            .name("display_id")
+            .map_or(Value::Null, |display| Value::from(display.as_str()));
+        crate::screen::set_extractor(TXXX_NAME);
+        crate::screen::screen(&format!(
+            "[{TXXX_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        let referer = url.as_str();
+        let headers = [("Referer", referer), ("X-Requested-With", "XMLHttpRequest")];
+        let file_url = Url::parse(&format!(
+            "https://{host}/api/videofile.php?video_id={video_id}&lifetime=8640000"
+        ))?;
+        let video_file = call_api(
+            client,
+            &file_url,
+            &video_id,
+            "Downloading video file info",
+            &headers,
+        )?;
+        // `slug = f'{int(1E6 * (id // 1E6))}/{1000 * (id // 1000)}'`.
+        // The URL matches digits only.
+        let id: i64 = video_id.parse().unwrap_or_default();
+        let slug = format!("{}/{}", 1_000_000 * (id / 1_000_000), 1000 * (id / 1000));
+        let info_url = Url::parse(&format!(
+            "https://{host}/api/json/video/86400/{slug}/{video_id}.json"
+        ))?;
+        let video_info = call_api(
+            client,
+            &info_url,
+            &video_id,
+            "Downloading video info",
+            &headers,
+        )?;
+        let video = video_info.get("video");
+        let field = |path: &str| video.and_then(|video| video.pointer(path));
+        let duration = match field("/duration")
+            .and_then(Value::as_str)
+            .and_then(crate::parse_duration)
+        {
+            Some(number) => json!(number),
+            None => Value::Null,
+        };
+        let thumbnail = field("/thumbsrc")
+            .and_then(Value::as_str)
+            .and_then(super::json_ld::url_or_none)
+            .map_or(Value::Null, Value::from);
+        let files: Vec<Value> = video_file.as_array().cloned().unwrap_or_default();
+        let formats = get_formats(TXXX_NAME, &host, &files, &video_id)?;
+        Ok(Some(dict_info(
+            url,
+            (TXXX_NAME, TXXX_NAME),
+            vec![
+                ("id", video_id.as_str().into()),
+                ("display_id", display_id),
+                ("title", field("/title").cloned().unwrap_or(Value::Null)),
+                (
+                    "uploader",
+                    field("/user/username").cloned().unwrap_or(Value::Null),
+                ),
+                ("duration", duration),
+                ("view_count", int_or_none(field("/statistics/viewed"))),
+                ("like_count", int_or_none(field("/statistics/likes"))),
+                ("dislike_count", int_or_none(field("/statistics/dislikes"))),
+                ("age_limit", 18.into()),
+                ("thumbnail", thumbnail),
+                ("formats", Value::Null),
+            ],
+            formats,
+        )))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -210,5 +355,14 @@ mod tests {
     fn base64_uses_porntop_alphabet() {
         // "ab" in base64 is "YWI=", written with the site's `,` `.` `~`.
         assert_eq!(decode_base64("YWI~").as_deref(), Some("ab"));
+    }
+
+    #[test]
+    fn txxx_urls_follow_upstream_valid_url() {
+        assert!(txxx_suitable(
+            "https://txxx.com/videos/16574965/digital-desire-malena-morgan/"
+        ));
+        assert!(txxx_suitable("https://vxxx.com/video-68925/"));
+        assert!(!txxx_suitable("https://porntop.com/video/1234/x"));
     }
 }

@@ -1,0 +1,29 @@
+<Mediapolis>
+	<url type="content">
+		<![CDATA[https://vod3-rai-it.akamaized.net/archive_k/Archive/raitre/report/report_puntate_2014/2440873_,800,1800/playlist.m3u8?auth=daEb0cvd9bRcObacybXdqa3b7cGdQaldya.-bQ5Gw0-c0-ClsxsFq&aifp=V001]]>
+	</url>
+	<url type="bumper"></url>
+	<url type="bumperend"></url>
+	<ct>m3u8</ct>
+	<bitrate>800</bitrate>
+	<smooth>N</smooth>
+	<is_live>N</is_live>
+	<description>Rai</description>
+	<geoprotection>N</geoprotection>
+	<category>3511</category>
+	<plVod></plVod>
+	<plLive></plLive>
+	<logo></logo>
+	<poster>https://www.rai.it/dl/RaiTV/2012/images/ogImage.jpg</poster>
+	<duration>$technical_metadata_duration</duration>
+	<krpano></krpano>
+	<channel></channel>
+	<ads_tecnico></ads_tecnico>
+	<license_url>
+		<![CDATA[{}]]>
+	</license_url>
+	<thumbs_array>
+<![CDATA[{}]]>
+	</thumbs_array>
+	<vtt_poster_thumbs_url><![CDATA[]]></vtt_poster_thumbs_url>
+</Mediapolis>

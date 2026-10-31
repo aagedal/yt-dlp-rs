@@ -1,0 +1,19 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.ondemandkorea.com/player/vod/uskn-news",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"uskn-news\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"OnDemandKorea\", \"title\": \"10/30/2026\", \"_type\": \"url\", \"url\": \"https://www.ondemandkorea.com/player/vod/uskn-news?contentId=3518970\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"OnDemandKorea\", \"title\": \"10/29/2026\", \"_type\": \"url\", \"url\": \"https://www.ondemandkorea.com/player/vod/uskn-news?contentId=3518671\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"OnDemandKorea\", \"title\": \"10/28/2026\", \"_type\": \"url\", \"url\": \"https://www.ondemandkorea.com/player/vod/uskn-news?contentId=3518427\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.ondemandkorea.com/player/vod/uskn-news\", \"original_url\": \"https://www.ondemandkorea.com/player/vod/uskn-news\", \"webpage_url_basename\": \"uskn-news\", \"webpage_url_domain\": \"ondemandkorea.com\", \"extractor\": \"OnDemandKoreaProgram\", \"extractor_key\": \"OnDemandKoreaProgram\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

@@ -1,13 +1,13 @@
-//! Upstream `RCTIPlusIE` (`yt_dlp/extractor/rcti.py`): an episode, clip,
-//! extra, live or missed event of RCTI+ from its visitor token, `/url` and
-//! metadata APIs and the HLS master playlist. `RCTIPlusSeriesIE` (program
-//! pages) and `RCTIPlusTVIE` (TV and live-channel pages) are not ported and
-//! their URLs are not claimed here.
+//! Upstream `RCTIPlusIE` and `RCTIPlusSeriesIE` (`yt_dlp/extractor/rcti.py`):
+//! an episode, clip, extra, live or missed event of RCTI+ from its visitor
+//! token, `/url` and metadata APIs and the HLS master playlist; and a program
+//! page's episodes, extras and clips as `url` entries. `RCTIPlusTVIE` (TV and
+//! live-channel pages) is not ported and its URLs are not claimed here.
 use super::{
     Extractor, dict_info, download_json_note, download_json_note_headers,
     post_json_errnote_optional,
 };
-use crate::{Error, ExtractResult, Result, VideoInfo};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::StatusCode;
 use reqwest::blocking::Client;
@@ -18,10 +18,19 @@ use std::sync::LazyLock;
 use url::Url;
 
 pub struct RctiPlus;
+pub struct RctiPlusSeries;
 
 const NAME: &str = "RCTIPlus";
+const SERIES_NAME: &str = "RCTIPlusSeries";
+const SERIES_KEY: &str = "RCTIPlusSeries";
 const REFERER: &str = "https://www.rctiplus.com/";
 
+static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(
+        r"^https?://www\.rctiplus\.com/programs/(?P<id>\d+)/(?P<display_id>[^/?#&]+)(?:/(?P<type>episodes|extras|clips))?",
+    )
+    .unwrap()
+});
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
     crate::extractor::url_regex(
         r"^https?://www\.rctiplus\.com/(?:programs/\d+?/.*?/)?(?P<type>episode|clip|extra|live-event|missed-event)/(?P<id>\d+)/(?P<display_id>[^/?#&]+)",
@@ -37,10 +46,22 @@ fn call_api(
     video_id: &str,
     note: &str,
 ) -> Result<(Value, Value)> {
+    call_api_named(client, NAME, url, auth, video_id, note)
+}
+
+/// [`call_api`] for an extractor `name` (its `IE_NAME` in the messages).
+fn call_api_named(
+    client: &Client,
+    name: &'static str,
+    url: &Url,
+    auth: &str,
+    video_id: &str,
+    note: &str,
+) -> Result<(Value, Value)> {
     let json = download_json_note_headers(
         client,
         url,
-        NAME,
+        name,
         video_id,
         note,
         &[("Authorization", auth)],
@@ -57,7 +78,7 @@ fn call_api(
             .and_then(Value::as_str)
             .unwrap_or_default();
         return Err(Error::Reported(format!(
-            "[{NAME}] {video_id}: {NAME} said: {message}"
+            "[{name}] {video_id}: {name} said: {message}"
         )));
     }
     Ok((
@@ -175,19 +196,7 @@ impl Extractor for RctiPlus {
             crate::screen::extracting_url(url.as_str())
         ));
         // `_real_initialize`: the visitor's access token.
-        let visitor = download_json_note(
-            client,
-            &Url::parse("https://api.rctiplus.com/api/v1/visitor?platform=web")?,
-            NAME,
-            &video_id,
-            "Fetching authorization key",
-        )?;
-        let auth = visitor
-            .get("data")
-            .and_then(|data| data.get("access_token"))
-            .and_then(Value::as_str)
-            .unwrap_or_default()
-            .to_owned();
+        let auth = visitor_auth(client, &video_id)?;
 
         let url_version = if video_type == "missed-event" {
             "v2"
@@ -387,9 +396,305 @@ impl Extractor for RctiPlus {
     }
 }
 
+/// `_real_initialize`: the visitor's access token (`data.access_token`).
+fn visitor_auth(client: &Client, note_id: &str) -> Result<String> {
+    let visitor = download_json_note(
+        client,
+        &Url::parse("https://api.rctiplus.com/api/v1/visitor?platform=web")?,
+        NAME,
+        note_id,
+        "Fetching authorization key",
+    )?;
+    Ok(visitor
+        .get("data")
+        .and_then(|data| data.get("access_token"))
+        .and_then(Value::as_str)
+        .unwrap_or_default()
+        .to_owned())
+}
+
+/// `RCTIPlusSeriesIE._AGE_RATINGS`.
+fn age_rating(code: &str) -> Option<i64> {
+    match code {
+        "S-SU" | "SU" | "P" => Some(2),
+        "A" => Some(7),
+        "R" => Some(13),
+        "R-R/1" => Some(17),
+        "D" => Some(18),
+        _ => None,
+    }
+}
+
+/// `traverse_obj(data, path, expected_type=lambda x: strip_or_none(x) or None)`
+/// of a list of `name`s: the non-blank stripped names.
+fn names_of(values: Vec<&Value>) -> Value {
+    values
+        .into_iter()
+        .filter_map(|value| value.as_str())
+        .map(str::trim)
+        .filter(|name| !name.is_empty())
+        .map(Value::from)
+        .collect::<Vec<Value>>()
+        .into()
+}
+
+/// `RCTIPlusSeriesIE._entries(url, ...)`: every page of a list endpoint, each
+/// item as a `url` entry with the series metadata. A `not found` list is empty.
+fn series_list_entries(
+    client: &Client,
+    auth: &str,
+    url: &str,
+    display_id: &str,
+    note: &str,
+    metadata: &[(&'static str, Value)],
+) -> Result<Vec<VideoInfo>> {
+    let first = call_api_named(
+        client,
+        SERIES_NAME,
+        &Url::parse(&format!("{url}&length=20&page=0"))?,
+        auth,
+        display_id,
+        note,
+    );
+    let total_pages = match first {
+        Ok((_, meta)) => meta
+            .get("pagination")
+            .and_then(|pagination| pagination.get("total_page"))
+            .and_then(Value::as_i64)
+            .unwrap_or(0),
+        Err(Error::Reported(message)) if message.contains("not found") => return Ok(Vec::new()),
+        Err(error) => return Err(error),
+    };
+    let mut entries = Vec::new();
+    for page in 1..=total_pages.max(0) {
+        let (items, _) = call_api_named(
+            client,
+            SERIES_NAME,
+            &Url::parse(&format!("{url}&length=20&page={page}"))?,
+            auth,
+            display_id,
+            &format!("{note} page {page}"),
+        )?;
+        for item in items.as_array().into_iter().flatten() {
+            entries.push(series_entry(item, metadata)?);
+        }
+    }
+    Ok(entries)
+}
+
+/// One program item as a `url` entry (its keys in upstream's dict order).
+fn series_entry(item: &Value, metadata: &[(&'static str, Value)]) -> Result<VideoInfo> {
+    let field = |key: &str| item.get(key).cloned().unwrap_or(Value::Null);
+    let share_link = field("share_link");
+    let target = share_link.as_str().unwrap_or_default().to_owned();
+    let display_id = item
+        .get("title_code")
+        .and_then(Value::as_str)
+        .map_or(Value::Null, |code| Value::from(code.replace('_', "-")));
+    let mut entry = Map::new();
+    entry.insert("_type".into(), "url".into());
+    entry.insert("url".into(), share_link);
+    entry.insert("ie_key".into(), NAME.into());
+    entry.insert("id".into(), field("product_id"));
+    entry.insert("title".into(), field("title"));
+    entry.insert("display_id".into(), display_id);
+    entry.insert("description".into(), field("summary"));
+    entry.insert("timestamp".into(), field("release_date"));
+    entry.insert("duration".into(), field("duration"));
+    entry.insert("season_number".into(), field("season"));
+    entry.insert("episode_number".into(), field("episode"));
+    for (key, value) in metadata {
+        entry.insert((*key).into(), value.clone());
+    }
+    url_entry_map(&target, entry)
+}
+
+/// A `url` result to [`RctiPlus`] carrying the entry's fields in order.
+fn url_entry_map(target: &str, entry: Map<String, Value>) -> Result<VideoInfo> {
+    let url = Url::parse(target)?;
+    let mut info = super::direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": {},
+            "ie_key": NAME,
+            "extractor": SERIES_NAME,
+            "entry": Value::Object(entry),
+        }),
+    );
+    Ok(info)
+}
+
+impl Extractor for RctiPlusSeries {
+    fn key(&self) -> &'static str {
+        SERIES_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = SERIES_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let series_id = found["id"].to_owned();
+        let display_id = found["display_id"].to_owned();
+        let video_type = found.name("type").map(|kind| kind.as_str().to_owned());
+        crate::screen::set_extractor(SERIES_NAME);
+        crate::screen::screen(&format!(
+            "[{SERIES_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        if let Some(kind) = &video_type {
+            crate::screen::warning(&format!(
+                "Only {kind} will be downloaded. To download everything from the series, remove \"/{kind}\" from the URL"
+            ));
+        }
+        let auth = visitor_auth(client, &display_id)?;
+
+        let (series_meta, _) = call_api_named(
+            client,
+            SERIES_NAME,
+            &Url::parse(&format!(
+                "https://api.rctiplus.com/api/v1/program/{series_id}/detail"
+            ))?,
+            &auth,
+            &display_id,
+            "Downloading series metadata",
+        )?;
+        let age_limit = series_meta
+            .get("age_restriction")
+            .and_then(|restrictions| restrictions.get(0))
+            .and_then(|restriction| restriction.get("code"))
+            .and_then(Value::as_str)
+            .and_then(age_rating)
+            .map_or(Value::Null, Value::from);
+        let cast_sources: Vec<&Value> = ["starring", "creator", "writer"]
+            .iter()
+            .filter_map(|key| series_meta.get(*key).and_then(Value::as_array))
+            .flatten()
+            .filter_map(|person| person.get("name"))
+            .collect();
+        let tag_sources: Vec<&Value> = series_meta
+            .get("tag")
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+            .filter_map(|tag| tag.get("name"))
+            .collect();
+        let metadata: Vec<(&'static str, Value)> = vec![
+            ("age_limit", age_limit),
+            ("cast", names_of(cast_sources)),
+            ("tags", names_of(tag_sources)),
+        ];
+
+        let mut entries = Vec::new();
+        if video_type.as_deref().is_none_or(|kind| kind == "episodes") {
+            let seasons = match call_api_named(
+                client,
+                SERIES_NAME,
+                &Url::parse(&format!(
+                    "https://api.rctiplus.com/api/v1/program/{series_id}/season"
+                ))?,
+                &auth,
+                &display_id,
+                "Downloading seasons list JSON",
+            ) {
+                Ok((seasons, _)) => seasons,
+                Err(Error::Reported(message)) if message.contains("not found") => Value::Null,
+                Err(error) => return Err(error),
+            };
+            for season in seasons.as_array().into_iter().flatten() {
+                let number = season.get("season").cloned().unwrap_or(Value::Null);
+                let number_text = match &number {
+                    Value::String(text) => text.clone(),
+                    other => other.to_string(),
+                };
+                entries.extend(series_list_entries(
+                    client,
+                    &auth,
+                    &format!(
+                        "https://api.rctiplus.com/api/v2/program/{series_id}/episode?season={number_text}"
+                    ),
+                    &display_id,
+                    &format!("Downloading season {number_text} episode entries"),
+                    &metadata,
+                )?);
+            }
+        }
+        if video_type.as_deref().is_none_or(|kind| kind == "extras") {
+            entries.extend(series_list_entries(
+                client,
+                &auth,
+                &format!("https://api.rctiplus.com/api/v2/program/{series_id}/extra?content_id=0"),
+                &display_id,
+                "Downloading extra entries",
+                &metadata,
+            )?);
+        }
+        if video_type.as_deref().is_none_or(|kind| kind == "clips") {
+            entries.extend(series_list_entries(
+                client,
+                &auth,
+                &format!("https://api.rctiplus.com/api/v2/program/{series_id}/clip?content_id=0"),
+                &display_id,
+                "Downloading clip entries",
+                &metadata,
+            )?);
+        }
+
+        let title = series_meta
+            .get("title")
+            .and_then(Value::as_str)
+            .map(str::to_owned);
+        let description = series_meta
+            .get("summary")
+            .and_then(Value::as_str)
+            .map(str::to_owned);
+        let mut keys = vec!["display_id", "age_limit", "cast", "tags", "id"];
+        let mut extra = Map::new();
+        extra.insert("display_id".into(), display_id.clone().into());
+        for (key, value) in &metadata {
+            extra.insert((*key).into(), value.clone());
+        }
+        if title.is_some() {
+            keys.push("title");
+        }
+        if description.is_some() {
+            keys.push("description");
+            extra.insert("description".into(), description.clone().into());
+        }
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            format!("playlist-dict;{}", keys.join(",")).into(),
+        );
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: series_id,
+            title: title.unwrap_or_default(),
+            webpage_url: url.clone(),
+            extractor: SERIES_NAME.into(),
+            extractor_key: SERIES_KEY.into(),
+            nested: Vec::new(),
+            pending: None,
+            entries,
+            extra,
+        })))
+    }
+}
+
 /// URL matching for `--list-extractors`.
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
+}
+
+/// `RCTIPlusSeriesIE.suitable`: a program page that is not an episode URL.
+pub fn series_suitable(url: &str) -> bool {
+    !VALID_URL.is_match(url) && SERIES_URL.is_match(url)
 }
 
 #[cfg(test)]

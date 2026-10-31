@@ -1,0 +1,170 @@
+{
+  "data" : {
+    "attributes" : {
+      "markers" : {
+        "introEnd" : 81550,
+        "introStart" : 67700,
+        "videoAboutToEnd" : 2419750
+      },
+      "reportProgressInterval" : 60000,
+      "ssaiInfo" : {
+        "adMetadataSchemaVersion" : "",
+        "forecastTimeline" : [ {
+          "event" : {
+            "action" : "streamInitiate",
+            "schema" : "playback"
+          },
+          "time" : {
+            "contentPosition" : 0.0,
+            "streamPosition" : 0.0
+          },
+          "triggerTime" : 0.0
+        }, {
+          "event" : {
+            "action" : "start",
+            "schema" : "playback"
+          },
+          "time" : {
+            "contentPosition" : 0.0,
+            "streamPosition" : 0.0
+          },
+          "triggerTime" : 0.001
+        }, {
+          "event" : {
+            "action" : "start",
+            "duration" : 2490.888,
+            "position" : 0,
+            "schema" : "chapter"
+          },
+          "time" : {
+            "contentPosition" : 0.0,
+            "streamPosition" : 0.0
+          },
+          "triggerTime" : 0.002
+        }, {
+          "event" : {
+            "action" : "start",
+            "duration" : 13.85,
+            "schema" : "bumper",
+            "type" : "intro"
+          },
+          "time" : {
+            "contentPosition" : 67.7,
+            "streamPosition" : 67.7
+          },
+          "triggerTime" : 67.7
+        }, {
+          "event" : {
+            "action" : "complete",
+            "duration" : 13.85,
+            "schema" : "bumper",
+            "type" : "intro"
+          },
+          "time" : {
+            "contentPosition" : 81.55,
+            "streamPosition" : 81.55
+          },
+          "triggerTime" : 81.55
+        }, {
+          "event" : {
+            "action" : "start",
+            "duration" : 71.105,
+            "schema" : "bumper",
+            "type" : "credits"
+          },
+          "time" : {
+            "contentPosition" : 2419.75,
+            "streamPosition" : 2419.75
+          },
+          "triggerTime" : 2419.75
+        }, {
+          "event" : {
+            "action" : "complete",
+            "duration" : 71.105,
+            "schema" : "bumper",
+            "type" : "credits"
+          },
+          "time" : {
+            "contentPosition" : 2490.855,
+            "streamPosition" : 2490.855
+          },
+          "triggerTime" : 2490.855
+        }, {
+          "event" : {
+            "action" : "complete",
+            "duration" : 2490.888,
+            "position" : 0,
+            "schema" : "chapter"
+          },
+          "time" : {
+            "contentPosition" : 2490.888,
+            "streamPosition" : 2490.888
+          },
+          "triggerTime" : 2490.888
+        }, {
+          "event" : {
+            "action" : "complete",
+            "schema" : "playback"
+          },
+          "time" : {
+            "contentPosition" : 2490.888,
+            "streamPosition" : 2490.888
+          },
+          "triggerTime" : 2490.889
+        }, {
+          "event" : {
+            "action" : "streamComplete",
+            "schema" : "playback"
+          },
+          "time" : {
+            "contentPosition" : 2490.888,
+            "streamPosition" : 2490.888
+          },
+          "triggerTime" : 2490.89
+        } ],
+        "vendorAttributes" : {
+          "breaks" : [ ],
+          "interstitialUrl" : "",
+          "nonLinearAds" : [ ],
+          "pingUrl" : "",
+          "sessionId" : "iCTxlFEoLx"
+        }
+      },
+      "streaming" : [ {
+        "cdn" : "cloudfront_dplus_na",
+        "fallback" : false,
+        "playbackProfile" : "h264-hls-ts-hd-sdr-free-clear",
+        "protection" : {
+          "clearkeyEnabled" : false,
+          "drmEnabled" : false,
+          "schemes" : null
+        },
+        "provider" : "gps",
+        "streamMode" : "VOD",
+        "type" : "hls",
+        "url" : "https://dplus-northamerica.media-edge.prod-vod.h264.io/b3d28309-b1f4-4d36-a924-86a195789aa1/hls_clear_ts/edge-cache-token=Expires=1793545928&KeyName=media-edge-key-prod-northamerica-200d417&Signature=0FhFGuJa0pI2tLgN295fIdxxUsMbDlCloyZctSL01bGo86J2hMOh6tUL6ubGZ4cRpDXuyvA7VhQOZ0F514rdCA/master.m3u8"
+      } ],
+      "userInfo" : {
+        "packages" : [ "Free" ]
+      },
+      "viewingHistory" : {
+        "viewed" : false
+      }
+    },
+    "id" : "5341132",
+    "type" : "videoPlaybackInfo"
+  },
+  "meta" : {
+    "site" : {
+      "attributes" : {
+        "brand" : "go",
+        "brandId" : "ids",
+        "mainTerritoryCode" : "us",
+        "theme" : "ids",
+        "websiteHostName" : ""
+      },
+      "id" : "ids",
+      "type" : "site"
+    }
+  }
+}

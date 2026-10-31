@@ -1,0 +1,18 @@
+[
+ {
+  "url": "http://www.cbc.ca/i/caffeine/syndicate/?mediaId=2657631896",
+  "args": ["-J", "--no-geo-bypass"]
+ },
+ {
+  "url": "https://www.cbc.ca/listen/cbc-podcasts/1353-the-naked-emperor/episode/16142603-introducing-understood-who-broke-the-internet",
+  "args": ["-J"]
+ },
+ {
+  "url": "https://www.cbc.ca/listen/cbc-podcasts/1-synthetic/episode/1-missing",
+  "args": ["-J"]
+ },
+ {
+  "url": "http://www.cbc.ca/player/play/1",
+  "args": ["-J", "--no-geo-bypass"]
+ }
+]

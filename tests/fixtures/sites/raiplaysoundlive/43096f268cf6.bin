@@ -1,0 +1,29 @@
+<Mediapolis>
+	<url type="content">
+		<![CDATA[https://8e7439fdb1694c8da3a0fd63e4dda518.msvdn.net/radiodue1/hls/playlist_mo.m3u8?auth=daEcBa5bBdPdOaIb9dpcebCcwaeakbQazai-bQ5Gw4-c0-HjyvyHo&aifp=V001]]>
+	</url>
+	<url type="bumper"></url>
+	<url type="bumperend"></url>
+	<ct>hls_ios</ct>
+	<bitrate>0</bitrate>
+	<smooth>Y</smooth>
+	<is_live>Y</is_live>
+	<description>Rai</description>
+	<geoprotection>N</geoprotection>
+	<category>791</category>
+	<plVod></plVod>
+	<plLive></plLive>
+	<logo></logo>
+	<poster>https://www.rai.it/dl/RaiTV/2012/images/ogImage.jpg</poster>
+	<duration>$LIVE_DURATION</duration>
+	<krpano></krpano>
+	<channel></channel>
+	<ads_tecnico></ads_tecnico>
+	<license_url>
+		<![CDATA[{}]]>
+	</license_url>
+	<thumbs_array>
+<![CDATA[{}]]>
+	</thumbs_array>
+	<vtt_poster_thumbs_url><![CDATA[]]></vtt_poster_thumbs_url>
+</Mediapolis>

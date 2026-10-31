@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://www.bilibili.com/audio/music-service-c/web/url?sid=1003142",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "url-1003142.json"
+  },
+  {
+   "url": "https://www.bilibili.com/audio/music-service-c/web/song/info?sid=1003142",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "song-info-1003142.json"
+  }
+ ]
+}

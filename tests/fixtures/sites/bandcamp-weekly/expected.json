@@ -1,0 +1,36 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://bandcamp.com/radio?show=224",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"224\", \"episode_id\": \"224\", \"episode\": \"Magic Moments\", \"title\": \"Bandcamp Weekly, 2017-04-04\", \"series\": \"Bandcamp Weekly\", \"thumbnail\": \"https://f4.bcbits.com/img/9982549_0.jpg\", \"description\": null, \"duration\": 5829.77, \"release_timestamp\": 1491264000, \"formats\": [{\"url\": \"https://bandcamp.com/stream_redirect?enc=mp3-128&track_id=1728916733&ts=1793459670&t=4ee1e4e14b2bffbb432913ef3b00d3e48951a3db\", \"format_id\": \"mp3-128\", \"ext\": \"mp3\", \"acodec\": \"mp3\", \"vcodec\": \"none\", \"abr\": 128, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 93276320, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3-128 - audio only\"}], \"webpage_url\": \"https://bandcamp.com/radio?show=224\", \"original_url\": \"https://bandcamp.com/radio?show=224\", \"webpage_url_basename\": \"radio\", \"webpage_url_domain\": \"bandcamp.com\", \"extractor\": \"Bandcamp:weekly\", \"extractor_key\": \"BandcampWeekly\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://f4.bcbits.com/img/9982549_0.jpg\", \"id\": \"0\"}], \"display_id\": \"224\", \"fulltitle\": \"Bandcamp Weekly, 2017-04-04\", \"duration_string\": \"1:37:09\", \"release_date\": \"20170404\", \"release_year\": 2017, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://bandcamp.com/stream_redirect?enc=mp3-128&track_id=1728916733&ts=1793459670&t=4ee1e4e14b2bffbb432913ef3b00d3e48951a3db\", \"format_id\": \"mp3-128\", \"ext\": \"mp3\", \"acodec\": \"mp3\", \"vcodec\": \"none\", \"abr\": 128, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"filesize_approx\": 93276320, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3-128 - audio only\", \"_filename\": \"Bandcamp Weekly, 2017-04-04 [224].mp3\", \"filename\": \"Bandcamp Weekly, 2017-04-04 [224].mp3\", \"__write_download_archive\": false}], \"url\": \"https://bandcamp.com/stream_redirect?enc=mp3-128&track_id=1728916733&ts=1793459670&t=4ee1e4e14b2bffbb432913ef3b00d3e48951a3db\", \"format_id\": \"mp3-128\", \"ext\": \"mp3\", \"acodec\": \"mp3\", \"vcodec\": \"none\", \"abr\": 128, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 93276320, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3-128 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://bandcamp.com/radio?show=224",
+   "args": [
+    "--print",
+    "title,series,episode,release_date,duration",
+    "--format",
+    "mp3-128"
+   ],
+   "exit": 0,
+   "stdout": [
+    "Bandcamp Weekly, 2017-04-04",
+    "Bandcamp Weekly",
+    "Magic Moments",
+    "20170404",
+    "5829.77"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

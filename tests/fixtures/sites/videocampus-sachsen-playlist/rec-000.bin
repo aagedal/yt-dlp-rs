@@ -1,0 +1,3148 @@
+<!DOCTYPE html>
+<html prefix="og: https://"
+      lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="title" content="Online tutorials ONYX - BPS - Educational organisations - VCS" />
+<meta name="description" content="Videocampus Sachsen" />
+<meta name="keywords" content="VCS, Videocampus, Sachsen, Videoplattform, Video, Audio, Studium, Lehre, Forschung, BPS, Bildungsportal, Universität, Hochschule, Berufsakademie" />
+<meta name="robots" content="index, follow" />
+<meta name="language" content="en" />
+<meta name="generator" content="Videocampus Sachsen (029A698379ED)" />
+		      <link rel="shortcut icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"
+        href="/apple-touch-icon-57x57.png"/>
+  <link rel="apple-touch-icon-precomposed" sizes="114x114"
+        href="/apple-touch-icon-114x114.png"/>
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"
+        href="/apple-touch-icon-72x72.png"/>
+  <link rel="apple-touch-icon-precomposed" sizes="144x144"
+        href="/apple-touch-icon-144x144.png"/>
+  <link rel="apple-touch-icon-precomposed" sizes="60x60"
+        href="/apple-touch-icon-60x60.png"/>
+  <link rel="apple-touch-icon-precomposed" sizes="120x120"
+        href="/apple-touch-icon-120x120.png"/>
+  <link rel="apple-touch-icon-precomposed" sizes="76x76"
+        href="/apple-touch-icon-76x76.png"/>
+  <link rel="apple-touch-icon-precomposed" sizes="152x152"
+        href="/apple-touch-icon-152x152.png"/>
+  <link rel="icon" type="image/png" href="/favicon-196x196.png" sizes="196x196"/>
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96"/>
+  <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32"/>
+  <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16"/>
+  <meta name="application-name" content="&nbsp;"/>
+  <meta name="msapplication-TileColor" content="#FFFFFF"/>
+  <meta name="msapplication-TileImage" content="http:///mstile-144x144.png"/>
+  <title>Online tutorials ONYX - BPS - Educational organisations - VCS</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/css/ocean.layout.min.css" rel="stylesheet" type="text/css" media="all"/>
+  <link href="/css/jquery-ui-slider.css" rel="stylesheet" type="text/css" media="all"/>
+
+  <!--  Guest Upload -->
+    <!-- / Guest Upload -->
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="/js/html5shiv.js"></script>
+    <script src="/js/respond.js"></script>
+    <link href="/css/lteIE8.css" rel="stylesheet" type="text/css" media="all" />
+  <![endif]-->
+
+  <style>
+﻿body{background:#fff}*:not(.vjs-play-progress::before){line-height:1.5em;word-spacing:.16em}a.underlined{text-decoration:underline}a.button{text-decoration:none}a.btn{text-decoration:none}.btn.focus{color:#fff;text-decoration:none;border-color:#3b6297;background-color:#3b6297}.btn:focus{color:#fff;text-decoration:none;border-color:#3b6297;background-color:#3b6297}.btn:hover{color:#fff;text-decoration:none;border-color:#3b6297;background-color:#3b6297}#siteSidebar{border-top:3px solid #fdfdfd}#siteSidebar #siteNav li:hover .sitemenu-submenu-wrap-form>button{color:#fff}#siteSidebar #siteNav li:hover .sitemenu-submenu-wrap-form button .icon-chevron-right:before{color:#fff}#siteSidebar #siteNav>ul>li:hover>.sitemenu-wrap-form button .icon-chevron-right:before{color:#fff}#siteSidebar #siteNav>ul>li ul li.active:hover .sitemenu-wrap-form button{color:#3b6297}#siteSidebar #siteNav>ul>li.active:hover>.sitemenu-wrap-form button .icon-chevron-right:before{color:#3b6297}#siteSidebar #siteNav li.active:hover .sitemenu-submenu-wrap-form button .icon-chevron-right:before{color:#fff}#siteSidebar #siteNav li.active:hover .sitemenu-submenu-wrap-form>button{color:#3b6297}.blogList .blogTeaser a:focus{background-color:rgba(0,0,0,0)}.groupThumbs .groupInfo a:focus{background-color:rgba(0,0,0,0)}.userActivity .media .content a:focus{background-color:rgba(0,0,0,0)}.userActivity .heading header .time{color:#3b6297}#activities-box .userActivity .media .content a:focus .mediaCover i:before{color:#3b6297 !important}a:focus .vmp-fnt-mnu{color:#3b6297}#siteNav li:not(.hasSublinks) button:focus{box-shadow:none}#siteNav li:hover button{color:#fff}#siteNav li.active>.sitemenu-wrap-form button{color:#fff}#siteNav li.active>.sitemenu-submenu-wrap-form{z-index:53}#siteNav li.active>.sitemenu-submenu-wrap-form>button{color:#fff}#siteNav li.active{background-color:#cad6db}#siteNav h2{display:block !important}#siteNav .hasSublinks{z-index:52}#siteNav .hasSublinks ul li.active{background-color:#cad6db}.shareMedia .btn:focus{box-shadow:none}.shareMedia .btn i{color:#51585f}.shareMedia .share-wrapper.is-shown{visibility:visible;z-index:99}.loading.btn:focus{box-shadow:none}.loading.btn{background-color:rgba(0,0,0,0);color:#3b6297}#searchHead .btn:focus{box-shadow:none}#searchHead .btn:hover{background-color:#475d7b}#searchHead .btn i{color:#51585f}h1{color:#3b6297}h2{color:#3b6297}h3{color:#3b6297}h4{color:#3b6297}h5{color:#3b6297}h6{color:#3b6297}.btn-default.active:hover{color:#3b6297}#siteNavHorizontal .hasSublinks .sublinks li{background:#dfe5eb}#siteNavHorizontal .hasSublinks .sublinks li.active,#siteNavHorizontal .hasSublinks .sublinks li:focus-within{background-color:#3b6297;color:#fff}#siteNavHorizontal ul li.active{background-color:#3b6297}#siteContent .media-overview ul.nav.tabbable.nav-tabs.media-overview--tabnav li.nav-item a.nav-link{color:#3b6297}#actionNav .actionLink{color:#51585f !important;outline:none !important}#actionNav .actionLink:focus .actionOffsetContainer{outline:2px solid #4f5a65 !important;z-index:1000;position:relative}.albumDetail .statistics li{color:#617ca3}.albumDetail .uploader li{color:#5b779a}.mediaDetail .statistics li{color:#617ca3}.mediaDetail .uploader li{color:#5b779a}.show-more span{background-color:#475d7b;color:#fff}.more{color:#475d7b}.more:hover{background-color:#475d7b;color:#fff}.tag{background-color:#587298;color:#fff;background-color:#6c757a;background:#5c7599}.tag:hover{background-color:#587298;color:#fff;background-color:#5c7599;background:#5c7599}.filterMedia li.active button{color:#1a1c1e;border-top:5px solid #617ca3;cursor:default;background-color:#fff;border-left:1px solid #ddd;border-right:1px solid #ddd;border-bottom-color:rgba(0,0,0,0)}.filterMedia li button{color:#3b6297;height:39px;margin-right:2px;line-height:0;border:1px solid rgba(0,0,0,0)}.filterMedia li button:hover{color:#fff;background-color:#728594;border-bottom:1px solid #3b6297}.filterMedia .active{color:#fff;background:#3b6297;border:none}#channels .vmp-desktop .channelThumbs.small a:focus{outline:3px solid #3b6297}#channels .vmp-desktop .slider .channelTeaser{border:4px solid rgba(0,0,0,0)}#channels .vmp-desktop .slider .channelTeaser:focus-within{background:#3b6297}#channels .vmp-desktop .slider .channelTeaser:focus-within a.link{width:100%;transition:width 1s}#channels .vmp-desktop .slider .channelTeaser:hover a.link{width:100%;transition:width 1s}.channelSlider .slider button{font-size:4em;color:#587298}.channelThumb a:focus{position:static}.categoryThumbs .details li{color:#617ca3}.channelThumbs.categoryThumbs a article{padding:2px}.channelThumbs.categoryThumbs a:focus .mediaCover .icons{visibility:visible;opacity:1}.channelThumbs.list a article{padding:2px}.channelThumbs.list a:focus .mediaCover .icons{visibility:visible;opacity:1}.mediaThumbs.small a article{padding:2px;padding:2px;border:1px solid #3b6297;box-shadow:none;border-radius:0;padding:0}.mediaThumbs.small a:focus .mediaCover .icons{visibility:visible;visibility:visible;opacity:1;opacity:1}.mediaThumbs.small .details{border-top:1px solid #3b6297}.mediaThumbs.small .additionalInfo p{color:#3b6297}.mediaThumbs.small article .mediaCover .uploader span{color:#3b6297}.mediaThumbs.categoryThumbs a article{padding:2px}.mediaThumbs.categoryThumbs a:focus .mediaCover .icons{visibility:visible;opacity:1}.mediaThumbs.list a article{padding:2px}.mediaThumbs.list a:focus .mediaCover .icons{visibility:visible;opacity:1}.media section a article{padding:2px}.channelThumbs.small a:focus .mediaCover .icons{visibility:visible;visibility:visible;opacity:1;opacity:1}.channelThumbs.big a:focus{z-index:500;position:static}.channelThumbs.big a:focus .mediaOverlay{margin:-2px;width:calc(100% + 4px)}.mediaThumbs.big a:focus{z-index:500;position:static}.channelTeaser .link h3{color:#fff}.channelTeaser .link p{color:#617ca3}.channelTeaser .link p i{color:#617ca3}.channelTeaser .link:hover p{color:#f0f0f0}.channelTeaser .link:focus{color:#f0f0f0;z-index:auto}#vimpFooter .copy{color:#465a79}#vimpFooter a:focus{box-shadow:0px 0px 0pt 1pt #3b6297}.tagged{overflow:hidden;border-radius:0;-moz-border-radius:0;-webkit-border-radius:0}.swiper-wrapper .swiper-slide .content-slide a:focus{outline:none !important}.viewChannel .statistics li p{color:#5b779a}.badge{background-color:#6c757a;background:#5c7599}.badge:hover{background-color:#5c7599;background:#5c7599}#contentWrapper .button-wrap-form button.tag{background-color:#6c757a;background:#5c7599}#contentWrapper .button-wrap-form button.tag:hover{background-color:#5c7599;background:#5c7599}.nav-tabs{border-bottom:1px solid #3b6297}.tagged.featured{background:url("../images/overlay-sprite-acc.png") 0 -187px no-repeat}.tagged.new{background:url("../images/overlay-sprite-acc.png") 0 -46px no-repeat}.tagged.favorite{background:url("../images/overlay-sprite-acc.png") 0 -236px no-repeat}.tagged.own{background:url("../images/overlay-sprite-acc.png") 0 -92px no-repeat}.tagged.friend{background:url("../images/overlay-sprite-acc.png") 0 -140px no-repeat}.tagged.rss{background:url("../images/overlay-sprite-acc.png") 0 -334px no-repeat}#activity .userActivity .date span{width:116px}span[data-td-toggle=datetimepicker]:focus{border:1px solid #3b6297}.vmp-fnt-btn-wrp{display:flex;padding:0 10px}.vmp-fnt-btn-wrp:hover .vmp-fnt-mnu{visibility:visible;z-index:9998}.vmp-fnt-btn-wrp .vmp-fnt-mnu:before{content:"";border-width:0 8px 8px 8px;border-color:rgba(0,0,0,0) rgba(0,0,0,0) #f5f6f7 rgba(0,0,0,0);border-style:solid;left:calc(5% - 8px);position:absolute;top:-8px}#vmp-cnl-fnt:focus{color:#fff;background-color:#3b6297}#vmp-cfm-fnt:focus{color:#fff;background-color:#3b6297}.vmp-fnt-mnu .ui-state-focus{background-color:#3b6297}#vmp-fnt-sld{width:300px;margin-left:30px}.vmp-xpl-txt{line-height:1.5em}.shadow{box-shadow:0 .5rem 1rem #3b6297 !important}#channelLinks .channelLink .channelThumb{border:1px solid #3b6297}#liveStreamLinks .liveStreamLink .liveStreamThumb{border:1px solid #3b6297}.comment{border:1px solid #3b6297;padding:10px 10px 0 10px}@media(min-width: 1000px){.vmp-mobile{display:none !important}}@media(max-width: 999px){.vmp-desktop{display:none !important}#mainFooter #footerLegal{width:auto}#mainFooter #footerText{width:auto}#mainFooter #footerLinks{width:auto}}#fileDetails #remove-custom-thumb-icon:focus{box-shadow:0px 0px 1pt 1pt #617ca3}#fileDetails #remove-custom-thumbnail-icon:focus{box-shadow:0px 0px 1pt 1pt #617ca3}#fileDetails label:focus-within input[type=radio]{box-shadow:0px 0px 7pt 1pt #6495ed;background-color:#6495ed}#fileDetails input[type=file]:focus-within{box-shadow:0px 0px 0pt 1pt #3b6297}#fileDetails #basic label:focus-within input[type=checkbox]{box-shadow:0px 0px 7pt 1pt #6495ed}#fileDetails #basic .custom_checkbox input[type=checkbox]:focus-within,#fileDetails #basic #clientShare input[type=checkbox]:focus-within{box-shadow:0px 0px 7pt 1pt #6495ed}#fileDetails #basic #cke_media_description:focus-within{outline:1px solid #6495ed}#fileDetails #basic #cke_media_description:focus{outline:1px solid #6495ed}#fileDetails #basic #media_copy_chat_lsid:focus,#fileDetails #basic #media_chat_offset:focus{box-shadow:0px 0px 0pt 1pt #3b6297}.radio-buttons-playlist input[type=radio]:focus{box-shadow:0px 0px 7pt 1pt #6495ed;background-color:#6495ed}.messageListing [id^=removeAttachment]:focus{box-shadow:inset 0px 0px 0pt 3px #3b6297}#mediaViewOptionsWrapper:focus-within input[type=checkbox]{box-shadow:0px 0px 7pt 1pt #6495ed;background-color:#6495ed}#timelineControleElements:focus-within input[type=checkbox]{box-shadow:0px 0px 7pt 1pt #6495ed;background-color:#6495ed}.playlist-visibility-actions input[type=radio]:focus{box-shadow:0px 0px 7pt 1pt #6495ed;background-color:#6495ed}#videojs_playerContainer .vjs-control-bar *:focus{border:2px dashed #fff}.categoriesDropdownSelectList>li{text-transform:none}.categoryDetail .category-lead .mediaThumb{max-width:500px !important}a#downloadSubtitles{width:fit-content;color:#fff;border:1px solid #008444;padding:.375rem .75rem;background:#008444}a#downloadSubtitles:hover,a#downloadSubtitles:focus{background:#006132}a#downloadSubtitles:focus{box-shadow:0 0 0 .25rem rgba(49,132,253,.5)}ul.a{list-style-type:circle;padding-left:2em;margin-bottom:1em}ul.b{list-style-type:square;padding-left:2em;margin-bottom:1em}ol.a{list-style-type:decimal;padding-left:2em;margin-bottom:1em}ol.b{list-style-type:upper-roman;padding-left:2em;margin-bottom:1em}ol.c{list-style-type:lower-alpha;padding-left:2em;margin-bottom:1em}h1,h2,h3,h4,h5,h6{color:#006132}a{color:#008444}a:hover,a:active{color:#006132}a:focus{background-color:#006132;color:#fff !important}a:visited{color:#006132}.albumDetail .statistics li,.mediaDetail .statistics li,.viewChannel .statistics li p,.mediaThumbs.small .details li,#contentWrapper .mediaThumbs.small a [class^=icon-],#contentWrapper .mediaThumbs.small a [class*=" icon-"],#contentWrapper a [class^=icon-],#contentWrapper a [class*=" icon-"]{color:#595656}.mediaThumbs.small .details li{font-size:1.3em}a.btn:visited{color:#fff}.btn:hover{border-color:#006132}.btn-primary,.btn-primary:visited{border-color:#008444}.btn-primary:hover,.btn-default:hover,.loading.btn:hover{background:#006132}.btn-primary,.btn-default,.loading.btn{background:#008444;color:#fff;border-color:#008444}.btn-primary i,.btn-default i,.loading.btn i{color:#fff}#contentWrapper .button-wrap-form button{border:1px solid #333;background:#008444;color:#fff}.btn-group>.btn{border:1px solid #008444}.btn :not(.btn-primary) :not(.btn-default) i{color:#333}.btn.active{background:#008444}.more{color:#000}.more:hover{background:#006132 !important;color:#fff !important}.btn-default.active.focus,.btn-default.active:focus,.btn-default:active.focus,.btn-default:active:focus,.btn-default:active:hover,.open>.dropdown-toggle.btn-default.focus,.open>.dropdown-toggle.btn-default:focus,.open>.dropdown-toggle.btn-default:hover{background-color:#006132}.toggle-filters .icon-filter{color:#fff}.toggle-filters.btn-default.active{background-color:#006132}#contentWrapper a.callToAction.btn [class^=icon-]{color:#fff}.btn-group>button.btn:focus,.filterMedia li button:focus,button.btn-default:focus,button:focus,.btn:focus,#videoUpload #uploadSubmit:focus,.buttonpane button:focus,#contentWrapper .button-wrap-form button:focus{background-color:#006132}form#deleteAcount button,form#deleteAccount button{background:#981e32;border-color:#981e32}.form-control:focus{border-color:#006132;outline:0;-webkit-box-shadow:0 0 8px 2px rgba(0,132,68,.5);box-shadow:0 0 8px 2px rgba(0,132,68,.5)}input[type=checkbox]:checked,input[type=checkbox]:checked:before{background-color:#008444}.checkbox label:focus-within,.form-group .vmp-inp-lbl:focus-within,.vmp-checkbox:focus-within{color:#fff;background-color:rgba(0,132,68,.5);border-color:#008444}#siteHeader{background:#008444;color:#fff;border-top:3px solid #008444}#siteHeader a,#siteHeader a [class*=" icon-"],#siteHeader a [class^=icon-],#siteHeader .glyphicon,#siteHeader #userActions:hover [class*=" icon-"]::before,#siteHeader #userActions:hover [class^=icon-]::before{color:#fff}#siteHeader .dropdown-menu a{color:#000}#siteHeader #headerContent>.vmp-fnt-btn-wrp:hover{background-color:#006132}#siteHeader #vmp-cnl-fnt:focus,#siteHeader #vmp-cfm-fnt:focus{background-color:#006132}#siteHeader #searchHead .btn{background-color:#fff}#siteHeader #searchHead .btn:hover,#siteHeader #searchHead .btn:focus{background-color:#006132 !important}#siteHeader #searchHead .btn i{color:#000}#siteHeader #headerContent #searchHead button[type=submit]:hover,#siteHeader #headerContent #searchHead button[type=submit]:focus{background-color:#006132}#siteHeader #headerContent>.upload:hover,#siteHeader #headerContent>.vmp-fnt-btn-wrp:hover,#siteHeader #userControls>.button:hover,#siteHeader #userControls>.button:hover>.linkToProfile{background-color:#006132}#siteHeader #headerContent>.language:hover,#siteHeader #headerContent>.language:focus{background-color:#006132}#siteHeader #headerContent>.language:hover a.dropdown-button,#siteHeader #headerContent>.language:focus a.dropdown-button{background-color:#006132}#siteHeader #headerContent>.language:hover a.dropdown-button i,#siteHeader #headerContent>.language:focus a.dropdown-button i{background-color:#006132}#siteHeader .changeLanguage.show li:hover,#siteHeader .changeLanguage.show li:hover *{background-color:#006132;color:#000}#siteHeader #headerContent #userActions>.userLoginLink:hover,#siteHeader #headerContent #userActions>.userLoginLink:hover>a,#siteHeader #headerContent #userActions>.userLoginLink:hover>a i::before{background-color:#006132}#siteHeader #headerContent #userActions>.userLoginLink>a:focus{background-color:#006132}#siteHeader #headerContent #userControls>a:hover{background:#006132}#siteHeader #headerContent a.upload:hover{background:#006132}#siteHeader #headerContent .language .dropdown-button{line-height:70px;padding:0 1em 0 1em;font-size:16.9px}#siteHeader #headerContent .language .dropdown-button:hover,#siteHeader #headerContent .language .dropdown-button:focus{background-color:#006132}#siteHeader #headerContent .userLoginLink a{line-height:70px;padding:0 1em 0 1em;font-size:16.9px}#siteHeader #userActions .userLoginLink,#siteHeader #userActions .userRegistrationLink{padding-top:0px}#siteHeader #userLinks a{color:#000}#siteHeader #userLinks .linkToProfile a:focus{background-color:rgba(0,0,0,0)}#siteHeader #userControls #profileLink p{color:#000}#siteHeader #userControls #furtherLinks ul li:hover,#siteHeader #userControls #furtherLinks ul li:focus-within{background:#008444}#siteHeader #userControls #furtherLinks ul li:hover a,#siteHeader #userControls #furtherLinks ul li:focus-within a{color:#fff !important}#siteHeader #userControls #furtherLinks ul li a:focus{background:rgba(0,0,0,0)}#siteHeader #profileLink a [class^=icon-]{color:#000}#siteHeader #userControls #profileLink .linkToProfile .links a:hover,#siteHeader #userControls #profileLink .linkToProfile .links a:focus,#siteHeader #userControls #profileLink .linkToProfile .links a:focus-within{background:#008444;color:#fff}#siteHeader #userControls #profileLink .linkToProfile .links a:hover [class^=icon-],#siteHeader #userControls #profileLink .linkToProfile .links a:focus [class^=icon-],#siteHeader #userControls #profileLink .linkToProfile .links a:focus-within [class^=icon-]{color:#fff}#userActions .userLoginLink>i,#userActions .userLoginLink:hover i,#userActions .userLoginLink:focus i{color:#fff}a#siteLogo:focus{border-color:#006132}#search:focus{background-color:#fff;color:#000}.vmp-fnt-btn-wrp .vmp-btn-wrp button,#fileUpload .vmp-adjust{border-color:#008444;color:#fff;background:#008444}.vmp-fnt-btn-wrp .vmp-btn-wrp button:hover,.vmp-fnt-btn-wrp .vmp-btn-wrp button:focus,#fileUpload .vmp-adjust:hover,#fileUpload .vmp-adjust:focus{background:#006132;border-color:#006132}#siteSidebar{background:#fff;color:#000}#siteSidebar #siteNav h2:first-child{display:none !important}#siteSidebar #siteNav ul li{background:#fff;border:0px}#siteSidebar #siteNav ul li .sitemenu-wrap-form>button{color:#000}#siteSidebar #siteNav ul li.active,#siteSidebar #siteNav ul li.active>.sitemenu-wrap-form button{background:#008444;border-right:5px solid #008444}#siteSidebar #siteNav ul li:hover,#siteSidebar #siteNav ul button:focus{background:#006132}#siteSidebar #categoryLinks{border-bottom:0px}#siteSidebar #categoryLinks ul li a{color:#000}#siteSidebar #categoryLinks ul li.scaled:not(.hasSublinks):hover{background:#006132}#siteSidebar #categoryLinks ul li.scaled:not(.hasSublinks):hover a{color:#fff}#siteSidebar #categoryLinks ul li.scaled.hasSublinks p:hover{background:#006132}#siteSidebar #categoryLinks ul li.scaled.hasSublinks p:hover a{color:#fff}#siteSidebar #categoryLinks ul li.hasSublinks:not(.scaled) a:hover{background:#006132;color:#fff}#siteSidebar #categoryLinks ul li:not(.scaled):not(.hasSublinks) a:hover{background:#006132;color:#fff}#siteSidebar #categoryLinks div{display:none}.nav-tabs{border-bottom:1px solid #008444}.nav>li>a:focus{background:#006132;color:#fff}#siteContent .media-overview .nav.nav-tabs .active .nav-link{background-color:#008444}#siteFooter{background:#595656;color:#fff}#siteFooter h2,#siteFooter h3{color:#fff}#siteFooter a{color:#fff}#siteFooter a:hover{text-decoration:underline}#siteFooter a:focus{background:rgba(0,0,0,0)}#siteFooter #language .btn-check:focus+.btn,#siteFooter #language .btn:focus{box-shadow:none}#siteFooter #language .btn-group>.btn{color:#fff;border-color:#fff}#siteFooter #language .dropdown-button:hover,#siteFooter #language .dropdown-button:focus{background-color:#fff;color:#000}#siteFooter #language ul.changeLanguage li a,#siteFooter #language a [class*=" icon-"]{color:#000}#siteFooter #language .changeLanguage.show li:hover,#siteFooter #language .changeLanguage.show li:hover *,#siteFooter #language .changeLanguage.show li a:hover,#siteFooter #language .changeLanguage.show li a:focus{background-color:#006132}.btn-primary:active{background-color:#006132}#siteContent{background:#fff}#siteContent nav.tabbable .nav.nav-tabs>li>a:hover,#siteContent nav.tabbable .nav>li>a:focus,#siteContent nav.tabbable .nav.nav-tabs>li.active>a{background:#008444}#siteContent form{background:#fff}#siteContent .mediaForm .tabbable .nav.nav-tabs>li.active>a{background-color:#fff;color:#333}#siteContent .mediaForm .tabbable .nav.nav-tabs>li.active>a:focus{color:#333 !important}#siteContent .mediaForm .tabbable .nav.nav-tabs>li.active>a{border:1px solid;border-top-color:#ddd;border-right-color:#ddd;border-bottom-color:rgba(0,0,0,0);border-left-color:#ddd;border-top-left-radius:.25rem;border-top-right-radius:.25rem}#siteContent button:not(.btn) i{color:#333 !important}#siteContent .create-btn:hover,#siteContent .btn-primary:active{background-color:#006132;border-color:#006132}#siteContent #subNav ul.nav.tabbable.nav-tabs li.nav-item a.nav-link.active{background-color:#008444 !important}#siteContent #subNav ul.nav.tabbable.nav-tabs li.nav-item a.nav-link:hover,#siteContent #subNav ul.nav.tabbable.nav-tabs li.nav-item a.nav-link:focus{background-color:#006132 !important}.cookieConsent .cookieCategory .categoryName{color:#008444}.alert.cookieHint .cookieHolder a.underlined:focus{background-color:#006132}#cookieHintCloseButton,#cookieHintCloseButtonAll{background-color:#008444}#cookieHintCloseButton:hover,#cookieHintCloseButtonAll:hover,#cookieHintCloseButtonAll:focus{background-color:#006132;color:#fff}.alert.cookieHint .vmp-more-btn:focus p{background-color:#006132}.modal-dialog .modal-content button{color:#fff;border-color:#008444}.modal-dialog .modal-content button:focus,.modal-dialog .modal-content button:hover{background-color:#006132}.manageImageModal.modal .btn-group i{color:#fff}#siteContent .deleteCommentModal .btn-default:hover,#siteContent .deleteCommentModal .btn-primary:hover{background-color:#006132;border-color:#006132}#login-section .input-group:hover .input-group-addon{background-color:#008444;background:#008444}#login-section .input-group:hover .form-control{border-color:#333}#login-section form button.btn:hover,#login-section form button.sign-in-button:hover{background-color:#006132 !important;background:#006132 !important}.categoriesDropdownSelect{background:#008444;color:#fff;border:1px solid #008444}.categoriesDropdownSelectSummary:focus{background:#006132;color:#fff;border:1px solid #006132}.nav.nav-tabs>li.active>button{background:#008444;color:#fff !important}.filterMedia .active{background:#008444}.filterMedia li button{color:#333}.filterMedia li.active{background:#008444}.filterMedia li button:hover{background:#006132 !important;color:#fff !important;border-bottom:0px}.filterMedia li:focus-within,.filterMedia li:hover{background-color:#006132 !important;color:#fff !important;border-bottom:0px}.filterMedia li:focus-within button,.filterMedia li:hover button{color:#fff}.filterView .btn i{color:#008444 !important}.filterView button:hover,.filterView button:focus{background:#006132 !important}#siteContent.mediaUpload .mediaForm .tabbable ul.nav.nav-tabs li.nav-item a.nav-link.active{background-color:#008444}#siteContent.mediaUpload .mediaForm article.mediaForm>nav>ul.nav-tabs{border-bottom-color:#ddd}#siteContent.mediaUpload .mediaForm article.mediaForm form#videoUpload section#fileDetails input#media_confirm_rights+div{float:none !important;padding-top:0px !important;padding-left:2em}#siteContent.mediaUpload .mediaForm #fileUpload .vmp-adjust .icon-cog::before{color:#fff}#siteContent.mediaUpload .mediaForm #fileUpload .description{color:#000}#siteContent.mediaUpload .mediaForm #fileUpload .vmp-adjust:hover .icon-cog::before{background-color:#006132}.channelThumbs.small a:hover article,.channelThumbs.small a:focus article,.mediaThumbs.small a:hover article,.mediaThumbs.small a:focus article{border-color:#006132;-webkit-box-shadow:0 0 8px 2px rgba(0,132,68,.5);box-shadow:0 0 8px 2px rgba(0,132,68,.5)}.channelThumbs.small article,.mediaThumbs.small article{border-color:#008444}.channelThumbs.small a article,.mediaThumbs.small a article{border-color:#008444}#bigThumbs ul li div.mediaOverlay ul.details li>p{font-size:1.3em}#bigThumbs ul li div.mediaOverlay ul.details li>i{font-size:1.3em}#smallThumbs article h3{font-size:1.3em}#smallThumbs article div.additionalInfo p{font-size:1.3em;color:#008444}#list ul li article ul.details li>p{color:#000;font-size:1.3em}#list ul li article ul.details li>i{font-size:1.3em}#additionalMediaOwnersContent #userListContainer .userCover{display:none}#additionalMediaOwnersContent #userListContainer #additionalOwnerActions .editRoleBlock .editRole a{color:#fff}#additionalMediaOwnersContent #userListContainer #additionalOwnerActions .editRoleBlock .editRole a i{color:#fff}#additionalMediaOwnersContent #userListContainer #additionalOwnerActions .removeRole a{color:#fff}#additionalMediaOwnersContent #userListContainer #additionalOwnerActions .removeRole a i{color:#fff}#videojs_playerContainer #videojsPlayer .vjs-big-play-button .vjs-icon-placeholder::before{content:url("/images/bps_play_button_100x100.png") !important}#p_play_overlay.embedLoad{background-image:url(../images/bps_play_button_100x100.png) !important}.p_chapter_slider{background-color:rgba(0,0,0,.8) !important}article.viewMedia section.details div.media-actions ul.statistics li.likes a i{color:#595656 !important}.mediaActions{background:#008444;color:#fff}.mediaActions summary:focus{background:#006132}.mediaActions .mediaActionsList .mediaAction a[href^="/media/delete/key/"] i.icon-remove::before{content:""}.mediaActions .mediaActionsList .mediaAction a[href^="/webPlayerSubtitles/edit/key/"] i.icon-pencil::before{content:""}#actionNav .actionLink{color:#fff !important}#siteContent .actionLink i::before{color:#fff}div.media-actions ul.statistics>li.likes a:focus,div.media-actions ul.statistics>li.likes a:focus i::before{background:#fff;color:#595656}.shareMedia .btn{background-color:#008444;color:#fff}.shareMedia .btn:hover{background-color:#008444}.shareMedia .btn i{color:#fff}.downloadMedia .icon-cloud-download::before{color:#fff}a#download_link>i{color:#fff !important}.modal-dialog .modal-content button.btn{background:#008444}.modal-dialog .modal-content button.btn:disabled{color:#000 !important}#contentWrapper .button-wrap-form button.tag{background:#fff;border:1px solid #333;color:#000}#contentWrapper .button-wrap-form button.tag:hover{background:#ddd;color:#000}#siteContent.mediaDetail .viewMedia .details .mediaInfo .furtherInfos .mediaInfoHolder .customFields{display:none}.show-more span{background-color:#008444}#media-comments article.comment div.comment-avatar{display:none}#siteContent .comments .comment .text .btn.btn-default{border-color:#008444}#siteContent .comments .comment .text .btn.btn-primary:hover,#siteContent .comments .comment .text .btn.btn-default:hover{background-color:#006132;background:#006132}#subtitlesBody .rowOptions ul li a:hover{color:#006132}#siteContent .actionLink:hover{background:#006132}.mediaActionsList li:hover a{background:#006132}.albumThumbs article{border-color:#008444}.mediaThumbs.small .details{border-top-color:#008444}.mediaNavigationButton{background-color:#008444;color:#fff !important}.mediaNavigationButton i{color:#fff !important}.mediaNavigationButton:hover{background-color:#006132}#innerNav .btn:hover{border-color:#006132}#albumContent #addMedia .mediaCover i{color:#333}#actionNav .actionLink{background-color:#008444;border-color:#fff}#actionNav .actionLink:hover,#actionNav .actionLink:focus{background-color:#006132 !important;color:#fff !important}#siteContent article.viewProfile nav#subNav{z-index:10}.viewProfile #innerNav #subNav .nav-tabs-history li a.active:focus,.viewProfile #userInfo #subNav .nav-tabs-history li a.active:focus{box-shadow:0 0 0 0 !important}.viewProfile #innerNav #subNav .nav.nav-tabs>li>a{border:0px !important}@media(min-width: 799px){#siteContent article.viewProfile #innerNav{padding-bottom:1em}#siteContent article.viewProfile div.vmp-profile-bg>#userInfo{display:none}#siteContent article.viewProfile #subNav{width:auto}#siteContent article.viewProfile #subNav ul.nav{padding:0px}}#channels form .search-channel-btn{background-color:#008444}#channels form .search-channel-btn:hover{background-color:#006132}#channels form .input-group:hover .form-control{border-color:#333}.viewChannel #actionNav .actionLink{background:#008444;border-color:#333;color:#fff !important}.viewChannel #actionNav .actionLink i::before{color:#fff}#channelContent #settings #createChannel #details fieldset:nth-of-type(4){display:none}#membersList #editRoles,#membersList .remove,#save_role{color:#fff}#userList .addUsersList .userCover{display:none}#userList .addUsersList article{border:1px solid #ddd;border-radius:.25em;height:auto;padding-bottom:10px}#userList .addUsersList article .btn-group a.btn-default:not(.confirm){background:#008444}#userList .addUsersList article .btn-group a.btn-default.confirm{background:#981e32;border-color:#981e32}#userList .addUsersList article .btn-group a i{color:#fff}#membersList .remove:hover{background:#006132}#membersList .remove i,#membersList .editRole i:before{color:#fff !important}#membersList .userList .userCover{display:none}#membersList .userList article{border:1px solid #ddd;border-radius:.25em;height:auto;padding-bottom:10px}#contentWrapper ul.nav.tabbable.nav-tabs li.nav-item a.nav-link.active{background-color:#008444 !important}#contentWrapper ul.nav.tabbable.nav-tabs li.nav-item a.nav-link:hover,#contentWrapper ul.nav.tabbable.nav-tabs li.nav-item a.nav-link:focus{background-color:#006132 !important}#siteContent .media-overview ul.nav.tabbable.nav-tabs.media-overview--tabnav li.nav-item a.nav-link{color:#333}#administerMediaTable .rowOptions:hover .rowActions,#administerUserTable .rowOptions:hover .rowActions,#administerWebcontentTable .rowOptions:hover .rowActions{top:25px !important}#administerMediaTable .rowOptions a:hover,#administerUserTable .rowOptions a:hover,#administerWebcontentTable .rowOptions a:hover{background:#006132 !important;color:#fff !important}#administerUserTable thead tr th:first-child,#administerUserTable tbody tr.userRow td.userRowAvatar{display:none}#siteContent div.languages span.btn-primary{background:#006132}#siteContent div.languages span a{color:#fff}#contentWrapper .tabbable ul.nav.nav-tabs li.nav-item a.nav-link.active{background-color:#008444}#contentWrapper .tabbable ul.nav.nav-tabs li.nav-item a.nav-link:hover{background-color:#006132}.nav-tabs .nav-link.active{border-color:#008444}#siteContent nav.tabbable .nav.nav-tabs>li>a:hover,nav-tabs .nav-link:hover{border-color:#008444}.pagingLinks{font-weight:bold}.pagingLinks .pagination>li>span,.pagingLinks .pagination>li>a{background:#008444}.pagingLinks .pagination>li.active span{background:#006132}.pagingLinks .pagination>li>a:hover,.pagingLinks .pagination>li>a:focus{background:#006132}#siteContent #advancedSearchForm section.basics fieldset div label[for=search_confirm_rights]{display:none}#siteContent #advancedSearchForm section.basics fieldset div label[for=search_confirm_rights]+div{display:none}#siteHeader #mobile-top-nav{background:#008444}.mobile-hidden-search{background-color:#008444}.vmp-accordion .ui-accordion-header.ui-state-active{background:#008444}.vmp-accordion .ui-accordion-header{background:rgba(0,132,68,.5);border-color:#008444;color:#000}#mobile-top-nav .mobile-user-context #userControls a,#mobile-top-nav .mobile-user-context #userControls a [class^=icon-]{color:#333}#mobile-top-nav .mobile-user-context #userControls .userThumb{box-shadow:0 0 2px #333}#siteHeader #mobile-top-nav .mobile-user-context[data-menuopen=true] #userControls a:hover{background:#006132}.vmp-mobile .showMore{border:1px solid #333;color:#000;background:#ddd}.vmp-mobile .showMore:active{color:#fff;background:#333}@media(max-width: 798px){#userInfo .user-img-wrapper div.editImageCoverWrapper{display:none}}.vmp-mnu-label{background-color:#008444}
+</style>
+  
+  
+    </head>
+
+<body >
+
+<div class="alert alert-info alert-dismissible cookieHint" role="alert">
+  <div class="cookieHolder">
+    <p style="font-weight:bold;font-size:16px;margin-bottom:0;">This site uses cookies</p>
+    <p>We use cookies to design our website optimally for you. By confirming the button "Accept" you agree to the use of cookies. By clicking the checkboxes below, you can select which cookie categories you want to allow. Clicking the "Show more" button provides a description of each category. For further information, please refer to our <a class="underlined" href="/pages/view/id/3" name="privacy policy">privacy policy</a>.</p>
+    <div class="cookieBar">
+    <div class="cookieOptions">
+      <span class="tabPill" style="float:left;"><label for="necessaryCookies"><input type="checkbox" id="necessaryCookies" disabled checked name="Necessary">Necessary </span>
+            
+            
+      
+      <!--p id="showMore" class="tabPill" style="float:left;margin-bottom:0px;"><span>Show More </span> <i class="icon-chevron-down"></i></p -->
+    </div>
+    <div class="cookieLinks">
+      <a id="cookieHintCloseButton" role="button" href="" class="alert-link" name="Agree to selection">Agree to selection</a>
+      <a id="cookieHintCloseButtonAll" role="button" href="" class="alert-link" name="Agree to all">Agree to all</a>
+      <a id="cookieHintCloseButtonRejectAll" role="button" href="" class="alert-link" name="Reject all">Reject all</a>
+    </div>
+    </div>
+    <button class="vmp-more-btn"><p id="showMore" class="tabPill" name="Show More" data-show-more="Show More" data-show-less="Show Less" style="margin-bottom:0px;"><span>Show More</span> <i class="icon-chevron-down" role="presentation"> </i></p></button>
+    <div class="cookieDetails">
+      <p style="font-size:16px;">Cookie details</p>
+      <div class="detailsLeft">
+        <p tabIndex="0" id="necessaryCookiesLabel" class="tab active" name="Necessary">Necessary</p>
+                
+                
+              </div>
+      <div class="detailsRight">
+        <div class="cookiesList necessaryCookies" style="clear:both;">
+          <p>Necessary cookies help make a website usable by enabling basic functions like page navigation and access to secure areas of the website. The website cannot function properly without these cookies.</p>
+        </div>         
+                  
+                  
+                
+      </div>
+    </div>
+  </div>
+</div>
+
+<a name="top"></a>
+<header id="siteHeader" aria-label="header" role="banner">
+  <div class="wrapper">
+    <div class="vmp-leftwrp">
+      <a id="siteLogo" href="/">
+        <!-- ClientsPlugin -->
+                  <img src="/images/Logo-Videocampus-Sachsen_white_629665e7de5e7.png" alt="VCS"/>                <!-- /ClientsPlugin -->
+      </a>
+      <ul class="vmp-bypass-list vmp-desktop" role="navigation" aria-live="off" aria-atomic="false"
+          aria-label="bypass to other sections">
+        <li class="vmp-bypass">
+          <a href="#siteSidebar" class="goto" role="button"
+             name="go to navigation">go to navigation</a>
+          <!--form class="button-wrap-form" action="#siteSidebar">
+              <button class="goto" name="go to navigation">go to navigation</button>
+            </form-->
+        </li>
+        <li class="vmp-bypass">
+          <a href="#siteContent" class="goto" role="button"
+             name="go to main content">go to main content</a>
+          <!--form class="button-wrap-form" action="#siteContent">
+              <button class="goto" name="go to main content">go to main content</button>
+            </form-->
+        </li>
+        <li class="vmp-bypass">
+          <a href="#siteFooter" class="goto" role="button"
+             name="go to footer">go to footer</a>
+          <!--form class="button-wrap-form" action="#siteFooter">
+              <button class="goto" name="go to footer">go to footer</button>
+            </form-->
+        </li>
+      </ul>
+    </div>
+
+    <section id="headerContent" class="clearfix" aria-label="header content" role="complementary">
+      <a class="vmp-fnt-btn-wrp vmp-desktop" title="Font and Text" tabindex="0"
+         name="Letter spacing">
+        <div class="vmp-fnt-btn">
+          <i class="icon-font vmp-sml-icn"></i>
+          <i class="icon-font vmp-big-icn"></i>
+        </div>
+        <section class="vmp-fnt-mnu">
+          <div>
+            <p>
+              <label for="vmp-fntspace-vl" class="scalable-font">Letter spacing:</label>
+              <input type="text" id="vmp-fntspace-vl" class="vmp-fnt-value" readonly tabindex="-1"
+                     style="border:0; color:#f6931f; font-weight:bold; width: 30%;">
+            </p>
+            <div id="vmp-fntspace"></div>
+          </div>
+          <div>
+            <p>
+              <label for="vmp-fntsize-vl" class="scalable-font">Font size:</label>
+              <input type="text" id="vmp-fntsize-vl" class="vmp-fnt-value" readonly tabindex="-1"
+                     style="border:0; color:#f6931f; font-weight:bold; width: 25%;">
+            </p>
+            <div id="vmp-fntsize"></div>
+          </div>
+          <!--div>
+                    <p>
+                      <label for="vmp-wordspace-vl" class="scalable-font">Word spacing:</label>
+                      <input type="text" id="vmp-wordspace-vl" class="vmp-fnt-value" readonly tabindex="-1" style="border:0; color:#f6931f; font-weight:bold;">
+                    </p>
+                    <div id="vmp-wordspace"></div>
+                </div-->
+          <div class="vmp-xpl-txt-wrp">
+            <textarea class="vmp-xpl-txt" rows="5" readonly tabindex="-1" disable aria-label="font size and letter spacing representation">Lorem ipsum dolor sit amet consectetur adipiscing elit, urna consequat felis, aenean non a in donec nulla. &#13;&#10; Phasellus ante pellentesque erat cum risus consequat imperdiet aliquam.</textarea>
+          </div>
+          <div class="vmp-btn-wrp">
+            <button id="vmp-cnl-fnt" class="btn-primary default-ocean-btn" name="Cancel">Cancel</button>
+            <button id="vmp-cfm-fnt" class="btn-primary default-ocean-btn" name="OK" disabled>OK</button>
+          </div>
+        </section>
+      </a>
+      <span class="vmp-desktop">      <div id=searchHead>
+        <form action="/search" method="post">
+          <div class="input-group">
+            <label id=search-label for="search" class="search-label-desktop">search anything...</label>
+            <input maxlength="128" id="search" type="text" name="search" class="form-control search-desktop" role="search" aria-label="search anything" />            <button class="btn btn-default not-scalable" type="submit" aria-label="Search"><i class="icon-search" role="presentation"></i></button>
+          </div>
+        </form>
+      </div>
+
+</span>
+      <!-- ClientsPlugin -->
+                          <!-- /ClientsPlugin -->
+
+              
+
+
+<section id="userControls" class="clearfix">
+
+  
+      <section class="vmp-mobile">
+      <a class="userControls-item-holder login login-mobile" href="/login">
+        <span class="button login" title="Login"><span class="wrap"><i
+                    class="icon-user context-icon" role="presentation"></i></span></span>
+      <span class="show-title-mobile title-login">Login</span>
+    </a>
+    </section>
+<section id="userActions" class="clearfix">
+<!--  --><!--    <section class="userControls-item-holder language dropdown" data-daccess-class="LanguageSelect">-->
+<!--      <a id="language-dropdown-open-choices-button" href="#" title="Settings" class="dropdown-button dropdown-toggle"-->
+<!--         data-bs-toggle="dropdown" aria-label="--><!--" name="--><!--">-->
+<!--        <i class="icon-globe" role="presentation"></i>-->
+<!--        <span class="vmp-desktop">--><!--</span>-->
+<!--      </a>-->
+<!--      <ul class="changeLanguage dropdown-menu" role="menu" aria-labelledby="language-dropdown-open-choices-button">-->
+<!--        --><!--      </ul>-->
+<!--    </section>-->
+<!--  -->
+
+      <section
+            class="userLoginLink"  >
+                          <a href="/login" name="Login">
+          <i class="icon-user" role="presentation"></i>
+          <span class="vmp-desktop">Login </span>
+        </a>
+          </section> <!-- .userLoginLink -->
+      </section> <!-- #userActions -->
+
+
+    </section>          </section> <!-- #headerContent -->
+  </div> <!-- #wrapper -->
+
+  <div id="mobile-top-nav" class="vmp-mobile">
+    <span class="open-mobile-menu"><i class="icon-reorder"></i></span>
+    <a id="siteLogoMobile" href="/">
+      <!-- ClientsPlugin -->
+              <img src="/images/Logo-Videocampus-Sachsen_white_629665e7de5e7.png" alt="VCS"/>            <!-- /ClientsPlugin -->
+    </a>
+          <i class="icon-search show-search display-6"></i>
+      <div class="mobile-hidden-search vmp-mobile">
+              <div id=searchHeadMobile>
+        <form action="/search" method="post">
+          <div class="input-group">
+            <label id=search-label-mobilephone for="search_mobile" class="search-label-mobile">search anything...</label>
+            <input maxlength="128" id="search_mobile" type="text" name="search" class="form-control search-mobile" role="search" aria-label="search anything" />            <button class="btn btn-default not-scalable" type="submit" aria-label="Search"><i class="icon-search" role="presentation"></i></button>
+          </div>
+        </form>
+      </div>
+
+      </div>
+      </div>
+</header> <!-- #siteHeader -->
+    <div id="side-menu-nav" class="side-menu-mobile-nav">
+        <div id="siteSidebarMobile">
+
+                          <nav id="siteNav" role="navigation">
+          <h3>Navigation</h3>
+          <ul class="accordion">
+        <li  role="button">
+          <form action="/medias"  target="_self"  class="sitemenu-wrap-form" method="get">
+            <button  aria-label="Media">
+              Media            </button>
+          </form>
+        </li>
+        <li  role="button">
+          <form action="/album"  target="_self"  class="sitemenu-wrap-form" method="get">
+            <button  aria-label="Playlists">
+              Playlists            </button>
+          </form>
+        </li>
+        <li  role="button">
+          <form action="/channels"  target="_self"  class="sitemenu-wrap-form" method="get">
+            <button  aria-label="Channels">
+              Channels            </button>
+          </form>
+        </li>
+        <li  role="button">
+          <form action="/pages/view/id/20"  target="_self"  class="sitemenu-wrap-form" method="get">
+            <button  aria-label="First Steps">
+              First Steps            </button>
+          </form>
+        </li>
+        <li  role="button">
+          <form action="/pages/view/id/18"  target="_self"  class="sitemenu-wrap-form" method="get">
+            <button  aria-label="FAQ">
+              FAQ            </button>
+          </form>
+        </li>
+      </ul>
+    </nav> <!-- #siteNav -->
+          					                <article id="categoryLinksMobile" aria-label="categories">
+      <h2>Educational organisations</h2>
+      <ul class="accordion">
+                <li class=" " ><a href="/category/arbeitskreis-e2Dlearning/68" title="Arbeitskreis E-Learning" name="Arbeitskreis E-Learning">Arbeitskreis E-Learning</a></li>
+                <li class="hasSublinks active " aria-expanded="false" role="button">
+          <p class="clearfix">
+            <a href="/category/bps/90" title="BPS" name="BPS">BPS</a>
+            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+          </p>
+          <ul class="sublinks">
+                        <li class="active  activeCategory ">
+              <a href="/category/online-tutorials-onyx/91" name="Online tutorials ONYX">Online tutorials ONYX</a>
+                            
+                           </li>
+           
+          </ul>
+        </li>
+                <li class=" " ><a href="/category/duale-hochschule-sachsen/67" title="Duale Hochschule Sachsen" name="Duale Hochschule Sachsen">Duale Hochschule Sachsen</a></li>
+                <li class="hasSublinks  " aria-expanded="false" role="button">
+          <p class="clearfix">
+            <a href="/category/hds/69" title="HDS" name="HDS">HDS</a>
+            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+          </p>
+          <ul class="sublinks">
+                        <li class="  ">
+              <a href="/category/vorstudie-fuer-eine-hochschuluebergreifende-oer2Dinitiative-in-sachsen/147" name="Vorstudie für eine hochschulübergreifende OER-Initiative in Sachsen">Vorstudie für eine hochschulübergreifende OER-Initiative in Sachsen</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/digital-higher-education-saxony/95" name="Digital higher education Saxony">Digital higher education Saxony</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/teaching-hacks/94" name="Teaching Hacks">Teaching Hacks</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/start-of-studies-under-covid2D19-conditions/93" name="Start of studies under COVID-19 conditions">Start of studies under COVID-19 conditions</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/hds2Eforum/92" name="HDS.Forum">HDS.Forum</a>
+                            
+                           </li>
+           
+          </ul>
+        </li>
+                <li class=" " ><a href="/category/hfbk-dresden/66" title="HfBK Dresden" name="HfBK Dresden">HfBK Dresden</a></li>
+                <li class=" " ><a href="/category/hfm-dresden/70" title="HfM Dresden" name="HfM Dresden">HfM Dresden</a></li>
+                <li class=" " ><a href="/category/hgb-leipzig/74" title="HGB Leipzig" name="HGB Leipzig">HGB Leipzig</a></li>
+                <li class=" " ><a href="/category/hmt-leipzig/49" title="HMT Leipzig" name="HMT Leipzig">HMT Leipzig</a></li>
+                <li class=" " ><a href="/category/hs-mittweida/50" title="HS Mittweida" name="HS Mittweida">HS Mittweida</a></li>
+                <li class="hasSublinks  " aria-expanded="false" role="button">
+          <p class="clearfix">
+            <a href="/category/hs-palucca-dresden/72" title="HS Palucca Dresden" name="HS Palucca Dresden">HS Palucca Dresden</a>
+            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+          </p>
+          <ul class="sublinks">
+                        <li class="  ">
+              <a href="/category/body-awareness/138" name="Body Awareness">Body Awareness</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/oberschule/137" name="Oberschule">Oberschule</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/studiengang-choreografie/136" name="Studiengang Choreografie">Studiengang Choreografie</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/studiengang-tanz/135" name="Studiengang Tanz">Studiengang Tanz</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/campus/134" name="Campus">Campus</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/studiengang-tanzpaedagogik/133" name="Studiengang Tanzpädagogik">Studiengang Tanzpädagogik</a>
+                            
+                           </li>
+           
+          </ul>
+        </li>
+                <li class=" " ><a href="/category/hs-zittau2Fgoerlitz/53" title="HS Zittau/Görlitz" name="HS Zittau/Görlitz">HS Zittau/Görlitz</a></li>
+                <li class="hasSublinks  " aria-expanded="false" role="button">
+          <p class="clearfix">
+            <a href="/category/htw-dresden/52" title="HTW Dresden" name="HTW Dresden">HTW Dresden</a>
+            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+          </p>
+          <ul class="sublinks">
+                        <li class="  ">
+              <a href="/category/central-institutions/88" name="Central Institutions">Central Institutions</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/language-centre/87" name="Language Centre">Language Centre</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/ecampus/86" name="eCampus">eCampus</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/career-service/85" name="Career Service">Career Service</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/library/84" name="Library">Library</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/business-administration/83" name="Business Administration">Business Administration</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/mechanical-engineering/82" name="Mechanical Engineering">Mechanical Engineering</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/agriculture2Fenvironment2Fchemistry/81" name="Agriculture/Environment/Chemistry">Agriculture/Environment/Chemistry</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/informatics-2F-mathematics/80" name="Informatics / Mathematics">Informatics / Mathematics</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/spatial-information/79" name="Spatial Information">Spatial Information</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/electrical-engineering/78" name="Electrical Engineering">Electrical Engineering</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/design/77" name="Design">Design</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/civil-engineering/76" name="Civil Engineering">Civil Engineering</a>
+                            
+                           </li>
+           
+          </ul>
+        </li>
+                <li class=" " ><a href="/category/htwk-leipzig/51" title="HTWK Leipzig" name="HTWK Leipzig">HTWK Leipzig</a></li>
+                <li class=" " ><a href="/category/lrk-sachsen/71" title="LRK Sachsen" name="LRK Sachsen">LRK Sachsen</a></li>
+                <li class=" " ><a href="/category/slub-dresden/73" title="SLUB Dresden" name="SLUB Dresden">SLUB Dresden</a></li>
+                <li class=" " ><a href="/category/tu-ba-freiberg/47" title="TU BA Freiberg" name="TU BA Freiberg">TU BA Freiberg</a></li>
+                <li class="hasSublinks  " aria-expanded="false" role="button">
+          <p class="clearfix">
+            <a href="/category/tu-chemnitz/13" title="TU Chemnitz" name="TU Chemnitz">TU Chemnitz</a>
+            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+          </p>
+          <ul class="sublinks">
+                        <li class="  ">
+              <a href="/category/seniorenkolleg/146" name="Seniorenkolleg">Seniorenkolleg</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/kinder2Duni/145" name="Kinder-Uni">Kinder-Uni</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/teacher-education/23" name="Teacher Education">Teacher Education</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/behavioural-and-social-sciences/22" name="Behavioural and Social Sciences">Behavioural and Social Sciences</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/humanities/21" name="Humanities">Humanities</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/economics-and-business-administration/20" name="Economics and Business Administration">Economics and Business Administration</a>
+                            
+                           </li>
+           
+                        <li class="  hasSublinks" role="button"">
+              <a href="/category/computer-science/19" name="Computer Science">Computer Science</a>
+                            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+                            
+                               <ul class="sublinks">
+                                     <li class=" ">
+                      <a href="/category/professur-betriebssysteme/148" name="Professur Betriebssysteme">Professur Betriebssysteme</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/professur-technische-informatik/139" name="Professur Technische Informatik">Professur Technische Informatik</a>
+                    </li>
+                                  </ul>
+                            </li>
+           
+                        <li class="  ">
+              <a href="/category/electrical-engineering-and-information-technology/18" name="Electrical Engineering and Information Technology">Electrical Engineering and Information Technology</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/mechanical-engineering/17" name="Mechanical Engineering">Mechanical Engineering</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/mathematics/16" name="Mathematics">Mathematics</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/natural-sciences/15" name="Natural Sciences">Natural Sciences</a>
+                            
+                           </li>
+           
+                        <li class="  hasSublinks" role="button"">
+              <a href="/category/central-institutions/65" name="Central Institutions">Central Institutions</a>
+                            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+                            
+                               <ul class="sublinks">
+                                     <li class=" ">
+                      <a href="/category/universitaetsbibliothek/144" name="Universitätsbibliothek">Universitätsbibliothek</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/internationales-universitaetszentrum/143" name="Internationales Universitätszentrum">Internationales Universitätszentrum</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/zentrum-fuer-sport2D-und-gesundheit/142" name="Zentrum für Sport- und Gesundheit">Zentrum für Sport- und Gesundheit</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/zentrum-fuer-lehrerbildung/141" name="Zentrum für Lehrerbildung">Zentrum für Lehrerbildung</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/zentrum-fuer-fremdsprachen/140" name="Zentrum für Fremdsprachen">Zentrum für Fremdsprachen</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/urz-2D-data-center/75" name="URZ - Data Center">URZ - Data Center</a>
+                    </li>
+                                  </ul>
+                            </li>
+           
+          </ul>
+        </li>
+                <li class="hasSublinks  " aria-expanded="false" role="button">
+          <p class="clearfix">
+            <a href="/category/tu-dresden/14" title="TU Dresden" name="TU Dresden">TU Dresden</a>
+            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+          </p>
+          <ul class="sublinks">
+                        <li class="  ">
+              <a href="/category/central-units/102" name="Central Units">Central Units</a>
+                            
+                           </li>
+           
+                        <li class="  hasSublinks" role="button"">
+              <a href="/category/school-of-medicine/101" name="School of Medicine">School of Medicine</a>
+                            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+                            
+                               <ul class="sublinks">
+                                     <li class=" ">
+                      <a href="/category/faculty-of-medicine-carl-gustav-carus/119" name="Faculty of Medicine Carl Gustav Carus">Faculty of Medicine Carl Gustav Carus</a>
+                    </li>
+                                  </ul>
+                            </li>
+           
+                        <li class="  hasSublinks" role="button"">
+              <a href="/category/school-of-civil-and-environmental-engineering/100" name="School of Civil and Environmental Engineering">School of Civil and Environmental Engineering</a>
+                            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+                            
+                               <ul class="sublinks">
+                                     <li class=" ">
+                      <a href="/category/faculty-of-business-and-economics/118" name="Faculty of Business and Economics">Faculty of Business and Economics</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/26quot3Bfriedrich-list26quot3B-faculty-of-transport-and-traffic-sciences/117" name="&quot;Friedrich List&quot; Faculty of Transport and Traffic Sciences">&quot;Friedrich List&quot; Faculty of Transport and Traffic Sciences</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-environmental-sciences/116" name="Faculty of Environmental Sciences">Faculty of Environmental Sciences</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-civil-engineering/115" name="Faculty of Civil Engineering">Faculty of Civil Engineering</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-architecture/114" name="Faculty of Architecture">Faculty of Architecture</a>
+                    </li>
+                                  </ul>
+                            </li>
+           
+                        <li class="  hasSublinks" role="button"">
+              <a href="/category/school-of-engineering-sciences/99" name="School of Engineering Sciences">School of Engineering Sciences</a>
+                            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+                            
+                               <ul class="sublinks">
+                                     <li class=" ">
+                      <a href="/category/faculty-of-mechanical-science-and-engineering/113" name="Faculty of Mechanical Science and Engineering">Faculty of Mechanical Science and Engineering</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-computer-science/112" name="Faculty of Computer Science">Faculty of Computer Science</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-electrical-and-computer-engineering/111" name="Faculty of Electrical and Computer Engineering">Faculty of Electrical and Computer Engineering</a>
+                    </li>
+                                  </ul>
+                            </li>
+           
+                        <li class="  hasSublinks" role="button"">
+              <a href="/category/school-of-humanities-and-social-sciences/98" name="School of Humanities and Social Sciences">School of Humanities and Social Sciences</a>
+                            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+                            
+                               <ul class="sublinks">
+                                     <li class=" ">
+                      <a href="/category/faculty-of-linguistics2C-literature-and-cultural-studies/110" name="Faculty of Linguistics, Literature and Cultural Studies">Faculty of Linguistics, Literature and Cultural Studies</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-arts2C-humanities-and-social-science/109" name="Faculty of Arts, Humanities and Social Science">Faculty of Arts, Humanities and Social Science</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-education/108" name="Faculty of Education">Faculty of Education</a>
+                    </li>
+                                  </ul>
+                            </li>
+           
+                        <li class="  hasSublinks" role="button"">
+              <a href="/category/school-of-science/97" name="School of Science">School of Science</a>
+                            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+                            
+                               <ul class="sublinks">
+                                     <li class=" ">
+                      <a href="/category/faculty-of-psychology/107" name="Faculty of Psychology">Faculty of Psychology</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-physics/106" name="Faculty of Physics">Faculty of Physics</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-mathematics/105" name="Faculty of Mathematics">Faculty of Mathematics</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-chemistry-and-food-chemistry/104" name="Faculty of Chemistry and Food Chemistry">Faculty of Chemistry and Food Chemistry</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-biology/103" name="Faculty of Biology">Faculty of Biology</a>
+                    </li>
+                                  </ul>
+                            </li>
+           
+                        <li class="  ">
+              <a href="/category/campus-life/96" name="Campus life">Campus life</a>
+                            
+                           </li>
+           
+          </ul>
+        </li>
+                <li class=" " ><a href="/category/uni-leipzig/48" title="Uni Leipzig" name="Uni Leipzig">Uni Leipzig</a></li>
+                <li class="hasSublinks  " aria-expanded="false" role="button">
+          <p class="clearfix">
+            <a href="/category/wh-zwickau/54" title="WH Zwickau" name="WH Zwickau">WH Zwickau</a>
+            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+          </p>
+          <ul class="sublinks">
+                        <li class="  ">
+              <a href="/category/hochschule-und-studiengaenge/120" name="Hochschule und Studiengänge">Hochschule und Studiengänge</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/zentrale-einrichtungen/121" name="Zentrale Einrichtungen">Zentrale Einrichtungen</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/vereine2C-projekte2C-initiativen/122" name="Vereine, Projekte, Initiativen">Vereine, Projekte, Initiativen</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-angewandte-kunst-schneeberg/123" name="Fakultät Angewandte Kunst Schneeberg">Fakultät Angewandte Kunst Schneeberg</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-angewandte-sprachen-und-interkulturelle-kommunikation/124" name="Fakultät Angewandte Sprachen und Interkulturelle Kommunikation">Fakultät Angewandte Sprachen und Interkulturelle Kommunikation</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-automobil2D-und-maschinenbau/125" name="Fakultät Automobil- und Maschinenbau">Fakultät Automobil- und Maschinenbau</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-elektrotechnik/126" name="Fakultät Elektrotechnik">Fakultät Elektrotechnik</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-gesundheits2D-und-pflegewissenschaften/127" name="Fakultät Gesundheits- und Pflegewissenschaften">Fakultät Gesundheits- und Pflegewissenschaften</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-kraftfahrzeugechnik/129" name="Fakultät  Kraftfahrzeugechnik">Fakultät  Kraftfahrzeugechnik</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-physikalische-technik-26amp3B-informatik/128" name="Fakultät Physikalische Technik &amp; Informatik">Fakultät Physikalische Technik &amp; Informatik</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-wirtschaftswissenschaften/130" name="Fakultät Wirtschaftswissenschaften">Fakultät Wirtschaftswissenschaften</a>
+                            
+                           </li>
+           
+          </ul>
+        </li>
+      </ul>
+
+      <div class="bottom">
+        <form class="button-wrap-form" action="/category">
+          <button class="more" name="view categories">view categories</button>
+        </form>
+      </div>
+
+    </article> <!-- #categoryLinks -->
+                  </div> <!-- #siteSidebar -->
+    </div>
+
+
+<!-- #Horizontal navigation -->
+
+<div id="contentWrapper" class="clearfix" data-webtvmode="normal">
+
+        
+      <div id="siteSidebar" class="vmp-desktop">
+
+                    
+          <article id="categoryLinks" aria-label="categories">
+      <h2>Educational organisations</h2>
+      <ul class="accordion">
+                <li class=" " ><a href="/category/arbeitskreis-e2Dlearning/68" title="Arbeitskreis E-Learning" name="Arbeitskreis E-Learning">Arbeitskreis E-Learning</a></li>
+                <li class="hasSublinks active " aria-expanded="false" role="button">
+          <p class="clearfix">
+            <a href="/category/bps/90" title="BPS" name="BPS">BPS</a>
+            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+          </p>
+          <ul class="sublinks">
+                        <li class="active  activeCategory ">
+              <a href="/category/online-tutorials-onyx/91" name="Online tutorials ONYX">Online tutorials ONYX</a>
+                            
+                           </li>
+           
+          </ul>
+        </li>
+                <li class=" " ><a href="/category/duale-hochschule-sachsen/67" title="Duale Hochschule Sachsen" name="Duale Hochschule Sachsen">Duale Hochschule Sachsen</a></li>
+                <li class="hasSublinks  " aria-expanded="false" role="button">
+          <p class="clearfix">
+            <a href="/category/hds/69" title="HDS" name="HDS">HDS</a>
+            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+          </p>
+          <ul class="sublinks">
+                        <li class="  ">
+              <a href="/category/vorstudie-fuer-eine-hochschuluebergreifende-oer2Dinitiative-in-sachsen/147" name="Vorstudie für eine hochschulübergreifende OER-Initiative in Sachsen">Vorstudie für eine hochschulübergreifende OER-Initiative in Sachsen</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/digital-higher-education-saxony/95" name="Digital higher education Saxony">Digital higher education Saxony</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/teaching-hacks/94" name="Teaching Hacks">Teaching Hacks</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/start-of-studies-under-covid2D19-conditions/93" name="Start of studies under COVID-19 conditions">Start of studies under COVID-19 conditions</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/hds2Eforum/92" name="HDS.Forum">HDS.Forum</a>
+                            
+                           </li>
+           
+          </ul>
+        </li>
+                <li class=" " ><a href="/category/hfbk-dresden/66" title="HfBK Dresden" name="HfBK Dresden">HfBK Dresden</a></li>
+                <li class=" " ><a href="/category/hfm-dresden/70" title="HfM Dresden" name="HfM Dresden">HfM Dresden</a></li>
+                <li class=" " ><a href="/category/hgb-leipzig/74" title="HGB Leipzig" name="HGB Leipzig">HGB Leipzig</a></li>
+                <li class=" " ><a href="/category/hmt-leipzig/49" title="HMT Leipzig" name="HMT Leipzig">HMT Leipzig</a></li>
+                <li class=" " ><a href="/category/hs-mittweida/50" title="HS Mittweida" name="HS Mittweida">HS Mittweida</a></li>
+                <li class="hasSublinks  " aria-expanded="false" role="button">
+          <p class="clearfix">
+            <a href="/category/hs-palucca-dresden/72" title="HS Palucca Dresden" name="HS Palucca Dresden">HS Palucca Dresden</a>
+            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+          </p>
+          <ul class="sublinks">
+                        <li class="  ">
+              <a href="/category/body-awareness/138" name="Body Awareness">Body Awareness</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/oberschule/137" name="Oberschule">Oberschule</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/studiengang-choreografie/136" name="Studiengang Choreografie">Studiengang Choreografie</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/studiengang-tanz/135" name="Studiengang Tanz">Studiengang Tanz</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/campus/134" name="Campus">Campus</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/studiengang-tanzpaedagogik/133" name="Studiengang Tanzpädagogik">Studiengang Tanzpädagogik</a>
+                            
+                           </li>
+           
+          </ul>
+        </li>
+                <li class=" " ><a href="/category/hs-zittau2Fgoerlitz/53" title="HS Zittau/Görlitz" name="HS Zittau/Görlitz">HS Zittau/Görlitz</a></li>
+                <li class="hasSublinks  " aria-expanded="false" role="button">
+          <p class="clearfix">
+            <a href="/category/htw-dresden/52" title="HTW Dresden" name="HTW Dresden">HTW Dresden</a>
+            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+          </p>
+          <ul class="sublinks">
+                        <li class="  ">
+              <a href="/category/central-institutions/88" name="Central Institutions">Central Institutions</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/language-centre/87" name="Language Centre">Language Centre</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/ecampus/86" name="eCampus">eCampus</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/career-service/85" name="Career Service">Career Service</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/library/84" name="Library">Library</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/business-administration/83" name="Business Administration">Business Administration</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/mechanical-engineering/82" name="Mechanical Engineering">Mechanical Engineering</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/agriculture2Fenvironment2Fchemistry/81" name="Agriculture/Environment/Chemistry">Agriculture/Environment/Chemistry</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/informatics-2F-mathematics/80" name="Informatics / Mathematics">Informatics / Mathematics</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/spatial-information/79" name="Spatial Information">Spatial Information</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/electrical-engineering/78" name="Electrical Engineering">Electrical Engineering</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/design/77" name="Design">Design</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/civil-engineering/76" name="Civil Engineering">Civil Engineering</a>
+                            
+                           </li>
+           
+          </ul>
+        </li>
+                <li class=" " ><a href="/category/htwk-leipzig/51" title="HTWK Leipzig" name="HTWK Leipzig">HTWK Leipzig</a></li>
+                <li class=" " ><a href="/category/lrk-sachsen/71" title="LRK Sachsen" name="LRK Sachsen">LRK Sachsen</a></li>
+                <li class=" " ><a href="/category/slub-dresden/73" title="SLUB Dresden" name="SLUB Dresden">SLUB Dresden</a></li>
+                <li class=" " ><a href="/category/tu-ba-freiberg/47" title="TU BA Freiberg" name="TU BA Freiberg">TU BA Freiberg</a></li>
+                <li class="hasSublinks  " aria-expanded="false" role="button">
+          <p class="clearfix">
+            <a href="/category/tu-chemnitz/13" title="TU Chemnitz" name="TU Chemnitz">TU Chemnitz</a>
+            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+          </p>
+          <ul class="sublinks">
+                        <li class="  ">
+              <a href="/category/seniorenkolleg/146" name="Seniorenkolleg">Seniorenkolleg</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/kinder2Duni/145" name="Kinder-Uni">Kinder-Uni</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/teacher-education/23" name="Teacher Education">Teacher Education</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/behavioural-and-social-sciences/22" name="Behavioural and Social Sciences">Behavioural and Social Sciences</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/humanities/21" name="Humanities">Humanities</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/economics-and-business-administration/20" name="Economics and Business Administration">Economics and Business Administration</a>
+                            
+                           </li>
+           
+                        <li class="  hasSublinks" role="button"">
+              <a href="/category/computer-science/19" name="Computer Science">Computer Science</a>
+                            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+                            
+                               <ul class="sublinks">
+                                     <li class=" ">
+                      <a href="/category/professur-betriebssysteme/148" name="Professur Betriebssysteme">Professur Betriebssysteme</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/professur-technische-informatik/139" name="Professur Technische Informatik">Professur Technische Informatik</a>
+                    </li>
+                                  </ul>
+                            </li>
+           
+                        <li class="  ">
+              <a href="/category/electrical-engineering-and-information-technology/18" name="Electrical Engineering and Information Technology">Electrical Engineering and Information Technology</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/mechanical-engineering/17" name="Mechanical Engineering">Mechanical Engineering</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/mathematics/16" name="Mathematics">Mathematics</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/natural-sciences/15" name="Natural Sciences">Natural Sciences</a>
+                            
+                           </li>
+           
+                        <li class="  hasSublinks" role="button"">
+              <a href="/category/central-institutions/65" name="Central Institutions">Central Institutions</a>
+                            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+                            
+                               <ul class="sublinks">
+                                     <li class=" ">
+                      <a href="/category/universitaetsbibliothek/144" name="Universitätsbibliothek">Universitätsbibliothek</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/internationales-universitaetszentrum/143" name="Internationales Universitätszentrum">Internationales Universitätszentrum</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/zentrum-fuer-sport2D-und-gesundheit/142" name="Zentrum für Sport- und Gesundheit">Zentrum für Sport- und Gesundheit</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/zentrum-fuer-lehrerbildung/141" name="Zentrum für Lehrerbildung">Zentrum für Lehrerbildung</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/zentrum-fuer-fremdsprachen/140" name="Zentrum für Fremdsprachen">Zentrum für Fremdsprachen</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/urz-2D-data-center/75" name="URZ - Data Center">URZ - Data Center</a>
+                    </li>
+                                  </ul>
+                            </li>
+           
+          </ul>
+        </li>
+                <li class="hasSublinks  " aria-expanded="false" role="button">
+          <p class="clearfix">
+            <a href="/category/tu-dresden/14" title="TU Dresden" name="TU Dresden">TU Dresden</a>
+            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+          </p>
+          <ul class="sublinks">
+                        <li class="  ">
+              <a href="/category/central-units/102" name="Central Units">Central Units</a>
+                            
+                           </li>
+           
+                        <li class="  hasSublinks" role="button"">
+              <a href="/category/school-of-medicine/101" name="School of Medicine">School of Medicine</a>
+                            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+                            
+                               <ul class="sublinks">
+                                     <li class=" ">
+                      <a href="/category/faculty-of-medicine-carl-gustav-carus/119" name="Faculty of Medicine Carl Gustav Carus">Faculty of Medicine Carl Gustav Carus</a>
+                    </li>
+                                  </ul>
+                            </li>
+           
+                        <li class="  hasSublinks" role="button"">
+              <a href="/category/school-of-civil-and-environmental-engineering/100" name="School of Civil and Environmental Engineering">School of Civil and Environmental Engineering</a>
+                            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+                            
+                               <ul class="sublinks">
+                                     <li class=" ">
+                      <a href="/category/faculty-of-business-and-economics/118" name="Faculty of Business and Economics">Faculty of Business and Economics</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/26quot3Bfriedrich-list26quot3B-faculty-of-transport-and-traffic-sciences/117" name="&quot;Friedrich List&quot; Faculty of Transport and Traffic Sciences">&quot;Friedrich List&quot; Faculty of Transport and Traffic Sciences</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-environmental-sciences/116" name="Faculty of Environmental Sciences">Faculty of Environmental Sciences</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-civil-engineering/115" name="Faculty of Civil Engineering">Faculty of Civil Engineering</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-architecture/114" name="Faculty of Architecture">Faculty of Architecture</a>
+                    </li>
+                                  </ul>
+                            </li>
+           
+                        <li class="  hasSublinks" role="button"">
+              <a href="/category/school-of-engineering-sciences/99" name="School of Engineering Sciences">School of Engineering Sciences</a>
+                            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+                            
+                               <ul class="sublinks">
+                                     <li class=" ">
+                      <a href="/category/faculty-of-mechanical-science-and-engineering/113" name="Faculty of Mechanical Science and Engineering">Faculty of Mechanical Science and Engineering</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-computer-science/112" name="Faculty of Computer Science">Faculty of Computer Science</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-electrical-and-computer-engineering/111" name="Faculty of Electrical and Computer Engineering">Faculty of Electrical and Computer Engineering</a>
+                    </li>
+                                  </ul>
+                            </li>
+           
+                        <li class="  hasSublinks" role="button"">
+              <a href="/category/school-of-humanities-and-social-sciences/98" name="School of Humanities and Social Sciences">School of Humanities and Social Sciences</a>
+                            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+                            
+                               <ul class="sublinks">
+                                     <li class=" ">
+                      <a href="/category/faculty-of-linguistics2C-literature-and-cultural-studies/110" name="Faculty of Linguistics, Literature and Cultural Studies">Faculty of Linguistics, Literature and Cultural Studies</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-arts2C-humanities-and-social-science/109" name="Faculty of Arts, Humanities and Social Science">Faculty of Arts, Humanities and Social Science</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-education/108" name="Faculty of Education">Faculty of Education</a>
+                    </li>
+                                  </ul>
+                            </li>
+           
+                        <li class="  hasSublinks" role="button"">
+              <a href="/category/school-of-science/97" name="School of Science">School of Science</a>
+                            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+                            
+                               <ul class="sublinks">
+                                     <li class=" ">
+                      <a href="/category/faculty-of-psychology/107" name="Faculty of Psychology">Faculty of Psychology</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-physics/106" name="Faculty of Physics">Faculty of Physics</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-mathematics/105" name="Faculty of Mathematics">Faculty of Mathematics</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-chemistry-and-food-chemistry/104" name="Faculty of Chemistry and Food Chemistry">Faculty of Chemistry and Food Chemistry</a>
+                    </li>
+                                     <li class=" ">
+                      <a href="/category/faculty-of-biology/103" name="Faculty of Biology">Faculty of Biology</a>
+                    </li>
+                                  </ul>
+                            </li>
+           
+                        <li class="  ">
+              <a href="/category/campus-life/96" name="Campus life">Campus life</a>
+                            
+                           </li>
+           
+          </ul>
+        </li>
+                <li class=" " ><a href="/category/uni-leipzig/48" title="Uni Leipzig" name="Uni Leipzig">Uni Leipzig</a></li>
+                <li class="hasSublinks  " aria-expanded="false" role="button">
+          <p class="clearfix">
+            <a href="/category/wh-zwickau/54" title="WH Zwickau" name="WH Zwickau">WH Zwickau</a>
+            <button type="button" class="arrow open-sub-menu" aria-label="category hides content" ><i class="icon-chevron-right" role="presentation"></i></button>
+          </p>
+          <ul class="sublinks">
+                        <li class="  ">
+              <a href="/category/hochschule-und-studiengaenge/120" name="Hochschule und Studiengänge">Hochschule und Studiengänge</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/zentrale-einrichtungen/121" name="Zentrale Einrichtungen">Zentrale Einrichtungen</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/vereine2C-projekte2C-initiativen/122" name="Vereine, Projekte, Initiativen">Vereine, Projekte, Initiativen</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-angewandte-kunst-schneeberg/123" name="Fakultät Angewandte Kunst Schneeberg">Fakultät Angewandte Kunst Schneeberg</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-angewandte-sprachen-und-interkulturelle-kommunikation/124" name="Fakultät Angewandte Sprachen und Interkulturelle Kommunikation">Fakultät Angewandte Sprachen und Interkulturelle Kommunikation</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-automobil2D-und-maschinenbau/125" name="Fakultät Automobil- und Maschinenbau">Fakultät Automobil- und Maschinenbau</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-elektrotechnik/126" name="Fakultät Elektrotechnik">Fakultät Elektrotechnik</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-gesundheits2D-und-pflegewissenschaften/127" name="Fakultät Gesundheits- und Pflegewissenschaften">Fakultät Gesundheits- und Pflegewissenschaften</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-kraftfahrzeugechnik/129" name="Fakultät  Kraftfahrzeugechnik">Fakultät  Kraftfahrzeugechnik</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-physikalische-technik-26amp3B-informatik/128" name="Fakultät Physikalische Technik &amp; Informatik">Fakultät Physikalische Technik &amp; Informatik</a>
+                            
+                           </li>
+           
+                        <li class="  ">
+              <a href="/category/fakultaet-wirtschaftswissenschaften/130" name="Fakultät Wirtschaftswissenschaften">Fakultät Wirtschaftswissenschaften</a>
+                            
+                           </li>
+           
+          </ul>
+        </li>
+      </ul>
+
+      <div class="bottom">
+        <form class="button-wrap-form" action="/category">
+          <button class="more" name="view categories">view categories</button>
+        </form>
+      </div>
+
+    </article> <!-- #categoryLinks -->
+    <nav id="siteNav" role="navigation">
+          <h2>Navigation</h2>
+          <ul class="accordion">
+        <li  role="button">
+          <form action="/medias"  target="_self"  class="sitemenu-wrap-form" method="get">
+            <button  aria-label="Media">
+              Media            </button>
+          </form>
+        </li>
+        <li  role="button">
+          <form action="/album"  target="_self"  class="sitemenu-wrap-form" method="get">
+            <button  aria-label="Playlists">
+              Playlists            </button>
+          </form>
+        </li>
+        <li  role="button">
+          <form action="/channels"  target="_self"  class="sitemenu-wrap-form" method="get">
+            <button  aria-label="Channels">
+              Channels            </button>
+          </form>
+        </li>
+        <li  role="button">
+          <form action="/pages/view/id/20"  target="_self"  class="sitemenu-wrap-form" method="get">
+            <button  aria-label="First Steps">
+              First Steps            </button>
+          </form>
+        </li>
+        <li  role="button">
+          <form action="/pages/view/id/18"  target="_self"  class="sitemenu-wrap-form" method="get">
+            <button  aria-label="FAQ">
+              FAQ            </button>
+          </form>
+        </li>
+      </ul>
+    </nav> <!-- #siteNav -->
+
+                    
+    </div> <!-- #siteSidebar -->
+  
+  <div id="siteContent" role="main" aria-label="main content"
+       class="categoryDetail">
+
+      <div id="alerts">
+      </div>
+
+              
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a aria-current="page" href="/category" name="Educational organisations">Educational organisations</a>  
+            <i class="icon-chevron-right" role="presentation"></i> <a href="/category/bps/90" name="BPS">BPS</a> 
+            <i class="icon-chevron-right" role="presentation"></i>
+       <a aria-current="page" name="Online tutorials ONYX">Online tutorials ONYX</a>
+    </nav>
+    <h1>Online tutorials ONYX</h1>
+    <div class="category-lead clearfix">
+      <img class="mediaThumb" width="500" height="281" src="data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAEZCAYAAABhDNfWAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAJq0lEQVR4Ae3QMQEAAADCoPVPbQo/iEBhwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwMB9YJThAAF9n2/xAAAAAElFTkSuQmCC" data-src="holder.js/500x281/auto/noalt/#EAECEE:#EAECEE" data-original="/cache/2ea17090eac195ba9f5dd3b413e43a48.png" role="presentation" align="right" alt="thumbnail of category Online tutorials ONYX"/>
+          </div>
+
+
+    <article id="featured-media-box" class="mediaListing cat-showSu">
+      <h2>Featured</h2>
+
+<div class="vmp-desktop">
+      <div class="d-flex justify-content-end mb-4 pt-2">
+      <section class="filter row-cols-auto justify-content-end mb-0 pt-0 hide">
+        <div class="mb-md-2 min-height-px-40">
+                  </div>
+        <div class="min-height-px-40">
+                      <select id="featured-media-box-type" data-filtertype="type" class="form-control mediaFilter filterMediaType me-2 min-height-inherit" aria-label="filter media type">
+      <option data-type="all" aria-label="All" title="All" name="All" >All</option>
+      <option data-type="video" aria-label="Videos" title="Videos" name="Videos" >Videos</option>
+      <option data-type="audio" aria-label="Audios" title="Audios" name="Audios" >Audios</option>
+  </select> <!-- .filterMediaType -->
+
+                    <select id="featured-media-box-limit" data-filtertype="limit" class="form-control mediaFilter filterTimeRange me-2 min-height-inherit" aria-label="filter time range">
+      <option data-limit="all" aria-label="Total time period" title="Total time period" name="Total time period"  selected>Total time period</option>
+      <option data-limit="week" aria-label="this week" title="this week" name="this week" >this week</option>
+      <option data-limit="month" aria-label="this month" title="this month" name="this month" >this month</option>
+      <option data-limit="lastmonth" aria-label="last month" title="last month" name="last month" >last month</option>
+      <option data-limit="year" aria-label="this year" title="this year" name="this year" >this year</option>
+      <option data-limit="lastyear" aria-label="last year" title="last year" name="last year" >last year</option>
+  </select> <!-- .filterTimeRange -->
+
+                <div class="filterView btn-group min-height-inherit">
+        <button class="btn btn-default active"  data-layout="thumbBig" role="button" aria-label="Big thumbnails of media" title="Big thumbnails of media">
+          <i class="icon-th-large" role="presentation"></i>
+        </button>
+        <button class="btn btn-default"  data-layout="thumb" role="button" aria-label="Small thumbnails of media" title="Small thumbnails of media">
+          <i class="icon-th" role="presentation"></i>
+        </button>
+        <button class="btn btn-default"  data-layout="list" role="button" aria-label="List of media" title="List of media">
+          <i class="icon-th-list" role="presentation"></i>
+        </button>
+      </div>
+        </div>
+			</section> <!-- .filter -->
+      <div class="toggle-filters-wrapper">
+	<button class="btn btn-default toggle-filters" role="button" aria-label="Toggle Filters" title="Toggle Filters" onclick="toggleVisibility(event);">
+		<i class="icon-filter" role="presentation"></i>
+	</button>
+</div>    </div>
+  	        
+      <section class="viewListing tab-content">
+  <div class="tab-pane active" id="bigThumbs">
+              <div class="empty">
+        <span class="noContent scalable-font">There are no media yet.</span>
+              </div>
+      </div> <!-- #bigThumbs -->
+</section> <!-- .viewListing -->
+
+<div class="vmp-desktop">
+</div>
+<div class="vmp-mobile">
+  </div>
+
+
+
+</div>
+<div class="vmp-mobile">
+  <div id="media-box-list-ajax-target-featured-media-box">
+    <div class=""></div>
+  </div>
+</div>
+
+
+    </article> <!-- .mediaListing -->
+
+    <article id="channels-box" class="channelList">
+        </article> <!-- .channelListing -->
+
+    <article id="media-box" class="mediaListing">
+      <h2>All Media</h2>
+
+<div class="vmp-desktop">
+      <div class="d-flex justify-content-end mb-4 pt-2">
+      <section class="filter row-cols-auto justify-content-end mb-0 pt-0 hide">
+        <div class="mb-md-2 min-height-px-40">
+          
+      <ul class="filterMedia nav nav-tabs min-height-inherit">
+                <li class="active">
+            <button  disabled="disabled" data-filter="all" aria-label="All" title="All" name="All">
+            All          </button>
+        </li>
+                <li>
+            <button  data-filter="featured" aria-label="Featured" title="Featured" name="Featured">
+            Featured          </button>
+        </li>
+                <li>
+            <button  data-filter="hottest" aria-label="Most viewed" title="Most viewed" name="Most viewed">
+            Most viewed          </button>
+        </li>
+                <li>
+            <button  data-filter="comments" aria-label="Comments" title="Comments" name="Comments">
+            Comments          </button>
+        </li>
+              </ul>
+        </div>
+        <div class="min-height-px-40">
+                      <select id="media-box-type" data-filtertype="type" class="form-control mediaFilter filterMediaType me-2 min-height-inherit" aria-label="filter media type">
+      <option data-type="all" aria-label="All" title="All" name="All" >All</option>
+      <option data-type="video" aria-label="Videos" title="Videos" name="Videos" >Videos</option>
+      <option data-type="audio" aria-label="Audios" title="Audios" name="Audios" >Audios</option>
+  </select> <!-- .filterMediaType -->
+
+                    <select id="media-box-limit" data-filtertype="limit" class="form-control mediaFilter filterTimeRange me-2 min-height-inherit" aria-label="filter time range">
+      <option data-limit="all" aria-label="Total time period" title="Total time period" name="Total time period"  selected>Total time period</option>
+      <option data-limit="week" aria-label="this week" title="this week" name="this week" >this week</option>
+      <option data-limit="month" aria-label="this month" title="this month" name="this month" >this month</option>
+      <option data-limit="lastmonth" aria-label="last month" title="last month" name="last month" >last month</option>
+      <option data-limit="year" aria-label="this year" title="this year" name="this year" >this year</option>
+      <option data-limit="lastyear" aria-label="last year" title="last year" name="last year" >last year</option>
+  </select> <!-- .filterTimeRange -->
+
+                <div class="filterView btn-group min-height-inherit">
+        <button class="btn btn-default"  data-layout="thumbBig" role="button" aria-label="Big thumbnails of media" title="Big thumbnails of media">
+          <i class="icon-th-large" role="presentation"></i>
+        </button>
+        <button class="btn btn-default active"  data-layout="thumb" role="button" aria-label="Small thumbnails of media" title="Small thumbnails of media">
+          <i class="icon-th" role="presentation"></i>
+        </button>
+        <button class="btn btn-default"  data-layout="list" role="button" aria-label="List of media" title="List of media">
+          <i class="icon-th-list" role="presentation"></i>
+        </button>
+      </div>
+        </div>
+			</section> <!-- .filter -->
+      <div class="toggle-filters-wrapper">
+	<button class="btn btn-default toggle-filters" role="button" aria-label="Toggle Filters" title="Toggle Filters" onclick="toggleVisibility(event);">
+		<i class="icon-filter" role="presentation"></i>
+	</button>
+</div>    </div>
+  	        
+      <section class="viewListing tab-content">
+  <div class="tab-pane active" id="smallThumbsCategoryAll">
+              <ul class="mediaThumbs small clearfix row">
+                                                              <li class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xlg-3">
+              <a href="/category/video/06-onyx-adaptive-testerstellung/6701c3180f8d13fd1d6da757eb995c3c/91" name="06 ONYX Adaptive Testerstellung" aria-label="06 ONYX Adaptive Testerstellung">
+              <article>
+                <div class="mediaCover">
+
+                    <img class="mediaThumb"
+												 width="365"
+												 height="205"
+                         src="data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAAW0AAADNCAYAAABzaiF4AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAFMUlEQVR4Ae3QAQ0AAADCoPdPbQ8HESgMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABA+cDA5ItAAErYdRrAAAAAElFTkSuQmCC"
+                         data-src="holder.js/365x205/auto/noalt/#EAECEE:#EAECEE"
+												 data-original="/cache/2efa9b975dce73b0e86fcfbe2dd706e6.png"
+												 role="presentation"
+												 alt="thumbnail of medium 06 ONYX Adaptive Testerstellung"
+										/>
+                    <i class="icon-facetime-video" role="presentation"></i>
+        <div class="icons"><img alt="play button" class="icon-thumbvideo" src="/images/playbutton_white_trans_24x24.png" role="presentation"></div>
+                                  </div>
+                  <h3 title="06 ONYX Adaptive Testerstellung">
+                  
+                  06 ONYX Adaptive Testerstellung                </h3>
+                <div class="additionalInfo clearfix">
+                  <p aria-hidden="true"><i class="icon-time" role="presentation"></i> 01:06:19</p>
+                  <p class="off-screen-text">01:06:19 duration</p>
+                </div>                      
+                <ul class="details clearfix">
+                  <li>
+                      <p aria-hidden="true"><i class="icon-eye-open" role="presentation"></i> 1237</p>
+                      <p class="off-screen-text">1237 views</p>
+                  </li>
+                  <li>
+                      <p aria-hidden="true"><i class="icon-comment-alt" role="presentation"></i> 0</p>
+                      <p class="off-screen-text">0 comments</p>
+                  </li>
+                  <li>
+                      <p aria-hidden="true"><i class="icon-thumbs-up-alt" role="presentation"></i> 0</p>
+                      <p class="off-screen-text">0 likes</p>
+                  </li>
+                                                                  <li>
+      <i title="This medium is not restricted to a client" class="mediaShareIcon fa fa-globe icon-globe"></i>
+    </li>
+                                                        </ul>
+              </article>
+</a>
+            </li>
+                                                                        <li class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xlg-3">
+              <a href="/category/video/03-onyx-testauswertung-und-archivierung/31409803a1e56dba7891768ee6672176/91" name="03 ONYX Testauswertung- und archivierung" aria-label="03 ONYX Testauswertung- und archivierung">
+              <article>
+                <div class="mediaCover">
+
+                    <img class="mediaThumb"
+												 width="365"
+												 height="205"
+                         src="data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAAW0AAADNCAYAAABzaiF4AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAFMUlEQVR4Ae3QAQ0AAADCoPdPbQ8HESgMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABA+cDA5ItAAErYdRrAAAAAElFTkSuQmCC"
+                         data-src="holder.js/365x205/auto/noalt/#EAECEE:#EAECEE"
+												 data-original="/cache/ca2ad6e779ca4ad361e88804b5b2ba48.png"
+												 role="presentation"
+												 alt="thumbnail of medium 03 ONYX Testauswertung- und archivierung"
+										/>
+                    <i class="icon-facetime-video" role="presentation"></i>
+        <div class="icons"><img alt="play button" class="icon-thumbvideo" src="/images/playbutton_white_trans_24x24.png" role="presentation"></div>
+                                  </div>
+                  <h3 title="03 ONYX Testauswertung- und archivierung">
+                  
+                  03 ONYX Testauswertung- und archivierung                </h3>
+                <div class="additionalInfo clearfix">
+                  <p aria-hidden="true"><i class="icon-time" role="presentation"></i> 01:21:32</p>
+                  <p class="off-screen-text">01:21:32 duration</p>
+                </div>                      
+                <ul class="details clearfix">
+                  <li>
+                      <p aria-hidden="true"><i class="icon-eye-open" role="presentation"></i> 1162</p>
+                      <p class="off-screen-text">1162 views</p>
+                  </li>
+                  <li>
+                      <p aria-hidden="true"><i class="icon-comment-alt" role="presentation"></i> 0</p>
+                      <p class="off-screen-text">0 comments</p>
+                  </li>
+                  <li>
+                      <p aria-hidden="true"><i class="icon-thumbs-up-alt" role="presentation"></i> 0</p>
+                      <p class="off-screen-text">0 likes</p>
+                  </li>
+                                                                  <li>
+      <i title="This medium is not restricted to a client" class="mediaShareIcon fa fa-globe icon-globe"></i>
+    </li>
+                                                        </ul>
+              </article>
+</a>
+            </li>
+                                                                        <li class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xlg-3">
+              <a href="/category/video/02-onyx-testbereitstellung-und-konfiguration/8a9ccf91650a3bc2de9089f4273edf56/91" name="02 ONYX Testbereitstellung und -konfiguration" aria-label="02 ONYX Testbereitstellung und -konfiguration">
+              <article>
+                <div class="mediaCover">
+
+                    <img class="mediaThumb"
+												 width="365"
+												 height="205"
+                         src="data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAAW0AAADNCAYAAABzaiF4AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAFMUlEQVR4Ae3QAQ0AAADCoPdPbQ8HESgMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABA+cDA5ItAAErYdRrAAAAAElFTkSuQmCC"
+                         data-src="holder.js/365x205/auto/noalt/#EAECEE:#EAECEE"
+												 data-original="/cache/d6c6f538e0e61e2b288f40003f81fa56.png"
+												 role="presentation"
+												 alt="thumbnail of medium 02 ONYX Testbereitstellung und -konfiguration"
+										/>
+                    <i class="icon-facetime-video" role="presentation"></i>
+        <div class="icons"><img alt="play button" class="icon-thumbvideo" src="/images/playbutton_white_trans_24x24.png" role="presentation"></div>
+                                  </div>
+                  <h3 title="02 ONYX Testbereitstellung und -konfiguration">
+                  
+                  02 ONYX Testbereitstellung und -konfiguration                </h3>
+                <div class="additionalInfo clearfix">
+                  <p aria-hidden="true"><i class="icon-time" role="presentation"></i> 01:07:02</p>
+                  <p class="off-screen-text">01:07:02 duration</p>
+                </div>                      
+                <ul class="details clearfix">
+                  <li>
+                      <p aria-hidden="true"><i class="icon-eye-open" role="presentation"></i> 1150</p>
+                      <p class="off-screen-text">1150 views</p>
+                  </li>
+                  <li>
+                      <p aria-hidden="true"><i class="icon-comment-alt" role="presentation"></i> 0</p>
+                      <p class="off-screen-text">0 comments</p>
+                  </li>
+                  <li>
+                      <p aria-hidden="true"><i class="icon-thumbs-up-alt" role="presentation"></i> 0</p>
+                      <p class="off-screen-text">0 likes</p>
+                  </li>
+                                                                  <li>
+      <i title="This medium is not restricted to a client" class="mediaShareIcon fa fa-globe icon-globe"></i>
+    </li>
+                                                        </ul>
+              </article>
+</a>
+            </li>
+                                                                        <li class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xlg-3">
+              <a href="/category/video/onyx-berblick-ber-szenarien-mit-variablen/3a971fdc82becf49f814b70575caf058/91" name="ONYX Überblick über Szenarien mit Variablen" aria-label="ONYX Überblick über Szenarien mit Variablen">
+              <article>
+                <div class="mediaCover">
+
+                    <img class="mediaThumb"
+												 width="365"
+												 height="205"
+                         src="data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAAW0AAADNCAYAAABzaiF4AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAFMUlEQVR4Ae3QAQ0AAADCoPdPbQ8HESgMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABA+cDA5ItAAErYdRrAAAAAElFTkSuQmCC"
+                         data-src="holder.js/365x205/auto/noalt/#EAECEE:#EAECEE"
+												 data-original="/cache/bff9a7912f7f0d41e53b907ea44e82c7.png"
+												 role="presentation"
+												 alt="thumbnail of medium ONYX Überblick über Szenarien mit Variablen"
+										/>
+                    <i class="icon-facetime-video" role="presentation"></i>
+        <div class="icons"><img alt="play button" class="icon-thumbvideo" src="/images/playbutton_white_trans_24x24.png" role="presentation"></div>
+                                  </div>
+                  <h3 title="ONYX Überblick über Szenarien mit Variablen">
+                  
+                  ONYX Überblick über Szenarien mit Variablen                </h3>
+                <div class="additionalInfo clearfix">
+                  <p aria-hidden="true"><i class="icon-time" role="presentation"></i> 40:53</p>
+                  <p class="off-screen-text">40:53 duration</p>
+                </div>                      
+                <ul class="details clearfix">
+                  <li>
+                      <p aria-hidden="true"><i class="icon-eye-open" role="presentation"></i> 931</p>
+                      <p class="off-screen-text">931 views</p>
+                  </li>
+                  <li>
+                      <p aria-hidden="true"><i class="icon-comment-alt" role="presentation"></i> 0</p>
+                      <p class="off-screen-text">0 comments</p>
+                  </li>
+                  <li>
+                      <p aria-hidden="true"><i class="icon-thumbs-up-alt" role="presentation"></i> 0</p>
+                      <p class="off-screen-text">0 likes</p>
+                  </li>
+                                                                  <li>
+      <i title="This medium is not restricted to a client" class="mediaShareIcon fa fa-globe icon-globe"></i>
+    </li>
+                                                        </ul>
+              </article>
+</a>
+            </li>
+                                                                        <li class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xlg-3">
+              <a href="/category/video/05-onyx-einsatz-von-variablen-zur-umsetzung-adaptiver-aufgaben/a8abbfc596f53b7bd985f7692a192666/91" name="05 ONYX Einsatz von Variablen zur Umsetzung adaptiver Aufgaben" aria-label="05 ONYX Einsatz von Variablen zur Umsetzung adaptiver Aufgaben">
+              <article>
+                <div class="mediaCover">
+
+                    <img class="mediaThumb"
+												 width="365"
+												 height="205"
+                         src="data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAAW0AAADNCAYAAABzaiF4AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAFMUlEQVR4Ae3QAQ0AAADCoPdPbQ8HESgMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABA+cDA5ItAAErYdRrAAAAAElFTkSuQmCC"
+                         data-src="holder.js/365x205/auto/noalt/#EAECEE:#EAECEE"
+												 data-original="/cache/b06689020289a42956de7009e691b892.png"
+												 role="presentation"
+												 alt="thumbnail of medium 05 ONYX Einsatz von Variablen zur Umsetzung adaptiver Aufgaben"
+										/>
+                    <i class="icon-facetime-video" role="presentation"></i>
+        <div class="icons"><img alt="play button" class="icon-thumbvideo" src="/images/playbutton_white_trans_24x24.png" role="presentation"></div>
+                                  </div>
+                  <h3 title="05 ONYX Einsatz von Variablen zur Umsetzung adaptiver Aufgaben">
+                  
+                  05 ONYX Einsatz von Variablen zur Umsetzung adaptiver Aufgaben                </h3>
+                <div class="additionalInfo clearfix">
+                  <p aria-hidden="true"><i class="icon-time" role="presentation"></i> 51:44</p>
+                  <p class="off-screen-text">51:44 duration</p>
+                </div>                      
+                <ul class="details clearfix">
+                  <li>
+                      <p aria-hidden="true"><i class="icon-eye-open" role="presentation"></i> 1196</p>
+                      <p class="off-screen-text">1196 views</p>
+                  </li>
+                  <li>
+                      <p aria-hidden="true"><i class="icon-comment-alt" role="presentation"></i> 0</p>
+                      <p class="off-screen-text">0 comments</p>
+                  </li>
+                  <li>
+                      <p aria-hidden="true"><i class="icon-thumbs-up-alt" role="presentation"></i> 0</p>
+                      <p class="off-screen-text">0 likes</p>
+                  </li>
+                                                                  <li>
+      <i title="This medium is not restricted to a client" class="mediaShareIcon fa fa-globe icon-globe"></i>
+    </li>
+                                                        </ul>
+              </article>
+</a>
+            </li>
+                                                                        <li class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xlg-3">
+              <a href="/category/video/04-onyx-mathematische-berechnungen-und-formeln/cc9ec4e4c5fc79ae925c22b6f23b4c7c/91" name="04 ONYX Mathematische Berechnungen und Formeln" aria-label="04 ONYX Mathematische Berechnungen und Formeln">
+              <article>
+                <div class="mediaCover">
+
+                    <img class="mediaThumb"
+												 width="365"
+												 height="205"
+                         src="data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAAW0AAADNCAYAAABzaiF4AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAFMUlEQVR4Ae3QAQ0AAADCoPdPbQ8HESgMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABA+cDA5ItAAErYdRrAAAAAElFTkSuQmCC"
+                         data-src="holder.js/365x205/auto/noalt/#EAECEE:#EAECEE"
+												 data-original="/cache/6fec7a0d8f87c15e3d07521cb3737edd.png"
+												 role="presentation"
+												 alt="thumbnail of medium 04 ONYX Mathematische Berechnungen und Formeln"
+										/>
+                    <i class="icon-facetime-video" role="presentation"></i>
+        <div class="icons"><img alt="play button" class="icon-thumbvideo" src="/images/playbutton_white_trans_24x24.png" role="presentation"></div>
+                                  </div>
+                  <h3 title="04 ONYX Mathematische Berechnungen und Formeln">
+                  
+                  04 ONYX Mathematische Berechnungen und Formeln                </h3>
+                <div class="additionalInfo clearfix">
+                  <p aria-hidden="true"><i class="icon-time" role="presentation"></i> 53:38</p>
+                  <p class="off-screen-text">53:38 duration</p>
+                </div>                      
+                <ul class="details clearfix">
+                  <li>
+                      <p aria-hidden="true"><i class="icon-eye-open" role="presentation"></i> 1097</p>
+                      <p class="off-screen-text">1097 views</p>
+                  </li>
+                  <li>
+                      <p aria-hidden="true"><i class="icon-comment-alt" role="presentation"></i> 0</p>
+                      <p class="off-screen-text">0 comments</p>
+                  </li>
+                  <li>
+                      <p aria-hidden="true"><i class="icon-thumbs-up-alt" role="presentation"></i> 0</p>
+                      <p class="off-screen-text">0 likes</p>
+                  </li>
+                                                                  <li>
+      <i title="This medium is not restricted to a client" class="mediaShareIcon fa fa-globe icon-globe"></i>
+    </li>
+                                                        </ul>
+              </article>
+</a>
+            </li>
+                                                                        <li class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xlg-3">
+              <a href="/category/video/01-onyx-aufgabenerstellung-und-verwaltung-fr-einsteiger/21d9c3894392961c7e2ed0c08da1e973/91" name="01 ONYX Aufgabenerstellung und -verwaltung für Einsteiger" aria-label="01 ONYX Aufgabenerstellung und -verwaltung für Einsteiger">
+              <article>
+                <div class="mediaCover">
+
+                    <img class="mediaThumb"
+												 width="365"
+												 height="205"
+                         src="data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAAW0AAADNCAYAAABzaiF4AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAFMUlEQVR4Ae3QAQ0AAADCoPdPbQ8HESgMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABA+cDA5ItAAErYdRrAAAAAElFTkSuQmCC"
+                         data-src="holder.js/365x205/auto/noalt/#EAECEE:#EAECEE"
+												 data-original="/cache/07fb596f0c46141178a33574bb3b32f5.png"
+												 role="presentation"
+												 alt="thumbnail of medium 01 ONYX Aufgabenerstellung und -verwaltung für Einsteiger"
+										/>
+                    <i class="icon-facetime-video" role="presentation"></i>
+        <div class="icons"><img alt="play button" class="icon-thumbvideo" src="/images/playbutton_white_trans_24x24.png" role="presentation"></div>
+                                  </div>
+                  <h3 title="01 ONYX Aufgabenerstellung und -verwaltung für Einsteiger">
+                  
+                  01 ONYX Aufgabenerstellung und -verwaltung für Einsteiger                </h3>
+                <div class="additionalInfo clearfix">
+                  <p aria-hidden="true"><i class="icon-time" role="presentation"></i> 48:33</p>
+                  <p class="off-screen-text">48:33 duration</p>
+                </div>                      
+                <ul class="details clearfix">
+                  <li>
+                      <p aria-hidden="true"><i class="icon-eye-open" role="presentation"></i> 1932</p>
+                      <p class="off-screen-text">1932 views</p>
+                  </li>
+                  <li>
+                      <p aria-hidden="true"><i class="icon-comment-alt" role="presentation"></i> 0</p>
+                      <p class="off-screen-text">0 comments</p>
+                  </li>
+                  <li>
+                      <p aria-hidden="true"><i class="icon-thumbs-up-alt" role="presentation"></i> 0</p>
+                      <p class="off-screen-text">0 likes</p>
+                  </li>
+                                                                  <li>
+      <i title="This medium is not restricted to a client" class="mediaShareIcon fa fa-globe icon-globe"></i>
+    </li>
+                                                        </ul>
+              </article>
+</a>
+            </li>
+                        </ul> <!-- .mediaThumbs.small -->
+      </div> <!-- #smallThumbs -->
+</section> <!-- .viewListing -->
+
+<div class="vmp-desktop">
+</div>
+<div class="vmp-mobile">
+  </div>
+
+
+
+</div>
+<div class="vmp-mobile">
+  <div id="media-box-list-ajax-target-media-box">
+    <div class="vmp-accordion"></div>
+  </div>
+</div>
+
+
+    </article> <!-- .mediaListing -->
+
+              
+  </div><!-- #siteContent -->
+
+</div><!-- #siteWrapper -->
+
+  
+<footer id="siteFooter" role="contentinfo">
+
+      <section id="mainFooter">
+                <style>
+          #mainFooter {
+              display: grid;
+              grid-template-columns: 2fr 1fr 1fr minmax(175px, 0.5fr);
+              grid-template-rows: 1fr;
+              grid-column-gap: 15px;
+              grid-row-gap: 0;
+              justify-items: stretch;
+              align-items: stretch;
+          }
+
+          #mainFooter .footerLink {
+              margin-bottom: 15px;
+          }
+
+          #mainFooter::before,
+          #mainFooter::after {
+              content: none !important;
+          }
+
+          .footerDropdowns {
+              justify-content: flex-start;
+          }
+
+          .footerDropdowns .dropup {
+              display: flex !important;
+          }
+      </style>
+
+                    <div>
+          <h2>About</h2>
+                                              
+<article class="text">
+<p><a href="/pages/view/id/20" rel="external nofollow">First Steps</a></p>
+<p>	<a href="/pages/view/id/18" rel="nofollow" target="_self" rel="external nofollow">FAQ</a></p>
+<p>	<a href="https://www.bps-system.de/help/pages/viewpage.action?pageId=528384026" target="_blank" rel="external nofollow">Operation status</a></p>
+</article>
+                                                  </div>
+              <div>
+          <h2>Legal Info</h2>
+                                              <div class="footerLink">
+                                                                        <a href="/pages/view/id/1">Terms and Conditions</a>
+                                                </div>
+                                                <div class="footerLink">
+                                                                        <a href="/pages/view/id/3">Privacy statement</a>
+                                                </div>
+                                                <div class="footerLink">
+                                                                        <a href="/pages/view/id/2">Imprint</a>
+                                                </div>
+                                                <div class="footerLink">
+                                                                        <a href="/pages/view/id/55">Accessibility Statement</a>
+                                                </div>
+                                                                    <div class="footerLink">
+                <a  class="scalable-font" href="/cookieconsent" name="Cookie Consent">Cookie Consent</a>
+              </div>
+                              </div>
+              <div>
+          <h2>Links</h2>
+                                                        <div class="footerLink">
+                <a class="scalable-font" href="/default/sitemap" target="_blank">Sitemap</a>
+              </div>
+                            </div>
+          
+        <section class="footerDropdowns">
+      <div class="container p-0">
+        
+        <!-- ClientsPlugin -->
+                                  <!-- /ClientsPlugin -->
+      </div>
+    </section>
+      </section> <!-- #mainFooter -->
+</footer> <!-- #siteFooter -->
+
+
+
+
+
+<link rel="stylesheet" type="text/css" media="screen" href="/css/jquery-ui.css?app=frontend&amp;env=prod&amp;debug=false&amp;version=6.2.9" />
+
+<script type="text/javascript" src="/js/jquery.ocean.js?app=frontend&amp;env=prod&amp;debug=false&amp;version=6.2.9"></script>
+<script type="text/javascript" src="/js/jquery.ui.ocean.js?app=frontend&amp;env=prod&amp;debug=false&amp;version=6.2.9"></script>
+<script type="text/javascript" src="/js/ocean.layout.min.js?app=frontend&amp;env=prod&amp;debug=false&amp;version=6.2.9"></script>
+<script type="text/javascript" src="/js/bootstrap-tab-history.js?app=frontend&amp;env=prod&amp;debug=false&amp;version=6.2.9"></script>
+<script type="text/javascript" src="/js/jquery.cookie.js?app=frontend&amp;env=prod&amp;debug=false&amp;version=6.2.9"></script>
+<script type="text/javascript" src="/js/cookieHint.js.php?forceReload=true&amp;app=frontend&amp;env=prod&amp;debug=false&amp;version=6.2.9"></script>
+<script type="text/javascript">
+//<![CDATA[
+// webplayer.whitelabeling
+var WEBPLAYER_WHITELABELING = 1;
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// webplayer.whitelabeling.icon
+var WEBPLAYER_WHITELABELING_ICON = 1;
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-type-featured-media-box
+$(document).ready(function(event) {
+  $("#featured-media-box").delegate("#featured-media-box-type", "change", function(e) {
+    var filterData = $("#featured-media-box").data("box-list");
+    filterData["type"] = $(this).find(":selected").data("type");
+    filterData["filter_hidden"] = false;
+    $.ajax({
+      type: "POST", 
+      url: "/media/ajax/component/boxList/category/online-tutorials-onyx/category_id/91",
+      data: { vars: filterData },
+      beforeSend: function(xhr, settings) {
+         $("#featured-media-box").append("<div class=\"loadingOverlay\"><span class=\"loader-wrapper\"><span class=\"loader-icon-main\"></span></span></div>");
+      },
+      complete: function(xhr, status) {
+        response = xhr.responseText;
+        $("#featured-media-box").empty().append(response);
+      },
+      success: function(data, status, xhr) { 
+        response = data; 
+        $("#featured-media-box").data("box-list", filterData);
+        $(this).closest("ul").find("li").removeClass("active");
+        $(this).parent().addClass("active"); 
+      } 
+    });
+  }); 
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-limit-featured-media-box
+$(document).ready(function(event) {
+  $("#featured-media-box").delegate("#featured-media-box-limit", "change", function(e) {
+    var filterData = $("#featured-media-box").data("box-list");
+    filterData["limit"] = $(this).find(":selected").data("limit");
+    filterData["filter_hidden"] = false;
+    $.ajax({
+      type: "POST", 
+      url: "/media/ajax/component/boxList/category/online-tutorials-onyx/category_id/91",
+      data: { vars: filterData },
+      beforeSend: function(xhr, settings) {
+         $("#featured-media-box").append("<div class=\"loadingOverlay\"><span class=\"loader-wrapper\"><span class=\"loader-icon-main\"></span></span></div>");
+      },
+      complete: function(xhr, status) {
+        response = xhr.responseText;
+        $("#featured-media-box").empty().append(response);
+      },
+      success: function(data, status, xhr) { 
+        response = data; 
+        $("#featured-media-box").data("box-list", filterData);
+        $(this).closest("ul").find("li").removeClass("active");
+        $(this).parent().addClass("active"); 
+      } 
+    });
+  }); 
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-layout-featured-media-box
+
+$(document).ready(function(event) {
+  $("#featured-media-box").delegate(".filterView button", "click", function(e) {
+    var filterData = $("#featured-media-box").data("box-list"); 
+    filterData["layout"] = $(this).data("layout");
+    filterData["layout_hidden"] = false;
+    $.ajax({
+      type: "POST", 
+      url: "/media/ajax/component/boxList/category/online-tutorials-onyx/category_id/91",
+      data: { vars: filterData },
+      beforeSend: function(xhr, settings) {
+         $("#featured-media-box").append("<div class=\"loadingOverlay\"><span class=\"loader-wrapper\"><span class=\"loader-icon-main\"></span></span></div>");
+      },
+      complete: function(xhr, status) {
+        response = xhr.responseText;
+        $("#featured-media-box").empty().append(response);
+      },
+      success: function(data, status, xhr) { 
+        response = data; 
+        $("#featured-media-box").data("box-list", filterData); 
+        $(this).closest("ul").find("li").removeClass("active");
+        $(this).parent().addClass("active"); 
+      } 
+    });
+  }); 
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-pager-loading-mobilefeatured-media-box
+
+$(document).ready(function(event) {
+  $("#featured-media-box").delegate(".vmp-mobile .ui-accordion-content-active .vmp-mobile .box .showMore", "click", function(e) {
+    var filterData = $("#featured-media-box").data("box-list"); 
+    $.ajax({
+      type: "POST", 
+      url: "/media/ajax/component/boxList/category/online-tutorials-onyx/category_id/91?page="+$(this).data("page")+"&page_only=1&per_page=20&filter="+$(".ui-accordion-content-active").attr("id")+"",
+      data: { vars: filterData },
+      beforeSend: function(xhr, settings) {
+         $("#featured-media-box .box .showMore i.fa").switchClass("fa-plus", "fa-spinner fa-spin");
+      },
+      complete: function(xhr, status) {
+        response = xhr.responseText;
+        $(".ui-accordion-content-active").append(response);
+      },
+      success: function(data, status, xhr) { 
+        response = data;
+        $(".ui-accordion-content-active .box .showMore").parent().remove(); 
+      } 
+    });
+  }); 
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-init-featured-media-box
+
+$(document).ready(function(event) {
+  $("#featured-media-box").data(
+    "box-list", 
+    {
+      act: 'boxList',
+      mod: 'media',
+      mode: 'featured',
+      context: 0,
+      context_id: null,
+      show_filter: false,
+      filter: 'all',
+      show_limit: true,
+      limit: 'all',
+      show_type: true,
+      type_id: null,
+      type: 'videos',
+      show_layout: true,
+      layout: 'thumbBig',
+      show_search: false,
+      search: '',
+      show_pager: true,
+      pager_mode: 'loading',
+      page_name: 'page',
+      page_only: false,
+      show_more: false,
+      more_link: 'media/list',
+      show_upload: false,
+      show_header: true,
+      per_page: {
+        thumbBig: 6,
+        thumb: 9,
+        list: 20
+      },
+      show_empty_box: false,
+      save_page: true,
+      thumbsize: '160x120',
+      categoryFilter: '0',
+      show_categories: false,
+      id: 'featured-media-box',
+      caption: 'Featured',
+      category: 91,
+      page: 1,
+      component: 'boxList',
+      text: null,
+      filterHidden: true,
+      layoutHidden: true,
+      isMobile: true,
+      captionParams: {
+        
+      },
+      mobile: true
+
+    }
+  );
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-filter-media-box
+$(document).ready(function(event) {
+  $("#media-box").delegate("ul.filterMedia li button", "click", function(e) {
+    var filterData = $("#media-box").data("box-list");
+    filterData["filter"] = $(this).data("filter");
+    filterData["filter_hidden"] = false;
+    $.ajax({
+      type: "POST", 
+      url: "/media/ajax/component/boxList/category/online-tutorials-onyx/category_id/91",
+      data: { vars: filterData },
+      beforeSend: function(xhr, settings) {
+         $("#media-box").append("<div class=\"loadingOverlay\"><span class=\"loader-wrapper\"><span class=\"loader-icon-main\"></span></span></div>");
+      },
+      complete: function(xhr, status) {
+        response = xhr.responseText;
+        $("#media-box").empty().append(response);
+      },
+      success: function(data, status, xhr) { 
+        response = data; 
+        $("#media-box").data("box-list", filterData);
+        $(this).closest("ul").find("li").removeClass("active");
+        $(this).parent().addClass("active"); 
+      } 
+    });
+  }); 
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-type-media-box
+$(document).ready(function(event) {
+  $("#media-box").delegate("#media-box-type", "change", function(e) {
+    var filterData = $("#media-box").data("box-list");
+    filterData["type"] = $(this).find(":selected").data("type");
+    filterData["filter_hidden"] = false;
+    $.ajax({
+      type: "POST", 
+      url: "/media/ajax/component/boxList/category/online-tutorials-onyx/category_id/91",
+      data: { vars: filterData },
+      beforeSend: function(xhr, settings) {
+         $("#media-box").append("<div class=\"loadingOverlay\"><span class=\"loader-wrapper\"><span class=\"loader-icon-main\"></span></span></div>");
+      },
+      complete: function(xhr, status) {
+        response = xhr.responseText;
+        $("#media-box").empty().append(response);
+      },
+      success: function(data, status, xhr) { 
+        response = data; 
+        $("#media-box").data("box-list", filterData);
+        $(this).closest("ul").find("li").removeClass("active");
+        $(this).parent().addClass("active"); 
+      } 
+    });
+  }); 
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-limit-media-box
+$(document).ready(function(event) {
+  $("#media-box").delegate("#media-box-limit", "change", function(e) {
+    var filterData = $("#media-box").data("box-list");
+    filterData["limit"] = $(this).find(":selected").data("limit");
+    filterData["filter_hidden"] = false;
+    $.ajax({
+      type: "POST", 
+      url: "/media/ajax/component/boxList/category/online-tutorials-onyx/category_id/91",
+      data: { vars: filterData },
+      beforeSend: function(xhr, settings) {
+         $("#media-box").append("<div class=\"loadingOverlay\"><span class=\"loader-wrapper\"><span class=\"loader-icon-main\"></span></span></div>");
+      },
+      complete: function(xhr, status) {
+        response = xhr.responseText;
+        $("#media-box").empty().append(response);
+      },
+      success: function(data, status, xhr) { 
+        response = data; 
+        $("#media-box").data("box-list", filterData);
+        $(this).closest("ul").find("li").removeClass("active");
+        $(this).parent().addClass("active"); 
+      } 
+    });
+  }); 
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-layout-media-box
+
+$(document).ready(function(event) {
+  $("#media-box").delegate(".filterView button", "click", function(e) {
+    var filterData = $("#media-box").data("box-list"); 
+    filterData["layout"] = $(this).data("layout");
+    filterData["layout_hidden"] = false;
+    $.ajax({
+      type: "POST", 
+      url: "/media/ajax/component/boxList/category/online-tutorials-onyx/category_id/91",
+      data: { vars: filterData },
+      beforeSend: function(xhr, settings) {
+         $("#media-box").append("<div class=\"loadingOverlay\"><span class=\"loader-wrapper\"><span class=\"loader-icon-main\"></span></span></div>");
+      },
+      complete: function(xhr, status) {
+        response = xhr.responseText;
+        $("#media-box").empty().append(response);
+      },
+      success: function(data, status, xhr) { 
+        response = data; 
+        $("#media-box").data("box-list", filterData); 
+        $(this).closest("ul").find("li").removeClass("active");
+        $(this).parent().addClass("active"); 
+      } 
+    });
+  }); 
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-pager-loading-mobilemedia-box
+
+$(document).ready(function(event) {
+  $("#media-box").delegate(".vmp-mobile .ui-accordion-content-active .vmp-mobile .box .showMore", "click", function(e) {
+    var filterData = $("#media-box").data("box-list"); 
+    $.ajax({
+      type: "POST", 
+      url: "/media/ajax/component/boxList/category/online-tutorials-onyx/category_id/91?page="+$(this).data("page")+"&page_only=1&per_page=20&filter="+$(".ui-accordion-content-active").attr("id")+"",
+      data: { vars: filterData },
+      beforeSend: function(xhr, settings) {
+         $("#media-box .box .showMore i.fa").switchClass("fa-plus", "fa-spinner fa-spin");
+      },
+      complete: function(xhr, status) {
+        response = xhr.responseText;
+        $(".ui-accordion-content-active").append(response);
+      },
+      success: function(data, status, xhr) { 
+        response = data;
+        $(".ui-accordion-content-active .box .showMore").parent().remove(); 
+      } 
+    });
+  }); 
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-init-media-box
+
+$(document).ready(function(event) {
+  $("#media-box").data(
+    "box-list", 
+    {
+      act: 'boxList',
+      mod: 'media',
+      mode: 'category',
+      context: 1,
+      context_id: 91,
+      show_filter: true,
+      filter: 'all',
+      show_limit: true,
+      limit: 'all',
+      show_type: true,
+      type_id: null,
+      type: 'videos',
+      show_layout: true,
+      layout: 'thumb',
+      show_search: false,
+      search: '',
+      show_pager: true,
+      pager_mode: 'loading',
+      page_name: 'page',
+      page_only: false,
+      show_more: false,
+      more_link: 'media/list',
+      show_upload: false,
+      show_header: true,
+      per_page: {
+        thumbBig: 15,
+        thumb: 20,
+        list: 20
+      },
+      show_empty_box: true,
+      save_page: true,
+      thumbsize: '160x120',
+      categoryFilter: '0',
+      show_categories: false,
+      id: 'media-box',
+      caption: 'All Media',
+      category: 91,
+      page: 1,
+      component: 'boxList',
+      text: null,
+      filterHidden: true,
+      layoutHidden: true,
+      isMobile: true,
+      captionParams: {
+        
+      },
+      mobile: true
+
+    }
+  );
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// show slider
+        $( document ).ready(function() {
+        var itemList = "h1, h2, h3, h4, h5, button, p, summary, span, li, a, input[type=text], textarea, .btn, .scalable-font, #categoryLinks>.accordion>li>a, #categoryLinksMobile>.accordion>li>a";
+        if("accessibility" == "accessibility" || "true" == "true"){
+            var maxLetterSpacing = 0.16;
+            var maxFontSize = 2;
+            $(".vmp-fnt-btn-wrp").on("keypress", function() {
+                var state = $(".vmp-fnt-mnu").css("visibility");
+                if( state === "hidden") {
+                    $(".vmp-fnt-mnu").css("visibility", "visible");
+                } else {
+                    $(".vmp-fnt-mnu").css("visibility", "hidden");
+                }
+            });
+            $(".vmp-fnt-btn-wrp").on("mouseenter", function() {
+                $(".vmp-fnt-mnu").css("visibility", "visible");
+            })
+            $(".vmp-fnt-btn-wrp").on("mouseleave", function() {
+                $(".vmp-fnt-mnu").css("visibility", "hidden");
+            })
+            $(".vmp-fnt-mnu *").focusout(function() {
+               if($(".vmp-fnt-mnu:focus-within").length < 1) {
+                $(".vmp-fnt-mnu").css("visibility", "hidden");
+               }
+            })
+          let size = parseFloat(localStorage.getItem("fontSize"));
+          let space = parseFloat(localStorage.getItem("letterSpace"));
+          function resizeFont(fontSize, reset) {
+               $(".scaled").removeClass("scaled");
+               if($('.vjs-control-bar') && !$('.vjs-control-bar').hasClass('not-scalable')) {
+                   $('.vjs-control-bar').addClass('not-scalable');
+                   $('.vjs-control-bar').find(itemList).addClass('not-scalable');
+               }
+               $(itemList).not(".not-scalable").each(function(index){
+                    if($(this).parents(".scaled").length === 0) {
+                        let oldSize = parseFloat($(this).css("font-size"));
+                        let faktor = size;
+                        if (reset) {
+                          oldSize = oldSize / size;
+                          faktor = fontSize;
+                        }
+                        const newSize = oldSize * faktor;
+                        $(this).css("font-size", newSize+"px");
+                        $(this).addClass("scaled");
+                    }
+                  // }
+              });
+          }
+          if (size == null || size == undefined || isNaN(size)) {
+            size = 1;
+            localStorage.setItem("fontSize", 1);
+          } else {
+            $(".vmp-xpl-txt").css("font-size",size + "em" );
+            resizeFont(1, false);
+          }
+        if (space == null || space == undefined || isNaN(space)) {
+          space = 0;
+          localStorage.setItem("letterSpace", 0);
+        } else {
+          $("*").css("letter-spacing", space + "em");
+        }
+          let letterSpace = parseFloat($("*").css("letter-spacing"));
+          let fontSize = 1;
+          let sliderSpace = $("#vmp-fntspace").slider({
+            value:space,
+            min: 0,
+            max: maxLetterSpacing,
+            step: 0.01,
+              slide: function( event, ui ) {
+                let val = ui.value;
+                if(val > maxLetterSpacing) {
+                    val = maxLetterSpacing;
+                }
+                $( "#vmp-fntspace-vl" ).val( val );
+                letterSpace =val;
+                  if(space == letterSpace) {
+                    $("#vmp-cfm-fnt").attr("disabled", true);
+                  } else {
+                    $("#vmp-cfm-fnt").attr("disabled", false);
+                  }
+                $(".vmp-xpl-txt").css("letter-spacing",val + "em" );
+              }
+          });
+          $( "#vmp-fntspace-vl" ).val($( "#vmp-fntspace" ).slider( "value" ));
+          let sliderSize = $("#vmp-fntsize").slider({
+              value:size,
+              min: 1,
+              max: maxFontSize,
+              step: 0.1,
+                slide: function( event, ui ) {
+                    let val = ui.value;
+                  $( "#vmp-fntsize-vl" ).val( val);
+                  fontSize =val;
+                  if(size == fontSize) {
+                    $("#vmp-cfm-fnt").attr("disabled", true);
+                  } else {
+                    $("#vmp-cfm-fnt").attr("disabled", false);
+                  }
+                  $(".vmp-xpl-txt").css("font-size",val + "em" );
+                }
+          });
+          $("#vmp-fntsize-vl").val($("#vmp-fntsize" ).slider( "value" ));
+            $("#vmp-cnl-fnt").click(function() {
+              sliderSize.slider("value", size);
+              sliderSpace.slider("value", space);
+              $( "#vmp-fntsize-vl" ).val( size);
+              $( "#vmp-fntspace-vl" ).val( space );
+              $(".vmp-xpl-txt").css("font-size",size + "em" );
+              $(".vmp-xpl-txt").css("letter-spacing",space + "em" );
+              $("#vmp-cfm-fnt").attr("disabled", true);
+              //$(".vmp-fnt-mnu").hide();
+              $(".vmp-fnt-mnu").css("visibility", "hidden");
+            });
+          $("#vmp-cfm-fnt").click(function() {
+              if(fontSize <= maxFontSize && letterSpace <= maxLetterSpacing) {
+                  $("*").css("letter-spacing", letterSpace + "em");
+                  resizeFont(fontSize, true);
+                  localStorage.setItem("letterSpace", letterSpace);
+                  localStorage.setItem("fontSize", fontSize);
+                  size = fontSize;
+                  space = letterSpace;
+                  $("#vmp-cfm-fnt").attr("disabled", true);
+                  //$(".vmp-fnt-mnu").hide();
+                  $(".vmp-fnt-mnu").css("visibility", "hidden");
+                }
+          });
+          
+        const targetNode = document.getElementsByClassName('changeList');
+        if(targetNode.length > 0) {
+          const config = { childList: true };
+          const callback = (mutationList, observer) => {
+              for (const mutation of mutationList) {
+                  if(mutation.addedNodes.length > 1) {
+                    $(mutation.target).find("h1, h2, h3, h4, h5, button, p, span, summary, li, a, .btn, .scalable-font").not(".not-scalable").each(function(index){
+                        if($(this).parents(".scaled").length === 0) {
+                            size = parseFloat(localStorage.getItem("fontSize"));
+                            let oldSize = parseFloat($(this).css("font-size"));
+                            let faktor = size;
+                            const newSize = oldSize * faktor;
+                            $(this).css("letter-spacing", parseFloat(localStorage.getItem("letterSpace")) + "em");
+                            $(this).css("font-size", newSize+"px");
+                            $(this).addClass("scaled");
+                        }
+                    });
+                  }
+              }
+          }
+          const observer = new MutationObserver(callback);
+          
+          for(let index = 0; index < targetNode.length; ++index) {
+            observer.observe(targetNode[index], config);
+          };
+        }
+        }
+      });
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// autocomplete_search
+$(document).ready(function() {
+  $('#search').autocomplete({"source":"\/search\/autocomplete","minLength":3});
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// search_label_change_desktop
+(function () {
+    var search = jQuery('.search-desktop');
+    search.bind('input', function() { 
+        var searchLabel = jQuery('.search-label-desktop');
+        if(search.val() != "") {
+            searchLabel.css("display", "none");
+        } else {
+            searchLabel.css("display", "block");
+        }
+    });
+})();
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// aria_toggle
+jQuery('.dropup').on('show.bs.dropdown', function () {
+    jQuery('.dropdown-button').attr("aria-label", 'media shows content');
+});
+jQuery('.dropup').on('hide.bs.dropdown', function () {
+    jQuery('.dropdown-button').attr("aria-label", 'media hides content');
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// user_contextmenu_ie_iframe_fix
+$(document).ready(function(event) {
+  if(/(?:msie|trident)/i.test(navigator.userAgent)){
+    $('#registrationDropdown').on('mouseenter', 'iframe', function() {
+      $(this).parents('#registrationDropdown').addClass('hover');
+    });
+    $('#registrationDropdown').on('mouseleave', 'iframe', function() {
+      $(this).parents('#registrationDropdown').removeClass('hover');
+    });
+  }
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// login_overlay_hover_effect
+$(document).ready(function(event) {
+  $('.userLoginLink').mouseenter(function(){
+    $('#loginDropdown').css('visibility', 'visible');
+    $('#loginDropdown').attr('aria-hidden', 'false');
+    $('#loginDropdown').attr('tabindex', '0');
+  })
+  $('.userLoginLink').mouseleave(function(e){
+    if($(e.target).attr('id') != 'signin_username' && $(e.target).attr('id') != 'signin_password' && $(e.target).attr('class') != 'selectIdp' ) {
+      $('#loginDropdown').css('visibility', 'hidden');
+      $('#loginDropdown').attr('aria-hidden', 'true');
+      $('#loginDropdown').attr('tabindex', '-1');
+    }
+  })
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// autocomplete_search_mobile
+$(document).ready(function() {
+  $('#search_mobile').autocomplete({"source":"\/search\/autocomplete","minLength":3});
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// search_label_change_mobile
+(function () {
+    var search = jQuery('.search-mobile');
+    search.bind('input', function() { 
+        var searchLabel = jQuery('.search-label-mobile');
+        if(search.val() != "") {
+            searchLabel.css("display", "none");
+        } else {
+            searchLabel.css("display", "block");
+        }
+    });
+})();
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// categorymenu_hover
+$(document).ready(function(event) {
+  $('#categoryLinks li:not(.active) .sublinks, #categoryLinksMobile li:not(.active) .sublinks').hide();
+  $('#categoryLinks .hasSublinks, #categoryLinksMobile .hasSublinks').on('click', '.open-sub-menu', function(event){
+      var sublinks = $(this).parent().parent().children('.sublinks');
+      var button = $(event.target).closest('.open-sub-menu');
+      if(!sublinks.is(':visible')) {
+        button.attr("aria-label", 'category shows content');
+        sublinks.delay(250).slideDown('slow');
+      } else {
+        button.attr("aria-label", 'category hides content');
+        sublinks.slideUp('slow')
+      }
+  });
+  $('#categoryLinks ul > li.hasSublinks:not(.active), #categoryLinksMobile ul > li.hasSublinks:not(.active)').hover(
+    function(event) {
+      clearTimeout($(this).data('timeout'));
+      if(!$(this).children('.sublinks').is(':visible'))
+      {
+        var button =  $(this).find('.open-sub-menu');
+        button.attr("aria-label", 'category shows content');
+        $(this).children('.sublinks').delay(250).slideDown('slow');
+      }
+    },
+    function(event) {
+      if($(this).children('.sublinks').is(':visible'))
+      {
+        var element = $(this).data('timeout', setTimeout(function() {
+          var button =  element.find('.open-sub-menu');
+          button.attr("aria-label", 'category hides content');
+          element.children('.sublinks').slideUp('slow')
+        }, 5000));
+      }
+    }
+  );
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// mainmenu_hover
+$(document).ready(function(event) {
+  $('#siteNav li:not(.active) .sublinks').hide();
+  $('#siteNav .hasSublinks').on('click', '.open-sub-menu', function(event){
+      var sublinks = $(this).parent().parent().children('.sublinks');
+      var button = $(event.target).closest('.open-sub-menu');
+      if(!sublinks.is(':visible')) {
+        button.attr("aria-label", 'media shows content');
+        $(this).parent().parent().attr("aria-expanded","true");
+        sublinks.delay(250).slideDown('slow');
+      } else {
+        button.attr("aria-label", 'media hides content');
+        $(this).parent().parent().attr("aria-expanded","false");
+        sublinks.slideUp('slow')
+      }
+  });
+  function toggleSublinks(sublinks) {
+    if(sublinks.css("visibility") == "hidden") {
+        sublinks.css({zIndex: "99", visibility : "visible"});
+    } else {
+        sublinks.css({zIndex: "initial", visibility : "hidden"});
+    }
+  }
+  $('#siteNavHorizontal .hasSublinks .open-sub-menu').on('keypress', function(event){
+        var sublinks = $(this).parent().parent().children('.sublinks');
+        toggleSublinks(sublinks);
+  });
+  $('#siteNavHorizontal .hasSublinks').on('mouseenter', function(event){
+        var sublinks = $(this).children('.sublinks');
+        sublinks.css({zIndex: "102", visibility : "visible"});
+  });
+    $('#siteNavHorizontal .hasSublinks').on('mouseleave', function(event){
+        var sublinks = $(this).children('.sublinks');
+        sublinks.css({zIndex: "initial", visibility : "hidden"});
+  });
+  /*$('#siteNav li.hasSublinks:not(.active)').hover(
+    function(event) {
+      clearTimeout($(this).data('timeout'));
+      if(!$(this).children('.sublinks').is(':visible'))
+      {
+        var button =   $(this).find('.open-sub-menu');
+        button.attr("aria-label", 'media shows content');
+        $(this).children('.sublinks').delay(250).slideDown('slow');
+        $(this).attr("aria-expanded","true");
+      }
+    },
+    function(event) {
+      if($(this).children('.sublinks').is(':visible'))
+      {
+        var element = $(this).data('timeout', setTimeout(function() {
+          var button =  element.find('.open-sub-menu');
+          button.attr("aria-label", 'media hides content');
+          element.children('.sublinks').slideUp('slow');    
+          element.attr("aria-expanded","false");
+        }, 5000));
+      }
+    }
+  );*/
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// image_lazyload
+$(document).ready(function(event) {
+Holder.run();
+    $('img[data-original]').not('startPageSlider').lazyload({
+      skip_invisible : false,
+      event: 'load',
+      effect: 'fadeIn',
+      load: function(elementsLeft, settings) {
+        $(this).removeData('original');
+        $(this).removeData('src');
+      }
+    });
+});
+$(document).ajaxComplete(function(event, XMLHttpRequest, ajaxOptions) {
+  if(ajaxOptions.url.search(/ajax/g) !== -1) {
+		// added .not('.mediaThumb') and handled lazyload differently with URLSearchParams so that on ajaxComplete
+		// all images with .mediaThumb do not load again, only those that are needed
+    $('img[data-original]').not('.suggested_channels').not('.suggested_livestreams').not('.startPageSlider').not('.mediaThumb').lazyload({
+      skip_invisible : false,
+      event: 'load',
+      effect : 'fadeIn',
+      load: function(elementsLeft, settings) {
+        $(this).removeData('original');
+        $(this).removeData('src');
+      }
+    });
+    
+		const params = new URLSearchParams(ajaxOptions.data)
+		const id = params.get("vars[id]");
+    $('#newMediaList, #contentbrowser, #' +  id).find('img[data-original]').lazyload({
+      skip_invisible : false,
+      event: 'load',
+      effect : 'fadeIn',
+      load: function(elementsLeft, settings) {
+        $(this).removeData('original');
+        $(this).removeData('src');
+      }
+    });
+  }
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// setTimezoneCookie
+  $(document).ready(function(){
+    if(document.cookie.match('userTimezone') == null) {
+      document.cookie = 'userTimezone='+Intl.DateTimeFormat().resolvedOptions().timeZone+';path=/;max-age='+24*60*60;
+    }
+  })
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// show-mobile-menu
+  $(document).ready(function() {
+    $('html').click(function(e) {
+      if(!$(e.target).hasClass('side-menu-mobile-nav') &&
+         !$(e.target).hasClass('open-mobile-menu') &&
+         !$(e.target).hasClass('icon-reorder') &&
+         $('#side-menu-nav').find($(e.target)).length === 0)
+      {
+        if($('#side-menu-nav').css('display') !== 'none') {
+          $('#side-menu-nav').toggle();
+        }
+      }
+    });
+
+    $('.open-mobile-menu').on('click', function() {
+        $('#side-menu-nav').toggle();
+    });
+    
+    var isMobileMode = false;
+    var checkNavigation = function(query)
+    {
+      if(query.matches && !isMobileMode)
+      {
+        $('#userControls').prependTo($('#side-menu-nav'));
+        constructMobileUserNavigation();
+        isMobileMode = true;
+      }
+      else if(isMobileMode && !query.matches)
+      {
+        $('#userControls').appendTo($('#headerContent'));
+        destructMobileUserNavigation();
+        isMobileMode = false;
+      }
+    }
+    
+    var constructMobileUserNavigation = function()
+    {
+      var mobileUserNavigation = jQuery(document.createElement('div'));
+      mobileUserNavigation.appendTo('#mobile-top-nav');
+      
+      var userElement = jQuery('.mobileProfile')[0];
+      if(userElement !== undefined)
+      {
+        mobileUserNavigation.html(jQuery(jQuery('.mobileProfile')[0]).clone().attr('href', 'javascript:void(0);'));
+      }
+      else
+      {
+        mobileUserNavigation.html('<a href="javascript:void(0);" class="anonymousMobileAvatarLink" name="link to user controls" aria-label="link to user controls"><i class="icon-user anonymousMobileAvatar"></i></a>');
+      }
+      
+      
+      mobileUserNavigation.addClass('mobile-user-context');
+      mobileUserNavigation.append(jQuery('#userControls'));
+      mobileUserNavigation.on('click', function(e) {
+        if(jQuery(this).attr('data-menuOpen') === "true")
+        {
+          jQuery(this).attr('data-menuOpen', false);
+        }
+        else
+        {
+          jQuery(this).attr('data-menuOpen', true);
+        }
+      });
+    }
+    
+    var destructMobileUserNavigation = function()
+    {
+      setTimeout(function() {
+        jQuery('.mobile-user-context').remove();
+      }, 0);
+    }
+    
+    var query = window.matchMedia("(max-width: 999px)")
+    checkNavigation(query);
+    query.addEventListener('change', checkNavigation);
+    
+    $('.show-search').on('click', function() {
+        if($('.mobile-hidden-search').css('display') == 'flex') {
+            $('.mobile-hidden-search').css('display', 'none');
+        } else {
+            $('.mobile-hidden-search').css('display', 'flex');
+        }
+    });
+  });
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// historyReconstructor
+    function makeSequentialAjaxCalls(urls, key) {
+        const results = [];
+
+        // Helper function to make a single AJAX call
+        function makeAjaxCall(url, filterData, historyState, page) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { vars: filterData },
+                    beforeSend: function(xhr, settings) {
+                        $("#" + key + " button.loading").append("<span class=\"loader-wrapper\"><span class=\"loader-icon-main\"></span></span>");
+                    },
+                    complete: function(xhr, status) {
+                        const response = xhr.responseText;
+                        $("#" + key).append(response);
+
+                        let pager = historyState.pager;
+                        pager[key] = page;
+
+                        let boxList = historyState.boxList;
+                        boxList[key] = filterData;
+                        history.replaceState({...historyState, pager, boxList}, "");
+                    },
+                    success: function(data, status, xhr) {
+                        results.push(data);
+                        resolve();
+                        $("#" + key + " button.loading").remove();
+                    }
+                });
+            });
+        }
+
+        // Chain the AJAX calls sequentially
+        const sequence = urls.reduce((promiseChain, url) => {
+            return promiseChain.then(() => makeAjaxCall(url.url, url.filterData, url.historyState, url.page));
+        }, Promise.resolve());
+
+        // When all AJAX calls are finished, execute your function
+        sequence.then(() => {
+            allAjaxCallsFinished();
+        });
+
+        function allAjaxCallsFinished() {
+            addClickEventToLinks();
+            if(history.state.boxListElement == key)
+            {
+                $(window).scrollTop(history.state.scrollPos);
+            }
+        }
+    }
+
+    function addClickEventToLinks() {
+        $(".viewListing").delegate("a", "click", function()
+        {
+            let scrollPos = $(document).scrollTop();
+            let boxListElement = $(this).closest(".mediaListing").attr("id");
+            let historyState = history.state;
+            history.replaceState({...historyState, "scrollPos": scrollPos, "boxListElement": boxListElement}, "");
+        });
+    }
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-pager-loading-featured-media-box
+$(document).ready(function() {
+    addClickEventToLinks();
+    
+    let historyStateObjects = {
+        "pager": [],
+        "boxList": [],
+        "scrollPos": "",
+        "boxListElement": ""
+    };
+    
+    historyState = history.state;
+    if(historyState == null) 
+    {
+        history.replaceState(historyStateObjects, "");
+    } else 
+    {
+        $.each(historyStateObjects, function(index, value) 
+        {
+             if(!historyState.hasOwnProperty(index))
+             {
+                history.replaceState({...historyState, [index]: value}, "");
+             }
+        });    
+    }
+   
+    const urls = [];
+    if(historyState !== null)
+    {
+        Object.keys(historyState.pager).forEach(function(key) 
+        {
+            if(key == "featured-media-box") 
+            {
+                var filterData = historyState.boxList[key]; 
+                var page = historyState.pager[key];
+                var url = "/media/ajax/component/boxList/category/online-tutorials-onyx/category_id/91?page=";
+     
+                for (let pageCount = 2; pageCount <= page; pageCount++) {
+                    urls.push({
+                        "url": url + pageCount + "&page_only=1",
+                        "filterData": filterData,
+                        "historyState": historyState,
+                        "page": page
+                    });
+                }
+            }
+        });
+        
+        if(Object.keys(historyState.pager).length !== 0)
+        {
+            makeSequentialAjaxCalls(urls, "featured-media-box");
+        }
+    }
+    
+  $("#featured-media-box").delegate("button.loading", "click", function(e) {
+    var filterData = $("#featured-media-box").data("box-list"); 
+    var page = $(this).data("page");
+    $.ajax({
+      type: "POST", 
+      url: "/media/ajax/component/boxList/category/online-tutorials-onyx/category_id/91?page="+page+"&page_only=1",
+      data: { vars: filterData },
+      beforeSend: function(xhr, settings) {
+         $("#featured-media-box button.loading").append("<span class=\"loader-wrapper\"><span class=\"loader-icon-main\"></span></span>");
+      },
+      complete: function(xhr, status) {
+        response = xhr.responseText;
+        $("#featured-media-box").append(response);
+        addClickEventToLinks();
+        if(historyState != null){
+          pager = historyState.pager;
+          pager["featured-media-box"] = page;
+          
+          boxList = historyState.boxList;
+          boxList["featured-media-box"] = filterData;
+          history.replaceState({...historyState, pager, boxList}, "");
+				}
+      },
+      success: function(data, status, xhr) { 
+        response = data; 
+        $("#featured-media-box button.loading").remove();
+      } 
+    });
+  }); 
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-init-mobile-featured-media-box
+jQuery(document).ready(function(event) {
+  var observerOptions = {
+    root: document.documentElement
+  };
+  
+  var mobile_boxlist_620ae0c071745832f9870b06b45350e3_initialized = false;
+  
+  var displayMobileObserver_620ae0c071745832f9870b06b45350e3 = new IntersectionObserver(function(entries, observer) 
+  {
+    entries.forEach(function(entry) {
+      var jTarget = jQuery(entry.target);
+      if(jTarget.css('display') != 'none')
+      {
+        if(!mobile_boxlist_620ae0c071745832f9870b06b45350e3_initialized)
+        {
+          mobile_boxlist_620ae0c071745832f9870b06b45350e3_initialized = true;
+
+          jQuery.ajax({
+            url: '/media/ajaxListView',
+            data: {
+              requestOptions: 'YTo0OntzOjY6Im1vZHVsZSI7czo4OiJjYXRlZ29yeSI7czo2OiJhY3Rpb24iO3M6NDoic2hvdyI7czo4OiJjYXRlZ29yeSI7czoyMToib25saW5lLXR1dG9yaWFscy1vbnl4IjtzOjExOiJjYXRlZ29yeV9pZCI7czoyOiI5MSI7fQ==',
+              listOptions: 'YTo0Mzp7czozOiJhY3QiO3M6NzoiYm94TGlzdCI7czozOiJtb2QiO3M6NToibWVkaWEiO3M6NDoibW9kZSI7czo4OiJmZWF0dXJlZCI7czo3OiJjb250ZXh0IjtpOjA7czoxMDoiY29udGV4dF9pZCI7TjtzOjExOiJzaG93X2ZpbHRlciI7YjowO3M6NjoiZmlsdGVyIjtzOjM6ImFsbCI7czoxMDoic2hvd19saW1pdCI7YjoxO3M6NToibGltaXQiO3M6MzoiYWxsIjtzOjk6InNob3dfdHlwZSI7YjoxO3M6NzoidHlwZV9pZCI7TjtzOjQ6InR5cGUiO3M6NjoidmlkZW9zIjtzOjExOiJzaG93X2xheW91dCI7YjoxO3M6NjoibGF5b3V0IjtzOjg6InRodW1iQmlnIjtzOjExOiJzaG93X3NlYXJjaCI7YjowO3M6Njoic2VhcmNoIjtzOjA6IiI7czoxMDoic2hvd19wYWdlciI7YjoxO3M6MTA6InBhZ2VyX21vZGUiO3M6NzoibG9hZGluZyI7czo5OiJwYWdlX25hbWUiO3M6NDoicGFnZSI7czo5OiJwYWdlX29ubHkiO2I6MDtzOjk6InNob3dfbW9yZSI7YjowO3M6OToibW9yZV9saW5rIjtzOjEwOiJtZWRpYS9saXN0IjtzOjExOiJzaG93X3VwbG9hZCI7YjowO3M6MTE6InNob3dfaGVhZGVyIjtiOjE7czo4OiJwZXJfcGFnZSI7aToyMDtzOjE0OiJzaG93X2VtcHR5X2JveCI7YjowO3M6OToic2F2ZV9wYWdlIjtiOjE7czo5OiJ0aHVtYnNpemUiO3M6NzoiMTYweDEyMCI7czoxNDoiY2F0ZWdvcnlGaWx0ZXIiO3M6MToiMCI7czoxNToic2hvd19jYXRlZ29yaWVzIjtiOjA7czoyOiJpZCI7czoxODoiZmVhdHVyZWQtbWVkaWEtYm94IjtzOjc6ImNhcHRpb24iO3M6ODoiRmVhdHVyZWQiO3M6ODoiY2F0ZWdvcnkiO2k6OTE7czo0OiJ0ZXh0IjtOO3M6MTI6ImZpbHRlckhpZGRlbiI7YjoxO3M6MTI6ImxheW91dEhpZGRlbiI7YjoxO3M6ODoiaXNNb2JpbGUiO2I6MTtzOjEzOiJjYXB0aW9uUGFyYW1zIjthOjA6e31zOjQ6InBhZ2UiO2k6MTtzOjk6ImNvbXBvbmVudCI7czo3OiJib3hMaXN0IjtzOjEyOiJmdW5jdGlvbkxpbmsiO3M6MTg6Ik1lZGlhOjpnZXRMaW5rTGlzdCI7czoxNjoiZnVuY3Rpb25MaW5rQWpheCI7czoxODoiTWVkaWE6OmdldExpbmtBamF4IjtzOjY6Im1vYmlsZSI7YjoxO30=',
+              filtered: false
+            },
+            method: 'post',
+            dataType: 'html',
+            success: function(data, xhr, status)
+            {
+              
+              if(!false)
+              {
+                jQuery('[id=media-box-list-ajax-target-featured-media-box]').html(data);
+              }
+              else 
+              {
+                jQuery('[id=media-box-list-ajax-target-featured-media-box] .vmp-accordion').html(data).accordion(
+                {
+                  heightStyle: "content"
+                });
+              }
+              
+              // Fight against the lazy loader
+              jQuery('[id=media-box-list-ajax-target-featured-media-box] img[data-original]').each(function(key) {
+                jQuery(this).attr('src', jQuery(this).attr('data-original'));
+              })
+            }
+          });
+        }
+      }
+    })
+  }, observerOptions);
+  displayMobileObserver_620ae0c071745832f9870b06b45350e3.observe(jQuery('#featured-media-box .vmp-mobile')[0]);
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-pager-loading-media-box
+$(document).ready(function() {
+    addClickEventToLinks();
+    
+    let historyStateObjects = {
+        "pager": [],
+        "boxList": [],
+        "scrollPos": "",
+        "boxListElement": ""
+    };
+    
+    historyState = history.state;
+    if(historyState == null) 
+    {
+        history.replaceState(historyStateObjects, "");
+    } else 
+    {
+        $.each(historyStateObjects, function(index, value) 
+        {
+             if(!historyState.hasOwnProperty(index))
+             {
+                history.replaceState({...historyState, [index]: value}, "");
+             }
+        });    
+    }
+   
+    const urls = [];
+    if(historyState !== null)
+    {
+        Object.keys(historyState.pager).forEach(function(key) 
+        {
+            if(key == "media-box") 
+            {
+                var filterData = historyState.boxList[key]; 
+                var page = historyState.pager[key];
+                var url = "/media/ajax/component/boxList/category/online-tutorials-onyx/category_id/91?page=";
+     
+                for (let pageCount = 2; pageCount <= page; pageCount++) {
+                    urls.push({
+                        "url": url + pageCount + "&page_only=1",
+                        "filterData": filterData,
+                        "historyState": historyState,
+                        "page": page
+                    });
+                }
+            }
+        });
+        
+        if(Object.keys(historyState.pager).length !== 0)
+        {
+            makeSequentialAjaxCalls(urls, "media-box");
+        }
+    }
+    
+  $("#media-box").delegate("button.loading", "click", function(e) {
+    var filterData = $("#media-box").data("box-list"); 
+    var page = $(this).data("page");
+    $.ajax({
+      type: "POST", 
+      url: "/media/ajax/component/boxList/category/online-tutorials-onyx/category_id/91?page="+page+"&page_only=1",
+      data: { vars: filterData },
+      beforeSend: function(xhr, settings) {
+         $("#media-box button.loading").append("<span class=\"loader-wrapper\"><span class=\"loader-icon-main\"></span></span>");
+      },
+      complete: function(xhr, status) {
+        response = xhr.responseText;
+        $("#media-box").append(response);
+        addClickEventToLinks();
+        if(historyState != null){
+          pager = historyState.pager;
+          pager["media-box"] = page;
+          
+          boxList = historyState.boxList;
+          boxList["media-box"] = filterData;
+          history.replaceState({...historyState, pager, boxList}, "");
+				}
+      },
+      success: function(data, status, xhr) { 
+        response = data; 
+        $("#media-box button.loading").remove();
+      } 
+    });
+  }); 
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// media-boxList-init-mobile-media-box
+jQuery(document).ready(function(event) {
+  var observerOptions = {
+    root: document.documentElement
+  };
+  
+  var mobile_boxlist_416b67dce7a24890eff247c5c71c036d_initialized = false;
+  
+  var displayMobileObserver_416b67dce7a24890eff247c5c71c036d = new IntersectionObserver(function(entries, observer) 
+  {
+    entries.forEach(function(entry) {
+      var jTarget = jQuery(entry.target);
+      if(jTarget.css('display') != 'none')
+      {
+        if(!mobile_boxlist_416b67dce7a24890eff247c5c71c036d_initialized)
+        {
+          mobile_boxlist_416b67dce7a24890eff247c5c71c036d_initialized = true;
+
+          jQuery.ajax({
+            url: '/media/ajaxListView',
+            data: {
+              requestOptions: 'YTo0OntzOjY6Im1vZHVsZSI7czo4OiJjYXRlZ29yeSI7czo2OiJhY3Rpb24iO3M6NDoic2hvdyI7czo4OiJjYXRlZ29yeSI7czoyMToib25saW5lLXR1dG9yaWFscy1vbnl4IjtzOjExOiJjYXRlZ29yeV9pZCI7czoyOiI5MSI7fQ==',
+              listOptions: 'YTo0Mzp7czozOiJhY3QiO3M6NzoiYm94TGlzdCI7czozOiJtb2QiO3M6NToibWVkaWEiO3M6NDoibW9kZSI7czo4OiJjYXRlZ29yeSI7czo3OiJjb250ZXh0IjtpOjE7czoxMDoiY29udGV4dF9pZCI7aTo5MTtzOjExOiJzaG93X2ZpbHRlciI7YjoxO3M6NjoiZmlsdGVyIjtzOjM6ImFsbCI7czoxMDoic2hvd19saW1pdCI7YjoxO3M6NToibGltaXQiO3M6MzoiYWxsIjtzOjk6InNob3dfdHlwZSI7YjoxO3M6NzoidHlwZV9pZCI7TjtzOjQ6InR5cGUiO3M6NjoidmlkZW9zIjtzOjExOiJzaG93X2xheW91dCI7YjoxO3M6NjoibGF5b3V0IjtzOjU6InRodW1iIjtzOjExOiJzaG93X3NlYXJjaCI7YjowO3M6Njoic2VhcmNoIjtzOjA6IiI7czoxMDoic2hvd19wYWdlciI7YjoxO3M6MTA6InBhZ2VyX21vZGUiO3M6NzoibG9hZGluZyI7czo5OiJwYWdlX25hbWUiO3M6NDoicGFnZSI7czo5OiJwYWdlX29ubHkiO2I6MDtzOjk6InNob3dfbW9yZSI7YjowO3M6OToibW9yZV9saW5rIjtzOjEwOiJtZWRpYS9saXN0IjtzOjExOiJzaG93X3VwbG9hZCI7YjowO3M6MTE6InNob3dfaGVhZGVyIjtiOjE7czo4OiJwZXJfcGFnZSI7aToyMDtzOjE0OiJzaG93X2VtcHR5X2JveCI7YjoxO3M6OToic2F2ZV9wYWdlIjtiOjE7czo5OiJ0aHVtYnNpemUiO3M6NzoiMTYweDEyMCI7czoxNDoiY2F0ZWdvcnlGaWx0ZXIiO3M6MToiMCI7czoxNToic2hvd19jYXRlZ29yaWVzIjtiOjA7czoyOiJpZCI7czo5OiJtZWRpYS1ib3giO3M6NzoiY2FwdGlvbiI7czo5OiJBbGwgTWVkaWEiO3M6ODoiY2F0ZWdvcnkiO2k6OTE7czo0OiJ0ZXh0IjtOO3M6MTI6ImZpbHRlckhpZGRlbiI7YjoxO3M6MTI6ImxheW91dEhpZGRlbiI7YjoxO3M6ODoiaXNNb2JpbGUiO2I6MTtzOjEzOiJjYXB0aW9uUGFyYW1zIjthOjA6e31zOjQ6InBhZ2UiO2k6MTtzOjk6ImNvbXBvbmVudCI7czo3OiJib3hMaXN0IjtzOjEyOiJmdW5jdGlvbkxpbmsiO3M6MTg6Ik1lZGlhOjpnZXRMaW5rTGlzdCI7czoxNjoiZnVuY3Rpb25MaW5rQWpheCI7czoxODoiTWVkaWE6OmdldExpbmtBamF4IjtzOjY6Im1vYmlsZSI7YjoxO30=',
+              filtered: true
+            },
+            method: 'post',
+            dataType: 'html',
+            success: function(data, xhr, status)
+            {
+              
+              if(!true)
+              {
+                jQuery('[id=media-box-list-ajax-target-media-box]').html(data);
+              }
+              else 
+              {
+                jQuery('[id=media-box-list-ajax-target-media-box] .vmp-accordion').html(data).accordion(
+                {
+                  heightStyle: "content"
+                });
+              }
+              
+              // Fight against the lazy loader
+              jQuery('[id=media-box-list-ajax-target-media-box] img[data-original]').each(function(key) {
+                jQuery(this).attr('src', jQuery(this).attr('data-original'));
+              })
+            }
+          });
+        }
+      }
+    })
+  }, observerOptions);
+  displayMobileObserver_416b67dce7a24890eff247c5c71c036d.observe(jQuery('#media-box .vmp-mobile')[0]);
+});
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+// showSidebarMobile
+  $(document).ready(function(){
+      var hideSidebar = function() 
+      {
+         $('#siteSidebar.vmp-mobile, #siteSidebarMobile.vmp-mobile').hide(1);
+         $('.vmp-sideBar.vmp-close').hide(1);
+         $('.vmp-sideBar.vmp-open').show(1);
+      }
+      var showSidebar = function() 
+      {
+          $('#siteSidebar.vmp-mobile, #siteSidebarMobile.vmp-mobile').show(1);
+          $('.vmp-sideBar.vmp-open').hide(1);
+          $('.vmp-sideBar.vmp-close').show(1);
+      }
+      $('.vmp-sideBar.vmp-close').on('click', hideSidebar);
+      $('.vmp-sideBar.vmp-open').on('click', showSidebar);
+    $(window).on('resize', function() {
+        if($(window).width() > 999) {
+            hideSidebar();
+            $('.vmp-mnu-label').hide(1);
+        } else {
+            var close = $('.vmp-mnu-label.vmp-close');
+            if(close.is(':visible')){
+                $('.vmp-sideBar.vmp-close').show(1);
+            } else {
+                $('.vmp-sideBar.vmp-open').show(1);
+            }
+        }
+        
+        jQuery(window).trigger('scroll');
+    });
+  });
+//]]>
+</script>
+
+
+
+
+
+</body>
+
+</html>
+

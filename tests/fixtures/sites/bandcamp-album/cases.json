@@ -1,0 +1,6 @@
+[
+ {"url": "http://blazo.bandcamp.com/album/jazz-format-mixtape-vol-1", "args": ["-J", "--flat-playlist"]},
+ {"url": "http://blazo.bandcamp.com/album/jazz-format-mixtape-vol-1", "args": ["--flat-playlist", "--print", "playlist_count,title,playlist_uploader_id"]},
+ {"url": "http://nomusic.bandcamp.com/album/empty", "args": ["-J", "--flat-playlist"]},
+ {"url": "http://nomusic.bandcamp.com/album/missing", "args": ["-J", "--flat-playlist"]}
+]

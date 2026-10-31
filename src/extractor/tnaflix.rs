@@ -1,7 +1,8 @@
-//! Upstream `TNAFlixNetworkEmbedIE` and `TNAFlixIE` (`yt_dlp/extractor/tnaflix.py`):
-//! `player.tnaflix.com` embeds as a url result to the TNAFlix page, and the
-//! page's AJAX video player `<source>` MP4s. Pages with a config XML (the
-//! `flashvars`/`config`/`vkey`+`nkey` branch) are not supported natively.
+//! Upstream `TNAFlixNetworkEmbedIE`, `TNAFlixIE` and `EMPFlixIE`
+//! (`yt_dlp/extractor/tnaflix.py`): `player.tnaflix.com` embeds as a url
+//! result to the TNAFlix page, and the pages' AJAX video player `<source>`
+//! MP4s. Pages with a config XML (the `flashvars`/`config`/`vkey`+`nkey`
+//! branch, MovieFap's) are not supported natively.
 use super::{Extractor, dict_format, dict_info, download_json_headers, download_webpage};
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
@@ -12,8 +13,10 @@ use url::Url;
 
 pub struct TNAFlixNetworkEmbed;
 pub struct TNAFlix;
+pub struct EMPFlix;
 
 const NAME: &str = "TNAFlix";
+const EMPFLIX_NAME: &str = "EMPFlix";
 
 static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://player\.(?P<host>tnaflix)\.com/video/(?P<id>\d+)").unwrap()
@@ -21,6 +24,12 @@ static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
     crate::extractor::url_regex(
         r"^https?://(?:www\.)?(?P<host>tnaflix)\.com/[^/]+/(?P<display_id>[^/]+)/video(?P<id>\d+)",
+    )
+    .unwrap()
+});
+static EMPFLIX_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?(?P<host>empflix)\.com/(?:videos/(?P<display_id>.+?)-|[^/]+/(?P<display_id_2>[^/]+)/video)(?P<id>[0-9]+)",
     )
     .unwrap()
 });
@@ -44,6 +53,11 @@ static SOURCE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"<source src="([^
 static HEIGHT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"-(\d+)p\.").unwrap());
 static POSTER: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"data-poster="([^"]+)""#).unwrap());
 
+/// `EMPFlixIE._VALID_URL`.
+pub fn empflix_suitable(url: &str) -> bool {
+    EMPFLIX_URL.is_match(url)
+}
+
 /// `_match_valid_url` for the embed (TNAFlix hosts only; EMPFlix is not ported).
 pub fn embed_suitable(url: &str) -> bool {
     EMBED_URL.is_match(url)
@@ -52,10 +66,6 @@ pub fn embed_suitable(url: &str) -> bool {
 /// `_match_valid_url` for the TNAFlix page.
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
-}
-
-fn unsupported(what: &str) -> Error {
-    Error::UnsupportedHtml5(format!("TNAFlix {what} are not supported natively"))
 }
 
 /// `int_or_none` of a digits string.
@@ -99,39 +109,39 @@ impl Extractor for TNAFlixNetworkEmbed {
     }
 }
 
-/// `TNAFlixIE._real_extract` for pages without a config XML.
-fn extract_page(client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
-    let Some(found) = VALID_URL.captures(url.as_str()) else {
-        return Ok(None);
-    };
-    let video_id = found["id"].to_owned();
-    let display_id = found["display_id"].to_owned();
-    crate::screen::set_extractor(NAME);
+/// `TNAFlixNetworkBaseIE._real_extract` for pages without a config XML.
+fn extract_video(
+    client: &Client,
+    url: &Url,
+    (name, host, video_id, display_id): (&'static str, &str, &str, &str),
+) -> Result<Option<VideoInfo>> {
+    crate::screen::set_extractor(name);
     crate::screen::screen(&format!(
-        "[{NAME}] Extracting URL: {}",
+        "[{name}] Extracting URL: {}",
         crate::screen::extracting_url(url.as_str())
     ));
 
-    let webpage = download_webpage(client, url, NAME, &display_id)?;
+    let webpage = download_webpage(client, url, name, display_id)?;
     let hidden = super::login::hidden_inputs(&webpage);
     let has_hidden = |name: &str| hidden.iter().any(|(key, _)| key == name);
     if CONFIG.is_match(&webpage)
         || has_hidden("config")
         || (has_hidden("vkey") && has_hidden("nkey"))
     {
-        return Err(unsupported("pages with a config XML"));
+        return Err(Error::UnsupportedHtml5(format!(
+            "{name} pages with a config XML are not supported natively"
+        )));
     }
 
     // Upstream's EMPFlix-style branch: the AJAX video player's `<source>`s.
     let player_url = Url::parse(&format!(
-        "http://www.{}.com/ajax/video-player/{video_id}",
-        &found["host"]
+        "http://www.{host}.com/ajax/video-player/{video_id}"
     ))?;
     let player = download_json_headers(
         client,
         &player_url,
-        NAME,
-        &display_id,
+        name,
+        video_id,
         &[("Referer", url.as_str())],
     )?;
     let player = player
@@ -159,8 +169,8 @@ fn extract_page(client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
                 ("height", height.map_or(Value::Null, Value::from)),
                 ("format_id", format_id.into()),
             ],
-            NAME,
-            &video_id,
+            name,
+            video_id,
         )?);
     }
 
@@ -196,10 +206,10 @@ fn extract_page(client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
 
     Ok(Some(dict_info(
         url,
-        (NAME, NAME),
+        (name, name),
         vec![
-            ("id", video_id.clone().into()),
-            ("display_id", display_id.clone().into()),
+            ("id", video_id.into()),
+            ("display_id", display_id.into()),
             ("title", title),
             ("description", description),
             ("thumbnails", thumbnails),
@@ -215,13 +225,47 @@ fn extract_page(client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
     )))
 }
 
+/// The `display_id` of `TNAFlixIE`/`EMPFlixIE` (`display_id`, then
+/// `display_id_2`, else the video ID).
+fn display_id(found: &regex::Captures<'_>) -> String {
+    ["display_id", "display_id_2"]
+        .iter()
+        .filter_map(|key| found.name(key))
+        .map(|display| display.as_str())
+        .find(|display| !display.is_empty())
+        .unwrap_or(&found["id"])
+        .to_owned()
+}
+
 impl Extractor for TNAFlix {
     fn key(&self) -> &'static str {
         NAME
     }
 
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
-        extract_page(client, url)
+        let Some(found) = VALID_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let display = display_id(&found);
+        extract_video(client, url, (NAME, &found["host"], &found["id"], &display))
+    }
+}
+
+impl Extractor for EMPFlix {
+    fn key(&self) -> &'static str {
+        EMPFLIX_NAME
+    }
+
+    fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        let Some(found) = EMPFLIX_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let display = display_id(&found);
+        extract_video(
+            client,
+            url,
+            (EMPFLIX_NAME, &found["host"], &found["id"], &display),
+        )
     }
 }
 
@@ -242,5 +286,18 @@ mod tests {
         ));
         assert!(embed_suitable("https://player.tnaflix.com/video/6538"));
         assert!(!embed_suitable("http://player.empflix.com/video/33051"));
+    }
+
+    #[test]
+    fn empflix_urls_follow_upstream_valid_url() {
+        assert!(empflix_suitable(
+            "http://www.empflix.com/amateur-porn/Amateur-Finger-Fuck/video33051"
+        ));
+        assert!(empflix_suitable(
+            "http://www.empflix.com/videos/Amateur-Finger-Fuck-33051.html"
+        ));
+        assert!(!empflix_suitable(
+            "https://www.tnaflix.com/teen-porn/Educational-xxx-video/video6538"
+        ));
     }
 }

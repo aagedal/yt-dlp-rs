@@ -1,0 +1,27 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.raiplay.it/dirette/rainews24",
+   "args": [
+    "-F",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[RaiPlayLive] Extracting URL: http://www.raiplay.it/dirette/rainews24",
+    "[RaiPlayLive] rainews24: Downloading video JSON",
+    "[RaiPlayLive] rainews24: Downloading XML metadata",
+    "[RaiPlayLive] rainews24: Downloading m3u8 information",
+    "[info] Available formats for d784ad40-e0ae-4a69-aa76-37519d238a9c:",
+    "ID       EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "-------------------------------------------------------------",
+    "hls-1640 mp4 768x432    | 1641k m3u8  | avc1.4d401f mp4a.40.2",
+    "hls-2440 mp4 1024x576   | 2441k m3u8  | avc1.4d401f mp4a.40.2",
+    "hls-3427 mp4 1280x720   | 3428k m3u8  | avc1.4d4029 mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,264 @@
+{
+  "data" : {
+    "attributes" : {
+      "availabilityWindows" : [ {
+        "package" : "Free",
+        "playableEnd" : "2038-01-18T00:00:00Z",
+        "playableStart" : "2023-11-01T04:00:00Z"
+      }, {
+        "package" : "HomeAndGarden",
+        "playableEnd" : "2038-01-18T00:00:00Z",
+        "playableStart" : "2023-11-01T04:00:00Z"
+      } ],
+      "description" : "Tarek and Christina are going their separate ways after one last flip!",
+      "longDescription" : "Tarek and Christina have one final house to flip before going their separate ways. It's one of their most challenging flips to date, and they'll look back and share some of their favorite memories and lessons they learned along the way!",
+      "name" : "Flip or Flop: The Final Flip",
+      "publishStart" : "2023-11-01T04:00:00Z",
+      "rights" : {
+        "embeddable" : false
+      },
+      "videoDuration" : 2580644
+    },
+    "id" : "5025585",
+    "relationships" : {
+      "contentPackages" : {
+        "data" : [ {
+          "id" : "Free",
+          "type" : "package"
+        }, {
+          "id" : "HomeAndGarden",
+          "type" : "package"
+        } ]
+      },
+      "images" : {
+        "data" : [ {
+          "id" : "23ac1348-115f-4394-bf1d-169ccd282b3c",
+          "type" : "image"
+        } ]
+      },
+      "primaryChannel" : {
+        "data" : {
+          "id" : "172",
+          "type" : "channel"
+        }
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "72d389c0-0725-404c-8d06-32b02af2704b",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "40beb98789eda05e22fecb7956f9b93bbf7edc1eaa8139ae1fdbebf72534fb2b",
+          "type" : "route"
+        } ]
+      },
+      "show" : {
+        "data" : {
+          "id" : "25090",
+          "type" : "show"
+        }
+      },
+      "txGenres" : {
+        "data" : [ {
+          "id" : "869882fb-d7f5-4f15-9cbb-fb021b26c3f1",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "video"
+  },
+  "included" : [ {
+    "attributes" : {
+      "name" : "HGTV"
+    },
+    "id" : "172",
+    "relationships" : {
+      "contentPackages" : {
+        "data" : [ {
+          "id" : "HomeAndGarden",
+          "type" : "package"
+        } ]
+      },
+      "images" : {
+        "data" : [ {
+          "id" : "11015b58-83d5-4092-809f-396fb4ce6d42",
+          "type" : "image"
+        }, {
+          "id" : "201d2c97-b6d8-45ac-8a5c-cde071daac06",
+          "type" : "image"
+        }, {
+          "id" : "57feca3f-6fd9-4e44-b376-a5d8d050c25f",
+          "type" : "image"
+        }, {
+          "id" : "626af4ee-ae8f-439b-804d-1c104bb5343b",
+          "type" : "image"
+        }, {
+          "id" : "9599923e-3f28-4d22-8420-bb057e9c4fbb",
+          "type" : "image"
+        }, {
+          "id" : "ebbe6db2-3abc-45ae-80f9-7fd3dabe0a8a",
+          "type" : "image"
+        }, {
+          "id" : "1420e118-d251-4d4a-8a8c-b21936ee922d",
+          "type" : "image"
+        }, {
+          "id" : "1a56596b-7e35-4e69-8d1f-c7cc54eb82cf",
+          "type" : "image"
+        }, {
+          "id" : "1d060e07-53f4-496f-9582-6260bd62bce7",
+          "type" : "image"
+        }, {
+          "id" : "4833c36d-87ca-422f-8222-a64ccfcb93f8",
+          "type" : "image"
+        }, {
+          "id" : "6e7100ac-4aea-44e4-ace4-a7d75dede6ab",
+          "type" : "image"
+        }, {
+          "id" : "854ebe41-6d8e-4ea3-9186-095ad6de292f",
+          "type" : "image"
+        } ]
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "6f7187c3-9502-452c-bce4-41c21fc3887c",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "f0c71972a151b67791d279d1661b04de5b7f38b88563d17513c6a9d183991c28",
+          "type" : "route"
+        } ]
+      },
+      "txFeedPreview" : {
+        "data" : [ {
+          "id" : "3dfa1ed6-ecd0-47c8-8315-a81ef1381d21",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "channel"
+  }, {
+    "attributes" : {
+      "height" : 1080,
+      "kind" : "default",
+      "src" : "https://us1-prod-images.disco-api.com/2022/11/27/455caa6c-1462-3f14-b63d-a026d7a5e6d3.jpeg",
+      "width" : 1920
+    },
+    "id" : "23ac1348-115f-4394-bf1d-169ccd282b3c",
+    "type" : "image"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/video/flip-or-flop-the-final-flip-hgtv-atve-us/flip-or-flop-the-final-flip"
+    },
+    "id" : "40beb98789eda05e22fecb7956f9b93bbf7edc1eaa8139ae1fdbebf72534fb2b",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/show/flip-or-flop-the-final-flip-hgtv-atve-us"
+    },
+    "id" : "6c5587b5eb7bfbbcf1e1ca90dac67b3678a70d6ab22ad01fefbda3a07ed2b72e",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/channel/hgtv"
+    },
+    "id" : "f0c71972a151b67791d279d1661b04de5b7f38b88563d17513c6a9d183991c28",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "customAttributes" : { },
+      "description" : "Tarek and Christina are going their separate ways after one last flip!",
+      "longDescription" : "Tarek and Christina have one final house to flip before going their separate ways. It's one of their most challenging flips to date, and they'll look back and share some of their favorite memories and lessons they learned along the way!",
+      "name" : "Flip or Flop: The Final Flip"
+    },
+    "id" : "25090",
+    "relationships" : {
+      "images" : {
+        "data" : [ {
+          "id" : "19e53d36-f36e-4914-82c8-c5f2c922ce94",
+          "type" : "image"
+        }, {
+          "id" : "23d3c998-e475-451e-be6b-11baa377c911",
+          "type" : "image"
+        }, {
+          "id" : "42193dfa-6b61-42ef-ab82-5511ca0f961f",
+          "type" : "image"
+        }, {
+          "id" : "9b624563-a23b-4457-b2ca-c76f64d48a33",
+          "type" : "image"
+        }, {
+          "id" : "b84383df-212a-4db4-876a-a93ab5e25d4f",
+          "type" : "image"
+        }, {
+          "id" : "fda0d81f-a9fb-47bf-8e4e-1581d1a264d2",
+          "type" : "image"
+        }, {
+          "id" : "4f035d05-356e-4916-b727-65861c36c643",
+          "type" : "image"
+        }, {
+          "id" : "64679416-a6b5-4e62-be42-84f81d3c8bae",
+          "type" : "image"
+        }, {
+          "id" : "6d4842d5-81c7-4337-8cd8-85b978aff564",
+          "type" : "image"
+        }, {
+          "id" : "a9c96837-ea38-4024-b75b-adc9f162ef47",
+          "type" : "image"
+        }, {
+          "id" : "da5304fa-28f2-4d68-ab9c-1cbcabe43de3",
+          "type" : "image"
+        }, {
+          "id" : "e1c6dd7d-096f-4568-80bf-4fca777fc64f",
+          "type" : "image"
+        } ]
+      },
+      "primaryChannel" : {
+        "data" : {
+          "id" : "172",
+          "type" : "channel"
+        }
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "72d389c0-0725-404c-8d06-32b02af2704b",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "6c5587b5eb7bfbbcf1e1ca90dac67b3678a70d6ab22ad01fefbda3a07ed2b72e",
+          "type" : "route"
+        } ]
+      },
+      "txGenres" : {
+        "data" : [ {
+          "id" : "682d2c52-ab9b-4033-ab49-6bfe2b3ef5ac",
+          "type" : "taxonomyNode"
+        }, {
+          "id" : "869882fb-d7f5-4f15-9cbb-fb021b26c3f1",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "show"
+  } ],
+  "meta" : {
+    "site" : {
+      "attributes" : {
+        "brand" : "go",
+        "brandId" : "hgtv",
+        "mainTerritoryCode" : "us",
+        "theme" : "hgtv",
+        "websiteHostName" : ""
+      },
+      "id" : "hgtv",
+      "type" : "site"
+    }
+  }
+}

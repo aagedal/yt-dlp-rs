@@ -1,0 +1,305 @@
+{
+  "data" : {
+    "attributes" : {
+      "availabilityWindows" : [ {
+        "package" : "FoodNetwork",
+        "playableEnd" : "2038-01-18T00:00:00Z",
+        "playableStart" : "2024-07-10T01:00:00Z"
+      }, {
+        "package" : "Free",
+        "playableEnd" : "2038-01-18T00:00:00Z",
+        "playableStart" : "2024-07-10T01:00:00Z"
+      } ],
+      "description" : "Marcus Samuelsson throws his legendary global tricks at the Titans.",
+      "episodeNumber" : 1,
+      "longDescription" : "Bobby Flay invites icon Marcus Samuelsson to the Triple Threat kitchen to flex his legendary cooking skills. From Sweden to Ethiopia, Marcus throws his global tricks at the Titans before famed restaurateur Ken Oringer decides who will triumph.",
+      "name" : "Titans vs Marcus Samuelsson",
+      "publishStart" : "2024-07-10T01:00:00Z",
+      "rights" : {
+        "embeddable" : false
+      },
+      "seasonNumber" : 3,
+      "videoDuration" : 2520851
+    },
+    "id" : "5350005",
+    "relationships" : {
+      "contentPackages" : {
+        "data" : [ {
+          "id" : "FoodNetwork",
+          "type" : "package"
+        }, {
+          "id" : "Free",
+          "type" : "package"
+        } ]
+      },
+      "images" : {
+        "data" : [ {
+          "id" : "888e3ad0-6139-41c8-b16b-7c2d1056393b",
+          "type" : "image"
+        } ]
+      },
+      "primaryChannel" : {
+        "data" : {
+          "id" : "162",
+          "type" : "channel"
+        }
+      },
+      "ratingDescriptors" : {
+        "data" : [ {
+          "id" : "323c40f5-ab36-464a-9150-0497ba3f798d",
+          "type" : "contentDescriptor"
+        } ]
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "6f7187c3-9502-452c-bce4-41c21fc3887c",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "89d981105a7aeb16f8b70d0a68c0362eb5f2c3b0a443862dbf9b62521534b6fe",
+          "type" : "route"
+        } ]
+      },
+      "season" : {
+        "data" : {
+          "id" : "34142",
+          "type" : "season"
+        }
+      },
+      "show" : {
+        "data" : {
+          "id" : "24800",
+          "type" : "show"
+        }
+      },
+      "txGenres" : {
+        "data" : [ {
+          "id" : "2b06ff78-e3c3-4a0c-9cfd-d5d5d28fb84e",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "video"
+  },
+  "included" : [ {
+    "attributes" : {
+      "name" : "Food Network"
+    },
+    "id" : "162",
+    "relationships" : {
+      "contentPackages" : {
+        "data" : [ {
+          "id" : "FoodNetwork",
+          "type" : "package"
+        } ]
+      },
+      "images" : {
+        "data" : [ {
+          "id" : "1b6b3cfe-2f9e-4945-af52-41156a713510",
+          "type" : "image"
+        }, {
+          "id" : "5bddfde7-e7e6-42e8-9aff-971a135bade7",
+          "type" : "image"
+        }, {
+          "id" : "9f657f18-a3d2-42dd-9fd6-20626dc1f834",
+          "type" : "image"
+        }, {
+          "id" : "ae660d88-4fda-47d4-a694-3d2f528dd18b",
+          "type" : "image"
+        }, {
+          "id" : "e931d4ab-57fa-42f8-9f9a-cfcada7f70e8",
+          "type" : "image"
+        }, {
+          "id" : "ecdc48dc-5120-47a9-acc5-f50261b9062a",
+          "type" : "image"
+        }, {
+          "id" : "436269a2-041a-43ce-beb0-d55cab3c070d",
+          "type" : "image"
+        }, {
+          "id" : "81cf3767-ff10-451b-a83c-a9b387381c3e",
+          "type" : "image"
+        }, {
+          "id" : "a11a1709-3b47-4245-889b-9c4b32390e37",
+          "type" : "image"
+        }, {
+          "id" : "b14a6088-fc56-4b88-8591-468d5f6ba9f0",
+          "type" : "image"
+        }, {
+          "id" : "d84dffa0-7ecc-4ccc-ad43-a98bdb8147a9",
+          "type" : "image"
+        }, {
+          "id" : "da01c655-f1d2-4767-9231-a53c78c198e5",
+          "type" : "image"
+        } ]
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "6f7187c3-9502-452c-bce4-41c21fc3887c",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "53ba87857c3899c01e5bc3bc6c634140303e1eaa9cfe60fdacf182ab7ee78bd9",
+          "type" : "route"
+        } ]
+      },
+      "txFeedPreview" : {
+        "data" : [ {
+          "id" : "3dfa1ed6-ecd0-47c8-8315-a81ef1381d21",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "channel"
+  }, {
+    "attributes" : {
+      "height" : 1080,
+      "kind" : "default",
+      "src" : "https://us1-prod-images.disco-api.com/2024/07/04/529cd095-27ec-35c5-84e9-90ebd3e5d2da.jpeg",
+      "width" : 1920
+    },
+    "id" : "888e3ad0-6139-41c8-b16b-7c2d1056393b",
+    "type" : "image"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/channel/food-network"
+    },
+    "id" : "53ba87857c3899c01e5bc3bc6c634140303e1eaa9cfe60fdacf182ab7ee78bd9",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/video/bobbys-triple-threat-food-network-atve-us/titans-vs-marcus-samuelsson"
+    },
+    "id" : "89d981105a7aeb16f8b70d0a68c0362eb5f2c3b0a443862dbf9b62521534b6fe",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/show/bobbys-triple-threat-food-network-atve-us"
+    },
+    "id" : "bfeae2e7419b6d36ace673dd082d5d8f56d9c3878776fc50ba372ac31f69a9e3",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "customAttributes" : { },
+      "description" : "Chefs face off against three culinary Titans for a chance to win $25,000.",
+      "longDescription" : "Bobby Flay hosts the toughest cooking competition yet as one competing chef faces off against Bobby's three culinary Titans for a chance to win $25,000.",
+      "name" : "Bobby's Triple Threat"
+    },
+    "id" : "24800",
+    "relationships" : {
+      "contentPackages" : {
+        "data" : [ {
+          "id" : "Free",
+          "type" : "package"
+        } ]
+      },
+      "images" : {
+        "data" : [ {
+          "id" : "100894d9-76f8-45e2-8c79-ac59198d99b0",
+          "type" : "image"
+        }, {
+          "id" : "218fa858-6929-4ecc-8e67-0b0587e9f1b8",
+          "type" : "image"
+        }, {
+          "id" : "336bcedb-f086-427e-b874-b051c58f969f",
+          "type" : "image"
+        }, {
+          "id" : "3891d5f2-ff88-4ad5-9688-a35a861afc75",
+          "type" : "image"
+        }, {
+          "id" : "9ab9b863-9658-44c5-b859-86ac510b8fe0",
+          "type" : "image"
+        }, {
+          "id" : "af185311-4520-4ab0-9849-edf83144a11a",
+          "type" : "image"
+        }, {
+          "id" : "28174b88-401e-4b18-9403-b4ae566b3526",
+          "type" : "image"
+        }, {
+          "id" : "2873353f-5d88-4b26-be57-03c8d13546ff",
+          "type" : "image"
+        }, {
+          "id" : "3ea61f79-e8dc-429a-8a47-2140836cca0c",
+          "type" : "image"
+        }, {
+          "id" : "6fb086a1-1d93-4756-9a72-ba51d3f5bfd6",
+          "type" : "image"
+        }, {
+          "id" : "af2707da-994b-44e1-9ed1-cab24c54e056",
+          "type" : "image"
+        }, {
+          "id" : "bf541b7d-6b63-4585-ad20-003b170152b5",
+          "type" : "image"
+        } ]
+      },
+      "primaryChannel" : {
+        "data" : {
+          "id" : "162",
+          "type" : "channel"
+        }
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "6f7187c3-9502-452c-bce4-41c21fc3887c",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "bfeae2e7419b6d36ace673dd082d5d8f56d9c3878776fc50ba372ac31f69a9e3",
+          "type" : "route"
+        } ]
+      },
+      "seasons" : {
+        "data" : [ {
+          "id" : "29722",
+          "type" : "season"
+        }, {
+          "id" : "31474",
+          "type" : "season"
+        }, {
+          "id" : "34142",
+          "type" : "season"
+        }, {
+          "id" : "35336",
+          "type" : "season"
+        }, {
+          "id" : "35716",
+          "type" : "season"
+        } ]
+      },
+      "txGenres" : {
+        "data" : [ {
+          "id" : "2b06ff78-e3c3-4a0c-9cfd-d5d5d28fb84e",
+          "type" : "taxonomyNode"
+        }, {
+          "id" : "7c396d2b-a0b1-443d-932f-3b2cee045ca4",
+          "type" : "taxonomyNode"
+        }, {
+          "id" : "a7355aab-3d0d-4a13-9141-ea681340963f",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "show"
+  } ],
+  "meta" : {
+    "site" : {
+      "attributes" : {
+        "brand" : "go",
+        "brandId" : "cook",
+        "mainTerritoryCode" : "us",
+        "theme" : "cook",
+        "websiteHostName" : ""
+      },
+      "id" : "cook",
+      "type" : "site"
+    }
+  }
+}

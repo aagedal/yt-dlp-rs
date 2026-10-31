@@ -1,0 +1,29 @@
+<Mediapolis>
+	<url type="content">
+		<![CDATA[https://rainews1-live.akamaized.net/hls/live/598326/rainews1/rainews1/playlist.m3u8?hdnea=st=1793459637~exp=1793459787~acl=/*~hmac=47d8f4d1c0228f91e3513b34b367cbd715e4fc5492c59271d114c2828c05113f]]>
+	</url>
+	<url type="bumper"></url>
+	<url type="bumperend"></url>
+	<ct>hls_ios</ct>
+	<bitrate>0</bitrate>
+	<smooth>Y</smooth>
+	<is_live>Y</is_live>
+	<description>Rai</description>
+	<geoprotection>N</geoprotection>
+	<category>1</category>
+	<plVod></plVod>
+	<plLive></plLive>
+	<logo></logo>
+	<poster>https://www.rai.it/dl/RaiTV/2012/images/ogImage.jpg</poster>
+	<duration>$LIVE_DURATION</duration>
+	<krpano></krpano>
+	<channel></channel>
+	<ads_tecnico></ads_tecnico>
+	<license_url>
+		<![CDATA[{}]]>
+	</license_url>
+	<thumbs_array>
+<![CDATA[{}]]>
+	</thumbs_array>
+	<vtt_poster_thumbs_url><![CDATA[]]></vtt_poster_thumbs_url>
+</Mediapolis>

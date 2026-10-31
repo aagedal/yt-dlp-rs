@@ -1,8 +1,9 @@
-//! Upstream `JioSaavnSongIE` and `JioSaavnAlbumIE` (`yt_dlp/extractor/jiosaavn.py`)
-//! with the `JioSaavnBaseIE` helpers they use: the `webapi.get` JSON, the song
-//! metadata (`_extract_song`), its per-bitrate `generateAuthToken` URLs and the
-//! album's `url_transparent` song entries. The show, playlist, show-playlist
-//! and artist extractors are not ported.
+//! Upstream `JioSaavnSongIE`, `JioSaavnAlbumIE`, `JioSaavnPlaylistIE`,
+//! `JioSaavnArtistIE`, `JioSaavnShowIE` and `JioSaavnShowPlaylistIE`
+//! (`yt_dlp/extractor/jiosaavn.py`) with the `JioSaavnBaseIE` helpers they use:
+//! the `webapi.get` JSON, the song and episode metadata (`_extract_song`,
+//! `_extract_episode`), their per-bitrate `generateAuthToken` URLs and the
+//! `url_transparent` song and episode entries of the list extractors.
 use super::{Extractor, dict_format, dict_info, direct};
 use crate::info::PlaylistInfo;
 use crate::{Error, ExtractResult, Result, VideoInfo};
@@ -14,13 +15,29 @@ use url::Url;
 
 pub struct JioSaavnSong;
 pub struct JioSaavnAlbum;
+pub struct JioSaavnPlaylist;
+pub struct JioSaavnArtist;
+pub struct JioSaavnShow;
+pub struct JioSaavnShowPlaylist;
 
 const SONG_NAME: &str = "jiosaavn:song";
 const SONG_KEY: &str = "JioSaavnSong";
 const ALBUM_NAME: &str = "jiosaavn:album";
 const ALBUM_KEY: &str = "JioSaavnAlbum";
+const PLAYLIST_NAME: &str = "jiosaavn:playlist";
+const PLAYLIST_KEY: &str = "JioSaavnPlaylist";
+const ARTIST_NAME: &str = "jiosaavn:artist";
+const ARTIST_KEY: &str = "JioSaavnArtist";
+const SHOW_NAME: &str = "jiosaavn:show";
+const SHOW_KEY: &str = "JioSaavnShow";
+const SHOW_PLAYLIST_NAME: &str = "jiosaavn:show:playlist";
+const SHOW_PLAYLIST_KEY: &str = "JioSaavnShowPlaylist";
 const API_URL: &str = "https://www.jiosaavn.com/api.php";
 const VALID_BITRATES: [&str; 5] = ["16", "32", "64", "128", "320"];
+/// `_PAGE_SIZE` of the playlist and artist extractors.
+const PAGE_SIZE: usize = 50;
+/// `_PAGE_SIZE` of the show-playlist extractor.
+const SHOW_PAGE_SIZE: usize = 10;
 const URL_BASE: &str = r"^https?://(?:www\.)?(?:jio)?saavn\.com";
 
 static SONG_URL: LazyLock<Regex> = LazyLock::new(|| {
@@ -32,6 +49,29 @@ static SONG_URL: LazyLock<Regex> = LazyLock::new(|| {
 static ALBUM_URL: LazyLock<Regex> = LazyLock::new(|| {
     crate::extractor::url_regex(&format!(r"{URL_BASE}/album/[^/?#]+/(?P<id>[^/?#]+)")).unwrap()
 });
+static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(&format!(
+        r"{URL_BASE}/(?:s/playlist/(?:[^/?#]+/){{2}}|featured/[^/?#]+/)(?P<id>[^/?#]+)"
+    ))
+    .unwrap()
+});
+static ARTIST_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(&format!(r"{URL_BASE}/artist/[^/?#]+/(?P<id>[^/?#]+)")).unwrap()
+});
+static SHOW_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(&format!(
+        r"{URL_BASE}/shows/[^/?#]+/(?P<id>[^/?#]{{11,}})/?(?:$|[?#])"
+    ))
+    .unwrap()
+});
+static SHOW_PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(&format!(
+        r"{URL_BASE}/shows/(?P<show>[^#/?]+)/(?P<season>\d+)/[^/?#]+"
+    ))
+    .unwrap()
+});
+static INITIAL_DATA: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"window\.__INITIAL_DATA__\s*=").unwrap());
 static ART_SIZE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"-\d+x\d+\.").unwrap());
 
 /// `_match_valid_url` for the song extractor.
@@ -42,6 +82,26 @@ pub fn song_suitable(url: &str) -> bool {
 /// `_match_valid_url` for the album extractor.
 pub fn album_suitable(url: &str) -> bool {
     ALBUM_URL.is_match(url)
+}
+
+/// `_match_valid_url` for the playlist extractor.
+pub fn playlist_suitable(url: &str) -> bool {
+    PLAYLIST_URL.is_match(url)
+}
+
+/// `_match_valid_url` for the artist extractor.
+pub fn artist_suitable(url: &str) -> bool {
+    ARTIST_URL.is_match(url)
+}
+
+/// `_match_valid_url` for the show (episode) extractor.
+pub fn show_suitable(url: &str) -> bool {
+    SHOW_URL.is_match(url)
+}
+
+/// `_match_valid_url` for the show-playlist extractor.
+pub fn show_playlist_suitable(url: &str) -> bool {
+    SHOW_PLAYLIST_URL.is_match(url)
 }
 
 /// `JioSaavnBaseIE.requested_bitrates`: the `bitrate` extractor argument.
@@ -97,17 +157,34 @@ fn call_api(
     token: &str,
     note: &str,
 ) -> Result<Value> {
-    let url = super::update_url_query(
-        &Url::parse(API_URL)?,
-        &[
-            ("__call", "webapi.get"),
-            ("_format", "json"),
-            ("_marker", "0"),
-            ("ctx", "web6dot0"),
-            ("token", token),
-            ("type", kind),
-        ],
-    );
+    call_api_params(client, extractor, kind, token, note, &[])
+}
+
+/// `_call_api(type_, token, note, params)`: the `webapi.get` query, its base
+/// keys updated in place by `params` (as a Python dict update does).
+fn call_api_params(
+    client: &Client,
+    extractor: &'static str,
+    kind: &str,
+    token: &str,
+    note: &str,
+    params: &[(&str, &str)],
+) -> Result<Value> {
+    let mut query: Vec<(&str, &str)> = vec![
+        ("__call", "webapi.get"),
+        ("_format", "json"),
+        ("_marker", "0"),
+        ("ctx", "web6dot0"),
+        ("token", token),
+        ("type", kind),
+    ];
+    for (key, value) in params {
+        match query.iter_mut().find(|(name, _)| name == key) {
+            Some(slot) => slot.1 = value,
+            None => query.push((key, value)),
+        }
+    }
+    let url = super::update_url_query(&Url::parse(API_URL)?, &query);
     download_api(
         client,
         &url,
@@ -312,8 +389,11 @@ fn extract_formats(
     extractor: &'static str,
 ) -> Result<Vec<crate::VideoFormat>> {
     let item_id = item.get("id").and_then(Value::as_str).unwrap_or_default();
+    // `setdefault('encrypted_media_url', more_info.encrypted_media_url)`: the
+    // episodes keep it in `more_info`.
     let encrypted = item
         .get("encrypted_media_url")
+        .or_else(|| item.get("more_info")?.get("encrypted_media_url"))
         .and_then(Value::as_str)
         .ok_or_else(|| super::clyp::key_error(item_id, "encrypted_media_url"))?;
     let mut formats = Vec::new();
@@ -369,8 +449,105 @@ fn extract_formats(
     Ok(formats)
 }
 
-/// `_extract_jiosaavn_result(url, 'song', 'songs', _extract_song)`.
-fn extract_song(client: &Client, url: &Url) -> Result<VideoInfo> {
+/// `_extract_song` / `_extract_episode`: an item's info fields.
+type ItemFields = Vec<(&'static str, Value)>;
+
+/// One `JioSaavnBaseIE` media kind: its endpoint, the response key of its
+/// item list, its IE names and its `_extract_song`/`_extract_episode` parse.
+#[derive(Clone, Copy)]
+struct Media {
+    endpoint: &'static str,
+    list: &'static str,
+    name: &'static str,
+    key: &'static str,
+    parse: fn(&Value, Option<&str>) -> ItemFields,
+}
+
+const SONG: Media = Media {
+    endpoint: "song",
+    list: "songs",
+    name: SONG_NAME,
+    key: SONG_KEY,
+    parse: song_fields,
+};
+const EPISODE: Media = Media {
+    endpoint: "episode",
+    list: "episodes",
+    name: SHOW_NAME,
+    key: SHOW_KEY,
+    parse: episode_fields,
+};
+
+/// A list value (`[]` when absent).
+fn list_of<'a>(value: &'a Value, key: &str) -> &'a [Value] {
+    value
+        .get(key)
+        .and_then(Value::as_array)
+        .map_or(&[], Vec::as_slice)
+}
+
+/// `_extract_episode(episode_data, url)`: the song fields without the archive
+/// IDs, plus the show's `more_info` (description, release time, series,
+/// season, episode and cast).
+fn episode_fields(episode: &Value, url: Option<&str>) -> Vec<(&'static str, Value)> {
+    let mut fields: Vec<(&'static str, Value)> = song_fields(episode, url)
+        .into_iter()
+        .filter(|(key, _)| *key != "_old_archive_ids")
+        .collect();
+    let info = episode.get("more_info");
+    let info_text = |key: &str| {
+        info.and_then(|info| info.get(key))
+            .and_then(Value::as_str)
+            .map(Value::from)
+    };
+    let info_int = |key: &str| {
+        Some(super::streamable::int_or_none(
+            info.and_then(|info| info.get(key)),
+        ))
+    };
+    let cast = episode
+        .get("starring")
+        .and_then(Value::as_str)
+        .filter(|text| !text.is_empty())
+        .map(|text| {
+            text.split(", ")
+                .map(Value::from)
+                .collect::<Vec<Value>>()
+                .into()
+        });
+    let extra = [
+        ("description", info_text("description")),
+        (
+            "timestamp",
+            info.and_then(|info| info.get("release_time"))
+                .and_then(Value::as_str)
+                .and_then(|date| crate::dates::unified_timestamp(date, true))
+                .map(Value::from),
+        ),
+        ("series", info_text("show_title")),
+        ("series_id", info_text("show_id")),
+        ("season", info_text("season_title")),
+        ("season_number", info_int("season_no")),
+        ("season_id", info_text("season_id")),
+        ("episode_number", info_int("episode_number")),
+        ("cast", cast),
+    ];
+    for (key, value) in extra {
+        let Some(value) = value.filter(|value| !value.is_null()) else {
+            continue;
+        };
+        match fields.iter_mut().find(|(name, _)| *name == key) {
+            Some(slot) => slot.1 = value,
+            None => fields.push((key, value)),
+        }
+    }
+    fields
+}
+
+/// `_extract_jiosaavn_result(url, endpoint, response_key, parse_func)`: the
+/// page's metadata and formats, or the smuggled id and media URL of a
+/// `url_transparent` list entry.
+fn extract_media(client: &Client, url: &Url, pattern: &Regex, media: &Media) -> Result<VideoInfo> {
     let (bare, smuggled) = super::brightcove::unsmuggle(url.as_str());
     let bare = Url::parse(&bare)?;
     let transparent = smuggled.get("id").is_some_and(super::nuxt::truthy)
@@ -378,35 +555,39 @@ fn extract_song(client: &Client, url: &Url) -> Result<VideoInfo> {
             .get("encrypted_media_url")
             .is_some_and(super::nuxt::truthy);
     let (fields, item) = if transparent {
-        // A `url_transparent` album entry: its metadata and media URL are known.
+        // A `url_transparent` entry: its metadata and media URL are known.
         let item = Value::Object(smuggled);
         (
             vec![("id", item["id"].clone()), ("formats", Value::Null)],
             item,
         )
     } else {
-        let Some(found) = SONG_URL.captures(bare.as_str()) else {
+        let Some(found) = pattern.captures(bare.as_str()) else {
             return Err(Error::Reported("Unsupported URL".into()));
         };
         let token = found["id"].to_owned();
-        let response = call_api(client, SONG_NAME, "song", &token, "API")?;
-        let song = response
-            .get("songs")
-            .ok_or_else(|| super::clyp::key_error(&token, "songs"))?
+        let response = call_api(client, media.name, media.endpoint, &token, "API")?;
+        let item = response
+            .get(media.list)
+            .ok_or_else(|| super::clyp::key_error(&token, media.list))?
             .get(0)
             .cloned()
             .ok_or_else(|| Error::Reported("list index out of range".into()))?;
-        let mut fields = song_fields(&song, Some(bare.as_str()));
+        let mut fields = (media.parse)(&item, Some(bare.as_str()));
         fields.push(("formats", Value::Null));
-        (fields, song)
+        (fields, item)
     };
-    let formats = extract_formats(client, &item, SONG_NAME)?;
-    Ok(dict_info(&bare, (SONG_NAME, SONG_KEY), fields, formats))
+    let formats = extract_formats(client, &item, media.name)?;
+    Ok(dict_info(&bare, (media.name, media.key), fields, formats))
 }
 
-/// `url_result(url, JioSaavnSongIE, url_transparent=True, **info)`: the
-/// entry's fields in the upstream key order, then its IE key, type and URL.
-fn transparent_entry(target: &str, fields: Vec<(&'static str, Value)>) -> Result<VideoInfo> {
+/// `url_result(url, ie, url_transparent=True, **info)`: the entry's fields in
+/// the upstream key order, then its IE key, type and URL.
+fn transparent_entry(
+    target: &str,
+    fields: Vec<(&'static str, Value)>,
+    media: &Media,
+) -> Result<VideoInfo> {
     let url = super::target_url(target)?;
     let mut info = direct::build_at(url.clone(), &url, String::new());
     info.formats.clear();
@@ -415,7 +596,7 @@ fn transparent_entry(target: &str, fields: Vec<(&'static str, Value)>) -> Result
     for (key, value) in fields {
         entry.insert(key.into(), value);
     }
-    entry.insert("ie_key".into(), SONG_KEY.into());
+    entry.insert("ie_key".into(), media.key.into());
     entry.insert("_type".into(), "url_transparent".into());
     entry.insert("url".into(), target.into());
     info.extra.insert(
@@ -424,30 +605,25 @@ fn transparent_entry(target: &str, fields: Vec<(&'static str, Value)>) -> Result
             "url": target,
             "force_videoid": null,
             "fields": {},
-            "ie_key": SONG_KEY,
-            "extractor": SONG_NAME,
+            "ie_key": media.key,
+            "extractor": media.name,
             "entry": Value::Object(entry),
         }),
     );
     Ok(info)
 }
 
-/// `_yield_items(album_data, 'songs')`: a `url_transparent` entry per song
+/// `_yield_items(playlist_data, keys)`: a `url_transparent` entry per item
 /// with a permalink and an ID (its media URL smuggled in the fragment).
-fn album_entries(album: &Value) -> Result<Vec<VideoInfo>> {
+fn yield_items(items: &[Value], media: &Media) -> Result<Vec<VideoInfo>> {
     let mut entries = Vec::new();
-    for song in album
-        .get("songs")
-        .and_then(Value::as_array)
-        .into_iter()
-        .flatten()
-    {
-        let has_id = song.get("id").is_some_and(super::nuxt::truthy);
-        let has_permalink = song.get("perma_url").is_some_and(super::nuxt::truthy);
+    for item in items {
+        let has_id = item.get("id").is_some_and(super::nuxt::truthy);
+        let has_permalink = item.get("perma_url").is_some_and(super::nuxt::truthy);
         if !(has_id && has_permalink) {
             continue;
         }
-        let fields = song_fields(song, None);
+        let fields = (media.parse)(item, None);
         let Some(webpage) = fields
             .iter()
             .find(|(key, _)| *key == "webpage_url")
@@ -456,17 +632,112 @@ fn album_entries(album: &Value) -> Result<Vec<VideoInfo>> {
             continue;
         };
         let mut smuggled = Map::new();
-        if let Some(id) = song.get("id").and_then(Value::as_str) {
+        if let Some(id) = item.get("id").and_then(Value::as_str) {
             smuggled.insert("id".into(), id.into());
         }
-        let encrypted = first_truthy(with_more_info(song, "encrypted_media_url"));
+        let encrypted = first_truthy(with_more_info(item, "encrypted_media_url"));
         if let Some(encrypted) = encrypted.and_then(|value| value.as_str().map(str::to_owned)) {
             smuggled.insert("encrypted_media_url".into(), encrypted.into());
         }
         let target = super::brightcove::smuggle(webpage, &Value::Object(smuggled));
-        entries.push(transparent_entry(&target, fields)?);
+        entries.push(transparent_entry(&target, fields, media)?);
     }
     Ok(entries)
+}
+
+/// The playlist-shaped result of `entries` with an optional title.
+fn list_result(
+    id: String,
+    title: Option<String>,
+    url: &Url,
+    (name, key): (&'static str, &'static str),
+    entries: Vec<VideoInfo>,
+) -> ExtractResult {
+    let mut keys = vec!["id"];
+    if title.is_some() {
+        keys.push("title");
+    }
+    let mut extra = Map::new();
+    extra.insert(
+        crate::info_order::INFO_SHAPE.into(),
+        format!("playlist-dict;{}", keys.join(",")).into(),
+    );
+    ExtractResult::Playlist(PlaylistInfo {
+        id,
+        title: title.unwrap_or_default(),
+        webpage_url: url.clone(),
+        extractor: name.into(),
+        extractor_key: key.into(),
+        nested: Vec::new(),
+        pending: None,
+        entries,
+        extra,
+    })
+}
+
+/// `_call_api('playlist', ...)` page `page` (1-based) of a playlist.
+fn playlist_page(client: &Client, token: &str, page: usize) -> Result<Value> {
+    let page = page.to_string();
+    let size = PAGE_SIZE.to_string();
+    call_api_params(
+        client,
+        PLAYLIST_NAME,
+        "playlist",
+        token,
+        &format!("playlist page {page}"),
+        &[("p", &page), ("n", &size)],
+    )
+}
+
+/// `_call_api('artist', ...)` page `page` (0-based) of an artist.
+fn artist_page(client: &Client, token: &str, page: usize) -> Result<Value> {
+    let page_text = page.to_string();
+    let size = PAGE_SIZE.to_string();
+    call_api_params(
+        client,
+        ARTIST_NAME,
+        "artist",
+        token,
+        &format!("artist page {}", page + 1),
+        &[
+            ("p", &page_text),
+            ("n_song", &size),
+            ("n_album", &size),
+            ("sub_type", ""),
+            ("includeMetaTags", ""),
+            ("api_version", "4"),
+            ("category", "alphabetical"),
+            ("sort_order", "asc"),
+        ],
+    )
+}
+
+/// `_call_api('show', ...)` page `page` (1-based) of a season's episodes.
+fn show_page(client: &Client, show_id: &str, season_id: &str, page: usize) -> Result<Value> {
+    let page = page.to_string();
+    call_api_params(
+        client,
+        SHOW_PLAYLIST_NAME,
+        "show",
+        show_id,
+        &format!("show page {page}"),
+        &[
+            ("p", &page),
+            ("__call", "show.getAllEpisodes"),
+            ("show_id", show_id),
+            ("season_number", season_id),
+            ("api_version", "4"),
+            ("sort_order", "desc"),
+        ],
+    )
+}
+
+fn announce(name: &'static str, url: &Url) {
+    crate::screen::set_extractor(name);
+    crate::screen::screen(&format!(
+        "[{name}] Extracting URL: {}",
+        crate::screen::extracting_url(url.as_str())
+    ));
 }
 
 impl Extractor for JioSaavnSong {
@@ -478,12 +749,22 @@ impl Extractor for JioSaavnSong {
         if !SONG_URL.is_match(url.as_str()) {
             return Ok(None);
         }
-        crate::screen::set_extractor(SONG_NAME);
-        crate::screen::screen(&format!(
-            "[{SONG_NAME}] Extracting URL: {}",
-            crate::screen::extracting_url(url.as_str())
-        ));
-        extract_song(client, url).map(Some)
+        announce(SONG_NAME, url);
+        extract_media(client, url, &SONG_URL, &SONG).map(Some)
+    }
+}
+
+impl Extractor for JioSaavnShow {
+    fn key(&self) -> &'static str {
+        SHOW_KEY
+    }
+
+    fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        if !SHOW_URL.is_match(url.as_str()) {
+            return Ok(None);
+        }
+        announce(SHOW_NAME, url);
+        extract_media(client, url, &SHOW_URL, &EPISODE).map(Some)
     }
 }
 
@@ -501,38 +782,175 @@ impl Extractor for JioSaavnAlbum {
             return Ok(None);
         };
         let display_id = found["id"].to_owned();
-        crate::screen::set_extractor(ALBUM_NAME);
-        crate::screen::screen(&format!(
-            "[{ALBUM_NAME}] Extracting URL: {}",
-            crate::screen::extracting_url(url.as_str())
-        ));
+        announce(ALBUM_NAME, url);
         let album = call_api(client, ALBUM_NAME, "album", &display_id, "API")?;
         let title = album
             .get("title")
             .and_then(Value::as_str)
-            .unwrap_or_default()
-            .to_owned();
-        let entries = album_entries(&album)?;
-        let mut extra = Map::new();
-        let mut keys = vec!["id"];
-        if !title.is_empty() {
-            keys.push("title");
-        }
-        extra.insert(
-            crate::info_order::INFO_SHAPE.into(),
-            format!("playlist-dict;{}", keys.join(",")).into(),
-        );
-        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
-            id: display_id,
+            .map(str::to_owned);
+        let entries = yield_items(list_of(&album, "songs"), &SONG)?;
+        Ok(Some(list_result(
+            display_id,
             title,
-            webpage_url: url.clone(),
-            extractor: ALBUM_NAME.into(),
-            extractor_key: ALBUM_KEY.into(),
-            nested: Vec::new(),
-            pending: None,
+            url,
+            (ALBUM_NAME, ALBUM_KEY),
             entries,
-            extra,
-        })))
+        )))
+    }
+}
+
+impl Extractor for JioSaavnPlaylist {
+    fn key(&self) -> &'static str {
+        PLAYLIST_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = PLAYLIST_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let display_id = found["id"].to_owned();
+        announce(PLAYLIST_NAME, url);
+        let first = playlist_page(client, &display_id, 1)?;
+        let list_count = first
+            .get("list_count")
+            .ok_or_else(|| super::clyp::key_error(&display_id, "list_count"))?;
+        let count = match list_count {
+            Value::String(text) => text.trim().parse::<i64>().unwrap_or_default(),
+            other => other.as_i64().unwrap_or_default(),
+        };
+        let total_pages = usize::try_from((count.max(0) + PAGE_SIZE as i64 - 1) / PAGE_SIZE as i64)
+            .unwrap_or_default();
+        let mut entries = Vec::new();
+        for page in 0..total_pages {
+            let data = if page == 0 {
+                first.clone()
+            } else {
+                playlist_page(client, &display_id, page + 1)?
+            };
+            entries.extend(yield_items(list_of(&data, "songs"), &SONG)?);
+        }
+        let title = first
+            .get("listname")
+            .and_then(Value::as_str)
+            .map(str::to_owned);
+        Ok(Some(list_result(
+            display_id,
+            title,
+            url,
+            (PLAYLIST_NAME, PLAYLIST_KEY),
+            entries,
+        )))
+    }
+}
+
+impl Extractor for JioSaavnArtist {
+    fn key(&self) -> &'static str {
+        ARTIST_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = ARTIST_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let artist_id = found["id"].to_owned();
+        announce(ARTIST_NAME, url);
+        let first = artist_page(client, &artist_id, 0)?;
+        let title = first.get("name").and_then(Value::as_str).map(str::to_owned);
+        // `_entries`: the top songs of each page until a page without any.
+        let mut entries = Vec::new();
+        for page in 0.. {
+            let data = if page == 0 {
+                first.clone()
+            } else {
+                artist_page(client, &artist_id, page)?
+            };
+            let songs: Vec<Value> = list_of(&data, "topSongs")
+                .iter()
+                .filter(|song| song.is_object())
+                .cloned()
+                .collect();
+            if songs.is_empty() {
+                break;
+            }
+            entries.extend(yield_items(&songs, &SONG)?);
+        }
+        Ok(Some(list_result(
+            artist_id,
+            title,
+            url,
+            (ARTIST_NAME, ARTIST_KEY),
+            entries,
+        )))
+    }
+}
+
+impl Extractor for JioSaavnShowPlaylist {
+    fn key(&self) -> &'static str {
+        SHOW_PLAYLIST_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = SHOW_PLAYLIST_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let playlist_id = format!("{}-{}", &found["show"], &found["season"]);
+        let season_id = found["season"].to_owned();
+        announce(SHOW_PLAYLIST_NAME, url);
+        let webpage = super::download_webpage(client, url, SHOW_PLAYLIST_NAME, &playlist_id)?;
+        // `_search_json(r'window\.__INITIAL_DATA__\s*=', ..., transform_source=js_to_json)`.
+        let initial = match super::search_json(&INITIAL_DATA, &webpage, true) {
+            Some(Some(initial)) => initial,
+            _ => {
+                return Err(Error::Reported(format!(
+                    "[{SHOW_PLAYLIST_NAME}] {playlist_id}: Unable to extract initial data; {}",
+                    crate::BUG_REPORTS_MESSAGE
+                )));
+            }
+        };
+        let show_info = initial
+            .get("showView")
+            .ok_or_else(|| super::clyp::key_error(&playlist_id, "showView"))?;
+        let show_id = match show_info.get("current_id") {
+            Some(Value::String(text)) => text.clone(),
+            Some(other) => other.to_string(),
+            None => return Err(super::clyp::key_error(&playlist_id, "current_id")),
+        };
+        let title = show_info
+            .get("show")
+            .and_then(|show| show.get("title"))
+            .and_then(|title| title.get("text"))
+            .and_then(Value::as_str)
+            .map(str::to_owned);
+        // `OnDemandPagedList`: pages of 10 until a page that is not full.
+        let mut entries = Vec::new();
+        for page in 0.. {
+            let data = show_page(client, &show_id, &season_id, page + 1)?;
+            let page_entries = yield_items(data.as_array().map_or(&[], Vec::as_slice), &EPISODE)?;
+            let full = page_entries.len() >= SHOW_PAGE_SIZE;
+            entries.extend(page_entries);
+            if !full {
+                break;
+            }
+        }
+        Ok(Some(list_result(
+            playlist_id,
+            title,
+            url,
+            (SHOW_PLAYLIST_NAME, SHOW_PLAYLIST_KEY),
+            entries,
+        )))
     }
 }
 

@@ -1,0 +1,113 @@
+{
+ "routes": [
+  {
+   "url": "https://soundcloud.com/",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "home.html"
+  },
+  {
+   "url": "https://a-v2.sndcdn.com/assets/1-second.js",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body": "var x={client_id:\"aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB\",y:1};"
+  },
+  {
+   "url": "https://a-v2.sndcdn.com/assets/0-first.js",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body": "var nothing=1;"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/playlists/4110309?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r0.json"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/resolve?url=https%3A%2F%2Fsoundcloud.com%2Fthe-concept-band%2Fsets%2Fthe-royal-concept-ep&client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r1.json"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/resolve?url=https%3A%2F%2Fsoundcloud.com%2Fsoft-cell-official&client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r2.json"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/stream/users/207965082?limit=200&linked_partitioning=1&offset=0&client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r3.json"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/resolve?url=https%3A%2F%2Fapi.soundcloud.com%2Fusers%2F30909869&client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r4.json"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/users/30909869/tracks?limit=200&linked_partitioning=1&offset=0&client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r5.json"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/resolve?url=https%3A%2F%2Fsoundcloud.com%2Fstations%2Ftrack%2Fofficialsundial%2Fyour-text&client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r6.json"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/stations/soundcloud:track-stations:286017854/tracks?limit=200&linked_partitioning=1&offset=0&client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r7.json"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/resolve?url=https%3A%2F%2Fsoundcloud.com%2Fwajang%2Fsexapil-pingers-5&client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r8.json"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/tracks/1084577272/related?limit=200&linked_partitioning=1&offset=0&client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r9.json"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/search/tracks?limit=15&q=post-avant+jazzcore&linked_partitioning=1&offset=0&client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r10.json"
+  }
+ ]
+}

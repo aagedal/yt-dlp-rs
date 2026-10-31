@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "http://blazo.bandcamp.com/album/jazz-format-mixtape-vol-1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "album.html"
+  },
+  {
+   "url": "http://nomusic.bandcamp.com/album/empty",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head><title>Empty | nomusic</title></head>\n<body>\n<div data-tralbum=\"{&quot;current&quot;: {&quot;title&quot;: &quot;Empty&quot;}, &quot;trackinfo&quot;: []}\"></div>\n</body>\n</html>\n"
+  }
+ ]
+}

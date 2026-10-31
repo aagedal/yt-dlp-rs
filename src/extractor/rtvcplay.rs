@@ -1,7 +1,8 @@
 //! Upstream `RTVCKalturaIE` (`yt_dlp/extractor/rtvcplay.py`): the Señal
 //! Colombia Kaltura player page's `config` script (its HLS `sources`) and
-//! the channel's CMS metadata and HLS stream. `RTVCPlayIE` and
-//! `RTVCPlayEmbedIE` are not ported.
+//! the channel's CMS metadata and HLS stream. `RTVCPlayIE`'s live channel and
+//! single-asset pages (hydration state HLS) are ported as `RtvcPlay`; its
+//! program and podcast pages are not, and `RTVCPlayEmbedIE` is not ported.
 use super::{
     Extractor, dict_format, dict_info, download_json_note, download_webpage,
     extract_m3u8_master_optional,
@@ -14,6 +15,17 @@ use std::sync::LazyLock;
 use url::Url;
 
 pub struct RtvcKaltura;
+pub struct RtvcPlay;
+
+const PLAY_NAME: &str = "RTVCPlay";
+static PLAY_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?rtvcplay\.co/(?P<category>[^/]+)/(?:[^?#]+/)?(?P<id>[\w-]+)",
+    )
+    .unwrap()
+});
+static HYDRATION: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"window\.__RTVCPLAY_STATE__\s*=").unwrap());
 
 const NAME: &str = "RTVCKaltura";
 
@@ -236,6 +248,106 @@ fn url_value(data: &Value, path: &str) -> Option<Value> {
         .map(Value::from)
 }
 
+/// `RTVCPlayIE._VALID_URL` (`(?!embed)` on the category, checked by hand).
+pub fn play_suitable(url: &str) -> bool {
+    PLAY_URL
+        .captures(url)
+        .is_some_and(|found| !found["category"].starts_with("embed"))
+}
+
+impl Extractor for RtvcPlay {
+    fn key(&self) -> &'static str {
+        PLAY_NAME
+    }
+
+    fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        if !play_suitable(url.as_str()) {
+            return Ok(None);
+        }
+        let found = PLAY_URL.captures(url.as_str()).expect("checked above");
+        let video_id = found["id"].to_owned();
+        let is_live = &found["category"] == "en-vivo";
+        crate::screen::set_extractor(PLAY_NAME);
+        crate::screen::screen(&format!(
+            "[{PLAY_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        let webpage = download_webpage(client, url, PLAY_NAME, &video_id)?;
+        let hydration = match super::search_json(&HYDRATION, &webpage, true) {
+            Some(Some(hydration)) => hydration,
+            _ => {
+                return Err(Error::Reported(format!(
+                    "[{PLAY_NAME}] {video_id}: Unable to extract hydration; {}",
+                    crate::BUG_REPORTS_MESSAGE
+                )));
+            }
+        };
+        let current = hydration
+            .pointer("/content/currentContent")
+            .ok_or_else(|| super::clyp::key_error(&video_id, "content"))?;
+
+        let asset_id = current
+            .pointer("/video/assetid")
+            .filter(|value| super::nuxt::truthy(value))
+            .and_then(Value::as_str);
+        let hls_url = match asset_id {
+            Some(asset_id) => {
+                let base = current
+                    .get("base_url_hls")
+                    .and_then(Value::as_str)
+                    .ok_or_else(|| super::clyp::key_error(&video_id, "base_url_hls"))?;
+                Some(base.replace("[node:field_asset_id]", asset_id))
+            }
+            None => current
+                .pointer("/channel/hls")
+                .and_then(Value::as_str)
+                .map(str::to_owned),
+        };
+        let Some(hls_url) = hls_url else {
+            return Err(Error::UnsupportedHtml5(
+                "RTVCPlay program and podcast pages are not supported natively".into(),
+            ));
+        };
+
+        let title = current.get("title").cloned().filter(Value::is_string);
+        let description = current.get("description").cloned().filter(Value::is_string);
+        let thumbnail = [
+            "/channel/image/logo/path",
+            "/resource/image/cover_desktop/path",
+        ]
+        .iter()
+        .find_map(|path| {
+            current
+                .pointer(path)
+                .filter(|value| !value.is_null())
+                .cloned()
+        });
+
+        let manifest = Url::parse(&hls_url)?;
+        let stream =
+            super::extract_m3u8_fatal_master(client, &manifest, PLAY_NAME, &video_id, None, true)?;
+
+        let mut fields: Vec<(&str, Value)> = vec![
+            ("id", video_id.clone().into()),
+            ("formats", Value::Null),
+            ("subtitles", Value::Null),
+            ("is_live", is_live.into()),
+        ];
+        for (key, value) in [
+            ("title", title),
+            ("description", description),
+            ("thumbnail", thumbnail),
+        ] {
+            if let Some(value) = value {
+                fields.push((key, value));
+            }
+        }
+        let mut info = dict_info(url, (PLAY_NAME, PLAY_NAME), fields, stream.formats);
+        info.subtitles = stream.subtitles;
+        Ok(Some(info))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -260,5 +372,18 @@ mod tests {
                 Some("application/x-mpegurl".to_owned())
             )]
         );
+    }
+
+    #[test]
+    fn play_urls_follow_upstream_valid_url() {
+        assert!(play_suitable(
+            "https://www.rtvcplay.co/en-vivo/canal-institucional"
+        ));
+        assert!(play_suitable(
+            "https://www.rtvcplay.co/peliculas-ficcion/senoritas"
+        ));
+        assert!(!play_suitable(
+            "https://www.rtvcplay.co/embed/72b0e699-248b-4929-a4a8-3782702fa7f9"
+        ));
     }
 }

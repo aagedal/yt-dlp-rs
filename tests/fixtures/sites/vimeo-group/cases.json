@@ -1,0 +1,9 @@
+[
+ {
+  "url": "https://vimeo.com/groups/meetup",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

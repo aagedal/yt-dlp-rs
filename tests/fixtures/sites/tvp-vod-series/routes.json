@@ -1,0 +1,95 @@
+{
+ "routes": [
+  {
+   "url": "https://vod.tvp.pl/api/products/vods/serials/316445?lang=pl&platform=BROWSER",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r001.body"
+  },
+  {
+   "url": "https://vod.tvp.pl/api/products/vods/serials/316445/seasons?lang=pl&platform=BROWSER",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r002.body"
+  },
+  {
+   "url": "https://vod.tvp.pl/api/products/vods/serials/316445/seasons/381045/episodes?lang=pl&platform=BROWSER",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r003.body"
+  },
+  {
+   "url": "https://vod.tvp.pl/api/products/vods/serials/316445/seasons/381149/episodes?lang=pl&platform=BROWSER",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r004.body"
+  },
+  {
+   "url": "https://vod.tvp.pl/api/products/vods/serials/316445/seasons/381066/episodes?lang=pl&platform=BROWSER",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r005.body"
+  },
+  {
+   "url": "https://vod.tvp.pl/api/products/vods/serials/316445/seasons/381083/episodes?lang=pl&platform=BROWSER",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r006.body"
+  },
+  {
+   "url": "https://vod.tvp.pl/api/products/vods/serials/316445/seasons/381077/episodes?lang=pl&platform=BROWSER",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r007.body"
+  },
+  {
+   "url": "https://vod.tvp.pl/api/products/vods/serials/316445/seasons/381101/episodes?lang=pl&platform=BROWSER",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r008.body"
+  },
+  {
+   "url": "https://vod.tvp.pl/api/products/vods/serials/316445/seasons/381122/episodes?lang=pl&platform=BROWSER",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r009.body"
+  },
+  {
+   "url": "https://vod.tvp.pl/api/products/vods/serials/316445/seasons/381131/episodes?lang=pl&platform=BROWSER",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r010.body"
+  },
+  {
+   "url": "https://vod.tvp.pl/api/products/vods/serials/316445/seasons/387676/episodes?lang=pl&platform=BROWSER",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r011.body"
+  },
+  {
+   "url": "https://vod.tvp.pl/api/products/vods/serials/316445/seasons/387705/episodes?lang=pl&platform=BROWSER",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r012.body"
+  },
+  {
+   "url": "https://vod.tvp.pl/api/products/vods/serials/316445/seasons/3270505/episodes?lang=pl&platform=BROWSER",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "r013.body"
+  }
+ ]
+}

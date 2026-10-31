@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://www.mellow-fan.com/capture/l2q00vxl8q8",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "capture-page.html"
+  },
+  {
+   "url": "https://public.mellow-fan.com/external/api/v5/captures/l2q00vxl8q8/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "capture-playlist.m3u8"
+  },
+  {
+   "url": "https://www.mellow-fan.com/user/sagara_mayu/playlist/xngNMzv71yLjGdW",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "playlist-page.html"
+  },
+  {
+   "url": "https://apiv5.mellow-fan.com/api/v5/users/me/playlists/xngNMzv71yLjGdW",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playlist-api.json"
+  },
+  {
+   "url": "https://public.mellow-fan.com/external/api/v5/search-captures?channel_ids=DbD_BPF&page=1&search_query=%E3%81%82%E3%81%A3%E3%81%95%E3%82%8A%E3%81%97%E3%82%87%E3%81%93",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "search-page1.json"
+  },
+  {
+   "url": "https://public.mellow-fan.com/external/api/v5/search-captures?channel_ids=DbD_BPF&page=2&search_query=%E3%81%82%E3%81%A3%E3%81%95%E3%82%8A%E3%81%97%E3%82%87%E3%81%93",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "search-page2.json"
+  }
+ ]
+}

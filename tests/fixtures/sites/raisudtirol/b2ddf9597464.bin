@@ -1,0 +1,662 @@
+
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<link href="/postitfeed.php?lang=la" rel="alternate" type="application/rss+xml" title="RSS" />
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+<meta name="author" content="Multimedia Project Srl">
+<meta name="description" content="Sito ufficiale - Offizielle Website Rai Alto Adige S&uumldtirol">
+<meta name="application-name" content="Rai Tvl"/>
+<meta name="msapplication-TileColor" content="#00539F"/>
+<meta name="msapplication-square70x70logo" content="/la/touch/tiny.png"/>
+<meta name="msapplication-square150x150logo" content="/la/touch/square.png"/>
+<meta name="msapplication-wide310x150logo" content="/la/touch/wide.png"/>
+<meta name="msapplication-square310x310logo" content="/la/touch/large.png"/>
+<meta name="msapplication-notification" content="frequency=30;polling-uri=http://www.raibz.rai.it/postitfeed.php?lang=la; cycle=1"/>
+<meta property="og:image" content="http://raibz.rai.it/img/postit_img_la.jpg" />
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/la/touch/apple-touch-icon-144x144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/la/touch/apple-touch-icon-114x114-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/la/touch/apple-touch-icon-72x72-precomposed.png">
+<link rel="apple-touch-icon-precomposed" href="/la/touch/apple-touch-icon-57x57-precomposed.png">
+<link rel="shortcut icon" href="/la/touch/apple-touch-icon.png">
+<link href="/la/touch/favicon.ico" rel="shortcut icon"/>
+
+<title>Rai Tvl</title>    
+<link href="/css/combined.css" rel="stylesheet">    
+<!--[if lt IE 9]>
+<link href="/css/template_ie_min.css" rel="stylesheet">
+<script src="/js/respond.min.js"></script>
+<![endif]-->
+
+<!-- modernizr  -->
+<script type="text/javascript" src="/js/modernizr.custom.59869.js"></script>
+<!-- the player -->
+<script type="text/javascript" src="/js/jwplayer_7.js"></script>
+<script>jwplayer.key="/9s9InJCeoHzthzhD0GSsHejcFgnuPoObfKnvg==";</script>
+</head>
+    <body>
+        <a id="jump" href="#main_menu" style="display: none;">Menu</a>
+
+<header>
+    <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+            <div class="menu_rai visible-xs-block">
+                <nav>
+                    <ul>
+                        <li><a href="../de/index.php" class="link">Rai S&uuml;dtirol</a></li>
+                        <li><a href="../it/index.php" class="link">RAI Alto Adige</a></li>
+                    </ul>
+                </nav>
+            </div>
+                                
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main_menu">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="main_menu">
+                <ul class="nav navbar-nav">
+                    <li><a href="/index.php">home</a></li>
+					<!--<li><a href="https://rai.ilmiotest.it/concorsi_cliente/rai">Avis por chirí personal</a></li>-->
+					<li><a href="http://rai.it/trail">TRaiL</a></li>
+                    <li><a href="chisiamo.php">Chi sonse pa?</a></li>
+                    <li><a id="radiolive" href="/streaming_radio.php" target="_blank">Radio live</a></li> 
+                    <li><a href="contatti.php" rel="facebox">Contatedenes</a></li>
+                    <li><a href="podcast.php">Podcast</a></li>
+                    <!--<li><a href="../lavoraconnoi.php" >Avis por chirí personal</a></li>-->
+                </ul>
+                <ul class="nav navbar-nav navbar-right follow_us visible-md-block visible-lg-block">
+					<li><a href="/postitfeed.php?lang=la" class="rss">Rss</a></li>
+                    <li><a href="http://www.rai.tv/" target="_blank" class="link">RAI.TV</a></li>
+                    <li><a href="http://www.rai.it/" target="_blank" class="link">RAI.IT</a></li>
+                <!--<li><a href="https://twitter.com/TGR_rai" class="twitter" target="_blank">Twitter</a></li>
+                    <li><a href="https://www.facebook.com/pages/Raitv/88988179171" class="facebook" target="_blank">Facebook</a></li>-->
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </div>
+</header>
+<!--//header-->
+
+  <div id="langapp" style="display: none;" class="text-center">
+      <p><a class="lavoro_splash" href="../it/lavora.php">Continua la consultazione<br />in lingua ITALIANA</a> <a class="lavoro_splash" href="../de/lavora.php">Weiter in<br />DEUTSCHER Sprach</a></p>
+      <br />
+  </div>
+        
+<section class="banner">
+    <div class="container"> 
+        <div class="row">      
+            <div class="col-sm-7">
+                <h1 class="logotvl"><a href="../la/index.php" title="RAI Ladinia"><span>RAI Ladinia</span></a></h1>
+                </div>
+            <nav style="margin-top:39px;" class=" col-sm-5 visible-sm-block visible-md-block visible-lg-block">
+                <ul style="list-style-type:none;margin: 0 20px 0 0;padding: 0;float: right;display:inline-block;white-space:nowrap;">
+                    <li style="display:inline-block;margin: 0 20px 0 0;padding: 0;"><h4 style="margin: 0;padding:0;"><a href="../de/index.php"><span class="raibozen"></span></a></h4></li>
+					<li style="display:inline-block;margin: 0 20px 0 0;padding: 0;"><h4 style="margin: 0;padding:0;"><a href="../it/index.php"><span class="raibolzano"></span></a></h4></li>
+                    <li style="display:inline-block;padding: 0;"><h4 style="margin: 0;padding:0;"><a href="../la/news.php"><span style="display:block;"><img style="display:block;" src="../img/tglnews.png" alt="TRaiL"></span></a></h4></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>   
+
+        <div class="container page">        
+        <!--container-->
+
+<section id="top_container">
+    <div class="row">
+        
+<div class="col-sm-8 boxvideo row-eq">
+    <nav class="menu_tab">
+        <ul class="menu_tv select">
+            <li>
+                <span class="title-tv">TV</span>
+            </li>
+			<li >
+                <a href="#" 
+                   id="tvmedia" 
+				   class="active"
+                   data-tab="tvmedia" 
+                   data-tipo="tv" 
+                   data-teca="P"
+                   data-latest="Euro%3A+trasmisciun+d%27economia"
+                   data-latesttime="29-04-2021 20:51"
+                   data-latestlink="20210429_Euro_718c88d3-4c80-4018-85f4-fdf21013a154.mp4"
+                   data-shareurl="http://raisudtirol.rai.it/la/index.php?media=Ptv1619729460"
+                   >Mediateca</a>
+            </li>
+            <li>
+                <a href="https://www.rainews.it/tgr/trail/notiziari/trail/archivio" 
+                   id="newtvnews" 
+                   data-tab="newtvnews" 
+                   data-tipo="tv" 
+                   data-teca="T"
+                   data-latest="Euro%3A+trasmisciun+d%27economia"
+                   data-latesttime="29-04-2021 20:51"
+                   data-latestlink="20210429_Euro_718c88d3-4c80-4018-85f4-fdf21013a154.mp4"
+                   data-shareurl="http://raisudtirol.rai.it/la/index.php?media=Ptv1619729460"
+				   onclick="window.open(this.href); return false;" onkeypress="window.open(this.href); return false;"
+                   >TRaiL</a>
+            </li>
+                <li>
+                    <!--<a href="#" -->
+					<li><a href="http://raibz.rai.it/streaming_tv.php?lang=la"
+                       id="newtvlive" 
+                       data-tab="newtvlive" 
+                       data-tipo="tv" 
+                       data-teca="L"
+                       data-latest="Euro%3A+trasmisciun+d%27economia"
+					   data-latesttime="29-04-2021 20:51"
+					   data-latestlink="20210429_Euro_718c88d3-4c80-4018-85f4-fdf21013a154.mp4"
+					   data-shareurl="http://raisudtirol.rai.it/la/index.php?media=Ptv1619729460"
+					   onclick="window.open(this.href); return false;" onkeypress="window.open(this.href); return false;">LIVE</a>
+                </li>
+				<!--data-latest="< ?php echo urlencode(DIRETTA_LIVE); ?>"-->
+        </ul>
+        <ul class="menu_radio">
+            <li>
+                <span class="title-radio"> RADIO</span>
+            </li>
+
+                <li>
+                    <a href="#" 
+                       id="radiomedia" 
+                       data-tab="radiomedia" 
+                       data-tipo="ra" 
+                       data-teca="P"
+                       data-latest="La+Copa+dal+Caf%C3%A8+-+Mum%C3%ABnc+de+ancunteda"
+                       data-latesttime="31-10-2026 13:45"
+                       data-latestlink="b162e036-c91f-45bb-aa61-7d4bcca24a7f.mp3"
+                       data-shareurl="http://raisudtirol.rai.it/la/index.php?media=ra1793454300"
+                       >Mediateca</a>
+                </li>
+<li>
+                <a href="#" 
+                   id="radionews" 
+                   data-tab="radionews" 
+                   data-tipo="ra" 
+                   data-teca="T" 
+                   data-latest="Nutizies+por+i+Ladins+dl+31-10-2026%2C+13%3A30%0A"
+                   data-latesttime=""
+                   data-latestlink="%2Fpodcast%2Fgrl%2Fgrl.mp3"
+                   data-shareurl="http://raisudtirol.rai.it/la/index.php?media=Tra"
+                   >Notiziar</a>
+            </li>
+				<!--<li class="rl"><a href="http://raibz.rai.it/streaming_radio.php?lang=de" target="_blank">LIVE</a></li>-->
+				<li><a href="http://raibz.rai.it/streaming_radio.php?lang=la" 
+				data-tab="radionews" 
+                   data-tipo="ra" 
+                   data-teca="T" 
+                   data-latest="La+Copa+dal+Caf%C3%A8+-+Mum%C3%ABnc+de+ancunteda" 
+                   data-latesttime="31-10-2026 13:45"
+                   data-latestlink="http%3A%2F%2Fwww.raibz.rai.it%2Fstreaming%2FNetia_Export%2Fb162e036-c91f-45bb-aa61-7d4bcca24a7f.mp3"
+                   data-shareurl="http://raisudtirol.rai.it/la/index.php?media=ra1793454300"
+				onclick="window.open(this.href); return false;" onkeypress="window.open(this.href); return false;">LIVE</a></li>
+        </ul>        
+    </nav>
+    <div class="col-md-12 videocontainer">
+        <div class="content_data_open">
+            <p class="media_desc">
+                <span class="med_data">29-04-2021 20:51 </span>
+                <span class="med_title">Euro: trasmisciun d'economia</span><br/>
+            </p>
+            <a href="" class="open_playlist"><span>open</span></a>
+
+        </div>
+                <div id="player_video" class="tvnews tabs">
+            <div id="videop" class="vodplayer" data-tipo="tv" data-teca="P">Loading...</div>
+            <script type="text/javascript">
+                var raiplayer = jwplayer("videop");
+                raiplayer.setup({
+                    flashplayer: "/js/jwplayer.flash_7.swf",
+                    playlist: [{
+                            image: '/img/radio_posterimg.jpg',
+                            sources: [{file: "//raibz.rai.it/streaming/20210429_Euro_718c88d3-4c80-4018-85f4-fdf21013a154.mp4"}]                        }],
+                    sharing: {
+                        link: 'http://raisudtirol.rai.it/la/index.php?media=Ptv1619729460'
+                    },
+                    width: "100%",
+                    aspectratio: "16:9",
+                    controls: true,
+                    androidhls: true
+                });
+            </script>
+        </div>
+
+        <div id="radiostreaming" class="jp-jplayer" data-channel="https%3A%2F%2Fradiobzlive.rai.it%2FRAIBZ_Livestream"></div>
+        <div id="jp_container_1" class="jp-audio" role="application" aria-label="media player">
+
+            <button class="play_audio" href="">play</button>
+            <button class="play_audio_stop" href="">play</button>
+            <div class="jp-type-single">            
+                <div class="jp-gui jp-interface">
+                    <div class="jp-controls">
+                        <button class="jp-play" role="button" tabindex="0">play</button>
+                        <button class="jp-stop" role="button" tabindex="0">stop</button>
+                    </div>
+                    <div class="jp-volume-controls">
+                        <button class="jp-mute" role="button" tabindex="0">mute</button>
+                        <button class="jp-volume-max" role="button" tabindex="0">max volume</button>
+                        <div class="jp-volume-bar">
+                            <div class="jp-volume-bar-value"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="jp-no-solution">
+                    <span>Update Required</span>
+                    To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank" rel="noopener noreferrer">Flash plugin</a>.
+                </div>
+            </div>
+        </div>
+
+        <div class="playlist">
+            <form class="searchmedia">
+                <div class="dtgroup"><input type="" name="mediadt" class="date mediadt" id="mediadt" /><a href="#" class="resetdt"></a></div>
+                <div class="namegroup"><input type="text" name="medianame" id="medianame" class="medianame" /><a href="#" class="resetname"></a></div>
+
+                <a href="" class="close_playlist"><span>close</span></a>
+
+            </form>
+
+            <div class="tg-item-content data_playlist" id="tglist">
+            </div>
+        </div>            
+
+    </div>
+    <!-- end #media -->
+</div>
+
+<div class="col-sm-4 boxtipp row-eq">
+    <div class="tipp_detail" itemprop="event" itemscope itemtype="http://schema.org/Event">
+        <div class="title_sx">tip</div>
+        <div class="tipp_detail_img" itemprop="image">
+            <a class="tipplink" href="/view_postit.php?id=10998"
+               rel="facebox" itemprop="url">
+                <img class=" img-responsive" src="https://www.raibz.rai.it/SharedImages/postit_img/postit_10998.jpg" alt="Tipps image"/>
+                <span class="img-icon"></span>
+            </a>
+        </div>
+        <div class="tipps_title_contenuto">
+            <div class="title">
+                <h3>
+                    <a href="/view_postit.php?id=10998" rel="facebox"
+                       itemprop="url"><span itemprop="name">RF: La copa dal café</span></a>
+                </h3>
+            </div>
+            <div class="tipcutter">
+                                    <div itemprop="summary">Mumënc de ancunteda<br />
+<br />
+Sabeda, 31.10.2026 dales 13:45<br />
+<br />
+Tla Lia Mostra d’Ert a Urtijëi fovel ai 24 de lugio la giaurida dla mostra “Danter doi monc” de Mathis Gabillard, Clemens Gerber, Joséphine ... <a href="/view_postit.php?id=10998" rel="facebox" itemprop="url"><span itemprop="name"> <i class="fa fa-angle-double-right" aria-hidden="true"></i></span></span></a></div>
+                            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+</section>
+    <section class="tipps clearfix">
+                    <div id="NAV-ID" class="crsl-nav">
+                <a href="#" class="previous"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+                <a href="#" class="next"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+            </div>
+                <h2 class="title"> Apuntam&euml;nc radio y TV</h2>
+        <div class="crsl-items" data-navigation="NAV-ID">
+            <div class="crsl-wrap">
+
+                                                            <article class="crsl-item">                       
+                            <div class="img_post">
+                                <a href="/view_postit.php?id=4904" rel="facebox">
+                                <img class="img-responsive pimg" src="//www.raibz.rai.it/SharedImages/postit_img/postit_4904.jpg" alt="Postit image" width="100%">
+                                    <span class="img-icon"></span>
+                                </a>
+                                <!--<div class="pointer"><img src="/img/pointer.png" alt="" /></div>-->
+                            </div>
+                            <h3 class="title"><a href="/view_postit.php?id=4904" rel="facebox">RF: Dai creps dl Sela</a></h3>
+                            <p>Les duciaries: inier y incö<br />
+<br />
+Sabeda, 31.10.2026 dales 19:05<br />
+<br />
+A che ne ti él pa denant sozedü, de mangé na papa y ponsé che ará mo mai inventé val’ tan de bun? Les origines dles duciaries va zoruch a tëmps antics, mo süa produziun industriala se á svilupé tl 19. secul.  Scemía che les saus, les for...</p>                        
+                        </article>
+
+                                                                    <article class="crsl-item">                       
+                            <div class="img_post">
+                                <a href="/view_postit.php?id=11351" rel="facebox">
+                                <img class="img-responsive pimg" src="//www.raibz.rai.it/SharedImages/postit_img/postit_11351.jpg" alt="Postit image" width="100%">
+                                    <span class="img-icon"></span>
+                                </a>
+                                <!--<div class="pointer"><img src="/img/pointer.png" alt="" /></div>-->
+                            </div>
+                            <h3 class="title"><a href="/view_postit.php?id=11351" rel="facebox">RF: La copa dal cafè</a></h3>
+                            <p>L criterio dla fede<br />
+<br />
+Domenia, 01.11.2026 dales 12:45<br />
+<br />
+For plu y plu se fesc inant l'intelligenza artificiela. Ciuldi che chesta scienza miena de savei dut, for plu jent toma tl uet. Trasmiscion de Hugo Senoner…<br />
+Foto: magnific.com...</p>                        
+                        </article>
+
+                                                                    <article class="crsl-item">                       
+                            <div class="img_post">
+                                <a href="/view_postit.php?id=2303" rel="facebox">
+                                <img class="img-responsive pimg" src="//www.raibz.rai.it/SharedImages/postit_img/postit_2303.jpg" alt="Postit image" width="100%">
+                                    <span class="img-icon"></span>
+                                </a>
+                                <!--<div class="pointer"><img src="/img/pointer.png" alt="" /></div>-->
+                            </div>
+                            <h3 class="title"><a href="/view_postit.php?id=2303" rel="facebox">RF: Dai creps dl Sela</a></h3>
+                            <p>Unissant – “La vita ne fina nia via cun la mort”<br />
+<br />
+Domenia, 01.11.2026 dales 19:05 <br />
+<br />
+La festa de Unissant nes fej lecurdé che nosta vita scumëncia cun la nasciuda ma che la ne fina nia via cun la mort. Sn. Vijo Pitscheider fej n valguna de bela cunscidrazions sun la vita y sun la mort de nëus persones y...</p>                        
+                        </article>
+
+                                                                    <article class="crsl-item">                       
+                            <div class="img_post">
+                                <a href="/view_postit.php?id=758" rel="facebox">
+                                <img class="img-responsive pimg" src="//www.raibz.rai.it/SharedImages/postit_img/postit_758.jpg" alt="Postit image" width="100%">
+                                    <span class="img-icon"></span>
+                                </a>
+                                <!--<div class="pointer"><img src="/img/pointer.png" alt="" /></div>-->
+                            </div>
+                            <h3 class="title"><a href="/view_postit.php?id=758" rel="facebox">RF: Ladinia Live</a></h3>
+                            <p>Le Sorvisc por l’inclujiun                                    <br />
+                                   <br />
+Mertesc, 03.11.2026 dales 13:45<br />
+<br />
+Les scores y scolines ladines é n spidl de nosta sozieté. Al röia insciö pormez scolars y scolares cun lingac, cultures, talënc y capazités desvalies. Le Sorvisc por l’in...</p>                        
+                        </article>
+
+                                                                    <article class="crsl-item">                       
+                            <div class="img_post">
+                                <a href="/view_postit.php?id=6731" rel="facebox">
+                                <img class="img-responsive pimg" src="//www.raibz.rai.it/SharedImages/postit_img/postit_6731.jpg" alt="Postit image" width="100%">
+                                    <span class="img-icon"></span>
+                                </a>
+                                <!--<div class="pointer"><img src="/img/pointer.png" alt="" /></div>-->
+                            </div>
+                            <h3 class="title"><a href="/view_postit.php?id=6731" rel="facebox">RF: Dai creps dl Sela</a></h3>
+                            <p>Nadia Rungger (2026): cësa da lat dijes tu / milchhaus sagst du. Innsbruck: Limbus V.<br />
+<br />
+Mertesc, 03.11.2026 dales 19:05<br />
+<br />
+L Cuartet leterer, Rut Bernardi, Ingrid Runggaldier, Mateo Taibon y Roland Verra rujenerà dla recoiüda de poejies per gherdëina y tudësch de Nadia Rungger de Pontives. La poejies va dala ...</p>                        
+                        </article>
+
+                                                                    <article class="crsl-item">                       
+                            <div class="img_post">
+                                <a href="/view_postit.php?id=4951" rel="facebox">
+                                <img class="img-responsive pimg" src="//www.raibz.rai.it/SharedImages/postit_img/postit_4951.jpg" alt="Postit image" width="100%">
+                                    <span class="img-icon"></span>
+                                </a>
+                                <!--<div class="pointer"><img src="/img/pointer.png" alt="" /></div>-->
+                            </div>
+                            <h3 class="title"><a href="/view_postit.php?id=4951" rel="facebox">TV: Cult rituai da inier y incö</a></h3>
+                            <p>I sanc e i morc          <br />
+<br />
+Mertesc, 03.11.2026 dales 20:50<br />
+<br />
+Test y conzet Giulia Tasser, produziun Karbonvideo, a cura de Alessandro Dapunt...</p>                        
+                        </article>
+
+                                                                    <article class="crsl-item">                       
+                            <div class="img_post">
+                                <a href="/view_postit.php?id=4800" rel="facebox">
+                                <img class="img-responsive pimg" src="//www.raibz.rai.it/SharedImages/postit_img/postit_4800.jpg" alt="Postit image" width="100%">
+                                    <span class="img-icon"></span>
+                                </a>
+                                <!--<div class="pointer"><img src="/img/pointer.png" alt="" /></div>-->
+                            </div>
+                            <h3 class="title"><a href="/view_postit.php?id=4800" rel="facebox">RF: Ladinia live</a></h3>
+                            <p>Sensiboltà ambientèla                                                    <br />
+<br />
+Mercui, 04.11.2026 dales 13:45<br />
+<br />
+La sostegniboltà e l ambient, sessaben, l é argomenc de grana atualità. Ampò, saone delvers cheche vel dir esser sostegniboi? Aone na sensiboltà ambientala? E sione bogn de la meter en esser avisa? ...</p>                        
+                        </article>
+
+                                                                    <article class="crsl-item">                       
+                            <div class="img_post">
+                                <a href="/view_postit.php?id=11277" rel="facebox">
+                                <img class="img-responsive pimg" src="//www.raibz.rai.it/SharedImages/postit_img/postit_11277.jpg" alt="Postit image" width="100%">
+                                    <span class="img-icon"></span>
+                                </a>
+                                <!--<div class="pointer"><img src="/img/pointer.png" alt="" /></div>-->
+                            </div>
+                            <h3 class="title"><a href="/view_postit.php?id=11277" rel="facebox">TV: Medejina ora dala natura</a></h3>
+                            <p>Mercui, 04.11.2026 dales 20.50<br />
+<br />
+La natura nes mët a desposizion na gran cumpëida de plantes che à nce na fazion positiva sun nosc corp y nosta sanità. Chësc prinzip vel per duta la sajons. Diego Deiana nes conduj ala scuviërta de chëla plantes che crësc d’auton.<br />
+Test y conzet Ingrid Demetz,  produziun  Karbo...</p>                        
+                        </article>
+
+                                                                    <article class="crsl-item">                       
+                            <div class="img_post">
+                                <a href="/view_postit.php?id=9064" rel="facebox">
+                                <img class="img-responsive pimg" src="//www.raibz.rai.it/SharedImages/postit_img/postit_9064.jpg" alt="Postit image" width="100%">
+                                    <span class="img-icon"></span>
+                                </a>
+                                <!--<div class="pointer"><img src="/img/pointer.png" alt="" /></div>-->
+                            </div>
+                            <h3 class="title"><a href="/view_postit.php?id=9064" rel="facebox">RF: Dai creps dl Sela</a></h3>
+                            <p>Le monologh nü de Simon Kostner<br />
+<br />
+Jöbia, 05.11.2026 dales 19.05<br />
+<br />
+Le atur y  regist Simon Kostner röia do da 10 agn da sü ultims suzesc da solist, indô sön paladina cun n toch de teater nü dal titul: „Ich liebe mich - … oder vom (Un-)Glück, ein Gutmensch zu sein“. Te chësc program nes cuntel de ci ...</p>                        
+                        </article>
+
+                                                                    <article class="crsl-item">                       
+                            <div class="img_post">
+                                <a href="/view_postit.php?id=11107" rel="facebox">
+                                <img class="img-responsive pimg" src="//www.raibz.rai.it/SharedImages/postit_img/postit_11107.jpg" alt="Postit image" width="100%">
+                                    <span class="img-icon"></span>
+                                </a>
+                                <!--<div class="pointer"><img src="/img/pointer.png" alt="" /></div>-->
+                            </div>
+                            <h3 class="title"><a href="/view_postit.php?id=11107" rel="facebox">TV: Scenar ert y cultura</a></h3>
+                            <p>Jöbia, 5.11.2026 dales 20.50<br />
+<br />
+La storia de Christine Runggaldier l’é na storia de formes: te sia scultures se met adum corpes desvalives, ènemes che rejona lengac desferenc. Te chesta desvalivanza, dut cogn se scutèr, perchè demò coscita duc i elemenc pel se entener.<br />
+Legn, sas, vierech: te la operes de Monica ...</p>                        
+                        </article>
+
+                                                            </div>
+            </div>
+        </section>
+
+        <!--planning-->
+<section class="planning">
+    <div class="row clearfix">
+    
+<div class="col-sm-4">
+    <h2 class="title">Programazion Tv</h2>
+
+    <div id="list_tv" class="nav_tv">
+        <a href="#" id="prev_tv" class="prg_prev prg_nav" data-channel="tv" data-struct="la" data-dir="prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+        <h6 id="tvdate" class="tvdate"></h6>
+        <a href="#" id="next_tv" class="prg_next prg_nav" data-channel="tv" data-struct="la" data-dir="next"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+    </div>
+
+        <div id="sc_tv" data-struct="la" data-ptype="tv">
+            <div class="waitfordata"><img src="/img/loading.gif" alt=""  /><br />Ricezione dati in corso...</div>
+    </div><!-- end TV -->
+</div>
+
+<div class="col-sm-4">    
+    <h2 class="title">Programazion Radio</h2>
+    <div id="list_radio" class="nav_tv">
+        <a href="#" id="prev_radio" class="prg_prev prg_nav" data-channel="ra" data-struct="la" data-dir="prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+        <h6 clasS="radiodate" id="radiodate"></h6>
+        <a href="#" id="next_radio" class="prg_next prg_nav" data-channel="ra" data-struct="la" data-dir="next"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+        </div>
+
+        <div id="sc_ra" data-struct="la" data-ptype="ra">
+            <div class="waitfordata"><img src="/img/loading.gif" alt=""  /><br />Ricezione dati in corso...            </div>
+
+        </div><!-- end RADIO -->
+</div><div class="col-sm-4">
+  <h2 class="title">Meteo</h2>
+
+  <div id="meteo">
+    <div id="meteo_cnt">
+      <div id="tdy">
+        <h4>
+          Meteo per  <span id="meteo_tdy_date">2026-10-31T00:00:00</span>
+            <a href="#" id="meteo_next" title=""><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+        </h4>
+        <div class="meteomap"> 
+          <div class="schlanders"><img src="/img/meteo/icons/a.png" alt="Wolkenlos" title="Wolkenlos" /></div>
+          <div class="sterzing"><img src="/img/meteo/icons/a.png" alt="Wolkenlos" title="Wolkenlos" /></div>
+          <div class="bruneck"><img src="/img/meteo/icons/a.png" alt="Wolkenlos" title="Wolkenlos" /></div>
+          <div class="brixen"><img src="/img/meteo/icons/a.png" alt="Wolkenlos" title="Wolkenlos" /></div>
+          <div class="bozen"><img src="/img/meteo/icons/a.png" alt="Wolkenlos" title="Wolkenlos" /></div>
+          <div class="meran"><img src="/img/meteo/icons/a.png" alt="Wolkenlos" title="Wolkenlos" /></div>
+
+          <img name="meteo" src="/img/meteo/meteo_la.jpg" width="100%" border="0" alt="Meteo Alto Adige - S&uuml;dtirol" />
+        </div>
+        <div class="temperature">
+          <ul>
+            <li><p>Bulsan <strong>2/18</strong></p></li>
+            <li><p>Maran <strong>2/17</strong></p></li>
+            <li><p>Bornech <strong>-3/14</strong></p></li>
+            <li><p>Persenon <strong>1/16</strong></p></li>
+            <li><p>Solaneres <strong>2/16</strong></p></li>
+            <li><p>Sterzing <strong>-3/12</strong></p></li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="tmw" style="display: none;">
+        <h4>
+            Meteo per  <span id="meteo_tmw_date"></span>
+        <a href="#" id="meteo_prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+        </h4>
+        <div class="meteomap"> 
+          <div class="schlanders"><img src="/img/meteo/icons/c.png" alt="Wolkig" title="Wolkig" /></div>
+          <div class="sterzing"><img src="/img/meteo/icons/c.png" alt="Wolkig" title="Wolkig" /></div>
+          <div class="bruneck"><img src="/img/meteo/icons/d.png" alt="Stark bew�lkt" title="Stark bew�lkt" /></div>
+          <div class="brixen"><img src="/img/meteo/icons/c.png" alt="Wolkig" title="Wolkig" /></div>
+          <div class="bozen"><img src="/img/meteo/icons/b.png" alt="Heiter" title="Heiter" /></div>
+          <div class="meran"><img src="/img/meteo/icons/b.png" alt="Heiter" title="Heiter" /></div>
+
+          <img name="meteo" src="/img/meteo/meteo_la.jpg" width="100%" border="0" alt="Meteo Alto Adige - S&uuml;dtirol" />
+        </div>
+        <div class="temperature">
+          <ul>
+            <li><p>Bulsan <strong>4/16</strong></p></li>
+            <li><p>Maran <strong>2/15</strong></p></li>
+            <li><p>Bornech <strong>-2/10</strong></p></li>
+            <li><p>Persenon <strong>2/12</strong></p></li>
+            <li><p>Solaneres <strong>2/13</strong></p></li>
+            <li><p>Sterzing <strong>-1/7</strong></p></li>
+          </ul>
+        </div>
+      </div>
+
+
+    </div>
+
+    <p class="meteoinfo"><a href="http://www.provinzia.bz.it/meteo-ladin/home.asp" target="_blank" rel="noopener noreferrer">Servisc meteo dla Provinzia Autonoma de Bulsan</a></p>
+    <!-- end #meteo -->
+  </div>
+</div>
+    </div>       
+</section>
+<!--//planning-->
+<footer>
+    <div class="row">
+        <div class="container">
+            <hr>
+        </div>
+        <div class="col-sm-6 copyright small">
+            <!-- &copy; 2013 Rai Bolzano. All Rights Reserved.<br /> -->
+            Rai - Radiotelevisione Italiana Spa<br />
+            Sede legale: Via Alessandro Severo, 246 - 00145 Roma<br />
+            Cap. Soc. Euro 242.518.100,00 interamente versato<br />
+            Ufficio del Registro delle Imprese di Roma<br />
+            &copy; RAI 2026 - tutti i diritti riservati. P.Iva 06382641006
+        </div>
+        <nav class="col-sm-6 small">
+            <ul>
+                <li><a href="../it/index.php">RAI Alto Adige</a> | </li>
+                <li><a href="../de/index.php">RAI S&uuml;dtirol</a> | </li>
+                <li><a href="../la/index.php">RAI Ladinia</a></li>
+            </ul>
+            <ul>
+                <li><a href="privacy.php">Privacy policy</a> | </li>
+                <li><a href="cookie.php"> Cookie policy</a> | </li>
+                <li><a href="soctransp.php">Società trasparente</a></li>
+            </ul>
+        </nav>
+    </div>
+</footer>
+<!--//footer-->    
+
+</div>
+<!--//page_container-->
+
+<div class="footer_bottom">
+    <div class="container">
+        <div class="credits"></div>
+    </div>
+</div>
+    <div id="cookieMessageWrapper">
+        <div id="cookieMessage" class="row">
+            <p class="col-md-11 col-sm-12">Il sito Rai utilizza cookie tecnici o assimiliati e cookie di profilazione di terze parti in forma aggregata, per rendere più agevole la navigazione, garantire la fruizione dei servizi e se vuoi saperne di più o negare il consenso a tutti o ad alcuni cookie <u><a href="cookie.php">leggi qui</a></u> - Chiudendo questo banner, scorrendo questa pagina o cliccando qualunque suo elemento acconsenti all'uso dei cookie.</p>
+            <p class="col-md-1 col-sm-12"><a id="cookieClose" href="#">Chiudi</a></p>
+        </div>
+    </div>
+
+<!--//footer_bottom-->
+<script type="text/javascript">
+    show_ie_alert = false;
+    var sitelang = 'la';
+    var sitepath = '/';
+    var _RTMP = 'rtmp://212.162.85.65:1935/BZstreaming/';
+    var _HTTP = '//raibz.rai.it/streaming/';
+
+    var _RTMP_RADIO = 'http://www.raibz.rai.it/streaming/Netia_Export/';
+    var _HTTP_RADIO = 'http://www.raibz.rai.it/streaming/Netia_Export/';
+
+    var RTMP_TVLIVE = '';
+    var HTTP_TVLIVE = '';
+</script>
+<!--[if lt IE 9]>
+    <script type="text/javascript" src="/js/legacy_min.js"></script>
+    <script type="text/javascript">
+        show_ie_alert = true;
+    </script>
+<![endif]-->
+    <script type="text/javascript" src="/js/combined.js"></script>
+<script type="text/javascript" src="/la/lang.js"></script>
+<script type="text/javascript" src="/la/moment-locale.js"></script>
+    
+
+    <script type="text/javascript">
+        //<!-- START Nielsen//NetRatings SiteCensus V5.2 -->
+        //<!-- COPYRIGHT 2006 Nielsen//NetRatings -->
+        var _rsCI = "rainet-it";
+        var _rsCG = "0";
+        var _rsDN = "//secure-it.imrworldwide.com/";
+        var _rsCC = 0;
+        var _rsIP = 1;
+    </script>
+    <script type="text/javascript" src="//secure-it.imrworldwide.com/v52.js"></script>
+    <noscript>
+        <img src="//secure-it.imrworldwide.com/cgi-bin/m?ci=rainet-it&amp;cg=0" style="display:none" alt=""/>
+    </noscript>
+    <!-- END Nielsen//NetRatings SiteCensus V5.2 -->
+    </body>
+</html>

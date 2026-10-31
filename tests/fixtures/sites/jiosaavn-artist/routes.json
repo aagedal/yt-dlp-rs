@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://www.jiosaavn.com/api.php?__call=webapi.get&_format=json&_marker=0&ctx=web6dot0&token=rYLBEve2z3U_&type=artist&p=0&n_song=50&n_album=50&sub_type=&includeMetaTags=&api_version=4&category=alphabetical&sort_order=asc",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page-0.json"
+  },
+  {
+   "url": "https://www.jiosaavn.com/api.php?__call=webapi.get&_format=json&_marker=0&ctx=web6dot0&token=rYLBEve2z3U_&type=artist&p=1&n_song=50&n_album=50&sub_type=&includeMetaTags=&api_version=4&category=alphabetical&sort_order=asc",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page-1.json"
+  },
+  {
+   "url": "https://www.jiosaavn.com/api.php?__call=webapi.get&_format=json&_marker=0&ctx=web6dot0&token=rYLBEve2z3U_&type=artist&p=2&n_song=50&n_album=50&sub_type=&includeMetaTags=&api_version=4&category=alphabetical&sort_order=asc",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page-2.json"
+  },
+  {
+   "url": "https://www.jiosaavn.com/api.php?__call=webapi.get&_format=json&_marker=0&ctx=web6dot0&token=rYLBEve2z3U_&type=artist&p=3&n_song=50&n_album=50&sub_type=&includeMetaTags=&api_version=4&category=alphabetical&sort_order=asc",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page-3.json"
+  }
+ ]
+}

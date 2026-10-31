@@ -1,0 +1,61 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.cbc.ca/i/caffeine/syndicate/?mediaId=2657631896",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"CBC Montreal is organizing its first ever community hackathon!\", \"description\": \"The modern technology we tend to depend on so heavily, is never without it's share of hiccups and headaches. Next weekend - CBC Montreal will be getting members of the public for its first Hackathon.\", \"thumbnail\": \"https://i.cbc.ca/ais/1.2985700,1717262248558/full/max/0/default.jpg\", \"timestamp\": 1425704400.0, \"media_type\": \"Excerpt\", \"series\": \"All in a Weekend Montreal\", \"season_number\": 2015, \"duration\": 494.811, \"location\": \"Quebec\", \"tags\": [\"All In A Weekend\", \"AudioMobile/All in a Weekend Montreal\", \"CBC\", \"CBC Radio\", \"Hackathon\", \"HackingCBCMTL\", \"Montreal\", \"Quebec\", \"Sonali Karnick\", \"listenmontreal\", \"Quebec\"], \"genres\": [\"Other\"], \"categories\": [\"All in a Weekend Montreal\"], \"id\": \"2657631896\", \"formats\": [{\"url\": \"https://mp3.cbc.ca/radio/CBC_Radio_VMS/298/119/allinawkendmtl1_20150307_32201_uploaded.mp3\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}], \"subtitles\": {}, \"chapters\": [], \"is_live\": false, \"webpage_url\": \"http://www.cbc.ca/i/caffeine/syndicate/?mediaId=2657631896\", \"original_url\": \"http://www.cbc.ca/i/caffeine/syndicate/?mediaId=2657631896\", \"webpage_url_basename\": \"syndicate\", \"webpage_url_domain\": \"cbc.ca\", \"extractor\": \"cbc.ca:player\", \"extractor_key\": \"CBCPlayer\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://i.cbc.ca/ais/1.2985700,1717262248558/full/max/0/default.jpg\", \"id\": \"0\"}], \"display_id\": \"2657631896\", \"fulltitle\": \"CBC Montreal is organizing its first ever community hackathon!\", \"duration_string\": \"8:14\", \"upload_date\": \"20150307\", \"release_year\": null, \"season\": \"Season 2015\", \"genre\": \"Other\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://mp3.cbc.ca/radio/CBC_Radio_VMS/298/119/allinawkendmtl1_20150307_32201_uploaded.mp3\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"CBC Montreal is organizing its first ever community hackathon! [2657631896].mp3\", \"filename\": \"CBC Montreal is organizing its first ever community hackathon! [2657631896].mp3\", \"__write_download_archive\": false}], \"url\": \"https://mp3.cbc.ca/radio/CBC_Radio_VMS/298/119/allinawkendmtl1_20150307_32201_uploaded.mp3\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.cbc.ca/listen/cbc-podcasts/1353-the-naked-emperor/episode/16142603-introducing-understood-who-broke-the-internet",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"16142603\", \"url\": \"https://cbc.mc.tritondigital.com/CBC_NAKEDEMPEROR_P/media/nakedemperor/nakedemperor-lIEqHISf-20250425.mp3\", \"title\": \"Introducing Understood: Who Broke the Internet?\", \"description\": \"\\nIt's not you \\u2014 the internet really does suck. Novelist, blogger and noted internet commentator Cory Doctorow explains what happened to the internet and why you're tormented by ads, bots, algorithms, AI slop and so many pop-ups.\\n\\n\\nSpoiler alert: it wasn't an accident.\\n\\n\\nIn a four-part series, Doctorow gets into the decisions made by powerful people that got us here, and most importantly, how we fix it. New episodes released weekly starting on Monday, May 5, 2025.\", \"release_timestamp\": 1745827200, \"timestamp\": 1745812800, \"duration\": 229, \"webpage_url\": \"https://www.cbc.ca/listen/cbc-podcasts/1353-the-naked-emperor/episode/16142603-introducing-understood-who-broke-the-internet\", \"original_url\": \"https://www.cbc.ca/listen/cbc-podcasts/1353-the-naked-emperor/episode/16142603-introducing-understood-who-broke-the-internet\", \"webpage_url_basename\": \"16142603-introducing-understood-who-broke-the-internet\", \"webpage_url_domain\": \"cbc.ca\", \"extractor\": \"cbc.ca:listen\", \"extractor_key\": \"CBCListen\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"16142603\", \"fulltitle\": \"Introducing Understood: Who Broke the Internet?\", \"duration_string\": \"3:49\", \"upload_date\": \"20250428\", \"release_date\": \"20250428\", \"release_year\": 2025, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Introducing Understood\\uff1a Who Broke the Internet\\uff1f [16142603].mp3\", \"filename\": \"Introducing Understood\\uff1a Who Broke the Internet\\uff1f [16142603].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.cbc.ca/listen/cbc-podcasts/1-synthetic/episode/1-missing",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [cbc.ca:listen] 1: Unable to download JSON metadata: HTTP Error 404: Not Found",
+    "WARNING: [cbc.ca:listen] API failed to return data. Falling back to webpage parsing",
+    "ERROR: [cbc.ca:listen] 1: Unable to extract preloaded state; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.cbc.ca/player/play/1",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [cbc.ca:player] 1: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

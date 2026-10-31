@@ -3,16 +3,24 @@
 //! `/video/NAME/ID` page or `/media/embed?key=ID` player. Its HLS master
 //! playlist (`hlsMedium`, an HTTP 404 or 500 means none) and the `getMedium`
 //! MP4 are the formats. ViMP's playlist pages (`ViMP:Playlist`) are not ported.
-use super::{Extractor, dict_format, dict_info, download_webpage, search_warning};
+use super::{
+    Extractor, dict_format, dict_info, download_webpage, search_warning, update_url_query,
+};
 use crate::html::{clean_html, html_search_meta_clean};
-use crate::{Error, Result, VideoFormat, VideoInfo};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
-use serde_json::Value;
+use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
 use url::Url;
 
 pub struct VideocampusSachsen;
+pub struct VideocampusSachsenPlaylist;
+
+const PLAYLIST_NAME: &str = "ViMP:Playlist";
+const PLAYLIST_KEY: &str = "ViMPPlaylist";
+/// `ViMPPlaylistIE._PAGE_SIZE`.
+const PAGE_SIZE: usize = 10;
 
 const NAME: &str = "ViMP";
 const KEY: &str = "VideocampusSachsen";
@@ -102,12 +110,75 @@ static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
     ))
     .unwrap()
 });
+static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
+    let hosts = INSTANCES
+        .iter()
+        .map(|host| regex::escape(host))
+        .collect::<Vec<_>>()
+        .join("|");
+    crate::extractor::url_regex(&format!(
+        r"^(?P<host>https?://(?:{hosts}))/(?:(?P<mode1>album)/view/aid/(?P<album_id>[0-9]+)|(?P<mode2>category|channel)/(?P<name>[\w-]+)/(?P<channel_id>[0-9]+)|(?P<mode3>tag)/(?P<tag_id>[0-9]+))"
+    ))
+    .unwrap()
+});
+/// The `"..../video/..."` links of a `boxList` page (`ViMPPlaylistIE._fetch_page`).
+static PLAYLIST_VIDEO: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#""([^"]*/video/[^"]+)""#).unwrap());
 static PIWIK_TITLE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<video-js[^>]* data-piwik-title="([^"<]+)""#).unwrap());
 
 /// `_match_id`-style check of the upstream `_VALID_URL`.
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
+}
+
+/// `ViMPPlaylistIE._VALID_URL`: an album, category, channel or tag page.
+pub fn playlist_suitable(url: &str) -> bool {
+    PLAYLIST_URL.is_match(url)
+}
+
+/// `url_result(target, ie=ie_key)` as a playlist entry.
+fn url_entry(target: &str, ie_key: &str, extractor: &str) -> Result<VideoInfo> {
+    let url = Url::parse(target)?;
+    let mut info = super::direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    let mut entry = Map::new();
+    entry.insert("ie_key".into(), ie_key.into());
+    entry.insert("_type".into(), "url".into());
+    entry.insert("url".into(), target.into());
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": {},
+            "ie_key": ie_key,
+            "extractor": extractor,
+            "entry": Value::Object(entry),
+        }),
+    );
+    Ok(info)
+}
+
+/// `_download_webpage(url, id, query=..., data=urlencode_postdata(data))`.
+fn post_webpage(client: &Client, url: &Url, id: &str, body: String) -> Result<String> {
+    use std::io::Read;
+    crate::screen::screen(&format!("[{PLAYLIST_NAME}] {id}: Downloading webpage"));
+    let mut response = super::direct::post_expecting(
+        client,
+        url,
+        &[("Content-Type", "application/x-www-form-urlencoded")],
+        body.clone(),
+        &[],
+    )?;
+    let headers = response.headers().clone();
+    let mut bytes = Vec::new();
+    response
+        .read_to_end(&mut bytes)
+        .map_err(Error::ExtractionRead)?;
+    let bytes = super::decode_content(&headers, bytes).map_err(Error::ExtractionRead)?;
+    Ok(super::decode_webpage(&bytes, &headers))
 }
 
 /// `_html_search_meta(names, webpage, fatal=False)`: the first name present,
@@ -288,9 +359,132 @@ impl Extractor for VideocampusSachsen {
     }
 }
 
+impl Extractor for VideocampusSachsenPlaylist {
+    fn key(&self) -> &'static str {
+        PLAYLIST_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = PLAYLIST_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let host = found["host"].to_owned();
+        let group = |name: &str| found.name(name).map(|found| found.as_str().to_owned());
+        let album_id = group("album_id");
+        let name = group("name").unwrap_or_default();
+        let channel_id = group("channel_id").unwrap_or_default();
+        let tag_id = group("tag_id").unwrap_or_default();
+        let mode = group("mode1")
+            .or_else(|| group("mode2"))
+            .or_else(|| group("mode3"))
+            .unwrap_or_default();
+        let playlist_id = album_id.clone().unwrap_or_else(|| {
+            if channel_id.is_empty() {
+                tag_id.clone()
+            } else {
+                channel_id.clone()
+            }
+        });
+        let url_part = if let Some(album_id) = &album_id {
+            format!("aid/{album_id}")
+        } else if mode == "category" {
+            format!("category/{name}/category_id/{channel_id}")
+        } else if mode == "channel" {
+            format!("title/{name}/channel/{channel_id}")
+        } else {
+            format!("tag/{tag_id}")
+        };
+        crate::screen::set_extractor(PLAYLIST_NAME);
+        crate::screen::screen(&format!(
+            "[{PLAYLIST_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+
+        // `_download_webpage(url, playlist_id, fatal=False) or ''`.
+        let webpage = optional_webpage(client, url, &playlist_id)?;
+        let title = crate::html::html_search_meta(&webpage, "title")
+            .or_else(|| crate::html::html_extract_title(&webpage));
+
+        let context = if album_id.is_some() {
+            "4"
+        } else if mode == "category" {
+            "1"
+        } else if mode == "album" {
+            "3"
+        } else {
+            "0"
+        };
+        let page_size = PAGE_SIZE.to_string();
+        let data = url::form_urlencoded::Serializer::new(String::new())
+            .append_pair("vars[mode]", &mode)
+            .append_pair(&format!("vars[{mode}]"), &playlist_id)
+            .append_pair("vars[context]", context)
+            .append_pair("vars[context_id]", &playlist_id)
+            .append_pair("vars[layout]", "thumb")
+            .append_pair("vars[per_page][thumb]", &page_size)
+            .finish();
+
+        // `InAdvancePagedList`-style iteration: a page with fewer than
+        // `_PAGE_SIZE` links is the last one.
+        let mut entries = Vec::new();
+        for page in 0.. {
+            let page_text = page.to_string();
+            let box_url = update_url_query(
+                &Url::parse(&format!("{host}/media/ajax/component/boxList/{url_part}"))?,
+                &[("page", &page_text), ("page_only", "1")],
+            );
+            let box_page = post_webpage(client, &box_url, &playlist_id, data.clone())?;
+            let links: Vec<String> = PLAYLIST_VIDEO
+                .captures_iter(&box_page)
+                .map(|found| found[1].to_owned())
+                .collect();
+            for link in &links {
+                entries.push(url_entry(&format!("{host}{link}"), KEY, PLAYLIST_NAME)?);
+            }
+            if links.len() < PAGE_SIZE {
+                break;
+            }
+        }
+
+        let mut extra = Map::new();
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            "playlist-dict;id,title".into(),
+        );
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: format!("{mode}-{playlist_id}"),
+            title: title.unwrap_or_default(),
+            webpage_url: url.clone(),
+            extractor: PLAYLIST_NAME.into(),
+            extractor_key: PLAYLIST_KEY.into(),
+            nested: Vec::new(),
+            pending: None,
+            entries,
+            extra,
+        })))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn playlist_urls_follow_upstream_valid_url() {
+        assert!(playlist_suitable(
+            "https://videocampus.sachsen.de/category/online-tutorials-onyx/91"
+        ));
+        assert!(playlist_suitable(
+            "https://www.hsbi.de/medienportal/album/view/aid/208"
+        ));
+        assert!(!playlist_suitable(
+            "https://videocampus.sachsen.de/video/Was-ist-selbstgesteuertes-Lernen/fc99c527e4205b121cb7c74433469262"
+        ));
+    }
 
     #[test]
     fn urls_follow_upstream_valid_url() {

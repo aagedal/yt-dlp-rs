@@ -1,0 +1,10 @@
+{
+  "data" : {
+    "attributes" : {
+      "realm" : "go",
+      "token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVU0VSSUQ6Z286MzIxYWEyMGUtODMxMy00YzY4LWExODMtN2RiYTBlNTA2Mzk4IiwianRpIjoidG9rZW4tMWVhMTcwMGQtOGM5NC00ODkxLWJjODYtZjJjOTI0OWQ5MTcwIiwiYW5vbnltb3VzIjp0cnVlLCJpYXQiOjE3OTM0NTk1Mjh9.hFKrKTumMV3LEhjO1qa5vmy7-Hxe5DBbZ8C_ZIQ6d0I"
+    },
+    "id" : "token-1ea1700d-8c94-4891-bc86-f2c9249d9170",
+    "type" : "token"
+  }
+}

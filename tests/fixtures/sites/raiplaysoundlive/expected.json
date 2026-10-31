@@ -1,0 +1,25 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.raiplaysound.it/radio2",
+   "args": [
+    "-F",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[RaiPlaySoundLive] Extracting URL: https://www.raiplaysound.it/radio2",
+    "[RaiPlaySoundLive] radio2: Downloading audio JSON",
+    "[RaiPlaySoundLive] radio2: Downloading XML metadata",
+    "[RaiPlaySoundLive] radio2: Downloading m3u8 information",
+    "[info] Available formats for b00a50e6-f404-4af6-8f8c-ff3b9af73a44:",
+    "ID      EXT RESOLUTION |  TBR PROTO | VCODEC ACODEC",
+    "------------------------------------------------------",
+    "hls-374 mp4 unknown    | 374k m3u8  | avc1   mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

@@ -4,7 +4,7 @@
 //! embeds resolve their `effective_video` first. F4M balancer entries and
 //! Rutube's playlist, channel, tag, person and movie pages are unsupported.
 use super::Extractor;
-use crate::{Error, ExtractResult, Result, VideoInfo};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
@@ -13,10 +13,16 @@ use url::Url;
 
 pub struct Rutube;
 pub struct RutubeEmbed;
+pub struct RutubePerson;
+pub struct RutubePlaylist;
+pub struct RutubeChannel;
 
 const NAME: &str = "rutube";
 const KEY: &str = "Rutube";
 const EMBED_NAME: &str = "rutube:embed";
+const PERSON_NAME: &str = "rutube:person";
+const PLAYLIST_NAME: &str = "rutube:playlist";
+const CHANNEL_NAME: &str = "rutube:channel";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
     crate::extractor::url_regex(r"^https?://rutube\.ru/(?:(?:live/)?video(?:/private)?|(?:play/)?embed)/(?P<id>[\da-z]{32})")
@@ -29,6 +35,32 @@ static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
 /// `RutubeIE.suitable`.
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
+}
+
+static PERSON_URL: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^https?://rutube\.ru/video/person/(?P<id>\d+)").unwrap());
+static PLAYLIST_URL: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^https?://rutube\.ru/plst/(?P<id>\d+)").unwrap());
+static CHANNEL_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        r"^https?://rutube\.ru/(?:channel/(?P<id>\d+)|u/(?P<slug>\w+))(?:/(?P<section>videos|shorts|playlists))?",
+    )
+    .unwrap()
+});
+
+/// `RutubePersonIE.suitable`.
+pub fn person_suitable(url: &str) -> bool {
+    PERSON_URL.is_match(url)
+}
+
+/// `RutubePlaylistIE.suitable`.
+pub fn playlist_suitable(url: &str) -> bool {
+    PLAYLIST_URL.is_match(url)
+}
+
+/// `RutubeChannelIE.suitable`.
+pub fn channel_suitable(url: &str) -> bool {
+    CHANNEL_URL.is_match(url)
 }
 
 /// `RutubeEmbedIE.suitable`.
@@ -472,6 +504,228 @@ impl Extractor for RutubeEmbed {
     }
 }
 
+/// `url_result(url, RutubeIE, ...)` as a `url` entry with the `_extract_info`
+/// fields (`_type`, `url` and `ie_key` added last, as upstream's `update`).
+fn url_entry(target: &str, id: &str, raw: Map<String, Value>) -> Result<VideoInfo> {
+    let url = Url::parse(target)?;
+    let mut info = super::direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    info.id = id.to_owned();
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": {},
+            "ie_key": KEY,
+            "extractor": NAME,
+            "entry": Value::Object(raw),
+        }),
+    );
+    Ok(info)
+}
+
+/// `RutubePlaylistBaseIE._entries`: each page's results with a `video_url`
+/// as `url` entries, until a page has no results or no `has_next`.
+fn playlist_entries(
+    client: &Client,
+    extractor: &'static str,
+    playlist_id: &str,
+    first: Url,
+) -> Result<Vec<VideoInfo>> {
+    let mut entries = Vec::new();
+    let mut url = first;
+    for pagenum in 1.. {
+        let page = super::download_json_note(
+            client,
+            &url,
+            extractor,
+            playlist_id,
+            &format!("Downloading page {pagenum}"),
+        )?;
+        let results = match page.get("results") {
+            Some(Value::Array(results)) if !results.is_empty() => results,
+            _ => break,
+        };
+        for result in results {
+            let Some(video_url) = result
+                .get("video_url")
+                .and_then(Value::as_str)
+                .and_then(super::json_ld::url_or_none)
+            else {
+                continue;
+            };
+            // `_extract_info(result, require_title=False)`.
+            let mut video = result.clone();
+            if let Some(object) = video.as_object_mut() {
+                object.entry("title").or_insert(Value::Null);
+            }
+            let video_id = match video.get("id") {
+                Some(Value::String(text)) => text.clone(),
+                Some(Value::Number(number)) => number.to_string(),
+                _ => String::new(),
+            };
+            let mut raw = extract_info(extractor, &video, &video_id)?;
+            raw.insert("_type".into(), "url".into());
+            raw.insert("url".into(), video_url.clone().into());
+            raw.insert("ie_key".into(), KEY.into());
+            let id = raw.get("id").map(|id| match id {
+                Value::String(text) => text.clone(),
+                other => other.to_string(),
+            });
+            entries.push(url_entry(
+                &video_url,
+                id.as_deref().unwrap_or_default(),
+                raw,
+            )?);
+        }
+        let next = page
+            .get("next")
+            .and_then(Value::as_str)
+            .filter(|next| !next.is_empty());
+        match next {
+            Some(next) if matches!(page.get("has_next"), Some(Value::Bool(true))) => {
+                url = Url::parse(next)?;
+            }
+            _ => break,
+        }
+    }
+    Ok(entries)
+}
+
+/// `playlist_result(_entries(...), playlist_id, playlist_name)`.
+fn playlist_result(
+    url: &Url,
+    (name, key): (&'static str, &'static str),
+    id: String,
+    entries: Vec<VideoInfo>,
+) -> ExtractResult {
+    let mut extra = Map::new();
+    extra.insert(
+        crate::info_order::INFO_SHAPE.into(),
+        format!("playlist-dict;id{}", crate::info_order::GENERATOR).into(),
+    );
+    ExtractResult::Playlist(PlaylistInfo {
+        id,
+        title: String::new(),
+        webpage_url: url.clone(),
+        extractor: name.into(),
+        extractor_key: key.into(),
+        nested: Vec::new(),
+        pending: None,
+        entries,
+        extra,
+    })
+}
+
+/// `RutubePersonIE`, `RutubePlaylistIE`, `RutubeChannelIE`: the paged
+/// `api/` listings of a person's, a custom playlist's or a channel's videos.
+impl Extractor for RutubePerson {
+    fn key(&self) -> &'static str {
+        PERSON_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = PERSON_URL.captures(page.as_str()) else {
+            return Ok(None);
+        };
+        let id = found["id"].to_owned();
+        start(PERSON_NAME, page);
+        let first = Url::parse(&format!(
+            "https://rutube.ru/api/video/person/{id}/?page=1&format=json"
+        ))?;
+        let entries = playlist_entries(client, PERSON_NAME, &id, first)?;
+        Ok(Some(playlist_result(
+            page,
+            (PERSON_NAME, "RutubePerson"),
+            id,
+            entries,
+        )))
+    }
+}
+
+impl Extractor for RutubePlaylist {
+    fn key(&self) -> &'static str {
+        PLAYLIST_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = PLAYLIST_URL.captures(page.as_str()) else {
+            return Ok(None);
+        };
+        let id = found["id"].to_owned();
+        start(PLAYLIST_NAME, page);
+        let first = Url::parse(&format!(
+            "https://rutube.ru/api/playlist/custom/{id}/videos?page=1&format=json"
+        ))?;
+        let entries = playlist_entries(client, PLAYLIST_NAME, &id, first)?;
+        Ok(Some(playlist_result(
+            page,
+            (PLAYLIST_NAME, "RutubePlaylist"),
+            id,
+            entries,
+        )))
+    }
+}
+
+impl Extractor for RutubeChannel {
+    fn key(&self) -> &'static str {
+        CHANNEL_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = CHANNEL_URL.captures(page.as_str()) else {
+            return Ok(None);
+        };
+        let section = found
+            .name("section")
+            .map(|section| section.as_str().to_owned());
+        start(CHANNEL_NAME, page);
+        if section.as_deref() == Some("playlists") {
+            return Err(Error::UnsupportedUrl(page.to_string()));
+        }
+        let Some(channel_id) = found.name("id").map(|id| id.as_str().to_owned()) else {
+            // `u/<slug>` channels need the channel page's redux state.
+            return Err(Error::UnsupportedHtml5(
+                "Rutube channel slugs are not supported natively".into(),
+            ));
+        };
+        // `_next_page_url`: the person API with the section's `origin__type`.
+        let origin_type = match section.as_deref() {
+            Some("videos") => "rtb,rst,ifrm,rspa",
+            Some("shorts") => "rshorts",
+            _ => "",
+        };
+        let first = Url::parse(&format!(
+            "https://rutube.ru/api/video/person/{channel_id}/?page=1&format=json&origin__type={origin_type}"
+        ))?;
+        let entries = playlist_entries(client, CHANNEL_NAME, &channel_id, first)?;
+        let id = match &section {
+            Some(section) => format!("{channel_id}_{section}"),
+            None => channel_id,
+        };
+        Ok(Some(playlist_result(
+            page,
+            (CHANNEL_NAME, "RutubeChannel"),
+            id,
+            entries,
+        )))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -494,5 +748,15 @@ mod tests {
         assert!(!embed_suitable(
             "https://rutube.ru/play/embed/a10e53b86e8f349080f718582ce4c661"
         ));
+    }
+
+    #[test]
+    fn listing_urls_follow_upstream_valid_url() {
+        assert!(channel_suitable("https://rutube.ru/channel/639184/videos/"));
+        assert!(channel_suitable("https://rutube.ru/u/rutube/videos/"));
+        assert!(person_suitable("https://rutube.ru/video/person/313878/"));
+        assert!(playlist_suitable("https://rutube.ru/plst/308547/"));
+        assert!(!playlist_suitable("https://rutube.ru/video/person/313878/"));
+        assert!(!channel_suitable("https://rutube.ru/video/person/313878/"));
     }
 }

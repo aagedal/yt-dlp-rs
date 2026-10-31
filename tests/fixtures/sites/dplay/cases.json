@@ -1,0 +1,51 @@
+[
+ {
+  "url": "https://watch.cookingchanneltv.com/video/bobbys-triple-threat-food-network-atve-us/titans-vs-marcus-samuelsson",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.discoverylife.com/video/er-files-discovery-life-atve-us/sweet-charity",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://go.discovery.com/video/in-the-eye-of-the-storm-discovery-atve-us/trapped-in-a-twister",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://watch.hgtv.com/video/flip-or-flop-the-final-flip-hgtv-atve-us/flip-or-flop-the-final-flip",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.investigationdiscovery.com/video/deadly-influence-the-social-media-murders-investigation-discovery-atve-us/rip-bianca",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.sciencechannel.com/video/spaces-deepest-secrets-science-atve-us/mystery-of-the-dead-planets",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://watch.cookingchanneltv.com/video/synthetic/missing",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ }
+]

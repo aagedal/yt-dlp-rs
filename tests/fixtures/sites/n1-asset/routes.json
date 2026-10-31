@@ -1,0 +1,20 @@
+{
+ "routes": [
+  {
+   "url": "https://best-vod.umn.cdn.united.cloud/stream?asset=ljsottomazilirija3060921-n1info-si-worldwide&stream=hp1400&t=0&player=m3u8v&sp=n1info&u=n1info&p=n1Sh4redSecre7iNf0",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "rec-000.bin"
+  },
+  {
+   "url": "https://n1-bg-ku-h1-2.umn.cdn.united.cloud/stream/?i=oh-36iRNgC91_DVTqd6ssQ&a=cTKSAdDamz7cHStq5_5i_8W1OjS1lRyyy_uQ82U4mZMRjiRBRfMmjKlEzdfZKYpyktBvyl0tKqb8B2BgQd9yssZI1hemnpvdz54usEYxrD8IYhkvOnigaVd1LNefaiU4yPHOgHqf2AIKUd35fx_9T6LveHgTirSqfn48PRFSc_BtJS0khpNeWxQvRpLXovmyrGOBpzZuxiuv8PHjZE_Mnry6-kDFZpQUkMuVt8lNr24YMP1cc0WpKyeoO4IRQpNbuIwXdwNDct-BJfTzqrR3Ag&sp=n1info&u=n1info&player=m3u8v",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "rec-000.bin"
+  }
+ ]
+}

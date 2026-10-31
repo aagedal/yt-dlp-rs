@@ -1,0 +1,20 @@
+{
+ "routes": [
+  {
+   "url": "https://my.mail.ru/cgi-bin/my/ajax?xemail=&ajax_call=1&func_name=music.search&mna=&mnb=&arg_query=black+shadow&arg_extended=1&arg_search_params=%7B%22music%22%3A+%7B%22limit%22%3A+100%2C+%22offset%22%3A+0%7D%7D&arg_limit=100&arg_offset=0",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/plain; charset=UTF-8"
+   },
+   "body_file": "rec-000.bin"
+  },
+  {
+   "url": "https://my.mail.ru/cgi-bin/my/ajax?xemail=&ajax_call=1&func_name=music.search&mna=&mnb=&arg_query=black+shadow&arg_extended=1&arg_search_params=%7B%22music%22%3A+%7B%22limit%22%3A+100%2C+%22offset%22%3A+100%7D%7D&arg_limit=100&arg_offset=100",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/plain; charset=UTF-8"
+   },
+   "body_file": "rec-001.bin"
+  }
+ ]
+}

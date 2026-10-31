@@ -13,10 +13,12 @@ use url::Url;
 
 pub struct Weibo;
 pub struct WeiboVideo;
+pub struct WeiboUser;
 
 const NAME: &str = "Weibo";
 const KEY: &str = "Weibo";
 const VIDEO_NAME: &str = "WeiboVideo";
+const USER_NAME: &str = "WeiboUser";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
     crate::extractor::url_regex(r"^https?://(?:m\.weibo\.cn/(?:status|detail)|(?:www\.)?weibo\.com/\d+)/(?P<id>[a-zA-Z0-9]+)")
@@ -35,6 +37,9 @@ static VIDEO_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
         .unwrap(),
     ]
 });
+/// `WeiboUserIE._VALID_URL`.
+static USER_URL: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?weibo\.com/u/(?P<id>\d+)").unwrap());
 static CHROME: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"Chrome/(\d+)").unwrap());
 static FALLBACK_LABEL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"label=(\w+)&template=(\d+x\d+)").unwrap());
@@ -42,6 +47,11 @@ static FALLBACK_LABEL: LazyLock<Regex> =
 /// `WeiboIE.suitable`.
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
+}
+
+/// `WeiboUserIE.suitable`.
+pub fn user_suitable(url: &str) -> bool {
+    USER_URL.is_match(url)
 }
 
 /// `WeiboVideoIE.suitable`.
@@ -235,11 +245,31 @@ fn weibo_json(
     referer: Option<&str>,
     data: Option<String>,
 ) -> Result<Value> {
+    weibo_json_note(
+        client,
+        extractor,
+        url,
+        id,
+        "Downloading JSON metadata",
+        referer,
+        data,
+    )
+}
+
+/// [`weibo_json`] with its progress `note`.
+fn weibo_json_note(
+    client: &Client,
+    extractor: &'static str,
+    url: &Url,
+    id: &str,
+    note: &str,
+    referer: Option<&str>,
+    data: Option<String>,
+) -> Result<Value> {
     let mut headers = vec![("Referer", referer.unwrap_or("https://weibo.com/"))];
     if data.is_some() {
         headers.push(("Content-Type", "application/x-www-form-urlencoded"));
     }
-    let note = "Downloading JSON metadata";
     let (mut text, final_url) = fetch(client, extractor, url, id, note, &headers, data.clone())?;
     if final_url.host_str() == Some("passport.weibo.com") {
         update_visitor_cookies(client, extractor, &final_url, id)?;
@@ -720,6 +750,133 @@ impl Extractor for WeiboVideo {
     }
 }
 
+/// `WeiboUserIE._fetch_page(uid, cursor, page)`: a profile's video feed page.
+fn fetch_user_page(client: &Client, uid: &str, cursor: i64, page: usize) -> Result<Value> {
+    let url = super::update_url_query(
+        &Url::parse("https://weibo.com/ajax/profile/getWaterFallContent")?,
+        &[("uid", uid), ("cursor", &cursor.to_string())],
+    );
+    let response = weibo_json_note(
+        client,
+        USER_NAME,
+        &url,
+        uid,
+        &format!("Downloading videos page {page}"),
+        None,
+        None,
+    )?;
+    Ok(response.get("data").cloned().unwrap_or(Value::Null))
+}
+
+impl Extractor for WeiboUser {
+    fn key(&self) -> &'static str {
+        USER_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = USER_URL.captures(page.as_str()) else {
+            return Ok(None);
+        };
+        let uid = found["id"].to_owned();
+        start(USER_NAME, page);
+        // `params = {k: v[-1] for k, v in parse_qs(url).items()}`: the layer
+        // of a `newVideo` tab is the single video, unless a playlist is wanted.
+        let params: Vec<(String, String)> = page
+            .query_pairs()
+            .filter(|(_, value)| !value.is_empty())
+            .map(|(key, value)| (key.into_owned(), value.into_owned()))
+            .collect();
+        let param = |name: &str| {
+            params
+                .iter()
+                .rev()
+                .find(|(key, _)| key == name)
+                .map(|(_, value)| value.as_str())
+        };
+        if let Some(video_id) = param("layerid").filter(|_| param("tabtype") == Some("newVideo")) {
+            if super::no_playlist() {
+                crate::screen::screen(&format!(
+                    "[{USER_NAME}] Downloading just the video {video_id} because of --no-playlist"
+                ));
+                return Ok(Some(super::follow_url(
+                    page,
+                    format!("https://weibo.com/{uid}/{video_id}"),
+                )));
+            }
+            crate::screen::screen(&format!(
+                "[{USER_NAME}] Downloading playlist {uid} - add --no-playlist to download just the video {video_id}"
+            ));
+        }
+
+        let first_page = fetch_user_page(client, &uid, 0, 1)?;
+        let uploader = first_page
+            .get("list")
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+            .find_map(|item| {
+                item.pointer("/user/screen_name")
+                    .and_then(Value::as_str)
+                    .map(str::to_owned)
+            });
+        let mut entries = Vec::new();
+        let mut response = first_page;
+        for page_number in 1.. {
+            if page_number > 1 {
+                let cursor = int(response.get("next_cursor")).unwrap_or(0);
+                response = fetch_user_page(client, &uid, cursor, page_number)?;
+            }
+            for video_info in response
+                .get("list")
+                .and_then(Value::as_array)
+                .into_iter()
+                .flatten()
+                .filter(|item| item.is_object())
+            {
+                entries.push(parse_video_info(video_info, page, &uid)?);
+            }
+            // `(int_or_none(cursor) or -1) < 0`: a zero cursor ends too.
+            let next = int(response.get("next_cursor"))
+                .filter(|cursor| *cursor != 0)
+                .unwrap_or(-1);
+            if next < 0 {
+                break;
+            }
+        }
+        // `playlist_result(entries, uid, **metainfo)`: the metainfo keys come
+        // before the ID.
+        let mut extra = Map::new();
+        let mut keys = Vec::new();
+        let mut title = String::new();
+        if let Some(uploader) = uploader {
+            title = format!("{uploader}的视频");
+            extra.insert("description".into(), format!("{uploader}的全部视频").into());
+            extra.insert("uploader".into(), uploader.clone().into());
+            keys.extend(["title", "description", "uploader"]);
+        }
+        keys.push("id");
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            format!("playlist-dict;{}", keys.join(",")).into(),
+        );
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: uid,
+            title,
+            webpage_url: page.clone(),
+            extractor: USER_NAME.into(),
+            extractor_key: USER_NAME.into(),
+            nested: Vec::new(),
+            pending: None,
+            entries,
+            extra,
+        })))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -744,5 +901,13 @@ mod tests {
             "{\"a\": 1}"
         );
         assert_eq!(strip_jsonp("cb( [1] )"), "[1] ");
+    }
+
+    #[test]
+    fn user_urls_follow_upstream_valid_url() {
+        assert!(user_suitable(
+            "https://weibo.com/u/2066652961?tabtype=video"
+        ));
+        assert!(!user_suitable("https://weibo.com/7827771738/N4xlMvjhI"));
     }
 }

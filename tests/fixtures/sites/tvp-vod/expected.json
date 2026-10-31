@@ -1,0 +1,18 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://vod.tvp.pl/dla-dzieci,24/laboratorium-alchemika-odcinki,309338/odcinek-24,S01E24,311357",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(age_limit)s|%(duration)s|%(episode_number)s|%(series)s|%(is_live)s|%(description)s|%(thumbnail)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "311357|Tusze termiczne. Jak zobaczyć niewidoczne. Odcinek 24|0|300|24|Laboratorium alchemika|False|Ludzie od zawsze szukali sposobów do zabezpieczenia tajnych informacji. Jedną z nich jest... niewidzialny tusz!|http://s.tvp.pl/images/f/c/8/uid_fc8376a75e9b45a79176a56c04267979_width_315_play_0_pos_0_gs_0_height_177.jpg"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

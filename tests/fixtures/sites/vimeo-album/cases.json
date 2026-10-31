@@ -1,0 +1,23 @@
+[
+ {
+  "url": "https://vimeo.com/showcase/10677689/embed#__youtubedl_smuggle=%7B%22referer%22%3A+%22https%3A%2F%2Fwww.riccardomutimusic.com%2F%22%7D",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://vimeo.com/showcase/10677689/embed",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://vimeo.com/album/2632481",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

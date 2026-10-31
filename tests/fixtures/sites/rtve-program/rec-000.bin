@@ -1,0 +1,3070 @@
+<!DOCTYPE html>
+<html lang="es" data-imgDomain="https://img.rtve.es" data-cssDomain="https://css.rtve.es"
+    data-apiDomain="https://api.rtve.es" data-vsp="2.17.1" data-ztnrdomain="https://ztnr.rtve.es" data-jsdomain="https://js.rtve.es" data-secureurl="https://secure2.rtve.es">
+
+<head>
+    
+    <title>Saber vivir - Programa de ciencia y futuro en RTVE Play</title>
+    <meta name="description" content="Saber vivir en RTVE Play. Disfruta de la ciencia y de los mejores programas, series, películas, podcast e informativos gratis en la plataforma de RTVE" />
+    
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=2.0,user-scalable=1" />
+    <link rel="canonical" href="https://www.rtve.es/play/videos/saber-vivir/" />
+    
+    <link media="all" rel="stylesheet" href="https://css.rtve.es/css/rtveplay.2024/rtve.play.pf_serie.desktp.css"
+        type="text/css" />
+    
+    
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    
+
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    
+
+
+
+<!-- Inicio Metas -->
+<meta name="keywords" content="Saber vivir, television, tve, online, rtve play" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="RTVE.es" />
+<meta property="og:url" content="https://www.rtve.es/play/videos/saber-vivir/" />
+
+    <meta property="og:image" content="https://img.rtve.es/imagenes/saber-vivir/01759842856982.jpg" />
+
+<meta property="og:locale" content="es_ES" />
+<meta property="og:title" content="Saber vivir - Programa de ciencia y futuro en RTVE Play" />
+<meta property="og:description" content="Saber vivir en RTVE Play. Disfruta de la ciencia y de los mejores programas, series, películas, podcast e informativos gratis en la plataforma de RTVE" />
+<meta name="DC.language" content="es" />
+<meta name="DC.identifier" content="111570" />
+<meta name="DC.title" content="Saber vivir - Programa de ciencia y futuro en RTVE Play" />
+<meta property="fb:app_id" content="78994661336" />
+
+    <meta name="twitter:image" content="https://img.rtve.es/imagenes/saber-vivir/01759842856982.jpg">
+
+<meta name="twitter:title" content="Saber vivir - Programa de ciencia y futuro en RTVE Play" />
+<meta name="twitter:description" content="Saber vivir en RTVE Play. Disfruta de la ciencia y de los mejores programas, series, películas, podcast e informativos gratis en la plataforma de RTVE" />
+<meta name="twitter:site" content="@rtve" />    
+<meta name="twitter:card" content="summary" /> 
+<meta name="RTVE.url" content="https://www.rtve.es/play/videos/saber-vivir/" />
+<meta name="RTVE.tipology" content="programas" />
+<meta name="RTVE.tags_libres" content="_Saber vivir_" />
+<meta name="RTVE.cat_principal" content="_Televisión Programas de TVE Magacín Saber vivir" />
+
+    <link name="image_src" href="https://img.rtve.es/imagenes/saber-vivir/01759842856982.jpg" />
+
+<meta name="last-modified" content="2026-06-03T23:42:00+02:00" />
+<meta name="technical_seo" content="" />
+
+<!-- Fin Metas -->
+<!-- Inicio microformatos -->
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "NewsMediaOrganization",
+        "@id": "https://www.rtve.es/#organization",
+        "name": "Corporación de Radio y Televisión Española (RTVE)",
+        "url": "https://www.rtve.es/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://img.rtve.es/css/rtve.commons/rtve.header.footer/i/logoRTVE.png"
+        },
+        "sameAs": [
+            "https://www.facebook.com/rtve",
+            "https://x.com/rtve",
+            "https://www.instagram.com/rtve",
+            "https://www.youtube.com/@rtvenoticias"
+        ],
+        "foundingDate": "1956",
+        "founder": {
+            "@type": "Organization",
+            "name": "Gobierno de España"
+        },
+        "publishingPrinciples": "https://www.rtve.es/corporacion/sostenibilidad/gobernanza/principios/",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": {
+                "@type": "Country",
+                "name": "ES"
+            }
+        }
+    }
+</script>
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TVSeries",
+        "name": "Saber vivir",
+        "url": "https://www.rtve.es/play/videos/saber-vivir/",
+        "description": "Saber Vivir es el programa decano de TVE dedicado a la salud, el bienestar y la calidad de vida. Cumpliendo un servicio público de calidad, el magazine busca informar, formar y entretener a toda la familia mediante la divulgación de consejos útiles y prácticos para vivir más y mejor. Dichos consejos son ofrecidos siempre por profesionales sanitarios de todos los ámbitos: medicina, enfermería, nutrición, farmacia, psicología, fisioterapia y actividad física. Todas las recomendaciones están basadas en la evidencia científica y la experiencia clínica de los especialistas que acuden al programa como colaboradores o invitados en cada emisión, con la intervención de Sergio Fernández, el chef de TVE, como profesor de cocina casera y saludable. ",
+        "image": "https://img.rtve.es/p/111570/",
+        "genre": "Ciencia y futuro",
+        "inLanguage": "es",
+        "producer": [
+          { "@type": "Person", "name": "Ana Martín." },
+            { "@type": "Person", "name": "Patricia Ituarte" }],
+        "director": [
+          { "@type": "Person", "name": "Alfonso García" },
+            { "@type": "Person", "name": "Jero Fernández" }]
+    }
+</script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{
+            "@type": "ListItem", 
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.rtve.es/"
+        },{
+            "@type": "ListItem", 
+            "position": 2,
+            "name": "Play",
+            "item": "https://www.rtve.es/play/"
+        },{
+            "@type": "ListItem", 
+            "position": 3,
+            "name": "Saber vivir",
+            "item": "https://www.rtve.es/play/videos/saber-vivir/"
+        }]
+    }
+</script>
+
+<!-- Fin microformatos -->
+
+    <script>
+        function errorImg(obj) {
+            var defa = obj.getAttribute("data-alternative");
+            if (defa) {
+                obj.src = 'https://img.rtve.es/css/rtveplay.2021/rtveplay.hbbtv/i/' + defa;
+                obj.removeAttribute('data-alternative')
+            }
+        }
+    </script>
+    
+    
+    
+    
+    
+<script id='adobe-target' src='https://js2.rtve.es/js/at.js'></script><!-- Start VWO Async SmartCode --><link rel='preconnect' href='https://dev.visualwebsiteoptimizer.com' /><script type='text/javascript' id='vwoCode'>window._vwo_code || (function() {var account_id=864486,version=2.1,settings_tolerance=2000,hide_element='body',hide_element_style = 'opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important;transition:none !important;',/* DO NOT EDIT BELOW THIS LINE */f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+'_settings',cc={};try{var c=JSON.parse(localStorage.getItem('_vwo_'+account_id+'_config'));cc=c&&typeof c==='object'?c:{}}catch(e){}var stT=cc.stT==='session'?w.sessionStorage:w.localStorage;code={nonce:v&&v.nonce,use_existing_jquery:function(){return typeof use_existing_jquery!=='undefined'?use_existing_jquery:undefined},library_tolerance:function(){return typeof library_tolerance!=='undefined'?library_tolerance:undefined},settings_tolerance:function(){return cc.sT||settings_tolerance},hide_element_style:function(){return'{'+(cc.hES||hide_element_style)+'}'},hide_element:function(){if(performance.getEntriesByName('first-contentful-paint')[0]){return''}return typeof cc.hE==='string'?cc.hE:hide_element},getVersion:function(){return version},finish:function(e){if(!f){f=true;var t=d.getElementById('_vis_opt_path_hides');if(t)t.parentNode.removeChild(t);if(e)(new Image).src='https://dev.visualwebsiteoptimizer.com/ee.gif?a='+account_id+e}},finished:function(){return f},addScript:function(e){var t=d.createElement('script');t.type='text/javascript';if(e.src){t.src=e.src}else{t.text=e.text}v&&t.setAttribute('nonce',v.nonce);d.getElementsByTagName('head')[0].appendChild(t)},load:function(e,t){var n=this.getSettings(),i=d.createElement('script'),r=this;t=t||{};if(n){i.textContent=n;d.getElementsByTagName('head')[0].appendChild(i);if(!w.VWO||VWO.caE){stT.removeItem(cK);r.load(e)}}else{var o=new XMLHttpRequest;o.open('GET',e,true);o.withCredentials=!t.dSC;o.responseType=t.responseType||'text';o.onload=function(){if(t.onloadCb){return t.onloadCb(o,e)}if(o.status===200||o.status===304){_vwo_code.addScript({text:o.responseText})}else{_vwo_code.finish('&e=loading_failure:'+e)}};o.onerror=function(){if(t.onerrorCb){return t.onerrorCb(e)}_vwo_code.finish('&e=loading_failure:'+e)};o.send()}},getSettings:function(){try{var e=stT.getItem(cK);if(!e){return}e=JSON.parse(e);if(Date.now()>e.e){stT.removeItem(cK);return}return e.s}catch(e){return}},init:function(){if(d.URL.indexOf('__vwo_disable__')>-1)return;var e=this.settings_tolerance();w._vwo_settings_timer=setTimeout(function(){_vwo_code.finish();stT.removeItem(cK)},e);var t;if(this.hide_element()!=='body'){t=d.createElement('style');var n=this.hide_element(),i=n?n+this.hide_element_style():'',r=d.getElementsByTagName('head')[0];t.setAttribute('id','_vis_opt_path_hides');v&&t.setAttribute('nonce',v.nonce);t.setAttribute('type','text/css');if(t.styleSheet)t.styleSheet.cssText=i;else t.appendChild(d.createTextNode(i));r.appendChild(t)}else{t=d.getElementsByTagName('head')[0];var i=d.createElement('div');i.style.cssText='z-index: 2147483647 !important;position: fixed !important;left: 0 !important;top: 0 !important;width: 100% !important;height: 100% !important;background: white !important;';i.setAttribute('id','_vis_opt_path_hides');i.classList.add('_vis_hide_layer');t.parentNode.insertBefore(i,t.nextSibling)}var o=window._vis_opt_url||d.URL,s='https://dev.visualwebsiteoptimizer.com/j.php?a='+account_id+'&u='+encodeURIComponent(o)+'&vn='+version;if(w.location.search.indexOf('_vwo_xhr')!==-1){this.addScript({src:s})}else{this.load(s+'&x=true')}}};w._vwo_code=code;code.init();})();</script><!-- End VWO Async SmartCode -->
+</head>
+
+
+<body class="rtveplay pfserie tve " data-lang="es" id="bodyElem" data-gmt="2026-10-31_15:10:25" data-locale="ES" data-channel="la2" data-program-uid="TE_SVVR876">
+    
+    
+    <div class="wrapper mainheader">
+        <header class="navBox" id="mainNav">
+            <div class="container">
+                <div role="banner" tabindex="1">
+                    
+<div id=2026-10-31_15:10:25 data-locale= data-subs=false></div>
+    <a class="icon logo-rtveplay" href="/play/" title="Portada de RTVE Play"> 
+        
+            <span class="rtve-icons"></span>
+            <span class="rtve-icons"></span>
+            <strong>rtve play</strong>
+        
+    </a>
+
+<div class="onside">
+    <h1><strong>Saber vivir</strong></h1>
+</div>
+
+
+                </div>
+                <div class="services" role="complementary" tabindex="-1">
+                    <ul>
+                        
+                        <li id="go_home">
+                            <a class="icon-label tooltip ghome hddn_desktp" href="https://www.rtve.es/play/"
+                                title="Portada de RTVE Play">
+                                <span class="rtve-icons"></span>
+                                <strong>Inicio</strong>
+                            </a>
+                            <div class="blindBox"></div>
+                        </li>
+                        
+                        
+                        <li id="open_seekr">
+                            <a class="icon-label tooltip seekr" href="/play/buscador/" title="Buscar en RTVE.es">
+                                <span class="rtve-icons"></span>
+                                <strong>Buscar</strong>
+                            </a>
+                            <div class="blindBox"></div>
+                        </li>
+                        
+                        <!--Asociado a mobile / mi-pagina-->
+                        <li id="open_mlist" class="hddn_desktp">
+                            <!-- <a class="icon-label tooltip mlist" href="https://secure2.rtve.es/usuarios/play/mi-pagina" title="Ir a mi lista">
+                                <span class="rtve-icons"></span>
+                                <strong>Mi lista</strong>
+                            </a>
+                            <div class="blindBox"></div> -->
+                        </li>
+                        
+                        <li id="open_users" class="JSfree">
+                            <a class="icon-label tooltip users" href="./"
+                                title="[ventana emergente] acceder al área de usuarios">
+                                <span class="rtve-icons"></span>
+                                <strong>Iniciar sesión</strong>
+                            </a>
+                            <div class="blindBox">
+                                <ul class="usersBox">
+                                    <li class="myContBox">
+                                        <ul>
+                                            <li>
+                                                <a target="_blank" href="https://secure2.rtve.es/usuarios/contenidos/mi-tv/">
+                                                    <strong>Mi TV</strong>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a target="_blank"
+                                                    href="https://secure2.rtve.es/usuarios/contenidos/mi-radio/">
+                                                    <strong>Mi radio</strong>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="myPrefBox">
+                                        <ul>
+                                            <li>
+                                                <a target="_blank" href="https://secure2.rtve.es/usuarios/cuenta/mis-datos/">
+                                                    <strong>Mi cuenta</strong>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="https://secure2.rtve.es/usuarios/cuenta/mis-perfiles/">
+                                                    <strong>Mis perfiles</strong>
+                                                </a>
+                                            </li>
+                                            <li class="playPlus">
+                                                <a href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/">
+                                                    <strong>Suscripción <span>rtveplay+</span></strong>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a target="_blank" href="https://secure2.rtve.es/usuarios/acceso/login-tv/">
+                                                    <strong>Vincular TV</strong>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="myGByeBox">
+                                        <a onClick="GigyaManagerRTVE.logout();" class="icon-label logout">
+                                            <span class="rtve-icons"></span>
+                                            <strong>Cerrar sesión</strong>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        
+                    </ul>
+                </div>
+                <div class="blind" id="burguer_menu" role="button" aria-label="Menú principal" aria-haspopup="true"
+                    tabindex="1">
+                    <span class="icon menu-cross hddn_mobile">
+                        <span></span><span></span><span></span><span></span>
+                    </span>
+                    <span class="icon-label menu hddn_desktp">
+                        <span class="rtve-icons"></span>
+                        <strong>Menú</strong>
+                    </span>
+                </div>
+                
+    <nav class="blindBox" role="navigation" tabindex="1">
+    <ul class="mainTabs" role="tree" aria-labelledby="burger_menu">
+        <li role="none">
+            <a role="treeitem" href="/play/videos/directo/" title="Todos los directos de RTVE">
+                <strong>Directos</strong>
+            </a>
+        </li>
+        <li role="none" class="topMenu">
+            <a role="treeitem" href="/play/cine/" title="El mejor cine en RTVE Play">
+                <strong>Cine</strong>
+            </a>
+        </li>
+        <li role="none" class="topMenu">
+            <a role="treeitem" href="/play/teledeporte/" title="TDP">
+                <strong>TDP</strong>
+            </a>
+        </li>
+        <li role="none" class="topMenu">
+            <a role="treeitem" href="/play/informativos/" title="Programas informativos en RTVE Play">
+                <strong>Informativos</strong>
+            </a>
+        </li>
+        <li role="none" class="topMenu">
+            <a role="treeitem" href="/play/archivo/" title="70 AÑOS">
+                <strong>70 AÑOS</strong>
+            </a>
+        </li>
+        <li role="none">
+            <a role="treeitem" href="/play/en-play/" title="EN PLAY">
+                <strong>EN PLAY</strong>
+            </a>
+        </li>
+        <li role="none" class="topMenu">
+            <a role="treeitem" href="/play/masterchef/" title="MASTERCHEF">
+                <strong>MASTERCHEF</strong>
+            </a>
+        </li>
+        <li role="none" class="topMenu">
+            <a role="treeitem" href="/play/la-revuelta/" title="LA REVUELTA">
+                <strong>LA REVUELTA</strong>
+            </a>
+        </li>
+        <li role="none" class="topMenu">
+            <a role="treeitem" href="/play/series/" title="Todas las series en RTVE Play">
+                <strong>Series</strong>
+            </a>
+        </li>
+        <li role="none" class="topMenu">
+            <a role="treeitem" href="/play/clan/" title="Lo mejor de Clan">
+                <strong>CLAN</strong>
+            </a>
+        </li>
+        <li role="none">
+            <a role="treeitem" href="/play/documentales/" title="DOCUMENTALES">
+                <strong>DOCUMENTALES</strong>
+            </a>
+        </li>
+        <li role="none">
+            <a role="treeitem" href="/play/benidorm-fest/" title="BENIDORM FEST">
+                <strong>BENIDORM FEST</strong>
+            </a>
+        </li>
+        <li role="none">
+            <a role="treeitem" href="/play/playz/" title="PLAYZ">
+                <strong>PLAYZ</strong>
+            </a>
+        </li>
+        <li role="none">
+            <a role="treeitem" href="/play/la-2-cat/" title="Los mejores contenidos en lengua catalana">
+                <strong>LA 2 CAT</strong>
+            </a>
+        </li>
+        <li role="none">
+            <a role="treeitem" href="/participa/es/" title="PARTICIPA">
+                <strong>PARTICIPA</strong>
+            </a>
+        </li>
+        <li role="none">
+            <a role="treeitem" href="/play/noticias-play/" title="NOTICIAS">
+                <strong>NOTICIAS</strong>
+            </a>
+        </li>
+        <li role="none">
+            <a role="treeitem" href="/play/universoplay/" title="Universo Play: Series, documentales y programas">
+                <strong>Universo Play</strong>
+            </a>
+        </li>
+        <li role="none">
+            <a role="treeitem" href="/play/tve-canarias/" title="TVE Canarias">
+                <strong>TVE Canarias</strong>
+            </a>
+        </li>
+        <li role="treeitem" aria-expanded="false">
+            <span class="icon-label openR blind">
+                <span class="rtve-icons"></span>
+                <strong>Otras temáticas</strong>
+            </span>
+            <ul role="group" class="blindBox">
+                <li role="none">
+                    <a role="treeitem" href="/play/entretenimiento/" title="Los mejores programas de entretenimiento en RTVE Play">
+                        <strong>Entretenimiento</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/la-promesa/" title="LA PROMESA">
+                        <strong>LA PROMESA</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/valle-salvaje/" title="VALLE SALVAJE">
+                        <strong>VALLE SALVAJE</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/no-do/" title="NO-DO">
+                        <strong>NO-DO</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/eurovision-junior/" title="EUROVISIÓN JUNIOR">
+                        <strong>EUROVISIÓN JUNIOR</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/cultura/" title="Contenidos divulgativos en RTVE Play">
+                        <strong>Cultura</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/actualidad/" title="MAGACINES">
+                        <strong>MAGACINES</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/radio-3-extra/" title="RADIO 3 EXTRA">
+                        <strong>RADIO 3 EXTRA</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/archivo/" title="Lo mejor del archivo RTVE Play">
+                        <strong>Archivo</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/mujeres/" title="FEMINISMO">
+                        <strong>FEMINISMO</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/orgullo/" title="ORGULLO">
+                        <strong>ORGULLO</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/playz/" title="Lo mejor del nuevo canal digital de RTVE">
+                        <strong>Playz</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/cocina/" title="Recetas y gastronomía en RTVE Play">
+                        <strong>Cocina</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/premios-goya/" title="PREMIOS GOYA">
+                        <strong>PREMIOS GOYA</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/instituto/" title="FORMACIÓN">
+                        <strong>FORMACIÓN</strong>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li role="treeitem" aria-expanded="false">
+            <span class="icon-label openR blind">
+                <span class="rtve-icons"></span>
+                <strong>Canales</strong>
+            </span>
+            <ul role="group" class="blindBox">
+                <li role="none">
+                    <a role="treeitem" href="/play/la-1/" title="La 1">
+                        <strong>La 1</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/la-2/" title="La 2">
+                        <strong>La 2</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/24-horas/" title="24H">
+                        <strong>24 horas</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/teledeporte/" title="Todo el deporte en TDP">
+                        <strong>TELEDEPORTE</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/clan/" title="Clan">
+                        <strong>Clan</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/canales-tematicos/" title="Canales Tematicos">
+                        <strong>Canales Tematicos</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/la-2-cat/" title="Los mejores contenidos en lengua catalana">
+                        <strong>LA 2 CAT</strong>
+                    </a>
+                </li>
+                <li role="none">
+                    <a role="treeitem" href="/play/tve-canarias/" title="Contenidos del centro de producción en Canarias">
+                        <strong>TVE Canarias</strong>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li role="none">
+            <a role="treeitem" href="/play/guia-tve/" title="Navega por la programación de nuestros canales">
+                <strong>Guía TV</strong>
+            </a>
+        </li>
+        <li role="none">
+            <a role="treeitem" href="/play/a-z/" title="Busca alfabéticamente nuestros programas, series, documentales y películas">
+                <strong>A-Z</strong>
+            </a>
+        </li>
+        <li role="separator"></li>
+        <li role="none">
+            <a role="treeitem" href="/" title="Actualidad informativa, deportiva y de entretenimiento en RTVE">
+                <strong>RTVE.es</strong>
+            </a>
+        </li>
+        <li role="none">
+            <a role="treeitem" href="/play/radio/" title="Radio Nacional en RTVE play">
+                <strong>RNE Audio</strong>
+            </a>
+        </li>
+        <li role="none" class="playPlus hddn_desktp hddn_mobile topMenu">
+            <a role="treeitem" href="/play/playplus/" title="Servicio de suscripción rtveplay+" target="_blank">
+                <strong>rtveplay+</strong>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+
+
+            </div>
+        </header>
+    </div>
+    
+    <div class="mainFilter"></div>
+    
+    <main id="topPage" class="wrapper mainbodier">
+        <div class="wrapper bodier">
+            <div class="toplayer"></div>
+            
+<div class="toplayer"></div>
+<div id="contenedordestacado" class="container striplayer" data-outofemission=false data-idasset=16909076>
+    <section class="grid size100">
+        <div class="mainElem" data-id='111570' data-name="Saber vivir" >
+            <div class="cellBox" data-idprograma=111570 data-countries="">
+                <div class="pxv_playPlus">
+   <div class="brandBox">
+      <span class="ima">
+         <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+      </span>
+   </div>
+   <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+      title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+      <span class="rtve-icons"></span>
+      <strong>Acceder</strong>
+   </a>
+   <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+      title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+      <span class="rtve-icons"></span>
+      <strong>Suscribirse</strong>
+   </a>
+</div>
+                <div class="mod serie_mod series">
+                    <div class="mainBox loading">
+                        <div class="content">
+                            <div class="txtBox">
+                                <strong>
+                                    <span class="maintitle">Saber vivir</span>
+                                </strong>
+                                <span class="capBox">
+                                    <span class="season">
+                                        
+                                        <span class="endbar">&nbsp;</span>
+                                    </span>
+                                </span>
+                                <p>Magazine de salud, bienestar y calidad de vida</p>
+                                
+                            </div>
+                            <div class="auxBox">
+                                
+                                    <span class="icon canal tv-la2">
+                                        <span class="rtve-icons" aria-label="La 2">
+                                            La 2
+                                        </span>
+                                    </span>
+                                
+                                <span class="icon redad mas00">
+                                    <span class="rtve-icons">Recomendable para todos los públicos</span>
+                                </span>
+                            </div>
+                            
+                        </div>
+                        <span class="ima">
+                            <div class="spinner">
+								<img src="https://img.rtve.es/css/rtveplay.2021/i/iconos/RTVE-Play-anim.svg">
+                                <div class="spinn">
+                                    <span class="ball01"></span>
+                                    <span class="ball02"></span>
+                                    <span class="ball03"></span>
+                                    <span class="ball04"></span>
+                                </div>
+                            </div>
+
+                            <img class="i_covr" src="https://img.rtve.es/p/111570/imgportada/?w=1600"
+                            alt="En un estudio televisivo, dos hombres vestidos formalmente interactúan con elementos gráficos. Uno sonríe y señala un objeto inusual, mientras que el otro muestra aprobación. El fondo presenta una pantalla con una persona angustiada y un icono emocional.">
+                            
+                            <!--LOGO--><img class="i_logo"
+                                src="https://img.rtve.es/p/111570/logo/?w=320"
+                                alt="Saber vivir">
+                            
+                            <span class="trailerContent" id="mainTrailer">
+                                <!--AQUI INSERTAMOS EL VIDEO-TEASER MEDIANTE JS--></span>
+                        </span>
+                    </div>
+                    <!--URL del video, se gestiona segun el estado de visionado-->
+                    <a class="goto_media"
+                        href="https://www.rtve.es/play/videos/saber-vivir/25-01-26/16909076/"
+                        title="Saber vivir - 25/01/26">
+                        <span class="icon progressBar play">
+                            <strong>
+                                <em>Ver ahora</em>
+                                <span style="width: 100%;"></span>
+                            </strong>
+                        </span>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="111570" data-share='{"programTitle": "Saber vivir", "contentTitle": "Saber vivir - 25/01/26", "url": "https://play.rtve.es/pr/111570/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong>Más opciones</strong>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<div class="container striplayer" data-name="tabsBar">
+    <section class="grid size100">
+        <nav class="slideNav" role="navigation" tabindex="1" data-showF="'true'">
+            <ul class="scndTabs">
+                
+                <li data-tab="details"
+                      class="active"  >
+                    <a href="#"
+                        data-module="/play/videos/modulos/detalles/program/111570/"
+                        title="Información sobre 'Saber vivir'">
+                        <strong>Detalles</strong>
+                    </a>
+                </li>
+                
+
+                
+                <li data-tab="capters"   >
+                    <a href="#"
+                        data-module="/play/videos/modulos/capitulos/111570/?currentpage=pf_serie&fullcontent=true"
+                        title="Temporadas y capítulos de 'Saber vivir'">
+                        
+                            <strong>Episodios</strong>
+                            
+                    </a>
+                </li>
+                
+                
+                
+                <li data-tab="clips">
+                    <a href="#" data-module="/play/videos/modulos/clips/111570/"
+                        title="Otros contenidos de 'Saber vivir'">
+                        <strong>Clips</strong>
+                    </a>
+                </li>
+                
+                
+                
+
+                
+                <li data-tab="noticias">
+                    <a href="#" data-module="/play/videos/modulos/noticias/111570/"
+                        title="Noticias de 'Saber vivir'">
+                        <strong>Noticias</strong>
+                    </a>
+                </li>
+                
+            </ul>
+        </nav>
+    </section>
+</div>
+
+
+    <div class="container stripinbox detailsbox" data-tab="details">
+    <section class="grid size100">
+        <span class="ima">
+            <!--BACKGROUND-->
+            <img class="i_back hddn_desktp" src="https://img.rtve.es/p/111570/imgbackground2/?h=400"
+                alt="Saber vivir" onerror="this.onerror=null;this.src='https://img.rtve.es/p/111570/imgbackground/?h=400';">
+            <!--POSTER-->
+            <img class="i_post hddn_mobile" src="https://img.rtve.es/p/111570/imgposter2/?h=400"
+                alt="Saber vivir" onerror="this.onerror=null;this.src='https://img.rtve.es/p/111570/imgPoster/?h=400';">
+        </span>
+        <div class="resumBox">
+            
+                <strong>Saber vivir</strong>
+            
+            
+            
+                <span class="icon-label redad mas00">
+                    <span class="rtve-icons"></span>
+                    <strong>Recomendable para todos los públicos</strong>
+                </span>
+            
+            
+        </div>
+        
+            <div class="txtBox intro">
+                <strong class="subtitle">Sinopsis</strong>
+                <p><p style="text-align:justify;">Saber Vivir es el programa decano de TVE dedicado a la salud, el bienestar y la calidad de vida. Cumpliendo un servicio p&uacute;blico de calidad, el magazine busca informar, formar y entretener a toda la familia mediante la divulgaci&oacute;n de consejos &uacute;tiles y pr&aacute;cticos para vivir m&aacute;s y mejor. Dichos consejos son ofrecidos siempre por profesionales sanitarios de todos los &aacute;mbitos: medicina, enfermer&iacute;a, nutrici&oacute;n, farmacia, psicolog&iacute;a, fisioterapia y actividad f&iacute;sica. Todas las recomendaciones est&aacute;n basadas en la evidencia cient&iacute;fica y la experiencia cl&iacute;nica de los especialistas que acuden al programa como colaboradores o invitados en cada emisi&oacute;n, con la intervenci&oacute;n de Sergio Fern&aacute;ndez, el chef de TVE, como profesor de cocina casera y saludable. </p></p>
+            </div>
+        
+        
+        <div class="txtBox staff">
+            
+                <strong class="subtitle">Ficha técnica</strong>
+                <dl class="staffBox">
+                    
+                    <dt>Emisión</dt>
+                    <dd>Domingo a las 12:15 horas.</dd>
+                    
+                    
+                        <dt>Presentado por</dt>
+                        <dd>Jero Fernández</dd>
+                    
+                    
+                        <dt>Dirigido por</dt>
+                        <dd>Alfonso García, Jero Fernández</dd>
+                    
+                    
+                        <dt>Producido por</dt>
+                        <dd>Ana Martín., Patricia Ituarte</dd>
+                    
+                    
+                    
+                        <dt>Equipo técnico</dt>
+                        <dd>Alfonso García, Idoya Orzaiz, José Carlos Hernández, Paloma Arroyo, Raúl Hernández, Sergio Fernández, Toñi Alamillos</dd>
+                    
+                    
+                        <dt>Géneros</dt>
+                        <dd>Ciencia y futuro, Cocina</dd>
+                    
+                  
+                    
+                        <dt class="xtrnBox">Saber vivir en redes</dt>
+                        <dd class="redesBox">
+                            
+                            <a class="icon-label tooltip twitt" title="'Saber vivir' en X" href="https://x.com/SaberVivirTVE/" target="_blank">
+                                <span class="rtve-icons"></span>
+                                <strong>@SaberVivirTVE</strong>
+                            </a>
+                            
+                            
+                            
+                            <a class="icon-label tooltip igram" title="'Saber vivir' en Instagram" href="https://www.instagram.com/sabervivir_tve/" target="_blank"> 
+                                <span class="rtve-icons"></span>
+                                <strong>@sabervivir_tve</strong>
+                            </a>
+                            
+                            
+                            
+                        </dd>
+                    
+
+                    
+                        <dt class="xtrnBox">Más información</dt>
+                        <dd>
+                            
+                                <a class="icon-label tooltip otros-logos logo_imdb" target="_blank" href="https://www.imdb.com/title/tt0375434/">
+                                    <span class="rtve-icons"></span>
+                                    
+                                    <strong>IMDb.com</strong>
+                                </a>
+                            
+                            
+                                <a class="icon-label tooltip otros-logos logo_wiki" target="_blank"
+                                    href="https://es.wikipedia.org/wiki/Saber_vivir">
+                                    <span class="rtve-icons"></span>
+                                    <strong>Wikipedia.es</strong>
+                                </a>
+                            
+                            
+                            
+                        </dd>
+                    
+                </dl>
+            
+        </div>
+        <div class="txtBox techs">
+			<dl>
+                
+                    <dt>Idiomas</dt>
+                    <dd>Castellano</dd>
+                
+			</dl>
+		</div>
+    </section>
+</div>
+
+
+
+<div class="container" data-section="relatedsEditorial"
+    data-feed="https://www.rtve.es/api/programas/111570/relacionados.json">
+    <section class="grid size100">
+        <div class="secBox">
+            <h2>
+                <strong>Relacionados con 'Saber vivir'</strong>
+            </h2>
+        </div>
+        <div class="collSet slideBox wariaType JSfree">
+            <div class="controlBox">
+    <span class="back_ beoff" role="button" tabindex="0" aria-controls="slideColmena" aria-label="Página anterior">
+        <img src="https://css.rtve.es/css/rtve.2019/rtve.commons/rtve.modules/rtve.slides/i/arrowL_ffffff.svg" alt="Retroceder">
+    </span>
+    <span class="next_ be_on" role="button" tabindex="0" aria-controls="slideColmena" aria-label="Página siguiente">
+        <img src="https://css.rtve.es/css/rtve.2019/rtve.commons/rtve.modules/rtve.slides/i/arrowR_ffffff.svg" alt="Avanzar">
+    </span>
+</div>
+            <div class="hiveBox slideH" id="relatedsEditorial">
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <ul id="slideColmena" class="monoBox comp_nV elem_00">
+
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031375"}'>
+            <div class="cellBox" data-idprograma=1031375 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/manana-mas-late/"
+                        title="Mañana Más Late">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Mañana Más Late</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-rtve-play">
+            
+            <span class="rtve-icons">RTVE Play</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031375/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Mañana Más Late">
+            <!--POSTER-->
+         <img class="i_post" onerror='errorImg(this);'
+            src="https://img.rtve.es/p/1031375/imgposter/?h=400" data-alternative="fake_nV.jpg"
+            alt="Mañana Más Late">
+            
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031375"
+                        data-share='{"programTitle": "Mañana Más Late", "contentTitle": "Mañana Más Late", "url": "https://www.rtve.es/play/videos/manana-mas-late/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031378"}'>
+            <div class="cellBox" data-idprograma=1031378 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/audios/manana-mas-late/"
+                        title="Mañana Más Late">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Mañana Más Late</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-rne-audio">
+            
+            <span class="rtve-icons">RNE Audio</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                <strong class="maintag"><span>Estreno</span></strong>
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031378/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Mañana Más Late">
+            <!--POSTER-->
+         <img class="i_post" onerror='errorImg(this);'
+            src="https://img.rtve.es/p/1031378/imgposter/?h=400" data-alternative="fake_nV.jpg"
+            alt="Mañana Más Late">
+            
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031378"
+                        data-share='{"programTitle": "Mañana Más Late", "contentTitle": "Mañana Más Late", "url": "https://www.rtve.es/play/audios/manana-mas-late/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031439"}'>
+            <div class="cellBox" data-idprograma=1031439 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/la-cena-de-los-idiotas/"
+                        title="La cena de los idiotas">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">La cena de los idiotas</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-rtve-play">
+            
+            <span class="rtve-icons">RTVE Play</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031439/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="La cena de los idiotas">
+            <!--POSTER-->
+         <img class="i_post" onerror='errorImg(this);'
+            src="https://img.rtve.es/p/1031439/imgposter/?h=400" data-alternative="fake_nV.jpg"
+            alt="La cena de los idiotas">
+            
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031439"
+                        data-share='{"programTitle": "La cena de los idiotas", "contentTitle": "La cena de los idiotas", "url": "https://www.rtve.es/play/videos/la-cena-de-los-idiotas/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031448"}'>
+            <div class="cellBox" data-idprograma=1031448 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/memes-dramas/"
+                        title="Memes &amp; Dramas">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Memes &amp; Dramas</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-rtve-play">
+            
+            <span class="rtve-icons">RTVE Play</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                <strong class="maintag"><span>ESTRENO, A LAS 16:00 H</span></strong>
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031448/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Memes &amp; Dramas">
+            <!--POSTER-->
+         <img class="i_post" onerror='errorImg(this);'
+            src="https://img.rtve.es/p/1031448/imgposter/?h=400" data-alternative="fake_nV.jpg"
+            alt="Memes &amp; Dramas">
+            
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031448"
+                        data-share='{"programTitle": "Memes &amp; Dramas", "contentTitle": "Memes &amp; Dramas", "url": "https://www.rtve.es/play/videos/memes-dramas/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031256"}'>
+            <div class="cellBox" data-idprograma=1031256 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/terapia-abierta/"
+                        title="Terapia abierta">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Terapia abierta</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-la2">
+            
+            <span class="rtve-icons">La 2</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031256/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Terapia abierta">
+            <!--POSTER-->
+         <img class="i_post" onerror='errorImg(this);'
+            src="https://img.rtve.es/p/1031256/imgposter/?h=400" data-alternative="fake_nV.jpg"
+            alt="Terapia abierta">
+            
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031256"
+                        data-share='{"programTitle": "Terapia abierta", "contentTitle": "Terapia abierta", "url": "https://www.rtve.es/play/videos/terapia-abierta/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031343"}'>
+            <div class="cellBox" data-idprograma=1031343 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/vale-ya/"
+                        title="Vale ya!">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Vale ya!</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-rtve-play">
+            
+            <span class="rtve-icons">RTVE Play</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031343/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Vale ya!">
+            <!--POSTER-->
+         <img class="i_post" onerror='errorImg(this);'
+            src="https://img.rtve.es/p/1031343/imgposter/?h=400" data-alternative="fake_nV.jpg"
+            alt="Vale ya!">
+            
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031343"
+                        data-share='{"programTitle": "Vale ya!", "contentTitle": "Vale ya!", "url": "https://www.rtve.es/play/videos/vale-ya/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031346"}'>
+            <div class="cellBox" data-idprograma=1031346 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/close-friends/"
+                        title="Close Friends">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Close Friends</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-rtve-play">
+            
+            <span class="rtve-icons">RTVE Play</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031346/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Close Friends">
+            <!--POSTER-->
+         <img class="i_post" onerror='errorImg(this);'
+            src="https://img.rtve.es/p/1031346/imgposter/?h=400" data-alternative="fake_nV.jpg"
+            alt="Close Friends">
+            
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031346"
+                        data-share='{"programTitle": "Close Friends", "contentTitle": "Close Friends", "url": "https://www.rtve.es/play/videos/close-friends/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031357"}'>
+            <div class="cellBox" data-idprograma=1031357 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/cervells-minims/"
+                        title="Cervells mínims">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Cervells mínims</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-la-2-cat">
+            
+            <span class="rtve-icons">La 2 Cat</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031357/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Cervells mínims">
+            <!--POSTER-->
+         <img class="i_post" onerror='errorImg(this);'
+            src="https://img.rtve.es/p/1031357/imgposter/?h=400" data-alternative="fake_nV.jpg"
+            alt="Cervells mínims">
+            
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031357"
+                        data-share='{"programTitle": "Cervells mínims", "contentTitle": "Cervells mínims", "url": "https://www.rtve.es/play/videos/cervells-minims/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031364"}'>
+            <div class="cellBox" data-idprograma=1031364 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/hitster/"
+                        title="Hitster">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Hitster</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-la1">
+            
+            <span class="rtve-icons">La 1</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031364/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Hitster">
+            <!--POSTER-->
+         <img class="i_post" onerror='errorImg(this);'
+            src="https://img.rtve.es/p/1031364/imgposter/?h=400" data-alternative="fake_nV.jpg"
+            alt="Hitster">
+            
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031364"
+                        data-share='{"programTitle": "Hitster", "contentTitle": "Hitster", "url": "https://www.rtve.es/play/videos/hitster/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031335"}'>
+            <div class="cellBox" data-idprograma=1031335 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/no-solo-debate/"
+                        title="No solo debate">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">No solo debate</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-rtve-play">
+            
+            <span class="rtve-icons">RTVE Play</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031335/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="No solo debate">
+            <!--POSTER-->
+         <img class="i_post" onerror='errorImg(this);'
+            src="https://img.rtve.es/p/1031335/imgposter/?h=400" data-alternative="fake_nV.jpg"
+            alt="No solo debate">
+            
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031335"
+                        data-share='{"programTitle": "No solo debate", "contentTitle": "No solo debate", "url": "https://www.rtve.es/play/videos/no-solo-debate/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031303"}'>
+            <div class="cellBox" data-idprograma=1031303 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/elige-tu-banda/"
+                        title="Elige tu banda">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Elige tu banda</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-rne-audio">
+            
+            <span class="rtve-icons">RNE Audio</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031303/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Elige tu banda">
+            <!--POSTER-->
+        
+            <img class="i_post" onerror='errorImg(this);'
+            data-src="https://img.rtve.es/p/1031303/imgposter/?h=400"
+            data-alternative="fake_nV.jpg" alt="Elige tu banda">
+        
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031303"
+                        data-share='{"programTitle": "Elige tu banda", "contentTitle": "Elige tu banda", "url": "https://www.rtve.es/play/videos/elige-tu-banda/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031319"}'>
+            <div class="cellBox" data-idprograma=1031319 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/control-central/"
+                        title="Control central">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Control central</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-rtve-play">
+            
+            <span class="rtve-icons">RTVE Play</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031319/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Control central">
+            <!--POSTER-->
+        
+            <img class="i_post" onerror='errorImg(this);'
+            data-src="https://img.rtve.es/p/1031319/imgposter/?h=400"
+            data-alternative="fake_nV.jpg" alt="Control central">
+        
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031319"
+                        data-share='{"programTitle": "Control central", "contentTitle": "Control central", "url": "https://www.rtve.es/play/videos/control-central/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031334"}'>
+            <div class="cellBox" data-idprograma=1031334 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/audios/paisajes-y-jardines/"
+                        title="Paisajes y jardines">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Paisajes y jardines</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-radio-5">
+            
+            <span class="rtve-icons">Radio 5</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031334/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Paisajes y jardines">
+            <!--POSTER-->
+        
+            <img class="i_post" onerror='errorImg(this);'
+            data-src="https://img.rtve.es/p/1031334/imgposter/?h=400"
+            data-alternative="fake_nV.jpg" alt="Paisajes y jardines">
+        
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031334"
+                        data-share='{"programTitle": "Paisajes y jardines", "contentTitle": "Paisajes y jardines", "url": "https://www.rtve.es/play/audios/paisajes-y-jardines/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031075"}'>
+            <div class="cellBox" data-idprograma=1031075 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/fomo-total/"
+                        title="Fomo total">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Fomo total</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-rtve-play">
+            
+            <span class="rtve-icons">RTVE Play</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031075/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Fomo total">
+            <!--POSTER-->
+        
+            <img class="i_post" onerror='errorImg(this);'
+            data-src="https://img.rtve.es/p/1031075/imgposter/?h=400"
+            data-alternative="fake_nV.jpg" alt="Fomo total">
+        
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031075"
+                        data-share='{"programTitle": "Fomo total", "contentTitle": "Fomo total", "url": "https://www.rtve.es/play/videos/fomo-total/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031215"}'>
+            <div class="cellBox" data-idprograma=1031215 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/cosas-nuestras/"
+                        title="Cosas nuestras">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Cosas nuestras</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-la1">
+            
+            <span class="rtve-icons">La 1</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                <strong class="maintag"><span>GRAN ESTRENO</span></strong>
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031215/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Cosas nuestras">
+            <!--POSTER-->
+        
+            <img class="i_post" onerror='errorImg(this);'
+            data-src="https://img.rtve.es/p/1031215/imgposter/?h=400"
+            data-alternative="fake_nV.jpg" alt="Cosas nuestras">
+        
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031215"
+                        data-share='{"programTitle": "Cosas nuestras", "contentTitle": "Cosas nuestras", "url": "https://www.rtve.es/play/videos/cosas-nuestras/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031217"}'>
+            <div class="cellBox" data-idprograma=1031217 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/audios/rtve-innova-en-radio-5/"
+                        title="RTVE Innova en Radio 5">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">RTVE Innova en Radio 5</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-radio-5">
+            
+            <span class="rtve-icons">Radio 5</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031217/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="RTVE Innova en Radio 5">
+            <!--POSTER-->
+        
+            <img class="i_post" onerror='errorImg(this);'
+            data-src="https://img.rtve.es/p/1031217/imgposter/?h=400"
+            data-alternative="fake_nV.jpg" alt="RTVE Innova en Radio 5">
+        
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031217"
+                        data-share='{"programTitle": "RTVE Innova en Radio 5", "contentTitle": "RTVE Innova en Radio 5", "url": "https://www.rtve.es/play/audios/rtve-innova-en-radio-5/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031169"}'>
+            <div class="cellBox" data-idprograma=1031169 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/sin-plan/"
+                        title="Sin Plan">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Sin Plan</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-la2">
+            
+            <span class="rtve-icons">La 2</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031169/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Sin Plan">
+            <!--POSTER-->
+        
+            <img class="i_post" onerror='errorImg(this);'
+            data-src="https://img.rtve.es/p/1031169/imgposter/?h=400"
+            data-alternative="fake_nV.jpg" alt="Sin Plan">
+        
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031169"
+                        data-share='{"programTitle": "Sin Plan", "contentTitle": "Sin Plan", "url": "https://www.rtve.es/play/videos/sin-plan/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031187"}'>
+            <div class="cellBox" data-idprograma=1031187 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/juego-de-naciones/"
+                        title="Juego de Naciones">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Juego de Naciones</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-la1">
+            
+            <span class="rtve-icons">La 1</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031187/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Juego de Naciones">
+            <!--POSTER-->
+        
+            <img class="i_post" onerror='errorImg(this);'
+            data-src="https://img.rtve.es/p/1031187/imgposter/?h=400"
+            data-alternative="fake_nV.jpg" alt="Juego de Naciones">
+        
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031187"
+                        data-share='{"programTitle": "Juego de Naciones", "contentTitle": "Juego de Naciones", "url": "https://www.rtve.es/play/videos/juego-de-naciones/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1031055"}'>
+            <div class="cellBox" data-idprograma=1031055 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/el-otro-castillo/"
+                        title="El otro castillo">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">El otro castillo</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-rne-audio">
+            
+            <span class="rtve-icons">RNE Audio</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1031055/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="El otro castillo">
+            <!--POSTER-->
+        
+            <img class="i_post" onerror='errorImg(this);'
+            data-src="https://img.rtve.es/p/1031055/imgposter/?h=400"
+            data-alternative="fake_nV.jpg" alt="El otro castillo">
+        
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1031055"
+                        data-share='{"programTitle": "El otro castillo", "contentTitle": "El otro castillo", "url": "https://www.rtve.es/play/videos/el-otro-castillo/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+    
+        <li class="elem_nV getoff" data-setup='{"tipo":"programa","id":"1030637"}'>
+            <div class="cellBox" data-idprograma=1030637 data-countries="">
+                
+    <div class="pxv_playPlus">
+        <div class="brandBox">
+            <span class="ima">
+                <img class="i_logo" src="https://css.rtve.es/css/rtve.2021/i/rtve-logos/logos_plus/logo_playPlus_ffffff.svg" alt="">
+            </span>
+        </div>
+        <a class="icon-label open_plus" href="https://secure2.rtve.es/usuarios/acceso/login/"
+            title="[ventana emergente] Ya estoy suscrito a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Acceder</strong>
+        </a>
+        <a class="icon-label subs_plus" href="https://secure2.rtve.es/usuarios/cuenta/mi-suscripcion/"
+            title="[ventana emergente] Quiero suscribirme a RTVE Play+">
+            <span class="rtve-icons"></span>
+            <strong>Suscribirse</strong>
+        </a>
+    </div>
+
+                <div class="mod serie_mod series">
+                    <a href="https://www.rtve.es/play/videos/fatal-gracias/"
+                        title="Fatal, gracias">
+                        <div class="5 mainBox">
+                            <div class="content">
+                                
+    <div class="txtBox">
+        <strong>
+            <h3>
+                <span class="maintitle">Fatal, gracias</span>
+            </h3>
+        </strong>
+        
+        
+    </div>
+
+                                
+    <div class="auxBox">
+        <span class="icon canal tv-rne-audio">
+            
+            <span class="rtve-icons">RNE Audio</span>
+            
+        </span>
+        <span class="icon redad ">
+            
+        </span>
+        <span class="icon _info">
+            <span class="rtve-icons">+info</span>
+        </span>
+    </div>
+
+                                
+                            </div>
+                            
+    <span class="ima">
+        <!--PORTADA--><img class="i_covr" onerror='errorImg(this);' src="https://img.rtve.es/p/1030637/imgportada/?h=400" data-alternative="fake_nV.jpg"
+            alt="Fatal, gracias">
+            <!--POSTER-->
+        
+            <img class="i_post" onerror='errorImg(this);'
+            data-src="https://img.rtve.es/p/1030637/imgposter/?h=400"
+            data-alternative="fake_nV.jpg" alt="Fatal, gracias">
+        
+    </span>
+
+                            
+    <div class="trailerControls">
+        <button class="icon" name="muter" title="Encender sonido">
+            <!--vjs-vol-2-->
+            <span class="rtve-icons"></span>
+        </button>
+        <button class="icon" name="player" title="Pausar vídeo">
+            <!--vjs-paused-->
+            <span class="rtve-icons"></span>
+        </button>
+    </div>
+
+                        </div>
+                    </a>
+                    <span class="icon-label extra tooltip blind tres_botones" data-id="1030637"
+                        data-share='{"programTitle": "Fatal, gracias", "contentTitle": "Fatal, gracias", "url": "https://www.rtve.es/play/videos/fatal-gracias/"}'>
+                        <span class="rtve-icons"></span>
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+        </li>
+    
+    
+</ul>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<!-- CARRUSEL RECOMENDACIONES -->
+
+
+    <div class="container" data-section="relatedsLike" data-feed="https://recomsys.rtve.es/recommendation/contents?source=web&amp;item=/pr/111570" style="display:none">
+        <section class="grid size100">
+            <div class="secBox">
+                <h2>
+                    <strong>Si te gustó Saber vivir, te gustará...</strong>
+                </h2>
+            </div>
+            <div class="collSet slideBox wariaType JSfree">
+                <div class="controlBox">
+    <span class="back_ beoff" role="button" tabindex="0" aria-controls="slideColmena" aria-label="Página anterior">
+        <img src="https://css.rtve.es/css/rtve.2019/rtve.commons/rtve.modules/rtve.slides/i/arrowL_ffffff.svg" alt="Retroceder">
+    </span>
+    <span class="next_ be_on" role="button" tabindex="0" aria-controls="slideColmena" aria-label="Página siguiente">
+        <img src="https://css.rtve.es/css/rtve.2019/rtve.commons/rtve.modules/rtve.slides/i/arrowR_ffffff.svg" alt="Avanzar">
+    </span>
+</div>
+                <div class="hiveBox slideH" id="relatedsLike">
+
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+
+
+<!-- Estadisticas -->
+<div id="stats" class="hddn" style="display: none;">
+    <span id="ganalytics" data-content="/television/programas-de-tve/magacin/saber-vivir/?cad=CTV_LA2"></span>
+    <span id="comscore" data-content="/television/programas-de-tve/magacin/saber-vivir/?cad=CTV_LA2"></span>
+    <span id="omniture" data-json='{"eVar2":"WEB","eVar3":"Television","eVar4":"Programas de TVE","eVar5":"Magacin","eVar6":"Saber vivir","channel":"Television","hier1":"WEB |Television|Programas de TVE|Magacin|Saber vivir","eVar61":"136650","eVar62":"Ciencia y futuro"}'></span>
+    <span id="usertracker" data-json='{"digitalData":{"pageInstanceID":"https://www.rtve.es/pr/111570/","page":{"pageInfo":{"language":"es-ES","pageID":"111570","title":"Saber vivir","sysEnv":"web"},"category":{"channel":"la2","pageType":"programa","primaryCategory":"Television/Programas de TVE/Magacin/Saber vivir"}}}}'></span>
+</div>
+
+
+        </div>
+    </main>
+    
+    
+    <footer class="wrapper footer" id="footer">
+        
+            
+                <div class="container">
+    <div class="infoBox">
+        <a target="_blank" class="butt info" href="https://www.rtve.es/components/play/ayuda/index.shtml">
+            <strong class="label">Ayuda</strong>
+        </a>
+    </div>
+    <div class="portalsBox">
+        <a class="icon-label tooltip logo-rtve" href="https://www.rtve.es/" aria-label="Portada de RTVE">
+            <span class="rtve-icons"></span>
+            <strong>RTVE.es</strong>
+        </a>
+        <a class="icon-label tooltip logo-rtveplay collapse" href="https://www.rtve.es/play/" aria-label="Portada de RTVE Play">
+            <span class="rtve-icons"></span>
+            <strong>RTVE Play</strong>
+        </a>
+        <a class="icon-label tooltip logo-playradio" href="https://www.rtve.es/play/radio/" aria-label="Portada de RTVE Audio">
+            <span class="rtve-icons"></span>
+            <strong>RTVE Audio</strong>
+        </a>
+        <a class="icon-label tooltip logo-clan" href="https://www.rtve.es/play/clan/" aria-label="Portada de Clan">
+            <span class="rtve-icons"></span>
+            <strong>Clan</strong>
+        </a>
+    </div>
+    <div role="contentinfo">
+        <ul>
+            <li>
+                <a target="_blank" title="Se abre p&amp;aacute;gina nueva" aria-label="Condiciones de utilizaci&amp;oacute;n del sitio RTVE.es" href="https://www.rtve.es/comunes/aviso_legal.html" tentacle-id="d591163f53933a310b33-152">
+                    <span>Aviso legal</span>
+                </a>
+            </li>
+            <li>
+                <a target="_blank" title="Se abre p&amp;aacute;gina nueva" aria-label="Pol&amp;iacute;tica de RTVE sobre el tratamiento de datos personales" href="https://www.rtve.es/comunes/politica_privacidad.html" tentacle-id="c9177102b9f74f51b07c-153">
+                    <span>Política de privacidad</span>
+                </a>
+            </li>
+            <li>
+                <a target="_blank" title="Se abre p&amp;aacute;gina nueva" aria-label="Pol&amp;iacute;tica de RTVE sobre el tratamiento de datos cookies" href="https://www.rtve.es/comunes/politica_cookies.html" tentacle-id="c5b030e8f6a0570b5721-154">
+                    <span>Política de cookies</span>
+                </a>
+            </li>
+            <li>
+                <a target="_blank" title="Se abre p&amp;aacute;gina nueva" aria-label="P&amp;aacute;gina sobre la accesibilidad del Portal de RTVE.es" href="https://www.rtve.es/comunes/accesibilidad.shtml" tentacle-id="4fd7a1a55d123fcd1abc-155">
+                    <span>Accesibilidad</span>
+                </a>
+            </li>
+            <li>
+                <a target="_blank" title="Se abre p&amp;aacute;gina nueva" aria-label="Mapa del sitio RTVE.es" href="https://www.rtve.es/mapa-web/" tentacle-id="5d9fd9b7eb25414d97ba-156">
+                    <span>Mapa web</span>
+                </a>
+            </li>
+            <li>
+                <a target="_blank" title="Se abre p&amp;aacute;gina nueva" aria-label="Preguntas frecuentes, direcciones de contacto de la Corporaci&amp;oacute;n RTVE.es, Oficina del Defensor" href="https://www.rtve.es/faqs/" tentacle-id="2849995b270c530fd80f-157">
+                    <span>Contacto</span>
+                </a>
+            </li>
+            <li>
+                <a target="_blank" title="Se abre p&amp;aacute;gina nueva" aria-label="Pol&amp;iacute;tica de RTVE.es sobre comentarios y participaci&amp;oacute;n social de usuarios" href="https://www.rtve.es/comunes/normas_participacion.shtml" tentacle-id="2392745a2bbc021ee386-158">
+                    <span>Normas de Participación</span>
+                </a>
+            </li>
+        </ul>
+        <ul>
+            <li>
+                <a href="https://europa.eu/next-generation-eu/index_es" target="_blank" title="[ventana emergente] Plan Europeo Next Generation">
+                    <span class="icon-label financiacion">
+                        <span class="rtve-icons"></span>
+                        <strong>Financiación Europea</strong>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="https://planderecuperacion.gob.es/" target="_blank" title="[ventana emergente] Plan de recuperaci&amp;oacute;n con fondos europeos. Gobierno de Espa&amp;ntilde;a">
+                    <span class="icon-label recuperacion">
+                        <span class="rtve-icons"></span>
+                        <strong>Plan de recuperación</strong>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="https://spainaudiovisualhub.mineco.gob.es/es/home" target="_blank" title="[ventana emergente] Bienvenido a Espa&amp;ntilde;a Hub Audiovisual de Europa">
+                    <span class="icon-label spainaudiohub">
+                        <span class="rtve-icons"></span>
+                        <strong>España Hub Audiovisual de Europa</strong>
+                    </span>
+                </a>
+            </li>
+        </ul>
+        <span itemscope="" itemtype="https://schema.org/CreativeWork">
+            <a itemprop="url" target="_blank" href="https://www.rtve.es/corporacion/">
+                <span itemprop="copyrightHolder">©</span>
+                <strong>Corporación de Radio y Televisión Española 2026</strong>
+            </a>
+        </span>
+    </div>
+    <div class="redesBox">
+        <a target="_blank" class="icon-label tooltip fbook" href="https://www.facebook.com/rtve" aria-label="RTVE en Facebook.">
+            <span class="rtve-icons"></span>
+            <strong>Facebook</strong>
+        </a>
+        <a target="_blank" class="icon-label tooltip twitt" href="https://twitter.com/rtve" aria-label="RTVE en Twitter">
+            <span class="rtve-icons"></span>
+            <strong>Twitter</strong>
+        </a>
+        <a target="_blank" class="icon-label tooltip ytube" href="https://www.youtube.com/channel/UCqlsTzBv49Uiu8Z3IseVgQQ" aria-label="RTVE en Youtube">
+            <span class="rtve-icons"></span>
+            <strong>Youtube</strong>
+        </a>
+        <a target="_blank" class="icon-label tooltip igram dr" href="https://www.instagram.com/rtve" aria-label="RTVE en Instagram">
+            <span class="rtve-icons"></span>
+            <strong>Instagram</strong>
+        </a>
+    </div>
+</div>
+
+            
+        
+    </footer>
+    
+    <div class="wrapper botlayer"></div>
+    
+    
+    
+    <script data-main="https://js.rtve.es/pages/pf-programas-tve/1.50.0/js/config" src="https://js.rtve.es/pages/pf-programas-tve/1.50.0/js/vendor/require.js" ></script>    
+    <script>
+
+        window.RTVE = window.RTVE || {}
+        window.RTVE.gigyaApiKey = '3_MVrnwOzwUbykkDXOuSGkJfyMFEpG8k4MI3A66RsIKg91icSRNMZ4XnfzYXsU6cmm';
+        window.RTVE.sDomain = 'https://secure2.rtve.es';
+        //Añadido para poder hacer la carga de GTM en js
+        window.RTVE.uidtm = 'GTM-XGJJ';
+        //Añadido para login-qr en dispositivos BMW
+        window.RTVE.loginQRUA = 'Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/573.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 BMW/124' || [];
+        
+        
+
+    window.RTVE.apiztnr = 'https://api.rtve.es'
+    window.RTVE.globalUrl = ''
+
+
+        var linkToClipboard = function (link, event) {
+            var el = document.createElement('textarea');
+            var parentLI = $(event.target).parent().parent();
+            el.value = link;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            parentLI.addClass("showInfo");
+            setTimeout(function () {
+                parentLI.removeClass("showInfo");
+            }, 3000);
+        }
+
+        var setUserLocale = function($){
+            var url = 'https://includesweb.rtve.es/locale.json';
+            if (window.location.host !== "www.rtve.es" && window.location.host !== "https://www-org.rtve.es") {
+                url = 'https://includesweb.rtve.es/locale-pre.json';
+            }
+            $.ajax({   
+                method: 'GET',
+                async: false,
+                url: url,
+                xhrFields: {
+                    withCredentials: true
+                },
+                timeout: 3000,
+                success: function(data) {
+                    if (data.locale) {
+                        $('body').attr('data-locale', data.locale)
+                    }
+
+                    if (data.region) {
+                        $('body').attr('data-region', data.region)
+                    }
+
+                    if (data.utcoffset) {
+                        $('body').attr('data-utcoffset', data.utcoffset)
+                    }
+                },
+                error: function(err) {
+                    console.log(err)
+                }
+            });
+        }
+
+        var favouritesList = [],
+                defaultList = [];
+        
+        document.addEventListener('DOMContentLoaded', function (event) {
+            document.body.classList.add("loaded");
+
+            //Link login
+            document.getElementById('open_users').getElementsByClassName('users')[0].href = '#'; //window.RTVE.sDomain + '/usuarios/acceso/login?callbackUrl=' + encodeURIComponent(window.location.href);   
+
+            /** Se comprueba si un elemento concreto del HTML común a todo el portal de RTVE PLAY está visible
+             * (Puesto que sólo será visible cuando la versión consultada sea la mobile) para deducir si la página
+             * consultada es en versión mobile o desktop */
+
+            /* Asociado a mobile / mi-pagina */
+            if (window.getComputedStyle(document.getElementById('open_mlist')).display === 'none') {
+                var items = document.getElementsByClassName('JSfree');
+
+                for (var i = items.length - 1; i >= 0; i--) {
+                    items[i].classList.remove('JSfree');
+                }
+            }
+        });
+
+        requirejs(['tabs', 'gigyaManager', 'vendor/jquery', 'shareAndFavorite', 'elementsHoverMechanism', 'pagination', 'initUserServices'], function (tabs, gigyaManager, $, shareAndFavorite, elementsHoverMechanism, pagination, initUserServices) {
+            setUserLocale($)
+            // Evitamos multiples clicks
+            var processingTresBotones = false; 
+            //Mecanismo para cargar asíncronamente las opciones de los 3 botones de cada elemento
+            $(document).on('click', '.tres_botones:not(.active)', function () {
+                
+                if(processingTresBotones) return;
+                
+                processingTresBotones = true;
+                
+                var clickedButton = $(this);
+                
+                function callShareAndFavorite(programAlreadyAdded, mediaAlreadyAdded, isUserLogged, isKW) {
+                    
+                    var configurationToLoadOptions = {
+                        programAlreadyAdded: programAlreadyAdded,
+                        mediaAlreadyAdded: mediaAlreadyAdded,
+                        shareConfig: clickedButton.data('share')
+                    }
+
+                    var shareAndFavoriteHtml = shareAndFavorite(clickedButton.data(), isUserLogged, configurationToLoadOptions, isKW)
+                    
+                    $(shareAndFavoriteHtml)
+                    .addClass('be_on')
+                    .insertAfter($(clickedButton));
+
+                    clickedButton.addClass('active')
+                    clickedButton.removeClass('loading-options')
+                    processingTresBotones = false
+                }
+
+                //Si la página consultada es versión mobile
+                if (window.getComputedStyle(document.getElementById('open_mlist')).display !== 'none') {
+                    $('body').addClass('locked');
+                }
+
+                $(clickedButton).closest('div.container').addClass('open_extra');
+
+                if (!$(clickedButton).next('.blindBox.toolBox').length) {
+
+                    var type = clickedButton.data('idasset') && clickedButton.data('tipo')
+                    clickedButton.addClass('loading-options')
+                    if (gigyaManager.userAlreadyLogged() && window.RTVE.user) {
+
+                        gigyaManager.refreshCookies(function (err, resp) {
+                            if (type === "video" || type === "audio"){
+
+                                //Seguir viendo
+                                var isKW = $(clickedButton).closest('.keepWatching').length ? true : false;
+
+                                if (isKW) {
+                                    gigyaManager.getFavouritesById(clickedButton.data('id'), function(favouriteData){
+                                        var isProgramInList = favouriteData.page.numElements > 0 ? 1 : -1
+                                        callShareAndFavorite(isProgramInList, -1, true, isKW)
+                                    }, 
+                                    function(error) { 
+                                        console.log(error);
+                                        callShareAndFavorite(-1, -1, true, isKW);
+                                    });
+                                } else {
+                                    gigyaManager.getSpecificListById(window.RTVE.user.profile.id, clickedButton.data('idasset'), type, function(listData){
+                                        var isAssetInList = listData.page.numElements > 0 ? 1 : -1
+                                        
+                                        if(isAssetInList !== -1 && defaultList.indexOf(clickedButton.data('idasset').toString()) === -1) {
+                                            defaultList.push(clickedButton.data('idasset').toString())
+                                        }
+
+                                        if(clickedButton.data('id')){
+
+                                            gigyaManager.getFavouritesById(clickedButton.data('id'), function(favouriteData){
+
+                                                    var isProgramInList = favouriteData.page.numElements > 0 ? 1 : -1
+
+                                                    if(isProgramInList !== -1 && favouritesList.indexOf(clickedButton.data('id').toString()) === -1){
+                                                        favouritesList.push(clickedButton.data('id').toString())  
+                                                    } 
+
+                                                    callShareAndFavorite(isProgramInList, isAssetInList, true)
+                                                }, 
+                                                function(error) { 
+                                                    console.log(error);
+                                                    callShareAndFavorite(-1, listData.page.numElements > 0 ? 1 : -1, true);
+                                                }
+                                            )   
+                                        }else{
+                                            callShareAndFavorite( -1, listData.page.numElements > 0 ? 1 : -1, true)
+                                        }
+                                    }, 
+                                    function(error) { 
+                                        console.log(error);
+                                        callShareAndFavorite(-1, -1, true);
+                                    });
+                                }
+                                
+                            }else{
+
+                                gigyaManager.getFavouritesById(
+                                    clickedButton.data('id'), 
+                                    function(data){
+                                        var isProgramInList = data.page.numElements > 0 ? 1 : -1
+                                        
+                                        if(isProgramInList !== -1 && favouritesList.indexOf(clickedButton.data('id').toString()) === -1){
+                                            favouritesList.push(clickedButton.data('id').toString())  
+                                        } 
+
+                                        callShareAndFavorite(isProgramInList, -1, true)
+                                    }, 
+                                    function(error) { 
+                                        console.log(error);
+                                        callShareAndFavorite(-1, -1, true);
+                                })
+                            }
+
+                        })
+                    }
+                    else {
+                        setTimeout(function(){
+                            callShareAndFavorite(-1, -1, false);
+                        }, 300)
+                    }
+                }else{
+                    processingTresBotones = false
+                }
+            });
+
+            $(document).on('click', '.tres_botones.active', function () {
+                var clickedButton = $(this);
+
+                //Si la página consultada es versión mobile
+                if (window.getComputedStyle(document.getElementById('open_mlist')).display !== 'none') {
+                    $('body').removeClass('locked');
+                }
+
+                $(clickedButton).closest('div.container').removeClass('open_extra');
+                $(clickedButton).removeClass('active')
+                $(clickedButton).next('.blindBox.toolBox').remove();
+            });
+
+            initUserServices();
+
+            elementsHoverMechanism();
+
+            setTimeout(function () {
+                $("#mainNav div[role='banner'] a.icon:first").addClass("collapse")
+            }, 1000)
+
+        });
+
+    </script>
+    
+    
+    
+    
+    
+    
+</body>
+
+</html>

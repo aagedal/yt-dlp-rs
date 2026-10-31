@@ -1,0 +1,17 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://jedynka.polskieradio.pl/artykul/1587943",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1587943\", \"title\": \"Prof. Andrzej Nowak: o historii nie da si\\u0119 my\\u015ble\\u0107 beznami\\u0119tnie\", \"description\": \"- O polskiej historii nie da si\\u0119 my\\u015ble\\u0107 bez wchodzenia w ten emocjonuj\\u0105cy sp\\u00f3r, co by\\u0142o dobre, a co z\\u0142e, co by\\u0142o b\\u0142\\u0119dem, a co by\\u0142o s\\u0142uszn\\u0105 decyzj\\u0105 - m\\u00f3wi profesor Andrzej Nowak.\", \"_type\": \"playlist\", \"entries\": [{\"url\": \"https://static.prsa.pl/7a85d429-5356-4def-a347-925e4ae7406b.file\", \"ext\": \"mp3\", \"id\": \"7a85d429-5356-4def-a347-925e4ae7406b\", \"title\": \"Profesor Andrzej Nowak opowiada o swojej fascynacji histori\\u0105 i wyzwaniach stoj\\u0105cych przed badaczami dziej\\u00f3w (Historia \\u017cywa/Jedynka)\", \"playlist_count\": 1, \"playlist\": \"Prof. Andrzej Nowak: o historii nie da si\\u0119 my\\u015ble\\u0107 beznami\\u0119tnie\", \"playlist_id\": \"1587943\", \"playlist_title\": \"Prof. Andrzej Nowak: o historii nie da si\\u0119 my\\u015ble\\u0107 beznami\\u0119tnie\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://jedynka.polskieradio.pl/artykul/1587943\", \"n_entries\": 1, \"webpage_url\": \"https://jedynka.polskieradio.pl/artykul/1587943\", \"webpage_url_basename\": \"1587943\", \"webpage_url_domain\": \"jedynka.polskieradio.pl\", \"playlist_index\": 1, \"__last_playlist_index\": 1, \"extractor\": \"PolskieRadio\", \"extractor_key\": \"PolskieRadio\", \"playlist_autonumber\": 1, \"display_id\": \"7a85d429-5356-4def-a347-925e4ae7406b\", \"fulltitle\": \"Profesor Andrzej Nowak opowiada o swojej fascynacji histori\\u0105 i wyzwaniach stoj\\u0105cych przed badaczami dziej\\u00f3w (Historia \\u017cywa/Jedynka)\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Profesor Andrzej Nowak opowiada o swojej fascynacji histori\\u0105 i wyzwaniach stoj\\u0105cych przed badaczami dziej\\u00f3w (Historia \\u017cywa\\u29f8Jedynka) [7a85d429-5356-4def-a347-925e4ae7406b].mp3\", \"filename\": \"Profesor Andrzej Nowak opowiada o swojej fascynacji histori\\u0105 i wyzwaniach stoj\\u0105cych przed badaczami dziej\\u00f3w (Historia \\u017cywa\\u29f8Jedynka) [7a85d429-5356-4def-a347-925e4ae7406b].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://jedynka.polskieradio.pl/artykul/1587943\", \"original_url\": \"https://jedynka.polskieradio.pl/artykul/1587943\", \"webpage_url_basename\": \"1587943\", \"webpage_url_domain\": \"jedynka.polskieradio.pl\", \"extractor\": \"PolskieRadio\", \"extractor_key\": \"PolskieRadio\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

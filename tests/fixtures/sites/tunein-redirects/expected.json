@@ -1,0 +1,31 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://tunein.com/embed/player/s34682/",
+   "args": [
+    "--print",
+    "%(id)s|%(alt_title)s|%(live_status)s|%(location)s|%(formats.:.format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "s34682|World Class Jazz|is_live|Seattle-Tacoma, US|['0']"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://tun.in/ser7s",
+   "args": [
+    "--print",
+    "%(id)s|%(alt_title)s|%(live_status)s|%(location)s|%(formats.:.format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "s34682|World Class Jazz|is_live|Seattle-Tacoma, US|['0']"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

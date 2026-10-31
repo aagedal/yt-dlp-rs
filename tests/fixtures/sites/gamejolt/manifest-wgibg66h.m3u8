@@ -1,0 +1,11 @@
+#EXTM3U
+## Generated with https://github.com/google/shaka-packager version v2.4.3-dd98700-release
+
+#EXT-X-MEDIA:TYPE=AUDIO,URI="1080p-vyunqe54.audio-stream.m3u8",GROUP-ID="default-audio-group",NAME="stream_0",AUTOSELECT=YES,CHANNELS="2"
+
+#EXT-X-STREAM-INF:BANDWIDTH=245385,AVERAGE-BANDWIDTH=246774,CODECS="avc1.4d401f,mp4a.40.2",RESOLUTION=854x480,FRAME-RATE=30.000,AUDIO="default-audio-group"
+480p-ztncvic3.video-stream.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=475296,AVERAGE-BANDWIDTH=475777,CODECS="avc1.4d401f,mp4a.40.2",RESOLUTION=1280x720,FRAME-RATE=30.000,AUDIO="default-audio-group"
+720p-wjv6hhgp.video-stream.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=1337885,AVERAGE-BANDWIDTH=1179367,CODECS="avc1.640028,mp4a.40.2",RESOLUTION=1920x1080,FRAME-RATE=30.000,AUDIO="default-audio-group"
+1080p-vyunqe54.video-stream.m3u8

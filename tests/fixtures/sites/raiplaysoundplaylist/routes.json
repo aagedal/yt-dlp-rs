@@ -1,0 +1,11 @@
+{
+  "routes": [
+    {
+      "url": "https://www.raiplaysound.it/programmi/ilruggitodelconiglio.json",
+      "headers": {
+        "Content-Type": "application/json;charset=UTF-8"
+      },
+      "body_file": "6b666c25368e.bin"
+    }
+  ]
+}

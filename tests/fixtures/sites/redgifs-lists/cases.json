@@ -1,0 +1,32 @@
+[
+ {
+  "url": "https://www.redgifs.com/browse?tags=Lesbian",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.redgifs.com/users/lamsinka89",
+  "args": [
+   "--flat-playlist",
+   "-I",
+   "1:2",
+   "--print",
+   "%(playlist_index)s|%(id)s|%(title)s"
+  ]
+ },
+ {
+  "url": "https://www.redgifs.com/users/lamsinka89",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.redgifs.com/browse?order=latest",
+  "args": [
+   "-J"
+  ]
+ }
+]

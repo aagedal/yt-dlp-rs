@@ -1,0 +1,120 @@
+{
+  "data" : {
+    "attributes" : {
+      "markers" : {
+        "videoAboutToEnd" : 2494989
+      },
+      "reportProgressInterval" : 60000,
+      "ssaiInfo" : {
+        "adMetadataSchemaVersion" : "",
+        "forecastTimeline" : [ {
+          "event" : {
+            "action" : "streamInitiate",
+            "schema" : "playback"
+          },
+          "time" : {
+            "contentPosition" : 0.0,
+            "streamPosition" : 0.0
+          },
+          "triggerTime" : 0.0
+        }, {
+          "event" : {
+            "action" : "start",
+            "schema" : "playback"
+          },
+          "time" : {
+            "contentPosition" : 0.0,
+            "streamPosition" : 0.0
+          },
+          "triggerTime" : 0.001
+        }, {
+          "event" : {
+            "action" : "start",
+            "duration" : 2525.022,
+            "position" : 0,
+            "schema" : "chapter"
+          },
+          "time" : {
+            "contentPosition" : 0.0,
+            "streamPosition" : 0.0
+          },
+          "triggerTime" : 0.002
+        }, {
+          "event" : {
+            "action" : "complete",
+            "duration" : 2525.022,
+            "position" : 0,
+            "schema" : "chapter"
+          },
+          "time" : {
+            "contentPosition" : 2525.022,
+            "streamPosition" : 2525.022
+          },
+          "triggerTime" : 2525.022
+        }, {
+          "event" : {
+            "action" : "complete",
+            "schema" : "playback"
+          },
+          "time" : {
+            "contentPosition" : 2525.022,
+            "streamPosition" : 2525.022
+          },
+          "triggerTime" : 2525.023
+        }, {
+          "event" : {
+            "action" : "streamComplete",
+            "schema" : "playback"
+          },
+          "time" : {
+            "contentPosition" : 2525.022,
+            "streamPosition" : 2525.022
+          },
+          "triggerTime" : 2525.024
+        } ],
+        "vendorAttributes" : {
+          "breaks" : [ ],
+          "interstitialUrl" : "",
+          "nonLinearAds" : [ ],
+          "pingUrl" : "",
+          "sessionId" : "es4eNaia5X"
+        }
+      },
+      "streaming" : [ {
+        "cdn" : "cloudfront_dplus_na",
+        "fallback" : false,
+        "playbackProfile" : "h264-hls-ts-hd-sdr-free-clear",
+        "protection" : {
+          "clearkeyEnabled" : false,
+          "drmEnabled" : false,
+          "schemes" : null
+        },
+        "provider" : "gps",
+        "streamMode" : "VOD",
+        "type" : "hls",
+        "url" : "https://dplus-northamerica.media-edge.prod-vod.h264.io/91c5e8c3-9b7c-4251-b65a-3984f7d534fc/hls_clear_ts/edge-cache-token=Expires=1793545931&KeyName=media-edge-key-prod-northamerica-200d417&Signature=652RUju6dfPekSw-WpSjIEdatojDbsy1jIY30AwK0jVxuaQyJ2rdhZs7FJjw8V006gxxqk2DF52DktZFOrcGAw/master.m3u8"
+      } ],
+      "userInfo" : {
+        "packages" : [ "Free" ]
+      },
+      "viewingHistory" : {
+        "viewed" : false
+      }
+    },
+    "id" : "2347335",
+    "type" : "videoPlaybackInfo"
+  },
+  "meta" : {
+    "site" : {
+      "attributes" : {
+        "brand" : "go",
+        "brandId" : "sci",
+        "mainTerritoryCode" : "us",
+        "theme" : "sci",
+        "websiteHostName" : ""
+      },
+      "id" : "sci",
+      "type" : "site"
+    }
+  }
+}

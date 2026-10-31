@@ -1,0 +1,16 @@
+[
+ {
+  "url": "https://www.bilibili.com/bangumi/play/ss2251",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.bilibili.com/bangumi/play/ss999999",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

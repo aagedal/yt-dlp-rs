@@ -1,0 +1,25 @@
+{
+  "routes": [
+    {
+      "url": "http://www.raiplay.it/dirette/rainews24.json",
+      "headers": {
+        "Content-Type": "application/json;charset=UTF-8"
+      },
+      "body_file": "5734efbf9186.bin"
+    },
+    {
+      "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=1&output=64",
+      "headers": {
+        "Content-Type": "text/xml;charset=ISO-8859-1"
+      },
+      "body_file": "97b8a797a2ef.bin"
+    },
+    {
+      "url": "https://rainews1-live.akamaized.net/hls/live/598326/rainews1/rainews1/playlist.m3u8?hdnea=st=1793459637~exp=1793459787~acl=/*~hmac=47d8f4d1c0228f91e3513b34b367cbd715e4fc5492c59271d114c2828c05113f",
+      "headers": {
+        "Content-Type": "application/x-mpegURL"
+      },
+      "body_file": "6262b1a361a6.bin"
+    }
+  ]
+}

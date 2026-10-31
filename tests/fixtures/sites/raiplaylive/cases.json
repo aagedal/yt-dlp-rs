@@ -1,0 +1,9 @@
+[
+ {
+  "url": "http://www.raiplay.it/dirette/rainews24",
+  "args": [
+   "-F",
+   "--no-geo-bypass"
+  ]
+ }
+]

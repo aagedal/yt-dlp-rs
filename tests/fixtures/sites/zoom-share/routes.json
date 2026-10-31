@@ -1,0 +1,36 @@
+{
+ "routes": [
+  {
+   "url": "https://cityofdetroit.zoom.us/rec/share/VjE-5kW3xmgbEYqR5KzRgZ1OFZvtMtiXk5HyRJo5kK4m5PYE6RF4rF_oiiO_9qaM.UTAg1MI7JSnF3ZjX",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html;charset=utf-8"
+   },
+   "body_file": "rec-000.bin"
+  },
+  {
+   "url": "https://cityofdetroit.zoom.us/nws/recording/1.0/play/share-info/H_dbe9XrOtP7Q2OuailzcZ1vvkDIWRDuWdhN49y0EKdyR98NbkJwlb0fbgVOkVzA.xgzmz5igVS99EdqW",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json;charset=UTF-8"
+   },
+   "body_file": "rec-001.bin"
+  },
+  {
+   "url": "https://cityofdetroit.zoom.us/rec/play/9qkSurdpYHVzC7xfSqURigK5g4VxUFVfu1rVIcA4qG3oCeIw7XkivTSFGzWs6-fUeI0TwGIs5UG4mNUn.LK2R_HoLGAZ8a2J7",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html;charset=utf-8"
+   },
+   "body_file": "rec-002.bin"
+  },
+  {
+   "url": "https://cityofdetroit.zoom.us/nws/recording/1.0/play/info/SXfYe7iREmQT23FCXNtPaCRmPm1eSYtpXU2daoTQ-RScVsVEOZYxSNc_4UmEysLb6_YVydr-2H3YjRZQ.9CPsws68r1TX8KTP?continueMode=true",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json;charset=UTF-8"
+   },
+   "body_file": "rec-003.bin"
+  }
+ ]
+}

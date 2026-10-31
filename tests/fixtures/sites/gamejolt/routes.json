@@ -1,0 +1,77 @@
+{
+ "routes": [
+  {
+   "url": "https://gamejolt.com/site-api/web/posts/view/c6achnzu",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "post-c6achnzu.json"
+  },
+  {
+   "url": "https://gamejolt.com/site-api/web/discover/games/655124",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "game-655124.json"
+  },
+  {
+   "url": "https://gamejolt.com/site-api/web/posts/fetch/game/655124",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_body": [
+    "scrollId"
+   ],
+   "body_file": "game-posts-page2.json"
+  },
+  {
+   "url": "https://gamejolt.com/site-api/web/posts/fetch/game/655124",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "game-posts-655124.json"
+  },
+  {
+   "url": "https://gamejolt.com/site-api/web/discover/games/overview/657899",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "soundtrack-657899.json"
+  },
+  {
+   "url": "https://v-2.gjcdn.net/public-data/transcoded-media/143/193/8980693/manifest-output-2r33wiex.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "manifest-2r33wiex.m3u8"
+  },
+  {
+   "url": "https://v-2.gjcdn.net/public-data/transcoded-media/147/112/9209862/manifest-output-wgibg66h.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "manifest-wgibg66h.m3u8"
+  },
+  {
+   "url": "https://v-2.gjcdn.net/public-data/transcoded-media/164/69/10307319/manifest-output-ydxbeibw.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "manifest-ydxbeibw.m3u8"
+  },
+  {
+   "url": "https://v-2.gjcdn.net/public-data/transcoded-media/158/206/9919206/manifest-output-4xgcz8be.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "manifest-4xgcz8be.m3u8"
+  },
+  {
+   "url": "https://v-2.gjcdn.net/public-data/transcoded-media/158/206/9919206/manifest-output-ec3biftf.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "manifest-ec3biftf.m3u8"
+  }
+ ]
+}

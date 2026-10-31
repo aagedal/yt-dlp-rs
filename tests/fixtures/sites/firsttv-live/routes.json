@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://www.1tv.ru/live",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "r001.body"
+  },
+  {
+   "url": "https://stream.1tv.ru/api/playlist/1tvch-v1_as_array.json",
+   "headers": {
+    "Content-Type": "text/json; charset=UTF-8"
+   },
+   "body_file": "r002.body"
+  },
+  {
+   "url": "https://1tv-live-gcore.servicecdn.ru/dash-live3/streams/1tv-dvr/1tvdash.mpd?e=1793459747",
+   "headers": {
+    "Content-Type": "application/octet-stream"
+   },
+   "body_file": "r003.body"
+  }
+ ]
+}

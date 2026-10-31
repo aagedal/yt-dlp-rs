@@ -1,0 +1,120 @@
+{
+ "code": "",
+ "title": "",
+ "messages": {},
+ "result": {
+  "count": 3,
+  "next": "https://odkmedia.io/odx/api/v3/program/uskn-news/episodes/?page=2&page_size=100",
+  "previous": null,
+  "page_next": 2,
+  "page_previous": null,
+  "page_size": 100,
+  "results": [
+   {
+    "id": 3518970,
+    "slug": "uskn-news-e110420298",
+    "uuid": "1e18b3dd-0a3d-47ba-a6ee-bead3c8677be",
+    "kind": "series",
+    "number": 110420298,
+    "part": null,
+    "release_date": "2026-10-30",
+    "sales_type": "FREE",
+    "title": "10/30/2026",
+    "synopsis": "",
+    "seo_title": "",
+    "seo_synopsis": "",
+    "seo_keyword": "",
+    "images": {
+     "thumbnail": "https://hls-mh.ondemandkorea.com/prod/video_3270902/thumbnails/thumbnail_auto_20261031_011302_2.jpg"
+    },
+    "video_duration": 1995000,
+    "display_duration": "34m",
+    "video_cc_languages": [],
+    "age_rating": {
+     "label": "All",
+     "name": "All",
+     "is_block": false
+    },
+    "badges": {
+     "top_left": null,
+     "top_right": null,
+     "bottom_left": "content-new-episode",
+     "bottom_right": null
+    },
+    "meta": {
+     "is_kocowa": false
+    }
+   },
+   {
+    "id": 3518671,
+    "slug": "uskn-news-e110420297",
+    "uuid": "dce59418-9f75-4ca2-a574-25ba9a7bbbe3",
+    "kind": "series",
+    "number": 110420297,
+    "part": null,
+    "release_date": "2026-10-29",
+    "sales_type": "FREE",
+    "title": "10/29/2026",
+    "synopsis": "",
+    "seo_title": "",
+    "seo_synopsis": "",
+    "seo_keyword": "",
+    "images": {
+     "thumbnail": "https://hls-mh.ondemandkorea.com/prod/video_3270064/thumbnails/thumbnail_20261029_234032.jpg"
+    },
+    "video_duration": 1928000,
+    "display_duration": "33m",
+    "video_cc_languages": [],
+    "age_rating": {
+     "label": "All",
+     "name": "All",
+     "is_block": false
+    },
+    "badges": {
+     "top_left": null,
+     "top_right": null,
+     "bottom_left": null,
+     "bottom_right": null
+    },
+    "meta": {
+     "is_kocowa": false
+    }
+   },
+   {
+    "id": 3518427,
+    "slug": "uskn-news-e110420296",
+    "uuid": "5837bb39-b973-4d7f-a993-8e5544d36532",
+    "kind": "series",
+    "number": 110420296,
+    "part": null,
+    "release_date": "2026-10-28",
+    "sales_type": "FREE",
+    "title": "10/28/2026",
+    "synopsis": "",
+    "seo_title": "",
+    "seo_synopsis": "",
+    "seo_keyword": "",
+    "images": {
+     "thumbnail": "https://hls-mh.ondemandkorea.com/prod/video_3269325/thumbnails/thumbnail_auto_20261028_220131_3.jpg"
+    },
+    "video_duration": 2045000,
+    "display_duration": "35m",
+    "video_cc_languages": [],
+    "age_rating": {
+     "label": "All",
+     "name": "All",
+     "is_block": false
+    },
+    "badges": {
+     "top_left": null,
+     "top_right": null,
+     "bottom_left": null,
+     "bottom_right": null
+    },
+    "meta": {
+     "is_kocowa": false
+    }
+   }
+  ]
+ }
+}

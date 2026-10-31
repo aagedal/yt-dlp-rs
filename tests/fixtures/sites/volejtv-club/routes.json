@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://api-volejtv-prod.apps.okd4.devopsie.cloud/api/team/show/1173",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "team-1173.json"
+  },
+  {
+   "url": "https://api-volejtv-prod.apps.okd4.devopsie.cloud/api/match/by-team-id-paginated/1173?page=1&take=6&order=DESC",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page-1.json"
+  },
+  {
+   "url": "https://api-volejtv-prod.apps.okd4.devopsie.cloud/api/match/by-team-id-paginated/1173?page=2&take=6&order=DESC",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page-2.json"
+  }
+ ]
+}

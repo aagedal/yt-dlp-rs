@@ -1,0 +1,31 @@
+{
+ "routes": [
+  {
+   "url": "https://api.app.ertflix.gr/v2/Tile/GetTiles?%24headers=%7B%22X-Api-Date-Format%22%3A+%22iso%22%2C+%22X-Api-Camel-Case%22%3A+false%2C+%22Content-Type%22%3A+%22application%2Fjson%3Bcharset%3Dutf-8%22%7D",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "r001.body"
+  },
+  {
+   "url": "https://api.app.ertflix.gr/v1/Player/AcquireContent?platformCodename=www&%24headers=%7B%22X-Api-Date-Format%22%3A+%22iso%22%2C+%22X-Api-Camel-Case%22%3A+false%7D&codename=aoratoi-ergates",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "r002.body"
+  },
+  {
+   "url": "https://mediaserve.ert.gr/bpk-vod/vodext/default/ghost_workers/ghost_workers/index.m3u8",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "r003.body"
+  },
+  {
+   "url": "https://mediaserve.ert.gr/bpk-vod/vodext/default/ghost_workers/ghost_workers/index.mpd",
+   "status": 404,
+   "body_file": "r004.body"
+  }
+ ]
+}

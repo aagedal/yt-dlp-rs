@@ -1,0 +1,18 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://vimeo.com/groups/meetup",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"meetup\", \"title\": \"Vimeo Meetup!\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Vimeo\", \"id\": \"1059680521\", \"title\": \"snoopy a small test in limited animation\", \"_type\": \"url\", \"url\": \"https://vimeo.com/groups/meetup/videos/1059680521\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"44941552\", \"title\": \"The 2012 Vimeo Festival\", \"_type\": \"url\", \"url\": \"https://vimeo.com/groups/meetup/videos/44941552\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"36822506\", \"title\": \"Shangri-la (English)\", \"_type\": \"url\", \"url\": \"https://vimeo.com/groups/meetup/videos/36822506\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"28585927\", \"title\": \"cokiyu - Your Thorn\", \"_type\": \"url\", \"url\": \"https://vimeo.com/groups/meetup/videos/28585927\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"18125967\", \"title\": \"Winter Tale (stop-motion animation)\", \"_type\": \"url\", \"url\": \"https://vimeo.com/groups/meetup/videos/18125967\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"17411263\", \"title\": \"Bloomin&#039; Marvelous! The Midwest DSLR meet up.\", \"_type\": \"url\", \"url\": \"https://vimeo.com/groups/meetup/videos/17411263\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"15358888\", \"title\": \"Lost in Amsterdam\", \"_type\": \"url\", \"url\": \"https://vimeo.com/groups/meetup/videos/15358888\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"15024655\", \"title\": \"Vimeo Party in Amsterdam\", \"_type\": \"url\", \"url\": \"https://vimeo.com/groups/meetup/videos/15024655\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"14998541\", \"title\": \"Vimeo Festival + Awards Amsterdam Kickoff Party!\", \"_type\": \"url\", \"url\": \"https://vimeo.com/groups/meetup/videos/14998541\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"14932725\", \"title\": \"Amsterdam with Vimeans\", \"_type\": \"url\", \"url\": \"https://vimeo.com/groups/meetup/videos/14932725\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"2179894\", \"title\": \"Vimeo Staff Vidblog/10SQ/merightnow/lipdubs\", \"_type\": \"url\", \"url\": \"https://vimeo.com/groups/meetup/videos/2179894\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vimeo\", \"id\": \"12405690\", \"title\": \"vimeo-meetup france 2010\", \"_type\": \"url\", \"url\": \"https://vimeo.com/groups/meetup/videos/12405690\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://vimeo.com/groups/meetup\", \"original_url\": \"https://vimeo.com/groups/meetup\", \"webpage_url_basename\": \"meetup\", \"webpage_url_domain\": \"vimeo.com\", \"extractor\": \"vimeo:group\", \"extractor_key\": \"VimeoGroups\", \"release_year\": null, \"playlist_count\": 12, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

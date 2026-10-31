@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://www.bilibili.com/bangumi/media/md1565/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "md1565-page.html"
+  },
+  {
+   "url": "https://api.bilibili.com/pgc/web/season/section?season_id=1565",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "section-1565.json"
+  }
+ ]
+}

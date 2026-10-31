@@ -1,0 +1,54 @@
+{
+ "routes": [
+  {
+   "url": "http://content.mlb.com/mlb/item/id/v1/34698933/details/web-v1.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "mlb-json.json"
+  },
+  {
+   "url": "https://mediadownloads.mlb.com/mlbam/2014/07/22/34698933_m3u8/master_android_tablet.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-android-tablet.m3u8"
+  },
+  {
+   "url": "https://mediadownloads.mlb.com/mlbam/2014/07/22/34698933_m3u8/master_mobile.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-mobile.m3u8"
+  },
+  {
+   "url": "https://mediadownloads.mlb.com/mlbam/2014/07/22/34698933_m3u8/master_tablet.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-tablet.m3u8"
+  },
+  {
+   "url": "https://mediadownloads.mlb.com/mlbam/2014/07/22/34698933_m3u8/master_wired.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master-wired.m3u8"
+  },
+  {
+   "url": "https://fastball-gateway.mlb.com/graphql?query=%7B%0A++mediaPlayback%28ids%3A+%22ackley-s-spectacular-catch-c34698933%22%29+%7B%0A++++description%0A++++feeds%28types%3A+CMS%29+%7B%0A++++++closedCaptions%0A++++++duration%0A++++++image+%7B%0A++++++++cuts+%7B%0A++++++++++width%0A++++++++++height%0A++++++++++src%0A++++++++%7D%0A++++++%7D%0A++++++playbacks+%7B%0A++++++++name%0A++++++++url%0A++++++%7D%0A++++%7D%0A++++id%0A++++timestamp%0A++++title%0A++%7D%0A%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "graphql.json"
+  },
+  {
+   "url": "http://content.mlb.com/mlb/item/id/v1/1/details/web-v1.json",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"message\":\"not found\"}"
+  }
+ ]
+}

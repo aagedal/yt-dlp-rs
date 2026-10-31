@@ -1,0 +1,17 @@
+[
+ {
+  "url": "https://www.raiplay.it/video/2014/04/Report-del-07042014-cb27157f-9dd0-4aee-b788-b1f67643a391.html",
+  "args": [
+   "-F",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.raiplay.it/video/2014/04/Report-del-07042014-cb27157f-9dd0-4aee-b788-b1f67643a391.html",
+  "args": [
+   "--print",
+   "\"%(id)s|%(display_id)s|%(title)s|%(alt_title)s|%(description)s|%(uploader)s|%(creator)s|%(duration)s|%(timestamp)s|%(series)s|%(season_number)s|%(season)s|%(episode)s|%(episode_number)s|%(release_year)s\"",
+   "--no-geo-bypass"
+  ]
+ }
+]

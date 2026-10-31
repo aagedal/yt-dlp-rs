@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {
+   "url": "https://arc.nexx.cloud/api/video/128907.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "nexx-arc.json"
+  }
+ ]
+}

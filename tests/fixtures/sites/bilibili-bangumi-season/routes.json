@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://www.bilibili.com/bangumi/play/ss2251",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "ss2251-page.html"
+  },
+  {
+   "url": "https://api.bilibili.com/pgc/web/season/section?season_id=2251",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "section-2251.json"
+  }
+ ]
+}

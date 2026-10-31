@@ -1,0 +1,39 @@
+{
+  "routes": [
+    {
+      "url": "https://www.rai.tv/dl/RaiTV/programmi/media/ContentItem-efb17665-691c-45d5-a60c-5301333cbb0c.html?json",
+      "headers": {
+        "Content-Type": "text/html; charset=utf-8"
+      },
+      "body_file": "b11062428ca5.bin"
+    },
+    {
+      "url": "http://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=5cWtEfGypVceeqqEEqual&output=64",
+      "headers": {
+        "Content-Type": "text/xml;charset=ISO-8859-1"
+      },
+      "body_file": "8b2aa4d4772a.bin"
+    },
+    {
+      "url": "https://vod4-rai-it.akamaized.net/podcastcdn/NewsVod/TG1/6097899.mp4/playlist.m3u8?hdnea=st=1793459633~exp=1793459783~acl=/*~hmac=0ea2e06160af797213f8c61eb539a2b425932286af068658265369978bd9cada",
+      "headers": {
+        "Content-Type": "application/x-mpegURL"
+      },
+      "body_file": "b99878b9462b.bin"
+    },
+    {
+      "url": "http://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=5cWtEfGypVceeqqEEqual&overrideUserAgentRule=mp4-*",
+      "headers": {
+        "Content-Type": "video/mp4"
+      },
+      "body_file": "332a9da9904c.bin"
+    },
+    {
+      "url": "https://www.rai.tv/dl/RaiTV/programmi/media/ContentItem-00000000-0000-4000-8000-000000000001.html?json",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"type\": \"Other\", \"name\": \"Synthetic\"}"
+    }
+  ]
+}

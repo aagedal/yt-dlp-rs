@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://www.tvp.pl/sess/TVPlayer2/api.php?id=51247504&@method=getTvpConfig&@callback=jebacpis",
+   "headers": {
+    "Content-Type": "text/javascript;charset=UTF-8"
+   },
+   "body_file": "config0.body"
+  },
+  {
+   "url": "https://www.tvp.pl/sess/TVPlayer2/api.php?id=51247504&@method=getTvpConfig&@callback=jebac_pis",
+   "headers": {
+    "Content-Type": "text/javascript;charset=UTF-8"
+   },
+   "body_file": "config1.body"
+  },
+  {
+   "url": "https://www.tvp.pl/sess/TVPlayer2/api.php?id=51247504&@method=getTvpConfig&@callback=ziobro",
+   "headers": {
+    "Content-Type": "text/javascript;charset=UTF-8"
+   },
+   "body_file": "config2.body"
+  },
+  {
+   "url": "https://www.tvp.pl/sess/TVPlayer2/api.php?id=51247504&@method=getTvpConfig&@callback=sasin70",
+   "headers": {
+    "Content-Type": "text/javascript;charset=UTF-8"
+   },
+   "body_file": "config3.body"
+  },
+  {
+   "url": "https://www.tvp.pl/sess/TVPlayer2/api.php?id=51247504&@method=getTvpConfig&@callback=sasin_przejebal_70_milionow_PLN",
+   "headers": {
+    "Content-Type": "text/javascript;charset=UTF-8"
+   },
+   "body_file": "config4.body"
+  },
+  {
+   "url": "https://www.tvp.pl/sess/TVPlayer2/api.php?id=51247504&@method=getTvpConfig&@callback=tvp_is_a_state_propaganda_service",
+   "headers": {
+    "Content-Type": "text/javascript;charset=UTF-8"
+   },
+   "body_file": "config5.body"
+  },
+  {
+   "url": "https://sdt-l3-05-205.tvp.pl/token/video/vod/51247504/20261031/3252931624/67e9f81f-fe17-442c-8a8d-d8b4de59f6a8/video.ism/manifest",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body_file": "r002.body"
+  },
+  {
+   "url": "https://sdt-l3-05-205.tvp.pl/token/video/vod/51247504/20261031/3252931624/67e9f81f-fe17-442c-8a8d-d8b4de59f6a8/video.ism/video.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "r003.body"
+  }
+ ]
+}

@@ -1,0 +1,34 @@
+[
+ {
+  "url": "https://music.163.com/#/mv?id=10958064",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://music.163.com/#/mv?id=1",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://music.163.com/#/program?id=10109055",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "http://music.163.com/#/program?id=10109055",
+  "args": [
+   "-J",
+   "--no-playlist"
+  ]
+ },
+ {
+  "url": "http://music.163.com/#/djradio?id=42",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

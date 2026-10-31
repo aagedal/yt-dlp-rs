@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="static" mediaPresentationDuration="PT1M21.233S" minBufferTime="PT2.000S">
+  <BaseURL>https://fastly-signed-us-east-1-prod.brightcovecdn.com/media/v1/dash/live/clear/1130468786001/3dc78ffc-f347-43a7-b497-cbce54477dc2/</BaseURL>
+  <Period>
+    <AdaptationSet mimeType="audio/mp4" codecs="mp4a" startWithSAP="1" id="0" segmentAlignment="true" lang="en">
+      <Label>en (Main)</Label>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
+      <SegmentTemplate duration="285696" initialization="$RepresentationID$/init.m4f?fastly_token=NmFlNjViOWFfY2E2ZWVlOGZiZDdmMGNkMjcyNWUwOTAwZDZjMmI4YmZiNDI5NTk1MDA0ZmY3ODVjYWVmODgzY2IwODg5ODcyMl8vL2Zhc3RseS1zaWduZWQtdXMtZWFzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzExMzA0Njg3ODYwMDEvM2RjNzhmZmMtZjM0Ny00M2E3LWI0OTctY2JjZTU0NDc3ZGMyLw%3D%3D" media="$RepresentationID$/3x/segment$Number$.m4f?fastly_token=NmFlNjViOWFfY2E2ZWVlOGZiZDdmMGNkMjcyNWUwOTAwZDZjMmI4YmZiNDI5NTk1MDA0ZmY3ODVjYWVmODgzY2IwODg5ODcyMl8vL2Zhc3RseS1zaWduZWQtdXMtZWFzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzExMzA0Njg3ODYwMDEvM2RjNzhmZmMtZjM0Ny00M2E3LWI0OTctY2JjZTU0NDc3ZGMyLw%3D%3D" startNumber="0" timescale="48000"></SegmentTemplate>
+      <Representation audioSamplingRate="48000" bandwidth="64000" codecs="mp4a.40.2" id="c4bb322b-372e-4c60-ac61-17f12f6b5396"></Representation>
+      <Representation audioSamplingRate="48000" bandwidth="96000" codecs="mp4a.40.2" id="972989bc-dd4b-4d6f-9d59-d338d8ff5949"></Representation>
+      <Representation audioSamplingRate="48000" bandwidth="128000" codecs="mp4a.40.2" id="7412fc86-be17-4d81-bc7c-9bb3c9900f95"></Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="video/mp4" codecs="avc1" startWithSAP="1" scanType="progressive" id="1" segmentAlignment="true">
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
+      <SegmentTemplate duration="180" initialization="$RepresentationID$/init.m4f?fastly_token=NmFlNjViOWFfY2E2ZWVlOGZiZDdmMGNkMjcyNWUwOTAwZDZjMmI4YmZiNDI5NTk1MDA0ZmY3ODVjYWVmODgzY2IwODg5ODcyMl8vL2Zhc3RseS1zaWduZWQtdXMtZWFzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzExMzA0Njg3ODYwMDEvM2RjNzhmZmMtZjM0Ny00M2E3LWI0OTctY2JjZTU0NDc3ZGMyLw%3D%3D" media="$RepresentationID$/3x/segment$Number$.m4f?fastly_token=NmFlNjViOWFfY2E2ZWVlOGZiZDdmMGNkMjcyNWUwOTAwZDZjMmI4YmZiNDI5NTk1MDA0ZmY3ODVjYWVmODgzY2IwODg5ODcyMl8vL2Zhc3RseS1zaWduZWQtdXMtZWFzdC0xLXByb2QuYnJpZ2h0Y292ZWNkbi5jb20vbWVkaWEvdjEvZGFzaC9saXZlL2NsZWFyLzExMzA0Njg3ODYwMDEvM2RjNzhmZmMtZjM0Ny00M2E3LWI0OTctY2JjZTU0NDc3ZGMyLw%3D%3D" startNumber="0" timescale="30"></SegmentTemplate>
+      <Representation bandwidth="451000" codecs="avc1.420015" frameRate="30/1" height="270" id="1699f3c1-9df0-46fa-b326-b7e327b4fe1d" width="480"></Representation>
+      <Representation bandwidth="693000" codecs="avc1.42001e" frameRate="30/1" height="360" id="923506e7-5e06-4b8b-8dda-c1350f58d51c" width="640"></Representation>
+      <Representation bandwidth="900000" codecs="avc1.4d001e" frameRate="30/1" height="360" id="e1d48af9-192d-434c-8204-f3ffc6c45b82" width="640"></Representation>
+      <Representation bandwidth="1197000" codecs="avc1.4d001f" frameRate="30/1" height="540" id="f4e12994-d73b-4329-a1a4-5b24e86621f0" width="960"></Representation>
+      <Representation bandwidth="1687000" codecs="avc1.4d001f" frameRate="30/1" height="540" id="118ac60d-7f9f-4330-833d-0f621ce1ffdf" width="960"></Representation>
+      <Representation bandwidth="1983000" codecs="avc1.4d001f" frameRate="30/1" height="720" id="0c863256-8eb1-4293-953f-3888a0fabb09" width="1280"></Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>

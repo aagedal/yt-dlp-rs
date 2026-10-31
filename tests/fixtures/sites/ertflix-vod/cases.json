@@ -1,0 +1,15 @@
+[
+ {
+  "url": "https://www.ertflix.gr/vod/vod.173258-aoratoi-ergates",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(episode_id)s|%(timestamp)s|%(upload_date)s|%(duration)s|%(age_limit)s|%(thumbnail)s|%(description)s|%(alt_title)s|%(webpage_url)s"
+  ]
+ },
+ {
+  "url": "https://www.ertflix.gr/vod/vod.173258-aoratoi-ergates",
+  "args": [
+   "-F"
+  ]
+ }
+]

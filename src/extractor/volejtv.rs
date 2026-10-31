@@ -1,7 +1,7 @@
-//! Upstream `VolejTVIE` and `VolejTVCategoryPlaylistIE`
-//! (`yt_dlp/extractor/volejtv.py`): a match's `api-volejtv-prod` JSON (its
-//! CloudFront MP4 qualities and the teams/date title), and a category's
-//! paged match list as `url` entries. `VolejTVClubPlaylistIE` is not ported.
+//! Upstream `VolejTVIE`, `VolejTVCategoryPlaylistIE` and
+//! `VolejTVClubPlaylistIE` (`yt_dlp/extractor/volejtv.py`): a match's
+//! `api-volejtv-prod` JSON (its CloudFront MP4 qualities and the teams/date
+//! title), and a category's or club's paged match list as `url` entries.
 use super::{Extractor, dict_format, dict_info, download_json, update_url_query};
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
@@ -12,6 +12,7 @@ use url::Url;
 
 pub struct VolejTv;
 pub struct VolejTvCategory;
+pub struct VolejTvClub;
 
 const NAME: &str = "volejtv:match";
 const KEY: &str = "VolejTV";
@@ -19,11 +20,16 @@ const CATEGORY_NAME: &str = "volejtv:category";
 const CATEGORY_KEY: &str = "VolejTVCategoryPlaylist";
 const API: &str = "https://api-volejtv-prod.apps.okd4.devopsie.cloud/api";
 const CATEGORY_PAGE_SIZE: usize = 10;
+const CLUB_NAME: &str = "volejtv:club";
+const CLUB_KEY: &str = "VolejTVClubPlaylist";
+const CLUB_PAGE_SIZE: usize = 6;
 
 static MATCH_URL: LazyLock<Regex> =
     LazyLock::new(|| super::url_regex(r"^https?://volej\.tv/match/(?P<id>\d+)").unwrap());
 static CATEGORY_URL: LazyLock<Regex> =
     LazyLock::new(|| super::url_regex(r"^https?://volej\.tv/kategorie/(?P<id>[^/$?]+)").unwrap());
+static CLUB_URL: LazyLock<Regex> =
+    LazyLock::new(|| super::url_regex(r"^https?://volej\.tv/klub/(?P<id>\d+)").unwrap());
 
 /// `int_or_none` rates are integers (`tbr`).
 fn rated(mut format: crate::VideoFormat) -> crate::VideoFormat {
@@ -50,6 +56,11 @@ pub fn suitable(url: &str) -> bool {
 /// `_match_valid_url` of [`VolejTvCategory`].
 pub fn category_suitable(url: &str) -> bool {
     CATEGORY_URL.is_match(url)
+}
+
+/// `_match_valid_url` of [`VolejTvClub`].
+pub fn club_suitable(url: &str) -> bool {
+    CLUB_URL.is_match(url)
 }
 
 fn api(endpoint: &str) -> Result<Url> {
@@ -276,53 +287,14 @@ impl Extractor for VolejTvCategory {
             ));
         };
 
-        let page_url = |page: usize| -> Result<Url> {
-            let base = api(&format!(
-                "match/by-category-id-paginated/{}",
-                value_text(&category_id)
-            ))?;
-            Ok(update_url_query(
-                &base,
-                &[
-                    ("page", &page.to_string()),
-                    ("take", &CATEGORY_PAGE_SIZE.to_string()),
-                    ("order", "DESC"),
-                ],
-            ))
-        };
-        let first_page = download_json(client, &page_url(1)?, CATEGORY_NAME, &slug)?;
-        let page_count = first_page
-            .get("meta")
-            .and_then(|meta| meta.get("pageCount"))
-            .and_then(Value::as_i64)
-            .ok_or_else(|| {
-                Error::Reported(format!(
-                    "[{CATEGORY_NAME}] {slug}: Unable to extract page count"
-                ))
-            })?;
-
-        let mut entries = Vec::new();
-        for page in 1..=page_count.max(0) {
-            let data = if page == 1 {
-                first_page.clone()
-            } else {
-                download_json(client, &page_url(page as usize)?, CATEGORY_NAME, &slug)?
-            };
-            for item in data
-                .get("data")
-                .and_then(Value::as_array)
-                .into_iter()
-                .flatten()
-            {
-                let Some(match_id) = item.get("id") else {
-                    continue;
-                };
-                entries.push(url_entry(&format!(
-                    "https://volej.tv/match/{}",
-                    value_text(match_id)
-                ))?);
-            }
-        }
+        let entries = paged_match_entries(
+            client,
+            CATEGORY_NAME,
+            &slug,
+            "by-category-id-paginated",
+            &value_text(&category_id),
+            CATEGORY_PAGE_SIZE,
+        )?;
 
         let mut extra = Map::new();
         extra.insert(
@@ -341,6 +313,115 @@ impl Extractor for VolejTvCategory {
             extra,
         })))
     }
+}
+
+impl Extractor for VolejTvClub {
+    fn key(&self) -> &'static str {
+        CLUB_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = CLUB_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let club_id = found["id"].to_owned();
+        announce(CLUB_NAME, url);
+
+        let team = download_json(
+            client,
+            &api(&format!("team/show/{club_id}"))?,
+            CLUB_NAME,
+            &club_id,
+        )?;
+        let title = team
+            .get("title")
+            .cloned()
+            .ok_or_else(|| super::clyp::key_error(&club_id, "title"))?;
+        let title = value_text(&title);
+        let entries = paged_match_entries(
+            client,
+            CLUB_NAME,
+            &club_id,
+            "by-team-id-paginated",
+            &club_id,
+            CLUB_PAGE_SIZE,
+        )?;
+
+        let mut extra = Map::new();
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            "playlist-dict;id,title".into(),
+        );
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: club_id,
+            title,
+            webpage_url: url.clone(),
+            extractor: CLUB_NAME.into(),
+            extractor_key: CLUB_KEY.into(),
+            nested: Vec::new(),
+            pending: None,
+            entries,
+            extra,
+        })))
+    }
+}
+
+/// `VolejTVPlaylistBaseIE._get_page` and `_entries`: every page of a
+/// `match/<filter>/<id>` list (`take` matches per page), each match as a `url`
+/// entry. The page count comes from the first page's metadata.
+fn paged_match_entries(
+    client: &Client,
+    name: &'static str,
+    slug: &str,
+    filter: &str,
+    id: &str,
+    page_size: usize,
+) -> Result<Vec<VideoInfo>> {
+    let page_url = |page: usize| -> Result<Url> {
+        let base = api(&format!("match/{filter}/{id}"))?;
+        Ok(update_url_query(
+            &base,
+            &[
+                ("page", &page.to_string()),
+                ("take", &page_size.to_string()),
+                ("order", "DESC"),
+            ],
+        ))
+    };
+    let first_page = download_json(client, &page_url(1)?, name, slug)?;
+    let page_count = first_page
+        .get("meta")
+        .and_then(|meta| meta.get("pageCount"))
+        .and_then(Value::as_i64)
+        .ok_or_else(|| Error::Reported(format!("[{name}] {slug}: Unable to extract page count")))?;
+
+    let mut entries = Vec::new();
+    for page in 1..=page_count.max(0) {
+        let data = if page == 1 {
+            first_page.clone()
+        } else {
+            download_json(client, &page_url(page as usize)?, name, slug)?
+        };
+        for item in data
+            .get("data")
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+        {
+            let Some(match_id) = item.get("id") else {
+                continue;
+            };
+            entries.push(url_entry(&format!(
+                "https://volej.tv/match/{}",
+                value_text(match_id)
+            ))?);
+        }
+    }
+    Ok(entries)
 }
 
 /// `str(value)` of an ID JSON value.
@@ -362,6 +443,8 @@ mod tests {
         assert!(category_suitable(
             "https://volej.tv/kategorie/chance-cesky-pohar"
         ));
+        assert!(club_suitable("https://volej.tv/klub/1173"));
+        assert!(!club_suitable("https://volej.tv/match/270579"));
         assert!(!category_suitable("https://volej.tv/match/270579"));
     }
 

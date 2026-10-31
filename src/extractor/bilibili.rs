@@ -1347,21 +1347,35 @@ fn multi_part_flv(
 
 /// `_get_subtitles(video_id, cid)`: the danmaku XML and the player's tracks.
 fn subtitles(client: &Client, video_id: &str, cid: &str) -> Result<Value> {
-    let url = with_query(
-        "https://api.bilibili.com/x/player/wbi/v2",
+    subtitles_with(
+        client,
+        NAME,
+        video_id,
         &pairs(&[("bvid", video_id), ("cid", cid)]),
-    )?;
+        cid,
+    )
+}
+
+/// [`subtitles`] for a query of `bvid`/`cid` or `aid`/`cid` (bangumi episodes).
+fn subtitles_with(
+    client: &Client,
+    name: &'static str,
+    video_id: &str,
+    query: &[(String, String)],
+    cid: &str,
+) -> Result<Value> {
+    let url = with_query("https://api.bilibili.com/x/player/wbi/v2", query)?;
     let info = super::download_json_note_headers(
         client,
         &url,
-        NAME,
+        name,
         video_id,
         &format!("Extracting subtitle info {cid}"),
         &[("Referer", "https://www.bilibili.com/")],
     )?;
     if truthy(info.pointer("/data/need_login_subtitle")) {
         crate::screen::warning_once(&format!(
-            "[{NAME}] Subtitles are only available when logged in. {LOGIN_HINT}"
+            "[{name}] Subtitles are only available when logged in. {LOGIN_HINT}"
         ));
     }
     let tracks = info
@@ -1379,6 +1393,952 @@ fn subtitles(client: &Client, video_id: &str, cid: &str) -> Result<Value> {
     Ok(
         json!({"danmaku": [{"ext": "xml", "url": format!("https://comment.bilibili.com/{cid}.xml")}]}),
     )
+}
+
+// ---------------------------------------------------------------------------
+// Bangumi (`BiliBiliBangumiIE`, `BiliBiliBangumiMediaIE`,
+// `BiliBiliBangumiSeasonIE`): episodes from the embedded `playurlSSRData` (or
+// the `pgc/player/web/v2/playurl` API), season and media pages as playlists of
+// episode `url` results.
+// ---------------------------------------------------------------------------
+
+const BANGUMI_NAME: &str = "BiliBiliBangumi";
+const BANGUMI_MEDIA_NAME: &str = "BiliBiliBangumiMedia";
+const BANGUMI_SEASON_NAME: &str = "BiliBiliBangumiSeason";
+static BANGUMI_EP: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:www\.)?bilibili\.com/bangumi/play/ep(\d+)").unwrap()
+});
+static BANGUMI_SS: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:www\.)?bilibili\.com/bangumi/play/ss(\d+)").unwrap()
+});
+static BANGUMI_MD: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:www\.)?bilibili\.com/bangumi/media/md(\d+)").unwrap()
+});
+static PLAYURL_SSR: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"playurlSSRData\s*=").unwrap());
+static LD_JSON: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"<script[^>]+type="application/ld\+json"[^>]*>"#).unwrap());
+
+/// `BiliBiliBangumiIE.suitable`.
+pub fn bangumi_episode_suitable(url: &str) -> bool {
+    BANGUMI_EP.is_match(url)
+}
+
+/// `BiliBiliBangumiMediaIE.suitable`.
+pub fn bangumi_media_suitable(url: &str) -> bool {
+    BANGUMI_MD.is_match(url)
+}
+
+/// `BiliBiliBangumiSeasonIE.suitable`.
+pub fn bangumi_season_suitable(url: &str) -> bool {
+    BANGUMI_SS.is_match(url)
+}
+
+fn named_fail(name: &str, id: &str, message: &str) -> Error {
+    Error::Reported(format!("[{name}] {id}: {message}"))
+}
+
+fn named_key_error(name: &str, id: &str, key: &str) -> Error {
+    named_fail(
+        name,
+        id,
+        &format!(
+            "An extractor error has occurred. (caused by KeyError('{key}')); {}",
+            crate::BUG_REPORTS_MESSAGE
+        ),
+    )
+}
+
+fn captured_id(regex: &Regex, url: &str) -> Option<String> {
+    regex.captures(url).map(|found| found[1].to_owned())
+}
+
+fn announce(name: &'static str, url: &Url) {
+    crate::screen::set_extractor(name);
+    crate::screen::screen(&format!(
+        "[{name}] Extracting URL: {}",
+        crate::screen::extracting_url(url.as_str())
+    ));
+}
+
+/// `url_result(target, BiliBiliBangumiIE, id)` as a playlist entry.
+fn bangumi_url_entry(target: &str, id: Option<String>, extractor: &str) -> Result<VideoInfo> {
+    url_result_entry(target, BANGUMI_NAME, id, extractor, Vec::new())
+}
+
+/// `url_result(target, ie_key, id)` as a playlist entry, with `fields` set on
+/// the entry dict (upstream's `entry['album'] = ...`).
+fn url_result_entry(
+    target: &str,
+    ie_key: &str,
+    id: Option<String>,
+    extractor: &str,
+    fields: Vec<(&str, Value)>,
+) -> Result<VideoInfo> {
+    let url = Url::parse(target)?;
+    let mut info = super::direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    let mut entry = Map::new();
+    entry.insert("ie_key".into(), ie_key.into());
+    if let Some(id) = id {
+        entry.insert("id".into(), id.into());
+    }
+    entry.insert("_type".into(), "url".into());
+    entry.insert("url".into(), target.into());
+    for (key, value) in fields {
+        entry.insert(key.into(), value);
+    }
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": {},
+            "ie_key": ie_key,
+            "extractor": extractor,
+            "entry": Value::Object(entry),
+        }),
+    );
+    Ok(info)
+}
+
+/// `_get_episodes_from_season(ss_id, url)`.
+fn bangumi_season_entries(
+    client: &Client,
+    name: &'static str,
+    page: &Url,
+    ss_id: &str,
+) -> Result<Vec<VideoInfo>> {
+    let url = with_query(
+        "https://api.bilibili.com/pgc/web/season/section",
+        &pairs(&[("season_id", ss_id)]),
+    )?;
+    let season_info = super::download_json_note_headers(
+        client,
+        &url,
+        name,
+        ss_id,
+        "Downloading season info",
+        &[("Referer", page.as_str())],
+    )?;
+    let mut entries = Vec::new();
+    for entry in season_info
+        .pointer("/result/main_section/episodes")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+    {
+        let Some(share_url) = entry
+            .get("share_url")
+            .and_then(Value::as_str)
+            .and_then(super::json_ld::url_or_none)
+        else {
+            continue;
+        };
+        if !truthy(entry.get("id")) {
+            continue;
+        }
+        entries.push(bangumi_url_entry(
+            &share_url,
+            str_or_none(entry.get("id")),
+            name,
+        )?);
+    }
+    Ok(entries)
+}
+
+/// `playlist_result(...)`; `id_first` for the positional-argument form
+/// (`playlist_result(entries, id, title, description)`), otherwise the
+/// keyword form (`title`/`description` first, then the id).
+fn bangumi_playlist(
+    name: &'static str,
+    page: &Url,
+    id: &str,
+    title: Option<String>,
+    description: Option<String>,
+    entries: Vec<VideoInfo>,
+    id_first: bool,
+) -> ExtractResult {
+    let mut keys = Vec::new();
+    let mut extra = Map::new();
+    if id_first {
+        keys.push("id");
+    }
+    if let Some(title) = &title {
+        keys.push("title");
+        extra.insert("title".into(), title.clone().into());
+    }
+    if let Some(description) = description {
+        keys.push("description");
+        extra.insert("description".into(), description.into());
+    }
+    if !id_first {
+        keys.push("id");
+    }
+    extra.insert(
+        crate::info_order::INFO_SHAPE.into(),
+        format!("playlist-dict;{}", keys.join(",")).into(),
+    );
+    ExtractResult::Playlist(PlaylistInfo {
+        id: id.to_owned(),
+        title: title.unwrap_or_default(),
+        webpage_url: page.clone(),
+        extractor: name.into(),
+        extractor_key: name.into(),
+        nested: Vec::new(),
+        pending: None,
+        entries,
+        extra,
+    })
+}
+
+/// `_search_json` on an embedded JSON-LD block (`ld+json`), fatal as upstream.
+fn bangumi_json_ld(webpage: &str, name: &str, id: &str) -> Result<Value> {
+    super::search_json(&LD_JSON, webpage, false)
+        .flatten()
+        .ok_or_else(|| {
+            named_fail(
+                name,
+                id,
+                &format!("Unable to extract info; {}", crate::BUG_REPORTS_MESSAGE),
+            )
+        })
+}
+
+/// Upstream's dict result for an episode: the keys are kept in upstream's
+/// order and `formats` is filled from `formats`.
+fn bangumi_video(
+    name: &'static str,
+    page: &Url,
+    dict: Map<String, Value>,
+    formats: Vec<crate::VideoFormat>,
+) -> ExtractResult {
+    let first = formats
+        .first()
+        .map_or_else(|| page.clone(), |format| format.url.clone());
+    let mut info = super::direct::build_at(first.clone(), &first, String::new());
+    info.direct = None;
+    if formats.is_empty() {
+        info.extra
+            .insert(crate::info::NO_FORMATS.into(), Value::Bool(true));
+    }
+    info.formats = formats;
+    info.webpage_url = page.clone();
+    info.extractor = name.into();
+    info.extractor_key = name.into();
+    let mut keys = Vec::new();
+    for (key, value) in dict {
+        keys.push(key.clone());
+        match key.as_str() {
+            "id" => info.id = value.as_str().unwrap_or_default().to_owned(),
+            "formats" => {}
+            _ if value.is_null() => {
+                info.extra.insert(key, Value::Null);
+            }
+            _ => crate::metadata_parser::set_field(&mut info, &key, value),
+        }
+    }
+    ExtractResult::Video(crate::info_order::mark_info(
+        info,
+        &format!("dict;{};subtitle=url,ext", keys.join(",")),
+    ))
+}
+
+/// `BiliBiliBangumiIE._real_extract`.
+fn bangumi_episode(client: &Client, page: &Url, episode_id: &str) -> Result<ExtractResult> {
+    let name = BANGUMI_NAME;
+    let referer = page.as_str().to_owned();
+    let headers = [("Referer", referer.as_str())];
+    let webpage = super::download_webpage(client, page, name, episode_id)?;
+    if webpage.contains("您所在的地区无法观看本片") {
+        return Err(named_fail(name, episode_id, "This video is restricted"));
+    }
+    if webpage.contains("正在观看预览，大会员免费看全片") {
+        return Err(named_fail(
+            name,
+            episode_id,
+            &format!("This video is for premium members only. {LOGIN_HINT}"),
+        ));
+    }
+
+    let mut play_info = match super::search_json(&PLAYURL_SSR, &webpage, false).flatten() {
+        Some(value) => value,
+        None => {
+            let url = with_query(
+                "https://api.bilibili.com/pgc/player/web/v2/playurl",
+                &pairs(&[("fnval", "12240"), ("ep_id", episode_id)]),
+            )?;
+            super::download_json_note_headers(
+                client,
+                &url,
+                name,
+                episode_id,
+                "Extracting episode",
+                &headers,
+            )?
+        }
+    };
+    // Three shapes: `result`/`video_info` at the top, under `raw`, or under `data`.
+    let mut status_code = play_info.get("code").cloned();
+    if let Some(raw) = play_info.get("raw").cloned() {
+        play_info = raw;
+    }
+    if let Some(data) = play_info.get("data").cloned() {
+        play_info = data;
+    }
+    if status_code.is_none() {
+        status_code = play_info.get("code").cloned();
+    }
+    if let Some(result) = play_info.get("result").cloned() {
+        play_info = result;
+    }
+
+    let geo_blocked = play_info
+        .get("plugins")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+        .any(|plugin| {
+            plugin.get("name").and_then(Value::as_str) == Some("AreaLimitPanel")
+                && truthy(plugin.pointer("/config/is_block"))
+        });
+    let premium_only = int(status_code.as_ref()) == Some(-10403);
+
+    let video_info = play_info
+        .get("video_info")
+        .filter(|value| value.is_object())
+        .cloned()
+        .unwrap_or_else(|| json!({}));
+    let formats = extract_formats(Some(&video_info))
+        .into_iter()
+        .map(|format| format_from(format, episode_id))
+        .collect::<Result<Vec<_>>>()?;
+
+    if formats.is_empty() {
+        if geo_blocked {
+            return Err(named_fail(
+                name,
+                episode_id,
+                "This video is not available from your location due to geo restriction. You might want to use a VPN or a proxy server (with --proxy)",
+            ));
+        }
+        if premium_only
+            || webpage.contains("成为大会员抢先看")
+            || webpage.contains("开通大会员观看")
+        {
+            return Err(named_fail(
+                name,
+                episode_id,
+                &format!("This video is for premium members only. {LOGIN_HINT}"),
+            ));
+        }
+    }
+    let preview = ["play_check", "play_detail", "play_video_type"]
+        .iter()
+        .any(|key| {
+            matches!(
+                play_info.get(*key).and_then(Value::as_str),
+                Some("PLAY_PREVIEW" | "preview")
+            )
+        });
+    if preview {
+        crate::screen::warning(&format!(
+            "[{name}] Only preview format is available, you have to become a premium member to access full video. {LOGIN_HINT}"
+        ));
+    }
+
+    let url = with_query(
+        "https://api.bilibili.com/pgc/view/web/season",
+        &pairs(&[("ep_id", episode_id)]),
+    )?;
+    let season = super::download_json_note_headers(
+        client,
+        &url,
+        name,
+        episode_id,
+        "Get episode details",
+        &headers,
+    )?;
+    let bangumi_info = season
+        .get("result")
+        .cloned()
+        .ok_or_else(|| named_key_error(name, episode_id, "result"))?;
+
+    // `episodes` of the main section, then those of every other section.
+    let mut candidates: Vec<Value> = Vec::new();
+    if let Some(list) = bangumi_info.get("episodes").and_then(Value::as_array) {
+        candidates.extend(list.iter().cloned());
+    }
+    for section in bangumi_info
+        .get("section")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+    {
+        if let Some(list) = section.get("episodes").and_then(Value::as_array) {
+            candidates.extend(list.iter().cloned());
+        }
+    }
+    let mut episode_number = 1;
+    let mut episode_info = json!({});
+    for (index, candidate) in candidates
+        .iter()
+        .filter(|value| value.is_object())
+        .enumerate()
+    {
+        if str_or_none(candidate.get("id")).as_deref() == Some(episode_id) {
+            episode_number = index as i64 + 1;
+            episode_info = candidate.clone();
+            break;
+        }
+    }
+
+    let season_id = bangumi_info
+        .get("season_id")
+        .filter(|value| truthy(Some(value)))
+        .cloned();
+    let (season_number, season_title) = season_id
+        .as_ref()
+        .and_then(|id| {
+            bangumi_info
+                .get("seasons")
+                .and_then(Value::as_array)
+                .and_then(|seasons| {
+                    seasons
+                        .iter()
+                        .enumerate()
+                        .find(|(_, season)| season.get("season_id") == Some(id))
+                        .map(|(index, season)| {
+                            (
+                                Some(index as i64 + 1),
+                                str_or_none(season.get("season_title")),
+                            )
+                        })
+                })
+        })
+        .unwrap_or((None, None));
+
+    let mut dict = Map::new();
+    dict.insert("id".into(), episode_id.into());
+    dict.insert("formats".into(), Value::Null);
+    let series = bangumi_info.get("series");
+    for (key, value) in [
+        (
+            "series",
+            series
+                .and_then(|series| series.get("series_title"))
+                .and_then(Value::as_str)
+                .map(str::to_owned),
+        ),
+        (
+            "series_id",
+            str_or_none(series.and_then(|series| series.get("series_id"))),
+        ),
+        (
+            "thumbnail",
+            bangumi_info
+                .get("square_cover")
+                .and_then(Value::as_str)
+                .and_then(super::json_ld::url_or_none),
+        ),
+    ] {
+        if let Some(value) = value {
+            dict.insert(key.into(), value.into());
+        }
+    }
+    if let Some(long_title) = str_or_none(episode_info.get("long_title")) {
+        dict.insert("episode".into(), long_title.into());
+    }
+    let episode_index = int(episode_info.get("title"))
+        .filter(|number| *number != 0)
+        .unwrap_or(episode_number);
+    dict.insert("episode_number".into(), episode_index.into());
+    if let Some(timestamp) = int(episode_info.get("pub_time")) {
+        dict.insert("timestamp".into(), timestamp.into());
+    }
+    if episode_info
+        .as_object()
+        .is_some_and(|object| !object.is_empty())
+    {
+        let title = [
+            str_or_none(episode_info.get("title")),
+            str_or_none(episode_info.get("long_title")),
+        ]
+        .into_iter()
+        .flatten()
+        .filter(|part| !part.is_empty())
+        .collect::<Vec<_>>()
+        .join(" ");
+        dict.insert("title".into(), title.into());
+    }
+    dict.insert("episode_id".into(), episode_id.into());
+    dict.insert(
+        "season".into(),
+        season_title.map_or(Value::Null, Value::from),
+    );
+    dict.insert(
+        "season_id".into(),
+        str_or_none(season_id.as_ref()).map_or(Value::Null, Value::from),
+    );
+    dict.insert(
+        "season_number".into(),
+        season_number.map_or(Value::Null, Value::from),
+    );
+    dict.insert(
+        "duration".into(),
+        float(video_info.get("timelength"), 1000.0).map_or(Value::Null, Value::from),
+    );
+    let cid = str_or_none(episode_info.get("cid")).unwrap_or_else(|| "None".into());
+    let subtitles = if super::subtitles_requested() {
+        let query = match episode_info.get("aid").filter(|value| truthy(Some(value))) {
+            Some(aid) => pairs(&[
+                ("aid", str_or_none(Some(aid)).unwrap_or_default().as_str()),
+                ("cid", cid.as_str()),
+            ]),
+            None => pairs(&[("bvid", episode_id), ("cid", cid.as_str())]),
+        };
+        subtitles_with(client, name, episode_id, &query, &cid)?
+    } else {
+        json!({})
+    };
+    dict.insert("subtitles".into(), subtitles);
+    dict.insert("http_headers".into(), json!({"Referer": referer}));
+
+    Ok(bangumi_video(name, page, dict, formats))
+}
+
+pub struct BiliBiliBangumi;
+
+impl Extractor for BiliBiliBangumi {
+    fn key(&self) -> &'static str {
+        BANGUMI_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
+        let Some(episode_id) = captured_id(&BANGUMI_EP, page.as_str()) else {
+            return Ok(None);
+        };
+        announce(BANGUMI_NAME, page);
+        bangumi_episode(client, page, &episode_id).map(Some)
+    }
+}
+
+pub struct BiliBiliBangumiSeason;
+
+impl Extractor for BiliBiliBangumiSeason {
+    fn key(&self) -> &'static str {
+        BANGUMI_SEASON_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
+        let Some(ss_id) = captured_id(&BANGUMI_SS, page.as_str()) else {
+            return Ok(None);
+        };
+        announce(BANGUMI_SEASON_NAME, page);
+        let webpage = super::download_webpage(client, page, BANGUMI_SEASON_NAME, &ss_id)?;
+        let ld = bangumi_json_ld(&webpage, BANGUMI_SEASON_NAME, &ss_id)?;
+        let metainfo = ld
+            .get("itemListElement")
+            .and_then(Value::as_array)
+            .and_then(|items| items.iter().find(|item| item.is_object()));
+        let title = metainfo.and_then(|item| str_or_none(item.get("name")));
+        let description = metainfo.and_then(|item| str_or_none(item.get("description")));
+        let entries = bangumi_season_entries(client, BANGUMI_SEASON_NAME, page, &ss_id)?;
+        Ok(Some(bangumi_playlist(
+            BANGUMI_SEASON_NAME,
+            page,
+            &ss_id,
+            title,
+            description,
+            entries,
+            false,
+        )))
+    }
+}
+
+pub struct BiliBiliBangumiMedia;
+
+impl Extractor for BiliBiliBangumiMedia {
+    fn key(&self) -> &'static str {
+        BANGUMI_MEDIA_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
+        let Some(media_id) = captured_id(&BANGUMI_MD, page.as_str()) else {
+            return Ok(None);
+        };
+        announce(BANGUMI_MEDIA_NAME, page);
+        let webpage = super::download_webpage(client, page, BANGUMI_MEDIA_NAME, &media_id)?;
+        let state = super::search_json(&INITIAL_STATE, &webpage, false)
+            .flatten()
+            .ok_or_else(|| {
+                named_fail(
+                    BANGUMI_MEDIA_NAME,
+                    &media_id,
+                    &format!(
+                        "Unable to extract initial_state; {}",
+                        crate::BUG_REPORTS_MESSAGE
+                    ),
+                )
+            })?;
+        let media = state
+            .get("mediaInfo")
+            .ok_or_else(|| named_key_error(BANGUMI_MEDIA_NAME, &media_id, "mediaInfo"))?;
+        let ss_id = str_or_none(media.get("season_id"))
+            .ok_or_else(|| named_key_error(BANGUMI_MEDIA_NAME, &media_id, "season_id"))?;
+        let entries = bangumi_season_entries(client, BANGUMI_MEDIA_NAME, page, &ss_id)?;
+        Ok(Some(bangumi_playlist(
+            BANGUMI_MEDIA_NAME,
+            page,
+            &media_id,
+            str_or_none(media.get("title")),
+            str_or_none(media.get("evaluate")),
+            entries,
+            false,
+        )))
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Audio (`BilibiliAudioIE`, `BilibiliAudioAlbumIE`): the music-service API.
+// ---------------------------------------------------------------------------
+
+const AUDIO_NAME: &str = "BilibiliAudio";
+const AUDIO_ALBUM_NAME: &str = "BilibiliAudioAlbum";
+static AUDIO_AU: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?bilibili\.com/audio/au(\d+)").unwrap());
+static AUDIO_AM: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?bilibili\.com/audio/am(\d+)").unwrap());
+
+/// `BilibiliAudioIE.suitable`.
+pub fn audio_suitable(url: &str) -> bool {
+    AUDIO_AU.is_match(url)
+}
+
+/// `BilibiliAudioAlbumIE.suitable`.
+pub fn audio_album_suitable(url: &str) -> bool {
+    AUDIO_AM.is_match(url)
+}
+
+/// `BilibiliAudioBaseIE._call_api`: the response's `data`.
+fn audio_call(
+    client: &Client,
+    name: &'static str,
+    path: &str,
+    sid: &str,
+    query: Option<Vec<(String, String)>>,
+) -> Result<Value> {
+    let query = query.unwrap_or_else(|| pairs(&[("sid", sid)]));
+    let url = with_query(
+        &format!("https://www.bilibili.com/audio/music-service-c/web/{path}"),
+        &query,
+    )?;
+    let response = super::download_json(client, &url, name, sid)?;
+    response
+        .get("data")
+        .cloned()
+        .ok_or_else(|| named_key_error(name, sid, "data"))
+}
+
+fn dict_value(value: Option<&Value>) -> Value {
+    value.cloned().unwrap_or(Value::Null)
+}
+
+pub struct BilibiliAudio;
+
+impl Extractor for BilibiliAudio {
+    fn key(&self) -> &'static str {
+        AUDIO_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
+        let Some(au_id) = captured_id(&AUDIO_AU, page.as_str()) else {
+            return Ok(None);
+        };
+        announce(AUDIO_NAME, page);
+        let play_data = audio_call(client, AUDIO_NAME, "url", &au_id, None)?;
+        let cdn = play_data
+            .get("cdns")
+            .and_then(Value::as_array)
+            .and_then(|cdns| cdns.first())
+            .cloned()
+            .ok_or_else(|| named_key_error(AUDIO_NAME, &au_id, "cdns"))?;
+        let mut format = Map::new();
+        format.insert("url".into(), cdn);
+        format.insert(
+            "filesize".into(),
+            int(play_data.get("size")).map_or(Value::Null, Value::from),
+        );
+        format.insert("vcodec".into(), "none".into());
+        format.insert("http_headers".into(), json!({"Referer": page.as_str()}));
+        let formats = vec![format_from(format, &au_id)?];
+
+        let song = audio_call(client, AUDIO_NAME, "song/info", &au_id, None)?;
+        let title = song
+            .get("title")
+            .cloned()
+            .ok_or_else(|| named_key_error(AUDIO_NAME, &au_id, "title"))?;
+        let statistic = song
+            .get("statistic")
+            .filter(|value| truthy(Some(value)))
+            .cloned()
+            .unwrap_or_else(|| json!({}));
+        let lyric = song
+            .get("lyric")
+            .filter(|value| truthy(Some(value)))
+            .cloned();
+        let subtitles = lyric.map_or(Value::Null, |lyric| {
+            let ext = lyric
+                .as_str()
+                .and_then(super::direct::determine_ext)
+                .unwrap_or_default();
+            json!({"origin": [{"url": lyric, "ext": ext}]})
+        });
+
+        let mut dict = Map::new();
+        dict.insert("id".into(), au_id.as_str().into());
+        dict.insert("title".into(), title);
+        dict.insert("formats".into(), Value::Null);
+        dict.insert("artist".into(), dict_value(song.get("author")));
+        dict.insert(
+            "comment_count".into(),
+            int(statistic.get("comment")).map_or(Value::Null, Value::from),
+        );
+        dict.insert("description".into(), dict_value(song.get("intro")));
+        dict.insert(
+            "duration".into(),
+            int(song.get("duration")).map_or(Value::Null, Value::from),
+        );
+        dict.insert("subtitles".into(), subtitles);
+        dict.insert("thumbnail".into(), dict_value(song.get("cover")));
+        dict.insert(
+            "timestamp".into(),
+            int(song.get("passtime")).map_or(Value::Null, Value::from),
+        );
+        dict.insert("uploader".into(), dict_value(song.get("uname")));
+        dict.insert(
+            "view_count".into(),
+            int(statistic.get("play")).map_or(Value::Null, Value::from),
+        );
+        Ok(Some(bangumi_video(AUDIO_NAME, page, dict, formats)))
+    }
+}
+
+pub struct BilibiliAudioAlbum;
+
+impl Extractor for BilibiliAudioAlbum {
+    fn key(&self) -> &'static str {
+        AUDIO_ALBUM_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
+        let Some(am_id) = captured_id(&AUDIO_AM, page.as_str()) else {
+            return Ok(None);
+        };
+        announce(AUDIO_ALBUM_NAME, page);
+        let listing = audio_call(
+            client,
+            AUDIO_ALBUM_NAME,
+            "song/of-menu",
+            &am_id,
+            Some(pairs(&[
+                ("sid", am_id.as_str()),
+                ("pn", "1"),
+                ("ps", "100"),
+            ])),
+        )?;
+        let songs = listing
+            .get("data")
+            .ok_or_else(|| named_key_error(AUDIO_ALBUM_NAME, &am_id, "data"))?;
+        let sids: Vec<String> = songs
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(|song| str_or_none(song.get("id")).filter(|sid| !sid.is_empty()))
+            .collect();
+
+        // `album_data = self._call_api('menu/info', am_id) or {}`: the album's
+        // title (its entries carry it) and intro, when there are songs.
+        let (album_title, album_intro) = if sids.is_empty() {
+            (None, None)
+        } else {
+            let album = audio_call(client, AUDIO_ALBUM_NAME, "menu/info", &am_id, None)?;
+            let album = if truthy(Some(&album)) {
+                album
+            } else {
+                json!({})
+            };
+            (
+                str_or_none(album.get("title")).filter(|title| !title.is_empty()),
+                str_or_none(album.get("intro")),
+            )
+        };
+        let entries = sids
+            .into_iter()
+            .map(|sid| {
+                let target = format!("https://www.bilibili.com/audio/au{sid}");
+                let fields = album_title
+                    .iter()
+                    .map(|title| ("album", Value::from(title.as_str())))
+                    .collect();
+                url_result_entry(&target, AUDIO_NAME, Some(sid), AUDIO_ALBUM_NAME, fields)
+            })
+            .collect::<Result<Vec<_>>>()?;
+        Ok(Some(bangumi_playlist(
+            AUDIO_ALBUM_NAME,
+            page,
+            &am_id,
+            album_title,
+            album_intro,
+            entries,
+            true,
+        )))
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Space audio (`BilibiliSpaceAudioIE`): a user's uploaded songs, paged.
+// ---------------------------------------------------------------------------
+
+const SPACE_AUDIO_NAME: &str = "BilibiliSpaceAudio";
+static SPACE_AUDIO: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://space\.bilibili\.com/(\d+)/(?:upload/)?audio").unwrap()
+});
+
+/// `BilibiliSpaceAudioIE.suitable`.
+pub fn space_audio_suitable(url: &str) -> bool {
+    SPACE_AUDIO.is_match(url)
+}
+
+pub struct BilibiliSpaceAudio;
+
+impl Extractor for BilibiliSpaceAudio {
+    fn key(&self) -> &'static str {
+        SPACE_AUDIO_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
+        let Some(uid) = captured_id(&SPACE_AUDIO, page.as_str()) else {
+            return Ok(None);
+        };
+        announce(SPACE_AUDIO_NAME, page);
+        let fetch_page = |index: usize| -> Result<Value> {
+            let url = with_query(
+                "https://api.bilibili.com/audio/music-service/web/song/upper",
+                &pairs(&[
+                    ("uid", uid.as_str()),
+                    ("pn", &(index + 1).to_string()),
+                    ("ps", "30"),
+                    ("order", "1"),
+                    ("jsonp", "jsonp"),
+                ]),
+            )?;
+            let response = super::download_json_note(
+                client,
+                &url,
+                SPACE_AUDIO_NAME,
+                &uid,
+                &format!("Downloading page {index}"),
+            )?;
+            response
+                .get("data")
+                .cloned()
+                .ok_or_else(|| named_key_error(SPACE_AUDIO_NAME, &uid, "data"))
+        };
+        let first_page = fetch_page(0)?;
+        let page_count = int(first_page.get("pageCount"))
+            .ok_or_else(|| named_key_error(SPACE_AUDIO_NAME, &uid, "pageCount"))?;
+
+        let mut entries = Vec::new();
+        for index in 0..page_count.max(0) {
+            let data = if index == 0 {
+                first_page.clone()
+            } else {
+                fetch_page(index as usize)?
+            };
+            // `data` is None when the playlist is empty.
+            for song in data
+                .get("data")
+                .and_then(Value::as_array)
+                .into_iter()
+                .flatten()
+            {
+                let sid = str_or_none(song.get("id")).unwrap_or_default();
+                entries.push(url_result_entry(
+                    &format!("https://www.bilibili.com/audio/au{sid}"),
+                    AUDIO_NAME,
+                    Some(sid),
+                    SPACE_AUDIO_NAME,
+                    Vec::new(),
+                )?);
+            }
+        }
+        Ok(Some(bangumi_playlist(
+            SPACE_AUDIO_NAME,
+            page,
+            &uid,
+            None,
+            None,
+            entries,
+            true,
+        )))
+    }
+}
+
+#[cfg(test)]
+mod bangumi_tests {
+    use super::*;
+
+    #[test]
+    fn bangumi_urls_follow_upstream_valid_url() {
+        assert!(bangumi_episode_suitable(
+            "https://www.bilibili.com/bangumi/play/ep21495/"
+        ));
+        assert!(bangumi_season_suitable(
+            "https://www.bilibili.com/bangumi/play/ss2251"
+        ));
+        assert!(bangumi_media_suitable(
+            "https://www.bilibili.com/bangumi/media/md1565/"
+        ));
+        assert!(!bangumi_season_suitable(
+            "https://www.bilibili.com/bangumi/play/ep21495/"
+        ));
+        assert!(!bangumi_episode_suitable(
+            "https://www.bilibili.com/bangumi/media/md1565/"
+        ));
+        assert!(audio_suitable("https://www.bilibili.com/audio/au1003142"));
+        assert!(audio_album_suitable(
+            "https://www.bilibili.com/audio/am10624"
+        ));
+        assert!(!audio_suitable("https://www.bilibili.com/audio/am10624"));
+        assert!(space_audio_suitable(
+            "https://space.bilibili.com/313580179/upload/audio"
+        ));
+    }
 }
 
 #[cfg(test)]

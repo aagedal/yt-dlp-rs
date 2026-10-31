@@ -1,0 +1,33 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.bbc.co.uk/programmes/b00mfl7n/clips?page=1",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"b00mfl7n\", \"title\": \"BBC One - Frozen Planet, Series 1 - Clips\", \"description\": \"Clips from Series 1\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p0nh78jz\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p0nh76yc\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p03phqgj\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p03pdc8m\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p03np8c0\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p03np4ms\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p03np39x\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p03nnv5j\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p02ffsph\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p02d9gps\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p02d9fh7\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p011vc1z\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p00ny2mf\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p00mq92j\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p00mq8hx\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p00mry8v\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p00mryqq\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p00mrzr1\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p00mrzfv\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p00mrvw9\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p00mrxlj\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p00mrb5p\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p00mrb3z\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BBCCoUk\", \"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p00mr7yp\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"http://www.bbc.co.uk/programmes/b00mfl7n/clips?page=1\", \"original_url\": \"http://www.bbc.co.uk/programmes/b00mfl7n/clips?page=1\", \"webpage_url_basename\": \"clips\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk:playlist\", \"extractor_key\": \"BBCCoUkPlaylist\", \"release_year\": null, \"playlist_count\": 24, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.bbc.co.uk/programmes/b00mfl7n/clips?page=2",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [bbc.co.uk:playlist] b00mfl7n: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

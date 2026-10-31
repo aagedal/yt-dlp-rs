@@ -8,7 +8,7 @@
 //! `_parse_api_response`, video passwords) and original formats. The
 //! `android` client (cached OAuth tokens only) is not ported.
 use super::Extractor;
-use crate::{Error, ExtractResult, Result, VideoInfo};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
@@ -1848,6 +1848,406 @@ impl Extractor for Vimeo {
     }
 }
 
+// Upstream `VimeoAlbumIE` (`vimeo:album`) and `VimeoGroupsIE` (`vimeo:group`,
+// a `VimeoChannelIE`): the album API's video pages and the group's HTML
+// video pages, both as `url_result`s to `VimeoIE`.
+
+const ALBUM_NAME: &str = "vimeo:album";
+const ALBUM_KEY: &str = "VimeoAlbum";
+const GROUP_NAME: &str = "vimeo:group";
+const GROUP_KEY: &str = "VimeoGroups";
+
+static ALBUM_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(
+        r"^https://vimeo\.com/(?:album|showcase)/(?P<id>[^/?#]+)(?:$|[?#]|(?P<is_embed>/embed))",
+    )
+    .unwrap()
+});
+static GROUP_URL: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^https://vimeo\.com/groups/(?P<id>[^/]+)(?P<tail>.*)$").unwrap());
+/// `(?!videos?/\d+)` of the group pattern.
+static GROUP_VIDEO_PATH: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^/videos?/\d+").unwrap());
+static VIDEO_ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"/videos/(\d+)").unwrap());
+/// `_TITLE_RE` of `VimeoChannelIE`.
+static CHANNEL_TITLE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"<link rel="alternate"[^>]+?title="(.*?)""#).unwrap());
+/// `_MORE_PAGES_INDICATOR`.
+static MORE_PAGES: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"(?s)<a.+?rel="next""#).unwrap());
+/// The clip anchors of `_title_and_entries` (`(\1)` as a second capture).
+static CLIP_LINK: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r#"id="clip_(\d+)"[^>]*>\s*<a[^>]+href="(/(?:[^/"]+/)*)(\d+)([^>]*)"#).unwrap()
+});
+static CLIP_TITLE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"\btitle="([^"]+)""#).unwrap());
+static CLIP_ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"id=["']clip_(\d+)"#).unwrap());
+
+/// `VimeoAlbumIE.suitable`.
+pub fn album_suitable(url: &str) -> bool {
+    ALBUM_URL.is_match(&super::brightcove::unsmuggle(url).0)
+}
+
+/// `VimeoGroupsIE.suitable`: `/groups/ID` then end or a `/` not followed by
+/// `videos/ID`.
+pub fn groups_suitable(url: &str) -> bool {
+    GROUP_URL.captures(url).is_some_and(|found| {
+        let tail = &found["tail"];
+        tail.is_empty() || (tail.starts_with('/') && !GROUP_VIDEO_PATH.is_match(tail))
+    })
+}
+
+/// `url_result(url, VimeoIE, video_id, video_title=...)` as a playlist entry.
+fn url_entry(target: &str, id: Option<String>, title: Option<String>) -> Result<VideoInfo> {
+    let url = Url::parse(target)?;
+    let mut info = super::direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    let mut entry = Map::new();
+    entry.insert("ie_key".into(), KEY.into());
+    if let Some(id) = id {
+        entry.insert("id".into(), id.into());
+    }
+    if let Some(title) = title {
+        entry.insert("title".into(), title.into());
+    }
+    entry.insert("_type".into(), "url".into());
+    entry.insert("url".into(), target.into());
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": {},
+            "ie_key": KEY,
+            "extractor": NAME,
+            "entry": Value::Object(entry),
+        }),
+    );
+    Ok(info)
+}
+
+/// `playlist_result(entries, id, title, description)` (falsy title and
+/// description are left out).
+fn list_result(
+    url: &Url,
+    (name, key): (&'static str, &'static str),
+    id: &str,
+    title: Option<&str>,
+    description: Option<Value>,
+    entries: Vec<VideoInfo>,
+) -> ExtractResult {
+    let mut shape = vec!["id"];
+    let mut extra = Map::new();
+    let title = title.unwrap_or_default().to_owned();
+    if !title.is_empty() {
+        shape.push("title");
+    }
+    if let Some(description) = description.filter(truthy_value) {
+        extra.insert("description".into(), description);
+        shape.push("description");
+    }
+    extra.insert(
+        crate::info_order::INFO_SHAPE.into(),
+        format!("playlist-dict;{}", shape.join(",")).into(),
+    );
+    ExtractResult::Playlist(PlaylistInfo {
+        id: id.to_owned(),
+        title,
+        webpage_url: url.clone(),
+        extractor: name.into(),
+        extractor_key: key.into(),
+        nested: Vec::new(),
+        pending: None,
+        entries,
+        extra,
+    })
+}
+
+fn truthy_value(value: &Value) -> bool {
+    match value {
+        Value::Null => false,
+        Value::Bool(flag) => *flag,
+        Value::Number(number) => number.as_f64().is_some_and(|number| number != 0.0),
+        Value::String(text) => !text.is_empty(),
+        Value::Array(items) => !items.is_empty(),
+        Value::Object(map) => !map.is_empty(),
+    }
+}
+
+/// `_download_json` of the album API under `name` (its errors and warnings
+/// carry the album's extractor name).
+fn album_json(
+    client: &Client,
+    url: &Url,
+    (name, id): (&'static str, &str),
+    note: &str,
+    errnote: &str,
+    headers: &[(&str, &str)],
+) -> Result<Value> {
+    crate::screen::set_extractor(name);
+    match fetch(client, url, (Some(id), note), headers, None)? {
+        Fetched::Page(text) => crate::json::from_str(&text).map_err(|error| {
+            Error::Reported(format!(
+                "[{name}] {id}: Failed to parse JSON  (caused by {error})"
+            ))
+        }),
+        Fetched::Status { error, .. } => Err(Error::Reported(super::request_errnote_text(
+            name, id, errnote, &error,
+        ))),
+    }
+}
+
+/// `VimeoAlbumIE._real_extract` (numeric album IDs; the password and
+/// non-numeric showcase slug paths are not ported).
+fn album_extract(client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+    // `_unsmuggle_headers`: the smuggled referer of an embed.
+    let (bare, smuggled) = super::brightcove::unsmuggle(url.as_str());
+    let Some(found) = ALBUM_URL.captures(&bare) else {
+        return Ok(None);
+    };
+    let album_id = found["id"].to_owned();
+    let is_embed = found.name("is_embed").is_some();
+    let referer = smuggled
+        .get("referer")
+        .and_then(Value::as_str)
+        .map(str::to_owned);
+    crate::screen::set_extractor(ALBUM_NAME);
+    crate::screen::screen(&format!(
+        "[{ALBUM_NAME}] Extracting URL: {}",
+        crate::screen::extracting_url(url.as_str())
+    ));
+    if !album_id.bytes().all(|byte| byte.is_ascii_digit()) {
+        return Err(Error::UnsupportedHtml5(format!(
+            "[{ALBUM_NAME}] {album_id}: non-numeric showcase slugs are not supported"
+        )));
+    }
+    // `_get_embed_params(is_embed, referer)`.
+    let referrer = match (&referer, is_embed) {
+        (Some(referer), true) => Url::parse(referer)
+            .ok()
+            .and_then(|parsed| parsed.host_str().map(str::to_owned))
+            .unwrap_or_default(),
+        _ => String::new(),
+    };
+    let is_embed_text = if is_embed { "true" } else { "false" };
+    let viewer = fetch_viewer_info(client, Some(&album_id), &album_id)?;
+    let jwt = viewer_field(&viewer, "jwt", &album_id)?;
+    let authorization = format!("jwt {jwt}");
+    let headers = [
+        ("Authorization", authorization.as_str()),
+        ("Accept", "application/json"),
+    ];
+    let mut album_url = Url::parse(&format!("https://api.vimeo.com/albums/{album_id}"))?;
+    album_url
+        .query_pairs_mut()
+        .append_pair("is_embed", is_embed_text)
+        .append_pair("referrer", &referrer)
+        .append_pair("fields", "description,name,privacy");
+    let album = album_json(
+        client,
+        &album_url,
+        (ALBUM_NAME, &album_id),
+        "Downloading JSON metadata",
+        "Unable to download JSON metadata",
+        &headers,
+    )?;
+    if album.pointer("/privacy/view").and_then(Value::as_str) == Some("password") {
+        return Err(Error::UnsupportedHtml5(format!(
+            "[{ALBUM_NAME}] {album_id}: password-protected albums are not supported"
+        )));
+    }
+
+    // `OnDemandPagedList` of `_fetch_page` (100 per page); a page shorter
+    // than that is the last one, and a 400 response ends the list.
+    let mut entries = Vec::new();
+    for page in 1.. {
+        let mut videos_url =
+            Url::parse(&format!("https://api.vimeo.com/albums/{album_id}/videos"))?;
+        videos_url
+            .query_pairs_mut()
+            .append_pair("is_embed", is_embed_text)
+            .append_pair("referrer", &referrer)
+            .append_pair("fields", "link,uri")
+            .append_pair("page", &page.to_string())
+            .append_pair("per_page", "100");
+        let videos = match fetch(
+            client,
+            &videos_url,
+            (Some(album_id.as_str()), &format!("Downloading page {page}")),
+            &headers,
+            None,
+        )? {
+            Fetched::Page(text) => crate::json::from_str::<Value>(&text).map_err(|error| {
+                Error::Reported(format!(
+                    "[{ALBUM_NAME}] {album_id}: Failed to parse JSON  (caused by {error})"
+                ))
+            })?,
+            Fetched::Status { status: 400, .. } => break,
+            Fetched::Status { error, .. } => {
+                return Err(Error::Reported(super::request_errnote_text(
+                    ALBUM_NAME,
+                    &album_id,
+                    "Unable to download JSON metadata",
+                    &error,
+                )));
+            }
+        };
+        let data = videos
+            .get("data")
+            .and_then(Value::as_array)
+            .ok_or_else(|| key_error(&album_id, "data"))?;
+        let mut count = 0;
+        for video in data {
+            let Some(link) = video
+                .get("link")
+                .and_then(Value::as_str)
+                .filter(|link| !link.is_empty())
+            else {
+                continue;
+            };
+            count += 1;
+            let video_id = video
+                .get("uri")
+                .and_then(Value::as_str)
+                .and_then(|uri| VIDEO_ID.captures(uri))
+                .map(|found| found[1].to_owned());
+            let mut target = link.to_owned();
+            if is_embed {
+                let Some(video_id) = &video_id else {
+                    crate::screen::warning(&format!(
+                        "[{ALBUM_NAME}] Skipping due to missing video ID: {link}"
+                    ));
+                    count -= 1;
+                    continue;
+                };
+                target = format!("https://player.vimeo.com/video/{video_id}");
+                if let Some(referer) = &referer {
+                    target = super::brightcove::smuggle(&target, &json!({"referer": referer}));
+                }
+            }
+            entries.push(url_entry(&target, video_id, None)?);
+        }
+        if count < 100 {
+            break;
+        }
+    }
+    let name = album.get("name").and_then(Value::as_str);
+    Ok(Some(list_result(
+        url,
+        (ALBUM_NAME, ALBUM_KEY),
+        &album_id,
+        name,
+        album.get("description").cloned(),
+        entries,
+    )))
+}
+
+/// `VimeoChannelIE._title_and_entries` for `https://vimeo.com/groups/ID`.
+fn group_extract(client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+    let Some(found) = GROUP_URL.captures(url.as_str()) else {
+        return Ok(None);
+    };
+    if !groups_suitable(url.as_str()) {
+        return Ok(None);
+    }
+    let group_id = found["id"].to_owned();
+    crate::screen::set_extractor(GROUP_NAME);
+    crate::screen::screen(&format!(
+        "[{GROUP_NAME}] Extracting URL: {}",
+        crate::screen::extracting_url(url.as_str())
+    ));
+    let base_url = format!("https://vimeo.com/groups/{group_id}");
+    let mut title = None;
+    let mut entries = Vec::new();
+    for pagenum in 1.. {
+        let page_url = Url::parse(&format!("{base_url}/videos/page:{pagenum}/"))?;
+        let webpage = super::download_webpage_note(
+            client,
+            &page_url,
+            GROUP_NAME,
+            &group_id,
+            &format!("Downloading page {pagenum}"),
+        )?;
+        if pagenum == 1 {
+            title = CHANNEL_TITLE
+                .captures(&webpage)
+                .map(|found| found[1].to_owned());
+        }
+        let base = Url::parse(&base_url)?;
+        let mut clips = Vec::new();
+        for found in CLIP_LINK.captures_iter(&webpage) {
+            // `(/(?:[^/]+/)*\1)`: the path must end in the clip's own ID.
+            if found[1] != found[3] {
+                continue;
+            }
+            let video_title = CLIP_TITLE
+                .captures_iter(&found[4])
+                .last()
+                .map(|title| title[1].to_owned());
+            clips.push((
+                format!("{}{}", &found[2], &found[3]),
+                found[1].to_owned(),
+                video_title,
+            ));
+        }
+        if clips.is_empty() {
+            for found in CLIP_ID.captures_iter(&webpage) {
+                clips.push((
+                    format!("https://vimeo.com/{}", &found[1]),
+                    found[1].to_owned(),
+                    None,
+                ));
+            }
+        }
+        for (path, video_id, video_title) in clips {
+            let target = base.join(&path)?.to_string();
+            entries.push(url_entry(&target, Some(video_id), video_title)?);
+        }
+        if !MORE_PAGES.is_match(&webpage) {
+            break;
+        }
+    }
+    Ok(Some(list_result(
+        url,
+        (GROUP_NAME, GROUP_KEY),
+        &group_id,
+        title.as_deref(),
+        None,
+        entries,
+    )))
+}
+
+pub struct VimeoAlbum;
+
+impl Extractor for VimeoAlbum {
+    fn key(&self) -> &'static str {
+        ALBUM_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        album_extract(client, url)
+    }
+}
+
+pub struct VimeoGroups;
+
+impl Extractor for VimeoGroups {
+    fn key(&self) -> &'static str {
+        GROUP_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        group_extract(client, url)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1881,5 +2281,19 @@ mod tests {
             match_url("https://vimeo.com/showcase/3253534/video/119195465"),
             Some(("119195465".into(), None))
         );
+    }
+
+    #[test]
+    fn album_and_group_urls_follow_upstream_valid_url() {
+        assert!(album_suitable(
+            "https://vimeo.com/showcase/10677689/embed#__youtubedl_smuggle=%7B%22referer%22%3A+%22https%3A%2F%2Fwww.riccardomutimusic.com%2F%22%7D"
+        ));
+        assert!(album_suitable("https://vimeo.com/album/2632481"));
+        assert!(!album_suitable("https://vimeo.com/album/2632481/video/1"));
+        assert!(groups_suitable("https://vimeo.com/groups/meetup"));
+        assert!(groups_suitable("https://vimeo.com/groups/meetup/members"));
+        assert!(!groups_suitable(
+            "https://vimeo.com/groups/meetup/videos/1234"
+        ));
     }
 }

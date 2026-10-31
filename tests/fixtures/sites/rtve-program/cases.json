@@ -1,0 +1,4 @@
+[
+ {"url": "https://www.rtve.es/play/videos/saber-vivir/", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.rtve.es/play/videos/missing-program/", "args": ["-J", "--flat-playlist"]}
+]

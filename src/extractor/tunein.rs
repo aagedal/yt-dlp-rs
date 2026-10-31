@@ -1,8 +1,9 @@
-//! Upstream `TuneInStationIE`, `TuneInPodcastIE` and `TuneInPodcastEpisodeIE`
-//! (`yt_dlp/extractor/tunein.py`): a station's or an episode's `opml`
-//! stream list (direct MP3/AAC/Ogg URLs) with the `api.tunein.com` profile,
-//! and a podcast's paged episode list as URL entries. HLS streams and the
-//! `TuneInEmbedIE`/`TuneInShortenerIE` redirects are not supported natively.
+//! Upstream `TuneInStationIE`, `TuneInPodcastIE`, `TuneInPodcastEpisodeIE`,
+//! `TuneInEmbedIE` and `TuneInShortenerIE` (`yt_dlp/extractor/tunein.py`): a
+//! station's or an episode's `opml` stream list (direct MP3/AAC/Ogg URLs)
+//! with the `api.tunein.com` profile, a podcast's paged episode list as URL
+//! entries, and the embed and `tun.in` redirects followed as URL results.
+//! HLS streams are not supported natively.
 use super::{Extractor, dict_format, dict_info, download_json};
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
@@ -14,11 +15,15 @@ use url::Url;
 pub struct TuneInStation;
 pub struct TuneInPodcast;
 pub struct TuneInPodcastEpisode;
+pub struct TuneInEmbed;
+pub struct TuneInShortener;
 
 const STATION_NAME: &str = "tunein:station";
 const PODCAST_NAME: &str = "tunein:podcast:program";
 const EPISODE_NAME: &str = "tunein:podcast";
 const PAGE_SIZE: usize = 20;
+const EMBED_NAME: &str = "tunein:embed";
+const SHORTENER_NAME: &str = "tunein:shortener";
 
 static STATION_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^https?://tunein\.com/radio/[^/?#]+(?P<id>s\d+)").unwrap());
@@ -45,6 +50,21 @@ pub fn podcast_suitable(url: &str) -> bool {
 /// `_match_valid_url` for `TuneInPodcastEpisodeIE`.
 pub fn episode_suitable(url: &str) -> bool {
     EPISODE_URL.is_match(url)
+}
+
+static EMBED_URL: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^https?://tunein\.com/embed/player/(?P<id>[^/?#]+)").unwrap());
+static SHORTENER_URL: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^https?://tun\.in/(?P<id>[^/?#]+)").unwrap());
+
+/// `_match_valid_url` for `TuneInEmbedIE`.
+pub fn embed_suitable(url: &str) -> bool {
+    EMBED_URL.is_match(url)
+}
+
+/// `_match_valid_url` for `TuneInShortenerIE`.
+pub fn shortener_suitable(url: &str) -> bool {
+    SHORTENER_URL.is_match(url)
 }
 
 fn unsupported(what: &str) -> Error {
@@ -393,6 +413,77 @@ impl Extractor for TuneInPodcastEpisode {
     }
 }
 
+impl Extractor for TuneInEmbed {
+    fn key(&self) -> &'static str {
+        "TuneInEmbed"
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    /// `url_result('https://tunein.com/{kind}/?{kind}id=...')`, the
+    /// station, program or topic page of the embed's ID.
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = EMBED_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let embed_id = found["id"].to_owned();
+        crate::screen::set_extractor(EMBED_NAME);
+        crate::screen::screen(&format!(
+            "[{EMBED_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        let kind = match embed_id.chars().next() {
+            Some('p') => "program",
+            Some('s') => "station",
+            Some('t') => "topic",
+            _ => "None",
+        };
+        let rest: String = embed_id.chars().skip(1).collect();
+        let target = format!("https://tunein.com/{kind}/?{kind}id={rest}");
+        // The generic extractor's redirect step: the page's final URL is
+        // the one that is followed.
+        let response = super::direct::request(client, &Url::parse(&target)?, None)?;
+        Ok(Some(super::follow_url(url, response.url().to_string())))
+    }
+}
+
+impl Extractor for TuneInShortener {
+    fn key(&self) -> &'static str {
+        "TuneInShortener"
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    /// `_request_webpage` (following the redirects), then the final URL
+    /// without its port as a URL result.
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = SHORTENER_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let redirect_id = found["id"].to_owned();
+        crate::screen::set_extractor(SHORTENER_NAME);
+        crate::screen::screen(&format!(
+            "[{SHORTENER_NAME}] {redirect_id}: Downloading redirect page"
+        ));
+        let response = super::direct::request(client, url, None)?;
+        let mut final_url = response.url().clone();
+        // Need to strip port from URL.
+        final_url
+            .set_port(None)
+            .map_err(|()| Error::UnsupportedUrl(final_url.to_string()))?;
+        let new_url = final_url.to_string();
+        // Prevent infinite loop in case redirect fails.
+        if shortener_suitable(&new_url) {
+            return Err(Error::UnsupportedUrl(new_url));
+        }
+        Ok(Some(super::follow_url(url, new_url)))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -413,5 +504,11 @@ mod tests {
             "https://tunein.com/podcasts/Technology-Podcasts/Artificial-Intelligence-p1153019/?topicId=236404354"
         ));
         assert!(!episode_suitable("https://tunein.com/embed/player/s6404/"));
+        assert!(embed_suitable("https://tunein.com/embed/player/s6404/"));
+        assert!(!embed_suitable(
+            "https://tunein.com/radio/Jazz24-885-s34682/"
+        ));
+        assert!(shortener_suitable("http://tun.in/ser7s"));
+        assert!(!shortener_suitable("https://tunein.com/ser7s"));
     }
 }

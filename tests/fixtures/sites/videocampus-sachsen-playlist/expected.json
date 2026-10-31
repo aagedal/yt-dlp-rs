@@ -1,0 +1,18 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://videocampus.sachsen.de/category/online-tutorials-onyx/91",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"category-91\", \"title\": \"Online tutorials ONYX - BPS - Educational organisations - VCS\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"VideocampusSachsen\", \"_type\": \"url\", \"url\": \"https://videocampus.sachsen.de/category/video/06-onyx-adaptive-testerstellung/6701c3180f8d13fd1d6da757eb995c3c/91\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VideocampusSachsen\", \"_type\": \"url\", \"url\": \"https://videocampus.sachsen.de/category/video/03-onyx-testauswertung-und-archivierung/31409803a1e56dba7891768ee6672176/91\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VideocampusSachsen\", \"_type\": \"url\", \"url\": \"https://videocampus.sachsen.de/category/video/02-onyx-testbereitstellung-und-konfiguration/8a9ccf91650a3bc2de9089f4273edf56/91\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VideocampusSachsen\", \"_type\": \"url\", \"url\": \"https://videocampus.sachsen.de/category/video/onyx-berblick-ber-szenarien-mit-variablen/3a971fdc82becf49f814b70575caf058/91\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VideocampusSachsen\", \"_type\": \"url\", \"url\": \"https://videocampus.sachsen.de/category/video/05-onyx-einsatz-von-variablen-zur-umsetzung-adaptiver-aufgaben/a8abbfc596f53b7bd985f7692a192666/91\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VideocampusSachsen\", \"_type\": \"url\", \"url\": \"https://videocampus.sachsen.de/category/video/04-onyx-mathematische-berechnungen-und-formeln/cc9ec4e4c5fc79ae925c22b6f23b4c7c/91\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VideocampusSachsen\", \"_type\": \"url\", \"url\": \"https://videocampus.sachsen.de/category/video/01-onyx-aufgabenerstellung-und-verwaltung-fr-einsteiger/21d9c3894392961c7e2ed0c08da1e973/91\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://videocampus.sachsen.de/category/online-tutorials-onyx/91\", \"original_url\": \"https://videocampus.sachsen.de/category/online-tutorials-onyx/91\", \"webpage_url_basename\": \"91\", \"webpage_url_domain\": \"videocampus.sachsen.de\", \"extractor\": \"ViMP:Playlist\", \"extractor_key\": \"ViMPPlaylist\", \"release_year\": null, \"playlist_count\": 7, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

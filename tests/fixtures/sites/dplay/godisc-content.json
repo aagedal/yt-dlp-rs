@@ -1,0 +1,302 @@
+{
+  "data" : {
+    "attributes" : {
+      "availabilityWindows" : [ {
+        "package" : "Discovery",
+        "playableEnd" : "2038-01-18T00:00:00Z",
+        "playableStart" : "2024-07-15T02:00:00Z"
+      }, {
+        "package" : "Free",
+        "playableEnd" : "2038-01-18T00:00:00Z",
+        "playableStart" : "2024-07-15T02:00:00Z"
+      } ],
+      "description" : "Twisters destroy Midwest towns, trapping spotters in the eye of the storm.",
+      "episodeNumber" : 1,
+      "longDescription" : "Hundreds of cameras captured a rare tornado outbreak in 2023 as it struck Rolling Fork, Mississippi and Little Rock, Arkansas. But when a twister hits Lewistown, Illinois, a group of tornado spotters find themselves trapped in the eye of the deadly storm.",
+      "name" : "Trapped in a Twister",
+      "publishStart" : "2024-07-15T02:00:00Z",
+      "rights" : {
+        "embeddable" : false
+      },
+      "seasonNumber" : 1,
+      "videoDuration" : 2490237
+    },
+    "id" : "5352642",
+    "relationships" : {
+      "contentPackages" : {
+        "data" : [ {
+          "id" : "Discovery",
+          "type" : "package"
+        }, {
+          "id" : "Free",
+          "type" : "package"
+        } ]
+      },
+      "images" : {
+        "data" : [ {
+          "id" : "7a58e016-f1c0-48b5-afe6-3502a0c10a81",
+          "type" : "image"
+        } ]
+      },
+      "primaryChannel" : {
+        "data" : {
+          "id" : "163",
+          "type" : "channel"
+        }
+      },
+      "ratingDescriptors" : {
+        "data" : [ {
+          "id" : "323c40f5-ab36-464a-9150-0497ba3f798d",
+          "type" : "contentDescriptor"
+        } ]
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "b4821276-a965-4e59-9328-eda965e38d6f",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "e49d2cf1bfcfc833ac10b09927afa894eaf16731b58c2ddf8ccac9c1206a5524",
+          "type" : "route"
+        } ]
+      },
+      "season" : {
+        "data" : {
+          "id" : "34193",
+          "type" : "season"
+        }
+      },
+      "show" : {
+        "data" : {
+          "id" : "27489",
+          "type" : "show"
+        }
+      },
+      "txGenres" : {
+        "data" : [ {
+          "id" : "81adf4e4-89f2-4101-8368-8da4a0b7968b",
+          "type" : "taxonomyNode"
+        }, {
+          "id" : "8c026e99-0051-40be-82cf-46d041ab6633",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "video"
+  },
+  "included" : [ {
+    "attributes" : {
+      "name" : "Discovery"
+    },
+    "id" : "163",
+    "relationships" : {
+      "contentPackages" : {
+        "data" : [ {
+          "id" : "Discovery",
+          "type" : "package"
+        } ]
+      },
+      "images" : {
+        "data" : [ {
+          "id" : "21db2234-9428-455c-b2c4-5ffc1edaee83",
+          "type" : "image"
+        }, {
+          "id" : "28aa425f-fb33-4500-8195-17e71ec947e8",
+          "type" : "image"
+        }, {
+          "id" : "5a80952d-69d6-48c9-a662-66ebe861239d",
+          "type" : "image"
+        }, {
+          "id" : "a9a0f868-8b57-4b03-8fc3-0874127ba218",
+          "type" : "image"
+        }, {
+          "id" : "affd8f03-534c-457b-a56c-af9ec34fd2d6",
+          "type" : "image"
+        }, {
+          "id" : "b4faee3c-2348-4249-b655-c0b235d1081f",
+          "type" : "image"
+        }, {
+          "id" : "a36d715d-efbf-415c-af0e-a5cd5476efa4",
+          "type" : "image"
+        }, {
+          "id" : "a9c6ddd9-d338-41fc-8e07-0f87578a48a1",
+          "type" : "image"
+        }, {
+          "id" : "b12d1866-7cf9-4e6e-8381-2ce93a9a003b",
+          "type" : "image"
+        }, {
+          "id" : "b96ded9e-1ee8-4d6b-87f1-b949ba0071a9",
+          "type" : "image"
+        }, {
+          "id" : "dd116c2e-c739-484c-8677-342cbe0a387d",
+          "type" : "image"
+        }, {
+          "id" : "fc7339d4-b100-4690-a9ea-ad43a89cf2e3",
+          "type" : "image"
+        } ]
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "b4821276-a965-4e59-9328-eda965e38d6f",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "0bc03b263155c518b34ac25f23870a5202a3ea058dbab5f607d12f6f5705b506",
+          "type" : "route"
+        } ]
+      },
+      "txFeedPreview" : {
+        "data" : [ {
+          "id" : "3dfa1ed6-ecd0-47c8-8315-a81ef1381d21",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "channel"
+  }, {
+    "attributes" : {
+      "height" : 1080,
+      "kind" : "default",
+      "src" : "https://us1-prod-images.disco-api.com/2024/07/10/5e39637d-cabf-3ab3-8e9a-f4e9d37bc036.jpeg",
+      "width" : 1920
+    },
+    "id" : "7a58e016-f1c0-48b5-afe6-3502a0c10a81",
+    "type" : "image"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/channel/discovery"
+    },
+    "id" : "0bc03b263155c518b34ac25f23870a5202a3ea058dbab5f607d12f6f5705b506",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/show/in-the-eye-of-the-storm-discovery-atve-us"
+    },
+    "id" : "a9b1f071a766b6ae8e69709c373baeb060386041bd4f402d0a0c50dd938fea34",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/video/in-the-eye-of-the-storm-discovery-atve-us/trapped-in-a-twister"
+    },
+    "id" : "e49d2cf1bfcfc833ac10b09927afa894eaf16731b58c2ddf8ccac9c1206a5524",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "customAttributes" : { },
+      "description" : "Eyewitnesses capture jaw-dropping footage from inside natural disasters.",
+      "longDescription" : "This series reveals recent natural disasters as they happened in real-time through footage captured by eyewitnesses who found themselves in the wrong place at the right time and boldly held up their camera phones to capture the eye of the storm.",
+      "name" : "In the Eye of the Storm"
+    },
+    "id" : "27489",
+    "relationships" : {
+      "images" : {
+        "data" : [ {
+          "id" : "02af3ed7-4ee4-4ea5-ada5-e7f47b4c8da2",
+          "type" : "image"
+        }, {
+          "id" : "1552f27a-bba6-4db7-ade4-4575de0676cb",
+          "type" : "image"
+        }, {
+          "id" : "516b102e-1f07-41b5-8002-9335765dd326",
+          "type" : "image"
+        }, {
+          "id" : "5b4b4f90-539d-4ff3-a8bc-15c91ff7bb6a",
+          "type" : "image"
+        }, {
+          "id" : "7e324a10-203d-4cce-a32f-8950e8bd60fe",
+          "type" : "image"
+        }, {
+          "id" : "c4363efc-7e8f-4ef5-b03f-9976548b629e",
+          "type" : "image"
+        }, {
+          "id" : "acb57d6b-40ce-4044-882e-4e841aad52fa",
+          "type" : "image"
+        }, {
+          "id" : "b4719265-7b08-4dbb-aaf3-752d87077a44",
+          "type" : "image"
+        }, {
+          "id" : "be62f41c-bb9f-4330-b8f7-78b5d09e0312",
+          "type" : "image"
+        }, {
+          "id" : "c7d3578c-eb3c-4067-9675-42fbfe56a51d",
+          "type" : "image"
+        }, {
+          "id" : "c9461c67-908b-4ab2-99fe-e406833039a2",
+          "type" : "image"
+        }, {
+          "id" : "fc53bf0f-407e-482a-9c16-1cd3cdefc277",
+          "type" : "image"
+        } ]
+      },
+      "primaryChannel" : {
+        "data" : {
+          "id" : "163",
+          "type" : "channel"
+        }
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "b4821276-a965-4e59-9328-eda965e38d6f",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "a9b1f071a766b6ae8e69709c373baeb060386041bd4f402d0a0c50dd938fea34",
+          "type" : "route"
+        } ]
+      },
+      "seasons" : {
+        "data" : [ {
+          "id" : "34193",
+          "type" : "season"
+        }, {
+          "id" : "35292",
+          "type" : "season"
+        }, {
+          "id" : "35397",
+          "type" : "season"
+        }, {
+          "id" : "35645",
+          "type" : "season"
+        } ]
+      },
+      "txGenres" : {
+        "data" : [ {
+          "id" : "81adf4e4-89f2-4101-8368-8da4a0b7968b",
+          "type" : "taxonomyNode"
+        }, {
+          "id" : "8c026e99-0051-40be-82cf-46d041ab6633",
+          "type" : "taxonomyNode"
+        }, {
+          "id" : "90d9f38b-cc2a-4a04-92d6-6824e1624fe8",
+          "type" : "taxonomyNode"
+        }, {
+          "id" : "fdd78a1d-d6c6-436f-9395-8c45b80a0ed6",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "show"
+  } ],
+  "meta" : {
+    "site" : {
+      "attributes" : {
+        "brand" : "go",
+        "brandId" : "dsc",
+        "mainTerritoryCode" : "us",
+        "theme" : "dsc",
+        "websiteHostName" : ""
+      },
+      "id" : "dsc",
+      "type" : "site"
+    }
+  }
+}

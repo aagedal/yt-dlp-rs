@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://xhamster.com/videos/femaleagent-shy-beauty-takes-the-bait-1509445",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "xh_video-01.html"
+  },
+  {
+   "url": "https://video-nss-h.xhcdn.com/HxjaCl-YZ0TK-GD6VPMg_Q==,1793473200/media=hls4/multi=256x144:144p,426x240:240p/001/509/445/_TPL_.h264.mp4.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "xh_video-02.m3u8"
+  },
+  {
+   "url": "https://video-h.xhcdn.com/key=sZ--oI3fkyh15A6zAIF5UQ,end=1793473200/data=192.0.2.1-dvp/referer=/media=hls4/multi=256x144:144p,426x240:240p/001/509/445/_TPL_.h264.mp4.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "xh_video-03.m3u8"
+  },
+  {
+   "url": "https://xhamster.com/users/netvideogirls/videos/1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "xh_user-01.html"
+  }
+ ]
+}

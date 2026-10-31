@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html><head><title>February 2022 Detroit Revenue Estimating Conference</title></head>
+<body>
+<script>
+window.__data__ = {
+logo: {
+img:  "" ,
+link: 'https://cityofdetroit.zoom.us/',
+alt:  "Zoom Logo" 
+},
+meetingId: 'H_dbe9XrOtP7Q2OuailzcZ1vvkDIWRDuWdhN49y0EKdyR98NbkJwlb0fbgVOkVzA.xgzmz5igVS99EdqW',
+fileId: '',
+isLogin: false,
+isFromShare: true,
+isVideoSDK: false,
+siteName: 'Zoom',
+enableNewPagePhase2: true,
+allowDarkMode:false,
+enableRedesignLayout:false,
+nwsDomain: '',
+marvelDomain: 'https%3A%2F%2Fus02zoomclips.zoom.us',
+addClipsPms: true,
+hybridRecordingPlay: false,
+accessLevel: 'meeting'
+};
+</script>
+</body></html>

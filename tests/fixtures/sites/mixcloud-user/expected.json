@@ -1,0 +1,35 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.mixcloud.com/dholbach/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"dholbach_uploads\", \"title\": \"dholbach (uploads)\", \"description\": \"As a DJ I was socialised with techno music in my early days and moved on, almost exclusively to Drum'n'Bass music. I loved the energy of broken beats and enjoyed playing those tunes at parties.\\n\\nThese days, I enjoy whatever music makes me want to move to it, whatever style it might be. I love getting feedback, so please comment on the mixes and let me know what you think. Also all kinds of music suggestions are appreciated.\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Mixcloud\", \"id\": \"dholbach_the-real-bellydance-2026-xxl-dj-session-mit-root-olivenbaum\", \"_type\": \"url\", \"url\": \"https://www.mixcloud.com/dholbach/the-real-bellydance-2026-xxl-dj-session-mit-root-olivenbaum/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Mixcloud\", \"id\": \"dholbach_something-like-something-like-bellydance-2026-fragments-of-the-rest-of-the-night\", \"_type\": \"url\", \"url\": \"https://www.mixcloud.com/dholbach/something-like-something-like-bellydance-2026-fragments-of-the-rest-of-the-night/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Mixcloud\", \"id\": \"dholbach_something-like-something-like-bellydance-2026-aftershow\", \"_type\": \"url\", \"url\": \"https://www.mixcloud.com/dholbach/something-like-something-like-bellydance-2026-aftershow/\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"http://www.mixcloud.com/dholbach/\", \"original_url\": \"http://www.mixcloud.com/dholbach/\", \"webpage_url_basename\": \"dholbach\", \"webpage_url_domain\": \"mixcloud.com\", \"extractor\": \"mixcloud:user\", \"extractor_key\": \"MixcloudUser\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [mixcloud:user] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.mixcloud.com/dholbach/uploads/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"dholbach_uploads\", \"title\": \"dholbach (uploads)\", \"description\": \"As a DJ I was socialised with techno music in my early days and moved on, almost exclusively to Drum'n'Bass music. I loved the energy of broken beats and enjoyed playing those tunes at parties.\\n\\nThese days, I enjoy whatever music makes me want to move to it, whatever style it might be. I love getting feedback, so please comment on the mixes and let me know what you think. Also all kinds of music suggestions are appreciated.\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Mixcloud\", \"id\": \"dholbach_the-real-bellydance-2026-xxl-dj-session-mit-root-olivenbaum\", \"_type\": \"url\", \"url\": \"https://www.mixcloud.com/dholbach/the-real-bellydance-2026-xxl-dj-session-mit-root-olivenbaum/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Mixcloud\", \"id\": \"dholbach_something-like-something-like-bellydance-2026-fragments-of-the-rest-of-the-night\", \"_type\": \"url\", \"url\": \"https://www.mixcloud.com/dholbach/something-like-something-like-bellydance-2026-fragments-of-the-rest-of-the-night/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Mixcloud\", \"id\": \"dholbach_something-like-something-like-bellydance-2026-aftershow\", \"_type\": \"url\", \"url\": \"https://www.mixcloud.com/dholbach/something-like-something-like-bellydance-2026-aftershow/\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"http://www.mixcloud.com/dholbach/uploads/\", \"original_url\": \"http://www.mixcloud.com/dholbach/uploads/\", \"webpage_url_basename\": \"uploads\", \"webpage_url_domain\": \"mixcloud.com\", \"extractor\": \"mixcloud:user\", \"extractor_key\": \"MixcloudUser\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [mixcloud:user] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,29 @@
+<Mediapolis>
+	<url type="content">
+		<![CDATA[https://vod8-rai-it.akamaized.net/podcastcdn/rai24_vod/22484252_,1200/playlist.m3u8?auth=daEamaHaib8d.c0dvdzbzalc.bmdYcJbkaT-bQ5GwZ-c0-CjuuzFn&aifp=V001]]>
+	</url>
+	<url type="bumper"></url>
+	<url type="bumperend"></url>
+	<ct>m3u8</ct>
+	<bitrate>0</bitrate>
+	<smooth>N</smooth>
+	<is_live>N</is_live>
+	<description>Rai</description>
+	<geoprotection>N</geoprotection>
+	<category>5116</category>
+	<plVod></plVod>
+	<plLive></plLive>
+	<logo>http://www.rainews.it/dl/rainews/images/logo_news.png</logo>
+	<poster>https://creativemediax1-rai-it.akamaized.net/podcastcdn/rai24_vod/22484252_1.jpg</poster>
+	<duration>00:03:16</duration>
+	<krpano></krpano>
+	<channel></channel>
+	<ads_tecnico></ads_tecnico>
+	<license_url>
+		<![CDATA[{}]]>
+	</license_url>
+	<thumbs_array>
+<![CDATA[{"shots":100,"frameHeight":81,"rowsPerStrips":5,"colsPerStrips":5,"files":["https://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=QGkSR5BBAGIu8Qs3MnqpxweeqqEEqualeeqqEEqual","https://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=ZeRfT4cEISGmxKCQDLX21weeqqEEqualeeqqEEqual","https://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=8HID0ssSlash8r3zppgVba1DpA0AeeqqEEqualeeqqEEqual","https://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=tEkX8v9XbWRm0F2yfrbyRAeeqqEEqualeeqqEEqual"]}]]>
+	</thumbs_array>
+	<vtt_poster_thumbs_url><![CDATA[https://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=2HMOUbXuXwlWQIvoqDr5LQeeqqEEqualeeqqEEqual]]></vtt_poster_thumbs_url>
+</Mediapolis>

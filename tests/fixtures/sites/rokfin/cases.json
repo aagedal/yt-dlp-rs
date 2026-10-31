@@ -1,0 +1,24 @@
+[
+ {
+  "url": "https://rokfin.com/post/223/Julian-Assange-Arrested-Streaming-In-Real-Time",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://www.rokfin.com/stack/271/Tulsi-Gabbard-Portsmouth-Townhall-FULL--Feb-9-2020",
+  "args": [
+   "-J",
+   "--flat-playlist",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "https://rokfin.com/post/999999/missing",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ }
+]

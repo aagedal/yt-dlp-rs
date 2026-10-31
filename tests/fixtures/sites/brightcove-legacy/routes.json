@@ -1,0 +1,92 @@
+{
+ "routes": [
+  {
+   "url": "https://link.brightcove.com/services/player/bcpid1265504713001",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html;charset=utf-8"
+   },
+   "body_file": "rec-000.bin"
+  },
+  {
+   "url": "https://players.brightcove.net/1130468786001/default_default/config.json",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "rec-001.bin"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/1130468786001/videos/2750934548001",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json; charset=UTF-8"
+   },
+   "body_file": "rec-002.bin"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/1130468786001/3dc78ffc-f347-43a7-b497-cbce54477dc2/10s/master.m3u8?fastly_token=NmFlNjVmY2NfOTVhMjBjMjViZmZkNjUyYzM3YTkxMzE2YzRhNWM0MzM2NWRiMGNlNDBlYzdiMWNlMjg1YmUxMzMxNTk1YTYzYw%3D%3D",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "rec-003.bin"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/1130468786001/3dc78ffc-f347-43a7-b497-cbce54477dc2/10s/master.m3u8?fastly_token=NmFlNjVmY2NfOTVhMjBjMjViZmZkNjUyYzM3YTkxMzE2YzRhNWM0MzM2NWRiMGNlNDBlYzdiMWNlMjg1YmUxMzMxNTk1YTYzYw%3D%3D",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "rec-004.bin"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v2/hls/v7/clear/avc1_mp4a/1130468786001/3dc78ffc-f347-43a7-b497-cbce54477dc2/10s/master.m3u8?fastly_token=NmFlNjVmY2NfZTNiOGRmZDU0M2ZhZTY1OGJiN2U3Zjk5NTA5MmY2YjE3YTFkODhiZTMzZGVkZTc0MmU3Mzg2NTA5NDcyN2UwMg%3D%3D",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "rec-005.bin"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v2/hls/v7/clear/avc1_mp4a/1130468786001/3dc78ffc-f347-43a7-b497-cbce54477dc2/10s/master.m3u8?fastly_token=NmFlNjVmY2NfZTNiOGRmZDU0M2ZhZTY1OGJiN2U3Zjk5NTA5MmY2YjE3YTFkODhiZTMzZGVkZTc0MmU3Mzg2NTA5NDcyN2UwMg%3D%3D",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "rec-006.bin"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/1130468786001/3dc78ffc-f347-43a7-b497-cbce54477dc2/6s/manifest.mpd?fastly_token=NmFlNjVmY2NfMDhlZjNkN2U5MWM5MGZiNjRiOGNhZDMwYmMwNmE3ZjUxNjUyODQ0YzQ2M2Y0NWRmYmI0YmZjNDdmOGY4MTY5OA%3D%3D",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "rec-007.bin"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/live-baseurl/clear/1130468786001/3dc78ffc-f347-43a7-b497-cbce54477dc2/6s/manifest.mpd?fastly_token=NmFlNjVmY2NfMDhlZjNkN2U5MWM5MGZiNjRiOGNhZDMwYmMwNmE3ZjUxNjUyODQ0YzQ2M2Y0NWRmYmI0YmZjNDdmOGY4MTY5OA%3D%3D",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "rec-008.bin"
+  },
+  {
+   "url": "http://manifest.prod.boltdns.net/manifest/v2/dash/live-baseurl/clear/avc1_mp4a/1130468786001/3dc78ffc-f347-43a7-b497-cbce54477dc2/6s/manifest.mpd?fastly_token=NmFlNjVmY2NfMzI3MjFlZWFhNmQyZWU3MGM5MWFhN2JjNDU1MjJlMmYzY2E0MDVlZGNjMTU0MTkyY2VlNGQ3ZGQyNWQyN2YxZQ%3D%3D",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "rec-009.bin"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v2/dash/live-baseurl/clear/avc1_mp4a/1130468786001/3dc78ffc-f347-43a7-b497-cbce54477dc2/6s/manifest.mpd?fastly_token=NmFlNjVmY2NfMzI3MjFlZWFhNmQyZWU3MGM5MWFhN2JjNDU1MjJlMmYzY2E0MDVlZGNjMTU0MTkyY2VlNGQ3ZGQyNWQyN2YxZQ%3D%3D",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "rec-010.bin"
+  }
+ ]
+}

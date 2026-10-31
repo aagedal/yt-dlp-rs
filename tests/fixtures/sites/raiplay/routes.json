@@ -1,0 +1,32 @@
+{
+  "routes": [
+    {
+      "url": "https://www.raiplay.it/video/2014/04/Report-del-07042014-cb27157f-9dd0-4aee-b788-b1f67643a391.json",
+      "headers": {
+        "Content-Type": "application/json;charset=UTF-8"
+      },
+      "body_file": "b8d09b616280.bin"
+    },
+    {
+      "url": "https://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=h3Gi3KmssSlashvT8eeqqEEqual&output=64",
+      "headers": {
+        "Content-Type": "text/xml;charset=ISO-8859-1"
+      },
+      "body_file": "7447d8c70743.bin"
+    },
+    {
+      "url": "https://vod3-rai-it.akamaized.net/archive_k/Archive/raitre/report/report_puntate_2014/2440873_,800,1800/playlist.m3u8?auth=daEb0cvd9bRcObacybXdqa3b7cGdQaldya.-bQ5Gw0-c0-ClsxsFq&aifp=V001",
+      "headers": {
+        "Content-Type": "application/x-mpegURL"
+      },
+      "body_file": "3cab3c58dfca.bin"
+    },
+    {
+      "url": "https://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=h3Gi3KmssSlashvT8eeqqEEqual&overrideUserAgentRule=mp4-*",
+      "headers": {
+        "Content-Type": "video/mp4"
+      },
+      "body_file": "83e6add7e041.bin"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+[
+ {
+  "url": "https://api.soundcloud.com/playlists/4110309",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://soundcloud.com/the-concept-band/sets/the-royal-concept-ep",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://soundcloud.com/soft-cell-official",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://api.soundcloud.com/users/30909869",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://soundcloud.com/stations/track/officialsundial/your-text",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://soundcloud.com/wajang/sexapil-pingers-5/recommended",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "scsearch15:post-avant jazzcore",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

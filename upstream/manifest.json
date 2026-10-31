@@ -892,9 +892,12 @@
       "rust": [
         "src/extractor/bandcamp.rs",
         "src/html_elements.rs",
-        "tests/fixtures/sites/bandcamp/"
+        "tests/fixtures/sites/bandcamp/",
+        "tests/fixtures/sites/bandcamp-album/",
+        "tests/fixtures/sites/bandcamp-user/",
+        "tests/fixtures/sites/bandcamp-weekly/"
       ],
-      "scope": "BandcampIE track pages: tralbum/embed data, streaming files, free download formats via stat URLs, metadata and tags; no albums, artist pages or weekly shows; compared with pinned upstream output through the fixture proxy"
+      "scope": "BandcampIE track pages: tralbum/embed data, streaming files, free download formats via stat URLs, metadata and tags; BandcampAlbumIE, BandcampUserIE and BandcampWeeklyIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "beacon",
@@ -988,9 +991,15 @@
       ],
       "rust": [
         "src/extractor/bilibili.rs",
-        "tests/fixtures/sites/bilibili/"
+        "tests/fixtures/sites/bilibili/",
+        "tests/fixtures/sites/bilibili-bangumi/",
+        "tests/fixtures/sites/bilibili-bangumi-media/",
+        "tests/fixtures/sites/bilibili-bangumi-season/",
+        "tests/fixtures/sites/bilibili-audio/",
+        "tests/fixtures/sites/bilibili-audio-album/",
+        "tests/fixtures/sites/bilibili-space-audio/"
       ],
-      "scope": "BiliBiliIE initial state, anthology playlists and parts, WBI-signed playurl DASH and legacy durl formats, chapters, danmaku subtitles, multi-part FLV multi_video results, the prefer_multi_flv extractor argument and errors; no interactive videos, SRT subtitles, comments or other Bilibili extractors; compared with pinned upstream output through the fixture proxy"
+      "scope": "BiliBiliIE initial state, anthology playlists and parts, WBI-signed playurl DASH and legacy durl formats, chapters, danmaku subtitles, multi-part FLV multi_video results, the prefer_multi_flv extractor argument and errors; no interactive videos, SRT subtitles, comments; BiliBiliBangumiIE, BiliBiliBangumiSeasonIE, BiliBiliBangumiMediaIE, BilibiliAudioIE, BilibiliAudioAlbumIE and BilibiliSpaceAudioIE (comments not ported), compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "bitchute",
@@ -1096,9 +1105,10 @@
       ],
       "rust": [
         "src/extractor/brightcove.rs",
-        "tests/fixtures/sites/brightcove/"
+        "tests/fixtures/sites/brightcove/",
+        "tests/fixtures/sites/brightcove-legacy/"
       ],
-      "scope": "BrightcoveNewIE players.brightcove.net video URLs: policy key from config.json (non-fatal) else index.min.js catalog/policyKey, Playback API with Accept pk header and smuggled referrer/token, _parse_brightcove_metadata (non-fatal HLS/DASH with subtitles, progressive and streaming HTTP sources, DRM flags, captions, thumbnails, metadata), 401/403 API errors (geo and messages) and raise_no_formats errors; _extract_brightcove_urls iframe and <video>+player-script embeds on generic pages (smuggled referrer) compared with pinned upstream output through the fixture proxy; TVE_AUTH videos with smuggled source_url/software_statement through AdobePassIE._extract_mvpd_auth and the tveToken Playback API request (tests/fixtures/sites/adobepass/); playlists, RTMP sources, <video>-only embeds needing _is_valid_url and BrightcoveLegacyIE are unsupported"
+      "scope": "BrightcoveNewIE players.brightcove.net video URLs: policy key from config.json (non-fatal) else index.min.js catalog/policyKey, Playback API with Accept pk header and smuggled referrer/token, _parse_brightcove_metadata (non-fatal HLS/DASH with subtitles, progressive and streaming HTTP sources, DRM flags, captions, thumbnails, metadata), 401/403 API errors (geo and messages) and raise_no_formats errors; _extract_brightcove_urls iframe and <video>+player-script embeds on generic pages (smuggled referrer) compared with pinned upstream output through the fixture proxy; TVE_AUTH videos with smuggled source_url/software_statement through AdobePassIE._extract_mvpd_auth and the tveToken Playback API request (tests/fixtures/sites/adobepass/); playlists, RTMP sources, <video>-only embeds needing _is_valid_url are unsupported; BrightcoveLegacyIE (follows BrightcoveNew), compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "btvplus",
@@ -1216,9 +1226,10 @@
       ],
       "rust": [
         "src/extractor/ccc.rs",
-        "tests/fixtures/sites/ccc/"
+        "tests/fixtures/sites/ccc/",
+        "tests/fixtures/sites/ccc-lists/"
       ],
-      "scope": "CCCIE event data-id, public events JSON recordings as formats (language/folder IDs, codecs, MiB filesize) with title, creator, description, thumbnail, timestamp, duration, view count and tags; CCCPlaylistIE is not ported. Compared with pinned upstream output through the fixture proxy"
+      "scope": "CCCIE event data-id, public events JSON recordings as formats (language/folder IDs, codecs, MiB filesize) with title, creator, description, thumbnail, timestamp, duration, view count and tags; CCCPlaylistIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "canalalpha",
@@ -3022,9 +3033,11 @@
       ],
       "rust": [
         "src/extractor/mixcloud.rs",
-        "tests/fixtures/sites/mixcloud/"
+        "tests/fixtures/sites/mixcloud/",
+        "tests/fixtures/sites/mixcloud-playlist/",
+        "tests/fixtures/sites/mixcloud-user/"
       ],
-      "scope": "MixcloudIE GraphQL cloudcast lookup, XOR-decrypted progressive/HLS/DASH stream URLs, restriction errors, comments and metadata; no user, playlist or favorites lists; compared with pinned upstream output through the fixture proxy"
+      "scope": "MixcloudIE GraphQL cloudcast lookup, XOR-decrypted progressive/HLS/DASH stream URLs, restriction errors, comments and metadata; no favorites lists; MixcloudPlaylistIE and MixcloudUserIE (trimmed to one page), compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "mixlr",
@@ -3567,9 +3580,10 @@
       ],
       "rust": [
         "src/extractor/pinterest.rs",
-        "tests/fixtures/sites/pinterest/"
+        "tests/fixtures/sites/pinterest/",
+        "tests/fixtures/sites/pinterest-collection/"
       ],
-      "scope": "PinterestIE Pin resource API video lists (HLS/progressive), story pin videos, thumbnails, metadata and url_transparent embeds; no boards or collections; compared with pinned upstream output through the fixture proxy"
+      "scope": "PinterestIE Pin resource API video lists (HLS/progressive), story pin videos, thumbnails, metadata and url_transparent embeds; no boards; PinterestCollectionIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "playerfm",
@@ -3821,9 +3835,10 @@
       "rust": [
         "src/extractor/rtve.rs",
         "tests/fixtures/sites/rtve/",
-        "tools/generate_rtve_fixtures.py"
+        "tools/generate_rtve_fixtures.py",
+        "tests/fixtures/sites/rtve-program/"
       ],
-      "scope": "RTVEALaCartaIE, RTVEAudioIE, RTVELiveIE and RTVETelevisionIE: API metadata and errors, RTVEBaseIE's base64 PNG media URL decoding (rtveplayw and default managers, non-fatal), HLS/DASH/progressive formats with qualities, API subtitles, _parse_metadata, live data-setup assets with JSON-LD, television contentUrl url results. RTVEProgramIE is not ported. Compared with pinned upstream output through the fixture proxy"
+      "scope": "RTVEALaCartaIE, RTVEAudioIE, RTVELiveIE and RTVETelevisionIE: API metadata and errors, RTVEBaseIE's base64 PNG media URL decoding (rtveplayw and default managers, non-fatal), HLS/DASH/progressive formats with qualities, API subtitles, _parse_metadata, live data-setup assets with JSON-LD, television contentUrl url results; RTVEProgramIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "rtvslo",
@@ -3873,9 +3888,10 @@
       ],
       "rust": [
         "src/extractor/rutube.rs",
-        "tests/fixtures/sites/rutube/"
+        "tests/fixtures/sites/rutube/",
+        "tests/fixtures/sites/rutube-lists/"
       ],
-      "scope": "RutubeIE and RutubeEmbedIE video API metadata and description chapters, play options balancer/live HLS and progressive formats and captions; no F4M formats or playlist extractors; compared with pinned upstream output through the fixture proxy"
+      "scope": "RutubeIE and RutubeEmbedIE video API metadata and description chapters, play options balancer/live HLS and progressive formats and captions; no F4M formats; RutubeChannelIE, RutubePersonIE and RutubePlaylistIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "ruv",
@@ -4066,12 +4082,14 @@
       ],
       "rust": [
         "src/extractor/soundcloud.rs",
+        "src/extractor/soundcloud_collections.rs",
         "tests/fixtures/sites/soundcloud/",
         "tests/fixtures/sites/soundcloud-login/",
         "src/extractor/html5.rs",
-        "tests/fixtures/sites/soundcloud-embeds/"
+        "tests/fixtures/sites/soundcloud-embeds/",
+        "tests/fixtures/sites/soundcloud-collections/"
       ],
-      "scope": "SoundcloudEmbedIE widget URLs (url/secret_token url results, KeyError) and its _EMBED_REGEX iframes on generic pages; SoundcloudIE client ID discovery, resolved track JSON, default or soundcloud:formats-requested transcoding formats, artwork thumbnails and metadata, DRM/geo errors; `--username oauth --password TOKEN` and oauth_token cookie verification (connect/session) authorizing API requests, with upstream password-login error and invalid-token warnings; no original downloads, comments, sets, users or search; compared with pinned upstream output through the fixture proxy"
+      "scope": "SoundcloudEmbedIE widget URLs (url/secret_token url results, KeyError) and its _EMBED_REGEX iframes on generic pages; SoundcloudIE client ID discovery, resolved track JSON, default or soundcloud:formats-requested transcoding formats, artwork thumbnails and metadata, DRM/geo errors; `--username oauth --password TOKEN` and oauth_token cookie verification (connect/session) authorizing API requests, with upstream password-login error and invalid-token warnings; no original downloads or comments; SoundcloudPlaylistIE, SoundcloudRelatedIE, SoundcloudSearchIE, SoundcloudSetIE, SoundcloudTrackStationIE, SoundcloudUserIE and SoundcloudUserPermalinkIE in src/extractor/soundcloud_collections.rs (paged eagerly), compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "soundgasm",
@@ -5043,9 +5061,11 @@
         "tests/fixtures/sites/vimeo-login/",
         "tests/login.rs",
         "src/extractor/html5.rs",
-        "tests/fixtures/sites/vimeo-embeds/"
+        "tests/fixtures/sites/vimeo-embeds/",
+        "tests/fixtures/sites/vimeo-album/",
+        "tests/fixtures/sites/vimeo-group/"
       ],
-      "scope": "VimeoIE: player page playerConfig and clip page config through _parse_config (progressive, per-CDN HLS/DASH incl. sep variants, text tracks, thumbnails, chapters, live status) merged with page metadata; VimeoBaseInfoExtractor login (_fetch_viewer_info with _jwt_is_expired, the xsrft token posted to /log_in, 404/405/418 bad-credential and generic Unable to log in errors, skipped with a vimeo cookie), _real_initialize, _get_requested_client (vimeo:client, Unsupported API client error), _call_videos_api for the web client (REQUIRES_AUTH login-required error, jwt viewer authorization, client headers and fields), _extract_from_api (config_url through _parse_config else _parse_api_response with API text tracks, video password 400 retry through _verify_video_password, 5460 location error, API metadata), _extract_original_format (download config source_file, privacy/download API fields, vimeo:original_format_policy) and album/showcase video password checks (_get_album_data_and_hashed_pass with the viewer JWT); the android client is only upstream's no-cached-token error (a cached token is an unsupported native error); _EMBED_REGEX player iframes and moogaloop embeds on generic pages through _extract_embed_urls (_smuggle_referrer, the smuggled referer unsmuggled by _real_extract; the <video src> pattern always meets HTML5 media, refused natively); player check-password, VimeoAlbumIE/ChannelIE/UserIE/WatchLaterIE/LikesIE/GroupsIE/ReviewIE/ProIE/OndemandIE/EventIE, rented trailers and JSON-LD merging are not ported; compared with pinned upstream output through the fixture proxy (tests/fixtures/sites/vimeo/ and vimeo-login/)"
+      "scope": "VimeoIE: player page playerConfig and clip page config through _parse_config (progressive, per-CDN HLS/DASH incl. sep variants, text tracks, thumbnails, chapters, live status) merged with page metadata; VimeoBaseInfoExtractor login (_fetch_viewer_info with _jwt_is_expired, the xsrft token posted to /log_in, 404/405/418 bad-credential and generic Unable to log in errors, skipped with a vimeo cookie), _real_initialize, _get_requested_client (vimeo:client, Unsupported API client error), _call_videos_api for the web client (REQUIRES_AUTH login-required error, jwt viewer authorization, client headers and fields), _extract_from_api (config_url through _parse_config else _parse_api_response with API text tracks, video password 400 retry through _verify_video_password, 5460 location error, API metadata), _extract_original_format (download config source_file, privacy/download API fields, vimeo:original_format_policy) and album/showcase video password checks (_get_album_data_and_hashed_pass with the viewer JWT); the android client is only upstream's no-cached-token error (a cached token is an unsupported native error); _EMBED_REGEX player iframes and moogaloop embeds on generic pages through _extract_embed_urls (_smuggle_referrer, the smuggled referer unsmuggled by _real_extract; the <video src> pattern always meets HTML5 media, refused natively); player check-password, VimeoChannelIE/UserIE/WatchLaterIE/LikesIE/ReviewIE/ProIE/OndemandIE/EventIE, rented trailers and JSON-LD merging are not ported; VimeoAlbumIE (numeric showcases) and VimeoGroupsIE (vimeo-album/, vimeo-group/); compared with pinned upstream output through the fixture proxy (tests/fixtures/sites/vimeo/ and vimeo-login/)"
     },
     {
       "name": "jsinterp",
@@ -5170,9 +5190,10 @@
       ],
       "rust": [
         "src/extractor/weibo.rs",
-        "tests/fixtures/sites/weibo/"
+        "tests/fixtures/sites/weibo/",
+        "tests/fixtures/sites/weibo-user/"
       ],
-      "scope": "WeiboIE statuses JSON with the visitor cookie handshake, playback-list and fallback formats, mixed-media playlists and metadata; WeiboVideoIE TV component lookups; no WeiboUserIE; compared with pinned upstream output through the fixture proxy"
+      "scope": "WeiboIE statuses JSON with the visitor cookie handshake, playback-list and fallback formats, mixed-media playlists and metadata; WeiboVideoIE TV component lookups; WeiboUserIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "whyp",
@@ -6504,9 +6525,10 @@
       ],
       "rust": [
         "src/extractor/firsttv.rs",
-        "tests/fixtures/sites/firsttv/"
+        "tests/fixtures/sites/firsttv/",
+        "tests/fixtures/sites/firsttv-live/"
       ],
-      "scope": "FirstTVIE pages (FirstTVLiveIE unsupported: dynamic DASH), compared with pinned upstream output through the fixture proxy"
+      "scope": "FirstTVIE pages and FirstTVLiveIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "mixch",
@@ -6708,9 +6730,10 @@
       ],
       "rust": [
         "src/extractor/n1.rs",
-        "tests/fixtures/sites/n1/"
+        "tests/fixtures/sites/n1/",
+        "tests/fixtures/sites/n1-asset/"
       ],
-      "scope": "N1InfoIIE articles (N1InfoAssetIE and the old <video data-url> player not ported), compared with pinned upstream output through the fixture proxy"
+      "scope": "N1InfoIIE articles (the old <video data-url> player not ported) and N1InfoAssetIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "zapiks",
@@ -6972,9 +6995,10 @@
       ],
       "rust": [
         "src/extractor/redgifs.rs",
-        "tests/fixtures/sites/redgifs/"
+        "tests/fixtures/sites/redgifs/",
+        "tests/fixtures/sites/redgifs-lists/"
       ],
-      "scope": "RedGifsIE (RedGifsSearchIE and RedGifsUserIE not ported), compared with pinned upstream output through the fixture proxy"
+      "scope": "RedGifsIE, RedGifsSearchIE and RedGifsUserIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "rtvcplay",
@@ -6984,9 +7008,10 @@
       ],
       "rust": [
         "src/extractor/rtvcplay.rs",
-        "tests/fixtures/sites/rtvcplay/"
+        "tests/fixtures/sites/rtvcplay/",
+        "tests/fixtures/sites/rtvcplay-live/"
       ],
-      "scope": "RTVCKalturaIE live channels (RTVCPlayIE and RTVCPlayEmbedIE not ported), compared with pinned upstream output through the fixture proxy"
+      "scope": "RTVCKalturaIE live channels; RTVCPlayIE channel/asset HLS (program and podcast pages unsupported); RTVCPlayEmbedIE not ported, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "rcs",
@@ -7008,9 +7033,10 @@
       ],
       "rust": [
         "src/extractor/tunein.rs",
-        "tests/fixtures/sites/tunein/"
+        "tests/fixtures/sites/tunein/",
+        "tests/fixtures/sites/tunein-redirects/"
       ],
-      "scope": "TuneInStationIE direct streams, TuneInPodcastIE and TuneInPodcastEpisodeIE (HLS stations, TuneInEmbedIE and TuneInShortenerIE unsupported), compared with pinned upstream output through the fixture proxy"
+      "scope": "TuneInStationIE direct streams, TuneInPodcastIE and TuneInPodcastEpisodeIE (HLS stations unsupported), TuneInEmbedIE and TuneInShortenerIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "rozhlas",
@@ -7020,9 +7046,10 @@
       ],
       "rust": [
         "src/extractor/rozhlas.rs",
-        "tests/fixtures/sites/rozhlas/"
+        "tests/fixtures/sites/rozhlas/",
+        "tests/fixtures/sites/rozhlas-audio/"
       ],
-      "scope": "RozhlasVltavaIE direct audio links (RozhlasIE and MujRozhlasIE not ported; DASH/HLS links unsupported), compared with pinned upstream output through the fixture proxy"
+      "scope": "RozhlasVltavaIE direct audio links (DASH/HLS links unsupported) and RozhlasIE; MujRozhlasIE not ported, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "amazon",
@@ -7116,9 +7143,10 @@
       ],
       "rust": [
         "src/extractor/ertgr.rs",
-        "tests/fixtures/sites/ertgr/"
+        "tests/fixtures/sites/ertgr/",
+        "tests/fixtures/sites/ertflix-vod/"
       ],
-      "scope": "ERTFlixCodenameIE (ertflix: pseudo-URLs and API); ERTFlixIE and ERTWebtvEmbedIE not ported, compared with pinned upstream output through the fixture proxy"
+      "scope": "ERTFlixCodenameIE (ertflix: pseudo-URLs and API); ERTFlixIE VODs (series URLs error as unsupported); ERTWebtvEmbedIE not ported, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "fc2",
@@ -7224,9 +7252,10 @@
       ],
       "rust": [
         "src/extractor/mailru.rs",
-        "tests/fixtures/sites/mailru/"
+        "tests/fixtures/sites/mailru/",
+        "tests/fixtures/sites/mailru-music-search/"
       ],
-      "scope": "MailRuIE videos and MailRuMusicIE tracks; MailRuMusicSearchIE and metadata-only embeds not ported, compared with pinned upstream output through the fixture proxy"
+      "scope": "MailRuIE videos and MailRuMusicIE tracks, MailRuMusicSearchIE; metadata-only embeds not ported, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "mainstreaming",
@@ -7296,9 +7325,10 @@
       ],
       "rust": [
         "src/extractor/ondemandkorea.rs",
-        "tests/fixtures/sites/ondemandkorea/"
+        "tests/fixtures/sites/ondemandkorea/",
+        "tests/fixtures/sites/ondemandkorea-program/"
       ],
-      "scope": "OnDemandKoreaIE episodes; OnDemandKoreaProgramIE not ported, compared with pinned upstream output through the fixture proxy"
+      "scope": "OnDemandKoreaIE episodes and OnDemandKoreaProgramIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "packtpub",
@@ -7356,9 +7386,10 @@
       ],
       "rust": [
         "src/extractor/tnaflix.rs",
-        "tests/fixtures/sites/tnaflix/"
+        "tests/fixtures/sites/tnaflix/",
+        "tests/fixtures/sites/empflix/"
       ],
-      "scope": "TNAFlixNetworkEmbedIE and TNAFlixIE AJAX-player pages (404 error); config-XML pages unsupported; EMPFlixIE and MovieFapIE not ported, compared with pinned upstream output through the fixture proxy"
+      "scope": "TNAFlixNetworkEmbedIE and TNAFlixIE AJAX-player pages (404 error); config-XML pages unsupported; EMPFlixIE; MovieFapIE (config-XML pages) not ported, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "uliza",
@@ -7380,9 +7411,10 @@
       ],
       "rust": [
         "src/extractor/videocampus_sachsen.rs",
-        "tests/fixtures/sites/videocampus_sachsen/"
+        "tests/fixtures/sites/videocampus_sachsen/",
+        "tests/fixtures/sites/videocampus-sachsen-playlist/"
       ],
-      "scope": "VideocampusSachsenIE (ViMP) video and embed pages (missing key, no-HLS); ViMPPlaylistIE not ported, compared with pinned upstream output through the fixture proxy"
+      "scope": "VideocampusSachsenIE (ViMP) video and embed pages (missing key, no-HLS); ViMPPlaylistIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "vidio",
@@ -7428,9 +7460,10 @@
       ],
       "rust": [
         "src/extractor/zoom.rs",
-        "tests/fixtures/sites/zoomclips/"
+        "tests/fixtures/sites/zoomclips/",
+        "tests/fixtures/sites/zoom-share/"
       ],
-      "scope": "ZoomClipsIE clips (missing mediaInfo and 404 errors); ZoomIE recordings not ported (fail upstream), compared with pinned upstream output through the fixture proxy"
+      "scope": "ZoomClipsIE clips (missing mediaInfo and 404 errors); ZoomIE recordings (passcode-protected recordings unsupported), compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "abc",
@@ -7464,9 +7497,11 @@
       ],
       "rust": [
         "src/extractor/afreecatv.rs",
-        "tests/fixtures/sites/afreecatv/"
+        "tests/fixtures/sites/afreecatv/",
+        "tests/fixtures/sites/afreecatv-vod/",
+        "tests/fixtures/sites/afreecatv-user/"
       ],
-      "scope": "AfreecaTVCatchStoryIE (soop:catchstory); AfreecaTVIE VODs not ported (pinned VOD playlists put tags after EXT-X-ENDLIST, which src/hls.rs rejects), live and user classes not ported, compared with pinned upstream output through the fixture proxy"
+      "scope": "AfreecaTVCatchStoryIE (soop:catchstory); AfreecaTVIE (soop) VODs (informational tags after EXT-X-ENDLIST ignored like upstream; subscriber-only VODs error as unsupported) and AfreecaTVUserIE; AfreecaTVLiveIE not ported, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "antenna",
@@ -7572,9 +7607,13 @@
       ],
       "rust": [
         "src/extractor/jiosaavn.rs",
-        "tests/fixtures/sites/jiosaavn/"
+        "tests/fixtures/sites/jiosaavn/",
+        "tests/fixtures/sites/jiosaavn-artist/",
+        "tests/fixtures/sites/jiosaavn-playlist/",
+        "tests/fixtures/sites/jiosaavn-show/",
+        "tests/fixtures/sites/jiosaavn-show-playlist/"
       ],
-      "scope": "JioSaavnSongIE and JioSaavnAlbumIE (synthetic auth-token responses; empty-songs and 404 errors); show, playlist and artist classes not ported, compared with pinned upstream output through the fixture proxy"
+      "scope": "JioSaavnSongIE and JioSaavnAlbumIE (synthetic auth-token responses; empty-songs and 404 errors); JioSaavnArtistIE, JioSaavnPlaylistIE, JioSaavnShowIE and JioSaavnShowPlaylistIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "lsm",
@@ -7596,9 +7635,10 @@
       ],
       "rust": [
         "src/extractor/microsoftembed.rs",
-        "tests/fixtures/sites/microsoftembed/"
+        "tests/fixtures/sites/microsoftembed/",
+        "tests/fixtures/sites/microsoftembed-playlist/"
       ],
-      "scope": "MicrosoftLearnEpisodeIE (synthetic minimal HLS/DASH manifests; no-entry and 404 errors; ISM errors as unsupported); playlist, session, Build, embed and Medius classes not ported, compared with pinned upstream output through the fixture proxy"
+      "scope": "MicrosoftLearnEpisodeIE (synthetic minimal HLS/DASH manifests; no-entry and 404 errors; ISM errors as unsupported); MicrosoftLearnPlaylistIE; session, Build, embed and Medius classes not ported, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "nate",
@@ -7656,9 +7696,10 @@
       ],
       "rust": [
         "src/extractor/rcti.rs",
-        "tests/fixtures/sites/rcti/"
+        "tests/fixtures/sites/rcti/",
+        "tests/fixtures/sites/rcti-series/"
       ],
-      "scope": "RCTIPlusIE episode/clip/extra pages (404 API error); RCTIPlusSeriesIE and RCTIPlusTVIE not ported, compared with pinned upstream output through the fixture proxy"
+      "scope": "RCTIPlusIE episode/clip/extra pages (404 API error); RCTIPlusSeriesIE (synthetic visitor token); RCTIPlusTVIE not ported, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "teamcoco",
@@ -7704,9 +7745,10 @@
       ],
       "rust": [
         "src/extractor/txxx.rs",
-        "tests/fixtures/sites/porntop/"
+        "tests/fixtures/sites/porntop/",
+        "tests/fixtures/sites/txxx-video/"
       ],
-      "scope": "PornTopIE pages; TxxxIE not ported, compared with pinned upstream output through the fixture proxy"
+      "scope": "PornTopIE pages and TxxxIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "volejtv",
@@ -7716,9 +7758,10 @@
       ],
       "rust": [
         "src/extractor/volejtv.rs",
-        "tests/fixtures/sites/volejtv/"
+        "tests/fixtures/sites/volejtv/",
+        "tests/fixtures/sites/volejtv-club/"
       ],
-      "scope": "VolejTVIE matches and VolejTVCategoryPlaylistIE categories (trimmed to 2 pages, fetched eagerly; 404 error); VolejTVClubPlaylistIE not ported, compared with pinned upstream output through the fixture proxy"
+      "scope": "VolejTVIE matches and VolejTVCategoryPlaylistIE categories (trimmed to 2 pages, fetched eagerly; 404 error); VolejTVClubPlaylistIE, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "wdr",
@@ -7743,6 +7786,199 @@
         "tests/fixtures/sites/yandexvideo/"
       ],
       "scope": "ZenYandexIE (dash/hls) and ZenYandexChannelIE (paged, fetched eagerly) with trimmed SSR pages; YandexVideoIE and YandexVideoPreviewIE not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "bbc",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bbc.py"
+      ],
+      "rust": [
+        "src/extractor/bbc.rs",
+        "tests/fixtures/sites/bbc-clips-playlist/"
+      ],
+      "scope": "BBCCoUkPlaylistIE clip listings (page 2 404 error); BBCIE, BBCCoUkIE and other classes not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "rai",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rai.py"
+      ],
+      "rust": [
+        "src/extractor/rai.rs",
+        "tests/fixtures/sites/rai/",
+        "tests/fixtures/sites/rainews/",
+        "tests/fixtures/sites/raicultura/",
+        "tests/fixtures/sites/raiplay/",
+        "tests/fixtures/sites/raiplaylive/",
+        "tests/fixtures/sites/raiplayplaylist/",
+        "tests/fixtures/sites/raiplaysound/",
+        "tests/fixtures/sites/raiplaysoundlive/",
+        "tests/fixtures/sites/raiplaysoundplaylist/",
+        "tests/fixtures/sites/raisudtirol/"
+      ],
+      "scope": "RaiIE, RaiCulturaIE, RaiNewsIE, RaiPlayIE, RaiPlayLiveIE, RaiPlayPlaylistIE, RaiPlaySoundIE, RaiPlaySoundLiveIE, RaiPlaySoundPlaylistIE and RaiSudtirolIE (HLS classes compared with -F/--print: hls variant key order differs; f4m relinker formats and iframe embeds unsupported), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "pornhub",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/pornhub.py"
+      ],
+      "rust": [
+        "src/extractor/pornhub.rs",
+        "tests/fixtures/sites/pornhub/"
+      ],
+      "scope": "PornHubIE, PornHubPagedVideoListIE, PornHubPlaylistIE and PornHubUserIE (pagination trimmed to one page); PornHubUserVideosUploadIE, login and the JS-variable fallback not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "xhamster",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/xhamster.py"
+      ],
+      "rust": [
+        "src/extractor/xhamster.rs",
+        "tests/fixtures/sites/xhamster/"
+      ],
+      "scope": "XHamsterIE (window.initials layout with deciphered sources; fixture IP replaced by 192.0.2.1 and re-enciphered) and XHamsterUserIE; XHamsterEmbedIE and the old layout not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "youporn",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/youporn.py"
+      ],
+      "rust": [
+        "src/extractor/youporn.rs",
+        "tests/fixtures/sites/youporn/"
+      ],
+      "scope": "YouPornIE watch pages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "polskieradio",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/polskieradio.py"
+      ],
+      "rust": [
+        "src/extractor/polskieradio.rs",
+        "tests/fixtures/sites/polskieradio-article/",
+        "tests/fixtures/sites/polskieradio-legacy/",
+        "tests/fixtures/sites/polskieradio-podcast-list/"
+      ],
+      "scope": "PolskieRadioIE articles, PolskieRadioLegacyIE redirects and PolskieRadioPodcastListIE (paged); category, player and podcast classes not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "tvp",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tvp.py"
+      ],
+      "rust": [
+        "src/extractor/tvp.rs",
+        "tests/fixtures/sites/tvp-embed/",
+        "tests/fixtures/sites/tvp-vod/",
+        "tests/fixtures/sites/tvp-vod-series/"
+      ],
+      "scope": "TVPEmbedIE (protocol-relative subtitle URLs error as unsupported), TVPVODVideoIE (metadata via --print; HLS audio ext differs) and TVPVODSeriesIE; TVPIE, stream and website classes not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "cbc",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/cbc.py"
+      ],
+      "rust": [
+        "src/extractor/cbc.rs",
+        "tests/fixtures/sites/cbc/"
+      ],
+      "scope": "CBCListenIE and CBCPlayerIE medianet non-HLS assets (HLS, live, subtitles and ThePlatform fallback error as unsupported); CBCGem classes geo-blocked and not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "mlb",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mlb.py"
+      ],
+      "rust": [
+        "src/extractor/mlb.rs",
+        "tests/fixtures/sites/mlb/"
+      ],
+      "scope": "MLBIE and MLBVideoIE (GraphQL feed); MLBTV and MLBArticle not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "neteasemusic",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/neteasemusic.py"
+      ],
+      "rust": [
+        "src/extractor/neteasemusic.rs",
+        "tests/fixtures/sites/netease/"
+      ],
+      "scope": "NetEaseMusicMvIE, NetEaseMusicProgramIE and NetEaseMusicDjRadioIE (anonymous eapi); song, album, singer and list classes not ported (song geo-restricted), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "openrec",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/openrec.py"
+      ],
+      "rust": [
+        "src/extractor/openrec.rs",
+        "tests/fixtures/sites/openrec/"
+      ],
+      "scope": "OpenRecCaptureIE, OpenRecChannelSearchIE and OpenRecPlaylistIE (mellowfan, webpage path); OpenRecIE and movie classes not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "gamejolt",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/gamejolt.py"
+      ],
+      "rust": [
+        "src/extractor/gamejolt.rs",
+        "tests/fixtures/sites/gamejolt/"
+      ],
+      "scope": "GameJoltIE posts, GameJoltGameIE (synthetic empty second page) and GameJoltGameSoundtrackIE; GIF posts error, community/search/user classes not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "rokfin",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rokfin.py"
+      ],
+      "rust": [
+        "src/extractor/rokfin.rs",
+        "tests/fixtures/sites/rokfin/"
+      ],
+      "scope": "RokfinIE posts and RokfinStackIE (404 error); login/premium and live paths error, channel and search classes not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "dplay",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dplay.py"
+      ],
+      "rust": [
+        "src/extractor/dplay.rs",
+        "tests/fixtures/sites/dplay/"
+      ],
+      "scope": "DiscoveryPlus base with CookingChannelIE, DiscoveryLifeIE, GoDiscoveryIE, HGTVUsaIE, InvestigationDiscoveryIE and ScienceChannelIE; DPlayIE, DiscoveryPlusIndiaIE (dependent DASH representations) and other classes not ported, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "nexx",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nexx.py"
+      ],
+      "rust": [
+        "src/extractor/nexx.rs",
+        "tests/fixtures/sites/nexx/"
+      ],
+      "scope": "NexxIE arc metadata with Azure CDN formats; session/init fallback, free and 3q CDNs, captions and NexxEmbedIE error as unsupported, compared with pinned upstream output through the fixture proxy"
     }
   ]
 }

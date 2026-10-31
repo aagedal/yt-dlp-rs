@@ -1,0 +1,16 @@
+[
+ {
+  "url": "http://dotscale.bandcamp.com/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "http://nodiscography.bandcamp.com",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://www.pinterest.com/resource/BoardResource/get/?data=%7B%22options%22%3A+%7B%22slug%22%3A+%22cool-diys%22%2C+%22username%22%3A+%22mashal0407%22%7D%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "board.json"
+  },
+  {
+   "url": "https://www.pinterest.com/resource/BoardFeedResource/get/?data=%7B%22options%22%3A+%7B%22board_id%22%3A+%22585890301462791043%22%2C+%22page_size%22%3A+250%7D%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "board-feed.json"
+  },
+  {
+   "url": "https://v1.pinimg.com/videos/mc/hls/2b/2e/c4/2b2ec4418110b56d013663510d01eacf.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "manifest-1.m3u8"
+  },
+  {
+   "url": "https://v1.pinimg.com/videos/mc/hls/c2/92/cf/c292cf75beef06b9db5590b73fdaae55.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "manifest-2.m3u8"
+  }
+ ]
+}

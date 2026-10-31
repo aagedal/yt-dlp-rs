@@ -1,0 +1,19 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.raiplay.it/programmi/nondirloalmiocapo/",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"nondirloalmiocapo\", \"title\": \"Non dirlo al mio capo\", \"description\": \"Lisa ha 34 anni, una laurea in legge, due figli e un'ipoteca sulla casa da pagare. Vedova da sei mesi, dopo tanti colloqui falliti e tante porte in faccia, racconta \\\"qualche\\\" piccola bugia sulla sua vita privata pur di essere assunta come praticante dal cinico avvocato Enrico Vinci. Riuscendoci, ma non restando immune al suo fascino.\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"RaiPlay\", \"id\": \"b387c8ee-4794-40bc-8c81-a381021309e8\", \"_type\": \"url\", \"url\": \"https://www.raiplay.it/video/2016/06/NON-DIRLO-AL-MIO-CAPO---STAGIONE-1---EPISODIO-1-b387c8ee-4794-40bc-8c81-a381021309e8.json\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"RaiPlay\", \"id\": \"0d6fef5a-3913-47a1-abb6-12638283f0a3\", \"_type\": \"url\", \"url\": \"https://www.raiplay.it/video/2016/06/NON-DIRLO-AL-MIO-CAPO---STAGIONE-1---EPISODIO-2-0d6fef5a-3913-47a1-abb6-12638283f0a3.json\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"RaiPlay\", \"id\": \"4e2375e9-502a-4fc4-8af9-851078255ca0\", \"_type\": \"url\", \"url\": \"https://www.raiplay.it/video/2018/09/Non-dirlo-al-mio-capo-S2E1---Omnia-vincit-amor-4e2375e9-502a-4fc4-8af9-851078255ca0.json\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"RaiPlay\", \"id\": \"8df4c050-09e3-40fc-a9c4-b075b53c6082\", \"_type\": \"url\", \"url\": \"https://www.raiplay.it/video/2018/09/Non-dirlo-al-mio-capo-S2E2---Il-tre-non-e-il-numero-perfetto-8df4c050-09e3-40fc-a9c4-b075b53c6082.json\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"RaiPlay\", \"id\": \"aff17edc-7614-4e3d-837d-2bb71469afe0\", \"_type\": \"url\", \"url\": \"https://www.raiplay.it/video/2018/09/Non-dirlo-al-mio-capo-oroscopo-onesto-perla-ariete-aff17edc-7614-4e3d-837d-2bb71469afe0.json\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"RaiPlay\", \"id\": \"f133b307-5711-491c-a5fd-9afa0d47f48d\", \"_type\": \"url\", \"url\": \"https://www.raiplay.it/video/2018/09/Non-dirlo-al-mio-capo-oroscopo-onesto-perla-toro-f133b307-5711-491c-a5fd-9afa0d47f48d.json\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"RaiPlay\", \"id\": \"f0fe3283-923e-4023-a543-885e1d4caa60\", \"_type\": \"url\", \"url\": \"https://www.raiplay.it/video/2016/04/Il-sistema---Backstage-f0fe3283-923e-4023-a543-885e1d4caa60.json\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"RaiPlay\", \"id\": \"f7ad4296-1679-4976-84d4-264e01bafb5e\", \"_type\": \"url\", \"url\": \"https://www.raiplay.it/video/2016/04/Il-sistema---Backstage-f7ad4296-1679-4976-84d4-264e01bafb5e.json\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"RaiPlay\", \"id\": \"33ca2d56-ad9b-42e9-9678-d0f93e507645\", \"_type\": \"url\", \"url\": \"https://www.raiplay.it/video/2018/09/Non-dirlo-al-mio-capo-s2-Intervista-Vanessa-Incontrada-33ca2d56-ad9b-42e9-9678-d0f93e507645.json\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"RaiPlay\", \"id\": \"e497a1ce-80ab-4271-bfa8-8e1456648d9f\", \"_type\": \"url\", \"url\": \"https://www.raiplay.it/video/2018/09/Non-dirlo-al-mio-capo-s2-Intervista-Lino-Guanciale-e497a1ce-80ab-4271-bfa8-8e1456648d9f.json\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.raiplay.it/programmi/nondirloalmiocapo/\", \"original_url\": \"https://www.raiplay.it/programmi/nondirloalmiocapo/\", \"webpage_url_basename\": \"nondirloalmiocapo\", \"webpage_url_domain\": \"raiplay.it\", \"extractor\": \"RaiPlayPlaylist\", \"extractor_key\": \"RaiPlayPlaylist\", \"release_year\": null, \"playlist_count\": 10, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

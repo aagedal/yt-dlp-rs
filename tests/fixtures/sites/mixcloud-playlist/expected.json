@@ -1,0 +1,44 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.mixcloud.com/maxvibes/playlists/jazzcat-on-ness-radio/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"maxvibes_jazzcat-on-ness-radio\", \"title\": \"Ness Radio sessions\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Mixcloud\", \"id\": \"maxvibes_jazzcat-on-ness-radio-programme-01\", \"_type\": \"url\", \"url\": \"https://www.mixcloud.com/maxvibes/jazzcat-on-ness-radio-programme-01/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Mixcloud\", \"id\": \"maxvibes_jazzcat-on-ness-radio-programme-02\", \"_type\": \"url\", \"url\": \"https://www.mixcloud.com/maxvibes/jazzcat-on-ness-radio-programme-02/\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Mixcloud\", \"id\": \"maxvibes_jazzcat-on-ness-radio-programme-03-25022015\", \"_type\": \"url\", \"url\": \"https://www.mixcloud.com/maxvibes/jazzcat-on-ness-radio-programme-03-25022015/\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.mixcloud.com/maxvibes/playlists/jazzcat-on-ness-radio/\", \"original_url\": \"https://www.mixcloud.com/maxvibes/playlists/jazzcat-on-ness-radio/\", \"webpage_url_basename\": \"jazzcat-on-ness-radio\", \"webpage_url_domain\": \"mixcloud.com\", \"extractor\": \"mixcloud:playlist\", \"extractor_key\": \"MixcloudPlaylist\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [mixcloud:playlist] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.mixcloud.com/maxvibes/playlists/jazzcat-on-ness-radio/",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "playlist_count,title,id"
+   ],
+   "exit": 0,
+   "stdout": [
+    "3",
+    "NA",
+    "maxvibes_jazzcat-on-ness-radio-programme-01",
+    "3",
+    "NA",
+    "maxvibes_jazzcat-on-ness-radio-programme-02",
+    "3",
+    "NA",
+    "maxvibes_jazzcat-on-ness-radio-programme-03-25022015"
+   ],
+   "stderr": [
+    "WARNING: [mixcloud:playlist] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  }
+ ]
+}

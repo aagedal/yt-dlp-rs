@@ -1,0 +1,296 @@
+{
+  "data" : {
+    "attributes" : {
+      "availabilityWindows" : [ {
+        "package" : "Free",
+        "playableEnd" : "2038-01-18T00:00:00Z",
+        "playableStart" : "2024-06-18T01:00:00Z"
+      }, {
+        "package" : "InvestigationDiscovery",
+        "playableEnd" : "2038-01-18T00:00:00Z",
+        "playableStart" : "2024-06-18T01:00:00Z"
+      } ],
+      "description" : "A teenage influencer discovers an online world of threat, harm and danger.",
+      "episodeNumber" : 3,
+      "longDescription" : "Anime-obsessed teenager Bianca becomes an inspiring mental health advocate online — and changes lives. But on forums and social media accounts, she discovers a horrifying and violent underbelly: young men primed to threaten, harm, and attack.",
+      "name" : "RIP Bianca",
+      "publishStart" : "2024-06-18T01:00:00Z",
+      "rights" : {
+        "embeddable" : false
+      },
+      "seasonNumber" : 1,
+      "videoDuration" : 2490888
+    },
+    "id" : "5341132",
+    "relationships" : {
+      "contentPackages" : {
+        "data" : [ {
+          "id" : "Free",
+          "type" : "package"
+        }, {
+          "id" : "InvestigationDiscovery",
+          "type" : "package"
+        } ]
+      },
+      "images" : {
+        "data" : [ {
+          "id" : "d02b01a4-2ad8-4f15-a07d-7aaeab97daeb",
+          "type" : "image"
+        } ]
+      },
+      "primaryChannel" : {
+        "data" : {
+          "id" : "165",
+          "type" : "channel"
+        }
+      },
+      "ratingDescriptors" : {
+        "data" : [ {
+          "id" : "323c40f5-ab36-464a-9150-0497ba3f798d",
+          "type" : "contentDescriptor"
+        }, {
+          "id" : "4c9e8f77-2166-4b43-b236-3384e9a0d9a3",
+          "type" : "contentDescriptor"
+        }, {
+          "id" : "5187556a-fe72-47bc-86ce-6a405cb5f242",
+          "type" : "contentDescriptor"
+        }, {
+          "id" : "dcb3c133-43a8-4428-9d30-2fc7fdae5b16",
+          "type" : "contentDescriptor"
+        } ]
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "b4821276-a965-4e59-9328-eda965e38d6f",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "1387af6c02eda21071f444464f92521c3da7857ddeb23bb969ccf24c93e1309b",
+          "type" : "route"
+        } ]
+      },
+      "season" : {
+        "data" : {
+          "id" : "34005",
+          "type" : "season"
+        }
+      },
+      "show" : {
+        "data" : {
+          "id" : "27363",
+          "type" : "show"
+        }
+      },
+      "txGenres" : {
+        "data" : [ {
+          "id" : "2c3bddd5-8b6e-493a-ab73-96b6d8d6f4a7",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "video"
+  },
+  "included" : [ {
+    "attributes" : {
+      "name" : "Investigation Discovery"
+    },
+    "id" : "165",
+    "relationships" : {
+      "contentPackages" : {
+        "data" : [ {
+          "id" : "InvestigationDiscovery",
+          "type" : "package"
+        } ]
+      },
+      "images" : {
+        "data" : [ {
+          "id" : "17db052c-367d-465c-89e6-9ad7ee3238b0",
+          "type" : "image"
+        }, {
+          "id" : "244cb6fe-dbee-4a12-9111-2bb6352e1b9f",
+          "type" : "image"
+        }, {
+          "id" : "33ce46c6-195c-4e69-b12c-361538f071f8",
+          "type" : "image"
+        }, {
+          "id" : "3c79ca88-4776-4169-b9b0-015e4b477b55",
+          "type" : "image"
+        }, {
+          "id" : "a7482336-c271-4851-a1fc-0b0f09e97c0c",
+          "type" : "image"
+        }, {
+          "id" : "b12c8469-409b-4a32-8601-40da5eb55d70",
+          "type" : "image"
+        }, {
+          "id" : "638d9d4d-50ca-4cf6-8eba-5f12cd14194c",
+          "type" : "image"
+        }, {
+          "id" : "ac821652-42b6-4501-bf25-a1d2fc2ea812",
+          "type" : "image"
+        }, {
+          "id" : "b3c06ffd-f512-4275-98c2-dde048dd8d93",
+          "type" : "image"
+        }, {
+          "id" : "b44fd2a5-ee16-45d6-b2f5-1f67e6d5fa7e",
+          "type" : "image"
+        }, {
+          "id" : "e0a25741-4bb1-4831-99f0-7127964e40f1",
+          "type" : "image"
+        }, {
+          "id" : "fa2b44a0-31fc-409a-8795-01a98f773749",
+          "type" : "image"
+        } ]
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "b4821276-a965-4e59-9328-eda965e38d6f",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "e6e0c89035996d8f4555fc35c99a6bece54adcf3d90913907bfb35eb60e8b94a",
+          "type" : "route"
+        } ]
+      },
+      "txFeedPreview" : {
+        "data" : [ {
+          "id" : "3dfa1ed6-ecd0-47c8-8315-a81ef1381d21",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "channel"
+  }, {
+    "attributes" : {
+      "height" : 1080,
+      "kind" : "default",
+      "src" : "https://us1-prod-images.disco-api.com/2024/06/15/b567c774-9e44-3c6c-b0ba-db860a73e812.jpeg",
+      "width" : 1920
+    },
+    "id" : "d02b01a4-2ad8-4f15-a07d-7aaeab97daeb",
+    "type" : "image"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/video/deadly-influence-the-social-media-murders-investigation-discovery-atve-us/rip-bianca"
+    },
+    "id" : "1387af6c02eda21071f444464f92521c3da7857ddeb23bb969ccf24c93e1309b",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/show/deadly-influence-the-social-media-murders-investigation-discovery-atve-us"
+    },
+    "id" : "7f7e0e2d1c3262fe2630ed24051d8c6e4da77a88682ed662c50ada83855fb4c5",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "canonical" : true,
+      "url" : "/channel/investigation-discovery"
+    },
+    "id" : "e6e0c89035996d8f4555fc35c99a6bece54adcf3d90913907bfb35eb60e8b94a",
+    "type" : "route"
+  }, {
+    "attributes" : {
+      "customAttributes" : { },
+      "description" : "Shocking stories of how online dreams can become blood-soaked nightmares.",
+      "longDescription" : "Social Media Influencers seem to have it all — money, celebrity, power. But in these shocking true crime stories, there is a horrifying dark side to the fame, which reveals how these online dreams can quickly become blood-soaked nightmares.",
+      "name" : "Deadly Influence: The Social Media Murders"
+    },
+    "id" : "27363",
+    "relationships" : {
+      "images" : {
+        "data" : [ {
+          "id" : "0e9f2ed9-cf53-4435-985a-10e70e918c1f",
+          "type" : "image"
+        }, {
+          "id" : "2a2a6c7f-2838-455e-b759-a606749d38df",
+          "type" : "image"
+        }, {
+          "id" : "5c16d126-0e64-454d-877e-974662b9bf17",
+          "type" : "image"
+        }, {
+          "id" : "80b3327e-e83b-402e-90a8-895976424cf5",
+          "type" : "image"
+        }, {
+          "id" : "8a252e8e-d561-4ee8-b0c4-fc523fdd9443",
+          "type" : "image"
+        }, {
+          "id" : "8e56146e-e458-4a4b-b664-378187bc66b0",
+          "type" : "image"
+        }, {
+          "id" : "144c1ac0-adae-4327-8e63-a80dda2c86ab",
+          "type" : "image"
+        }, {
+          "id" : "638ee928-499f-464c-a6f1-55f0b7392797",
+          "type" : "image"
+        }, {
+          "id" : "8a744a8f-fafd-4fae-a3b1-3320a7d300f9",
+          "type" : "image"
+        }, {
+          "id" : "df0f3887-d7a0-43ab-9241-8231b0ad48f2",
+          "type" : "image"
+        }, {
+          "id" : "e6db46c8-16ff-467b-9072-aceb62d62922",
+          "type" : "image"
+        }, {
+          "id" : "ef3575db-af3d-4fa9-98b6-b154831a4462",
+          "type" : "image"
+        } ]
+      },
+      "primaryChannel" : {
+        "data" : {
+          "id" : "165",
+          "type" : "channel"
+        }
+      },
+      "ratings" : {
+        "data" : [ {
+          "id" : "b4821276-a965-4e59-9328-eda965e38d6f",
+          "type" : "contentRating"
+        } ]
+      },
+      "routes" : {
+        "data" : [ {
+          "id" : "7f7e0e2d1c3262fe2630ed24051d8c6e4da77a88682ed662c50ada83855fb4c5",
+          "type" : "route"
+        } ]
+      },
+      "seasons" : {
+        "data" : [ {
+          "id" : "34005",
+          "type" : "season"
+        }, {
+          "id" : "35623",
+          "type" : "season"
+        } ]
+      },
+      "txGenres" : {
+        "data" : [ {
+          "id" : "2c3bddd5-8b6e-493a-ab73-96b6d8d6f4a7",
+          "type" : "taxonomyNode"
+        }, {
+          "id" : "a8038e51-cb63-4662-bb7e-c13871a535fd",
+          "type" : "taxonomyNode"
+        } ]
+      }
+    },
+    "type" : "show"
+  } ],
+  "meta" : {
+    "site" : {
+      "attributes" : {
+        "brand" : "go",
+        "brandId" : "ids",
+        "mainTerritoryCode" : "us",
+        "theme" : "ids",
+        "websiteHostName" : ""
+      },
+      "id" : "ids",
+      "type" : "site"
+    }
+  }
+}

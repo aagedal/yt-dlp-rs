@@ -1,19 +1,25 @@
 //! Upstream `OnDemandKoreaIE` (`yt_dlp/extractor/ondemandkorea.py`): an
 //! episode's playback API (`odkmedia.io`, 403 and 404 answers read as
 //! JSON) and its HLS manifests, preferring the `_1080p` variant of a `_720p`
-//! manifest when it exists. The program page (`OnDemandKoreaProgramIE`) is
-//! not ported natively.
-use super::{Extractor, dict_info, direct, extract_m3u8_master_optional};
-use crate::{Error, Result, Subtitles, VideoInfo};
+//! manifest when it exists. The program page (`OnDemandKoreaProgramIE`):
+//! its episodes API pages as `OnDemandKorea` url entries with their titles.
+use super::{
+    Extractor, dict_info, direct, download_json_note_headers, extract_m3u8_master_optional,
+};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
-use serde_json::Value;
+use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
 use url::Url;
 
 pub struct OnDemandKorea;
+pub struct OnDemandKoreaProgram;
 
 const NAME: &str = "OnDemandKorea";
+const PROGRAM_NAME: &str = "OnDemandKoreaProgram";
+/// `OnDemandKoreaProgramIE._PAGE_SIZE`.
+const PROGRAM_PAGE_SIZE: usize = 100;
 /// `str(uuid.uuid4())`: the port has no UUID generator, so the device ID is
 /// fixed (the playback API only uses it for ad targeting).
 const DEVICE_ID: &str = "00000000-0000-4000-8000-000000000000";
@@ -24,11 +30,133 @@ static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
     )
     .unwrap()
 });
+static PROGRAM_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(
+        r"https?://(?:www\.)?ondemandkorea\.com/(?:en/)?player/vod/(?P<id>[a-z0-9-]+)(?:$|#)",
+    )
+    .unwrap()
+});
 static QUALITY_720: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"_720(p?)\.m3u8").unwrap());
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
+}
+
+/// `OnDemandKoreaProgramIE._VALID_URL`.
+pub fn program_suitable(url: &str) -> bool {
+    PROGRAM_URL.is_match(url)
+}
+
+/// `url_result(target, ie=OnDemandKoreaIE, video_title=title)` as a playlist entry.
+fn program_entry(target: &str, title: Option<&str>) -> Result<VideoInfo> {
+    let url = Url::parse(target)?;
+    let mut info = direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    let mut entry = Map::new();
+    entry.insert("ie_key".into(), NAME.into());
+    if let Some(title) = title {
+        entry.insert("title".into(), title.into());
+    }
+    entry.insert("_type".into(), "url".into());
+    entry.insert("url".into(), target.into());
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": {},
+            "ie_key": NAME,
+            "extractor": PROGRAM_NAME,
+            "entry": Value::Object(entry),
+        }),
+    );
+    Ok(info)
+}
+
+impl Extractor for OnDemandKoreaProgram {
+    fn key(&self) -> &'static str {
+        PROGRAM_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = PROGRAM_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let display_id = found["id"].to_owned();
+        crate::screen::set_extractor(PROGRAM_NAME);
+        crate::screen::screen(&format!(
+            "[{PROGRAM_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+
+        // `OnDemandPagedList`: pages are fetched until one has fewer than
+        // `_PAGE_SIZE` results (`page` is 1-based).
+        let mut entries = Vec::new();
+        for page in 1.. {
+            let api = Url::parse_with_params(
+                &format!("https://odkmedia.io/odx/api/v3/program/{display_id}/episodes/"),
+                &[
+                    ("page", page.to_string()),
+                    ("page_size", PROGRAM_PAGE_SIZE.to_string()),
+                ],
+            )?;
+            let data = download_json_note_headers(
+                client,
+                &api,
+                PROGRAM_NAME,
+                &display_id,
+                &format!("Downloading page {page}"),
+                &[("service-name", "odk")],
+            )?;
+            let results = data
+                .pointer("/result/results")
+                .and_then(Value::as_array)
+                .cloned()
+                .unwrap_or_default();
+            for episode in &results {
+                let episode_id = match episode.get("id") {
+                    Some(Value::String(text)) => text.clone(),
+                    Some(Value::Number(number)) => number.to_string(),
+                    _ => {
+                        return Err(super::clyp::key_error(&display_id, "id"));
+                    }
+                };
+                let title = episode.get("title").and_then(Value::as_str);
+                entries.push(program_entry(
+                    &format!(
+                        "https://www.ondemandkorea.com/player/vod/{display_id}?contentId={episode_id}"
+                    ),
+                    title,
+                )?);
+            }
+            if results.len() < PROGRAM_PAGE_SIZE {
+                break;
+            }
+        }
+
+        let mut extra = Map::new();
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            "playlist-dict;id".into(),
+        );
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: display_id,
+            title: String::new(),
+            webpage_url: url.clone(),
+            extractor: PROGRAM_NAME.into(),
+            extractor_key: PROGRAM_NAME.into(),
+            nested: Vec::new(),
+            pending: None,
+            entries,
+            extra,
+        })))
+    }
 }
 
 fn unsupported(what: &str) -> Error {
@@ -300,5 +428,18 @@ mod tests {
             QUALITY_720.replace_all(url, "_1080${1}.m3u8"),
             "https://hls.example/x/master_1080p.m3u8"
         );
+    }
+
+    #[test]
+    fn program_urls_follow_upstream_valid_url() {
+        assert!(program_suitable(
+            "https://www.ondemandkorea.com/player/vod/uskn-news"
+        ));
+        assert!(program_suitable(
+            "https://www.ondemandkorea.com/en/player/vod/the-land"
+        ));
+        assert!(!program_suitable(
+            "https://www.ondemandkorea.com/player/vod/uskn-news?contentId=3518970"
+        ));
     }
 }

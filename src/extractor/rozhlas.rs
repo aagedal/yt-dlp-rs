@@ -217,6 +217,129 @@ fn extract_video(entry: &Value, url: &Url) -> Result<VideoInfo> {
     Ok(dict_info(url, (VLTAVA_NAME, VLTAVA_NAME), fields, formats))
 }
 
+/// Upstream `RozhlasIE` (`prehravac.rozhlas.cz/audio/<id>`): the player page's
+/// title, description and duration around the `media.rozhlas.cz` MP3 URL,
+/// returned as a URL-only result (no media request is made).
+pub struct RozhlasAudio;
+
+const AUDIO_NAME: &str = "Rozhlas";
+static AUDIO_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:www\.)?prehravac\.rozhlas\.cz/audio/(?P<id>[0-9]+)").unwrap()
+});
+/// `<h3>(.+?)</h3>\s*<p[^>]*>.*?</p>\s*<div[^>]+id=["']player-track`.
+static AUDIO_TITLE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r#"<h3>(.+?)</h3>\s*<p[^>]*>.*?</p>\s*<div[^>]+id=["']player-track"#).unwrap()
+});
+/// `<p[^>]+title=(["'])(?P<url>...)\1[^>]*>.*?</p>\s*<div[^>]+id=["']player-track`
+/// (the quote backreference is spelled out as two alternatives).
+static AUDIO_DESCRIPTION: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        r#"<p[^>]+title=(?:"([^"\n]+)"|'([^'\n]+)')[^>]*>.*?</p>\s*<div[^>]+id=["']player-track"#,
+    )
+    .unwrap()
+});
+static AUDIO_DURATION: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"data-duration=["'](\d+)"#).unwrap());
+
+/// `_match_id` for `RozhlasIE`.
+pub fn audio_suitable(url: &str) -> bool {
+    AUDIO_VALID_URL.is_match(url)
+}
+
+impl Extractor for RozhlasAudio {
+    fn key(&self) -> &'static str {
+        AUDIO_NAME
+    }
+
+    fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        let Some(found) = AUDIO_VALID_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let audio_id = found["id"].to_owned();
+        crate::screen::set_extractor(AUDIO_NAME);
+        crate::screen::screen(&format!(
+            "[{AUDIO_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        let page = Url::parse(&format!("http://prehravac.rozhlas.cz/audio/{audio_id}"))?;
+        let webpage = download_webpage(client, &page, AUDIO_NAME, &audio_id)?;
+
+        // `_html_search_regex(...) or remove_start(_og_search_title(...), 'Radio Wave - ')`.
+        // `_html_search_regex` cleans its match (`clean_html(...).strip()`).
+        let title = AUDIO_TITLE
+            .captures(&webpage)
+            .map(|found| crate::html::clean_html(&found[1]).trim().to_owned())
+            .filter(|title| !title.is_empty())
+            .or_else(|| {
+                crate::html::og_search_property(&webpage, "title").map(|title| {
+                    title
+                        .strip_prefix("Radio Wave - ")
+                        .unwrap_or(&title)
+                        .to_owned()
+                })
+            });
+        let description = AUDIO_DESCRIPTION.captures(&webpage).and_then(|found| {
+            found
+                .get(1)
+                .or_else(|| found.get(2))
+                .map(|value| crate::html::clean_html(value.as_str()).trim().to_owned())
+        });
+        let duration = AUDIO_DURATION
+            .captures(&webpage)
+            .and_then(|found| found[1].parse::<i64>().ok());
+
+        let media = Url::parse(&format!("http://media.rozhlas.cz/_audio/{audio_id}.mp3"))?;
+        let mut info = super::direct::with_format(
+            super::direct::build_at(media.clone(), &media, "mp3".into()),
+            "",
+        );
+        for format in &mut info.formats {
+            format.ext = "mp3".into();
+            format.format_id = String::new();
+            format.vcodec = Some("none".into());
+        }
+        info.format_id = None;
+        info.id = audio_id;
+        let mut keys = vec!["id", "url"];
+        match title {
+            Some(title) => {
+                info.title = title;
+                keys.push("title");
+            }
+            None => {
+                info.extra
+                    .insert(crate::info::TITLE_MISSING.into(), Value::Bool(true));
+            }
+        }
+        if let Some(description) = description {
+            info.metadata.description = Some(description);
+            keys.push("description");
+        }
+        if let Some(duration) = duration {
+            crate::metadata_parser::set_field(&mut info, "duration", duration.into());
+            keys.push("duration");
+        }
+        keys.push("vcodec");
+        crate::metadata_parser::set_field(&mut info, "vcodec", "none".into());
+        info.webpage_url = url.clone();
+        info.direct = None;
+        info.extractor = AUDIO_NAME.into();
+        info.extractor_key = AUDIO_NAME.into();
+        Ok(Some(crate::info_order::mark_info(
+            info,
+            &format!(
+                "untyped-dict;{}{}",
+                keys.join(","),
+                if keys.contains(&"title") {
+                    ""
+                } else {
+                    "-untitled"
+                }
+            ),
+        )))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -227,5 +350,14 @@ mod tests {
             "https://wave.rozhlas.cz/papej-masicko-porcujeme-a-bilancujeme-filmy-a-serialy-ktere-letos-zabily-8891337"
         ));
         assert!(!vltava_suitable("https://www.mujrozhlas.cz/nespavci"));
+    }
+
+    #[test]
+    fn audio_urls_follow_upstream_valid_url() {
+        assert!(audio_suitable("http://prehravac.rozhlas.cz/audio/3421320"));
+        assert!(audio_suitable(
+            "https://www.prehravac.rozhlas.cz/audio/3421320/embed"
+        ));
+        assert!(!audio_suitable("http://prehravac.rozhlas.cz/audio/"));
     }
 }

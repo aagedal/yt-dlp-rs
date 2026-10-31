@@ -1,0 +1,16 @@
+[
+ {
+  "url": "http://www.mixcloud.com/dholbach/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "http://www.mixcloud.com/dholbach/uploads/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://www.bilibili.com/audio/music-service-c/web/song/of-menu?sid=10624&pn=1&ps=100",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "of-menu-10624.json"
+  },
+  {
+   "url": "https://www.bilibili.com/audio/music-service-c/web/menu/info?sid=10624",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "menu-info-10624.json"
+  }
+ ]
+}

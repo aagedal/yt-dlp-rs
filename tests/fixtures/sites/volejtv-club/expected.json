@@ -1,0 +1,18 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://volej.tv/klub/1173",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1173\", \"title\": \"VK Jihostroj \\u010cesk\\u00e9 Bud\\u011bjovice\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629317\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3629095\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3706724\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/3324778\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/1971002\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/1971000\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/1925670\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/1925668\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/1925531\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/1925527\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/1841613\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VolejTV\", \"_type\": \"url\", \"url\": \"https://volej.tv/match/1841611\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://volej.tv/klub/1173\", \"original_url\": \"https://volej.tv/klub/1173\", \"webpage_url_basename\": \"1173\", \"webpage_url_domain\": \"volej.tv\", \"extractor\": \"volejtv:club\", \"extractor_key\": \"VolejTVClubPlaylist\", \"release_year\": null, \"playlist_count\": 12, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

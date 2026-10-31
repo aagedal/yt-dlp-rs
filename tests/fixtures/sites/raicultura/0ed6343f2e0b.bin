@@ -1,0 +1,29 @@
+<Mediapolis>
+	<url type="content">
+		<![CDATA[https://vod3-rai-it.akamaized.net/podcastcdn/Rai/RaiCultura/9730180.mp4/playlist.m3u8?hdnea=st=1793459564~exp=1793459714~acl=/*~hmac=90995b5723c63d7343924924cf30472410ebd9ed361ac709f3c1111f4399d63b]]>
+	</url>
+	<url type="bumper"></url>
+	<url type="bumperend"></url>
+	<ct>m3u8</ct>
+	<bitrate>0</bitrate>
+	<smooth>N</smooth>
+	<is_live>N</is_live>
+	<description>Rai</description>
+	<geoprotection>N</geoprotection>
+	<category>4746</category>
+	<plVod></plVod>
+	<plLive></plLive>
+	<logo></logo>
+	<poster>https://creativemedia4-rai-it.akamaized.net/infocdn/Rai/RaiCultura/9730180_1.jpg</poster>
+	<duration>00:29:16</duration>
+	<krpano></krpano>
+	<channel></channel>
+	<ads_tecnico></ads_tecnico>
+	<license_url>
+		<![CDATA[{}]]>
+	</license_url>
+	<thumbs_array>
+<![CDATA[{}]]>
+	</thumbs_array>
+	<vtt_poster_thumbs_url><![CDATA[]]></vtt_poster_thumbs_url>
+</Mediapolis>

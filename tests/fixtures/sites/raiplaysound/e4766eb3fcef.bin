@@ -1,0 +1,29 @@
+<Mediapolis>
+	<url type="content">
+		<![CDATA[https://creativemedia4-rai-it.akamaized.net/podcastcdn/Rai/audiocut/sound_cms/15780584.mp3?hdnea=st=1793459639~exp=1793459789~acl=/*~hmac=0580d53227bfce15211ac6e6d3dff5f1a0841a4e8b554d4c7939ebc609d46514]]>
+	</url>
+	<url type="bumper"></url>
+	<url type="bumperend"></url>
+	<ct>mp3</ct>
+	<bitrate>0</bitrate>
+	<smooth>N</smooth>
+	<is_live>N</is_live>
+	<description>Rai</description>
+	<geoprotection>N</geoprotection>
+	<category>5230</category>
+	<plVod></plVod>
+	<plLive></plLive>
+	<logo></logo>
+	<poster>https://www.rai.it/dl/RaiTV/2012/images/ogImage.jpg</poster>
+	<duration>01:34:45</duration>
+	<krpano></krpano>
+	<channel></channel>
+	<ads_tecnico></ads_tecnico>
+	<license_url>
+		<![CDATA[{}]]>
+	</license_url>
+	<thumbs_array>
+<![CDATA[{}]]>
+	</thumbs_array>
+	<vtt_poster_thumbs_url><![CDATA[]]></vtt_poster_thumbs_url>
+</Mediapolis>

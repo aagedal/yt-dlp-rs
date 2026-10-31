@@ -1,0 +1,46 @@
+
+		{
+			"type": "RaiTv Media Video Item",
+			"itemId": "ContentItem-efb17665-691c-45d5-a60c-5301333cbb0c",
+			"parentSet": "ContentSet-da2e6aa7-86ac-4930-8740-63c1c1ac381f",
+			"weblink": "http://www.rai.tv/dl/RaiTV/programmi/media/ContentItem-efb17665-691c-45d5-a60c-5301333cbb0c.html",
+			"mediaUri": "http://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=5cWtEfGypVceeqqEEqual",
+			"h264": "",
+			"m3u8": "http://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=5cWtEfGypVceeqqEEqual",
+			"wmv": "http://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=5cWtEfGypVceeqqEEqual",
+      "subtitlesUrl": "",
+      "highlights": "",
+			"image": "/dl/img/2016/11/105x791478201477517logo_tg1__1_.jpg",
+			"image_medium": "/dl/img/2016/11/264x1961478201477517logo_tg1__1_.jpg",
+			"image_300": "/dl/img/2016/11/300x1691478201477517logo_tg1__1_.jpg",
+			"length": "",
+			"date": "03/11/2016",
+			"name": "TG1 ore 20:00 del 03/11/2016",
+			"author": "",
+			"from": "TG1",
+			"desc": "TG1 edizione integrale ore 20:00 del giorno 03/11/2016",
+      
+      "title": "Video Rai.TV - TG1 - TG1 ore 20:00 del 03/11/2016",
+      "imageLarge": "/dl/img/2016/11/1478201477517logo_tg1__1_.jpg",
+      "editore":"",
+      "tematiche": [
+				
+					"News"],
+  
+		"tags" : [
+    ""
+
+		],
+		
+				
+		"eventType": "TVShow",
+			
+			"bsp":  "rtv_streaming_news^rtv_streaming_tg1^wmv^",
+      
+			"bsp_fmt": "",
+			"bspAudio": "",
+			"b100": "rtv_news^rtv_tg1_3_1_rect^300x100^",
+			"b250": "rtv_news^rtv_tg1_medium_box^300x250^"
+	
+		}
+	

@@ -1,0 +1,5 @@
+[
+ {"url": "https://media.ccc.de/c/30c3", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://media.ccc.de/c/30c3", "args": ["-J", "--flat-playlist", "--playlist-items", "2"]},
+ {"url": "https://media.ccc.de/c/missing-conf", "args": ["-J", "--flat-playlist"]}
+]

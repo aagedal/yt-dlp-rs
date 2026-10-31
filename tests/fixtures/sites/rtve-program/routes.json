@@ -1,0 +1,20 @@
+{
+ "routes": [
+  {
+   "url": "https://www.rtve.es/play/videos/saber-vivir/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "rec-000.bin"
+  },
+  {
+   "url": "https://www.rtve.es/api/programas/111570/videos?type=39816&page=1&size=60",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "rec-001.bin"
+  }
+ ]
+}

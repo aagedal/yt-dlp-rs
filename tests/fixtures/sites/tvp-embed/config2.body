@@ -1,0 +1,203 @@
+"use strict";
+ziobro({
+    "ads": {
+        "list": []
+    },
+    "content": {
+        "subtitles": [],
+        "info": {
+            "description": null,
+            "seoDescription": "",
+            "episode": 0,
+            "id": 51247504,
+            "subtitle": "Razmova 091220",
+            "title": null,
+            "seoTitle": "Razmova 091220",
+            "season": null,
+            "categoryName": "Kategorie",
+            "categoryId": 79795853,
+            "subcategoryName": "Wideo",
+            "subcategoryId": 81638463,
+            "isLive": false,
+            "productPlacement": null,
+            "ageGroup": {
+                "minAge": 1,
+                "showMark": false
+            },
+            "websiteId": "",
+            "vortalId": 79680874,
+            "vortalName": "belsat",
+            "accessProvider": null,
+            "distributionModel": "AVOD",
+            "topology": "belsat\/wersja-be\/kategorie",
+            "szarpId": "",
+            "programTransmission": "stream",
+            "parentsList": [
+                81638463,
+                79795853,
+                79680874,
+                79651774,
+                2
+            ],
+            "isPaid": false,
+            "contractor": "BRAK",
+            "duration": 876,
+            "pageUrl": "https:\/\/belsat.eu\/51247504\/razmova-091220",
+            "isGeoBlocked": false,
+            "pswnTags": {
+                "violence": false,
+                "sex": false,
+                "profanity": false,
+                "drugs": false
+            }
+        },
+        "tracking": {
+            "complete": "\/\/ads.tvp.pl\/_1793460834\/ad.xml?id=ee8wzGGUJywYITx4alO1zO4CoeThREe2c8udtIEyeHz.y7\/aocodetype=1\/vortal_id=79680874\/website_id=0\/video_id=51247504\/point=complete\/sec=",
+            "firstQuartile": "\/\/ads.tvp.pl\/_1793460834\/ad.xml?id=ee8wzGGUJywYITx4alO1zO4CoeThREe2c8udtIEyeHz.y7\/aocodetype=1\/vortal_id=79680874\/website_id=0\/video_id=51247504\/point=first-quartile\/sec=",
+            "midpoint": "\/\/ads.tvp.pl\/_1793460834\/ad.xml?id=ee8wzGGUJywYITx4alO1zO4CoeThREe2c8udtIEyeHz.y7\/aocodetype=1\/vortal_id=79680874\/website_id=0\/video_id=51247504\/point=midpoint\/sec=",
+            "start": "\/\/ads.tvp.pl\/_1793460834\/ad.xml?id=ee8wzGGUJywYITx4alO1zO4CoeThREe2c8udtIEyeHz.y7\/aocodetype=1\/vortal_id=79680874\/website_id=0\/video_id=51247504\/c=BRAK\/dm={dm}\/level={struct}\/ae={adsenabled}\/point=start\/sec=",
+            "thirdQuartile": "\/\/ads.tvp.pl\/_1793460834\/ad.xml?id=ee8wzGGUJywYITx4alO1zO4CoeThREe2c8udtIEyeHz.y7\/aocodetype=1\/vortal_id=79680874\/website_id=0\/video_id=51247504\/point=third-quartile\/sec=",
+            "_30sek": "\/\/ads.tvp.pl\/_1793460834\/ad.xml?id=ee8wzGGUJywYITx4alO1zO4CoeThREe2c8udtIEyeHz.y7\/aocodetype=1\/vortal_id=79680874\/website_id=0\/video_id=51247504\/point=30sek\/sec="
+        },
+        "statistics": {
+            "ppGemiusId": "ncc1jTr4uSMyzkKkmEpbCqQ_fSUisHtwEzbHuFXT8Xf.t7",
+            "ppGemiusTimeId": ""
+        },
+        "posters": [
+            {
+                "height": 405,
+                "width": 720,
+                "src": "https:\/\/s4.tvp.pl\/images2\/4\/f\/9\/uid_4f99c3d28716b8b62b716b0ca1e732711607513195089_width_720_play_0_pos_0_gs_0_height_405.jpg",
+                "ratio": "16x9"
+            },
+            {
+                "height": 405,
+                "width": 720,
+                "src": "https:\/\/s4.tvp.pl\/images2\/4\/f\/9\/uid_4f99c3d28716b8b62b716b0ca1e732711607513195089_width_{width}_play_0_pos_0_gs_0_height_{height}.jpg",
+                "ratio": "16x9"
+            }
+        ],
+        "logo": null,
+        "streamPing": null,
+        "files": [
+            {
+                "audioLang": "pl-PL",
+                "audioType": "origin",
+                "quality": 0,
+                "type": "dash_h264",
+                "url": "https:\/\/sdt-l3-05-205.tvp.pl\/token\/video\/vod\/51247504\/20261031\/3252931624\/67e9f81f-fe17-442c-8a8d-d8b4de59f6a8\/video.ism\/manifest",
+                "protection": null,
+                "video_360": false
+            },
+            {
+                "audioLang": "pl-PL",
+                "audioType": "origin",
+                "quality": 0,
+                "type": "hls",
+                "url": "https:\/\/sdt-l3-05-205.tvp.pl\/token\/video\/vod\/51247504\/20261031\/3252931624\/67e9f81f-fe17-442c-8a8d-d8b4de59f6a8\/video.ism\/video.m3u8",
+                "protection": null,
+                "video_360": false
+            },
+            {
+                "audioLang": "pl-PL",
+                "audioType": "origin",
+                "quality": {
+                    "bitrate": 1250000,
+                    "fps": null,
+                    "height": null,
+                    "width": null
+                },
+                "type": "any_native",
+                "url": "https:\/\/sdt-l3-05-205.tvp.pl\/token\/video\/vod\/51247504\/20261031\/3252931624\/67e9f81f-fe17-442c-8a8d-d8b4de59f6a8\/video-4.mp4",
+                "protection": null,
+                "video_360": false
+            },
+            {
+                "audioLang": "pl-PL",
+                "audioType": "origin",
+                "quality": {
+                    "bitrate": 9100000,
+                    "fps": null,
+                    "height": null,
+                    "width": null
+                },
+                "type": "any_native",
+                "url": "https:\/\/sdt-l3-05-205.tvp.pl\/token\/video\/vod\/51247504\/20261031\/3252931624\/67e9f81f-fe17-442c-8a8d-d8b4de59f6a8\/video-9.mp4",
+                "protection": null,
+                "video_360": false
+            },
+            {
+                "audioLang": "pl-PL",
+                "audioType": "origin",
+                "quality": {
+                    "bitrate": 2850000,
+                    "fps": null,
+                    "height": null,
+                    "width": null
+                },
+                "type": "any_native",
+                "url": "https:\/\/sdt-l3-05-205.tvp.pl\/token\/video\/vod\/51247504\/20261031\/3252931624\/67e9f81f-fe17-442c-8a8d-d8b4de59f6a8\/video-6.mp4",
+                "protection": null,
+                "video_360": false
+            },
+            {
+                "audioLang": "pl-PL",
+                "audioType": "origin",
+                "quality": {
+                    "bitrate": 590000,
+                    "fps": null,
+                    "height": null,
+                    "width": null
+                },
+                "type": "any_native",
+                "url": "https:\/\/sdt-l3-05-205.tvp.pl\/token\/video\/vod\/51247504\/20261031\/3252931624\/67e9f81f-fe17-442c-8a8d-d8b4de59f6a8\/video-2.mp4",
+                "protection": null,
+                "video_360": false
+            },
+            {
+                "audioLang": "pl-PL",
+                "audioType": "origin",
+                "quality": {
+                    "bitrate": 820000,
+                    "fps": null,
+                    "height": null,
+                    "width": null
+                },
+                "type": "any_native",
+                "url": "https:\/\/sdt-l3-05-205.tvp.pl\/token\/video\/vod\/51247504\/20261031\/3252931624\/67e9f81f-fe17-442c-8a8d-d8b4de59f6a8\/video-3.mp4",
+                "protection": null,
+                "video_360": false
+            },
+            {
+                "audioLang": "pl-PL",
+                "audioType": "origin",
+                "quality": {
+                    "bitrate": 1750000,
+                    "fps": null,
+                    "height": null,
+                    "width": null
+                },
+                "type": "any_native",
+                "url": "https:\/\/sdt-l3-05-205.tvp.pl\/token\/video\/vod\/51247504\/20261031\/3252931624\/67e9f81f-fe17-442c-8a8d-d8b4de59f6a8\/video-5.mp4",
+                "protection": null,
+                "video_360": false
+            },
+            {
+                "audioLang": "pl-PL",
+                "audioType": "origin",
+                "quality": {
+                    "bitrate": 5420000,
+                    "fps": null,
+                    "height": null,
+                    "width": null
+                },
+                "type": "any_native",
+                "url": "https:\/\/sdt-l3-05-205.tvp.pl\/token\/video\/vod\/51247504\/20261031\/3252931624\/67e9f81f-fe17-442c-8a8d-d8b4de59f6a8\/video-7.mp4",
+                "protection": null,
+                "video_360": false
+            }
+        ],
+        "freezeFrameFolder": "\/\/klatki.tvp.pl"
+    },
+    "fullscreenForVideoStream": true
+});

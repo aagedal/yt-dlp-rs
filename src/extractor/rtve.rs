@@ -10,7 +10,7 @@ use super::{
     Extractor, dict_format, dict_info, download_json, download_json_note, download_webpage,
     extract_m3u8_master_optional, extract_mpd_optional_note,
 };
-use crate::{Error, ExtractResult, Result, SubtitleFormat, Subtitles, VideoInfo};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoInfo};
 use base64::Engine;
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -22,6 +22,18 @@ pub struct RtveALaCarta;
 pub struct RtveAudio;
 pub struct RtveLive;
 pub struct RtveTelevision;
+pub struct RtveProgram;
+
+const PROGRAM_NAME: &str = "rtve.es:program";
+const PROGRAM_KEY: &str = "RTVEProgram";
+/// `RTVEProgramIE._PAGE_SIZE`.
+const PROGRAM_PAGE_SIZE: usize = 60;
+static PROGRAM_URL: LazyLock<Regex> = LazyLock::new(|| {
+    crate::extractor::url_regex(
+        r"^https?://(?:www\.)?rtve\.es/play/videos/(?P<id>[\w-]+)/?(?:[?#]|$)",
+    )
+    .unwrap()
+});
 
 const ALACARTA_NAME: &str = "rtve.es:alacarta";
 const ALACARTA_KEY: &str = "RTVEALaCarta";
@@ -617,6 +629,211 @@ impl Extractor for RtveTelevision {
     }
 }
 
+/// `RTVEProgramIE._VALID_URL`.
+pub fn program_suitable(url: &str) -> bool {
+    PROGRAM_URL.is_match(url)
+}
+
+/// `_fetch_page(program_id, page_num)`: one page of the program's videos API.
+fn program_page(client: &Client, program_id: &str, page_num: usize) -> Result<Value> {
+    let api = Url::parse_with_params(
+        &format!("https://www.rtve.es/api/programas/{program_id}/videos"),
+        &[
+            ("type", "39816".to_owned()),
+            ("page", page_num.to_string()),
+            ("size", PROGRAM_PAGE_SIZE.to_string()),
+        ],
+    )?;
+    download_json_note(
+        client,
+        &api,
+        PROGRAM_NAME,
+        program_id,
+        &format!("Downloading page {page_num}"),
+    )
+}
+
+/// `int_or_none` of a JSON value.
+fn int_of(value: Option<&Value>) -> Option<i64> {
+    match value? {
+        Value::Number(number) => number
+            .as_i64()
+            .or_else(|| number.as_f64().map(|float| float.trunc() as i64)),
+        Value::String(text) => text.trim().parse().ok(),
+        _ => None,
+    }
+}
+
+/// `str` of a JSON scalar (`None` for a missing value).
+fn str_of(value: Option<&Value>) -> Option<Value> {
+    match value? {
+        Value::String(text) => Some(Value::from(text.clone())),
+        Value::Number(number) => Some(Value::from(number.to_string())),
+        _ => None,
+    }
+}
+
+/// `url_result(htmlUrl, RTVEALaCartaIE, url_transparent=True, **fields)`
+/// as a playlist entry (its keys in upstream's order).
+fn program_entry(target: &str, fields: Vec<(&str, Value)>) -> Result<VideoInfo> {
+    let url = super::target_url(target)?;
+    let mut info = super::direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    let mut entry = Map::new();
+    for (key, value) in fields {
+        if !value.is_null() {
+            entry.insert(key.into(), value);
+        }
+    }
+    entry.insert("ie_key".into(), ALACARTA_KEY.into());
+    entry.insert("_type".into(), "url_transparent".into());
+    entry.insert("url".into(), target.into());
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": {},
+            "ie_key": ALACARTA_KEY,
+            "extractor": ALACARTA_NAME,
+            "entry": Value::Object(entry),
+        }),
+    );
+    Ok(info)
+}
+
+impl Extractor for RtveProgram {
+    fn key(&self) -> &'static str {
+        PROGRAM_KEY
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = PROGRAM_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let program_slug = found["id"].to_owned();
+        crate::screen::set_extractor(PROGRAM_NAME);
+        crate::screen::screen(&format!(
+            "[{PROGRAM_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        let program_page_html = download_webpage(client, url, PROGRAM_NAME, &program_slug)?;
+        let Some(program_id) = crate::html::html_search_meta(&program_page_html, "DC.identifier")
+        else {
+            return Err(Error::Reported(format!(
+                "[{PROGRAM_NAME}] {program_slug}: Unable to extract Program ID; {}",
+                crate::BUG_REPORTS_MESSAGE
+            )));
+        };
+
+        let first_page = program_page(client, &program_id, 1)?;
+        let page_count = first_page
+            .pointer("/page/totalPages")
+            .and_then(|value| int_of(Some(value)))
+            .filter(|count| *count != 0)
+            .unwrap_or(1);
+        let mut entries = Vec::new();
+        for page_num in 1..=page_count.max(0) as usize {
+            let data = if page_num == 1 {
+                first_page.clone()
+            } else {
+                program_page(client, &program_id, page_num)?
+            };
+            let items = data
+                .pointer("/page/items")
+                .and_then(Value::as_array)
+                .cloned()
+                .unwrap_or_default();
+            for video in items {
+                let Some(html_url) = video
+                    .get("htmlUrl")
+                    .and_then(Value::as_str)
+                    .filter(|link| link.starts_with("http://") || link.starts_with("https://"))
+                else {
+                    continue;
+                };
+                let text = |key: &str| {
+                    video
+                        .get(key)
+                        .and_then(Value::as_str)
+                        .map(|t| Value::from(t.to_owned()))
+                };
+                let duration = video
+                    .get("duration")
+                    .and_then(Value::as_f64)
+                    .map_or(Value::Null, |ms| Value::from(ms / 1000.0));
+                let thumbnail = video
+                    .get("thumbnail")
+                    .and_then(Value::as_str)
+                    .filter(|link| link.starts_with("http://") || link.starts_with("https://"))
+                    .map_or(Value::Null, Value::from);
+                // `(('programInfo', 'title'), {str}, any)`: a non-string
+                // `programInfo` is skipped for the episode's own `title`.
+                let series = [
+                    video.get("programInfo").and_then(Value::as_str),
+                    video.get("title").and_then(Value::as_str),
+                ]
+                .into_iter()
+                .flatten()
+                .next()
+                .map(|text| Value::from(text.to_owned()));
+                let fields = vec![
+                    ("id", str_of(video.get("id")).unwrap_or(Value::Null)),
+                    ("title", text("longTitle").unwrap_or(Value::Null)),
+                    (
+                        "description",
+                        text("shortDescription").unwrap_or(Value::Null),
+                    ),
+                    ("duration", duration),
+                    ("series", series.unwrap_or(Value::Null)),
+                    (
+                        "season_number",
+                        int_of(video.get("temporadaOrden")).map_or(Value::Null, Value::from),
+                    ),
+                    (
+                        "season_id",
+                        str_of(video.get("temporadaId")).unwrap_or(Value::Null),
+                    ),
+                    (
+                        "season",
+                        str_of(video.get("temporada")).unwrap_or(Value::Null),
+                    ),
+                    (
+                        "episode_number",
+                        int_of(video.get("episode")).map_or(Value::Null, Value::from),
+                    ),
+                    ("episode", text("title").unwrap_or(Value::Null)),
+                    ("thumbnail", thumbnail),
+                ];
+                entries.push(program_entry(html_url, fields)?);
+            }
+        }
+
+        let title = crate::html::html_extract_title(&program_page_html);
+        let mut extra = Map::new();
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            "playlist-dict;id,title".into(),
+        );
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: program_id,
+            title: title.unwrap_or_default(),
+            webpage_url: url.clone(),
+            extractor: PROGRAM_NAME.into(),
+            extractor_key: PROGRAM_KEY.into(),
+            nested: Vec::new(),
+            pending: None,
+            entries,
+            extra,
+        })))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -651,5 +868,15 @@ mod tests {
         let alphabet_data = b"ax";
         assert_eq!(alphabet(alphabet_data), ['a']);
         assert_eq!(decode_url(&['a', 'b'], b"07770").unwrap(), "a");
+    }
+
+    #[test]
+    fn program_urls_follow_upstream_valid_url() {
+        assert!(program_suitable(
+            "https://www.rtve.es/play/videos/saber-vivir/"
+        ));
+        assert!(!program_suitable(
+            "https://www.rtve.es/play/videos/saber-vivir/25-01-26/16909076/"
+        ));
     }
 }

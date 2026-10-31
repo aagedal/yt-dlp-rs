@@ -1,0 +1,9 @@
+{
+ "routes": [
+  {"url": "https://www.cbc.ca/player/play/2657631896", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "player-page.html"},
+  {"url": "https://services.radio-canada.ca/media/validation/v2?appCode=medianet&idMedia=9548798&tech=progressive&output=json", "headers": {"Content-Type": "application/json"}, "body_file": "player-asset.json"},
+  {"url": "https://www.cbc.ca/listen/api/v1/clips/16142603", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "listen-clip.json"},
+  {"url": "https://www.cbc.ca/listen/api/v1/clips/1", "status": 404, "headers": {"Content-Type": "application/json"}, "body_file": "listen-missing.json"},
+  {"url": "https://www.cbc.ca/listen/cbc-podcasts/1-synthetic/episode/1-missing", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "listen-synthetic.html"}
+ ]
+}
