@@ -1,0 +1,69 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://blog.example.test/fb-one",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Old town walk\", \"description\": \"A walk through the old town\", \"uploader\": \"Old town walk | Facebook\", \"timestamp\": 1699999999, \"thumbnail\": \"https://scontent.xx.fbcdn.net/v/thumb.jpg?stp=1\", \"duration\": 61.234, \"id\": \"1234567890\", \"formats\": [{\"format_id\": \"1\", \"manifest_url\": \"https://video.xx.fbcdn.net/v/dash/manifest.mpd?x=1\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 69.248, \"asr\": 44100, \"fps\": null, \"language\": null, \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://video.xx.fbcdn.net/v/dash/manifest.mpd?x=1\", \"fragment_base_url\": \"\", \"fragments\": [{\"path\": \"init-stream1.m4s\"}, {\"path\": \"chunk-stream1-00001.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00002.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00003.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00004.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00005.m4s\", \"duration\": 2.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 1, \"is_dash_periods\": true, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 69.248, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"format\": \"1 - audio only (DASH audio)\"}, {\"format_id\": \"sd-0\", \"quality\": -3, \"url\": \"https://video.xx.fbcdn.net/v/sd.mp4?efg=sd\", \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"sd-0 - unknown\"}, {\"format_id\": \"sd-1\", \"quality\": -3, \"url\": \"https://video.xx.fbcdn.net/v/prog-sd.mp4\", \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"sd-1 - unknown\"}, {\"format_id\": \"hd-0\", \"quality\": -2, \"url\": \"https://video.xx.fbcdn.net/v/hd.mp4?efg=hd\", \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"hd-0 - unknown\"}, {\"format_id\": \"hd-1\", \"quality\": -2, \"url\": \"https://video.xx.fbcdn.net/v/prog-hd.mp4\", \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"hd-1 - unknown\"}, {\"format_id\": \"0\", \"manifest_url\": \"https://video.xx.fbcdn.net/v/dash/manifest.mpd?x=1\", \"ext\": \"mp4\", \"width\": 320, \"height\": 240, \"tbr\": 56.115, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.f4000d\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://video.xx.fbcdn.net/v/dash/manifest.mpd?x=1\", \"fragment_base_url\": \"\", \"fragments\": [{\"path\": \"init-stream0.m4s\"}, {\"path\": \"chunk-stream0-00001.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00002.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00003.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00004.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00005.m4s\", \"duration\": 2.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 56.115, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"format\": \"0 - 320x240 (DASH video)\"}], \"uploader_id\": \"100000000000001\", \"automatic_captions\": {\"nb_NO\": [{\"url\": \"https://scontent.xx.fbcdn.net/v/nb.srt\", \"name\": \"Norwegian\", \"ext\": \"srt\"}]}, \"subtitles\": {\"en_US\": [{\"url\": \"https://scontent.xx.fbcdn.net/v/en.srt\", \"name\": \"English (United States)\", \"ext\": \"srt\"}]}, \"original_url\": \"https://blog.example.test/fb-one\", \"webpage_url\": \"https://www.facebook.com/someone/videos/1234567890/\", \"webpage_url_basename\": \"1234567890\", \"webpage_url_domain\": \"facebook.com\", \"extractor\": \"facebook\", \"extractor_key\": \"Facebook\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://scontent.xx.fbcdn.net/v/thumb.jpg?stp=1\", \"id\": \"0\"}], \"display_id\": \"1234567890\", \"fulltitle\": \"Old town walk\", \"duration_string\": \"1:01\", \"upload_date\": \"20231114\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_formats\": [{\"format_id\": \"0\", \"manifest_url\": \"https://video.xx.fbcdn.net/v/dash/manifest.mpd?x=1\", \"ext\": \"mp4\", \"width\": 320, \"height\": 240, \"tbr\": 56.115, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.f4000d\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://video.xx.fbcdn.net/v/dash/manifest.mpd?x=1\", \"fragment_base_url\": \"\", \"fragments\": [{\"path\": \"init-stream0.m4s\"}, {\"path\": \"chunk-stream0-00001.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00002.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00003.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00004.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00005.m4s\", \"duration\": 2.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 56.115, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"format\": \"0 - 320x240 (DASH video)\"}, {\"format_id\": \"1\", \"manifest_url\": \"https://video.xx.fbcdn.net/v/dash/manifest.mpd?x=1\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 69.248, \"asr\": 44100, \"fps\": null, \"language\": null, \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://video.xx.fbcdn.net/v/dash/manifest.mpd?x=1\", \"fragment_base_url\": \"\", \"fragments\": [{\"path\": \"init-stream1.m4s\"}, {\"path\": \"chunk-stream1-00001.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00002.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00003.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00004.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00005.m4s\", \"duration\": 2.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 1, \"is_dash_periods\": true, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 69.248, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"format\": \"1 - audio only (DASH audio)\"}], \"format\": \"0 - 320x240 (DASH video)+1 - audio only (DASH audio)\", \"format_id\": \"0+1\", \"ext\": \"mp4\", \"protocol\": \"http_dash_segments+http_dash_segments\", \"language\": null, \"format_note\": \"DASH video+DASH audio\", \"filesize_approx\": null, \"tbr\": 125.363, \"width\": 320, \"height\": 240, \"resolution\": \"320x240\", \"fps\": null, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.f4000d\", \"vbr\": 56.115, \"stretched_ratio\": null, \"aspect_ratio\": 1.33, \"acodec\": \"mp4a.40.2\", \"abr\": 69.248, \"asr\": 44100, \"audio_channels\": null, \"_filename\": \"Old town walk [1234567890].mp4\", \"filename\": \"Old town walk [1234567890].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [facebook] Ignoring subtitle tracks found in the DASH manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/fb-one",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1234567890|Old town walk|facebook|https://www.facebook.com/someone/videos/1234567890/|https://blog.example.test/fb-one"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [facebook] Ignoring subtitle tracks found in the DASH manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/fb-many",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"fb-many\", \"title\": \"Facebook embeds\", \"timestamp\": null, \"description\": null, \"thumbnail\": null, \"age_limit\": null, \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Facebook\", \"_type\": \"url\", \"url\": \"https://www.facebook.com/video/embed?video_id=1111111111\", \"extractor\": \"facebook\", \"extractor_key\": \"Facebook\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Facebook\", \"_type\": \"url\", \"url\": \"https://www.facebook.com/someone/posts/3333333333\", \"extractor\": \"facebook\", \"extractor_key\": \"Facebook\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Facebook\", \"_type\": \"url\", \"url\": \"https://facebook.com/someone/videos/2222222222/?ref=embed&x=1\", \"extractor\": \"facebook\", \"extractor_key\": \"Facebook\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://blog.example.test/fb-many\", \"original_url\": \"https://blog.example.test/fb-many\", \"webpage_url_basename\": \"fb-many\", \"webpage_url_domain\": \"blog.example.test\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/fb-many",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(url)s|%(ie_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|1111111111|https://www.facebook.com/video/embed?video_id=1111111111|Facebook",
+    "2|3333333333|https://www.facebook.com/someone/posts/3333333333|Facebook",
+    "3|2222222222|https://facebook.com/someone/videos/2222222222/?ref=embed&x=1|Facebook"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  }
+ ]
+}

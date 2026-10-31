@@ -2180,7 +2180,7 @@ enum Embed {
     Info(WebpageEntry),
 }
 
-static EMBED_SITES: [EmbedSite; 44] = [
+static EMBED_SITES: [EmbedSite; 48] = [
     EmbedSite {
         name: "youtube",
         key: "Youtube",
@@ -2326,6 +2326,15 @@ static EMBED_SITES: [EmbedSite; 44] = [
         fields: None,
     },
     EmbedSite {
+        name: super::facebook::NAME,
+        key: super::facebook::KEY,
+        extractor: Some(&super::facebook::Facebook),
+        embed_urls: super::facebook::embed_urls,
+        temp_id: super::facebook::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
         name: super::googledrive::NAME,
         key: super::googledrive::KEY,
         extractor: Some(&super::googledrive::GoogleDrive),
@@ -2349,6 +2358,15 @@ static EMBED_SITES: [EmbedSite; 44] = [
         extractor: Some(&super::indavideo::IndavideoEmbed),
         embed_urls: super::indavideo::embed_urls,
         temp_id: super::indavideo::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::instagram::NAME,
+        key: super::instagram::NAME,
+        extractor: Some(&super::instagram::Instagram),
+        embed_urls: super::instagram::embed_urls,
+        temp_id: super::instagram::temp_id,
         webpage: None,
         fields: None,
     },
@@ -2470,6 +2488,15 @@ static EMBED_SITES: [EmbedSite; 44] = [
         fields: None,
     },
     EmbedSite {
+        name: super::tiktok::NAME,
+        key: super::tiktok::NAME,
+        extractor: Some(&super::tiktok::TikTok),
+        embed_urls: super::tiktok::embed_urls,
+        temp_id: super::tiktok::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
         name: super::tvigle::NAME,
         key: super::tvigle::KEY,
         extractor: Some(&super::tvigle::Tvigle),
@@ -2484,6 +2511,15 @@ static EMBED_SITES: [EmbedSite; 44] = [
         extractor: Some(&super::udn::UdnEmbed),
         embed_urls: super::udn::embed_urls,
         temp_id: super::udn::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::vk::NAME,
+        key: super::vk::KEY,
+        extractor: Some(&super::vk::Vk),
+        embed_urls: super::vk::embed_urls,
+        temp_id: super::vk::temp_id,
         webpage: None,
         fields: None,
     },

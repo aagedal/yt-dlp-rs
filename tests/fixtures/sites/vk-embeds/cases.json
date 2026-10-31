@@ -1,0 +1,6 @@
+[
+ {"url": "https://blog.example.test/vk-one", "args": ["-j"]},
+ {"url": "https://blog.example.test/vk-one", "args": ["--print", "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"]},
+ {"url": "https://blog.example.test/vk-many", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://blog.example.test/vk-many", "args": ["--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(url)s|%(ie_key)s"]}
+]

@@ -1,0 +1,67 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://blog.example.test/vk-one",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"-1_7\", \"formats\": [{\"format_id\": \"url360\", \"url\": \"https://vkvd.test/e-360.mp4\", \"ext\": \"mp4\", \"source_preference\": 1, \"height\": 360, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"url360 - 360p\"}], \"subtitles\": {}, \"title\": \"Embedded clip\", \"timestamp\": 1600000000, \"view_count\": null, \"is_live\": false, \"_format_sort_fields\": [\"res\", \"source\"], \"original_url\": \"https://blog.example.test/vk-one\", \"webpage_url\": \"https://vk.com/video_ext.php?oid=-1&id=7&hash=abc\", \"webpage_url_basename\": \"video_ext.php\", \"webpage_url_domain\": \"vk.com\", \"extractor\": \"vk\", \"extractor_key\": \"VK\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"-1_7\", \"fulltitle\": \"Embedded clip\", \"upload_date\": \"20200913\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"url360\", \"url\": \"https://vkvd.test/e-360.mp4\", \"ext\": \"mp4\", \"source_preference\": 1, \"height\": 360, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"url360 - 360p\", \"_filename\": \"Embedded clip [-1_7].mp4\", \"filename\": \"Embedded clip [-1_7].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/vk-one",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "-1_7|Embedded clip|vk|https://vk.com/video_ext.php?oid=-1&id=7&hash=abc|https://blog.example.test/vk-one"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/vk-many",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"vk-many\", \"title\": \"VK embeds\", \"timestamp\": null, \"description\": null, \"thumbnail\": null, \"age_limit\": null, \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"VK\", \"_type\": \"url\", \"url\": \"https://vkvideo.ru/video_ext.php?oid=-2&id=5&hd=2\", \"extractor\": \"vk\", \"extractor_key\": \"VK\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VK\", \"_type\": \"url\", \"url\": \"https://vk.ru/video_ext.php?oid=-1&id=8\", \"extractor\": \"vk\", \"extractor_key\": \"VK\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"VK\", \"_type\": \"url\", \"url\": \"https://vk.com/video_ext.php?oid=-1&id=7&hash=abc\", \"extractor\": \"vk\", \"extractor_key\": \"VK\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://blog.example.test/vk-many\", \"original_url\": \"https://blog.example.test/vk-many\", \"webpage_url_basename\": \"vk-many\", \"webpage_url_domain\": \"blog.example.test\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/vk-many",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(url)s|%(ie_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|5|https://vkvideo.ru/video_ext.php?oid=-2&id=5&hd=2|VK",
+    "2|8|https://vk.ru/video_ext.php?oid=-1&id=8|VK",
+    "3|7|https://vk.com/video_ext.php?oid=-1&id=7&hash=abc|VK"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  }
+ ]
+}

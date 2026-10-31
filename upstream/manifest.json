@@ -1980,9 +1980,11 @@
       ],
       "rust": [
         "src/extractor/facebook.rs",
-        "tests/fixtures/sites/facebook/"
+        "tests/fixtures/sites/facebook/",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/facebook-embeds/"
       ],
-      "scope": "FacebookIE server JS (handleServerJS/s.handle) and bigPipe pagelet VideoConfig instances (src formats, inline DASH, subtitles_src, multi-video url playlists), relay prefetched data (parse_graphql_video legacy/delivery formats, inline DASH, progressive/HLS URLs, captions), watch party livingRoom recaps (GraphQL POST with lsd/RelayAPIConfigDefaults) and the tahoe POST fallback, merged with extract_metadata including JSON-LD, login/interstitial/Cannot parse data errors; FacebookReelIE, FacebookPluginsVideoIE and FacebookRedirectURLIE redirects; FacebookAdsIE snapshots (current and old paths, markup descriptions, videos/cards as formats or playlists) without the 403 client-challenge retry; SegmentBase DASH representations are refused and BaseURL-only ones shaped as one-fragment DASH by the shared parser (upstream: unfragmented https); compared with pinned upstream output through the fixture proxy"
+      "scope": "FacebookIE server JS (handleServerJS/s.handle) and bigPipe pagelet VideoConfig instances (src formats, inline DASH, subtitles_src, multi-video url playlists), relay prefetched data (parse_graphql_video legacy/delivery formats, inline DASH, progressive/HLS URLs, captions), watch party livingRoom recaps (GraphQL POST with lsd/RelayAPIConfigDefaults) and the tahoe POST fallback, merged with extract_metadata including JSON-LD, login/interstitial/Cannot parse data errors; FacebookReelIE, FacebookPluginsVideoIE and FacebookRedirectURLIE redirects; FacebookAdsIE snapshots (current and old paths, markup descriptions, videos/cards as formats or playlists) without the 403 client-challenge retry; SegmentBase DASH representations are refused and BaseURL-only ones shaped as one-fragment DASH by the shared parser (upstream: unfragmented https); FacebookIE _EMBED_REGEX iframes and fb-video/fb-post embeds on generic pages; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "fathom",
@@ -2460,9 +2462,11 @@
       ],
       "rust": [
         "src/extractor/instagram.rs",
-        "tests/fixtures/sites/instagram/"
+        "tests/fixtures/sites/instagram/",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/instagram-embeds/"
       ],
-      "scope": "InstagramIE without impersonation: logged-out LSD session token, accessibility check warnings/errors and post page prefetched media; logged-in (sessionid cookie) media info API with the stale-cookie fallback, app_id extractor argument and --write-comments comments API; _extract_product formats, inline DASH manifests (direct BaseURL representations), thumbnails, metadata, comments and carousel playlists; InstagramIOSIE; InstagramStoryIE (stories/highlights page user and reels_media API, --no-playlist); InstagramTagIE and InstagramUserIE (broken upstream) sharedData and GIS-signed GraphQL timeline pages; no GraphQL post query (needs impersonation), embeds or comments of logged-in carousels; compared with pinned upstream output through the fixture proxy"
+      "scope": "InstagramIE without impersonation: logged-out LSD session token, accessibility check warnings/errors and post page prefetched media; logged-in (sessionid cookie) media info API with the stale-cookie fallback, app_id extractor argument and --write-comments comments API; _extract_product formats, inline DASH manifests (direct BaseURL representations), thumbnails, metadata, comments and carousel playlists; InstagramIOSIE; InstagramStoryIE (stories/highlights page user and reels_media API, --no-playlist); InstagramTagIE and InstagramUserIE (broken upstream) sharedData and GIS-signed GraphQL timeline pages; InstagramIE._extract_embed_urls on generic pages (embed iframes, else the instagram-media link when absolute); no GraphQL post query (needs impersonation) or comments of logged-in carousels; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "israelnationalnews",
@@ -4515,9 +4519,11 @@
       "rust": [
         "src/extractor/tiktok.rs",
         "tests/fixtures/sites/tiktok/",
-        "tests/fixtures/sites/douyin/"
+        "tests/fixtures/sites/douyin/",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/tiktok-embeds/"
       ],
-      "scope": "TikTokIE webpage universal data with the native JS challenge solver, _parse_aweme_video_web formats/metadata, webpage/feed subtitles, slideshows as their audio track, status-code errors, __needs_testing format checks; TikTokVMIE short-link redirects; TikTokUserIE (user page, embed-page secUid fallback, creator item_list pages) and TikTokCollectionIE as lazy flat url playlists; DouyinIE web detail API through _parse_aweme_video_app (no signature/verification challenge); no app API, aweme/detail SRT-data captions, TikTokSoundIE/TikTokEffectIE/TikTokTagIE (app API, _WORKING=False); TikTokLiveIE webcast room info with FLV/HLS pull formats and the live detail fallback; compared with pinned upstream output through the fixture proxy"
+      "scope": "TikTokIE webpage universal data with the native JS challenge solver, _parse_aweme_video_web formats/metadata, webpage/feed subtitles, slideshows as their audio track, status-code errors, __needs_testing format checks; TikTokVMIE short-link redirects; TikTokUserIE (user page, embed-page secUid fallback, creator item_list pages) and TikTokCollectionIE as lazy flat url playlists; DouyinIE web detail API through _parse_aweme_video_app (no signature/verification challenge); no app API, aweme/detail SRT-data captions, TikTokSoundIE/TikTokEffectIE/TikTokTagIE (app API, _WORKING=False); TikTokLiveIE webcast room info with FLV/HLS pull formats and the live detail fallback; TikTokIE _EMBED_REGEX script/iframe embeds on generic pages; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "toypics",
@@ -5056,9 +5062,11 @@
         "src/extractor/vk.rs",
         "src/extractor/vkplay.rs",
         "tests/fixtures/sites/vk/",
-        "tests/fixtures/sites/vk-login/"
+        "tests/fixtures/sites/vk-login/",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/vk-embeds/"
       ],
-      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; VKWallPostIE wkview payload as a playlist of data-audio tracks and linked videos; VKUserVideosIE sections and playlists through load_videos_silent pages (fetched lazily like the upstream generator; playlist_count unknown unless exhausted); VKPlayIE records and VKPlayLiveIE streams from the API or the initial-state script; the JS challenge (challenge.html salt function run by the native JSInterpreter, md5 key submission and the request repeated with its cookie; missing hash/salt and interpreter errors); no other embeds; compared with pinned upstream output through the fixture proxy; VKBaseIE login (home page hidden inputs, cp1251 email/pass, first remixlhk Set-Cookie, onLoginFailed error) for VKIE, VKWallPostIE and VKUserVideosIE, compared with pinned upstream through tests/fixtures/sites/vk-login/"
+      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; VKWallPostIE wkview payload as a playlist of data-audio tracks and linked videos; VKUserVideosIE sections and playlists through load_videos_silent pages (fetched lazily like the upstream generator; playlist_count unknown unless exhausted); VKPlayIE records and VKPlayLiveIE streams from the API or the initial-state script; the JS challenge (challenge.html salt function run by the native JSInterpreter, md5 key submission and the request repeated with its cookie; missing hash/salt and interpreter errors); no other embeds in VK pages; VKIE _EMBED_REGEX video_ext iframes on generic pages; compared with pinned upstream output through the fixture proxy; VKBaseIE login (home page hidden inputs, cp1251 email/pass, first remixlhk Set-Cookie, onLoginFailed error) for VKIE, VKWallPostIE and VKUserVideosIE, compared with pinned upstream through tests/fixtures/sites/vk-login/"
     },
     {
       "name": "vocaroo",

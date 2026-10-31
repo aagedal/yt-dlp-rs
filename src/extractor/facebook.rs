@@ -21,8 +21,8 @@ pub struct FacebookPluginsVideo;
 pub struct FacebookRedirectUrl;
 pub struct FacebookAds;
 
-const NAME: &str = "facebook";
-const KEY: &str = "Facebook";
+pub(crate) const NAME: &str = "facebook";
+pub(crate) const KEY: &str = "Facebook";
 const REDIRECT_NAME: &str = "FacebookRedirectURL";
 const ADS_NAME: &str = "facebook:ads";
 const ADS_KEY: &str = "FacebookAds";
@@ -107,6 +107,26 @@ static IMAGE_EXT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\.(?:jpg|png)"
 /// `FacebookIE._match_valid_url`.
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
+}
+
+/// `get_temp_id`.
+pub(crate) fn temp_id(url: &str) -> Option<String> {
+    VALID_URL.captures(url).map(|found| found["id"].to_owned())
+}
+
+/// `_EMBED_REGEX`: video embed/plugin iframes and `fb-video`/`fb-post`
+/// API embeds (each quote backreference as one alternative per quote).
+static EMBED: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+    [
+        r#"<iframe[^>]+?src=(?:"(?P<url>https?://www\.facebook\.com/(?:video/embed|plugins/video\.php).+?)"|'(?P<url2>https?://www\.facebook\.com/(?:video/embed|plugins/video\.php).+?)')"#,
+        r#"<div[^>]+class=(?:'[^'"]*\bfb-(?:video|post)\b[^'"]*'|"[^'"]*\bfb-(?:video|post)\b[^'"]*")[^>]+data-href=(?:'(?P<url>(?:https?:)?//(?:www\.)?facebook.com/.+?)'|"(?P<url2>(?:https?:)?//(?:www\.)?facebook.com/.+?)")"#,
+    ]
+    .map(|pattern| Regex::new(pattern).unwrap())
+});
+
+/// `_extract_embed_urls` under `orderedSet`.
+pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
+    super::embed_regex_urls(url, webpage, &*EMBED, suitable)
 }
 
 /// `FacebookReelIE._match_valid_url`.

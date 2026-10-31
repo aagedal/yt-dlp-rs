@@ -2526,7 +2526,11 @@ upstream. `facebook:ads` (`ads/library/?id=ID`) follows upstream
 description, page uploader fields and like count, and each video or card's
 SD/HD (watermarked) URLs as one video or a playlist; upstream's 403 `Client
 challenge` verification retry is not ported (the HTTP error is reported).
-`tests/fixtures/sites/facebook/` is compared with pinned upstream output.
+On generic pages `FacebookIE._EMBED_REGEX` finds `video/embed` and
+`plugins/video.php` iframes and `fb-video`/`fb-post` API embeds (kept when
+`FacebookIE` accepts them). `tests/fixtures/sites/facebook/` and
+`tests/fixtures/sites/facebook-embeds/` are compared with pinned upstream
+output.
 
 Fathom shares (`fathom.video/share/ID`) follow upstream `FathomIE`: the `app`
 element's `data-page` JSON props (upstream's `TypeError` text without them),
@@ -2656,7 +2660,10 @@ output.
 
 `vm.tiktok` short links (`vm.`/`vt.tiktok.com/ID`,
 `tiktok.com/t/ID`) are resolved with a HEAD request and followed.
-`tests/fixtures/sites/tiktok/` is compared with pinned upstream output.
+On generic pages `TikTokIE._EMBED_REGEX` finds script and iframe sources
+matching its `_VALID_URL`. `tests/fixtures/sites/tiktok/` and
+`tests/fixtures/sites/tiktok-embeds/` are compared with pinned upstream
+output.
 
 Tweakers videos (`tweakers.net/video/ID`) follow upstream `TweakersIE`: the
 `s1playlist/ID/1920/1080/playlist.json` item's progressive sources as formats
@@ -2942,7 +2949,9 @@ a warning) or the page's `initial-state` script, `playerUrls` HLS, DASH and
 progressive formats (with the named resolutions), the common metadata and
 `The channel is not currently live` for an offline channel. A live
 stream's HLS master playlist is read without its media playlists.
-`tests/fixtures/sites/vk/` is compared with pinned upstream output.
+On generic pages `VKIE._EMBED_REGEX` finds `video_ext.php` iframes (kept
+when `VKIE` accepts them). `tests/fixtures/sites/vk/` and
+`tests/fixtures/sites/vk-embeds/` are compared with pinned upstream output.
 
 Web of Stories stories (`[www.]webofstories.com/play/[SPEAKER/]ID`) follow
 upstream `WebOfStoriesIE`: the OpenGraph title (else the fatal
@@ -3363,7 +3372,11 @@ marked broken upstream) read the page's `sharedData` and its GIS-signed
 GraphQL timeline pages (trying upstream's signature templates on `403`) as
 `url` entries of the video nodes; all pages are fetched before processing,
 so a page error ends the extraction instead of upstream's partial playlist.
-`tests/fixtures/sites/instagram/` is compared with pinned upstream output.
+On generic pages `InstagramIE._extract_embed_urls` finds `/p/ID/embed`
+iframes, else the first link of the `instagram-media` element (a link that is
+not an absolute URL is dropped, where upstream would fail to process it).
+`tests/fixtures/sites/instagram/` and `tests/fixtures/sites/instagram-embeds/`
+are compared with pinned upstream output.
 
 Ivoox audios (`[www.]ivoox.com/[LANG/]SLUG_rf_ID_1.html`,
 `go.ivoox.com/rf/ID`) follow upstream `IvooxIE`: the page's

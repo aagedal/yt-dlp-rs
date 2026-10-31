@@ -27,7 +27,7 @@ pub struct InstagramStory;
 pub struct InstagramTag;
 pub struct InstagramUser;
 
-const NAME: &str = "Instagram";
+pub(crate) const NAME: &str = "Instagram";
 const IOS_NAME: &str = "InstagramIOS";
 const STORY_NAME: &str = "instagram:story";
 const STORY_KEY: &str = "InstagramStory";
@@ -90,6 +90,43 @@ pub fn suitable(url: &str) -> bool {
     let after_kind = &url[found.name("id").map_or(0, |id| id.start())..];
     !path.starts_with("/share/")
         && !(path.contains("/reel/audio/") || after_kind.starts_with("audio/"))
+}
+
+/// `get_temp_id`.
+pub(crate) fn temp_id(url: &str) -> Option<String> {
+    VALID_URL.captures(url).map(|found| found["id"].to_owned())
+}
+
+/// `_EMBED_REGEX` (`(["\'])...\1` as one alternative per quote).
+static EMBED: LazyLock<[Regex; 1]> = LazyLock::new(|| {
+    [Regex::new(r#"<iframe[^>]+src=(?:"(?P<url>(?:https?:)?//(?:www\.)?instagram\.com/p/[^/]+/embed.*?)"|'(?P<url2>(?:https?:)?//(?:www\.)?instagram\.com/p/[^/]+/embed.*?)')"#).unwrap()]
+});
+
+/// `InstagramIE._extract_embed_urls`: the `_EMBED_REGEX` embeds, else the
+/// first link of the `instagram-media` element (taken as is; a link that
+/// is not an absolute URL is dropped here).
+pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
+    let found = super::embed_regex_urls(url, webpage, &*EMBED, suitable);
+    if !found.is_empty() {
+        return found;
+    }
+    static LINK: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(r#"<a[^>]+href=(?:'(?P<url>[^'"]+)'|"(?P<url2>[^'"]+)")"#).unwrap()
+    });
+    let media = crate::html_elements::elements_text_and_html_by_attribute(
+        "class",
+        "instagram-media",
+        webpage,
+    )
+    .ok()
+    .and_then(|elements| elements.into_iter().next())
+    .map(|(content, _)| content)
+    .unwrap_or_default();
+    LINK.captures(&media)
+        .and_then(|found| found.name("url").or_else(|| found.name("url2")))
+        .and_then(|link| Url::parse(link.as_str()).ok())
+        .into_iter()
+        .collect()
 }
 
 /// `InstagramIOSIE._VALID_URL`.
