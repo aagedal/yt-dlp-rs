@@ -6857,7 +6857,22 @@ still fail. Before extraction, like upstream's `extract_info`, a URL whose extra
 knows its ID without extracting (YouTube videos and the embeddable sites' URLs:
 upstream `get_temp_id`) is skipped with `[download] ID: has already been
 recorded in the archive` (and `--break-on-existing` stops) when `KEY ID` is
-recorded; other URLs are filtered after extraction. Remaining playlist entries must
+recorded; other URLs are filtered after extraction. Unresolved playlist entries
+(YouTube playlist/channel entries, embeds and other `url` results) are checked by
+their own `ie_key` and `id` like upstream `_make_archive_id`, so a recorded entry
+is skipped without extracting it; an entry without them (an RSS item) is checked
+by its URL's temp ID before extraction (`ID: has already been recorded`, counted
+as a failed entry like upstream's `None` result) and by its resolved identity
+after extraction. Upstream's fallback to the first extractor suitable for an
+entry's URL when the entry has an `id` but no `ie_key` is not reproduced. Skip
+lines of playlist entries are printed in the entry loop, after the previous
+entry's processing, like upstream. With `--break-on-existing`, or a rejection
+that breaks (`--break-on-reject`, `--break-match-filters`), the requested items
+end at the first entry that would break, like upstream `get_requested_items`:
+`Downloading N items` counts up to it and a paged playlist (YouTube) fetches no
+pages past it when the selection is one ascending range (the default). An
+archived entry is not match-filtered. Compared with pinned upstream in
+`tests/fixtures/sites/archive-entries/`. Remaining playlist entries must
 all select successfully before output/download begins. Metadata, listing and
 simulation filter recorded entries too, but never append or create archives.
 Malformed selectors still fail syntax preflight even if every entry is recorded.
@@ -6931,12 +6946,7 @@ and an entry resolving to a playlist already processed for this input prints
 `Skipping already downloaded playlist: TITLE` and counts as failed, like
 upstream's `_playlist_urls` recursion guard. Compared with pinned upstream in
 `tests/fixtures/sites/generic-rss-nested/` (an RSS feed of YouTube videos and
-a YouTube playlist). Known differences, not specific to nesting: an RSS
-feed's unresolved entries (no ID before extraction) are an explicit
-`--download-archive` error instead of upstream's unarchived entries, YouTube
-playlist entries are not matched against the archive before extraction, and
-`--match-filter` rejections of a YouTube playlist's entries are reported when
-the playlist is selected rather than at the rejected item.
+a YouTube playlist).
 
 ## Playlist item selection
 

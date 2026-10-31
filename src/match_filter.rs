@@ -785,6 +785,12 @@ impl MatchFilters {
         )))
     }
 
+    /// Whether a rejection can break (`--break-on-reject` or
+    /// `--break-match-filters`).
+    pub fn breaks(&self) -> bool {
+        self.selection.break_on_reject || !self.breaking.is_empty()
+    }
+
     /// Evaluate a video. Before format selection, pass `before_selection` so
     /// format fields are incomplete (missing ones pass).
     pub fn check(&self, info: &VideoInfo, before_selection: bool) -> Result<MatchOutcome> {

@@ -244,10 +244,66 @@ impl PlaylistSelection {
     /// Reorder playlist entries and assign positions before any archive filtering.
     /// Returns the playlist-level counts used for playlist file names.
     pub fn apply(&self, result: &mut ExtractResult) -> Option<PlaylistCounts> {
+        self.apply_until(result, None)
+    }
+
+    /// The leading entries a selection reading `entries` in order needs when
+    /// [`Self::apply_until`] stops at the first `stop` entry: only for one
+    /// ascending segment (`START:END`), else `None`.
+    pub fn stop_fetch_limit(
+        &self,
+        entries: &[crate::VideoInfo],
+        stop: &dyn Fn(&crate::VideoInfo) -> bool,
+    ) -> Option<usize> {
+        let [segment] = self.segments.as_slice() else {
+            return None;
+        };
+        let start = segment
+            .start
+            .filter(|start| *start > 0 && segment.step == 1)? as usize;
+        if self.lazy {
+            return None;
+        }
+        let end = match segment.end {
+            Endpoint::Index(end) if end >= 0 => end as usize,
+            Endpoint::Index(_) => return None,
+            Endpoint::Open | Endpoint::Infinite => usize::MAX,
+        };
+        entries
+            .iter()
+            .enumerate()
+            .skip(start - 1)
+            .take(end.saturating_sub(start - 1))
+            .find(|(_, entry)| stop(entry))
+            .map(|(index, _)| index + 1)
+    }
+
+    /// [`Self::apply`], where (unless lazy) the requested items end after
+    /// the first entry `stop` matches, like upstream's `get_requested_items`
+    /// with `--break-on-existing`/`--break-on-reject` (its silent
+    /// `_match_entry` raises): it is still selected, later items are not.
+    pub fn apply_until(
+        &self,
+        result: &mut ExtractResult,
+        stop: Option<&dyn Fn(&crate::VideoInfo) -> bool>,
+    ) -> Option<PlaylistCounts> {
         let ExtractResult::Playlist(playlist) = result else {
             return None;
         };
         let count = playlist.entries.len();
+        // The requested items in reading order (before reversing/shuffling).
+        let reading = Self {
+            reverse: false,
+            random: false,
+            ..self.clone()
+        }
+        .indices(count);
+        let stopped = stop.filter(|_| !self.lazy).and_then(|stop| {
+            reading
+                .iter()
+                .position(|index| stop(&playlist.entries[*index]))
+                .map(|position| reading[..=position].iter().copied().collect::<HashSet<_>>())
+        });
         // Upstream's `_playlist_infodict` extras each entry gets by default.
         let title = Some(playlist.title.clone()).filter(|title| !title.is_empty());
         let field = |key: &str| {
@@ -297,7 +353,7 @@ impl PlaylistSelection {
             .get(crate::info_order::INFO_SHAPE)
             .and_then(serde_json::Value::as_str)
             .is_some_and(|shape| shape.ends_with(crate::info_order::GENERATOR))
-            && self.fetch_limit().is_some_and(|limit| limit <= count);
+            && (stopped.is_some() || self.fetch_limit().is_some_and(|limit| limit <= count));
         // `if not ie_result.get('playlist_count'): ... get_full_count()`.
         let playlist_count = playlist
             .extra
@@ -309,14 +365,16 @@ impl PlaylistSelection {
                 // A failed page ended a paged list: its entry is not counted.
                 crate::extractor::paged::fetch_error_count(&playlist.entries).unwrap_or(count)
             }));
-        let indices = self.indices(count);
+        let keep = |indices: Vec<usize>| match &stopped {
+            Some(kept) => indices
+                .into_iter()
+                .filter(|index| kept.contains(index))
+                .collect(),
+            None => indices,
+        };
+        let indices = keep(self.indices(count));
         let requested = if self.selection_index && !self.lazy {
-            Self {
-                reverse: false,
-                random: false,
-                ..self.clone()
-            }
-            .indices(count)
+            keep(reading)
         } else {
             indices.clone()
         };
@@ -697,6 +755,60 @@ mod tests {
 
     fn video(id: &str) -> VideoInfo {
         serde_json::from_value(json!({"id":id,"title":id,"ext":"mp4","url":"https://example.com/media.mp4","webpage_url":"https://example.com/watch","extractor":"test","extractor_key":"Test","direct":true})).unwrap()
+    }
+
+    #[test]
+    fn apply_until_ends_requested_items_at_the_first_stop_entry() {
+        let playlist = || {
+            ExtractResult::Playlist(PlaylistInfo {
+                id: "p".into(),
+                title: "playlist".into(),
+                webpage_url: "https://example.com/".parse().unwrap(),
+                extractor: "test".into(),
+                extractor_key: "Test".into(),
+                nested: Vec::new(),
+                pending: None,
+                entries: (1..=5).map(|i| video(&i.to_string())).collect(),
+                extra: Default::default(),
+            })
+        };
+        let stop = |info: &crate::VideoInfo| info.id == "3";
+        let selected = |items: Option<&str>, reverse: bool| {
+            let mut result = playlist();
+            let counts = PlaylistSelection::new(items, 1, None, reverse)
+                .unwrap()
+                .apply_until(&mut result, Some(&stop))
+                .unwrap();
+            let ExtractResult::Playlist(playlist) = result else {
+                panic!()
+            };
+            let ids: Vec<_> = playlist.entries.iter().map(|v| v.id.clone()).collect();
+            (ids, counts.n_entries, counts.playlist_count)
+        };
+        // The stop entry is still requested; later items are not.
+        assert_eq!(
+            selected(None, false),
+            (vec!["1".into(), "2".into(), "3".into()], Some(3), Some(5))
+        );
+        // Reading order is before reversing.
+        assert_eq!(
+            selected(None, true),
+            (vec!["3".into(), "2".into(), "1".into()], Some(3), Some(5))
+        );
+        assert_eq!(
+            selected(Some("5,3,1"), false),
+            (vec!["5".into(), "3".into()], Some(2), Some(5))
+        );
+        let entries: Vec<_> = (1..=5).map(|i| video(&i.to_string())).collect();
+        let limit = |items: Option<&str>, start| {
+            PlaylistSelection::new(items, start, None, false)
+                .unwrap()
+                .stop_fetch_limit(&entries, &stop)
+        };
+        assert_eq!(limit(None, 1), Some(3));
+        assert_eq!(limit(None, 4), None);
+        assert_eq!(limit(Some("2:4"), 1), Some(3));
+        assert_eq!(limit(Some("5,3"), 1), None);
     }
 
     #[test]
