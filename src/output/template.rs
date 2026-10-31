@@ -1340,8 +1340,11 @@ pub(super) fn render_kind(
         return Err(invalid("empty paths and stdout output are unsupported"));
     }
     let output = super::filename::output_path(options, kind, &output);
-    // Like upstream get_output_path, forced Windows names sanitize the whole path.
-    let output = if options.windows_filenames {
+    // Upstream `get_output_path`'s `sanitize_path(path, force=windowsfilenames)`:
+    // always on Windows hosts, forced elsewhere.
+    let output = if cfg!(windows) {
+        super::sanitize::windows_sanitize_path(&output)
+    } else if options.windows_filenames {
         super::sanitize::force_sanitize_path(&output)
     } else {
         output

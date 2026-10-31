@@ -123,7 +123,7 @@ suspended as a `PlaylistRun` and resumed through the input queue).
    string/integer/fixed-point conversions, width/precision/flags, alternatives and
    missing-value defaults with upstream filename sanitization, restricted/Windows/
    minimal modes, name trimming, typed `-o` templates and `-P` paths; upstream's full template expressions and
-   conversions followed, and Windows-host path sanitization remains open. `--print` video-stage field lists/templates and
+   conversions followed, as did upstream's Windows-host `sanitize_path`. `--print` video-stage field lists/templates and
    the title/ID/URL/filename `--get-*` aliases print unsanitized values with
    quiet simulation; `--print-to-file` appends video-stage lines to output-template
    destinations without implying simulation. All upstream print stages are implemented.

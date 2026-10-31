@@ -7139,7 +7139,7 @@ otherwise dot/space-only and is not literally present at the same position in
 the template becomes `_`, so metadata never traverses directories (upstream can
 produce `../x.mp4`). Only literal template text can introduce directories.
 Neither metadata nor defaults trigger environment, home-directory or template
-expansion; the literal template and `--paths` values do (`~`, `$NAME`, `${NAME}`). On Windows hosts upstream's Windows `sanitize_path` is not ported.
+expansion; the literal template and `--paths` values do (`~`, `$NAME`, `${NAME}`). On Windows hosts every output path goes through upstream's Windows `sanitize_path` (`/` as `\\`, UNC/device, drive and root prefixes kept, reserved characters and trailing dots/spaces of the other parts replaced by `#`, `.`/`..` folded), compared with pinned upstream on saved cases; elsewhere only `--windows-filenames` forces the POSIX form.
 See [filename sanitization](../upstream/notes/filename-sanitization.md).
 
 Specs are limited to 16 KiB and 256 percent tokens, widths/precisions to 4096,

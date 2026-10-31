@@ -262,19 +262,19 @@ pub fn filename_sanitizer(key: &str, value: &str, restricted: bool, legacy: bool
     sanitize_filename_legacy(value, restricted, ID.is_match(key))
 }
 
-/// Upstream non-Windows `sanitize_path(path, force=True)` (`--windows-filenames`):
-/// drop empty/`.` parts, fold `..` lexically, and replace reserved characters
-/// and a trailing space/dot in each part with `#`.
-pub fn force_sanitize_path(path: &str) -> String {
-    let mut parts: Vec<String> = Vec::new();
-    for part in path.split('/') {
+/// Upstream `_sanitize_path_parts`: drop empty/`.` parts, fold `..`
+/// lexically, and replace reserved characters and a trailing space/dot in
+/// each part with `#`.
+fn sanitize_path_parts<'a>(parts: impl IntoIterator<Item = &'a str>) -> Vec<String> {
+    let mut sanitized: Vec<String> = Vec::new();
+    for part in parts {
         match part {
             "" | "." => {}
             ".." => {
-                if parts.last().is_some_and(|last| last != "..") {
-                    parts.pop();
+                if sanitized.last().is_some_and(|last| last != "..") {
+                    sanitized.pop();
                 } else {
-                    parts.push("..".into());
+                    sanitized.push("..".into());
                 }
             }
             part => {
@@ -291,12 +291,51 @@ pub fn force_sanitize_path(path: &str) -> String {
                     }
                     chars[length - 1] = '#';
                 }
-                parts.push(chars.into_iter().collect());
+                sanitized.push(chars.into_iter().collect());
             }
         }
     }
+    sanitized
+}
+
+/// Upstream non-Windows `sanitize_path(path, force=True)` (`--windows-filenames`).
+pub fn force_sanitize_path(path: &str) -> String {
     let root = if path.starts_with('/') { "/" } else { "" };
-    let joined = parts.join("/");
+    let joined = sanitize_path_parts(path.split('/')).join("/");
+    if root.is_empty() && joined.is_empty() {
+        ".".into()
+    } else {
+        format!("{root}{joined}")
+    }
+}
+
+/// Upstream's Windows `sanitize_path(path)` (always applied on Windows
+/// hosts): `/` becomes `\\`, and a UNC/device (`\\\\SERVER\\SHARE\\`), drive
+/// (`C:`, `C:\\`) or root (`\\`) prefix is kept while the other parts are
+/// sanitized.
+pub fn windows_sanitize_path(path: &str) -> String {
+    let normed = path.replace('/', "\\");
+    let chars: Vec<char> = normed.chars().collect();
+    let (root, parts): (String, Vec<&str>) = if normed.starts_with("\\\\") {
+        let parts: Vec<&str> = normed.split('\\').collect();
+        let split = parts.len().min(4);
+        (
+            format!("{}\\", parts[..split].join("\\")),
+            parts[split..].to_vec(),
+        )
+    } else if chars.get(1) == Some(&':') {
+        // `normed[1:2] == ':'`: an absolute or drive-relative path.
+        let offset = if chars.get(2) == Some(&'\\') { 3 } else { 2 };
+        let byte_offset: usize = chars[..offset].iter().map(|c| c.len_utf8()).sum();
+        (
+            normed[..byte_offset].to_owned(),
+            normed[byte_offset..].split('\\').collect(),
+        )
+    } else {
+        let root = if normed.starts_with('\\') { "\\" } else { "" };
+        (root.to_owned(), normed.split('\\').collect())
+    };
+    let joined = sanitize_path_parts(parts).join("\\");
     if root.is_empty() && joined.is_empty() {
         ".".into()
     } else {
@@ -371,5 +410,38 @@ mod tests {
         assert_eq!(force_sanitize_path("a/./b/../c<d>./e. "), "a/c#d##/e.#");
         assert_eq!(force_sanitize_path("../x"), "../x");
         assert_eq!(force_sanitize_path("/"), "/");
+    }
+
+    #[test]
+    fn windows_sanitize_path_matches_upstream() {
+        // Saved from pinned upstream `sanitize_path` with `sys.platform`
+        // patched to `win32`.
+        for (path, expected) in [
+            ("abc", "abc"),
+            ("abc/def", "abc\\def"),
+            ("abc\\def", "abc\\def"),
+            ("abc|def", "abc#def"),
+            ("<>:\"|?*", "#######"),
+            ("C:/abc/def", "C:\\abc\\def"),
+            ("C:abc", "C:abc"),
+            ("C:\\..\\abc", "C:\\..\\abc"),
+            ("\\\\?\\UNC\\C:\\abc", "\\\\?\\UNC\\C#\\abc"),
+            ("\\\\?\\C:\\abc", "\\\\?\\C:\\abc"),
+            ("\\\\server\\share\\a:b", "\\\\server\\share\\a#b"),
+            ("\\abc", "\\abc"),
+            (
+                "youtube/%(uploader)s/%(autonumber)s-%(title)s-%(upload_date)s.%(ext)s",
+                "youtube\\%(uploader)s\\%(autonumber)s-%(title)s-%(upload_date)s.%(ext)s",
+            ),
+            ("../abc", "..\\abc"),
+            ("../../abc", "..\\..\\abc"),
+            ("./abc", "abc"),
+            ("./../abc", "..\\abc"),
+            ("a/b. ", "a\\b.#"),
+            ("", "."),
+            ("C:", "C:"),
+        ] {
+            assert_eq!(windows_sanitize_path(path), expected, "{path:?}");
+        }
     }
 }
