@@ -4,9 +4,9 @@ Official pinned yt-dlp: `f264a6cbd1f630894da0f368df00f8aae50140e0`.
 Run `python3 tools/compare_proxies.py --upstream /path/to/pinned/yt-dlp`.
 
 `cases.json` contains 50 source configurations and eight additional explicitly
-source-only cases. Of the 50, native consumes 39 explicit endpoint configurations,
-rejects five SOCKS4 credential configurations, and treats six omitted-option
-cases only as an Environment mode marker. Those eleven configurations carry
+source-only cases. Of the 50, native consumes 44 explicit endpoint configurations
+(including five SOCKS4 credential configurations) and treats six omitted-option
+cases only as an Environment mode marker. Those six configurations carry
 `native_policy`; their actual source results remain unchanged reference data.
 Each has `args`, a controlled `environment` proxy mapping, request URLs and
 `expected` (`proxy_option`, `selected` endpoints and remaining `headers`).
@@ -54,9 +54,9 @@ reqwest environment behavior and compares only the Environment mode marker for
 these six omitted-option cases. Python HTTP-to-HTTPS fallback, no_proxy routing
 and platform discovery are reference evidence, not native route parity claims.
 
-Native rejects the five SOCKS4 userinfo configurations because its reqwest
-transport cannot carry a SOCKS4 USERID. Their parsed source credentials remain
-reference-only. SOCKS5 incomplete or empty credentials remain represented in the
+The five SOCKS4 userinfo configurations are compared like the others; the
+username reaches the proxy as the USERID through a loopback relay, because the
+reqwest transport cannot carry one itself. SOCKS5 incomplete or empty credentials remain represented in the
 parsed URL for endpoint comparison, but native clears userinfo when either
 username or password is empty/missing before transport. Actual upstream
 `socks.py:183` likewise offers username/password authentication only when both

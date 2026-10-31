@@ -475,17 +475,23 @@ impl Extractor for Niconico {
         api.query_pairs_mut()
             .append_pair("actionTrackId", &format!("AAAAAAAAAA_{millis}"));
         crate::screen::screen(&format!("[{NAME}] {video_id}: Downloading API JSON"));
-        let mut response = super::direct::request_expecting(client, &api, &HEADERS, &[400, 404])
-            .map_err(|error| match error {
-                Error::Http(_) | Error::HttpRetryAfter { .. } => Error::Reported(
-                    super::request_error_text(NAME, &video_id, "API JSON", &error).replacen(
-                        ": Unable to download API JSON:",
-                        ": Unable to fetch data:",
-                        1,
-                    ),
+        // `headers={**self._HEADERS, **self.geo_verification_headers()}`.
+        let mut response = super::direct::request_expecting(
+            &super::geo_verification_client(client),
+            &api,
+            &HEADERS,
+            &[400, 404],
+        )
+        .map_err(|error| match error {
+            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::Reported(
+                super::request_error_text(NAME, &video_id, "API JSON", &error).replacen(
+                    ": Unable to download API JSON:",
+                    ": Unable to fetch data:",
+                    1,
                 ),
-                error => error,
-            })?;
+            ),
+            error => error,
+        })?;
         let mut bytes = Vec::new();
         response
             .read_to_end(&mut bytes)

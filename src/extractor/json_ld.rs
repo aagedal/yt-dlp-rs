@@ -125,13 +125,7 @@ fn video_object(info: &mut Map<String, Value>, e: &Value) {
         })
         .filter_map(Value::as_str)
         .map(crate::html::unescape_html)
-        .map(|url| {
-            if url.starts_with("//") {
-                format!("https:{url}")
-            } else {
-                url
-            }
-        })
+        .map(|url| super::proto_relative(&url))
         .filter_map(|url| url_or_none(&url))
         .map(|url| serde_json::json!({ "url": url }))
         .collect();

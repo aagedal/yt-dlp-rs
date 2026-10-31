@@ -1,4 +1,5 @@
 use clap::{CommandFactory, FromArgMatches, Parser};
+mod bidi;
 use std::io::{self, Write};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::{
@@ -25,22 +26,40 @@ use yt_dlp_rs::{
 
 // Upstream `write_string` encodes every message with `--encoding`; these
 // shadow the standard printing macros for the rest of the binary.
+/// A message through `--bidi-workaround` (`_bidi_workaround`), keeping
+/// its final line break, if any.
+fn bidi_line(text: String) -> String {
+    if !bidi::active() {
+        return text;
+    }
+    match text.strip_suffix('\n') {
+        Some(message) => format!("{}\n", bidi::apply(message)),
+        None => bidi::apply(&text),
+    }
+}
+
 macro_rules! println {
     () => {
-        yt_dlp_rs::output::encoding::write_message(false, "\n")
+        yt_dlp_rs::output::encoding::write_message(false, &bidi_line("\n".into()))
     };
     ($($arg:tt)*) => {
-        yt_dlp_rs::output::encoding::write_message(false, &format!("{}\n", format_args!($($arg)*)))
+        yt_dlp_rs::output::encoding::write_message(
+            false,
+            &bidi_line(format!("{}\n", format_args!($($arg)*))),
+        )
     };
 }
 macro_rules! eprintln {
     () => {
-        yt_dlp_rs::output::encoding::write_message(true, "\n")
+        yt_dlp_rs::output::encoding::write_message(true, &bidi_line("\n".into()))
     };
     ($($arg:tt)*) => {
         yt_dlp_rs::output::encoding::write_message(
             true,
-            &yt_dlp_rs::output::color::err_prefix(format!("{}\n", format_args!($($arg)*))),
+            &bidi_line(yt_dlp_rs::output::color::err_prefix(format!(
+                "{}\n",
+                format_args!($($arg)*)
+            ))),
         )
     };
 }
@@ -71,10 +90,46 @@ static STDERR_COLORS: std::sync::OnceLock<yt_dlp_rs::output::color::Allow> =
 /// Upstream `_out_files.out`: stdout, or stderr with `logtostderr`.
 fn out_stream() -> Box<dyn Write> {
     use yt_dlp_rs::output::encoding::{EncodingWriter, output};
-    if LOG_TO_STDERR.load(Ordering::Relaxed) {
+    let stream: Box<dyn Write> = if LOG_TO_STDERR.load(Ordering::Relaxed) {
         Box::new(EncodingWriter::new(io::stderr().lock(), output()))
     } else {
         Box::new(EncodingWriter::new(io::stdout().lock(), output()))
+    };
+    if bidi::active() {
+        Box::new(BidiWriter {
+            inner: stream,
+            pending: Vec::new(),
+        })
+    } else {
+        stream
+    }
+}
+
+/// `to_stdout`'s `_bidi_workaround`: each flushed message (its final line
+/// break kept) through the bidi program.
+struct BidiWriter {
+    inner: Box<dyn Write>,
+    pending: Vec<u8>,
+}
+
+impl Write for BidiWriter {
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        self.pending.extend_from_slice(buf);
+        Ok(buf.len())
+    }
+
+    fn flush(&mut self) -> io::Result<()> {
+        if !self.pending.is_empty() {
+            let text = String::from_utf8_lossy(&std::mem::take(&mut self.pending)).into_owned();
+            self.inner.write_all(bidi_line(text).as_bytes())?;
+        }
+        self.inner.flush()
+    }
+}
+
+impl Drop for BidiWriter {
+    fn drop(&mut self) {
+        let _ = self.flush();
     }
 }
 
@@ -1652,6 +1707,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         usize::try_from(args.trim_filenames).ok().filter(|&n| n > 0),
     );
     yt_dlp_rs::extractor::hls_split_discontinuity(args.hls_split_discontinuity);
+    yt_dlp_rs::extractor::set_prefer_insecure(args.prefer_insecure);
     // Upstream `parse_metadata` (shared by both options, in command-line
     // order per stage) plus the deprecated `--metadata-from-title`.
     let metadata_actions = {
@@ -1754,6 +1810,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         color::set(stdout, stderr);
         // `-o -` (`logtostderr`) makes stderr upstream's `out` stream.
         STDERR_COLORS.set(stderr).ok();
+    }
+    // Upstream `YoutubeDL.__init__`'s `bidi_workaround` output process.
+    if args.bidi_workaround {
+        match bidi::start() {
+            Ok(()) => {}
+            Err(bidi::StartError::NotFound) => warning!(
+                "WARNING: Could not find fribidi executable, ignoring --bidi-workaround. Make sure that  fribidi  is an executable file in one of the directories in your $PATH."
+            ),
+            Err(bidi::StartError::Other(error)) => return Err(Box::new(error)),
+        }
     }
     validate_accepted_options(&args)?;
     // `--xff` and its hidden aliases share upstream's `geo_bypass`
@@ -2581,6 +2647,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     http_options.proxy = args.proxy;
     http_options.socket_timeout = args.socket_timeout;
     http_options.print_traffic = args.print_traffic;
+    http_options.geo_verification_proxy = args.geo_verification_proxy.clone();
     http_options.no_check_certificates = args.no_check_certificates;
     http_options.client_certificate = args.client_certificate.clone();
     http_options.client_certificate_key = args.client_certificate_key.clone();
@@ -8209,20 +8276,17 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
             );
         }
     }
+    // rustls never requires RFC 5746 secure renegotiation (upstream's
+    // `OP_LEGACY_SERVER_CONNECT`) but has no CBC suites (`DEFAULT` ciphers).
+    if args.legacy_server_connect {
+        warning!(
+            "WARNING: --legacy-server-connect: legacy (CBC/SHA-1) cipher suites are not supported natively; servers without secure renegotiation are always accepted"
+        );
+    }
     for (given, what) in [
-        (args.legacy_server_connect, "--legacy-server-connect"),
-        (args.bidi_workaround, "--bidi-workaround"),
         (!args.plugin_dirs.is_empty(), "--plugin-dirs"),
-        // HTTP-scheme preferences of a few upstream extractors.
-        (args.prefer_insecure, "--prefer-insecure"),
         // The EJS challenge solver is bundled (pinned), never downloaded.
         (!args.remote_components.is_empty(), "--remote-components"),
-        // The `Ytdl-request-proxy` header of upstream's geo verification
-        // requests.
-        (
-            args.geo_verification_proxy.is_some(),
-            "--geo-verification-proxy",
-        ),
     ] {
         if given {
             warning!("WARNING: {what} is not supported natively and is ignored");

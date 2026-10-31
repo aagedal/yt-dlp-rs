@@ -179,8 +179,10 @@ suspended as a `PlaylistRun` and resumed through the input queue).
    docs/COMPATIBILITY.md (including Vimeo's login and logged-in web API
    client), and Adobe Pass TV provider authentication is ported.
    Explicit HTTP/HTTPS/SOCKS proxies and direct overrides now route all native
-   clients, including verified HTTPS proxy/CONNECT transport. SOCKS4 user IDs,
-   full upstream environment discovery/bypass and per-extractor proxy policies remain open.
+   clients, including verified HTTPS proxy/CONNECT transport and SOCKS4 user
+   IDs; `--geo-verification-proxy` routes upstream's geo verification requests.
+   Full upstream environment discovery/bypass and other per-extractor proxy
+   policies remain open.
 4. **YouTube vertical slice.** Player/API request fixtures, client selection,
    progressive and adaptive formats, signature/JavaScript challenge strategy,
    playlist handling, and end-to-end validation. Split request/client machinery

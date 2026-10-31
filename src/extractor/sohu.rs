@@ -73,8 +73,9 @@ fn fetch_data(client: &Client, id: &str, vid: &str, mytv: bool) -> Result<Value>
         "http://hot.vrs.sohu.com/vrs_flash.action?vid="
     };
     let url = Url::parse(&format!("{base}{vid}"))?;
+    // `headers=self.geo_verification_headers()`.
     download_json_note(
-        client,
+        &super::geo_verification_client(client),
         &url,
         NAME,
         id,

@@ -106,11 +106,8 @@ fn join(base: &Url, value: Option<&Value>) -> Option<Url> {
     if text.is_empty() {
         return None;
     }
-    let text = if text.starts_with("//") {
-        format!("https:{text}")
-    } else {
-        text.to_owned()
-    };
+    // `self._proto_relative_url(...)`.
+    let text = super::proto_relative(text);
     base.join(&text).ok()
 }
 

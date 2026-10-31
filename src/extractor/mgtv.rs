@@ -151,7 +151,8 @@ impl Extractor for Mgtv {
             &Url::parse("https://pcweb.api.mgtv.com/player/video")?,
             &[("tk2", &token), ("video_id", &video_id), ("type", "pch5")],
         );
-        let api_data = player_api(client, &api_url, &video_id)?
+        // `headers=self.geo_verification_headers()`.
+        let api_data = player_api(&super::geo_verification_client(client), &api_url, &video_id)?
             .get("data")
             .cloned()
             .ok_or_else(|| super::clyp::key_error(&video_id, "data"))?;
@@ -179,6 +180,8 @@ impl Extractor for Mgtv {
                 ("allowedRC", "1"),
             ],
         );
+        // Every request below sends `geo_verification_headers()`.
+        let client = &super::geo_verification_client(client);
         let stream_data = download_json(client, &source_url, NAME, &video_id)?
             .get("data")
             .cloned()

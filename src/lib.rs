@@ -1544,22 +1544,30 @@ impl YoutubeDl {
                 .map(|value| String::from_utf8_lossy(value.as_bytes()).into_owned())
                 .unwrap_or_default();
         }
-        let builder = Client::builder()
-            .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
-            .default_headers(headers.clone())
-            .cookie_provider(cookies.clone())
-            .redirect(reqwest::redirect::Policy::limited(10))
-            // Preserve an HTML5 page's explicit referrer across media redirects.
-            .referer(false)
-            // Python's http.client sends `User-Agent`, not `user-agent`;
-            // Cloudflare rejects lowercase HTTP/1.1 header names on some
-            // sites (kick.com answers 403).
-            .http1_title_case_headers()
-            .connection_verbose(http.print_traffic);
+        let builder = || {
+            Client::builder()
+                .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
+                .default_headers(headers.clone())
+                .cookie_provider(cookies.clone())
+                .redirect(reqwest::redirect::Policy::limited(10))
+                // Preserve an HTML5 page's explicit referrer across media redirects.
+                .referer(false)
+                // Python's http.client sends `User-Agent`, not `user-agent`;
+                // Cloudflare rejects lowercase HTTP/1.1 header names on some
+                // sites (kick.com answers 403).
+                .http1_title_case_headers()
+                .connection_verbose(http.print_traffic)
+        };
         if http.print_traffic {
             traffic::enable();
         }
-        let client = proxy.apply(builder)?.build()?;
+        let client = proxy.apply(builder())?.build()?;
+        // The same client routed through `--geo-verification-proxy`.
+        let geo_client = http
+            .geo_transport_config()?
+            .map(|config| config.apply(builder())?.build().map_err(Error::from))
+            .transpose()?;
+        extractor::set_geo_verification_client(geo_client);
         impersonate::configure(&http, &cookies)?;
         let youtube_runtime = youtube.runtimes();
         Ok(Self {

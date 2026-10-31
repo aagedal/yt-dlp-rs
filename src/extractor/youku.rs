@@ -108,7 +108,13 @@ impl Extractor for Youku {
                 ("client_ts", &client_ts.to_string()),
             ],
         );
-        let response = download_json(client, &ups, NAME, &video_id)?;
+        // `headers.update(self.geo_verification_headers())`.
+        let response = download_json(
+            &super::geo_verification_client(client),
+            &ups,
+            NAME,
+            &video_id,
+        )?;
         let data = response
             .get("data")
             .ok_or_else(|| key_error(&video_id, "data"))?;

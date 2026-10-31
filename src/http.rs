@@ -1,5 +1,6 @@
 //! Validated global HTTP defaults, separate from extractor-owned request headers.
 mod proxy;
+mod socks4_relay;
 use crate::{CookieJar, Error, Result};
 pub(crate) use proxy::ProxyConfig;
 use reqwest::blocking::ClientBuilder;
@@ -32,6 +33,10 @@ pub struct HttpOptions {
     pub client_certificate_password: Option<String>,
     /// `--print-traffic`: report the HTTP bytes sent and response headers.
     pub print_traffic: bool,
+    /// `--geo-verification-proxy`: the proxy of the requests upstream sends
+    /// with `geo_verification_headers()` (`Ytdl-request-proxy`, which
+    /// overrides every other proxy setting).
+    pub geo_verification_proxy: Option<String>,
 }
 
 /// Connection policy shared by the normal and bounded player clients.
@@ -283,6 +288,7 @@ impl HttpOptions {
     pub fn validate(&self) -> Result<()> {
         self.header_map()?;
         self.transport_config()?;
+        self.geo_transport_config()?;
         Ok(())
     }
 
@@ -337,6 +343,22 @@ impl HttpOptions {
             source_address,
             identity: self.client_identity()?,
         })
+    }
+
+    /// [`Self::transport_config`] with `--geo-verification-proxy` as the
+    /// proxy; `None` without one.
+    pub(crate) fn geo_transport_config(&self) -> Result<Option<TransportConfig>> {
+        let Some(proxy) = self
+            .geo_verification_proxy
+            .as_deref()
+            .filter(|proxy| !proxy.is_empty())
+        else {
+            return Ok(None);
+        };
+        Ok(Some(TransportConfig {
+            proxy: ProxyConfig::parse(Some(proxy))?,
+            ..self.transport_config()?
+        }))
     }
 
     pub(crate) fn header_map(&self) -> Result<HeaderMap> {

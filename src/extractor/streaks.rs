@@ -80,7 +80,13 @@ fn playback_json(
     crate::screen::screen(&format!(
         "[{NAME}] {media_id}: Downloading STREAKS playback API JSON"
     ));
-    let mut response = direct::request_expecting(client, &api, &all, &[403, 404])?;
+    // `**self.geo_verification_headers()`.
+    let mut response = direct::request_expecting(
+        &super::geo_verification_client(client),
+        &api,
+        &all,
+        &[403, 404],
+    )?;
     let status = response.status().as_u16();
     let mut body = Vec::new();
     std::io::Read::read_to_end(&mut response, &mut body).map_err(Error::ExtractionRead)?;

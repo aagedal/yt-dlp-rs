@@ -423,8 +423,9 @@ impl Extractor for Rutube {
             &query,
         )?;
         let dict = extract_info(NAME, &api, &video_id)?;
+        // `headers=self.geo_verification_headers()`.
         let options = api_json(
-            client,
+            &super::geo_verification_client(client),
             NAME,
             "play/options",
             &video_id,
@@ -461,8 +462,9 @@ impl Extractor for RutubeEmbed {
         let embed_id = found["id"].to_owned();
         start(EMBED_NAME, page);
         let query = api_query(page);
+        // `headers=self.geo_verification_headers()`.
         let options = api_json(
-            client,
+            &super::geo_verification_client(client),
             EMBED_NAME,
             "play/options",
             &embed_id,
