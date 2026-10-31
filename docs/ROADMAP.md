@@ -120,16 +120,16 @@ remain outside the current result contract.
    extraction lazy. Typed filename templates support represented root fields,
    string/integer/fixed-point conversions, width/precision/flags, alternatives and
    missing-value defaults with upstream filename sanitization, restricted/Windows/
-   minimal modes, name trimming, typed `-o` templates and `-P` paths; full template expressions, conversions and
-   Windows-host path sanitization remain open. `--print` video-stage field lists/templates and
+   minimal modes, name trimming, typed `-o` templates and `-P` paths; upstream's full template expressions and
+   conversions followed, and Windows-host path sanitization remains open. `--print` video-stage field lists/templates and
    the title/ID/URL/filename `--get-*` aliases print unsanitized values with
    quiet simulation; `--print-to-file` appends video-stage lines to output-template
    destinations without implying simulation. All upstream print stages are implemented.
    `-a/--batch-file` URL lists follow upstream `get_urls` parsing, and the
    `-w`/`--force-overwrites` modes follow upstream existing-file decisions.
-   Full upstream ranking and general selector
-   expressions remain open. Site
-   playlists and nested/unresolved results require further explicit result types.
+   Upstream FormatSorter ranking and the full selector grammar followed, each
+   compared with pinned upstream on saved cases; site playlists, nested
+   playlists and URL results have explicit result types.
 3. **Resilient transport and media protocols.** Retry policy, range/resume with
    validator checks, HLS/DASH parsing and fragments, format selection, ffmpeg
    integration, and download progress/cancellation. Do not label manifest text
@@ -242,7 +242,7 @@ remain outside the current result contract.
    tools, no-clobber publication and original/intermediate retention.
    Subtitle embedding now follows audio/video processing for MP4/MOV/M4A/WebM/
    Matroska, preserving source container/language policies and sidecar retention.
-   Other-site/manifest subtitles remain open.
+   HLS/DASH manifest subtitles and other sites' subtitles followed.
    Video/playlist `--write-info-json` sidecars follow upstream clean filtering,
    naming and ordering for the represented metadata subset, and
    `--load-info-json` reprocesses saved dictionaries; `--embed-info-json`

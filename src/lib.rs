@@ -234,6 +234,8 @@ pub struct YoutubeDl {
     force_generic: bool,
     /// `--default-search`.
     default_search: Option<String>,
+    /// `--wait-for-video`: wait for videos without formats yet.
+    wait_for_video: Option<extractor::WaitForVideo>,
     check_formats: CheckFormats,
     /// `-N`/`--concurrent-fragments`.
     concurrent_fragments: usize,
@@ -1343,6 +1345,7 @@ impl YoutubeDl {
     /// Configure global HTTP defaults together with YouTube extraction.
     /// Per-request extractor and transport headers override these defaults.
     pub fn with_options(youtube: YoutubeOptions, http: HttpOptions) -> Result<Self> {
+        let wait_for_video = youtube.wait_for_video;
         let headers = http.header_map()?;
         let proxy_url = http.proxy.clone();
         let proxy = http.transport_config()?;
@@ -1409,6 +1412,7 @@ impl YoutubeDl {
             allowed_extractors: None,
             force_generic: false,
             default_search: None,
+            wait_for_video,
             check_formats: CheckFormats::Default,
             concurrent_fragments: 1,
             keep_fragments: false,
@@ -4099,8 +4103,8 @@ impl YoutubeDl {
         self.extract_info_with_format(input, None)
     }
 
-    /// Extract and select a supported single source, two-stream pair, or fallback.
-    /// Full upstream selector grammar and ranking are unsupported.
+    /// Extract a video and select its formats with an upstream format
+    /// selector (`-f`; `None` for the default) after upstream's sorting.
     pub fn extract_info_with_format(&self, input: &str, format: Option<&str>) -> Result<VideoInfo> {
         self.extract_result_with_format(input, format)?.into_video()
     }
@@ -4398,6 +4402,19 @@ impl YoutubeDl {
                 .take_while(|item| **item != "end")
                 .any(|item| item.eq_ignore_ascii_case(name))
         })
+    }
+
+    /// Upstream `extract_info`'s check before extracting: the extractor key
+    /// and URL ID (`ie.get_temp_id(url)`) of `url` when its extractor is
+    /// known without extracting (YouTube videos and the embeddable sites), for
+    /// `--download-archive` to skip a recorded video without any request.
+    pub fn temp_archive_identity(&self, url: &str) -> Option<(String, String)> {
+        if self.force_generic {
+            return None;
+        }
+        extractor::html5::temp_identity(url, |key| self.extractor_allowed(key))
+            .filter(|(_, id)| !id.is_empty())
+            .map(|(key, id)| (key.to_owned(), id))
     }
 
     fn generic_allowed(&self) -> bool {
@@ -4781,6 +4798,23 @@ impl YoutubeDl {
             // `extract`: a geo restriction may retry with a fake IP.
             if extracted.is_err() && geo::retry_with_fake_ip() {
                 geo::restart();
+                extracted = extract();
+            }
+            // `_wait_for_video`: a video without formats yet (an upcoming
+            // stream whose extractor raised an expected no-formats error)
+            // waits and is extracted again (`ReExtractInfo`).
+            while let (Some(wait), Ok(Some(ExtractResult::Video(video)))) =
+                (self.wait_for_video.as_ref(), &extracted)
+                && video.formats.is_empty()
+                && video.extra.contains_key(info::NO_FORMATS)
+            {
+                let release = video
+                    .extra
+                    .get("release_timestamp")
+                    .and_then(serde_json::Value::as_i64);
+                let upcoming = video.metadata.live_status.as_deref() == Some("is_upcoming");
+                let message = extractor::youtube::wait_for_video(wait, release, upcoming);
+                screen::screen(&format!("{message}; Re-extracting data"));
                 extracted = extract();
             }
             let extracted = extracted?;
