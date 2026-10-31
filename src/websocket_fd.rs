@@ -9,7 +9,13 @@ use crate::{
     DownloadOptions, DownloadProgress, Error, Result, VideoInfo,
     ffmpeg_fd::{self, Network, Settings},
 };
-use std::{io::Write, net::TcpStream, ops::ControlFlow, path::Path, sync::Arc};
+use std::{
+    io::Write,
+    net::{TcpStream, ToSocketAddrs},
+    ops::ControlFlow,
+    path::Path,
+    sync::Arc,
+};
 use tungstenite::{
     Connector, Message, WebSocket,
     client::IntoClientRequest,
@@ -56,10 +62,37 @@ pub(crate) fn connect(url: &Url, headers: &[(String, String)]) -> Result<Socket>
         .ok_or_else(|| Error::Reported(format!("{url} has no host")))?;
     let host = host.trim_start_matches('[').trim_end_matches(']');
     let port = url.port_or_known_default().unwrap_or(80);
-    let stream = TcpStream::connect((host, port))?;
+    // Bound the connect and opening handshake like a socket timeout; the
+    // stream itself may then idle (a quiet live stream is not a failure).
+    let timeout = crate::http::DEFAULT_SOCKET_TIMEOUT;
+    let mut last = None;
+    let mut stream = None;
+    for address in (host, port).to_socket_addrs()? {
+        match TcpStream::connect_timeout(&address, timeout) {
+            Ok(connected) => {
+                stream = Some(connected);
+                break;
+            }
+            Err(error) => last = Some(error),
+        }
+    }
+    let stream = match (stream, last) {
+        (Some(stream), _) => stream,
+        (None, Some(error)) => return Err(error.into()),
+        (None, None) => return Err(Error::Reported(format!("{host} did not resolve"))),
+    };
+    stream.set_read_timeout(Some(timeout))?;
+    stream.set_write_timeout(Some(timeout))?;
     let connector = (url.scheme() == "wss").then(connector);
     let (socket, _) = tungstenite::client_tls_with_config(request, stream, None, connector)
         .map_err(|error| failed(&error))?;
+    let stream = match socket.get_ref() {
+        MaybeTlsStream::Plain(stream) => stream,
+        MaybeTlsStream::Rustls(stream) => stream.get_ref(),
+        _ => return Ok(socket),
+    };
+    stream.set_read_timeout(None)?;
+    stream.set_write_timeout(None)?;
     Ok(socket)
 }
 

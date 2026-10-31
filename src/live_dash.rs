@@ -161,7 +161,7 @@ fn run(
         PartFiles::Private => (
             Some(
                 tempfile::Builder::new()
-                    .prefix(".yt-dlp-rs-live-")
+                    .prefix(&crate::scratch::prefix(".yt-dlp-rs-live-", parent))
                     .suffix(".part")
                     .tempfile_in(parent)?,
             ),

@@ -267,6 +267,14 @@ pub(crate) fn download(
     processors: &PostprocessOptions,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<ProcessedDownload> {
+    // Processors check interrupts at their checkpoints, as downloads do.
+    let callback = &mut |progress| {
+        if crate::control::requested() {
+            ControlFlow::Break(())
+        } else {
+            callback(progress)
+        }
+    };
     let existing = processors.existing.as_deref();
     // `postprocessed_by_ffmpeg`: VideoRemuxer/VideoConvertor mapping the
     // extension to another container.
@@ -363,12 +371,20 @@ pub(crate) fn download(
         .unwrap_or(Path::new("."));
     fs::create_dir_all(parent)?;
     let workspace = tempfile::Builder::new()
-        .prefix(".yt-dlp-rs-process-")
+        .prefix(&crate::scratch::prefix(".yt-dlp-rs-process-", parent))
         .tempdir_in(parent)?;
     let input = workspace.path().join(format!(
         "source.{}",
         crate::output::safe_component(&info.ext)
     ));
+    // Should this run be killed while processing, the next one moves the
+    // finished download back to its name (`scratch::sweep`).
+    if let Some(name) = destination.file_name().and_then(|name| name.to_str()) {
+        fs::write(
+            workspace.path().join(crate::scratch::DESTINATION_MARKER),
+            name,
+        )?;
+    }
     // Upstream merges selected formats from `NAME.fID.EXT` files beside the
     // destination (printing their downloads and the merge) before the
     // processors run; the merged file then becomes the private source.
@@ -379,21 +395,30 @@ pub(crate) fn download(
     // A growing file (`--growing-file`) is recorded at its final name, so
     // editors can import it; the processors then replace it.
     let growing = existing.is_none() && downloader.grows(info);
+    // Upstream downloads a single format to its name (through `NAME.part`,
+    // which `--continue` resumes after an interruption) before processing.
+    let single = existing.is_none() && info.requested_formats.is_empty();
     let bytes = if let Some(existing) = existing {
         // A private link (or copy) of the existing file is the source.
         if fs::hard_link(existing, &input).is_err() {
             fs::copy(existing, &input)?;
         }
         fs::metadata(&input)?.len()
-    } else if upstream_merge || growing {
-        // Each stream's download reports its own completion.
-        let bytes =
-            downloader.download_with_progress(info, destination, options, &mut *callback)?;
+    } else if upstream_merge || growing || single {
+        // Each merged stream's download reports its own completion; a single
+        // source's publication is not the processed result's.
+        let bytes = downloader.download_with_progress(info, destination, options, |progress| {
+            if single && progress.phase == DownloadPhase::Publishing {
+                ControlFlow::Continue(())
+            } else {
+                callback(progress)
+            }
+        })?;
         fs::rename(destination, &input)?;
         bytes
     } else {
-        // The workspace source is private; part files apply to unprocessed
-        // media only.
+        // A merge with private format files (the library default) happens
+        // in the workspace.
         let options = DownloadOptions {
             part_files: crate::PartFiles::Private,
             merge_files: crate::MergeFiles::Private,
@@ -1251,7 +1276,11 @@ pub(crate) fn download(
         })
     })();
     match process {
-        Err(Error::DownloadCancelled) => Err(Error::DownloadCancelled),
+        // A signal (upstream's `KeyboardInterrupt`) keeps files like a
+        // failure; a library cancel discards them.
+        Err(Error::DownloadCancelled) if !crate::SignalInterrupt::interrupted() => {
+            Err(Error::DownloadCancelled)
+        }
         Err(error) => {
             // Retain the latest completed input on failure. Earlier successful
             // processor inputs are retained as well when keep-video is enabled.

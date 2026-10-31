@@ -2,8 +2,9 @@ use super::Extractor;
 use crate::{Error, Result, VideoInfo};
 use percent_encoding::percent_decode_str;
 use reqwest::{
-    blocking::{Client, Response},
-    header::{ACCEPT_ENCODING, CONTENT_TYPE, REFERER},
+    ResponseBuilderExt,
+    blocking::{Client, RequestBuilder, Response},
+    header::{ACCEPT_ENCODING, CONTENT_ENCODING, CONTENT_LENGTH, CONTENT_TYPE, REFERER},
 };
 use url::Url;
 
@@ -23,7 +24,71 @@ pub(crate) fn request_with_headers(
     headers: &[(&str, &str)],
 ) -> Result<Response> {
     crate::screen::before_extraction_request();
-    probe_with_headers(client, url, referer, headers)
+    send_get(
+        compressed(client.get(url.clone()), headers),
+        referer,
+        headers,
+        true,
+    )
+}
+
+/// Upstream's request handlers send `Accept-Encoding: gzip, deflate` (plus
+/// `br`/`zstd` when installed) on extraction requests and decode the body.
+/// Pages and API responses are several times smaller compressed.
+fn compressed(request: RequestBuilder, headers: &[(&str, &str)]) -> RequestBuilder {
+    if headers
+        .iter()
+        .any(|(name, _)| name.eq_ignore_ascii_case("accept-encoding"))
+    {
+        return request;
+    }
+    request.header(ACCEPT_ENCODING, "gzip, deflate")
+}
+
+/// A response to a [`compressed`] request with its gzip/deflate body decoded,
+/// as reqwest's own decompression would leave it (no `Content-Encoding`,
+/// the decoded length). Responses in other encodings are left to the caller.
+fn decoded(mut response: Response) -> Result<Response> {
+    use std::io::Read;
+    let encodings: Vec<String> = response
+        .headers()
+        .get_all(CONTENT_ENCODING)
+        .iter()
+        .flat_map(|value| {
+            String::from_utf8_lossy(value.as_bytes())
+                .split(',')
+                .map(|encoding| encoding.trim().to_ascii_lowercase())
+                .collect::<Vec<_>>()
+        })
+        .collect();
+    if !encodings
+        .iter()
+        .any(|value| value == "gzip" || value == "deflate")
+        || !encodings
+            .iter()
+            .all(|value| matches!(value.as_str(), "gzip" | "deflate" | "identity" | ""))
+    {
+        return Ok(response);
+    }
+    let mut headers = response.headers().clone();
+    let mut body = Vec::new();
+    response
+        .read_to_end(&mut body)
+        .map_err(Error::ExtractionRead)?;
+    let body = super::decode_content(&headers, body).map_err(Error::ExtractionRead)?;
+    headers.remove(CONTENT_ENCODING);
+    headers.insert(CONTENT_LENGTH, body.len().into());
+    let mut builder = http::Response::builder()
+        .status(response.status())
+        .version(response.version())
+        .url(response.url().clone());
+    if let Some(parts) = builder.headers_mut() {
+        *parts = headers;
+    }
+    let rebuilt = builder.body(body).map_err(|error| {
+        Error::ExtractionRead(std::io::Error::new(std::io::ErrorKind::InvalidData, error))
+    })?;
+    Ok(rebuilt.into())
 }
 
 /// [`request`] that also accepts the `expected` error statuses
@@ -35,7 +100,7 @@ pub(crate) fn request_expecting(
     expected: &[u16],
 ) -> Result<Response> {
     crate::screen::before_extraction_request();
-    let mut request = client.get(url.clone()).header(ACCEPT_ENCODING, "identity");
+    let mut request = compressed(client.get(url.clone()), headers);
     for (name, value) in headers {
         request = request.header(*name, *value);
     }
@@ -43,7 +108,7 @@ pub(crate) fn request_expecting(
     crate::screen::load_cookies()?;
     let response = crate::impersonate::send(request);
     crate::screen::flush_traffic();
-    let response = response?;
+    let response = decoded(response?)?;
     if expected.contains(&response.status().as_u16()) {
         return Ok(response);
     }
@@ -115,10 +180,7 @@ pub(crate) fn post_expecting(
     expected: &[u16],
 ) -> Result<Response> {
     crate::screen::before_extraction_request();
-    let mut request = client
-        .post(url.clone())
-        .header(ACCEPT_ENCODING, "identity")
-        .body(body);
+    let mut request = compressed(client.post(url.clone()), headers).body(body);
     for (name, value) in headers {
         request = request.header(*name, *value);
     }
@@ -126,7 +188,7 @@ pub(crate) fn post_expecting(
     crate::screen::load_cookies()?;
     let response = crate::impersonate::send(request);
     crate::screen::flush_traffic();
-    let response = response?;
+    let response = decoded(response?)?;
     if expected.contains(&response.status().as_u16()) {
         return Ok(response);
     }
@@ -139,13 +201,28 @@ pub(crate) fn probe(client: &Client, url: &Url, referer: Option<&Url>) -> Result
     probe_with_headers(client, url, referer, &[])
 }
 
+/// Probes ask for `identity`: the response may be streamed as media, whose
+/// size and byte ranges must not change.
 fn probe_with_headers(
     client: &Client,
     url: &Url,
     referer: Option<&Url>,
     headers: &[(&str, &str)],
 ) -> Result<Response> {
-    let mut request = client.get(url.clone()).header(ACCEPT_ENCODING, "identity");
+    send_get(
+        client.get(url.clone()).header(ACCEPT_ENCODING, "identity"),
+        referer,
+        headers,
+        false,
+    )
+}
+
+fn send_get(
+    mut request: RequestBuilder,
+    referer: Option<&Url>,
+    headers: &[(&str, &str)],
+    decode: bool,
+) -> Result<Response> {
     if let Some(referer) = referer {
         request = request.header(REFERER, referer.as_str());
     }
@@ -156,7 +233,12 @@ fn probe_with_headers(
     crate::screen::load_cookies()?;
     let response = crate::impersonate::send(request);
     crate::screen::flush_traffic();
-    let response = crate::retry::check_response(response?)?;
+    let response = if decode {
+        decoded(response?)?
+    } else {
+        response?
+    };
+    let response = crate::retry::check_response(response)?;
     if response.status() == reqwest::StatusCode::PARTIAL_CONTENT {
         return Err(Error::PartialResponse);
     }

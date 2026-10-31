@@ -246,8 +246,9 @@ pub(crate) fn media_tempfile(
     suffix: &str,
     parent: &Path,
 ) -> std::io::Result<tempfile::NamedTempFile> {
+    let prefix = crate::scratch::prefix(prefix, parent);
     let mut builder = tempfile::Builder::new();
-    builder.prefix(prefix).suffix(suffix);
+    builder.prefix(&prefix).suffix(suffix);
     #[cfg(unix)]
     builder.permissions(std::os::unix::fs::PermissionsExt::from_mode(0o666));
     builder.tempfile_in(parent)
@@ -740,7 +741,7 @@ fn join_subtitle_fragments(
         .filter(|parent| !parent.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
     let workspace = tempfile::Builder::new()
-        .prefix(".yt-dlp-rs-subtitle-")
+        .prefix(&crate::scratch::prefix(".yt-dlp-rs-subtitle-", parent))
         .tempdir_in(parent)?;
     let single = !webvtt || fragments.len() == 1;
     let mut stored = 0_u64;

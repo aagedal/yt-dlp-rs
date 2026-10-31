@@ -22,8 +22,8 @@ pub struct Vk;
 pub struct VkWallPost;
 pub struct VkUserVideos;
 
-const NAME: &str = "vk";
-const KEY: &str = "VK";
+pub(crate) const NAME: &str = "vk";
+pub(crate) const KEY: &str = "VK";
 const WALL_POST: &str = "vk:wallpost";
 const USER_VIDEOS: &str = "vk:uservideos";
 const LOGIN_HINT: &str = "Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vk) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies";
@@ -167,6 +167,24 @@ static POST_VIDEO: LazyLock<Regex> =
 /// `VKIE.suitable`.
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
+}
+
+/// `get_temp_id`: the `id` group (`None` for `videoid` URLs).
+pub(crate) fn temp_id(url: &str) -> Option<String> {
+    VALID_URL
+        .captures(url)
+        .and_then(|found| found.name("id").map(|id| id.as_str().to_owned()))
+}
+
+/// `_EMBED_REGEX`: `video_ext.php` iframes (`(["\'])...\1` as one
+/// alternative per quote).
+static EMBED: LazyLock<[Regex; 1]> = LazyLock::new(|| {
+    [Regex::new(r#"<iframe[^>]+?src=(?:"(?P<url>https?://vk(?:(?:video)?\.ru|\.com)/video_ext\.php.+?)"|'(?P<url2>https?://vk(?:(?:video)?\.ru|\.com)/video_ext\.php.+?)')"#).unwrap()]
+});
+
+/// `_extract_embed_urls` under `orderedSet`.
+pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
+    super::embed_regex_urls(url, webpage, &*EMBED, suitable)
 }
 
 /// `VKWallPostIE.suitable`.

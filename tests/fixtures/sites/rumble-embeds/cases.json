@@ -1,0 +1,9 @@
+[
+ {"url": "https://blog.example.test/rb-one", "args": ["-j"]},
+ {"url": "https://blog.example.test/rb-one", "args": ["--print", "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"]},
+ {"url": "https://blog.example.test/rb-script", "args": ["--print", "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"]},
+ {"url": "https://blog.example.test/rb-many", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://blog.example.test/rb-many", "args": ["--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(url)s|%(ie_key)s"]},
+ {"url": "https://rumble.com/browse/", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://rumble.com/browse/", "args": ["--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(url)s|%(ie_key)s"]}
+]

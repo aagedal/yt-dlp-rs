@@ -53,17 +53,26 @@ impl From<ProxyConfig> for TransportConfig {
     }
 }
 
+/// Upstream's `--socket-timeout` default (`socket_timeout=20`), applied to
+/// the connect and to each read like its socket timeout.
+pub(crate) const DEFAULT_SOCKET_TIMEOUT: Duration = Duration::from_secs(20);
+
 impl TransportConfig {
+    /// The socket timeout: `--socket-timeout`, else upstream's default.
+    pub(crate) fn socket_timeout(&self) -> Duration {
+        self.timeout.unwrap_or(DEFAULT_SOCKET_TIMEOUT)
+    }
+
     pub(crate) fn apply(&self, builder: ClientBuilder) -> Result<ClientBuilder> {
-        let (connect, operation) = match self.timeout {
-            Some(timeout) => (timeout, timeout),
-            None => (Duration::from_secs(15), Duration::from_secs(300)),
-        };
+        let timeout = self.socket_timeout();
+        // The blocking client applies `timeout` to sending a request and to
+        // each read of a streamed body (whole-body helpers such as `text()`
+        // are bounded as a whole), so it acts as upstream's socket timeout.
         let mut builder = self
             .proxy
             .apply(builder)?
-            .connect_timeout(connect)
-            .timeout(operation);
+            .connect_timeout(timeout)
+            .timeout(timeout);
         if self.insecure {
             builder = builder.danger_accept_invalid_certs(true);
         }
@@ -388,6 +397,31 @@ impl HttpOptions {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn socket_timeout_defaults_to_upstreams_twenty_seconds() {
+        let options = HttpOptions::default();
+        assert_eq!(
+            options.transport_config().unwrap().socket_timeout(),
+            Duration::from_secs(20)
+        );
+        let options = HttpOptions {
+            socket_timeout: Some(0.0),
+            ..Default::default()
+        };
+        assert_eq!(
+            options.transport_config().unwrap().socket_timeout(),
+            Duration::from_secs(20)
+        );
+        let options = HttpOptions {
+            socket_timeout: Some(2.5),
+            ..Default::default()
+        };
+        assert_eq!(
+            options.transport_config().unwrap().socket_timeout(),
+            Duration::from_millis(2500)
+        );
+    }
 
     #[test]
     fn invalid_controls_cookies_and_resource_bounds_fail_without_values_in_errors() {

@@ -37,7 +37,7 @@ does. Skip-download retains acquired sidecars without embedding/deletion.
 Native orchestration snapshots eligible local sidecars into the private workspace,
 with 16 MiB per-file/256 MiB total bounds. The FFmpeg runner uses explicit local
 media/sidecar demuxers and output muxers, file-only protocols, faststart, closed
-stdin, bounded pipes, version validation and a 600-second shared deadline.
+stdin, bounded pipes and version validation, without a time limit (as upstream).
 Metadata/track limits and unsupported active formats return explicit errors.
 Missing/filtered/unsupported-container skips remain visible and never inspect tools.
 

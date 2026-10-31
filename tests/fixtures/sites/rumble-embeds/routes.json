@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://blog.example.test/rb-one",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>One Rumble embed</title></head><body><iframe class=\"rumble\" width=\"640\" height=\"360\" src=\"https://rumble.com/embed/vb0ofn/?pub=4\" frameborder=\"0\" allowfullscreen></iframe></body></html>"
+  },
+  {
+   "url": "https://blog.example.test/rb-script",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Rumble script</title></head><body><div id=\"rumble_vb0ofn\"></div><script>!function(r,u,m,b,l,e){r._Rumble=b,r[b]||(r[b]=function(){(r[b]._=r[b]._||[]).push(arguments)})}(window,document,\"script\",\"Rumble\");</script>\n<script>Rumble(\"play\", {\"video\":\"vb0ofn\",\"div\":\"rumble_vb0ofn\"});</script></body></html>"
+  },
+  {
+   "url": "https://blog.example.test/rb-many",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Rumble embeds</title><script type=\"application/ld+json\">{\"@type\": \"VideoObject\", \"embedUrl\": \"https://rumble.com/embed/vdef34/\"}</script></head><body>\n<script src=\"https://rumble.com/embed/u4.vabc12/?pub=1\"></script>\n<iframe src='https://rumble.com/embed/vb0ofn/'></iframe>\n<script>Rumble(\"play\", {\"video\":\"vzzz99\"});</script>\n</body></html>"
+  },
+  {
+   "url": "https://rumble.com/browse/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Browse</title></head><body>\n<iframe src=\"https://rumble.com/embed/vb0ofn/?pub=4\"></iframe>\n<a class=video-item--a href=/vdmum1-moose-the-dog.html><img></a>\n<a class=video-item--a href=/videos-latest.html>latest</a>\n<a title=\"x\" class=\"videostream__link link\" draggable=false href=/v2abcd-second-clip.html>\n<a class=video-item--a href=/vdmum1-moose-the-dog.html>again</a>\n</body></html>"
+  },
+  {
+   "url": "https://rumble.com/embedJS/u3/?request=video&ver=2&v=vb0ofn",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "../rumble/embed.json"
+  },
+  {
+   "url": "https://rumble.com/embedJS/u3/?request=video&ver=2&v=vgone1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"sys\": {\"msg\": \"Video not found\"}}"
+  },
+  {
+   "url": "https://rumble.com/vdmum1-moose-the-dog.html",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "../rumble/page.html"
+  },
+  {
+   "url": "https://sp.rmbl.ws/s8/2/360.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-rumble"
+  }
+ ]
+}

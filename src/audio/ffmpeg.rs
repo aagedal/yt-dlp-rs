@@ -9,7 +9,7 @@ use std::{
     time::{Duration, Instant},
 };
 const PROBE_DEADLINE: Duration = Duration::from_secs(30);
-const CONVERT_DEADLINE: Duration = Duration::from_secs(600);
+const CONVERT_DEADLINE: Duration = crate::merge::NO_DEADLINE;
 fn failure(message: &str) -> Error {
     Error::Postprocess(message.into())
 }

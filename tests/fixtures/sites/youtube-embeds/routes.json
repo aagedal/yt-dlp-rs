@@ -13,6 +13,13 @@
     "Content-Type": "text/html; charset=utf-8"
    },
    "body": "<html><head><title>One</title></head><body><iframe src=\"https://www.youtube.com/embed/BaW_jenozKc\"></iframe></body></html>"
+  },
+  {
+   "url": "https://blog.example.test/mixed",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Mixed players</title></head><body><iframe src=\"//fast.wistia.net/embed/iframe/a6ndpko1wg\"></iframe>\n<iframe src=\"https://www.youtube.com/embed/BaW_jenozKc\"></iframe>\n<div class=\"wistia_embed wistia_async_5vd7p4bct5\"></div></body></html>"
   }
  ]
 }

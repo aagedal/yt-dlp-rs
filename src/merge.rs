@@ -11,7 +11,11 @@ use std::{
     time::{Duration, Instant},
 };
 
-const DEADLINE: Duration = Duration::from_secs(600);
+/// Upstream waits for FFmpeg postprocessing without a time limit: merging,
+/// recoding or cutting a long video can legitimately take hours. The
+/// callback still cancels a run; tests pass short deadlines to cover hangs.
+pub(crate) const NO_DEADLINE: Duration = Duration::MAX;
+const DEADLINE: Duration = NO_DEADLINE;
 const MAX_STDOUT: usize = 64 * 1024;
 const MAX_STDERR: usize = 256 * 1024;
 

@@ -1,0 +1,84 @@
+{
+ "routes": [
+  {
+   "url": "https://blog.example.test/vimeo-one",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>One Vimeo embed</title><meta property=\"og:description\" content=\"A post\"></head><body><iframe src=\"//player.vimeo.com/video/54469442\" width=\"640\" height=\"360\" frameborder=\"0\" allowfullscreen></iframe></body></html>"
+  },
+  {
+   "url": "https://blog.example.test/vimeo-many",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Vimeo embeds</title></head><body>\n<iframe src=\"https://player.vimeo.com/video/54469442?h=0123456789&amp;badge=0\" width=\"640\"></iframe>\n<iframe src='//player.vimeo.com/video/222222' width='640'></iframe>\n<object><embed src=\"http://vimeo.com/moogaloop.swf?clip_id=76979871&amp;server=vimeo.com\" type=\"application/x-shockwave-flash\"></embed></object>\n<iframe src=\"https://player.vimeo.com/video/222222\"></iframe>\n<iframe src=\"https://player.vimeo.com/album/333\"></iframe>\n</body></html>"
+  },
+  {
+   "url": "https://blog.example.test/mixed",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Mixed embeds</title></head><body><iframe src=\"https://player.vimeo.com/video/54469442\"></iframe><iframe src=\"https://www.youtube.com/embed/BaW_jenozKc\"></iframe></body></html>"
+  },
+  {
+   "url": "https://player.vimeo.com/video/54469442",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../vimeo/player.html",
+   "request_headers": {
+    "Referer": "https://blog.example.test/vimeo-one"
+   }
+  },
+  {
+   "url": "https://skyfire.vimeocdn.com/54469442/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "../vimeo/master.m3u8"
+  },
+  {
+   "url": "https://skyfire.vimeocdn.com/54469442/audio/high.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "../vimeo/media.m3u8"
+  },
+  {
+   "url": "https://skyfire.vimeocdn.com/54469442/audio/medium.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "../vimeo/media.m3u8"
+  },
+  {
+   "url": "https://skyfire.vimeocdn.com/54469442/v/360.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "../vimeo/media.m3u8"
+  },
+  {
+   "url": "https://skyfire.vimeocdn.com/54469442/v/720.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "../vimeo/media.m3u8"
+  },
+  {
+   "url": "https://akfire.vimeocdn.com/54469442/video/master.mpd?base64_init=1",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "../vimeo/master.mpd"
+  },
+  {
+   "url": "https://akfire.vimeocdn.com/54469442/sep/video/master.mpd?base64_init=1",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "../vimeo/master.mpd"
+  }
+ ]
+}

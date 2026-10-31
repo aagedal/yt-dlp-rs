@@ -202,6 +202,12 @@ fn non_negative_int(value: Option<&Value>) -> Option<Option<usize>> {
     }
 }
 
+/// Upstream resolves with an explicit stack; this recursion is capped so a
+/// hostile payload cannot overflow the stack, which would abort the run.
+/// The cap is serde_json's own nesting limit (deeper values could not be
+/// read back from an info JSON), and fits a 2 MiB thread in debug builds.
+const MAX_DEPTH: usize = 128;
+
 struct State<'a> {
     parsed: &'a [Value],
     revivers: &'a [(&'a str, Reviver)],
@@ -234,6 +240,9 @@ impl State<'_> {
             self.errors.push("list index out of range".into());
             return Ok(Value::Null);
         };
+        if self.pending.len() >= MAX_DEPTH {
+            return Err("maximum recursion depth exceeded".into());
+        }
         self.pending.push(index);
         let result = self.resolve_value(index, value);
         self.pending.pop();
@@ -677,6 +686,29 @@ mod tests {
         for (unparsed, error) in cases {
             assert_eq!(parse(&unparsed, &[]), Err(error.into()), "{unparsed}");
         }
+    }
+
+    #[test]
+    fn deep_nesting_is_an_error_not_a_stack_overflow() {
+        let chain = |depth: usize| {
+            let mut items: Vec<Value> = (1..depth).map(|next| json!([next])).collect();
+            items.push(json!("leaf"));
+            Value::Array(items)
+        };
+        // On a small stack, as a library caller's thread may have.
+        let small_stack = |payload: Value| {
+            std::thread::Builder::new()
+                .stack_size(2 * 1024 * 1024)
+                .spawn(move || parse(&payload, &[]).map(|_| ()))
+                .unwrap()
+                .join()
+                .unwrap()
+        };
+        assert_eq!(small_stack(chain(MAX_DEPTH)), Ok(()));
+        assert_eq!(
+            small_stack(chain(200_000)),
+            Err("maximum recursion depth exceeded".into())
+        );
     }
 
     /// Cycles cannot be shared; the back-reference is `null`.

@@ -87,8 +87,9 @@ These options are not in upstream yt-dlp:
   kept file.
 - **`--download-sections` for adaptive HTTPS formats** fetches only the
   segments covering the section, located through the format's MP4 `sidx` or
-  WebM `Cues` index, in parallel 10 MiB ranges. Upstream instead has FFmpeg
-  read the whole stream, which runs at about twice playback speed. The cut uses
+  WebM `Cues` index, in 10 MiB ranges (the video and audio streams in
+  parallel). Upstream instead has FFmpeg read the whole stream, which runs at
+  about twice playback speed. The cut uses
   the same FFmpeg arguments and was checked packet-identical to upstream's
   output. Formats without an index, servers without range support and
   `--downloader ffmpeg` keep upstream's behavior.
@@ -131,8 +132,10 @@ Bandcamp, Tumblr, Bluesky, Niconico, PeerTube, Brightcove, Kaltura, JW Player,
 Wistia, the major European public broadcasters (NRK, SVT, DR, Yle, ARD, ZDF,
 Arte, France Télévisions) and several hundred smaller sites. Run
 `yt-dlp-rs --list-extractors` for the full list. Other URLs go through the
-generic extractor: direct media, HLS and DASH manifests, and HTML5
-`<video>`/`<audio>` pages.
+generic extractor: direct media, HLS and DASH manifests, HTML5
+`<video>`/`<audio>` pages, JSON-LD, JW Player, video.js and KVS players,
+`og:video`/`twitter:player` metadata, RSS, SMIL and XSPF, and the embedded
+players of supported sites.
 
 ## Not supported
 
@@ -142,8 +145,8 @@ generic extractor: direct media, HLS and DASH manifests, and HTML5
 - Generic-page features beyond HTML5 media elements and known embeds, such as
   JavaScript-built players.
 - Chromium cookies on Windows (DPAPI) and from the GNOME keyring.
-- Resuming partial downloads across separate runs: an interrupted transfer
-  resumes only within the same run.
+- Graceful Ctrl+C on Windows: there it ends the process at once (on other
+  platforms `.part` files are kept for `--continue`, as upstream).
 - Upstream options this port has not implemented: they are errors, never
   silently ignored.
 

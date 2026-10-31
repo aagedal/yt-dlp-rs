@@ -1284,7 +1284,10 @@ pub use skylinewebcams::{SkylineWebcams, suitable as skylinewebcams_suitable};
 pub use skynewsau::{SkyNewsAU, suitable as skynewsau_suitable};
 pub use snapchat::{SnapchatSpotlight, suitable as snapchat_suitable};
 pub use sohu::{Sohu, SohuV, suitable as sohu_suitable, v_suitable as sohu_v_suitable};
-pub use soundcloud::{Soundcloud, suitable as soundcloud_suitable};
+pub use soundcloud::{
+    Soundcloud, SoundcloudEmbed, embed_suitable as soundcloud_embed_suitable,
+    suitable as soundcloud_suitable,
+};
 pub use soundgasm::{
     Soundgasm, SoundgasmProfile, profile_suitable as soundgasm_profile_suitable,
     suitable as soundgasm_suitable,
@@ -3552,6 +3555,39 @@ pub(crate) fn proto_relative(url: &str) -> String {
     match url.strip_prefix("//") {
         Some(rest) => format!("https://{rest}"),
         None => url.to_owned(),
+    }
+}
+
+/// `InfoExtractor._extract_embed_urls(url, webpage)`: each pattern's `url`
+/// group (or `url2`, standing in for a quote backreference's other
+/// alternative), HTML-unescaped, joined to the page URL and kept when
+/// `suitable`, without repeats (`orderedSet`).
+pub(crate) fn embed_regex_urls(
+    url: &Url,
+    webpage: &str,
+    patterns: &[regex::Regex],
+    suitable: fn(&str) -> bool,
+) -> Vec<Url> {
+    let mut found = Vec::new();
+    for pattern in patterns {
+        for captures in pattern.captures_iter(webpage) {
+            let Some(group) = captures.name("url").or_else(|| captures.name("url2")) else {
+                continue;
+            };
+            if let Ok(embed) = url.join(&crate::html::unescape_html(group.as_str()))
+                && suitable(embed.as_str())
+            {
+                push_unique(&mut found, embed);
+            }
+        }
+    }
+    found
+}
+
+/// `orderedSet`'s push: `url` unless already found.
+pub(crate) fn push_unique(found: &mut Vec<Url>, url: Url) {
+    if !found.contains(&url) {
+        found.push(url);
     }
 }
 
