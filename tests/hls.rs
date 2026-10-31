@@ -93,6 +93,16 @@ impl Server {
                         "application/x-mpegurl",
                         "",
                     ),
+                    "/fairplay.m3u8" => (
+                        "#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXT-X-KEY:METHOD=SAMPLE-AES,URI=\"skd://key\",KEYFORMAT=\"com.apple.streamingkeydelivery\"\n#EXTINF:4,\nsegment.ts\n#EXT-X-ENDLIST\n",
+                        "application/x-mpegurl",
+                        "",
+                    ),
+                    "/tagged.m3u8" => (
+                        "#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXT-X-START:TIME-OFFSET=0\n#EXT-X-DATERANGE:ID=\"a\",START-DATE=\"2026-01-01T00:00:00Z\"\n#EXT-X-CUE-OUT:4\n#EXTINF:4,\nsegments/first.ts\n#EXT-X-CUE-IN\n#EXTINF:2,\nsegments/second.ts\n#EXT-X-ENDLIST\n",
+                        "application/x-mpegurl",
+                        "",
+                    ),
                     "/malformed.m3u8" => ("not a playlist", "text/plain", ""),
                     "/nested.m3u8" => (
                         "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=400000\nmaster.m3u8\n",
@@ -309,7 +319,6 @@ fn json_simulation_does_not_fetch_fragments_or_create_output() {
 fn unsupported_manifests_fail_before_any_output_or_fragment_request() {
     let server = Server::new();
     for path in [
-        "/encrypted.m3u8",
         "/malformed.m3u8",
         "/nested.m3u8",
         "/compressed.m3u8",
@@ -331,12 +340,104 @@ fn unsupported_manifests_fail_before_any_output_or_fragment_request() {
     );
     let directory = tempfile::tempdir().unwrap();
     let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
-        .arg(server.url("/encrypted.m3u8"))
+        .arg(server.url("/malformed.m3u8"))
         .current_dir(directory.path())
         .output()
         .unwrap();
     assert!(!result.status.success());
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+}
+
+/// Upstream ignores tags it does not interpret (ad markers, date ranges,
+/// start offsets, ...) instead of rejecting the playlist.
+#[test]
+fn unknown_tags_are_ignored_like_upstream() {
+    let server = Server::new();
+    let info = YoutubeDl::new()
+        .unwrap()
+        .extract_info(&server.url("/tagged.m3u8"))
+        .unwrap();
+    let urls: Vec<_> = info.fragments.iter().map(|f| f.url.path()).collect();
+    assert_eq!(urls, ["/segments/first.ts", "/segments/second.ts"]);
+}
+
+/// Upstream `HlsFD.can_download`: a `SAMPLE-AES` playlist is extracted, then
+/// its download is delegated to FFmpegFD (which needs ffmpeg); a DRM one
+/// is marked `has_drm` and fails like `_has_drm`.
+#[cfg(unix)]
+#[test]
+fn unsupported_keys_delegate_to_ffmpeg_and_drm_fails() {
+    use std::os::unix::fs::PermissionsExt;
+    let server = Server::new();
+    let info = YoutubeDl::new()
+        .unwrap()
+        .extract_info(&server.url("/encrypted.m3u8"))
+        .unwrap();
+    assert!(info.fragments.is_empty());
+    assert_eq!(info.formats[0].extra["has_drm"], false);
+
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = tools.path().join("ffmpeg");
+    let log = tools.path().join("args");
+    std::fs::write(
+        &ffmpeg,
+        format!(
+            "#!/bin/sh\n\
+             case \"$1\" in -version) echo 'ffmpeg version fixture'; exit 0;; esac\n\
+             echo \"$@\" >> '{}'\n\
+             for last; do :; done\n\
+             printf media > \"${{last#file:}}\"\n",
+            log.display()
+        ),
+    )
+    .unwrap();
+    std::fs::set_permissions(&ffmpeg, std::fs::Permissions::from_mode(0o755)).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--ffmpeg-location", &ffmpeg.display().to_string()])
+        .args(["-o", "out.%(ext)s", &server.url("/encrypted.m3u8")])
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8_lossy(&result.stderr);
+    assert!(result.status.success(), "{stderr}");
+    assert!(
+        stderr.contains(
+            "WARNING: Unsupported features have been detected; extraction will be delegated to ffmpeg"
+        ),
+        "{stderr}"
+    );
+    let args = std::fs::read_to_string(&log).unwrap();
+    assert!(args.contains(&server.url("/encrypted.m3u8")), "{args}");
+    assert!(directory.path().join("out.mp4").exists());
+
+    let directory = tempfile::tempdir().unwrap();
+    let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--ffmpeg-location", "/nonexistent/ffmpeg"])
+        .arg(server.url("/encrypted.m3u8"))
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8_lossy(&result.stderr);
+    assert!(!result.status.success());
+    assert!(
+        stderr.contains("m3u8 download detected but ffmpeg could not be found"),
+        "{stderr}"
+    );
+
+    let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--ffmpeg-location", &ffmpeg.display().to_string()])
+        .arg(server.url("/fairplay.m3u8"))
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8_lossy(&result.stderr);
+    assert!(!result.status.success());
+    assert!(
+        stderr.contains("ERROR: [generic] fairplay: This video is DRM protected"),
+        "{stderr}"
+    );
+    assert!(server.paths().iter().all(|path| !path.contains("segment")));
 }
 
 #[test]

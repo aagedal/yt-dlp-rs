@@ -160,7 +160,8 @@ suspended as a `PlaylistRun` and resumed through the input queue).
    representation downloads are implemented; explicit FFmpeg merges separate
    tracks. Dynamic DASH follows upstream: generic live results,
    `--ignore-dynamic-mpd` and FFmpegFD live downloads (native live DASH stays an
-   error). SIDX DASH, SAMPLE-AES/DRM decryption and native (non-FFmpeg) live HLS
+   error). Unknown HLS tags are ignored and SAMPLE-AES playlists delegated to
+   FFmpegFD like upstream's HlsFD. SIDX DASH, SAMPLE-AES/DRM decryption and native (non-FFmpeg) live HLS
    and external video renditions remain open. On Unix, SIGINT/SIGTERM end a
    CLI run like upstream's `KeyboardInterrupt`, keeping `.part` files.
    `--continue`/`.part` whole-file resume (also for downloads to be

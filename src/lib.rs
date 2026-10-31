@@ -303,6 +303,14 @@ thread_local! {
     static FRAGMENT_TOTAL: std::cell::RefCell<Option<(Url, usize)>> = const { std::cell::RefCell::new(None) };
     /// The URL whose download `announce_download` already reported.
     static ANNOUNCED: std::cell::RefCell<Option<Url>> = const { std::cell::RefCell::new(None) };
+    /// Playlist URLs whose refetch HlsFD delegated to FFmpegFD.
+    static HLS_DELEGATED: std::cell::RefCell<Vec<Url>> = const { std::cell::RefCell::new(Vec::new()) };
+}
+
+/// Whether `refresh_hls` delegated `info`'s download to FFmpegFD.
+fn hls_delegated(info: &VideoInfo) -> bool {
+    info.requested_formats.is_empty()
+        && HLS_DELEGATED.with(|urls| urls.borrow().contains(&info.url))
 }
 
 /// Upstream `dl`'s `Invoking … downloader on "URL"[, "URL"]` debug line;
@@ -2680,6 +2688,7 @@ impl YoutubeDl {
         let hls::Playlist::Media {
             fragments,
             discontinuity,
+            native,
             ..
         } = playlist
         else {
@@ -2687,6 +2696,24 @@ impl YoutubeDl {
                 "the refetched HLS manifest is not a media playlist".into(),
             ));
         };
+        HLS_DELEGATED.with(|urls| urls.borrow_mut().retain(|url| *url != info.url));
+        // `can_download`: unless `--allow-unplayable-formats`, DRM is an
+        // error and other unsupported features go to FFmpegFD.
+        if native != hls::Native::Supported && !no_formats::allow_unplayable() {
+            if native == hls::Native::Drm {
+                return Err(Error::Reported(
+                    "This format is DRM protected; Try selecting another format with --format or add --check-formats to automatically fallback to the next best format"
+                        .into(),
+                ));
+            }
+            screen::warning(
+                "Unsupported features have been detected; extraction will be delegated to ffmpeg",
+            );
+            HLS_DELEGATED.with(|urls| urls.borrow_mut().push(info.url.clone()));
+            let mut delegated = info.clone();
+            delegated.fragments = Vec::new();
+            return Ok(Some(delegated));
+        }
         // HlsFD keeps only the format's discontinuity section.
         let index = info
             .extra
@@ -5570,15 +5597,29 @@ impl YoutubeDl {
                 .filter(|path| !path.as_os_str().is_empty())
                 .unwrap_or(Path::new(".")),
         );
+        // Upstream `HlsFD.real_download` refetches the media playlist (a
+        // loaded format, or a merge's private stream, has no fragments yet).
+        let refreshed = if info.requested_formats.is_empty()
+            && info.fragments.is_empty()
+            && !hls_delegated(info)
+        {
+            self.refresh_hls(info)?
+        } else {
+            None
+        };
+        let info = refreshed.as_ref().unwrap_or(info);
+        // HlsFD delegating to FFmpegFD (`Unsupported features have been
+        // detected`).
+        let delegated = hls_delegated(info);
         // Upstream `get_suitable_downloader`: partial downloads and
         // `--downloader ffmpeg` use FFmpegFD, which also merges selected
         // formats directly.
-        let ffmpeg_fd = self.uses_ffmpeg_fd(info);
+        let ffmpeg_fd = self.uses_ffmpeg_fd(info) || (delegated && self.ffmpeg.is_some());
         // FFmpegFD's `m3u8` protocol, or live DASH, without ffmpeg
         // (`_call_downloader`).
         let live_dash = self.live_dash(info);
         if self.ffmpeg.is_none()
-            && (self.forced_ffmpeg_hls(info) || live_dash == Some(LiveDash::Ffmpeg))
+            && (delegated || self.forced_ffmpeg_hls(info) || live_dash == Some(LiveDash::Ffmpeg))
         {
             return Err(Error::Reported(
                 "m3u8 download detected but ffmpeg could not be found. Please install".into(),
@@ -5785,13 +5826,6 @@ impl YoutubeDl {
                 &mut callback,
             );
         }
-        // A loaded HLS format reads its fragments from the playlist now.
-        let refreshed = if info.fragments.is_empty() {
-            self.refresh_hls(info)?
-        } else {
-            None
-        };
-        let info = refreshed.as_ref().unwrap_or(info);
         if !info.fragments.is_empty() {
             return fragment::download(
                 &self.client,

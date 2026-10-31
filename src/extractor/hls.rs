@@ -34,16 +34,34 @@ fn recognized(response: &Response) -> bool {
 }
 
 /// Upstream `_extract_m3u8_formats` keys this port does not model as fields:
-/// `has_drm` (always false: DRM playlists are rejected) and, for formats from
-/// a master playlist, its `manifest_url`.
-fn hls_extra(master: Option<&Url>, shape: &str) -> serde_json::Map<String, serde_json::Value> {
+/// `has_drm` (the document's `HlsFD._has_drm`) and, for formats from a master
+/// playlist, its `manifest_url`.
+fn hls_extra(
+    master: Option<&Url>,
+    shape: &str,
+    has_drm: bool,
+) -> serde_json::Map<String, serde_json::Value> {
     let mut extra = serde_json::Map::new();
     extra.insert(crate::info_order::FORMAT_SHAPE.into(), shape.into());
     if let Some(master) = master {
         extra.insert("manifest_url".into(), master.as_str().into());
     }
-    extra.insert("has_drm".into(), false.into());
+    extra.insert("has_drm".into(), has_drm.into());
     extra
+}
+
+/// A media playlist's fragments for native HlsFD: none when HlsFD would not
+/// download it itself, so the download refetches it and decides
+/// (`YoutubeDl::refresh_hls`).
+fn native_fragments(
+    fragments: Vec<crate::Fragment>,
+    native: crate::hls::Native,
+) -> Vec<crate::Fragment> {
+    if native == crate::hls::Native::Supported {
+        fragments
+    } else {
+        Vec::new()
+    }
 }
 
 pub(crate) fn read_playlist(response: Response) -> Result<(Url, Playlist)> {
@@ -404,6 +422,7 @@ fn from_playlist(
             discontinuity: Vec::new(),
             discontinuities,
             ext: String::new(),
+            native: crate::hls::Native::Supported,
         },
         playlist => playlist,
     };
@@ -412,13 +431,16 @@ fn from_playlist(
             fragments,
             discontinuity,
             discontinuities,
+            native,
             ..
         } => {
+            let has_drm = native == crate::hls::Native::Drm;
+            let fragments = native_fragments(fragments, native);
             // A media playlist is returned as one format (per section).
             let format = VideoFormat {
                 byte_index: None,
                 http_headers: None,
-                extra: hls_extra(None, "hls-media"),
+                extra: hls_extra(None, "hls-media", has_drm),
                 protocol: Some("m3u8_native".into()),
                 vcodec: None,
                 acodec: None,
@@ -464,6 +486,7 @@ fn from_playlist(
             variants,
             audio,
             subtitles,
+            drm,
         } => {
             // Upstream `extract_media`: an m3u8 subtitle rendition is WebVTT
             // fetched through HlsFD; other URIs keep their extension.
@@ -516,11 +539,13 @@ fn from_playlist(
                         fragments,
                         discontinuity,
                         discontinuities,
+                        native,
                         ..
                     } = playlist
                     else {
                         return Err(unsupported("nested HLS master playlists are not supported"));
                     };
+                    let fragments = native_fragments(fragments, native);
                     (url, fragments, discontinuity, discontinuities)
                 };
                 total_fragments = total_fragments
@@ -551,7 +576,7 @@ fn from_playlist(
                 let mut format = VideoFormat {
                     byte_index: None,
                     http_headers: None,
-                    extra: hls_extra(Some(&manifest_url), "hls-variant"),
+                    extra: hls_extra(Some(&manifest_url), "hls-variant", drm),
                     protocol: Some("m3u8_native".into()),
                     vcodec: known(codecs.vcodec),
                     acodec: known(codecs.acodec),
@@ -632,11 +657,13 @@ fn from_playlist(
                         fragments,
                         discontinuity,
                         discontinuities,
+                        native,
                         ..
                     } = playlist
                     else {
                         return Err(unsupported("nested HLS master playlists are not supported"));
                     };
+                    let fragments = native_fragments(fragments, native);
                     (url, fragments, discontinuity, discontinuities)
                 };
                 total_fragments = total_fragments
@@ -650,7 +677,7 @@ fn from_playlist(
                 let format = VideoFormat {
                     byte_index: None,
                     http_headers: None,
-                    extra: hls_extra(Some(&manifest_url), "hls-rendition"),
+                    extra: hls_extra(Some(&manifest_url), "hls-rendition", drm),
                     protocol: Some("m3u8_native".into()),
                     vcodec: Some("none".into()),
                     acodec: None,

@@ -6130,11 +6130,25 @@ remuxed. FFmpeg is unnecessary for this download path.
 `EXT-X-BYTERANGE` supports explicit offsets and implicit continuation only after
 an immediately preceding media range on the same URL. Map byte ranges require
 an explicit offset. All ranges are positive with checked arithmetic. Unsupported
-state is an error: live playlists without ENDLIST, SAMPLE-AES/DRM or unsupported
-key formats, gaps, low-latency tags, variables, changing maps (also a map
-after a discontinuity),
+state is an error: live playlists without ENDLIST (outside FFmpegFD), variables,
+changing maps (also a map after a discontinuity),
 external video or unresolved rendition groups, mixed inband/external
-audio groups, nested masters and unknown EXT tags.
+audio groups, nested masters and malformed AES-128 keys. Like upstream's line
+loops, other tags (`EXT-X-START`, `EXT-X-DATERANGE`, ad/SCTE-35 markers, gaps,
+low-latency parts and hints, session data/keys, vendor tags) are ignored.
+Upstream `HlsFD.can_download` and `_has_drm` decide encrypted playlists: a
+document with FairPlay/PlayReady keys or `EXT-X-FAXS-CM` marks its formats
+`has_drm` (a master's session key marks every variant), which drops them like
+other DRM formats; another `EXT-X-KEY` method than `NONE`/`AES-128` (SAMPLE-AES)
+leaves the format without fragments, and the download refetches the playlist
+and delegates it to FFmpegFD with `WARNING: Unsupported features have been
+detected; extraction will be delegated to ffmpeg` (`m3u8 download detected but
+ffmpeg could not be found. Please install` without ffmpeg; upstream's extra
+`Destination` line and `.part` error there are not reproduced). A media playlist
+that only its refetch shows to be DRM-protected is upstream's `This format is DRM
+protected; Try selecting another format…` error. With
+`--allow-unplayable-formats`, such keys are ignored and the segments are
+downloaded natively as they are, as upstream does.
 `EXT-X-MEDIA:TYPE=SUBTITLES` renditions with a URI become subtitles like
 upstream's `extract_media` (by `LANGUAGE`, default `und`; an m3u8 URI is `vtt`
 with protocol `m3u8_native`), listed by `--list-subs` and written with
@@ -6248,8 +6262,9 @@ implicit-IV-after-MAP behavior follows RFC media sequence numbering, and that
 specific upstream equivalence is explicitly excluded. Explicit-IV MAP plans
 are compared without masking this difference.
 
-SAMPLE-AES, DRM key formats, session keys, custom key overrides and live/key
-refresh across playlist reloads remain unsupported. See the
+Decrypting SAMPLE-AES or DRM (see above for FFmpeg delegation and DRM marking),
+custom key overrides and live/key refresh across playlist reloads remain
+unsupported natively. See the
 [AES source slice](../upstream/notes/hls-aes128.md).
 
 

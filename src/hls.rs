@@ -15,6 +15,9 @@ pub(crate) enum Playlist {
         audio: Vec<AudioRendition>,
         /// `SUBTITLES` renditions with a URI, in document order.
         subtitles: Vec<SubtitleRendition>,
+        /// Upstream `_parse_m3u8_formats_and_subtitles`'s `has_drm` for
+        /// every format of the document.
+        drm: bool,
     },
     Media {
         fragments: Vec<Fragment>,
@@ -28,6 +31,10 @@ pub(crate) enum Playlist {
         /// upstream and FFmpeg inputs sniff their contents instead.
         #[cfg_attr(not(test), allow(dead_code))]
         ext: String,
+        /// Upstream `HlsFD.can_download` fails: [`has_drm`] or an
+        /// `#EXT-X-KEY` method other than `NONE`/`AES-128`. Such keys are
+        /// not interpreted (HlsFD only decrypts `AES-128`).
+        native: Native,
     },
     /// A media playlist without `#EXT-X-ENDLIST` (only from [`parse_live`]):
     /// upstream returns it as one format without reading its segments.
@@ -75,6 +82,53 @@ pub(crate) struct AudioRendition {
     pub autoselect: bool,
     /// Upstream `is_alternate`: `DEFAULT=NO` or `AUTOSELECT=NO`.
     pub alternate: bool,
+}
+
+/// Whether upstream's HlsFD downloads a media playlist itself
+/// (`can_download`, without its `is_live` check).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum Native {
+    Supported,
+    /// Delegated to FFmpegFD (`Unsupported features have been detected`).
+    UnsupportedFeatures,
+    /// `This format is DRM protected`.
+    Drm,
+}
+
+impl Native {
+    fn of(text: &str) -> Self {
+        if has_drm(text) {
+            Self::Drm
+        } else if unsupported_key_method(text) {
+            Self::UnsupportedFeatures
+        } else {
+            Self::Supported
+        }
+    }
+}
+
+/// Upstream `HlsFD._has_drm`: FairPlay, PlayReady or Flash Access keys.
+pub(crate) fn has_drm(text: &str) -> bool {
+    static DRM: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(concat!(
+            r#"#EXT-X-(?:SESSION-)?KEY:.*?URI="skd://"#,
+            r#"|#EXT-X-(?:SESSION-)?KEY:.*?KEYFORMAT="com\.apple\.streamingkeydelivery""#,
+            r#"|#EXT-X-(?:SESSION-)?KEY:.*?KEYFORMAT="com\.microsoft\.playready""#,
+            r"|#EXT-X-FAXS-CM:",
+        ))
+        .expect("valid DRM pattern")
+    });
+    DRM.is_match(text)
+}
+
+/// Upstream `can_download`'s `#EXT-X-KEY:METHOD=(?!NONE|AES-128)`
+/// (encrypted, but not necessarily DRM, e.g. `SAMPLE-AES`).
+fn unsupported_key_method(text: &str) -> bool {
+    const TAG: &str = "#EXT-X-KEY:METHOD=";
+    text.match_indices(TAG).any(|(index, _)| {
+        let method = &text[index + TAG.len()..];
+        !method.starts_with("NONE") && !method.starts_with("AES-128")
+    })
 }
 
 fn invalid(message: impl Into<String>) -> Error {
@@ -378,6 +432,7 @@ fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
     if lines.first() != Some(&"#EXTM3U") {
         return Err(invalid("missing HLS EXTM3U header"));
     }
+    let native = Native::of(text);
     let mut groups = BTreeMap::new();
     // Upstream `groups`: renditions with TYPE, GROUP-ID and NAME, by GROUP-ID.
     let mut group_names: BTreeMap<&str, &str> = BTreeMap::new();
@@ -582,7 +637,11 @@ fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
                 return Err(invalid("HLS media key appears in a master playlist"));
             }
             media_seen = true;
-            current_key = aes_key(value, base)?;
+            // A playlist HlsFD delegates (or refuses) has keys it does
+            // not interpret; FFmpeg reads them itself.
+            if native == Native::Supported {
+                current_key = aes_key(value, base)?;
+            }
         } else if let Some(value) = line.strip_prefix("#EXT-X-VERSION:") {
             positive_integer(value)?;
         } else if let Some(value) = line.strip_prefix("#EXT-X-TARGETDURATION:") {
@@ -627,25 +686,12 @@ fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
                 .checked_add(1)
                 .ok_or_else(|| invalid("HLS discontinuity count overflow"))?;
             media_seen = true;
-        } else if line == "#EXT-X-INDEPENDENT-SEGMENTS"
-            || line.starts_with("#EXT-X-PROGRAM-DATE-TIME:")
-            || line.starts_with("#EXT-X-MEDIA:")
-            // Trick-play renditions (TED); upstream only reads `#EXT-X-STREAM-INF`
-            // variants, so these never become formats.
-            || line.starts_with("#EXT-X-I-FRAME-STREAM-INF:")
-            // Thumbnail renditions, which upstream never reads either.
-            || line.starts_with("#EXT-X-IMAGE-STREAM-INF:")
-            // Twitch's informational vendor tags (`#EXT-X-TWITCH-INFO`,
-            // `-ELAPSED-SECS`, `-TOTAL-SECS`), which upstream ignores.
-            || line.starts_with("#EXT-X-TWITCH-")
-        {
-            // Informational metadata; media groups are validated against references above.
-        } else if line.starts_with("#EXT-X-") || line.starts_with("#EXT") {
-            return Err(invalid(format!(
-                "unsupported HLS tag: {}",
-                line.split(':').next().unwrap_or(line)
-            )));
         } else if line.starts_with('#') {
+            // Like upstream's line loops, other tags (informational ones,
+            // `#EXT-X-START`, `#EXT-X-DATERANGE`, ad markers, low-latency
+            // parts, `#EXT-X-SESSION-KEY`, vendor tags, ...) and comments
+            // are ignored; media groups are validated against references
+            // above.
             continue;
         } else {
             let url = if pending_variant.is_some() {
@@ -738,6 +784,7 @@ fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
             variants,
             audio,
             subtitles,
+            drm: native == Native::Drm,
         });
     }
     if !endlist && allow_live && target_duration {
@@ -757,6 +804,7 @@ fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
         discontinuity,
         discontinuities,
         ext: ext.unwrap_or("ts").into(),
+        native,
     })
 }
 
@@ -958,15 +1006,8 @@ mod tests {
     fn rejects_unsafe_or_unsupported_state_and_incomplete_playlists() {
         let valid = "#EXTM3U\n#EXTINF:1,\na.ts\n#EXT-X-ENDLIST";
         for tag in [
-            "#EXT-X-KEY:METHOD=SAMPLE-AES",
             "#EXT-X-KEY:METHOD=NONE,URI=\"key\"",
             "#EXT-X-DISCONTINUITY-SEQUENCE:x",
-            "#EXT-X-GAP",
-            "#EXT-X-PART:DURATION=1,URI=\"a.ts\"",
-            "#EXT-X-PRELOAD-HINT:TYPE=PART,URI=\"a\"",
-            "#EXT-X-SKIP:SKIPPED-SEGMENTS=1",
-            "#EXT-X-UNKNOWN:1",
-            "#EXT-X-START:TIME-OFFSET=2",
         ] {
             let text = valid.replace("#EXTINF", &format!("{tag}\n#EXTINF"));
             assert!(parse(&text, &base()).is_err(), "{tag}");
@@ -999,6 +1040,71 @@ mod tests {
         };
         assert_eq!(fragments.len(), 1);
     }
+    #[test]
+    fn other_tags_are_ignored_like_upstream() {
+        let text = "#EXTM3U\n#EXT-X-VERSION:6\n#EXT-X-START:TIME-OFFSET=2\n#EXT-X-SERVER-CONTROL:CAN-BLOCK-RELOAD=YES\n#EXT-X-PART-INF:PART-TARGET=1\n#EXT-X-TARGETDURATION:4\n#EXT-X-DATERANGE:ID=\"ad\",START-DATE=\"2026-01-01T00:00:00Z\"\n#EXT-X-CUE-OUT:30\n#EXT-OATCLS-SCTE35:/DA=\n#EXTINF:4,\na.ts\n#EXT-X-PART:DURATION=1,URI=\"a.1.ts\"\n#EXT-X-CUE-IN\n#EXT-X-GAP\n#EXTINF:4,\nb.ts\n#EXT-X-PRELOAD-HINT:TYPE=PART,URI=\"c.ts\"\n#EXT-X-RENDITION-REPORT:URI=\"o.m3u8\"\n#EXT-X-ENDLIST";
+        let Playlist::Media {
+            fragments, native, ..
+        } = parse(text, &base()).unwrap()
+        else {
+            panic!("media playlist expected");
+        };
+        let urls: Vec<_> = fragments.iter().map(|f| f.url.path()).collect();
+        assert_eq!(urls, ["/path/a.ts", "/path/b.ts"]);
+        assert_eq!(native, Native::Supported);
+        let master = "#EXTM3U\n#EXT-X-SESSION-DATA:DATA-ID=\"x\",VALUE=\"y\"\n#EXT-X-CONTENT-STEERING:SERVER-URI=\"s\"\n#EXT-X-STREAM-INF:BANDWIDTH=1000\na.m3u8";
+        assert!(matches!(
+            parse(master, &base()).unwrap(),
+            Playlist::Master { drm: false, .. }
+        ));
+    }
+
+    #[test]
+    fn non_native_keys_are_flagged_instead_of_failing() {
+        let media = |key: &str| {
+            let text = format!(
+                "#EXTM3U\n#EXT-X-TARGETDURATION:4\n{key}\n#EXTINF:4,\na.ts\n#EXT-X-ENDLIST"
+            );
+            match parse(&text, &base()).unwrap() {
+                Playlist::Media {
+                    fragments, native, ..
+                } => (fragments.len(), fragments[0].encryption.is_none(), native),
+                _ => panic!("media playlist expected"),
+            }
+        };
+        assert_eq!(
+            media("#EXT-X-KEY:METHOD=SAMPLE-AES,URI=\"k\",KEYFORMAT=\"identity\""),
+            (1, true, Native::UnsupportedFeatures)
+        );
+        assert_eq!(
+            media("#EXT-X-KEY:METHOD=SAMPLE-AES-CTR,URI=\"k\""),
+            (1, true, Native::UnsupportedFeatures)
+        );
+        assert_eq!(
+            media(
+                "#EXT-X-KEY:METHOD=SAMPLE-AES,URI=\"skd://key\",KEYFORMAT=\"com.apple.streamingkeydelivery\""
+            ),
+            (1, true, Native::Drm)
+        );
+        assert_eq!(
+            media("#EXT-X-KEY:METHOD=AES-128,URI=\"k\",KEYFORMAT=\"com.microsoft.playready\""),
+            (1, true, Native::Drm)
+        );
+        assert_eq!(media("#EXT-X-FAXS-CM:abc").2, Native::Drm);
+        assert_eq!(
+            media("#EXT-X-KEY:METHOD=AES-128,URI=\"k\"").2,
+            Native::Supported
+        );
+        // A master's session key marks its formats.
+        let master = "#EXTM3U\n#EXT-X-SESSION-KEY:METHOD=SAMPLE-AES,URI=\"skd://x\"\n#EXT-X-STREAM-INF:BANDWIDTH=1000\na.m3u8";
+        assert!(matches!(
+            parse(master, &base()).unwrap(),
+            Playlist::Master { drm: true, .. }
+        ));
+        // Upstream's patterns stop at line ends.
+        assert!(!has_drm("#EXT-X-KEY:METHOD=NONE\nURI=\"skd://x\""));
+    }
+
     #[test]
     fn discontinuities_are_counted_per_fragment_and_select_sections() {
         let text = "#EXTM3U\n#EXT-X-TARGETDURATION:1\n#EXTINF:1,\na.ts\n#EXT-X-DISCONTINUITY\n#EXTINF:1,\nb.ts\n#EXTINF:1,\nc.ts\n#EXT-X-DISCONTINUITY-SEQUENCE:4\n#EXTINF:1,\nd.ts\n#EXT-X-ENDLIST";
@@ -1178,10 +1284,9 @@ mod tests {
             "METHOD=AES-128,URI=\"data:key\"",
             "METHOD=AES-128,URI=\"key#fragment\"",
             "METHOD=AES-128,URI=\"key space\"",
-            "METHOD=AES-128,URI=\"key\",KEYFORMAT=\"com.apple.streamingkeydelivery\"",
+            "METHOD=AES-128,URI=\"key\",KEYFORMAT=\"com.example\"",
             "METHOD=AES-128,URI=\"key\",KEYFORMATVERSIONS=\"1/2\"",
             "METHOD=AES-128,URI=\"key\",UNKNOWN=1",
-            "METHOD=SAMPLE-AES,URI=\"key\"",
             "METHOD=NONE,IV=0x1",
             "METHOD=AES-128,URI=\"key\",IV=0x",
             "METHOD=AES-128,URI=\"key\",IV=abc",
