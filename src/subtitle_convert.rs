@@ -196,7 +196,7 @@ pub(crate) fn convert(
         .filter(|p| !p.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
     let workspace = tempfile::Builder::new()
-        .prefix(".yt-dlp-rs-subs-")
+        .prefix(&crate::scratch::prefix(".yt-dlp-rs-subs-", parent))
         .tempdir_in(parent)?;
     let is_ttml = matches!(source_ext, "dfxp" | "ttml" | "tt");
     let mut warnings = Vec::new();

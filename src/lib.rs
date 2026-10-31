@@ -62,6 +62,7 @@ mod postprocess;
 pub mod pp_args;
 mod retry;
 mod rtmp_fd;
+mod scratch;
 pub mod screen;
 mod section_timecode;
 pub mod sections;
@@ -79,7 +80,7 @@ pub mod xattr;
 
 pub use archive::{DownloadArchive, archive_id};
 pub use audio::{AudioDownload, AudioOptions, audio_original_path, audio_output_path};
-pub use control::{DownloadControl, Interrupt, RequestScope};
+pub use control::{DownloadControl, Interrupt, RequestScope, SignalInterrupt};
 pub use cookies::CookieJar;
 pub use download::{
     BUFFER_SIZE, DownloadOptions, DownloadPhase, DownloadProgress, FragmentBytes, MergeFiles,
@@ -2596,7 +2597,7 @@ impl YoutubeDl {
                 .filter(|parent| !parent.as_os_str().is_empty())
                 .unwrap_or(Path::new("."));
             let directory = tempfile::Builder::new()
-                .prefix(".yt-dlp-rs-keyframes-")
+                .prefix(&crate::scratch::prefix(".yt-dlp-rs-keyframes-", parent))
                 .tempdir_in(parent)?;
             let ext = input
                 .extension()
@@ -3020,7 +3021,7 @@ impl YoutubeDl {
                 .unwrap_or(Path::new("."));
             std::fs::create_dir_all(parent)?;
             let workspace = tempfile::Builder::new()
-                .prefix(".yt-dlp-rs-growing-")
+                .prefix(&crate::scratch::prefix(".yt-dlp-rs-growing-", parent))
                 .tempdir_in(parent)?;
             let streams: Vec<(VideoInfo, PathBuf)> = if info.requested_formats.is_empty() {
                 vec![(info.clone(), workspace.path().join("input-0"))]
@@ -5156,6 +5157,13 @@ impl YoutubeDl {
         options: DownloadOptions,
         mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<u64> {
+        // What a killed run left beside the output (see `scratch`).
+        crate::scratch::sweep(
+            destination
+                .parent()
+                .filter(|path| !path.as_os_str().is_empty())
+                .unwrap_or(Path::new(".")),
+        );
         // Upstream `get_suitable_downloader`: partial downloads and
         // `--downloader ffmpeg` use FFmpegFD, which also merges selected
         // formats directly.
@@ -5569,7 +5577,7 @@ impl YoutubeDl {
             .unwrap_or(Path::new("."));
         fs::create_dir_all(parent)?;
         let workspace = tempfile::Builder::new()
-            .prefix(".yt-dlp-rs-merge-")
+            .prefix(&crate::scratch::prefix(".yt-dlp-rs-merge-", parent))
             .tempdir_in(parent)?;
         let upstream = match options.merge_files {
             download::MergeFiles::Private => None,

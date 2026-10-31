@@ -808,7 +808,7 @@ fn download_concurrent(
                     };
                     let result = (|| {
                         let mut file = tempfile::Builder::new()
-                            .prefix(".yt-dlp-rs-fragment-")
+                            .prefix(&crate::scratch::prefix(".yt-dlp-rs-fragment-", parent))
                             .tempfile_in(parent)?;
                         let mut stored = 0;
                         let outcome = fetch_with_retries(

@@ -51,7 +51,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--buffer-size SIZE`, `--resize-buffer`, `--no-resize-buffer` | HttpFD's reads: full blocks of `--buffer-size` (default 1024; positive, upstream's size syntax) resized after each block by `best_block_size` unless `--no-resize-buffer`, which sets when progress lines appear, as upstream (also each fragment's) |
 | `--newline`, `--no-progress`, `--progress`, `--progress-delta SECONDS` | Upstream progress lines and printers (fragmented downloads like FragmentFD's hook: its size estimate over the running total, `ProgressCalculator`'s smoothed speed and ETA, and a line as each fragment finishes); see [download progress](#download-progress-and-cooperative-cancellation) |
 | `--sleep-requests SECONDS` | Upstream `_request_webpage` delay: every extraction request after the run's first one waits, announced as `[EXTRACTOR] Sleeping SECONDS seconds ...` before its `Downloading …` line; this port's extra media/child-playlist probes (plain HTML5 sources, HLS variants, YouTube media) are not delayed, as upstream does not make them; validated with upstream's message |
-| `-c`, `--continue`, `--no-continue`, `--part`, `--no-part` | Upstream `.part` files for whole-file media downloads: the transfer is written to `FILE.part` (kept after a failure) and renamed on success; an existing part file is continued with a plain `Range` request (`[download] Resuming download at byte N`; a full response restarts with `[download] Unable to resume`, and a complete part file fails with the server's 416 like upstream); `--no-continue` restarts it and `--no-part` writes the output directly. Merged, fragmented and postprocessed downloads keep private temporary files, and the library default remains a private temporary file removed on failure |
+| `-c`, `--continue`, `--no-continue`, `--part`, `--no-part` | Upstream `.part` files for whole-file media downloads: the transfer is written to `FILE.part` (kept after a failure) and renamed on success; an existing part file is continued with a plain `Range` request (`[download] Resuming download at byte N`; a full response restarts with `[download] Unable to resume`, and a complete part file fails with the server's 416 like upstream); `--no-continue` restarts it and `--no-part` writes the output directly. Merged formats download to upstream's `FILE.fID.EXT` files and fragmented downloads keep upstream's `.part`/`.ytdl` state; a single format that postprocessors process is downloaded through `FILE.part` first, like upstream. The library default remains a private temporary file removed on failure |
 | `--age-limit YEARS` | Upstream `age_restricted`: skip videos whose `age_limit` exceeds YEARS (`Skipping "TITLE" because it is age restricted`); unknown ratings pass. Extractors see it as the `age_limit` param (Dailymotion's family filter) |
 | `--min-views`, `--max-views`, `--match-title`, `--reject-title`, `--break-on-reject` (hidden upstream) | Upstream `_match_entry` order and messages: case-insensitive title regexes (Rust `regex` syntax, validated at startup), view counts when known, and `--break-on-reject` turning any rejection into the `RejectedVideoReached` cancellation (exit 101) |
 | `--max-downloads NUMBER` | Stop after NUMBER processed videos (simulated, already-downloaded and size-skipped ones count), print upstream's message and exit 101; 0 means unlimited |
@@ -5741,8 +5741,30 @@ terminal and `TERM` is set (on Windows, when `windows_enable_vt_mode`'s
 each progress status sets the title (`yt-dlp %(progress._default_template)s`
 by default) and ConEmu progress state (`ESC]9;4;STATE;PERCENT BEL`), including
 with `--no-progress`. The Windows paths are not covered by local tests. JSON and simulation do not download
-and emit no download progress. The CLI does not install signal handlers or
-expose cancellation flags.
+and emit no download progress.
+
+On Unix the CLI handles SIGINT and SIGTERM for the whole run like upstream's
+`KeyboardInterrupt`: extraction ends before its next request, downloads and
+postprocessors at their next checkpoint (a blocked read waits for the socket
+timeout), later URLs and playlist entries are not processed, and the run ends
+with `ERROR: Interrupted by user` (exit status 1) after saving `--cookies`.
+Errors of the interrupted work are not printed. Files are kept as after a
+failure: upstream `.part`, `.ytdl` and format files stay for `--continue`, a
+postprocessing interruption keeps the latest completed stage, and private
+temporary files are removed. A second signal, or one at an interactive prompt
+(`-f -`, `--match-filters` questions), exits at once with the same message.
+Live FFmpeg downloads, `--wait-for-video` and growing files handle the signal
+themselves as described in their sections, and `--keep-partial-on-stop` makes
+it a stop. Windows keeps the default Ctrl+C behavior.
+
+Private temporary files and directories are named
+`.yt-dlp-rs-KIND-HOST-pidPID-RANDOM`. A run killed without cleanup (SIGKILL,
+a crash) leaves them behind; the next download into the directory removes
+those of processes no longer running on the same host (Unix; untagged names
+and other hosts' entries are kept). A finished download that a killed run had
+moved into its postprocessing workspace is moved back to its name instead,
+with `WARNING: Recovered FILE from an interrupted run; it has not been
+postprocessed`; a rerun then processes it as an existing file.
 
 The library observer is a native extension of the transport milestone, not a
 port of upstream's progress-hook contract or CLI cancellation behavior. The pinned baseline remains

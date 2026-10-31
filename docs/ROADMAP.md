@@ -158,10 +158,11 @@ inline nested processing) remains an explicit error.
    MPEG-TS video and AAC/TS audio. Static DASH templates/timelines/lists/ranges, multi-period merging, `has_drm` marking and native
    representation downloads are implemented; explicit FFmpeg merges separate
    tracks. Dynamic/SIDX DASH, SAMPLE-AES/DRM decryption and native (non-FFmpeg) live HLS,
-   external video/subtitle renditions, discontinuities, extraction cancellation
-   and general CLI signal handling (SIGINT is handled for live FFmpeg downloads
-   and `--wait-for-video`) remain open. `--continue`/`.part` whole-file resume
-   and FragmentFD `.ytdl` fragment resume persist across invocations.
+   and external video renditions remain open. On Unix, SIGINT/SIGTERM end a
+   CLI run like upstream's `KeyboardInterrupt`, keeping `.part` files.
+   `--continue`/`.part` whole-file resume (also for downloads to be
+   postprocessed) and FragmentFD `.ytdl` fragment resume persist across
+   invocations.
    Global custom headers and User-Agent/Referer options apply across extraction,
    transfers, fragments, keys, subtitles and validated player acquisition with
    request-specific precedence. Shared in-memory cookies and explicit Netscape
