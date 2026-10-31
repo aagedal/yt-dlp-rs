@@ -6479,7 +6479,15 @@ availability hints) and children, and namespaced attributes (an `Initialization`
 or `SegmentURL` without its `sourceURL`/`media`, or this port's ranges, is
 upstream's `KeyError`). Multiple BaseURL alternatives, misplaced addressing,
 mixed inherited addressing schemes and unsupported state are rejected. SegmentBase representations are their
-direct BaseURL, as upstream. YouTube MPD discovery remains outside
+direct BaseURL, as upstream (the info dict, JSON and `-F` are upstream's). As a
+port extension, downloading one reads its `indexRange` (MP4 `sidx` or WebM
+`Cues`, through the `--download-sections` index parser) and fetches the file as
+byte-range fragments, the bytes before the first segment, each segment and any
+tail (`[dashsegments] Total fragments: N`), with fragment retries, `.ytdl`
+resume and `--concurrent-fragments`; the result is byte-identical to upstream's
+whole-file HttpFD transfer, which an unusable or non-contiguous index, an
+unknown length, a server without ranges, `--test`, stdout and
+`--http-chunk-size` keep (`src/sidx_fd.rs`, `tests/dash_sidx.rs`). YouTube MPD discovery remains outside
 its extractor. No live/site reliability or general DASH parity is implied.
 
 Original local fMP4 fixtures verify exact single-track bytes and optional FFprobe

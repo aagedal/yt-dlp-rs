@@ -163,7 +163,11 @@ suspended as a `PlaylistRun` and resumed through the input queue).
    error). Unknown HLS tags are ignored and SAMPLE-AES playlists delegated to
    FFmpegFD like upstream's HlsFD; external HLS video renditions are formats.
    Without ffmpeg, live HLS is recorded natively (a port extension; upstream
-   requires ffmpeg). SIDX DASH and SAMPLE-AES/DRM decryption remain open. On Unix, SIGINT/SIGTERM end a
+   requires ffmpeg). DASH SegmentBase files download as SIDX/Cues byte-range
+   fragments (a port extension; upstream reads the whole file). Out of scope
+   by decision (2026-10-31): native SAMPLE-AES decryption (FFmpegFD decrypts
+   it, as upstream), `--remote-components` (the challenge solver stays the
+   bundled, pinned EJS copy) and Python plugins (no Python at runtime). On Unix, SIGINT/SIGTERM end a
    CLI run like upstream's `KeyboardInterrupt`, keeping `.part` files.
    `--continue`/`.part` whole-file resume (also for downloads to be
    postprocessed) and FragmentFD `.ytdl` fragment resume persist across

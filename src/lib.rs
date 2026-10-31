@@ -68,6 +68,7 @@ pub mod screen;
 mod section_timecode;
 pub mod sections;
 mod sha1;
+mod sidx_fd;
 pub mod sponsorblock;
 mod sqlite;
 mod subtitle_convert;
@@ -5883,6 +5884,30 @@ impl YoutubeDl {
                 &mut callback,
             );
         }
+        // Port extension: a DASH SegmentBase file as byte-range fragments
+        // from its segment index (not for `--test`, stdout or explicit
+        // `--http-chunk-size` transfers, which keep HttpFD).
+        if !self.test
+            && self.http_chunk_size.is_none()
+            && destination != Path::new("-")
+            && let Some(fragments) = sidx_fd::plan(&self.client, info, &options)?
+        {
+            screen::screen(&format!(
+                "[dashsegments] Total fragments: {}",
+                fragments.len()
+            ));
+            let mut plan = info.clone();
+            plan.fragments = fragments;
+            return fragment::download(
+                &self.client,
+                &plan,
+                destination,
+                options,
+                self.concurrent_fragments,
+                self.keep_fragments,
+                &mut callback,
+            );
+        }
         // Upstream `HttpFD`: `_TEST_FILE_SIZE` for `--test`, else the
         // `http_chunk_size` parameter, else the format's downloader options.
         let chunk = if self.test {
@@ -6228,6 +6253,15 @@ impl YoutubeDl {
             part.filesize = stream.filesize;
             part.width = stream.width;
             part.height = stream.height;
+            // Port extension (`sidx_fd`): a DASH SegmentBase stream as
+            // byte-range fragments from its segment index.
+            if !self.test
+                && self.http_chunk_size.is_none()
+                && let Some(fragments) =
+                    sidx_fd::plan_format(&self.client, &part, stream, &options)?
+            {
+                part.fragments = fragments;
+            }
             if upstream.is_some() {
                 self.announce_download(&part);
                 // Upstream `HlsFD` refetches each stream's media playlist.
@@ -6236,7 +6270,8 @@ impl YoutubeDl {
                 }
                 if !part.fragments.is_empty() && !self.live_dash_fails(&part) {
                     let downloader = match part.protocol.as_deref() {
-                        Some("http_dash_segments") => "dashsegments",
+                        // `sidx_fd`'s byte-range fragments.
+                        Some("http_dash_segments" | "http" | "https") => "dashsegments",
                         Some("ism") => "ism",
                         Some("mhtml") => "mhtml",
                         _ => "hlsnative",

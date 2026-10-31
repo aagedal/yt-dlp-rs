@@ -126,6 +126,25 @@ fn one<'a, 'input>(node: Node<'a, 'input>, name: &str) -> Result<Option<Node<'a,
     }
     Ok(nodes.into_iter().next())
 }
+/// The nearest `SegmentBase`'s `indexRange` and `Initialization@range` (else
+/// the bytes before the index), as inclusive byte ranges.
+fn segment_base(nodes: &[Node<'_, '_>]) -> Option<crate::info::ByteIndex> {
+    let base = nodes
+        .iter()
+        .find_map(|node| one(*node, "SegmentBase").ok().flatten())?;
+    let range = |value: &str| -> Option<(u64, u64)> {
+        let (start, end) = value.split_once('-')?;
+        let (start, end) = (start.trim().parse().ok()?, end.trim().parse().ok()?);
+        (start <= end).then_some((start, end))
+    };
+    let index = range(plain(base, "indexRange")?)?;
+    let init = match one(base, "Initialization").ok().flatten() {
+        Some(init) => range(plain(init, "range")?)?,
+        None => (0, index.0.checked_sub(1)?),
+    };
+    Some(crate::info::ByteIndex { init, index })
+}
+
 /// ElementTree's `get(name)`: an attribute without a namespace.
 fn plain<'a>(node: Node<'a, '_>, name: &str) -> Option<&'a str> {
     node.attributes()
@@ -1129,8 +1148,13 @@ impl Periods {
                 }
                 extra.insert("is_dash_periods".into(), true.into());
                 representations += 1;
+                // Port extension (`sidx_fd`): a direct representation's
+                // SegmentBase index, which upstream never reads.
+                let byte_index = direct
+                    .as_ref()
+                    .and_then(|_| segment_base(&[representation, adaptation, period]));
                 self.merge(VideoFormat {
-                    byte_index: None,
+                    byte_index,
                     http_headers: None,
                     extra,
                     protocol: direct.is_none().then(|| "http_dash_segments".into()),
