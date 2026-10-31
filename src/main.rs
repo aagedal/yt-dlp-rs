@@ -7461,6 +7461,7 @@ const SUPPORTED_EXTRACTOR_ARGS: &[(&str, &[&str])] = &[
     ("instagram", &["app_id"]),
     ("streaks", &["api_key"]),
     ("twitch", &["client_id"]),
+    ("bilibili", &["prefer_multi_flv"]),
 ];
 
 /// Upstream `_PRESET_ALIASES`.

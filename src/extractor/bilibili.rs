@@ -1080,7 +1080,36 @@ impl Extractor for BiliBili {
                 .iter()
                 .filter(|format| truthy(format.get("fragments")))
                 .collect();
-            if !flv.is_empty() && flv.len() < formats.len() {
+            // FLV and MP4 formats cannot both be kept (FLV becomes a
+            // `multi_video`): the `bilibili:prefer_multi_flv` extractor
+            // argument keeps FLV, else MP4 is kept.
+            let prefer_flv =
+                crate::manifest_args::configuration_arg(NAME, "prefer_multi_flv", false)
+                    .and_then(|values| values.into_iter().next());
+            let mixed = !flv.is_empty() && flv.len() < formats.len();
+            if let Some(prefer) = prefer_flv.filter(|_| mixed) {
+                // `prefer_multi_flv=QUALITY` keeps that quality's formats
+                // (`int()` failing like a mismatch), else the best FLV one.
+                let wanted = prefer.parse::<i64>().ok();
+                let chosen: Vec<Map<String, Value>> = formats
+                    .iter()
+                    .filter(|format| {
+                        wanted.is_some() && format.get("quality").and_then(Value::as_i64) == wanted
+                    })
+                    .cloned()
+                    .collect();
+                formats = if chosen.is_empty() {
+                    // `max(...)` keeps the first of equal qualities.
+                    let best = flv
+                        .iter()
+                        .rev()
+                        .max_by_key(|format| format.get("quality").and_then(Value::as_i64))
+                        .map(|format| (*format).clone());
+                    best.into_iter().collect()
+                } else {
+                    chosen
+                };
+            } else if mixed {
                 let dropped: Vec<String> = flv
                     .iter()
                     .map(|format| {

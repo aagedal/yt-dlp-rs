@@ -170,6 +170,121 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "https://www.bilibili.com/video/BV1mix",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[BiliBili] Extracting URL: https://www.bilibili.com/video/BV1mix",
+    "[BiliBili] 1mix: Downloading webpage",
+    "[BiliBili] BV1mix: Extracting videos in anthology",
+    "[BiliBili] BV1mix: Downloading wbi sign",
+    "[BiliBili] BV1mix: Downloading video formats for cid 44",
+    "[BiliBili] BV1mix: Downloading video format 64 for cid 44",
+    "[BiliBili] BV1mix: Downloading video format 32 for cid 44",
+    "[BiliBili] Dropping incompatible flv format(s) 720P 准高清 (64), 480P 清晰 (32) since mp4 is available. To extract flv, pass --extractor-args \"bilibili:prefer_multi_flv\"",
+    "[BiliBili] 7002: Extracting chapters",
+    "[info] Available formats for BV1mix:",
+    "ID EXT RESOLUTION | FILESIZE PROTO | VCODEC  ACODEC  MORE INFO",
+    "--------------------------------------------------------------",
+    "80 mp4 1080p      |  900.00B https | unknown unknown 1080P 高清"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bilibili.com/video/BV1mix",
+   "args": [
+    "--extractor-args",
+    "bilibili:prefer_multi_flv",
+    "--print",
+    "playlist:%(_type)s|%(id)s|%(title)s|%(duration)s|%(playlist_count)s",
+    "--print",
+    "%(id)s|%(title)s|%(format_id)s|%(duration)s|%(filesize)s|%(url)s",
+    "--concat-playlist",
+    "never",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BV1mix_0|Mixed|64|7.0|640|https://upos.bilivideo.test/mix-64-1.flv?e=4",
+    "BV1mix_1|Mixed|64|5.0|320|https://upos.bilivideo.test/mix-64-2.flv?e=4",
+    "multi_video|BV1mix|Mixed|12.0|2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bilibili.com/video/BV1mix",
+   "args": [
+    "--extractor-args",
+    "BiliBili:prefer_multi_flv=32",
+    "--print",
+    "playlist:%(_type)s|%(id)s|%(title)s|%(duration)s|%(playlist_count)s",
+    "--print",
+    "%(id)s|%(title)s|%(format_id)s|%(duration)s|%(filesize)s|%(url)s",
+    "--concat-playlist",
+    "never",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BV1mix_0|Mixed|32|7.0|320|https://upos.bilivideo.test/mix-32-1.flv?e=4",
+    "BV1mix_1|Mixed|32|5.0|160|https://upos.bilivideo.test/mix-32-2.flv?e=4",
+    "multi_video|BV1mix|Mixed|12.0|2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bilibili.com/video/BV1mix",
+   "args": [
+    "--extractor-args",
+    "bilibili:prefer_multi_flv=80",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[BiliBili] Extracting URL: https://www.bilibili.com/video/BV1mix",
+    "[BiliBili] 1mix: Downloading webpage",
+    "[BiliBili] BV1mix: Extracting videos in anthology",
+    "[BiliBili] BV1mix: Downloading wbi sign",
+    "[BiliBili] BV1mix: Downloading video formats for cid 44",
+    "[BiliBili] BV1mix: Downloading video format 64 for cid 44",
+    "[BiliBili] BV1mix: Downloading video format 32 for cid 44",
+    "[BiliBili] 7002: Extracting chapters",
+    "[info] Available formats for BV1mix:",
+    "ID EXT RESOLUTION | FILESIZE PROTO | VCODEC  ACODEC  MORE INFO",
+    "--------------------------------------------------------------",
+    "80 mp4 1080p      |  900.00B https | unknown unknown 1080P 高清"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bilibili.com/video/BV1mix",
+   "args": [
+    "--extractor-args",
+    "bilibili:prefer_multi_flv=best",
+    "--print",
+    "playlist:%(_type)s|%(id)s|%(title)s|%(duration)s|%(playlist_count)s",
+    "--print",
+    "%(id)s|%(title)s|%(format_id)s|%(duration)s|%(filesize)s|%(url)s",
+    "--concat-playlist",
+    "never",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BV1mix_0|Mixed|64|7.0|640|https://upos.bilivideo.test/mix-64-1.flv?e=4",
+    "BV1mix_1|Mixed|64|5.0|320|https://upos.bilivideo.test/mix-64-2.flv?e=4",
+    "multi_video|BV1mix|Mixed|12.0|2"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }
