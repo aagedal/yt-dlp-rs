@@ -1,8 +1,20 @@
-//! Pure, bounded static DASH plans. No network or SIDX discovery.
+//! Pure, bounded DASH plans. No network or SIDX discovery. Static MPDs
+//! follow exact timing rules; dynamic (live) MPDs reproduce upstream's
+//! snapshot lists (see [`dynamic_times`]).
 use crate::{ByteRange, Error, Fragment, Result, StreamKind, VideoFormat};
 use roxmltree::{Document, Node, ParsingOptions};
 use std::collections::BTreeMap;
+use std::sync::atomic::{AtomicBool, Ordering};
 use url::Url;
+
+/// Upstream `dynamic_mpd` (`--allow-dynamic-mpd`, the default, or
+/// `--ignore-dynamic-mpd`).
+static DYNAMIC_MPD: AtomicBool = AtomicBool::new(true);
+
+/// `params['dynamic_mpd']`: whether dynamic MPDs give formats.
+pub(crate) fn set_dynamic_mpd(process: bool) {
+    DYNAMIC_MPD.store(process, Ordering::Relaxed);
+}
 
 /// Segments per representation (a 2 s-segment timeline covers 11 days).
 const LIMIT: usize = 500_000;
@@ -198,6 +210,8 @@ struct Entry {
 }
 #[derive(Clone, Default)]
 struct Address {
+    /// A dynamic MPD's addressing (availability hints are then ignored).
+    dynamic: bool,
     kind: Option<String>,
     attrs: BTreeMap<String, String>,
     timeline: Option<Vec<Entry>>,
@@ -223,6 +237,15 @@ impl Address {
         for attr in source.attributes() {
             if attr.namespace().is_some() {
                 return Err(bad("namespaced DASH addressing attributes are unsupported"));
+            }
+            // Live availability hints; upstream never reads them.
+            if inherited.dynamic
+                && matches!(
+                    attr.name(),
+                    "availabilityTimeOffset" | "availabilityTimeComplete"
+                )
+            {
+                continue;
             }
             if !matches!(
                 attr.name(),
@@ -421,8 +444,24 @@ fn expand_template(
     Ok(output)
 }
 
+/// A Period's duration as segment plans use it.
+#[derive(Clone, Copy, Default)]
+struct Span {
+    /// The exact duration in nanoseconds, when known.
+    exact: Option<u128>,
+    /// Upstream's parse of a dynamic MPD ([`dynamic_times`]).
+    dynamic: bool,
+    /// Dynamic only: upstream's `period_duration` taken from an earlier
+    /// representation's fragment durations (seconds, as Python floats).
+    inferred: Option<f64>,
+}
+
 /// Segment numbers, start times and durations (timescale units).
-fn times(address: &Address, duration_ns: Option<u128>) -> Result<Vec<(u64, u64, u64)>> {
+fn times(address: &Address, span: Span) -> Result<Vec<(u64, u64, u64)>> {
+    if span.dynamic {
+        return dynamic_times(address, span);
+    }
+    let duration_ns = span.exact;
     let scale = address.integer("timescale", 1, true)?;
     let pto = address.integer("presentationTimeOffset", 0, false)?;
     let first_number = address.integer("startNumber", 1, false)?;
@@ -512,14 +551,86 @@ fn times(address: &Address, duration_ns: Option<u128>) -> Result<Vec<(u64, u64, 
     Ok(times)
 }
 
+/// Upstream `_parse_mpd_periods` for a dynamic MPD, which it parses like a
+/// static one: `presentationTimeOffset` is ignored, a missing (or zero) `t`
+/// continues the timeline, any time order is kept, a negative repeat (`r="-1"`,
+/// open until the next entry or the Period end) is a single segment, and a
+/// `$Number$` duration template has `ceil(period duration / duration)`
+/// segments, none without a Period duration (`mediaPresentationDuration`,
+/// `Period@duration` or one inferred from an earlier representation's
+/// fragments, see [`Span::inferred`]). The list is upstream's snapshot of the
+/// manifest, not the live edge.
+fn dynamic_times(address: &Address, span: Span) -> Result<Vec<(u64, u64, u64)>> {
+    let scale = address.integer("timescale", 1, true)?;
+    address.integer("presentationTimeOffset", 0, false)?;
+    let first_number = address.integer("startNumber", 1, false)?;
+    let number = |index: usize| {
+        first_number
+            .checked_add(index as u64)
+            .ok_or_else(|| bad("DASH segment number overflow"))
+    };
+    let mut times = Vec::new();
+    if let Some(entries) = &address.timeline {
+        // `segment_time = s.get('t') or segment_time`.
+        let mut current = 0u64;
+        for entry in entries {
+            current = entry.t.filter(|t| *t != 0).unwrap_or(current);
+            // `for _ in range(s.get('r', 0))`: no repeats when negative.
+            let count = if entry.r >= 0 { entry.r as u64 + 1 } else { 1 };
+            if count > LIMIT as u64 || times.len() + count as usize > LIMIT {
+                return Err(bad("DASH fragment limit exceeded"));
+            }
+            for _ in 0..count {
+                times.push((number(times.len())?, current, entry.d));
+                current = current
+                    .checked_add(entry.d)
+                    .ok_or_else(|| bad("DASH timeline overflow"))?;
+            }
+        }
+        return Ok(times);
+    }
+    let segment_duration = address.integer("duration", 0, true)?;
+    if segment_duration == 0 {
+        return Err(bad("DASH template requires duration or timeline"));
+    }
+    let count = match (span.exact, span.inferred) {
+        (Some(exact), _) => ceil(
+            mul(exact, u128::from(scale))?,
+            mul(NS, u128::from(segment_duration))?,
+        )?,
+        // `math.ceil(float_or_none(period_duration, segment_duration))`.
+        (None, Some(seconds)) => {
+            let count = (seconds / (segment_duration as f64 / scale as f64)).ceil();
+            if !count.is_finite() || count < 0.0 || count > LIMIT as f64 {
+                return Err(bad("DASH fragment limit exceeded"));
+            }
+            count as u128
+        }
+        (None, None) => 0,
+    };
+    if count > LIMIT as u128 {
+        return Err(bad("DASH fragment limit exceeded"));
+    }
+    for index in 0..count as usize {
+        let time = (index as u64)
+            .checked_mul(segment_duration)
+            .ok_or_else(|| bad("DASH timeline overflow"))?;
+        times.push((number(index)?, time, segment_duration));
+    }
+    Ok(times)
+}
+
+/// A representation's fragments (an initialization fragment first), and
+/// upstream's `sum(frag['duration'] for frag in r['fragments'])` over its
+/// media fragments when every one has a duration (`None` for none).
 fn plans(
     address: &Address,
     base: &Url,
     explicit_base: bool,
-    duration_ns: Option<u128>,
+    span: Span,
     id: Option<&str>,
     bandwidth: Option<u64>,
-) -> Result<Vec<Fragment>> {
+) -> Result<(Vec<Fragment>, Option<f64>)> {
     if !explicit_base
         && (address
             .initialization
@@ -540,23 +651,37 @@ fn plans(
                 "DASH representation has no explicit direct resource or addressing",
             ));
         }
-        return Ok(vec![Fragment {
-            url: base.clone(),
-            byte_range: None,
-            encryption: None,
-            path: None,
-            duration: None,
-            fragment_count: None,
-        }]);
+        return Ok((
+            vec![Fragment {
+                url: base.clone(),
+                byte_range: None,
+                encryption: None,
+                path: None,
+                duration: None,
+                fragment_count: None,
+            }],
+            None,
+        ));
     }
     let mut fragments = Vec::new();
+    let media_start;
     if address.kind.as_deref() == Some("SegmentTemplate") {
-        let schedule = times(address, duration_ns)?;
         let media = address
             .attrs
             .get("media")
             .filter(|v| !v.is_empty())
             .ok_or_else(|| bad("DASH template has no media URL"))?;
+        // Upstream takes a template without `$Number$` to need a timeline
+        // (`KeyError: 's'`).
+        if span.dynamic
+            && address.timeline.is_none()
+            && !(media.contains("$Number$") || media.contains("$Number%"))
+        {
+            return Err(bad(
+                "dynamic DASH templates without a timeline need a Number token",
+            ));
+        }
+        let schedule = times(address, span)?;
         if let Some(initialization) = address.attrs.get("initialization") {
             if address.initialization.is_some() {
                 return Err(bad("ambiguous DASH initialization"));
@@ -566,6 +691,7 @@ fn plans(
         } else if let Some((source, range)) = &address.initialization {
             fragments.push(fragment(base, source.as_deref(), range.as_deref(), None)?);
         }
+        media_start = fragments.len();
         // Like upstream, initialization is optional; each fragment's duration
         // is `d / timescale` (the constant `duration` without a timeline).
         let scale = address.integer("timescale", 1, true)? as f64;
@@ -589,13 +715,28 @@ fn plans(
         if let Some((source, bytes)) = &address.initialization {
             fragments.push(fragment(base, source.as_deref(), bytes.as_deref(), None)?);
         }
-        let segments = address
+        media_start = fragments.len();
+        let mut segments = address
             .segments
-            .as_ref()
+            .as_deref()
             .filter(|segments| !segments.is_empty())
             .ok_or_else(|| bad("empty DASH SegmentList"))?;
-        let timeline = match address.timeline {
-            Some(_) => Some(times(address, duration_ns)?),
+        let timeline = match &address.timeline {
+            // Upstream gives each entry `r + 1` SegmentURLs (none for a
+            // negative repeat) and drops the rest.
+            Some(entries) if span.dynamic => {
+                let mut timeline = Vec::new();
+                for entry in entries {
+                    let count = usize::try_from(entry.r + 1).unwrap_or(0);
+                    if timeline.len() + count > segments.len() {
+                        return Err(bad("DASH timeline and SegmentList counts disagree"));
+                    }
+                    timeline.extend(std::iter::repeat_n((0, 0, entry.d), count));
+                }
+                segments = &segments[..timeline.len()];
+                Some(timeline)
+            }
+            Some(_) => Some(times(address, span)?),
             None => None,
         };
         if timeline
@@ -635,7 +776,17 @@ fn plans(
     if fragments.len() > LIMIT {
         return Err(bad("DASH fragment limit exceeded"));
     }
-    Ok(fragments)
+    // `try_get(..., float)`: a missing duration (`KeyError`/`TypeError`) or
+    // no media fragments (`sum` is the integer 0) give `None`.
+    let media = &fragments[media_start..];
+    let seconds = (!media.is_empty())
+        .then(|| {
+            media
+                .iter()
+                .try_fold(0.0, |total, fragment| Some(total + fragment.duration?))
+        })
+        .flatten();
+    Ok((fragments, seconds))
 }
 
 #[cfg(test)]
@@ -749,10 +900,23 @@ impl Periods {
         period: Node<'_, '_>,
         manifest: &Url,
         (root_base, root_explicit): (&Url, bool),
-        duration_ns: Option<u128>,
+        mut span: Span,
     ) -> Result<()> {
         let (period_base, period_explicit) = base_url(period, root_base, root_explicit)?;
-        let address = Address::default().inherit(root)?.inherit(period)?;
+        let address = Address {
+            dynamic: span.dynamic,
+            ..Address::default()
+        }
+        .inherit(root)?
+        .inherit(period)?;
+        // Upstream `if not period_duration: period_duration = try_get(...)`
+        // after each fragmented representation (dynamic MPDs only: static
+        // ones need a known duration).
+        let infer = |span: &mut Span, seconds: Option<f64>| {
+            if span.dynamic && span.exact.is_none() && span.inferred.is_none() {
+                span.inferred = seconds;
+            }
+        };
         let mut representations = 0;
         for adaptation in children(period, "AdaptationSet") {
             let (adaptation_base, adaptation_explicit) =
@@ -799,6 +963,25 @@ impl Periods {
                             manifest
                         };
                         *self.stream_numbers.entry(key.to_string()).or_default() += 1;
+                        // Storyboards are not formats here, but their
+                        // fragments can still give a dynamic Period its
+                        // duration (an unplannable one gives none).
+                        if address.kind.is_some() {
+                            let bandwidth = attrs
+                                .get("bandwidth")
+                                .and_then(|value| positive(value).ok());
+                            let seconds = plans(
+                                &address,
+                                &base,
+                                explicit,
+                                span,
+                                representation.attribute("id"),
+                                bandwidth,
+                            )
+                            .ok()
+                            .and_then(|(_, seconds)| seconds);
+                            infer(&mut span, seconds);
+                        }
                         continue;
                     }
                     _ => match &codecs {
@@ -847,14 +1030,15 @@ impl Periods {
                         let bandwidth = attrs
                             .get("bandwidth")
                             .and_then(|value| positive(value).ok());
-                        let fragments = plans(
+                        let (fragments, seconds) = plans(
                             &address,
                             &base,
                             explicit,
-                            duration_ns,
+                            span,
                             representation.attribute("id"),
                             bandwidth,
                         )?;
+                        infer(&mut span, seconds);
                         let mut extra = text_extra(
                             manifest,
                             Some(if explicit {
@@ -903,14 +1087,15 @@ impl Periods {
                         })
                         .transpose()
                 };
-                let fragments = plans(
+                let (fragments, seconds) = plans(
                     &address,
                     &base,
                     explicit,
-                    duration_ns,
+                    span,
                     representation.attribute("id"),
                     bandwidth,
                 )?;
+                infer(&mut span, seconds);
                 // "Assuming direct URL to unfragmented media": upstream's `url`
                 // is the resource itself, without a protocol or fragments.
                 let (direct, fragments) = if address.kind.is_none() {
@@ -1042,6 +1227,21 @@ pub(crate) fn parse_with_subtitles(
     text: &str,
     manifest: &Url,
 ) -> Result<(Vec<VideoFormat>, ManifestSubtitles)> {
+    let parsed = parse_manifest(text, manifest)?;
+    Ok((parsed.formats, parsed.subtitles))
+}
+
+/// A parsed MPD.
+pub(crate) struct Manifest {
+    pub formats: Vec<VideoFormat>,
+    pub subtitles: ManifestSubtitles,
+    /// `type="dynamic"` (a live presentation).
+    pub dynamic: bool,
+}
+
+/// [`parse_with_subtitles`], also telling whether the MPD is dynamic. With
+/// `--ignore-dynamic-mpd` a dynamic MPD has no formats or subtitles.
+pub(crate) fn parse_manifest(text: &str, manifest: &Url) -> Result<Manifest> {
     if !matches!(manifest.scheme(), "http" | "https")
         || manifest.host_str().is_none()
         || manifest.fragment().is_some()
@@ -1073,8 +1273,18 @@ pub(crate) fn parse_with_subtitles(
     {
         return Err(bad("expected a DASH MPD root"));
     }
-    if root.attribute("type").is_some_and(|kind| kind != "static") {
-        return Err(bad("dynamic DASH is unsupported"));
+    let dynamic = match root.attribute("type") {
+        None | Some("static") => false,
+        Some("dynamic") => true,
+        Some(_) => return Err(bad("unsupported DASH MPD type")),
+    };
+    // `if not self.get_param('dynamic_mpd', True)`: no Periods.
+    if dynamic && !DYNAMIC_MPD.load(Ordering::Relaxed) {
+        return Ok(Manifest {
+            formats: Vec::new(),
+            subtitles: Vec::new(),
+            dynamic,
+        });
     }
     for node in root.descendants().filter(Node::is_element) {
         if node.ancestors().take(66).count() > 65 {
@@ -1110,6 +1320,16 @@ pub(crate) fn parse_with_subtitles(
         {
             if node.tag_name().namespace() != root.tag_name().namespace() {
                 return Err(bad("unsupported DASH extension namespace"));
+            }
+            continue;
+        }
+        // A dynamic MPD's refresh locations only matter to its refetches,
+        // which upstream leaves to FFmpeg; it never reads them.
+        if dynamic && matches!(node.tag_name().name(), "Location" | "PatchLocation") {
+            if node.tag_name().namespace() != root.tag_name().namespace()
+                || node.parent_element() != Some(root)
+            {
+                return Err(bad("misplaced DASH location"));
             }
             continue;
         }
@@ -1170,17 +1390,42 @@ pub(crate) fn parse_with_subtitles(
     if periods.is_empty() {
         return Err(bad("DASH requires a Period"));
     }
-    let durations = period_durations(root, &periods)?;
+    let durations = if dynamic {
+        // Upstream `parse_duration(period.get('duration')) or mpd_duration`
+        // (a zero duration is unknown).
+        let total = root
+            .attribute("mediaPresentationDuration")
+            .map(duration)
+            .transpose()?
+            .filter(|total| *total > 0);
+        periods
+            .iter()
+            .map(|period| {
+                Ok(period
+                    .attribute("duration")
+                    .map(duration)
+                    .transpose()?
+                    .filter(|length| *length > 0)
+                    .or(total))
+            })
+            .collect::<Result<Vec<_>>>()?
+    } else {
+        period_durations(root, &periods)?
+    };
     let (root_base, root_explicit) = base_url(root, manifest, false)?;
     let mut parsed = Periods::default();
-    for (period, duration_ns) in periods.into_iter().zip(durations) {
+    for (period, exact) in periods.into_iter().zip(durations) {
         let earlier = parsed.subtitles.len();
         parsed.period(
             root,
             period,
             manifest,
             (&root_base, root_explicit),
-            duration_ns,
+            Span {
+                exact,
+                dynamic,
+                inferred: None,
+            },
         )?;
         if earlier > 0 && parsed.subtitles.len() > earlier {
             crate::screen::extractor_warning_once(&format!(
@@ -1194,7 +1439,11 @@ pub(crate) fn parse_with_subtitles(
     if parsed.formats.is_empty() {
         return Err(bad("DASH has no supported representations"));
     }
-    Ok((parsed.formats, parsed.subtitles))
+    Ok(Manifest {
+        formats: parsed.formats,
+        subtitles: parsed.subtitles,
+        dynamic,
+    })
 }
 
 #[cfg(test)]
@@ -1476,7 +1725,12 @@ mod tests {
     fn unsupported_or_ambiguous_manifests_fail_before_producing_any_formats() {
         let text = template("");
         for changed in [
-            text.replace("type=\"static\"", "type=\"dynamic\""),
+            text.replace("type=\"static\"", "type=\"event\""),
+            // A static MPD's refresh location is not followed.
+            text.replace(
+                "<Period>",
+                "<Location>https://example.com/next.mpd</Location><Period>",
+            ),
             // The first Period's end is unknown, so its template has no count.
             text.replace("</MPD>", "<Period/></MPD>"),
             text.replace("<Period>", "<Period><ContentProtection/>"),
@@ -1944,5 +2198,193 @@ mod tests {
         );
         assert!(parse(&text(distinct(200, 0), distinct(200, 200)), &manifest()).is_err());
         assert!(parse(&text(distinct(257, 0), String::new()), &manifest()).is_err());
+    }
+
+    fn dynamic(root: &str, body: &str) -> String {
+        format!(
+            "<MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" type=\"dynamic\" availabilityStartTime=\"2024-01-01T00:00:00Z\" {root}>{body}</MPD>"
+        )
+    }
+    fn video(template: &str) -> String {
+        format!(
+            "<AdaptationSet mimeType=\"video/mp4\" codecs=\"avc1.640028\">{template}<Representation id=\"v\" bandwidth=\"1000\"/></AdaptationSet>"
+        )
+    }
+    fn audio(template: &str) -> String {
+        format!(
+            "<AdaptationSet mimeType=\"audio/mp4\" codecs=\"mp4a.40.2\">{template}<Representation id=\"a\" bandwidth=\"1000\"/></AdaptationSet>"
+        )
+    }
+    const NUMBER: &str = "<SegmentTemplate timescale=\"10\" duration=\"20\" initialization=\"init-$RepresentationID$.mp4\" media=\"$RepresentationID$-$Number$.m4s\"/>";
+    #[test]
+    fn dynamic_number_templates_count_only_a_known_period_duration() {
+        let parsed = parse_manifest(
+            &dynamic("", &format!("<Period>{}</Period>", video(NUMBER))),
+            &manifest(),
+        )
+        .unwrap();
+        assert!(parsed.dynamic);
+        // Upstream: `ceil(float_or_none(None, d, default=0))` segments.
+        assert_eq!(paths(&parsed.formats[0]), ["init-v.mp4"]);
+        // `parse_duration(Period@duration) or mediaPresentationDuration`.
+        for (root, period) in [
+            ("mediaPresentationDuration=\"PT5S\"", ""),
+            ("", "duration=\"PT5S\""),
+            ("mediaPresentationDuration=\"PT5S\"", "duration=\"PT0S\""),
+        ] {
+            let formats = parse(
+                &dynamic(
+                    root,
+                    &format!("<Period {period}>{}</Period>", video(NUMBER)),
+                ),
+                &manifest(),
+            )
+            .unwrap();
+            assert_eq!(
+                paths(&formats[0]),
+                ["init-v.mp4", "v-1.m4s", "v-2.m4s", "v-3.m4s"],
+                "{root} {period}"
+            );
+        }
+        // Static MPDs keep their exact Period bounds.
+        assert!(parse(&dynamic("", "").replace("dynamic", "static"), &manifest()).is_err());
+    }
+    #[test]
+    fn dynamic_timelines_ignore_offsets_and_keep_one_segment_per_negative_repeat() {
+        let timeline = "<SegmentTemplate timescale=\"10\" presentationTimeOffset=\"100\" startNumber=\"5\" media=\"$Time$.m4s\"><SegmentTimeline><S t=\"40\" d=\"10\" r=\"1\"/><S d=\"20\" r=\"-1\"/><S t=\"100\" d=\"10\"/><S t=\"0\" d=\"5\" r=\"-1\"/></SegmentTimeline></SegmentTemplate>";
+        let text = dynamic("", &format!("<Period>{}</Period>", video(timeline)));
+        let formats = parse(&text, &manifest()).unwrap();
+        assert_eq!(
+            paths(&formats[0]),
+            ["40.m4s", "50.m4s", "60.m4s", "100.m4s", "110.m4s"]
+        );
+        let durations: Vec<_> = formats[0].fragments.iter().map(|f| f.duration).collect();
+        assert_eq!(
+            durations,
+            [Some(1.0), Some(1.0), Some(2.0), Some(1.0), Some(0.5)]
+        );
+        // The same timeline is out of order for a static presentation.
+        let fixed = text.replace(
+            "type=\"dynamic\"",
+            "type=\"static\" mediaPresentationDuration=\"PT20S\"",
+        );
+        assert!(parse(&fixed, &manifest()).is_err());
+    }
+    #[test]
+    fn dynamic_period_durations_are_inferred_from_earlier_fragments_per_period() {
+        let timeline = "<SegmentTemplate timescale=\"10\" media=\"$RepresentationID$-$Time$.m4s\"><SegmentTimeline><S d=\"20\" r=\"1\"/><S d=\"15\"/></SegmentTimeline></SegmentTemplate>";
+        // 5.5 seconds of video: ceil(5.5 / 2) audio segments.
+        let text = dynamic(
+            "",
+            &format!(
+                "<Period id=\"1\">{}{}</Period><Period id=\"2\">{}</Period>",
+                video(timeline),
+                audio(NUMBER),
+                // Unequal formats, which `_merge_mpd_periods` keeps apart.
+                audio(NUMBER).replace("id=\"a\" bandwidth=\"1000\"", "id=\"b\" bandwidth=\"2000\"")
+            ),
+        );
+        let formats = parse(&text, &manifest()).unwrap();
+        assert_eq!(
+            paths(&formats[1]),
+            ["init-a.mp4", "a-1.m4s", "a-2.m4s", "a-3.m4s"]
+        );
+        // Each Period starts unknown again.
+        assert_eq!(paths(&formats[2]), ["init-b.mp4"]);
+        // An earlier representation only: the audio comes first here.
+        let text = dynamic(
+            "",
+            &format!("<Period>{}{}</Period>", audio(NUMBER), video(timeline)),
+        );
+        assert_eq!(
+            paths(&parse(&text, &manifest()).unwrap()[0]),
+            ["init-a.mp4"]
+        );
+        // List segments without durations infer nothing (`KeyError`).
+        let list = "<SegmentList><SegmentURL media=\"l1.m4s\"/></SegmentList>";
+        let text = dynamic(
+            "",
+            &format!("<Period>{}{}</Period>", video(list), audio(NUMBER)),
+        );
+        assert_eq!(
+            paths(&parse(&text, &manifest()).unwrap()[1]),
+            ["init-a.mp4"]
+        );
+        // Storyboards are not formats here, but upstream reads their fragments.
+        let storyboard = format!(
+            "<AdaptationSet mimeType=\"image/jpeg\">{timeline}<Representation id=\"i\" bandwidth=\"1\"/></AdaptationSet>"
+        );
+        let text = dynamic(
+            "",
+            &format!("<Period>{storyboard}{}</Period>", audio(NUMBER)),
+        );
+        let formats = parse(&text, &manifest()).unwrap();
+        assert_eq!(formats.len(), 1);
+        assert_eq!(paths(&formats[0]).len(), 4);
+    }
+    #[test]
+    fn dynamic_segment_lists_take_one_url_per_repeat_and_drop_the_rest() {
+        let list = |urls: usize| {
+            format!(
+                "<SegmentList timescale=\"10\"><SegmentTimeline><S t=\"50\" d=\"10\" r=\"1\"/><S d=\"20\" r=\"-1\"/><S d=\"5\"/></SegmentTimeline>{}</SegmentList>",
+                (1..=urls)
+                    .map(|index| format!("<SegmentURL media=\"l{index}.m4s\"/>"))
+                    .collect::<String>()
+            )
+        };
+        let formats = parse(
+            &dynamic("", &format!("<Period>{}</Period>", video(&list(4)))),
+            &manifest(),
+        )
+        .unwrap();
+        assert_eq!(paths(&formats[0]), ["l1.m4s", "l2.m4s", "l3.m4s"]);
+        let durations: Vec<_> = formats[0].fragments.iter().map(|f| f.duration).collect();
+        assert_eq!(durations, [Some(1.0), Some(1.0), Some(0.5)]);
+        // Upstream indexes past the URLs (`IndexError`).
+        assert!(
+            parse(
+                &dynamic("", &format!("<Period>{}</Period>", video(&list(2)))),
+                &manifest()
+            )
+            .is_err()
+        );
+    }
+    #[test]
+    fn dynamic_only_location_and_availability_hints_are_ignored() {
+        let hinted = NUMBER.replace(
+            "duration=",
+            "availabilityTimeOffset=\"1.5\" availabilityTimeComplete=\"false\" duration=",
+        );
+        let body = format!(
+            "<Location>https://example.com/next.mpd</Location><PatchLocation>patch.mpp</PatchLocation><Period duration=\"PT2S\">{}</Period>",
+            video(&hinted)
+        );
+        let formats = parse(&dynamic("", &body), &manifest()).unwrap();
+        assert_eq!(paths(&formats[0]), ["init-v.mp4", "v-1.m4s"]);
+        let fixed = dynamic("", &body).replace("type=\"dynamic\"", "type=\"static\"");
+        assert!(parse(&fixed, &manifest()).is_err());
+        assert!(parse(
+            &fixed.replace("<Location>https://example.com/next.mpd</Location><PatchLocation>patch.mpp</PatchLocation>", ""),
+            &manifest()
+        )
+        .is_err());
+        // A Location must be the MPD's.
+        let misplaced = dynamic(
+            "",
+            &format!(
+                "<Period><Location>next.mpd</Location>{}</Period>",
+                video(NUMBER)
+            ),
+        );
+        assert!(parse(&misplaced, &manifest()).is_err());
+        // Without a timeline upstream needs `$Number$` (`KeyError: 's'`).
+        let time = NUMBER.replace("$Number$", "$Time$");
+        assert!(
+            parse(
+                &dynamic("", &format!("<Period>{}</Period>", video(&time))),
+                &manifest()
+            )
+            .is_err()
+        );
     }
 }

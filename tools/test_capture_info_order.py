@@ -12,6 +12,16 @@ class InfoOrderCaptureTests(unittest.TestCase):
         self.assertEqual(normalize(line, origin),
                          '{"url": "{ORIGIN}/a", "webpage_url_domain": "{HOST}", "_type": "video"}')
 
+    def test_live_results_replace_only_their_local_title_time(self):
+        origin = 'http://127.0.0.1:4321'
+        line = ('{"title": "live 2026-10-31 11:21", "live_status": "is_live", '
+                '"_filename": "live 2026-10-31 11_21 [live].mp4"}')
+        self.assertEqual(normalize(line, origin),
+                         '{"title": "live {DATE} {HH}:{MM}", "live_status": "is_live", '
+                         '"_filename": "live {DATE} {HH}_{MM} [live].mp4"}')
+        static = '{"title": "clip 2026-10-31 11:21", "live_status": null}'
+        self.assertEqual(normalize(static, origin), static)
+
     def test_headers_and_saved_cases_cover_every_served_case(self):
         self.assertEqual(content_type('plain.m3u8'), 'text/plain')
         self.assertEqual(content_type('master.m3u8'), 'application/vnd.apple.mpegurl')

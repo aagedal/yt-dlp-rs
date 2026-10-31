@@ -2741,7 +2741,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         } else {
             None
         })
-        .with_live_from_start(args.live_from_start);
+        .with_live_from_start(args.live_from_start)
+        .with_dynamic_mpd(!args.ignore_dynamic_mpd);
     let output_paths = yt_dlp_rs::output::parse_paths(&args.paths)?;
     let template_options = TemplateOptions {
         na_placeholder: args.output_na_placeholder,

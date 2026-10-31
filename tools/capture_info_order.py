@@ -5,7 +5,9 @@ Development only: serves tests/fixtures/info_order/site on 127.0.0.1 with
 fixed headers (HEADERS below) and runs the pinned upstream checkout's
 `yt_dlp -j --user-agent fixture` (and `-J`) for each case. Lines are saved exactly,
 except that the origin becomes {ORIGIN} (its host {HOST}) and the volatile `epoch` and
-`_version` (upstream's release) are removed. The Rust test
+`_version` (upstream's release) are removed. A live result's title carries the local
+time (`process_video_result`), so its `YYYY-MM-DD HH:MM` (also in the sanitized
+`HH_MM` file names) becomes `{DATE} {HH}:{MM}` (`{HH}_{MM}`). The Rust test
 tests/info_order.rs serves the same files with the same headers and compares
 native output with these lines.
 """
@@ -37,7 +39,8 @@ CONTENT_TYPES = {
 }
 CASES = ['clip.mp4', 'clip.qqq', 'one.html', 'rich.html', 'three.html', 'master.m3u8',
          'video.m3u8', 'plain.m3u8', 'segmented.mpd', 'text.mpd', 'og.html', 'twitter.html',
-         'flow.html', 'cine.html', 'two.html', 'refresh.html', 'jw.html', 'jwaudio.html', 'vjs.html', 'vjs2.html', 'ld.html', 'oghls.html', 'ogdash.html', 'jwhls.html', 'vjshls.html', 'vjsmix.html', 'feed.xml', 'twohls.html', 'periods.mpd', 'periods-unmerged.mpd', 'periods-direct.mpd', 'drm.mpd']
+         'flow.html', 'cine.html', 'two.html', 'refresh.html', 'jw.html', 'jwaudio.html', 'vjs.html', 'vjs2.html', 'ld.html', 'oghls.html', 'ogdash.html', 'jwhls.html', 'vjshls.html', 'vjsmix.html', 'feed.xml', 'twohls.html', 'periods.mpd', 'periods-unmerged.mpd', 'periods-direct.mpd', 'drm.mpd', 'dynamic.mpd',
+         'dynamic-timeline.mpd']
 
 
 def content_type(name):
@@ -47,6 +50,8 @@ def content_type(name):
 def normalize(line, origin):
     line = line.replace(origin, '{ORIGIN}').replace(origin.split('//', 1)[1], '{HOST}')
     line = re.sub(r'"epoch": \d+, ', '', line)
+    if '"live_status": "is_live"' in line:
+        line = re.sub(r'\d{4}-\d{2}-\d{2} \d{2}([:_])\d{2}', r'{DATE} {HH}\1{MM}', line)
     return re.sub(r', "_version": \{[^{}]*\}', '', line)
 
 

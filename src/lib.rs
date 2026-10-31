@@ -3994,6 +3994,14 @@ impl YoutubeDl {
         self
     }
 
+    /// `--allow-dynamic-mpd` (the default) or `--ignore-dynamic-mpd`
+    /// (`dynamic_mpd`): whether dynamic (live) DASH manifests give formats.
+    /// Like upstream's parameter, this applies to every extraction.
+    pub fn with_dynamic_mpd(self, process: bool) -> Self {
+        dash::set_dynamic_mpd(process);
+        self
+    }
+
     /// `--live-from-start`: live streams keep their title and default format.
     pub fn with_live_from_start(mut self, from_start: bool) -> Self {
         self.live_from_start = from_start;
@@ -4377,7 +4385,9 @@ impl YoutubeDl {
                         true,
                         None,
                     )?,
-                    ManifestKind::Dash => extractor::dash::from_response(response, webpage, true)?,
+                    ManifestKind::Dash => {
+                        extractor::dash::from_generic_response(response, webpage, true)?
+                    }
                 }
                 .ok_or_else(|| Error::UnsupportedManifest("the manifest has no media".into()))?
             }

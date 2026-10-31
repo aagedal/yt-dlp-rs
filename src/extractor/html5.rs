@@ -693,7 +693,7 @@ impl Extractor for GenericHttp {
                 None,
                 Some(format!("[generic] {id}: Extracting information")),
             );
-            let manifest = dash::from_response(response, url, dash_path);
+            let manifest = dash::from_generic_response(response, url, dash_path);
             crate::screen::clear_page();
             let manifest = manifest?;
             if manifest.is_some() && !media_type {
