@@ -16,8 +16,9 @@ const IFRAME: &str = "https://video.matchtv.ru/iframe/channel/106";
 
 static VALID_URL: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [
-        Regex::new(r"^https?://matchtv\.ru/on-air/?(?:$|[?#])").unwrap(),
-        Regex::new(r"^https?://video\.matchtv\.ru/iframe/channel/106/?(?:$|[?#])").unwrap(),
+        crate::extractor::url_regex(r"^https?://matchtv\.ru/on-air/?(?:$|[?#])").unwrap(),
+        crate::extractor::url_regex(r"^https?://video\.matchtv\.ru/iframe/channel/106/?(?:$|[?#])")
+            .unwrap(),
     ]
 });
 static CONFIG: LazyLock<Regex> =

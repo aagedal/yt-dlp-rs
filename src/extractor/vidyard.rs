@@ -31,7 +31,7 @@ static VALID_URLS: LazyLock<[Regex; 3]> = LazyLock::new(|| {
         r"^https?://(?:embed|share)\.vidyard\.com/share/(?P<id>[\w-]+)",
         r"^https?://play\.vidyard\.com/(?:player/)?(?P<id>[\w-]+)",
     ]
-    .map(|pattern| Regex::new(pattern).unwrap())
+    .map(|pattern| crate::extractor::url_regex(pattern).unwrap())
 });
 
 /// `_match_id`'s ID of a suitable URL.

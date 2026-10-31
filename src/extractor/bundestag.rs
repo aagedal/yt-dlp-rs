@@ -16,9 +16,11 @@ const NAME: &str = "Bundestag";
 
 static VALID_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [
-        Regex::new(r"^https?://dbtg\.tv/[cf]vid/(?P<id>\d+)").unwrap(),
-        Regex::new(r"^https?://www\.bundestag\.de/mediathek/?\?(?:[^#]+&)?videoid=(?P<id>\d+)")
-            .unwrap(),
+        crate::extractor::url_regex(r"^https?://dbtg\.tv/[cf]vid/(?P<id>\d+)").unwrap(),
+        crate::extractor::url_regex(
+            r"^https?://www\.bundestag\.de/mediathek/?\?(?:[^#]+&)?videoid=(?P<id>\d+)",
+        )
+        .unwrap(),
     ]
 });
 static SHARE_AUDIO: LazyLock<Regex> = LazyLock::new(|| {

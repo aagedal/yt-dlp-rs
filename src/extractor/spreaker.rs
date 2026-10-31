@@ -17,12 +17,14 @@ const SHOW_NAME: &str = "SpreakerShow";
 
 static VALID_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [
-        Regex::new(
+        crate::extractor::url_regex(
             r"^https?://api\.spreaker\.com/(?:(?:download/)?episode|v2/episodes)/(?P<id>\d+)",
         )
         .unwrap(),
-        Regex::new(r"^https?://(?:www\.)?spreaker\.com/episode/[^#?/]*?(?P<id>\d+)/?(?:[?#]|$)")
-            .unwrap(),
+        crate::extractor::url_regex(
+            r"^https?://(?:www\.)?spreaker\.com/episode/[^#?/]*?(?P<id>\d+)/?(?:[?#]|$)",
+        )
+        .unwrap(),
     ]
 });
 static SHOW_URLS: LazyLock<[Regex; 3]> = LazyLock::new(|| {

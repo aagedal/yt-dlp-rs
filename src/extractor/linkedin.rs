@@ -16,12 +16,14 @@ const NAME: &str = "LinkedIn";
 
 static VALID_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [
-        Regex::new(
+        crate::extractor::url_regex(
             r"^https?://(?:www\.)?linkedin\.com/posts/[^/?#]+-(?P<id>\d+)-\w{4}/?(?:[?#]|$)",
         )
         .unwrap(),
-        Regex::new(r"^https?://(?:www\.)?linkedin\.com/feed/update/urn:li:activity:(?P<id>\d+)")
-            .unwrap(),
+        crate::extractor::url_regex(
+            r"^https?://(?:www\.)?linkedin\.com/feed/update/urn:li:activity:(?P<id>\d+)",
+        )
+        .unwrap(),
     ]
 });
 static VIDEO: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(<video[^>]+>)").unwrap());

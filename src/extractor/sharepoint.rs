@@ -16,11 +16,11 @@ const NAME: &str = "SharePoint";
 
 static VALID_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [
-        Regex::new(
+        crate::extractor::url_regex(
             r"^https?://[\w-]+\.sharepoint\.com/:v:/[a-z]/(?:[^/?#]+/)*(?P<id>[^/?#]{46})/?(?:$|[?#])",
         )
         .unwrap(),
-        Regex::new(r"^https?://[\w-]+\.sharepoint\.com/(?:[^/?#]+/)*stream\.aspx\?(?:[^#]+&)?id=(?P<id>[^&#]+)")
+        crate::extractor::url_regex(r"^https?://[\w-]+\.sharepoint\.com/(?:[^/?#]+/)*stream\.aspx\?(?:[^#]+&)?id=(?P<id>[^&#]+)")
             .unwrap(),
     ]
 });
