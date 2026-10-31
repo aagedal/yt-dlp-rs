@@ -21,6 +21,7 @@ icu_normalizer = "2.3"
 icu_properties = "2.3"
 percent-encoding = "2.3"
 regex = "1"
+ring = "0.17"
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls", "cookies", "socks"] }
 roxmltree = "0.21"
 rustls = { version = "0.23", default-features = false, features = ["ring", "std"] }

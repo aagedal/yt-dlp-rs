@@ -1431,7 +1431,10 @@ fn download_initial_webpage(
     if super::args::contains("player_skip", "webpage") {
         return Ok(None);
     }
-    let mut url = Url::parse(&format!("https://www.youtube.com/watch?v={video_id}"))?;
+    let mut url = Url::parse(&format!(
+        "{}//www.youtube.com/watch?v={video_id}",
+        super::super::http_scheme()
+    ))?;
     {
         let mut query = url.query_pairs_mut();
         query.append_pair("bpctr", "9999999999");

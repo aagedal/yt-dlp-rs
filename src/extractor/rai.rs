@@ -420,8 +420,13 @@ struct Relinker {
 /// The relinker's XML, with `fix_cdata` and the `Rai` User-Agent.
 fn download_relinker(client: &Client, url: &Url, name: &'static str, id: &str) -> Result<String> {
     crate::screen::screen(&format!("[{name}] {id}: Downloading XML metadata"));
-    let mut response =
-        super::direct::request_with_headers(client, url, None, &[("User-Agent", "Rai")])?;
+    // `headers={**self.geo_verification_headers(), 'User-Agent': 'Rai'}`.
+    let mut response = super::direct::request_with_headers(
+        &super::geo_verification_client(client),
+        url,
+        None,
+        &[("User-Agent", "Rai")],
+    )?;
     let mut body = Vec::new();
     response
         .read_to_end(&mut body)

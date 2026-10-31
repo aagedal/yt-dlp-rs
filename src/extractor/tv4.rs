@@ -136,9 +136,8 @@ impl Extractor for Tv4 {
             .filter(|metadata| metadata.is_object())
             .cloned()
             .unwrap_or_else(|| Value::Object(Default::default()));
-        // `headers=self.geo_verification_headers()`: empty without
-        // `--geo-verification-proxy`, which this port does not apply.
-        let play = call_api(client, "play", &id, &[])?;
+        // `headers=self.geo_verification_headers()`.
+        let play = call_api(&super::geo_verification_client(client), "play", &id, &[])?;
         let item = play
             .get("playbackItem")
             .ok_or_else(|| key_error(&id, "playbackItem"))?;

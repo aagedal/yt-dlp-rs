@@ -1,5 +1,7 @@
 //! Validated global HTTP defaults, separate from extractor-owned request headers.
+mod legacy_tls;
 mod proxy;
+mod socks4_relay;
 use crate::{CookieJar, Error, Result};
 pub(crate) use proxy::ProxyConfig;
 use reqwest::blocking::ClientBuilder;
@@ -32,6 +34,13 @@ pub struct HttpOptions {
     pub client_certificate_password: Option<String>,
     /// `--print-traffic`: report the HTTP bytes sent and response headers.
     pub print_traffic: bool,
+    /// `--geo-verification-proxy`: the proxy of the requests upstream sends
+    /// with `geo_verification_headers()` (`Ytdl-request-proxy`, which
+    /// overrides every other proxy setting).
+    pub geo_verification_proxy: Option<String>,
+    /// `--legacy-server-connect`: also offer TLS 1.2 CBC cipher suites
+    /// (upstream's OpenSSL `DEFAULT` ciphers).
+    pub legacy_server_connect: bool,
 }
 
 /// Connection policy shared by the normal and bounded player clients.
@@ -42,6 +51,10 @@ pub(crate) struct TransportConfig {
     pub(crate) insecure: bool,
     pub(crate) source_address: Option<IpAddr>,
     identity: Option<reqwest::Identity>,
+    /// The identity's decrypted PEM, for [`Self::legacy`]'s own TLS setup.
+    identity_pem: Option<Vec<u8>>,
+    /// `--legacy-server-connect`: also offer CBC cipher suites.
+    pub(crate) legacy: bool,
 }
 
 impl From<ProxyConfig> for TransportConfig {
@@ -57,7 +70,84 @@ impl From<ProxyConfig> for TransportConfig {
 /// the connect and to each read like its socket timeout.
 pub(crate) const DEFAULT_SOCKET_TIMEOUT: Duration = Duration::from_secs(20);
 
+/// `--no-check-certificates` for a preconfigured Rustls client.
+#[derive(Debug)]
+struct AcceptAnyCertificate(Arc<rustls::crypto::CryptoProvider>);
+
+impl rustls::client::danger::ServerCertVerifier for AcceptAnyCertificate {
+    fn verify_server_cert(
+        &self,
+        _: &rustls::pki_types::CertificateDer<'_>,
+        _: &[rustls::pki_types::CertificateDer<'_>],
+        _: &rustls::pki_types::ServerName<'_>,
+        _: &[u8],
+        _: rustls::pki_types::UnixTime,
+    ) -> std::result::Result<rustls::client::danger::ServerCertVerified, rustls::Error> {
+        Ok(rustls::client::danger::ServerCertVerified::assertion())
+    }
+
+    fn verify_tls12_signature(
+        &self,
+        _: &[u8],
+        _: &rustls::pki_types::CertificateDer<'_>,
+        _: &rustls::DigitallySignedStruct,
+    ) -> std::result::Result<rustls::client::danger::HandshakeSignatureValid, rustls::Error> {
+        Ok(rustls::client::danger::HandshakeSignatureValid::assertion())
+    }
+
+    fn verify_tls13_signature(
+        &self,
+        _: &[u8],
+        _: &rustls::pki_types::CertificateDer<'_>,
+        _: &rustls::DigitallySignedStruct,
+    ) -> std::result::Result<rustls::client::danger::HandshakeSignatureValid, rustls::Error> {
+        Ok(rustls::client::danger::HandshakeSignatureValid::assertion())
+    }
+
+    fn supported_verify_schemes(&self) -> Vec<rustls::SignatureScheme> {
+        self.0.signature_verification_algorithms.supported_schemes()
+    }
+}
+
 impl TransportConfig {
+    /// `--legacy-server-connect`'s Rustls client: the default suites and
+    /// CBC ones, with this configuration's certificate policy and identity
+    /// (reqwest's own options do not apply to a preconfigured client).
+    fn legacy_tls(&self) -> Result<rustls::ClientConfig> {
+        use rustls::pki_types::{CertificateDer, PrivateKeyDer, pem::PemObject};
+        let provider = legacy_tls::provider();
+        let builder = rustls::ClientConfig::builder_with_provider(provider.clone())
+            .with_protocol_versions(&[&rustls::version::TLS13, &rustls::version::TLS12])
+            .map_err(|_| error("unsupported TLS configuration"))?;
+        let builder = if self.insecure {
+            builder
+                .dangerous()
+                .with_custom_certificate_verifier(Arc::new(AcceptAnyCertificate(provider)))
+        } else {
+            let roots = rustls::RootCertStore {
+                roots: webpki_roots::TLS_SERVER_ROOTS.to_vec(),
+            };
+            builder.with_root_certificates(roots)
+        };
+        let mut config = match &self.identity_pem {
+            Some(pem) => {
+                let certificates: Vec<CertificateDer<'static>> =
+                    CertificateDer::pem_slice_iter(pem)
+                        .collect::<std::result::Result<_, _>>()
+                        .map_err(|_| error("invalid client certificate PEM"))?;
+                let key = PrivateKeyDer::from_pem_slice(pem)
+                    .map_err(|_| error("invalid client certificate key PEM"))?;
+                builder
+                    .with_client_auth_cert(certificates, key)
+                    .map_err(|_| error("unusable client certificate"))?
+            }
+            None => builder.with_no_client_auth(),
+        };
+        // Upstream sends ALPN `http/1.1`, like reqwest's HTTP/1-only client.
+        config.alpn_protocols = vec![b"http/1.1".to_vec()];
+        Ok(config)
+    }
+
     /// The socket timeout: `--socket-timeout`, else upstream's default.
     pub(crate) fn socket_timeout(&self) -> Duration {
         self.timeout.unwrap_or(DEFAULT_SOCKET_TIMEOUT)
@@ -79,7 +169,9 @@ impl TransportConfig {
         if let Some(address) = self.source_address {
             builder = builder.local_address(address);
         }
-        if let Some(identity) = &self.identity {
+        if self.legacy {
+            builder = builder.use_preconfigured_tls(self.legacy_tls()?);
+        } else if let Some(identity) = &self.identity {
             builder = builder.identity(identity.clone());
         }
         Ok(builder)
@@ -283,12 +375,14 @@ impl HttpOptions {
     pub fn validate(&self) -> Result<()> {
         self.header_map()?;
         self.transport_config()?;
+        self.geo_transport_config()?;
         Ok(())
     }
 
     /// Upstream `client_certificate*`: the certificate file (which may hold
-    /// the key) plus an optional separate key file, as a TLS client identity.
-    fn client_identity(&self) -> Result<Option<reqwest::Identity>> {
+    /// the key) plus an optional separate key file, as a TLS client identity
+    /// and its decrypted PEM.
+    fn client_identity(&self) -> Result<Option<(reqwest::Identity, Vec<u8>)>> {
         let Some(certificate) = &self.client_certificate else {
             if self.client_certificate_key.is_some() || self.client_certificate_password.is_some() {
                 return Err(error(
@@ -307,9 +401,10 @@ impl HttpOptions {
             pem.extend(read(key)?);
         }
         let pem = decrypt_keys(&pem, self.client_certificate_password.as_deref())?;
-        reqwest::Identity::from_pem(&pem).map(Some).map_err(|_| {
+        let identity = reqwest::Identity::from_pem(&pem).map_err(|_| {
             error("the client certificate must be PEM with a certificate and its private key")
-        })
+        })?;
+        Ok(Some((identity, pem)))
     }
 
     pub(crate) fn transport_config(&self) -> Result<TransportConfig> {
@@ -330,13 +425,32 @@ impl HttpOptions {
                     .map_err(|_| error("source address must be an IP address"))
             })
             .transpose()?;
+        let identity = self.client_identity()?;
         Ok(TransportConfig {
             proxy: ProxyConfig::parse(self.proxy.as_deref())?,
             timeout,
             insecure: self.no_check_certificates,
             source_address,
-            identity: self.client_identity()?,
+            identity: identity.as_ref().map(|(identity, _)| identity.clone()),
+            identity_pem: identity.map(|(_, pem)| pem),
+            legacy: self.legacy_server_connect,
         })
+    }
+
+    /// [`Self::transport_config`] with `--geo-verification-proxy` as the
+    /// proxy; `None` without one.
+    pub(crate) fn geo_transport_config(&self) -> Result<Option<TransportConfig>> {
+        let Some(proxy) = self
+            .geo_verification_proxy
+            .as_deref()
+            .filter(|proxy| !proxy.is_empty())
+        else {
+            return Ok(None);
+        };
+        Ok(Some(TransportConfig {
+            proxy: ProxyConfig::parse(Some(proxy))?,
+            ..self.transport_config()?
+        }))
     }
 
     pub(crate) fn header_map(&self) -> Result<HeaderMap> {

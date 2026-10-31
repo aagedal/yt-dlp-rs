@@ -217,7 +217,19 @@ fn render_targets(supported: &[Supported]) -> String {
             ..Default::default()
         };
         if !supported.iter().any(|entry| entry.target.contains(&known)) {
-            rows.insert(0, row(&known, format!("{SOURCE} (unavailable)")));
+            let unavailable = row(&known, format!("{SOURCE} (unavailable)"));
+            rows.insert(
+                0,
+                unavailable
+                    .iter()
+                    .map(|text| {
+                        crate::output::color::format_out(
+                            text,
+                            crate::output::color::styles::SUPPRESS,
+                        )
+                    })
+                    .collect(),
+            );
         }
     }
     crate::output::render_table(
@@ -343,6 +355,31 @@ pub(crate) fn attempt(requested: &[&str], warn: impl FnOnce(&str)) -> Scope {
 /// `Err` is the `ExtractorError` message without its `[EXTRACTOR]` prefix.
 pub(crate) fn require(requested: &[&str]) -> Result<Scope, String> {
     select(requested, true)
+}
+
+thread_local! {
+    /// Requests upstream sends with `geo_verification_headers()`.
+    static GEO: Cell<bool> = const { Cell::new(false) };
+}
+
+/// While alive, impersonated requests on this thread use
+/// `--geo-verification-proxy` like upstream's `Ytdl-request-proxy` header
+/// (plain requests use [`crate::extractor::geo_verification_client`]).
+pub(crate) struct GeoScope(bool);
+
+pub(crate) fn geo_scope() -> GeoScope {
+    GeoScope(GEO.with(|geo| geo.replace(true)))
+}
+
+impl Drop for GeoScope {
+    fn drop(&mut self) {
+        GEO.with(|geo| geo.set(self.0));
+    }
+}
+
+#[cfg_attr(not(feature = "impersonate"), allow(dead_code))]
+fn geo_active() -> bool {
+    GEO.with(Cell::get)
 }
 
 /// Send an extraction request, through the impersonating transport when a

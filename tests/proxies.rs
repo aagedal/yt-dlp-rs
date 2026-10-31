@@ -587,6 +587,39 @@ fn socks4_4a_and_legacy_alias_negotiate_without_connecting_to_a_destination() {
     }
 }
 
+/// Upstream `_setup_socks4`: the URL's percent-decoded username is the
+/// USERID (the password is not sent).
+#[test]
+fn socks4_userid_is_the_decoded_username() {
+    for (scheme, host) in [
+        ("socks4", "127.0.0.2"),
+        ("socks4a", "destination.invalid"),
+        ("socks", "127.0.0.2"),
+    ] {
+        let proxy = Socks::new(false);
+        let directory = tempfile::tempdir().unwrap();
+        let url = proxy
+            .url(scheme)
+            .replacen("://", "://proxy%20user:proxy-secret@", 1);
+        success(
+            &command(
+                &format!("http://{host}:5678/media.mp4"),
+                &["-j", "--proxy", &url],
+                directory.path(),
+            )
+            .output()
+            .unwrap(),
+        );
+        let requests = proxy.requests.lock().unwrap();
+        assert_eq!(requests.len(), 1, "{scheme}");
+        assert_eq!(requests[0].version, 4);
+        assert_eq!(requests[0].user.as_deref(), Some("proxy user"));
+        assert_eq!(requests[0].host, host);
+        assert_eq!(requests[0].port, 5678);
+        assert_eq!(requests[0].http.target, "/media.mp4");
+    }
+}
+
 #[test]
 fn socks5_and_5h_send_destination_domain_without_local_dns_or_incomplete_authentication() {
     for (scheme, credentials) in [
@@ -698,30 +731,6 @@ fn invalid_proxy_urls_fail_before_network_and_do_not_expose_credentials() {
         .unwrap();
         assert!(!output.status.success(), "invalid proxy was accepted");
         assert!(output.stdout.is_empty());
-        assert!(!String::from_utf8_lossy(&output.stderr).contains("proxy-secret"));
-        assert!(!String::from_utf8_lossy(&output.stderr).contains("proxy-private-user"));
-    }
-    for scheme in ["socks4", "socks4a", "socks"] {
-        let uri = proxy.url.replace(
-            "http://",
-            &format!("{scheme}://proxy-private-user:proxy-secret@"),
-        );
-        assert!(
-            HttpOptions {
-                proxy: Some(uri.clone()),
-                ..Default::default()
-            }
-            .validate()
-            .is_err()
-        );
-        let output = command(
-            &proxy.origin("/media.mp4"),
-            &["-j", "--proxy", &uri],
-            directory.path(),
-        )
-        .output()
-        .unwrap();
-        assert!(!output.status.success());
         assert!(!String::from_utf8_lossy(&output.stderr).contains("proxy-secret"));
         assert!(!String::from_utf8_lossy(&output.stderr).contains("proxy-private-user"));
     }

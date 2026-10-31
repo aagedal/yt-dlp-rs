@@ -128,6 +128,8 @@ static RUNTIME: LazyLock<std::result::Result<tokio::runtime::Runtime, String>> =
     });
 
 static TRANSPORT: RwLock<Option<Arc<Transport>>> = RwLock::new(None);
+/// The transport through `--geo-verification-proxy` (see [`super::geo_scope`]).
+static GEO_TRANSPORT: RwLock<Option<Arc<Transport>>> = RwLock::new(None);
 
 fn error(message: impl std::fmt::Display) -> Error {
     Error::Impersonate(message.to_string())
@@ -162,7 +164,35 @@ impl wreq::cookie::CookieStore for SharedCookies {
 /// Build the shared client from the global options (upstream's handler
 /// `proxies`, `verify`, `source_address`, `timeout` and cookie jar).
 pub(super) fn configure(options: &HttpOptions, cookies: &Arc<CookieJar>) -> Result<()> {
-    let transport = options.transport_config()?;
+    let make = |transport: crate::http::TransportConfig| -> Result<Option<Arc<Transport>>> {
+        let client = client(&transport, cookies)?;
+        Ok((options.client_certificate.is_none()).then(|| {
+            Arc::new(Transport {
+                client,
+                headers: options.header_map().unwrap_or_default(),
+            })
+        }))
+    };
+    let state = make(options.transport_config()?)?;
+    let geo = options
+        .geo_transport_config()?
+        .map(make)
+        .transpose()?
+        .flatten();
+    if let Ok(mut current) = TRANSPORT.write() {
+        *current = state;
+    }
+    if let Ok(mut current) = GEO_TRANSPORT.write() {
+        *current = geo;
+    }
+    Ok(())
+}
+
+/// A `wreq` client for one transport configuration.
+fn client(
+    transport: &crate::http::TransportConfig,
+    cookies: &Arc<CookieJar>,
+) -> Result<wreq::Client> {
     // `CurlCFFIRH` uses the timeout for the connect and as a low-speed
     // limit (1 byte/s), so a slow but moving body is not cut off.
     let timeout = transport.socket_timeout();
@@ -186,17 +216,7 @@ pub(super) fn configure(options: &HttpOptions, cookies: &Arc<CookieJar>) -> Resu
             builder = builder.no_proxy().proxy(proxy);
         }
     }
-    let client = builder.build().map_err(error)?;
-    let state = (options.client_certificate.is_none()).then(|| {
-        Arc::new(Transport {
-            client,
-            headers: options.header_map().unwrap_or_default(),
-        })
-    });
-    if let Ok(mut current) = TRANSPORT.write() {
-        *current = state;
-    }
-    Ok(())
+    builder.build().map_err(error)
 }
 
 /// `_get_impersonate_headers`: the global headers merged with the
@@ -240,10 +260,22 @@ pub(super) fn send(
     request: reqwest::blocking::RequestBuilder,
     target: &Supported,
 ) -> Result<reqwest::blocking::Response> {
-    let transport = TRANSPORT
-        .read()
-        .ok()
-        .and_then(|transport| transport.clone())
+    // Inside a geo scope, the `--geo-verification-proxy` transport, if any.
+    let geo = super::geo_active()
+        .then(|| {
+            GEO_TRANSPORT
+                .read()
+                .ok()
+                .and_then(|transport| transport.clone())
+        })
+        .flatten();
+    let transport = geo
+        .or_else(|| {
+            TRANSPORT
+                .read()
+                .ok()
+                .and_then(|transport| transport.clone())
+        })
         .ok_or_else(|| error("impersonation with client certificates is not supported natively"))?;
     let runtime = RUNTIME.as_ref().map_err(error)?;
     let request = request.build()?;

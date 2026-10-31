@@ -1,31 +1,6 @@
 //! Upstream `render_thumbnails_table` / `list_thumbnails` output.
 use crate::VideoInfo;
 
-/// Upstream `render_table` without styles: each cell padded to the column width
-/// plus one space, rows right-trimmed. Widths count characters.
-fn render_table(header: &[&str], rows: &[Vec<String>]) -> String {
-    let mut widths: Vec<usize> = header.iter().map(|cell| cell.chars().count()).collect();
-    for row in rows {
-        for (width, cell) in widths.iter_mut().zip(row) {
-            *width = (*width).max(cell.chars().count());
-        }
-    }
-    let line = |cells: &mut dyn Iterator<Item = &str>| {
-        let mut line = String::new();
-        for (cell, width) in cells.zip(&widths) {
-            line.push_str(cell);
-            line.push_str(&" ".repeat(width - cell.chars().count() + 1));
-        }
-        line.trim_end().to_owned()
-    };
-    let mut lines = vec![line(&mut header.iter().copied())];
-    lines.extend(
-        rows.iter()
-            .map(|row| line(&mut row.iter().map(String::as_str))),
-    );
-    lines.join("\n")
-}
-
 /// `[info] Available thumbnails for ID:` and the table, or `ID has no thumbnails`.
 pub fn render_thumbnails(info: &VideoInfo) -> String {
     match render_thumbnails_table(info) {
@@ -56,7 +31,14 @@ pub fn render_thumbnails_table(info: &VideoInfo) -> Option<String> {
             ]
         })
         .collect();
-    Some(render_table(&["ID", "Width", "Height", "URL"], &rows))
+    let header = ["ID", "Width", "Height", "URL"].map(super::formats::list_format_header);
+    Some(super::formats::render_table(
+        header.to_vec(),
+        rows,
+        None,
+        0,
+        false,
+    ))
 }
 
 #[cfg(test)]

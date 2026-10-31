@@ -95,7 +95,9 @@ impl Extractor for Lego {
             &Url::parse("https://services.slingshot.lego.com/mediaplayer/v2")?,
             &[("videoId", format!("{}_{locale}", uuid(&url_id)).as_str())],
         );
-        let item = match download_json(client, &api, NAME, &url_id) {
+        // `headers=self.geo_verification_headers()`.
+        let item = match download_json(&super::geo_verification_client(client), &api, NAME, &url_id)
+        {
             Ok(item) => item,
             Err(Error::ExtractorRequest { source, .. })
                 if crate::upstream_error_text(&source).starts_with("HTTP Error 451") =>
