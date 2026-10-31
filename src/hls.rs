@@ -72,8 +72,13 @@ pub(crate) struct SubtitleRendition {
     pub language: Option<String>,
 }
 
+/// An `EXT-X-MEDIA` rendition with a URI that upstream's `extract_media`
+/// lists as a format: `TYPE=AUDIO`, or `TYPE=VIDEO` with [`Self::video`].
 #[derive(Debug)]
 pub(crate) struct AudioRendition {
+    /// A `TYPE=VIDEO` rendition: upstream leaves its codecs unknown and
+    /// gives it no audio-group preference.
+    pub video: bool,
     pub url: Url,
     pub group_id: String,
     pub name: String,
@@ -338,16 +343,9 @@ fn variant(
     groups: &BTreeMap<(&str, &str), bool>,
     group_names: &BTreeMap<&str, &str>,
 ) -> Result<Variant> {
-    // SUBTITLES groups become the result's subtitles.
-    for group_type in ["VIDEO", "CLOSED-CAPTIONS"] {
-        if let Some(group) = values.get(group_type).filter(|group| **group != "NONE")
-            && groups.get(&(group_type, *group)) != Some(&false)
-        {
-            return Err(invalid(
-                "external or unresolved HLS rendition group is unsupported",
-            ));
-        }
-    }
+    // Like upstream, VIDEO and CLOSED-CAPTIONS references (resolved or
+    // not) leave the variant a format of its own; external VIDEO renditions
+    // are formats of their own too, and SUBTITLES groups become subtitles.
     let audio_group = values.get("AUDIO").filter(|group| **group != "NONE");
     // Upstream ignores an AUDIO reference to an unknown group.
     let external_audio = audio_group
@@ -508,6 +506,7 @@ fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
                 let language = attrs.get("LANGUAGE").map(|language| (*language).to_owned());
                 if let Some(uri) = attrs.get("URI") {
                     audio.push(AudioRendition {
+                        video: false,
                         url: absolute(base, uri)?,
                         group_id: (*group).to_owned(),
                         name: (*name).to_owned(),
@@ -518,6 +517,22 @@ fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
                             || attrs.get("AUTOSELECT") == Some(&"NO"),
                     });
                 }
+            }
+            // `extract_media`: a named VIDEO rendition with a URI is a format.
+            if *kind == "VIDEO"
+                && let Some(name) = attrs.get("NAME").filter(|name| !name.is_empty())
+                && let Some(uri) = attrs.get("URI")
+            {
+                audio.push(AudioRendition {
+                    video: true,
+                    url: absolute(base, uri)?,
+                    group_id: (*group).to_owned(),
+                    name: (*name).to_owned(),
+                    language: attrs.get("LANGUAGE").map(|language| (*language).to_owned()),
+                    default: false,
+                    autoselect: false,
+                    alternate: false,
+                });
             }
             groups
                 .entry((*kind, *group))
@@ -1148,15 +1163,32 @@ mod tests {
     }
 
     #[test]
-    fn rejects_external_non_audio_rendition_groups() {
+    fn external_video_renditions_are_formats_and_references_are_kept() {
+        let text = "#EXTM3U\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"aud\",NAME=\"en\",URI=\"en.m3u8\"\n#EXT-X-MEDIA:TYPE=VIDEO,GROUP-ID=\"cam\",NAME=\"Angle 2\",LANGUAGE=\"en\",URI=\"angle2.m3u8\"\n#EXT-X-MEDIA:TYPE=VIDEO,GROUP-ID=\"cam\",NAME=\"Main\"\n#EXT-X-STREAM-INF:BANDWIDTH=1000,VIDEO=\"cam\",AUDIO=\"aud\",CODECS=\"avc1.4d401f,mp4a.40.2\"\na.m3u8";
+        let Playlist::Master {
+            variants, audio, ..
+        } = parse(text, &base()).unwrap()
+        else {
+            panic!("master expected");
+        };
+        let renditions: Vec<_> = audio
+            .iter()
+            .map(|r| (r.video, r.group_id.as_str(), r.name.as_str(), r.url.path()))
+            .collect();
+        assert_eq!(
+            renditions,
+            [
+                (false, "aud", "en", "/path/en.m3u8"),
+                (true, "cam", "Angle 2", "/path/angle2.m3u8"),
+            ]
+        );
+        assert_eq!(audio[1].language.as_deref(), Some("en"));
+        // `build_stream_name`: the VIDEO group's first rendition NAME.
+        assert_eq!(variants[0].name.as_deref(), Some("Angle 2"));
         for group in ["VIDEO", "CLOSED-CAPTIONS"] {
-            let text = format!(
-                "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000,{group}=\"a\"\na.m3u8\n#EXT-X-MEDIA:TYPE={group},GROUP-ID=\"a\",NAME=\"A\",URI=\"extra.m3u8\""
-            );
-            assert!(parse(&text, &base()).is_err());
             let text =
                 format!("#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000,{group}=\"missing\"\na.m3u8");
-            assert!(parse(&text, &base()).is_err());
+            assert!(parse(&text, &base()).is_ok(), "{group}");
         }
         // Like upstream, an unknown AUDIO group is ignored.
         let text = "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000,AUDIO=\"missing\"\na.m3u8";

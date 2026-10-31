@@ -679,7 +679,8 @@ fn from_playlist(
                     http_headers: None,
                     extra: hls_extra(Some(&manifest_url), "hls-rendition", drm),
                     protocol: Some("m3u8_native".into()),
-                    vcodec: Some("none".into()),
+                    // `'vcodec': 'none' if is_audio else None`.
+                    vcodec: (!rendition.video).then(|| "none".into()),
                     acodec: None,
                     dynamic_range: None,
                     video_ext: None,
@@ -694,8 +695,13 @@ fn from_playlist(
                     format: None,
                     aspect_ratio: None,
                     format_id: join(&[m3u8_id, Some(&rendition.group_id), Some(&rendition.name)]),
-                    stream_kind: StreamKind::AudioOnly,
-                    audio_group: Some(rendition.group_id),
+                    stream_kind: if rendition.video {
+                        StreamKind::Standalone
+                    } else {
+                        StreamKind::AudioOnly
+                    },
+                    // `_audio_group_id` is only an audio rendition's.
+                    audio_group: (!rendition.video).then_some(rendition.group_id),
                     language: rendition.language,
                     format_note: Some(rendition.name),
                     audio_default: rendition.default,

@@ -6131,9 +6131,13 @@ remuxed. FFmpeg is unnecessary for this download path.
 an immediately preceding media range on the same URL. Map byte ranges require
 an explicit offset. All ranges are positive with checked arithmetic. Unsupported
 state is an error: live playlists without ENDLIST (outside FFmpegFD), variables,
-changing maps (also a map after a discontinuity),
-external video or unresolved rendition groups, mixed inband/external
-audio groups, nested masters and malformed AES-128 keys. Like upstream's line
+changing maps (also a map after a discontinuity), mixed inband/external
+audio groups, nested masters and malformed AES-128 keys. Like upstream's
+`extract_media`, a named `EXT-X-MEDIA:TYPE=VIDEO` rendition with a URI is a
+format (`GROUP-NAME` ID, the name as note, its language, unknown codecs, no
+audio-group preference) listed in document order with the audio renditions
+before the variants; a variant's VIDEO or CLOSED-CAPTIONS reference, resolved or
+not, leaves it a format of its own. Like upstream's line
 loops, other tags (`EXT-X-START`, `EXT-X-DATERANGE`, ad/SCTE-35 markers, gaps,
 low-latency parts and hints, session data/keys, vendor tags) are ignored.
 Upstream `HlsFD.can_download` and `_has_drm` decide encrypted playlists: a

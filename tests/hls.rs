@@ -103,6 +103,11 @@ impl Server {
                         "application/x-mpegurl",
                         "",
                     ),
+                    "/angles.m3u8" => (
+                        "#EXTM3U\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"aud\",NAME=\"en\",URI=\"media.m3u8\"\n#EXT-X-MEDIA:TYPE=VIDEO,GROUP-ID=\"cam\",NAME=\"Angle 2\",URI=\"low.m3u8\"\n#EXT-X-MEDIA:TYPE=VIDEO,GROUP-ID=\"cam\",NAME=\"Main\"\n#EXT-X-STREAM-INF:BANDWIDTH=1000000,VIDEO=\"cam\",AUDIO=\"aud\",CLOSED-CAPTIONS=\"cc\",CODECS=\"avc1.4d401f,mp4a.40.2\"\nhigh.m3u8\n",
+                        "application/x-mpegurl",
+                        "",
+                    ),
                     "/malformed.m3u8" => ("not a playlist", "text/plain", ""),
                     "/nested.m3u8" => (
                         "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=400000\nmaster.m3u8\n",
@@ -346,6 +351,32 @@ fn unsupported_manifests_fail_before_any_output_or_fragment_request() {
         .unwrap();
     assert!(!result.status.success());
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+}
+
+/// Upstream `extract_media`: a VIDEO rendition with a URI is a format with
+/// unknown codecs, listed with the audio renditions before the variants.
+#[test]
+fn external_video_renditions_become_formats() {
+    let server = Server::new();
+    let info = YoutubeDl::new()
+        .unwrap()
+        .extract_info(&server.url("/angles.m3u8"))
+        .unwrap();
+    let formats: Vec<_> = info
+        .formats
+        .iter()
+        .map(|f| (f.format_id.as_str(), f.vcodec.as_deref(), f.fragments.len()))
+        .collect();
+    assert_eq!(
+        formats,
+        [
+            ("aud-en", Some("none"), 2),
+            ("cam-Angle_2", None, 2),
+            ("Angle_2", Some("avc1.4d401f"), 2),
+        ]
+    );
+    assert_eq!(info.formats[1].format_note.as_deref(), Some("Angle 2"));
+    assert!(info.formats[1].audio_group.is_none());
 }
 
 /// Upstream ignores tags it does not interpret (ad markers, date ranges,
