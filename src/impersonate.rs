@@ -217,7 +217,19 @@ fn render_targets(supported: &[Supported]) -> String {
             ..Default::default()
         };
         if !supported.iter().any(|entry| entry.target.contains(&known)) {
-            rows.insert(0, row(&known, format!("{SOURCE} (unavailable)")));
+            let unavailable = row(&known, format!("{SOURCE} (unavailable)"));
+            rows.insert(
+                0,
+                unavailable
+                    .iter()
+                    .map(|text| {
+                        crate::output::color::format_out(
+                            text,
+                            crate::output::color::styles::SUPPRESS,
+                        )
+                    })
+                    .collect(),
+            );
         }
     }
     crate::output::render_table(

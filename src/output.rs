@@ -1,3 +1,4 @@
+pub mod color;
 pub mod encoding;
 pub(crate) mod exec;
 mod filename;

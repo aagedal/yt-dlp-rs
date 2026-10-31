@@ -219,10 +219,53 @@ fn bytes(value: Option<f64>) -> String {
     format!("{:>10}", format_bytes(value))
 }
 
-/// The `downloading` line (without the `[download] ` prefix).
-pub fn downloading_line(status: &ProgressStatus) -> String {
+/// Upstream `_format_progress`: a `ProgressStyles` field styled when the
+/// progress stream (`_out_files.out`) allows colors.
+fn styled(text: String, style: &str) -> String {
+    use super::color;
+    if color::out() == color::Allow::Yes {
+        color::format_text(&text, style)
+    } else {
+        text
+    }
+}
+
+/// The styled `_..._str` fields of a `downloading` status.
+struct Fields {
+    percent: String,
+    total: String,
+    estimate: String,
+    downloaded: String,
+    speed: String,
+    eta: String,
+    elapsed: String,
+}
+
+impl Fields {
+    fn of(status: &ProgressStatus, percent: Option<f64>) -> Self {
+        use super::color::progress_styles as style;
+        Self {
+            percent: styled(format_percent(percent), style::PERCENT),
+            total: styled(
+                bytes(status.total_bytes.map(|total| total as f64)),
+                style::TOTAL_BYTES,
+            ),
+            estimate: styled(bytes(status.total_bytes_estimate), style::TOTAL_BYTES),
+            downloaded: styled(
+                bytes(Some(status.downloaded_bytes as f64)),
+                style::DOWNLOADED_BYTES,
+            ),
+            speed: styled(format_speed(status.speed), style::SPEED),
+            eta: styled(format_eta(status.eta).trim().to_owned(), style::ETA),
+            elapsed: styled(format_seconds(status.elapsed), style::ELAPSED),
+        }
+    }
+}
+
+/// `report_progress`'s `progress`: by total, estimate, or a first empty read.
+fn percent(status: &ProgressStatus) -> Option<f64> {
     let downloaded = status.downloaded_bytes as f64;
-    let percent = status
+    status
         .total_bytes
         .map(|total| 100.0 * downloaded / total as f64)
         .or_else(|| {
@@ -230,29 +273,28 @@ pub fn downloading_line(status: &ProgressStatus) -> String {
                 .total_bytes_estimate
                 .map(|total| 100.0 * downloaded / total)
         })
-        .or_else(|| (status.downloaded_bytes == 0).then_some(0.0));
-    let percent = format_percent(percent);
-    let speed = format_speed(status.speed);
-    let eta = format_eta(status.eta);
-    let eta = eta.trim();
-    let mut line = if let Some(total) = status.total_bytes {
-        format!(
-            "{percent} of {} at {speed} ETA {eta}",
-            bytes(Some(total as f64))
-        )
-    } else if let Some(estimate) = status.total_bytes_estimate {
-        format!(
-            "{percent} of ~{} at {speed} ETA {eta}",
-            bytes(Some(estimate))
-        )
-    } else if let Some(elapsed) = status.elapsed {
-        format!(
-            "{} at {speed} ({})",
-            bytes(Some(downloaded)),
-            format_seconds(Some(elapsed))
-        )
+        .or_else(|| (status.downloaded_bytes == 0).then_some(0.0))
+}
+
+/// The `downloading` line (without the `[download] ` prefix).
+pub fn downloading_line(status: &ProgressStatus) -> String {
+    let Fields {
+        percent,
+        total,
+        estimate,
+        downloaded,
+        speed,
+        eta,
+        elapsed,
+    } = Fields::of(status, percent(status));
+    let mut line = if status.total_bytes.is_some() {
+        format!("{percent} of {total} at {speed} ETA {eta}")
+    } else if status.total_bytes_estimate.is_some() {
+        format!("{percent} of ~{estimate} at {speed} ETA {eta}")
+    } else if status.elapsed.is_some() {
+        format!("{downloaded} at {speed} ({elapsed})")
     } else {
-        format!("{} at {speed}", bytes(Some(downloaded)))
+        format!("{downloaded} at {speed}")
     };
     match (status.fragment_index, status.fragment_count) {
         (Some(index), Some(count)) => line.push_str(&format!(" (frag {index}/{count})")),
@@ -268,16 +310,8 @@ pub fn downloading_line(status: &ProgressStatus) -> String {
 /// Upstream `report_progress`'s `downloading` status dict (the
 /// `progress` of `--progress-template`), with `_default_template`.
 pub fn downloading_dict(status: &ProgressStatus, filename: Option<&str>) -> serde_json::Value {
-    let downloaded = status.downloaded_bytes as f64;
-    let percent = status
-        .total_bytes
-        .map(|total| 100.0 * downloaded / total as f64)
-        .or_else(|| {
-            status
-                .total_bytes_estimate
-                .map(|total| 100.0 * downloaded / total)
-        })
-        .or_else(|| (status.downloaded_bytes == 0).then_some(0.0));
+    let percent = percent(status);
+    let fields = Fields::of(status, percent);
     let mut dict = serde_json::json!({
         "status": "downloading",
         "downloaded_bytes": status.downloaded_bytes,
@@ -305,25 +339,16 @@ pub fn downloading_dict(status: &ProgressStatus, filename: Option<&str>) -> serd
             format_seconds(Some(recorded)).into(),
         );
     }
-    for (key, value) in [
-        ("_eta_str", format_eta(status.eta).trim().to_owned()),
-        ("_speed_str", format_speed(status.speed)),
-    ] {
+    for (key, value) in [("_eta_str", fields.eta), ("_speed_str", fields.speed)] {
         object.insert(key.into(), value.into());
     }
     object.insert("_percent".into(), percent.into());
     for (key, value) in [
-        ("_percent_str", format_percent(percent)),
-        (
-            "_total_bytes_str",
-            bytes(status.total_bytes.map(|total| total as f64)),
-        ),
-        (
-            "_total_bytes_estimate_str",
-            bytes(status.total_bytes_estimate),
-        ),
-        ("_downloaded_bytes_str", bytes(Some(downloaded))),
-        ("_elapsed_str", format_seconds(status.elapsed)),
+        ("_percent_str", fields.percent),
+        ("_total_bytes_str", fields.total),
+        ("_total_bytes_estimate_str", fields.estimate),
+        ("_downloaded_bytes_str", fields.downloaded),
+        ("_elapsed_str", fields.elapsed),
         ("_default_template", downloading_line(status)),
     ] {
         object.insert(key.into(), value.into());
@@ -340,6 +365,7 @@ pub fn finished_dict(
     let speed = elapsed
         .filter(|elapsed| *elapsed > 0.0)
         .map(|elapsed| total_bytes as f64 / elapsed);
+    use super::color::progress_styles as style;
     serde_json::json!({
         "downloaded_bytes": total_bytes,
         "total_bytes": total_bytes,
@@ -347,11 +373,11 @@ pub fn finished_dict(
         "status": "finished",
         "elapsed": elapsed,
         "speed": speed,
-        "_speed_str": format_speed(speed).trim(),
-        "_total_bytes_str": bytes(Some(total_bytes as f64)),
-        "_elapsed_str": format_seconds(elapsed),
+        "_speed_str": styled(format_speed(speed).trim().to_owned(), style::SPEED),
+        "_total_bytes_str": styled(bytes(Some(total_bytes as f64)), style::TOTAL_BYTES),
+        "_elapsed_str": styled(format_seconds(elapsed), style::ELAPSED),
         "_percent": 100.0,
-        "_percent_str": format_percent(Some(100.0)),
+        "_percent_str": styled(format_percent(Some(100.0)), style::PERCENT),
         "_default_template": finished_line(total_bytes, elapsed),
     })
 }
@@ -361,28 +387,43 @@ pub fn finished_line(total_bytes: u64, elapsed: Option<f64>) -> String {
     let speed = elapsed
         .filter(|elapsed| *elapsed > 0.0)
         .map(|elapsed| total_bytes as f64 / elapsed);
+    use super::color::progress_styles as style;
     let mut parts = vec![
         "100%".to_owned(),
-        format!("of {}", bytes(Some(total_bytes as f64))),
+        format!(
+            "of {}",
+            styled(bytes(Some(total_bytes as f64)), style::TOTAL_BYTES)
+        ),
     ];
     if let Some(elapsed) = elapsed {
-        parts.push(format!("in {}", format_seconds(Some(elapsed))));
+        parts.push(format!(
+            "in {}",
+            styled(format_seconds(Some(elapsed)), style::ELAPSED)
+        ));
     }
     if let Some(speed) = speed {
-        parts.push(format!("at {}", format_speed(Some(speed)).trim()));
+        parts.push(format!(
+            "at {}",
+            styled(format_speed(Some(speed)).trim().to_owned(), style::SPEED)
+        ));
     }
     parts.join(" ")
 }
 
-/// Upstream `MultilinePrinter` (one line, no terminal sequences) or
-/// `BreaklineStatusPrinter` (`--newline`).
+/// Upstream `MultilinePrinter` (one line) or `BreaklineStatusPrinter`
+/// (`--newline`).
 #[derive(Debug, Default)]
 pub struct StatusPrinter {
     newline: bool,
     preserve: bool,
+    /// `_HAVE_FULLCAP`: erase lines with terminal sequences instead of
+    /// padding them.
+    sequences: bool,
     last_length: usize,
     printed: bool,
 }
+
+const ERASE_LINE: &str = "\x1b[K";
 
 impl StatusPrinter {
     /// `preserve` is upstream's `not quiet`: the last status stays visible.
@@ -390,9 +431,17 @@ impl StatusPrinter {
         Self {
             newline,
             preserve,
+            sequences: false,
             last_length: 0,
             printed: false,
         }
+    }
+
+    /// Use terminal sequences (`_HAVE_FULLCAP`, upstream's truthy
+    /// `_allow_colors.out`, also with `no_color`).
+    pub fn with_sequences(mut self, sequences: bool) -> Self {
+        self.sequences = sequences;
+        self
     }
 
     /// The text written for one status line.
@@ -400,6 +449,9 @@ impl StatusPrinter {
         self.printed = true;
         if self.newline {
             return format!("{text}\n");
+        }
+        if self.sequences {
+            return format!("\r{ERASE_LINE}{text}");
         }
         let length = text.chars().count();
         let padding = self.last_length.saturating_sub(length);
@@ -413,6 +465,14 @@ impl StatusPrinter {
             return String::new();
         }
         self.printed = false;
+        if self.sequences {
+            // `_move_cursor(0)`, then a line break or an erased line.
+            return if self.preserve {
+                "\r\n".into()
+            } else {
+                format!("\r{ERASE_LINE}")
+            };
+        }
         if self.preserve {
             "\n".into()
         } else {
@@ -496,5 +556,15 @@ mod tests {
         let mut breakline = StatusPrinter::new(true, true);
         assert_eq!(breakline.print("x"), "x\n");
         assert_eq!(breakline.end(), "");
+        // `_HAVE_FULLCAP`.
+        let mut full = StatusPrinter::new(false, true).with_sequences(true);
+        assert_eq!(full.print("long line"), "\r\x1b[Klong line");
+        assert_eq!(full.print("short"), "\r\x1b[Kshort");
+        assert_eq!(full.end(), "\r\n");
+        let mut quiet = StatusPrinter::new(false, false).with_sequences(true);
+        quiet.print("abc");
+        assert_eq!(quiet.end(), "\r\x1b[K");
+        let mut breakline = StatusPrinter::new(true, true).with_sequences(true);
+        assert_eq!(breakline.print("x"), "x\n");
     }
 }
