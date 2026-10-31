@@ -2440,10 +2440,16 @@ upstream's lazy ones (no `[IE]` prefix): the entry being read is `None`
 (`null` with `-J`, reported once, exit code 1) and the failed page ends the
 list (`_pagecount = pagenum - 1`), so the playlist still finishes. Selecting,
 after such a failure, an entry of the failed page that precedes the failed one
-is an explicit native error. Not ported: `DailymotionPlaylistIE`'s jukebox
-widget embeds on generic pages.
-`tests/fixtures/sites/dailymotion/` and `tests/fixtures/sites/dailymotion-login/`
-are compared with pinned upstream output.
+is an explicit native error. On generic pages `DailymotionIE._extract_embed_urls`
+finds embed/iframe sources and `dmcloudUrlEmissionSelect` values matching its
+`_VALID_URL`, `DM.player(...)` video IDs and player scripts' `data-video`/
+`data-playlist`, and `DailymotionPlaylistIE` jukebox widgets' playlists. Like
+upstream, a source whose ID is not followed by `/`, `?`, `_`, `&` or `#` runs
+past its closing quote; this port's URLs percent-encode the quote and
+spaces there. `tests/fixtures/sites/dailymotion/`,
+`tests/fixtures/sites/dailymotion-login/` and
+`tests/fixtures/sites/dailymotion-embeds/` are compared with pinned upstream
+output.
 
 EbaumsWorld videos (`ebaumsworld.com/videos/SLUG/ID`) follow upstream
 `EbaumsWorldIE`: the player config XML (`Downloading XML`) as an untyped

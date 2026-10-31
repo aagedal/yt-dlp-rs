@@ -2180,7 +2180,7 @@ enum Embed {
     Info(WebpageEntry),
 }
 
-static EMBED_SITES: [EmbedSite; 42] = [
+static EMBED_SITES: [EmbedSite; 44] = [
     EmbedSite {
         name: "youtube",
         key: "Youtube",
@@ -2277,6 +2277,24 @@ static EMBED_SITES: [EmbedSite; 42] = [
         extractor: Some(&super::dailymail::DailyMail),
         embed_urls: super::dailymail::embed_urls,
         temp_id: super::dailymail::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::dailymotion::NAME,
+        key: super::dailymotion::KEY,
+        extractor: Some(&super::dailymotion::Dailymotion),
+        embed_urls: super::dailymotion::embed_urls,
+        temp_id: super::dailymotion::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::dailymotion::PLAYLIST_NAME,
+        key: super::dailymotion::PLAYLIST_KEY,
+        extractor: Some(&super::dailymotion::DailymotionPlaylist),
+        embed_urls: super::dailymotion::playlist_embed_urls,
+        temp_id: super::dailymotion::playlist_temp_id,
         webpage: None,
         fields: None,
     },
