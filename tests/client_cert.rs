@@ -163,3 +163,47 @@ fn client_certificates_authenticate_tls_requests() {
         );
     }
 }
+
+/// `--legacy-server-connect` builds its own TLS client (with CBC suites):
+/// client certificates and certificate checks still apply.
+#[test]
+fn legacy_server_connect_keeps_client_certificates_and_verification() {
+    let port = serve();
+    let directory = tempfile::tempdir().unwrap();
+    let combined = fixture("combined.pem");
+    let output = run(
+        port,
+        &[
+            "--legacy-server-connect",
+            "--client-certificate",
+            combined.to_str().unwrap(),
+        ],
+        directory.path(),
+    );
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(output.status.success(), "{stderr}");
+    assert!(!stderr.contains("not supported natively"), "{stderr}");
+    assert_eq!(
+        std::fs::read(directory.path().join("o.mp4")).unwrap(),
+        b"media"
+    );
+    // Without `--no-check-certificates` the test CA is not trusted.
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "--ignore-config",
+            "--legacy-server-connect",
+            "--retries",
+            "0",
+        ])
+        .args(["--client-certificate", combined.to_str().unwrap(), "-s"])
+        .arg(format!("https://127.0.0.1:{port}/v.mp4"))
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        stderr.contains("UnknownIssuer") || stderr.contains("certificate"),
+        "{stderr}"
+    );
+}

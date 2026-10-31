@@ -195,10 +195,71 @@ pub fn err_prefix(line: String) -> String {
         ("Deprecated Feature:", styles::ERROR),
     ] {
         if let Some(rest) = line.strip_prefix(prefix) {
+            let rest = if prefix == "Deprecated Feature:" {
+                rest.to_owned()
+            } else {
+                emphasize_extracted_name(rest)
+            };
             return format!("{}{rest}", format_text(prefix, style));
         }
     }
     line
+}
+
+/// Messages upstream raises with these literal texts (after `Unable to
+/// extract `) instead of `_search_regex`'s, so their names are not styled.
+static LITERAL_EXTRACT_MESSAGES: std::sync::LazyLock<regex::Regex> =
+    std::sync::LazyLock::new(|| {
+        regex::Regex::new(concat!(
+            r"^(?:JSON-LD|NRK ID|access credentials|access token|actual video ID|ad data",
+            r"|any SproutVideo embed url|any media blocks from webpage|auth token",
+            r"|aweme detail info|brightcove Video ID|brightcove reference ID",
+            r"|broadcast number|challenge data|client id|content|embedUrl|file ID",
+            r"|initial state|main content from webpage|moment id|on-air start time",
+            r"|player JS|playlist url|stream host|stream url|the user id",
+            r"|token cookie values|user id|video ID|video ID from webpage|video URL",
+            r"|video from webpage|video id|video info|video info from html inline initial state",
+            r"|video urls|live URL information)$",
+            r"|^(?:post title\. Falling back to parsing html page",
+            r"|secondary user ID\. |the VOD associated with this livestream",
+            r"|token, continuing without authentication|video info, make sure the URL is valid",
+            r"|format info for |formats: |metadata: |url for clip |\S+ version information$",
+            r"|\S+ format$)",
+        ))
+        .expect("valid pattern")
+    });
+
+/// Upstream `_search_regex`/`_search_json`'s `Unable to extract {_name}`
+/// (and the `unable to extract` warning): the name in `Styles.EMPHASIS`.
+fn emphasize_extracted_name(message: &str) -> String {
+    const ENDS: [&str; 2] = ["; please report", " - Failed to parse JSON"];
+    let Some(at) = message
+        .find("Unable to extract ")
+        .or_else(|| message.find("unable to extract "))
+    else {
+        return message.to_owned();
+    };
+    let start = at + "Unable to extract ".len();
+    let rest = &message[start..];
+    let body = rest.strip_suffix('\n').unwrap_or(rest);
+    let end = ENDS
+        .iter()
+        .filter_map(|end| body.find(end))
+        .min()
+        .unwrap_or(body.len());
+    let name = &body[..end];
+    if name.is_empty()
+        || LITERAL_EXTRACT_MESSAGES.is_match(body)
+        || LITERAL_EXTRACT_MESSAGES.is_match(name)
+    {
+        return message.to_owned();
+    }
+    format!(
+        "{}{}{}",
+        &message[..start],
+        format_text(name, styles::EMPHASIS),
+        &rest[end..]
+    )
 }
 
 /// Upstream `_format_out(text, style, fallback, test_encoding=True)`: the
@@ -272,6 +333,43 @@ mod tests {
             format_text("x", "bold green on light blue"),
             "\x1b[1;32m\x1b[0;104mx\x1b[0m"
         );
+    }
+
+    #[test]
+    fn search_regex_names_are_emphasized() {
+        let blue = |name: &str| format_text(name, styles::EMPHASIS);
+        assert_eq!(
+            emphasize_extracted_name(
+                " [x] id: Unable to extract title; please report this issue on  ...\n"
+            ),
+            format!(
+                " [x] id: Unable to extract {}; please report this issue on  ...\n",
+                blue("title")
+            )
+        );
+        assert_eq!(
+            emphasize_extracted_name(
+                " [x] id: Unable to extract player data - Failed to parse JSON"
+            ),
+            format!(
+                " [x] id: Unable to extract {} - Failed to parse JSON",
+                blue("player data")
+            )
+        );
+        assert_eq!(
+            emphasize_extracted_name(" [x] unable to extract views; please report"),
+            format!(" [x] unable to extract {}; please report", blue("views"))
+        );
+        // Upstream's literal messages keep their plain text.
+        for message in [
+            " [x] id: Unable to extract video URL; please report this issue",
+            " [x] id: Unable to extract JSON-LD",
+            " [x] id: Unable to extract url for clip 2",
+            " [cda] id: Unable to extract player version information",
+            " [x] id: Unable to extract formats: 403",
+        ] {
+            assert_eq!(emphasize_extracted_name(message), message);
+        }
     }
 
     #[test]

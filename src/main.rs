@@ -2648,6 +2648,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     http_options.socket_timeout = args.socket_timeout;
     http_options.print_traffic = args.print_traffic;
     http_options.geo_verification_proxy = args.geo_verification_proxy.clone();
+    http_options.legacy_server_connect = args.legacy_server_connect;
     http_options.no_check_certificates = args.no_check_certificates;
     http_options.client_certificate = args.client_certificate.clone();
     http_options.client_certificate_key = args.client_certificate_key.clone();
@@ -8275,13 +8276,6 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
                 "WARNING: Ignoring unsupported JavaScript runtime(s): {name}. Supported runtimes: deno, node, bun, quickjs."
             );
         }
-    }
-    // rustls never requires RFC 5746 secure renegotiation (upstream's
-    // `OP_LEGACY_SERVER_CONNECT`) but has no CBC suites (`DEFAULT` ciphers).
-    if args.legacy_server_connect {
-        warning!(
-            "WARNING: --legacy-server-connect: legacy (CBC/SHA-1) cipher suites are not supported natively; servers without secure renegotiation are always accepted"
-        );
     }
     for (given, what) in [
         (!args.plugin_dirs.is_empty(), "--plugin-dirs"),
