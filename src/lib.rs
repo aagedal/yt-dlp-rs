@@ -479,6 +479,14 @@ mod guard_extractor_tests {
     }
 }
 
+/// Upstream `UserNotLive` (a channel or user not live): every extractor
+/// raising it here uses its default message.
+fn user_not_live(error: &Error) -> bool {
+    error
+        .to_string()
+        .ends_with("The channel is not currently live")
+}
+
 pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U";
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
@@ -4803,17 +4811,27 @@ impl YoutubeDl {
             // `_wait_for_video`: a video without formats yet (an upcoming
             // stream whose extractor raised an expected no-formats error)
             // waits and is extracted again (`ReExtractInfo`).
-            while let (Some(wait), Ok(Some(ExtractResult::Video(video)))) =
-                (self.wait_for_video.as_ref(), &extracted)
-                && video.formats.is_empty()
-                && video.extra.contains_key(info::NO_FORMATS)
-            {
-                let release = video
-                    .extra
-                    .get("release_timestamp")
-                    .and_then(serde_json::Value::as_i64);
-                let upcoming = video.metadata.live_status.as_deref() == Some("is_upcoming");
-                let message = extractor::youtube::wait_for_video(wait, release, upcoming);
+            while let Some(wait) = self.wait_for_video.as_ref() {
+                let message = match &extracted {
+                    Ok(Some(ExtractResult::Video(video)))
+                        if video.formats.is_empty()
+                            && video.extra.contains_key(info::NO_FORMATS) =>
+                    {
+                        let release = video
+                            .extra
+                            .get("release_timestamp")
+                            .and_then(serde_json::Value::as_i64);
+                        let upcoming = video.metadata.live_status.as_deref() == Some("is_upcoming");
+                        extractor::youtube::wait_for_video(wait, release, upcoming, true)
+                    }
+                    // `UserNotLive`: reported as a warning, then
+                    // `_wait_for_video()` without an info dict.
+                    Err(error) if user_not_live(error) => {
+                        screen::warning(&error.to_string());
+                        extractor::youtube::wait_for_video(wait, None, false, false)
+                    }
+                    _ => break,
+                };
                 screen::screen(&format!("{message}; Re-extracting data"));
                 extracted = extract();
             }
