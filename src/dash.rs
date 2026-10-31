@@ -646,6 +646,12 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
 /// Subtitles by language, in manifest order.
 pub(crate) type ManifestSubtitles = Vec<(String, crate::SubtitleFormat)>;
 
+/// Upstream `is_drm_protected`: a direct `ContentProtection` child.
+fn protected(node: Node<'_, '_>) -> bool {
+    node.children()
+        .any(|child| child.is_element() && child.tag_name().name() == "ContentProtection")
+}
+
 /// Upstream `_parse_mpd_formats_and_subtitles`: the formats and, from text
 /// representations with a direct resource, the subtitles by language
 /// (`und` without one). Segmented text tracks are not represented.
@@ -688,6 +694,17 @@ pub(crate) fn parse_with_subtitles(
         return Err(bad("dynamic DASH is unsupported"));
     }
     for node in root.descendants().filter(Node::is_element) {
+        if node.ancestors().take(66).count() > 65 {
+            return Err(bad("DASH XML nesting exceeds 64 element levels"));
+        }
+        // Like upstream, only a ContentProtection element's presence is read
+        // (`has_drm`); its scheme data, often namespaced, is not interpreted.
+        if node.ancestors().skip(1).any(|ancestor| {
+            ancestor.tag_name().name() == "ContentProtection"
+                && ancestor.tag_name().namespace() == root.tag_name().namespace()
+        }) {
+            continue;
+        }
         if matches!(
             node.tag_name().name(),
             "SegmentTemplate"
@@ -701,9 +718,6 @@ pub(crate) fn parse_with_subtitles(
             .any(|attribute| attribute.namespace().is_some())
         {
             return Err(bad("namespaced DASH addressing attributes are unsupported"));
-        }
-        if node.ancestors().take(66).count() > 65 {
-            return Err(bad("DASH XML nesting exceeds 64 element levels"));
         }
         // Upstream never reads `SegmentBase` (or its index ranges and
         // `Initialization`): such a representation is its direct `BaseURL`.
@@ -746,6 +760,8 @@ pub(crate) fn parse_with_subtitles(
                 matches!(parent, Some("SegmentTemplate" | "SegmentList"))
             }
             "SegmentURL" => parent == Some("SegmentList"),
+            // Upstream reads it on AdaptationSets and Representations only.
+            "ContentProtection" => matches!(parent, Some("AdaptationSet" | "Representation")),
             "S" => parent == Some("SegmentTimeline"),
             _ => true,
         };
@@ -755,11 +771,9 @@ pub(crate) fn parse_with_subtitles(
         if node.tag_name().namespace() != root.tag_name().namespace() {
             return Err(bad("unsupported DASH extension namespace"));
         }
-        if matches!(
-            node.tag_name().name(),
-            "ContentProtection" | "RepresentationIndex"
-        ) {
-            return Err(bad("DASH encryption and SIDX addressing are unsupported"));
+        // Upstream never reads RepresentationIndex (SIDX) addressing.
+        if node.tag_name().name() == "RepresentationIndex" {
+            return Err(bad("DASH RepresentationIndex addressing is unsupported"));
         }
         if node.attributes().any(|a| {
             a.namespace() == Some("http://www.w3.org/1999/xlink")
@@ -824,6 +838,7 @@ pub(crate) fn parse_with_subtitles(
             }
             let (base, explicit) = base_url(representation, &adaptation_base, adaptation_explicit)?;
             let address = address.inherit(representation)?;
+            let has_drm = protected(adaptation) || protected(representation);
             let mut attrs = BTreeMap::new();
             for node in [root, period, adaptation, representation] {
                 for attr in node.attributes() {
@@ -884,10 +899,14 @@ pub(crate) fn parse_with_subtitles(
                 if address.kind.is_none() {
                     // "Assuming direct URL to unfragmented media."
                     if explicit && !directory(&base) {
+                        let mut extra = text_extra(manifest, None);
+                        if has_drm {
+                            extra.insert("has_drm".into(), true.into());
+                        }
                         subtitles.push((
                             language,
                             crate::SubtitleFormat {
-                                extra: text_extra(manifest, None),
+                                extra,
                                 fragments: Vec::new(),
                                 name: None,
                                 url: base.clone(),
@@ -909,17 +928,21 @@ pub(crate) fn parse_with_subtitles(
                         representation.attribute("id"),
                         bandwidth,
                     )?;
+                    let mut extra = text_extra(
+                        manifest,
+                        Some(if explicit {
+                            base.clone()
+                        } else {
+                            base.join(".")?
+                        }),
+                    );
+                    if has_drm {
+                        extra.insert("has_drm".into(), true.into());
+                    }
                     subtitles.push((
                         language,
                         crate::SubtitleFormat {
-                            extra: text_extra(
-                                manifest,
-                                Some(if explicit {
-                                    base.clone()
-                                } else {
-                                    base.join(".")?
-                                }),
-                            ),
+                            extra,
                             fragments,
                             name: None,
                             url: manifest.clone(),
@@ -987,8 +1010,9 @@ pub(crate) fn parse_with_subtitles(
                 None => content_type.to_owned(),
             };
             // Upstream `**parse_codecs(codecs)`: no codec keys without one.
-            // Upstream keys: the MPD as `manifest_url`, the representation
-            // base for relative fragment paths, and `_merge_mpd_periods`'s
+            // Upstream keys: the MPD as `manifest_url`, `has_drm` for a
+            // protected representation, the representation base for
+            // relative fragment paths, and `_merge_mpd_periods`'s
             // `is_dash_periods`.
             let mut extra = serde_json::Map::new();
             extra.insert(
@@ -1001,6 +1025,9 @@ pub(crate) fn parse_with_subtitles(
                 .into(),
             );
             extra.insert("manifest_url".into(), manifest.as_str().into());
+            if has_drm {
+                extra.insert("has_drm".into(), true.into());
+            }
             if address.kind.is_some() {
                 // Without a BaseURL, upstream's base is the MPD's directory.
                 let directory;
@@ -1360,7 +1387,11 @@ mod tests {
         for changed in [
             text.replace("type=\"static\"", "type=\"dynamic\""),
             text.replace("</MPD>", "<Period/></MPD>"),
-            text.replace("<Representation ", "<ContentProtection/><Representation "),
+            text.replace("<Period>", "<Period><ContentProtection/>"),
+            text.replace(
+                "/></AdaptationSet>",
+                "><RepresentationIndex sourceURL=\"index.sidx\"/></Representation></AdaptationSet>",
+            ),
             text.replace(
                 "<Representation ",
                 "<BaseURL>a/</BaseURL><BaseURL>b/</BaseURL><Representation ",
@@ -1600,5 +1631,43 @@ mod tests {
             "<Representation id=\"other\" bandwidth=\"2000000\"/></AdaptationSet>",
         );
         assert!(parse(&text, &manifest()).is_err());
+    }
+    fn periods(body: &str) -> String {
+        format!(
+            "<MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" type=\"static\" mediaPresentationDuration=\"PT6S\">{body}</MPD>"
+        )
+    }
+    #[test]
+    fn content_protection_marks_formats_has_drm_like_upstream() {
+        let text = periods(
+            "<Period xmlns:cenc=\"urn:mpeg:cenc:2013\"><AdaptationSet mimeType=\"video/mp4\" codecs=\"avc1.42001e\"><ContentProtection schemeIdUri=\"urn:mpeg:dash:mp4protection:2011\" value=\"cenc\" cenc:default_KID=\"10000000-1000-1000-1000-100000000001\"/><ContentProtection schemeIdUri=\"urn:uuid:edef8ba9-79d6-4ace-a3c8-27dcd51d21ed\"><cenc:pssh>AAAA</cenc:pssh></ContentProtection><Representation id=\"v\" bandwidth=\"1\"><BaseURL>v.mp4</BaseURL></Representation></AdaptationSet>\
+             <AdaptationSet mimeType=\"audio/mp4\" codecs=\"mp4a.40.2\"><Representation id=\"a\" bandwidth=\"1\"><ContentProtection schemeIdUri=\"urn:x\"/><BaseURL>a.m4a</BaseURL></Representation><Representation id=\"clear\" bandwidth=\"1\"><BaseURL>c.m4a</BaseURL></Representation></AdaptationSet>\
+             <AdaptationSet contentType=\"text\" mimeType=\"text/vtt\"><ContentProtection schemeIdUri=\"urn:x\"/><Representation bandwidth=\"1\"><BaseURL>s.vtt</BaseURL></Representation></AdaptationSet></Period>",
+        );
+        let (formats, subtitles) = parse_with_subtitles(&text, &manifest()).unwrap();
+        let drm: Vec<_> = formats
+            .iter()
+            .map(|f| (f.format_id.as_str(), f.extra.get("has_drm").cloned()))
+            .collect();
+        assert_eq!(
+            drm,
+            [
+                ("v", Some(true.into())),
+                ("a", Some(true.into())),
+                ("clear", None)
+            ]
+        );
+        assert_eq!(subtitles[0].1.extra["has_drm"], true);
+        // Foreign elements stay unsupported outside ContentProtection.
+        assert!(
+            parse(
+                &text.replace(
+                    "<cenc:pssh>AAAA</cenc:pssh></ContentProtection>",
+                    "</ContentProtection><cenc:pssh>AAAA</cenc:pssh>"
+                ),
+                &manifest()
+            )
+            .is_err()
+        );
     }
 }
