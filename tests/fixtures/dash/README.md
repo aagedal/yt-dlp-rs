@@ -5,6 +5,14 @@ fixtures. They describe synthetic URLs and ranges, not media. The comparison too
 documents which fields match the pinned upstream parser and independently checks
 the ranges that upstream ignores.
 
+`dynamic-number.mpd`, `dynamic-timeline.mpd` and `dynamic-list.mpd` are
+handwritten live (`type="dynamic"`) manifests with synthetic URLs: a `$Number$`
+duration template without a Period duration, a `$Time$` timeline with an offset,
+an open `r="-1"` entry, `Location` and `availabilityTimeOffset` beside a duration
+template whose count comes from the timeline's summed durations, and a SegmentList
+timeline with more URLs than entries. `tools/compare_dash.py` compares their
+formats with the pinned upstream parser; `tests/dash_dynamic.rs` serves them.
+
 `media/` contains original blue video and sine audio generated offline with
 FFmpeg 9.0.2. No third-party media is included. From the repository root:
 

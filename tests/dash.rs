@@ -97,7 +97,7 @@ impl Server {
                     "/hinted.html" => ("<video src='/hinted' type='application/dash+xml'></video>".into(), "text/html", ""),
                     "/bad-hint.html" => ("<video><source src='/bad-media' type='application/dash+xml'></video>".into(), "text/html", ""),
                     "/bad-media" | "/malformed.mpd" => ("ordinary media bytes".into(), "video/mp4", ""),
-                    "/dynamic.mpd" => (MPD.replace("type=\"static\"", "type=\"dynamic\""), "application/dash+xml", ""),
+                    "/unknown-type.mpd" => (MPD.replace("type=\"static\"", "type=\"event\""), "application/dash+xml", ""),
                     "/drm.mpd" => (MPD.replace("<Representation id=\"video\"", "<ContentProtection schemeIdUri=\"urn:mpeg:dash:mp4protection:2011\"/><Representation id=\"video\""), "application/dash+xml", ""),
                     "/drm-all.mpd" => (MPD.replace("<Representation ", "<ContentProtection schemeIdUri=\"urn:mpeg:dash:mp4protection:2011\"/><Representation "), "application/dash+xml", ""),
                     "/multi.mpd" => (MPD.replace("</Period></MPD>", "</Period><Period duration=\"PT1S\"/></MPD>"), "application/dash+xml", ""),
@@ -390,7 +390,8 @@ fn json_simulation_does_not_request_initialization_or_media_or_create_files() {
 fn unsupported_dash_and_invalid_response_metadata_fail_before_publication() {
     let server = Server::new();
     for path in [
-        "/dynamic.mpd",
+        // Neither `static` nor `dynamic` (dynamic MPDs: tests/dash_dynamic.rs).
+        "/unknown-type.mpd",
         // The second Period ends after the presentation.
         "/multi.mpd",
         "/dtd.mpd",

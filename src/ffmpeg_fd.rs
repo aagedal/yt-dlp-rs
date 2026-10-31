@@ -246,6 +246,10 @@ fn arguments(
         if protocol == "rtmp" {
             let fields = crate::rtmp_fd::Fields::from_extra(&format.extra);
             args.extend(fields.ffmpeg_args().into_iter().map(OsString::from));
+        } else if protocol == "http_dash_segments" && crate::is_live(info) {
+            // Upstream: FFmpeg may read past a live DASH stream's latest
+            // segments without `-re`.
+            args.push("-re".into());
         }
         // `_configuration_args(('_i1', '_i'))` before each input.
         let keys = [format!("ffmpeg_i{}", input + 1), "ffmpeg_i".into()];

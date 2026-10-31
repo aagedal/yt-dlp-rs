@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" type="dynamic" availabilityStartTime="2024-01-01T00:00:00Z" minimumUpdatePeriod="PT2S">
+  <Period id="p0">
+    <AdaptationSet mimeType="video/mp4" codecs="avc1.4d401e">
+      <Representation id="list" bandwidth="300000" width="320" height="180">
+        <SegmentList timescale="1000">
+          <Initialization sourceURL="l/init.mp4"/>
+          <SegmentTimeline><S t="5000" d="2000" r="1"/><S d="1000" r="-1"/></SegmentTimeline>
+          <SegmentURL media="l/1.m4s"/><SegmentURL media="l/2.m4s"/><SegmentURL media="l/3.m4s"/>
+        </SegmentList>
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="audio/mp4" codecs="mp4a.40.2" lang="nb">
+      <Representation id="audio" bandwidth="64000">
+        <SegmentTemplate timescale="48000" duration="96000" startNumber="7" media="audio/$Number%03d$.m4s"/>
+      </Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>
