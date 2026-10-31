@@ -6207,7 +6207,7 @@ upstream's parser does not. See [the source slice](../upstream/notes/hls-audio.m
 ## Static DASH MPDs
 
 Direct `.mpd` paths, `application/dash+xml`, and HTML5 DASH type hints support a
-bounded static, single-period MPD subset. Original/final MPD paths and explicit
+bounded static MPD subset with one or more Periods. Original/final MPD paths and explicit
 hints force parsing even with a conflicting media MIME, preventing MPD text from
 being published as media. Read at most 2 MiB of identity-encoded UTF-8 XML;
 ambiguous/invalid headers, DTDs, foreign element namespaces and external XML
@@ -6221,10 +6221,20 @@ tokens are RepresentationID, Bandwidth, Number and Time, dollar escaping and
 bounded zero-padded decimal numeric forms. Initialization permits only RepresentationID
 and Bandwidth; media cannot combine actual Number and Time tokens. Static duration
 templates require a
-finite Period or MPD duration. Exact day/hour/minute/second ISO durations use
+finite Period span. Exact day/hour/minute/second ISO durations use
 nanosecond precision (up to nine fractional second digits), checked integer
-arithmetic and ceiling division. Explicit Period and MPD duration bounds must agree.
-No floating-point segment count is used.
+arithmetic and ceiling division. No floating-point segment count is used.
+
+A Period spans its `duration`, else up to the next Period's `start` or, for the
+last one, the end of `mediaPresentationDuration`. A missing `start` is 0 for the
+first Period and the previous Period's end when that has a `duration`; otherwise
+the span is unknown, which only fails where a duration template or `r=-1`
+repeat needs it. Known starts must increase and not pass the presentation end,
+the last Period's explicit end must equal it, and a Period must not be empty.
+Pinned upstream instead gives every Period without a `duration` the whole
+`mediaPresentationDuration` (so a later Period's duration template lists segments
+past its end); for such multi-period templates, and for a single Period with a
+nonzero `start`, native fragment lists are deliberately shorter than upstream's.
 
 SegmentTimeline supports explicit/implicit starts, positive durations, finite
 repeats and bounded `r=-1` expansion to an aligned next start or finite period
@@ -6245,7 +6255,33 @@ Inclusive XML byte endpoints become exact ByteRange offset/length values. Explic
 resource BaseURLs may supply omitted range-resource URIs. Fragmented MP4/WebM
 plans require initialization; an explicit whole-resource non-directory BaseURL
 can instead form a single-fragment representation. Resolved URLs are limited to
-16 KiB, formats to 256 and aggregate fragments (including initialization) to 10000.
+16 KiB, representations to 256 per Period, merged formats to 256 and aggregate
+fragments across all Periods (including initialization) to 500000.
+
+Periods are parsed in order and combined like upstream `_merge_mpd_periods`: a
+format equal to an earlier one except for `format_id`, `fragments` and
+`manifest_stream_number` (in the same or an earlier Period) appends its
+fragments, initialization included, to the earlier format, which keeps its ID and
+stream number; an equal unfragmented resource adds nothing. Other formats are
+listed separately (repeated IDs get upstream's `-0`/`-1` suffixes), and
+`manifest_stream_number` counts on across Periods per format URL. Every format
+has `is_dash_periods`. Subtitle tracks of all Periods are listed in order; when
+more than one Period has them, upstream's `Found subtitles in multiple periods in
+the DASH manifest; if part of the subtitles are missing, please report this
+issue on ...` warning is printed once per extraction, prefixed with the current
+extractor name as page-dump messages are (`[generic]` for direct manifests).
+The second Period's media is downloaded after the first's into one file, as
+upstream's DashSegmentsFD does; nothing is trimmed or remuxed at the boundary.
+
+A `ContentProtection` child of an AdaptationSet or Representation marks the
+affected formats and subtitle tracks `has_drm` (placed after `dynamic_range`, as
+upstream); its scheme data and namespaced descendants (`cenc:pssh`, PlayReady,
+license URLs) are accepted but not interpreted. Processing then drops those
+formats unless `--allow-unplayable-formats`; when none remain the result fails
+with `ERROR: [generic] ID: This video is DRM protected` (a warning with
+`--ignore-no-formats-error`), and `-F` lists them with `DRM` under
+`--allow-unplayable-formats`. No decryption is attempted. ContentProtection
+elsewhere (MPD or Period level) is rejected rather than ignored.
 
 Formats use upstream IDs (the representation `id`, else the content type; HTML5
 sources add no prefix, as upstream passes no `mpd_id`), declared stream kind, MP4/M4A
@@ -6256,14 +6292,18 @@ the ordered fragments describe actual resources. Existing selectors, per-fragmen
 retries/cancellation, no-clobber publication and explicit FFmpeg merge policy apply.
 Without a merger, separate-only presentations need explicit single-track selection.
 
-Reject dynamic MPDs, multiple periods, ContentProtection/DRM, SegmentBase/SIDX and
-index attributes, dependent/scalable representations, SubRepresentation,
+Reject dynamic MPDs (`type="dynamic"`; pinned upstream parses them like static
+ones and marks generic results live), RepresentationIndex and index attributes
+(upstream ignores them), dependent/scalable representations, SubRepresentation,
 EssentialProperty, remapping, multiple BaseURL alternatives, mixed inherited
-addressing schemes and unsupported state. YouTube MPD discovery remains outside
+addressing schemes and unsupported state. SegmentBase representations are their
+direct BaseURL, as upstream. YouTube MPD discovery remains outside
 its extractor. No live/site reliability or general DASH parity is implied.
 
 Original local fMP4 fixtures verify exact single-track bytes and optional FFprobe
-H.264/AAC tracks for timeline, duration-template, list and range forms. The real
+H.264/AAC tracks for timeline, duration-template, list and range forms, and a
+two-Period timeline manifest whose download is both Periods' bytes in order
+(identical to pinned upstream's file). The real
 merge test downloads both representations and checks the combined tracks. The
 Linux real-tool job includes these checks. Pinned reference command:
 
@@ -6275,7 +6315,10 @@ The actual upstream parser receives saved XML with network access blocked; nativ
 JSON reads only localhost MPDs. Whole format dicts are compared in FormatSorter
 order, including fragment_base_url and each fragment's path/url/duration,
 excluding only the fields `process_video_result` adds and applying its
-`dynamic_range` SDR default; only the exact local origin is normalized. Pinned
+`dynamic_range` SDR default; only the exact local origin is normalized. The
+saved info-order cases (`tests/fixtures/info_order/`) also compare exact `-j`/`-J`
+lines with pinned upstream for merged, unmerged and direct multi-period
+manifests and a partly protected one. Pinned
 upstream ignores SegmentList ranges and does not expand
 negative repeats or apply presentationTimeOffset: native range expectations are
 checked independently, and those timing behaviors are excluded from upstream

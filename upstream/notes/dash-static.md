@@ -21,8 +21,8 @@ inherited SegmentTemplate/SegmentTimeline or SegmentList, explicit whole-resourc
 representations, MP4/WebM audio/video metadata and bounded ordered fragments.
 Direct HTTP/HTML5 dispatch acquires a bounded MPD without probing fragments;
 selection, byte ranges, retries, publication and explicit local FFmpeg merging
-reuse the existing native pipeline. Unsupported dynamic, multiperiod, DRM, SIDX,
-dependent streams and advanced addressing fail explicitly. See
+reuse the existing native pipeline. Unsupported dynamic, SIDX, dependent streams
+and advanced addressing fail explicitly. See
 [the compatibility contract](../../docs/COMPATIBILITY.md#static-dash-mpds).
 
 `tools/compare_dash.py` invokes the actual pinned parser with saved XML and
@@ -48,3 +48,35 @@ real-tool CI job includes these tests. Fixture provenance is in
 
 This adds no YouTube MPD discovery, general DASH compatibility, live-site guarantee
 or global baseline advancement.
+
+## Multi-period and ContentProtection (pinned 2026.10.26)
+
+Against the pinned baseline `f264a6cbd1f630894da0f368df00f8aae50140e0`
+(2026.10.26; no baseline change), ported from `yt_dlp/extractor/common.py`:
+`_merge_mpd_periods` and the per-Period loop of `_parse_mpd_periods`
+(`stream_numbers` shared across Periods) and `is_drm_protected`/`has_drm`.
+Formats equal except for `format_id`, `fragments` and `manifest_stream_number`
+merge by appending fragments (also within one Period); subtitles concatenate with
+the once-per-extraction multiple-period warning. `has_drm` formats are then dropped
+by the existing `process_video_result` port unless `--allow-unplayable-formats`
+(`This video is DRM protected`). Deliberate difference: a Period without
+`duration` spans to the next Period's start (or the presentation end), where
+upstream reuses `mediaPresentationDuration`; this only changes duration-template
+segment counts. RepresentationIndex stays rejected (upstream never reads it).
+
+Dynamic MPDs stay rejected. Upstream parses them with the same static code
+(`dynamic_mpd`, default on; `--ignore-dynamic-mpd` returns no Periods), so a
+`$Number$` duration template without a presentation duration yields only its
+initialization fragment, an open `r=-1` repeat a single segment, and
+presentationTimeOffset is ignored; the generic extractor sets
+`live_status='is_live'`, and live `http_dash_segments` downloads use FFmpegFD on
+the manifest URL. Porting that needs a dynamic-only parse mode emulating those
+lists against this port's fail-closed timing rules, generic live status,
+`--ignore-dynamic-mpd`, and wall-clock-dependent live download tests.
+
+Evidence: exact `-j`/`-J` lines for merged, unmerged and direct multi-period and
+partly protected manifests (`tests/fixtures/info_order/`, captured with
+`tools/capture_info_order.py`), `tools/compare_dash.py` on
+`media/periods.mpd`, byte-identical two-Period downloads, and the DRM error,
+`--ignore-no-formats-error`, `--allow-unplayable-formats`, `-F` and warning
+outputs compared with pinned upstream on the same local manifests.
