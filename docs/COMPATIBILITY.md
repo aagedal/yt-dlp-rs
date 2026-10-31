@@ -379,13 +379,17 @@ unsupported error. Then come `_extract_embeds`' URL patterns in upstream order: 
 `source=` parameters, the JW Player JS loader, Flow Player, Cinerama, Twitter
 `player:stream` cards and `og:video`/`og:audio` (with `check_video`'s image and
 subtitle exclusions), then `http-equiv="refresh"` redirects and `twitter:player`
-iframes (`[redirect] Following redirect to URL`, extracted again). Found
+iframes (`[redirect] Following redirect to URL`, then upstream's
+`url_result(new_url)`: the URL is extracted with every extractor, YouTube
+included). `check_video` also keeps YouTube and RTMP URLs, as upstream. Found
 direct media URLs become upstream's entries (basename ID, the domain as
 `uploader`, the page title, a Referer header; one URL merged with the page's
 `timestamp`/`description`/`thumbnail`, several as a playlist with numbered
 titles); found HLS or DASH URLs are requested with the page as Referer and
-get `_extra_manifest_info` (XSPF/F4M, RTMP and YouTube URLs are
-unsupported errors). Before JSON-LD, a KVS player (`kt_player.js`/`.swf`
+get `_extra_manifest_info`; a YouTube URL is upstream's
+`url_result(video_url, 'Youtube')` (followed when it is the only one, a
+`url` entry otherwise; `tests/fixtures/sites/generic-youtube/`); XSPF/F4M and
+RTMP URLs are unsupported errors. Before JSON-LD, a KVS player (`kt_player.js`/`.swf`
 version, with upstream's untested-major-version warning) is `_extract_kvs`:
 the `flashvars` object (`_search_json` with `js_to_json`), canonical-link
 `display_id`, `<title>`/`<h1>` title, protocol-fixed preview thumbnail, and
@@ -6796,6 +6800,18 @@ identities/file-and-set membership checks, logical recording and four upstream
 control flows. Native tests separately cover failure timing, concurrency and
 append rollback. See [the source slice](../upstream/notes/download-archive.md).
 
+
+## URL results
+
+An extractor's `url` result is extracted again with every extractor. Its
+`url_transparent` result is too, then overlaid with the outer result's
+non-`None` fields except `_type`, `url` and `ie_key` (and, without
+`section_start`/`section_end`, `id`, `extractor` and `extractor_key`), as
+upstream's `process_ie_result`; when the target is a playlist, the playlist
+takes those fields and the outer page URL, with new keys after its page fields
+(`tests/fixtures/sites/wykop-playlist/`). A playlist entry whose
+`url_transparent` URL resolves to a playlist is an explicit error: upstream
+processes it as an inline nested playlist, which this port does not.
 
 ## Playlist item selection
 

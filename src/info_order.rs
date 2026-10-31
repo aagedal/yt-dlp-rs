@@ -24,6 +24,11 @@ pub(crate) const SECTION_UPDATE: &str = "__yt_dlp_rs_section_update";
 /// result's `original_url` on as extra info, ahead of the default keys.
 pub(crate) const FOLLOWED: &str = "__yt_dlp_rs_followed";
 
+/// A playlist's fields a `url_transparent` result added (upstream's
+/// `new_result.update(force_properties)`: new keys follow the inner
+/// result's own, before processing adds its fields).
+pub(crate) const FORCED_KEYS: &str = "__yt_dlp_rs_forced_keys";
+
 /// An extractor dict's own top-level `url` (next to its `formats`), which
 /// `requested_downloads` are compared with; the typed `url` holds the
 /// selected format's.
@@ -2797,7 +2802,14 @@ fn youtube_tab_playlist(
 /// (passed on as extra info) ahead of its `webpage_url`.
 pub(crate) fn playlist(mut map: Map<String, Value>) -> Map<String, Value> {
     let followed = map.shift_remove(FOLLOWED).is_some();
-    let map = shaped_playlist(map);
+    let forced: Vec<String> = match map.shift_remove(FORCED_KEYS) {
+        Some(Value::Array(keys)) => keys
+            .into_iter()
+            .filter_map(|key| key.as_str().map(str::to_owned))
+            .collect(),
+        _ => Vec::new(),
+    };
+    let map = forced_after_page_fields(shaped_playlist(map), &forced);
     if !followed || !map.contains_key("original_url") {
         return map;
     }
@@ -2808,6 +2820,29 @@ pub(crate) fn playlist(mut map: Map<String, Value>) -> Map<String, Value> {
         }
         if key != "original_url" || !out.contains_key("original_url") {
             out.insert(key.clone(), value.clone());
+        }
+    }
+    out
+}
+
+/// `forced` keys moved after `webpage_url_domain` (the inner result's
+/// default extra info), where upstream's update appends them.
+fn forced_after_page_fields(map: Map<String, Value>, forced: &[String]) -> Map<String, Value> {
+    if forced.is_empty() || !map.contains_key("webpage_url_domain") {
+        return map;
+    }
+    let mut out = Map::new();
+    for (key, value) in &map {
+        if forced.contains(key) {
+            continue;
+        }
+        out.insert(key.clone(), value.clone());
+        if key == "webpage_url_domain" {
+            for key in forced {
+                if let Some(value) = map.get(key) {
+                    out.insert(key.clone(), value.clone());
+                }
+            }
         }
     }
     out

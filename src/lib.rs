@@ -4876,10 +4876,43 @@ impl YoutubeDl {
                     // The outer result's fake IP is among its forced fields.
                     let outer_ip = geo::fake_ip();
                     let merge = |result: &mut ExtractResult| -> Result<()> {
-                        let ExtractResult::Video(inner) = result else {
-                            return Err(Error::UnsupportedHtml5(
-                                "url_transparent playlists are not supported natively".into(),
-                            ));
+                        let inner = match result {
+                            ExtractResult::Video(inner) => inner,
+                            // `new_result = info.copy(); new_result.update(
+                            // force_properties)`: a playlist takes the outer
+                            // result's fields and page URL too.
+                            ExtractResult::Playlist(playlist) => {
+                                let added: Vec<serde_json::Value> = fields
+                                    .iter()
+                                    .map(|(key, _)| key.as_str())
+                                    .filter(|key| {
+                                        !matches!(*key, "title" | "webpage_url")
+                                            && !playlist.extra.contains_key(*key)
+                                    })
+                                    .map(serde_json::Value::from)
+                                    .collect();
+                                playlist
+                                    .extra
+                                    .insert(info_order::FORCED_KEYS.into(), added.into());
+                                for (key, value) in &fields {
+                                    match key.as_str() {
+                                        "title" => {
+                                            playlist.title =
+                                                value.as_str().unwrap_or_default().to_owned();
+                                        }
+                                        _ => {
+                                            playlist.extra.insert(key.clone(), value.clone());
+                                        }
+                                    }
+                                }
+                                playlist.webpage_url = outer.clone();
+                                if let Some(ip) = &outer_ip {
+                                    playlist
+                                        .extra
+                                        .insert(geo::FAKE_IP_FIELD.into(), ip.clone().into());
+                                }
+                                return before_processing(result);
+                            }
                         };
                         let mut inner_shape = match inner.extra.get(info_order::INFO_SHAPE) {
                             Some(serde_json::Value::String(shape)) => shape.clone(),

@@ -1,0 +1,17 @@
+[
+ {
+  "url": "https://wykop.pl/link/6912923/najbardziej-zrzedliwy-kot-na-swiecie-i-frozen-planet-ii-i-bbc-earth",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://wykop.pl/link/6912923/najbardziej-zrzedliwy-kot-na-swiecie-i-frozen-planet-ii-i-bbc-earth",
+  "args": [
+   "--flat-playlist",
+   "--print",
+   "%(playlist_title)s|%(id)s"
+  ]
+ }
+]
