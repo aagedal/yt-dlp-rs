@@ -31,6 +31,7 @@ pub mod geo;
 pub mod getpass;
 mod growing;
 mod hls;
+mod hls_live;
 mod html;
 mod html_elements;
 mod http;
@@ -2685,7 +2686,10 @@ impl YoutubeDl {
     pub fn refresh_hls(&self, info: &VideoInfo) -> Result<Option<VideoInfo>> {
         // Formats loaded from info JSON have no fragments yet, like
         // upstream's, which HlsFD always reads from the playlist.
-        if !info.protocol.as_deref().unwrap_or("").starts_with("m3u8") || self.uses_ffmpeg_fd(info)
+        // A live stream is FFmpegFD's (or, without ffmpeg, `hls_live`'s).
+        if !info.protocol.as_deref().unwrap_or("").starts_with("m3u8")
+            || self.uses_ffmpeg_fd(info)
+            || is_live(info)
         {
             return Ok(None);
         }
@@ -3263,7 +3267,11 @@ impl YoutubeDl {
                 screen::screen(&format!("[download] Destination: {}", path.display()));
             }
             jobs.push(live_dash::Job {
-                fragments: extractor::LiveFragments::new(feed.clone(), &stream.extra, &stream.url),
+                fragments: Box::new(extractor::LiveFragments::new(
+                    feed.clone(),
+                    &stream.extra,
+                    &stream.url,
+                )),
                 info: stream.clone(),
                 destination: path.clone(),
                 pipe,
@@ -5605,6 +5613,36 @@ impl YoutubeDl {
                 .filter(|path| !path.as_os_str().is_empty())
                 .unwrap_or(Path::new(".")),
         );
+        // Port extension: without ffmpeg, a live HLS format is recorded
+        // natively (`hls_live`) where upstream fails with `m3u8 download
+        // detected but ffmpeg could not be found`.
+        if self.ffmpeg.is_none()
+            && info.requested_formats.is_empty()
+            && is_live(info)
+            && info
+                .protocol
+                .as_deref()
+                .is_some_and(|protocol| protocol.starts_with("m3u8"))
+        {
+            screen::warning(
+                "ffmpeg could not be found; recording the live HLS stream natively (yt-dlp-rs extension)",
+            );
+            let referer = (!info.is_direct()).then(|| info.webpage_url.clone());
+            let job = live_dash::Job {
+                info: info.clone(),
+                destination: destination.to_path_buf(),
+                fragments: Box::new(hls_live::HlsLive::new(
+                    self.client.clone(),
+                    info.url.clone(),
+                    referer,
+                    self.live_from_start,
+                )),
+                pipe: false,
+            };
+            let sizes =
+                live_dash::download(&self.client, vec![job], options, false, &mut callback)?;
+            return Ok(sizes.iter().sum());
+        }
         // Upstream `HlsFD.real_download` refetches the media playlist (a
         // loaded format, or a merge's private stream, has no fragments yet).
         let refreshed = if info.requested_formats.is_empty()

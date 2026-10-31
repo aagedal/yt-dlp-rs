@@ -71,6 +71,24 @@ pub(crate) fn read_playlist(response: Response) -> Result<(Url, Playlist)> {
 /// [`read_playlist`]; with `allow_live`, an unfinished media playlist is
 /// [`Playlist::LiveMedia`].
 fn read_playlist_with(response: Response, allow_live: bool) -> Result<(Url, Playlist)> {
+    let (base, text) = read_text(response)?;
+    let playlist = if allow_live {
+        crate::hls::parse_live(&text, &base)?
+    } else {
+        crate::hls::parse(&text, &base)?
+    };
+    Ok((base, playlist))
+}
+
+/// A (live) media playlist's current window.
+pub(crate) fn read_window(response: Response) -> Result<(Url, crate::hls::Window)> {
+    let (base, text) = read_text(response)?;
+    let window = crate::hls::parse_window(&text, &base)?;
+    Ok((base, window))
+}
+
+/// A playlist's bounded identity-encoded UTF-8 text and final URL.
+fn read_text(response: Response) -> Result<(Url, String)> {
     if response
         .content_length()
         .is_some_and(|size| size > MAX_MANIFEST_BYTES)
@@ -129,14 +147,9 @@ fn read_playlist_with(response: Response, allow_live: bool) -> Result<(Url, Play
         ));
     }
     crate::screen::page_read(&base, &bytes)?;
-    let text = std::str::from_utf8(&bytes)
+    let text = String::from_utf8(bytes)
         .map_err(|_| unsupported("only UTF-8/ASCII HLS playlists are supported"))?;
-    let playlist = if allow_live {
-        crate::hls::parse_live(text, &base)?
-    } else {
-        crate::hls::parse(text, &base)?
-    };
-    Ok((base.clone(), playlist))
+    Ok((base, text))
 }
 
 /// Upstream generic `_extra_manifest_info` ("Checking m3u8 live status"):
@@ -482,6 +495,7 @@ fn from_playlist(
             info.fragments = info.formats[0].fragments.clone();
         }
         Playlist::LiveMedia { .. } => unreachable!("converted to a media format above"),
+        Playlist::Window(_) => unreachable!("only parse_window returns a window"),
         Playlist::Master {
             variants,
             audio,

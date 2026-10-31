@@ -6130,14 +6130,26 @@ remuxed. FFmpeg is unnecessary for this download path.
 `EXT-X-BYTERANGE` supports explicit offsets and implicit continuation only after
 an immediately preceding media range on the same URL. Map byte ranges require
 an explicit offset. All ranges are positive with checked arithmetic. Unsupported
-state is an error: live playlists without ENDLIST (outside FFmpegFD), variables,
+state is an error: VOD playlists without ENDLIST, variables,
 changing maps (also a map after a discontinuity), mixed inband/external
 audio groups, nested masters and malformed AES-128 keys. Like upstream's
 `extract_media`, a named `EXT-X-MEDIA:TYPE=VIDEO` rendition with a URI is a
 format (`GROUP-NAME` ID, the name as note, its language, unknown codecs, no
 audio-group preference) listed in document order with the audio renditions
 before the variants; a variant's VIDEO or CLOSED-CAPTIONS reference, resolved or
-not, leaves it a format of its own. Like upstream's line
+not, leaves it a format of its own. Live media playlists download through FFmpegFD like upstream; without ffmpeg,
+where upstream fails with `m3u8 download detected but ffmpeg could not be found`,
+this port records them natively (port extension, `WARNING: ffmpeg could not be
+found; recording the live HLS stream natively (yt-dlp-rs extension)`): it reloads
+the media playlist every target duration (half of it after a reload without new
+segments), starts three segments before the live edge like FFmpeg's
+`live_start_index` (every listed segment with `--live-from-start`), appends each
+new segment once by media sequence number (an initialization map once; AES-128
+decrypted; with fragment retries), warns about segments that left the playlist
+before a reload, and ends at `#EXT-X-ENDLIST`, an interrupt (keeping the
+recording) or ten reloads without a new segment. DRM and SAMPLE-AES live streams
+still need ffmpeg. The output is the segments as they are (MPEG-TS in an `.mp4`
+name, like native VOD HLS without ffmpeg's fixup). Like upstream's line
 loops, other tags (`EXT-X-START`, `EXT-X-DATERANGE`, ad/SCTE-35 markers, gaps,
 low-latency parts and hints, session data/keys, vendor tags) are ignored.
 Upstream `HlsFD.can_download` and `_has_drm` decide encrypted playlists: a

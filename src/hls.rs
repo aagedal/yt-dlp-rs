@@ -42,6 +42,30 @@ pub(crate) enum Playlist {
         /// All `#EXT-X-DISCONTINUITY*` lines.
         discontinuities: u32,
     },
+    /// The current segments of a (possibly live) media playlist (only from
+    /// [`parse_window`]).
+    Window(Window),
+}
+
+/// A media playlist's current window, for polling a live stream.
+#[derive(Debug)]
+pub(crate) struct Window {
+    /// The segments, after an initialization fragment when [`Self::has_map`].
+    pub fragments: Vec<Fragment>,
+    pub has_map: bool,
+    /// The media sequence number of the first segment.
+    pub first_sequence: u64,
+    pub endlist: bool,
+    /// `#EXT-X-TARGETDURATION` in seconds.
+    pub target_duration: u64,
+    pub native: Native,
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Mode {
+    Vod,
+    Live,
+    Window,
 }
 
 #[derive(Debug)]
@@ -410,17 +434,25 @@ fn variant(
 }
 
 pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
-    parse_with(text, base, false)
+    parse_with(text, base, Mode::Vod)
+}
+
+/// A media playlist's current segments, with or without `#EXT-X-ENDLIST`.
+pub(crate) fn parse_window(text: &str, base: &Url) -> Result<Window> {
+    match parse_with(text, base, Mode::Window)? {
+        Playlist::Window(window) => Ok(window),
+        _ => Err(invalid("a live HLS stream must be a media playlist")),
+    }
 }
 
 /// [`parse`], returning [`Playlist::LiveMedia`] for a media playlist
 /// (`#EXT-X-TARGETDURATION`) without `#EXT-X-ENDLIST`, like upstream
 /// `_parse_m3u8_formats_and_subtitles`.
 pub(crate) fn parse_live(text: &str, base: &Url) -> Result<Playlist> {
-    parse_with(text, base, true)
+    parse_with(text, base, Mode::Live)
 }
 
-fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
+fn parse_with(text: &str, base: &Url, mode: Mode) -> Result<Playlist> {
     let lines: Vec<_> = text
         .trim_start_matches('\u{feff}')
         .lines()
@@ -547,6 +579,8 @@ fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
     let mut pending_range = None;
     let mut endlist = false;
     let mut target_duration = false;
+    let mut target_seconds = 0u64;
+    let mut first_sequence = 0u64;
     let mut media_seen = false;
     let mut has_map = false;
     let mut ext: Option<&str> = None;
@@ -660,7 +694,7 @@ fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
         } else if let Some(value) = line.strip_prefix("#EXT-X-VERSION:") {
             positive_integer(value)?;
         } else if let Some(value) = line.strip_prefix("#EXT-X-TARGETDURATION:") {
-            positive_integer(value)?;
+            target_seconds = positive_integer(value)?;
             media_seen = true;
             target_duration = true;
         } else if let Some(value) = line.strip_prefix("#EXT-X-MEDIA-SEQUENCE:") {
@@ -674,6 +708,7 @@ fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
                 ));
             }
             sequence = Some(unsigned(value)?);
+            first_sequence = sequence.unwrap_or_default();
             sequence_seen = true;
             media_seen = true;
         } else if let Some(value) = line.strip_prefix("#EXT-X-PLAYLIST-TYPE:") {
@@ -802,7 +837,20 @@ fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
             drm: native == Native::Drm,
         });
     }
-    if !endlist && allow_live && target_duration {
+    if mode == Mode::Window {
+        if !target_duration || !groups.is_empty() {
+            return Err(invalid("a live HLS stream must be a media playlist"));
+        }
+        return Ok(Playlist::Window(Window {
+            fragments,
+            has_map,
+            first_sequence,
+            endlist,
+            target_duration: target_seconds,
+            native,
+        }));
+    }
+    if !endlist && mode == Mode::Live && target_duration {
         return Ok(Playlist::LiveMedia { discontinuities });
     }
     if !endlist {
@@ -1055,6 +1103,24 @@ mod tests {
         };
         assert_eq!(fragments.len(), 1);
     }
+    #[test]
+    fn live_windows_keep_sequence_target_and_map() {
+        let window = parse_window(
+            "#EXTM3U\n#EXT-X-TARGETDURATION:6\n#EXT-X-MEDIA-SEQUENCE:41\n#EXT-X-MAP:URI=\"init.mp4\"\n#EXTINF:6,\na.m4s\n#EXTINF:6,\nb.m4s",
+            &base(),
+        )
+        .unwrap();
+        assert_eq!(window.first_sequence, 41);
+        assert_eq!(window.target_duration, 6);
+        assert!(window.has_map && !window.endlist);
+        assert_eq!(window.fragments.len(), 3);
+        // An empty live window is valid; a master playlist is not.
+        let empty = parse_window("#EXTM3U\n#EXT-X-TARGETDURATION:2", &base()).unwrap();
+        assert!(empty.fragments.is_empty());
+        assert!(parse_window("#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1\na.m3u8", &base()).is_err());
+        assert!(parse_window("#EXTM3U\n#EXTINF:1,\na.ts\n#EXT-X-ENDLIST", &base()).is_err());
+    }
+
     #[test]
     fn other_tags_are_ignored_like_upstream() {
         let text = "#EXTM3U\n#EXT-X-VERSION:6\n#EXT-X-START:TIME-OFFSET=2\n#EXT-X-SERVER-CONTROL:CAN-BLOCK-RELOAD=YES\n#EXT-X-PART-INF:PART-TARGET=1\n#EXT-X-TARGETDURATION:4\n#EXT-X-DATERANGE:ID=\"ad\",START-DATE=\"2026-01-01T00:00:00Z\"\n#EXT-X-CUE-OUT:30\n#EXT-OATCLS-SCTE35:/DA=\n#EXTINF:4,\na.ts\n#EXT-X-PART:DURATION=1,URI=\"a.1.ts\"\n#EXT-X-CUE-IN\n#EXT-X-GAP\n#EXTINF:4,\nb.ts\n#EXT-X-PRELOAD-HINT:TYPE=PART,URI=\"c.ts\"\n#EXT-X-RENDITION-REPORT:URI=\"o.m3u8\"\n#EXT-X-ENDLIST";

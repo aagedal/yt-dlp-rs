@@ -661,8 +661,7 @@ fn live_media_playlist_extracts_as_one_live_format() {
     assert!(server.paths().iter().all(|path| path == "/live.m3u8"));
 }
 
-/// Upstream `_get_suitable_downloader`: live HLS downloads through FFmpegFD;
-/// without FFmpeg the native downloader still rejects the unfinished playlist.
+/// Upstream `_get_suitable_downloader`: live HLS downloads through FFmpegFD.
 #[cfg(unix)]
 #[test]
 fn live_media_playlist_downloads_through_ffmpeg() {
@@ -704,18 +703,5 @@ fn live_media_playlist_downloads_through_ffmpeg() {
         server.paths()
     );
     assert!(directory.path().join("out.mp4").exists());
-
-    let directory = tempfile::tempdir().unwrap();
-    let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
-        .args(["--ffmpeg-location", "/nonexistent/ffmpeg"])
-        .arg(server.url("/live.m3u8"))
-        .current_dir(directory.path())
-        .output()
-        .unwrap();
-    assert!(!result.status.success());
-    assert!(
-        String::from_utf8_lossy(&result.stderr).contains("ENDLIST"),
-        "{}",
-        String::from_utf8_lossy(&result.stderr)
-    );
+    // Without ffmpeg, see `tests/hls_live.rs`.
 }
