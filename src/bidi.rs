@@ -64,6 +64,7 @@ pub fn start() -> Result<(), StartError> {
 #[derive(Debug)]
 pub enum StartError {
     NotFound,
+    #[cfg_attr(not(unix), allow(dead_code))]
     Other(std::io::Error),
 }
 
