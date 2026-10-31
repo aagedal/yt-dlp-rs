@@ -97,7 +97,7 @@ static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
         .map(|host| regex::escape(host))
         .collect::<Vec<_>>()
         .join("|");
-    Regex::new(&format!(
+    crate::extractor::url_regex(&format!(
         r"^https?://(?P<host>{hosts})/(?:m/(?P<tmp_id>[0-9a-f]+)|(?:category/)?video/(?P<display_id>[\w-]+)/(?P<id>[0-9a-f]{{32}})|media/embed.*(?:\?|&)key=(?P<embed_id>[0-9a-f]{{32}}&?))"
     ))
     .unwrap()

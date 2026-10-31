@@ -17,9 +17,11 @@ const NAME: &str = "Ivoox";
 
 static VALID_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [
-        Regex::new(r"^https?://(?:www\.)?ivoox\.com/(?:\w{2}/)?[^/?#]+_rf_(?P<id>[0-9]+)_1\.html")
-            .unwrap(),
-        Regex::new(r"^https?://go\.ivoox\.com/rf/(?P<id>[0-9]+)").unwrap(),
+        crate::extractor::url_regex(
+            r"^https?://(?:www\.)?ivoox\.com/(?:\w{2}/)?[^/?#]+_rf_(?P<id>[0-9]+)_1\.html",
+        )
+        .unwrap(),
+        crate::extractor::url_regex(r"^https?://go\.ivoox\.com/rf/(?P<id>[0-9]+)").unwrap(),
     ]
 });
 

@@ -21,7 +21,7 @@ const CLAIM: &str = "[0-9a-f]{1,40}";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
     let opt = format!(r"[^$@:/?#&]+(?:[:#]{CLAIM})?");
-    Regex::new(&format!(
+    crate::extractor::url_regex(&format!(
         r"^(?:https?://(?:www\.)?(?:lbry\.tv|odysee\.com)/|lbry://)(?:\$/(?:download|embed)/)?(?P<id>[^$@:/?#]+/{CLAIM}|(?:@{opt}/)?{opt})"
     ))
     .unwrap()

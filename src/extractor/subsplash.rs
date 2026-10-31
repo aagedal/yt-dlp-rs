@@ -29,11 +29,11 @@ const SERIES_INCLUDE: &str =
 
 static VALID_URL: LazyLock<Vec<Regex>> = LazyLock::new(|| {
     vec![
-        Regex::new(
+        crate::extractor::url_regex(
             r"^https?://(?:www\.)?subsplash\.com/(?:u/)?[^/?#]+/[^/?#]+/(?:d/|mi/\+)(?P<id>\w+)",
         )
         .unwrap(),
-        Regex::new(r"^https?://(?:\w+\.)?subspla\.sh/(?P<id>\w+)").unwrap(),
+        crate::extractor::url_regex(r"^https?://(?:\w+\.)?subspla\.sh/(?P<id>\w+)").unwrap(),
     ]
 });
 static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {

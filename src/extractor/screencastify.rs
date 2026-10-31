@@ -16,8 +16,12 @@ const NAME: &str = "Screencastify";
 
 static VALID_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [
-        Regex::new(r"^https?://watch\.screencastify\.com/v/(?P<id>[^/?#]+)").unwrap(),
-        Regex::new(r"^https?://app\.screencastify\.com/v[23]/watch/(?P<id>[^/?#]+)").unwrap(),
+        crate::extractor::url_regex(r"^https?://watch\.screencastify\.com/v/(?P<id>[^/?#]+)")
+            .unwrap(),
+        crate::extractor::url_regex(
+            r"^https?://app\.screencastify\.com/v[23]/watch/(?P<id>[^/?#]+)",
+        )
+        .unwrap(),
     ]
 });
 

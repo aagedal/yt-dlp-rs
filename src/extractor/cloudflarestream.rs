@@ -19,7 +19,7 @@ static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
     let domain = r"(?:cloudflarestream\.com|(?:videodelivery|bytehighway)\.net)";
     let embed = format!(r"(?:embed\.|{subdomain}){domain}/embed/[^/?#]+\.js\?(?:[^#]+&)?video=");
     let id = r"[\da-f]{32}|eyJ[\w-]+\.[\w-]+\.[\w-]+";
-    Regex::new(&format!(
+    crate::extractor::url_regex(&format!(
         r"^https?://(?:{subdomain}(?P<domain>{domain})/|{embed})(?P<id>{id})"
     ))
     .unwrap()

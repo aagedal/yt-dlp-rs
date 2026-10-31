@@ -18,9 +18,12 @@ const NAME: &str = "Zapiks";
 
 static VALID_URL: LazyLock<Vec<Regex>> = LazyLock::new(|| {
     vec![
-        Regex::new(r"^https?://(?:www\.)?zapiks\.(?:com|fr)/(?P<id>[\w-]+)\.html").unwrap(),
-        Regex::new(r"^https?://(?:www\.)?zapiks\.fr/index\.php\?(?:[^#]+&)?media_id=(?P<id>\d+)")
+        crate::extractor::url_regex(r"^https?://(?:www\.)?zapiks\.(?:com|fr)/(?P<id>[\w-]+)\.html")
             .unwrap(),
+        crate::extractor::url_regex(
+            r"^https?://(?:www\.)?zapiks\.fr/index\.php\?(?:[^#]+&)?media_id=(?P<id>\d+)",
+        )
+        .unwrap(),
     ]
 });
 static UPLOADER_ID: LazyLock<Regex> =

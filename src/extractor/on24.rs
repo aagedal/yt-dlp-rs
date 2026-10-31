@@ -17,13 +17,13 @@ const KEY: &str = "On24";
 static VALID_URLS: LazyLock<[Regex; 3]> = LazyLock::new(|| {
     let query = r"(?:[^#]*&)?eventid=(?P<id>\d{7})&(?:[^#]+&)?key=(?P<key>[0-9A-F]{32})";
     [
-        Regex::new(r"^https?://event\.on24\.com/wcc/r/(?P<id>\d{7})/(?P<key>[0-9A-F]{32})")
+        crate::extractor::url_regex(r"^https?://event\.on24\.com/wcc/r/(?P<id>\d{7})/(?P<key>[0-9A-F]{32})")
             .unwrap(),
-        Regex::new(&format!(
+        crate::extractor::url_regex(&format!(
             r"^https?://event\.on24\.com/eventRegistration/console/(?:EventConsoleApollo\.jsp|apollox/mainEvent/?)\?{query}"
         ))
         .unwrap(),
-        Regex::new(&format!(
+        crate::extractor::url_regex(&format!(
             r"^https?://event\.on24\.com/eventRegistration/EventLobbyServlet/?\?{query}"
         ))
         .unwrap(),
