@@ -2690,7 +2690,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         } else {
             None
         })
-        .with_live_from_start(args.live_from_start);
+        .with_live_from_start(args.live_from_start)
+        .with_dynamic_mpd(!args.ignore_dynamic_mpd);
     let output_paths = yt_dlp_rs::output::parse_paths(&args.paths)?;
     let template_options = TemplateOptions {
         na_placeholder: args.output_na_placeholder,
@@ -6139,6 +6140,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 if !ffmpeg_fd
                                     && info.requested_formats.is_empty()
                                     && !info.fragments.is_empty()
+                                    && !downloader.live_dash_fails(info)
                                 {
                                     // Upstream `_prepare_frag_download`.
                                     let downloader = match info.protocol.as_deref() {
@@ -6313,7 +6315,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     let stream = refreshed.as_ref().unwrap_or(stream);
                                     // A single result already announced itself above.
                                     if !info.requested_formats.is_empty() {
-                                        if !stream.fragments.is_empty() {
+                                        if !stream.fragments.is_empty()
+                                            && !downloader.live_dash_fails(stream)
+                                        {
                                             let downloader = match stream.protocol.as_deref() {
                                                 Some("http_dash_segments") => "dashsegments",
                                                 Some("ism") => "ism",

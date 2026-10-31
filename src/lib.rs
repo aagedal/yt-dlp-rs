@@ -263,6 +263,13 @@ fn is_ffmpeg_name(name: &str) -> bool {
     name != "native" && (base.contains("ffmpeg") || base.contains("avconv"))
 }
 
+/// A live `http_dash_segments` download's downloader.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum LiveDash {
+    Ffmpeg,
+    Native,
+}
+
 /// `info_dict.get('is_live')` (from `live_status`).
 pub(crate) fn is_live(info: &VideoInfo) -> bool {
     info.metadata.live_status.as_deref() == Some("is_live")
@@ -2459,13 +2466,16 @@ impl YoutubeDl {
             || (!ffmpeg_fd
                 && protocol.starts_with("m3u8")
                 && !options.hls_use_mpegts.unwrap_or(false));
-        let m4a = info.ext == "m4a" && info.container.as_deref() == Some("m4a_dash");
+        // Only a live FFmpegFD download gets here: the M3u8 check alone
+        // applies to it (`fd != FFmpegFD`, `downloader == 'dashsegments'`).
+        let m4a = !ffmpeg_fd && info.ext == "m4a" && info.container.as_deref() == Some("m4a_dash");
         // Every MPD format is `is_dash_periods` upstream.
         // (YouTube's post-live formats are not `is_dash_periods`.)
-        let dash = (protocol == "http_dash_segments"
-            && !info.fragments.is_empty()
-            && !info.extra.contains_key("target_duration"))
-            || (protocol == "http_dash_segments_generator" && is_live(info));
+        let dash = !ffmpeg_fd
+            && ((protocol == "http_dash_segments"
+                && !info.fragments.is_empty()
+                && !info.extra.contains_key("target_duration"))
+                || (protocol == "http_dash_segments_generator" && is_live(info)));
         for (needed, message, fixup) in [
             (
                 m4a,
@@ -3395,6 +3405,46 @@ impl YoutubeDl {
         }
     }
 
+    /// How a live result's `http_dash_segments` formats download
+    /// (`_get_suitable_downloader`): FFmpegFD unless `--downloader native`
+    /// names DashSegmentsFD; `None` when not live or no such format.
+    fn live_dash(&self, info: &VideoInfo) -> Option<LiveDash> {
+        if !is_live(info) {
+            return None;
+        }
+        let protocols: Vec<String> = if info.requested_formats.is_empty() {
+            info.protocol.iter().cloned().collect()
+        } else {
+            info.requested_formats
+                .iter()
+                .map(VideoFormat::determine_protocol)
+                .collect()
+        };
+        let mut found = None;
+        for protocol in protocols.iter().filter(|p| *p == "http_dash_segments") {
+            if self
+                .downloader_name(protocol)
+                .is_some_and(|name| name.eq_ignore_ascii_case("native"))
+            {
+                found = found.or(Some(LiveDash::Native));
+            } else {
+                return Some(LiveDash::Ffmpeg);
+            }
+        }
+        found
+    }
+
+    /// Whether a live DASH download fails before its fragments (FFmpegFD
+    /// without ffmpeg, or `--downloader native`), so no fragment count is
+    /// announced for it.
+    pub fn live_dash_fails(&self, info: &VideoInfo) -> bool {
+        match self.live_dash(info) {
+            Some(LiveDash::Native) => true,
+            Some(LiveDash::Ffmpeg) => self.ffmpeg.is_none(),
+            None => false,
+        }
+    }
+
     /// Upstream `get_suitable_downloader(...) == FFmpegFD`: partial downloads,
     /// or every selected protocol assigned to `ffmpeg` by `--downloader`.
     pub fn uses_ffmpeg_fd(&self, info: &VideoInfo) -> bool {
@@ -3995,6 +4045,14 @@ impl YoutubeDl {
         self
     }
 
+    /// `--allow-dynamic-mpd` (the default) or `--ignore-dynamic-mpd`
+    /// (`dynamic_mpd`): whether dynamic (live) DASH manifests give formats.
+    /// Like upstream's parameter, this applies to every extraction.
+    pub fn with_dynamic_mpd(self, process: bool) -> Self {
+        dash::set_dynamic_mpd(process);
+        self
+    }
+
     /// `--live-from-start`: live streams keep their title and default format.
     pub fn with_live_from_start(mut self, from_start: bool) -> Self {
         self.live_from_start = from_start;
@@ -4378,7 +4436,9 @@ impl YoutubeDl {
                         true,
                         None,
                     )?,
-                    ManifestKind::Dash => extractor::dash::from_response(response, webpage, true)?,
+                    ManifestKind::Dash => {
+                        extractor::dash::from_generic_response(response, webpage, true)?
+                    }
                 }
                 .ok_or_else(|| Error::UnsupportedManifest("the manifest has no media".into()))?
             }
@@ -5187,11 +5247,21 @@ impl YoutubeDl {
         // `--downloader ffmpeg` use FFmpegFD, which also merges selected
         // formats directly.
         let ffmpeg_fd = self.uses_ffmpeg_fd(info);
-        // FFmpegFD's `m3u8` protocol without ffmpeg (`_call_downloader`).
-        if self.ffmpeg.is_none() && self.forced_ffmpeg_hls(info) {
+        // FFmpegFD's `m3u8` protocol, or live DASH, without ffmpeg
+        // (`_call_downloader`).
+        let live_dash = self.live_dash(info);
+        if self.ffmpeg.is_none()
+            && (self.forced_ffmpeg_hls(info) || live_dash == Some(LiveDash::Ffmpeg))
+        {
             return Err(Error::Reported(
                 "m3u8 download detected but ffmpeg could not be found. Please install".into(),
             ));
+        }
+        // `DashSegmentsFD.real_download` reports this error for a live
+        // `http_dash_segments` download, then tries the manifest's snapshot
+        // fragments; this port stops instead.
+        if live_dash == Some(LiveDash::Native) {
+            return Err(Error::Reported("Live DASH videos are not supported".into()));
         }
         // Merged F4M formats are not supported (upstream merges F4mFD files).
         if info
@@ -5757,7 +5827,7 @@ impl YoutubeDl {
                 if let Some(refreshed) = self.refresh_hls(&part)? {
                     part = refreshed;
                 }
-                if !part.fragments.is_empty() {
+                if !part.fragments.is_empty() && !self.live_dash_fails(&part) {
                     let downloader = match part.protocol.as_deref() {
                         Some("http_dash_segments") => "dashsegments",
                         Some("ism") => "ism",

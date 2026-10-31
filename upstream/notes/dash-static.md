@@ -64,15 +64,53 @@ by the existing `process_video_result` port unless `--allow-unplayable-formats`
 upstream reuses `mediaPresentationDuration`; this only changes duration-template
 segment counts. RepresentationIndex stays rejected (upstream never reads it).
 
-Dynamic MPDs stay rejected. Upstream parses them with the same static code
-(`dynamic_mpd`, default on; `--ignore-dynamic-mpd` returns no Periods), so a
-`$Number$` duration template without a presentation duration yields only its
-initialization fragment, an open `r=-1` repeat a single segment, and
-presentationTimeOffset is ignored; the generic extractor sets
-`live_status='is_live'`, and live `http_dash_segments` downloads use FFmpegFD on
-the manifest URL. Porting that needs a dynamic-only parse mode emulating those
-lists against this port's fail-closed timing rules, generic live status,
-`--ignore-dynamic-mpd`, and wall-clock-dependent live download tests.
+## Dynamic (live) MPDs (pinned 2026.10.26)
+
+Against the same pinned baseline (no baseline change), ported from
+`yt_dlp/extractor/common.py` `_parse_mpd_periods` (the `dynamic_mpd` check, the
+`period_duration` fallback and the template/timeline/list loops as they behave
+for live manifests), `yt_dlp/extractor/generic.py` (`live_status` of a direct
+MPD), `yt_dlp/options.py` (`--allow-dynamic-mpd`/`--ignore-dynamic-mpd` and
+aliases), `yt_dlp/downloader/__init__.py` `_get_suitable_downloader` (live
+`http_dash_segments` → FFmpegFD unless `native`), `yt_dlp/downloader/external.py`
+`FFmpegFD._call_downloader` (`-re` per live DASH input), `yt_dlp/downloader/dash.py`
+(`Live DASH videos are not supported`) and the `YoutubeDL.process_info` fixup
+conditions (no duplicate-MOOV/m4a fixup after FFmpegFD).
+
+Upstream reads a dynamic MPD with its static code, so the port adds a
+dynamic-only schedule (`dash::dynamic_times`) instead of relaxing the static
+rules: Period duration from `duration` or `mediaPresentationDuration` only (no
+Period start checks); `$Number$` duration templates counted from it, from an
+earlier representation's summed fragment durations in the same Period (float, as
+`try_get(..., float)`), or not at all; timelines without presentationTimeOffset,
+`t="0"` continuing, any time order and `r="-1"` as one segment; SegmentList
+timelines taking `r + 1` URLs and dropping extras. Live-only hints upstream never
+reads (`Location`, `PatchLocation`, `availabilityTimeOffset`,
+`availabilityTimeComplete`) are ignored for dynamic MPDs only. Static parsing and
+output are unchanged.
+
+Explicit errors instead of upstream's behavior: too few SegmentURLs (`IndexError`)
+and templates without a timeline or `$Number$` (`KeyError`) fail like upstream but
+with this port's unsupported-manifest error; timeline/list structures the static
+parser already rejects (namespaced attributes, `r < -1`, ...) stay rejected;
+`--downloader native` stops after DashSegmentsFD's error where upstream goes on
+to download the snapshot's fragments. Storyboard (image) representations still
+produce no formats, though their fragments count toward an inferred Period
+duration as upstream's do.
+
+Evidence: `tools/compare_dash.py` (now eight manifests) on
+`tests/fixtures/dash/dynamic-{number,timeline,list}.mpd`; exact `-j`/`-J` lines
+for `dynamic.mpd` and `dynamic-timeline.mpd` in `tests/fixtures/info_order/`
+(the live title's local time normalized as `{DATE} {HH}:{MM}`); parser unit tests
+whose manifests were run through the pinned parser; and `tests/dash_dynamic.rs`
+comparing `--ignore-dynamic-mpd`/`--allow-dynamic-mpd`, `--ignore-no-formats-error`,
+`--live-from-start` and download outputs with pinned upstream on the same
+manifests. FFmpegFD arguments for merged and single-format live downloads equal
+upstream's as recorded by the same fake FFmpeg, except this port's existing
+non-direct `Referer` header. FFmpeg's DASH demuxer itself is not tested: the
+default Homebrew FFmpeg 9.0.2 has none, and FFmpeg-full 9.0.2 loops re-reading a
+fully available local dynamic manifest (and its first segment) rather than
+ending, so a real-tool live test would be wall-clock dependent.
 
 Evidence: exact `-j`/`-J` lines for merged, unmerged and direct multi-period and
 partly protected manifests (`tests/fixtures/info_order/`, captured with

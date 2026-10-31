@@ -45,7 +45,7 @@ tractable for future agents.
 - `src/http.rs`: validated global request headers and User-Agent/Referer defaults, shared by normal and bounded player clients.
 - `src/download.rs`: streaming HTTP transfer, byte-progress/cancellation checkpoints, and no-clobber publication.
 - `src/hls.rs` and `src/extractor/hls.rs`: pure VOD HLS parsing and generic/HTML5 manifest acquisition.
-- `src/dash.rs` and `src/extractor/dash.rs`: bounded static (multi-period) MPD parsing and generic/HTML5 acquisition.
+- `src/dash.rs` and `src/extractor/dash.rs`: bounded static (multi-period) MPD parsing, upstream's snapshot parse of dynamic (live) MPDs, and generic/HTML5 acquisition.
 - `src/fragment.rs`: ordered native fragment/range transport and atomic publication.
 - `src/rtmp_fd.rs` and `src/websocket_fd.rs`: upstream's RtmpFD (`rtmpdump`) and
   WebSocketFragmentFD (a websocket client piped into FFmpegFD's stdin, reusable by
@@ -157,7 +157,9 @@ inline nested processing) remains an explicit error.
    feed native fragment downloads and explicit FFmpeg copy merging, including
    MPEG-TS video and AAC/TS audio. Static DASH templates/timelines/lists/ranges, multi-period merging, `has_drm` marking and native
    representation downloads are implemented; explicit FFmpeg merges separate
-   tracks. Dynamic/SIDX DASH, SAMPLE-AES/DRM decryption and native (non-FFmpeg) live HLS,
+   tracks. Dynamic DASH follows upstream: generic live results,
+   `--ignore-dynamic-mpd` and FFmpegFD live downloads (native live DASH stays an
+   error). SIDX DASH, SAMPLE-AES/DRM decryption and native (non-FFmpeg) live HLS
    and external video renditions remain open. On Unix, SIGINT/SIGTERM end a
    CLI run like upstream's `KeyboardInterrupt`, keeping `.part` files.
    `--continue`/`.part` whole-file resume (also for downloads to be

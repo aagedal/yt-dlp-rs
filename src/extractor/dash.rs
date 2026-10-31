@@ -1,6 +1,6 @@
 //! Bounded static DASH acquisition; parsing and fragment transport are separate.
 use super::direct;
-use crate::{Error, Result, VideoFormat, VideoInfo};
+use crate::{Error, Result, VideoInfo};
 use percent_encoding::percent_decode_str;
 use reqwest::{
     blocking::Response,
@@ -20,9 +20,7 @@ pub(crate) fn recognized(response: &Response) -> bool {
         || response.url().path().to_ascii_lowercase().ends_with(".mpd")
 }
 
-fn read_manifest(
-    response: Response,
-) -> Result<(Url, Vec<VideoFormat>, crate::dash::ManifestSubtitles)> {
+fn read_manifest(response: Response) -> Result<(Url, crate::dash::Manifest)> {
     if response
         .content_length()
         .is_some_and(|size| size > MAX_MANIFEST_BYTES)
@@ -83,43 +81,70 @@ fn read_manifest(
     crate::screen::page_read(&base, &bytes)?;
     let text = std::str::from_utf8(&bytes)
         .map_err(|_| unsupported("only UTF-8/ASCII DASH playlists are supported"))?;
-    let (formats, subtitles) = crate::dash::parse_with_subtitles(text, &base)?;
-    Ok((base.clone(), formats, subtitles))
+    let manifest = crate::dash::parse_manifest(text, &base)?;
+    Ok((base, manifest))
 }
 
+/// The formats and subtitles of a DASH response (`None` when it is not
+/// one), for an extractor's `_extract_mpd_formats_and_subtitles`: a dynamic
+/// MPD's formats do not make the result live.
 pub(crate) fn from_response(
     response: Response,
     original: &Url,
     force_dash: bool,
+) -> Result<Option<VideoInfo>> {
+    from_response_as(response, original, force_dash, false)
+}
+
+/// GenericIE's direct MPD result: also `live_status`, `is_live` for a
+/// dynamic MPD (`None` otherwise).
+pub(crate) fn from_generic_response(
+    response: Response,
+    original: &Url,
+    force_dash: bool,
+) -> Result<Option<VideoInfo>> {
+    from_response_as(response, original, force_dash, true)
+}
+
+fn from_response_as(
+    response: Response,
+    original: &Url,
+    force_dash: bool,
+    generic: bool,
 ) -> Result<Option<VideoInfo>> {
     if !force_dash && !recognized(&response) {
         return Ok(None);
     }
     // Upstream's generic and HTML5 DASH extraction pass no `mpd_id`, so
     // representation IDs are used as they are.
-    let (manifest_url, formats, subtitle_list) = read_manifest(response)?;
-    from_manifest(manifest_url, formats, subtitle_list, original)
+    let (manifest_url, manifest) = read_manifest(response)?;
+    from_manifest(manifest_url, manifest, original, generic)
 }
 
 /// An MPD given as text (a library caller's inline manifest), resolved
-/// against `base`: the info [`from_response`] builds after its fetch.
+/// against `base`: the info [`from_generic_response`] builds after its fetch.
 pub(crate) fn from_text(text: &str, base: &Url, original: &Url) -> Result<VideoInfo> {
     if text.len() as u64 > MAX_MANIFEST_BYTES {
         return Err(unsupported(
             "DASH playlist exceeds the 2097152-byte extraction limit",
         ));
     }
-    let (formats, subtitles) = crate::dash::parse_with_subtitles(text, base)?;
-    from_manifest(base.clone(), formats, subtitles, original)?
+    let manifest = crate::dash::parse_manifest(text, base)?;
+    from_manifest(base.clone(), manifest, original, true)?
         .ok_or_else(|| unsupported("the DASH manifest has no media"))
 }
 
 fn from_manifest(
     manifest_url: Url,
-    formats: Vec<VideoFormat>,
-    subtitle_list: crate::dash::ManifestSubtitles,
+    manifest: crate::dash::Manifest,
     original: &Url,
+    generic: bool,
 ) -> Result<Option<VideoInfo>> {
+    let crate::dash::Manifest {
+        formats,
+        subtitles: subtitle_list,
+        dynamic,
+    } = manifest;
     // `period_entry['subtitles'][lang or 'und'].append(f)`.
     let mut subtitles = crate::Subtitles::default();
     for (language, format) in subtitle_list {
@@ -133,9 +158,15 @@ fn from_manifest(
             None => subtitles.entries.push((language, vec![format])),
         }
     }
-    let first = formats
-        .first()
-        .ok_or_else(|| unsupported("DASH manifest has no supported representations"))?;
+    // Only `--ignore-dynamic-mpd` leaves a parsed MPD without formats:
+    // upstream's result then has none ("No video formats found!").
+    let no_formats = formats.is_empty();
+    if no_formats && !dynamic {
+        return Err(unsupported(
+            "DASH manifest has no supported representations",
+        ));
+    }
+    let first = formats.first();
     let filename = manifest_url
         .path_segments()
         .and_then(|mut segments| segments.next_back())
@@ -145,7 +176,7 @@ fn from_manifest(
         .rsplit_once('.')
         .map_or(filename.as_ref(), |(stem, _)| stem);
     let title = if stem.is_empty() { "video" } else { stem }.to_owned();
-    Ok(Some(VideoInfo {
+    let mut info = VideoInfo {
         protocol: None,
         format_sort_fields: Vec::new(),
         resolution: None,
@@ -181,19 +212,28 @@ fn from_manifest(
         id: title.clone(),
         title,
         fulltitle: None,
-        ext: first.ext.clone(),
-        url: first.url.clone(),
+        ext: first.map_or_else(String::new, |first| first.ext.clone()),
+        url: first.map_or_else(|| manifest_url.clone(), |first| first.url.clone()),
         webpage_url: original.clone(),
         extractor: "generic".into(),
         extractor_key: "Generic".into(),
         direct: None,
-        stream_kind: first.stream_kind,
-        fragments: first.fragments.clone(),
+        stream_kind: first.map_or(crate::StreamKind::Standalone, |first| first.stream_kind),
+        fragments: first.map_or_else(Vec::new, |first| first.fragments.clone()),
         requested_formats: Vec::new(),
         format_id: None,
-        filesize: first.filesize,
-        width: first.width,
-        height: first.height,
+        filesize: first.and_then(|first| first.filesize),
+        width: first.and_then(|first| first.width),
+        height: first.and_then(|first| first.height),
         formats,
-    }))
+    };
+    // GenericIE: `'is_live' if doc.get('type') == 'dynamic' else None`.
+    if generic && dynamic {
+        info.metadata.live_status = Some("is_live".into());
+    }
+    if no_formats {
+        info.extra
+            .insert(crate::info::NO_FORMATS.into(), true.into());
+    }
+    Ok(Some(info))
 }

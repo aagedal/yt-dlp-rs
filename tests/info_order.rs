@@ -79,12 +79,17 @@ fn serve(fixture: &serde_json::Value) -> String {
 }
 
 /// The capture's normalization: `{ORIGIN}`/`{HOST}`, no `epoch` (this port writes no
-/// `_version`).
+/// `_version`), and a live result's local title time as `{DATE} {HH}:{MM}`.
 fn normalize(line: &str, origin: &str) -> String {
     let host = origin.split_once("//").unwrap().1;
     let line = line.replace(origin, "{ORIGIN}").replace(host, "{HOST}");
     let epoch = regex::Regex::new(r#""epoch": \d+, "#).unwrap();
-    epoch.replace(&line, "").into_owned()
+    let line = epoch.replace(&line, "").into_owned();
+    if !line.contains(r#""live_status": "is_live""#) {
+        return line;
+    }
+    let time = regex::Regex::new(r"\d{4}-\d{2}-\d{2} \d{2}([:_])\d{2}").unwrap();
+    time.replace_all(&line, "{DATE} {HH}${1}{MM}").into_owned()
 }
 
 #[test]

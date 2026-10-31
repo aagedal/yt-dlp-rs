@@ -26,9 +26,14 @@ before the upstream comparison. This is NOT upstream byte-range parity. Nonnegat
 repeats/PTO=0 are compared; pinned upstream does not expand negative repeats or
 apply presentationTimeOffset. Native negative-repeat/PTO policy is outside this
 comparison, not normalized away. media/periods.mpd covers _merge_mpd_periods
-(two Periods with explicit durations). This does not establish media download,
-decoding, merging, live, DRM or full DASH compatibility. No source URL, timestamp, query or
-filename difference is ignored.
+(two Periods with explicit durations). The dynamic-*.mpd manifests cover upstream's
+parse of live MPDs: a $Number$ duration template without a Period duration (only the
+initialization fragment), $Time$ timelines ignoring presentationTimeOffset with an
+open r="-1" entry kept as one segment, a Period duration inferred from an earlier
+representation's fragment durations, a SegmentList timeline truncating its URLs, and
+the ignored Location and availabilityTimeOffset. This does not establish media download,
+decoding, merging, live edge tracking, DRM or full DASH compatibility. No source URL,
+timestamp, query or filename difference is ignored.
 """
 import argparse
 import contextlib
@@ -171,7 +176,8 @@ def main():
         verify_upstream(upstream)  # Must precede binary inspection or server creation.
         binary = args.binary.resolve(strict=True)
         manifests = {f"/{name}": (root / "tests/fixtures/dash" / name).read_text(encoding="utf-8")
-                     for name in ("plan-number.mpd", "plan-time.mpd", "plan-list.mpd")}
+                     for name in ("plan-number.mpd", "plan-time.mpd", "plan-list.mpd",
+                                  "dynamic-number.mpd", "dynamic-timeline.mpd", "dynamic-list.mpd")}
         for name in ("manifest.mpd", "periods.mpd"):
             manifests[f"/media/{name}"] = (root / "tests/fixtures/dash/media" / name).read_text(encoding="utf-8")
         with manifest_server(manifests) as (origin, requests):
@@ -191,9 +197,9 @@ def main():
         if isinstance(error, subprocess.CalledProcessError) and error.stderr:
             print(error.stderr, file=sys.stderr)
         return 1
-    print("Five saved DASH manifests' format dicts and fragment plans match the pinned upstream "
-          "parser; SegmentList ranges checked independently (upstream ignores ranges; "
-          "no range/download/remux parity claim)")
+    print(f"{len(manifests)} saved DASH manifests' format dicts and fragment plans match the "
+          "pinned upstream parser; SegmentList ranges checked independently (upstream ignores "
+          "ranges; no range/download/remux parity claim)")
     return 0
 
 
