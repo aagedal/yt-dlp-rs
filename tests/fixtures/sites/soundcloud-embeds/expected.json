@@ -1,0 +1,90 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://blog.example.test/sc-one",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "123998367|Lostin Powers - She so Heavy|soundcloud|https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy|https://blog.example.test/sc-one"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/sc-secret",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "ERROR: [soundcloud] This video is not available from your location due to geo restriction"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/sc-many",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"sc-many\", \"title\": \"SoundCloud embeds\", \"timestamp\": null, \"description\": null, \"thumbnail\": null, \"age_limit\": null, \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"SoundcloudEmbed\", \"_type\": \"url\", \"url\": \"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/123998367&color=%23ff5500\", \"extractor\": \"SoundcloudEmbed\", \"extractor_key\": \"SoundcloudEmbed\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"SoundcloudEmbed\", \"_type\": \"url\", \"url\": \"https://w.soundcloud.com/player/?visual=true&url=https%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F922213810&show_artwork=true\", \"extractor\": \"SoundcloudEmbed\", \"extractor_key\": \"SoundcloudEmbed\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://blog.example.test/sc-many\", \"original_url\": \"https://blog.example.test/sc-many\", \"webpage_url_basename\": \"sc-many\", \"webpage_url_domain\": \"blog.example.test\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/sc-many",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(url)s|%(ie_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|https%3A//api.soundcloud.com/tracks/123998367&color=%23ff5500|https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/123998367&color=%23ff5500|SoundcloudEmbed",
+    "2|https%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F922213810&show_artwork=true|https://w.soundcloud.com/player/?visual=true&url=https%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F922213810&show_artwork=true|SoundcloudEmbed"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/123998367&visual=true",
+   "args": [
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "123998367|soundcloud|https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy|https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/123998367&visual=true"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://w.soundcloud.com/player/?url=&visual=true",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: &visual=true: An extractor error has occurred. (caused by KeyError('url')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

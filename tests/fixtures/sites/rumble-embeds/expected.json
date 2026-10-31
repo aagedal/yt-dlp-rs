@@ -1,0 +1,115 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://blog.example.test/rb-one",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"vb0ofn\", \"title\": \"Winter-loving dog helps girls dig a snow fort & more\", \"formats\": [{\"acodec\": \"aac\", \"vcodec\": \"none\", \"url\": \"https://sp.rmbl.ws/s8/2/audio.aac\", \"format_id\": \"audio\", \"format_note\": null, \"fps\": null, \"tbr\": 96, \"protocol\": \"https\", \"ext\": \"aac\", \"audio_ext\": \"aac\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 1236000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"audio - audio only\"}, {\"acodec\": \"none\", \"vcodec\": null, \"url\": \"https://sp.rmbl.ws/s8/2/timeline.mp4\", \"format_id\": \"timeline-180p\", \"format_note\": \"Timeline\", \"fps\": null, \"tbr\": 100, \"width\": 320, \"height\": 180, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 100, \"resolution\": \"320x180\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 1287500, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"timeline-180p - 320x180 (Timeline)\"}, {\"acodec\": null, \"vcodec\": null, \"url\": \"https://sp.rmbl.ws/s8/2/360.mp4\", \"format_id\": \"mp4-360p\", \"format_note\": null, \"fps\": 29.97, \"tbr\": 650, \"filesize\": 8000000, \"width\": 640, \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-360p - 640x360\"}, {\"acodec\": null, \"vcodec\": null, \"url\": \"https://sp.rmbl.ws/s8/2/720.mp4\", \"format_id\": \"mp4-720p\", \"format_note\": null, \"fps\": 29.97, \"tbr\": 2000, \"filesize\": 26000000, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-720p - 1280x720\"}], \"subtitles\": {\"en\": [{\"url\": \"https://rumble.com/cc/en.vtt\", \"name\": \"English\", \"ext\": \"vtt\"}]}, \"thumbnails\": [{\"url\": \"https://sp.rmbl.ws/s8/1/thumb.jpg\", \"width\": 1280, \"height\": 720, \"id\": \"0\", \"resolution\": \"1280x720\"}], \"timestamp\": 1612662578, \"channel\": \"LovingMontana\", \"channel_url\": \"https://rumble.com/c/c-546523\", \"duration\": 103, \"uploader\": \"LovingMontana\", \"live_status\": \"not_live\", \"original_url\": \"https://blog.example.test/rb-one\", \"webpage_url\": \"https://rumble.com/embed/vb0ofn\", \"webpage_url_basename\": \"vb0ofn\", \"webpage_url_domain\": \"rumble.com\", \"extractor\": \"RumbleEmbed\", \"extractor_key\": \"RumbleEmbed\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://sp.rmbl.ws/s8/1/thumb.jpg\", \"display_id\": \"vb0ofn\", \"fulltitle\": \"Winter-loving dog helps girls dig a snow fort & more\", \"duration_string\": \"1:43\", \"upload_date\": \"20210207\", \"release_year\": null, \"is_live\": false, \"was_live\": false, \"requested_subtitles\": null, \"_has_drm\": null, \"acodec\": null, \"vcodec\": null, \"url\": \"https://sp.rmbl.ws/s8/2/720.mp4\", \"format_id\": \"mp4-720p\", \"format_note\": null, \"fps\": 29.97, \"tbr\": 2000, \"filesize\": 26000000, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-720p - 1280x720\", \"_filename\": \"Winter-loving dog helps girls dig a snow fort & more [vb0ofn].mp4\", \"filename\": \"Winter-loving dog helps girls dig a snow fort & more [vb0ofn].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/rb-one",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "vb0ofn|Winter-loving dog helps girls dig a snow fort & more|RumbleEmbed|https://rumble.com/embed/vb0ofn|https://blog.example.test/rb-one"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/rb-script",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "vb0ofn|Winter-loving dog helps girls dig a snow fort & more|RumbleEmbed|https://rumble.com/embed/vb0ofn|https://blog.example.test/rb-script"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/rb-many",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"rb-many\", \"title\": \"Rumble embeds\", \"timestamp\": null, \"description\": null, \"thumbnail\": null, \"age_limit\": null, \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"RumbleEmbed\", \"_type\": \"url\", \"url\": \"https://rumble.com/embed/vdef34\", \"extractor\": \"RumbleEmbed\", \"extractor_key\": \"RumbleEmbed\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"RumbleEmbed\", \"_type\": \"url\", \"url\": \"https://rumble.com/embed/u4.vabc12\", \"extractor\": \"RumbleEmbed\", \"extractor_key\": \"RumbleEmbed\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"RumbleEmbed\", \"_type\": \"url\", \"url\": \"https://rumble.com/embed/vb0ofn\", \"extractor\": \"RumbleEmbed\", \"extractor_key\": \"RumbleEmbed\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://blog.example.test/rb-many\", \"original_url\": \"https://blog.example.test/rb-many\", \"webpage_url_basename\": \"rb-many\", \"webpage_url_domain\": \"blog.example.test\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/rb-many",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(url)s|%(ie_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|vdef34|https://rumble.com/embed/vdef34|RumbleEmbed",
+    "2|vabc12|https://rumble.com/embed/u4.vabc12|RumbleEmbed",
+    "3|vb0ofn|https://rumble.com/embed/vb0ofn|RumbleEmbed"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://rumble.com/browse/",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"browse\", \"title\": \"Browse\", \"timestamp\": null, \"description\": null, \"thumbnail\": null, \"age_limit\": null, \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"RumbleEmbed\", \"_type\": \"url\", \"url\": \"https://rumble.com/embed/vb0ofn\", \"extractor\": \"RumbleEmbed\", \"extractor_key\": \"RumbleEmbed\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Rumble\", \"_type\": \"url\", \"url\": \"https://rumble.com/vdmum1-moose-the-dog.html\", \"extractor\": \"Rumble\", \"extractor_key\": \"Rumble\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Rumble\", \"_type\": \"url\", \"url\": \"https://rumble.com/v2abcd-second-clip.html\", \"extractor\": \"Rumble\", \"extractor_key\": \"Rumble\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://rumble.com/browse/\", \"original_url\": \"https://rumble.com/browse/\", \"webpage_url_basename\": \"browse\", \"webpage_url_domain\": \"rumble.com\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://rumble.com/browse/",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(url)s|%(ie_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|vb0ofn|https://rumble.com/embed/vb0ofn|RumbleEmbed",
+    "2|vdmum1-moose-the-dog.html|https://rumble.com/vdmum1-moose-the-dog.html|Rumble",
+    "3|v2abcd-second-clip.html|https://rumble.com/v2abcd-second-clip.html|Rumble"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  }
+ ]
+}

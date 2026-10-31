@@ -1,0 +1,9 @@
+[
+ {"url": "https://blog.example.test/pt-one", "args": ["-j"]},
+ {"url": "https://blog.example.test/pt-one", "args": ["--print", "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"]},
+ {"url": "https://blog.example.test/pt-many", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://blog.example.test/pt-many", "args": ["--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(url)s|%(ie_key)s"]},
+ {"url": "https://peertube.example.test/w/9c9de5e8-0a1e-484a-b099-e80766180a6d", "args": ["-j"]},
+ {"url": "https://peertube.example.test/w/9c9de5e8-0a1e-484a-b099-e80766180a6d", "args": ["--print", "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"]},
+ {"url": "https://peertube.example.test/videos/watch/9c9de5e8-0a1e-484a-b099-e80766180a6d", "args": ["-j"]}
+]

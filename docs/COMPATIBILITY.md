@@ -501,8 +501,12 @@ thumbnails and metadata, with the API's `sys.msg` warning. Rumble video
 pages (`rumble.com/vID-SLUG.html`) follow `RumbleIE`: the page's embed (or
 `Rumble("play", ...)` script) as a `url_transparent` result with the page's
 release time, view, like and dislike counts and description. Channels are
-not supported. `tests/fixtures/sites/rumble/` is compared with pinned
-upstream output.
+not supported. On generic pages `RumbleEmbedIE._extract_embed_urls` finds
+embed script/iframe sources and JSON `embedUrl`s, else every
+`Rumble("play", ...)` script's video, and `RumbleIE._EMBED_REGEX` finds
+listing pages' `video-item--a`/`videostream__link` video links.
+`tests/fixtures/sites/rumble/` and `tests/fixtures/sites/rumble-embeds/` are
+compared with pinned upstream output.
 
 Rutube videos (`rutube.ru/[live/]video[/private]/ID`, `[play/]embed/ID`
 with 32-character IDs) follow upstream `RutubeIE`: the video API (the URL's
@@ -583,9 +587,13 @@ TOKEN` (or an `oauth_token` cookie) is verified like upstream
 (`Verifying login token...`, `Logging in`, an invalid token's warnings) and
 then authorizes the API requests; other usernames are upstream's
 unsupported-login error. Original downloads, comments, sets, users, stations
-and search are not supported. `tests/fixtures/sites/soundcloud/` and
-`tests/fixtures/sites/soundcloud-login/` are compared with pinned upstream
-output.
+and search are not supported. SoundCloud widgets
+(`w|player|p.soundcloud.com/player/?...url=URL`) follow `SoundcloudEmbedIE`:
+the `url` query value (with any `secret_token`) is a `url` result, a missing
+one upstream's `KeyError`; their iframes on generic pages are embeds.
+`tests/fixtures/sites/soundcloud/`, `tests/fixtures/sites/soundcloud-login/`
+and `tests/fixtures/sites/soundcloud-embeds/` are compared with pinned
+upstream output.
 
 SRG SSR media (`srgssr:BU:[...:]video|audio:ID` for `srf`, `rts`, `rsi`,
 `rtr` and `swi`, and `tp.srgssr.ch/p/...?urn=urn:...` player URLs) follow
@@ -811,8 +819,9 @@ count, dates and tags with OpenGraph fallbacks. Upstream's `http-` bitrate
 variants never apply (they look for `m3u8` rather than `m3u8_native`
 formats), so none are made. Playlists (`TedPlaylistIE`) and series, or one
 `#season_N` (`TedSeriesIE`), are playlists of talk `url` results;
-`embed[-ssl].ted.com` URLs (`TedEmbedIE`) are rewritten to `www`.
-`tests/fixtures/sites/ted/` is compared with pinned upstream output.
+`embed[-ssl].ted.com` URLs (`TedEmbedIE`) are rewritten to `www`; their
+iframes on generic pages are embeds. `tests/fixtures/sites/ted/` and
+`tests/fixtures/sites/ted-embeds/` are compared with pinned upstream output.
 
 Telegram public posts (`t.me/CHANNEL/ID`) follow upstream
 `TelegramEmbedIE` (2026.10.21): the post's embed frame (`?embed=1`, any
@@ -2054,9 +2063,14 @@ holding the requested entries and in request order (`-I 31` reads only page 2,
 `-I 31,1` page 2 then page 1), each once; a negative or reversed open bound,
 or a request past the end, reads every page in order until one is shorter
 than 30 entries. The count is unknown (`NA`) unless a selection reads past the
-end. Not ported: PeerTube detection on other hosts (GenericIE's
-`_EMBED_REGEX` iframes and `og:platform` page check), which stays the
-generic extractor's unsupported-URL path.
+end. On generic pages `PeerTubeIE._extract_embed_urls` finds
+`/videos/embed/` iframes of the known instances (like upstream's pattern,
+which interpolates `_UUID_RE` ungrouped, only short IDs; dashed UUIDs are not
+matched), else a page whose own URL is a video URL (`/videos/watch|embed/` or
+`/w/` with an ID) on any host and that carries one of PeerTube's markers
+(`og:platform`, `<title>PeerTube<`, the no-JS texts) becomes
+`peertube:HOST:ID`. `tests/fixtures/sites/peertube-embeds/` is compared with
+pinned upstream output.
 
 peer.tv videos (`peer.tv/de|it|en/ID`) follow upstream `PeerTVIE`: the page's
 `player.peer.tv/js/KEY` script (fetched with the `www.peer.tv` Referer) gives
@@ -2440,10 +2454,16 @@ upstream's lazy ones (no `[IE]` prefix): the entry being read is `None`
 (`null` with `-J`, reported once, exit code 1) and the failed page ends the
 list (`_pagecount = pagenum - 1`), so the playlist still finishes. Selecting,
 after such a failure, an entry of the failed page that precedes the failed one
-is an explicit native error. Not ported: `DailymotionPlaylistIE`'s jukebox
-widget embeds on generic pages.
-`tests/fixtures/sites/dailymotion/` and `tests/fixtures/sites/dailymotion-login/`
-are compared with pinned upstream output.
+is an explicit native error. On generic pages `DailymotionIE._extract_embed_urls`
+finds embed/iframe sources and `dmcloudUrlEmissionSelect` values matching its
+`_VALID_URL`, `DM.player(...)` video IDs and player scripts' `data-video`/
+`data-playlist`, and `DailymotionPlaylistIE` jukebox widgets' playlists. Like
+upstream, a source whose ID is not followed by `/`, `?`, `_`, `&` or `#` runs
+past its closing quote; this port's URLs percent-encode the quote and
+spaces there. `tests/fixtures/sites/dailymotion/`,
+`tests/fixtures/sites/dailymotion-login/` and
+`tests/fixtures/sites/dailymotion-embeds/` are compared with pinned upstream
+output.
 
 EbaumsWorld videos (`ebaumsworld.com/videos/SLUG/ID`) follow upstream
 `EbaumsWorldIE`: the player config XML (`Downloading XML`) as an untyped
@@ -2520,7 +2540,11 @@ upstream. `facebook:ads` (`ads/library/?id=ID`) follows upstream
 description, page uploader fields and like count, and each video or card's
 SD/HD (watermarked) URLs as one video or a playlist; upstream's 403 `Client
 challenge` verification retry is not ported (the HTTP error is reported).
-`tests/fixtures/sites/facebook/` is compared with pinned upstream output.
+On generic pages `FacebookIE._EMBED_REGEX` finds `video/embed` and
+`plugins/video.php` iframes and `fb-video`/`fb-post` API embeds (kept when
+`FacebookIE` accepts them). `tests/fixtures/sites/facebook/` and
+`tests/fixtures/sites/facebook-embeds/` are compared with pinned upstream
+output.
 
 Fathom shares (`fathom.video/share/ID`) follow upstream `FathomIE`: the `app`
 element's `data-page` JSON props (upstream's `TypeError` text without them),
@@ -2650,7 +2674,10 @@ output.
 
 `vm.tiktok` short links (`vm.`/`vt.tiktok.com/ID`,
 `tiktok.com/t/ID`) are resolved with a HEAD request and followed.
-`tests/fixtures/sites/tiktok/` is compared with pinned upstream output.
+On generic pages `TikTokIE._EMBED_REGEX` finds script and iframe sources
+matching its `_VALID_URL`. `tests/fixtures/sites/tiktok/` and
+`tests/fixtures/sites/tiktok-embeds/` are compared with pinned upstream
+output.
 
 Tweakers videos (`tweakers.net/video/ID`) follow upstream `TweakersIE`: the
 `s1playlist/ID/1920/1080/playlist.json` item's progressive sources as formats
@@ -2870,7 +2897,14 @@ gives upstream's no-cached-token error (a cached token is an unsupported
 native error), and player-page passwords (`check-password`), rented
 trailers, JSON-LD metadata, on-demand, reviews, events and the album,
 showcase, channel, user, likes, groups and watch-later playlists are not
-supported. `tests/fixtures/sites/vimeo/` and `tests/fixtures/sites/vimeo-login/`
+supported. On generic pages `VimeoIE._extract_embed_urls` finds
+`player.vimeo.com/video/ID` iframes and `moogaloop.swf` embeds, smuggling the
+page as their `referer` (`_smuggle_referrer`): the player page is requested
+with it and a followed embed's `webpage_url` is the smuggled URL, like
+upstream. Its `<video src>` pattern always comes with the page's HTML5 media,
+which this port does not combine with embeds (an unsupported error); VHX and
+event embeds are not detected. `tests/fixtures/sites/vimeo/`,
+`tests/fixtures/sites/vimeo-login/` and `tests/fixtures/sites/vimeo-embeds/`
 are compared with pinned upstream output.
 
 NZZ articles (`[www.]nzz.ch/[SECTION/]...-ld.ID`) follow upstream `NZZIE`:
@@ -2929,7 +2963,9 @@ a warning) or the page's `initial-state` script, `playerUrls` HLS, DASH and
 progressive formats (with the named resolutions), the common metadata and
 `The channel is not currently live` for an offline channel. A live
 stream's HLS master playlist is read without its media playlists.
-`tests/fixtures/sites/vk/` is compared with pinned upstream output.
+On generic pages `VKIE._EMBED_REGEX` finds `video_ext.php` iframes (kept
+when `VKIE` accepts them). `tests/fixtures/sites/vk/` and
+`tests/fixtures/sites/vk-embeds/` are compared with pinned upstream output.
 
 Web of Stories stories (`[www.]webofstories.com/play/[SPEAKER/]ID`) follow
 upstream `WebOfStoriesIE`: the OpenGraph title (else the fatal
@@ -3350,7 +3386,11 @@ marked broken upstream) read the page's `sharedData` and its GIS-signed
 GraphQL timeline pages (trying upstream's signature templates on `403`) as
 `url` entries of the video nodes; all pages are fetched before processing,
 so a page error ends the extraction instead of upstream's partial playlist.
-`tests/fixtures/sites/instagram/` is compared with pinned upstream output.
+On generic pages `InstagramIE._extract_embed_urls` finds `/p/ID/embed`
+iframes, else the first link of the `instagram-media` element (a link that is
+not an absolute URL is dropped, where upstream would fail to process it).
+`tests/fixtures/sites/instagram/` and `tests/fixtures/sites/instagram-embeds/`
+are compared with pinned upstream output.
 
 Ivoox audios (`[www.]ivoox.com/[LANG/]SLUG_rf_ID_1.html`,
 `go.ivoox.com/rf/ID`) follow upstream `IvooxIE`: the page's
@@ -5171,13 +5211,17 @@ information of song ID`) as an untyped `mp3` audio-only result with the artist
 as `uploader`/`uploader_id`, and `thumbnail`/`image` thumbnails ranked like
 `qualities`; a missing `name`/`url` is upstream's `KeyError` extractor error.
 
-On generic pages, the embeds of Blogger, Google Drive, JW Platform, Megaphone, Streamable, Wistia (above) and YouTube
+On generic pages, the embeds of Blogger, Dailymotion, Facebook, Google Drive,
+Instagram, JW Platform, Megaphone, PeerTube, Rumble, SoundCloud, Streamable,
+TED, TikTok, Vimeo, VK, Wistia (each described in its section) and YouTube
 (`YoutubeIE._EMBED_REGEX`: iframe/embed/object/SWFObject/`data-video-url`
 `youtube[-nocookie].com/embed|v|p/ID` URLs and lazy-load watch links, kept when
-this port's YouTube extractor accepts them), in
-upstream extractor order (each HTML-unescaped, joined to the page URL,
-suitable and unique, with `Identified N NAME embed(s)` debug lines), are `url`
-results like upstream `_extract_embeds`: one is followed (`original_url` stays
+this port's YouTube extractor accepts them), among the other extractors' noted
+in their sections, are detected in upstream's extractor order
+(`gen_extractor_classes`, which puts YouTube first; each HTML-unescaped,
+joined to the page URL, suitable and unique, with `Identified N NAME
+embed(s)` debug lines). They are `url` results like upstream
+`_extract_embeds`: one is followed (`original_url` stays
 the page, also ahead of a followed playlist's `webpage_url`), several form the page's playlist (`--flat-playlist` keeps
 `ie_key`/`extractor` entries with the `_match_id` temporary ID). A page with
 both HTML5 media and these embeds is an unsupported error; other sites' embeds

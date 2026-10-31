@@ -1,0 +1,170 @@
+{
+ "routes": [
+  {
+   "url": "https://blog.example.test/fb-one",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>One Facebook embed</title></head><body><div id=\"fb-root\"></div><div class=\"fb-video\" data-href=\"https://www.facebook.com/someone/videos/1234567890/\" data-width=\"500\" data-show-text=\"false\"></div></body></html>"
+  },
+  {
+   "url": "https://blog.example.test/fb-many",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Facebook embeds</title></head><body>\n<iframe src=\"https://www.facebook.com/video/embed?video_id=1111111111\" width=\"600\"></iframe>\n<iframe src=\"https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fsomeone%2Fvideos%2F999%2F&amp;show_text=0\" width=\"560\"></iframe>\n<div class='fb-post' data-width='500' data-href='//www.facebook.com/someone/posts/3333333333'></div>\n<div class=\"wrap fb-video big\" id=\"v\" data-href=\"https://facebook.com/someone/videos/2222222222/?ref=embed&amp;x=1\"></div>\n<iframe src=\"https://www.facebook.com/video/embed?video_id=1111111111\"></iframe>\n</body></html>"
+  },
+  {
+   "url": "https://www.facebook.com/watch/?v=1234567890",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/watch.html"
+  },
+  {
+   "url": "https://www.facebook.com/watch/?v=1234567890&_rdr",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/watch.html"
+  },
+  {
+   "url": "https://www.facebook.com/video/video.php?v=1234567890",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/watch.html"
+  },
+  {
+   "url": "https://www.facebook.com/someone/videos/1234567890/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/watch.html"
+  },
+  {
+   "url": "https://www.facebook.com/someone/videos/999/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/login.html"
+  },
+  {
+   "url": "https://www.facebook.com/video.php?v=1111111111",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/serverjs.html"
+  },
+  {
+   "url": "https://www.facebook.com/someone/videos/2222222222/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/pagelet.html"
+  },
+  {
+   "url": "https://www.facebook.com/someone/posts/3333333333",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/multi.html"
+  },
+  {
+   "url": "https://www.facebook.com/video.php?v=4444444444",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/tahoe.html"
+  },
+  {
+   "url": "https://www.facebook.com/video/tahoe/async/4444444444/?chain=true&isvideo=true&payloadtype=primary",
+   "request_headers": {
+    "Content-Type": "application/x-www-form-urlencoded"
+   },
+   "request_body": [
+    "__a=1&__pc=PHASED%3Afixture&__rev=1001234&fb_dtsg=dtsg%3Afixture"
+   ],
+   "headers": {
+    "Content-Type": "application/x-javascript; charset=utf-8"
+   },
+   "body_file": "../facebook/tahoe.txt"
+  },
+  {
+   "url": "https://www.facebook.com/video.php?v=5555555555",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/empty.html"
+  },
+  {
+   "url": "https://www.facebook.com/video/tahoe/async/5555555555/?chain=true&isvideo=true&payloadtype=primary",
+   "request_body": [
+    "__a=1&__pc=PHASED%3ADEFAULT&__rev=3944515&fb_dtsg="
+   ],
+   "headers": {
+    "Content-Type": "application/x-javascript; charset=utf-8"
+   },
+   "body": "for (;;);{\"__ar\": 1, \"payload\": null}"
+  },
+  {
+   "url": "https://www.facebook.com/video.php?v=5555555556",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/interstitial.html"
+  },
+  {
+   "url": "https://www.facebook.com/watchparty/6666666666",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/watchparty.html"
+  },
+  {
+   "url": "https://www.facebook.com/api/graphql/?fixture=1",
+   "request_body": [
+    "doc_id=3731964053542869&variables=%7B%22livingRoomID%22%3A+%226666666666%22%7D&lsd=lsd-fixture"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "../facebook/livingroom.json"
+  },
+  {
+   "url": "https://www.facebook.com/ads/library/?id=8888888888",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/ads.html"
+  },
+  {
+   "url": "https://www.facebook.com/ads/library/?id=9999999999",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/ads_cards.html"
+  },
+  {
+   "url": "https://www.facebook.com/ads/library/?id=7777777777",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/ads_none.html"
+  },
+  {
+   "url": "https://www.facebook.com/watch/?v=1212121212&_rdr",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "../facebook/reel_empty_title.html"
+  },
+  {
+   "url": "https://video.xx.fbcdn.net/v/prog-hd.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-fbhd"
+  }
+ ]
+}

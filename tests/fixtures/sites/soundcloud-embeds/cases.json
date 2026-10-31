@@ -1,0 +1,8 @@
+[
+ {"url": "https://blog.example.test/sc-one", "args": ["--print", "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"]},
+ {"url": "https://blog.example.test/sc-secret", "args": ["-j"]},
+ {"url": "https://blog.example.test/sc-many", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://blog.example.test/sc-many", "args": ["--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(url)s|%(ie_key)s"]},
+ {"url": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/123998367&visual=true", "args": ["--print", "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"]},
+ {"url": "https://w.soundcloud.com/player/?url=&visual=true", "args": ["-j"]}
+]
