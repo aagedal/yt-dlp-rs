@@ -96,8 +96,9 @@ deferred entry pages (`PlaylistInfo::pending`) are processed by the CLI's input 
 a `MULTI_VIDEO` marker makes a playlist upstream's `_type: multi_video`
 (`PlaylistInfo::result_type`), which the default `--concat-playlist` joins;
 a top-level `url_transparent` result resolving to a playlist takes the outer
-fields like upstream, while a playlist entry resolving to a playlist (upstream's
-inline nested processing) remains an explicit error.
+fields like upstream, and a playlist entry resolving to a playlist is processed
+inline as a nested playlist (the outer playlist's remaining entries are
+suspended as a `PlaylistRun` and resumed through the input queue).
 
 ## Milestones
 

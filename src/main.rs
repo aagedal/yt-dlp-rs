@@ -4640,8 +4640,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         None => urls.into_iter().map(|url| Input::Url(url, None)).collect(),
     };
     let mut inputs: std::collections::VecDeque<_> = inputs.into();
-    // Outer playlists whose nested playlists are being processed.
-    let mut outer_playlists: Vec<OuterPlaylist> = Vec::new();
+    // Playlists whose nested playlists are being processed.
+    let mut parents: Vec<Parent> = Vec::new();
+    // Upstream `_playlist_urls`: the playlists processed for this input.
+    let mut playlist_urls = std::collections::HashSet::new();
     // Upstream's `KeyboardInterrupt`: SIGINT/SIGTERM end the run at the next
     // checkpoint, keeping `.part` files and completed processing stages
     // (`cli` reports it). The handler stays until the process exits.
@@ -4650,423 +4652,523 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         if yt_dlp_rs::SignalInterrupt::interrupted() {
             break;
         }
-        let (url, loaded, nested) = match input {
-            Input::Url(url, loaded) => (url, loaded.map(|loaded| *loaded), None),
-            Input::Nested { playlist, item } => {
-                screen!("{item}");
-                (playlist.webpage_url.to_string(), None, Some(*playlist))
-            }
-            Input::FinishOuter => {
-                let Some(outer) = outer_playlists.pop() else {
+        let run = match input {
+            Input::Resume => {
+                let Some(Parent::Suspended(mut run)) = parents.pop() else {
                     continue;
                 };
-                // The tail of upstream's `__process_playlist` for the outer
-                // playlist, after its nested playlists.
-                if let Some((path, value)) = &outer.info_json {
-                    match write_info_json_with(path, value, true) {
-                        Ok(written) => report_info_json("updated playlist", path, written),
-                        Err(_) => {
-                            report_error!(
-                                "ERROR: Cannot write updated playlist metadata to JSON file {}",
-                                path.display()
-                            );
+                // `if not entry_result: failures += 1` for the entry whose
+                // nested playlist was processed (or skipped).
+                if let Some((_, true)) = run.nested_entry.take() {
+                    run.extraction_failures += 1;
+                    if let (Some(limit), Some(title)) = (
+                        args.skip_playlist_after_errors.filter(|limit| *limit != 0),
+                        &run.playlist_title,
+                    ) && run.extraction_failures as i64 >= limit
+                    {
+                        report_error!(
+                            "ERROR: Skipping the remaining entries in playlist \"{title}\" since {} items failed extraction",
+                            run.extraction_failures
+                        );
+                        failed = true;
+                        run.entries = Vec::new().into_iter().enumerate();
+                    }
+                }
+                *run
+            }
+            input => {
+                let (url, loaded, nested) = match input {
+                    Input::Url(url, loaded) => {
+                        playlist_urls.clear();
+                        (url, loaded.map(|loaded| *loaded), None)
+                    }
+                    Input::Nested { playlist, item } => {
+                        if let Some(item) = item {
+                            screen!("{item}");
+                        }
+                        (playlist.webpage_url.to_string(), None, Some(*playlist))
+                    }
+                    Input::Resume => unreachable!("resumed above"),
+                    Input::FinishOuter => {
+                        let Some(Parent::Outer(outer)) = parents.pop() else {
+                            continue;
+                        };
+                        let outer = *outer;
+                        // The tail of upstream's `__process_playlist` for the outer
+                        // playlist, after its nested playlists.
+                        if let Some((path, value)) = &outer.info_json {
+                            match write_info_json_with(path, value, true) {
+                                Ok(written) => report_info_json("updated playlist", path, written),
+                                Err(_) => {
+                                    report_error!(
+                                        "ERROR: Cannot write updated playlist metadata to JSON file {}",
+                                        path.display()
+                                    );
+                                    failed = true;
+                                    continue;
+                                }
+                            }
+                        }
+                        let outcome = match &outer.dict {
+                            Some(dict) => run_playlist_stage(
+                                dict,
+                                &vec![None; outer.entry_count],
+                                &print_templates,
+                                &print_files,
+                                &exec,
+                                &templates,
+                                &template_options,
+                                &downloader,
+                                PlaylistStage {
+                                    simulate,
+                                    concat: args.concat_playlist == "always",
+                                    concat_pp: args.concat_playlist != "never",
+                                    keep: args.keep_video,
+                                    ignore_errors: error_mode == ErrorMode::Ignore,
+                                },
+                                &metadata_actions,
+                            )?,
+                            None => StageOutcome::Done,
+                        };
+                        if outcome != StageOutcome::Done {
                             failed = true;
+                        }
+                        if outcome == StageOutcome::Aborted {
+                            if abort_on_error {
+                                break;
+                            }
                             continue;
                         }
+                        screen!("[download] Finished downloading playlist: {}", outer.title);
+                        let value = outer.single_json.map(|mut value| {
+                            if let Some(object) = value.as_object_mut() {
+                                object.insert("entries".into(), outer.json_entries.into());
+                            }
+                            value
+                        });
+                        if outer.nested {
+                            finish_nested(&mut parents, value);
+                        } else if let Some(value) = value {
+                            emit_single_json(value, &mut stdout)?;
+                        }
+                        continue;
                     }
-                }
-                let outcome = match &outer.dict {
-                    Some(dict) => run_playlist_stage(
-                        dict,
-                        &vec![None; outer.entry_count],
-                        &print_templates,
-                        &print_files,
-                        &exec,
-                        &templates,
-                        &template_options,
-                        &downloader,
-                        PlaylistStage {
-                            simulate,
-                            concat: args.concat_playlist == "always",
-                            concat_pp: args.concat_playlist != "never",
-                            keep: args.keep_video,
-                            ignore_errors: error_mode == ErrorMode::Ignore,
-                        },
-                        &metadata_actions,
-                    )?,
-                    None => StageOutcome::Done,
                 };
-                if outcome != StageOutcome::Done {
-                    failed = true;
-                }
-                if outcome == StageOutcome::Aborted {
-                    if abort_on_error {
-                        break;
-                    }
-                    continue;
-                }
-                screen!("[download] Finished downloading playlist: {}", outer.title);
-                if let Some(mut value) = outer.single_json {
-                    if let Some(object) = value.as_object_mut() {
-                        object.insert("entries".into(), outer.json_entries.into());
-                    }
-                    match outer_playlists.last_mut().filter(|_| outer.nested) {
-                        Some(parent) => parent.json_entries.push(value),
-                        None => emit_single_json(value, &mut stdout)?,
-                    }
-                }
-                continue;
-            }
-        };
-        let is_nested = nested.is_some();
-        // Upstream `download_with_info_file` retries a raised DownloadError
-        // with the webpage URL.
-        let from_info_json = matches!(loaded, Some(ExtractResult::Video(_)));
-        let mut fallback: Option<(String, String)> = None;
-        let options = ExtractionOptions {
-            retries: args.extractor_retries,
-            ..Default::default()
-        };
-        let mut pending: Option<Cancel> = None;
-        let mut header_printed = false;
-        let extracted =
-            (|| -> yt_dlp_rs::Result<Option<(ExtractResult, Option<PlaylistCounts>)>> {
-                let mut result = if let Some(playlist) = nested {
-                    ExtractResult::Playlist(playlist)
-                } else {
-                    match loaded {
-                        // Loaded playlists have no entries (`sanitize_info`), so
-                        // upstream's `EntryNotInPlaylist` falls back to the URL.
-                        Some(ExtractResult::Playlist(playlist)) => {
+                let is_nested = nested.is_some();
+                // Upstream `download_with_info_file` retries a raised DownloadError
+                // with the webpage URL.
+                let from_info_json = matches!(loaded, Some(ExtractResult::Video(_)));
+                let options = ExtractionOptions {
+                    retries: args.extractor_retries,
+                    ..Default::default()
+                };
+                let mut pending: Option<Cancel> = None;
+                let mut header_printed = false;
+                let extracted =
+                    (|| -> yt_dlp_rs::Result<Option<(ExtractResult, Option<PlaylistCounts>)>> {
+                        let mut result = if let Some(playlist) = nested {
+                            ExtractResult::Playlist(playlist)
+                        } else {
+                            match loaded {
+                                // Loaded playlists have no entries (`sanitize_info`), so
+                                // upstream's `EntryNotInPlaylist` falls back to the URL.
+                                Some(ExtractResult::Playlist(playlist)) => {
+                                    let title = [&playlist.title, &playlist.id]
+                                        .into_iter()
+                                        .find(|text| !text.is_empty())
+                                        .map_or("<Untitled>", |text| text.as_str());
+                                    screen!(
+                                        "[download] Downloading {}: {title}",
+                                        playlist.result_type()
+                                    );
+                                    warning!(
+                                        "WARNING: The info failed to download: There are no entries; trying with URL {}",
+                                        playlist.webpage_url
+                                    );
+                                    downloader.extract_result_unselected_with_options(
+                                        playlist.webpage_url.as_str(),
+                                        options,
+                                    )?
+                                }
+                                Some(result) => result,
+                                None => {
+                                    // Upstream `extract_info`: a recorded temp ID
+                                    // skips the URL before extraction.
+                                    if let Some(archive) = &archive
+                                        && let Some((key, id)) =
+                                            downloader.temp_archive_identity(&url)
+                                        && archive.contains_identity(&key, &id)
+                                    {
+                                        screen!(
+                                            "[download] {id}: has already been recorded in the archive"
+                                        );
+                                        if args.break_on_existing {
+                                            pending = Some(Cancel::Existing);
+                                        }
+                                        return Ok(None);
+                                    }
+                                    downloader
+                                        .extract_result_unselected_with_options(&url, options)?
+                                }
+                            }
+                        };
+                        // Upstream `__process_playlist` names the playlist, then its
+                        // `PlaylistEntries` fetches the requested entries.
+                        if let ExtractResult::Playlist(playlist) = &mut result
+                            && playlist.pending.is_some()
+                        {
                             let title = [&playlist.title, &playlist.id]
                                 .into_iter()
                                 .find(|text| !text.is_empty())
                                 .map_or("<Untitled>", |text| text.as_str());
                             screen!("[download] Downloading {}: {title}", playlist.result_type());
-                            warning!(
-                                "WARNING: The info failed to download: There are no entries; trying with URL {}",
-                                playlist.webpage_url
-                            );
-                            downloader.extract_result_unselected_with_options(
-                                playlist.webpage_url.as_str(),
-                                options,
-                            )?
+                            header_printed = true;
+                            if let Some(pending) = &mut playlist.pending {
+                                pending.request_entries(&playlist_selection);
+                            }
+                            downloader.fetch_pending(playlist, playlist_selection.fetch_limit())?;
                         }
-                        Some(result) => result,
-                        None => {
-                            // Upstream `extract_info`: a recorded temp ID
-                            // skips the URL before extraction.
-                            if let Some(archive) = &archive
-                                && let Some((key, id)) = downloader.temp_archive_identity(&url)
-                                && archive.contains_identity(&key, &id)
-                            {
-                                screen!(
-                                    "[download] {id}: has already been recorded in the archive"
-                                );
-                                if args.break_on_existing {
-                                    pending = Some(Cancel::Existing);
-                                }
+                        // Nested playlists are selected like entries; archive and
+                        // match filters apply to their videos.
+                        let outer = matches!(&result, ExtractResult::Playlist(playlist) if !playlist.nested.is_empty());
+                        if let (ExtractResult::Playlist(playlist), true) = (&mut result, outer) {
+                            playlist.nested_placeholders();
+                        }
+                        let counts = playlist_selection.apply(&mut result);
+                        if outer {
+                            return Ok(Some((result, counts)));
+                        }
+                        let result = if let Some(archive) = &archive {
+                            let (result, reached) =
+                                filter_archived(result, archive, args.break_on_existing)?;
+                            if reached {
+                                pending = Some(Cancel::Existing);
+                            }
+                            let Some(result) = result else {
                                 return Ok(None);
+                            };
+                            result
+                        } else {
+                            result
+                        };
+                        // Upstream `_match_entry` before selection: format fields are incomplete.
+                        let Some(mut result) = prefilter(result, &match_filters, &mut pending)?
+                        else {
+                            return Ok(None);
+                        };
+                        if write_subs || args.write_auto_subs {
+                            let select =
+                                |info: &mut yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<()> {
+                                    let selection = subtitle_options.select_sources(
+                                        &info.subtitles,
+                                        &info.automatic_captions,
+                                        write_subs,
+                                        args.write_auto_subs,
+                                    )?;
+                                    for warning in selection.warnings {
+                                        warning!("WARNING: {}: {warning}", info.id);
+                                    }
+                                    info.requested_subtitles = ((write_subs
+                                        && !info.subtitles.is_empty())
+                                        || (args.write_auto_subs
+                                            && !info.automatic_captions.is_empty()))
+                                    .then_some(selection.requested);
+                                    Ok(())
+                                };
+                            match &mut result {
+                                ExtractResult::Video(info) => select(info)?,
+                                ExtractResult::Playlist(playlist) => {
+                                    for info in &mut playlist.entries {
+                                        select(info)?;
+                                    }
+                                }
                             }
-                            downloader.extract_result_unselected_with_options(&url, options)?
+                        }
+                        Ok(Some((result, counts)))
+                    })();
+                let (mut extracted, counts) = match extracted {
+                    Ok(Some(result)) => result,
+                    Ok(None) if pending.is_some() => {
+                        match cancel(pending.take().unwrap(), args.break_per_input) {
+                            Some(cancel) => {
+                                cancelled = Some(cancel);
+                                break;
+                            }
+                            None => {
+                                processed = 0;
+                                if is_nested {
+                                    drop_nesting(&mut inputs, &mut parents);
+                                }
+                                continue;
+                            }
                         }
                     }
+                    Ok(None) => continue,
+                    Err(error) => {
+                        // `CookieLoadError` is re-raised and ends the run.
+                        if let yt_dlp_rs::Error::CookieLoad(message) = &error {
+                            report_error!("ERROR: {message}");
+                            failed = true;
+                            break;
+                        }
+                        match &error {
+                            yt_dlp_rs::Error::Reported(message) => {
+                                report_error!("ERROR: {message}")
+                            }
+                            error @ (yt_dlp_rs::Error::Webpage { .. }
+                            | yt_dlp_rs::Error::ExtractorRequest { .. }
+                            | yt_dlp_rs::Error::UnsupportedUrl(_)) => {
+                                report_error!("ERROR: {error}")
+                            }
+                            _ => report_error!("ERROR: {url}: {error}"),
+                        }
+                        failed = true;
+                        if abort_on_error {
+                            break;
+                        }
+                        // `ignoreerrors` returns `None` from `extract_info`, which
+                        // `-J` still dumps (a nested playlist's is its outer
+                        // playlist's `None` entry).
+                        if is_nested {
+                            if let Some(Parent::Outer(outer)) = parents.last_mut()
+                                && args.dump_single_json
+                            {
+                                outer.json_entries.push(serde_json::Value::Null);
+                            }
+                        } else if args.dump_single_json {
+                            writeln!(stdout, "null")?;
+                            stdout.flush()?;
+                        }
+                        continue;
+                    }
                 };
-                // Upstream `__process_playlist` names the playlist, then its
-                // `PlaylistEntries` fetches the requested entries.
-                if let ExtractResult::Playlist(playlist) = &mut result
-                    && playlist.pending.is_some()
+                if let ExtractResult::Playlist(playlist) = &extracted {
+                    playlist_urls.insert(playlist.webpage_url.to_string());
+                }
+                // Upstream `__process_playlist` progress lines use the playlist
+                // title (or ID).
+                let playlist_title = match &extracted {
+                    ExtractResult::Playlist(playlist) => Some(
+                        [&playlist.title, &playlist.id]
+                            .into_iter()
+                            .find(|text| !text.is_empty())
+                            .map_or("<Untitled>".to_owned(), |text| text.to_string()),
+                    ),
+                    ExtractResult::Video(_) => None,
+                };
+                if let (Some(title), ExtractResult::Playlist(playlist)) =
+                    (&playlist_title, &extracted)
+                    && !header_printed
                 {
-                    let title = [&playlist.title, &playlist.id]
-                        .into_iter()
-                        .find(|text| !text.is_empty())
-                        .map_or("<Untitled>", |text| text.as_str());
                     screen!("[download] Downloading {}: {title}", playlist.result_type());
-                    header_printed = true;
-                    if let Some(pending) = &mut playlist.pending {
-                        pending.request_entries(&playlist_selection);
-                    }
-                    downloader.fetch_pending(playlist, playlist_selection.fetch_limit())?;
                 }
-                // Nested playlists are selected like entries; archive and
-                // match filters apply to their videos.
-                let outer = matches!(&result, ExtractResult::Playlist(playlist) if !playlist.nested.is_empty());
-                if let (ExtractResult::Playlist(playlist), true) = (&mut result, outer) {
-                    playlist.nested_placeholders();
-                }
-                let counts = playlist_selection.apply(&mut result);
-                if outer {
-                    return Ok(Some((result, counts)));
-                }
-                let result = if let Some(archive) = &archive {
-                    let (result, reached) =
-                        filter_archived(result, archive, args.break_on_existing)?;
-                    if reached {
-                        pending = Some(Cancel::Existing);
-                    }
-                    let Some(result) = result else {
-                        return Ok(None);
-                    };
-                    result
-                } else {
-                    result
-                };
-                // Upstream `_match_entry` before selection: format fields are incomplete.
-                let Some(mut result) = prefilter(result, &match_filters, &mut pending)? else {
-                    return Ok(None);
-                };
-                if write_subs || args.write_auto_subs {
-                    let select = |info: &mut yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<()> {
-                        let selection = subtitle_options.select_sources(
-                            &info.subtitles,
-                            &info.automatic_captions,
-                            write_subs,
-                            args.write_auto_subs,
-                        )?;
-                        for warning in selection.warnings {
-                            warning!("WARNING: {}: {warning}", info.id);
-                        }
-                        info.requested_subtitles = ((write_subs && !info.subtitles.is_empty())
-                            || (args.write_auto_subs && !info.automatic_captions.is_empty()))
-                        .then_some(selection.requested);
-                        Ok(())
-                    };
-                    match &mut result {
-                        ExtractResult::Video(info) => select(info)?,
-                        ExtractResult::Playlist(playlist) => {
-                            for info in &mut playlist.entries {
-                                select(info)?;
+                // The playlist info JSON written before the entries, rewritten after
+                // them (`_infojson_written is True`).
+                let mut playlist_info_json: Option<(PathBuf, serde_json::Value)> = None;
+                if let (ExtractResult::Playlist(playlist), Some(counts), true) = (
+                    &extracted,
+                    counts,
+                    playlist_files && (writes_info_json || writes_description),
+                ) {
+                    // Upstream writes playlist metadata before processing any entry,
+                    // and a failed write skips the playlist.
+                    let written = (|| -> Result<(), Box<dyn std::error::Error>> {
+                        if writes_info_json
+                            && let Some(path) = templates.prepare_playlist(
+                                playlist,
+                                counts,
+                                "pl_infojson",
+                                &template_options,
+                            )?
+                        {
+                            reject_reserved(&path, [&archive_path, &args.cookies])?;
+                            let value = yt_dlp_rs::playlist_info_json_with(
+                                playlist,
+                                counts,
+                                epoch(),
+                                !args.no_clean_info_json,
+                            )?;
+                            let written =
+                                write_info_json_with(&path, &value, overwrites != Some(false))?;
+                            if matches!(written, InfoJsonWrite::Written) {
+                                playlist_info_json = Some((path.clone(), value));
                             }
+                            report_info_json("playlist", &path, written);
                         }
-                    }
-                }
-                Ok(Some((result, counts)))
-            })();
-        let (mut extracted, counts) = match extracted {
-            Ok(Some(result)) => result,
-            Ok(None) if pending.is_some() => {
-                match cancel(pending.take().unwrap(), args.break_per_input) {
-                    Some(cancel) => {
-                        cancelled = Some(cancel);
-                        break;
-                    }
-                    None => {
-                        processed = 0;
+                        if writes_description
+                            && templates
+                                .prepare_playlist(
+                                    playlist,
+                                    counts,
+                                    "pl_description",
+                                    &template_options,
+                                )?
+                                .is_some()
+                        {
+                            // Playlist results carry no represented description.
+                            screen!("[info] There's no playlist description to write");
+                        }
+                        Ok(())
+                    })();
+                    if let Err(error) = written {
+                        report_error!("ERROR: {url}: {error}");
+                        failed = true;
+                        if abort_on_error {
+                            break;
+                        }
                         continue;
                     }
                 }
-            }
-            Ok(None) => continue,
-            Err(error) => {
-                // `CookieLoadError` is re-raised and ends the run.
-                if let yt_dlp_rs::Error::CookieLoad(message) = &error {
-                    report_error!("ERROR: {message}");
-                    failed = true;
-                    break;
-                }
-                match &error {
-                    yt_dlp_rs::Error::Reported(message) => report_error!("ERROR: {message}"),
-                    error @ (yt_dlp_rs::Error::Webpage { .. }
-                    | yt_dlp_rs::Error::ExtractorRequest { .. }
-                    | yt_dlp_rs::Error::UnsupportedUrl(_)) => {
-                        report_error!("ERROR: {error}")
-                    }
-                    _ => report_error!("ERROR: {url}: {error}"),
-                }
-                failed = true;
-                if abort_on_error {
-                    break;
-                }
-                // `ignoreerrors` returns `None` from `extract_info`, which
-                // `-J` still dumps.
-                if args.dump_single_json {
-                    writeln!(stdout, "null")?;
-                    stdout.flush()?;
-                }
-                continue;
-            }
-        };
-        // Upstream `__process_playlist` progress lines use the playlist
-        // title (or ID).
-        let playlist_title = match &extracted {
-            ExtractResult::Playlist(playlist) => Some(
-                [&playlist.title, &playlist.id]
-                    .into_iter()
-                    .find(|text| !text.is_empty())
-                    .map_or("<Untitled>".to_owned(), |text| text.to_string()),
-            ),
-            ExtractResult::Video(_) => None,
-        };
-        if let (Some(title), ExtractResult::Playlist(playlist)) = (&playlist_title, &extracted)
-            && !header_printed
-        {
-            screen!("[download] Downloading {}: {title}", playlist.result_type());
-        }
-        // The playlist info JSON written before the entries, rewritten after
-        // them (`_infojson_written is True`).
-        let mut playlist_info_json: Option<(PathBuf, serde_json::Value)> = None;
-        if let (ExtractResult::Playlist(playlist), Some(counts), true) = (
-            &extracted,
-            counts,
-            playlist_files && (writes_info_json || writes_description),
-        ) {
-            // Upstream writes playlist metadata before processing any entry,
-            // and a failed write skips the playlist.
-            let written = (|| -> Result<(), Box<dyn std::error::Error>> {
-                if writes_info_json
-                    && let Some(path) = templates.prepare_playlist(
-                        playlist,
-                        counts,
-                        "pl_infojson",
-                        &template_options,
-                    )?
+                if let (ExtractResult::Playlist(playlist), true) =
+                    (&extracted, args.list_thumbnails && playlist_files)
                 {
-                    reject_reserved(&path, [&archive_path, &args.cookies])?;
-                    let value = yt_dlp_rs::playlist_info_json_with(
-                        playlist,
-                        counts,
-                        epoch(),
-                        !args.no_clean_info_json,
-                    )?;
-                    let written = write_info_json_with(&path, &value, overwrites != Some(false))?;
-                    if matches!(written, InfoJsonWrite::Written) {
-                        playlist_info_json = Some((path.clone(), value));
-                    }
-                    report_info_json("playlist", &path, written);
+                    // Playlist results carry no represented thumbnails.
+                    screen!("{} has no thumbnails", playlist.id);
                 }
-                if writes_description
-                    && templates
-                        .prepare_playlist(playlist, counts, "pl_description", &template_options)?
-                        .is_some()
+                if let (ExtractResult::Playlist(playlist), Some(counts), Some(title)) =
+                    (&extracted, counts, &playlist_title)
                 {
-                    // Playlist results carry no represented description.
-                    screen!("[info] There's no playlist description to write");
+                    screen!(
+                        "[{}] Playlist {title}: Downloading {} items{}",
+                        playlist.extractor,
+                        counts
+                            .n_entries
+                            .map_or_else(|| "N/A".into(), |count| count.to_string()),
+                        // `format_field(ie_result, 'playlist_count', ' of %s')`: a
+                        // missing or zero count is left out.
+                        counts
+                            .playlist_count
+                            .filter(|count| *count != 0)
+                            .map_or_else(String::new, |count| format!(" of {count}"))
+                    );
+                    // Upstream keeps resolved entries unless `extract_flat` became
+                    // `discard`/`discard_in_playlist` (which keeps a `multi_video`'s).
+                    let keeps_entries = args.flat_playlist
+                        || playlist.result_type() == "multi_video"
+                        || args.dump_single_json
+                        || prints_stage(Stage::Playlist)
+                        || (args.write_info_json && args.no_clean_info_json && playlist_files)
+                        || exec.has(Stage::Playlist)
+                        || args.concat_playlist == "always";
+                    if keeps_entries && yt_dlp_rs::screen::verbose() {
+                        eprintln!(
+                            "[debug] The information of all playlist entries will be held in memory"
+                        );
+                    }
                 }
-                Ok(())
-            })();
-            if let Err(error) = written {
-                report_error!("ERROR: {url}: {error}");
-                failed = true;
-                if abort_on_error {
-                    break;
+                // Upstream's playlist dict for the `playlist` stage.
+                let playlist_dict = playlist_title
+                    .is_some()
+                    .then(|| single_json(&extracted, counts))
+                    .transpose()?;
+                // Upstream `-J` prints the processed entries (`null` for entries whose
+                // processing failed) after the playlist.
+                let mut single_json = args
+                    .dump_single_json
+                    .then(|| single_json(&extracted, counts))
+                    .transpose()?;
+                let mut json_entries = single_json
+                    .as_mut()
+                    .and_then(|value| value.get_mut("entries"))
+                    .map(serde_json::Value::take);
+                // Unresolved `url_transparent` entries are `null` unless processed.
+                if let (
+                    Some(serde_json::Value::Array(entries)),
+                    ExtractResult::Playlist(playlist),
+                ) = (&mut json_entries, &extracted)
+                {
+                    for (entry, info) in entries.iter_mut().zip(&playlist.entries) {
+                        if YoutubeDl::is_transparent(info) {
+                            *entry = serde_json::Value::Null;
+                        }
+                    }
                 }
-                continue;
-            }
-        }
-        if let (ExtractResult::Playlist(playlist), true) =
-            (&extracted, args.list_thumbnails && playlist_files)
-        {
-            // Playlist results carry no represented thumbnails.
-            screen!("{} has no thumbnails", playlist.id);
-        }
-        if let (ExtractResult::Playlist(playlist), Some(counts), Some(title)) =
-            (&extracted, counts, &playlist_title)
-        {
-            screen!(
-                "[{}] Playlist {title}: Downloading {} items{}",
-                playlist.extractor,
-                counts
-                    .n_entries
-                    .map_or_else(|| "N/A".into(), |count| count.to_string()),
-                // `format_field(ie_result, 'playlist_count', ' of %s')`: a
-                // missing or zero count is left out.
-                counts
-                    .playlist_count
-                    .filter(|count| *count != 0)
-                    .map_or_else(String::new, |count| format!(" of {count}"))
-            );
-            // Upstream keeps resolved entries unless `extract_flat` became
-            // `discard`/`discard_in_playlist` (which keeps a `multi_video`'s).
-            let keeps_entries = args.flat_playlist
-                || playlist.result_type() == "multi_video"
-                || args.dump_single_json
-                || prints_stage(Stage::Playlist)
-                || (args.write_info_json && args.no_clean_info_json && playlist_files)
-                || exec.has(Stage::Playlist)
-                || args.concat_playlist == "always";
-            if keeps_entries && yt_dlp_rs::screen::verbose() {
-                eprintln!("[debug] The information of all playlist entries will be held in memory");
-            }
-        }
-        // Upstream's playlist dict for the `playlist` stage.
-        let playlist_dict = playlist_title
-            .is_some()
-            .then(|| single_json(&extracted, counts))
-            .transpose()?;
-        // Upstream `-J` prints the processed entries (`null` for entries whose
-        // processing failed) after the playlist.
-        let mut single_json = args
-            .dump_single_json
-            .then(|| single_json(&extracted, counts))
-            .transpose()?;
-        let mut json_entries = single_json
-            .as_mut()
-            .and_then(|value| value.get_mut("entries"))
-            .map(serde_json::Value::take);
-        // Unresolved `url_transparent` entries are `null` unless processed.
-        if let (Some(serde_json::Value::Array(entries)), ExtractResult::Playlist(playlist)) =
-            (&mut json_entries, &extracted)
-        {
-            for (entry, info) in entries.iter_mut().zip(&playlist.entries) {
-                if YoutubeDl::is_transparent(info) {
-                    *entry = serde_json::Value::Null;
-                }
-            }
-        }
-        // Upstream `__process_playlist` processes each selected nested
-        // playlist as an entry: queue them, then this playlist's tail.
-        if let ExtractResult::Playlist(outer) = &mut extracted
-            && !outer.nested.is_empty()
-        {
-            let nested = std::mem::take(&mut outer.nested);
-            let mut queued = Vec::new();
-            for entry in &outer.entries {
-                let Some(playlist) = entry
-                    .extra
-                    .get(yt_dlp_rs::NESTED_INDEX)
-                    .and_then(serde_json::Value::as_u64)
-                    .and_then(|index| nested.get(index as usize))
-                else {
+                // Upstream `__process_playlist` processes each selected nested
+                // playlist as an entry: queue them, then this playlist's tail.
+                if let ExtractResult::Playlist(outer) = &mut extracted
+                    && !outer.nested.is_empty()
+                {
+                    let nested = std::mem::take(&mut outer.nested);
+                    let mut queued = Vec::new();
+                    for entry in &outer.entries {
+                        let Some(playlist) = entry
+                            .extra
+                            .get(yt_dlp_rs::NESTED_INDEX)
+                            .and_then(serde_json::Value::as_u64)
+                            .and_then(|index| nested.get(index as usize))
+                        else {
+                            continue;
+                        };
+                        let count = entry
+                            .n_entries
+                            .map_or_else(|| "N/A".into(), |count| count.to_string());
+                        // `entry['__x_forwarded_for_ip'] = ...` before processing.
+                        let mut playlist = playlist.clone();
+                        playlist
+                            .extra
+                            .insert("__x_forwarded_for_ip".into(), serde_json::Value::Null);
+                        queued.push(Input::Nested {
+                            playlist: Box::new(playlist),
+                            item: Some(format!(
+                                "[download] Downloading item {} of {count}",
+                                entry.playlist_autonumber.unwrap_or_default()
+                            )),
+                        });
+                    }
+                    parents.push(Parent::Outer(Box::new(OuterPlaylist {
+                        title: playlist_title.clone().unwrap_or_default(),
+                        info_json: playlist_info_json,
+                        dict: playlist_dict,
+                        single_json,
+                        json_entries: Vec::new(),
+                        entry_count: queued.len(),
+                        nested: is_nested,
+                    })));
+                    inputs.push_front(Input::FinishOuter);
+                    for input in queued.into_iter().rev() {
+                        inputs.push_front(input);
+                    }
                     continue;
-                };
-                let count = entry
-                    .n_entries
-                    .map_or_else(|| "N/A".into(), |count| count.to_string());
-                // `entry['__x_forwarded_for_ip'] = ...` before processing.
-                let mut playlist = playlist.clone();
-                playlist
-                    .extra
-                    .insert("__x_forwarded_for_ip".into(), serde_json::Value::Null);
-                queued.push(Input::Nested {
-                    playlist: Box::new(playlist),
-                    item: format!(
-                        "[download] Downloading item {} of {count}",
-                        entry.playlist_autonumber.unwrap_or_default()
-                    ),
-                });
+                }
+                PlaylistRun {
+                    url,
+                    from_info_json,
+                    is_nested,
+                    pending,
+                    playlist_title,
+                    playlist_info_json,
+                    playlist_dict,
+                    single_json,
+                    json_entries,
+                    entry_files: vec![None; extracted.entry_count()],
+                    extraction_failures: 0,
+                    failed_before: failed,
+                    entries: extracted.into_entries().into_iter().enumerate(),
+                    nested_entry: None,
+                }
             }
-            outer_playlists.push(OuterPlaylist {
-                title: playlist_title.clone().unwrap_or_default(),
-                info_json: playlist_info_json,
-                dict: playlist_dict,
-                single_json,
-                json_entries: Vec::new(),
-                entry_count: queued.len(),
-                nested: is_nested,
-            });
-            inputs.push_front(Input::FinishOuter);
-            for input in queued.into_iter().rev() {
-                inputs.push_front(input);
-            }
-            continue;
-        }
+        };
+        let PlaylistRun {
+            url,
+            from_info_json,
+            is_nested,
+            mut pending,
+            playlist_title,
+            playlist_info_json,
+            playlist_dict,
+            mut single_json,
+            mut json_entries,
+            entry_files,
+            mut extraction_failures,
+            failed_before,
+            mut entries,
+            nested_entry: _,
+        } = run;
         // Each entry's downloaded file (`requested_downloads[0].filepath`).
-        let entry_files = std::cell::RefCell::new(vec![None::<PathBuf>; extracted.entry_count()]);
+        let entry_files = std::cell::RefCell::new(entry_files);
+        let mut fallback: Option<(String, String)> = None;
         let mut url_cancelled = false;
-        // Upstream `__process_playlist` `failures`.
-        let mut extraction_failures = 0;
-        let failed_before = failed;
-        for (entry_index, mut info) in extracted.into_entries().into_iter().enumerate() {
+        while let Some((entry_index, mut info)) = entries.next() {
             if yt_dlp_rs::SignalInterrupt::interrupted() {
                 break 'inputs;
             }
@@ -5100,7 +5202,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             let mut entry_cancel = None;
             // Upstream `_num_videos` (`process_video_result`).
             videos += 1;
-            template_options.video_autonumber.set(Some(videos));
+            let previous_autonumber = template_options.video_autonumber.replace(Some(videos));
             if let Some(index) = info.playlist_autonumber
                 && playlist_title.is_some()
             {
@@ -5140,21 +5242,70 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
                 continue;
             }
+            // A `url_transparent` entry (RSS items) is extracted now.
+            let mut resolve_error = None;
+            if YoutubeDl::is_transparent(&info) {
+                match downloader.resolve_entry_result(info.clone()) {
+                    Ok(ExtractResult::Video(resolved)) => info = resolved,
+                    // Upstream processes a playlist entry inline (its own
+                    // `__process_playlist`, not counted as a video), then
+                    // this playlist's remaining entries: queue it and the
+                    // rest of this playlist.
+                    Ok(ExtractResult::Playlist(playlist)) => {
+                        videos -= 1;
+                        template_options.video_autonumber.set(previous_autonumber);
+                        // `_playlist_urls` protects from recursion.
+                        let seen = playlist_urls.contains(playlist.webpage_url.as_str());
+                        if seen {
+                            let title = [&playlist.title, &playlist.id]
+                                .into_iter()
+                                .find(|text| !text.is_empty())
+                                .map_or("", |text| text.as_str());
+                            screen!("[download] Skipping already downloaded playlist: {title}");
+                        }
+                        parents.push(Parent::Suspended(Box::new(PlaylistRun {
+                            url,
+                            from_info_json,
+                            is_nested,
+                            pending,
+                            playlist_title,
+                            playlist_info_json,
+                            playlist_dict,
+                            single_json,
+                            json_entries,
+                            entry_files: entry_files.into_inner(),
+                            extraction_failures,
+                            failed_before,
+                            entries,
+                            nested_entry: Some((entry_index, true)),
+                        })));
+                        inputs.push_front(Input::Resume);
+                        if !seen {
+                            inputs.push_front(Input::Nested {
+                                playlist: Box::new(playlist),
+                                item: None,
+                            });
+                        }
+                        continue 'inputs;
+                    }
+                    Err(error) => resolve_error = Some(error),
+                }
+            }
+            // `_num_videos` counts the entries reaching `process_video_result`.
+            if resolve_error.is_some() || YoutubeDl::entry_error(&info).is_some() {
+                videos -= 1;
+                template_options.video_autonumber.set(previous_autonumber);
+            }
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
-                // A `url_transparent` entry (RSS items) is extracted now.
-                if YoutubeDl::is_transparent(&info) {
-                    info = downloader.resolve_entry(info.clone()).map_err(
-                        |error| -> Box<dyn std::error::Error> {
-                            // An entry's extractor request error is reported
-                            // as is, like other entry extraction errors.
-                            match error {
-                                error @ yt_dlp_rs::Error::ExtractorRequest { .. } => {
-                                    Box::new(EntryExtractionError(error.to_string()))
-                                }
-                                error => error.into(),
-                            }
-                        },
-                    )?;
+                if let Some(error) = resolve_error {
+                    // An entry's extractor request error is reported as is,
+                    // like other entry extraction errors.
+                    return Err(match error {
+                        error @ yt_dlp_rs::Error::ExtractorRequest { .. } => {
+                            Box::new(EntryExtractionError(error.to_string()))
+                        }
+                        error => error.into(),
+                    });
                 }
                 if let Some(error) = YoutubeDl::entry_error(&info) {
                     return Err(EntryExtractionError(error.to_owned()).into());
@@ -6948,9 +7099,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 break;
             }
             processed = 0;
+            if is_nested {
+                drop_nesting(&mut inputs, &mut parents);
+            }
             continue;
         }
         if url_cancelled {
+            // `DownloadCancelled` ends the outer playlists too.
+            if is_nested {
+                drop_nesting(&mut inputs, &mut parents);
+            }
             continue;
         }
         // "Write the updated info to json": the cleaned dict loses its
@@ -7008,13 +7166,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         ) {
             object.insert("entries".into(), entries);
         }
-        if let Some(value) = single_json {
-            if is_nested {
+        if is_nested {
+            let value = single_json.map(|mut value| {
                 // A nested playlist is its outer playlist's entry, whose
                 // `__x_forwarded_for_ip` preceded the processing fields.
-                let mut value = value;
                 yt_dlp_rs::upstream_shape(&mut value);
-                let value = match value {
+                match value {
                     serde_json::Value::Object(mut object) => {
                         let ip = object.shift_remove("__x_forwarded_for_ip");
                         let mut ordered = serde_json::Map::new();
@@ -7028,13 +7185,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         serde_json::Value::Object(ordered)
                     }
                     value => value,
-                };
-                if let Some(outer) = outer_playlists.last_mut() {
-                    outer.json_entries.push(value);
                 }
-            } else {
-                emit_single_json(value, &mut stdout)?;
-            }
+            });
+            finish_nested(&mut parents, value);
+        } else if let Some(value) = single_json {
+            emit_single_json(value, &mut stdout)?;
         }
     }
     for warning in downloader.cookie_jar().take_warnings() {
@@ -7102,13 +7257,83 @@ impl std::error::Error for EntryExtractionError {}
 enum Input {
     /// A URL, or a dictionary loaded with `--load-info-json`.
     Url(String, Option<Box<ExtractResult>>),
-    /// A selected nested playlist, after its outer playlist's item line.
+    /// A selected nested playlist, after its outer playlist's item line
+    /// (already shown for an entry that resolved to a playlist).
     Nested {
         playlist: Box<yt_dlp_rs::PlaylistInfo>,
-        item: String,
+        item: Option<String>,
     },
     /// The end of the innermost outer playlist.
     FinishOuter,
+    /// The innermost suspended playlist's remaining entries.
+    Resume,
+}
+
+/// A playlist waiting for its nested playlists.
+enum Parent {
+    /// A playlist whose entries are all playlists (YouTube channel tabs).
+    Outer(Box<OuterPlaylist>),
+    /// A playlist one of whose entries resolved to a playlist.
+    Suspended(Box<PlaylistRun>),
+}
+
+/// A playlist's entry processing (upstream `__process_playlist`'s state),
+/// which an entry resolving to a playlist suspends.
+struct PlaylistRun {
+    url: String,
+    from_info_json: bool,
+    /// Whether this playlist is itself nested.
+    is_nested: bool,
+    /// A cancellation the playlist's selection found (archive, filters).
+    pending: Option<Cancel>,
+    playlist_title: Option<String>,
+    playlist_info_json: Option<(PathBuf, serde_json::Value)>,
+    playlist_dict: Option<serde_json::Value>,
+    single_json: Option<serde_json::Value>,
+    json_entries: Option<serde_json::Value>,
+    entry_files: Vec<Option<PathBuf>>,
+    /// Upstream `failures`.
+    extraction_failures: usize,
+    failed_before: bool,
+    /// The entries not processed yet.
+    entries: std::iter::Enumerate<std::vec::IntoIter<yt_dlp_rs::VideoInfo>>,
+    /// The entry whose nested playlist is being processed, and whether it
+    /// failed (until that playlist finishes).
+    nested_entry: Option<(usize, bool)>,
+}
+
+/// Hand a finished nested playlist (and its `-J` dict) to the playlist it
+/// is an entry of.
+fn finish_nested(parents: &mut [Parent], value: Option<serde_json::Value>) {
+    match parents.last_mut() {
+        Some(Parent::Outer(outer)) => outer.json_entries.extend(value),
+        Some(Parent::Suspended(run)) => {
+            if let Some((index, failed)) = &mut run.nested_entry {
+                *failed = false;
+                if let (Some(value), Some(entry)) = (
+                    value,
+                    run.json_entries
+                        .as_mut()
+                        .and_then(|entries| entries.get_mut(*index)),
+                ) {
+                    *entry = value;
+                }
+            }
+        }
+        None => {}
+    }
+}
+
+/// Upstream's `DownloadCancelled` through nested playlists: the input's
+/// outer playlists end with it.
+fn drop_nesting(inputs: &mut std::collections::VecDeque<Input>, parents: &mut Vec<Parent>) {
+    while matches!(
+        inputs.front(),
+        Some(Input::Nested { .. } | Input::FinishOuter | Input::Resume)
+    ) {
+        inputs.pop_front();
+    }
+    parents.clear();
 }
 
 /// An outer playlist's tail state while its nested playlists are processed.

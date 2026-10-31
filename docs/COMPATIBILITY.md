@@ -6863,9 +6863,36 @@ non-`None` fields except `_type`, `url` and `ie_key` (and, without
 `section_start`/`section_end`, `id`, `extractor` and `extractor_key`), as
 upstream's `process_ie_result`; when the target is a playlist, the playlist
 takes those fields and the outer page URL, with new keys after its page fields
-(`tests/fixtures/sites/wykop-playlist/`). A playlist entry whose
-`url_transparent` URL resolves to a playlist is an explicit error: upstream
-processes it as an inline nested playlist, which this port does not.
+(`tests/fixtures/sites/wykop-playlist/`).
+
+A playlist entry (`url` or `url_transparent`, such as an RSS item) whose URL
+resolves to a playlist when the entry is processed is processed inline like
+upstream's `__process_playlist` recursion: after the outer playlist's
+`Downloading item i of n` line, the nested playlist (overlaid with the
+entry's non-`None` fields, so an RSS item's title names it) prints its own
+`Downloading playlist`, `Playlist X: Downloading N items of M`, item and
+`Finished downloading playlist` lines, its videos carry its `playlist_*`,
+`playlist_index` and `n_entries` fields, its `playlist:` prints and
+`--print`/`-j` output run in place, and the outer playlist then continues with
+its next entries. Like `_num_videos`, `video_autonumber` counts only entries
+that reach video processing: neither such a playlist entry nor an entry whose
+extraction failed.
+`-J` holds the nested playlist's processed dict (its entries included) as the
+outer entry; `--flat-playlist` leaves the entry unextracted. `-I` selects
+within every level, `--max-downloads`, `--break-on-existing`/`--break-on-reject`
+and Ctrl+C end the outer playlists too (also with `--break-per-input`, which
+then continues with the next input), a nested playlist whose processing fails
+counts as a failed entry for `--skip-playlist-after-errors` (`null` in `-J`),
+and an entry resolving to a playlist already processed for this input prints
+`Skipping already downloaded playlist: TITLE` and counts as failed, like
+upstream's `_playlist_urls` recursion guard. Compared with pinned upstream in
+`tests/fixtures/sites/generic-rss-nested/` (an RSS feed of YouTube videos and
+a YouTube playlist). Known differences, not specific to nesting: an RSS
+feed's unresolved entries (no ID before extraction) are an explicit
+`--download-archive` error instead of upstream's unarchived entries, YouTube
+playlist entries are not matched against the archive before extraction, and
+`--match-filter` rejections of a YouTube playlist's entries are reported when
+the playlist is selected rather than at the rejected item.
 
 ## Playlist item selection
 

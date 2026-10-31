@@ -427,6 +427,31 @@ pub(crate) const FETCH_ERROR_COUNT: &str = "__yt_dlp_rs_fetch_error_count";
 /// fields (`process_ie_result`).
 pub(crate) const FOLLOW_TRANSPARENT: &str = "__yt_dlp_rs_follow_transparent";
 
+/// A `url_transparent` result's non-`None` `fields` set on the playlist it
+/// resolved to (upstream's `new_result.update(...)`: new keys follow the
+/// playlist's own, see [`info_order::FORCED_KEYS`]).
+fn overlay_playlist(playlist: &mut PlaylistInfo, fields: &[(String, serde_json::Value)]) {
+    let added: Vec<serde_json::Value> = fields
+        .iter()
+        .map(|(key, _)| key.as_str())
+        .filter(|key| {
+            !matches!(*key, "title" | "webpage_url") && !playlist.extra.contains_key(*key)
+        })
+        .map(serde_json::Value::from)
+        .collect();
+    playlist
+        .extra
+        .insert(info_order::FORCED_KEYS.into(), added.into());
+    for (key, value) in fields {
+        match key.as_str() {
+            "title" => playlist.title = value.as_str().unwrap_or_default().to_owned(),
+            _ => {
+                playlist.extra.insert(key.clone(), value.clone());
+            }
+        }
+    }
+}
+
 /// Upstream `bug_reports_message()` after a lowercase-ending text.
 /// Upstream's `InfoExtractor.extract` turns an extractor's unexpected
 /// exception into `ExtractorError('An extractor error has occurred.')`, so
@@ -4539,9 +4564,21 @@ impl YoutubeDl {
     /// (RSS items): its URL is extracted (smuggling the `guid` as
     /// `force_videoid`), then updated with the entry's non-`None` fields,
     /// keeping the playlist fields. Other entries are returned unchanged.
+    /// An entry resolving to a playlist is an error here; see
+    /// [`Self::resolve_entry_result`].
     pub fn resolve_entry(&self, entry: VideoInfo) -> Result<VideoInfo> {
+        match self.resolve_entry_result(entry)? {
+            ExtractResult::Video(info) => Ok(info),
+            ExtractResult::Playlist(_) => Err(Error::PlaylistRequiresResult),
+        }
+    }
+
+    /// [`Self::resolve_entry`], where an entry resolving to a playlist is
+    /// that playlist (upstream processes it inline as a nested playlist),
+    /// updated with the entry's non-`None` fields like a video.
+    pub fn resolve_entry_result(&self, entry: VideoInfo) -> Result<ExtractResult> {
         let Some(marker) = entry.extra.get(TRANSPARENT).cloned() else {
-            return Ok(entry);
+            return Ok(ExtractResult::Video(entry));
         };
         let target = marker["url"].as_str().unwrap_or_default().to_owned();
         let Ok(url) = Url::parse(&target) else {
@@ -4579,10 +4616,25 @@ impl YoutubeDl {
         // (as does a URL whose extractor names its own: YouTube's feeds).
         let plain_url = marker["entry"]["_type"] == "url" || marker["keep_webpage_url"] == true;
         let merge = |result: &mut ExtractResult| -> Result<()> {
-            let ExtractResult::Video(info) = result else {
-                return Err(Error::UnsupportedHtml5(
-                    "url_transparent playlists are not supported natively".into(),
-                ));
+            let info = match result {
+                ExtractResult::Video(info) => info,
+                // `new_result.update(...)`: a playlist takes the entry's
+                // fields too (its `id` and extractor stay).
+                ExtractResult::Playlist(playlist) => {
+                    let (urls, fields): (Vec<_>, Vec<_>) = fields
+                        .iter()
+                        .cloned()
+                        .partition(|(key, _)| key == "webpage_url");
+                    overlay_playlist(playlist, &fields);
+                    if let Some(url) = urls
+                        .last()
+                        .and_then(|(_, url)| url.as_str())
+                        .and_then(|url| Url::parse(url).ok())
+                    {
+                        playlist.webpage_url = url;
+                    }
+                    return Ok(());
+                }
             };
             let mut inner_shape = match info.extra.get(info_order::INFO_SHAPE) {
                 Some(serde_json::Value::String(shape)) => shape.clone(),
@@ -4624,7 +4676,10 @@ impl YoutubeDl {
         extractor::html5::clear_smuggled();
         let mut result = result?;
         result.add_default_extra_info(&shown);
-        let mut info = result.into_video()?;
+        let mut info = match result {
+            ExtractResult::Video(info) => info,
+            playlist @ ExtractResult::Playlist(_) => return Ok(playlist),
+        };
         // The playlist's fields stay.
         info.playlist_index = entry.playlist_index;
         info.playlist_autonumber = entry.playlist_autonumber;
@@ -4645,7 +4700,7 @@ impl YoutubeDl {
                 info.extra.insert(key.into(), value.clone());
             }
         }
-        Ok(info)
+        Ok(ExtractResult::Video(info))
     }
 
     /// A `--flat-playlist` `url_transparent` entry, unextracted: upstream's
@@ -4902,29 +4957,7 @@ impl YoutubeDl {
                             // force_properties)`: a playlist takes the outer
                             // result's fields and page URL too.
                             ExtractResult::Playlist(playlist) => {
-                                let added: Vec<serde_json::Value> = fields
-                                    .iter()
-                                    .map(|(key, _)| key.as_str())
-                                    .filter(|key| {
-                                        !matches!(*key, "title" | "webpage_url")
-                                            && !playlist.extra.contains_key(*key)
-                                    })
-                                    .map(serde_json::Value::from)
-                                    .collect();
-                                playlist
-                                    .extra
-                                    .insert(info_order::FORCED_KEYS.into(), added.into());
-                                for (key, value) in &fields {
-                                    match key.as_str() {
-                                        "title" => {
-                                            playlist.title =
-                                                value.as_str().unwrap_or_default().to_owned();
-                                        }
-                                        _ => {
-                                            playlist.extra.insert(key.clone(), value.clone());
-                                        }
-                                    }
-                                }
+                                overlay_playlist(playlist, &fields);
                                 playlist.webpage_url = outer.clone();
                                 if let Some(ip) = &outer_ip {
                                     playlist
