@@ -1,0 +1,110 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://blog.example.test/pt-one",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3fbif9S3WmtTP8gGsC5HBd\", \"title\": \"E2E tests\", \"description\": \"description\", \"thumbnail\": \"https://peertube2.cpy.re/lazy-static/thumbnails/841923e6-b198-4769-b6b9-8f4d0f3a385d.jpg\", \"timestamp\": 1589276219, \"uploader\": \"chocobozzz\", \"uploader_id\": \"37855\", \"uploader_url\": \"https://peertube2.cpy.re/accounts/chocobozzz\", \"channel\": \"Chocobozzz test channel\", \"channel_id\": \"5187\", \"channel_url\": \"https://peertube2.cpy.re/video-channels/chocobozzz_channel\", \"language\": null, \"license\": \"Unknown\", \"duration\": 52, \"view_count\": 164, \"like_count\": 0, \"dislike_count\": 0, \"age_limit\": null, \"tags\": [], \"categories\": [\"Unknown\"], \"formats\": [{\"height\": 480, \"url\": \"https://peertube2.cpy.re/static/web-videos/122d093a-1ede-43bd-bd34-59d2931ffc5e-480.mp4\", \"format_id\": \"480p\", \"filesize\": 4368907, \"fps\": 24, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"480p - 480p\"}], \"subtitles\": {}, \"is_live\": false, \"webpage_url\": \"https://peertube2.cpy.re/videos/watch/3fbif9S3WmtTP8gGsC5HBd\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"original_url\": \"https://blog.example.test/pt-one\", \"webpage_url_basename\": \"3fbif9S3WmtTP8gGsC5HBd\", \"webpage_url_domain\": \"peertube2.cpy.re\", \"extractor\": \"PeerTube\", \"extractor_key\": \"PeerTube\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://peertube2.cpy.re/lazy-static/thumbnails/841923e6-b198-4769-b6b9-8f4d0f3a385d.jpg\", \"id\": \"0\"}], \"display_id\": \"3fbif9S3WmtTP8gGsC5HBd\", \"fulltitle\": \"E2E tests\", \"duration_string\": \"52\", \"upload_date\": \"20200512\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"height\": 480, \"url\": \"https://peertube2.cpy.re/static/web-videos/122d093a-1ede-43bd-bd34-59d2931ffc5e-480.mp4\", \"format_id\": \"480p\", \"filesize\": 4368907, \"fps\": 24, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"format\": \"480p - 480p\", \"_filename\": \"E2E tests [3fbif9S3WmtTP8gGsC5HBd].mp4\", \"filename\": \"E2E tests [3fbif9S3WmtTP8gGsC5HBd].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/pt-one",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "3fbif9S3WmtTP8gGsC5HBd|E2E tests|PeerTube|https://peertube2.cpy.re/videos/watch/3fbif9S3WmtTP8gGsC5HBd|https://blog.example.test/pt-one"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/pt-many",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"pt-many\", \"title\": \"PeerTube embeds\", \"timestamp\": null, \"description\": null, \"thumbnail\": null, \"age_limit\": null, \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"PeerTube\", \"_type\": \"url\", \"url\": \"https://framatube.org/videos/embed/kkGMgK9ZtnKfYAgnEtQxbv\", \"extractor\": \"PeerTube\", \"extractor_key\": \"PeerTube\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"PeerTube\", \"_type\": \"url\", \"url\": \"https://peertube2.cpy.re/videos/embed/3fbif9S3WmtTP8gGsC5HBd\", \"extractor\": \"PeerTube\", \"extractor_key\": \"PeerTube\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://blog.example.test/pt-many\", \"original_url\": \"https://blog.example.test/pt-many\", \"webpage_url_basename\": \"pt-many\", \"webpage_url_domain\": \"blog.example.test\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://blog.example.test/pt-many",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(url)s|%(ie_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|kkGMgK9ZtnKfYAgnEtQxbv|https://framatube.org/videos/embed/kkGMgK9ZtnKfYAgnEtQxbv|PeerTube",
+    "2|3fbif9S3WmtTP8gGsC5HBd|https://peertube2.cpy.re/videos/embed/3fbif9S3WmtTP8gGsC5HBd|PeerTube"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://peertube.example.test/w/9c9de5e8-0a1e-484a-b099-e80766180a6d",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"9c9de5e8-0a1e-484a-b099-e80766180a6d\", \"title\": \"What is PeerTube?\", \"description\": \"**[Want to help to translate this video?](https://weblate.framasoft.org/projects/what-is-peertube-video/)**\\r\\n\\r\\n**Take back the control of your videos! [#JoinPeertube](https://joinpeertube.org)**\\r\\n*A decentralized video hosting network, based on free/libre software!*\\r\\n\\r\\n**Animation Produced by:** [LILA](https://libreart.info) - [ZeMarmot Team](https://film.zemarmot.net)\\r\\n*Directed by* Aryeom\\r\\n*Assistant* Jehan\\r\\n**Licence**: [CC-By-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)\\r\\n\\r\\n**Sponsored by** [Framasoft](https://framasoft.org)\\r\\n\\r\\n**Music**: [Red Step Forward](http://play.dogmazic.net/song.php?song_id=52491) - CC-By Ken Bushima\\r\\n\\r\\n**Movie Clip**: [Caminades 3: Llamigos](http://www.caminandes.com/) CC-By Blender Institute\\r\\n\\r\\n**Video sources**: https://gitlab.gnome.org/Jehan/what-is-peertube/\", \"thumbnail\": \"https://peertube.example.test/lazy-static/thumbnails/2463a64d-561c-4442-9a76-15337b58a4b2.jpg\", \"timestamp\": 1538391166, \"uploader\": \"Framasoft\", \"uploader_id\": \"3\", \"uploader_url\": \"https://framatube.org/accounts/framasoft\", \"channel\": \"A propos de PeerTube\", \"channel_id\": \"2215\", \"channel_url\": \"https://framatube.org/video-channels/joinpeertube\", \"language\": \"en\", \"license\": \"Attribution - Share Alike\", \"duration\": 113, \"view_count\": 148885, \"like_count\": 35, \"dislike_count\": 0, \"age_limit\": null, \"tags\": [\"framasoft\", \"peertube\"], \"categories\": [\"Science & Technology\"], \"formats\": [{\"height\": 240, \"url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/9c9de5e8-0a1e-484a-b099-e80766180a6d-240-fragmented.mp4\", \"format_id\": \"240p\", \"filesize\": 3792049, \"fps\": 24, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"240p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"240p - 240p\"}, {\"format_id\": \"1\", \"format_index\": null, \"url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/9c9de5e8-0a1e-484a-b099-e80766180a6d-240.m3u8\", \"manifest_url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/c28d0633-b88d-44c0-a236-e5f40f7e2d35-master.m3u8\", \"tbr\": 268.464, \"ext\": \"mp4\", \"fps\": 24.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 426, \"height\": 240, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"426x240\", \"aspect_ratio\": 1.77, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1 - 426x240\"}, {\"height\": 360, \"url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/9c9de5e8-0a1e-484a-b099-e80766180a6d-360-fragmented.mp4\", \"format_id\": \"360p\", \"filesize\": 5166155, \"fps\": 24, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 360p\"}, {\"format_id\": \"3\", \"format_index\": null, \"url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/9c9de5e8-0a1e-484a-b099-e80766180a6d-360.m3u8\", \"manifest_url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/c28d0633-b88d-44c0-a236-e5f40f7e2d35-master.m3u8\", \"tbr\": 365.746, \"ext\": \"mp4\", \"fps\": 24.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"3 - 640x360\"}, {\"height\": 480, \"url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/9c9de5e8-0a1e-484a-b099-e80766180a6d-480-fragmented.mp4\", \"format_id\": \"480p\", \"filesize\": 6557911, \"fps\": 24, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"480p - 480p\"}, {\"format_id\": \"5\", \"format_index\": null, \"url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/9c9de5e8-0a1e-484a-b099-e80766180a6d-480.m3u8\", \"manifest_url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/c28d0633-b88d-44c0-a236-e5f40f7e2d35-master.m3u8\", \"tbr\": 464.277, \"ext\": \"mp4\", \"fps\": 24.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 852, \"height\": 480, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"852x480\", \"aspect_ratio\": 1.77, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"5 - 852x480\"}, {\"height\": 720, \"url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/9c9de5e8-0a1e-484a-b099-e80766180a6d-720-fragmented.mp4\", \"format_id\": \"720p\", \"filesize\": 10017104, \"fps\": 24, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\"}, {\"format_id\": \"7\", \"format_index\": null, \"url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/9c9de5e8-0a1e-484a-b099-e80766180a6d-720.m3u8\", \"manifest_url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/c28d0633-b88d-44c0-a236-e5f40f7e2d35-master.m3u8\", \"tbr\": 709.176, \"ext\": \"mp4\", \"fps\": 24.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"7 - 1280x720\"}, {\"height\": 1080, \"url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/9c9de5e8-0a1e-484a-b099-e80766180a6d-1080-fragmented.mp4\", \"format_id\": \"1080p\", \"filesize\": 16815344, \"fps\": 24, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080p - 1080p\"}, {\"format_id\": \"9\", \"format_index\": null, \"url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/9c9de5e8-0a1e-484a-b099-e80766180a6d-1080.m3u8\", \"manifest_url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/c28d0633-b88d-44c0-a236-e5f40f7e2d35-master.m3u8\", \"tbr\": 1190.467, \"ext\": \"mp4\", \"fps\": 24.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"9 - 1920x1080\"}], \"subtitles\": {}, \"is_live\": false, \"webpage_url\": \"https://peertube.example.test/videos/watch/9c9de5e8-0a1e-484a-b099-e80766180a6d\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"original_url\": \"https://peertube.example.test/w/9c9de5e8-0a1e-484a-b099-e80766180a6d\", \"webpage_url_basename\": \"9c9de5e8-0a1e-484a-b099-e80766180a6d\", \"webpage_url_domain\": \"peertube.example.test\", \"extractor\": \"PeerTube\", \"extractor_key\": \"PeerTube\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://peertube.example.test/lazy-static/thumbnails/2463a64d-561c-4442-9a76-15337b58a4b2.jpg\", \"id\": \"0\"}], \"display_id\": \"9c9de5e8-0a1e-484a-b099-e80766180a6d\", \"fulltitle\": \"What is PeerTube?\", \"duration_string\": \"1:53\", \"upload_date\": \"20181001\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"9\", \"format_index\": null, \"url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/9c9de5e8-0a1e-484a-b099-e80766180a6d-1080.m3u8\", \"manifest_url\": \"https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/c28d0633-b88d-44c0-a236-e5f40f7e2d35-master.m3u8\", \"tbr\": 1190.467, \"ext\": \"mp4\", \"fps\": 24.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"format\": \"9 - 1920x1080\", \"_filename\": \"What is PeerTube\\uff1f [9c9de5e8-0a1e-484a-b099-e80766180a6d].mp4\", \"filename\": \"What is PeerTube\\uff1f [9c9de5e8-0a1e-484a-b099-e80766180a6d].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [PeerTube] 9c9de5e8-0a1e-484a-b099-e80766180a6d: Unable to download webpage: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://peertube.example.test/w/9c9de5e8-0a1e-484a-b099-e80766180a6d",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "9c9de5e8-0a1e-484a-b099-e80766180a6d|What is PeerTube?|PeerTube|https://peertube.example.test/videos/watch/9c9de5e8-0a1e-484a-b099-e80766180a6d|https://peertube.example.test/w/9c9de5e8-0a1e-484a-b099-e80766180a6d"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [PeerTube] 9c9de5e8-0a1e-484a-b099-e80766180a6d: Unable to download webpage: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://peertube.example.test/videos/watch/9c9de5e8-0a1e-484a-b099-e80766180a6d",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "ERROR: Unsupported URL: https://peertube.example.test/videos/watch/9c9de5e8-0a1e-484a-b099-e80766180a6d"
+   ],
+   "files": {}
+  }
+ ]
+}

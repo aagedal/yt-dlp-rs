@@ -2180,7 +2180,7 @@ enum Embed {
     Info(WebpageEntry),
 }
 
-static EMBED_SITES: [EmbedSite; 48] = [
+static EMBED_SITES: [EmbedSite; 52] = [
     EmbedSite {
         name: "youtube",
         key: "Youtube",
@@ -2443,11 +2443,38 @@ static EMBED_SITES: [EmbedSite; 48] = [
         fields: None,
     },
     EmbedSite {
+        name: super::peertube::NAME,
+        key: super::peertube::NAME,
+        extractor: Some(&super::peertube::PeerTube),
+        embed_urls: super::peertube::embed_urls,
+        temp_id: super::peertube::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
         name: super::rudovideo::NAME,
         key: super::rudovideo::KEY,
         extractor: Some(&super::rudovideo::RudoVideo),
         embed_urls: super::rudovideo::embed_urls,
         temp_id: super::rudovideo::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::rumble::EMBED_NAME,
+        key: super::rumble::EMBED_NAME,
+        extractor: Some(&super::rumble::RumbleEmbed),
+        embed_urls: super::rumble::embed_urls,
+        temp_id: super::rumble::embed_temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::rumble::NAME,
+        key: super::rumble::NAME,
+        extractor: Some(&super::rumble::Rumble),
+        embed_urls: super::rumble::embed_page_urls,
+        temp_id: super::rumble::temp_id,
         webpage: None,
         fields: None,
     },
@@ -2484,6 +2511,15 @@ static EMBED_SITES: [EmbedSite; 48] = [
         extractor: Some(&super::tv24ua::Tv24UaVideo),
         embed_urls: super::tv24ua::embed_urls,
         temp_id: super::tv24ua::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::ted::EMBED,
+        key: super::ted::EMBED,
+        extractor: Some(&super::ted::TedEmbed),
+        embed_urls: super::ted::embed_urls,
+        temp_id: super::ted::embed_temp_id,
         webpage: None,
         fields: None,
     },

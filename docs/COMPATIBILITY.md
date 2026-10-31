@@ -501,8 +501,12 @@ thumbnails and metadata, with the API's `sys.msg` warning. Rumble video
 pages (`rumble.com/vID-SLUG.html`) follow `RumbleIE`: the page's embed (or
 `Rumble("play", ...)` script) as a `url_transparent` result with the page's
 release time, view, like and dislike counts and description. Channels are
-not supported. `tests/fixtures/sites/rumble/` is compared with pinned
-upstream output.
+not supported. On generic pages `RumbleEmbedIE._extract_embed_urls` finds
+embed script/iframe sources and JSON `embedUrl`s, else every
+`Rumble("play", ...)` script's video, and `RumbleIE._EMBED_REGEX` finds
+listing pages' `video-item--a`/`videostream__link` video links.
+`tests/fixtures/sites/rumble/` and `tests/fixtures/sites/rumble-embeds/` are
+compared with pinned upstream output.
 
 Rutube videos (`rutube.ru/[live/]video[/private]/ID`, `[play/]embed/ID`
 with 32-character IDs) follow upstream `RutubeIE`: the video API (the URL's
@@ -811,8 +815,9 @@ count, dates and tags with OpenGraph fallbacks. Upstream's `http-` bitrate
 variants never apply (they look for `m3u8` rather than `m3u8_native`
 formats), so none are made. Playlists (`TedPlaylistIE`) and series, or one
 `#season_N` (`TedSeriesIE`), are playlists of talk `url` results;
-`embed[-ssl].ted.com` URLs (`TedEmbedIE`) are rewritten to `www`.
-`tests/fixtures/sites/ted/` is compared with pinned upstream output.
+`embed[-ssl].ted.com` URLs (`TedEmbedIE`) are rewritten to `www`; their
+iframes on generic pages are embeds. `tests/fixtures/sites/ted/` and
+`tests/fixtures/sites/ted-embeds/` are compared with pinned upstream output.
 
 Telegram public posts (`t.me/CHANNEL/ID`) follow upstream
 `TelegramEmbedIE` (2026.10.21): the post's embed frame (`?embed=1`, any
@@ -2054,9 +2059,14 @@ holding the requested entries and in request order (`-I 31` reads only page 2,
 `-I 31,1` page 2 then page 1), each once; a negative or reversed open bound,
 or a request past the end, reads every page in order until one is shorter
 than 30 entries. The count is unknown (`NA`) unless a selection reads past the
-end. Not ported: PeerTube detection on other hosts (GenericIE's
-`_EMBED_REGEX` iframes and `og:platform` page check), which stays the
-generic extractor's unsupported-URL path.
+end. On generic pages `PeerTubeIE._extract_embed_urls` finds
+`/videos/embed/` iframes of the known instances (like upstream's pattern,
+which interpolates `_UUID_RE` ungrouped, only short IDs; dashed UUIDs are not
+matched), else a page whose own URL is a video URL (`/videos/watch|embed/` or
+`/w/` with an ID) on any host and that carries one of PeerTube's markers
+(`og:platform`, `<title>PeerTube<`, the no-JS texts) becomes
+`peertube:HOST:ID`. `tests/fixtures/sites/peertube-embeds/` is compared with
+pinned upstream output.
 
 peer.tv videos (`peer.tv/de|it|en/ID`) follow upstream `PeerTVIE`: the page's
 `player.peer.tv/js/KEY` script (fetched with the `www.peer.tv` Referer) gives

@@ -19,7 +19,7 @@ pub struct TedEmbed;
 const TALK: &str = "TedTalk";
 const PLAYLIST: &str = "TedPlaylist";
 const SERIES: &str = "TedSeries";
-const EMBED: &str = "TedEmbed";
+pub(crate) const EMBED: &str = "TedEmbed";
 
 fn base(kind: &str) -> String {
     format!(r"^https?://www\.ted\.com/(?:{kind})(?:/lang/[^/#?]+)?/(?P<id>[\w-]+)")
@@ -53,6 +53,21 @@ pub fn series_suitable(url: &str) -> bool {
 /// `TedEmbedIE.suitable`.
 pub fn embed_suitable(url: &str) -> bool {
     EMBED_URL.is_match(url)
+}
+
+/// `TedEmbedIE.get_temp_id`: the pattern has no `id` group.
+pub(crate) fn embed_temp_id(_url: &str) -> Option<String> {
+    None
+}
+
+/// `TedEmbedIE._EMBED_REGEX` (`(["\'])...\1` as one alternative per quote).
+static EMBED_IFRAME: LazyLock<[Regex; 1]> = LazyLock::new(|| {
+    [Regex::new(r#"<iframe[^>]+?src=(?:"(?P<url>https?://embed(?:-ssl)?\.ted\.com/.+?)"|'(?P<url2>https?://embed(?:-ssl)?\.ted\.com/.+?)')"#).unwrap()]
+});
+
+/// `TedEmbedIE._extract_embed_urls` under `orderedSet`.
+pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
+    super::embed_regex_urls(url, webpage, &*EMBED_IFRAME, embed_suitable)
 }
 
 fn bug(extractor: &str, id: &str, cause: &str) -> Error {
