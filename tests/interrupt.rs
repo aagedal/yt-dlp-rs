@@ -235,6 +235,9 @@ fn a_signal_at_a_prompt_exits_at_once() {
         .stderr(Stdio::piped())
         .spawn()
         .unwrap();
+    // Stdin stays open until the child exits (`wait_with_output` would close
+    // it first, and the prompt could read EOF before the signal arrives).
+    let stdin = child.stdin.take();
     let mut stdout = BufReader::new(child.stdout.take().unwrap());
     let mut prompt = Vec::new();
     while !String::from_utf8_lossy(&prompt).contains("Ctrl+C to quit") {
@@ -252,6 +255,7 @@ fn a_signal_at_a_prompt_exits_at_once() {
     let sent = Instant::now();
     terminate(&child);
     let (code, stderr, names) = finish(child, directory.path());
+    drop(stdin);
     assert!(sent.elapsed() < Duration::from_secs(5));
     assert_eq!(code, Some(1), "{stderr}");
     assert!(
