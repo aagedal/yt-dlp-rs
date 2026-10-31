@@ -6177,6 +6177,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 if !ffmpeg_fd
                                     && info.requested_formats.is_empty()
                                     && !info.fragments.is_empty()
+                                    && !downloader.live_dash_fails(info)
                                 {
                                     // Upstream `_prepare_frag_download`.
                                     let downloader = match info.protocol.as_deref() {
@@ -6351,7 +6352,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     let stream = refreshed.as_ref().unwrap_or(stream);
                                     // A single result already announced itself above.
                                     if !info.requested_formats.is_empty() {
-                                        if !stream.fragments.is_empty() {
+                                        if !stream.fragments.is_empty()
+                                            && !downloader.live_dash_fails(stream)
+                                        {
                                             let downloader = match stream.protocol.as_deref() {
                                                 Some("http_dash_segments") => "dashsegments",
                                                 Some("ism") => "ism",
