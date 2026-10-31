@@ -1357,12 +1357,13 @@ impl GenericHttp {
             None => return Ok(None),
             Some(Found::Redirect(target)) => {
                 crate::screen::screen(&format!("[redirect] Following redirect to {target}"));
-                if super::youtube_suitable(target.as_str()) {
-                    return Err(unsupported(
-                        "redirects to YouTube are not supported natively",
-                    ));
-                }
-                return self.extract_result(client, &target);
+                // `[self.url_result(new_url)]`: followed with every extractor.
+                let mut info = direct::build_at(target.clone(), &target, String::new());
+                info.formats.clear();
+                info.direct = None;
+                info.extra
+                    .insert(crate::FOLLOW_URL.into(), target.as_str().into());
+                return Ok(Some(ExtractResult::Video(info)));
             }
             Some(Found::Urls(name, urls)) => {
                 // `report_detected(name)` (no count).
@@ -1383,10 +1384,37 @@ impl GenericHttp {
         let count = urls.len();
         let mut entries = Vec::new();
         for (index, media) in urls.into_iter().enumerate() {
+            // "Sometimes, jwplayer extraction will result in a YouTube URL":
+            // `url_result(video_url, 'Youtube')`, followed when it is the
+            // only one, else a playlist entry (without a numbered title).
             if super::youtube_suitable(media.as_str()) {
-                return Err(unsupported(
-                    "embedded YouTube URLs are not supported natively",
-                ));
+                let mut info = direct::build_at(media.clone(), &media, String::new());
+                info.formats.clear();
+                info.direct = None;
+                if count == 1 {
+                    info.extra
+                        .insert(crate::FOLLOW_URL.into(), media.as_str().into());
+                } else {
+                    info.id = super::youtube::temp_id(media.as_str()).unwrap_or_default();
+                    info.extra.insert(
+                        crate::TRANSPARENT.into(),
+                        serde_json::json!({
+                            "url": media.as_str(),
+                            "force_videoid": null,
+                            "fields": {},
+                            "ie_key": "Youtube",
+                            "extractor": "youtube",
+                            // `url_result(video_url, 'Youtube')` as is.
+                            "entry": {
+                                "ie_key": "Youtube",
+                                "_type": "url",
+                                "url": media.as_str(),
+                            },
+                        }),
+                    );
+                }
+                entries.push(info);
+                continue;
             }
             if media.scheme().starts_with("rtmp") {
                 return Err(unsupported("RTMP URLs are not supported natively"));
