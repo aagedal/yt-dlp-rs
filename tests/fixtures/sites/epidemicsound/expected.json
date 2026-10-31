@@ -1,0 +1,48 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.epidemicsound.com/track/mj8GTTwsZd/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"148700\", \"display_id\": \"mj8GTTwsZd\", \"title\": \"Noplace\", \"duration\": 237.0, \"timestamp\": 1694426482, \"release_timestamp\": 1700535606, \"categories\": [\"drum and bass\"], \"tags\": [\"liquid drum n bass\", \"energetic\"], \"thumbnails\": [{\"url\": \"https://cdn.epidemicsound.com/curation-assets/commercial-release-cover-images/11138/3000x3000.jpg?height=128&width=128\", \"width\": 128, \"height\": 128, \"id\": \"0\", \"resolution\": \"128x128\"}, {\"url\": \"https://cdn.epidemicsound.com/curation-assets/commercial-release-cover-images/11138/3000x3000.jpg?height=300&width=300\", \"width\": 300, \"height\": 300, \"id\": \"1\", \"resolution\": \"300x300\"}, {\"url\": \"https://cdn.epidemicsound.com/curation-assets/commercial-release-cover-images/11138/3000x3000.jpg?height=600&width=600\", \"width\": 600, \"height\": 600, \"id\": \"2\", \"resolution\": \"600x600\"}, {\"url\": \"https://cdn.epidemicsound.com/curation-assets/commercial-release-cover-images/11138/3000x3000.jpg?height=1050&width=1050\", \"width\": 1050, \"height\": 1050, \"id\": \"3\", \"resolution\": \"1050x1050\"}, {\"url\": \"https://cdn.epidemicsound.com/curation-assets/commercial-release-cover-images/11138/3000x3000.jpg\", \"width\": 3000, \"height\": 3000, \"id\": \"4\", \"resolution\": \"3000x3000\"}], \"formats\": [{\"format\": \"full\", \"format_note\": \"track ID 433549\", \"format_id\": \"full\", \"url\": \"https://audiocdn.epidemicsound.com/lqmp3/01KJQ8RERZJTT9C1ZEMY6KFSFB.mp3\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}}], \"webpage_url\": \"https://www.epidemicsound.com/track/mj8GTTwsZd/\", \"original_url\": \"https://www.epidemicsound.com/track/mj8GTTwsZd/\", \"webpage_url_basename\": \"mj8GTTwsZd\", \"webpage_url_domain\": \"epidemicsound.com\", \"extractor\": \"EpidemicSound\", \"extractor_key\": \"EpidemicSound\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://cdn.epidemicsound.com/curation-assets/commercial-release-cover-images/11138/3000x3000.jpg\", \"fulltitle\": \"Noplace\", \"duration_string\": \"3:57\", \"upload_date\": \"20230911\", \"release_date\": \"20231121\", \"release_year\": 2023, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format\": \"full\", \"format_note\": \"track ID 433549\", \"format_id\": \"full\", \"url\": \"https://audiocdn.epidemicsound.com/lqmp3/01KJQ8RERZJTT9C1ZEMY6KFSFB.mp3\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"acodec\": \"mp3\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"_filename\": \"Noplace [148700].mp3\", \"filename\": \"Noplace [148700].mp3\", \"__write_download_archive\": false}], \"format\": \"full\", \"format_note\": \"track ID 433549\", \"format_id\": \"full\", \"url\": \"https://audiocdn.epidemicsound.com/lqmp3/01KJQ8RERZJTT9C1ZEMY6KFSFB.mp3\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.epidemicsound.com/track/mj8GTTwsZd/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[EpidemicSound] Extracting URL: https://www.epidemicsound.com/track/mj8GTTwsZd/",
+    "[EpidemicSound] mj8GTTwsZd: Downloading JSON metadata",
+    "[info] Available formats for 148700:",
+    "ID   EXT RESOLUTION | PROTO | VCODEC  ACODEC MORE INFO",
+    "------------------------------------------------------------",
+    "full mp3 unknown    | https | unknown mp3    track ID 433549"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.epidemicsound.com/track/nosuchtrack1/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [EpidemicSound] nosuchtrack1: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://api-volejtv-prod.apps.okd4.devopsie.cloud/api/category",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "category.json"
+  },
+  {
+   "url": "https://api-volejtv-prod.apps.okd4.devopsie.cloud/api/match/by-category-id-paginated/3?page=1&take=10&order=DESC",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page-1.json"
+  },
+  {
+   "url": "https://api-volejtv-prod.apps.okd4.devopsie.cloud/api/match/by-category-id-paginated/3?page=2&take=10&order=DESC",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page-2.json"
+  },
+  {
+   "url": "https://api-volejtv-prod.apps.okd4.devopsie.cloud/api/match/798209",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "match-798209.json"
+  }
+ ]
+}

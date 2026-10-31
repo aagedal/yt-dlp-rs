@@ -1,0 +1,6 @@
+[
+ {"url": "http://www.wdrmaus.de/elefantenseite/#elefantenkino_wippe", "args": ["-J", "--no-geo-bypass"]},
+ {"url": "http://www.wdrmaus.de/elefantenseite/#elefantenkino_wippe", "args": ["-F", "--no-geo-bypass"]},
+ {"url": "http://www.wdrmaus.de/elefantenseite/#elefantenkino_missing", "args": ["-J", "--no-geo-bypass"]},
+ {"url": "http://www.wdrmaus.de/elefantenseite/#elefantenkino_nonvideo", "args": ["-J", "--no-geo-bypass"]}
+]

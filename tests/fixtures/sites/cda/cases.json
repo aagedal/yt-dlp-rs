@@ -1,0 +1,6 @@
+[
+ {"url": "http://www.cda.pl/video/57413289", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(average_rating)s|%(thumbnail)s|%(duration)s|%(age_limit)s|%(timestamp)s|%(uploader)s|%(width)s|%(height)s|%(format_id)s|%(formats.:.url)s"]},
+ {"url": "http://www.cda.pl/video/57413289", "args": ["-F"]},
+ {"url": "https://www.cda.pl/video/8753244", "args": ["-J"]},
+ {"url": "https://m.cda.pl/video/617297677", "args": ["-J"]}
+]

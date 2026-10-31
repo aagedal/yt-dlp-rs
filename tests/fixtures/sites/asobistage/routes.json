@@ -1,0 +1,42 @@
+{
+ "routes": [
+  {
+   "url": "https://asobistage.asobistore.jp/event/idolmaster_idolworld2023_goods/archive/live",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://asobistage-api.asobistore.jp/api/v1/vspf/token",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "token.json"
+  },
+  {
+   "url": "https://asobistage.asobistore.jp/cdn/v101/events/idolmaster_idolworld2023_goods/archives.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "archives.json"
+  },
+  {
+   "url": "https://survapi.channel.or.jp/proxy/v1/contents/3aef7110/get_by_cuid",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_headers": {
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3OTQwNjEzNTYsInVzZXJfaWQiOiJ2Y3VzZXIifQ.2UM7WRFdRMZBXTfvvniRKy3CTB3By0yWfBaKEimK7p0"
+   },
+   "body_file": "channel.json"
+  },
+  {
+   "url": "https://dce1j8lyafk9e.cloudfront.net/lalabit/1666282079/d271b03b-3031-42c0-8e39-64e9e764f94f/index.m3u8?Expires=1793456739&Signature=OuF5VV2n~J8tcMqOUiZmRf478peyuHTXqnstoTBKp434UhtNzbV7xqaYL568dZdv~n1fnZDn7ZQKX6kPTES~1a4KiWWX1ILjpG9Kh33YtlGDLCUxxEg9ZwoI5hCNzAdRbEIMXzthY8JNPqayEaR97lcK0-Pswk2obOzsfxIPZGb3EZvc04TDEWXhc64kMd3smfPHGRCAA70CuZqt4pg1O-GE-l-TyxERdkwpl1gA8kmj8pzcE3gQ2uHdvJyBT7mWr-aXuRhrTAWRJNYaZRJJIJn~PFzpNk3lxjwmzT36xIGz9Tnxajr6KPCIYHiS4g5YAJUp3LMnzgcK~y5S8BaHog__&Key-Pair-Id=APKAICPKDW5EZGX4OD4A",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  }
+ ]
+}

@@ -1,0 +1,8 @@
+#EXTM3U
+#EXT-X-INDEPENDENT-SEGMENTS
+#EXT-X-STREAM-INF:AVERAGE-BANDWIDTH=2695724,BANDWIDTH=4482228,RESOLUTION=1280x720,FRAME-RATE=30.000,CODECS="avc1.4d401e,mp4a.40.2"
+https://vp.nyt.com/nyt-video-prd-us-central/video-media/2014/04/28/27731_1_opdoc-verbatim1_wg_720p.m3u8
+#EXT-X-I-FRAME-STREAM-INF:BANDWIDTH=160036,CODECS="avc1.4d401e",RESOLUTION=1280x720,URI="https://vp.nyt.com/nyt-video-prd-us-central/video-media/2014/04/28/27731_1_opdoc-verbatim1_wg_720p.m3u8?iframe"
+#EXT-X-STREAM-INF:AVERAGE-BANDWIDTH=3934069,BANDWIDTH=6457539,RESOLUTION=1920x1080,FRAME-RATE=30.000,CODECS="avc1.4d401e,mp4a.40.2"
+https://vp.nyt.com/nyt-video-prd-us-central/video-media/2014/04/28/27731_1_opdoc-verbatim1_wg_1080p.m3u8
+#EXT-X-I-FRAME-STREAM-INF:BANDWIDTH=284010,CODECS="avc1.4d401e",RESOLUTION=1920x1080,URI="https://vp.nyt.com/nyt-video-prd-us-central/video-media/2014/04/28/27731_1_opdoc-verbatim1_wg_1080p.m3u8?iframe"

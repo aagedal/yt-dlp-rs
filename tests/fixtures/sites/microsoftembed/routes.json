@@ -1,0 +1,54 @@
+{
+ "routes": [
+  {
+   "url": "https://learn.microsoft.com/en-us/shows/bash-for-beginners/what-is-the-difference-between-a-terminal-and-a-shell-2-of-20-bash-for-beginners/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "learn-episode.html"
+  },
+  {
+   "url": "https://learn.microsoft.com/api/video/public/v1/entries/d44e1a03-a0e5-45c2-9496-5c9fa08dc94c",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "entry.json"
+  },
+  {
+   "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/02-83600-difference-a04_16763395_master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "hls-master.m3u8"
+  },
+  {
+   "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/02-83600-difference-a04_16763395.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "dash-manifest.mpd"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/shows/bash-for-beginners/synthetic-noentry/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-noentry.html"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/shows/bash-for-beginners/synthetic-missing/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-missing.html"
+  },
+  {
+   "url": "https://learn.microsoft.com/api/video/public/v1/entries/00000000-0000-4000-8000-000000000000",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"not found\"}"
+  }
+ ]
+}

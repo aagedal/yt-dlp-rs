@@ -1,0 +1,31 @@
+[
+ {
+  "url": "http://abcnews.go.com/ThisWeek/video/week-exclusive-irans-foreign-minister-zarif-20411932",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(description)s|%(timestamp)s|%(duration)s|%(upload_date)s|%(thumbnail)s|%(display_id)s|%(webpage_url)s|%(extractor_key)s|%(format_id)s",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "http://abcnews.go.com/ThisWeek/video/week-exclusive-irans-foreign-minister-zarif-20411932",
+  "args": [
+   "-F",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "http://abcnews.go.com/video/embed?id=1",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "http://abcnews.go.com/video/embed?id=2",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ }
+]

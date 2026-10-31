@@ -1,0 +1,27 @@
+{
+ "routes": [
+  {
+   "url": "https://www.antenna.gr/templates/pages/player?cid=3f_li_c_az_jw_y_u=&w=670&h=377",
+   "status": 301,
+   "headers": {
+    "Content-Type": "text/html; charset=UTF-8",
+    "Location": "https://nkv.antenna.gr/templates/pages/player?cid=3f_li_c_az_jw_y_u=&w=670&h=377"
+   },
+   "body": "<head><title>Document Moved</title></head>\n<body><h1>Object Moved</h1>This document may be found <a HREF=\"https://nkv.antenna.gr/templates/pages/player?cid=3f_li_c_az_jw_y_u=&amp;w=670&amp;h=377\">here</a></body>\n"
+  },
+  {
+   "url": "https://nkv.antenna.gr/templates/pages/player?cid=3f_li_c_az_jw_y_u=&w=670&h=377",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html>\n<html><head><title>NO GR</title></head><body></body></html>\n"
+  },
+  {
+   "url": "https://nkv.antenna.gr/templates/data/jsonPlayer?cid=3f_li_c_az_jw_y_u%3D",
+   "headers": {
+    "Content-Type": "application/json; charset=utf-8"
+   },
+   "body_file": "jsonplayer.json"
+  }
+ ]
+}

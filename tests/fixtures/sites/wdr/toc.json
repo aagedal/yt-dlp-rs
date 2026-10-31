@@ -1,0 +1,22 @@
+{
+ "elefantenkino_wippe": {
+  "type": "movie",
+  "id": "elefantenkino_wippe",
+  "colorSet": "red",
+  "title": "Spot 02 Wippe",
+  "xmlPath": "data/xml/filme/Elefantenkino/elefantenkino_spot_002_wippe.xml",
+  "parent": "filme",
+  "airdate": "03.10.2007",
+  "duration": "00:01:11"
+ },
+ "elefantenkino_nonvideo": {
+  "type": "movie",
+  "id": "elefantenkino_nonvideo",
+  "colorSet": "red",
+  "title": "Synthetic non-video",
+  "xmlPath": "data/xml/synthetic_nonvideo.xml",
+  "parent": "filme",
+  "airdate": "03.10.2007",
+  "duration": "00:01:11"
+ }
+}

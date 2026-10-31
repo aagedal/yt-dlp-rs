@@ -1,0 +1,21 @@
+[
+ {
+  "url": "https://volej.tv/kategorie/chance-cesky-pohar",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://volej.tv/match/798209",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://volej.tv/match/1",
+  "args": [
+   "-J"
+  ]
+ }
+]

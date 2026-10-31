@@ -2169,6 +2169,21 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         for part in parts {
             if let Some(subtitle_keys) = part.strip_prefix("subtitle=") {
                 order_subtitle_tracks(&mut replay.out, subtitle_keys);
+            } else if let Some(thumbnail_keys) = part.strip_prefix("thumbnail=")
+                && let Some(Value::Array(thumbnails)) = replay.out.get_mut("thumbnails")
+            {
+                // `untyped-dict;KEYS;thumbnail=KEYS`: the extractor's thumbnail
+                // keys first (upstream's `_sanitize_thumbnails` adds `id` last).
+                for thumbnail in thumbnails.iter_mut().filter_map(Value::as_object_mut) {
+                    let mut ordered = Map::new();
+                    for key in thumbnail_keys.split(',') {
+                        if let Some(value) = thumbnail.shift_remove(key) {
+                            ordered.insert(key.to_owned(), value);
+                        }
+                    }
+                    ordered.append(thumbnail);
+                    *thumbnail = ordered;
+                }
             } else if let Some(chapter_keys) = part.strip_prefix("chapter=")
                 && let Some(Value::Array(chapters)) = replay.out.get_mut("chapters")
             {

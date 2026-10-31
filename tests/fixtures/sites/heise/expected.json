@@ -1,0 +1,33 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.heise.de/newsticker/meldung/Netflix-In-20-Jahren-vom-Videoverleih-zum-TV-Revolutionaer-3814130.html",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3814130\", \"title\": \"Netflix: In 20 Jahren vom Videoverleih zum TV-Revolution\\u00e4r\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"http://www.youtube-nocookie.com/embed/6kmWbXleKW4\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"http://www.heise.de/newsticker/meldung/Netflix-In-20-Jahren-vom-Videoverleih-zum-TV-Revolutionaer-3814130.html\", \"original_url\": \"http://www.heise.de/newsticker/meldung/Netflix-In-20-Jahren-vom-Videoverleih-zum-TV-Revolutionaer-3814130.html\", \"webpage_url_basename\": \"Netflix-In-20-Jahren-vom-Videoverleih-zum-TV-Revolutionaer-3814130.html\", \"webpage_url_domain\": \"heise.de\", \"extractor\": \"Heise\", \"extractor_key\": \"Heise\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.heise.de/newsticker/meldung/Synthetic-Kein-Video-1234567.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [Heise] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [Heise] 1234567: Unable to extract container ID; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

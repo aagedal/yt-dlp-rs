@@ -1,0 +1,81 @@
+{
+  "id": "d44e1a03-a0e5-45c2-9496-5c9fa08dc94c",
+  "createTime": "2023-02-14T01:52:27.6410416Z",
+  "updateTime": "2023-02-14T01:55:19.2597321Z",
+  "publishTime": "2023-02-14T20:58:29.5855435Z",
+  "title": "83600-What is the Difference Between a Terminal and a Shell? [2 of 20] | Bash for Beginners",
+  "originalFileName": "02-83600-difference-a04.mp4",
+  "publicVideo": {
+    "highQualityVideoUrl": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/02-83600-difference-a04_16763395_1920x1080_AACAudio_2765_1.mp4",
+    "mediumQualityVideoUrl": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/02-83600-difference-a04_16763395_1280x720_AACAudio_1474_2.mp4",
+    "lowQualityVideoUrl": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/02-83600-difference-a04_16763395_640x360_AACAudio_501_4.mp4",
+    "adaptiveVideoUrl": "",
+    "adaptiveVideoHLSUrl": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/02-83600-difference-a04_16763395_master.m3u8",
+    "adaptiveVideoDashUrl": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/02-83600-difference-a04_16763395.mpd",
+    "audioUrl": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/02-83600-difference-a04_16763395_AACAudio_2Ch_192kbps.mp4",
+    "durationInMillisecond": 99712,
+    "thumbnailOtherSizes": {
+      "w800Url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/Beg-Bash-02-83600-difference_w800.png",
+      "w1120Url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/Beg-Bash-02-83600-difference_w1120.png"
+    },
+    "captions": [
+      {
+        "language": "ja-jp",
+        "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/caption-ja-jp.vtt"
+      },
+      {
+        "language": "es-es",
+        "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/caption-es-es.vtt"
+      },
+      {
+        "language": "zh-cn",
+        "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/caption-zh-cn.vtt"
+      },
+      {
+        "language": "de-de",
+        "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/caption-de-de.vtt"
+      },
+      {
+        "language": "zh-tw",
+        "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/caption-zh-tw.vtt"
+      },
+      {
+        "language": "cs-cz",
+        "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/caption-cs-cz.vtt"
+      },
+      {
+        "language": "it-it",
+        "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/caption-it-it.vtt"
+      },
+      {
+        "language": "pl-pl",
+        "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/caption-pl-pl.vtt"
+      },
+      {
+        "language": "pt-pt",
+        "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/caption-pt-pt.vtt"
+      },
+      {
+        "language": "ko-kr",
+        "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/caption-ko-kr.vtt"
+      },
+      {
+        "language": "ru-ru",
+        "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/caption-ru-ru.vtt"
+      },
+      {
+        "language": "tr-tr",
+        "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/caption-tr-tr.vtt"
+      },
+      {
+        "language": "fr-fr",
+        "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/caption-fr-fr.vtt"
+      },
+      {
+        "language": "en-us",
+        "url": "https://videoencodingpublic-hgeaeyeba8gycee3.b01.azurefd.net/public-d44e1a03-a0e5-45c2-9496-5c9fa08dc94c/caption-en-us.vtt"
+      }
+    ]
+  },
+  "youTubeUrl": "https://youtu.be/8OUZhrR_umE"
+}

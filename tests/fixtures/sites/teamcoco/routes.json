@@ -1,0 +1,26 @@
+{
+ "routes": [
+  {
+   "url": "http://teamcoco.com/video/mary-kay-remote",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "mary-kay-remote.html"
+  },
+  {
+   "url": "http://teamcoco.com/video/synthetic-missing",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>Not Found</body></html>\n"
+  },
+  {
+   "url": "https://d3uqdomqytryhw.cloudfront.net/~sw/cdn/public/111628/a6e97/hls/CONAN_040114_Comedy_1_REV2_v1--master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  }
+ ]
+}

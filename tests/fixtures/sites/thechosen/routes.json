@@ -1,0 +1,19 @@
+{
+  "routes": [
+    {
+      "url": "https://api.watch.thechosen.tv/v1/videos/184683594325",
+      "headers": {"Content-Type": "application/json"},
+      "body_file": "api-184683594325.json"
+    },
+    {
+      "url": "https://cas.global.ssl.fastly.net/manifests-10-4/184683594325/master.m3u8",
+      "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+      "body_file": "master-184683594325.m3u8"
+    },
+    {
+      "url": "https://api.watch.thechosen.tv/v1/videos/2",
+      "headers": {"Content-Type": "application/json"},
+      "body_file": "api-2.json"
+    }
+  ]
+}

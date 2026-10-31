@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://www.radiofrance.fr/franceculture/podcasts/science-en-questions/la-physique-d-einstein-aiderait-elle-a-comprendre-le-cerveau-8440487",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://www.radiofrance.fr/franceculture/podcasts/synthetic/synthetic-noaudio-1234567",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "synthetic-noaudio.html"
+  }
+ ]
+}

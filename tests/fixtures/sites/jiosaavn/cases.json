@@ -1,0 +1,33 @@
+[
+ {
+  "url": "https://www.jiosaavn.com/song/the-life-of-ram/ByUKVSBKU0A",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.jiosaavn.com/song/the-life-of-ram/ByUKVSBKU0A",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.jiosaavn.com/album/96/buIOjYZDrNA_",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.jiosaavn.com/song/synthetic/SYNTHETIC1",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.jiosaavn.com/song/synthetic/SYNTHETIC2",
+  "args": [
+   "-J"
+  ]
+ }
+]

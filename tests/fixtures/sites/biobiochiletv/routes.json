@@ -1,0 +1,10 @@
+{
+ "routes": [
+  {"url": "http://www.biobiochile.cl/noticias/bbtv/comentarios-bio-bio/2016/07/08/edecanes-del-congreso-figuras-decorativas-que-le-cuestan-muy-caro-a-los-chilenos.shtml", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "http://rudo.video/vod/b4xd0LK3SK", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "rudo.html"},
+  {"url": "https://redirector.rudo.video/hls-video-vod/bbtv/cl4/79350/smil:b4xd0LK3SK.smil/playlist.m3u8", "status": 302, "headers": {"Location": "https://jireh-2-vod-us-isp.dps.live/hls-video-vod/bbtv/cl4/79350/smil:b4xd0LK3SK.smil/playlist.m3u8?dpssid=b218214454576ae5fa0e5f0ce&sid=ba5t1l1xb21153872536ae5fa0e5f0cc&ndvc=1"}, "body": ""},
+  {"url": "https://jireh-2-vod-us-isp.dps.live/hls-video-vod/bbtv/cl4/79350/smil:b4xd0LK3SK.smil/playlist.m3u8?dpssid=b218214454576ae5fa0e5f0ce&sid=ba5t1l1xb21153872536ae5fa0e5f0cc&ndvc=1", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "playlist.m3u8"},
+  {"url": "http://www.biobiochile.cl/noticias/bbtv/synthetic/noframe.shtml", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "synthetic-noframe.html"},
+  {"url": "http://www.biobiochile.cl/noticias/bbtv/synthetic/missing.shtml", "status": 404, "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><body>Not found</body></html>"}
+ ]
+}

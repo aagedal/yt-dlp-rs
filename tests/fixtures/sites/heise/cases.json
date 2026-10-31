@@ -1,0 +1,15 @@
+[
+ {
+  "url": "http://www.heise.de/newsticker/meldung/Netflix-In-20-Jahren-vom-Videoverleih-zum-TV-Revolutionaer-3814130.html",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "http://www.heise.de/newsticker/meldung/Synthetic-Kein-Video-1234567.html",
+  "args": [
+   "-J"
+  ]
+ }
+]

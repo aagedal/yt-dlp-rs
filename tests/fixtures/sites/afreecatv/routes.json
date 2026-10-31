@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {
+   "url": "https://api.m.sooplive.com/catchstory/a/view?aStoryListIdx=&nStoryIdx=103247",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "catchstory-103247.json"
+  }
+ ]
+}

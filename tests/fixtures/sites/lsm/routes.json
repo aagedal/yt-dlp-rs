@@ -1,0 +1,75 @@
+{
+  "routes": [
+    {
+      "url": "https://ltv.lsm.lv/embed?enablesdkjs=1&c=synthetic-backscreen",
+      "headers": {
+        "Content-Type": "text/html; charset=utf-8"
+      },
+      "body_file": "ltv-backscreen.html"
+    },
+    {
+      "url": "https://ltv.lsm.lv/embed?c=synthetic-unsupported",
+      "headers": {
+        "Content-Type": "text/html; charset=utf-8"
+      },
+      "body_file": "ltv-unsupported.html"
+    },
+    {
+      "url": "https://player.cloudycdn.services/player/ltv/media/46k_d23-6000-105/",
+      "request_body": [
+        "version=6.4.0",
+        "referer=https%3A%2F%2Fembed.cloudycdn.services%2Fltv%2Fmedia%2F46k_d23-6000-105%3F"
+      ],
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"name\": \"D23-6000-105_cetstud\", \"duration\": 1442, \"upload_date\": \"2023-11-21T17:52:31+00:00\", \"source\": {\"poster\": \"https://store.bstrm.net/tmsp00060/assets/media/660858/placeholder1700589200.jpg\", \"sources\": [{\"src\": \"https://cdn.cloudycdn.test/ltv/46k/playlist.m3u8\", \"type\": \"application/x-mpegURL\"}, {\"src\": \"not a url\"}, {\"type\": \"x\"}]}}"
+    },
+    {
+      "url": "https://player.cloudycdn.services/player/ltv/media/46k_d23-6000-105/",
+      "request_body": [
+        "version=6.4.0",
+        "referer=https%3A%2F%2Fembed.cloudycdn.services%2Fltv%2Fmedia%2F46k_d23-6000-105"
+      ],
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"name\": \"D23-6000-105_cetstud\", \"duration\": 1442, \"upload_date\": \"2023-11-21T17:52:31+00:00\", \"source\": {\"poster\": \"https://store.bstrm.net/tmsp00060/assets/media/660858/placeholder1700589200.jpg\", \"sources\": [{\"src\": \"https://cdn.cloudycdn.test/ltv/46k/playlist.m3u8\", \"type\": \"application/x-mpegURL\"}]}}"
+    },
+    {
+      "url": "https://cdn.cloudycdn.test/ltv/46k/playlist.m3u8",
+      "headers": {
+        "Content-Type": "application/vnd.apple.mpegurl"
+      },
+      "body_file": "master.m3u8"
+    },
+    {
+      "url": "https://cdn.cloudycdn.test/ltv/46k/chunklist_b1200000_vo_slv.m3u8",
+      "headers": {
+        "Content-Type": "application/vnd.apple.mpegurl"
+      },
+      "body_file": "media.m3u8"
+    },
+    {
+      "url": "https://cdn.cloudycdn.test/ltv/46k/chunklist_b600000_slv.m3u8",
+      "headers": {
+        "Content-Type": "application/vnd.apple.mpegurl"
+      },
+      "body_file": "media.m3u8"
+    },
+    {
+      "url": "https://replay.lsm.lv/lv/klausies/ieraksts/lr/183522/138-nepilniga-kompensejamo-zalu-sistema-pat-menesiem-dzena-pacientus-pa-aptiekam",
+      "headers": {
+        "Content-Type": "text/html; charset=utf-8"
+      },
+      "body_file": "replay-183522.html"
+    },
+    {
+      "url": "https://muste.latvijasradio.lv/lr0/_definst_/mp4:342781.m4a/playlist.m3u8",
+      "headers": {
+        "Content-Type": "application/vnd.apple.mpegurl"
+      },
+      "body_file": "playlist-342781.m3u8"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+[
+ {
+  "url": "http://teamcoco.com/video/mary-kay-remote",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
+ },
+ {
+  "url": "http://teamcoco.com/video/mary-kay-remote",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "http://teamcoco.com/video/synthetic-missing",
+  "args": [
+   "-J"
+  ]
+ }
+]

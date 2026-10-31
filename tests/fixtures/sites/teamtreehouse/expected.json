@@ -1,0 +1,60 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://teamtreehouse.com/library/application-overview-2",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"ext\": \"webm\", \"width\": null, \"height\": null, \"tbr\": null, \"format_id\": \"0\", \"url\": \"https://videos.teamtreehouse.com/videos/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-720p-clip.webm?token=fixture\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://teamtreehouse.com/library/application-overview-2\"}, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"0 - unknown\"}, {\"ext\": \"mp4\", \"width\": null, \"height\": null, \"tbr\": null, \"format_id\": \"1\", \"url\": \"https://videos.teamtreehouse.com/videos/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-720p-clip.mp4?token=fixture\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://teamtreehouse.com/library/application-overview-2\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"1 - unknown\"}], \"subtitles\": {\"en\": [{\"url\": \"https://teamtreehouse.com/videos/109559/captions?lang=en&preview=1\", \"ext\": \"srt\"}]}, \"thumbnail\": \"https://videos.teamtreehouse.com/stills/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-stills-9.jpg?token=fixture\", \"id\": \"application-overview-2\", \"title\": \"Application Overview\", \"description\": \"Application Overview. We are going to be building the Authentication and Authorization for a book voting website that you can share among your book...\", \"duration\": 30, \"webpage_url\": \"https://teamtreehouse.com/library/application-overview-2\", \"original_url\": \"https://teamtreehouse.com/library/application-overview-2\", \"webpage_url_basename\": \"application-overview-2\", \"webpage_url_domain\": \"teamtreehouse.com\", \"extractor\": \"TeamTreeHouse\", \"extractor_key\": \"TeamTreeHouse\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://videos.teamtreehouse.com/stills/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-stills-9.jpg?token=fixture\", \"id\": \"0\"}], \"display_id\": \"application-overview-2\", \"fulltitle\": \"Application Overview\", \"duration_string\": \"30\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"ext\": \"mp4\", \"format_id\": \"1\", \"url\": \"https://videos.teamtreehouse.com/videos/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-720p-clip.mp4?token=fixture\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://teamtreehouse.com/library/application-overview-2\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"format\": \"1 - unknown\", \"_filename\": \"Application Overview [application-overview-2].mp4\", \"filename\": \"Application Overview [application-overview-2].mp4\", \"__write_download_archive\": false}], \"ext\": \"mp4\", \"width\": null, \"height\": null, \"tbr\": null, \"format_id\": \"1\", \"url\": \"https://videos.teamtreehouse.com/videos/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-720p-clip.mp4?token=fixture\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://teamtreehouse.com/library/application-overview-2\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"1 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [TeamTreeHouse] application-overview-2: This is just a preview. You need to be signed in with a Basic account to download the entire video."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://teamtreehouse.com/library/application-overview-2",
+   "args": [
+    "--print",
+    "%(title)s|%(description)s|%(duration)s|%(id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "Application Overview|Application Overview. We are going to be building the Authentication and Authorization for a book voting website that you can share among your book...|30|application-overview-2"
+   ],
+   "stderr": [
+    "WARNING: [TeamTreeHouse] application-overview-2: This is just a preview. You need to be signed in with a Basic account to download the entire video."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://teamtreehouse.com/library/synthetic-full",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"ext\": \"webm\", \"width\": null, \"height\": null, \"tbr\": null, \"format_id\": \"0\", \"url\": \"https://videos.teamtreehouse.com/videos/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-720p-clip.webm?token=fixture\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://teamtreehouse.com/library/synthetic-full\"}, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"0 - unknown\"}, {\"ext\": \"mp4\", \"width\": null, \"height\": null, \"tbr\": null, \"format_id\": \"1\", \"url\": \"https://videos.teamtreehouse.com/videos/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-720p-clip.mp4?token=fixture\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://teamtreehouse.com/library/synthetic-full\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"1 - unknown\"}], \"subtitles\": {\"en\": [{\"url\": \"https://teamtreehouse.com/videos/109559/captions?lang=en&preview=1\", \"ext\": \"srt\"}]}, \"thumbnail\": \"https://videos.teamtreehouse.com/stills/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-stills-9.jpg?token=fixture\", \"id\": \"synthetic-full\", \"title\": \"Application Overview\", \"description\": \"Application Overview. We are going to be building the Authentication and Authorization for a book voting website that you can share among your book...\", \"duration\": 258.058, \"webpage_url\": \"https://teamtreehouse.com/library/synthetic-full\", \"original_url\": \"https://teamtreehouse.com/library/synthetic-full\", \"webpage_url_basename\": \"synthetic-full\", \"webpage_url_domain\": \"teamtreehouse.com\", \"extractor\": \"TeamTreeHouse\", \"extractor_key\": \"TeamTreeHouse\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://videos.teamtreehouse.com/stills/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-stills-9.jpg?token=fixture\", \"id\": \"0\"}], \"display_id\": \"synthetic-full\", \"fulltitle\": \"Application Overview\", \"duration_string\": \"4:18\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"ext\": \"mp4\", \"format_id\": \"1\", \"url\": \"https://videos.teamtreehouse.com/videos/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-720p-clip.mp4?token=fixture\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://teamtreehouse.com/library/synthetic-full\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"format\": \"1 - unknown\", \"_filename\": \"Application Overview [synthetic-full].mp4\", \"filename\": \"Application Overview [synthetic-full].mp4\", \"__write_download_archive\": false}], \"ext\": \"mp4\", \"width\": null, \"height\": null, \"tbr\": null, \"format_id\": \"1\", \"url\": \"https://videos.teamtreehouse.com/videos/PHP-BasicUserAuthenticationInPHP-Refresh-2019-S1V1-720p-clip.mp4?token=fixture\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://teamtreehouse.com/library/synthetic-full\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"1 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://teamtreehouse.com/library/synthetic-empty",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [TeamTreeHouse] synthetic-empty: Unable to extract stages path; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

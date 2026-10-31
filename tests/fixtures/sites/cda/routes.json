@@ -1,0 +1,9 @@
+{
+ "routes": [
+  {"url": "https://www.cda.pl/video/57413289/vfilm", "headers": {"Content-Type": "text/html; charset=UTF-8"}, "body_file": "page.html"},
+  {"url": "https://www.cda.pl/video/57413289", "request_body": ["videoGetLink"], "headers": {"Content-Type": "application/json"}, "body_file": "quality.json"},
+  {"url": "https://vwaw619.cda.pl/NegNXGFyMxxGQvFHXiLcEA/1793478172/16na/aaac1e3cc28/33/574132raw/574132.mpd", "headers": {"Content-Type": "application/dash+xml"}, "body_file": "manifest.mpd"},
+  {"url": "https://www.cda.pl/video/8753244/vfilm", "headers": {"Content-Type": "text/html; charset=UTF-8"}, "body_file": "synthetic-premium.html"},
+  {"url": "https://www.cda.pl/video/617297677/vfilm", "status": 404, "headers": {"Content-Type": "text/html; charset=UTF-8"}, "body": "<html><body>Not Found</body></html>"}
+ ]
+}

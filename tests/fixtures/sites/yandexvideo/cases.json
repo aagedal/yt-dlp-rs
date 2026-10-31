@@ -1,0 +1,6 @@
+[
+ {"url": "https://dzen.ru/video/watch/63344d3e1709370076f7a145", "args": ["-J"]},
+ {"url": "https://zen.yandex.ru/id/606fd806cc13cb3c58c05cf5", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://zen.yandex.ru/id/606fd806cc13cb3c58c05cf5", "args": ["-J", "--flat-playlist", "--playlist-end", "12"]},
+ {"url": "https://zen.yandex.ru/id/nonexistent-channel-fixture", "args": ["-J", "--flat-playlist"]}
+]

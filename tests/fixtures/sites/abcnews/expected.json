@@ -1,0 +1,81 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://abcnews.go.com/ThisWeek/video/week-exclusive-irans-foreign-minister-zarif-20411932",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(timestamp)s|%(duration)s|%(upload_date)s|%(thumbnail)s|%(display_id)s|%(webpage_url)s|%(extractor_key)s|%(format_id)s",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "20411932|'This Week' Exclusive: Iran's Foreign Minister Zarif|George Stephanopoulos goes one-on-one with Iranian Foreign Minister Dr. Javad Zarif.|1380454200|180|20130929|https://s.abcnews.com/images/ThisWeek/abc_tw_zarif_130929_wg.jpg|week-exclusive-irans-foreign-minister-zarif|http://abcnews.go.com/ThisWeek/video/week-exclusive-irans-foreign-minister-zarif-20411932|AbcNewsVideo|hls-2495"
+   ],
+   "stderr": [
+    "WARNING: [abcnews:video] 20411932: Unable to download f4m manifest: HTTP Error 400: OK"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://abcnews.go.com/ThisWeek/video/week-exclusive-irans-foreign-minister-zarif-20411932",
+   "args": [
+    "-F",
+    "--no-geo-bypass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[abcnews:video] Extracting URL: http://abcnews.go.com/ThisWeek/video/week-exclusive-irans-foreign-minister-zarif-20411932",
+    "[abcnews:video] Downloading Akamai AMP feed",
+    "[abcnews:video] 20411932: Downloading f4m manifest",
+    "[abcnews:video] 20411932: Downloading m3u8 information",
+    "[info] Available formats for 20411932:",
+    "ID       EXT RESOLUTION FPS |  FILESIZE   TBR PROTO | VCODEC      ACODEC",
+    "---------------------------------------------------------------------------",
+    "PDL_LOW  mp4 unknown        |                 https | unknown     unknown",
+    "PDL_MED  mp4 unknown        |                 https | unknown     unknown",
+    "hls-496  mp4 512x288     30 | ~10.64MiB  496k m3u8  | avc1.64001f mp4a.40.2",
+    "hls-696  mp4 640x360     30 | ~14.93MiB  696k m3u8  | avc1.64001f mp4a.40.2",
+    "hls-895  mp4 640x360     30 | ~19.23MiB  896k m3u8  | avc1.64001f mp4a.40.2",
+    "hls-1195 mp4 640x360     30 | ~25.66MiB 1196k m3u8  | avc1.64001f mp4a.40.2",
+    "hls-1595 mp4 640x360     30 | ~34.24MiB 1596k m3u8  | avc1.64001f mp4a.40.2",
+    "hls-1995 mp4 1024x576    30 | ~42.83MiB 1996k m3u8  | avc1.640033 mp4a.40.2",
+    "hls-2495 mp4 1280x720    30 | ~53.56MiB 2496k m3u8  | avc1.640033 mp4a.40.2"
+   ],
+   "stderr": [
+    "WARNING: [abcnews:video] 20411932: Unable to download f4m manifest: HTTP Error 400: OK"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://abcnews.go.com/video/embed?id=1",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [abcnews:video] 1: abcnews:video said: Video not found; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://abcnews.go.com/video/embed?id=2",
+   "args": [
+    "-J",
+    "--no-geo-bypass"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [abcnews:video] 2: Unable to download Akamai AMP feed: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}
