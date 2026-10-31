@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel><title>Mixed feed</title><description>Videos and playlists</description>
+<item><title>A video</title><link>https://www.youtube.com/watch?v=BaW_jenozKc</link></item>
+<item><title>A playlist</title><description>A nested playlist</description><link>https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re</link></item>
+<item><title>The video again</title><link>https://www.youtube.com/watch?v=BaW_jenozKc</link></item>
+</channel></rss>

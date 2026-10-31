@@ -1,0 +1,444 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "--no-js-runtimes",
+    "-s",
+    "--download-archive",
+    "second.txt"
+   ],
+   "copy": [
+    "second.txt"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Downloading webpage",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re page 1: Downloading API JSON",
+    "[youtube:tab] Playlist Test Playlist: Downloading 3 items of 3",
+    "[download] Downloading item 1 of 3",
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading visionos player API JSON",
+    "[info] BaW_jenozKc: Downloading 1 format(s): 137+140",
+    "[download] YYYYYYYYYYY: Second video has already been recorded in the archive",
+    "[download] Downloading item 3 of 3",
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=ZZZZZZZZZZZ",
+    "[youtube] ZZZZZZZZZZZ: Downloading webpage",
+    "[youtube] ZZZZZZZZZZZ: Downloading webpage",
+    "[youtube] ZZZZZZZZZZZ: Downloading webpage",
+    "[youtube] ZZZZZZZZZZZ: Downloading webpage",
+    "[youtube] ZZZZZZZZZZZ: Downloading initial data API JSON",
+    "[youtube] ZZZZZZZZZZZ: Downloading initial data API JSON",
+    "[youtube] ZZZZZZZZZZZ: Downloading initial data API JSON",
+    "[youtube] ZZZZZZZZZZZ: Downloading initial data API JSON",
+    "[download] Finished downloading playlist: Test Playlist"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>). Giving up after 3 retries",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "ERROR: [youtube] ZZZZZZZZZZZ: Unable to download API page: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "--no-js-runtimes",
+    "-s",
+    "--break-on-existing",
+    "--download-archive",
+    "second.txt"
+   ],
+   "copy": [
+    "second.txt"
+   ],
+   "exit": 101,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Downloading webpage",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] Playlist Test Playlist: Downloading 2 items of 3",
+    "[download] Downloading item 1 of 2",
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading visionos player API JSON",
+    "[info] BaW_jenozKc: Downloading 1 format(s): 137+140",
+    "[download] YYYYYYYYYYY: Second video has already been recorded in the archive",
+    "[info] Encountered a video that is already in the archive, stopping due to --break-on-existing",
+    "Aborting remaining downloads"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "--no-js-runtimes",
+    "-J",
+    "--break-on-existing",
+    "--download-archive",
+    "second.txt"
+   ],
+   "copy": [
+    "second.txt"
+   ],
+   "exit": 101,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "id",
+    "--download-archive",
+    "second.txt"
+   ],
+   "copy": [
+    "second.txt"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc",
+    "ZZZZZZZZZZZ"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "--download-archive",
+    "second.txt"
+   ],
+   "copy": [
+    "second.txt"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re\", \"title\": \"Test Playlist\", \"availability\": \"public\", \"channel_follower_count\": null, \"description\": \"A playlist description\", \"tags\": [\"one\", \"two\"], \"thumbnails\": [], \"modified_date\": \"20240105\", \"view_count\": 5678, \"playlist_count\": 3, \"channel\": \"Playlist Owner\", \"channel_id\": \"UCabcdefghijklmnopqrstuv\", \"uploader_id\": \"@Owner\", \"uploader\": \"Playlist Owner\", \"channel_url\": \"https://www.youtube.com/channel/UCabcdefghijklmnopqrstuv\", \"uploader_url\": \"https://www.youtube.com/@Owner\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"BaW_jenozKc\", \"url\": \"https://www.youtube.com/watch?v=BaW_jenozKc\", \"title\": \"First video\", \"description\": null, \"duration\": 10, \"channel_id\": \"UC0123456789abcdefghijkl\", \"channel\": \"Uploader Name\", \"channel_url\": \"https://www.youtube.com/channel/UC0123456789abcdefghijkl\", \"uploader\": \"Uploader Name\", \"uploader_id\": \"@Uploader\", \"uploader_url\": \"https://www.youtube.com/@Uploader\", \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/BaW_jenozKc/hqdefault.jpg\", \"height\": 94, \"width\": 168}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": 1200, \"live_status\": null, \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"ZZZZZZZZZZZ\", \"url\": \"https://www.youtube.com/watch?v=ZZZZZZZZZZZ\", \"title\": \"Third video\", \"description\": null, \"duration\": 120, \"channel_id\": \"UC0123456789abcdefghijkl\", \"channel\": \"Uploader Name\", \"channel_url\": \"https://www.youtube.com/channel/UC0123456789abcdefghijkl\", \"uploader\": \"Uploader Name\", \"uploader_id\": \"@Uploader\", \"uploader_url\": \"https://www.youtube.com/@Uploader\", \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/ZZZZZZZZZZZ/hqdefault.jpg\", \"height\": 94, \"width\": 168}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": 1200, \"live_status\": null, \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}], \"extractor_key\": \"YoutubeTab\", \"extractor\": \"youtube:tab\", \"webpage_url\": \"https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re\", \"original_url\": \"https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re\", \"webpage_url_basename\": \"playlist\", \"webpage_url_domain\": \"youtube.com\", \"release_year\": null, \"requested_entries\": [1, 3], \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "--match-title",
+    "First",
+    "--download-archive",
+    "second.txt"
+   ],
+   "copy": [
+    "second.txt"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Downloading webpage",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re page 1: Downloading API JSON",
+    "[youtube:tab] Playlist Test Playlist: Downloading 3 items of 3",
+    "[download] Downloading item 1 of 3",
+    "[download] YYYYYYYYYYY: Second video has already been recorded in the archive",
+    "[download] \"Third video\" title did not match pattern \"First\"",
+    "[download] Finished downloading playlist: Test Playlist"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "--break-on-reject",
+    "--match-title",
+    "First",
+    "--download-archive",
+    "second.txt"
+   ],
+   "copy": [
+    "second.txt"
+   ],
+   "exit": 101,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Downloading webpage",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re page 1: Downloading API JSON",
+    "[youtube:tab] Playlist Test Playlist: Downloading 3 items of 3",
+    "[download] Downloading item 1 of 3",
+    "[download] YYYYYYYYYYY: Second video has already been recorded in the archive",
+    "[download] \"Third video\" title did not match pattern \"First\"",
+    "[info] Encountered a video that did not match filter, stopping due to --break-match-filter",
+    "Aborting remaining downloads"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "--break-on-reject",
+    "--match-title",
+    "First"
+   ],
+   "exit": 101,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Downloading webpage",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] Playlist Test Playlist: Downloading 2 items of 3",
+    "[download] Downloading item 1 of 2",
+    "[download] \"Second video\" title did not match pattern \"First\"",
+    "[info] Encountered a video that did not match filter, stopping due to --break-match-filter",
+    "Aborting remaining downloads"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "--no-js-runtimes",
+    "-s",
+    "-I",
+    "3,2,1",
+    "--download-archive",
+    "second.txt"
+   ],
+   "copy": [
+    "second.txt"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Downloading webpage",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re page 1: Downloading API JSON",
+    "[youtube:tab] Playlist Test Playlist: Downloading 3 items of 3",
+    "[download] Downloading item 1 of 3",
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=ZZZZZZZZZZZ",
+    "[youtube] ZZZZZZZZZZZ: Downloading webpage",
+    "[youtube] ZZZZZZZZZZZ: Downloading webpage",
+    "[youtube] ZZZZZZZZZZZ: Downloading webpage",
+    "[youtube] ZZZZZZZZZZZ: Downloading webpage",
+    "[youtube] ZZZZZZZZZZZ: Downloading initial data API JSON",
+    "[youtube] ZZZZZZZZZZZ: Downloading initial data API JSON",
+    "[youtube] ZZZZZZZZZZZ: Downloading initial data API JSON",
+    "[youtube] ZZZZZZZZZZZ: Downloading initial data API JSON",
+    "[download] YYYYYYYYYYY: Second video has already been recorded in the archive",
+    "[download] Downloading item 3 of 3",
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading visionos player API JSON",
+    "[info] BaW_jenozKc: Downloading 1 format(s): 137+140",
+    "[download] Finished downloading playlist: Test Playlist"
+   ],
+   "stderr": [
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>). Giving up after 3 retries",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "ERROR: [youtube] ZZZZZZZZZZZ: Unable to download API page: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)",
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://page.test/feed.xml",
+   "args": [
+    "--no-js-runtimes",
+    "-s",
+    "--download-archive",
+    "first.txt"
+   ],
+   "copy": [
+    "first.txt"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[generic] Extracting URL: https://page.test/feed.xml",
+    "[generic] feed: Downloading webpage",
+    "[generic] feed: Extracting information",
+    "[download] Downloading playlist: Mixed feed",
+    "[generic] Playlist Mixed feed: Downloading 3 items of 3",
+    "[download] Downloading item 1 of 3",
+    "[download] BaW_jenozKc: has already been recorded in the archive",
+    "[download] Downloading item 2 of 3",
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Downloading webpage",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: A playlist",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re page 1: Downloading API JSON",
+    "[youtube:tab] Playlist A playlist: Downloading 3 items of 3",
+    "[download] BaW_jenozKc: First video has already been recorded in the archive",
+    "[download] Downloading item 2 of 3",
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=YYYYYYYYYYY",
+    "[youtube] YYYYYYYYYYY: Downloading webpage",
+    "[youtube] YYYYYYYYYYY: Downloading webpage",
+    "[youtube] YYYYYYYYYYY: Downloading webpage",
+    "[youtube] YYYYYYYYYYY: Downloading webpage",
+    "[youtube] YYYYYYYYYYY: Downloading initial data API JSON",
+    "[youtube] YYYYYYYYYYY: Downloading initial data API JSON",
+    "[youtube] YYYYYYYYYYY: Downloading initial data API JSON",
+    "[youtube] YYYYYYYYYYY: Downloading initial data API JSON",
+    "[download] Downloading item 3 of 3",
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=ZZZZZZZZZZZ",
+    "[youtube] ZZZZZZZZZZZ: Downloading webpage",
+    "[youtube] ZZZZZZZZZZZ: Downloading webpage",
+    "[youtube] ZZZZZZZZZZZ: Downloading webpage",
+    "[youtube] ZZZZZZZZZZZ: Downloading webpage",
+    "[youtube] ZZZZZZZZZZZ: Downloading initial data API JSON",
+    "[youtube] ZZZZZZZZZZZ: Downloading initial data API JSON",
+    "[youtube] ZZZZZZZZZZZ: Downloading initial data API JSON",
+    "[youtube] ZZZZZZZZZZZ: Downloading initial data API JSON",
+    "[download] Finished downloading playlist: A playlist",
+    "[download] Downloading item 3 of 3",
+    "[download] BaW_jenozKc: has already been recorded in the archive",
+    "[download] Finished downloading playlist: Mixed feed"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] YYYYYYYYYYY: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>). Giving up after 3 retries",
+    "WARNING: [youtube] YYYYYYYYYYY: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] YYYYYYYYYYY: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] YYYYYYYYYYY: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] YYYYYYYYYYY: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "ERROR: [youtube] YYYYYYYYYYY: Unable to download API page: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>). Giving up after 3 retries",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "ERROR: [youtube] ZZZZZZZZZZZ: Unable to download API page: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://page.test/feed.xml",
+   "args": [
+    "--no-js-runtimes",
+    "-s",
+    "--break-on-existing",
+    "--download-archive",
+    "first.txt"
+   ],
+   "copy": [
+    "first.txt"
+   ],
+   "exit": 101,
+   "stdout": [
+    "[generic] Extracting URL: https://page.test/feed.xml",
+    "[generic] feed: Downloading webpage",
+    "[generic] feed: Extracting information",
+    "[download] Downloading playlist: Mixed feed",
+    "[generic] Playlist Mixed feed: Downloading 3 items of 3",
+    "[download] Downloading item 1 of 3",
+    "[download] BaW_jenozKc: has already been recorded in the archive",
+    "[info] Encountered a video that is already in the archive, stopping due to --break-on-existing",
+    "Aborting remaining downloads"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://page.test/feed.xml",
+   "args": [
+    "--no-js-runtimes",
+    "-J",
+    "--download-archive",
+    "first.txt"
+   ],
+   "copy": [
+    "first.txt"
+   ],
+   "exit": 1,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"id\": \"https://page.test/feed.xml\", \"title\": \"Mixed feed\", \"description\": \"Videos and playlists\", \"entries\": [null, {\"id\": \"PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re\", \"title\": \"A playlist\", \"availability\": \"public\", \"channel_follower_count\": null, \"description\": \"A nested playlist\", \"tags\": [\"one\", \"two\"], \"thumbnails\": [], \"modified_date\": \"20240105\", \"view_count\": 5678, \"playlist_count\": 3, \"channel\": \"Playlist Owner\", \"channel_id\": \"UCabcdefghijklmnopqrstuv\", \"uploader_id\": \"@Owner\", \"uploader\": \"Playlist Owner\", \"channel_url\": \"https://www.youtube.com/channel/UCabcdefghijklmnopqrstuv\", \"uploader_url\": \"https://www.youtube.com/@Owner\", \"_type\": \"playlist\", \"entries\": [null, null], \"extractor_key\": \"YoutubeTab\", \"extractor\": \"youtube:tab\", \"webpage_url\": \"https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re\", \"original_url\": \"https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re\", \"webpage_url_basename\": \"playlist\", \"webpage_url_domain\": \"youtube.com\", \"release_year\": null, \"requested_entries\": [2, 3], \"__files_to_move\": {}}, null], \"webpage_url\": \"https://page.test/feed.xml\", \"original_url\": \"https://page.test/feed.xml\", \"webpage_url_basename\": \"feed.xml\", \"webpage_url_domain\": \"page.test\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] YYYYYYYYYYY: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>). Giving up after 3 retries",
+    "WARNING: [youtube] YYYYYYYYYYY: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] YYYYYYYYYYY: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] YYYYYYYYYYY: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] YYYYYYYYYYY: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "ERROR: [youtube] YYYYYYYYYYY: Unable to download API page: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>). Giving up after 3 retries",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "WARNING: [youtube] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube] ZZZZZZZZZZZ: Failed to parse JSON: Expecting value in 'not found': line 1 column 1 (char 0)",
+    "ERROR: [youtube] ZZZZZZZZZZZ: Unable to download API page: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}
