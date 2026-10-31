@@ -1,0 +1,14 @@
+[
+ {"url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re", "args": ["--no-js-runtimes", "-s", "--download-archive", "second.txt"], "copy": ["second.txt"]},
+ {"url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re", "args": ["--no-js-runtimes", "-s", "--break-on-existing", "--download-archive", "second.txt"], "copy": ["second.txt"]},
+ {"url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re", "args": ["--no-js-runtimes", "-J", "--break-on-existing", "--download-archive", "second.txt"], "copy": ["second.txt"]},
+ {"url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re", "args": ["--flat-playlist", "--print", "id", "--download-archive", "second.txt"], "copy": ["second.txt"]},
+ {"url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re", "args": ["-J", "--flat-playlist", "--download-archive", "second.txt"], "copy": ["second.txt"]},
+ {"url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re", "args": ["-s", "--flat-playlist", "--match-title", "First", "--download-archive", "second.txt"], "copy": ["second.txt"]},
+ {"url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re", "args": ["-s", "--flat-playlist", "--break-on-reject", "--match-title", "First", "--download-archive", "second.txt"], "copy": ["second.txt"]},
+ {"url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re", "args": ["-s", "--flat-playlist", "--break-on-reject", "--match-title", "First"]},
+ {"url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re", "args": ["--no-js-runtimes", "-s", "-I", "3,2,1", "--download-archive", "second.txt"], "copy": ["second.txt"]},
+ {"url": "https://page.test/feed.xml", "args": ["--no-js-runtimes", "-s", "--download-archive", "first.txt"], "copy": ["first.txt"]},
+ {"url": "https://page.test/feed.xml", "args": ["--no-js-runtimes", "-s", "--break-on-existing", "--download-archive", "first.txt"], "copy": ["first.txt"]},
+ {"url": "https://page.test/feed.xml", "args": ["--no-js-runtimes", "-J", "--download-archive", "first.txt"], "copy": ["first.txt"]}
+]

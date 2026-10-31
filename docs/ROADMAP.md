@@ -256,8 +256,11 @@ suspended as a `PlaylistRun` and resumed through the input queue).
    filtering before selection and recording only after successful final publication.
    Bounded cooperating-writer locks, append rollback and a pinned offline archive
    reference fixture are covered, as are break-on-existing, per-input breaks,
-   force-write and archive disabling; early URL-ID skips, alternate legacy IDs
-   and broader archive option parity remain open.
+   force-write and archive disabling, as are early temp-ID skips and
+   unresolved playlist entries matched by their own `ie_key`/`id` (a recorded
+   YouTube playlist entry is not extracted; `--break-on-existing` stops
+   fetching playlist pages). The URL-suitable extractor fallback for entries
+   without an `ie_key` and broader archive option parity remain open.
    Audio extraction now supports bounded format mappings, quality plans and local
    FFprobe/FFmpeg copy/conversion for eight target formats, source retention,
    cancellation and archive-after-final-publication. Video remux/recode now follows

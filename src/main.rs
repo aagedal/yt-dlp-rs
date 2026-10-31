@@ -4997,6 +4997,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         );
                         failed = true;
                         run.entries = Vec::new().into_iter().enumerate();
+                        run.skipped.clear();
                     }
                 }
                 *run
@@ -5088,6 +5089,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     ..Default::default()
                 };
                 let mut pending: Option<Cancel> = None;
+                let mut skipped = std::collections::VecDeque::new();
                 let mut header_printed = false;
                 let extracted =
                     (|| -> yt_dlp_rs::Result<Option<(ExtractResult, Option<PlaylistCounts>)>> {
@@ -5139,6 +5141,22 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         };
                         // Upstream `__process_playlist` names the playlist, then its
                         // `PlaylistEntries` fetches the requested entries.
+                        // Upstream `get_requested_items`: with `--break-on-existing`
+                        // or a breaking filter, the requested items end at the
+                        // first entry that would break (checked silently).
+                        // An archived entry is not filtered.
+                        let stop = |info: &yt_dlp_rs::VideoInfo| {
+                            if archive
+                                .as_ref()
+                                .is_some_and(|archive| archived(info, archive).unwrap_or(false))
+                            {
+                                return args.break_on_existing;
+                            }
+                            matches!(match_filters.check(info, true), Ok(MatchOutcome::Break(_)))
+                        };
+                        let stops =
+                            (args.break_on_existing && archive.is_some()) || match_filters.breaks();
+                        let stop = stops.then_some(&stop as &dyn Fn(&yt_dlp_rs::VideoInfo) -> bool);
                         if let ExtractResult::Playlist(playlist) = &mut result
                             && playlist.pending.is_some()
                         {
@@ -5151,7 +5169,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             if let Some(pending) = &mut playlist.pending {
                                 pending.request_entries(&playlist_selection);
                             }
-                            downloader.fetch_pending(playlist, playlist_selection.fetch_limit())?;
+                            let limit = stop
+                                .and_then(|stop| {
+                                    playlist_selection.stop_fetch_limit(&playlist.entries, stop)
+                                })
+                                .map_or(playlist_selection.fetch_limit(), |stopped| {
+                                    Some(
+                                        playlist_selection
+                                            .fetch_limit()
+                                            .map_or(stopped, |limit| limit.min(stopped)),
+                                    )
+                                });
+                            downloader.fetch_pending(playlist, limit)?;
                         }
                         // Nested playlists are selected like entries; archive and
                         // match filters apply to their videos.
@@ -5159,13 +5188,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         if let (ExtractResult::Playlist(playlist), true) = (&mut result, outer) {
                             playlist.nested_placeholders();
                         }
-                        let counts = playlist_selection.apply(&mut result);
+                        let counts = playlist_selection.apply_until(&mut result, stop);
                         if outer {
                             return Ok(Some((result, counts)));
                         }
                         let result = if let Some(archive) = &archive {
-                            let (result, reached) =
-                                filter_archived(result, archive, args.break_on_existing)?;
+                            let (result, reached) = filter_archived(
+                                result,
+                                archive,
+                                args.break_on_existing,
+                                &mut skipped,
+                            )?;
                             if reached {
                                 pending = Some(Cancel::Existing);
                             }
@@ -5177,7 +5210,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             result
                         };
                         // Upstream `_match_entry` before selection: format fields are incomplete.
-                        let Some(mut result) = prefilter(result, &match_filters, &mut pending)?
+                        let Some(mut result) =
+                            prefilter(result, &match_filters, &mut pending, &mut skipped)?
                         else {
                             return Ok(None);
                         };
@@ -5469,6 +5503,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     extraction_failures: 0,
                     failed_before: failed,
                     entries: extracted.into_entries().into_iter().enumerate(),
+                    skipped,
                     nested_entry: None,
                 }
             }
@@ -5487,13 +5522,29 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             mut extraction_failures,
             failed_before,
             mut entries,
+            mut skipped,
             nested_entry: _,
         } = run;
         // Each entry's downloaded file (`requested_downloads[0].filepath`).
         let entry_files = std::cell::RefCell::new(entry_files);
         let mut fallback: Option<(String, String)> = None;
         let mut url_cancelled = false;
-        while let Some((entry_index, mut info)) = entries.next() {
+        loop {
+            // Skip lines of dropped entries before this one (all of them
+            // once the entries are exhausted).
+            let next = entries.next();
+            let before = next
+                .as_ref()
+                .and_then(|(_, info)| info.playlist_autonumber)
+                .unwrap_or(usize::MAX);
+            while skipped.front().is_some_and(|(index, _)| *index < before) {
+                // `screen!` does not evaluate its arguments when quiet.
+                let (_, line) = skipped.pop_front().unwrap();
+                screen!("{line}");
+            }
+            let Some((entry_index, mut info)) = next else {
+                break;
+            };
             if yt_dlp_rs::SignalInterrupt::interrupted() {
                 break 'inputs;
             }
@@ -5569,7 +5620,40 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             }
             // A `url_transparent` entry (RSS items) is extracted now.
             let mut resolve_error = None;
-            if YoutubeDl::is_transparent(&info) {
+            let resolved = YoutubeDl::is_transparent(&info);
+            if resolved {
+                // Upstream `extract_info`: a recorded temp ID skips the
+                // entry's URL before extraction (a `None` entry result).
+                if let Some(archive) = &archive
+                    && let Some((key, id)) = YoutubeDl::transparent_url(&info)
+                        .and_then(|url| downloader.temp_archive_identity(url))
+                    && archive.contains_identity(&key, &id)
+                {
+                    videos -= 1;
+                    template_options.video_autonumber.set(previous_autonumber);
+                    screen!("[download] {id}: has already been recorded in the archive");
+                    if args.break_on_existing {
+                        cancelled = cancel(Cancel::Existing, args.break_per_input);
+                        if cancelled.is_none() {
+                            processed = 0;
+                        }
+                        url_cancelled = true;
+                        break;
+                    }
+                    extraction_failures += 1;
+                    if let (Some(limit), Some(title)) = (
+                        args.skip_playlist_after_errors.filter(|limit| *limit != 0),
+                        &playlist_title,
+                    ) && extraction_failures as i64 >= limit
+                    {
+                        report_error!(
+                            "ERROR: Skipping the remaining entries in playlist \"{title}\" since {extraction_failures} items failed extraction"
+                        );
+                        failed = true;
+                        break;
+                    }
+                    continue;
+                }
                 match downloader.resolve_entry_result(info.clone()) {
                     Ok(ExtractResult::Video(resolved)) => info = resolved,
                     // Upstream processes a playlist entry inline (its own
@@ -5602,6 +5686,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             extraction_failures,
                             failed_before,
                             entries,
+                            skipped,
                             nested_entry: Some((entry_index, true)),
                         })));
                         inputs.push_front(Input::Resume);
@@ -5690,6 +5775,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     Ok(())
                 };
                 early_stage(Stage::PreProcess, &mut info, "pre_process")?;
+                // Upstream `process_video_result`'s `_match_entry`: a resolved
+                // entry is checked against the archive by its own identity.
+                if resolved
+                    && let Some(archive) = &archive
+                    && archive.contains(&info)?
+                {
+                    screen!("{}", archived_reason(&info));
+                    if args.break_on_existing {
+                        entry_cancel = Some(Cancel::Existing);
+                    }
+                    return Ok(());
+                }
                 downloader.post_extract(&mut info)?;
                 early_stage(Stage::AfterFilter, &mut info, "after_filter")?;
                 // Upstream `SponsorBlockPP`, the last `after_filter` processor.
@@ -7625,6 +7722,9 @@ struct PlaylistRun {
     failed_before: bool,
     /// The entries not processed yet.
     entries: std::iter::Enumerate<std::vec::IntoIter<yt_dlp_rs::VideoInfo>>,
+    /// Archive/filter skip lines of entries dropped before processing, by
+    /// `playlist_autonumber` (upstream prints them in its lazy entry loop).
+    skipped: std::collections::VecDeque<(usize, String)>,
     /// The entry whose nested playlist is being processed, and whether it
     /// failed (until that playlist finishes).
     nested_entry: Option<(usize, bool)>,
@@ -10511,23 +10611,44 @@ fn paths_alias(left: &std::path::Path, right: &std::path::Path) -> io::Result<bo
 
 /// Apply match filters before selection: rejected entries are skipped, and a
 /// breaking rejection truncates entries and records the pending cancellation.
+/// A playlist entry's skip line is deferred to its place in the entry loop
+/// (see [`PlaylistRun::skipped`]); a video's is printed now.
+fn report_skip(
+    info: &yt_dlp_rs::VideoInfo,
+    line: String,
+    skipped: Option<&mut std::collections::VecDeque<(usize, String)>>,
+) {
+    match skipped {
+        Some(skipped) => {
+            let index = info.playlist_autonumber.unwrap_or_default();
+            // Upstream checks the archive, then the filters, entry by entry.
+            let at = skipped.partition_point(|(other, _)| *other <= index);
+            skipped.insert(at, (index, line));
+        }
+        None => screen!("{line}"),
+    }
+}
+
 fn prefilter(
     result: ExtractResult,
     filters: &MatchFilters,
     pending: &mut Option<Cancel>,
+    skipped: &mut std::collections::VecDeque<(usize, String)>,
 ) -> yt_dlp_rs::Result<Option<ExtractResult>> {
     if filters.is_empty() {
         return Ok(Some(result));
     }
-    let mut keep = |info: &yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<Option<bool>> {
+    let mut keep = |info: &yt_dlp_rs::VideoInfo,
+                    skipped: Option<&mut std::collections::VecDeque<(usize, String)>>|
+     -> yt_dlp_rs::Result<Option<bool>> {
         Ok(match filters.check(info, true)? {
             MatchOutcome::Pass | MatchOutcome::Ask => Some(true),
             MatchOutcome::Reject(reason) => {
-                screen!("[download] {reason}");
+                report_skip(info, format!("[download] {reason}"), skipped);
                 Some(false)
             }
             MatchOutcome::Break(reason) => {
-                screen!("[download] {reason}");
+                report_skip(info, format!("[download] {reason}"), skipped);
                 *pending = Some(Cancel::Rejected);
                 None
             }
@@ -10535,12 +10656,12 @@ fn prefilter(
     };
     match result {
         ExtractResult::Video(info) => {
-            Ok((keep(&info)? == Some(true)).then_some(ExtractResult::Video(info)))
+            Ok((keep(&info, None)? == Some(true)).then_some(ExtractResult::Video(info)))
         }
         ExtractResult::Playlist(mut playlist) => {
             let mut kept = Vec::new();
             for info in playlist.entries {
-                match keep(&info)? {
+                match keep(&info, Some(skipped))? {
                     Some(true) => kept.push(info),
                     Some(false) => {}
                     None => break,
@@ -10552,6 +10673,33 @@ fn prefilter(
     }
 }
 
+/// Upstream `_match_entry`'s archive reason: `format_field`s of the ID and
+/// title (each left out when missing).
+fn archived_reason(info: &yt_dlp_rs::VideoInfo) -> String {
+    let id = if info.id.is_empty() {
+        String::new()
+    } else {
+        format!("{}: ", info.id)
+    };
+    let title = if info.title.is_empty() {
+        String::new()
+    } else {
+        format!("{} ", info.title)
+    };
+    format!("[download] {id}{title}has already been recorded in the archive")
+}
+
+/// Upstream `in_download_archive`. An unresolved entry is checked by its own
+/// `ie_key` and `id`; one without them is not in the archive until resolved.
+fn archived(info: &yt_dlp_rs::VideoInfo, archive: &DownloadArchive) -> yt_dlp_rs::Result<bool> {
+    if YoutubeDl::is_transparent(info) {
+        Ok(YoutubeDl::entry_archive_identity(info)
+            .is_some_and(|(key, id)| archive.contains_identity(&key, &id)))
+    } else {
+        archive.contains(info)
+    }
+}
+
 /// Drop archived entries. With `break_on_existing`, entries stop at the first
 /// archived one and the returned flag requests cancellation after the earlier
 /// entries are processed (upstream processes entries lazily in order).
@@ -10559,21 +10707,22 @@ fn filter_archived(
     result: ExtractResult,
     archive: &DownloadArchive,
     break_on_existing: bool,
+    skipped: &mut std::collections::VecDeque<(usize, String)>,
 ) -> yt_dlp_rs::Result<(Option<ExtractResult>, bool)> {
-    let keep = |info: &yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<bool> {
-        let recorded = archive.contains(info)?;
+    let keep = |info: &yt_dlp_rs::VideoInfo,
+                skipped: Option<&mut std::collections::VecDeque<(usize, String)>>|
+     -> yt_dlp_rs::Result<bool> {
+        // An unresolved entry is checked by its own `ie_key` and `id`; one
+        // without them is not in the archive until it is resolved.
+        let recorded = archived(info, archive)?;
         if recorded {
-            screen!(
-                "[download] {}: {} has already been recorded in the archive",
-                info.id,
-                info.title
-            );
+            report_skip(info, archived_reason(info), skipped);
         }
         Ok(!recorded)
     };
     match result {
         ExtractResult::Video(info) => {
-            let kept = keep(&info)?;
+            let kept = keep(&info, None)?;
             Ok((
                 kept.then_some(ExtractResult::Video(info)),
                 !kept && break_on_existing,
@@ -10583,7 +10732,7 @@ fn filter_archived(
             let mut pending = Vec::new();
             let mut reached = false;
             for info in playlist.entries {
-                if keep(&info)? {
+                if keep(&info, Some(skipped))? {
                     pending.push(info);
                 } else if break_on_existing {
                     reached = true;

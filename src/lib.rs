@@ -4879,6 +4879,36 @@ impl YoutubeDl {
         extractor::paged::fetch_error(entry)
     }
 
+    /// Upstream `_make_archive_id` for an unresolved `url`/`url_transparent`
+    /// entry: its `extractor_key` or `ie_key` and `id`, else `None` (never in
+    /// the archive). Upstream's fallback to the first extractor suitable for
+    /// the entry's URL is not reproduced; such entries are checked when they
+    /// are resolved.
+    pub fn entry_archive_identity(entry: &VideoInfo) -> Option<(String, String)> {
+        let marker = entry.extra.get(TRANSPARENT)?;
+        let raw = marker["entry"].as_object();
+        let text = |value: Option<&serde_json::Value>| {
+            value
+                .and_then(serde_json::Value::as_str)
+                .filter(|text| !text.is_empty())
+                .map(str::to_owned)
+        };
+        // A playlist extractor's own entry dict is the upstream entry.
+        let id = match raw {
+            Some(raw) => text(raw.get("id")),
+            None => Some(entry.id.clone()).filter(|id| !id.is_empty()),
+        }?;
+        let key = raw
+            .and_then(|raw| text(raw.get("extractor_key")).or_else(|| text(raw.get("ie_key"))))
+            .or_else(|| text(marker.get("ie_key")))?;
+        Some((key, id))
+    }
+
+    /// The URL an unresolved `url_transparent` entry resolves.
+    pub fn transparent_url(entry: &VideoInfo) -> Option<&str> {
+        entry.extra.get(TRANSPARENT)?["url"].as_str()
+    }
+
     /// Whether `entry` is an unresolved `url_transparent` entry.
     pub fn is_transparent(entry: &VideoInfo) -> bool {
         entry.extra.contains_key(TRANSPARENT)
