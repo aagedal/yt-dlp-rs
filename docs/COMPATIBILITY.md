@@ -587,9 +587,13 @@ TOKEN` (or an `oauth_token` cookie) is verified like upstream
 (`Verifying login token...`, `Logging in`, an invalid token's warnings) and
 then authorizes the API requests; other usernames are upstream's
 unsupported-login error. Original downloads, comments, sets, users, stations
-and search are not supported. `tests/fixtures/sites/soundcloud/` and
-`tests/fixtures/sites/soundcloud-login/` are compared with pinned upstream
-output.
+and search are not supported. SoundCloud widgets
+(`w|player|p.soundcloud.com/player/?...url=URL`) follow `SoundcloudEmbedIE`:
+the `url` query value (with any `secret_token`) is a `url` result, a missing
+one upstream's `KeyError`; their iframes on generic pages are embeds.
+`tests/fixtures/sites/soundcloud/`, `tests/fixtures/sites/soundcloud-login/`
+and `tests/fixtures/sites/soundcloud-embeds/` are compared with pinned
+upstream output.
 
 SRG SSR media (`srgssr:BU:[...:]video|audio:ID` for `srf`, `rts`, `rsi`,
 `rtr` and `swi`, and `tp.srgssr.ch/p/...?urn=urn:...` player URLs) follow
@@ -5207,13 +5211,17 @@ information of song ID`) as an untyped `mp3` audio-only result with the artist
 as `uploader`/`uploader_id`, and `thumbnail`/`image` thumbnails ranked like
 `qualities`; a missing `name`/`url` is upstream's `KeyError` extractor error.
 
-On generic pages, the embeds of Blogger, Google Drive, JW Platform, Megaphone, Streamable, Wistia (above) and YouTube
+On generic pages, the embeds of Blogger, Dailymotion, Facebook, Google Drive,
+Instagram, JW Platform, Megaphone, PeerTube, Rumble, SoundCloud, Streamable,
+TED, TikTok, Vimeo, VK, Wistia (each described in its section) and YouTube
 (`YoutubeIE._EMBED_REGEX`: iframe/embed/object/SWFObject/`data-video-url`
 `youtube[-nocookie].com/embed|v|p/ID` URLs and lazy-load watch links, kept when
-this port's YouTube extractor accepts them), in
-upstream extractor order (each HTML-unescaped, joined to the page URL,
-suitable and unique, with `Identified N NAME embed(s)` debug lines), are `url`
-results like upstream `_extract_embeds`: one is followed (`original_url` stays
+this port's YouTube extractor accepts them), among the other extractors' noted
+in their sections, are detected in upstream's extractor order
+(`gen_extractor_classes`, which puts YouTube first; each HTML-unescaped,
+joined to the page URL, suitable and unique, with `Identified N NAME
+embed(s)` debug lines). They are `url` results like upstream
+`_extract_embeds`: one is followed (`original_url` stays
 the page, also ahead of a followed playlist's `webpage_url`), several form the page's playlist (`--flat-playlist` keeps
 `ie_key`/`extractor` entries with the `_match_id` temporary ID). A page with
 both HTML5 media and these embeds is an unsupported error; other sites' embeds

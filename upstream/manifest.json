@@ -4067,9 +4067,11 @@
       "rust": [
         "src/extractor/soundcloud.rs",
         "tests/fixtures/sites/soundcloud/",
-        "tests/fixtures/sites/soundcloud-login/"
+        "tests/fixtures/sites/soundcloud-login/",
+        "src/extractor/html5.rs",
+        "tests/fixtures/sites/soundcloud-embeds/"
       ],
-      "scope": "SoundcloudIE client ID discovery, resolved track JSON, default transcoding formats, artwork thumbnails and metadata, DRM/geo errors; `--username oauth --password TOKEN` and oauth_token cookie verification (connect/session) authorizing API requests, with upstream password-login error and invalid-token warnings; no original downloads, comments, sets, users or search; compared with pinned upstream output through the fixture proxy"
+      "scope": "SoundcloudEmbedIE widget URLs (url/secret_token url results, KeyError) and its _EMBED_REGEX iframes on generic pages; SoundcloudIE client ID discovery, resolved track JSON, default transcoding formats, artwork thumbnails and metadata, DRM/geo errors; `--username oauth --password TOKEN` and oauth_token cookie verification (connect/session) authorizing API requests, with upstream password-login error and invalid-token warnings; no original downloads, comments, sets, users or search; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "soundgasm",

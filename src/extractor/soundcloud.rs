@@ -746,6 +746,77 @@ impl Extractor for Soundcloud {
     }
 }
 
+/// Upstream `SoundcloudEmbedIE`: a `w.soundcloud.com/player` widget URL,
+/// whose `url` query value (with any `secret_token`) is a `url_result`.
+pub struct SoundcloudEmbed;
+
+pub(crate) const EMBED_NAME: &str = "SoundcloudEmbed";
+
+static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:w|player|p)\.soundcloud\.com/player/?.*?\burl=(?P<id>.+)").unwrap()
+});
+
+/// `SoundcloudEmbedIE.suitable`.
+pub fn embed_suitable(url: &str) -> bool {
+    EMBED_URL.is_match(url)
+}
+
+/// `SoundcloudEmbedIE.get_temp_id`.
+pub(crate) fn embed_temp_id(url: &str) -> Option<String> {
+    EMBED_URL.captures(url).map(|found| found["id"].to_owned())
+}
+
+/// `SoundcloudEmbedIE._EMBED_REGEX` (`(["\'])...\1` as one alternative per
+/// quote).
+static EMBED_IFRAME: LazyLock<[Regex; 1]> = LazyLock::new(|| {
+    [Regex::new(r#"<iframe[^>]+src=(?:"(?P<url>(?:https?://)?(?:w\.)?soundcloud\.com/player.+?)"|'(?P<url2>(?:https?://)?(?:w\.)?soundcloud\.com/player.+?)')"#).unwrap()]
+});
+
+/// `SoundcloudEmbedIE._extract_embed_urls` under `orderedSet`.
+pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
+    super::embed_regex_urls(url, webpage, &*EMBED_IFRAME, embed_suitable)
+}
+
+impl Extractor for SoundcloudEmbed {
+    fn key(&self) -> &'static str {
+        EMBED_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(temp_id) = embed_temp_id(url.as_str()) else {
+            return Ok(None);
+        };
+        crate::screen::set_extractor(EMBED_NAME);
+        crate::screen::screen(&format!(
+            "[{EMBED_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        // `parse_qs(url)`: blank values dropped.
+        let first = |key: &str| {
+            url.query_pairs()
+                .find(|(name, value)| name == key && !value.is_empty())
+                .map(|(_, value)| value.into_owned())
+        };
+        let Some(api_url) = first("url") else {
+            return Err(Error::Reported(format!(
+                "{temp_id}: An extractor error has occurred. (caused by KeyError('url')); {}",
+                crate::BUG_REPORTS_MESSAGE
+            )));
+        };
+        let target = match (first("secret_token"), Url::parse(&api_url)) {
+            (Some(token), Ok(api)) => {
+                super::update_url_query(&api, &[("secret_token", &token)]).to_string()
+            }
+            _ => api_url,
+        };
+        Ok(Some(super::follow_url(url, target)))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

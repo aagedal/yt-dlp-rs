@@ -1284,7 +1284,10 @@ pub use skylinewebcams::{SkylineWebcams, suitable as skylinewebcams_suitable};
 pub use skynewsau::{SkyNewsAU, suitable as skynewsau_suitable};
 pub use snapchat::{SnapchatSpotlight, suitable as snapchat_suitable};
 pub use sohu::{Sohu, SohuV, suitable as sohu_suitable, v_suitable as sohu_v_suitable};
-pub use soundcloud::{Soundcloud, suitable as soundcloud_suitable};
+pub use soundcloud::{
+    Soundcloud, SoundcloudEmbed, embed_suitable as soundcloud_embed_suitable,
+    suitable as soundcloud_suitable,
+};
 pub use soundgasm::{
     Soundgasm, SoundgasmProfile, profile_suitable as soundgasm_profile_suitable,
     suitable as soundgasm_suitable,

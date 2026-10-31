@@ -2180,7 +2180,7 @@ enum Embed {
     Info(WebpageEntry),
 }
 
-static EMBED_SITES: [EmbedSite; 52] = [
+static EMBED_SITES: [EmbedSite; 53] = [
     EmbedSite {
         name: "youtube",
         key: "Youtube",
@@ -2493,6 +2493,15 @@ static EMBED_SITES: [EmbedSite; 52] = [
         extractor: Some(&super::simplecast::Simplecast),
         embed_urls: super::simplecast::embed_urls,
         temp_id: super::simplecast::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::soundcloud::EMBED_NAME,
+        key: super::soundcloud::EMBED_NAME,
+        extractor: Some(&super::soundcloud::SoundcloudEmbed),
+        embed_urls: super::soundcloud::embed_urls,
+        temp_id: super::soundcloud::embed_temp_id,
         webpage: None,
         fields: None,
     },
