@@ -12,8 +12,11 @@ use std::time::Duration;
 /// SOCKS4 USERID and DOMAIN fields are NUL-terminated; bound what is read.
 const MAX_FIELD: usize = 1024;
 
+/// A relay's proxy host, port and user ID.
+type RelayKey = (String, u16, Vec<u8>);
+
 /// Running relays by proxy address and user ID: their loopback ports.
-static RELAYS: Mutex<BTreeMap<(String, u16, Vec<u8>), u16>> = Mutex::new(BTreeMap::new());
+static RELAYS: Mutex<BTreeMap<RelayKey, u16>> = Mutex::new(BTreeMap::new());
 
 /// The loopback port of a relay to `host:port` sending `userid`, started on
 /// first use and kept for the process.
