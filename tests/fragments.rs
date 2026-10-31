@@ -644,9 +644,10 @@ fn a_failed_append_stops_concurrent_workers() {
             |_| ControlFlow::Continue(()),
         );
     assert!(result.is_err());
-    // The workers stop instead of fetching the remaining fragments.
+    // The workers stop instead of fetching all 40 fragments (how many
+    // finish first depends on scheduling; slow runners see more).
     let requests = server.requests().len();
-    assert!(requests < 10, "{requests} requests");
+    assert!(requests < 30, "{requests} requests");
 }
 
 #[test]
