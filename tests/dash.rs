@@ -391,6 +391,7 @@ fn unsupported_dash_and_invalid_response_metadata_fail_before_publication() {
     let server = Server::new();
     for path in [
         "/dynamic.mpd",
+        // The second Period ends after the presentation.
         "/multi.mpd",
         "/dtd.mpd",
         "/duplicate-type.mpd",

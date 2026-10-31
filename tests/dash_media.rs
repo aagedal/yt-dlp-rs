@@ -177,6 +177,37 @@ fn saved_timeline_number_list_and_range_plans_download_exact_media() {
         }
     }
 }
+/// Upstream `_merge_mpd_periods` appends the second Period's fragments,
+/// initialization included, to the first Period's equal format: the file is
+/// both Periods' resources in order, byte-identical to pinned upstream's.
+#[test]
+fn multi_period_formats_download_each_period_in_order() {
+    let server = Server::new();
+    let dl = YoutubeDl::new().unwrap();
+    let url = format!("{}/media/periods.mpd", server.origin);
+    for (id, ext, resource, count) in [
+        ("0", "mp4", "video-combined.mp4", 8),
+        ("1", "m4a", "audio-combined.mp4", 10),
+    ] {
+        let info = dl.extract_info_with_format(&url, Some(id)).unwrap();
+        assert_eq!(info.formats.len(), 2);
+        assert_eq!(info.fragments.len(), count);
+        assert_eq!(info.extra["is_dash_periods"], true);
+        let directory = tempfile::tempdir().unwrap();
+        let output = directory.path().join(format!("media.{ext}"));
+        dl.download(&info, &output).unwrap();
+        let single = std::fs::read(format!(
+            "{}/tests/fixtures/dash/media/{resource}",
+            env!("CARGO_MANIFEST_DIR")
+        ))
+        .unwrap();
+        assert_eq!(
+            std::fs::read(&output).unwrap(),
+            [&single[..], &single[..]].concat()
+        );
+    }
+}
+
 #[test]
 fn real_static_dash_downloads_both_representations_and_merges_tracks() {
     let Some(ffmpeg) = std::env::var_os("YT_DLP_RS_TEST_FFMPEG") else {

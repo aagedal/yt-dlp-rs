@@ -24,6 +24,8 @@ those exact resources:
   `chunk-stream0-*.m4s` resources; `audio-combined.mp4` concatenates the equivalent
   initialization and four audio resources. Each XML range starts after the prior
   resource and spans its exact file length. Recompute ranges when regenerating.
+- `periods.mpd` repeats `manifest.mpd`'s Period as a second Period (start 1.8 s,
+  presentation 3.6 s), so each merged format downloads its resources twice.
 
 Required tests verify exact assembled bytes for all four addressing forms.
 `YT_DLP_RS_TEST_FFPROBE` additionally verifies H.264/AAC single-track output;
