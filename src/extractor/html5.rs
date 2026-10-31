@@ -2180,7 +2180,7 @@ enum Embed {
     Info(WebpageEntry),
 }
 
-static EMBED_SITES: [EmbedSite; 41] = [
+static EMBED_SITES: [EmbedSite; 42] = [
     EmbedSite {
         name: "youtube",
         key: "Youtube",
@@ -2493,6 +2493,15 @@ static EMBED_SITES: [EmbedSite; 41] = [
         extractor: Some(&super::vidyard::Vidyard),
         embed_urls: super::vidyard::embed_urls,
         temp_id: super::vidyard::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::vimeo::NAME,
+        key: super::vimeo::KEY,
+        extractor: Some(&super::vimeo::Vimeo),
+        embed_urls: super::vimeo::embed_urls,
+        temp_id: super::vimeo::temp_id,
         webpage: None,
         fields: None,
     },

@@ -3500,6 +3500,39 @@ pub(crate) fn proto_relative(url: &str) -> String {
     }
 }
 
+/// `InfoExtractor._extract_embed_urls(url, webpage)`: each pattern's `url`
+/// group (or `url2`, standing in for a quote backreference's other
+/// alternative), HTML-unescaped, joined to the page URL and kept when
+/// `suitable`, without repeats (`orderedSet`).
+pub(crate) fn embed_regex_urls(
+    url: &Url,
+    webpage: &str,
+    patterns: &[regex::Regex],
+    suitable: fn(&str) -> bool,
+) -> Vec<Url> {
+    let mut found = Vec::new();
+    for pattern in patterns {
+        for captures in pattern.captures_iter(webpage) {
+            let Some(group) = captures.name("url").or_else(|| captures.name("url2")) else {
+                continue;
+            };
+            if let Ok(embed) = url.join(&crate::html::unescape_html(group.as_str()))
+                && suitable(embed.as_str())
+            {
+                push_unique(&mut found, embed);
+            }
+        }
+    }
+    found
+}
+
+/// `orderedSet`'s push: `url` unless already found.
+pub(crate) fn push_unique(found: &mut Vec<Url>, url: Url) {
+    if !found.contains(&url) {
+        found.push(url);
+    }
+}
+
 /// A top-level `url_result(target, ...)`: processing extracts `target`
 /// (its own fields are not merged).
 pub(crate) fn follow_url(page: &Url, target: String) -> crate::ExtractResult {

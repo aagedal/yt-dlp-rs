@@ -2870,7 +2870,14 @@ gives upstream's no-cached-token error (a cached token is an unsupported
 native error), and player-page passwords (`check-password`), rented
 trailers, JSON-LD metadata, on-demand, reviews, events and the album,
 showcase, channel, user, likes, groups and watch-later playlists are not
-supported. `tests/fixtures/sites/vimeo/` and `tests/fixtures/sites/vimeo-login/`
+supported. On generic pages `VimeoIE._extract_embed_urls` finds
+`player.vimeo.com/video/ID` iframes and `moogaloop.swf` embeds, smuggling the
+page as their `referer` (`_smuggle_referrer`): the player page is requested
+with it and a followed embed's `webpage_url` is the smuggled URL, like
+upstream. Its `<video src>` pattern always comes with the page's HTML5 media,
+which this port does not combine with embeds (an unsupported error); VHX and
+event embeds are not detected. `tests/fixtures/sites/vimeo/`,
+`tests/fixtures/sites/vimeo-login/` and `tests/fixtures/sites/vimeo-embeds/`
 are compared with pinned upstream output.
 
 NZZ articles (`[www.]nzz.ch/[SECTION/]...-ld.ID`) follow upstream `NZZIE`:
