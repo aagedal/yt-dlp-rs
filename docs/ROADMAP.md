@@ -305,6 +305,11 @@ Work in this order; each step lands with deterministic tests like any other chan
    cookie databases, `--load-info-json`. Panics found become regression tests;
    the targets run briefly in CI. Download-side panics fail closed with an
    error instead of aborting the run.
+   Status (2026-11-01): 15 targets in `fuzz/` (also webpage helpers, dates
+   and cover-art embedding), run in CI. Found and fixed: a SQLite schema
+   panic and unbounded DASH planning memory (fragment and URL-byte budgets).
+   A panic outside an extractor still ends the run with exit 1, like an
+   upstream crash. Not fuzzed yet: `jsinterp` (no step limit, like upstream).
 2. **Live canary suite.** A scheduled, non-required workflow that extracts and
    downloads a few megabytes from the tier-1 sites (at least the Media Converter
    site list: YouTube, Instagram, TikTok, X, Facebook, Reddit, Vimeo, Twitch,
