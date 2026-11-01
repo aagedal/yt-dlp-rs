@@ -6232,12 +6232,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 None if playlist_title.is_none() => single_json.as_mut(),
                                 None => None,
                             };
-                            if let Some(serde_json::Value::Object(target)) = target
-                                && let serde_json::Value::Array(downloads) = target
+                            if let Some(serde_json::Value::Object(target)) = target {
+                                // `prepare_filename` set `epoch` on the video's
+                                // dict (`prepare_outtmpl`) before its downloads.
+                                target.entry("epoch").or_insert(epoch().into());
+                                if let serde_json::Value::Array(downloads) = target
                                     .entry("requested_downloads")
                                     .or_insert_with(|| serde_json::Value::Array(Vec::new()))
-                            {
-                                downloads.push(download);
+                                {
+                                    downloads.push(download);
+                                }
                             }
                         }
                         // Upstream `forcejson`: `--dump-json` or `--print-json`.
@@ -6720,7 +6724,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 // reports it finished.
                                 if existing == path && info.requested_formats.is_empty() {
                                     ProgressReporter::new(&progress_options)
-                                        .for_download(&info, &path)
+                                        .for_download(&info, &path, part_files)
                                         .already_downloaded(std::fs::metadata(&path)?.len());
                                 }
                                 if processing {
@@ -6927,8 +6931,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             };
                             let info = refreshed.as_ref().unwrap_or(&info);
                             let post_printed = std::cell::Cell::new(false);
-                            let mut reporter =
-                                ProgressReporter::new(&progress_options).for_download(info, &path);
+                            let mut reporter = ProgressReporter::new(&progress_options)
+                                .for_download(info, &path, part_files);
                             let mut progress = |progress: yt_dlp_rs::DownloadProgress| {
                                 if !matches!(
                                     progress.phase,
@@ -7513,6 +7517,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             report_error!("ERROR: {message}");
                             failed = true;
                         }
+                        false
+                    }
+                    // A stop that kept the file (`--keep-partial-on-stop`) or
+                    // FFmpegFD's interrupt: like upstream's `KeyboardInterrupt`,
+                    // it ends the run with `main`'s
+                    // `sys.exit('\nERROR: Interrupted by user')`.
+                    Some(yt_dlp_rs::Error::Reported(message))
+                        if message == "Interrupted by user" =>
+                    {
+                        eprintln!("\nERROR: Interrupted by user");
+                        failed = true;
+                        aborted = true;
                         false
                     }
                     // Upstream `report_error` text without a URL/ID prefix.
@@ -9653,6 +9669,13 @@ struct ProgressReporter<'a> {
     /// downloads).
     dict: std::cell::RefCell<serde_json::Value>,
     filename: Option<String>,
+    /// A merged download's per-format `info` and file (upstream's
+    /// `new_info` and `NAME.fID.EXT`), by `stream_index - 1`.
+    streams: Vec<(serde_json::Value, String)>,
+    /// The `stream_index` that `dict` and `filename` describe.
+    stream: Option<u8>,
+    /// Upstream `.part` files (not `--no-part`).
+    part: bool,
 }
 
 struct ActiveDownload {
@@ -9663,6 +9686,8 @@ struct ActiveDownload {
     next: Instant,
     /// FragmentFD's progress state for fragmented downloads.
     fragments: Option<FragmentState>,
+    /// The `finished` status this download reports.
+    finisher: yt_dlp_rs::output::progress::Finisher,
 }
 
 /// FragmentFD `frag_progress_hook` state: completed fragments, the running
@@ -9680,19 +9705,52 @@ impl<'a> ProgressReporter<'a> {
             active: None,
             dict: std::cell::RefCell::new(serde_json::json!({"info": {}, "progress": null})),
             filename: None,
+            streams: Vec::new(),
+            stream: None,
+            part: false,
         }
     }
 
     /// The video and file a `--progress-template` describes.
-    fn for_download(mut self, info: &yt_dlp_rs::VideoInfo, filename: &std::path::Path) -> Self {
+    fn for_download(
+        mut self,
+        info: &yt_dlp_rs::VideoInfo,
+        filename: &std::path::Path,
+        part_files: yt_dlp_rs::PartFiles,
+    ) -> Self {
+        self.part = matches!(part_files, yt_dlp_rs::PartFiles::Part { .. });
         if self.options.template.is_some() || console_title() {
             self.dict = std::cell::RefCell::new(serde_json::json!({
                 "info": yt_dlp_rs::info_value(info).unwrap_or_default(),
                 "progress": null,
             }));
             self.filename = Some(filename.to_string_lossy().into_owned());
+            self.streams = info
+                .requested_formats
+                .iter()
+                .map(|format| {
+                    let path = yt_dlp_rs::stream_path(filename, &info.ext, format);
+                    (
+                        yt_dlp_rs::info_value(&info.with_selected_format(format))
+                            .unwrap_or_default(),
+                        path.to_string_lossy().into_owned(),
+                    )
+                })
+                .collect();
         }
         self
+    }
+
+    /// Describe the merged download's stream `stream` (1-based) from now on.
+    fn select_stream(&mut self, stream: Option<u8>) {
+        let Some(index) = stream.filter(|index| *index != 0 && self.stream != stream) else {
+            return;
+        };
+        if let Some((info, filename)) = self.streams.get(usize::from(index - 1)) {
+            self.dict.get_mut()["info"] = info.clone();
+            self.filename = Some(filename.clone());
+            self.stream = stream;
+        }
     }
 
     /// Upstream `_report_progress_status`: the template over
@@ -9762,6 +9820,7 @@ impl<'a> ProgressReporter<'a> {
             DownloadPhase::Publishing
                 if self.active.is_none() && progress.stream_index.is_some() =>
             {
+                self.select_stream(progress.stream_index);
                 return self.already_downloaded(progress.downloaded_bytes);
             }
             DownloadPhase::Merging | DownloadPhase::Postprocessing | DownloadPhase::Publishing => {
@@ -9779,6 +9838,7 @@ impl<'a> ProgressReporter<'a> {
             DownloadPhase::Completed => {
                 if let Some(active) = self.active.as_mut() {
                     active.downloaded = progress.downloaded_bytes;
+                    active.finisher = yt_dlp_rs::output::progress::Finisher::External;
                 }
                 return self.finish();
             }
@@ -9790,6 +9850,9 @@ impl<'a> ProgressReporter<'a> {
             .is_some_and(|active| active.stream != progress.stream_index)
         {
             self.finish();
+        }
+        if self.active.is_none() {
+            self.select_stream(progress.stream_index);
         }
         let now = Instant::now();
         let active = self.active.get_or_insert_with(|| ActiveDownload {
@@ -9803,8 +9866,12 @@ impl<'a> ProgressReporter<'a> {
             .with_sequences(yt_dlp_rs::output::color::out().sequences()),
             next: now,
             fragments: None,
+            finisher: yt_dlp_rs::output::progress::Finisher::Http,
         });
         active.downloaded = progress.downloaded_bytes;
+        if progress.fragment_count.is_some() || progress.fragment_index.is_some() {
+            active.finisher = yt_dlp_rs::output::progress::Finisher::Fragments;
+        }
         // FragmentFD reports each fragment's HttpFD progress (only).
         if progress.fragment_count.is_some() && progress.fragment.is_none() {
             return;
@@ -9833,18 +9900,20 @@ impl<'a> ProgressReporter<'a> {
             let estimate = (state.complete as f64 + fragment.total.unwrap_or(0) as f64)
                 / (f64::from(state.index) + 1.0)
                 * f64::from(count);
+            // `state['elapsed']` is read before the update.
+            let elapsed = state.calculator.elapsed;
             state.calculator.set_total(Some(estimate));
-            state.calculator.update(fragment.downloaded);
+            state.calculator.update(fragment.index, fragment.downloaded);
             if fragment.finished {
                 state.index += 1;
-                state.calculator.thread_reset();
+                state.calculator.thread_reset(fragment.index);
             }
             state.complete = state.calculator.downloaded;
             let status = ProgressStatus {
                 downloaded_bytes: state.complete,
                 total_bytes: None,
                 total_bytes_estimate: state.calculator.total(),
-                elapsed: Some(state.calculator.elapsed),
+                elapsed: Some(elapsed),
                 speed: state.calculator.speed(),
                 eta: state.calculator.eta(),
                 fragment_index: Some(state.index),
@@ -9897,8 +9966,20 @@ impl<'a> ProgressReporter<'a> {
 
     /// One `downloading` status: the line (unless `noprogress`) and title.
     fn downloading(&mut self, status: &yt_dlp_rs::output::progress::ProgressStatus) {
-        let dict =
-            || yt_dlp_rs::output::progress::downloading_dict(status, self.filename.as_deref());
+        // A growing file is written at its final name.
+        let tmpfilename = match &self.filename {
+            Some(name) if self.part && name != "-" && status.recorded.is_none() => {
+                Some(format!("{name}.part"))
+            }
+            name => name.clone(),
+        };
+        let dict = || {
+            yt_dlp_rs::output::progress::downloading_dict(
+                status,
+                self.filename.as_deref(),
+                tmpfilename.as_deref(),
+            )
+        };
         if self.options.enabled {
             let line = if self.options.template.is_some() {
                 self.render(dict())
@@ -9919,25 +10000,25 @@ impl<'a> ProgressReporter<'a> {
     /// `FileDownloader.download`'s `finished` status for an existing file
     /// (no timing).
     fn already_downloaded(&self, bytes: u64) {
-        if console_title() {
-            self.title(yt_dlp_rs::output::progress::finished_dict(
-                bytes,
-                None,
-                self.filename.as_deref(),
-            ));
-        }
+        let dict = yt_dlp_rs::output::progress::finished_dict(
+            yt_dlp_rs::output::progress::Finisher::Existing,
+            bytes,
+            None,
+            self.filename.as_deref(),
+        );
         if !self.options.enabled {
             screen!("[download] Download completed");
         } else {
-            let line = yt_dlp_rs::output::progress::finished_line(bytes, None);
+            let line = self.render(dict.clone());
             let mut printer = yt_dlp_rs::output::progress::StatusPrinter::new(
                 self.options.newline,
                 !self.options.quiet,
             )
             .with_sequences(yt_dlp_rs::output::color::out().sequences());
-            Self::write(&printer.print(&format!("[download] {line}")));
+            Self::write(&printer.print(&line));
             Self::write(&printer.end());
         }
+        self.title(dict);
     }
 
     /// The `finished` status of the current stream.
@@ -9947,6 +10028,7 @@ impl<'a> ProgressReporter<'a> {
         };
         let elapsed = active.start.elapsed().as_secs_f64();
         let dict = yt_dlp_rs::output::progress::finished_dict(
+            active.finisher,
             active.downloaded,
             Some(elapsed),
             self.filename.as_deref(),
@@ -9963,10 +10045,13 @@ impl<'a> ProgressReporter<'a> {
 }
 
 impl Drop for ProgressReporter<'_> {
-    /// End an interrupted status line before an error is reported.
+    /// End an interrupted status line before an error is reported. A
+    /// signal leaves it open: upstream's `KeyboardInterrupt` writes only
+    /// the stderr message.
     fn drop(&mut self) {
         if let Some(mut active) = self.active.take()
             && self.options.enabled
+            && !yt_dlp_rs::SignalInterrupt::interrupted()
         {
             Self::write(&active.printer.end());
         }

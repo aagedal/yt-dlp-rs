@@ -84,7 +84,7 @@ fn normalize(line: &str, origin: &str) -> String {
     let host = origin.split_once("//").unwrap().1;
     let line = line.replace(origin, "{ORIGIN}").replace(host, "{HOST}");
     let epoch = regex::Regex::new(r#""epoch": \d+, "#).unwrap();
-    let line = epoch.replace(&line, "").into_owned();
+    let line = epoch.replace_all(&line, "").into_owned();
     if !line.contains(r#""live_status": "is_live""#) {
         return line;
     }

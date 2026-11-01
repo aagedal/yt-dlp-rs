@@ -91,8 +91,9 @@ impl SmoothValue {
     }
 }
 
-/// Upstream `utils.progress.ProgressCalculator` (FragmentFD's progress), for
-/// one downloading thread: sizes are per fragment, reset between them.
+/// Upstream `utils.progress.ProgressCalculator` (FragmentFD's progress).
+/// Sizes are per downloading thread (`_thread_sizes`), reset between its
+/// fragments; the port keys them by the fragment a thread is fetching.
 #[derive(Debug, Clone)]
 pub struct ProgressCalculator {
     pub downloaded: u64,
@@ -100,7 +101,7 @@ pub struct ProgressCalculator {
     total: Option<f64>,
     start: std::time::Instant,
     last_update: f64,
-    thread_size: u64,
+    thread_sizes: std::collections::HashMap<u32, u64>,
     times: Vec<f64>,
     sizes: Vec<u64>,
     speed: SmoothValue,
@@ -119,7 +120,7 @@ impl ProgressCalculator {
             total: Some(0.0),
             start: std::time::Instant::now(),
             last_update: 0.0,
-            thread_size: 0,
+            thread_sizes: std::collections::HashMap::new(),
             times: vec![0.0],
             sizes: vec![initial],
             speed: SmoothValue::new(Some(0.0), 0.7),
@@ -139,8 +140,9 @@ impl ProgressCalculator {
         };
     }
 
-    pub fn thread_reset(&mut self) {
-        self.thread_size = 0;
+    /// `thread_reset` for the thread fetching fragment `thread`.
+    pub fn thread_reset(&mut self, thread: u32) {
+        self.thread_sizes.remove(&thread);
     }
 
     pub fn speed(&self) -> Option<f64> {
@@ -151,13 +153,14 @@ impl ProgressCalculator {
         self.eta.smooth
     }
 
-    /// `update(size)`: this thread's bytes so far.
-    pub fn update(&mut self, size: u64) {
+    /// `update(size)`: the bytes so far of the thread fetching fragment
+    /// `thread`.
+    pub fn update(&mut self, thread: u32, size: u64) {
         if size == 0 {
             return;
         }
-        let delta = size.saturating_sub(self.thread_size);
-        self.thread_size = size;
+        let last = self.thread_sizes.insert(thread, size).unwrap_or(0);
+        let delta = size.saturating_sub(last);
         let now = self.start.elapsed().as_secs_f64();
         self.downloaded += delta;
         self.elapsed = now;
@@ -308,30 +311,63 @@ pub fn downloading_line(status: &ProgressStatus) -> String {
 }
 
 /// Upstream `report_progress`'s `downloading` status dict (the
-/// `progress` of `--progress-template`), with `_default_template`.
-pub fn downloading_dict(status: &ProgressStatus, filename: Option<&str>) -> serde_json::Value {
+/// `progress` of `--progress-template`), with `_default_template`. The
+/// keys and their order follow the reporting downloader: HttpFD's, or
+/// FragmentFD's `state` when `fragment_index` is set. `tmpfilename` is the
+/// file being written (upstream `temp_name`: `FILE.part` unless `--no-part`).
+pub fn downloading_dict(
+    status: &ProgressStatus,
+    filename: Option<&str>,
+    tmpfilename: Option<&str>,
+) -> serde_json::Value {
     let percent = percent(status);
     let fields = Fields::of(status, percent);
-    let mut dict = serde_json::json!({
-        "status": "downloading",
-        "downloaded_bytes": status.downloaded_bytes,
-        "total_bytes": status.total_bytes,
-        "tmpfilename": filename,
-        "filename": filename,
-        "eta": status.eta.map(|eta| eta as i64),
-        "speed": status.speed,
-        "elapsed": status.elapsed,
-    });
+    let eta = status.eta.map(|eta| eta as i64);
+    let mut dict = if let Some(index) = status.fragment_index {
+        // FragmentFD's `state`: ProgressCalculator's `elapsed` starts as
+        // the integer 0, `total_bytes_estimate` is unset for live streams.
+        let elapsed = match status.elapsed {
+            Some(0.0) => serde_json::Value::from(0),
+            elapsed => elapsed.into(),
+        };
+        let mut dict = serde_json::json!({
+            "status": "downloading",
+            "downloaded_bytes": status.downloaded_bytes,
+            "fragment_index": index,
+            "fragment_count": status.fragment_count,
+            "filename": filename,
+            "tmpfilename": tmpfilename,
+            "max_progress": null,
+            "progress_idx": null,
+            "elapsed": elapsed,
+        });
+        let object = dict.as_object_mut().expect("static object");
+        if let Some(total) = status.total_bytes_estimate {
+            object.insert("total_bytes_estimate".into(), total.into());
+        }
+        object.insert("speed".into(), status.speed.into());
+        object.insert("eta".into(), eta.into());
+        dict
+    } else {
+        let mut dict = serde_json::json!({
+            "status": "downloading",
+            "downloaded_bytes": status.downloaded_bytes,
+            "total_bytes": status.total_bytes,
+            "tmpfilename": tmpfilename,
+            "filename": filename,
+            "eta": eta,
+            "speed": status.speed,
+            "elapsed": status.elapsed,
+            "ctx_id": null,
+        });
+        if let Some(total) = status.total_bytes_estimate {
+            dict.as_object_mut()
+                .expect("static object")
+                .insert("total_bytes_estimate".into(), total.into());
+        }
+        dict
+    };
     let object = dict.as_object_mut().expect("static object");
-    if let Some(total) = status.total_bytes_estimate {
-        object.insert("total_bytes_estimate".into(), total.into());
-    }
-    if let Some(index) = status.fragment_index {
-        object.insert("fragment_index".into(), index.into());
-    }
-    if let Some(count) = status.fragment_count {
-        object.insert("fragment_count".into(), count.into());
-    }
     if let Some(recorded) = status.recorded {
         object.insert("recorded_seconds".into(), recorded.into());
         object.insert(
@@ -356,30 +392,87 @@ pub fn downloading_dict(status: &ProgressStatus, filename: Option<&str>) -> serd
     dict
 }
 
-/// Upstream `report_progress`'s `finished` status dict.
+/// The downloader that reports a `finished` status, which decides the
+/// status dict's keys.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Finisher {
+    /// HttpFD (also the port's other single-request downloads).
+    Http,
+    /// FragmentFD's `_finish_frag_download` (HLS, DASH, ISM, F4M).
+    Fragments,
+    /// ExternalFD and FFmpegFD after a successful run.
+    External,
+    /// `FileDownloader.download` for an already downloaded file.
+    Existing,
+}
+
+/// Upstream `report_progress`'s `finished` status dict. `elapsed` is
+/// ignored for [`Finisher::Existing`].
 pub fn finished_dict(
+    finisher: Finisher,
     total_bytes: u64,
     elapsed: Option<f64>,
     filename: Option<&str>,
 ) -> serde_json::Value {
+    let elapsed = elapsed.filter(|_| finisher != Finisher::Existing);
+    let mut dict = match finisher {
+        Finisher::Http | Finisher::Fragments => serde_json::json!({
+            "downloaded_bytes": total_bytes,
+            "total_bytes": total_bytes,
+            "filename": filename,
+            "status": "finished",
+            "elapsed": elapsed,
+            "ctx_id": null,
+        }),
+        Finisher::External => serde_json::json!({
+            "filename": filename,
+            "status": "finished",
+            "elapsed": elapsed,
+            "downloaded_bytes": total_bytes,
+            "total_bytes": total_bytes,
+        }),
+        Finisher::Existing => serde_json::json!({
+            "filename": filename,
+            "status": "finished",
+            "total_bytes": total_bytes,
+        }),
+    };
+    let object = dict.as_object_mut().expect("static object");
+    if finisher == Finisher::Fragments {
+        object.insert("max_progress".into(), serde_json::Value::Null);
+        object.insert("progress_idx".into(), serde_json::Value::Null);
+    }
     let speed = elapsed
         .filter(|elapsed| *elapsed > 0.0)
         .map(|elapsed| total_bytes as f64 / elapsed);
     use super::color::progress_styles as style;
-    serde_json::json!({
-        "downloaded_bytes": total_bytes,
-        "total_bytes": total_bytes,
-        "filename": filename,
-        "status": "finished",
-        "elapsed": elapsed,
-        "speed": speed,
-        "_speed_str": styled(format_speed(speed).trim().to_owned(), style::SPEED),
-        "_total_bytes_str": styled(bytes(Some(total_bytes as f64)), style::TOTAL_BYTES),
-        "_elapsed_str": styled(format_seconds(elapsed), style::ELAPSED),
-        "_percent": 100.0,
-        "_percent_str": styled(format_percent(Some(100.0)), style::PERCENT),
-        "_default_template": finished_line(total_bytes, elapsed),
-    })
+    for (key, value) in [
+        ("speed", speed.into()),
+        (
+            "_speed_str",
+            styled(format_speed(speed).trim().to_owned(), style::SPEED).into(),
+        ),
+        (
+            "_total_bytes_str",
+            styled(bytes(Some(total_bytes as f64)), style::TOTAL_BYTES).into(),
+        ),
+        (
+            "_elapsed_str",
+            styled(format_seconds(elapsed), style::ELAPSED).into(),
+        ),
+        ("_percent", 100.0.into()),
+        (
+            "_percent_str",
+            styled(format_percent(Some(100.0)), style::PERCENT).into(),
+        ),
+        (
+            "_default_template",
+            finished_line(total_bytes, elapsed).into(),
+        ),
+    ] {
+        object.insert(key.into(), value);
+    }
+    dict
 }
 
 /// The `finished` line: `100% of SIZE in TIME at SPEED`.
@@ -536,9 +629,65 @@ mod tests {
             downloading_line(&status),
             "  12.34MiB at  297.32KiB/s (00:00:42), recorded 00:01:05"
         );
-        let dict = downloading_dict(&status, Some("live.mov"));
+        let dict = downloading_dict(&status, Some("live.mov"), Some("live.mov"));
         assert_eq!(dict["recorded_seconds"], 65.4);
         assert_eq!(dict["_recorded_str"], "00:01:05");
+    }
+
+    fn keys(dict: &serde_json::Value) -> Vec<&str> {
+        dict.as_object()
+            .unwrap()
+            .keys()
+            .map(String::as_str)
+            .collect()
+    }
+
+    #[test]
+    fn finished_dicts_follow_each_downloader() {
+        // ExternalFD/FFmpegFD (`external.py`) and an existing file
+        // (`FileDownloader.download`); HttpFD and FragmentFD are compared
+        // with pinned upstream in tests/cli_contract.rs.
+        let tail = [
+            "speed",
+            "_speed_str",
+            "_total_bytes_str",
+            "_elapsed_str",
+            "_percent",
+            "_percent_str",
+            "_default_template",
+        ];
+        let external = finished_dict(Finisher::External, 10, Some(2.0), Some("a.mp4"));
+        let head = [
+            "filename",
+            "status",
+            "elapsed",
+            "downloaded_bytes",
+            "total_bytes",
+        ];
+        assert_eq!(keys(&external), [&head[..], &tail[..]].concat());
+        assert_eq!(external["speed"], 5.0);
+        let existing = finished_dict(Finisher::Existing, 10, Some(2.0), Some("a.mp4"));
+        assert_eq!(
+            keys(&existing),
+            [&["filename", "status", "total_bytes"][..], &tail[..]].concat()
+        );
+        assert_eq!(existing["speed"], serde_json::Value::Null);
+        assert_eq!(existing["_default_template"], "100% of     10.00B");
+    }
+
+    #[test]
+    fn concurrent_fragments_add_up_per_thread() {
+        let mut progress = ProgressCalculator::new(0);
+        // Two fragments in flight report their own running sizes.
+        progress.update(0, 100);
+        progress.update(1, 50);
+        progress.update(0, 300);
+        progress.update(1, 80);
+        assert_eq!(progress.downloaded, 380);
+        // A finished fragment's thread starts over with the next one.
+        progress.thread_reset(0);
+        progress.update(2, 40);
+        assert_eq!(progress.downloaded, 420);
     }
 
     #[test]

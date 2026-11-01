@@ -61,6 +61,8 @@ pub struct DownloadProgress {
 /// response length; its size once finished).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct FragmentBytes {
+    /// Zero-based fragment index; concurrent fragments (`-N`) interleave.
+    pub index: u32,
     pub downloaded: u64,
     pub total: Option<u64>,
     pub finished: bool,

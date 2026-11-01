@@ -480,6 +480,7 @@ fn download_with(
                 )? {
                     // HttpFD's `finished` status for the fragment.
                     reporter.fragment = Some(crate::FragmentBytes {
+                        index: index as u32,
                         downloaded: stored - prefix,
                         total: Some(stored - prefix),
                         finished: true,
@@ -733,6 +734,8 @@ enum Event {
     Progress {
         index: usize,
         bytes: u64,
+        /// The fragment's HttpFD progress, when the event has one.
+        fragment: Option<crate::FragmentBytes>,
     },
     Done {
         index: usize,
@@ -792,6 +795,7 @@ fn download_concurrent(
                         let _ = progress.send(Event::Progress {
                             index,
                             bytes: event.downloaded_bytes,
+                            fragment: event.fragment,
                         });
                         if flag.load(Ordering::Relaxed) {
                             ControlFlow::Break(())
@@ -824,6 +828,19 @@ fn download_concurrent(
                             &mut stored,
                             &mut worker,
                         )?;
+                        // HttpFD's `finished` status for the fragment.
+                        if outcome.is_some() {
+                            let _ = sender.send(Event::Progress {
+                                index,
+                                bytes: stored,
+                                fragment: Some(crate::FragmentBytes {
+                                    index: index as u32,
+                                    downloaded: stored,
+                                    total: Some(stored),
+                                    finished: true,
+                                }),
+                            });
+                        }
                         Ok(outcome.map(|modified| (file, modified)))
                     })();
                     let failed = result.is_err();
@@ -853,8 +870,15 @@ fn download_concurrent(
         let mut outcome = Ok(());
         for event in receiver {
             match event {
-                Event::Progress { index, bytes } => {
+                Event::Progress {
+                    index,
+                    bytes,
+                    fragment,
+                } => {
                     in_flight.insert(index, bytes);
+                    // Each fragment's HttpFD progress reaches the hook
+                    // (FragmentFD's `frag_progress_hook` from every thread).
+                    reporter.fragment = fragment;
                 }
                 Event::Done { index, result } => match result {
                     Ok(file) => {
@@ -987,6 +1011,7 @@ fn fetch(
         };
         if !data.is_empty() {
             reporter.fragment = Some(crate::FragmentBytes {
+                index: reporter.index.saturating_sub(1),
                 downloaded: received + data.len() as u64,
                 total: expected,
                 finished: false,
