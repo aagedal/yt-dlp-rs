@@ -1,0 +1,688 @@
+{
+ "commands": {
+  "default": "python3 tools/benchmark.py --upstream .upstream/yt-dlp --runs 5",
+  "large": "python3 tools/benchmark.py --upstream .upstream/yt-dlp --runs 5 --groups hls,dash --segments 400 --segment-kib 1024 --latencies 0"
+ },
+ "default": {
+  "system": {
+   "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+   "machine": "arm64",
+   "python": "3.15.2",
+   "cpus": 18,
+   "cpu": "Apple M5 Pro",
+   "memory_bytes": "68719476736"
+  },
+  "programs": {
+   "yt-dlp-rs": "yt-dlp-rs 0.7.0-beta.2",
+   "upstream": "2026.10.26"
+  },
+  "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+  "runs": 5,
+  "media": {
+   "segments": 100,
+   "segment_bytes": 262144,
+   "total_bytes": 26214400
+  },
+  "groups": [
+   {
+    "name": "startup",
+    "cases": [
+     {
+      "label": "--version",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.0069,
+        "min_s": 0.0066,
+        "max_s": 0.0079,
+        "peak_rss_mib": 5.7
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.1274,
+        "min_s": 0.1215,
+        "max_s": 0.1324,
+        "peak_rss_mib": 38.5
+       }
+      }
+     },
+     {
+      "label": "simulate direct URL",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.0774,
+        "min_s": 0.0762,
+        "max_s": 0.078,
+        "peak_rss_mib": 101.1
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.502,
+        "min_s": 0.4739,
+        "max_s": 0.5185,
+        "peak_rss_mib": 74.7
+       }
+      }
+     }
+    ]
+   },
+   {
+    "name": "extract",
+    "cases": [
+     {
+      "label": "youtube --no-js-runtimes -J",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.0645,
+        "min_s": 0.0635,
+        "max_s": 0.0662,
+        "peak_rss_mib": 91.5
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.4075,
+        "min_s": 0.4033,
+        "max_s": 0.4198,
+        "peak_rss_mib": 69.3
+       }
+      }
+     },
+     {
+      "label": "instagram -J",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.0336,
+        "min_s": 0.0328,
+        "max_s": 0.0341,
+        "peak_rss_mib": 48.1
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.4342,
+        "min_s": 0.426,
+        "max_s": 0.4464,
+        "peak_rss_mib": 70.1
+       }
+      }
+     },
+     {
+      "label": "tiktok -J",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.0381,
+        "min_s": 0.0376,
+        "max_s": 0.0394,
+        "peak_rss_mib": 45.9
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.5044,
+        "min_s": 0.4935,
+        "max_s": 0.5063,
+        "peak_rss_mib": 73.8
+       }
+      }
+     },
+     {
+      "label": "vimeo -J",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.0401,
+        "min_s": 0.039,
+        "max_s": 0.0405,
+        "peak_rss_mib": 50.1
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.5227,
+        "min_s": 0.5012,
+        "max_s": 0.5407,
+        "peak_rss_mib": 73.9
+       }
+      }
+     },
+     {
+      "label": "dailymotion -J",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.0374,
+        "min_s": 0.0366,
+        "max_s": 0.0381,
+        "peak_rss_mib": 49.3
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.4311,
+        "min_s": 0.42,
+        "max_s": 0.441,
+        "peak_rss_mib": 69.7
+       }
+      }
+     },
+     {
+      "label": "bandcamp -J",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.038,
+        "min_s": 0.0371,
+        "max_s": 0.0383,
+        "peak_rss_mib": 53.0
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.427,
+        "min_s": 0.4112,
+        "max_s": 0.4347,
+        "peak_rss_mib": 69.5
+       }
+      }
+     },
+     {
+      "label": "soundcloud -J",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.0437,
+        "min_s": 0.0431,
+        "max_s": 0.0456,
+        "peak_rss_mib": 51.9
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.4934,
+        "min_s": 0.4833,
+        "max_s": 0.5409,
+        "peak_rss_mib": 73.8
+       }
+      }
+     },
+     {
+      "label": "twitter -J",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.0435,
+        "min_s": 0.0413,
+        "max_s": 0.0451,
+        "peak_rss_mib": 45.3
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.5185,
+        "min_s": 0.4794,
+        "max_s": 0.52,
+        "peak_rss_mib": 73.9
+       }
+      }
+     },
+     {
+      "label": "facebook -J",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.0341,
+        "min_s": 0.0329,
+        "max_s": 0.035,
+        "peak_rss_mib": 50.0
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.4147,
+        "min_s": 0.4087,
+        "max_s": 0.4392,
+        "peak_rss_mib": 69.9
+       }
+      }
+     },
+     {
+      "label": "bluesky -J",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.0406,
+        "min_s": 0.0392,
+        "max_s": 0.0416,
+        "peak_rss_mib": 56.0
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.3979,
+        "min_s": 0.3939,
+        "max_s": 0.425,
+        "peak_rss_mib": 69.4
+       }
+      }
+     }
+    ]
+   },
+   {
+    "name": "hls",
+    "cases": [
+     {
+      "label": "-N 1, 0 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.1223,
+        "min_s": 0.1172,
+        "max_s": 0.1249,
+        "peak_rss_mib": 102.3,
+        "mib_per_s": 204.4
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.7325,
+        "min_s": 0.71,
+        "max_s": 0.7464,
+        "peak_rss_mib": 75.3,
+        "mib_per_s": 34.1
+       }
+      }
+     },
+     {
+      "label": "-N 4, 0 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.162,
+        "min_s": 0.1596,
+        "max_s": 0.1708,
+        "peak_rss_mib": 105.3,
+        "mib_per_s": 154.3
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.6846,
+        "min_s": 0.6698,
+        "max_s": 0.7638,
+        "peak_rss_mib": 75.8,
+        "mib_per_s": 36.5
+       }
+      }
+     },
+     {
+      "label": "-N 8, 0 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.1621,
+        "min_s": 0.1602,
+        "max_s": 0.1762,
+        "peak_rss_mib": 110.2,
+        "mib_per_s": 154.2
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.7324,
+        "min_s": 0.6869,
+        "max_s": 0.9724,
+        "peak_rss_mib": 77.4,
+        "mib_per_s": 34.1
+       }
+      }
+     },
+     {
+      "label": "-N 1, 50 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 5.7166,
+        "min_s": 5.6895,
+        "max_s": 5.7625,
+        "peak_rss_mib": 105.1,
+        "mib_per_s": 4.4
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 6.6686,
+        "min_s": 6.6059,
+        "max_s": 6.6999,
+        "peak_rss_mib": 76.2,
+        "mib_per_s": 3.7
+       }
+      }
+     },
+     {
+      "label": "-N 4, 50 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 1.6471,
+        "min_s": 1.6361,
+        "max_s": 1.6635,
+        "peak_rss_mib": 107.9,
+        "mib_per_s": 15.2
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 2.2227,
+        "min_s": 2.1884,
+        "max_s": 2.2903,
+        "peak_rss_mib": 76.0,
+        "mib_per_s": 11.2
+       }
+      }
+     },
+     {
+      "label": "-N 8, 50 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.9635,
+        "min_s": 0.9577,
+        "max_s": 0.9662,
+        "peak_rss_mib": 110.4,
+        "mib_per_s": 25.9
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 1.5633,
+        "min_s": 1.5514,
+        "max_s": 1.6427,
+        "peak_rss_mib": 77.3,
+        "mib_per_s": 16.0
+       }
+      }
+     }
+    ]
+   },
+   {
+    "name": "dash",
+    "cases": [
+     {
+      "label": "-N 1, 0 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.1268,
+        "min_s": 0.1176,
+        "max_s": 0.1319,
+        "peak_rss_mib": 104.3,
+        "mib_per_s": 197.2
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.7738,
+        "min_s": 0.7665,
+        "max_s": 0.928,
+        "peak_rss_mib": 75.4,
+        "mib_per_s": 32.3
+       }
+      }
+     },
+     {
+      "label": "-N 4, 0 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.1726,
+        "min_s": 0.1638,
+        "max_s": 0.1817,
+        "peak_rss_mib": 107.5,
+        "mib_per_s": 144.8
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.7674,
+        "min_s": 0.7011,
+        "max_s": 0.856,
+        "peak_rss_mib": 76.0,
+        "mib_per_s": 32.6
+       }
+      }
+     },
+     {
+      "label": "-N 8, 0 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.1632,
+        "min_s": 0.1626,
+        "max_s": 0.1715,
+        "peak_rss_mib": 110.5,
+        "mib_per_s": 153.2
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 0.76,
+        "min_s": 0.6889,
+        "max_s": 0.8468,
+        "peak_rss_mib": 77.2,
+        "mib_per_s": 32.9
+       }
+      }
+     },
+     {
+      "label": "-N 1, 50 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 5.6397,
+        "min_s": 5.6226,
+        "max_s": 5.6919,
+        "peak_rss_mib": 105.2,
+        "mib_per_s": 4.4
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 6.5268,
+        "min_s": 6.5133,
+        "max_s": 6.5687,
+        "peak_rss_mib": 75.8,
+        "mib_per_s": 3.8
+       }
+      }
+     },
+     {
+      "label": "-N 4, 50 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 1.5748,
+        "min_s": 1.5573,
+        "max_s": 1.5811,
+        "peak_rss_mib": 108.5,
+        "mib_per_s": 15.9
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 2.1226,
+        "min_s": 2.0637,
+        "max_s": 2.1553,
+        "peak_rss_mib": 75.8,
+        "mib_per_s": 11.8
+       }
+      }
+     },
+     {
+      "label": "-N 8, 50 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.8691,
+        "min_s": 0.8542,
+        "max_s": 0.8735,
+        "peak_rss_mib": 110.1,
+        "mib_per_s": 28.8
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 1.3745,
+        "min_s": 1.3578,
+        "max_s": 1.4587,
+        "peak_rss_mib": 77.1,
+        "mib_per_s": 18.2
+       }
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "large": {
+  "system": {
+   "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+   "machine": "arm64",
+   "python": "3.15.2",
+   "cpus": 18,
+   "cpu": "Apple M5 Pro",
+   "memory_bytes": "68719476736"
+  },
+  "programs": {
+   "yt-dlp-rs": "yt-dlp-rs 0.7.0-beta.2",
+   "upstream": "2026.10.26"
+  },
+  "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+  "runs": 5,
+  "media": {
+   "segments": 400,
+   "segment_bytes": 1048576,
+   "total_bytes": 419430400
+  },
+  "groups": [
+   {
+    "name": "hls",
+    "cases": [
+     {
+      "label": "-N 1, 0 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.3645,
+        "min_s": 0.3465,
+        "max_s": 0.4339,
+        "peak_rss_mib": 108.9,
+        "mib_per_s": 1097.4
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 1.7583,
+        "min_s": 1.7324,
+        "max_s": 1.8374,
+        "peak_rss_mib": 75.6,
+        "mib_per_s": 227.5
+       }
+      }
+     },
+     {
+      "label": "-N 4, 0 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.6664,
+        "min_s": 0.6467,
+        "max_s": 0.6772,
+        "peak_rss_mib": 120.9,
+        "mib_per_s": 600.2
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 1.4642,
+        "min_s": 1.3748,
+        "max_s": 1.559,
+        "peak_rss_mib": 80.4,
+        "mib_per_s": 273.2
+       }
+      }
+     },
+     {
+      "label": "-N 8, 0 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.688,
+        "min_s": 0.6807,
+        "max_s": 0.8062,
+        "peak_rss_mib": 130.0,
+        "mib_per_s": 581.4
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 1.5401,
+        "min_s": 1.4067,
+        "max_s": 1.6164,
+        "peak_rss_mib": 82.8,
+        "mib_per_s": 259.7
+       }
+      }
+     }
+    ]
+   },
+   {
+    "name": "dash",
+    "cases": [
+     {
+      "label": "-N 1, 0 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.3211,
+        "min_s": 0.303,
+        "max_s": 0.3531,
+        "peak_rss_mib": 108.2,
+        "mib_per_s": 1245.7
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 1.856,
+        "min_s": 1.8221,
+        "max_s": 2.1284,
+        "peak_rss_mib": 75.4,
+        "mib_per_s": 215.5
+       }
+      }
+     },
+     {
+      "label": "-N 4, 0 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.6732,
+        "min_s": 0.668,
+        "max_s": 0.7499,
+        "peak_rss_mib": 121.5,
+        "mib_per_s": 594.2
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 1.5225,
+        "min_s": 1.4214,
+        "max_s": 1.5381,
+        "peak_rss_mib": 81.5,
+        "mib_per_s": 262.7
+       }
+      }
+     },
+     {
+      "label": "-N 8, 0 ms latency",
+      "results": {
+       "yt-dlp-rs": {
+        "runs": 5,
+        "median_s": 0.6897,
+        "min_s": 0.6721,
+        "max_s": 0.7031,
+        "peak_rss_mib": 129.8,
+        "mib_per_s": 580.0
+       },
+       "upstream": {
+        "runs": 5,
+        "median_s": 1.5201,
+        "min_s": 1.3921,
+        "max_s": 1.5774,
+        "peak_rss_mib": 86.2,
+        "mib_per_s": 263.1
+       }
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

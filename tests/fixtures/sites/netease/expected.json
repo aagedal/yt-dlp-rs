@@ -64,6 +64,23 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "http://music.163.com/#/djradio?id=42",
+   "args": [
+    "--lazy-playlist",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|2489886137|3",
+    "2|2489904058|3",
+    "3|2489904057|3"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }
