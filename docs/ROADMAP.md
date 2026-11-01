@@ -294,8 +294,9 @@ is implied by this initial adaptation.
 1.0 is a stability promise, not an extractor count. Upstream-compatible CLI
 behavior, the core download pipeline and a tier of actively watched sites must
 hold up on real input; the rest of the extractors stay best effort. The main
-consumer (Aagedal Media Converter) runs the binary as a subprocess, so the CLI
-and its output are the primary contract; the Rust library is secondary.
+consumer (Aagedal Media Converter) runs the binary as a subprocess and will
+keep doing so, so the CLI and its output are the primary contract; the Rust
+library is secondary. Media Converter can change how it calls the CLI.
 
 Work in this order; each step lands with deterministic tests like any other change.
 
@@ -317,9 +318,14 @@ Work in this order; each step lands with deterministic tests like any other chan
    upstream, and reports breakage. It never gates merges.
 3. **Interruptible transfers.** Stop/Cancel and SIGINT/SIGTERM interrupt
    blocking connects and reads promptly instead of waiting for the socket timeout.
-4. **CLI output contract.** Document and test the lines consumers parse
-   (`[download]` progress, `Destination:`, `has already been downloaded`,
-   `--print` stages, `--progress-template`, exit codes) as stable.
+4. **CLI output contract.** A machine-readable interface rather than frozen
+   human-readable lines: `--progress-template` with JSON fields
+   (`%(progress)j` and friends), `--print` stage templates (`before_dl`,
+   `after_move:filepath`), exit codes, and the stop/cancel signals with
+   `--keep-partial-on-stop`. Both use upstream's own options, so a consumer
+   works the same against yt-dlp. Document these as stable, test them, and
+   move Media Converter off regex-parsing `[download]` lines. The human
+   output keeps following upstream but is not a contract.
 5. **Benchmarks.** A local-server harness comparing startup, extraction from
    saved fixtures, HLS/DASH throughput with `-N 1/4/8` and peak memory with
    upstream. Then lazy playlist extraction for item selection and a reviewed
