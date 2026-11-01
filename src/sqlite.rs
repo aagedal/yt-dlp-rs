@@ -350,6 +350,10 @@ fn columns(sql: &str) -> (Vec<String>, Option<usize>) {
     let (Some(open), Some(close)) = (sql.find('('), sql.rfind(')')) else {
         return (Vec::new(), None);
     };
+    // A corrupt schema can close before it opens.
+    if close < open {
+        return (Vec::new(), None);
+    }
     let mut parts = Vec::new();
     let mut depth = 0;
     let mut current = String::new();
@@ -424,5 +428,20 @@ mod tests {
         );
         assert_eq!(names, ["id", "name", "value"]);
         assert_eq!(alias, Some(0));
+    }
+
+    #[test]
+    fn corrupt_definitions_have_no_columns() {
+        // Found by the `sqlite` fuzz target: `)` before `(` in a damaged schema.
+        assert_eq!(columns("CREATE TABLE t) x (a"), (Vec::new(), None));
+    }
+
+    #[test]
+    fn fuzzed_databases_fail_without_panicking() {
+        let bytes = include_bytes!("../tests/fixtures/fuzz/sqlite-reversed-schema.sqlite");
+        let db = Database::from_bytes(bytes.to_vec()).unwrap();
+        for name in ["cookies", "moz_cookies", "meta"] {
+            let _ = db.table(name);
+        }
     }
 }

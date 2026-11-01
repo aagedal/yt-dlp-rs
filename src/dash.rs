@@ -18,6 +18,9 @@ pub(crate) fn set_dynamic_mpd(process: bool) {
 
 /// Segments per representation (a 2 s-segment timeline covers 11 days).
 const LIMIT: usize = 500_000;
+/// Fragment URL bytes per manifest: [`LIMIT`] fragments may still carry
+/// long signed URLs (about 500 bytes each), but not up to 16 KiB each.
+const URL_BYTES: usize = 256 << 20;
 const NS: u128 = 1_000_000_000;
 fn bad(message: impl Into<String>) -> Error {
     Error::UnsupportedManifest(message.into())
@@ -619,7 +622,9 @@ fn dynamic_times(address: &Address, span: Span) -> Result<Vec<(u64, u64, u64)>> 
 
 /// A representation's fragments (an initialization fragment first), and
 /// upstream's `sum(frag['duration'] for frag in r['fragments'])` over its
-/// media fragments when every one has a duration (`None` for none).
+/// media fragments when every one has a duration (`None` for none). More
+/// fragments or URL bytes than `budget` allows fail as soon as they are
+/// known, before the rest are built.
 fn plans(
     address: &Address,
     base: &Url,
@@ -627,7 +632,24 @@ fn plans(
     span: Span,
     id: Option<&str>,
     bandwidth: Option<u64>,
+    budget: Budget,
 ) -> Result<(Vec<Fragment>, Option<f64>)> {
+    let over_budget = |count: usize| {
+        if count > budget.fragments {
+            Err(bad("DASH total fragment limit exceeded"))
+        } else {
+            Ok(())
+        }
+    };
+    let mut url_bytes = 0usize;
+    let mut push = |fragments: &mut Vec<Fragment>, fragment: Fragment| {
+        url_bytes += fragment.url.as_str().len();
+        if url_bytes > budget.url_bytes {
+            return Err(bad("DASH total fragment URL size limit exceeded"));
+        }
+        fragments.push(fragment);
+        Ok(())
+    };
     if !explicit_base
         && (address
             .initialization
@@ -679,14 +701,19 @@ fn plans(
             ));
         }
         let schedule = times(address, span)?;
+        over_budget(schedule.len())?;
+        fragments.reserve_exact(schedule.len() + 1);
         if let Some(initialization) = address.attrs.get("initialization") {
             if address.initialization.is_some() {
                 return Err(bad("ambiguous DASH initialization"));
             }
             let init = expand_template(initialization, id, bandwidth, 0, 0, true)?;
-            fragments.push(fragment(base, Some(&init), None, None)?);
+            push(&mut fragments, fragment(base, Some(&init), None, None)?)?;
         } else if let Some((source, range)) = &address.initialization {
-            fragments.push(fragment(base, source.as_deref(), range.as_deref(), None)?);
+            push(
+                &mut fragments,
+                fragment(base, source.as_deref(), range.as_deref(), None)?,
+            )?;
         }
         media_start = fragments.len();
         // Like upstream, initialization is optional; each fragment's duration
@@ -694,12 +721,10 @@ fn plans(
         let scale = address.integer("timescale", 1, true)? as f64;
         for (number, time, length) in schedule {
             let media = expand(media, id, bandwidth, number, time)?;
-            fragments.push(fragment(
-                base,
-                Some(&media),
-                None,
-                Some(length as f64 / scale),
-            )?);
+            push(
+                &mut fragments,
+                fragment(base, Some(&media), None, Some(length as f64 / scale))?,
+            )?;
         }
     } else {
         address.integer("timescale", 1, true)?;
@@ -710,7 +735,10 @@ fn plans(
         }
         // Like upstream, initialization is optional.
         if let Some((source, bytes)) = &address.initialization {
-            fragments.push(fragment(base, source.as_deref(), bytes.as_deref(), None)?);
+            push(
+                &mut fragments,
+                fragment(base, source.as_deref(), bytes.as_deref(), None)?,
+            )?;
         }
         media_start = fragments.len();
         let mut segments = address
@@ -750,6 +778,8 @@ fn plans(
         {
             positive(duration)?;
         }
+        over_budget(segments.len())?;
+        fragments.reserve_exact(segments.len());
         // Upstream: timeline durations, else the constant `duration`.
         let scale = address.integer("timescale", 1, true)? as f64;
         let constant = address
@@ -762,17 +792,13 @@ fn plans(
                 Some(timeline) => Some(timeline[index].2 as f64 / scale),
                 None => constant,
             };
-            fragments.push(fragment(
-                base,
-                source.as_deref(),
-                bytes.as_deref(),
-                duration,
-            )?);
+            push(
+                &mut fragments,
+                fragment(base, source.as_deref(), bytes.as_deref(), duration)?,
+            )?;
         }
     }
-    if fragments.len() > LIMIT {
-        return Err(bad("DASH fragment limit exceeded"));
-    }
+    over_budget(fragments.len())?;
     // `try_get(..., float)`: a missing duration (`KeyError`/`TypeError`) or
     // no media fragments (`sum` is the integer 0) give `None`.
     let media = &fragments[media_start..];
@@ -864,9 +890,40 @@ struct Periods {
     /// an unfragmented representation's own resource), across Periods.
     stream_numbers: BTreeMap<String, usize>,
     total_fragments: usize,
+    total_url_bytes: usize,
+}
+
+/// What is left of a manifest's [`LIMIT`] and [`URL_BYTES`].
+#[derive(Clone, Copy)]
+struct Budget {
+    fragments: usize,
+    url_bytes: usize,
 }
 
 impl Periods {
+    /// What the manifest may still plan.
+    fn budget(&self) -> Budget {
+        Budget {
+            fragments: LIMIT.saturating_sub(self.total_fragments),
+            url_bytes: URL_BYTES.saturating_sub(self.total_url_bytes),
+        }
+    }
+
+    fn count(&mut self, fragments: &[Fragment]) -> Result<()> {
+        self.total_fragments = self
+            .total_fragments
+            .checked_add(fragments.len())
+            .filter(|count| *count <= LIMIT)
+            .ok_or_else(|| bad("DASH total fragment limit exceeded"))?;
+        let bytes: usize = fragments.iter().map(|f| f.url.as_str().len()).sum();
+        self.total_url_bytes = self
+            .total_url_bytes
+            .checked_add(bytes)
+            .filter(|total| *total <= URL_BYTES)
+            .ok_or_else(|| bad("DASH total fragment URL size limit exceeded"))?;
+        Ok(())
+    }
+
     /// Upstream `_merge_mpd_periods`: a format equal to an earlier one but
     /// for `format_id`, `fragments` and `manifest_stream_number` appends its
     /// fragments to that one (a repeated direct resource adds nothing).
@@ -969,6 +1026,7 @@ impl Periods {
                                 span,
                                 representation.attribute("id"),
                                 bandwidth,
+                                self.budget(),
                             )
                             .ok()
                             .and_then(|(_, seconds)| seconds);
@@ -1029,7 +1087,9 @@ impl Periods {
                             span,
                             representation.attribute("id"),
                             bandwidth,
+                            self.budget(),
                         )?;
+                        self.count(&fragments)?;
                         infer(&mut span, seconds);
                         let mut extra = text_extra(
                             manifest,
@@ -1086,6 +1146,7 @@ impl Periods {
                     span,
                     representation.attribute("id"),
                     bandwidth,
+                    self.budget(),
                 )?;
                 infer(&mut span, seconds);
                 // "Assuming direct URL to unfragmented media": upstream's `url`
@@ -1106,11 +1167,7 @@ impl Periods {
                     *counter += 1;
                     *counter - 1
                 };
-                self.total_fragments = self
-                    .total_fragments
-                    .checked_add(fragments.len())
-                    .filter(|count| *count <= LIMIT)
-                    .ok_or_else(|| bad("DASH total fragment limit exceeded"))?;
+                self.count(&fragments)?;
                 // Upstream: the representation ID, else the content type.
                 let format_id = match representation.attribute("id") {
                     Some(id) => id.to_owned(),
@@ -1410,6 +1467,58 @@ mod tests {
             "<MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" type=\"static\" mediaPresentationDuration=\"PT2.5S\"><Period>{body}</Period></MPD>"
         )
     }
+    #[test]
+    fn fragment_budget_spans_representations_and_fails_before_building() {
+        // Found by the `dash` fuzz target: 300000 fragments each are within
+        // the per-representation limit, but not together.
+        let set = |id: &str| {
+            format!(
+                "<AdaptationSet mimeType=\"audio/mp4\"><SegmentTemplate timescale=\"1\" duration=\"1\" initialization=\"i.mp4\" media=\"$Number$.m4s\"/><Representation id=\"{id}\" bandwidth=\"1\"/></AdaptationSet>"
+            )
+        };
+        let long = |body: &str| wrap(body).replace("PT2.5S", "PT299999S");
+        let one = parse_manifest(&long(&set("a")), &manifest()).unwrap();
+        assert_eq!(one.formats[0].fragments.len(), 300_000);
+        let error = parse_manifest(&long(&(set("a") + &set("b"))), &manifest())
+            .err()
+            .unwrap();
+        assert!(
+            error
+                .to_string()
+                .contains("DASH total fragment limit exceeded")
+        );
+        let text = "<AdaptationSet contentType=\"text\" mimeType=\"application/mp4\" lang=\"en\"><SegmentTemplate timescale=\"1\" duration=\"1\" initialization=\"t.mp4\" media=\"t$Number$.m4s\"/><Representation id=\"t\" bandwidth=\"1\" codecs=\"stpp\"/></AdaptationSet>";
+        let error = parse_manifest(&long(&(set("a") + text)), &manifest())
+            .err()
+            .unwrap();
+        assert!(
+            error
+                .to_string()
+                .contains("DASH total fragment limit exceeded")
+        );
+    }
+
+    #[test]
+    fn fragment_url_bytes_are_limited_per_manifest() {
+        // Found by the `dash` fuzz target: fragment count alone does not
+        // bound memory when every URL is long.
+        let long = |count: u32| {
+            wrap(&format!(
+                "<AdaptationSet mimeType=\"audio/mp4\"><SegmentTemplate timescale=\"1\" duration=\"1\" initialization=\"i.mp4\" media=\"{}/$Number$.m4s\"/><Representation id=\"a\" bandwidth=\"1\"/></AdaptationSet>",
+                "x".repeat(15_000)
+            ))
+            .replace("PT2.5S", &format!("PT{count}S"))
+        };
+        let fits = parse_manifest(&long(1_000), &manifest()).unwrap();
+        assert_eq!(fits.formats[0].fragments.len(), 1_001);
+        let error = parse_manifest(&long(20_000), &manifest()).err().unwrap();
+        assert!(
+            error
+                .to_string()
+                .contains("DASH total fragment URL size limit exceeded")
+        );
+    }
+
     #[test]
     fn direct_text_representations_become_subtitles() {
         let text = wrap(&format!(

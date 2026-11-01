@@ -244,6 +244,8 @@ mod jixie;
 mod joj;
 mod jove;
 mod json_ld;
+#[cfg(fuzzing)]
+pub(crate) use json_ld::yield_json_ld;
 mod jstream;
 mod jwplatform;
 mod jwplayer;

@@ -6394,7 +6394,10 @@ resource BaseURLs may supply omitted range-resource URIs. Fragmented MP4/WebM
 plans require initialization; an explicit whole-resource non-directory BaseURL
 can instead form a single-fragment representation. Resolved URLs are limited to
 16 KiB, representations to 256 per Period, merged formats to 256 and aggregate
-fragments across all Periods (including initialization) to 500000.
+fragments across all Periods (including initialization and segmented text) to
+500000, and their URLs to 256 MiB together; a representation that would pass
+either limit fails while it is planned, so a small manifest cannot allocate
+more than that.
 
 Periods are parsed in order and combined like upstream `_merge_mpd_periods`: a
 format equal to an earlier one except for `format_id`, `fragments` and

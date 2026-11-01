@@ -27,6 +27,9 @@ mod fixup;
 pub mod format_select;
 pub mod format_sort;
 mod fragment;
+#[cfg(fuzzing)]
+#[doc(hidden)]
+pub mod fuzz;
 pub mod geo;
 pub mod getpass;
 mod growing;

@@ -1,0 +1,124 @@
+[package]
+name = "yt-dlp-rs-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+yt-dlp-rs = { path = ".." }
+
+# Keep the fuzz crate out of the main workspace.
+[workspace]
+members = ["."]
+
+[profile.release]
+debug = 1
+
+[[bin]]
+name = "hls"
+path = "fuzz_targets/hls.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "dash"
+path = "fuzz_targets/dash.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "media_index"
+path = "fuzz_targets/media_index.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "js_to_json"
+path = "fuzz_targets/js_to_json.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "devalue"
+path = "fuzz_targets/devalue.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "ttml"
+path = "fuzz_targets/ttml.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "cookie_file"
+path = "fuzz_targets/cookie_file.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "sqlite"
+path = "fuzz_targets/sqlite.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "f4m"
+path = "fuzz_targets/f4m.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "ism"
+path = "fuzz_targets/ism.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "info_json"
+path = "fuzz_targets/info_json.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "netrc"
+path = "fuzz_targets/netrc.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "html"
+path = "fuzz_targets/html.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "dates"
+path = "fuzz_targets/dates.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "cover_art"
+path = "fuzz_targets/cover_art.rs"
+test = false
+doc = false
+bench = false
