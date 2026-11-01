@@ -15,8 +15,11 @@ use url::Url;
 /// (`live_start_index` -3).
 const LIVE_EDGE_SEGMENTS: usize = 3;
 /// Consecutive reloads without a new segment before the stream is
-/// considered ended.
-const MAX_STALE_RELOADS: u32 = 10;
+/// considered ended (FFmpeg's `m3u8_hold_counters` default).
+const MAX_STALE_RELOADS: u32 = 1000;
+/// Consecutive failed reloads (network or parse errors) tolerated before the
+/// recording fails, so one bad response does not end it.
+const MAX_FAILED_RELOADS: u32 = 10;
 
 pub(crate) struct HlsLive {
     client: Client,
@@ -30,6 +33,9 @@ pub(crate) struct HlsLive {
     pending: VecDeque<Fragment>,
     ended: bool,
     stale: u32,
+    failed: u32,
+    /// The playlist's last target duration, the delay after a failed reload.
+    target: Duration,
     next_poll: Instant,
 }
 
@@ -45,6 +51,8 @@ impl HlsLive {
             pending: VecDeque::new(),
             ended: false,
             stale: 0,
+            failed: 0,
+            target: Duration::from_secs(1),
             next_poll: Instant::now(),
         }
     }
@@ -52,9 +60,28 @@ impl HlsLive {
     /// Reload the playlist and queue its new segments; the delay before the
     /// next reload.
     fn reload(&mut self) -> Result<Duration> {
-        let response =
-            crate::extractor::direct::probe(&self.client, &self.url, self.referer.as_ref())?;
-        let (_, window) = crate::extractor::hls::read_window(response)?;
+        let window = match crate::extractor::direct::probe(
+            &self.client,
+            &self.url,
+            self.referer.as_ref(),
+        )
+        .and_then(crate::extractor::hls::read_window)
+        {
+            Ok((_, window)) => {
+                self.failed = 0;
+                window
+            }
+            Err(Error::DownloadCancelled) => return Err(Error::DownloadCancelled),
+            Err(error) if self.failed < MAX_FAILED_RELOADS => {
+                self.failed += 1;
+                crate::screen::warning(&format!(
+                    "[hlsnative] Reloading the live playlist failed ({error}); retrying ({}/{MAX_FAILED_RELOADS})",
+                    self.failed
+                ));
+                return Ok(self.target);
+            }
+            Err(error) => return Err(error),
+        };
         match window.native {
             Native::Supported => {}
             Native::Drm => {
@@ -81,7 +108,7 @@ impl HlsLive {
         }
         let segments: Vec<Fragment> = fragments.collect();
         let first = window.first_sequence;
-        let end = first + segments.len() as u64;
+        let end = first.saturating_add(segments.len() as u64);
         let start = match self.next_sequence {
             Some(next) => {
                 if next < first {
@@ -92,14 +119,17 @@ impl HlsLive {
                     ));
                 }
                 // A media sequence that restarted (a new stream) resumes
-                // from its start.
-                if next > end && end > 0 {
+                // from its start. A playlist only slightly behind is a
+                // lagging copy (another CDN edge), not a restart.
+                if next > end && next - end > segments.len() as u64 {
                     first
                 } else {
                     next.max(first)
                 }
             }
-            None if self.from_start => first,
+            // A playlist that already ended records in full, as FFmpeg
+            // applies `live_start_index` only to unfinished ones.
+            None if self.from_start || window.endlist => first,
             None => end.saturating_sub(LIVE_EDGE_SEGMENTS as u64).max(first),
         };
         let fresh: Vec<Fragment> = segments
@@ -109,6 +139,7 @@ impl HlsLive {
             .map(|(_, fragment)| fragment)
             .collect();
         let target = Duration::from_secs(window.target_duration.max(1));
+        self.target = target;
         let delay = if fresh.is_empty() {
             self.stale += 1;
             target / 2
