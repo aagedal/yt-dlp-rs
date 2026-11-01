@@ -13,5 +13,7 @@
  {"url": "https://www.bitchute.com/playlist/pl1", "args": ["--flat-playlist", "-I", "2:", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
  {"url": "https://www.bitchute.com/channel/empty/", "args": ["-J", "--flat-playlist"]},
  {"url": "https://www.bitchute.com/channel/gone/", "args": ["-J", "--flat-playlist"]},
- {"url": "https://www.bitchute.com/channel/testchan/", "args": ["--flat-playlist", "-I", "26,2"]}
+ {"url": "https://www.bitchute.com/channel/testchan/", "args": ["--flat-playlist", "-I", "26,2"]},
+ {"url": "https://www.bitchute.com/channel/testchan/", "args": ["--lazy-playlist", "--max-downloads", "1", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
+ {"url": "https://www.bitchute.com/channel/testchan/", "args": ["--lazy-playlist", "--flat-playlist", "-I", "24:26"]}
 ]

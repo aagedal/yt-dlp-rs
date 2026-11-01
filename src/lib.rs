@@ -111,7 +111,7 @@ pub use info_json::{
 };
 pub use match_filter::{EntrySelection, MatchFilters, MatchOutcome};
 pub use output::{render_automatic_captions, render_subtitles};
-pub use playlist::{PlaylistCounts, PlaylistSelection};
+pub use playlist::{EntrySource, LazySelection, PlaylistCounts, PlaylistSelection};
 pub use postprocess::{InfoJsonEmbed, ModifyChapters, PostprocessOptions, ProcessedDownload};
 pub use retry::{RetrySleep, SleepExpression, upstream_error_text};
 pub use subtitle_convert::{ConvertedSubtitle, SubtitleConversion};
@@ -3597,6 +3597,21 @@ impl YoutubeDl {
             }
         }
         Ok(())
+    }
+
+    /// `--lazy-playlist`'s read of entry `position` (see
+    /// [`LazySelection`]): fetch the pending entries up to it, or only its
+    /// page for a random-access paged list. Whether the entry exists.
+    pub fn fetch_position(&self, playlist: &mut PlaylistInfo, position: usize) -> Result<bool> {
+        if let Some(pending) = &mut playlist.pending {
+            if pending.state["random_access"] == true {
+                pending.request_position(position);
+                self.fetch_pending(playlist, Some(position + 1))?;
+            } else if position >= playlist.entries.len() {
+                self.fetch_pending(playlist, Some(position + 1))?;
+            }
+        }
+        Ok(position < playlist.entries.len())
     }
 
     fn fetch_all_pending(&self, result: &mut ExtractResult) -> Result<()> {

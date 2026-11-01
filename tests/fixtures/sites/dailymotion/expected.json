@@ -471,6 +471,64 @@
     "ERROR: Could not fetch search data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
    ],
    "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/playlist/x6hynp",
+   "args": [
+    "--lazy-playlist",
+    "--flat-playlist",
+    "-I",
+    "99:"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[dailymotion:playlist] Extracting URL: https://www.dailymotion.com/playlist/x6hynp",
+    "[download] Downloading playlist: x6hynp",
+    "[dailymotion:playlist] Playlist x6hynp: Downloading N/A items",
+    "[dailymotion:playlist] Downloading Access Token",
+    "[dailymotion:playlist] x6hynp: Downloading page 1",
+    "[download] Downloading item 1 of N/A",
+    "[download] Downloading item 2 of N/A",
+    "[dailymotion:playlist] x6hynp: Downloading page 2",
+    "[download] Downloading item 3 of N/A",
+    "[download] Downloading item 4 of N/A",
+    "[download] Finished downloading playlist: x6hynp"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/playlist/x6hynp",
+   "args": [
+    "--lazy-playlist",
+    "--flat-playlist",
+    "-I",
+    "2",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s|%(n_entries)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2|x7p002|NA|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/playlist/x6hynp",
+   "args": [
+    "--lazy-playlist",
+    "-J",
+    "--flat-playlist",
+    "-I",
+    "101:"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"x6hynp\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Dailymotion\", \"id\": \"x7p101\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p101\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p102\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p102\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.dailymotion.com/playlist/x6hynp\", \"original_url\": \"https://www.dailymotion.com/playlist/x6hynp\", \"webpage_url_basename\": \"x6hynp\", \"webpage_url_domain\": \"dailymotion.com\", \"extractor\": \"dailymotion:playlist\", \"extractor_key\": \"DailymotionPlaylist\", \"release_year\": null, \"requested_entries\": [101, 102], \"playlist_count\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

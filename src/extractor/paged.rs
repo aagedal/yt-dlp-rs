@@ -179,6 +179,10 @@ pub(crate) fn fetch_requested(
             None => vec!["all".into()],
         },
     };
+    let lazy = state
+        .as_object_mut()
+        .and_then(|state| state.shift_remove("lazy"))
+        .is_some();
     let counts = state["pages"]
         .as_array()
         .map(|pages| {
@@ -218,7 +222,7 @@ pub(crate) fn fetch_requested(
             }
         }
     }
-    if exhausted {
+    if exhausted && !lazy {
         paged.read_all()?;
     }
     // A failed page ends the list, but its full count is known only once a

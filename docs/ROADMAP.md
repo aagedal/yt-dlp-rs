@@ -360,6 +360,19 @@ Work in this order; each step lands with deterministic tests like any other chan
    saved fixtures, HLS/DASH throughput with `-N 1/4/8` and peak memory with
    upstream. Then lazy playlist extraction for item selection and a reviewed
    default for `-N`.
+   Status (2026-11-01): `tools/benchmark.py` measures both programs on local
+   servers (fixture proxy, generated HLS/DASH with and without 50 ms
+   per-request latency); results and their limits are in `docs/BENCHMARKS.md`.
+   On an M5 Pro the port starts and extracts fixtures 6–18× faster; with
+   latency, `-N 4`/`-N 8` cut download time 3.5×/6× for both programs.
+   Peak RSS is higher than upstream's whenever all extractor URL patterns
+   are compiled (about 80 MiB), and `-N > 1` writes each fragment twice,
+   so on localhost it is slower than `-N 1`; both are follow-ups. `-N`
+   stays 1 like upstream. Item selection already read paged playlists
+   lazily; `--lazy-playlist` now reads each entry (and its page) only when
+   the previous one is processed, like upstream, so `--max-downloads` stops
+   page fetches (`tests/lazy_playlist.rs`, new site fixture cases). Not
+   matched yet: some lazy `-J` entry dicts.
 6. **Platform parity.** Impersonation in the Windows release (or a documented
    tier-2 limitation), and test runs on real Windows hardware.
 7. **Core gaps.** Impersonation for media transfers, environment proxy

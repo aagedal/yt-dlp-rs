@@ -145,7 +145,7 @@ print stages, exit codes, signals) is specified in
 | `--flat-playlist`, `--no-flat-playlist` | Like upstream `extract_flat='in_playlist'`: URL-result entries (`url`/`url_transparent`, which most playlist extractors return) are not extracted; `-J` holds the raw entries and forced printings (`-j`, `--print`) see them; entries a playlist extractor returns fully extracted are processed as usual. Compared with pinned upstream in the site fixtures |
 | `--skip-playlist-after-errors N` | Upstream `__process_playlist` `failures`: after N entries fail extraction/selection, `ERROR: Skipping the remaining entries in playlist "TITLE" since N items failed extraction`; 0 is unlimited |
 | `--playlist-random` | Upstream `random.shuffle` of the selected entries (clock-seeded; `playlist_autonumber` follows the new order); `--playlist-reverse is ignored since --playlist-random was given` |
-| `--lazy-playlist`, `--no-lazy-playlist` | Upstream lazy semantics on the eagerly extracted playlist: entries keep their order, `n_entries` is unknown (`Downloading N/A items`, `item N of N/A`, `NA` in templates), `-J` has no `requested_entries`, and reverse/random are ignored with upstream's `is ignored since --lazy-playlist was given` warnings (printed after date conflicts, unlike upstream's order) |
+| `--lazy-playlist`, `--no-lazy-playlist` | Upstream's lazy `PlaylistEntries`: each requested entry is read only after the previous one was processed, so a paged playlist's next page is fetched when its first requested entry is reached and never after `--max-downloads` or a break ends the playlist (`tests/lazy_playlist.rs`). Entries keep their order, `n_entries` is unknown (`Downloading N/A items`, `item N of N/A`, `NA` in templates), `playlist_count` is known only for a list (not a generator or paged list not read yet), indices are not zero-padded (`__last_playlist_index` 0), `-J` keeps `requested_entries` unless the count is known and every entry was requested, and reverse/random are ignored with upstream's `is ignored since --lazy-playlist was given` warnings (printed after date conflicts, unlike upstream's order). Entries are read before processing (in order, fetching pages in between) when the whole playlist is needed first: `-J`, playlist-stage `--print`/`--exec`/`--parse-metadata`, playlist info JSON or description files, `--concat-playlist always`, `multi_video` results and nested playlists. Not matched: some `-J` entry dicts' key sets with `--lazy-playlist` (such as a `null` `n_entries`), and a few extractors whose result is marked a list or a generator unlike upstream |
 | `--download-archive FILE` | Read recorded extractor/video IDs, skip before selection (`[download] ID: TITLE has already been recorded in the archive`), record after successful download/merge publication or an already-downloaded file; no writes in metadata/listing/simulation unless `--force-write-archive` |
 | `--no-download-archive` | Disable the archive; last of it and `--download-archive` wins |
 | `--break-on-existing`, `--no-break-on-existing` | Stop at the first archived video (earlier playlist entries are still processed), print upstream's cancellation message and exit 101 |
@@ -6703,8 +6703,8 @@ unavailable-video reloads, with and without the compatibility options;
 `youtubetab` arguments, cookies with and without the auth check, approximate
 dates) are compared with pinned upstream output.
 
-With `--lazy-playlist`, the requested pages are still fetched before the
-first entry is processed. An inline watch-page playlist without a playlist page
+With `--lazy-playlist`, each page is fetched when its first requested entry
+is reached (see the `--lazy-playlist` row). An inline watch-page playlist without a playlist page
 (mixes, `RD…`) is `_extract_inline_playlist`'s: the page's videos, then `next`
 API pages (`ID page N`) as needed until a page adds no new video; the fixture
 `tests/fixtures/sites/youtube-mix/` covers it. YouTube Music URLs are handled

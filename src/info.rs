@@ -187,6 +187,15 @@ impl PendingEntries {
             self.state["requests"] = selection.entry_requests().into();
         }
     }
+
+    /// One lazily read entry of a random-access paged list: its page only.
+    /// Reading past the end does not read every page for the full count
+    /// (`PlaylistEntries` only marks itself exhausted).
+    pub(crate) fn request_position(&mut self, position: usize) {
+        self.state["requests"] =
+            serde_json::json!([{"start": position, "stop": position + 1, "step": 1}]);
+        self.state["lazy"] = true.into();
+    }
 }
 
 /// A list field's `None` (`chapters: null`) as an empty list; the `null`

@@ -245,6 +245,46 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "https://www.bitchute.com/channel/testchan/",
+   "args": [
+    "--lazy-playlist",
+    "--max-downloads",
+    "1",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 101,
+   "stdout": [
+    "1|UGlrF9o9b-Q|27"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bitchute.com/channel/testchan/",
+   "args": [
+    "--lazy-playlist",
+    "--flat-playlist",
+    "-I",
+    "24:26"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[BitChuteChannel] Extracting URL: https://www.bitchute.com/channel/testchan/",
+    "[BitChuteChannel] testchan: Downloading webpage",
+    "[download] Downloading playlist: Test Channel",
+    "[BitChuteChannel] Playlist Test Channel: Downloading N/A items of 27",
+    "[BitChuteChannel] testchan: Downloading page 0",
+    "[download] Downloading item 1 of N/A",
+    "[download] Downloading item 2 of N/A",
+    "[BitChuteChannel] testchan: Downloading page 1",
+    "[download] Downloading item 3 of N/A",
+    "[download] Finished downloading playlist: Test Channel"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

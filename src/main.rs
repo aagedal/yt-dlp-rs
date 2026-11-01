@@ -1286,14 +1286,14 @@ fn single_json(
                 .iter()
                 .map(|info| info.playlist_index)
                 .collect();
-            // Lazy playlists have no `requested_entries` upstream, and full
-            // playlists drop it ("Do not set for full playlist").
+            // Full playlists drop `requested_entries` ("Do not set for full
+            // playlist"); a lazy one's count is unknown, so it keeps them.
             let full = counts.is_some_and(|counts| {
                 counts
                     .playlist_count
                     .is_some_and(|count| indices.iter().copied().eq((1..=count).map(Some)))
             });
-            if !full && counts.is_none_or(|counts| counts.n_entries.is_some()) {
+            if !full {
                 object.insert("requested_entries".into(), serde_json::to_value(indices)?);
             }
             object.insert("entries".into(), entries.unwrap_or_default());
@@ -5109,6 +5109,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // checkpoint, keeping `.part` files and completed processing stages
     // (`cli` reports it). The handler stays until the process exits.
     SIGNALS.get_or_init(yt_dlp_rs::SignalInterrupt::install);
+    // `--lazy-playlist` reads a playlist's entries while processing them,
+    // unless the whole playlist is needed first (its JSON, playlist files,
+    // stages and metadata actions); then they are all read before.
+    let lazy_reads = args.lazy_playlist
+        && !args.dump_single_json
+        && !prints_stage(Stage::Playlist)
+        && !exec.has(Stage::Playlist)
+        && !metadata_actions.has("playlist")
+        && !(playlist_files && (writes_info_json || writes_description))
+        && args.concat_playlist != "always";
     'inputs: while let Some(input) = inputs.pop_front() {
         if yt_dlp_rs::SignalInterrupt::interrupted() {
             break;
@@ -5132,7 +5142,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             run.extraction_failures
                         );
                         failed = true;
-                        run.entries = Vec::new().into_iter().enumerate();
+                        run.entries = RunEntries::default();
                         run.skipped.clear();
                     }
                 }
@@ -5227,6 +5237,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 let mut pending: Option<Cancel> = None;
                 let mut skipped = std::collections::VecDeque::new();
                 let mut header_printed = false;
+                let mut lazy_entries = None;
                 let extracted =
                     (|| -> yt_dlp_rs::Result<Option<(ExtractResult, Option<PlaylistCounts>)>> {
                         let mut result = if let Some(playlist) = nested {
@@ -5294,6 +5305,51 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         let stops =
                             (args.break_on_existing && archive.is_some()) || match_filters.breaks();
                         let stop = stops.then_some(&stop as &dyn Fn(&yt_dlp_rs::VideoInfo) -> bool);
+                        // `--lazy-playlist`: no selected count, and entries are
+                        // read one at a time (in the entry loop below, unless
+                        // the whole playlist is needed before its entries).
+                        if args.lazy_playlist
+                            && let ExtractResult::Playlist(playlist) = &mut result
+                            && playlist.nested.is_empty()
+                        {
+                            let mut lazy = LazyEntries::new(playlist, &playlist_selection);
+                            let counts = Some(lazy.selection.counts());
+                            if lazy_reads && playlist.result_type() != "multi_video" {
+                                lazy_entries = Some(lazy);
+                            } else {
+                                if lazy.playlist.pending.is_some() {
+                                    let title = [&playlist.title, &playlist.id]
+                                        .into_iter()
+                                        .find(|text| !text.is_empty())
+                                        .map_or("<Untitled>", |text| text.as_str());
+                                    screen!(
+                                        "[download] Downloading {}: {title}",
+                                        playlist.result_type()
+                                    );
+                                    header_printed = true;
+                                }
+                                while let Some(entry) = lazy.next(&downloader)? {
+                                    playlist.entries.push(entry);
+                                }
+                            }
+                            let Some(result) = select_entries(
+                                result,
+                                &EntryFilters {
+                                    archive: archive.as_ref(),
+                                    break_on_existing: args.break_on_existing,
+                                    match_filters: &match_filters,
+                                    subtitles: &subtitle_options,
+                                    write_subs,
+                                    write_auto_subs: args.write_auto_subs,
+                                },
+                                &mut pending,
+                                &mut skipped,
+                            )?
+                            else {
+                                return Ok(None);
+                            };
+                            return Ok(Some((result, counts)));
+                        }
                         if let ExtractResult::Playlist(playlist) = &mut result
                             && playlist.pending.is_some()
                         {
@@ -5329,57 +5385,22 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         if outer {
                             return Ok(Some((result, counts)));
                         }
-                        let result = if let Some(archive) = &archive {
-                            let (result, reached) = filter_archived(
-                                result,
-                                archive,
-                                args.break_on_existing,
-                                &mut skipped,
-                            )?;
-                            if reached {
-                                pending = Some(Cancel::Existing);
-                            }
-                            let Some(result) = result else {
-                                return Ok(None);
-                            };
-                            result
-                        } else {
-                            result
-                        };
-                        // Upstream `_match_entry` before selection: format fields are incomplete.
-                        let Some(mut result) =
-                            prefilter(result, &match_filters, &mut pending, &mut skipped)?
+                        let Some(result) = select_entries(
+                            result,
+                            &EntryFilters {
+                                archive: archive.as_ref(),
+                                break_on_existing: args.break_on_existing,
+                                match_filters: &match_filters,
+                                subtitles: &subtitle_options,
+                                write_subs,
+                                write_auto_subs: args.write_auto_subs,
+                            },
+                            &mut pending,
+                            &mut skipped,
+                        )?
                         else {
                             return Ok(None);
                         };
-                        if write_subs || args.write_auto_subs {
-                            let select =
-                                |info: &mut yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<()> {
-                                    let selection = subtitle_options.select_sources(
-                                        &info.subtitles,
-                                        &info.automatic_captions,
-                                        write_subs,
-                                        args.write_auto_subs,
-                                    )?;
-                                    for warning in selection.warnings {
-                                        warning!("WARNING: {}: {warning}", info.id);
-                                    }
-                                    info.requested_subtitles = ((write_subs
-                                        && !info.subtitles.is_empty())
-                                        || (args.write_auto_subs
-                                            && !info.automatic_captions.is_empty()))
-                                    .then_some(selection.requested);
-                                    Ok(())
-                                };
-                            match &mut result {
-                                ExtractResult::Video(info) => select(info)?,
-                                ExtractResult::Playlist(playlist) => {
-                                    for info in &mut playlist.entries {
-                                        select(info)?;
-                                    }
-                                }
-                            }
-                        }
                         Ok(Some((result, counts)))
                     })();
                 let (mut extracted, counts) = match extracted {
@@ -5643,7 +5664,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     entry_files: vec![None; extracted.entry_count()],
                     extraction_failures: 0,
                     failed_before: failed,
-                    entries: extracted.into_entries().into_iter().enumerate(),
+                    entries: RunEntries::new(extracted.into_entries(), lazy_entries),
                     skipped,
                     nested_entry: None,
                 }
@@ -5673,7 +5694,66 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         loop {
             // Skip lines of dropped entries before this one (all of them
             // once the entries are exhausted).
-            let next = entries.next();
+            let next = loop {
+                if let Some(next) = entries.ready.pop_front() {
+                    break Some(next);
+                }
+                // `--lazy-playlist`: the next requested entry is read (and
+                // its page fetched) only now, after the earlier ones.
+                let Some(lazy) = &mut entries.lazy else {
+                    break None;
+                };
+                if pending.is_some() {
+                    entries.lazy = None;
+                    break None;
+                }
+                // Earlier entries' skip lines come before the next read.
+                while let Some((_, line)) = skipped.pop_front() {
+                    screen!("{line}");
+                }
+                let read = lazy.next(&downloader).and_then(|entry| match entry {
+                    Some(entry) => select_entries(
+                        lazy.single(entry),
+                        &EntryFilters {
+                            archive: archive.as_ref(),
+                            break_on_existing: args.break_on_existing,
+                            match_filters: &match_filters,
+                            subtitles: &subtitle_options,
+                            write_subs,
+                            write_auto_subs: args.write_auto_subs,
+                        },
+                        &mut pending,
+                        &mut skipped,
+                    )
+                    .map(Some),
+                    None => Ok(None),
+                });
+                match read {
+                    Ok(Some(selected)) => {
+                        for info in selected
+                            .map(ExtractResult::into_entries)
+                            .unwrap_or_default()
+                        {
+                            entries.push(info);
+                            entry_files.borrow_mut().push(None);
+                        }
+                    }
+                    Ok(None) => entries.lazy = None,
+                    Err(error) => {
+                        entries.lazy = None;
+                        match &error {
+                            yt_dlp_rs::Error::Reported(message) => {
+                                report_error!("ERROR: {message}")
+                            }
+                            error => report_error!("ERROR: {error}"),
+                        }
+                        failed = true;
+                        if abort_on_error {
+                            aborted = true;
+                        }
+                    }
+                }
+            };
             let before = next
                 .as_ref()
                 .and_then(|(_, info)| info.playlist_autonumber)
@@ -7885,13 +7965,105 @@ struct PlaylistRun {
     extraction_failures: usize,
     failed_before: bool,
     /// The entries not processed yet.
-    entries: std::iter::Enumerate<std::vec::IntoIter<yt_dlp_rs::VideoInfo>>,
+    entries: RunEntries,
     /// Archive/filter skip lines of entries dropped before processing, by
     /// `playlist_autonumber` (upstream prints them in its lazy entry loop).
     skipped: std::collections::VecDeque<(usize, String)>,
     /// The entry whose nested playlist is being processed, and whether it
     /// failed (until that playlist finishes).
     nested_entry: Option<(usize, bool)>,
+}
+
+/// A playlist run's entries not processed yet, by index (in `entry_files`
+/// and `json_entries`); with `--lazy-playlist`, also where the next ones
+/// are read from.
+#[derive(Default)]
+struct RunEntries {
+    ready: std::collections::VecDeque<(usize, yt_dlp_rs::VideoInfo)>,
+    lazy: Option<Box<LazyEntries>>,
+    next_index: usize,
+}
+
+impl RunEntries {
+    fn new(entries: Vec<yt_dlp_rs::VideoInfo>, lazy: Option<LazyEntries>) -> Self {
+        Self {
+            next_index: entries.len(),
+            ready: entries.into_iter().enumerate().collect(),
+            lazy: lazy.map(Box::new),
+        }
+    }
+
+    fn push(&mut self, info: yt_dlp_rs::VideoInfo) -> usize {
+        let index = self.next_index;
+        self.next_index += 1;
+        self.ready.push_back((index, info));
+        index
+    }
+}
+
+/// `--lazy-playlist` entries still to be read: the playlist's entries read
+/// so far (with its pending ones) and the selection's place in them.
+struct LazyEntries {
+    playlist: yt_dlp_rs::PlaylistInfo,
+    selection: yt_dlp_rs::LazySelection,
+}
+
+impl LazyEntries {
+    /// Take `playlist`'s entries, leaving it without any.
+    fn new(playlist: &mut yt_dlp_rs::PlaylistInfo, selection: &PlaylistSelection) -> Self {
+        let selection = selection.lazy_selection(playlist);
+        let entries = std::mem::take(&mut playlist.entries);
+        let pending = playlist.pending.take();
+        Self {
+            playlist: yt_dlp_rs::PlaylistInfo {
+                entries,
+                pending,
+                ..playlist.clone()
+            },
+            selection,
+        }
+    }
+
+    /// The next requested entry, fetching the pages up to it.
+    fn next(&mut self, downloader: &YoutubeDl) -> yt_dlp_rs::Result<Option<yt_dlp_rs::VideoInfo>> {
+        struct Source<'a> {
+            downloader: &'a YoutubeDl,
+            playlist: &'a mut yt_dlp_rs::PlaylistInfo,
+        }
+        impl yt_dlp_rs::EntrySource for Source<'_> {
+            fn has(&mut self, position: usize) -> yt_dlp_rs::Result<bool> {
+                self.downloader.fetch_position(self.playlist, position)
+            }
+            fn full_count(&mut self) -> yt_dlp_rs::Result<usize> {
+                self.downloader.fetch_pending(self.playlist, None)?;
+                Ok(self.playlist.entries.len())
+            }
+        }
+        let mut source = Source {
+            downloader,
+            playlist: &mut self.playlist,
+        };
+        let Some(position) = self.selection.next_position(&mut source)? else {
+            return Ok(None);
+        };
+        let entry = self.playlist.entries[position].clone();
+        Ok(Some(self.selection.entry(position, entry)))
+    }
+
+    /// `entry` alone in a copy of the playlist (for [`select_entries`]).
+    fn single(&self, entry: yt_dlp_rs::VideoInfo) -> ExtractResult {
+        ExtractResult::Playlist(yt_dlp_rs::PlaylistInfo {
+            entries: vec![entry],
+            nested: Vec::new(),
+            pending: None,
+            extra: self.playlist.extra.clone(),
+            title: self.playlist.title.clone(),
+            id: self.playlist.id.clone(),
+            webpage_url: self.playlist.webpage_url.clone(),
+            extractor: self.playlist.extractor.clone(),
+            extractor_key: self.playlist.extractor_key.clone(),
+        })
+    }
 }
 
 /// Hand a finished nested playlist (and its `-J` dict) to the playlist it
@@ -10972,6 +11144,69 @@ fn filter_archived(
             Ok((Some(ExtractResult::Playlist(playlist)), reached))
         }
     }
+}
+
+/// What a playlist's selected entries go through before processing.
+struct EntryFilters<'a> {
+    archive: Option<&'a DownloadArchive>,
+    break_on_existing: bool,
+    match_filters: &'a MatchFilters,
+    subtitles: &'a SubtitleOptions,
+    write_subs: bool,
+    write_auto_subs: bool,
+}
+
+/// Drop archived and filtered entries (recording their skip lines), then
+/// select the remaining entries' subtitles. `None`: nothing is processed.
+fn select_entries(
+    result: ExtractResult,
+    filters: &EntryFilters,
+    pending: &mut Option<Cancel>,
+    skipped: &mut std::collections::VecDeque<(usize, String)>,
+) -> yt_dlp_rs::Result<Option<ExtractResult>> {
+    let result = if let Some(archive) = filters.archive {
+        let (result, reached) =
+            filter_archived(result, archive, filters.break_on_existing, skipped)?;
+        if reached {
+            *pending = Some(Cancel::Existing);
+        }
+        let Some(result) = result else {
+            return Ok(None);
+        };
+        result
+    } else {
+        result
+    };
+    // Upstream `_match_entry` before selection: format fields are incomplete.
+    let Some(mut result) = prefilter(result, filters.match_filters, pending, skipped)? else {
+        return Ok(None);
+    };
+    if filters.write_subs || filters.write_auto_subs {
+        let select = |info: &mut yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<()> {
+            let selection = filters.subtitles.select_sources(
+                &info.subtitles,
+                &info.automatic_captions,
+                filters.write_subs,
+                filters.write_auto_subs,
+            )?;
+            for warning in selection.warnings {
+                warning!("WARNING: {}: {warning}", info.id);
+            }
+            info.requested_subtitles = ((filters.write_subs && !info.subtitles.is_empty())
+                || (filters.write_auto_subs && !info.automatic_captions.is_empty()))
+            .then_some(selection.requested);
+            Ok(())
+        };
+        match &mut result {
+            ExtractResult::Video(info) => select(info)?,
+            ExtractResult::Playlist(playlist) => {
+                for info in &mut playlist.entries {
+                    select(info)?;
+                }
+            }
+        }
+    }
+    Ok(Some(result))
 }
 
 /// The parser and the long `run` need more stack than the 1 MiB some

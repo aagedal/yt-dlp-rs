@@ -304,48 +304,7 @@ impl PlaylistSelection {
                 .position(|index| stop(&playlist.entries[*index]))
                 .map(|position| reading[..=position].iter().copied().collect::<HashSet<_>>())
         });
-        // Upstream's `_playlist_infodict` extras each entry gets by default.
-        let title = Some(playlist.title.clone()).filter(|title| !title.is_empty());
-        let field = |key: &str| {
-            playlist
-                .extra
-                .get(key)
-                .cloned()
-                .unwrap_or(serde_json::Value::Null)
-        };
-        // `playlist_result(entries)` without an ID (an `id: None` extra).
-        let id = if playlist.id.is_empty()
-            && playlist.extra.get("id") == Some(&serde_json::Value::Null)
-        {
-            serde_json::Value::Null
-        } else {
-            playlist.id.clone().into()
-        };
-        let defaults: [(&str, serde_json::Value); 10] = [
-            // `title or id`.
-            (
-                "playlist",
-                title.clone().map_or_else(|| id.clone(), Into::into),
-            ),
-            ("playlist_id", id),
-            ("playlist_title", title.into()),
-            ("playlist_uploader", field("uploader")),
-            ("playlist_uploader_id", field("uploader_id")),
-            ("playlist_channel", field("channel")),
-            ("playlist_channel_id", field("channel_id")),
-            (
-                "playlist_webpage_url",
-                crate::extractor::input_text(&playlist.webpage_url).into(),
-            ),
-            (
-                "webpage_url_basename",
-                crate::info::url_basename(&playlist.webpage_url).into(),
-            ),
-            (
-                "webpage_url_domain",
-                crate::info::get_domain(&playlist.webpage_url).into(),
-            ),
-        ];
+        let defaults = entry_defaults(playlist);
         // A generator's (`LazyList`) full count is unknown unless the
         // selection read past its end.
         let unexhausted = playlist
@@ -408,6 +367,208 @@ impl PlaylistSelection {
             last_playlist_index: last_index,
         })
     }
+}
+
+/// Where `--lazy-playlist` reads a playlist's entries: [`LazySelection`]
+/// asks for one position at a time (upstream's lazy `PlaylistEntries`
+/// getter), so the source fetches only the pages up to it.
+pub trait EntrySource {
+    /// Whether the entry at zero-based `position` exists, after fetching
+    /// what it needs.
+    fn has(&mut self, position: usize) -> Result<bool>;
+    /// `len(self)`: the full count, after fetching every entry.
+    fn full_count(&mut self) -> Result<usize>;
+}
+
+/// Upstream `--lazy-playlist` processing: `get_requested_items` yields one
+/// requested entry at a time (`orderedSet(lazy=True)`), each read through
+/// `PlaylistEntries.__getitem__` only when the previous one is processed,
+/// so a later page is fetched only once an entry on it is reached. The
+/// playlist's count is decided before any entry is read.
+#[derive(Debug, Clone)]
+pub struct LazySelection {
+    segments: Vec<Segment>,
+    next_segment: usize,
+    /// The current segment's `frange`: position, stop (`None`: infinite), step.
+    range: Option<(i128, Option<i128>, i128)>,
+    seen: HashSet<usize>,
+    autonumber: usize,
+    defaults: [(&'static str, serde_json::Value); 10],
+    playlist_count: Option<usize>,
+}
+
+impl PlaylistSelection {
+    /// A [`LazySelection`] of `playlist`'s entries (which may be pending).
+    pub fn lazy_selection(&self, playlist: &crate::PlaylistInfo) -> LazySelection {
+        // `get_full_count()` before iterating: a list's length, unknown for
+        // a generator or paged list (`LazyList`/`PagedList`) not read yet.
+        let generator = playlist
+            .extra
+            .get(crate::info_order::INFO_SHAPE)
+            .and_then(serde_json::Value::as_str)
+            .is_some_and(|shape| shape.ends_with(crate::info_order::GENERATOR));
+        let playlist_count = playlist
+            .extra
+            .get("playlist_count")
+            .and_then(serde_json::Value::as_u64)
+            .filter(|count| *count != 0)
+            .map(|count| count as usize)
+            .or((playlist.pending.is_none() && !generator).then(|| {
+                crate::extractor::paged::fetch_error_count(&playlist.entries)
+                    .unwrap_or(playlist.entries.len())
+            }));
+        LazySelection {
+            segments: self.segments.clone(),
+            next_segment: 0,
+            range: None,
+            seen: HashSet::new(),
+            autonumber: 0,
+            defaults: entry_defaults(playlist),
+            playlist_count,
+        }
+    }
+}
+
+impl LazySelection {
+    /// The counts upstream reports before reading entries: no selected count
+    /// (`N/A`) and no `requested_entries` (`__last_playlist_index` 0).
+    pub fn counts(&self) -> PlaylistCounts {
+        PlaylistCounts {
+            playlist_count: self.playlist_count,
+            n_entries: None,
+            last_playlist_index: 0,
+        }
+    }
+
+    /// The next requested zero-based position, reading entries from
+    /// `source` only as far as it needs; `None` once the selection ends.
+    pub fn next_position(&mut self, source: &mut dyn EntrySource) -> Result<Option<usize>> {
+        loop {
+            let Some((position, stop, step)) = self.range else {
+                let Some(segment) = self.segments.get(self.next_segment) else {
+                    return Ok(None);
+                };
+                self.next_segment += 1;
+                let step = i128::from(segment.step);
+                let start = match segment.start {
+                    None if step > 0 => 0,
+                    None => source.full_count()? as i128 - 1,
+                    Some(start) if start >= 0 => i128::from(start) - 1,
+                    Some(start) => source.full_count()? as i128 + i128::from(start),
+                };
+                // `stop += [-1, 1][step > 0]` (infinity stays infinite).
+                let shift = if step > 0 { 1 } else { -1 };
+                let stop = match segment.end {
+                    Endpoint::Open if step > 0 => None,
+                    Endpoint::Open => Some(-1),
+                    Endpoint::Infinite => None,
+                    Endpoint::Index(end) if end >= 0 => Some(i128::from(end) - 1 + shift),
+                    Endpoint::Index(end) => {
+                        Some(source.full_count()? as i128 + i128::from(end) + shift)
+                    }
+                };
+                // `frange(start, inf, step < 0)` is empty.
+                if stop.is_some() || step > 0 {
+                    self.range = Some((start, stop, step));
+                }
+                continue;
+            };
+            let within = stop.is_none_or(|stop| {
+                if step > 0 {
+                    position < stop
+                } else {
+                    position > stop
+                }
+            });
+            if !within || (step < 0 && position < 0) {
+                self.range = None;
+                continue;
+            }
+            if position < 0 {
+                // Skip the positions before the start in constant time.
+                let skip = (-position + step - 1) / step * step;
+                self.range = Some((position + skip, stop, step));
+                continue;
+            }
+            self.range = Some((position + step, stop, step));
+            let index = position as usize;
+            if !source.has(index)? {
+                // `except self.IndexError`: a forward slice ends; a backward
+                // one goes on below the end.
+                if step > 0 {
+                    self.range = None;
+                } else {
+                    let len = source.full_count()? as i128;
+                    let stride = -step;
+                    let below = position - (position - (len - 1) + stride - 1) / stride * stride;
+                    self.range = Some((below.min(position + step), stop, step));
+                }
+                continue;
+            }
+            if self.seen.insert(index) {
+                return Ok(Some(index));
+            }
+        }
+    }
+
+    /// `entry` (read at `position`) with the playlist fields upstream's
+    /// lazy loop gives it.
+    pub fn entry(&mut self, position: usize, mut entry: crate::VideoInfo) -> crate::VideoInfo {
+        self.autonumber += 1;
+        for (key, value) in self.defaults.clone() {
+            crate::info::set_default(&mut entry.extra, key, value);
+        }
+        entry.last_playlist_index = Some(0);
+        entry.playlist_index = Some(position + 1);
+        entry.playlist_autonumber = Some(self.autonumber);
+        entry.playlist_count = self.playlist_count;
+        entry.n_entries = None;
+        entry
+    }
+}
+
+/// Upstream's `_playlist_infodict` extras each entry gets by default.
+fn entry_defaults(playlist: &crate::PlaylistInfo) -> [(&'static str, serde_json::Value); 10] {
+    let title = Some(playlist.title.clone()).filter(|title| !title.is_empty());
+    let field = |key: &str| {
+        playlist
+            .extra
+            .get(key)
+            .cloned()
+            .unwrap_or(serde_json::Value::Null)
+    };
+    // `playlist_result(entries)` without an ID (an `id: None` extra).
+    let id = if playlist.id.is_empty() && playlist.extra.get("id") == Some(&serde_json::Value::Null)
+    {
+        serde_json::Value::Null
+    } else {
+        playlist.id.clone().into()
+    };
+    [
+        // `title or id`.
+        (
+            "playlist",
+            title.clone().map_or_else(|| id.clone(), Into::into),
+        ),
+        ("playlist_id", id),
+        ("playlist_title", title.into()),
+        ("playlist_uploader", field("uploader")),
+        ("playlist_uploader_id", field("uploader_id")),
+        ("playlist_channel", field("channel")),
+        ("playlist_channel_id", field("channel_id")),
+        (
+            "playlist_webpage_url",
+            crate::extractor::input_text(&playlist.webpage_url).into(),
+        ),
+        (
+            "webpage_url_basename",
+            crate::info::url_basename(&playlist.webpage_url).into(),
+        ),
+        (
+            "webpage_url_domain",
+            crate::info::get_domain(&playlist.webpage_url).into(),
+        ),
+    ]
 }
 
 /// `random.shuffle`: a Fisher-Yates shuffle seeded from the clock.
@@ -580,6 +741,81 @@ mod tests {
     use super::*;
     use crate::{PlaylistInfo, VideoInfo};
     use serde_json::json;
+
+    /// A list of `len` entries that records how far it was read.
+    struct Counted {
+        len: usize,
+        read: usize,
+        full: bool,
+    }
+
+    impl EntrySource for Counted {
+        fn has(&mut self, position: usize) -> Result<bool> {
+            self.read = self.read.max((position + 1).min(self.len));
+            Ok(position < self.len)
+        }
+        fn full_count(&mut self) -> Result<usize> {
+            self.full = true;
+            Ok(self.len)
+        }
+    }
+
+    fn lazy(items: &str, len: usize) -> (Vec<usize>, usize, bool) {
+        let selection = PlaylistSelection::new(Some(items), 1, None, false).unwrap();
+        let mut lazy = selection.lazy_selection(&PlaylistInfo {
+            id: "list".into(),
+            title: String::new(),
+            webpage_url: "https://example.com/list".parse().unwrap(),
+            extractor: "generic".into(),
+            extractor_key: "Generic".into(),
+            entries: Vec::new(),
+            nested: Vec::new(),
+            pending: None,
+            extra: Default::default(),
+        });
+        let mut source = Counted {
+            len,
+            read: 0,
+            full: false,
+        };
+        let mut positions = Vec::new();
+        while let Some(position) = lazy.next_position(&mut source).unwrap() {
+            positions.push(position);
+        }
+        (positions, source.read, source.full)
+    }
+
+    #[test]
+    fn lazy_selection_reads_only_as_far_as_each_item() {
+        // The same entries as an eager selection, in the same order.
+        for items in [
+            "1",
+            "2-4,3-4,3",
+            "4,2,4",
+            "0",
+            "::-1",
+            ":-6",
+            "-1:6:-2",
+            "9:-6:-2",
+            "3:",
+            "1:inf",
+            "5:inf:-1",
+            "8:2:-2",
+            "20:",
+            "-3:",
+            "12::-1",
+        ] {
+            assert_eq!(lazy(items, 10).0, select(items, 10), "{items}");
+        }
+        // Forward slices stop at their end; open ones at the list's end.
+        assert_eq!(lazy("2:4", 100), (vec![1, 2, 3], 4, false));
+        assert_eq!(lazy("3,1", 100), (vec![2, 0], 3, false));
+        assert_eq!(lazy("8:2:-2", 100), (vec![7, 5, 3, 1], 8, false));
+        assert_eq!(lazy("98:", 100).1, 100);
+        // Negative bounds need the full count (`len(self)`).
+        assert!(lazy("-1", 100).2);
+        assert!(!lazy("1:", 100).2);
+    }
 
     fn select(items: &str, len: usize) -> Vec<usize> {
         PlaylistSelection::new(Some(items), 1, None, false)

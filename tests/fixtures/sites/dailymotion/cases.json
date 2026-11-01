@@ -26,5 +26,8 @@
  {"url": "https://www.dailymotion.com/search/king+of+turtles/videos", "args": ["-I", "50", "--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
  {"url": "https://www.dailymotion.com/search/king+of+turtles/videos", "args": ["-I", "-1", "--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s|%(playlist_title)s"]},
  {"url": "https://www.dailymotion.com/search/broken/videos", "args": ["-J", "--flat-playlist"]},
- {"url": "https://www.dailymotion.com/search/empty/videos", "args": ["-I", "1", "--flat-playlist"]}
+ {"url": "https://www.dailymotion.com/search/empty/videos", "args": ["-I", "1", "--flat-playlist"]},
+ {"url": "https://www.dailymotion.com/playlist/x6hynp", "args": ["--lazy-playlist", "--flat-playlist", "-I", "99:"]},
+ {"url": "https://www.dailymotion.com/playlist/x6hynp", "args": ["--lazy-playlist", "--flat-playlist", "-I", "2", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s|%(n_entries)s"]},
+ {"url": "https://www.dailymotion.com/playlist/x6hynp", "args": ["--lazy-playlist", "-J", "--flat-playlist", "-I", "101:"]}
 ]

@@ -291,14 +291,15 @@ fn playlist(
         }
     }
     shape.push("id".into());
+    // `_get_entries` is a generator; the DJ radio collects a list.
+    let generator = if key == DJRADIO_KEY {
+        ""
+    } else {
+        crate::info_order::GENERATOR
+    };
     extra.insert(
         crate::info_order::INFO_SHAPE.into(),
-        format!(
-            "playlist-dict;{}{}",
-            shape.join(","),
-            crate::info_order::GENERATOR
-        )
-        .into(),
+        format!("playlist-dict;{}{generator}", shape.join(",")).into(),
     );
     ExtractResult::Playlist(PlaylistInfo {
         id,
