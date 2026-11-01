@@ -163,6 +163,13 @@ fn bootstrap(data: &[u8]) -> Result<Bootstrap> {
     })
 }
 
+#[cfg(fuzzing)]
+pub(crate) fn fuzz_bootstrap(data: &[u8]) {
+    if let Ok(boot) = bootstrap(data) {
+        let _ = fragments_list(&boot);
+    }
+}
+
 /// `build_fragments_list`: `(segment, fragment)` numbers.
 fn fragments_list(boot: &Bootstrap) -> Result<Vec<(u32, u64)>> {
     let index_error = || reported("list index out of range");

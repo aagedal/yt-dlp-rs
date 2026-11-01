@@ -338,6 +338,12 @@ impl CookieJar {
         let text = std::str::from_utf8(&bytes).map_err(|_| error("cookie file is not UTF-8"))?;
         Self::parse(text)
     }
+
+    #[cfg(fuzzing)]
+    pub(crate) fn parse_for_fuzzing(text: &str) -> Result<Self> {
+        Self::parse(text)
+    }
+
     fn parse(text: &str) -> Result<Self> {
         let mut lines = text.lines();
         let first = lines

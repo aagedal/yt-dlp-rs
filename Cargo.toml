@@ -52,4 +52,8 @@ default = []
 impersonate = ["dep:tokio", "dep:wreq", "dep:wreq-util"]
 
 
+[lints.rust]
+# `cargo fuzz` builds with `--cfg fuzzing` (see src/fuzz.rs).
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(fuzzing)'] }
+
 [dev-dependencies]

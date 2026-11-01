@@ -685,8 +685,13 @@ pub fn load_info_json(path: &std::path::Path) -> Result<Vec<crate::ExtractResult
     let bytes = std::fs::read(path).map_err(|error| Error::InfoJson(error.to_string()))?;
     let text = String::from_utf8(bytes)
         .map_err(|_| Error::InfoJson("info JSON is not valid UTF-8".into()))?;
+    load_info_json_text(&text)
+}
+
+/// [`load_info_json`] for the file's text.
+pub(crate) fn load_info_json_text(text: &str) -> Result<Vec<crate::ExtractResult>> {
     let value: Value =
-        serde_json::from_str(&text).map_err(|error| Error::InfoJson(error.to_string()))?;
+        serde_json::from_str(text).map_err(|error| Error::InfoJson(error.to_string()))?;
     let items = match value {
         Value::Array(items) => items,
         other => vec![other],
