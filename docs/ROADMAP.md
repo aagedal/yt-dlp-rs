@@ -288,3 +288,51 @@ Each milestone may span many changes. A milestone is complete when its documente
 behavior passes deterministic tests, compatibility gaps are recorded, and its
 upstream mapping is maintained. No whole-project parity claim or completion date
 is implied by this initial adaptation.
+
+## Road to 1.0
+
+1.0 is a stability promise, not an extractor count. Upstream-compatible CLI
+behavior, the core download pipeline and a tier of actively watched sites must
+hold up on real input; the rest of the extractors stay best effort. The main
+consumer (Aagedal Media Converter) runs the binary as a subprocess, so the CLI
+and its output are the primary contract; the Rust library is secondary.
+
+Work in this order; each step lands with deterministic tests like any other change.
+
+1. **Parser hardening.** `cargo-fuzz` targets for every parser that reads
+   untrusted bytes: HLS and DASH manifests, SIDX/MP4 boxes and WebM Cues,
+   `js_to_json`, `devalue`, subtitle conversion, cookie files and browser
+   cookie databases, `--load-info-json`. Panics found become regression tests;
+   the targets run briefly in CI. Download-side panics fail closed with an
+   error instead of aborting the run.
+2. **Live canary suite.** A scheduled, non-required workflow that extracts and
+   downloads a few megabytes from the tier-1 sites (at least the Media Converter
+   site list: YouTube, Instagram, TikTok, X, Facebook, Reddit, Vimeo, Twitch,
+   Bluesky, SoundCloud, Bandcamp), compares key metadata with the pinned
+   upstream, and reports breakage. It never gates merges.
+3. **Interruptible transfers.** Stop/Cancel and SIGINT/SIGTERM interrupt
+   blocking connects and reads promptly instead of waiting for the socket timeout.
+4. **CLI output contract.** Document and test the lines consumers parse
+   (`[download]` progress, `Destination:`, `has already been downloaded`,
+   `--print` stages, `--progress-template`, exit codes) as stable.
+5. **Benchmarks.** A local-server harness comparing startup, extraction from
+   saved fixtures, HLS/DASH throughput with `-N 1/4/8` and peak memory with
+   upstream. Then lazy playlist extraction for item selection and a reviewed
+   default for `-N`.
+6. **Platform parity.** Impersonation in the Windows release (or a documented
+   tier-2 limitation), and test runs on real Windows hardware.
+7. **Core gaps.** Impersonation for media transfers, environment proxy
+   discovery and per-extractor proxy policies, the archive URL-suitable
+   fallback and native live DASH.
+8. **Library API.** Shrink the public surface to what consumers use, mark
+   growing structs `#[non_exhaustive]` or give them builders, one public error
+   type, and `cargo-semver-checks` in CI.
+9. **Extractor tiers.** Tier 1 is the canary list; tier 2 is fixture-tested and
+   best effort; extractors for dead sites are removed or marked. A short
+   supported-sites summary goes at the top of `docs/COMPATIBILITY.md`.
+10. **Upstream cadence.** At least one full baseline advance through the
+    milestone 6 loop within a week of an upstream release.
+
+Then a release candidate runs against the canaries for a few weeks before 1.0.
+Not required: splitting `src/main.rs`, self-update (`-U` stays an error;
+distribution goes through package managers and Media Converter's bundle).
