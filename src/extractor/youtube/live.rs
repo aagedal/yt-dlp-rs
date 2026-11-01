@@ -66,10 +66,12 @@ fn now() -> f64 {
 /// One HEAD request's `X-Head-Seqnum` (`None` on failure, like upstream's
 /// non-fatal `_request_webpage`).
 fn head_seqnum(client: &Client, url: &str) -> Option<i64> {
-    match crate::control::scoped(client.head(url))
-        .and_then(|request| request.send())
-        .and_then(|r| r.error_for_status())
-    {
+    let response = match crate::control::scoped(client.head(url)) {
+        // An interrupt leaves no sequence number.
+        Ok(request) => crate::http::interruptible::send(request).ok()?,
+        Err(error) => Err(error),
+    };
+    match response.and_then(|r| r.error_for_status()) {
         Ok(response) => response
             .headers()
             .get("X-Head-Seqnum")?

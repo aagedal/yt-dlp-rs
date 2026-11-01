@@ -309,7 +309,7 @@ fn fetch(
 
 fn send(request: reqwest::blocking::RequestBuilder) -> Result<reqwest::blocking::Response> {
     crate::screen::load_cookies()?;
-    let response = crate::control::scoped(request).and_then(|request| request.send());
+    let response = crate::http::send_media(request);
     crate::screen::flush_traffic();
     crate::retry::check_response(response?)
 }
@@ -465,7 +465,8 @@ pub(crate) fn download(
             (parse_actions_replay(chat, &mut fragment)?, None)
         };
         if let Some(wait) = wait {
-            std::thread::sleep(wait);
+            // An interrupt ends the wait; the report below sees it.
+            crate::control::sleep(wait);
         }
         output.write_all(&fragment)?;
         written += fragment.len() as u64;

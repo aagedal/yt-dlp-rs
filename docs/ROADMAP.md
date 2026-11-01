@@ -328,6 +328,14 @@ Work in this order; each step lands with deterministic tests like any other chan
    HTML5 media`) and a Bandcamp title keeping a double space upstream collapses.
 3. **Interruptible transfers.** Stop/Cancel and SIGINT/SIGTERM interrupt
    blocking connects and reads promptly instead of waiting for the socket timeout.
+   Status (2026-11-01): requests send on a helper thread and stream their body
+   through a 256 KiB queue whenever an `Interrupt` or signal handler is
+   installed, so connects, TLS handshakes, header waits, body reads (single
+   file, ranges, fragments with `-N`, the `impersonate` transport) and retry
+   or `--sleep-*` waits end within about 100 ms; tests in
+   `tests/stalled_transfers.rs`. No throughput change measured on a local 1 GiB
+   transfer. Not covered: WebSocket connects, filesystem operations; Windows
+   Ctrl+C still ends the process at once.
 4. **CLI output contract.** A machine-readable interface rather than frozen
    human-readable lines: `--progress-template` with JSON fields
    (`%(progress)j` and friends), `--print` stage templates (`before_dl`,

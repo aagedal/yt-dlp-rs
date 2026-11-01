@@ -360,4 +360,53 @@ mod transport {
         );
         assert_eq!(chrome.alpn.as_deref(), Some(&b"h2"[..]));
     }
+
+    /// SIGTERM ends an impersonated request whose TLS handshake stalls
+    /// within the interrupt poll, not after the socket timeout.
+    #[cfg(unix)]
+    #[test]
+    fn a_signal_ends_a_stalled_impersonated_request() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        let (accepted, connected) = mpsc::channel();
+        thread::spawn(move || {
+            for stream in listener.incoming().flatten() {
+                let _ = accepted.send(());
+                thread::spawn(move || {
+                    let _stream = stream;
+                    thread::sleep(Duration::from_secs(60));
+                });
+            }
+        });
+        let directory = tempfile::tempdir().unwrap();
+        let child = std::process::Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--ignore-config", "--impersonate", "chrome", "-s"])
+            .arg(format!("https://127.0.0.1:{port}/page"))
+            .current_dir(directory.path())
+            .stdin(std::process::Stdio::null())
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::piped())
+            .spawn()
+            .unwrap();
+        connected.recv_timeout(Duration::from_secs(30)).unwrap();
+        thread::sleep(Duration::from_millis(300));
+        let sent = std::time::Instant::now();
+        let status = std::process::Command::new("kill")
+            .args(["-TERM", &child.id().to_string()])
+            .status()
+            .unwrap();
+        assert!(status.success());
+        let output = child.wait_with_output().unwrap();
+        assert!(
+            sent.elapsed() < Duration::from_secs(3),
+            "{:?}",
+            sent.elapsed()
+        );
+        assert_eq!(output.status.code(), Some(1), "{}", stderr(&output));
+        assert!(
+            stderr(&output).ends_with("ERROR: Interrupted by user\n"),
+            "{}",
+            stderr(&output)
+        );
+    }
 }

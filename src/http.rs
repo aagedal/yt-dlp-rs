@@ -1,4 +1,5 @@
 //! Validated global HTTP defaults, separate from extractor-owned request headers.
+pub(crate) mod interruptible;
 mod legacy_tls;
 mod proxy;
 mod socks4_relay;
@@ -63,6 +64,41 @@ impl From<ProxyConfig> for TransportConfig {
             proxy,
             ..Default::default()
         }
+    }
+}
+
+/// Send a download request with the call's [`RequestScope`]; an interrupt
+/// while it connects or waits for headers ends it as
+/// `Error::DownloadCancelled` (a stop or cancel, decided by the caller).
+///
+/// [`RequestScope`]: crate::RequestScope
+pub(crate) fn send_media(
+    request: reqwest::blocking::RequestBuilder,
+) -> Result<reqwest::blocking::Response> {
+    let request = crate::control::scoped(request)?;
+    match interruptible::send(request) {
+        Ok(response) => Ok(response?),
+        Err(interruptible::Interrupted) => Err(Error::DownloadCancelled),
+    }
+}
+
+/// Send an extraction request already checked and scoped
+/// (`control::prepare`); an interrupt ends it as `ExtractionCancelled`.
+pub(crate) fn send_prepared(
+    request: reqwest::blocking::RequestBuilder,
+) -> Result<reqwest::blocking::Response> {
+    match interruptible::send(request) {
+        Ok(response) => Ok(response?),
+        Err(interruptible::Interrupted) => Err(Error::ExtractionCancelled),
+    }
+}
+
+/// A download body read's error: an interrupt is `DownloadCancelled`.
+pub(crate) fn read_error(error: std::io::Error) -> Error {
+    if interruptible::is_interrupted(&error) {
+        Error::DownloadCancelled
+    } else {
+        Error::Io(error)
     }
 }
 

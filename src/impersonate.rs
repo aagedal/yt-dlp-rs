@@ -392,7 +392,7 @@ pub(crate) fn send(
     if let Some(index) = ACTIVE.with(Cell::get).or_else(default_target) {
         return transport::send(request, &supported_targets()[index]);
     }
-    Ok(request.send()?)
+    crate::http::send_prepared(request)
 }
 
 /// Configure the impersonating transport from the global HTTP options

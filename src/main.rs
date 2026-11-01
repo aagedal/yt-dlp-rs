@@ -1599,7 +1599,8 @@ impl SleepPolicy {
     fn pause(seconds: f64, note: &str) {
         if seconds > 0.0 {
             screen!("[download] Sleeping {seconds:.2} seconds {note}...");
-            std::thread::sleep(Duration::from_secs_f64(seconds));
+            // A signal ends the sleep; the run stops at its next checkpoint.
+            yt_dlp_rs::SignalInterrupt::sleep(Duration::from_secs_f64(seconds));
         }
     }
 

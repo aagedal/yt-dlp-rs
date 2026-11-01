@@ -58,8 +58,10 @@ download retries for a library call; `download` uses the default policy.
 stored bytes, optional total bytes, and the current phase. Fragment downloads also report one-based fragment indexes
 and counts, with cumulative assembled bytes and a per-fragment attempt number. Return
 `std::ops::ControlFlow::Continue(())` to continue or `Break(())` to cancel.
-Cancellation is cooperative: it cannot interrupt an in-flight blocking request,
-read, or filesystem operation. See the compatibility inventory for checkpoints.
+A callback's `Break` is cooperative: it is seen at the next checkpoint, not
+during a blocking request, read, or filesystem operation; use an `Interrupt`
+(below) to end a transfer blocked on the network. See the compatibility
+inventory for checkpoints.
 `extract_result_with_options(url, None, ExtractionOptions { retries: 2, ..Default::default() })` enables
 whole-extraction retries; existing extraction methods keep retries disabled.
 `YoutubeDl::with_growing_file(true)` makes `download_with_progress` record live
@@ -95,9 +97,14 @@ Cancel buttons):
 - During extraction either request ends the call with
   `Error::ExtractionCancelled` before its next request.
 
-Checks run before each request and at each progress checkpoint; a blocking
-request or read already in flight finishes or times out first (see
-`HttpOptions` timeouts).
+Checks run before each request and at each progress checkpoint. A request
+blocked on the network (DNS, connect, TLS handshake, response headers or a
+body read, including fragment workers) and retry or `--sleep-*` waits end
+within about 100 ms, without shortening the socket timeout of a healthy
+transfer: while an `Interrupt` is installed, requests are sent on a helper
+thread and bodies stream through a small queue (see
+[Interruptible transfers](COMPATIBILITY.md#interruptible-transfers)).
+Filesystem operations are not interrupted.
 
 `RequestScope::new(&url)` holds headers and cookies for one origin (scheme,
 host and port). `.header(name, value)` values are sent only on requests to

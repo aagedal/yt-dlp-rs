@@ -271,8 +271,9 @@ fn reason_phrase(error: &reqwest::Error) -> Option<String> {
 }
 
 pub(crate) fn backoff(attempt: u32, retry_after: Duration) {
-    // Bounded exponential backoff: 100, 200, 400, 800, then 1000 ms.
-    std::thread::sleep(delay(attempt, retry_after));
+    // Bounded exponential backoff: 100, 200, 400, 800, then 1000 ms; an
+    // interrupt ends it (the caller's next checkpoint reports it).
+    crate::control::sleep(delay(attempt, retry_after));
 }
 
 #[cfg(test)]

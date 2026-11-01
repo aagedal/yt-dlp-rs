@@ -147,7 +147,9 @@ players of supported sites.
   JavaScript-built players.
 - Chromium cookies on Windows (DPAPI) and from the GNOME keyring.
 - Graceful Ctrl+C on Windows: there it ends the process at once (on other
-  platforms `.part` files are kept for `--continue`, as upstream).
+  platforms `.part` files are kept for `--continue`, as upstream, and a
+  transfer blocked on the network ends within about 100 ms). Library
+  `Interrupt` stop/cancel works on every platform.
 - Upstream options this port has not implemented: they are errors, never
   silently ignored.
 

@@ -296,16 +296,33 @@ pub(super) fn send(
     if let Some(body) = body {
         outgoing = outgoing.body(body);
     }
-    let (status, version, headers, url, body) = runtime
-        .block_on(async move {
-            let response = outgoing.send().await?;
-            let status = response.status();
-            let version = response.version();
-            let headers = response.headers().clone();
-            let url = response.uri().to_string();
-            let body = response.bytes().await?;
-            Ok::<_, wreq::Error>((status, version, headers, url, body))
-        })
+    let exchange = async move {
+        let response = outgoing.send().await?;
+        let status = response.status();
+        let version = response.version();
+        let headers = response.headers().clone();
+        let url = response.uri().to_string();
+        let body = response.bytes().await?;
+        Ok::<_, wreq::Error>((status, version, headers, url, body))
+    };
+    // A stop, cancel or signal drops the exchange (closing its connection)
+    // within `POLL`; the socket timeouts still bound a healthy one.
+    let watch = crate::control::watch();
+    let exchange = runtime.block_on(async move {
+        let mut exchange = std::pin::pin!(exchange);
+        let Some(watch) = watch else {
+            return Some(exchange.await);
+        };
+        loop {
+            match tokio::time::timeout(crate::http::interruptible::POLL, exchange.as_mut()).await {
+                Ok(result) => return Some(result),
+                Err(_) if watch.requested() => return None,
+                Err(_) => {}
+            }
+        }
+    });
+    let (status, version, headers, url, body) = exchange
+        .ok_or(crate::Error::ExtractionCancelled)?
         .map_err(error)?;
     let url = url::Url::parse(&url)?;
     let mut builder = http::Response::builder()

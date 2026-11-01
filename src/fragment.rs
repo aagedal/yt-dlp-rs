@@ -79,8 +79,9 @@ impl From<std::io::Error> for Failure {
 }
 fn body_failure(error: Error) -> Failure {
     Failure {
+        // An interrupt ends the download instead.
+        retry: (!matches!(error, Error::DownloadCancelled)).then_some(Duration::ZERO),
         error,
-        retry: Some(Duration::ZERO),
     }
 }
 fn unsupported(message: &str) -> Error {
@@ -937,10 +938,8 @@ fn fetch(
             format!("bytes={}-{}", range.offset, range.offset + range.length - 1),
         );
     }
-    let mut response = crate::control::scoped(request)
-        .and_then(|request| request.send())
+    let mut response = crate::http::send_media(request)
         .inspect(|_| crate::screen::after_request())
-        .map_err(Error::Http)
         .and_then(crate::retry::check_response)
         .map_err(|error| Failure {
             retry: crate::retry::failure_delay(&error),
@@ -969,7 +968,7 @@ fn fetch(
     loop {
         let block = blocks
             .read(&mut response, None)
-            .map_err(|error| body_failure(Error::Io(error)))?
+            .map_err(|error| body_failure(crate::http::read_error(error)))?
             .to_vec();
         let count = block.len();
         limiter.consume(count);
@@ -1170,10 +1169,8 @@ fn fetch_key(
     if let Some(ip) = crate::geo::forwarded_for(info) {
         request = request.header("X-Forwarded-For", ip);
     }
-    let mut response = crate::control::scoped(request)
-        .and_then(|request| request.send())
+    let mut response = crate::http::send_media(request)
         .inspect(|_| crate::screen::after_request())
-        .map_err(Error::Http)
         .and_then(crate::retry::check_response)
         .map_err(|error| Failure {
             retry: crate::retry::failure_delay(&error),
@@ -1199,7 +1196,7 @@ fn fetch_key(
             Ok(0) => break,
             Ok(count) => count,
             Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
-            Err(error) => return Err(body_failure(Error::Io(error))),
+            Err(error) => return Err(body_failure(crate::http::read_error(error))),
         };
         received += count;
     }
@@ -1231,7 +1228,7 @@ fn decrypt_response(
             Ok(0) => break,
             Ok(count) => count,
             Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
-            Err(error) => return Err(body_failure(Error::Io(error))),
+            Err(error) => return Err(body_failure(crate::http::read_error(error))),
         };
         limiter.consume(count);
         cipher_bytes = cipher_bytes

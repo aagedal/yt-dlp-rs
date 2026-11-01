@@ -347,7 +347,8 @@ impl RateLimit {
         let target = Duration::from_secs_f64(self.bytes as f64 / limit as f64);
         let elapsed = self.start.elapsed();
         if !elapsed.is_zero() && target > elapsed {
-            std::thread::sleep(target - elapsed);
+            // The next progress checkpoint reports an interrupt.
+            crate::control::sleep(target - elapsed);
         }
     }
 }
@@ -447,6 +448,14 @@ impl AttemptFailure {
             error,
             retryable: true,
             retry_after: std::time::Duration::ZERO,
+        }
+    }
+
+    /// A body read's failure: retried, unless an interrupt ended it.
+    fn read(error: std::io::Error) -> Self {
+        match crate::http::read_error(error) {
+            Error::Io(error) => Self::retry(Error::Io(error)),
+            error => error.into(),
         }
     }
 
@@ -1165,10 +1174,8 @@ fn chunked_attempt(
             request = request.header(USER_AGENT, agent);
         }
         crate::screen::load_cookies().map_err(AttemptFailure::from)?;
-        let mut response = crate::control::scoped(request)
-            .and_then(|request| request.send())
+        let mut response = crate::http::send_media(request)
             .inspect(|_| crate::screen::flush_traffic())
-            .map_err(Error::Http)
             .and_then(crate::retry::check_response)
             .map_err(AttemptFailure::request)?;
         *last_modified = crate::filetime::header(&response);
@@ -1241,7 +1248,7 @@ fn chunked_attempt(
             let block = match blocks.read(&mut response, limit) {
                 Ok([]) => break,
                 Ok(block) => block,
-                Err(error) => return Err(AttemptFailure::retry(Error::Io(error))),
+                Err(error) => return Err(AttemptFailure::read(error)),
             };
             let count = block.len();
             temporary.write_all(block)?;
@@ -1314,10 +1321,8 @@ pub(crate) fn fetch_span(
                 request = request.header(REFERER, referrer.as_str());
             }
             crate::screen::load_cookies().map_err(AttemptFailure::from)?;
-            let mut response = crate::control::scoped(request)
-                .and_then(|request| request.send())
+            let mut response = crate::http::send_media(request)
                 .inspect(|_| crate::screen::flush_traffic())
-                .map_err(Error::Http)
                 .and_then(crate::retry::check_response)
                 .map_err(AttemptFailure::request)?;
             let range = (response.status() == reqwest::StatusCode::PARTIAL_CONTENT)
@@ -1339,7 +1344,7 @@ pub(crate) fn fetch_span(
                         }));
                     }
                     Ok(block) => block,
-                    Err(error) => return Err(AttemptFailure::retry(Error::Io(error))),
+                    Err(error) => return Err(AttemptFailure::read(error)),
                 };
                 let count = block.len();
                 output.write_all(block)?;
@@ -1438,10 +1443,8 @@ fn download_attempt(
     // Upstream's 416 branch re-sends the same Range, so a complete part
     // file fails with that status; the part file is kept.
     crate::screen::load_cookies().map_err(AttemptFailure::from)?;
-    let mut response = crate::control::scoped(build(loose))
-        .and_then(|request| request.send())
+    let mut response = crate::http::send_media(build(loose))
         .inspect(|_| crate::screen::flush_traffic())
-        .map_err(Error::Http)
         .and_then(crate::retry::check_response)
         .map_err(AttemptFailure::request)?;
     *last_modified = crate::filetime::header(&response);
@@ -1512,7 +1515,7 @@ fn download_attempt(
         let block = match blocks.read(&mut response, None) {
             Ok([]) => break,
             Ok(block) => block,
-            Err(error) => return Err(AttemptFailure::retry(Error::Io(error))),
+            Err(error) => return Err(AttemptFailure::read(error)),
         };
         let count = block.len();
         let next = actual
