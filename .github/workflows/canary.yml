@@ -1,0 +1,107 @@
+name: Canary
+# Live tier-1 site canaries (tools/canary.py, tools/canary_sites.json). Never a
+# required check: it runs only on a schedule or by hand, and reports breakage
+# through a single issue labelled `canary`.
+on:
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+    inputs:
+      sites:
+        description: 'Comma-separated site keys (empty: all; a filtered run leaves the issue alone)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: canary
+  cancel-in-progress: false
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: canary-impersonate-release
+      - name: Install FFmpeg
+        run: command -v ffmpeg || (sudo apt-get update && sudo apt-get install -y ffmpeg)
+      # The pinned runtime of the youtube-challenges job in ci.yml.
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.9.7
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install the pinned upstream yt-dlp
+        run: |
+          version=$(jq -r .upstream_version upstream/manifest.json)
+          python -m pip install "yt-dlp[default,curl-cffi]==$version"
+          yt-dlp --version
+      - run: cargo build --release --locked --features impersonate
+      - name: Run canaries
+        id: canary
+        env:
+          SITES: ${{ github.event.inputs.sites }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          # Optional Netscape cookie files; a site marked requires_cookies is
+          # skipped when its secret is absent.
+          CANARY_COOKIES_YOUTUBE: ${{ secrets.CANARY_COOKIES_YOUTUBE }}
+          CANARY_COOKIES_INSTAGRAM: ${{ secrets.CANARY_COOKIES_INSTAGRAM }}
+          CANARY_COOKIES_TIKTOK: ${{ secrets.CANARY_COOKIES_TIKTOK }}
+          CANARY_COOKIES_TWITTER: ${{ secrets.CANARY_COOKIES_TWITTER }}
+          CANARY_COOKIES_FACEBOOK: ${{ secrets.CANARY_COOKIES_FACEBOOK }}
+          CANARY_COOKIES_REDDIT: ${{ secrets.CANARY_COOKIES_REDDIT }}
+          CANARY_COOKIES_VIMEO: ${{ secrets.CANARY_COOKIES_VIMEO }}
+          CANARY_COOKIES_TWITCH: ${{ secrets.CANARY_COOKIES_TWITCH }}
+          CANARY_COOKIES_BLUESKY: ${{ secrets.CANARY_COOKIES_BLUESKY }}
+          CANARY_COOKIES_SOUNDCLOUD: ${{ secrets.CANARY_COOKIES_SOUNDCLOUD }}
+          CANARY_COOKIES_BANDCAMP: ${{ secrets.CANARY_COOKIES_BANDCAMP }}
+        run: |
+          set +e
+          python tools/canary.py --binary target/release/yt-dlp-rs \
+            --upstream "$(command -v yt-dlp)" --sites "$SITES" \
+            --report canary-report.json --summary canary-summary.md \
+            --issue canary-issue.json --run-url "$RUN_URL"
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canary-report
+          path: |
+            canary-report.json
+            canary-summary.md
+      - name: Open, update or close the canary issue
+        if: always() && steps.canary.outputs.code != '' && github.event.inputs.sites == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          CODE: ${{ steps.canary.outputs.code }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh label create canary --color B60205 --description 'Live canary failures' 2>/dev/null || true
+          number=$(gh issue list --label canary --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -f canary-issue.json ]; then
+            title=$(jq -r .title canary-issue.json)
+            jq -r .body canary-issue.json > canary-issue.md
+            if [ -n "$number" ]; then
+              old=$(gh issue view "$number" --json title --jq .title)
+              gh issue edit "$number" --title "$title" --body-file canary-issue.md
+              if [ "$old" != "$title" ]; then
+                gh issue comment "$number" --body "Failing sites changed: $title ($RUN_URL)"
+              fi
+            else
+              gh issue create --title "$title" --body-file canary-issue.md --label canary
+            fi
+          elif [ "$CODE" = 0 ] && [ -n "$number" ]; then
+            gh issue close "$number" --comment "No tier-1 site is broken or diverged any more ($RUN_URL)."
+          fi
+      - name: Fail when a site is broken
+        if: steps.canary.outputs.code != '0'
+        run: exit 1

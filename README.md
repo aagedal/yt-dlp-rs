@@ -178,6 +178,27 @@ commits, affected Rust components and unmapped files. It does not port code or
 advance the baseline; [the upstream workflow](docs/UPSTREAM.md) describes how
 changes are ported.
 
+### Live canaries
+
+`.github/workflows/canary.yml` runs daily (and by hand, optionally for some
+sites) against the tier-1 sites in `tools/canary_sites.json`: the
+Media Converter site list. For each URL, `tools/canary.py` runs `-j` and checks
+the key fields (id, extractor key, title, duration, formats), compares them
+with the pinned upstream release, downloads a few seconds with
+`-f bestvideo+bestaudio/best` and probes the file with ffprobe. A failed URL
+is retried once. Sites end up `pass`, `broken`, `diverged` (differs from
+upstream), `blocked` (bot check, PO token, login wall, IP block or rate limit;
+the patterns are listed in the script) or `skip` (needs a
+`CANARY_COOKIES_<SITE>` secret holding a cookies file, and it is not set).
+Broken or diverged sites open or update one issue labelled `canary`, which is
+closed when none are left. The workflow is never a required check, and the
+test suite never contacts live sites. To run it locally:
+
+```sh
+cargo build --release --features impersonate
+python3 tools/canary.py --sites youtube,vimeo --upstream .upstream/yt-dlp
+```
+
 More documentation:
 
 - [Compatibility inventory](docs/COMPATIBILITY.md): every supported option and
