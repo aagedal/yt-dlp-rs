@@ -1,7 +1,7 @@
 //! Upstream `MegaphoneIE` (`yt_dlp/extractor/megaphone.py`): a
 //! `player.megaphone.fm` page's OpenGraph audio fields and its `episode`
 //! script object.
-use super::{Extractor, download_webpage, proto_relative};
+use super::{Extractor, download_webpage, proto_relative_https};
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -128,7 +128,8 @@ impl Extractor for Megaphone {
             .get("duration")
             .cloned()
             .ok_or_else(|| key_error("duration"))?;
-        let media = Url::parse(&proto_relative(&media))?;
+        // `_proto_relative_url(..., 'https:')`.
+        let media = Url::parse(&proto_relative_https(&media))?;
         let ext =
             super::direct::determine_ext(media.as_str()).unwrap_or_else(|| "unknown_video".into());
         let mut format: VideoFormat = serde_json::from_value(

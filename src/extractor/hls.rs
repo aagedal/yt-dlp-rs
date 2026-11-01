@@ -34,16 +34,34 @@ fn recognized(response: &Response) -> bool {
 }
 
 /// Upstream `_extract_m3u8_formats` keys this port does not model as fields:
-/// `has_drm` (always false: DRM playlists are rejected) and, for formats from
-/// a master playlist, its `manifest_url`.
-fn hls_extra(master: Option<&Url>, shape: &str) -> serde_json::Map<String, serde_json::Value> {
+/// `has_drm` (the document's `HlsFD._has_drm`) and, for formats from a master
+/// playlist, its `manifest_url`.
+fn hls_extra(
+    master: Option<&Url>,
+    shape: &str,
+    has_drm: bool,
+) -> serde_json::Map<String, serde_json::Value> {
     let mut extra = serde_json::Map::new();
     extra.insert(crate::info_order::FORMAT_SHAPE.into(), shape.into());
     if let Some(master) = master {
         extra.insert("manifest_url".into(), master.as_str().into());
     }
-    extra.insert("has_drm".into(), false.into());
+    extra.insert("has_drm".into(), has_drm.into());
     extra
+}
+
+/// A media playlist's fragments for native HlsFD: none when HlsFD would not
+/// download it itself, so the download refetches it and decides
+/// (`YoutubeDl::refresh_hls`).
+fn native_fragments(
+    fragments: Vec<crate::Fragment>,
+    native: crate::hls::Native,
+) -> Vec<crate::Fragment> {
+    if native == crate::hls::Native::Supported {
+        fragments
+    } else {
+        Vec::new()
+    }
 }
 
 pub(crate) fn read_playlist(response: Response) -> Result<(Url, Playlist)> {
@@ -53,6 +71,24 @@ pub(crate) fn read_playlist(response: Response) -> Result<(Url, Playlist)> {
 /// [`read_playlist`]; with `allow_live`, an unfinished media playlist is
 /// [`Playlist::LiveMedia`].
 fn read_playlist_with(response: Response, allow_live: bool) -> Result<(Url, Playlist)> {
+    let (base, text) = read_text(response)?;
+    let playlist = if allow_live {
+        crate::hls::parse_live(&text, &base)?
+    } else {
+        crate::hls::parse(&text, &base)?
+    };
+    Ok((base, playlist))
+}
+
+/// A (live) media playlist's current window.
+pub(crate) fn read_window(response: Response) -> Result<(Url, crate::hls::Window)> {
+    let (base, text) = read_text(response)?;
+    let window = crate::hls::parse_window(&text, &base)?;
+    Ok((base, window))
+}
+
+/// A playlist's bounded identity-encoded UTF-8 text and final URL.
+fn read_text(response: Response) -> Result<(Url, String)> {
     if response
         .content_length()
         .is_some_and(|size| size > MAX_MANIFEST_BYTES)
@@ -111,14 +147,9 @@ fn read_playlist_with(response: Response, allow_live: bool) -> Result<(Url, Play
         ));
     }
     crate::screen::page_read(&base, &bytes)?;
-    let text = std::str::from_utf8(&bytes)
+    let text = String::from_utf8(bytes)
         .map_err(|_| unsupported("only UTF-8/ASCII HLS playlists are supported"))?;
-    let playlist = if allow_live {
-        crate::hls::parse_live(text, &base)?
-    } else {
-        crate::hls::parse(text, &base)?
-    };
-    Ok((base.clone(), playlist))
+    Ok((base, text))
 }
 
 /// Upstream generic `_extra_manifest_info` ("Checking m3u8 live status"):
@@ -404,6 +435,7 @@ fn from_playlist(
             discontinuity: Vec::new(),
             discontinuities,
             ext: String::new(),
+            native: crate::hls::Native::Supported,
         },
         playlist => playlist,
     };
@@ -412,13 +444,16 @@ fn from_playlist(
             fragments,
             discontinuity,
             discontinuities,
+            native,
             ..
         } => {
+            let has_drm = native == crate::hls::Native::Drm;
+            let fragments = native_fragments(fragments, native);
             // A media playlist is returned as one format (per section).
             let format = VideoFormat {
                 byte_index: None,
                 http_headers: None,
-                extra: hls_extra(None, "hls-media"),
+                extra: hls_extra(None, "hls-media", has_drm),
                 protocol: Some("m3u8_native".into()),
                 vcodec: None,
                 acodec: None,
@@ -460,10 +495,12 @@ fn from_playlist(
             info.fragments = info.formats[0].fragments.clone();
         }
         Playlist::LiveMedia { .. } => unreachable!("converted to a media format above"),
+        Playlist::Window(_) => unreachable!("only parse_window returns a window"),
         Playlist::Master {
             variants,
             audio,
             subtitles,
+            drm,
         } => {
             // Upstream `extract_media`: an m3u8 subtitle rendition is WebVTT
             // fetched through HlsFD; other URIs keep their extension.
@@ -516,11 +553,13 @@ fn from_playlist(
                         fragments,
                         discontinuity,
                         discontinuities,
+                        native,
                         ..
                     } = playlist
                     else {
                         return Err(unsupported("nested HLS master playlists are not supported"));
                     };
+                    let fragments = native_fragments(fragments, native);
                     (url, fragments, discontinuity, discontinuities)
                 };
                 total_fragments = total_fragments
@@ -551,7 +590,7 @@ fn from_playlist(
                 let mut format = VideoFormat {
                     byte_index: None,
                     http_headers: None,
-                    extra: hls_extra(Some(&manifest_url), "hls-variant"),
+                    extra: hls_extra(Some(&manifest_url), "hls-variant", drm),
                     protocol: Some("m3u8_native".into()),
                     vcodec: known(codecs.vcodec),
                     acodec: known(codecs.acodec),
@@ -632,11 +671,13 @@ fn from_playlist(
                         fragments,
                         discontinuity,
                         discontinuities,
+                        native,
                         ..
                     } = playlist
                     else {
                         return Err(unsupported("nested HLS master playlists are not supported"));
                     };
+                    let fragments = native_fragments(fragments, native);
                     (url, fragments, discontinuity, discontinuities)
                 };
                 total_fragments = total_fragments
@@ -650,9 +691,10 @@ fn from_playlist(
                 let format = VideoFormat {
                     byte_index: None,
                     http_headers: None,
-                    extra: hls_extra(Some(&manifest_url), "hls-rendition"),
+                    extra: hls_extra(Some(&manifest_url), "hls-rendition", drm),
                     protocol: Some("m3u8_native".into()),
-                    vcodec: Some("none".into()),
+                    // `'vcodec': 'none' if is_audio else None`.
+                    vcodec: (!rendition.video).then(|| "none".into()),
                     acodec: None,
                     dynamic_range: None,
                     video_ext: None,
@@ -667,8 +709,13 @@ fn from_playlist(
                     format: None,
                     aspect_ratio: None,
                     format_id: join(&[m3u8_id, Some(&rendition.group_id), Some(&rendition.name)]),
-                    stream_kind: StreamKind::AudioOnly,
-                    audio_group: Some(rendition.group_id),
+                    stream_kind: if rendition.video {
+                        StreamKind::Standalone
+                    } else {
+                        StreamKind::AudioOnly
+                    },
+                    // `_audio_group_id` is only an audio rendition's.
+                    audio_group: (!rendition.video).then_some(rendition.group_id),
                     language: rendition.language,
                     format_note: Some(rendition.name),
                     audio_default: rendition.default,

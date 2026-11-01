@@ -31,6 +31,7 @@ pub mod geo;
 pub mod getpass;
 mod growing;
 mod hls;
+mod hls_live;
 mod html;
 mod html_elements;
 mod http;
@@ -67,6 +68,7 @@ pub mod screen;
 mod section_timecode;
 pub mod sections;
 mod sha1;
+mod sidx_fd;
 pub mod sponsorblock;
 mod sqlite;
 mod subtitle_convert;
@@ -303,6 +305,14 @@ thread_local! {
     static FRAGMENT_TOTAL: std::cell::RefCell<Option<(Url, usize)>> = const { std::cell::RefCell::new(None) };
     /// The URL whose download `announce_download` already reported.
     static ANNOUNCED: std::cell::RefCell<Option<Url>> = const { std::cell::RefCell::new(None) };
+    /// Playlist URLs whose refetch HlsFD delegated to FFmpegFD.
+    static HLS_DELEGATED: std::cell::RefCell<Vec<Url>> = const { std::cell::RefCell::new(Vec::new()) };
+}
+
+/// Whether `refresh_hls` delegated `info`'s download to FFmpegFD.
+fn hls_delegated(info: &VideoInfo) -> bool {
+    info.requested_formats.is_empty()
+        && HLS_DELEGATED.with(|urls| urls.borrow().contains(&info.url))
 }
 
 /// Upstream `dl`'s `Invoking … downloader on "URL"[, "URL"]` debug line;
@@ -1536,22 +1546,30 @@ impl YoutubeDl {
                 .map(|value| String::from_utf8_lossy(value.as_bytes()).into_owned())
                 .unwrap_or_default();
         }
-        let builder = Client::builder()
-            .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
-            .default_headers(headers.clone())
-            .cookie_provider(cookies.clone())
-            .redirect(reqwest::redirect::Policy::limited(10))
-            // Preserve an HTML5 page's explicit referrer across media redirects.
-            .referer(false)
-            // Python's http.client sends `User-Agent`, not `user-agent`;
-            // Cloudflare rejects lowercase HTTP/1.1 header names on some
-            // sites (kick.com answers 403).
-            .http1_title_case_headers()
-            .connection_verbose(http.print_traffic);
+        let builder = || {
+            Client::builder()
+                .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
+                .default_headers(headers.clone())
+                .cookie_provider(cookies.clone())
+                .redirect(reqwest::redirect::Policy::limited(10))
+                // Preserve an HTML5 page's explicit referrer across media redirects.
+                .referer(false)
+                // Python's http.client sends `User-Agent`, not `user-agent`;
+                // Cloudflare rejects lowercase HTTP/1.1 header names on some
+                // sites (kick.com answers 403).
+                .http1_title_case_headers()
+                .connection_verbose(http.print_traffic)
+        };
         if http.print_traffic {
             traffic::enable();
         }
-        let client = proxy.apply(builder)?.build()?;
+        let client = proxy.apply(builder())?.build()?;
+        // The same client routed through `--geo-verification-proxy`.
+        let geo_client = http
+            .geo_transport_config()?
+            .map(|config| config.apply(builder())?.build().map_err(Error::from))
+            .transpose()?;
+        extractor::set_geo_verification_client(geo_client);
         impersonate::configure(&http, &cookies)?;
         let youtube_runtime = youtube.runtimes();
         Ok(Self {
@@ -2669,7 +2687,10 @@ impl YoutubeDl {
     pub fn refresh_hls(&self, info: &VideoInfo) -> Result<Option<VideoInfo>> {
         // Formats loaded from info JSON have no fragments yet, like
         // upstream's, which HlsFD always reads from the playlist.
-        if !info.protocol.as_deref().unwrap_or("").starts_with("m3u8") || self.uses_ffmpeg_fd(info)
+        // A live stream is FFmpegFD's (or, without ffmpeg, `hls_live`'s).
+        if !info.protocol.as_deref().unwrap_or("").starts_with("m3u8")
+            || self.uses_ffmpeg_fd(info)
+            || is_live(info)
         {
             return Ok(None);
         }
@@ -2680,6 +2701,7 @@ impl YoutubeDl {
         let hls::Playlist::Media {
             fragments,
             discontinuity,
+            native,
             ..
         } = playlist
         else {
@@ -2687,6 +2709,24 @@ impl YoutubeDl {
                 "the refetched HLS manifest is not a media playlist".into(),
             ));
         };
+        HLS_DELEGATED.with(|urls| urls.borrow_mut().retain(|url| *url != info.url));
+        // `can_download`: unless `--allow-unplayable-formats`, DRM is an
+        // error and other unsupported features go to FFmpegFD.
+        if native != hls::Native::Supported && !no_formats::allow_unplayable() {
+            if native == hls::Native::Drm {
+                return Err(Error::Reported(
+                    "This format is DRM protected; Try selecting another format with --format or add --check-formats to automatically fallback to the next best format"
+                        .into(),
+                ));
+            }
+            screen::warning(
+                "Unsupported features have been detected; extraction will be delegated to ffmpeg",
+            );
+            HLS_DELEGATED.with(|urls| urls.borrow_mut().push(info.url.clone()));
+            let mut delegated = info.clone();
+            delegated.fragments = Vec::new();
+            return Ok(Some(delegated));
+        }
         // HlsFD keeps only the format's discontinuity section.
         let index = info
             .extra
@@ -3228,7 +3268,11 @@ impl YoutubeDl {
                 screen::screen(&format!("[download] Destination: {}", path.display()));
             }
             jobs.push(live_dash::Job {
-                fragments: extractor::LiveFragments::new(feed.clone(), &stream.extra, &stream.url),
+                fragments: Box::new(extractor::LiveFragments::new(
+                    feed.clone(),
+                    &stream.extra,
+                    &stream.url,
+                )),
                 info: stream.clone(),
                 destination: path.clone(),
                 pipe,
@@ -5570,15 +5614,59 @@ impl YoutubeDl {
                 .filter(|path| !path.as_os_str().is_empty())
                 .unwrap_or(Path::new(".")),
         );
+        // Port extension: without ffmpeg, a live HLS format is recorded
+        // natively (`hls_live`) where upstream fails with `m3u8 download
+        // detected but ffmpeg could not be found`.
+        if self.ffmpeg.is_none()
+            && info.requested_formats.is_empty()
+            && is_live(info)
+            && info
+                .protocol
+                .as_deref()
+                .is_some_and(|protocol| protocol.starts_with("m3u8"))
+        {
+            screen::warning(
+                "ffmpeg could not be found; recording the live HLS stream natively (yt-dlp-rs extension)",
+            );
+            let referer = (!info.is_direct()).then(|| info.webpage_url.clone());
+            let job = live_dash::Job {
+                info: info.clone(),
+                destination: destination.to_path_buf(),
+                fragments: Box::new(hls_live::HlsLive::new(
+                    self.client.clone(),
+                    info.url.clone(),
+                    referer,
+                    self.live_from_start,
+                )),
+                pipe: false,
+            };
+            let sizes =
+                live_dash::download(&self.client, vec![job], options, false, &mut callback)?;
+            return Ok(sizes.iter().sum());
+        }
+        // Upstream `HlsFD.real_download` refetches the media playlist (a
+        // loaded format, or a merge's private stream, has no fragments yet).
+        let refreshed = if info.requested_formats.is_empty()
+            && info.fragments.is_empty()
+            && !hls_delegated(info)
+        {
+            self.refresh_hls(info)?
+        } else {
+            None
+        };
+        let info = refreshed.as_ref().unwrap_or(info);
+        // HlsFD delegating to FFmpegFD (`Unsupported features have been
+        // detected`).
+        let delegated = hls_delegated(info);
         // Upstream `get_suitable_downloader`: partial downloads and
         // `--downloader ffmpeg` use FFmpegFD, which also merges selected
         // formats directly.
-        let ffmpeg_fd = self.uses_ffmpeg_fd(info);
+        let ffmpeg_fd = self.uses_ffmpeg_fd(info) || (delegated && self.ffmpeg.is_some());
         // FFmpegFD's `m3u8` protocol, or live DASH, without ffmpeg
         // (`_call_downloader`).
         let live_dash = self.live_dash(info);
         if self.ffmpeg.is_none()
-            && (self.forced_ffmpeg_hls(info) || live_dash == Some(LiveDash::Ffmpeg))
+            && (delegated || self.forced_ffmpeg_hls(info) || live_dash == Some(LiveDash::Ffmpeg))
         {
             return Err(Error::Reported(
                 "m3u8 download detected but ffmpeg could not be found. Please install".into(),
@@ -5785,17 +5873,34 @@ impl YoutubeDl {
                 &mut callback,
             );
         }
-        // A loaded HLS format reads its fragments from the playlist now.
-        let refreshed = if info.fragments.is_empty() {
-            self.refresh_hls(info)?
-        } else {
-            None
-        };
-        let info = refreshed.as_ref().unwrap_or(info);
         if !info.fragments.is_empty() {
             return fragment::download(
                 &self.client,
                 info,
+                destination,
+                options,
+                self.concurrent_fragments,
+                self.keep_fragments,
+                &mut callback,
+            );
+        }
+        // Port extension: a DASH SegmentBase file as byte-range fragments
+        // from its segment index (not for `--test`, stdout or explicit
+        // `--http-chunk-size` transfers, which keep HttpFD).
+        if !self.test
+            && self.http_chunk_size.is_none()
+            && destination != Path::new("-")
+            && let Some(fragments) = sidx_fd::plan(&self.client, info, &options)?
+        {
+            screen::screen(&format!(
+                "[dashsegments] Total fragments: {}",
+                fragments.len()
+            ));
+            let mut plan = info.clone();
+            plan.fragments = fragments;
+            return fragment::download(
+                &self.client,
+                &plan,
                 destination,
                 options,
                 self.concurrent_fragments,
@@ -6148,6 +6253,15 @@ impl YoutubeDl {
             part.filesize = stream.filesize;
             part.width = stream.width;
             part.height = stream.height;
+            // Port extension (`sidx_fd`): a DASH SegmentBase stream as
+            // byte-range fragments from its segment index.
+            if !self.test
+                && self.http_chunk_size.is_none()
+                && let Some(fragments) =
+                    sidx_fd::plan_format(&self.client, &part, stream, &options)?
+            {
+                part.fragments = fragments;
+            }
             if upstream.is_some() {
                 self.announce_download(&part);
                 // Upstream `HlsFD` refetches each stream's media playlist.
@@ -6156,7 +6270,8 @@ impl YoutubeDl {
                 }
                 if !part.fragments.is_empty() && !self.live_dash_fails(&part) {
                     let downloader = match part.protocol.as_deref() {
-                        Some("http_dash_segments") => "dashsegments",
+                        // `sidx_fd`'s byte-range fragments.
+                        Some("http_dash_segments" | "http" | "https") => "dashsegments",
                         Some("ism") => "ism",
                         Some("mhtml") => "mhtml",
                         _ => "hlsnative",

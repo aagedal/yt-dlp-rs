@@ -1176,8 +1176,7 @@
           }
         ],
         "headers": {}
-      },
-      "native_policy": "Native rejects SOCKS4 userinfo: reqwest SOCKS4 transport cannot carry USERID; source endpoint configuration remains reference-only"
+      }
     },
     {
       "name": "socks4-auth-user-only",
@@ -1211,8 +1210,7 @@
           }
         ],
         "headers": {}
-      },
-      "native_policy": "Native rejects SOCKS4 userinfo: reqwest SOCKS4 transport cannot carry USERID; source endpoint configuration remains reference-only"
+      }
     },
     {
       "name": "socks4-auth-empty-password",
@@ -1246,8 +1244,7 @@
           }
         ],
         "headers": {}
-      },
-      "native_policy": "Native rejects SOCKS4 userinfo: reqwest SOCKS4 transport cannot carry USERID; source endpoint configuration remains reference-only"
+      }
     },
     {
       "name": "socks4-auth-empty-user",
@@ -1281,8 +1278,7 @@
           }
         ],
         "headers": {}
-      },
-      "native_policy": "Native rejects SOCKS4 userinfo: reqwest SOCKS4 transport cannot carry USERID; source endpoint configuration remains reference-only"
+      }
     },
     {
       "name": "socks4-auth-both-empty",
@@ -1316,8 +1312,7 @@
           }
         ],
         "headers": {}
-      },
-      "native_policy": "Native rejects SOCKS4 userinfo: reqwest SOCKS4 transport cannot carry USERID; source endpoint configuration remains reference-only"
+      }
     },
     {
       "name": "socks5-auth-decoded",

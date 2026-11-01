@@ -150,8 +150,9 @@ fn print_templates_and_get_aliases_print_in_upstream_order_without_writing() {
     assert_eq!(
         stdout,
         format!(
-            "page-1\n1280\n{title}|00720|0|\"Fixture: \\\"A/B\\\" Épisode (1)\"\next = \"mp4\"\n{title}\npage-1\n{}\nout/Fixture： ＂A⧸B＂ Épisode (1).mp4\n",
-            server.url("/media.mp4")
+            "page-1\n1280\n{title}|00720|0|\"Fixture: \\\"A/B\\\" Épisode (1)\"\next = \"mp4\"\n{title}\npage-1\n{}\n{}\n",
+            server.url("/media.mp4"),
+            yt_dlp_rs::output::host_path("out/Fixture： ＂A⧸B＂ Épisode (1).mp4")
         )
     );
     // Quiet simulation: no diagnostics line, media download or info JSON.
@@ -279,7 +280,10 @@ fn print_to_file_appends_before_downloading_without_implying_simulation() {
         "{stdout}"
     );
     assert!(
-        stdout.contains("[info] Writing '%(id)s\\n%(width)s' to: lists/html5.txt"),
+        stdout.contains(&format!(
+            "[info] Writing '%(id)s\\n%(width)s' to: {}",
+            yt_dlp_rs::output::host_path("lists/html5.txt")
+        )),
         "{stdout}"
     );
     assert_eq!(

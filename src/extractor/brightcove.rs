@@ -688,6 +688,9 @@ impl Extractor for BrightcoveNew {
         let Some(found) = VALID_URL.captures(&bare) else {
             return Ok(None);
         };
+        // An `AdobePassIE`: its `_download_webpage_handle` (also behind JSON
+        // and manifest downloads) sends `geo_verification_headers()`.
+        let client = &super::geo_verification_client(client);
         crate::screen::set_extractor(NAME);
         crate::screen::screen(&format!(
             "[{NAME}] Extracting URL: {}",

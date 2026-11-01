@@ -485,7 +485,13 @@ impl Extractor for SvtPlay {
         let api = Url::parse(&format!(
             "https://api.svt.se/videoplayer-api/video/{svt_id}"
         ))?;
-        let data = download_json(client, &api, PLAY_NAME, &svt_id)?;
+        // `headers=self.geo_verification_headers()`.
+        let data = download_json(
+            &super::geo_verification_client(client),
+            &api,
+            PLAY_NAME,
+            &svt_id,
+        )?;
         let (mut fields, formats, subtitles) =
             extract_video(client, &data, &svt_id, PLAY_NAME, video_id.as_deref())?;
         let field = |fields: &[(&str, Value)], key: &str| {

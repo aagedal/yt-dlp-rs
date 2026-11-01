@@ -3781,8 +3781,55 @@ pub(crate) fn proto_relative_http(url: &str) -> String {
     }
 }
 
-/// `self._proto_relative_url(url)`: `//host/...` becomes `https://host/...`.
+/// The client for `--geo-verification-proxy` requests.
+static GEO_CLIENT: std::sync::RwLock<Option<Client>> = std::sync::RwLock::new(None);
+
+pub(crate) fn set_geo_verification_client(client: Option<Client>) {
+    if let Ok(mut slot) = GEO_CLIENT.write() {
+        *slot = client;
+    }
+}
+
+/// The client of a request upstream sends with `geo_verification_headers()`:
+/// its `Ytdl-request-proxy` routes it through `--geo-verification-proxy`,
+/// else it is `client`.
+pub(crate) fn geo_verification_client(client: &Client) -> Client {
+    GEO_CLIENT
+        .read()
+        .ok()
+        .and_then(|slot| slot.clone())
+        .unwrap_or_else(|| client.clone())
+}
+
+/// `--prefer-insecure`.
+static PREFER_INSECURE: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+/// `--prefer-insecure`: HTTP instead of HTTPS for [`http_scheme`].
+pub fn set_prefer_insecure(prefer: bool) {
+    PREFER_INSECURE.store(prefer, std::sync::atomic::Ordering::Relaxed);
+}
+
+/// Upstream `InfoExtractor.http_scheme()`: `http:` with `--prefer-insecure`,
+/// else `https:`.
+pub(crate) fn http_scheme() -> &'static str {
+    if PREFER_INSECURE.load(std::sync::atomic::Ordering::Relaxed) {
+        "http:"
+    } else {
+        "https:"
+    }
+}
+
+/// `self._proto_relative_url(url)`: `//host/...` gets [`http_scheme`].
 pub(crate) fn proto_relative(url: &str) -> String {
+    if url.starts_with("//") {
+        format!("{}{url}", http_scheme())
+    } else {
+        url.to_owned()
+    }
+}
+
+/// `self._proto_relative_url(url, 'https:')`.
+pub(crate) fn proto_relative_https(url: &str) -> String {
     match url.strip_prefix("//") {
         Some(rest) => format!("https://{rest}"),
         None => url.to_owned(),

@@ -109,11 +109,6 @@ impl ProxyConfig {
                 return Err(error());
             }
         }
-        if matches!(url.scheme(), "socks4" | "socks4a") && credentials.is_some() {
-            // The current transport cannot carry SOCKS4 USERID. Do not silently
-            // discard credentials that upstream would send.
-            return Err(error());
-        }
         // Explicit SOCKS ports avoid depending on backend-specific URL defaults.
         if url.scheme().starts_with("socks") && url.port().is_none() {
             url.set_port(Some(1080)).map_err(|_| error())?;
@@ -127,6 +122,27 @@ impl ProxyConfig {
             Self::Environment => Ok(builder),
             Self::Direct => Ok(builder.no_proxy()),
             Self::Explicit { url, credentials } => {
+                // Upstream's SOCKS4 USERID (the username; a password is not
+                // sent), through a loopback relay that inserts it.
+                if matches!(url.scheme(), "socks4" | "socks4a")
+                    && let Some((username, _)) = credentials
+                        .as_ref()
+                        .filter(|(username, _)| !username.is_empty())
+                {
+                    let host = url.host_str().ok_or_else(error)?;
+                    let host = host.trim_start_matches('[').trim_end_matches(']');
+                    let local = super::socks4_relay::port(
+                        host,
+                        url.port().unwrap_or(1080),
+                        username.as_bytes(),
+                        super::DEFAULT_SOCKET_TIMEOUT,
+                    )
+                    .map_err(|_| error())?;
+                    let relay = Url::parse(&format!("{}://127.0.0.1:{local}", url.scheme()))
+                        .map_err(|_| error())?;
+                    let proxy = reqwest::Proxy::all(relay).map_err(|_| error())?;
+                    return Ok(builder.no_proxy().proxy(proxy));
+                }
                 let mut endpoint = url.clone();
                 let http = matches!(url.scheme(), "http" | "https");
                 let incomplete_socks_auth = url.scheme() == "socks5h"
@@ -173,10 +189,6 @@ mod tests {
                 ));
                 continue;
             }
-            if case["name"].as_str().unwrap().starts_with("socks4-auth") {
-                assert!(ProxyConfig::parse(raw).is_err());
-                continue;
-            }
             let actual = match ProxyConfig::parse(raw).unwrap() {
                 ProxyConfig::Direct => Value::Null,
                 ProxyConfig::Explicit { url, credentials } => {
@@ -198,7 +210,7 @@ mod tests {
             }
             compared += 1;
         }
-        assert_eq!(compared, 39);
+        assert_eq!(compared, 44);
     }
 
     #[test]

@@ -2853,8 +2853,10 @@ impl GenericHttp {
                 "JSON-LD media with an encoding format is not supported natively",
             ));
         }
+        // `process_ie_result`'s `sanitize_url(url, scheme=...)`: a
+        // protocol-relative URL gets `http_scheme()`, not the page's.
         let target = url
-            .join(target)
+            .join(&super::proto_relative(target))
             .map_err(|_| unsupported("JSON-LD media URL is invalid"))?;
         if super::youtube_suitable(target.as_str()) || !matches!(target.scheme(), "http" | "https")
         {

@@ -1,4 +1,5 @@
 use clap::{CommandFactory, FromArgMatches, Parser};
+mod bidi;
 use std::io::{self, Write};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::{
@@ -7,6 +8,7 @@ use std::{
     sync::Arc,
     time::{Duration, Instant},
 };
+use yt_dlp_rs::output::color;
 use yt_dlp_rs::{
     AudioOptions, CookieJar, DownloadArchive, DownloadOptions, DownloadPhase, EntrySelection,
     ExtractResult, ExtractionOptions, HttpOptions, InfoJsonWrite, MatchFilters, MatchOutcome,
@@ -24,20 +26,41 @@ use yt_dlp_rs::{
 
 // Upstream `write_string` encodes every message with `--encoding`; these
 // shadow the standard printing macros for the rest of the binary.
+/// A message through `--bidi-workaround` (`_bidi_workaround`), keeping
+/// its final line break, if any.
+fn bidi_line(text: String) -> String {
+    if !bidi::active() {
+        return text;
+    }
+    match text.strip_suffix('\n') {
+        Some(message) => format!("{}\n", bidi::apply(message)),
+        None => bidi::apply(&text),
+    }
+}
+
 macro_rules! println {
     () => {
-        yt_dlp_rs::output::encoding::write_message(false, "\n")
+        yt_dlp_rs::output::encoding::write_message(false, &bidi_line("\n".into()))
     };
     ($($arg:tt)*) => {
-        yt_dlp_rs::output::encoding::write_message(false, &format!("{}\n", format_args!($($arg)*)))
+        yt_dlp_rs::output::encoding::write_message(
+            false,
+            &bidi_line(format!("{}\n", format_args!($($arg)*))),
+        )
     };
 }
 macro_rules! eprintln {
     () => {
-        yt_dlp_rs::output::encoding::write_message(true, "\n")
+        yt_dlp_rs::output::encoding::write_message(true, &bidi_line("\n".into()))
     };
     ($($arg:tt)*) => {
-        yt_dlp_rs::output::encoding::write_message(true, &format!("{}\n", format_args!($($arg)*)))
+        yt_dlp_rs::output::encoding::write_message(
+            true,
+            &bidi_line(yt_dlp_rs::output::color::err_prefix(format!(
+                "{}\n",
+                format_args!($($arg)*)
+            ))),
+        )
     };
 }
 
@@ -60,14 +83,53 @@ fn validation_warning(rank: u8, text: String) {
 
 /// Upstream `logtostderr` (`-o -`): screen and progress output use stderr.
 static LOG_TO_STDERR: AtomicBool = AtomicBool::new(false);
+/// The stderr color policy, which `logtostderr` also applies to `out`.
+static STDERR_COLORS: std::sync::OnceLock<yt_dlp_rs::output::color::Allow> =
+    std::sync::OnceLock::new();
 
 /// Upstream `_out_files.out`: stdout, or stderr with `logtostderr`.
 fn out_stream() -> Box<dyn Write> {
     use yt_dlp_rs::output::encoding::{EncodingWriter, output};
-    if LOG_TO_STDERR.load(Ordering::Relaxed) {
+    let stream: Box<dyn Write> = if LOG_TO_STDERR.load(Ordering::Relaxed) {
         Box::new(EncodingWriter::new(io::stderr().lock(), output()))
     } else {
         Box::new(EncodingWriter::new(io::stdout().lock(), output()))
+    };
+    if bidi::active() {
+        Box::new(BidiWriter {
+            inner: stream,
+            pending: Vec::new(),
+        })
+    } else {
+        stream
+    }
+}
+
+/// `to_stdout`'s `_bidi_workaround`: each flushed message (its final line
+/// break kept) through the bidi program.
+struct BidiWriter {
+    inner: Box<dyn Write>,
+    pending: Vec<u8>,
+}
+
+impl Write for BidiWriter {
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        self.pending.extend_from_slice(buf);
+        Ok(buf.len())
+    }
+
+    fn flush(&mut self) -> io::Result<()> {
+        if !self.pending.is_empty() {
+            let text = String::from_utf8_lossy(&std::mem::take(&mut self.pending)).into_owned();
+            self.inner.write_all(bidi_line(text).as_bytes())?;
+        }
+        self.inner.flush()
+    }
+}
+
+impl Drop for BidiWriter {
+    fn drop(&mut self) {
+        let _ = self.flush();
     }
 }
 
@@ -819,7 +881,7 @@ struct Args {
     /// Maximum download rate in bytes per second, e.g. 50K or 4.2M
     #[arg(short = 'r', long, aliases = ["rate-limit"], value_name = "RATE")]
     limit_rate: Option<String>,
-    /// Whether to emit color codes ([STREAM:]POLICY); this port never emits them
+    /// Whether to emit color codes ([STREAM:]POLICY): always, auto (default), never, no_color, auto-tty or no_color-tty
     #[arg(long, value_name = "[STREAM:]POLICY")]
     color: Vec<String>,
     #[arg(long, alias = "no-colours", hide = true)]
@@ -1645,6 +1707,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         usize::try_from(args.trim_filenames).ok().filter(|&n| n > 0),
     );
     yt_dlp_rs::extractor::hls_split_discontinuity(args.hls_split_discontinuity);
+    yt_dlp_rs::extractor::set_prefer_insecure(args.prefer_insecure);
     // Upstream `parse_metadata` (shared by both options, in command-line
     // order per stage) plus the deprecated `--metadata-from-title`.
     let metadata_actions = {
@@ -1682,6 +1745,80 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         args.sub_langs = vec!["all".into()];
         if !(args.embed_subs || args.write_auto_subs) {
             args.write_subs = true;
+        }
+    }
+    // Upstream `--color` (`_dict_from_options_callback` with `stdout|stderr`
+    // keys, both by default) and `--no-colors` (replacing the whole dict),
+    // in command-line order; the final values are validated.
+    let mut policies: [Option<String>; 2] = [None, None];
+    let mut events: Vec<(usize, Option<&str>)> = matches
+        .indices_of("color")
+        .into_iter()
+        .flatten()
+        .zip(args.color.iter().map(|value| Some(value.as_str())))
+        .collect();
+    // A flag's default value has an index too.
+    if matches.value_source("no_colors") == Some(clap::parser::ValueSource::CommandLine) {
+        events.extend(
+            matches
+                .indices_of("no_colors")
+                .into_iter()
+                .flatten()
+                .map(|index| (index, None)),
+        );
+    }
+    events.sort_by_key(|(index, _)| *index);
+    for (_, value) in events {
+        let Some(value) = value else {
+            policies = [Some("no_color".into()), Some("no_color".into())];
+            continue;
+        };
+        let keyed = value.split_once(':').filter(|(keys, _)| {
+            keys.split(',')
+                .all(|key| matches!(key.to_lowercase().as_str(), "stdout" | "stderr"))
+        });
+        let (stdout, stderr, policy) = match keyed {
+            Some((keys, policy)) => {
+                let keys = keys.to_lowercase();
+                let keys: Vec<&str> = keys.split(',').collect();
+                (keys.contains(&"stdout"), keys.contains(&"stderr"), policy)
+            }
+            None => (true, true, value),
+        };
+        for (slot, set) in policies.iter_mut().zip([stdout, stderr]) {
+            if set {
+                *slot = Some(policy.trim().to_owned());
+            }
+        }
+    }
+    {
+        use std::io::IsTerminal;
+        use yt_dlp_rs::output::color;
+        let term = std::env::var("TERM").unwrap_or_default();
+        let term_allows = term.to_lowercase() != "dumb";
+        let no_color_env = std::env::var_os("NO_COLOR").is_some_and(|value| !value.is_empty());
+        let resolve = |policy: &Option<String>, tty: bool| {
+            color::resolve(
+                policy.as_deref(),
+                tty && terminal_sequences(),
+                term_allows,
+                no_color_env,
+            )
+        };
+        let stdout = resolve(&policies[0], std::io::stdout().is_terminal());
+        let stderr = resolve(&policies[1], std::io::stderr().is_terminal());
+        color::set(stdout, stderr);
+        // `-o -` (`logtostderr`) makes stderr upstream's `out` stream.
+        STDERR_COLORS.set(stderr).ok();
+    }
+    // Upstream `YoutubeDL.__init__`'s `bidi_workaround` output process.
+    if args.bidi_workaround {
+        match bidi::start() {
+            Ok(()) => {}
+            Err(bidi::StartError::NotFound) => warning!(
+                "WARNING: Could not find fribidi executable, ignoring --bidi-workaround. Make sure that  fribidi  is an executable file in one of the directories in your $PATH."
+            ),
+            Err(bidi::StartError::Other(error)) => return Err(Box::new(error)),
         }
     }
     validate_accepted_options(&args)?;
@@ -2022,6 +2159,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         now,
     });
     QUIET.store(args.simulation().quiet, Ordering::Relaxed);
+    yt_dlp_rs::output::color::set_screen_is_stderr(args.simulation().quiet);
     yt_dlp_rs::screen::set_sink(|message| match message {
         yt_dlp_rs::screen::Message::Screen(text) => screen!("{text}"),
         yt_dlp_rs::screen::Message::ScreenRaw(text) => {
@@ -2509,6 +2647,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     http_options.proxy = args.proxy;
     http_options.socket_timeout = args.socket_timeout;
     http_options.print_traffic = args.print_traffic;
+    http_options.geo_verification_proxy = args.geo_verification_proxy.clone();
+    http_options.legacy_server_connect = args.legacy_server_connect;
     http_options.no_check_certificates = args.no_check_certificates;
     http_options.client_certificate = args.client_certificate.clone();
     http_options.client_certificate_key = args.client_certificate_key.clone();
@@ -2680,6 +2820,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let templates = OutputTemplates::parse(&args.output, args.restrict_filenames);
     LOG_TO_STDERR.store(templates.get(None) == "-", Ordering::Relaxed);
+    if let Some(&stderr) = STDERR_COLORS.get()
+        && LOG_TO_STDERR.load(Ordering::Relaxed)
+    {
+        yt_dlp_rs::output::color::set(stderr, stderr);
+    }
     let downloader = downloader
         .with_prefer_best_format(templates.get(None) == "-")
         .with_external_quiet(QUIET.load(Ordering::Relaxed))
@@ -3105,19 +3250,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 .collect::<Vec<_>>(),
         )
         .map_err(usage)?;
-    // Upstream `--color` validation; output is always uncolored.
-    for value in &args.color {
-        let policy = match value.split_once(':') {
-            Some((stream, policy))
-                if matches!(stream.to_lowercase().as_str(), "stdout" | "stderr") =>
-            {
-                policy
-            }
-            _ => value.as_str(),
-        }
-        .trim();
+    for policy in policies.iter().flatten() {
         if !matches!(
-            policy,
+            policy.as_str(),
             "always" | "auto" | "auto-tty" | "no_color" | "no_color-tty" | "never"
         ) {
             return Err(usage(format!("\"{policy}\" is not a valid color policy")).into());
@@ -5127,7 +5262,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         && archive.contains_identity(&key, &id)
                                     {
                                         screen!(
-                                            "[download] {id}: has already been recorded in the archive"
+                                            "[download] {}: has already been recorded in the archive",
+                                            color::format_screen(&id, color::styles::ID)
                                         );
                                         if args.break_on_existing {
                                             pending = Some(Cancel::Existing);
@@ -5469,8 +5605,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         queued.push(Input::Nested {
                             playlist: Box::new(playlist),
                             item: Some(format!(
-                                "[download] Downloading item {} of {count}",
-                                entry.playlist_autonumber.unwrap_or_default()
+                                "[download] Downloading item {} of {}",
+                                color::format_screen(
+                                    &entry.playlist_autonumber.unwrap_or_default().to_string(),
+                                    color::styles::ID
+                                ),
+                                color::format_screen(&count.to_string(), color::styles::EMPHASIS)
                             )),
                         });
                     }
@@ -5585,7 +5725,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 let count = info
                     .n_entries
                     .map_or_else(|| "N/A".into(), |count| count.to_string());
-                screen!("[download] Downloading item {index} of {count}");
+                screen!(
+                    "[download] Downloading item {} of {}",
+                    color::format_screen(&index.to_string(), color::styles::ID),
+                    color::format_screen(&count, color::styles::EMPHASIS)
+                );
             }
             // `--flat-playlist`: a `url_transparent` entry is not extracted;
             // its forced printings see the raw entry.
@@ -5631,7 +5775,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 {
                     videos -= 1;
                     template_options.video_autonumber.set(previous_autonumber);
-                    screen!("[download] {id}: has already been recorded in the archive");
+                    screen!(
+                        "[download] {}: has already been recorded in the archive",
+                        color::format_screen(&id, color::styles::ID)
+                    );
                     if args.break_on_existing {
                         cancelled = cancel(Cancel::Existing, args.break_per_input);
                         if cancelled.is_none() {
@@ -8131,19 +8278,9 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
         }
     }
     for (given, what) in [
-        (args.legacy_server_connect, "--legacy-server-connect"),
-        (args.bidi_workaround, "--bidi-workaround"),
         (!args.plugin_dirs.is_empty(), "--plugin-dirs"),
-        // HTTP-scheme preferences of a few upstream extractors.
-        (args.prefer_insecure, "--prefer-insecure"),
         // The EJS challenge solver is bundled (pinned), never downloaded.
         (!args.remote_components.is_empty(), "--remote-components"),
-        // The `Ytdl-request-proxy` header of upstream's geo verification
-        // requests.
-        (
-            args.geo_verification_proxy.is_some(),
-            "--geo-verification-proxy",
-        ),
     ] {
         if given {
             warning!("WARNING: {what} is not supported natively and is ignored");
@@ -8151,7 +8288,9 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
     }
     if args.allow_unplayable_formats {
         warning!(
-            "WARNING: You have asked for UNPLAYABLE formats to be listed/downloaded. This is a developer option intended for debugging. \n         If you experience any issues while using this option, DO NOT open a bug report"
+            "WARNING: You have asked for {} formats to be listed/downloaded. This is a developer option intended for debugging. \n         If you experience any issues while using this option, {} open a bug report",
+            color::format_err("UNPLAYABLE", color::styles::EMPHASIS),
+            color::format_err("DO NOT", color::styles::ERROR)
         );
     }
     Ok(())
@@ -9391,9 +9530,7 @@ fn send_console_code(code: &str) -> bool {
 
 /// Upstream `remove_terminal_sequences` (`\033[...m`).
 fn remove_terminal_sequences(text: &str) -> String {
-    static SEQUENCE: std::sync::LazyLock<regex::Regex> =
-        std::sync::LazyLock::new(|| regex::Regex::new("\x1b\\[[^m]+m").unwrap());
-    SEQUENCE.replace_all(text, "").into_owned()
+    yt_dlp_rs::output::color::remove_terminal_sequences(text).into_owned()
 }
 
 /// Upstream `to_console_title(message, progress_state, percent)`.
@@ -9661,7 +9798,8 @@ impl<'a> ProgressReporter<'a> {
             printer: yt_dlp_rs::output::progress::StatusPrinter::new(
                 self.options.newline,
                 !self.options.quiet,
-            ),
+            )
+            .with_sequences(yt_dlp_rs::output::color::out().sequences()),
             next: now,
             fragments: None,
         });
@@ -9794,7 +9932,8 @@ impl<'a> ProgressReporter<'a> {
             let mut printer = yt_dlp_rs::output::progress::StatusPrinter::new(
                 self.options.newline,
                 !self.options.quiet,
-            );
+            )
+            .with_sequences(yt_dlp_rs::output::color::out().sequences());
             Self::write(&printer.print(&format!("[download] {line}")));
             Self::write(&printer.end());
         }
@@ -10679,12 +10818,15 @@ fn archived_reason(info: &yt_dlp_rs::VideoInfo) -> String {
     let id = if info.id.is_empty() {
         String::new()
     } else {
-        format!("{}: ", info.id)
+        format!("{}: ", color::format_screen(&info.id, color::styles::ID))
     };
     let title = if info.title.is_empty() {
         String::new()
     } else {
-        format!("{} ", info.title)
+        format!(
+            "{} ",
+            color::format_screen(&info.title, color::styles::EMPHASIS)
+        )
     };
     format!("[download] {id}{title}has already been recorded in the archive")
 }

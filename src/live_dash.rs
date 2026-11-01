@@ -20,12 +20,24 @@ use std::{
     },
 };
 
+/// A lazy live fragment list: the next fragment, `None` once the stream
+/// ends. `stop` is polled while waiting (an interrupt ends the list).
+pub(crate) trait LiveSource: Send {
+    fn next(&mut self, stop: &dyn Fn() -> bool) -> Result<Option<crate::Fragment>>;
+}
+
+impl LiveSource for LiveFragments {
+    fn next(&mut self, stop: &dyn Fn() -> bool) -> Result<Option<crate::Fragment>> {
+        LiveFragments::next(self, stop)
+    }
+}
+
 /// One format's download.
 pub(crate) struct Job {
     /// The result with this format applied (request headers, referrer).
     pub info: VideoInfo,
     pub destination: PathBuf,
-    pub fragments: LiveFragments,
+    pub fragments: Box<dyn LiveSource>,
     /// `destination` is a named pipe FFmpeg reads (`--growing-file`).
     pub pipe: bool,
 }

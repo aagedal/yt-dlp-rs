@@ -745,6 +745,8 @@ pub(crate) fn extract_mvpd_auth(
 ) -> Result<String> {
     let options = options();
     let mso_id = options.mso.as_deref();
+    // `AdobePassIE._download_webpage_handle`: `geo_verification_headers()`.
+    let client = &super::geo_verification_client(client);
     let flow = Flow {
         client,
         caller,

@@ -597,7 +597,7 @@ fn templates_are_explicit_and_metadata_cannot_inject_paths_or_fields() {
             .unwrap()
             .to_str()
             .unwrap(),
-        "downloads/%-..⧸folder⧸%(id)s.mp4"
+        yt_dlp_rs::output::host_path("downloads/%-..⧸folder⧸%(id)s.mp4")
     );
     assert_eq!(
         render_template("%(title)03d", &info).unwrap(),

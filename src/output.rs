@@ -1,3 +1,4 @@
+pub mod color;
 pub mod encoding;
 pub(crate) mod exec;
 mod filename;
@@ -22,7 +23,9 @@ pub use print::{ForcedFields, PrintTemplate, PrintToFile, StagePaths};
 pub fn print_stage_name(spec: &str) -> String {
     exec::Stage::split(spec, "video").0
 }
-pub use sanitize::{FilenameMode, force_sanitize_path, sanitize_filename};
+pub use sanitize::{
+    FilenameMode, force_sanitize_path, host_path, sanitize_filename, windows_sanitize_path,
+};
 pub use subtitles::{render_automatic_captions, render_subtitles};
 pub use thumbnails::render_thumbnails;
 

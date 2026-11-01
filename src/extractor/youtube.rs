@@ -504,7 +504,10 @@ pub(crate) fn wait_for_video(
         }
         progress(&format!(
             "[wait] Remaining time until next attempt: {}",
-            format_duration(remaining)
+            crate::output::color::format_screen(
+                &format_duration(remaining),
+                crate::output::color::styles::EMPHASIS
+            )
         ));
         // A second's sleep, polling the interrupt.
         for _ in 0..20 {

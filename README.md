@@ -139,7 +139,8 @@ players of supported sites.
 
 ## Not supported
 
-- DRM-protected media, and HLS SAMPLE-AES.
+- DRM-protected media, and native HLS SAMPLE-AES decryption (like upstream,
+  such playlists are delegated to FFmpeg).
 - Python plugins, including PO-token provider plugins (pass `po_token` with
   `--extractor-args` instead). `--use-postprocessor` supports only `Exec`.
 - Generic-page features beyond HTML5 media elements and known embeds, such as

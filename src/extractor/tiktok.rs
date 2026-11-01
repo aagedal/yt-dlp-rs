@@ -170,13 +170,7 @@ fn error_text(error: &Error) -> String {
     }
 }
 
-/// `_proto_relative_url(url)`.
-fn proto_relative(url: &str) -> String {
-    match url.strip_prefix("//") {
-        Some(rest) => format!("https://{rest}"),
-        None => url.to_owned(),
-    }
-}
+use super::proto_relative;
 
 /// A random number (upstream uses `random`; values are never reproduced).
 fn random_u64(salt: u64) -> u64 {

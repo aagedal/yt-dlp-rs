@@ -26,16 +26,16 @@ behavior rather than claiming the Python environment fallback/bypass algorithm.
 HTTP proxy Basic credentials are decoded explicitly and preserve empty/user-only
 fields as an explicit native policy; source backends can omit HTTP auth for
 incomplete/empty fields, so this is not a universal wire parity claim. SOCKS5 offers user/password auth only with both nonempty values as source
-does. Current SOCKS4 backend cannot send USERID, so native rejects such URLs
-instead of silently discarding it. Strict URL bounds, unsupported paths/query/
+does. The SOCKS4 backend cannot send a USERID, so a loopback relay inserts the
+username into each request (added later; see COMPATIBILITY.md). Strict URL bounds, unsupported paths/query/
 fragments and legacy per-request proxy headers produce value-free errors.
 
 The offline worker invokes actual parse_options, YoutubeDL.proxies, clean_proxies,
 select_proxy and make_socks_proxy_opts with controlled discovered proxy mappings,
 real environment bypass predicates and network/download/process calls forbidden.
 Fifty source configurations and eight source-only cases preserve source results.
-Native parser tests compare 39 explicit endpoint projections, reject five SOCKS4
-credential cases and treat six omitted-option cases as environment-mode markers
+Native parser tests compare 44 explicit endpoint projections (five SOCKS4
+credential cases since the relay) and treat six omitted-option cases as environment-mode markers
 only. Host casing/default ports/URL formatting projection is documented; credentials
 and DNS flags stay explicit. Configuration comparison is not a transport proof.
 
@@ -50,8 +50,9 @@ and deliberately public dummy key are saved fixtures; tests invoke no OpenSSL.
 The bounded-player proxy regression also rejects an off-origin redirect before
 another request. Required tests make no live-site requests.
 
-Remaining scope includes SOCKS4 USERID, full upstream environment discovery and
-bypass/PAC semantics, per-request/extractor proxies and geo-verification routing.
+Remaining scope includes full upstream environment discovery and
+bypass/PAC semantics and per-request/extractor proxies. `--geo-verification-proxy`
+(upstream's `Ytdl-request-proxy` header) was ported later through a second client.
 Python remains development/reference tooling only.
 
 ```sh

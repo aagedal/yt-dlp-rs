@@ -1,6 +1,7 @@
 //! Upstream `render_formats_table` (`-F`), including the `--list-formats-old`
-//! layout, over the serialized info dict without styles. Pure: never selects
-//! or inspects resources.
+//! layout, over the serialized info dict, with upstream's styles when stdout
+//! allows colors. Pure: never selects or inspects resources.
+use super::color::{format_out, format_out_or, styles};
 use crate::VideoInfo;
 use serde_json::{Map, Value};
 
@@ -58,7 +59,7 @@ pub fn render_formats_table(info: &VideoInfo, as_table: bool) -> Option<String> 
         let header = ["format code", "extension", "resolution", "note"].map(String::from);
         return Some(render_table(header.to_vec(), rows, None, 1, false));
     }
-    let delim = "|".to_owned();
+    let delim = format_out_or("\u{2502}", styles::DELIM, "|");
     let duration = get(&info, "duration").and_then(Value::as_f64);
     let rows = formats
         .iter()
@@ -82,9 +83,15 @@ pub fn render_formats_table(info: &VideoInfo, as_table: bool) -> Option<String> 
             ]
             .into_iter()
             .find_map(|(value, prefix)| {
-                value
-                    .filter(|value| *value != 0.0)
-                    .map(|value| format!("{prefix}{}", super::progress::format_bytes(Some(value))))
+                value.filter(|value| *value != 0.0).map(|value| {
+                    let size = super::progress::format_bytes(Some(value));
+                    // The estimate's whole template is suppressed.
+                    if prefix == "~\t" {
+                        format_out(&format!("{prefix}{size}"), styles::SUPPRESS)
+                    } else {
+                        format!("{prefix}{size}")
+                    }
+                })
             })
             .unwrap_or_default();
             let more_info = join_nonempty(
@@ -93,19 +100,21 @@ pub fn render_formats_table(info: &VideoInfo, as_table: bool) -> Option<String> 
                     join_nonempty(
                         [
                             if matches!(text_of(f, "ext").as_deref(), Some("f4f" | "f4m")) {
-                                "UNSUPPORTED".into()
+                                format_out("UNSUPPORTED", styles::BAD_FORMAT)
                             } else {
                                 String::new()
                             },
                             match get(f, "has_drm") {
                                 Some(Value::String(value)) if value == "maybe" => {
-                                    "Maybe DRM".into()
+                                    format_out("Maybe DRM", styles::WARNING)
                                 }
-                                Some(value) if truthy(value) => "DRM".into(),
+                                Some(value) if truthy(value) => {
+                                    format_out("DRM", styles::BAD_FORMAT)
+                                }
                                 _ => String::new(),
                             },
                             if get(f, "__needs_testing").is_some_and(truthy) {
-                                "Untested".into()
+                                format_out("Untested", styles::WARNING)
                             } else {
                                 String::new()
                             },
@@ -123,7 +132,7 @@ pub fn render_formats_table(info: &VideoInfo, as_table: bool) -> Option<String> 
                 " ",
             );
             vec![
-                field(f, "format_id", "%s"),
+                format_out(&field(f, "format_id", "%s"), styles::ID),
                 field(f, "ext", "%s"),
                 format_resolution(f),
                 rounded(f, "fps", "\t", ""),
@@ -161,11 +170,11 @@ pub fn render_formats_table(info: &VideoInfo, as_table: bool) -> Option<String> 
         "\tFPS",
         "HDR",
         "CH",
-        "|",
+        &delim,
         "\tFILESIZE",
         "\tTBR",
         "PROTO",
-        "|",
+        &delim,
         "VCODEC",
         "\tVBR",
         "ACODEC",
@@ -173,8 +182,14 @@ pub fn render_formats_table(info: &VideoInfo, as_table: bool) -> Option<String> 
         "\tASR",
         "MORE INFO",
     ]
-    .map(String::from);
-    Some(render_table(header.to_vec(), rows, Some("-"), 0, true))
+    .map(list_format_header);
+    let line = format_out_or("\u{2500}", styles::DELIM, "-");
+    Some(render_table(header.to_vec(), rows, Some(&line), 0, true))
+}
+
+/// Upstream `_list_format_headers` (tables other than `--list-formats-old`).
+pub(crate) fn list_format_header(header: &str) -> String {
+    format_out(header, styles::HEADERS)
 }
 
 /// Upstream `render_table`: text after a tab is right-aligned.
@@ -185,7 +200,13 @@ pub(crate) fn render_table(
     extra_gap: usize,
     hide_empty: bool,
 ) -> String {
-    let width = |text: &str| text.chars().filter(|c| *c != '\t').count();
+    // `len(remove_terminal_sequences(string).replace('\t', ''))`.
+    let width = |text: &str| {
+        super::color::remove_terminal_sequences(text)
+            .chars()
+            .filter(|c| *c != '\t')
+            .count()
+    };
     let max_lens = |table: &[Vec<String>]| -> Vec<usize> {
         let columns = table.first().map_or(0, Vec::len);
         (0..columns)
@@ -369,12 +390,14 @@ fn simplified_codec(f: &Dict, field: &str) -> String {
     if field == "acodec" && other.as_deref() == Some("none") {
         return String::new();
     }
-    if field == "vcodec" {
-        "audio only"
-    } else {
-        "video only"
-    }
-    .into()
+    format_out(
+        if field == "vcodec" {
+            "audio only"
+        } else {
+            "video only"
+        },
+        styles::SUPPRESS,
+    )
 }
 
 /// Upstream `shorten_protocol_name`.

@@ -120,6 +120,9 @@ fn from_api(client: &Client, url: &Url, video_id: &str, tld: &str) -> Result<Opt
         .append_pair("room_slug", video_id)
         .finish();
     // `_download_json(..., fatal=False, impersonate=True) or {}`.
+    // `**self.geo_verification_headers()`.
+    let client = &super::geo_verification_client(client);
+    let _geo = crate::impersonate::geo_scope();
     let response = impersonated(|| {
         super::direct::post(
             client,
@@ -213,6 +216,9 @@ fn unsupported(what: &str) -> Error {
 /// `_extract_from_html`.
 fn from_html(client: &Client, url: &Url, video_id: &str, tld: &str) -> Result<VideoInfo> {
     let page = Url::parse(&format!("https://chaturbate.{tld}/{video_id}/"))?;
+    // `headers=self.geo_verification_headers()`.
+    let client = &super::geo_verification_client(client);
+    let _geo = crate::impersonate::geo_scope();
     let webpage = impersonated(|| {
         download_webpage_note_headers(client, &page, NAME, video_id, "Downloading webpage", &[])
     })?;

@@ -67,10 +67,11 @@ class ProxyComparisonTests(unittest.TestCase):
             self.assertIn(fragment,UPSTREAM_WORKER)
         self.assertEqual(self.fixture['upstream_commit'],PINNED_UPSTREAM)
         policy_cases=[c for c in self.fixture['cases'] if 'native_policy' in c]
-        self.assertEqual(len(policy_cases),11)
+        self.assertEqual(len(policy_cases),6)
         self.assertEqual(sum(c['expected']['proxy_option'] is None for c in policy_cases),6)
-        self.assertEqual(sum(c['name'].startswith('socks4-auth-') for c in policy_cases),5)
-        self.assertEqual(sum('native_policy' not in c for c in self.fixture['cases']),39)
+        # SOCKS4 userinfo is compared natively (USERID through a loopback relay).
+        self.assertEqual(sum(c['name'].startswith('socks4-auth-') for c in policy_cases),0)
+        self.assertEqual(sum('native_policy' not in c for c in self.fixture['cases']),44)
 
     def run_main(self,revision,fixture_path=None):
         with tempfile.TemporaryDirectory() as directory:

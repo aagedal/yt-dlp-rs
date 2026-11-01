@@ -123,7 +123,7 @@ suspended as a `PlaylistRun` and resumed through the input queue).
    string/integer/fixed-point conversions, width/precision/flags, alternatives and
    missing-value defaults with upstream filename sanitization, restricted/Windows/
    minimal modes, name trimming, typed `-o` templates and `-P` paths; upstream's full template expressions and
-   conversions followed, and Windows-host path sanitization remains open. `--print` video-stage field lists/templates and
+   conversions followed, as did upstream's Windows-host `sanitize_path`. `--print` video-stage field lists/templates and
    the title/ID/URL/filename `--get-*` aliases print unsanitized values with
    quiet simulation; `--print-to-file` appends video-stage lines to output-template
    destinations without implying simulation. All upstream print stages are implemented.
@@ -160,8 +160,14 @@ suspended as a `PlaylistRun` and resumed through the input queue).
    representation downloads are implemented; explicit FFmpeg merges separate
    tracks. Dynamic DASH follows upstream: generic live results,
    `--ignore-dynamic-mpd` and FFmpegFD live downloads (native live DASH stays an
-   error). SIDX DASH, SAMPLE-AES/DRM decryption and native (non-FFmpeg) live HLS
-   and external video renditions remain open. On Unix, SIGINT/SIGTERM end a
+   error). Unknown HLS tags are ignored and SAMPLE-AES playlists delegated to
+   FFmpegFD like upstream's HlsFD; external HLS video renditions are formats.
+   Without ffmpeg, live HLS is recorded natively (a port extension; upstream
+   requires ffmpeg). DASH SegmentBase files download as SIDX/Cues byte-range
+   fragments (a port extension; upstream reads the whole file). Out of scope
+   by decision (2026-10-31): native SAMPLE-AES decryption (FFmpegFD decrypts
+   it, as upstream), `--remote-components` (the challenge solver stays the
+   bundled, pinned EJS copy) and Python plugins (no Python at runtime). On Unix, SIGINT/SIGTERM end a
    CLI run like upstream's `KeyboardInterrupt`, keeping `.part` files.
    `--continue`/`.part` whole-file resume (also for downloads to be
    postprocessed) and FragmentFD `.ytdl` fragment resume persist across
@@ -177,8 +183,10 @@ suspended as a `PlaylistRun` and resumed through the input queue).
    docs/COMPATIBILITY.md (including Vimeo's login and logged-in web API
    client), and Adobe Pass TV provider authentication is ported.
    Explicit HTTP/HTTPS/SOCKS proxies and direct overrides now route all native
-   clients, including verified HTTPS proxy/CONNECT transport. SOCKS4 user IDs,
-   full upstream environment discovery/bypass and per-extractor proxy policies remain open.
+   clients, including verified HTTPS proxy/CONNECT transport and SOCKS4 user
+   IDs; `--geo-verification-proxy` routes upstream's geo verification requests.
+   Full upstream environment discovery/bypass and other per-extractor proxy
+   policies remain open.
 4. **YouTube vertical slice.** Player/API request fixtures, client selection,
    progressive and adaptive formats, signature/JavaScript challenge strategy,
    playlist handling, and end-to-end validation. Split request/client machinery

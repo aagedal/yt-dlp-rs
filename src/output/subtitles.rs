@@ -59,6 +59,6 @@ pub fn render_subtitles_table(subtitles: &Subtitles) -> Option<String> {
             ]
         })
         .collect();
-    let header = ["Language", "Name", "Formats"].map(String::from);
+    let header = ["Language", "Name", "Formats"].map(super::formats::list_format_header);
     Some(render_table(header.to_vec(), rows, None, 0, true))
 }

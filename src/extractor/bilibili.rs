@@ -695,6 +695,9 @@ impl Extractor for BiliBili {
         };
         let temp_id = found["id"].to_owned();
         let prefix = found["prefix"].to_uppercase();
+        // `headers = self.geo_verification_headers()`, sent with (nearly)
+        // every request of `_real_extract`.
+        let client = &super::geo_verification_client(client);
         crate::screen::set_extractor(NAME);
         crate::screen::screen(&format!(
             "[{NAME}] Extracting URL: {}",
@@ -1513,8 +1516,9 @@ fn bangumi_season_entries(
         "https://api.bilibili.com/pgc/web/season/section",
         &pairs(&[("season_id", ss_id)]),
     )?;
+    // `headers={'Referer': url, **self.geo_verification_headers()}`.
     let season_info = super::download_json_note_headers(
-        client,
+        &super::geo_verification_client(client),
         &url,
         name,
         ss_id,
@@ -1923,7 +1927,8 @@ impl Extractor for BiliBiliBangumi {
             return Ok(None);
         };
         announce(BANGUMI_NAME, page);
-        bangumi_episode(client, page, &episode_id).map(Some)
+        // `headers = self.geo_verification_headers()` for its requests.
+        bangumi_episode(&super::geo_verification_client(client), page, &episode_id).map(Some)
     }
 }
 

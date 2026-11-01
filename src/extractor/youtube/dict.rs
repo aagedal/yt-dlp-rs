@@ -661,7 +661,12 @@ pub(super) fn build(input: &Input<'_>) -> Map<String, Value> {
     info.insert("age_limit".into(), age_limit.into());
     info.insert(
         "webpage_url".into(),
-        format!("https://www.youtube.com/watch?v={id}").into(),
+        // `base_url = self.http_scheme() + '//www.youtube.com/'`.
+        format!(
+            "{}//www.youtube.com/watch?v={id}",
+            super::super::http_scheme()
+        )
+        .into(),
     );
     info.insert(
         "categories".into(),

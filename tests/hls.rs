@@ -93,6 +93,21 @@ impl Server {
                         "application/x-mpegurl",
                         "",
                     ),
+                    "/fairplay.m3u8" => (
+                        "#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXT-X-KEY:METHOD=SAMPLE-AES,URI=\"skd://key\",KEYFORMAT=\"com.apple.streamingkeydelivery\"\n#EXTINF:4,\nsegment.ts\n#EXT-X-ENDLIST\n",
+                        "application/x-mpegurl",
+                        "",
+                    ),
+                    "/tagged.m3u8" => (
+                        "#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXT-X-START:TIME-OFFSET=0\n#EXT-X-DATERANGE:ID=\"a\",START-DATE=\"2026-01-01T00:00:00Z\"\n#EXT-X-CUE-OUT:4\n#EXTINF:4,\nsegments/first.ts\n#EXT-X-CUE-IN\n#EXTINF:2,\nsegments/second.ts\n#EXT-X-ENDLIST\n",
+                        "application/x-mpegurl",
+                        "",
+                    ),
+                    "/angles.m3u8" => (
+                        "#EXTM3U\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"aud\",NAME=\"en\",URI=\"media.m3u8\"\n#EXT-X-MEDIA:TYPE=VIDEO,GROUP-ID=\"cam\",NAME=\"Angle 2\",URI=\"low.m3u8\"\n#EXT-X-MEDIA:TYPE=VIDEO,GROUP-ID=\"cam\",NAME=\"Main\"\n#EXT-X-STREAM-INF:BANDWIDTH=1000000,VIDEO=\"cam\",AUDIO=\"aud\",CLOSED-CAPTIONS=\"cc\",CODECS=\"avc1.4d401f,mp4a.40.2\"\nhigh.m3u8\n",
+                        "application/x-mpegurl",
+                        "",
+                    ),
                     "/malformed.m3u8" => ("not a playlist", "text/plain", ""),
                     "/nested.m3u8" => (
                         "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=400000\nmaster.m3u8\n",
@@ -309,7 +324,6 @@ fn json_simulation_does_not_fetch_fragments_or_create_output() {
 fn unsupported_manifests_fail_before_any_output_or_fragment_request() {
     let server = Server::new();
     for path in [
-        "/encrypted.m3u8",
         "/malformed.m3u8",
         "/nested.m3u8",
         "/compressed.m3u8",
@@ -331,12 +345,130 @@ fn unsupported_manifests_fail_before_any_output_or_fragment_request() {
     );
     let directory = tempfile::tempdir().unwrap();
     let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
-        .arg(server.url("/encrypted.m3u8"))
+        .arg(server.url("/malformed.m3u8"))
         .current_dir(directory.path())
         .output()
         .unwrap();
     assert!(!result.status.success());
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+}
+
+/// Upstream `extract_media`: a VIDEO rendition with a URI is a format with
+/// unknown codecs, listed with the audio renditions before the variants.
+#[test]
+fn external_video_renditions_become_formats() {
+    let server = Server::new();
+    let info = YoutubeDl::new()
+        .unwrap()
+        .extract_info(&server.url("/angles.m3u8"))
+        .unwrap();
+    let formats: Vec<_> = info
+        .formats
+        .iter()
+        .map(|f| (f.format_id.as_str(), f.vcodec.as_deref(), f.fragments.len()))
+        .collect();
+    assert_eq!(
+        formats,
+        [
+            ("aud-en", Some("none"), 2),
+            ("cam-Angle_2", None, 2),
+            ("Angle_2", Some("avc1.4d401f"), 2),
+        ]
+    );
+    assert_eq!(info.formats[1].format_note.as_deref(), Some("Angle 2"));
+    assert!(info.formats[1].audio_group.is_none());
+}
+
+/// Upstream ignores tags it does not interpret (ad markers, date ranges,
+/// start offsets, ...) instead of rejecting the playlist.
+#[test]
+fn unknown_tags_are_ignored_like_upstream() {
+    let server = Server::new();
+    let info = YoutubeDl::new()
+        .unwrap()
+        .extract_info(&server.url("/tagged.m3u8"))
+        .unwrap();
+    let urls: Vec<_> = info.fragments.iter().map(|f| f.url.path()).collect();
+    assert_eq!(urls, ["/segments/first.ts", "/segments/second.ts"]);
+}
+
+/// Upstream `HlsFD.can_download`: a `SAMPLE-AES` playlist is extracted, then
+/// its download is delegated to FFmpegFD (which needs ffmpeg); a DRM one
+/// is marked `has_drm` and fails like `_has_drm`.
+#[cfg(unix)]
+#[test]
+fn unsupported_keys_delegate_to_ffmpeg_and_drm_fails() {
+    use std::os::unix::fs::PermissionsExt;
+    let server = Server::new();
+    let info = YoutubeDl::new()
+        .unwrap()
+        .extract_info(&server.url("/encrypted.m3u8"))
+        .unwrap();
+    assert!(info.fragments.is_empty());
+    assert_eq!(info.formats[0].extra["has_drm"], false);
+
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = tools.path().join("ffmpeg");
+    let log = tools.path().join("args");
+    std::fs::write(
+        &ffmpeg,
+        format!(
+            "#!/bin/sh\n\
+             case \"$1\" in -version) echo 'ffmpeg version fixture'; exit 0;; esac\n\
+             echo \"$@\" >> '{}'\n\
+             for last; do :; done\n\
+             printf media > \"${{last#file:}}\"\n",
+            log.display()
+        ),
+    )
+    .unwrap();
+    std::fs::set_permissions(&ffmpeg, std::fs::Permissions::from_mode(0o755)).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--ffmpeg-location", &ffmpeg.display().to_string()])
+        .args(["-o", "out.%(ext)s", &server.url("/encrypted.m3u8")])
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8_lossy(&result.stderr);
+    assert!(result.status.success(), "{stderr}");
+    assert!(
+        stderr.contains(
+            "WARNING: Unsupported features have been detected; extraction will be delegated to ffmpeg"
+        ),
+        "{stderr}"
+    );
+    let args = std::fs::read_to_string(&log).unwrap();
+    assert!(args.contains(&server.url("/encrypted.m3u8")), "{args}");
+    assert!(directory.path().join("out.mp4").exists());
+
+    let directory = tempfile::tempdir().unwrap();
+    let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--ffmpeg-location", "/nonexistent/ffmpeg"])
+        .arg(server.url("/encrypted.m3u8"))
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8_lossy(&result.stderr);
+    assert!(!result.status.success());
+    assert!(
+        stderr.contains("m3u8 download detected but ffmpeg could not be found"),
+        "{stderr}"
+    );
+
+    let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--ffmpeg-location", &ffmpeg.display().to_string()])
+        .arg(server.url("/fairplay.m3u8"))
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8_lossy(&result.stderr);
+    assert!(!result.status.success());
+    assert!(
+        stderr.contains("ERROR: [generic] fairplay: This video is DRM protected"),
+        "{stderr}"
+    );
+    assert!(server.paths().iter().all(|path| !path.contains("segment")));
 }
 
 #[test]
@@ -529,8 +661,7 @@ fn live_media_playlist_extracts_as_one_live_format() {
     assert!(server.paths().iter().all(|path| path == "/live.m3u8"));
 }
 
-/// Upstream `_get_suitable_downloader`: live HLS downloads through FFmpegFD;
-/// without FFmpeg the native downloader still rejects the unfinished playlist.
+/// Upstream `_get_suitable_downloader`: live HLS downloads through FFmpegFD.
 #[cfg(unix)]
 #[test]
 fn live_media_playlist_downloads_through_ffmpeg() {
@@ -572,18 +703,5 @@ fn live_media_playlist_downloads_through_ffmpeg() {
         server.paths()
     );
     assert!(directory.path().join("out.mp4").exists());
-
-    let directory = tempfile::tempdir().unwrap();
-    let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
-        .args(["--ffmpeg-location", "/nonexistent/ffmpeg"])
-        .arg(server.url("/live.m3u8"))
-        .current_dir(directory.path())
-        .output()
-        .unwrap();
-    assert!(!result.status.success());
-    assert!(
-        String::from_utf8_lossy(&result.stderr).contains("ENDLIST"),
-        "{}",
-        String::from_utf8_lossy(&result.stderr)
-    );
+    // Without ffmpeg, see `tests/hls_live.rs`.
 }
