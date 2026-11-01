@@ -316,6 +316,16 @@ Work in this order; each step lands with deterministic tests like any other chan
    site list: YouTube, Instagram, TikTok, X, Facebook, Reddit, Vimeo, Twitch,
    Bluesky, SoundCloud, Bandcamp), compares key metadata with the pinned
    upstream, and reports breakage. It never gates merges.
+   Status (2026-11-01): `.github/workflows/canary.yml` runs `tools/canary.py`
+   daily on `tools/canary_sites.json` (two URLs for most sites, one partial or
+   short download each), with the pinned upstream from PyPI for comparison
+   and one `canary` issue for broken or diverged sites. Reddit needs login for
+   every request (upstream too) and is skipped without a
+   `CANARY_COOKIES_REDDIT` secret; `vimeo.com` pages need login, so the Vimeo
+   canary uses the embed player. The first local run found four port bugs:
+   Instagram posts (`unsupported DASH fractional duration`), the Vimeo player
+   (HTTP 401 where upstream succeeds), Twitch clip downloads (`unsupported
+   HTML5 media`) and a Bandcamp title keeping a double space upstream collapses.
 3. **Interruptible transfers.** Stop/Cancel and SIGINT/SIGTERM interrupt
    blocking connects and reads promptly instead of waiting for the socket timeout.
 4. **CLI output contract.** A machine-readable interface rather than frozen

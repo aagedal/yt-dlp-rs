@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "comment": "Tier-1 live canaries (tools/canary.py). Media Converter's site list; URLs from upstream _TESTS that worked without login with yt-dlp 2026.10.26 on 2026-11-01.",
+  "sites": [
+    {
+      "site": "youtube",
+      "name": "YouTube",
+      "urls": [
+        {
+          "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
+          "expect": {"id": "jNQXAC9IVRw", "extractor_key": "Youtube", "title": "Me at the zoo", "duration": [18, 20]},
+          "download": {"format": "bestvideo+bestaudio/best", "streams": ["video", "audio"]}
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+          "expect": {"id": "aqz-KE-bpKQ", "extractor_key": "Youtube", "title_regex": "^Big Buck Bunny", "duration": [630, 640]},
+          "download": {"format": "bestvideo[height<=720]+bestaudio/best", "sections": "*0-4", "streams": ["video", "audio"]}
+        }
+      ]
+    },
+    {
+      "site": "instagram",
+      "name": "Instagram",
+      "urls": [
+        {
+          "url": "https://www.instagram.com/reel/Chunk8-jurw/",
+          "expect": {"id": "Chunk8-jurw", "extractor_key": "Instagram", "title": "Video by instagram"},
+          "download": {"format": "bestvideo+bestaudio/best", "streams": ["video"]}
+        },
+        {
+          "url": "https://www.instagram.com/p/aye83DjauH/",
+          "expect": {"id": "aye83DjauH", "extractor_key": "Instagram", "title": "Video by naomipq"}
+        }
+      ]
+    },
+    {
+      "site": "tiktok",
+      "name": "TikTok",
+      "urls": [
+        {
+          "url": "https://www.tiktok.com/@patroxofficial/video/6742501081818877190",
+          "expect": {"id": "6742501081818877190", "extractor_key": "TikTok", "title_regex": "^Tag 1 Friend reverse this Video", "duration": [26, 28]},
+          "download": {"format": "bestvideo+bestaudio/best", "streams": ["video", "audio"]}
+        },
+        {
+          "url": "https://www.tiktok.com/@pokemonlife22/video/7059698374567611694",
+          "expect": {"id": "7059698374567611694", "extractor_key": "TikTok", "duration": [5, 7]}
+        }
+      ]
+    },
+    {
+      "site": "twitter",
+      "name": "X/Twitter",
+      "urls": [
+        {
+          "url": "https://x.com/historyinmemes/status/1790637656616943991",
+          "expect": {"id": "1790637589910654976", "extractor_key": "Twitter", "title_regex": "^Historic Vids - One of the most intense moments in history", "duration": [14, 17]},
+          "download": {"format": "bestvideo+bestaudio/best", "streams": ["video", "audio"]}
+        },
+        {
+          "url": "https://twitter.com/oshtru/status/1577855540407197696",
+          "expect": {"id": "1577855447914409984", "extractor_key": "Twitter", "title_regex": "^Oshtru - gm", "duration": [29, 31]}
+        }
+      ]
+    },
+    {
+      "site": "facebook",
+      "name": "Facebook",
+      "urls": [
+        {
+          "url": "https://www.facebook.com/cnn/videos/10155529876156509/",
+          "expect": {"id": "10155529876156509", "extractor_key": "Facebook", "title": "Holocaust survivor becomes US citizen", "duration": [43, 46]},
+          "download": {"format": "bestvideo+bestaudio/best", "sections": "*0-5", "streams": ["video", "audio"]}
+        },
+        {
+          "url": "https://www.facebook.com/video.php?v=274175099429670",
+          "expect": {"id": "274175099429670", "extractor_key": "Facebook", "title_regex": "Asif Nawab Butt", "duration": [130, 132]}
+        }
+      ]
+    },
+    {
+      "site": "reddit",
+      "name": "Reddit",
+      "requires_cookies": true,
+      "comment": "Reddit answers every unauthenticated request with 'Account authentication is required' (upstream too, 2026-11-01).",
+      "urls": [
+        {
+          "url": "https://www.reddit.com/r/videos/comments/6rrwyj/that_small_heart_attack/",
+          "expect": {"id": "zv89llsvexdz", "extractor_key": "Reddit", "title": "That small heart attack.", "duration": [11, 13]},
+          "download": {"format": "bestvideo+bestaudio/best", "streams": ["video"]}
+        }
+      ]
+    },
+    {
+      "site": "vimeo",
+      "name": "Vimeo",
+      "comment": "vimeo.com/ID pages need login for the web client (upstream too, 2026-11-01); the embed player does not.",
+      "urls": [
+        {
+          "url": "https://player.vimeo.com/video/859028877",
+          "expect": {"id": "859028877", "extractor_key": "Vimeo", "title": "Ariana Grande - Honeymoon Avenue (Live from London)", "duration": [299, 301]},
+          "download": {"format": "bestvideo+bestaudio/best", "sections": "*0-5", "streams": ["video", "audio"]}
+        }
+      ]
+    },
+    {
+      "site": "twitch",
+      "name": "Twitch",
+      "urls": [
+        {
+          "url": "https://clips.twitch.tv/FaintLightGullWholeWheat",
+          "expect": {"id": "396245304", "extractor_key": "TwitchClips", "title": "EA Play 2016 Live from the Novo Theatre", "duration": [31, 33]},
+          "download": {"format": "bestvideo+bestaudio/best", "streams": ["video", "audio"]}
+        },
+        {
+          "url": "https://www.twitch.tv/videos/635475444",
+          "expect": {"id": "v635475444", "extractor_key": "TwitchVod", "title": "Riot Games", "duration": [11640, 11646]},
+          "download": {"format": "bestvideo[height<=720]+bestaudio/best[height<=720]/best", "sections": "*0-5", "streams": ["video", "audio"]}
+        }
+      ]
+    },
+    {
+      "site": "bluesky",
+      "name": "Bluesky",
+      "urls": [
+        {
+          "url": "https://bsky.app/profile/bsky.app/post/3l3vgf77uco2g",
+          "expect": {"id": "3l3vgf77uco2g", "extractor_key": "Bluesky", "title_regex": "^Bluesky now has video!"},
+          "download": {"format": "bestvideo+bestaudio/best", "streams": ["video"]}
+        }
+      ]
+    },
+    {
+      "site": "soundcloud",
+      "name": "SoundCloud",
+      "urls": [
+        {
+          "url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy",
+          "expect": {"id": "62986583", "extractor_key": "Soundcloud", "title_regex": "^Lostin Powers - She so Heavy", "duration": [142, 144]},
+          "download": {"format": "bestaudio/best", "streams": ["audio"]}
+        },
+        {
+          "url": "https://soundcloud.com/garyvee/sideways-prod-mad-real",
+          "expect": {"id": "309699954", "extractor_key": "Soundcloud", "title": "Sideways (Prod. Mad Real)", "duration": [206, 208]}
+        }
+      ]
+    },
+    {
+      "site": "bandcamp",
+      "name": "Bandcamp",
+      "urls": [
+        {
+          "url": "https://youtube-dl.bandcamp.com/track/youtube-dl-test-song",
+          "expect": {"id": "1812978515", "extractor_key": "Bandcamp", "title_regex": "youtube-dl test song", "duration": [9, 11]},
+          "download": {"format": "bestaudio/best", "streams": ["audio"]}
+        },
+        {
+          "url": "https://benprunty.bandcamp.com/track/lanius-battle",
+          "expect": {"id": "2650410135", "extractor_key": "Bandcamp", "title": "Ben Prunty - Lanius (Battle)", "duration": [260, 262]}
+        }
+      ]
+    }
+  ]
+}
