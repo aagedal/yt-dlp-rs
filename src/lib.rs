@@ -5902,7 +5902,7 @@ impl YoutubeDl {
                 &self.client,
                 &plan,
                 destination,
-                options,
+                sidx_fd::fragment_options(options),
                 self.concurrent_fragments,
                 self.keep_fragments,
                 &mut callback,
@@ -6255,12 +6255,14 @@ impl YoutubeDl {
             part.height = stream.height;
             // Port extension (`sidx_fd`): a DASH SegmentBase stream as
             // byte-range fragments from its segment index.
+            let mut options = options;
             if !self.test
                 && self.http_chunk_size.is_none()
                 && let Some(fragments) =
                     sidx_fd::plan_format(&self.client, &part, stream, &options)?
             {
                 part.fragments = fragments;
+                options = sidx_fd::fragment_options(options);
             }
             if upstream.is_some() {
                 self.announce_download(&part);

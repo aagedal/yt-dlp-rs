@@ -1086,7 +1086,10 @@ fn validate(
                 || (images && mime.starts_with("image/"))
                 || matches!(
                     mime.as_str(),
-                    "application/octet-stream" | "application/mp4" | "application/ogg"
+                    "application/octet-stream"
+                        | "binary/octet-stream"
+                        | "application/mp4"
+                        | "application/ogg"
                 ))
         {
             return Err(unsupported("fragment response is not media"));

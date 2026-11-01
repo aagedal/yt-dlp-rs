@@ -86,10 +86,11 @@ pub(crate) fn sweep(directory: &Path) {
             continue;
         };
         if kind.is_dir() {
-            if name.starts_with(".yt-dlp-rs-process-") {
-                recover(&path, directory);
+            // A workspace whose finished download could not be recovered
+            // is kept rather than deleting the only copy.
+            if !name.starts_with(".yt-dlp-rs-process-") || recover(&path, directory) {
+                let _ = fs::remove_dir_all(&path);
             }
-            let _ = fs::remove_dir_all(&path);
         } else {
             let _ = fs::remove_file(&path);
         }
@@ -129,22 +130,24 @@ fn alive(_: u32) -> bool {
     true
 }
 
-/// Move a dead run's finished, unprocessed download back to its name.
-fn recover(workspace: &Path, directory: &Path) {
+/// Move a dead run's finished, unprocessed download back to its name;
+/// whether the workspace may be removed (nothing finished to recover, the
+/// destination already exists, or the download was moved).
+fn recover(workspace: &Path, directory: &Path) -> bool {
     let Ok(name) = fs::read_to_string(workspace.join(DESTINATION_MARKER)) else {
-        return;
+        return true;
     };
     let name = Path::new(name.trim());
     // Only a plain file name in the same directory.
     if name.components().count() != 1 || name.file_name().is_none() {
-        return;
+        return true;
     }
     let destination = directory.join(name);
     if fs::symlink_metadata(&destination).is_ok() {
-        return;
+        return true;
     }
     let Ok(entries) = fs::read_dir(workspace) else {
-        return;
+        return false;
     };
     let sources: Vec<PathBuf> = entries
         .flatten()
@@ -152,16 +155,23 @@ fn recover(workspace: &Path, directory: &Path) {
         .filter(|path| {
             path.file_name()
                 .and_then(|name| name.to_str())
-                .is_some_and(|name| name.starts_with("source.") && !name.starts_with("source.f"))
+                // The workspace input `source.EXT` (`source.flv` too), not a
+                // format file (`source.f137.mp4`) or a postprocessor's
+                // intermediate (`source.temp.mp4`).
+                .and_then(|name| name.strip_prefix("source."))
+                .is_some_and(|ext| !ext.is_empty() && !ext.contains('.'))
         })
         .collect();
-    if let [source] = sources.as_slice()
-        && fs::rename(source, &destination).is_ok()
-    {
-        crate::screen::warning(&format!(
-            "Recovered {} from an interrupted run; it has not been postprocessed",
-            destination.display()
-        ));
+    match sources.as_slice() {
+        [] => true,
+        [source] if fs::rename(source, &destination).is_ok() => {
+            crate::screen::warning(&format!(
+                "Recovered {} from an interrupted run; it has not been postprocessed",
+                destination.display()
+            ));
+            true
+        }
+        _ => false,
     }
 }
 
@@ -193,6 +203,19 @@ mod tests {
         fs::create_dir(&escaping).unwrap();
         fs::write(escaping.join(DESTINATION_MARKER), "../escaped.mp4").unwrap();
         fs::write(escaping.join("source.mp4"), "media").unwrap();
+        // An "f"-initial extension, beside an interrupted fixup's output.
+        let fixup = path.join(format!(".yt-dlp-rs-process-{dead}ghi"));
+        fs::create_dir(&fixup).unwrap();
+        fs::write(fixup.join(DESTINATION_MARKER), "audio.flac").unwrap();
+        fs::write(fixup.join("source.flac"), "audio").unwrap();
+        fs::write(fixup.join("source.temp.flac"), "partial").unwrap();
+        // An ambiguous workspace is kept rather than deleted.
+        let ambiguous_name = format!(".yt-dlp-rs-process-{dead}jkl");
+        let ambiguous = path.join(&ambiguous_name);
+        fs::create_dir(&ambiguous).unwrap();
+        fs::write(ambiguous.join(DESTINATION_MARKER), "other.mkv").unwrap();
+        fs::write(ambiguous.join("source.mp4"), "a").unwrap();
+        fs::write(ambiguous.join("source.webm"), "b").unwrap();
         sweep(path);
         let mut names: Vec<String> = fs::read_dir(path)
             .unwrap()
@@ -204,10 +227,16 @@ mod tests {
             format!(".yt-dlp-rs-{live}abc.part"),
             ".yt-dlp-rs-untagged.part".to_owned(),
             "video.mp4".to_owned(),
+            "audio.flac".to_owned(),
+            ambiguous_name,
         ];
         expected.sort();
         assert_eq!(names, expected);
         assert_eq!(fs::read_to_string(path.join("video.mp4")).unwrap(), "media");
+        assert_eq!(
+            fs::read_to_string(path.join("audio.flac")).unwrap(),
+            "audio"
+        );
         assert!(
             !directory
                 .path()

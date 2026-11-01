@@ -5,13 +5,31 @@
 //! `--concurrent-fragments` and fragment progress, and together cover the
 //! file exactly (its head, every indexed segment, and any tail), so the
 //! result is byte-identical. An index this port cannot use, a gap between
-//! segments or an unknown length keeps the whole-file download.
+//! segments, an unknown length, an index far from the file's head or more
+//! fragments than the fragment downloader takes keeps the whole-file
+//! download. The fragments are pieces of one file, so none may be skipped
+//! (see [`fragment_options`]).
 use crate::{
     ByteRange, DownloadOptions, Fragment, Result, VideoInfo,
     download::{ByteSpan, fetch_span},
     media_index,
 };
 use reqwest::blocking::Client;
+
+/// The largest head (initialization plus index) read to plan the fragments.
+/// An index beyond it (WebM Cues or an MP4 `sidx` after the media) keeps the
+/// whole-file download instead of buffering most of the file.
+const MAX_HEAD: u64 = 4 << 20;
+
+/// The fragment downloader's limit (`fragment::download`).
+const MAX_FRAGMENTS: usize = 10_000;
+
+/// `options` for downloading [`plan`]'s fragments: a missing byte range is a
+/// hole in the file, so `--skip-unavailable-fragments` does not apply.
+pub(crate) fn fragment_options(mut options: DownloadOptions) -> DownloadOptions {
+    options.skip_unavailable_fragments = None;
+    options
+}
 
 /// The fragments covering `info`'s file, when it is a DASH SegmentBase
 /// format with a usable, contiguous index.
@@ -56,6 +74,10 @@ pub(crate) fn plan_format(
     };
     let referrer = (!info.is_direct()).then_some(&info.webpage_url);
     let head_start = ranges.init.0.min(ranges.index.0);
+    let head_end = ranges.init.1.max(ranges.index.1);
+    if head_end.saturating_sub(head_start) >= MAX_HEAD {
+        return Ok(None);
+    }
     let mut head = Vec::new();
     let total = match fetch_span(
         client,
@@ -63,7 +85,7 @@ pub(crate) fn plan_format(
             url: &info.url,
             referrer,
             start: head_start,
-            end: ranges.init.1.max(ranges.index.1),
+            end: head_end,
             chunk: u64::MAX,
             rate_limit: options.rate_limit,
         },
@@ -76,7 +98,8 @@ pub(crate) fn plan_format(
         Err(crate::Error::InvalidRangeResponse) => return Ok(None),
         Err(error) => return Err(error),
     };
-    let Some(total) = total.or(format.filesize) else {
+    // Each fragment response must state the file's length too.
+    let Some(total) = total else {
         return Ok(None);
     };
     let Some(media) = media_index::parse(&head, head_start, ranges, Some(total)) else {
@@ -126,7 +149,7 @@ fn cover(segments: &[media_index::Segment], total: u64) -> Option<Vec<(u64, u64)
         spans.push((last.end + 1, total - 1));
     }
     // A single span is the whole-file download already.
-    (spans.len() > 1).then_some(spans)
+    (spans.len() > 1 && spans.len() <= MAX_FRAGMENTS).then_some(spans)
 }
 
 #[cfg(test)]
@@ -157,5 +180,14 @@ mod tests {
         assert_eq!(cover(&segments, 300), None);
         assert_eq!(cover(&[segment(0, 99)], 100), None);
         assert_eq!(cover(&[], 100), None);
+        // More fragments than the fragment downloader takes.
+        let many: Vec<_> = (0..MAX_FRAGMENTS as u64)
+            .map(|i| segment(i * 10 + 10, i * 10 + 19))
+            .collect();
+        assert_eq!(cover(&many, MAX_FRAGMENTS as u64 * 10 + 10), None);
+        assert_eq!(
+            cover(&many[1..], MAX_FRAGMENTS as u64 * 10 + 10).map(|s| s.len()),
+            Some(MAX_FRAGMENTS)
+        );
     }
 }

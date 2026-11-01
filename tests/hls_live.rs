@@ -15,7 +15,26 @@ use std::{
 /// A live playlist that gains a segment with each reload after the first
 /// (the extraction's two reads), sliding a three-segment window, and ends
 /// after six segments.
-fn serve() -> String {
+fn sliding(reload: usize) -> Option<String> {
+    let count = (2 + reload.saturating_sub(2)).min(6);
+    let first = count.saturating_sub(3);
+    Some(playlist(first, count, count == 6))
+}
+
+fn playlist(first: usize, count: usize, ended: bool) -> String {
+    let mut text = format!("#EXTM3U\n#EXT-X-TARGETDURATION:1\n#EXT-X-MEDIA-SEQUENCE:{first}\n");
+    for index in first..count {
+        text.push_str(&format!("#EXTINF:1,\nseg{index}.ts\n"));
+    }
+    if ended {
+        text.push_str("#EXT-X-ENDLIST\n");
+    }
+    text
+}
+
+/// Serves `/live.m3u8` from `playlist` by reload number (`None` is a 503)
+/// and every other path as a segment naming itself.
+fn serve(playlist: fn(usize) -> Option<String>) -> String {
     let listener = TcpListener::bind("127.0.0.1:0").unwrap();
     let base = format!("http://{}", listener.local_addr().unwrap());
     let reloads = Arc::new(AtomicUsize::new(0));
@@ -32,24 +51,21 @@ fn serve() -> String {
             }
             let request = String::from_utf8_lossy(&request);
             let path = request.split_whitespace().nth(1).unwrap_or("").to_owned();
-            let (mime, body) = if path == "/live.m3u8" {
-                let count = (2 + reloads.fetch_add(1, Ordering::SeqCst).saturating_sub(2)).min(6);
-                let first = count.saturating_sub(3);
-                let mut text =
-                    format!("#EXTM3U\n#EXT-X-TARGETDURATION:1\n#EXT-X-MEDIA-SEQUENCE:{first}\n");
-                for index in first..count {
-                    text.push_str(&format!("#EXTINF:1,\nseg{index}.ts\n"));
+            let (status, mime, body) = if path == "/live.m3u8" {
+                match playlist(reloads.fetch_add(1, Ordering::SeqCst)) {
+                    Some(text) => ("200 OK", "application/x-mpegurl", text),
+                    None => ("503 Service Unavailable", "text/plain", String::new()),
                 }
-                if count == 6 {
-                    text.push_str("#EXT-X-ENDLIST\n");
-                }
-                ("application/x-mpegurl", text)
             } else {
-                ("video/mp2t", format!("[{}]", path.trim_start_matches('/')))
+                (
+                    "200 OK",
+                    "video/mp2t",
+                    format!("[{}]", path.trim_start_matches('/')),
+                )
             };
             let _ = stream.write_all(
                 format!(
-                    "HTTP/1.1 200 OK\r\nContent-Type: {mime}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                    "HTTP/1.1 {status}\r\nContent-Type: {mime}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
                     body.len()
                 )
                 .as_bytes(),
@@ -59,9 +75,7 @@ fn serve() -> String {
     base
 }
 
-#[test]
-fn live_hls_without_ffmpeg_is_recorded_natively() {
-    let base = serve();
+fn record(base: &str) -> (std::process::Output, tempfile::TempDir) {
     let directory = tempfile::tempdir().unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
         .args([
@@ -74,6 +88,12 @@ fn live_hls_without_ffmpeg_is_recorded_natively() {
         .current_dir(directory.path())
         .output()
         .unwrap();
+    (output, directory)
+}
+
+#[test]
+fn live_hls_without_ffmpeg_is_recorded_natively() {
+    let (output, directory) = record(&serve(sliding));
     let stderr = String::from_utf8_lossy(&output.stderr);
     assert!(output.status.success(), "{stderr}");
     assert!(
@@ -83,6 +103,27 @@ fn live_hls_without_ffmpeg_is_recorded_natively() {
         "{stderr}"
     );
     // Every segment once, in order, from the start of the first window.
+    assert_eq!(
+        std::fs::read_to_string(directory.path().join("out.mp4")).unwrap(),
+        "[seg0.ts][seg1.ts][seg2.ts][seg3.ts][seg4.ts][seg5.ts]"
+    );
+}
+
+#[test]
+fn a_failed_reload_is_retried_and_an_ended_playlist_recorded_in_full() {
+    // Live during extraction; the first reload fails, the next one has
+    // ended with more segments than the live-edge start would take.
+    let (output, directory) = record(&serve(|reload| match reload {
+        0 | 1 => Some(playlist(0, 2, false)),
+        2 => None,
+        _ => Some(playlist(0, 6, true)),
+    }));
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(output.status.success(), "{stderr}");
+    assert!(
+        stderr.contains("[hlsnative] Reloading the live playlist failed"),
+        "{stderr}"
+    );
     assert_eq!(
         std::fs::read_to_string(directory.path().join("out.mp4")).unwrap(),
         "[seg0.ts][seg1.ts][seg2.ts][seg3.ts][seg4.ts][seg5.ts]"
