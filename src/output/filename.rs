@@ -270,7 +270,7 @@ mod tests {
             );
             assert_eq!(
                 actual,
-                expected["pl_infojson"].as_str().unwrap(),
+                crate::output::host_path(expected["pl_infojson"].as_str().unwrap()),
                 "{} playlist",
                 case["name"]
             );

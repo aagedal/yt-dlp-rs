@@ -504,7 +504,8 @@ mod tests {
             // production prepares `pl_infojson` itself, replacing the
             // extension before Windows hosts' `sanitize_path` like upstream,
             // so a name ending with `.` differs only in this construction.
-            if cfg!(windows) && name.to_string_lossy().ends_with(['.', ' ']) {
+            // (Windows' `sanitize_path` already made a trailing `.` a `#`.)
+            if cfg!(windows) && name.to_string_lossy().ends_with('#') {
                 continue;
             }
             let path = info_json_path(&name, None);

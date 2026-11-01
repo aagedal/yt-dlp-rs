@@ -1501,11 +1501,23 @@ mod tests {
             output("directory/%(title)s.%(ext)s", &info),
             super::super::sanitize::host_path("directory/..⧸..⧸bad⧹name %(id)s.mp4")
         );
-        assert_eq!(output("%(format_id|../../bad)s", &info), "..⧸..⧸bad");
+        assert_eq!(
+            output("%(format_id|../../bad)s", &info),
+            super::super::sanitize::host_path("..⧸..⧸bad")
+        );
         info.title = ". .x".into();
-        assert_eq!(output("%(title).2s-file", &info), ". -file");
-        assert_eq!(output("%(title).2s/%(title).1s/./x", &info), "_/_/./x");
-        assert_eq!(output("%(title).0s-file", &info), "-file");
+        assert_eq!(
+            output("%(title).2s-file", &info),
+            super::super::sanitize::host_path(". -file")
+        );
+        assert_eq!(
+            output("%(title).2s/%(title).1s/./x", &info),
+            super::super::sanitize::host_path("_/_/./x")
+        );
+        assert_eq!(
+            output("%(title).0s-file", &info),
+            super::super::sanitize::host_path("-file")
+        );
     }
 
     #[test]
@@ -1525,7 +1537,7 @@ mod tests {
         };
         assert_eq!(
             render_with("%(title)s.%(ext)s", &options),
-            "Episode_-_a_b_c.mp4"
+            super::super::sanitize::host_path("Episode_-_a_b_c.mp4")
         );
         options.filename_mode = FilenameMode::Minimal;
         assert_eq!(
@@ -1535,7 +1547,7 @@ mod tests {
         options.windows_filenames = true;
         assert_eq!(
             render_with("x/./%(title)s.%(ext)s", &options),
-            "x/Épisode# a⧸b #c#.mp4"
+            super::super::sanitize::host_path("x/Épisode# a⧸b #c#.mp4")
         );
         options = TemplateOptions {
             trim_file_name: 3,
@@ -1543,12 +1555,18 @@ mod tests {
         };
         assert_eq!(
             render_with("%(title)s.%(id)s.%(ext)s", &options),
-            "Épi.42.mp4"
+            super::super::sanitize::host_path("Épi.42.mp4")
         );
         options.trim_file_name = -2;
-        assert_eq!(render_with("abcd.%(ext)s", &options), "ab.mp4");
+        assert_eq!(
+            render_with("abcd.%(ext)s", &options),
+            super::super::sanitize::host_path("ab.mp4")
+        );
         options.trim_file_name = 2;
-        assert_eq!(render_with("abcd", &options), "ab");
+        assert_eq!(
+            render_with("abcd", &options),
+            super::super::sanitize::host_path("ab")
+        );
         assert_eq!(
             super::super::default_template(true),
             "%(title)s-[%(id)s].%(ext)s"

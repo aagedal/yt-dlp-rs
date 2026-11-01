@@ -346,7 +346,8 @@ pub fn windows_sanitize_path(path: &str) -> String {
 /// A path saved from upstream on a POSIX host as this host gives it: on
 /// Windows, upstream's `get_output_path` also runs `sanitize_path`.
 pub fn host_path(path: &str) -> String {
-    if cfg!(windows) {
+    // An empty result is no path (an empty template), not `.`.
+    if cfg!(windows) && !path.is_empty() {
         windows_sanitize_path(path)
     } else {
         path.to_owned()
