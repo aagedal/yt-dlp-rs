@@ -344,6 +344,18 @@ Work in this order; each step lands with deterministic tests like any other chan
    works the same against yt-dlp. Document these as stable, test them, and
    move Media Converter off regex-parsing `[download]` lines. The human
    output keeps following upstream but is not a contract.
+   Status (2026-11-01): specified in `docs/CLI_CONTRACT.md` with a Media
+   Converter migration note, and pinned by `tests/cli_contract.rs`: 35 cases
+   compared with saved pinned-upstream output (`tools/capture_cli_contract.py`)
+   plus the port's own SIGTERM and `--keep-partial-on-stop` stops. Fixed on
+   the way: `tmpfilename` was the final name instead of the `.part` file;
+   merged downloads reported the merged file and info instead of each
+   format's; `-N` fragment downloads reported no `downloading` statuses;
+   progress dict keys and order now follow each upstream downloader;
+   `-J` playlist entries lacked `epoch`; a `--keep-partial-on-stop` stop went
+   on to the next video and lacked the message's blank line. Not covered:
+   Windows (no signals), the full `%(info)j` dict, the human output.
+   Media Converter itself is not changed yet.
 5. **Benchmarks.** A local-server harness comparing startup, extraction from
    saved fixtures, HLS/DASH throughput with `-N 1/4/8` and peak memory with
    upstream. Then lazy playlist extraction for item selection and a reviewed

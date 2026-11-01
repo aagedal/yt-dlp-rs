@@ -1,0 +1,1064 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "name": "http-progress-json",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--progress-template",
+    "%(progress)j",
+    "BASE/clip.mp4"
+   ],
+   "code": 0,
+   "stdout": [
+    "JSON [\"status\", \"downloaded_bytes\", \"total_bytes\", \"tmpfilename\", \"filename\", \"eta\", \"speed\", \"elapsed\", \"ctx_id\", \"_eta_str\", \"_speed_str\", \"_percent\", \"_percent_str\", \"_total_bytes_str\", \"_total_bytes_estimate_str\", \"_downloaded_bytes_str\", \"_elapsed_str\", \"_default_template\"]",
+    "JSON [\"downloaded_bytes\", \"total_bytes\", \"filename\", \"status\", \"elapsed\", \"ctx_id\", \"speed\", \"_speed_str\", \"_total_bytes_str\", \"_elapsed_str\", \"_percent\", \"_percent_str\", \"_default_template\"]",
+    ""
+   ],
+   "stderr": [
+    ""
+   ],
+   "files": [
+    "clip [clip].mp4"
+   ]
+  },
+  {
+   "name": "http-progress-fields",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--progress-template",
+    "download:%(progress.status)s|%(progress.total_bytes)s|%(progress.filename)s|%(progress.tmpfilename)s|%(info.id)s|%(info.title)s|%(info.ext)s",
+    "BASE/clip.mp4"
+   ],
+   "code": 0,
+   "stdout": [
+    "downloading|300000|clip [clip].mp4|clip [clip].mp4.part|clip|clip|mp4",
+    "finished|300000|clip [clip].mp4|NA|clip|clip|mp4",
+    ""
+   ],
+   "stderr": [
+    ""
+   ],
+   "files": [
+    "clip [clip].mp4"
+   ]
+  },
+  {
+   "name": "hls-progress-json",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--fixup",
+    "never",
+    "--progress-template",
+    "%(progress)j",
+    "BASE/hls.m3u8"
+   ],
+   "code": 0,
+   "stdout": [
+    "JSON [\"status\", \"downloaded_bytes\", \"fragment_index\", \"fragment_count\", \"filename\", \"tmpfilename\", \"max_progress\", \"progress_idx\", \"elapsed\", \"total_bytes_estimate\", \"speed\", \"eta\", \"_eta_str\", \"_speed_str\", \"_percent\", \"_percent_str\", \"_total_bytes_str\", \"_total_bytes_estimate_str\", \"_downloaded_bytes_str\", \"_elapsed_str\", \"_default_template\"]",
+    "JSON [\"downloaded_bytes\", \"total_bytes\", \"filename\", \"status\", \"elapsed\", \"ctx_id\", \"max_progress\", \"progress_idx\", \"speed\", \"_speed_str\", \"_total_bytes_str\", \"_elapsed_str\", \"_percent\", \"_percent_str\", \"_default_template\"]",
+    ""
+   ],
+   "stderr": [
+    ""
+   ],
+   "files": [
+    "hls [hls].mp4"
+   ]
+  },
+  {
+   "name": "hls-progress-fields",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--fixup",
+    "never",
+    "--progress-template",
+    "download:%(progress.status)s|%(progress.fragment_index)s/%(progress.fragment_count)s|%(progress.total_bytes)s|%(progress.filename)s|%(progress.tmpfilename)s|%(info.id)s",
+    "BASE/hls.m3u8"
+   ],
+   "code": 0,
+   "stdout": [
+    "downloading|0/3|NA|hls [hls].mp4|hls [hls].mp4.part|hls",
+    "downloading|1/3|NA|hls [hls].mp4|hls [hls].mp4.part|hls",
+    "downloading|2/3|NA|hls [hls].mp4|hls [hls].mp4.part|hls",
+    "downloading|3/3|NA|hls [hls].mp4|hls [hls].mp4.part|hls",
+    "finished|NA/NA|282000|hls [hls].mp4|NA|hls",
+    ""
+   ],
+   "stderr": [
+    ""
+   ],
+   "files": [
+    "hls [hls].mp4"
+   ]
+  },
+  {
+   "name": "http-progress-subset",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--progress-template",
+    "download:[progress] %(progress.{status,total_bytes,fragment_index,fragment_count,filename,tmpfilename})j",
+    "BASE/clip.mp4"
+   ],
+   "code": 0,
+   "stdout": [
+    "[progress] {\"status\": \"downloading\", \"total_bytes\": 300000, \"filename\": \"clip [clip].mp4\", \"tmpfilename\": \"clip [clip].mp4.part\"}",
+    "[progress] {\"status\": \"finished\", \"total_bytes\": 300000, \"filename\": \"clip [clip].mp4\"}",
+    ""
+   ],
+   "stderr": [
+    ""
+   ],
+   "files": [
+    "clip [clip].mp4"
+   ]
+  },
+  {
+   "name": "hls-progress-subset",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--fixup",
+    "never",
+    "--progress-template",
+    "download:[progress] %(progress.{status,total_bytes,fragment_index,fragment_count,filename,tmpfilename})j",
+    "BASE/hls.m3u8"
+   ],
+   "code": 0,
+   "stdout": [
+    "[progress] {\"status\": \"downloading\", \"fragment_index\": 0, \"fragment_count\": 3, \"filename\": \"hls [hls].mp4\", \"tmpfilename\": \"hls [hls].mp4.part\"}",
+    "[progress] {\"status\": \"downloading\", \"fragment_index\": 1, \"fragment_count\": 3, \"filename\": \"hls [hls].mp4\", \"tmpfilename\": \"hls [hls].mp4.part\"}",
+    "[progress] {\"status\": \"downloading\", \"fragment_index\": 2, \"fragment_count\": 3, \"filename\": \"hls [hls].mp4\", \"tmpfilename\": \"hls [hls].mp4.part\"}",
+    "[progress] {\"status\": \"downloading\", \"fragment_index\": 3, \"fragment_count\": 3, \"filename\": \"hls [hls].mp4\", \"tmpfilename\": \"hls [hls].mp4.part\"}",
+    "[progress] {\"status\": \"finished\", \"total_bytes\": 282000, \"filename\": \"hls [hls].mp4\"}",
+    ""
+   ],
+   "stderr": [
+    ""
+   ],
+   "files": [
+    "hls [hls].mp4"
+   ]
+  },
+  {
+   "name": "hls-concurrent-progress-json",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--fixup",
+    "never",
+    "-N",
+    "3",
+    "--progress-template",
+    "%(progress)j",
+    "BASE/hls.m3u8"
+   ],
+   "code": 0,
+   "stdout": [
+    "JSON [\"status\", \"downloaded_bytes\", \"fragment_index\", \"fragment_count\", \"filename\", \"tmpfilename\", \"max_progress\", \"progress_idx\", \"elapsed\", \"total_bytes_estimate\", \"speed\", \"eta\", \"_eta_str\", \"_speed_str\", \"_percent\", \"_percent_str\", \"_total_bytes_str\", \"_total_bytes_estimate_str\", \"_downloaded_bytes_str\", \"_elapsed_str\", \"_default_template\"]",
+    "JSON [\"downloaded_bytes\", \"total_bytes\", \"filename\", \"status\", \"elapsed\", \"ctx_id\", \"max_progress\", \"progress_idx\", \"speed\", \"_speed_str\", \"_total_bytes_str\", \"_elapsed_str\", \"_percent\", \"_percent_str\", \"_default_template\"]",
+    ""
+   ],
+   "stderr": [
+    ""
+   ],
+   "files": [
+    "hls [hls].mp4"
+   ]
+  },
+  {
+   "name": "hls-concurrent-progress-fields",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--fixup",
+    "never",
+    "-N",
+    "3",
+    "--progress-template",
+    "%(progress.status)s|%(progress.fragment_count)s|%(progress.filename)s",
+    "BASE/hls.m3u8"
+   ],
+   "code": 0,
+   "stdout": [
+    "downloading|3|hls [hls].mp4",
+    "finished|NA|hls [hls].mp4",
+    ""
+   ],
+   "stderr": [
+    ""
+   ],
+   "files": [
+    "hls [hls].mp4"
+   ]
+  },
+  {
+   "name": "progress-without-newline",
+   "args": [
+    "-q",
+    "--progress",
+    "--progress-template",
+    "%(progress.status)s",
+    "BASE/a.mp4"
+   ],
+   "code": 0,
+   "stdout": [
+    "\rdownloading\rdownloading\rdownloading\rdownloading\rdownloading\rdownloading\rfinished   \r        \r"
+   ],
+   "stderr": [
+    ""
+   ],
+   "files": [
+    "a [a].mp4"
+   ]
+  },
+  {
+   "name": "no-progress",
+   "args": [
+    "--no-progress",
+    "--progress-template",
+    "%(progress.status)s",
+    "BASE/a.mp4"
+   ],
+   "code": 0,
+   "stdout": [
+    "[generic] Extracting URL: BASE/a.mp4",
+    "[generic] a: Downloading webpage",
+    "[info] a: Downloading 1 format(s): mp4",
+    "[download] Destination: a [a].mp4",
+    "[download] Download completed",
+    ""
+   ],
+   "stderr": [
+    ""
+   ],
+   "files": [
+    "a [a].mp4"
+   ]
+  },
+  {
+   "name": "merge-progress",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--load-info-json",
+    "m.info.json",
+    "-f",
+    "v+a",
+    "--ffmpeg-location",
+    "FFMPEG",
+    "--progress-template",
+    "download:%(progress.status)s|%(progress.total_bytes)s|%(progress.filename)s|%(info.format_id)s|%(info.ext)s|%(info.vcodec)s|%(info.acodec)s",
+    "--progress-template",
+    "postprocess:%(progress.status)s|%(progress.postprocessor)s|%(info.id)s",
+    "--print",
+    "after_move:filepath"
+   ],
+   "code": 0,
+   "stdout": [
+    "downloading|60000|Merged [m].fv.mp4|v|mp4|avc1|none",
+    "finished|60000|Merged [m].fv.mp4|v|mp4|avc1|none",
+    "downloading|30000|Merged [m].fa.m4a|a|m4a|none|mp4a.40.2",
+    "finished|30000|Merged [m].fa.m4a|a|m4a|none|mp4a.40.2",
+    "DIR/Merged [m].mp4",
+    ""
+   ],
+   "stderr": [
+    "started|Merger|m",
+    "finished|Merger|m",
+    "started|MoveFiles|m",
+    "finished|MoveFiles|m",
+    ""
+   ],
+   "files": [
+    "Merged [m].mp4",
+    "m.info.json"
+   ]
+  },
+  {
+   "name": "merge-progress-json",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--load-info-json",
+    "m.info.json",
+    "-f",
+    "v+a",
+    "--ffmpeg-location",
+    "FFMPEG",
+    "--progress-template",
+    "%(progress)j",
+    "--progress-template",
+    "postprocess:%(progress)j"
+   ],
+   "code": 0,
+   "stdout": [
+    "JSON [\"status\", \"downloaded_bytes\", \"total_bytes\", \"tmpfilename\", \"filename\", \"eta\", \"speed\", \"elapsed\", \"ctx_id\", \"_eta_str\", \"_speed_str\", \"_percent\", \"_percent_str\", \"_total_bytes_str\", \"_total_bytes_estimate_str\", \"_downloaded_bytes_str\", \"_elapsed_str\", \"_default_template\"]",
+    "JSON [\"downloaded_bytes\", \"total_bytes\", \"filename\", \"status\", \"elapsed\", \"ctx_id\", \"speed\", \"_speed_str\", \"_total_bytes_str\", \"_elapsed_str\", \"_percent\", \"_percent_str\", \"_default_template\"]",
+    "JSON [\"status\", \"downloaded_bytes\", \"total_bytes\", \"tmpfilename\", \"filename\", \"eta\", \"speed\", \"elapsed\", \"ctx_id\", \"_eta_str\", \"_speed_str\", \"_percent\", \"_percent_str\", \"_total_bytes_str\", \"_total_bytes_estimate_str\", \"_downloaded_bytes_str\", \"_elapsed_str\", \"_default_template\"]",
+    "JSON [\"downloaded_bytes\", \"total_bytes\", \"filename\", \"status\", \"elapsed\", \"ctx_id\", \"speed\", \"_speed_str\", \"_total_bytes_str\", \"_elapsed_str\", \"_percent\", \"_percent_str\", \"_default_template\"]",
+    ""
+   ],
+   "stderr": [
+    "JSON [\"status\", \"postprocessor\", \"_default_template\"]",
+    ""
+   ],
+   "files": [
+    "Merged [m].mp4",
+    "m.info.json"
+   ]
+  },
+  {
+   "name": "merge-reused-format",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--load-info-json",
+    "m.info.json",
+    "-f",
+    "v+a",
+    "--ffmpeg-location",
+    "FFMPEG",
+    "--progress-template",
+    "download:%(progress.status)s|%(progress.filename)s|%(info.format_id)s"
+   ],
+   "code": 0,
+   "stdout": [
+    "finished|Merged [m].fv.mp4|v",
+    "downloading|Merged [m].fa.m4a|a",
+    "finished|Merged [m].fa.m4a|a",
+    ""
+   ],
+   "stderr": [
+    ""
+   ],
+   "files": [
+    "Merged [m].mp4",
+    "m.info.json"
+   ]
+  },
+  {
+   "name": "merge-reused-format-json",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--load-info-json",
+    "m.info.json",
+    "-f",
+    "v+a",
+    "--ffmpeg-location",
+    "FFMPEG",
+    "--progress-template",
+    "%(progress)j"
+   ],
+   "code": 0,
+   "stdout": [
+    "JSON [\"filename\", \"status\", \"total_bytes\", \"speed\", \"_speed_str\", \"_total_bytes_str\", \"_elapsed_str\", \"_percent\", \"_percent_str\", \"_default_template\"]",
+    "JSON [\"status\", \"downloaded_bytes\", \"total_bytes\", \"tmpfilename\", \"filename\", \"eta\", \"speed\", \"elapsed\", \"ctx_id\", \"_eta_str\", \"_speed_str\", \"_percent\", \"_percent_str\", \"_total_bytes_str\", \"_total_bytes_estimate_str\", \"_downloaded_bytes_str\", \"_elapsed_str\", \"_default_template\"]",
+    "JSON [\"downloaded_bytes\", \"total_bytes\", \"filename\", \"status\", \"elapsed\", \"ctx_id\", \"speed\", \"_speed_str\", \"_total_bytes_str\", \"_elapsed_str\", \"_percent\", \"_percent_str\", \"_default_template\"]",
+    ""
+   ],
+   "stderr": [
+    ""
+   ],
+   "files": [
+    "Merged [m].mp4",
+    "m.info.json"
+   ]
+  },
+  {
+   "name": "stages-simulate",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "BASE/two.html"
+   ],
+   "code": 0,
+   "stdout": [
+    "pre_process two-1",
+    "video two-1 1",
+    "before_dl two-1 Two (1) [two-1].mp4",
+    "post_process two-1 Two (1) [two-1].mp4",
+    "after_move DIR/Two (1) [two-1].mp4",
+    "after_video two-1",
+    "pre_process two-2",
+    "video two-2 2",
+    "before_dl two-2 Two (2) [two-2].mp4",
+    "post_process two-2 Two (2) [two-2].mp4",
+    "after_move DIR/Two (2) [two-2].mp4",
+    "after_video two-2",
+    "playlist two Two 2",
+    ""
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    ""
+   ],
+   "files": [
+    "Two (1) [two-1].mp4",
+    "Two (2) [two-2].mp4"
+   ]
+  },
+  {
+   "name": "stages-download",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "--no-simulate",
+    "BASE/two.html"
+   ],
+   "code": 0,
+   "stdout": [
+    "pre_process two-1",
+    "video two-1 1",
+    "before_dl two-1 Two (1) [two-1].mp4",
+    "post_process two-1 Two (1) [two-1].mp4",
+    "after_move DIR/Two (1) [two-1].mp4",
+    "after_video two-1",
+    "pre_process two-2",
+    "video two-2 2",
+    "before_dl two-2 Two (2) [two-2].mp4",
+    "post_process two-2 Two (2) [two-2].mp4",
+    "after_move DIR/Two (2) [two-2].mp4",
+    "after_video two-2",
+    "playlist two Two 2",
+    ""
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    ""
+   ],
+   "files": [
+    "Two (1) [two-1].mp4",
+    "Two (2) [two-2].mp4"
+   ]
+  },
+  {
+   "name": "stages-quiet-download",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "-q",
+    "--no-simulate",
+    "BASE/two.html"
+   ],
+   "code": 0,
+   "stdout": [
+    "pre_process two-1",
+    "video two-1 1",
+    "before_dl two-1 Two (1) [two-1].mp4",
+    "post_process two-1 Two (1) [two-1].mp4",
+    "after_move DIR/Two (1) [two-1].mp4",
+    "after_video two-1",
+    "pre_process two-2",
+    "video two-2 2",
+    "before_dl two-2 Two (2) [two-2].mp4",
+    "post_process two-2 Two (2) [two-2].mp4",
+    "after_move DIR/Two (2) [two-2].mp4",
+    "after_video two-2",
+    "playlist two Two 2",
+    ""
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    ""
+   ],
+   "files": [
+    "Two (1) [two-1].mp4",
+    "Two (2) [two-2].mp4"
+   ]
+  },
+  {
+   "name": "stages-progress",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "--progress",
+    "--newline",
+    "--no-simulate",
+    "--progress-template",
+    "%(progress.status)s %(info.id)s",
+    "BASE/two.html"
+   ],
+   "code": 0,
+   "stdout": [
+    "pre_process two-1",
+    "video two-1 1",
+    "before_dl two-1 Two (1) [two-1].mp4",
+    "downloading two-1",
+    "finished two-1",
+    "post_process two-1 Two (1) [two-1].mp4",
+    "after_move DIR/Two (1) [two-1].mp4",
+    "after_video two-1",
+    "pre_process two-2",
+    "video two-2 2",
+    "before_dl two-2 Two (2) [two-2].mp4",
+    "downloading two-2",
+    "finished two-2",
+    "post_process two-2 Two (2) [two-2].mp4",
+    "after_move DIR/Two (2) [two-2].mp4",
+    "after_video two-2",
+    "playlist two Two 2",
+    ""
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    ""
+   ],
+   "files": [
+    "Two (1) [two-1].mp4",
+    "Two (2) [two-2].mp4"
+   ]
+  },
+  {
+   "name": "dump-json",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "-j",
+    "BASE/two.html"
+   ],
+   "code": 0,
+   "stdout": [
+    "pre_process two-1",
+    "video two-1 1",
+    "JSON [\"formats\", \"subtitles\", \"thumbnail\", \"id\", \"title\", \"_old_archive_ids\", \"extractor\", \"extractor_key\", \"playlist_count\", \"playlist\", \"playlist_id\", \"playlist_title\", \"playlist_uploader\", \"playlist_uploader_id\", \"playlist_channel\", \"playlist_channel_id\", \"playlist_webpage_url\", \"n_entries\", \"webpage_url\", \"webpage_url_basename\", \"webpage_url_domain\", \"playlist_index\", \"__last_playlist_index\", \"playlist_autonumber\", \"display_id\", \"fulltitle\", \"release_year\", \"requested_subtitles\", \"_has_drm\", \"epoch\", \"url\", \"vcodec\", \"ext\", \"http_headers\", \"protocol\", \"video_ext\", \"audio_ext\", \"vbr\", \"abr\", \"tbr\", \"resolution\", \"dynamic_range\", \"aspect_ratio\", \"filesize_approx\", \"format_id\", \"format\", \"_filename\", \"filename\", \"_type\"]",
+    "after_video two-1",
+    "pre_process two-2",
+    "video two-2 2",
+    "JSON [\"formats\", \"subtitles\", \"thumbnail\", \"id\", \"title\", \"_old_archive_ids\", \"extractor\", \"extractor_key\", \"playlist_count\", \"playlist\", \"playlist_id\", \"playlist_title\", \"playlist_uploader\", \"playlist_uploader_id\", \"playlist_channel\", \"playlist_channel_id\", \"playlist_webpage_url\", \"n_entries\", \"webpage_url\", \"webpage_url_basename\", \"webpage_url_domain\", \"playlist_index\", \"__last_playlist_index\", \"playlist_autonumber\", \"display_id\", \"fulltitle\", \"release_year\", \"requested_subtitles\", \"_has_drm\", \"epoch\", \"url\", \"vcodec\", \"ext\", \"http_headers\", \"protocol\", \"video_ext\", \"audio_ext\", \"vbr\", \"abr\", \"tbr\", \"resolution\", \"dynamic_range\", \"aspect_ratio\", \"filesize_approx\", \"format_id\", \"format\", \"_filename\", \"filename\", \"_type\"]",
+    "after_video two-2",
+    "playlist two Two 2",
+    ""
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    ""
+   ],
+   "files": []
+  },
+  {
+   "name": "dump-json-download",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "-j",
+    "--no-simulate",
+    "BASE/two.html"
+   ],
+   "code": 0,
+   "stdout": [
+    "pre_process two-1",
+    "video two-1 1",
+    "JSON [\"formats\", \"subtitles\", \"thumbnail\", \"id\", \"title\", \"_old_archive_ids\", \"extractor\", \"extractor_key\", \"playlist_count\", \"playlist\", \"playlist_id\", \"playlist_title\", \"playlist_uploader\", \"playlist_uploader_id\", \"playlist_channel\", \"playlist_channel_id\", \"playlist_webpage_url\", \"n_entries\", \"webpage_url\", \"webpage_url_basename\", \"webpage_url_domain\", \"playlist_index\", \"__last_playlist_index\", \"playlist_autonumber\", \"display_id\", \"fulltitle\", \"release_year\", \"requested_subtitles\", \"_has_drm\", \"epoch\", \"url\", \"vcodec\", \"ext\", \"http_headers\", \"protocol\", \"video_ext\", \"audio_ext\", \"vbr\", \"abr\", \"tbr\", \"resolution\", \"dynamic_range\", \"aspect_ratio\", \"filesize_approx\", \"format_id\", \"format\", \"_filename\", \"filename\", \"_type\"]",
+    "before_dl two-1 Two (1) [two-1].mp4",
+    "post_process two-1 Two (1) [two-1].mp4",
+    "after_move DIR/Two (1) [two-1].mp4",
+    "after_video two-1",
+    "pre_process two-2",
+    "video two-2 2",
+    "JSON [\"formats\", \"subtitles\", \"thumbnail\", \"id\", \"title\", \"_old_archive_ids\", \"extractor\", \"extractor_key\", \"playlist_count\", \"playlist\", \"playlist_id\", \"playlist_title\", \"playlist_uploader\", \"playlist_uploader_id\", \"playlist_channel\", \"playlist_channel_id\", \"playlist_webpage_url\", \"n_entries\", \"webpage_url\", \"webpage_url_basename\", \"webpage_url_domain\", \"playlist_index\", \"__last_playlist_index\", \"playlist_autonumber\", \"display_id\", \"fulltitle\", \"release_year\", \"requested_subtitles\", \"_has_drm\", \"epoch\", \"url\", \"vcodec\", \"ext\", \"http_headers\", \"protocol\", \"video_ext\", \"audio_ext\", \"vbr\", \"abr\", \"tbr\", \"resolution\", \"dynamic_range\", \"aspect_ratio\", \"filesize_approx\", \"format_id\", \"format\", \"_filename\", \"filename\", \"_type\"]",
+    "before_dl two-2 Two (2) [two-2].mp4",
+    "post_process two-2 Two (2) [two-2].mp4",
+    "after_move DIR/Two (2) [two-2].mp4",
+    "after_video two-2",
+    "playlist two Two 2",
+    ""
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    ""
+   ],
+   "files": [
+    "Two (1) [two-1].mp4",
+    "Two (2) [two-2].mp4"
+   ]
+  },
+  {
+   "name": "dump-single-json",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "-J",
+    "BASE/two.html"
+   ],
+   "code": 0,
+   "stdout": [
+    "pre_process two-1",
+    "video two-1 1",
+    "after_video two-1",
+    "pre_process two-2",
+    "video two-2 2",
+    "after_video two-2",
+    "playlist two Two 2",
+    "JSON [\"id\", \"title\", \"timestamp\", \"description\", \"thumbnail\", \"age_limit\", \"_type\", \"entries\", \"webpage_url\", \"original_url\", \"webpage_url_basename\", \"webpage_url_domain\", \"extractor\", \"extractor_key\", \"release_year\", \"playlist_count\", \"epoch\", \"__files_to_move\"]",
+    ""
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    ""
+   ],
+   "files": []
+  },
+  {
+   "name": "dump-single-json-download",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "-J",
+    "--no-simulate",
+    "BASE/two.html"
+   ],
+   "code": 0,
+   "stdout": [
+    "pre_process two-1",
+    "video two-1 1",
+    "before_dl two-1 Two (1) [two-1].mp4",
+    "post_process two-1 Two (1) [two-1].mp4",
+    "after_move DIR/Two (1) [two-1].mp4",
+    "after_video two-1",
+    "pre_process two-2",
+    "video two-2 2",
+    "before_dl two-2 Two (2) [two-2].mp4",
+    "post_process two-2 Two (2) [two-2].mp4",
+    "after_move DIR/Two (2) [two-2].mp4",
+    "after_video two-2",
+    "playlist two Two 2",
+    "JSON [\"id\", \"title\", \"timestamp\", \"description\", \"thumbnail\", \"age_limit\", \"_type\", \"entries\", \"webpage_url\", \"original_url\", \"webpage_url_basename\", \"webpage_url_domain\", \"extractor\", \"extractor_key\", \"release_year\", \"playlist_count\", \"epoch\", \"__files_to_move\"]",
+    ""
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    ""
+   ],
+   "files": [
+    "Two (1) [two-1].mp4",
+    "Two (2) [two-2].mp4"
+   ]
+  },
+  {
+   "name": "print-json",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "--print-json",
+    "BASE/two.html"
+   ],
+   "code": 0,
+   "stdout": [
+    "pre_process two-1",
+    "video two-1 1",
+    "JSON [\"formats\", \"subtitles\", \"thumbnail\", \"id\", \"title\", \"_old_archive_ids\", \"extractor\", \"extractor_key\", \"playlist_count\", \"playlist\", \"playlist_id\", \"playlist_title\", \"playlist_uploader\", \"playlist_uploader_id\", \"playlist_channel\", \"playlist_channel_id\", \"playlist_webpage_url\", \"n_entries\", \"webpage_url\", \"webpage_url_basename\", \"webpage_url_domain\", \"playlist_index\", \"__last_playlist_index\", \"playlist_autonumber\", \"display_id\", \"fulltitle\", \"release_year\", \"requested_subtitles\", \"_has_drm\", \"epoch\", \"url\", \"vcodec\", \"ext\", \"http_headers\", \"protocol\", \"video_ext\", \"audio_ext\", \"vbr\", \"abr\", \"tbr\", \"resolution\", \"dynamic_range\", \"aspect_ratio\", \"filesize_approx\", \"format_id\", \"format\", \"_filename\", \"filename\", \"_type\"]",
+    "before_dl two-1 Two (1) [two-1].mp4",
+    "post_process two-1 Two (1) [two-1].mp4",
+    "after_move DIR/Two (1) [two-1].mp4",
+    "after_video two-1",
+    "pre_process two-2",
+    "video two-2 2",
+    "JSON [\"formats\", \"subtitles\", \"thumbnail\", \"id\", \"title\", \"_old_archive_ids\", \"extractor\", \"extractor_key\", \"playlist_count\", \"playlist\", \"playlist_id\", \"playlist_title\", \"playlist_uploader\", \"playlist_uploader_id\", \"playlist_channel\", \"playlist_channel_id\", \"playlist_webpage_url\", \"n_entries\", \"webpage_url\", \"webpage_url_basename\", \"webpage_url_domain\", \"playlist_index\", \"__last_playlist_index\", \"playlist_autonumber\", \"display_id\", \"fulltitle\", \"release_year\", \"requested_subtitles\", \"_has_drm\", \"epoch\", \"url\", \"vcodec\", \"ext\", \"http_headers\", \"protocol\", \"video_ext\", \"audio_ext\", \"vbr\", \"abr\", \"tbr\", \"resolution\", \"dynamic_range\", \"aspect_ratio\", \"filesize_approx\", \"format_id\", \"format\", \"_filename\", \"filename\", \"_type\"]",
+    "before_dl two-2 Two (2) [two-2].mp4",
+    "post_process two-2 Two (2) [two-2].mp4",
+    "after_move DIR/Two (2) [two-2].mp4",
+    "after_video two-2",
+    "playlist two Two 2",
+    ""
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    ""
+   ],
+   "files": [
+    "Two (1) [two-1].mp4",
+    "Two (2) [two-2].mp4"
+   ]
+  },
+  {
+   "name": "print-to-file",
+   "args": [
+    "-q",
+    "--print-to-file",
+    "after_move:%(id)s %(filepath)s",
+    "done.txt",
+    "--print-to-file",
+    "%(title)s",
+    "titles.txt",
+    "BASE/two.html"
+   ],
+   "code": 0,
+   "stdout": [
+    ""
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    ""
+   ],
+   "files": [
+    "Two (1) [two-1].mp4",
+    "Two (2) [two-2].mp4",
+    "done.txt",
+    "titles.txt"
+   ],
+   "contents": {
+    "done.txt": [
+     "two-1 DIR/Two (1) [two-1].mp4",
+     "two-2 DIR/Two (2) [two-2].mp4",
+     ""
+    ],
+    "titles.txt": [
+     "Two (1)",
+     "Two (2)",
+     ""
+    ]
+   }
+  },
+  {
+   "name": "exit-download-error",
+   "args": [
+    "-q",
+    "BASE/missing.mp4"
+   ],
+   "code": 1,
+   "stdout": [
+    ""
+   ],
+   "stderr": [
+    "ERROR: [generic] missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)",
+    ""
+   ],
+   "files": []
+  },
+  {
+   "name": "exit-continues-after-error",
+   "args": [
+    "-q",
+    "--print",
+    "after_move:filepath",
+    "BASE/missing.mp4",
+    "BASE/a.mp4"
+   ],
+   "code": 1,
+   "stdout": [
+    "DIR/a [a].mp4",
+    ""
+   ],
+   "stderr": [
+    "ERROR: [generic] missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)",
+    ""
+   ],
+   "files": [
+    "a [a].mp4"
+   ]
+  },
+  {
+   "name": "exit-abort-on-error",
+   "args": [
+    "-q",
+    "--abort-on-error",
+    "BASE/missing.mp4",
+    "BASE/a.mp4"
+   ],
+   "code": 1,
+   "stdout": [
+    ""
+   ],
+   "stderr": [
+    "ERROR: [generic] missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)",
+    ""
+   ],
+   "files": []
+  },
+  {
+   "name": "exit-single-json-error",
+   "args": [
+    "-J",
+    "BASE/missing.mp4"
+   ],
+   "code": 1,
+   "stdout": [
+    "null",
+    ""
+   ],
+   "stderr": [
+    "ERROR: [generic] missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)",
+    ""
+   ],
+   "files": []
+  },
+  {
+   "name": "exit-usage-unknown-option",
+   "args": [
+    "--frobnicate",
+    "BASE/a.mp4"
+   ],
+   "code": 2,
+   "stdout": [
+    ""
+   ],
+   "stderr": [
+    "",
+    "Usage: yt-dlp [OPTIONS] URL [URL...]",
+    "",
+    "yt-dlp: error: no such option: --frobnicate",
+    ""
+   ],
+   "files": []
+  },
+  {
+   "name": "exit-usage-bad-items",
+   "args": [
+    "-I",
+    "abc",
+    "BASE/two.html"
+   ],
+   "code": 2,
+   "stdout": [
+    ""
+   ],
+   "stderr": [
+    "",
+    "Usage: yt-dlp [OPTIONS] URL [URL...]",
+    "",
+    "yt-dlp: error: Invalid playlist-items 'abc': 'abc' is not a valid specification",
+    ""
+   ],
+   "files": []
+  },
+  {
+   "name": "exit-usage-no-url",
+   "args": [],
+   "code": 2,
+   "stdout": [
+    ""
+   ],
+   "stderr": [
+    "",
+    "Usage: yt-dlp [OPTIONS] URL [URL...]",
+    "",
+    "yt-dlp: error: You must provide at least one URL.",
+    "Type yt-dlp --help to see a list of all options.",
+    ""
+   ],
+   "files": []
+  },
+  {
+   "name": "exit-max-downloads",
+   "args": [
+    "--max-downloads",
+    "1",
+    "--print",
+    "after_move:filepath",
+    "BASE/two.html"
+   ],
+   "code": 101,
+   "stdout": [
+    "DIR/Two (1) [two-1].mp4",
+    ""
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    ""
+   ],
+   "files": [
+    "Two (1) [two-1].mp4"
+   ]
+  },
+  {
+   "name": "exit-max-downloads-simulate",
+   "args": [
+    "--max-downloads",
+    "1",
+    "--print",
+    "id",
+    "BASE/two.html"
+   ],
+   "code": 101,
+   "stdout": [
+    "two-1",
+    ""
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    ""
+   ],
+   "files": []
+  },
+  {
+   "name": "exit-break-on-existing",
+   "args": [
+    "--break-on-existing",
+    "--download-archive",
+    "archive.txt",
+    "--print",
+    "after_move:filepath",
+    "BASE/two.html"
+   ],
+   "code": 101,
+   "stdout": [
+    ""
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    ""
+   ],
+   "files": [
+    "archive.txt"
+   ]
+  },
+  {
+   "name": "sigint-download",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--progress-template",
+    "%(progress.status)s|%(progress.tmpfilename)s",
+    "--print",
+    "before_dl:before_dl %(filename)s",
+    "--print",
+    "after_move:filepath",
+    "--load-info-json",
+    "slow.info.json"
+   ],
+   "code": 1,
+   "stdout": [
+    "before_dl Slow [slow].mp4",
+    "downloading|Slow [slow].mp4.part",
+    ""
+   ],
+   "stderr": [
+    "",
+    "ERROR: Interrupted by user",
+    ""
+   ],
+   "files": [
+    "Slow [slow].mp4.part",
+    "slow.info.json"
+   ]
+  }
+ ]
+}

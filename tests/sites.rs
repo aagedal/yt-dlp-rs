@@ -15,7 +15,7 @@ fn normalize(text: &str) -> Vec<String> {
     let comment_time = regex::Regex::new(r#"("_time_text": "[^"]*", "timestamp": )\d+"#).unwrap();
     text.lines()
         .map(|line| {
-            let line = epoch.replace(line, "");
+            let line = epoch.replace_all(line, "");
             let line = available.replace_all(&line, r#""available_at": 0"#);
             comment_time.replace_all(&line, "${1}0").into_owned()
         })

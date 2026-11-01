@@ -1,0 +1,591 @@
+{
+ "routes": {
+  "/clip.mp4": {
+   "type": "video/mp4",
+   "size": 300000,
+   "chunk": 32768,
+   "delay_ms": 5
+  },
+  "/hls.m3u8": {
+   "type": "application/vnd.apple.mpegurl",
+   "text": "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:4\n#EXT-X-MEDIA-SEQUENCE:0\n#EXTINF:4.0,\ns0.ts\n#EXTINF:4.0,\ns1.ts\n#EXTINF:4.0,\ns2.ts\n#EXT-X-ENDLIST\n"
+  },
+  "/s0.ts": {
+   "type": "video/mp2t",
+   "size": 94000,
+   "fill": 71,
+   "chunk": 16384,
+   "delay_ms": 5
+  },
+  "/s1.ts": {
+   "type": "video/mp2t",
+   "size": 94000,
+   "fill": 71,
+   "chunk": 16384,
+   "delay_ms": 5
+  },
+  "/s2.ts": {
+   "type": "video/mp2t",
+   "size": 94000,
+   "fill": 71,
+   "chunk": 16384,
+   "delay_ms": 5
+  },
+  "/two.html": {
+   "type": "text/html",
+   "text": "<html><head><title>Two</title></head><body><video src=\"a.mp4\"></video><video src=\"b.mp4\"></video></body></html>"
+  },
+  "/a.mp4": {
+   "type": "video/mp4",
+   "size": 40000
+  },
+  "/b.mp4": {
+   "type": "video/mp4",
+   "size": 50000
+  },
+  "/v.mp4": {
+   "type": "video/mp4",
+   "size": 60000,
+   "fill": 1,
+   "chunk": 16384
+  },
+  "/a.m4a": {
+   "type": "audio/mp4",
+   "size": 30000,
+   "fill": 2,
+   "chunk": 16384
+  },
+  "/slow.mp4": {
+   "type": "video/mp4",
+   "size": 1048576,
+   "length": 4194304,
+   "chunk": 65536,
+   "stall_after": 262144
+  }
+ },
+ "cases": [
+  {
+   "name": "http-progress-json",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--progress-template",
+    "%(progress)j",
+    "BASE/clip.mp4"
+   ]
+  },
+  {
+   "name": "http-progress-fields",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--progress-template",
+    "download:%(progress.status)s|%(progress.total_bytes)s|%(progress.filename)s|%(progress.tmpfilename)s|%(info.id)s|%(info.title)s|%(info.ext)s",
+    "BASE/clip.mp4"
+   ]
+  },
+  {
+   "name": "hls-progress-json",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--fixup",
+    "never",
+    "--progress-template",
+    "%(progress)j",
+    "BASE/hls.m3u8"
+   ]
+  },
+  {
+   "name": "hls-progress-fields",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--fixup",
+    "never",
+    "--progress-template",
+    "download:%(progress.status)s|%(progress.fragment_index)s/%(progress.fragment_count)s|%(progress.total_bytes)s|%(progress.filename)s|%(progress.tmpfilename)s|%(info.id)s",
+    "BASE/hls.m3u8"
+   ]
+  },
+  {
+   "name": "http-progress-subset",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--progress-template",
+    "download:[progress] %(progress.{status,total_bytes,fragment_index,fragment_count,filename,tmpfilename})j",
+    "BASE/clip.mp4"
+   ]
+  },
+  {
+   "name": "hls-progress-subset",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--fixup",
+    "never",
+    "--progress-template",
+    "download:[progress] %(progress.{status,total_bytes,fragment_index,fragment_count,filename,tmpfilename})j",
+    "BASE/hls.m3u8"
+   ]
+  },
+  {
+   "name": "hls-concurrent-progress-json",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--fixup",
+    "never",
+    "-N",
+    "3",
+    "--progress-template",
+    "%(progress)j",
+    "BASE/hls.m3u8"
+   ]
+  },
+  {
+   "name": "hls-concurrent-progress-fields",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--fixup",
+    "never",
+    "-N",
+    "3",
+    "--progress-template",
+    "%(progress.status)s|%(progress.fragment_count)s|%(progress.filename)s",
+    "BASE/hls.m3u8"
+   ]
+  },
+  {
+   "name": "progress-without-newline",
+   "args": [
+    "-q",
+    "--progress",
+    "--progress-template",
+    "%(progress.status)s",
+    "BASE/a.mp4"
+   ]
+  },
+  {
+   "name": "no-progress",
+   "args": [
+    "--no-progress",
+    "--progress-template",
+    "%(progress.status)s",
+    "BASE/a.mp4"
+   ]
+  },
+  {
+   "name": "merge-progress",
+   "files": {
+    "m.info.json": "{\"id\": \"m\", \"title\": \"Merged\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"webpage_url\": \"BASE/merged\", \"formats\": [{\"format_id\": \"v\", \"url\": \"BASE/v.mp4\", \"ext\": \"mp4\", \"vcodec\": \"avc1\", \"acodec\": \"none\", \"protocol\": \"http\"}, {\"format_id\": \"a\", \"url\": \"BASE/a.m4a\", \"ext\": \"m4a\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"protocol\": \"http\"}]}"
+   },
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--load-info-json",
+    "m.info.json",
+    "-f",
+    "v+a",
+    "--ffmpeg-location",
+    "FFMPEG",
+    "--progress-template",
+    "download:%(progress.status)s|%(progress.total_bytes)s|%(progress.filename)s|%(info.format_id)s|%(info.ext)s|%(info.vcodec)s|%(info.acodec)s",
+    "--progress-template",
+    "postprocess:%(progress.status)s|%(progress.postprocessor)s|%(info.id)s",
+    "--print",
+    "after_move:filepath"
+   ]
+  },
+  {
+   "name": "merge-progress-json",
+   "files": {
+    "m.info.json": "{\"id\": \"m\", \"title\": \"Merged\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"webpage_url\": \"BASE/merged\", \"formats\": [{\"format_id\": \"v\", \"url\": \"BASE/v.mp4\", \"ext\": \"mp4\", \"vcodec\": \"avc1\", \"acodec\": \"none\", \"protocol\": \"http\"}, {\"format_id\": \"a\", \"url\": \"BASE/a.m4a\", \"ext\": \"m4a\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"protocol\": \"http\"}]}"
+   },
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--load-info-json",
+    "m.info.json",
+    "-f",
+    "v+a",
+    "--ffmpeg-location",
+    "FFMPEG",
+    "--progress-template",
+    "%(progress)j",
+    "--progress-template",
+    "postprocess:%(progress)j"
+   ]
+  },
+  {
+   "name": "merge-reused-format",
+   "files": {
+    "m.info.json": "{\"id\": \"m\", \"title\": \"Merged\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"webpage_url\": \"BASE/merged\", \"formats\": [{\"format_id\": \"v\", \"url\": \"BASE/v.mp4\", \"ext\": \"mp4\", \"vcodec\": \"avc1\", \"acodec\": \"none\", \"protocol\": \"http\"}, {\"format_id\": \"a\", \"url\": \"BASE/a.m4a\", \"ext\": \"m4a\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"protocol\": \"http\"}]}",
+    "Merged [m].fv.mp4": "reused video"
+   },
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--load-info-json",
+    "m.info.json",
+    "-f",
+    "v+a",
+    "--ffmpeg-location",
+    "FFMPEG",
+    "--progress-template",
+    "download:%(progress.status)s|%(progress.filename)s|%(info.format_id)s"
+   ]
+  },
+  {
+   "name": "merge-reused-format-json",
+   "files": {
+    "m.info.json": "{\"id\": \"m\", \"title\": \"Merged\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"webpage_url\": \"BASE/merged\", \"formats\": [{\"format_id\": \"v\", \"url\": \"BASE/v.mp4\", \"ext\": \"mp4\", \"vcodec\": \"avc1\", \"acodec\": \"none\", \"protocol\": \"http\"}, {\"format_id\": \"a\", \"url\": \"BASE/a.m4a\", \"ext\": \"m4a\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"protocol\": \"http\"}]}",
+    "Merged [m].fv.mp4": "reused video"
+   },
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--load-info-json",
+    "m.info.json",
+    "-f",
+    "v+a",
+    "--ffmpeg-location",
+    "FFMPEG",
+    "--progress-template",
+    "%(progress)j"
+   ]
+  },
+  {
+   "name": "stages-simulate",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "BASE/two.html"
+   ]
+  },
+  {
+   "name": "stages-download",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "--no-simulate",
+    "BASE/two.html"
+   ]
+  },
+  {
+   "name": "stages-quiet-download",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "-q",
+    "--no-simulate",
+    "BASE/two.html"
+   ]
+  },
+  {
+   "name": "stages-progress",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "--progress",
+    "--newline",
+    "--no-simulate",
+    "--progress-template",
+    "%(progress.status)s %(info.id)s",
+    "BASE/two.html"
+   ]
+  },
+  {
+   "name": "dump-json",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "-j",
+    "BASE/two.html"
+   ]
+  },
+  {
+   "name": "dump-json-download",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "-j",
+    "--no-simulate",
+    "BASE/two.html"
+   ]
+  },
+  {
+   "name": "dump-single-json",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "-J",
+    "BASE/two.html"
+   ]
+  },
+  {
+   "name": "dump-single-json-download",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "-J",
+    "--no-simulate",
+    "BASE/two.html"
+   ]
+  },
+  {
+   "name": "print-json",
+   "args": [
+    "--print",
+    "video:video %(id)s %(playlist_index)s",
+    "--print",
+    "pre_process:pre_process %(id)s",
+    "--print",
+    "before_dl:before_dl %(id)s %(filename)s",
+    "--print",
+    "post_process:post_process %(id)s %(filepath)s",
+    "--print",
+    "after_move:after_move %(filepath)s",
+    "--print",
+    "after_video:after_video %(id)s",
+    "--print",
+    "playlist:playlist %(id)s %(title)s %(playlist_count)s",
+    "--print-json",
+    "BASE/two.html"
+   ]
+  },
+  {
+   "name": "print-to-file",
+   "args": [
+    "-q",
+    "--print-to-file",
+    "after_move:%(id)s %(filepath)s",
+    "done.txt",
+    "--print-to-file",
+    "%(title)s",
+    "titles.txt",
+    "BASE/two.html"
+   ],
+   "read": [
+    "done.txt",
+    "titles.txt"
+   ]
+  },
+  {
+   "name": "exit-download-error",
+   "args": [
+    "-q",
+    "BASE/missing.mp4"
+   ]
+  },
+  {
+   "name": "exit-continues-after-error",
+   "args": [
+    "-q",
+    "--print",
+    "after_move:filepath",
+    "BASE/missing.mp4",
+    "BASE/a.mp4"
+   ]
+  },
+  {
+   "name": "exit-abort-on-error",
+   "args": [
+    "-q",
+    "--abort-on-error",
+    "BASE/missing.mp4",
+    "BASE/a.mp4"
+   ]
+  },
+  {
+   "name": "exit-single-json-error",
+   "args": [
+    "-J",
+    "BASE/missing.mp4"
+   ]
+  },
+  {
+   "name": "exit-usage-unknown-option",
+   "args": [
+    "--frobnicate",
+    "BASE/a.mp4"
+   ]
+  },
+  {
+   "name": "exit-usage-bad-items",
+   "args": [
+    "-I",
+    "abc",
+    "BASE/two.html"
+   ]
+  },
+  {
+   "name": "exit-usage-no-url",
+   "args": []
+  },
+  {
+   "name": "exit-max-downloads",
+   "args": [
+    "--max-downloads",
+    "1",
+    "--print",
+    "after_move:filepath",
+    "BASE/two.html"
+   ]
+  },
+  {
+   "name": "exit-max-downloads-simulate",
+   "args": [
+    "--max-downloads",
+    "1",
+    "--print",
+    "id",
+    "BASE/two.html"
+   ]
+  },
+  {
+   "name": "exit-break-on-existing",
+   "files": {
+    "archive.txt": "generic two-1\n"
+   },
+   "args": [
+    "--break-on-existing",
+    "--download-archive",
+    "archive.txt",
+    "--print",
+    "after_move:filepath",
+    "BASE/two.html"
+   ]
+  },
+  {
+   "name": "sigint-download",
+   "signal": "SIGINT",
+   "args": [
+    "-q",
+    "--progress",
+    "--newline",
+    "--progress-template",
+    "%(progress.status)s|%(progress.tmpfilename)s",
+    "--print",
+    "before_dl:before_dl %(filename)s",
+    "--print",
+    "after_move:filepath",
+    "--load-info-json",
+    "slow.info.json"
+   ],
+   "files": {
+    "slow.info.json": "{\"id\": \"slow\", \"title\": \"Slow\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"webpage_url\": \"BASE/slow\", \"formats\": [{\"format_id\": \"mp4\", \"url\": \"BASE/slow.mp4\", \"ext\": \"mp4\", \"protocol\": \"http\"}]}"
+   }
+  }
+ ]
+}

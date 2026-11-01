@@ -57,6 +57,12 @@ yt-dlp-rs --live-from-start --growing-file 'https://www.youtube.com/watch?v=LIVE
 The [compatibility inventory](docs/COMPATIBILITY.md) documents every
 supported option and where it differs from upstream.
 
+Programs that run the CLI should parse the machine-readable output in the
+[CLI output contract](docs/CLI_CONTRACT.md) (`--progress-template` JSON,
+`--print` stages, exit codes, stop signals), which works the same with
+yt-dlp. The human-readable lines follow upstream but are not a stable
+interface.
+
 ## Extensions in this fork
 
 These options are not in upstream yt-dlp:
