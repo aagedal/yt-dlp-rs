@@ -55,10 +55,9 @@ impl Extractor for Vocaroo {
                 .head(media.clone())
                 .header(reqwest::header::REFERER, REFERER),
             &[],
-        ))?
-        .send()
+        ))
+        .and_then(crate::http::send_prepared)
         .inspect(|_| crate::screen::after_request())
-        .map_err(Error::Http)
         .and_then(crate::retry::check_response)
         .map_err(|error| match error {
             Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {

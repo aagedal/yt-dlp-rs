@@ -2,7 +2,8 @@
 //! ends at the next checkpoint with `ERROR: Interrupted by user` (exit 1),
 //! later URLs are not processed, the upstream `.part` file is kept for
 //! `--continue` (also when postprocessors are enabled) and no private
-//! temporary files remain. A second signal exits at once. SIGTERM is sent,
+//! temporary files remain. A blocked read ends within its interrupt poll
+//! (see also `stalled_transfers.rs`). SIGTERM is sent,
 //! since background test processes may inherit an ignored SIGINT.
 #![cfg(unix)]
 use std::{
@@ -199,26 +200,29 @@ fn a_signal_keeps_the_part_file_of_a_download_to_be_processed() {
 }
 
 #[test]
-fn a_second_signal_exits_without_waiting_for_a_stalled_read() {
+fn a_signal_ends_a_stalled_read_at_once() {
     let (port, requests) = server();
     let directory = tempfile::tempdir().unwrap();
     let stalled = format!("http://127.0.0.1:{port}/stalled.mp4");
-    let mut child = spawn(directory.path(), &[&stalled]);
+    let child = spawn(directory.path(), &[&stalled]);
     wait_for(&requests, "/stalled.mp4");
     thread::sleep(Duration::from_millis(300));
-    terminate(&child);
-    // The first signal waits for the blocked read (the socket timeout).
-    thread::sleep(Duration::from_millis(500));
-    assert!(child.try_wait().unwrap().is_none());
+    // The blocked read ends within its interrupt poll, not the socket timeout.
     let sent = Instant::now();
     terminate(&child);
-    let (code, stderr, _) = finish(child, directory.path());
-    assert!(sent.elapsed() < Duration::from_secs(5));
+    let (code, stderr, names) = finish(child, directory.path());
+    assert!(
+        sent.elapsed() < Duration::from_secs(3),
+        "{:?}",
+        sent.elapsed()
+    );
     assert_eq!(code, Some(1), "{stderr}");
     assert!(
         stderr.ends_with("\nERROR: Interrupted by user\n"),
         "{stderr}"
     );
+    assert_eq!(names, ["stalled.mp4.part"]);
+    assert_eq!(part_size(directory.path(), "stalled.mp4.part"), 1024);
 }
 
 #[test]

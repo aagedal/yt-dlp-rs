@@ -3024,8 +3024,12 @@ impl YoutubeDl {
         let mut attempt = 0;
         let body: Option<serde_json::Value> = loop {
             attempt += 1;
-            let result = crate::control::scoped(self.client.get(&url))
-                .and_then(|request| request.send())
+            let sent = match crate::control::scoped(self.client.get(&url)) {
+                Ok(request) => crate::http::interruptible::send(request)
+                    .map_err(|_| Error::DownloadCancelled)?,
+                Err(error) => Err(error),
+            };
+            let result = sent
                 .inspect(|_| crate::screen::after_request())
                 .map_err(|error| retry::urllib_error(&error))
                 .and_then(|response| {
@@ -3047,6 +3051,8 @@ impl YoutubeDl {
                 });
             match result {
                 Ok(body) => break body,
+                // A read the interrupt ended.
+                Err(_) if control::interrupted() => return Err(Error::DownloadCancelled),
                 Err(error) => {
                     let error = format!("Unable to communicate with SponsorBlock API: {error}");
                     if attempt > retries {
@@ -4719,6 +4725,9 @@ impl YoutubeDl {
                     return Ok(info);
                 }
                 Err(error) => {
+                    // An interrupt that ended a read in flight, whatever
+                    // error the extractor made of it.
+                    control::check()?;
                     let Some(delay) = retry::failure_delay(&error) else {
                         return Err(error);
                     };
@@ -4753,6 +4762,13 @@ impl YoutubeDl {
         if !matches!(manifest.url.scheme(), "http" | "https") {
             return Err(Error::UnsupportedScheme(manifest.url.scheme().into()));
         }
+        // An interrupt that ended a read in flight, whatever error the
+        // parser made of it.
+        self.extract_manifest_in_context(manifest)
+            .map_err(|error| control::check().err().unwrap_or(error))
+    }
+
+    fn extract_manifest_in_context(&self, manifest: &Manifest) -> Result<ExtractResult> {
         let webpage = manifest.webpage_url.as_ref().unwrap_or(&manifest.url);
         let mut info = match (&manifest.data, manifest.kind) {
             (Some(text), ManifestKind::Hls) => {

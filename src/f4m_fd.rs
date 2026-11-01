@@ -225,16 +225,17 @@ fn get(client: &Client, url: &Url, info: &VideoInfo) -> Result<(Url, Vec<u8>)> {
     if !info.is_direct() {
         request = request.header(reqwest::header::REFERER, info.webpage_url.as_str());
     }
-    let mut response = crate::control::scoped(request)
-        .and_then(|request| request.send())
+    let mut response = crate::http::send_media(request)
         .inspect(|_| crate::screen::after_request())
-        .map_err(Error::Http)
         .and_then(crate::retry::check_response)?;
     let final_url = response.url().clone();
     let mut body = Vec::new();
     response
         .read_to_end(&mut body)
-        .map_err(Error::ExtractionRead)?;
+        .map_err(|error| match crate::http::read_error(error) {
+            Error::Io(error) => Error::ExtractionRead(error),
+            error => error,
+        })?;
     Ok((final_url, body))
 }
 

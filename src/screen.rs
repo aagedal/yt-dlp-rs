@@ -379,8 +379,9 @@ pub(crate) fn before_extraction_request() {
             "[{extractor}] Sleeping {} seconds ...",
             py_float(seconds)
         ));
+        // An interrupt ends the sleep; the request then fails as cancelled.
         if seconds.is_finite() {
-            std::thread::sleep(std::time::Duration::from_secs_f64(seconds));
+            crate::control::sleep(std::time::Duration::from_secs_f64(seconds));
         }
     }
 }

@@ -27,8 +27,9 @@ const CANCEL: u8 = 2;
 ///   download publishes the data it has at the destination (whole
 ///   fragments only) and returns [`Error::DownloadStopped`] with its path.
 ///
-/// Either one ends an extraction with [`Error::ExtractionCancelled`] before
-/// its next request. Requests already in flight finish or time out first.
+/// Either one ends an extraction with [`Error::ExtractionCancelled`].
+/// Requests in flight (connecting, waiting for headers or reading the body)
+/// and waits between requests end within about 100 ms of the call.
 #[derive(Debug, Clone, Default)]
 pub struct Interrupt {
     state: Arc<AtomicU8>,
@@ -208,8 +209,8 @@ static SIGNAL_INTERRUPT_ACTIVE: std::sync::atomic::AtomicBool =
 
 /// The CLI's SIGINT/SIGTERM handling for a whole run, upstream's
 /// `KeyboardInterrupt`: while held, a signal ends extraction and downloads
-/// at their next checkpoint (a blocked read waits for the socket timeout)
-/// like a cancel, but keeps files as a failure does: upstream `.part` files
+/// at their next checkpoint (a blocked connect or read within about
+/// 100 ms) like a cancel, but keeps files as a failure does: upstream `.part` files
 /// and completed postprocessing stages stay, private temporary files are
 /// removed. A second signal exits at once. Not for library callers, which
 /// use [`Interrupt`]; Windows keeps the default Ctrl+C behavior.
@@ -229,6 +230,12 @@ impl SignalInterrupt {
     /// process at once.
     pub fn prompt<T>(wait: impl FnOnce() -> T) -> T {
         crate::interrupt::exit_at_once(wait)
+    }
+
+    /// Sleep for `duration`, or until a signal (`time.sleep` raising
+    /// `KeyboardInterrupt`); `false` when a signal ended it.
+    pub fn sleep(duration: std::time::Duration) -> bool {
+        sleep(duration)
     }
 
     /// Whether a signal ended the run.
@@ -333,6 +340,58 @@ pub(crate) fn stopping() -> bool {
                 .and_then(|context| context.interrupt.as_ref())
                 .is_some_and(Interrupt::is_stop)
         })
+}
+
+/// What can interrupt the current call, checked from another thread while
+/// a transfer or sleep waits (see [`crate::http::interruptible`]).
+#[derive(Clone)]
+pub(crate) struct Watch {
+    interrupt: Option<Interrupt>,
+}
+
+impl Watch {
+    /// The call's [`Interrupt`], or a signal any handler recorded: the
+    /// run-wide one, `--keep-partial-on-stop`'s stop, or a live download's
+    /// or recording's own (which then finishes instead of ending the run).
+    pub(crate) fn requested(&self) -> bool {
+        crate::interrupt::pending() || self.interrupt.as_ref().is_some_and(Interrupt::is_requested)
+    }
+}
+
+/// The current call's interrupt sources; `None` when nothing can interrupt
+/// it (no [`Interrupt`] and no signal handler), so waits need no watching.
+pub(crate) fn watch() -> Option<Watch> {
+    let interrupt = ACTIVE.with(|active| {
+        active
+            .borrow()
+            .as_ref()
+            .and_then(|context| context.interrupt.clone())
+    });
+    (interrupt.is_some() || crate::interrupt::guarded()).then_some(Watch { interrupt })
+}
+
+/// Whether the current call's [`watch`] sees an interrupt.
+pub(crate) fn interrupted() -> bool {
+    watch().is_some_and(|watch| watch.requested())
+}
+
+/// Sleep for `duration`, ending early (`false`) at an interrupt.
+pub(crate) fn sleep(duration: std::time::Duration) -> bool {
+    let Some(watch) = watch() else {
+        std::thread::sleep(duration);
+        return true;
+    };
+    let until = std::time::Instant::now() + duration;
+    loop {
+        if watch.requested() {
+            return false;
+        }
+        let remaining = until.saturating_duration_since(std::time::Instant::now());
+        if remaining.is_zero() {
+            return true;
+        }
+        std::thread::sleep(remaining.min(crate::http::interruptible::POLL));
+    }
 }
 
 /// An extraction checkpoint: `Err` once an interrupt was requested.

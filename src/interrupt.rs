@@ -20,6 +20,11 @@ static EXIT_ON_REPEAT: AtomicBool = AtomicBool::new(false);
 #[cfg(unix)]
 static NESTED: AtomicUsize = AtomicUsize::new(0);
 
+/// Installed guards of any kind: while there is none, a recorded signal is
+/// stale (the last guard's owner handled it).
+#[cfg(unix)]
+static GUARDS: AtomicUsize = AtomicUsize::new(0);
+
 /// Whether a signal ends the process at once (a prompt waiting for input,
 /// where upstream's `input()` raises `KeyboardInterrupt` immediately).
 #[cfg(unix)]
@@ -80,6 +85,7 @@ impl Guard {
             if nested != Some(true) {
                 INTERRUPTED.store(false, Ordering::SeqCst);
             }
+            GUARDS.fetch_add(1, Ordering::SeqCst);
             Self {
                 previous,
                 nested,
@@ -115,6 +121,28 @@ pub(crate) fn interrupted() -> bool {
     #[cfg(unix)]
     {
         INTERRUPTED.load(Ordering::SeqCst)
+    }
+    #[cfg(not(unix))]
+    false
+}
+
+/// Whether a handler is installed and a signal arrived since: any guard's
+/// signal ends transfers in flight (its owner then stops, finishes or ends
+/// the run as it would at its next checkpoint).
+pub(crate) fn pending() -> bool {
+    #[cfg(unix)]
+    {
+        GUARDS.load(Ordering::SeqCst) > 0 && INTERRUPTED.load(Ordering::SeqCst)
+    }
+    #[cfg(not(unix))]
+    false
+}
+
+/// Whether a signal handler is installed (on Windows, never).
+pub(crate) fn guarded() -> bool {
+    #[cfg(unix)]
+    {
+        GUARDS.load(Ordering::SeqCst) > 0
     }
     #[cfg(not(unix))]
     false
@@ -175,6 +203,7 @@ impl Drop for Guard {
     fn drop(&mut self) {
         #[cfg(unix)]
         {
+            GUARDS.fetch_sub(1, Ordering::SeqCst);
             // SAFETY: restores the handlers `install` replaced.
             unsafe {
                 if let Some(previous) = self.terminate {
