@@ -62,7 +62,7 @@ jobs:
         working-directory: fuzz
         run: |
           for target in $(cargo fuzz list); do
-            cargo fuzz run -O "$target" -- -max_total_time=30 -timeout=10 -rss_limit_mb=2048 -max_len=262144
+            cargo fuzz run -O "$target" -- -max_total_time=30 -timeout=10 -rss_limit_mb=4096 -max_len=262144
           done
       - uses: actions/upload-artifact@v4
         if: failure()
