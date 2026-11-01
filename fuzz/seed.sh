@@ -28,3 +28,6 @@ seed f4m -name '*.abst' -o -name '*.f4m'
 seed ism -name '*.ismv' -o -name '*.isma' -o -path '*ism*'
 seed info_json -name '*.info.json'
 seed netrc -name '*netrc*'
+seed html -name '*.html' -o -name '*.htm'
+seed dates -name '*.json' -size -4k
+seed cover_art -name '*.flac' -o -name '*.ogg' -o -name '*.opus' -o -name '*.m4a' -o -name '*.mp4' -o -name '*.png' -o -name '*.jpg'

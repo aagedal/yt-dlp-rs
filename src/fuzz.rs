@@ -99,3 +99,53 @@ pub fn info_json(data: &[u8]) {
 pub fn netrc(data: &[u8]) {
     let _ = crate::netrc::Netrc::from_content(text(data));
 }
+
+/// Webpage helpers every extractor runs on fetched HTML.
+pub fn html(data: &[u8]) {
+    use crate::html_elements as elements;
+    let html = text(data);
+    let _ = crate::html::unescape_html(html);
+    let _ = crate::html::clean_html(html);
+    let _ = crate::html::og_search_property(html, "title");
+    let _ = crate::html::html_search_meta(html, "description");
+    let _ = crate::html::html_extract_title(html);
+    let _ = crate::html::rta_search(html);
+    let _ = elements::element_text_and_html_by_tag("video", html);
+    let _ = elements::elements_text_and_html_by_attribute("data-id", "x", html);
+    let _ = elements::elements_text_and_html_by_class("player", html);
+    let _ = elements::element_html_by_id("main", html);
+    let _ = elements::extract_attributes(html);
+    let _ = crate::extractor::yield_json_ld(html);
+}
+
+/// Date strings from pages and APIs.
+pub fn dates(data: &[u8]) {
+    let date = text(data);
+    let _ = crate::dates::unified_timestamp(date, false);
+    let _ = crate::dates::unified_timestamp(date, true);
+    let _ = crate::dates::unified_strdate(date, false);
+    let _ = crate::dates::parse_iso8601(date);
+    let _ = crate::dates::parse_iso8601_space(date);
+    let _ = crate::dates::timeconvert(date);
+}
+
+/// Native cover-art embedding into downloaded FLAC, Ogg and MP4 files, and
+/// thumbnail sniffing. The first byte picks the container; a fixed PNG is
+/// the image.
+pub fn cover_art(data: &[u8]) {
+    const PNG: &[u8] = &[
+        0x89, b'P', b'N', b'G', 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 13, b'I', b'H', b'D', b'R', 0, 0,
+        0, 1, 0, 0, 0, 1, 8, 6, 0, 0, 0,
+    ];
+    let _ = crate::cover_art::image_type(data);
+    let _ = crate::cover_art::image_size(data);
+    let Some((kind, file)) = data.split_first() else {
+        return;
+    };
+    let picture = crate::cover_art::picture(PNG, "image/png", Some((1, 1)));
+    let _ = match kind % 3 {
+        0 => crate::cover_art::embed_flac(file, &picture),
+        1 => crate::cover_art::embed_ogg(file, &picture),
+        _ => crate::cover_art::embed_mp4(file, PNG, 14),
+    };
+}

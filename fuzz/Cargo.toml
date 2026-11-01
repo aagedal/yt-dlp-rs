@@ -101,3 +101,24 @@ path = "fuzz_targets/netrc.rs"
 test = false
 doc = false
 bench = false
+
+[[bin]]
+name = "html"
+path = "fuzz_targets/html.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "dates"
+path = "fuzz_targets/dates.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "cover_art"
+path = "fuzz_targets/cover_art.rs"
+test = false
+doc = false
+bench = false

@@ -3,7 +3,8 @@
 libFuzzer targets for the parsers that read untrusted bytes: HLS, DASH,
 SIDX/Cues indexes, `js_to_json`, `devalue`, TTML, Netscape cookie files,
 browser cookie databases (SQLite), HDS bootstraps, ISM fragments,
-`--load-info-json` and `.netrc`. Entry points live in `src/fuzz.rs`, which
+`--load-info-json`, `.netrc`, webpage helpers (meta tags, elements,
+JSON-LD), date strings and native cover-art embedding. Entry points live in `src/fuzz.rs`, which
 only exists under `--cfg fuzzing`.
 
 ```sh
