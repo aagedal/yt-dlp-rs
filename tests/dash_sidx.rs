@@ -17,8 +17,9 @@ fn mpd(index_range: &str) -> String {
     )
 }
 
-/// Serve the MPD and the video with byte ranges; record each `Range`.
-fn serve(manifest: String) -> (String, Arc<Mutex<Vec<String>>>) {
+/// Serve the MPD and the video with byte ranges; record each `Range`. A
+/// range starting at `fail` gets a 503.
+fn serve(manifest: String, fail: Option<&'static str>) -> (String, Arc<Mutex<Vec<String>>>) {
     let listener = TcpListener::bind("127.0.0.1:0").unwrap();
     let base = format!("http://{}", listener.local_addr().unwrap());
     let ranges = Arc::new(Mutex::new(Vec::new()));
@@ -48,6 +49,12 @@ fn serve(manifest: String) -> (String, Arc<Mutex<Vec<String>>>) {
             let head = match range.as_deref().and_then(|range| range.split_once('-')) {
                 Some((start, end)) if path != "/v.mpd" => {
                     record.lock().unwrap().push(format!("{start}-{end}"));
+                    if fail == Some(start) {
+                        let _ = stream.write_all(
+                            b"HTTP/1.1 503 Service Unavailable\r\nContent-Length: 0\r\nConnection: close\r\n\r\n",
+                        );
+                        continue;
+                    }
                     let start: usize = start.parse().unwrap();
                     let end = end
                         .parse::<usize>()
@@ -90,7 +97,7 @@ fn download(base: &str, args: &[&str]) -> (tempfile::TempDir, std::process::Outp
 
 #[test]
 fn segment_base_downloads_as_index_fragments() {
-    let (base, ranges) = serve(mpd("819-954"));
+    let (base, ranges) = serve(mpd("819-954"), None);
     let (directory, output) = download(&base, &["-N", "3"]);
     let stdout = String::from_utf8_lossy(&output.stdout);
     assert!(
@@ -133,7 +140,7 @@ fn segment_base_downloads_as_index_fragments() {
 #[test]
 fn unusable_index_keeps_the_whole_file_download() {
     // An index range that is not a `sidx` box.
-    let (base, ranges) = serve(mpd("100-200"));
+    let (base, ranges) = serve(mpd("100-200"), None);
     let (directory, output) = download(&base, &[]);
     assert!(
         output.status.success(),
@@ -149,4 +156,16 @@ fn unusable_index_keeps_the_whole_file_download() {
         ranges.lock().unwrap().last().map(String::as_str),
         Some("whole")
     );
+}
+
+#[test]
+fn an_unavailable_segment_fails_instead_of_being_skipped() {
+    // The fragments are pieces of one file: `--skip-unavailable-fragments`
+    // (the default) must not leave a hole in it.
+    let (base, _) = serve(mpd("819-954"), Some("12849"));
+    let (directory, output) = download(&base, &["--fragment-retries", "0"]);
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(!output.status.success(), "{stdout}");
+    assert!(!stdout.contains("Skipping fragment"), "{stdout}");
+    assert!(!directory.path().join("out.mp4").exists());
 }
