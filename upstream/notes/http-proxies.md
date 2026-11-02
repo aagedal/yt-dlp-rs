@@ -50,9 +50,10 @@ and deliberately public dummy key are saved fixtures; tests invoke no OpenSSL.
 The bounded-player proxy regression also rejects an off-origin redirect before
 another request. Required tests make no live-site requests.
 
-Remaining scope includes full upstream environment discovery and
-bypass/PAC semantics and per-request/extractor proxies. `--geo-verification-proxy`
-(upstream's `Ytdl-request-proxy` header) was ported later through a second client.
+`--geo-verification-proxy` (upstream's `Ytdl-request-proxy` header) was ported
+later through a second client, and environment discovery and `no_proxy` bypass
+(urllib's environment functions, not the macOS/Windows system settings) in Road to
+1.0 step 7; see [core gaps](core-gaps.md).
 Python remains development/reference tooling only.
 
 ```sh

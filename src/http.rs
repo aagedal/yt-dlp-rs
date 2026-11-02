@@ -4,6 +4,8 @@ mod legacy_tls;
 mod proxy;
 mod socks4_relay;
 use crate::{CookieJar, Error, Result};
+#[cfg(feature = "impersonate")]
+pub(crate) use proxy::EnvironmentProxies;
 pub(crate) use proxy::ProxyConfig;
 use reqwest::blocking::ClientBuilder;
 use reqwest::header::{COOKIE, HeaderMap, HeaderName, HeaderValue, REFERER, USER_AGENT};

@@ -363,6 +363,35 @@ mod transport {
         assert_eq!(chrome.alpn.as_deref(), Some(&b"h2"[..]));
     }
 
+    /// Without `--proxy`, impersonated requests follow upstream's
+    /// environment routes like the plain client: `HTTPS_PROXY`, else the
+    /// `http` route, else `ALL_PROXY` (bypass rules: `src/http/proxy.rs`).
+    #[test]
+    fn impersonated_requests_use_environment_proxies() {
+        for variable in ["HTTPS_PROXY", "HTTP_PROXY", "ALL_PROXY"] {
+            let (proxy, receiver) = proxy(&[b"h2", b"http/1.1"]);
+            let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
+            for name in ["HTTP", "HTTPS", "ALL", "NO"] {
+                command
+                    .env_remove(format!("{name}_PROXY"))
+                    .env_remove(format!("{}_proxy", name.to_lowercase()));
+            }
+            let output = command
+                .args(["--ignore-config", "--no-check-certificate", IMPERSONATED])
+                .env(variable, &proxy)
+                .output()
+                .unwrap();
+            let captured = receiver
+                .recv_timeout(Duration::from_secs(10))
+                .unwrap_or_else(|_| panic!("{variable}: {}", stderr(&output)));
+            assert!(
+                captured.cipher_suites.iter().any(|&suite| is_grease(suite)),
+                "{variable}"
+            );
+            assert_eq!(captured.alpn.as_deref(), Some(&b"h2"[..]), "{variable}");
+        }
+    }
+
     /// SIGTERM ends an impersonated request whose TLS handshake stalls
     /// within the interrupt poll, not after the socket timeout.
     #[test]

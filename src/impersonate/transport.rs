@@ -115,6 +115,8 @@ pub(super) fn targets() -> Vec<Supported> {
 struct Transport {
     client: wreq::Client,
     headers: reqwest::header::HeaderMap,
+    /// Without `--proxy`, upstream's environment routes, chosen per request.
+    environment: Option<crate::http::EnvironmentProxies>,
 }
 
 static RUNTIME: LazyLock<std::result::Result<tokio::runtime::Runtime, String>> =
@@ -166,10 +168,17 @@ impl wreq::cookie::CookieStore for SharedCookies {
 pub(super) fn configure(options: &HttpOptions, cookies: &Arc<CookieJar>) -> Result<()> {
     let make = |transport: crate::http::TransportConfig| -> Result<Option<Arc<Transport>>> {
         let client = client(&transport, cookies)?;
+        let environment = match transport.proxy {
+            crate::http::ProxyConfig::Environment => {
+                Some(crate::http::EnvironmentProxies::from_env()?)
+            }
+            _ => None,
+        };
         Ok((options.client_certificate.is_none()).then(|| {
             Arc::new(Transport {
                 client,
                 headers: options.header_map().unwrap_or_default(),
+                environment,
             })
         }))
     };
@@ -208,8 +217,10 @@ fn client(
         builder = builder.local_address(address);
     }
     match &transport.proxy {
-        crate::http::ProxyConfig::Environment => {}
-        crate::http::ProxyConfig::Direct => builder = builder.no_proxy(),
+        // Environment routes are set on each request (see `send`).
+        crate::http::ProxyConfig::Environment | crate::http::ProxyConfig::Direct => {
+            builder = builder.no_proxy();
+        }
         crate::http::ProxyConfig::Explicit { url, .. } => {
             let proxy = wreq::Proxy::all(url.as_str())
                 .map_err(|_| Error::HttpConfiguration("invalid or unsupported proxy URL".into()))?;
@@ -293,6 +304,15 @@ pub(super) fn send(
         .request(request.method().clone(), request.url().as_str())
         .emulation(emulation)
         .headers(headers);
+    if let Some(target) = transport
+        .environment
+        .as_ref()
+        .and_then(|environment| environment.target(request.url()))
+    {
+        let proxy = wreq::Proxy::all(target.as_str())
+            .map_err(|_| Error::HttpConfiguration("invalid or unsupported proxy URL".into()))?;
+        outgoing = outgoing.proxy(proxy);
+    }
     if let Some(body) = body {
         outgoing = outgoing.body(body);
     }

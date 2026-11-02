@@ -7607,11 +7607,25 @@ and [fixture provenance](../tests/fixtures/cookies/README.md).
 `--proxy URL` (last value wins) configures one route for all supported HTTP and
 HTTPS requests. `--proxy ''` forces direct connections; the pinned
 `__noproxy__` sentinel is also recognized. Explicit routes override ambient proxy
-and NO_PROXY settings. Without an option, the existing reqwest environment/system
-routing policy is preserved. This does not reproduce all Python platform discovery,
-HTTP-to-HTTPS environment fallback, bypass suffix or PAC behavior. The six saved
-omitted-option environment cases establish source behavior only; native tests use
-isolated subprocess environments for basic inheritance and explicit direct bypass.
+and NO_PROXY settings.
+
+Without an option, routes come from the environment like upstream's
+`urllib.request.getproxies()` and `select_proxy`, for the native clients and the
+`impersonate` transport alike: every `NAME_proxy` variable in any case (an
+all-lowercase name wins and an empty lowercase one removes the route; under CGI,
+when `REQUEST_METHOD` is set, an uppercase `HTTP_PROXY` is ignored; on Windows
+names count as uppercase, as Python sees them), `https` taking the `http` route when
+it has none, `clean_proxies` (a scheme-less value is HTTP, `socks`/`socks5` are
+SOCKS4/SOCKS5h, `__noproxy__` is direct and falls back to the `all` route), then
+the request scheme's route or else `all_proxy`, unless `no_proxy` bypasses it
+(`*`, or the destination host or `host:port` equal to or ending in `.NAME`, leading
+dots and case ignored). Credentials and SOCKS rules are those of `--proxy`, and an
+invalid `http`, `https` or `all` value is a configuration error before the first
+request (upstream rejects every request with it). Not read: the macOS System
+Configuration and the Windows registry, which upstream's `urllib` consults only
+when no proxy variable is set, and PAC files (upstream has none). 21 environment
+cases (15 of raw variables) are compared with the pinned source's own functions,
+and local proxy tests cover the fallback, credentials, bypass and CGI rule.
 
 Proxy URLs support HTTP, HTTPS, SOCKS4, SOCKS4a, SOCKS5 and SOCKS5h. Missing schemes
 and scheme-relative values become HTTP. HTTP/HTTPS default to ports 80/443; SOCKS
@@ -7652,10 +7666,15 @@ URLs are bounded to 16 KiB; controls, whitespace, backslashes, malformed percent
 credentials, non-UTF-8 decoded credentials, zero ports, unsupported schemes,
 non-root paths, queries and fragments are explicit errors. SOCKS credential fields
 are capped at 255 decoded bytes. Legacy Ytdl-Request-Proxy/Ytdl-Socks-Proxy custom
-headers are rejected; per-request and geo-verification proxy features remain open.
-Untrusted environment settings use the pre-existing backend handling rather than
-this explicit-URL validator. No fallback to a direct connection is configured when
-an explicit proxy fails.
+headers are rejected. Environment routes pass the same validator. No fallback to a
+direct connection is configured when a proxy fails.
+
+Upstream's per-extractor proxies are the `Ytdl-request-proxy` header of
+`geo_verification_headers()`, ported as `--geo-verification-proxy` (above), the
+proxy given to external downloaders and FFmpeg (ported with them), and YouTube
+PO-token providers' own requests, which this port does not have. No ported
+extractor sets other per-request proxies. JavaScript challenge runtimes run with a
+cleared environment, so they do not see proxy variables.
 
 The offline pinned source comparison covers 50 source configurations and eight
 source-only validation/legacy cases. Native unit tests compare 44 explicit endpoint

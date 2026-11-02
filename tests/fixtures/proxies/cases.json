@@ -16,8 +16,7 @@
           null
         ],
         "headers": {}
-      },
-      "native_policy": "Native records Environment mode and preserves reqwest environment behavior; source environment routes and HTTP-to-HTTPS fallback are reference-only"
+      }
     },
     {
       "name": "explicit-direct",
@@ -1515,8 +1514,7 @@
           }
         ],
         "headers": {}
-      },
-      "native_policy": "Native records Environment mode and preserves reqwest environment behavior; source environment routes and HTTP-to-HTTPS fallback are reference-only"
+      }
     },
     {
       "name": "environment-scheme-specific",
@@ -1550,8 +1548,7 @@
           }
         ],
         "headers": {}
-      },
-      "native_policy": "Native records Environment mode and preserves reqwest environment behavior; source environment routes and HTTP-to-HTTPS fallback are reference-only"
+      }
     },
     {
       "name": "environment-all",
@@ -1584,8 +1581,7 @@
           }
         ],
         "headers": {}
-      },
-      "native_policy": "Native records Environment mode and preserves reqwest environment behavior; source environment routes and HTTP-to-HTTPS fallback are reference-only"
+      }
     },
     {
       "name": "environment-no-proxy",
@@ -1614,8 +1610,7 @@
           }
         ],
         "headers": {}
-      },
-      "native_policy": "Native records Environment mode and preserves reqwest environment behavior; source environment routes and HTTP-to-HTTPS fallback are reference-only"
+      }
     },
     {
       "name": "environment-none-sentinel",
@@ -1642,8 +1637,7 @@
           null
         ],
         "headers": {}
-      },
-      "native_policy": "Native records Environment mode and preserves reqwest environment behavior; source environment routes and HTTP-to-HTTPS fallback are reference-only"
+      }
     }
   ],
   "source_only_cases": [
@@ -1918,6 +1912,463 @@
             "password": "pass",
             "rdns": null
           }
+        ],
+        "headers": {}
+      }
+    }
+  ],
+  "environment_cases": [
+    {
+      "name": "lowercase-wins",
+      "args": [],
+      "variables": {
+        "HTTP_PROXY": "http://upper.test:1",
+        "http_proxy": "http://lower.test:2"
+      },
+      "requests": [
+        "http://example.test/media",
+        "https://example.test/media"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          {
+            "scheme": "http",
+            "host": "lower.test",
+            "port": 2,
+            "username": null,
+            "password": null,
+            "rdns": null
+          },
+          {
+            "scheme": "http",
+            "host": "lower.test",
+            "port": 2,
+            "username": null,
+            "password": null,
+            "rdns": null
+          }
+        ],
+        "headers": {}
+      }
+    },
+    {
+      "name": "empty-lowercase-removes",
+      "args": [],
+      "variables": {
+        "HTTPS_PROXY": "http://upper.test:1",
+        "https_proxy": "",
+        "ALL_PROXY": "http://all.test:3"
+      },
+      "requests": [
+        "http://example.test/media",
+        "https://example.test/media"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          {
+            "scheme": "http",
+            "host": "all.test",
+            "port": 3,
+            "username": null,
+            "password": null,
+            "rdns": null
+          },
+          {
+            "scheme": "http",
+            "host": "all.test",
+            "port": 3,
+            "username": null,
+            "password": null,
+            "rdns": null
+          }
+        ],
+        "headers": {}
+      }
+    },
+    {
+      "name": "all-proxy",
+      "args": [],
+      "variables": {
+        "ALL_PROXY": "http://all.test:3"
+      },
+      "requests": [
+        "http://example.test/media",
+        "https://example.test/media"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          {
+            "scheme": "http",
+            "host": "all.test",
+            "port": 3,
+            "username": null,
+            "password": null,
+            "rdns": null
+          },
+          {
+            "scheme": "http",
+            "host": "all.test",
+            "port": 3,
+            "username": null,
+            "password": null,
+            "rdns": null
+          }
+        ],
+        "headers": {}
+      }
+    },
+    {
+      "name": "mixed-case-name",
+      "args": [],
+      "variables": {
+        "Http_Proxy": "http://mixed.test:4"
+      },
+      "requests": [
+        "http://example.test/media",
+        "https://example.test/media"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          {
+            "scheme": "http",
+            "host": "mixed.test",
+            "port": 4,
+            "username": null,
+            "password": null,
+            "rdns": null
+          },
+          {
+            "scheme": "http",
+            "host": "mixed.test",
+            "port": 4,
+            "username": null,
+            "password": null,
+            "rdns": null
+          }
+        ],
+        "headers": {}
+      }
+    },
+    {
+      "name": "cgi-drops-uppercase-http",
+      "args": [],
+      "variables": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://upper.test:1"
+      },
+      "requests": [
+        "http://example.test/media",
+        "https://example.test/media"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          null,
+          null
+        ],
+        "headers": {}
+      }
+    },
+    {
+      "name": "cgi-keeps-lowercase-http",
+      "args": [],
+      "variables": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://upper.test:1",
+        "http_proxy": "http://lower.test:2"
+      },
+      "requests": [
+        "http://example.test/media",
+        "https://example.test/media"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          {
+            "scheme": "http",
+            "host": "lower.test",
+            "port": 2,
+            "username": null,
+            "password": null,
+            "rdns": null
+          },
+          {
+            "scheme": "http",
+            "host": "lower.test",
+            "port": 2,
+            "username": null,
+            "password": null,
+            "rdns": null
+          }
+        ],
+        "headers": {}
+      }
+    },
+    {
+      "name": "scheme-less-and-socks-aliases",
+      "args": [],
+      "variables": {
+        "HTTP_PROXY": "plain.test:3128",
+        "HTTPS_PROXY": "socks5://s5.test",
+        "ALL_PROXY": "socks://s4.test:1081"
+      },
+      "requests": [
+        "http://example.test/media",
+        "https://example.test/media",
+        "ftp://example.test/file"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          {
+            "scheme": "http",
+            "host": "plain.test",
+            "port": 3128,
+            "username": null,
+            "password": null,
+            "rdns": null
+          },
+          {
+            "scheme": "socks5h",
+            "host": "s5.test",
+            "port": 1080,
+            "username": null,
+            "password": null,
+            "rdns": true
+          },
+          {
+            "scheme": "socks4",
+            "host": "s4.test",
+            "port": 1081,
+            "username": null,
+            "password": null,
+            "rdns": false
+          }
+        ],
+        "headers": {}
+      }
+    },
+    {
+      "name": "credentials",
+      "args": [],
+      "variables": {
+        "HTTP_PROXY": "http://us%40er:p%3Ass@auth.test:8080",
+        "HTTPS_PROXY": "socks5h://user:pw@s5.test:1080"
+      },
+      "requests": [
+        "http://example.test/media",
+        "https://example.test/media"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          {
+            "scheme": "http",
+            "host": "auth.test",
+            "port": 8080,
+            "username": "us@er",
+            "password": "p:ss",
+            "rdns": null
+          },
+          {
+            "scheme": "socks5h",
+            "host": "s5.test",
+            "port": 1080,
+            "username": "user",
+            "password": "pw",
+            "rdns": true
+          }
+        ],
+        "headers": {}
+      }
+    },
+    {
+      "name": "noproxy-sentinel-falls-back-to-all",
+      "args": [],
+      "variables": {
+        "HTTPS_PROXY": "__noproxy__",
+        "ALL_PROXY": "http://all.test:3"
+      },
+      "requests": [
+        "http://example.test/media",
+        "https://example.test/media"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          {
+            "scheme": "http",
+            "host": "all.test",
+            "port": 3,
+            "username": null,
+            "password": null,
+            "rdns": null
+          },
+          {
+            "scheme": "http",
+            "host": "all.test",
+            "port": 3,
+            "username": null,
+            "password": null,
+            "rdns": null
+          }
+        ],
+        "headers": {}
+      }
+    },
+    {
+      "name": "noproxy-sentinel-copied-to-https",
+      "args": [],
+      "variables": {
+        "HTTP_PROXY": "__noproxy__"
+      },
+      "requests": [
+        "http://example.test/media",
+        "https://example.test/media"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          null,
+          null
+        ],
+        "headers": {}
+      }
+    },
+    {
+      "name": "no-proxy-suffixes-and-ports",
+      "args": [],
+      "variables": {
+        "ALL_PROXY": "http://all.test:3",
+        "NO_PROXY": " .Example.Test, other.test:8080 ,ip.test"
+      },
+      "requests": [
+        "http://example.test/",
+        "http://sub.example.test/a",
+        "http://notexample.test/",
+        "http://other.test:8080/",
+        "http://other.test/",
+        "http://ip.test:9/",
+        "https://IP.TEST/"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          null,
+          null,
+          {
+            "scheme": "http",
+            "host": "all.test",
+            "port": 3,
+            "username": null,
+            "password": null,
+            "rdns": null
+          },
+          null,
+          {
+            "scheme": "http",
+            "host": "all.test",
+            "port": 3,
+            "username": null,
+            "password": null,
+            "rdns": null
+          },
+          null,
+          null
+        ],
+        "headers": {}
+      }
+    },
+    {
+      "name": "no-proxy-lowercase-wins",
+      "args": [],
+      "variables": {
+        "ALL_PROXY": "http://all.test:3",
+        "NO_PROXY": "*",
+        "no_proxy": "example.test"
+      },
+      "requests": [
+        "http://example.test/media",
+        "https://example.test/media",
+        "http://other.test/"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          null,
+          null,
+          {
+            "scheme": "http",
+            "host": "all.test",
+            "port": 3,
+            "username": null,
+            "password": null,
+            "rdns": null
+          }
+        ],
+        "headers": {}
+      }
+    },
+    {
+      "name": "no-proxy-star",
+      "args": [],
+      "variables": {
+        "HTTP_PROXY": "http://upper.test:1",
+        "NO_PROXY": "*"
+      },
+      "requests": [
+        "http://example.test/media",
+        "https://example.test/media"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          null,
+          null
+        ],
+        "headers": {}
+      }
+    },
+    {
+      "name": "ipv6-destination-bypass",
+      "args": [],
+      "variables": {
+        "ALL_PROXY": "http://all.test:3",
+        "NO_PROXY": "::1"
+      },
+      "requests": [
+        "http://[::1]/",
+        "http://[::1]:8080/"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          null,
+          null
+        ],
+        "headers": {}
+      }
+    },
+    {
+      "name": "other-scheme-variables-ignored",
+      "args": [],
+      "variables": {
+        "FTP_PROXY": "http://ftp.test:21",
+        "NO_PROXY": ""
+      },
+      "requests": [
+        "http://example.test/media",
+        "https://example.test/media"
+      ],
+      "expected": {
+        "proxy_option": null,
+        "selected": [
+          null,
+          null
         ],
         "headers": {}
       }

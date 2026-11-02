@@ -3,19 +3,22 @@
 Official pinned yt-dlp: `f264a6cbd1f630894da0f368df00f8aae50140e0`.
 Run `python3 tools/compare_proxies.py --upstream /path/to/pinned/yt-dlp`.
 
-`cases.json` contains 50 source configurations and eight additional explicitly
-source-only cases. Of the 50, native consumes 44 explicit endpoint configurations
-(including five SOCKS4 credential configurations) and treats six omitted-option
-cases only as an Environment mode marker. Those six configurations carry
-`native_policy`; their actual source results remain unchanged reference data.
-Each has `args`, a controlled `environment` proxy mapping, request URLs and
+`cases.json` contains 50 source configurations, eight additional explicitly
+source-only cases and 15 raw environment cases. Native tests compare all 50: 44
+explicit endpoint configurations (including five SOCKS4 credential
+configurations) and six omitted-option cases whose discovered mapping goes through
+the native `https` fallback, cleanup and selection. The `environment_cases` hold
+raw `variables` instead; the worker sets exactly those as `os.environ` and calls
+the actual `getproxies_environment` and `proxy_bypass_environment` (the non-Windows
+functions on any host), and native tests run the same variables through the
+native discovery. `--write` saves the source results as `expected`.
+Each configuration has `args`, a controlled `environment` proxy mapping, request URLs and
 `expected` (`proxy_option`, `selected` endpoints and remaining `headers`).
 `proxy_option` preserves the actual explicit CLI value or null when omitted.
 Each selected endpoint is null (direct) or an object with scheme, host, port,
-username, password and rdns. Native fixture tests compare supported explicit
-endpoints without network or environment mutations. Environment configurations
-do not assert route equality. Environment keys are the already-discovered urllib
-getproxies mapping, not raw OS environment variables.
+username, password and rdns. Native fixture tests compare them without network
+or environment mutations. In `cases`, environment keys are the already-discovered
+urllib getproxies mapping, not raw OS environment variables.
 
 The worker calls actual parse_options, YoutubeDL.proxies, clean_proxies,
 select_proxy and make_socks_proxy_opts. It replaces both standard-library and
@@ -49,10 +52,9 @@ URLs, IPv6, scheme defaults, supported schemes/aliases and percent-decoded/user-
 only/empty credentials. Explicit proxy overrides all environment including no.
 An omitted explicit option uses the actual source discovered environment mapping: HTTP
 falls back to HTTPS only if HTTPS is absent; all provides general fallback;
-no bypasses matching hosts; HTTPS __noproxy__ remains direct. Native preserves
-reqwest environment behavior and compares only the Environment mode marker for
-these six omitted-option cases. Python HTTP-to-HTTPS fallback, no_proxy routing
-and platform discovery are reference evidence, not native route parity claims.
+no bypasses matching hosts; HTTPS __noproxy__ remains direct. Native environment
+discovery reproduces these routes and is compared on them. Platform discovery
+(macOS System Configuration, Windows registry) is not reproduced.
 
 The five SOCKS4 userinfo configurations are compared like the others; the
 username reaches the proxy as the USERID through a loopback relay, because the
