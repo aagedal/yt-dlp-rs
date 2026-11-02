@@ -12,5 +12,12 @@
    "-J",
    "--flat-playlist"
   ]
+ },
+ {
+  "url": "globo:3607726",
+  "args": [
+   "-J",
+   "--no-geo-bypass"
+  ]
  }
 ]
