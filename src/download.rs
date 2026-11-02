@@ -66,6 +66,9 @@ pub struct FragmentBytes {
     pub downloaded: u64,
     pub total: Option<u64>,
     pub finished: bool,
+    /// Part of a live DASH snapshot (upstream's `ctx['live']`): no size
+    /// estimate is derived from it.
+    pub live: bool,
 }
 
 /// `--buffer-size` (upstream `buffersize`, default 1024).

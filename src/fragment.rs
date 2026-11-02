@@ -23,13 +23,19 @@ struct Reporter<'a> {
     rate_limit: Option<u64>,
     /// The current fragment's HttpFD progress, reported with its data.
     fragment: Option<crate::FragmentBytes>,
+    /// A live DASH snapshot (`ctx['live']`).
+    live: bool,
 }
 impl Reporter<'_> {
     fn report(&mut self, phase: DownloadPhase, bytes: u64) -> Result<()> {
         let fragment = self
             .fragment
             .take()
-            .filter(|_| phase == DownloadPhase::Downloading);
+            .filter(|_| phase == DownloadPhase::Downloading)
+            .map(|fragment| crate::FragmentBytes {
+                live: self.live,
+                ..fragment
+            });
         if (self.callback)(DownloadProgress {
             attempt: self.attempt,
             downloaded_bytes: bytes,
@@ -256,6 +262,9 @@ fn download_with(
         crate::PartFiles::Private => (false, false),
         crate::PartFiles::Part { resume } | crate::PartFiles::NoPart { resume } => (true, resume),
     };
+    // A live DASH snapshot (`ctx['live']`) neither resumes nor keeps state.
+    let live = crate::live_snapshot(info);
+    let resume = resume && !live;
     let part_path = {
         let mut name = destination.as_os_str().to_owned();
         if matches!(options.part_files, crate::PartFiles::Part { .. }) {
@@ -282,6 +291,9 @@ fn download_with(
         _ => None,
     };
     let write_state = |index: usize, mhtml: &Option<(String, bool)>| -> Result<()> {
+        if live {
+            return Ok(());
+        }
         let extra = if let Some((boundary, true)) = mhtml {
             format!(
                 ", \"extra_state\": {{\"header_written\": true, \"mime_boundary\": {}}}",
@@ -378,6 +390,7 @@ fn download_with(
         count: info.fragments.len() as u32,
         rate_limit: options.rate_limit,
         fragment: None,
+        live,
     };
     // Upstream `--keep-fragments`: `TMPFILENAME-FragN` beside the output.
     let keep = keep_fragments.then(|| part_path.as_os_str().to_owned());
@@ -484,6 +497,7 @@ fn download_with(
                         downloaded: stored - prefix,
                         total: Some(stored - prefix),
                         finished: true,
+                        live: false,
                     });
                     reporter.report(DownloadPhase::Downloading, stored)?;
                     filetime = crate::filetime::filetime(modified.as_deref()).or(filetime);
@@ -631,6 +645,7 @@ pub(crate) fn append_live(
         count: 0,
         rate_limit: options.rate_limit,
         fragment: None,
+        live: false,
     };
     let prefix = *stored;
     let appended = fetch_with_retries(
@@ -810,6 +825,7 @@ fn download_concurrent(
                         count: count as u32,
                         rate_limit: options.rate_limit,
                         fragment: None,
+                        live: crate::live_snapshot(info),
                     };
                     let result = (|| {
                         let mut file = tempfile::Builder::new()
@@ -838,6 +854,7 @@ fn download_concurrent(
                                     downloaded: stored,
                                     total: Some(stored),
                                     finished: true,
+                                    live: false,
                                 }),
                             });
                         }
@@ -1015,6 +1032,7 @@ fn fetch(
                 downloaded: received + data.len() as u64,
                 total: expected,
                 finished: false,
+                live: false,
             });
             append(file, &data, stored, &mut received, expected, reporter)?;
         }

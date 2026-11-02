@@ -216,6 +216,9 @@ pub struct YoutubeDl {
     multistreams: (bool, bool),
     /// `--live-from-start`.
     live_from_start: bool,
+    /// After `Live DASH videos are not supported` (`--downloader native`),
+    /// download the manifest snapshot like upstream's DashSegmentsFD.
+    live_dash_snapshot: bool,
     /// `--growing-file` (port extension).
     growing_file: bool,
     /// `--keep-partial-on-stop` (port extension).
@@ -295,14 +298,46 @@ fn live_generated(info: &VideoInfo) -> bool {
     }
 }
 
-/// A transport error as urllib words it: `[Errno N] TEXT` for an OS error.
-/// HlsFD's `Total fragments` for `info` after `refresh_hls`: the whole
-/// playlist's fragments even when only a discontinuity section downloads.
-pub fn total_fragments(info: &VideoInfo) -> usize {
-    FRAGMENT_TOTAL.with(|total| match &*total.borrow() {
-        Some((url, count)) if *url == info.url => *count,
-        _ => info.fragments.len(),
-    })
+/// The `Total fragments: N` text of a fragment download: HlsFD's count after
+/// `refresh_hls` is the whole playlist's fragments even when only a
+/// discontinuity section downloads; a live DASH snapshot is `unknown (live)`
+/// (`_prepare_frag_download`'s `ctx['live']`).
+pub fn total_fragments(info: &VideoInfo) -> String {
+    if live_snapshot(info) {
+        return "unknown (live)".into();
+    }
+    FRAGMENT_TOTAL
+        .with(|total| match &*total.borrow() {
+            Some((url, count)) if *url == info.url => *count,
+            _ => info.fragments.len(),
+        })
+        .to_string()
+}
+
+static TROUBLE: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+/// Upstream `trouble` with `ignoreerrors`: an `ERROR:` line on stderr that
+/// does not stop the work.
+fn report_trouble(message: &str) {
+    screen::stderr(&format!("ERROR: {message}"));
+    TROUBLE.store(true, std::sync::atomic::Ordering::Relaxed);
+}
+
+/// Whether an error was reported without stopping the work (upstream's
+/// `_download_retcode = 1`): the CLI then exits 1.
+pub fn trouble_reported() -> bool {
+    TROUBLE.load(std::sync::atomic::Ordering::Relaxed)
+}
+
+/// DashSegmentsFD's error for a live format (see
+/// [`YoutubeDl::with_live_dash_snapshot`]).
+pub const LIVE_DASH_UNSUPPORTED: &str = "Live DASH videos are not supported";
+
+/// A live `http_dash_segments` format downloaded by DashSegmentsFD (its
+/// manifest snapshot, after `Live DASH videos are not supported`): upstream's
+/// `ctx['live']`, with no `.ytdl` resume state.
+pub(crate) fn live_snapshot(info: &VideoInfo) -> bool {
+    is_live(info) && info.protocol.as_deref() == Some("http_dash_segments")
 }
 
 thread_local! {
@@ -1583,6 +1618,7 @@ impl YoutubeDl {
             merge_output_format: None,
             multistreams: (false, false),
             live_from_start: false,
+            live_dash_snapshot: false,
             growing_file: false,
             keep_partial_on_stop: false,
             youtube_runtime,
@@ -3794,11 +3830,12 @@ impl YoutubeDl {
     }
 
     /// Whether a live DASH download fails before its fragments (FFmpegFD
-    /// without ffmpeg, or `--downloader native`), so no fragment count is
-    /// announced for it.
+    /// without ffmpeg, or `--downloader native` without
+    /// [`Self::with_live_dash_snapshot`]), so no fragment count is announced
+    /// for it.
     pub fn live_dash_fails(&self, info: &VideoInfo) -> bool {
         match self.live_dash(info) {
-            Some(LiveDash::Native) => true,
+            Some(LiveDash::Native) => !self.live_dash_snapshot,
             Some(LiveDash::Ffmpeg) => self.ffmpeg.is_none(),
             None => false,
         }
@@ -4417,6 +4454,28 @@ impl YoutubeDl {
         self.live_from_start = from_start;
         extractor::TWITCH_LIVE_FROM_START.store(from_start, std::sync::atomic::Ordering::Relaxed);
         self
+    }
+
+    /// Upstream DashSegmentsFD's `report_error('Live DASH videos are not
+    /// supported')` for a live DASH format with `--downloader native`: with
+    /// `true` (the CLI's default `ignoreerrors='only_download'`) the caller
+    /// reports [`LIVE_DASH_UNSUPPORTED`] ([`Self::report_live_dash`]) and the
+    /// download continues with the fragments of the extraction's
+    /// manifest snapshot; with `false` (`--abort-on-error`, the library
+    /// default) the download fails with that error.
+    pub fn with_live_dash_snapshot(mut self, snapshot: bool) -> Self {
+        self.live_dash_snapshot = snapshot;
+        self
+    }
+
+    /// Before a fragment download: DashSegmentsFD's `report_error` for a
+    /// live DASH format whose snapshot is then downloaded (see
+    /// [`Self::with_live_dash_snapshot`]); the run still fails
+    /// ([`trouble_reported`]).
+    pub fn report_live_dash(&self, info: &VideoInfo) {
+        if self.live_dash(info) == Some(LiveDash::Native) && self.live_dash_snapshot {
+            report_trouble(LIVE_DASH_UNSUPPORTED);
+        }
     }
 
     /// Whether `info` is live and downloaded from now (upstream's
@@ -5709,10 +5768,10 @@ impl YoutubeDl {
             ));
         }
         // `DashSegmentsFD.real_download` reports this error for a live
-        // `http_dash_segments` download, then tries the manifest's snapshot
-        // fragments; this port stops instead.
-        if live_dash == Some(LiveDash::Native) {
-            return Err(Error::Reported("Live DASH videos are not supported".into()));
+        // `http_dash_segments` download, then (unless it raised) downloads
+        // the manifest's snapshot fragments.
+        if live_dash == Some(LiveDash::Native) && !self.live_dash_snapshot {
+            return Err(Error::Reported(LIVE_DASH_UNSUPPORTED.into()));
         }
         // Merged F4M formats are not supported (upstream merges F4mFD files).
         if info
@@ -6306,6 +6365,7 @@ impl YoutubeDl {
                 if let Some(refreshed) = self.refresh_hls(&part)? {
                     part = refreshed;
                 }
+                self.report_live_dash(&part);
                 if !part.fragments.is_empty() && !self.live_dash_fails(&part) {
                     let downloader = match part.protocol.as_deref() {
                         // `sidx_fd`'s byte-range fragments.

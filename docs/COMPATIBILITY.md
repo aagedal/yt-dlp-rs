@@ -6511,9 +6511,19 @@ input, `-map INPUT:manifest_stream_number`, selected formats merged in one FFmpe
 run, and no duplicate-MOOV or DASH m4a fixup (those follow DashSegmentsFD and
 native downloads). A `--downloader` other than `native` keeps FFmpegFD; without
 ffmpeg the download fails with upstream's `m3u8 download detected but ffmpeg could
-not be found. Please install`. `--downloader native` (or `dash:native`) fails with
-DashSegmentsFD's `Live DASH videos are not supported`: upstream reports the same
-error and then tries the snapshot's fragments, this port stops there. Like its
+not be found. Please install`. `--downloader native` (or `dash:native`) keeps
+DashSegmentsFD, which reports `ERROR: Live DASH videos are not supported` and then,
+like upstream's `report_error` under the default `--no-abort-on-error`, downloads
+the fragments of the extraction's manifest snapshot as a live fragment download
+(`[dashsegments] Total fragments: unknown (live)`, no `.ytdl` state or resume,
+no `total_bytes_estimate` in progress) and exits 1 even when every file
+completes; merged formats report the error once per format. With
+`--abort-on-error` the error ends the download before any segment is requested.
+The library does the same with `YoutubeDl::with_live_dash_snapshot(true)`
+(`trouble_reported()` then tells the error was reported); by default it fails.
+Neither upstream nor this port follows the live edge natively: the snapshot is
+the segments listed when the video was extracted (`tests/dash_dynamic.rs`
+compares it with pinned upstream). Like its
 other non-direct FFmpegFD downloads, this port also sends the page as `Referer`.
 The download tests use a recording fake FFmpeg whose arguments equal pinned
 upstream's (apart from `Referer`); FFmpeg's own DASH demuxer is not exercised

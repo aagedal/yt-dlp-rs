@@ -158,7 +158,10 @@ only for a file that was finished, or kept by `--keep-partial-on-stop`.
 
 With the default `--no-abort-on-error`, later URLs and playlist entries
 still run after an error, and the exit code is 1. `--abort-on-error` stops at
-the first error. A few malformed values are rejected by the argument parser
+the first error. An error does not always end its video: like upstream, a
+live DASH format downloaded with `--downloader native` reports `ERROR: Live
+DASH videos are not supported` and still downloads the manifest's snapshot
+(with `after_move` and `finished` statuses), and the run exits 1. A few malformed values are rejected by the argument parser
 itself, with its own message instead of upstream's, but they also exit 2
 (`docs/COMPATIBILITY.md`).
 

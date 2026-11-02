@@ -2837,6 +2837,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             None
         })
         .with_live_from_start(args.live_from_start)
+        // DashSegmentsFD's live error raises only with `--abort-on-error`.
+        .with_live_dash_snapshot(error_mode != ErrorMode::Abort)
         .with_dynamic_mpd(!args.ignore_dynamic_mpd);
     let output_paths = yt_dlp_rs::output::parse_paths(&args.paths)?;
     let template_options = TemplateOptions {
@@ -6941,6 +6943,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     None
                                 };
                                 let info = refreshed.as_ref().unwrap_or(&info);
+                                if !ffmpeg_fd && info.requested_formats.is_empty() {
+                                    downloader.report_live_dash(info);
+                                }
                                 if !ffmpeg_fd
                                     && info.requested_formats.is_empty()
                                     && !info.fragments.is_empty()
@@ -7119,6 +7124,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     let stream = refreshed.as_ref().unwrap_or(stream);
                                     // A single result already announced itself above.
                                     if !info.requested_formats.is_empty() {
+                                        downloader.report_live_dash(stream);
                                         if !stream.fragments.is_empty()
                                             && !downloader.live_dash_fails(stream)
                                         {
@@ -10074,7 +10080,10 @@ impl<'a> ProgressReporter<'a> {
                 * f64::from(count);
             // `state['elapsed']` is read before the update.
             let elapsed = state.calculator.elapsed;
-            state.calculator.set_total(Some(estimate));
+            // `if not ctx['live']`: live fragments have no estimate.
+            state
+                .calculator
+                .set_total((!fragment.live).then_some(estimate));
             state.calculator.update(fragment.index, fragment.downloaded);
             if fragment.finished {
                 state.index += 1;
@@ -11245,8 +11254,8 @@ fn cli() -> std::process::ExitCode {
         return std::process::ExitCode::FAILURE;
     }
     match result {
-        Ok(true) => std::process::ExitCode::SUCCESS,
-        Ok(false) => std::process::ExitCode::FAILURE,
+        Ok(true) if !yt_dlp_rs::trouble_reported() => std::process::ExitCode::SUCCESS,
+        Ok(_) => std::process::ExitCode::FAILURE,
         Err(error) if error.is::<Cancel>() => std::process::ExitCode::from(101),
         Err(error) if error.is::<UsageError>() => {
             // Upstream `_generate_error_message`, written after a newline.
