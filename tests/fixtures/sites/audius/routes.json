@@ -56,6 +56,13 @@
    },
    "body_file": "route-07.json",
    "status": 404
+  },
+  {
+   "url": "https://api.audius.co/v1/tracks/KKdy2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "route-01.json"
   }
  ]
 }

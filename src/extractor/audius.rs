@@ -107,22 +107,22 @@ fn random_index(len: usize) -> usize {
 }
 
 /// `_select_api_base`: a random discovery host.
-fn select_api_base(client: &Client) -> Result<String> {
+fn select_api_base(client: &Client, name: &'static str) -> Result<String> {
     let url = Url::parse(DISCOVERY)?;
-    let response = download_json_note(client, &url, NAME, "", "Requesting available API hosts")?;
+    let response = download_json_note(client, &url, name, "", "Requesting available API hosts")?;
     let hosts = response
         .get("data")
         .and_then(Value::as_array)
         .filter(|hosts| !hosts.is_empty())
-        .ok_or_else(|| Error::Reported(format!("[{NAME}] Unable to get available API hosts")))?;
+        .ok_or_else(|| Error::Reported(format!("[{name}] Unable to get available API hosts")))?;
     let host = hosts[random_index(hosts.len())]
         .as_str()
-        .ok_or_else(|| Error::Reported(format!("[{NAME}] Unable to get available API hosts")))?;
+        .ok_or_else(|| Error::Reported(format!("[{name}] Unable to get available API hosts")))?;
     Ok(host.trim_end_matches('/').to_owned())
 }
 
 /// `_get_response_data`.
-fn response_data(response: &Value) -> Result<Value> {
+fn response_data(response: &Value, name: &str) -> Result<Value> {
     if let Some(object) = response.as_object() {
         if let Some(data) = object.get("data").filter(|data| !data.is_null()) {
             return Ok(data.clone());
@@ -133,11 +133,11 @@ fn response_data(response: &Value) -> Result<Value> {
             let text = message
                 .as_str()
                 .map_or_else(|| message.to_string(), str::to_owned);
-            return Err(Error::Reported(format!("[{NAME}] API error: {text}")));
+            return Err(Error::Reported(format!("[{name}] API error: {text}")));
         }
     }
     Err(Error::Reported(format!(
-        "[{NAME}] Unexpected API response; {}",
+        "[{name}] Unexpected API response; {}",
         crate::BUG_REPORTS_MESSAGE
     )))
 }
@@ -145,6 +145,7 @@ fn response_data(response: &Value) -> Result<Value> {
 /// `_api_request(path, item_id, expected_status=...)`.
 fn api_request(
     client: &Client,
+    name: &'static str,
     base: &str,
     path: &str,
     item_id: &str,
@@ -153,24 +154,32 @@ fn api_request(
 ) -> Result<Value> {
     let url = Url::parse(&format!("{base}{API_VERSION}{path}"))?;
     let response = if expect_404 {
+        crate::screen::screen(&format!("[{name}] {item_id}: {note}"));
         let mut response = direct::request_expecting(client, &url, &[], &[404])?;
         let mut body = Vec::new();
         std::io::Read::read_to_end(&mut response, &mut body).map_err(Error::ExtractionRead)?;
         serde_json::from_slice::<Value>(&body).map_err(|_| {
             Error::Reported(format!(
-                "[{NAME}] {item_id}: An error occurred while receiving data. Try again"
+                "[{name}] {item_id}: An error occurred while receiving data. Try again"
             ))
         })?
     } else {
-        download_json_note(client, &url, NAME, item_id, note)?
+        download_json_note(client, &url, name, item_id, note)?
     };
-    response_data(&response)
+    response_data(&response, name)
 }
 
 /// `_resolve_url(url, item_id)`.
-fn resolve(client: &Client, base: &str, url: &str, item_id: &str) -> Result<Value> {
+fn resolve(
+    client: &Client,
+    name: &'static str,
+    base: &str,
+    url: &str,
+    item_id: &str,
+) -> Result<Value> {
     api_request(
         client,
+        name,
         base,
         &format!("/resolve?url={}", quote(url)),
         item_id,
@@ -180,12 +189,12 @@ fn resolve(client: &Client, base: &str, url: &str, item_id: &str) -> Result<Valu
 }
 
 /// `_build_playlist`: a flat `AudiusTrack` entry per track.
-fn build_playlist(tracks: &Value) -> Result<Vec<VideoInfo>> {
+fn build_playlist(tracks: &Value, name: &str) -> Result<Vec<VideoInfo>> {
     let mut entries = Vec::new();
     for track in tracks.as_array().into_iter().flatten() {
         let Some(object) = track.as_object() else {
             return Err(Error::Reported(format!(
-                "[{NAME}] Unexpected API response; {}",
+                "[{name}] Unexpected API response; {}",
                 crate::BUG_REPORTS_MESSAGE
             )));
         };
@@ -194,7 +203,7 @@ fn build_playlist(tracks: &Value) -> Result<Vec<VideoInfo>> {
             Some(Value::Number(number)) => number.to_string(),
             _ => {
                 return Err(Error::Reported(format!(
-                    "[{NAME}] Unable to get track ID from playlist; {}",
+                    "[{name}] Unable to get track ID from playlist; {}",
                     crate::BUG_REPORTS_MESSAGE
                 )));
             }
@@ -213,22 +222,24 @@ fn build_playlist(tracks: &Value) -> Result<Vec<VideoInfo>> {
 /// The shared `_real_extract` of the track classes.
 fn track_info(
     client: &Client,
+    ie: (&'static str, &'static str),
     url: &Url,
     track_id: Option<&str>,
     title_text: Option<&str>,
 ) -> Result<VideoInfo> {
-    let base = select_api_base(client)?;
+    let base = select_api_base(client, ie.0)?;
     let (title, track_data) = match track_id {
         None => {
             let title = title_text.unwrap_or_default();
             let (prepared, title) = prepare_url(url.as_str(), title);
-            let data = resolve(client, &base, &prepared, &title)?;
+            let data = resolve(client, ie.0, &base, &prepared, &title)?;
             (Some(title), data)
         }
         Some(track_id) => (
             None,
             api_request(
                 client,
+                ie.0,
                 &base,
                 &format!("/tracks/{track_id}"),
                 track_id,
@@ -239,14 +250,16 @@ fn track_info(
     };
     let Some(track) = track_data.as_object() else {
         return Err(Error::Reported(format!(
-            "[{NAME}] Unexpected API response; {}",
+            "[{}] Unexpected API response; {}",
+            ie.0,
             crate::BUG_REPORTS_MESSAGE
         )));
     };
     let id = match track.get("id") {
         Some(Value::Null) | None => {
             return Err(Error::Reported(format!(
-                "[{NAME}] Unable to get ID of the track; {}",
+                "[{}] Unable to get ID of the track; {}",
+                ie.0,
                 crate::BUG_REPORTS_MESSAGE
             )));
         }
@@ -303,12 +316,17 @@ fn track_info(
     ];
     // Upstream's bare `url` result: the stream URL is the one format.
     let stream = Url::parse(&format!("{base}{API_VERSION}/tracks/{id}/stream"))?;
-    Ok(url_info(url, &stream, fields))
+    Ok(url_info(url, ie, &stream, fields))
 }
 
 /// Upstream's bare `url` result: the stream URL is the one `mp3` format, and
 /// the dict's keys keep `fields`' order with no `formats` key.
-fn url_info(page: &Url, media: &Url, fields: Vec<(&str, Value)>) -> VideoInfo {
+fn url_info(
+    page: &Url,
+    ie: (&'static str, &'static str),
+    media: &Url,
+    fields: Vec<(&str, Value)>,
+) -> VideoInfo {
     let keys: Vec<String> = fields.iter().map(|(key, _)| (*key).to_owned()).collect();
     let mut formats =
         direct::with_format(direct::build_at(media.clone(), media, "mp3".into()), "").formats;
@@ -316,7 +334,7 @@ fn url_info(page: &Url, media: &Url, fields: Vec<(&str, Value)>) -> VideoInfo {
         format.ext = "mp3".into();
         format.format_id = String::new();
     }
-    let mut info = super::dict_info(page, (NAME, NAME), fields, formats);
+    let mut info = super::dict_info(page, ie, fields, formats);
     info.format_id = None;
     crate::info_order::mark_info(info, &format!("untyped-dict;{}", keys.join(",")))
 }
@@ -335,7 +353,7 @@ impl Extractor for Audius {
             "[{NAME}] Extracting URL: {}",
             crate::screen::extracting_url(url.as_str())
         ));
-        track_info(client, url, None, Some(&title)).map(Some)
+        track_info(client, (NAME, NAME), url, None, Some(&title)).map(Some)
     }
 }
 
@@ -350,7 +368,11 @@ impl Extractor for AudiusTrack {
         };
         let id = found["track_id"].to_owned();
         crate::screen::set_extractor(TRACK_NAME);
-        track_info(client, url, Some(&id), None).map(Some)
+        crate::screen::screen(&format!(
+            "[{TRACK_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        track_info(client, (TRACK_NAME, TRACK_IE_KEY), url, Some(&id), None).map(Some)
     }
 }
 
@@ -404,14 +426,18 @@ impl Extractor for AudiusPlaylist {
         };
         let title_text = found["title"].to_owned();
         crate::screen::set_extractor(PLAYLIST_NAME);
-        let base = select_api_base(client)?;
+        crate::screen::screen(&format!(
+            "[{PLAYLIST_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        let base = select_api_base(client, PLAYLIST_NAME)?;
         let (prepared, title) = prepare_url(url.as_str(), &title_text);
-        let response = resolve(client, &base, &prepared, &title)?;
+        let response = resolve(client, PLAYLIST_NAME, &base, &prepared, &title)?;
         let playlist = match response.as_array().map(Vec::as_slice) {
             Some([playlist]) if playlist.is_object() => playlist.clone(),
             _ => {
                 return Err(Error::Reported(format!(
-                    "[{NAME}] Unexpected API response; {}",
+                    "[{PLAYLIST_NAME}] Unexpected API response; {}",
                     crate::BUG_REPORTS_MESSAGE
                 )));
             }
@@ -422,12 +448,13 @@ impl Extractor for AudiusPlaylist {
             .map(|id| id.as_str().map_or_else(|| id.to_string(), str::to_owned))
             .ok_or_else(|| {
                 Error::Reported(format!(
-                    "[{NAME}] Unable to get playlist ID; {}",
+                    "[{PLAYLIST_NAME}] Unable to get playlist ID; {}",
                     crate::BUG_REPORTS_MESSAGE
                 ))
             })?;
         let tracks = api_request(
             client,
+            PLAYLIST_NAME,
             &base,
             &format!("/playlists/{id}/tracks"),
             &title,
@@ -436,11 +463,11 @@ impl Extractor for AudiusPlaylist {
         )?;
         if !tracks.is_array() {
             return Err(Error::Reported(format!(
-                "[{NAME}] Unexpected API response; {}",
+                "[{PLAYLIST_NAME}] Unexpected API response; {}",
                 crate::BUG_REPORTS_MESSAGE
             )));
         }
-        let entries = build_playlist(&tracks)?;
+        let entries = build_playlist(&tracks, PLAYLIST_NAME)?;
         let name = playlist.get("playlist_name").map_or(title.clone(), |name| {
             name.as_str().unwrap_or_default().to_owned()
         });
@@ -470,9 +497,14 @@ impl Extractor for AudiusProfile {
         };
         let profile_id = found["id"].to_owned();
         crate::screen::set_extractor(PROFILE_NAME);
-        let base = select_api_base(client)?;
+        crate::screen::screen(&format!(
+            "[{PROFILE_NAME}] Extracting URL: {}",
+            crate::screen::extracting_url(url.as_str())
+        ));
+        let base = select_api_base(client, PROFILE_NAME)?;
         let profile = api_request(
             client,
+            PROFILE_NAME,
             &base,
             &format!("/full/users/handle/{profile_id}"),
             &profile_id,
@@ -480,14 +512,16 @@ impl Extractor for AudiusProfile {
             "Downloading JSON metadata",
         )
         .map_err(|error| {
-            Error::Reported(format!("[{NAME}] Could not download profile info; {error}"))
+            Error::Reported(format!(
+                "[{PROFILE_NAME}] Could not download profile info; {error}"
+            ))
         })?;
         let first = profile
             .as_array()
             .and_then(|items| items.first())
             .ok_or_else(|| {
                 Error::Reported(format!(
-                    "[{NAME}] Unexpected API response; {}",
+                    "[{PROFILE_NAME}] Unexpected API response; {}",
                     crate::BUG_REPORTS_MESSAGE
                 ))
             })?;
@@ -497,20 +531,21 @@ impl Extractor for AudiusProfile {
             .map(str::to_owned)
             .ok_or_else(|| {
                 Error::Reported(format!(
-                    "[{NAME}] Unexpected API response; {}",
+                    "[{PROFILE_NAME}] Unexpected API response; {}",
                     crate::BUG_REPORTS_MESSAGE
                 ))
             })?;
         let bio = first.get("bio").filter(|bio| !bio.is_null()).cloned();
         let tracks = api_request(
             client,
+            PROFILE_NAME,
             &base,
             &format!("/full/users/handle/{profile_id}/tracks"),
             &profile_id,
             false,
             "Downloading JSON metadata",
         )?;
-        let entries = build_playlist(&tracks)?;
+        let entries = build_playlist(&tracks, PROFILE_NAME)?;
         Ok(Some(playlist_result(
             url,
             (PROFILE_NAME, PROFILE_IE_KEY),

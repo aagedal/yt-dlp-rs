@@ -3392,6 +3392,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("arcpublishing:") && arcpublishing::suitable(url))
         || (url.starts_with("arte://") && arte::suitable(url))
+        || (url.starts_with("audius:") && audius::track_suitable(url))
         || (url.starts_with("cbcplayer:") && cbc::player_suitable(url))
         || (url.starts_with("facebook:") && facebook::suitable(url))
         || (url.starts_with("globo:") && globo::suitable(url))
