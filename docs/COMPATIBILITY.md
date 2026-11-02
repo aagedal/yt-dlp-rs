@@ -5590,8 +5590,8 @@ HTTP 5xx status (upstream HttpFD; other statuses fail at once), connection/timeo
 and other transport errors, response body read errors, or Content-Length
 mismatches. Extraction requests keep retrying HTTP 408, 429, 500, 502, 503 and 504. `--retries 0` disables retries; values through 255
 are accepted (the CLI default is 10, see `--retries`; `u32::MAX` retries
-indefinitely). The library exposes `DownloadOptions { retries, fragment_retries,
-retry_sleep, skip_unavailable_fragments }` through
+indefinitely). The library exposes `DownloadOptions` (`retries`, `fragment_retries`,
+`retry_sleep`, `skip_unavailable_fragments`) through
 `YoutubeDl::download_with_options`; `download` uses the default policy.
 After the retry budget is exhausted, return `Error::RetriesExhausted`, which
 wraps the final attempt's error with upstream's Giving-up text.
@@ -5671,7 +5671,7 @@ existing baseline and does not advance it.
 
 `--extractor-retries N` opts into up to N additional whole-extraction attempts
 (default 0, maximum 255). The library exposes the same policy through
-`extract_result_with_options(url, format, ExtractionOptions { retries: N })`.
+`extract_result_with_options(url, format, options)` with `ExtractionOptions::retries`.
 Existing extraction methods retain zero retries. Call `into_video()` on the
 result when a single video is required; playlists still fail at that boundary.
 
@@ -6520,8 +6520,8 @@ the fragments of the extraction's manifest snapshot as a live fragment download
 no `total_bytes_estimate` in progress) and exits 1 even when every file
 completes; merged formats report the error once per format. With
 `--abort-on-error` the error ends the download before any segment is requested.
-The library does the same with `YoutubeDl::with_live_dash_snapshot(true)`
-(`trouble_reported()` then tells the error was reported); by default it fails.
+The library downloads the snapshot with `YoutubeDl::with_live_dash_snapshot(true)`
+without reporting the error (the CLI reports it); by default it fails.
 Neither upstream nor this port follows the live edge natively: the snapshot is
 the segments listed when the video was extracted (`tests/dash_dynamic.rs`
 compares it with pinned upstream). Like its
@@ -7017,8 +7017,8 @@ are intentionally not reproduced.
 The library exposes `DownloadArchive::{load, contains, record}` and `archive_id`;
 callers explicitly filter unselected results, call `YoutubeDl::select_result`,
 download, then record after success. Extraction/download APIs do not implicitly
-manage an archive. `YoutubeDl::entry_archive_identity` takes the URL fallback
-as a callback (the CLI's searches its extractor table). Legacy alternate IDs,
+manage an archive. The CLI's archive identity takes the URL fallback as a
+callback that searches its extractor table. Legacy alternate IDs,
 `--force-write-archive`, `--no-download-archive`, in-memory set CLI input and general
 archive option parity remain unsupported. The shared fixture compares twelve
 identities/file-and-set membership checks, logical recording and four upstream
@@ -7107,8 +7107,7 @@ playlist metadata or lazy evaluation parity is claimed. Represented playlist fie
 can be used in the typed templates described below.
 
 Library callers explicitly use `PlaylistSelection::new(items, start, end, reverse)`
-then `apply(&mut ExtractResult)` before format selection/download. `indices(len)`
-returns zero-based positions in selected order. Library extraction APIs do not
+then `apply(&mut ExtractResult)` before format selection/download. Library extraction APIs do not
 implicitly apply CLI options or annotate playlist indices. Reapplying selection
 treats the current entry vector as its input, so select once before archive filters.
 Source evidence and shared comparison fixtures are recorded in
@@ -7241,8 +7240,7 @@ Rendering occurs only on actual download paths after extraction and selection,
 or for `--print` lines that refer to `filename`. Other metadata, simulation and
 listing paths leave output templates inert, including invalid ones; this
 existing native timing is not general upstream option-normalization parity. Library `output::render_template` uses default options;
-`render_template_with_options` accepts `TemplateOptions` with `na_placeholder`,
-`filename_mode`, `windows_filenames` and `trim_file_name`.
+`render_template_with_options` accepts `TemplateOptions` with `na_placeholder`.
 Environment expansion of metadata and full filename/platform compatibility
 remain open.
 
@@ -7520,8 +7518,8 @@ serves windows-1251). Unknown charset labels decode as lossy UTF-8, and
 unpaired `\uD800`–`\uDFFF` escapes, which Python's `json` accepts, parses
 with U+FFFD in their place.
 
-Construct `YoutubeDl::with_options(youtube_options, HttpOptions { headers,
-user_agent, referer })` for library use. Existing constructors retain defaults.
+Construct `YoutubeDl::with_options(youtube_options, http_options)` with
+`HttpOptions`' `headers`, `user_agent` and `referer` for library use. Existing constructors retain defaults.
 Library header pairs allow valid HTTP token names; `HttpOptions::from_cli`
 applies the CLI name grammar as well. Validation occurs before client creation,
 network requests, archive loading or output writes. Errors omit supplied header

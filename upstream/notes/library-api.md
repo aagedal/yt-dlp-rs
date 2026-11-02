@@ -107,3 +107,18 @@ throughout.
   breaking release.
 - **`cargo-semver-checks`** in CI compares the PR with the latest
   release tag's library.
+
+## Result
+
+After the change rustdoc lists about 140 public paths outside the hidden
+`cli` and `__private` modules (crate root, `output`, and the canonical paths
+of the re-exported types) and 35 `YoutubeDl` methods (`register_extractor`
+hidden). `cargo-semver-checks --release-type minor` against
+`v0.7.0-beta.2` reports the intended breaks: removed modules, items, methods
+and fields, and the new `#[non_exhaustive]` markers. Kept public after a
+second look: `CookieJar::save_new` and `take_warnings` (documented for library
+callers in COMPATIBILITY.md). Made crate-private with no outside use:
+`trouble_reported` (the library's snapshot mode does not report the error;
+the CLI does), `PlaylistSelection`'s CLI-only modes, the info structs'
+upstream-processing helpers and `PlaylistInfo.pending` (library extraction
+fetches every page).
