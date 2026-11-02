@@ -50,10 +50,21 @@ with changed/deleted files and unmapped paths.
 
 ## Future update agent
 
-An external scheduler can eventually fetch upstream and invoke an agent with the
-report, this repository's `AGENTS.md`, and an immutable target SHA. No agent service,
-credentials, recurring schedule, or automatic PR/merge machinery is configured by
-this first milestone.
+A baseline advance is due within a week of each upstream release.
+`.github/workflows/upstream.yml` checks daily: `tools/upstream_watch.py` finds
+the newest `YYYY.MM.DD[.N]` release tag in a blobless upstream clone and, when
+the manifest's baseline does not contain it, keeps one issue labelled
+`upstream` open with the exact target SHA and this report's commits, affected
+components (core and per-extractor) and unmapped files. The job fails once
+the release is more than seven days old and closes the issue when the
+baseline contains it. It never ports, edits the manifest or opens PRs; the
+issue is the brief for an agent (or person) together with `AGENTS.md`.
+
+```sh
+python3 tools/upstream_watch.py .upstream/yt-dlp --report /tmp/upstream-watch.json
+```
+
+No agent service, credentials, or automatic PR/merge machinery is configured.
 
 For each update, the agent should:
 

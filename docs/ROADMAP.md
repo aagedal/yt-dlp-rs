@@ -470,6 +470,13 @@ Work in this order; each step lands with deterministic tests like any other chan
    the `url` crate cannot represent (`lbry://@c#5` parses as `lbry://c#5`).
 10. **Upstream cadence.** At least one full baseline advance through the
     milestone 6 loop within a week of an upstream release.
+    Status (2026-11-02): the baseline is the latest release (2026.10.26);
+    upstream `master` has only three CI/build commits since. The daily
+    `.github/workflows/upstream.yml` (`tools/upstream_watch.py`) opens an
+    `upstream` issue with the report when a release appears and fails once
+    it is a week old without a baseline advance (docs/UPSTREAM.md). Done
+    when the first release after 2026.10.26 is advanced through that loop
+    in time.
 
 Then a release candidate runs against the canaries for a few weeks before 1.0.
 Not required: splitting `src/cli.rs`, self-update (`-U` stays an error;

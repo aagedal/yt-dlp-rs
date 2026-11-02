@@ -6441,9 +6441,12 @@
       ],
       "rust": [
         "tools/upstream_report.py",
-        "tools/test_upstream_report.py"
+        "tools/test_upstream_report.py",
+        "tools/upstream_watch.py",
+        "tools/test_upstream_watch.py",
+        ".github/workflows/upstream.yml"
       ],
-      "scope": "The upstream change report used for update tasks"
+      "scope": "The upstream change report used for update tasks and the daily release watch that tracks a pending baseline advance"
     },
     {
       "name": "tv5unis",

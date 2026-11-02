@@ -6432,7 +6432,8 @@ and Bandwidth; media cannot combine actual Number and Time tokens. Static durati
 templates require a
 finite Period span. Exact day/hour/minute/second ISO durations use
 nanosecond precision (seconds digits past the ninth, like Instagram's
-15, round up to the next nanosecond), checked integer arithmetic and ceiling division. No floating-point segment count is used.
+15, round up to the next nanosecond), checked integer arithmetic and
+ceiling division. No floating-point segment count is used.
 
 A Period spans its `duration`, else up to the next Period's `start` or, for the
 last one, the end of `mediaPresentationDuration`. A missing `start` is 0 for the
