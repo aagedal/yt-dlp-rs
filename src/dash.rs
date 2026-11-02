@@ -89,14 +89,18 @@ fn duration(text: &str) -> Result<u128> {
         }
         last = rank;
         let nanos = if let Some((whole, fraction)) = amount.split_once('.') {
-            if unit != b'S' || fraction.is_empty() || fraction.len() > 9 {
+            if unit != b'S' || fraction.is_empty() || !fraction.bytes().all(|b| b.is_ascii_digit())
+            {
                 return Err(bad("unsupported DASH fractional duration"));
             }
-            let fraction = number(fraction)?;
+            // Upstream's float accepts any precision (Instagram writes 15
+            // digits). Digits past the nanosecond round up, so a segment
+            // count `ceil(duration / segment)` never drops one.
+            let (digits, rest) = fraction.split_at(fraction.len().min(9));
+            let sub = u128::from(rest.bytes().any(|b| b != b'0'));
             add(
                 mul(u128::from(number(whole)?), NS)?,
-                u128::from(fraction)
-                    * 10u128.pow(9 - amount.split_once('.').unwrap().1.len() as u32),
+                u128::from(number(digits)?) * 10u128.pow(9 - digits.len() as u32) + sub,
             )?
         } else {
             mul(u128::from(number(amount)?), NS)?
@@ -1586,20 +1590,15 @@ mod tests {
             93_784_123_456_789
         );
         assert_eq!(duration("PT0.000000001S").unwrap(), 1);
+        assert_eq!(duration("PT8.742074966430664S").unwrap(), 8_742_074_967);
+        assert_eq!(duration("PT1.1234567890S").unwrap(), 1_123_456_789);
         let text = template("").replace("PT2.5S", "PT0.300000001S").replace(
             "timescale=\"10\" duration=\"10\"",
             "timescale=\"10\" duration=\"1\"",
         );
         assert_eq!(parse(&text, &manifest()).unwrap()[0].fragments.len(), 5);
         for text in [
-            "P",
-            "PT",
-            "P1Y",
-            "P1M",
-            "PT1.5H",
-            "PT1.1234567890S",
-            "PT-1S",
-            "PT1S1M",
+            "P", "PT", "P1Y", "P1M", "PT1.5H", "PT1.S", "PT1.1e3S", "PT-1S", "PT1S1M",
         ] {
             assert!(duration(text).is_err(), "{text}");
         }
