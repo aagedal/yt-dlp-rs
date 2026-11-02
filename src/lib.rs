@@ -3684,6 +3684,20 @@ impl YoutubeDl {
         Ok(self)
     }
 
+    /// Whether upstream's `YoutubeDL._ies` holds the extractor `name`
+    /// (`--use-extractors`, else the enabled ones), for `_make_archive_id`'s
+    /// search of a suitable extractor; `--force-generic-extractor` does not
+    /// change it.
+    pub fn uses_extractor(&self, name: &str, enabled: bool) -> bool {
+        match &self.allowed_extractors {
+            None => enabled,
+            Some(order) => order
+                .iter()
+                .take_while(|item| **item != "end")
+                .any(|item| item.eq_ignore_ascii_case(name)),
+        }
+    }
+
     /// Upstream `writesubtitles`/`listsubtitles`: extractors'
     /// `extract_subtitles` (lazy subtitle requests) run only with them.
     pub fn with_subtitles_requested(self, requested: bool) -> Self {
@@ -5019,11 +5033,14 @@ impl YoutubeDl {
     }
 
     /// Upstream `_make_archive_id` for an unresolved `url`/`url_transparent`
-    /// entry: its `extractor_key` or `ie_key` and `id`, else `None` (never in
-    /// the archive). Upstream's fallback to the first extractor suitable for
-    /// the entry's URL is not reproduced; such entries are checked when they
-    /// are resolved.
-    pub fn entry_archive_identity(entry: &VideoInfo) -> Option<(String, String)> {
+    /// entry: its `extractor_key` or `ie_key` and `id`; without a key,
+    /// `url_key` of the entry's `url` (the first suitable extractor's
+    /// `ie_key`, see [`Self::uses_extractor`]); else `None` (never in the
+    /// archive).
+    pub fn entry_archive_identity(
+        entry: &VideoInfo,
+        url_key: &dyn Fn(&str) -> Option<String>,
+    ) -> Option<(String, String)> {
         let marker = entry.extra.get(TRANSPARENT)?;
         let raw = marker["entry"].as_object();
         let text = |value: Option<&serde_json::Value>| {
@@ -5037,10 +5054,24 @@ impl YoutubeDl {
             Some(raw) => text(raw.get("id")),
             None => Some(entry.id.clone()).filter(|id| !id.is_empty()),
         }?;
-        let key = raw
-            .and_then(|raw| text(raw.get("extractor_key")).or_else(|| text(raw.get("ie_key"))))
-            .or_else(|| text(marker.get("ie_key")))?;
+        let key = match raw {
+            Some(raw) => text(raw.get("extractor_key"))
+                .or_else(|| text(raw.get("ie_key")))
+                .or_else(|| url_key(&text(raw.get("url"))?))?,
+            None => text(marker.get("ie_key"))?,
+        };
         Some((key, id))
+    }
+
+    /// The `title` of an unresolved entry's upstream entry dict (`None`
+    /// without one); `Some(entry.title)` for other entries.
+    pub fn entry_title(entry: &VideoInfo) -> Option<&str> {
+        match entry.extra.get(TRANSPARENT).map(|marker| &marker["entry"]) {
+            Some(serde_json::Value::Object(raw)) => {
+                raw.get("title").and_then(serde_json::Value::as_str)
+            }
+            _ => Some(entry.title.as_str()),
+        }
     }
 
     /// The URL an unresolved `url_transparent` entry resolves.

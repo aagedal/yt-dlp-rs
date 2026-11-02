@@ -42,6 +42,70 @@
     "ERROR: [Rokfin] post/999999: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
    ],
    "files": {}
+  },
+  {
+   "url": "https://www.rokfin.com/stack/271/Tulsi-Gabbard-Portsmouth-Townhall-FULL--Feb-9-2020",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "--no-geo-bypass",
+    "--download-archive",
+    "archive-key.txt"
+   ],
+   "copy": [
+    "archive-key.txt"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[rokfin:stack] Extracting URL: https://www.rokfin.com/stack/271/Tulsi-Gabbard-Portsmouth-Townhall-FULL--Feb-9-2020",
+    "[rokfin:stack] 271: Downloading JSON metadata",
+    "[download] Downloading playlist: 271",
+    "[rokfin:stack] Playlist 271: Downloading 8 items of 8",
+    "[download] Downloading item 1 of 8",
+    "[download] post/8482: Tulsi Gabbard ALARMED by foreign policy answers in Dem debate... has already been recorded in the archive",
+    "[download] Downloading item 3 of 8",
+    "[download] Downloading item 4 of 8",
+    "[download] Downloading item 5 of 8",
+    "[download] Downloading item 6 of 8",
+    "[download] Downloading item 7 of 8",
+    "[download] Downloading item 8 of 8",
+    "[download] Finished downloading playlist: 271"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.rokfin.com/stack/271/Tulsi-Gabbard-Portsmouth-Townhall-FULL--Feb-9-2020",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "--no-geo-bypass",
+    "--use-extractors",
+    "rokfin:stack,generic",
+    "--download-archive",
+    "archive-generic.txt"
+   ],
+   "copy": [
+    "archive-generic.txt"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[rokfin:stack] Extracting URL: https://www.rokfin.com/stack/271/Tulsi-Gabbard-Portsmouth-Townhall-FULL--Feb-9-2020",
+    "[rokfin:stack] 271: Downloading JSON metadata",
+    "[download] Downloading playlist: 271",
+    "[rokfin:stack] Playlist 271: Downloading 8 items of 8",
+    "[download] Downloading item 1 of 8",
+    "[download] Downloading item 2 of 8",
+    "[download] post/8483: Tulsi Gabbard on Criminal Justice Reform has already been recorded in the archive",
+    "[download] Downloading item 4 of 8",
+    "[download] Downloading item 5 of 8",
+    "[download] Downloading item 6 of 8",
+    "[download] Downloading item 7 of 8",
+    "[download] Downloading item 8 of 8",
+    "[download] Finished downloading playlist: 271"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }
