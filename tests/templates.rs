@@ -409,7 +409,7 @@ fn filename_option_flags_select_upstream_sanitization_and_trimming() {
     );
     assert_eq!(
         filename(&["--windows-filenames", "-o", "x/./y/../%(title).7s?.%(ext)s"]),
-        format!("{}\n", yt_dlp_rs::output::host_path("x/..alpha#.mp4"))
+        format!("{}\n", yt_dlp_rs::__private::host_path("x/..alpha#.mp4"))
     );
     assert_eq!(
         filename(&["--trim-file-names", "4", "-o", "%(title)s.%(ext)s"]),
@@ -497,7 +497,9 @@ fn templates_and_paths_expand_home_and_variables_before_rendering() {
         String::from_utf8(output.stdout).unwrap(),
         format!(
             "{}\n",
-            yt_dlp_rs::output::host_path("/home/fixture/v/vars/vars/$YTDLP_RS_UNSET/Typed (1).mp4")
+            yt_dlp_rs::__private::host_path(
+                "/home/fixture/v/vars/vars/$YTDLP_RS_UNSET/Typed (1).mp4"
+            )
         )
     );
 }

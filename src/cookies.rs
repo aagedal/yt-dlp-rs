@@ -197,7 +197,7 @@ impl CookieJar {
     /// Upstream `_merge_cookie_jars`: extracted browser cookies, then the
     /// cookie file's (which replace same-key browser cookies). Browser
     /// cookies this jar cannot represent are skipped.
-    pub fn from_browser(
+    pub(crate) fn from_browser(
         extracted: crate::browser_cookies::Extracted,
         file: Option<&Path>,
     ) -> Result<Self> {
@@ -245,7 +245,7 @@ impl CookieJar {
     /// Upstream `_calc_headers`' `cookies` field for `url`: each matching
     /// cookie as `NAME=VALUE; Domain=…; Path=…[; Secure][; Expires=…]`
     /// (values quoted like `SimpleCookie`), in jar order.
-    pub fn info_field(&self, url: &Url) -> Option<String> {
+    pub(crate) fn info_field(&self, url: &Url) -> Option<String> {
         let state = self.state.read().ok()?;
         if !matches!(url.scheme(), "http" | "https") {
             return None;

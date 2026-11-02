@@ -160,14 +160,11 @@ fn transient_statuses_retry_and_preserve_complete_output() {
         let destination = directory.path().join("clip.mp4");
         assert_eq!(
             downloader
-                .download_with_options(
-                    &info,
-                    &destination,
-                    DownloadOptions {
-                        retries: 1,
-                        ..Default::default()
-                    }
-                )
+                .download_with_options(&info, &destination, {
+                    let mut options = DownloadOptions::default();
+                    options.retries = 1;
+                    options
+                })
                 .unwrap(),
             14
         );
@@ -196,14 +193,11 @@ fn truncated_body_restarts_without_range_or_partial_bytes() {
     let destination = directory.path().join("clip.mp4");
     assert_eq!(
         downloader
-            .download_with_options(
-                &info,
-                &destination,
-                DownloadOptions {
-                    retries: 1,
-                    ..Default::default()
-                }
-            )
+            .download_with_options(&info, &destination, {
+                let mut options = DownloadOptions::default();
+                options.retries = 1;
+                options
+            })
             .unwrap(),
         14
     );
@@ -238,14 +232,11 @@ fn exhausted_retries_count_additional_attempts_and_clean_temporary_files() {
         let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
         let directory = tempfile::tempdir().unwrap();
         let error = downloader
-            .download_with_options(
-                &info,
-                directory.path().join("clip.mp4"),
-                DownloadOptions {
-                    retries: 2,
-                    ..Default::default()
-                },
-            )
+            .download_with_options(&info, directory.path().join("clip.mp4"), {
+                let mut options = DownloadOptions::default();
+                options.retries = 2;
+                options
+            })
             .unwrap_err();
         assert_eq!(
             server.requests_for("/clip.mp4").len(),
@@ -271,14 +262,11 @@ fn permanent_download_failures_are_not_retried() {
         let directory = tempfile::tempdir().unwrap();
         assert!(
             downloader
-                .download_with_options(
-                    &info,
-                    directory.path().join("clip.mp4"),
-                    DownloadOptions {
-                        retries: 2,
-                        ..Default::default()
-                    }
-                )
+                .download_with_options(&info, directory.path().join("clip.mp4"), {
+                    let mut options = DownloadOptions::default();
+                    options.retries = 2;
+                    options
+                })
                 .is_err()
         );
         assert_eq!(server.requests_for("/clip.mp4").len(), 2, "status {status}");
@@ -296,14 +284,11 @@ fn existing_destination_is_preserved_without_attempting_download() {
     std::fs::write(&destination, "existing file").unwrap();
     assert!(
         downloader
-            .download_with_options(
-                &info,
-                &destination,
-                DownloadOptions {
-                    retries: 2,
-                    ..Default::default()
-                }
-            )
+            .download_with_options(&info, &destination, {
+                let mut options = DownloadOptions::default();
+                options.retries = 2;
+                options
+            })
             .is_err()
     );
     assert_eq!(std::fs::read(destination).unwrap(), b"existing file");
@@ -333,14 +318,11 @@ fn html5_page_referrer_is_preserved_on_every_retry() {
     let info = downloader.extract_info(&page_url).unwrap();
     let directory = tempfile::tempdir().unwrap();
     downloader
-        .download_with_options(
-            &info,
-            directory.path().join("clip.mp4"),
-            DownloadOptions {
-                retries: 1,
-                ..Default::default()
-            },
-        )
+        .download_with_options(&info, directory.path().join("clip.mp4"), {
+            let mut options = DownloadOptions::default();
+            options.retries = 1;
+            options
+        })
         .unwrap();
     assert_eq!(server.requests_for("/page.html").len(), 1);
     let requests = server.requests_for("/clip.mp4");
@@ -496,14 +478,11 @@ fn html5_source_that_stops_serving_media_is_not_retried() {
     let directory = tempfile::tempdir().unwrap();
     assert!(
         downloader
-            .download_with_options(
-                &info,
-                directory.path().join("clip.mp4"),
-                DownloadOptions {
-                    retries: 2,
-                    ..Default::default()
-                }
-            )
+            .download_with_options(&info, directory.path().join("clip.mp4"), {
+                let mut options = DownloadOptions::default();
+                options.retries = 2;
+                options
+            })
             .is_err()
     );
     assert_eq!(server.requests_for("/clip.mp4").len(), 2);
@@ -520,14 +499,11 @@ fn filesystem_failure_does_not_retry_or_make_download_requests() {
     std::fs::write(&parent, "existing file").unwrap();
     assert!(
         downloader
-            .download_with_options(
-                &info,
-                parent.join("clip.mp4"),
-                DownloadOptions {
-                    retries: 2,
-                    ..Default::default()
-                }
-            )
+            .download_with_options(&info, parent.join("clip.mp4"), {
+                let mut options = DownloadOptions::default();
+                options.retries = 2;
+                options
+            })
             .is_err()
     );
     assert_eq!(server.requests_for("/clip.mp4").len(), 1);
@@ -611,14 +587,11 @@ fn interrupted_download_resumes_with_download_validator_and_html5_referrer() {
         let destination = directory.path().join("clip.mp4");
         assert_eq!(
             downloader
-                .download_with_options(
-                    &info,
-                    &destination,
-                    DownloadOptions {
-                        retries: 1,
-                        ..Default::default()
-                    }
-                )
+                .download_with_options(&info, &destination, {
+                    let mut options = DownloadOptions::default();
+                    options.retries = 1;
+                    options
+                })
                 .unwrap(),
             14
         );
@@ -657,14 +630,11 @@ fn interrupted_ranges_advance_offsets_and_share_retry_budget() {
         let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
         let directory = tempfile::tempdir().unwrap();
         let destination = directory.path().join("clip.mp4");
-        let result = downloader.download_with_options(
-            &info,
-            &destination,
-            DownloadOptions {
-                retries,
-                ..Default::default()
-            },
-        );
+        let result = downloader.download_with_options(&info, &destination, {
+            let mut options = DownloadOptions::default();
+            options.retries = retries;
+            options
+        });
         let requests = server.requests_for("/clip.mp4");
         assert_eq!(requests.len(), retries as usize + 2);
         if retries == 2 {
@@ -696,14 +666,11 @@ fn full_response_to_range_replaces_partial_bytes() {
     let destination = directory.path().join("clip.mp4");
     assert_eq!(
         downloader
-            .download_with_options(
-                &info,
-                &destination,
-                DownloadOptions {
-                    retries: 1,
-                    ..Default::default()
-                }
-            )
+            .download_with_options(&info, &destination, {
+                let mut options = DownloadOptions::default();
+                options.retries = 1;
+                options
+            })
             .unwrap(),
         3
     );
@@ -738,14 +705,11 @@ fn unsafe_partial_responses_fail_without_publishing_or_retrying() {
         let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
         let directory = tempfile::tempdir().unwrap();
         let error = downloader
-            .download_with_options(
-                &info,
-                directory.path().join("clip.mp4"),
-                DownloadOptions {
-                    retries: 2,
-                    ..Default::default()
-                },
-            )
+            .download_with_options(&info, directory.path().join("clip.mp4"), {
+                let mut options = DownloadOptions::default();
+                options.retries = 2;
+                options
+            })
             .unwrap_err();
         assert!(
             matches!(error, yt_dlp_rs::Error::InvalidRangeResponse),
@@ -782,14 +746,11 @@ fn weak_or_malformed_etags_and_encoded_bodies_restart_from_zero() {
         let directory = tempfile::tempdir().unwrap();
         let destination = directory.path().join("clip.mp4");
         downloader
-            .download_with_options(
-                &info,
-                &destination,
-                DownloadOptions {
-                    retries: 1,
-                    ..Default::default()
-                },
-            )
+            .download_with_options(&info, &destination, {
+                let mut options = DownloadOptions::default();
+                options.retries = 1;
+                options
+            })
             .unwrap();
         assert_eq!(std::fs::read(destination).unwrap(), b"complete media");
         let requests = server.requests_for("/clip.mp4");
@@ -815,14 +776,11 @@ fn range_length_mismatch_or_416_is_not_accepted_as_complete() {
         let directory = tempfile::tempdir().unwrap();
         assert!(
             downloader
-                .download_with_options(
-                    &info,
-                    directory.path().join("clip.mp4"),
-                    DownloadOptions {
-                        retries: 2,
-                        ..Default::default()
-                    }
-                )
+                .download_with_options(&info, directory.path().join("clip.mp4"), {
+                    let mut options = DownloadOptions::default();
+                    options.retries = 2;
+                    options
+                })
                 .is_err()
         );
         assert_eq!(server.requests_for("/clip.mp4").len(), 3);
@@ -851,14 +809,11 @@ fn range_redirect_to_different_resource_is_rejected() {
     let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
     let directory = tempfile::tempdir().unwrap();
     let error = downloader
-        .download_with_options(
-            &info,
-            directory.path().join("clip.mp4"),
-            DownloadOptions {
-                retries: 1,
-                ..Default::default()
-            },
-        )
+        .download_with_options(&info, directory.path().join("clip.mp4"), {
+            let mut options = DownloadOptions::default();
+            options.retries = 1;
+            options
+        })
         .unwrap_err();
     assert!(matches!(error, yt_dlp_rs::Error::InvalidRangeResponse));
     assert!(directory_names(directory.path()).is_empty());
@@ -885,14 +840,11 @@ fn unknown_initial_length_restarts_even_with_a_strong_etag() {
     let directory = tempfile::tempdir().unwrap();
     let destination = directory.path().join("clip.mp4");
     downloader
-        .download_with_options(
-            &info,
-            &destination,
-            DownloadOptions {
-                retries: 1,
-                ..Default::default()
-            },
-        )
+        .download_with_options(&info, &destination, {
+            let mut options = DownloadOptions::default();
+            options.retries = 1;
+            options
+        })
         .unwrap();
     assert_eq!(std::fs::read(destination).unwrap(), b"complete media");
     let requests = server.requests_for("/clip.mp4");
@@ -916,14 +868,11 @@ fn range_body_without_content_length_is_checked_against_content_range() {
         let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
         let directory = tempfile::tempdir().unwrap();
         let destination = directory.path().join("clip.mp4");
-        let result = downloader.download_with_options(
-            &info,
-            &destination,
-            DownloadOptions {
-                retries: 1,
-                ..Default::default()
-            },
-        );
+        let result = downloader.download_with_options(&info, &destination, {
+            let mut options = DownloadOptions::default();
+            options.retries = 1;
+            options
+        });
         if body == "lete media" {
             assert_eq!(result.unwrap(), 14);
             assert_eq!(std::fs::read(destination).unwrap(), b"complete media");
@@ -953,14 +902,11 @@ fn transient_range_status_retains_offset_and_validator() {
     let directory = tempfile::tempdir().unwrap();
     let destination = directory.path().join("clip.mp4");
     downloader
-        .download_with_options(
-            &info,
-            &destination,
-            DownloadOptions {
-                retries: 2,
-                ..Default::default()
-            },
-        )
+        .download_with_options(&info, &destination, {
+            let mut options = DownloadOptions::default();
+            options.retries = 2;
+            options
+        })
         .unwrap();
     assert_eq!(std::fs::read(destination).unwrap(), b"complete media");
     let requests = server.requests_for("/clip.mp4");
@@ -995,14 +941,11 @@ fn interrupted_full_replacement_resumes_using_new_validator_and_length() {
     let destination = directory.path().join("clip.mp4");
     assert_eq!(
         downloader
-            .download_with_options(
-                &info,
-                &destination,
-                DownloadOptions {
-                    retries: 2,
-                    ..Default::default()
-                }
-            )
+            .download_with_options(&info, &destination, {
+                let mut options = DownloadOptions::default();
+                options.retries = 2;
+                options
+            })
             .unwrap(),
         10
     );
@@ -1035,14 +978,11 @@ fn extraction_retries_selected_transient_statuses() {
         });
         let result = YoutubeDl::new()
             .unwrap()
-            .extract_result_with_options(
-                &server.url("/clip.mp4"),
-                None,
-                ExtractionOptions {
-                    retries: 1,
-                    ..Default::default()
-                },
-            )
+            .extract_result_with_options(&server.url("/clip.mp4"), None, {
+                let mut options = ExtractionOptions::default();
+                options.retries = 1;
+                options
+            })
             .unwrap();
         assert_eq!(result.into_video().unwrap().ext, "mp4");
         assert_eq!(server.requests_for("/clip.mp4").len(), 2, "{status}");
@@ -1056,14 +996,11 @@ fn extraction_budget_is_bounded_and_returns_final_error() {
         let server = Server::start(|_, count| Response::status(if count == 1 { 503 } else { 429 }));
         let error = YoutubeDl::new()
             .unwrap()
-            .extract_result_with_options(
-                &server.url("/clip.mp4"),
-                None,
-                ExtractionOptions {
-                    retries,
-                    ..Default::default()
-                },
-            )
+            .extract_result_with_options(&server.url("/clip.mp4"), None, {
+                let mut options = ExtractionOptions::default();
+                options.retries = retries;
+                options
+            })
             .unwrap_err();
         // Reported as upstream's `Unable to download webpage`.
         let Error::Webpage { source, .. } = error else {
@@ -1101,14 +1038,11 @@ fn extraction_restarts_truncated_html_without_reusing_partial_bytes() {
     });
     let info = YoutubeDl::new()
         .unwrap()
-        .extract_result_with_options(
-            &server.url("/page.html"),
-            None,
-            ExtractionOptions {
-                retries: 1,
-                ..Default::default()
-            },
-        )
+        .extract_result_with_options(&server.url("/page.html"), None, {
+            let mut options = ExtractionOptions::default();
+            options.retries = 1;
+            options
+        })
         .unwrap()
         .into_video()
         .unwrap();
@@ -1127,14 +1061,11 @@ fn source_probe_failure_restarts_entire_playlist_and_preserves_referrer() {
     });
     let result = YoutubeDl::new()
         .unwrap()
-        .extract_result_with_options(
-            &server.url("/page.html"),
-            None,
-            ExtractionOptions {
-                retries: 1,
-                ..Default::default()
-            },
-        )
+        .extract_result_with_options(&server.url("/page.html"), None, {
+            let mut options = ExtractionOptions::default();
+            options.retries = 1;
+            options
+        })
         .unwrap();
     assert_eq!(result.into_entries().len(), 2);
     for path in ["/page.html", "/first.mp4", "/second.mp4"] {
@@ -1159,14 +1090,11 @@ fn extraction_does_not_retry_permanent_statuses_or_unsupported_pages() {
         assert!(
             YoutubeDl::new()
                 .unwrap()
-                .extract_result_with_options(
-                    &server.url("/page.html"),
-                    None,
-                    ExtractionOptions {
-                        retries: 2,
-                        ..Default::default()
-                    },
-                )
+                .extract_result_with_options(&server.url("/page.html"), None, {
+                    let mut options = ExtractionOptions::default();
+                    options.retries = 2;
+                    options
+                },)
                 .is_err()
         );
         assert_eq!(server.requests_for("/page.html").len(), 1, "{status}");
@@ -1191,25 +1119,19 @@ fn extraction_does_not_retry_format_selection_or_oversized_html() {
     });
     let downloader = YoutubeDl::new().unwrap();
     assert!(matches!(
-        downloader.extract_result_with_options(
-            &server.url("/clip.mp4"),
-            Some("unavailable"),
-            ExtractionOptions {
-                retries: 2,
-                ..Default::default()
-            },
-        ),
+        downloader.extract_result_with_options(&server.url("/clip.mp4"), Some("unavailable"), {
+            let mut options = ExtractionOptions::default();
+            options.retries = 2;
+            options
+        },),
         Err(Error::FormatSelection(_))
     ));
     assert!(matches!(
-        downloader.extract_result_with_options(
-            &server.url("/large.html"),
-            None,
-            ExtractionOptions {
-                retries: 2,
-                ..Default::default()
-            },
-        ),
+        downloader.extract_result_with_options(&server.url("/large.html"), None, {
+            let mut options = ExtractionOptions::default();
+            options.retries = 2;
+            options
+        },),
         Err(Error::HtmlTooLarge(_))
     ));
     assert_eq!(server.requests_for("/clip.mp4").len(), 1);
@@ -1301,7 +1223,7 @@ fn cli_download_retry_budget_does_not_enable_extraction_retries() {
 #[test]
 fn custom_extractor_filesystem_errors_are_not_retried() {
     use std::sync::atomic::AtomicUsize;
-    use yt_dlp_rs::{Result, VideoInfo, extractor::Extractor};
+    use yt_dlp_rs::{__private::Extractor, Result, VideoInfo};
 
     struct FailingExtractor(Arc<AtomicUsize>);
     impl Extractor for FailingExtractor {
@@ -1321,14 +1243,11 @@ fn custom_extractor_filesystem_errors_are_not_retried() {
     let mut downloader = YoutubeDl::new().unwrap();
     downloader.register_extractor(Box::new(FailingExtractor(calls.clone())));
     let error = downloader
-        .extract_result_with_options(
-            "http://127.0.0.1:1/unused.mp4",
-            None,
-            ExtractionOptions {
-                retries: 2,
-                ..Default::default()
-            },
-        )
+        .extract_result_with_options("http://127.0.0.1:1/unused.mp4", None, {
+            let mut options = ExtractionOptions::default();
+            options.retries = 2;
+            options
+        })
         .unwrap_err();
     assert!(matches!(error, Error::Io(_)));
     assert_eq!(calls.load(Ordering::Relaxed), 1);
@@ -1342,14 +1261,11 @@ fn exhausted_html_read_retries_return_final_read_error() {
     });
     let error = YoutubeDl::new()
         .unwrap()
-        .extract_result_with_options(
-            &server.url("/page.html"),
-            None,
-            ExtractionOptions {
-                retries: 2,
-                ..Default::default()
-            },
-        )
+        .extract_result_with_options(&server.url("/page.html"), None, {
+            let mut options = ExtractionOptions::default();
+            options.retries = 2;
+            options
+        })
         .unwrap_err();
     assert!(matches!(error, Error::ExtractionRead(_)), "{error}");
     assert_eq!(server.requests_for("/page.html").len(), 3);
@@ -1357,7 +1273,7 @@ fn exhausted_html_read_retries_return_final_read_error() {
 
 #[test]
 fn extraction_retry_restarts_previously_visited_custom_extractors() {
-    use yt_dlp_rs::{Result, VideoInfo, extractor::Extractor};
+    use yt_dlp_rs::{__private::Extractor, Result, VideoInfo};
 
     struct RecordingExtractor {
         name: &'static str,
@@ -1394,14 +1310,11 @@ fn extraction_retry_restarts_previously_visited_custom_extractors() {
         }));
     }
     let error = downloader
-        .extract_result_with_options(
-            "http://127.0.0.1:1/unused.mp4",
-            None,
-            ExtractionOptions {
-                retries: 1,
-                ..Default::default()
-            },
-        )
+        .extract_result_with_options("http://127.0.0.1:1/unused.mp4", None, {
+            let mut options = ExtractionOptions::default();
+            options.retries = 1;
+            options
+        })
         .unwrap_err();
     assert!(matches!(error, Error::ExtractionRead(_)));
     assert_eq!(
@@ -1428,28 +1341,22 @@ fn retry_after_delays_extraction_and_download_recovery() {
         let directory = tempfile::tempdir().unwrap();
         let start = std::time::Instant::now();
         let info = downloader
-            .extract_result_with_options(
-                &server.url("/clip.mp4"),
-                None,
-                ExtractionOptions {
-                    retries: 1,
-                    ..Default::default()
-                },
-            )
+            .extract_result_with_options(&server.url("/clip.mp4"), None, {
+                let mut options = ExtractionOptions::default();
+                options.retries = 1;
+                options
+            })
             .unwrap()
             .into_video()
             .unwrap();
         if !extraction {
             let destination = directory.path().join("clip.mp4");
             downloader
-                .download_with_options(
-                    &info,
-                    &destination,
-                    DownloadOptions {
-                        retries: 1,
-                        ..Default::default()
-                    },
-                )
+                .download_with_options(&info, &destination, {
+                    let mut options = DownloadOptions::default();
+                    options.retries = 1;
+                    options
+                })
                 .unwrap();
             assert_eq!(std::fs::read(destination).unwrap(), b"complete media");
         }
@@ -1485,26 +1392,20 @@ fn retry_after_respects_exhausted_budgets_and_permanent_statuses() {
             let retries = if status == 404 { 2 } else { 0 };
             let error = if extraction {
                 downloader
-                    .extract_result_with_options(
-                        &server.url("/clip.mp4"),
-                        None,
-                        ExtractionOptions {
-                            retries,
-                            ..Default::default()
-                        },
-                    )
+                    .extract_result_with_options(&server.url("/clip.mp4"), None, {
+                        let mut options = ExtractionOptions::default();
+                        options.retries = retries;
+                        options
+                    })
                     .unwrap_err()
             } else {
                 let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
                 downloader
-                    .download_with_options(
-                        &info,
-                        directory.path().join("clip.mp4"),
-                        DownloadOptions {
-                            retries: retries.into(),
-                            ..Default::default()
-                        },
-                    )
+                    .download_with_options(&info, directory.path().join("clip.mp4"), {
+                        let mut options = DownloadOptions::default();
+                        options.retries = retries.into();
+                        options
+                    })
                     .unwrap_err()
             };
             // A retryable download failure reports through `RetryManager`,
@@ -1555,14 +1456,11 @@ fn unsupported_retry_after_values_keep_transient_failures_retryable() {
         });
         YoutubeDl::new()
             .unwrap()
-            .extract_result_with_options(
-                &server.url("/clip.mp4"),
-                None,
-                ExtractionOptions {
-                    retries: 1,
-                    ..Default::default()
-                },
-            )
+            .extract_result_with_options(&server.url("/clip.mp4"), None, {
+                let mut options = ExtractionOptions::default();
+                options.retries = 1;
+                options
+            })
             .unwrap();
         assert_eq!(server.requests_for("/clip.mp4").len(), 2);
     }
@@ -1583,14 +1481,11 @@ fn expired_http_date_hints_allow_extraction_and_download_recovery() {
         });
         let downloader = YoutubeDl::new().unwrap();
         let info = downloader
-            .extract_result_with_options(
-                &server.url("/clip.mp4"),
-                None,
-                ExtractionOptions {
-                    retries: 1,
-                    ..Default::default()
-                },
-            )
+            .extract_result_with_options(&server.url("/clip.mp4"), None, {
+                let mut options = ExtractionOptions::default();
+                options.retries = 1;
+                options
+            })
             .unwrap()
             .into_video()
             .unwrap();
@@ -1598,14 +1493,11 @@ fn expired_http_date_hints_allow_extraction_and_download_recovery() {
             let directory = tempfile::tempdir().unwrap();
             let destination = directory.path().join("clip.mp4");
             downloader
-                .download_with_options(
-                    &info,
-                    &destination,
-                    DownloadOptions {
-                        retries: 1,
-                        ..Default::default()
-                    },
-                )
+                .download_with_options(&info, &destination, {
+                    let mut options = DownloadOptions::default();
+                    options.retries = 1;
+                    options
+                })
                 .unwrap();
             assert_eq!(std::fs::read(destination).unwrap(), b"complete media");
         }

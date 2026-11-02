@@ -7,6 +7,7 @@ const TARGETS: [&str; 18] = [
     "mp3", "ogg", "opus", "vorbis", "wav",
 ];
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum VideoMode {
     Remux,
     Recode,
@@ -70,7 +71,7 @@ impl VideoOptions {
     }
     /// Match the pinned CLI's lowercase target validation before applying the
     /// library resolver. Uppercase conditional source words remain accepted.
-    pub fn from_cli(format: &str, mode: VideoMode) -> Result<Self> {
+    pub(crate) fn from_cli(format: &str, mode: VideoMode) -> Result<Self> {
         if format.split('/').any(|branch| {
             branch
                 .rsplit_once('>')

@@ -567,7 +567,8 @@ pub fn parse_iter(parsed: &Value, revivers: &[(&str, Reviver)]) -> Result<Parsed
 }
 
 /// `devalue.parse`: the first yielded error is raised.
-pub fn parse(parsed: &Value, revivers: &[(&str, Reviver)]) -> Result<Value, String> {
+#[cfg(test)]
+fn parse(parsed: &Value, revivers: &[(&str, Reviver)]) -> Result<Value, String> {
     let parsed = parse_iter(parsed, revivers)?;
     match parsed.errors.into_iter().next() {
         Some(error) => Err(error),

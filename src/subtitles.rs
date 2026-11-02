@@ -72,6 +72,7 @@ impl<'de, T: Deserialize<'de>> Deserialize<'de> for SubtitleMap<T> {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct SubtitleFormat {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -105,6 +106,7 @@ impl Default for SubtitleOptions {
     }
 }
 #[derive(Debug, Clone)]
+#[non_exhaustive]
 pub struct SubtitleSelection {
     pub requested: RequestedSubtitles,
     pub warnings: Vec<String>,

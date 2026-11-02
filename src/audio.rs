@@ -49,6 +49,7 @@ pub(crate) struct AudioPlan {
     pub skip: bool,
 }
 #[derive(Debug, Clone)]
+#[non_exhaustive]
 pub struct AudioDownload {
     pub path: PathBuf,
     pub bytes: u64,
@@ -111,7 +112,7 @@ impl AudioOptions {
     }
     /// Apply the pinned CLI's lowercase target validation before resolving the
     /// mapping. The library constructor also accepts case-insensitive targets.
-    pub fn from_cli(format: &str, quality: &str) -> Result<Self> {
+    pub(crate) fn from_cli(format: &str, quality: &str) -> Result<Self> {
         if format.split('/').any(|branch| {
             branch
                 .rsplit_once('>')

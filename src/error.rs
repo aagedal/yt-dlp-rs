@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 
 #[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
 pub enum Error {
     /// Retries were exhausted (upstream `RetryManager.report_retry` text,
     /// without the suffix when no retries were allowed).

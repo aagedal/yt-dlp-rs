@@ -226,9 +226,10 @@ fn key_status_and_truncated_key_retries_share_fragment_budget() {
             .download_with_progress(
                 &encrypted_info(&server, &["key"]),
                 &output,
-                DownloadOptions {
-                    retries: 1,
-                    ..Default::default()
+                {
+                    let mut options = DownloadOptions::default();
+                    options.retries = 1;
+                    options
                 },
                 |event| {
                     second_attempt |= event.attempt == 2;
@@ -270,9 +271,10 @@ fn ciphertext_retry_keeps_key_and_discards_partial_plaintext() {
         .download_with_progress(
             &encrypted_info(&server, &["key"]),
             &output,
-            DownloadOptions {
-                retries: 1,
-                ..Default::default()
+            {
+                let mut options = DownloadOptions::default();
+                options.retries = 1;
+                options
             },
             |event| {
                 retry_reset |= event.attempt == 2

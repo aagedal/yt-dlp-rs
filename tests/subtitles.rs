@@ -689,9 +689,10 @@ fn library_subtitle_cancellation_at_request_or_publication_never_leaves_final_or
             &info,
             subtitle,
             &target,
-            DownloadOptions {
-                retries: 3,
-                ..Default::default()
+            {
+                let mut options = DownloadOptions::default();
+                options.retries = 3;
+                options
             },
             |progress| {
                 checkpoints.push(progress.phase);

@@ -6,6 +6,7 @@ use crate::{ExtractResult, Result};
 /// Upstream playlist-file counts after item selection, before archive filtering:
 /// the full count, selected count and largest selected index.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct PlaylistCounts {
     /// Upstream `playlist_count`: the playlist's own count, else the entry
     /// count once every entry was fetched (`None` while some are pending).
@@ -91,20 +92,20 @@ impl PlaylistSelection {
 
     /// `--compat-options playlist-index`: an entry's `playlist_index` is the
     /// index selected at its position before reversing or shuffling.
-    pub fn selection_index(mut self, enabled: bool) -> Self {
+    pub(crate) fn selection_index(mut self, enabled: bool) -> Self {
         self.selection_index = enabled;
         self
     }
 
     /// Upstream `--playlist-random`: shuffle the selected entries.
-    pub fn random(mut self, random: bool) -> Self {
+    pub(crate) fn random(mut self, random: bool) -> Self {
         self.random = random;
         self
     }
 
     /// Upstream `--lazy-playlist`: entries keep their order and the selected
     /// count is unknown (`N/A`).
-    pub fn lazy(mut self, lazy: bool) -> Self {
+    pub(crate) fn lazy(mut self, lazy: bool) -> Self {
         self.lazy = lazy;
         self
     }
@@ -112,7 +113,7 @@ impl PlaylistSelection {
     /// How many leading entries the selection can use: upstream's
     /// `PlaylistEntries` slices its lazy entries, which only exhausts them
     /// for open or negative bounds (`None`).
-    pub fn fetch_limit(&self) -> Option<usize> {
+    pub(crate) fn fetch_limit(&self) -> Option<usize> {
         let mut limit = 0;
         for segment in &self.segments {
             let last = if segment.step > 0 {
@@ -140,7 +141,7 @@ impl PlaylistSelection {
     /// exclusive, `null` unbounded; negative positions are skipped), or
     /// `"all"` once a bound needs the full length (`len(self)` reads every
     /// entry, after which nothing else is fetched).
-    pub fn entry_requests(&self) -> Vec<serde_json::Value> {
+    pub(crate) fn entry_requests(&self) -> Vec<serde_json::Value> {
         let mut requests = Vec::new();
         for segment in &self.segments {
             let step = segment.step;
@@ -169,7 +170,7 @@ impl PlaylistSelection {
     }
 
     /// Return zero-based positions, removing duplicates before optional reversal.
-    pub fn indices(&self, len: usize) -> Vec<usize> {
+    pub(crate) fn indices(&self, len: usize) -> Vec<usize> {
         let mut indices = Vec::new();
         if len == 0 {
             return indices;
@@ -250,7 +251,7 @@ impl PlaylistSelection {
     /// The leading entries a selection reading `entries` in order needs when
     /// [`Self::apply_until`] stops at the first `stop` entry: only for one
     /// ascending segment (`START:END`), else `None`.
-    pub fn stop_fetch_limit(
+    pub(crate) fn stop_fetch_limit(
         &self,
         entries: &[crate::VideoInfo],
         stop: &dyn Fn(&crate::VideoInfo) -> bool,
@@ -282,7 +283,7 @@ impl PlaylistSelection {
     /// the first entry `stop` matches, like upstream's `get_requested_items`
     /// with `--break-on-existing`/`--break-on-reject` (its silent
     /// `_match_entry` raises): it is still selected, later items are not.
-    pub fn apply_until(
+    pub(crate) fn apply_until(
         &self,
         result: &mut ExtractResult,
         stop: Option<&dyn Fn(&crate::VideoInfo) -> bool>,
@@ -399,7 +400,7 @@ pub struct LazySelection {
 
 impl PlaylistSelection {
     /// A [`LazySelection`] of `playlist`'s entries (which may be pending).
-    pub fn lazy_selection(&self, playlist: &crate::PlaylistInfo) -> LazySelection {
+    pub(crate) fn lazy_selection(&self, playlist: &crate::PlaylistInfo) -> LazySelection {
         // `get_full_count()` before iterating: a list's length, unknown for
         // a generator or paged list (`LazyList`/`PagedList`) not read yet.
         let generator = playlist

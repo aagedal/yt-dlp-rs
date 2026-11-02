@@ -161,6 +161,7 @@ impl SleepExpression {
 
 /// Upstream `--retry-sleep` functions for download retries.
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
+#[non_exhaustive]
 pub struct RetrySleep {
     pub http: Option<SleepExpression>,
     pub fragment: Option<SleepExpression>,

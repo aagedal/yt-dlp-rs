@@ -271,7 +271,7 @@ impl crate::VideoInfo {
     /// `--list-subs` checks (`'automatic_captions' in info_dict`): any
     /// captions, or an extractor's recorded key list naming it (YouTube
     /// always sets the key, possibly to `{}`).
-    pub fn has_automatic_captions_key(&self) -> bool {
+    pub(crate) fn has_automatic_captions_key(&self) -> bool {
         !self.automatic_captions.is_empty()
             || self
                 .extra

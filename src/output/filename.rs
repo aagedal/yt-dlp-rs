@@ -88,13 +88,6 @@ impl OutputTemplates {
             .unwrap_or(&self.templates["default"])
     }
 
-    /// Every configured template, for startup validation.
-    pub fn iter(&self) -> impl Iterator<Item = (&str, &str)> {
-        self.templates
-            .iter()
-            .map(|(kind, template)| (kind.as_str(), template.as_str()))
-    }
-
     /// Render a typed filename (`None` for media), or `None` when the type's
     /// template is empty (upstream then skips writing that file).
     pub fn prepare(
@@ -258,7 +251,7 @@ mod tests {
                 let actual = text(templates.prepare(&info, kind, &options).unwrap());
                 assert_eq!(
                     actual,
-                    crate::output::host_path(expected[key].as_str().unwrap()),
+                    crate::output::sanitize::host_path(expected[key].as_str().unwrap()),
                     "{} {key}",
                     case["name"]
                 );
@@ -270,7 +263,7 @@ mod tests {
             );
             assert_eq!(
                 actual,
-                crate::output::host_path(expected["pl_infojson"].as_str().unwrap()),
+                crate::output::sanitize::host_path(expected["pl_infojson"].as_str().unwrap()),
                 "{} playlist",
                 case["name"]
             );

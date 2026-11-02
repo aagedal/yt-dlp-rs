@@ -60,6 +60,7 @@ const COOKIES_HINT: &str = "See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-d
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Hint {
     /// `None`: no hint.
+    #[cfg_attr(not(test), allow(dead_code))] // no ported extractor passes it yet
     Nothing,
     /// `'any'`: cookies or credentials.
     Any,
@@ -68,6 +69,7 @@ pub enum Hint {
     /// `'cookies'`.
     Cookies,
     /// `'session_cookies'`.
+    #[cfg_attr(not(test), allow(dead_code))] // no ported extractor passes it yet
     SessionCookies,
 }
 

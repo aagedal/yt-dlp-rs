@@ -16,6 +16,7 @@ use std::{
 
 /// Checkpoints at which a synchronous download observer can cancel.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum DownloadPhase {
     Requesting,
     Downloading,
@@ -35,6 +36,7 @@ pub enum DownloadPhase {
 /// A full-response retry or the next selected stream can reset bytes and total.
 /// Merging reports summed input bytes; final publication reports output bytes.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct DownloadProgress {
     /// One-based attempt number, including the initial request (maximum 256).
     pub attempt: u16,
@@ -60,6 +62,7 @@ pub struct DownloadProgress {
 /// One fragment's HttpFD progress: bytes so far and its total (the
 /// response length; its size once finished).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct FragmentBytes {
     /// Zero-based fragment index; concurrent fragments (`-N`) interleave.
     pub index: u32,
@@ -197,6 +200,7 @@ impl Reporter<'_> {
 
 /// Download retry policy, independent of `ExtractionOptions`.
 #[derive(Debug, Clone, Copy)]
+#[non_exhaustive]
 pub struct DownloadOptions {
     /// Additional attempts after a transient failure (`u32::MAX` retries
     /// indefinitely, like upstream `infinite`).
@@ -302,6 +306,7 @@ pub(crate) fn persist(
 
 /// Intermediate-file policy for merged (two-stream) downloads.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum MergeFiles {
     /// A private same-directory workspace, removed afterwards (library default).
     #[default]
@@ -314,6 +319,7 @@ pub enum MergeFiles {
 
 /// Temporary-file policy for whole-file media downloads.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum PartFiles {
     /// A private same-directory temporary file, removed on failure or
     /// cancellation and published without overwriting (library default).

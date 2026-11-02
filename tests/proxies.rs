@@ -269,13 +269,11 @@ fn library_http_proxy_uses_absolute_targets_and_percent_decoded_proxy_credential
     let proxy = Proxy::new();
     let directory = tempfile::tempdir().unwrap();
     let uri = proxy.url.replace("http://", "http://us%65r:p%40ss@");
-    let dl = YoutubeDl::with_options(
-        YoutubeOptions::default(),
-        HttpOptions {
-            proxy: Some(uri),
-            ..Default::default()
-        },
-    )
+    let dl = YoutubeDl::with_options(YoutubeOptions::default(), {
+        let mut options = HttpOptions::default();
+        options.proxy = Some(uri);
+        options
+    })
     .unwrap();
     let info = dl
         .extract_info("http://destination.invalid/media.mp4")
@@ -809,9 +807,10 @@ fn invalid_proxy_urls_fail_before_network_and_do_not_expose_credentials() {
         "http://proxy-private-user:proxy-secret@",
     ] {
         assert!(
-            HttpOptions {
-                proxy: Some(uri.into()),
-                ..Default::default()
+            {
+                let mut options = HttpOptions::default();
+                options.proxy = Some(uri.into());
+                options
             }
             .validate()
             .is_err()

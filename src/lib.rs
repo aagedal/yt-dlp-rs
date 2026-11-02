@@ -1,80 +1,84 @@
+#![doc = include_str!("../docs/LIBRARY.md")]
+
 use crate::paths::Canonical;
 mod archive;
 mod audio;
 mod audio_download;
-pub mod batch;
-pub mod browser_cookies;
-pub mod cache;
-pub mod codecs;
-pub mod config;
-pub mod container;
+pub(crate) mod batch;
+pub(crate) mod browser_cookies;
+pub(crate) mod cache;
+#[doc(hidden)]
+pub mod cli;
+pub(crate) mod codecs;
+pub(crate) mod config;
+pub(crate) mod container;
 mod control;
 mod cookies;
 mod cover_art;
 mod crypto;
 mod dash;
-pub mod dates;
-pub mod devalue;
+pub(crate) mod dates;
+pub(crate) mod devalue;
 mod download;
 mod embed_metadata;
 mod embed_subtitles;
 mod error;
 mod external_fd;
-pub mod extractor;
+pub(crate) mod extractor;
 mod f4m_fd;
 mod ffmpeg_fd;
 mod filetime;
 mod fixup;
-pub mod format_select;
-pub mod format_sort;
+pub(crate) mod format_select;
+pub(crate) mod format_sort;
 mod fragment;
 #[cfg(fuzzing)]
 #[doc(hidden)]
 pub mod fuzz;
-pub mod geo;
-pub mod getpass;
+pub(crate) mod geo;
+pub(crate) mod getpass;
 mod growing;
 mod hls;
 mod hls_live;
 mod html;
 mod html_elements;
 mod http;
-pub mod impersonate;
+pub(crate) mod impersonate;
 mod indexed_fd;
 mod info;
 mod info_json;
 mod info_order;
 mod interrupt;
 mod ism_fd;
-pub mod js_to_json;
-pub mod jsinterp;
+pub(crate) mod js_to_json;
+pub(crate) mod jsinterp;
 mod json;
 mod live_dash;
-pub mod manifest_args;
+pub(crate) mod manifest_args;
 mod match_filter;
 mod md5;
 mod media_index;
 mod merge;
-pub mod metadata_parser;
+pub(crate) mod metadata_parser;
 mod mhtml;
 mod modify_chapters;
-pub mod netrc;
-pub mod no_formats;
+pub(crate) mod netrc;
+pub(crate) mod no_formats;
 pub mod output;
 mod partial;
 mod paths;
 mod playlist;
 mod postprocess;
-pub mod pp_args;
+pub(crate) mod pp_args;
 mod retry;
 mod rtmp_fd;
 mod scratch;
-pub mod screen;
+pub(crate) mod screen;
 mod section_timecode;
-pub mod sections;
+pub(crate) mod sections;
 mod sha1;
 mod sidx_fd;
-pub mod sponsorblock;
+pub(crate) mod sponsorblock;
 mod sqlite;
 mod subtitle_convert;
 mod subtitles;
@@ -83,45 +87,58 @@ mod traffic;
 mod video;
 mod websocket_fd;
 mod webvtt;
-pub mod xattr;
+pub(crate) mod xattr;
+
+/// Internals the integration tests use. Not part of the API: anything here
+/// can change or disappear in any release.
+#[doc(hidden)]
+pub mod __private {
+    pub use crate::container::{sniff, sniff_bytes};
+    pub use crate::extractor::{DirectHttp, Extractor, GenericHttp, login::Session};
+    pub use crate::geo::GeoContext;
+    pub use crate::output::{exec::shell_quote_command, sanitize::host_path};
+}
 
 pub use archive::{DownloadArchive, archive_id};
-pub use audio::{AudioDownload, AudioOptions, audio_original_path, audio_output_path};
-pub use control::{DownloadControl, Interrupt, RequestScope, SignalInterrupt};
+pub use audio::{AudioDownload, AudioOptions};
+pub(crate) use audio::{audio_original_path, audio_output_path};
+pub(crate) use control::SignalInterrupt;
+pub use control::{DownloadControl, Interrupt, RequestScope};
 pub use cookies::CookieJar;
+pub(crate) use download::{BUFFER_SIZE, RESIZE_BUFFER};
 pub use download::{
-    BUFFER_SIZE, DownloadOptions, DownloadPhase, DownloadProgress, FragmentBytes, MergeFiles,
-    PartFiles, RESIZE_BUFFER,
+    DownloadOptions, DownloadPhase, DownloadProgress, FragmentBytes, MergeFiles, PartFiles,
 };
-pub use embed_metadata::COMPAT_EMBED_METADATA;
+pub(crate) use embed_metadata::COMPAT_EMBED_METADATA;
 pub use embed_subtitles::{SubtitleEmbedding, SubtitleFile};
 pub use error::{Error, Result};
 pub use extractor::YoutubeOptions;
-pub use format_sort::FormatSorter;
 pub use http::HttpOptions;
 pub use info::{
     ByteIndex, ByteRange, Chapter, DownloaderOptions, ExtractResult, Fragment, HlsAes128, Metadata,
     PlaylistInfo, PyNumber, StreamKind, Thumbnail, VideoFormat, VideoInfo,
 };
-pub use info::{
-    COMPAT_FORMAT_SPEC, COMPAT_MANIFEST_FILESIZE_APPROX, MULTI_VIDEO, NESTED_INDEX, PendingEntries,
+pub(crate) use info::{
+    COMPAT_FORMAT_SPEC, COMPAT_MANIFEST_FILESIZE_APPROX, NESTED_INDEX, PendingEntries,
 };
-pub use info_json::{
-    InfoJsonWrite, info_json_path, info_value, load_info_json, playlist_info_json,
-    playlist_info_json_with, to_python_json, upstream_shape, video_info_json, video_info_json_with,
-    write_info_json, write_info_json_with,
+pub(crate) use info_json::{
+    InfoJsonWrite, info_value, load_info_json, playlist_info_json_with, to_python_json,
+    upstream_shape, video_info_json_with, write_info_json_with,
 };
-pub use match_filter::{EntrySelection, MatchFilters, MatchOutcome};
-pub use output::{render_automatic_captions, render_subtitles};
-pub use playlist::{EntrySource, LazySelection, PlaylistCounts, PlaylistSelection};
-pub use postprocess::{InfoJsonEmbed, ModifyChapters, PostprocessOptions, ProcessedDownload};
-pub use retry::{RetrySleep, SleepExpression, upstream_error_text};
+pub(crate) use match_filter::{EntrySelection, MatchFilters, MatchOutcome};
+pub(crate) use output::{render_automatic_captions, render_subtitles};
+pub(crate) use playlist::{EntrySource, LazySelection};
+pub use playlist::{PlaylistCounts, PlaylistSelection};
+pub(crate) use postprocess::{InfoJsonEmbed, ModifyChapters};
+pub use postprocess::{PostprocessOptions, ProcessedDownload};
+pub(crate) use retry::upstream_error_text;
+pub use retry::{RetrySleep, SleepExpression};
 pub use subtitle_convert::{ConvertedSubtitle, SubtitleConversion};
 pub use subtitles::{
     RequestedSubtitles, SubtitleFormat, SubtitleMap, SubtitleOptions, SubtitleSelection, Subtitles,
     subtitle_paths,
 };
-pub use thumbnail_process::{ThumbnailConversion, fixup_webp};
+pub(crate) use thumbnail_process::{ThumbnailConversion, fixup_webp};
 pub use video::{VideoMode, VideoOptions};
 
 use extractor::{Extractor, GenericHttp, Youtube};
@@ -143,6 +160,7 @@ pub fn validate_format_selector(expression: &str) -> Result<()> {
 /// Whole-extraction retry policy, independent of download retries.
 /// Defaults to no retries to preserve existing library behavior.
 #[derive(Debug, Clone, Default)]
+#[non_exhaustive]
 pub struct ExtractionOptions {
     /// Additional attempts after transient HTTP or HTML body read failures.
     pub retries: u8,
@@ -155,6 +173,7 @@ pub struct ExtractionOptions {
 
 /// The kind of a [`Manifest`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ManifestKind {
     /// An HLS master or media playlist (M3U8).
     Hls,
@@ -166,6 +185,7 @@ pub enum ManifestKind {
 /// from `url`, or given inline as `data` with `url` as the base for its
 /// relative URIs (and the origin a [`RequestScope`] usually names).
 #[derive(Debug, Clone)]
+#[non_exhaustive]
 pub struct Manifest {
     pub kind: ManifestKind,
     /// The manifest's URL (HTTP or HTTPS).
@@ -262,7 +282,7 @@ pub struct YoutubeDl {
     external_settings: external_fd::ExternalSettings,
 }
 
-pub use external_fd::ExternalSettings;
+pub(crate) use external_fd::ExternalSettings;
 
 /// Upstream `get_external_downloader` names FFmpegFD/AVconvFD.
 fn is_ffmpeg_name(name: &str) -> bool {
@@ -302,7 +322,7 @@ fn live_generated(info: &VideoInfo) -> bool {
 /// `refresh_hls` is the whole playlist's fragments even when only a
 /// discontinuity section downloads; a live DASH snapshot is `unknown (live)`
 /// (`_prepare_frag_download`'s `ctx['live']`).
-pub fn total_fragments(info: &VideoInfo) -> String {
+pub(crate) fn total_fragments(info: &VideoInfo) -> String {
     if live_snapshot(info) {
         return "unknown (live)".into();
     }
@@ -325,13 +345,13 @@ fn report_trouble(message: &str) {
 
 /// Whether an error was reported without stopping the work (upstream's
 /// `_download_retcode = 1`): the CLI then exits 1.
-pub fn trouble_reported() -> bool {
+pub(crate) fn trouble_reported() -> bool {
     TROUBLE.load(std::sync::atomic::Ordering::Relaxed)
 }
 
 /// DashSegmentsFD's error for a live format (see
 /// [`YoutubeDl::with_live_dash_snapshot`]).
-pub const LIVE_DASH_UNSUPPORTED: &str = "Live DASH videos are not supported";
+pub(crate) const LIVE_DASH_UNSUPPORTED: &str = "Live DASH videos are not supported";
 
 /// A live `http_dash_segments` format downloaded by DashSegmentsFD (its
 /// manifest snapshot, after `Live DASH videos are not supported`): upstream's
@@ -392,7 +412,7 @@ fn simplify_protocol(protocol: &str) -> &str {
 
 /// Upstream `--fixup POLICY` and `--hls-use-mpegts`.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
-pub struct FixupOptions {
+pub(crate) struct FixupOptions {
     /// `never`, `ignore`, `warn`, `detect_or_warn` (default) or `force`.
     pub policy: Option<String>,
     /// `--hls-use-mpegts`/`--no-hls-use-mpegts` (`None` when not given:
@@ -406,7 +426,7 @@ pub struct FixupOptions {
 /// Upstream `check_formats`: `--check-formats` (`selected`),
 /// `--check-all-formats` (`True`) and `--no-check-formats` (`False`).
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
-pub enum CheckFormats {
+pub(crate) enum CheckFormats {
     /// Only formats that need testing (none in the represented extractors).
     #[default]
     Default,
@@ -456,7 +476,7 @@ fn test_format(client: &Client, info: &VideoInfo, format: &VideoFormat) -> bool 
 }
 
 /// Upstream `parse_duration`: whole durations are `int`, others `float`.
-pub fn parse_duration(text: &str) -> Option<PyNumber> {
+pub(crate) fn parse_duration(text: &str) -> Option<PyNumber> {
     match_filter::parse_duration_number(text)
 }
 
@@ -1546,7 +1566,7 @@ pub(crate) fn has_scheme(input: &str) -> bool {
 /// Upstream `-S`/`--format-sort`, `--format-sort-force` and
 /// `--prefer-free-formats`.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
-pub struct FormatSortOptions {
+pub(crate) struct FormatSortOptions {
     pub fields: Vec<String>,
     pub force: bool,
     pub prefer_free: bool,
@@ -2602,14 +2622,10 @@ impl YoutubeDl {
     }
 
     /// Upstream `FFmpegFixupM3u8PP`: when `path` holds MPEG-TS, print
-    /// `[FixupM3u8] Fixing MPEG-TS in MP4 container of "PATH"` and remux it to
-    /// MP4 in place (`aac_adtstoasc` when ffprobe reports AAC audio).
-    /// Returns whether a fixup ran; requires a configured ffmpeg.
-    pub fn fixup_m3u8(&self, path: &Path) -> Result<bool> {
-        self.fixup_m3u8_as(path, path)
-    }
-
-    /// [`Self::fixup_m3u8`] naming `shown` (the destination) in its message.
+    /// `[FixupM3u8] Fixing MPEG-TS in MP4 container of "SHOWN"` (the
+    /// destination) and remux it to MP4 in place (`aac_adtstoasc` when
+    /// ffprobe reports AAC audio). Returns whether a fixup ran; requires a
+    /// configured ffmpeg.
     fn fixup_m3u8_as(&self, path: &Path, shown: &Path) -> Result<bool> {
         if crate::container::sniff(path) != Some("ts") {
             return Ok(false);
@@ -2640,11 +2656,7 @@ impl YoutubeDl {
     }
 
     /// Upstream `FFmpegFixupM4aPP`: print `[FixupM4a] Correcting container of
-    /// "PATH"` and remux a DASH m4a download to a plain MP4 container.
-    pub fn fixup_m4a(&self, path: &Path) -> Result<()> {
-        self.fixup_m4a_as(path, path)
-    }
-
+    /// "SHOWN"` and remux a DASH m4a download to a plain MP4 container.
     fn fixup_m4a_as(&self, path: &Path, shown: &Path) -> Result<()> {
         let ffmpeg = self
             .ffmpeg
@@ -2725,7 +2737,7 @@ impl YoutubeDl {
     /// Upstream `HlsFD.real_download`: `[hlsnative] Downloading m3u8
     /// manifest` refetches the media playlist, whose fragments are then
     /// downloaded. `None` for other downloads.
-    pub fn refresh_hls(&self, info: &VideoInfo) -> Result<Option<VideoInfo>> {
+    pub(crate) fn refresh_hls(&self, info: &VideoInfo) -> Result<Option<VideoInfo>> {
         // Formats loaded from info JSON have no fragments yet, like
         // upstream's, which HlsFD always reads from the playlist.
         // A live stream is FFmpegFD's (or, without ffmpeg, `hls_live`'s).
@@ -2785,7 +2797,7 @@ impl YoutubeDl {
     /// Upstream `YoutubeDL.fixup()` for an unmerged download at `path`
     /// (shown as `shown`): `FixupM4a` for `m4a_dash` containers and
     /// `FixupM3u8` for native HLS MP4 downloads, under `--fixup` policies.
-    pub fn fixup(
+    pub(crate) fn fixup(
         &self,
         info: &VideoInfo,
         path: &Path,
@@ -2946,7 +2958,7 @@ impl YoutubeDl {
     /// chapter (`destinations` pairs each chapter with its prepared path).
     /// With `force_keyframes` (`--force-keyframes-at-cuts`), a re-encoded copy
     /// with keyframes at the chapter starts is split instead.
-    pub fn split_chapters(
+    pub(crate) fn split_chapters(
         &self,
         input: &Path,
         chapters: &[(Chapter, PathBuf)],
@@ -3040,7 +3052,7 @@ impl YoutubeDl {
     /// Upstream `SponsorBlockPP.run` (an `after_filter` processor): fetch the
     /// video's segments in `categories` from `api` and store them as
     /// `sponsorblock_chapters`. `retries` follows `--extractor-retries`.
-    pub fn fetch_sponsorblock(
+    pub(crate) fn fetch_sponsorblock(
         &self,
         info: &mut VideoInfo,
         categories: &[String],
@@ -3134,7 +3146,7 @@ impl YoutubeDl {
 
     /// Upstream `FFmpegConcatPP.concat_files` for `--concat-playlist`:
     /// several files with identical streams are concatenated into `output`.
-    pub fn concat_files(&self, inputs: &[PathBuf], output: &Path) -> Result<()> {
+    pub(crate) fn concat_files(&self, inputs: &[PathBuf], output: &Path) -> Result<()> {
         let ffmpeg = self.ffmpeg.as_ref().ok_or_else(|| {
             Error::Postprocess(
                 "ffmpeg not found. Please install or provide the path using --ffmpeg-location"
@@ -3152,7 +3164,7 @@ impl YoutubeDl {
     /// Upstream `dl`'s `--verbose` line naming the downloader, for callers
     /// that announce a download before starting it; the next
     /// `download_with_progress` of the same info does not repeat it.
-    pub fn announce_download(&self, info: &VideoInfo) {
+    pub(crate) fn announce_download(&self, info: &VideoInfo) {
         self.report_invoking(info);
         ANNOUNCED.with(|announced| announced.replace(Some(info.url.clone())));
     }
@@ -3213,11 +3225,11 @@ impl YoutubeDl {
     }
 
     /// The configured ffmpeg executable.
-    pub fn ffmpeg_path(&self) -> Option<&Path> {
+    pub(crate) fn ffmpeg_path(&self) -> Option<&Path> {
         self.ffmpeg.as_deref()
     }
 
-    pub fn has_ffmpeg(&self) -> bool {
+    pub(crate) fn has_ffmpeg(&self) -> bool {
         self.ffmpeg.is_some()
     }
 
@@ -3232,7 +3244,7 @@ impl YoutubeDl {
     /// timecode their first frame has in the whole video. `video` is the
     /// `--remux-video`/`--recode-video` mapping applied afterwards; only
     /// MP4/MOV results carry the timecode, others are warned about.
-    pub fn with_section_timecode(mut self, video: Option<VideoOptions>) -> Self {
+    pub(crate) fn with_section_timecode(mut self, video: Option<VideoOptions>) -> Self {
         self.section_timecode = Some(video);
         self
     }
@@ -3257,7 +3269,7 @@ impl YoutubeDl {
     /// Upstream's `prefer_best` default (`best/bestvideo+bestaudio`, no
     /// ffmpeg warning), used for `-o -` output.
     /// Upstream `quiet` for FFmpeg downloads (`-loglevel quiet`).
-    pub fn with_external_quiet(mut self, quiet: bool) -> Self {
+    pub(crate) fn with_external_quiet(mut self, quiet: bool) -> Self {
         self.ffmpeg_settings.quiet = quiet;
         self
     }
@@ -3265,14 +3277,14 @@ impl YoutubeDl {
     /// Return playlists with their extractor's pending entries (upstream's
     /// lazily extracted entries) for [`YoutubeDl::fetch_pending`]; by default
     /// extraction fetches every entry.
-    pub fn with_deferred_entries(mut self, defer: bool) -> Self {
+    pub(crate) fn with_deferred_entries(mut self, defer: bool) -> Self {
         self.defer_entries = defer;
         self
     }
 
     /// Upstream `post_extract`: what the extractor left for after the match
     /// filters (YouTube's comments with `getcomments`).
-    pub fn post_extract(&self, info: &mut VideoInfo) -> Result<()> {
+    pub(crate) fn post_extract(&self, info: &mut VideoInfo) -> Result<()> {
         extractor::youtube_comments(&self.client, info)?;
         extractor::pialive_comments(&self.client, info)?;
         extractor::instagram_comments(&self.client, info)
@@ -3513,13 +3525,17 @@ impl YoutubeDl {
     /// Evaluate YouTube post-live formats' fragment lists (upstream's
     /// `LazyList`, read by JSON output and the downloaders): one HEAD
     /// request's `X-Head-Seqnum` bounds them.
-    pub fn prepare_live_fragments(&self, info: &mut VideoInfo) -> Result<()> {
+    pub(crate) fn prepare_live_fragments(&self, info: &mut VideoInfo) -> Result<()> {
         extractor::youtube_live_fragments(&self.client, info)
     }
 
     /// Fetch a playlist's pending entries (and its nested playlists') until
     /// it has `limit` entries, or all of them; entries still pending remain.
-    pub fn fetch_pending(&self, playlist: &mut PlaylistInfo, limit: Option<usize>) -> Result<()> {
+    pub(crate) fn fetch_pending(
+        &self,
+        playlist: &mut PlaylistInfo,
+        limit: Option<usize>,
+    ) -> Result<()> {
         if let Some(pending) = playlist.pending.take() {
             let fetch = if pending.state["kind"] == "twitch" {
                 extractor::fetch_twitch_pages
@@ -3640,7 +3656,11 @@ impl YoutubeDl {
     /// `--lazy-playlist`'s read of entry `position` (see
     /// [`LazySelection`]): fetch the pending entries up to it, or only its
     /// page for a random-access paged list. Whether the entry exists.
-    pub fn fetch_position(&self, playlist: &mut PlaylistInfo, position: usize) -> Result<bool> {
+    pub(crate) fn fetch_position(
+        &self,
+        playlist: &mut PlaylistInfo,
+        position: usize,
+    ) -> Result<bool> {
         if let Some(pending) = &mut playlist.pending {
             if pending.state["random_access"] == true {
                 pending.request_position(position);
@@ -3664,7 +3684,7 @@ impl YoutubeDl {
 
     /// `--http-chunk-size`: chunked HTTP downloads (overrides a format's
     /// `downloader_options`).
-    pub fn with_http_chunk_size(mut self, size: Option<u64>) -> Self {
+    pub(crate) fn with_http_chunk_size(mut self, size: Option<u64>) -> Self {
         self.http_chunk_size = size;
         self
     }
@@ -3672,7 +3692,7 @@ impl YoutubeDl {
     /// `--use-extractors NAMES`: upstream names (`html5`, `youtube`,
     /// `generic`, `end`, regexes, `all`, `default`, `-` exclusions) select and
     /// order the extractors.
-    pub fn with_allowed_extractors(
+    pub(crate) fn with_allowed_extractors(
         mut self,
         names: &[String],
     ) -> std::result::Result<Self, String> {
@@ -3688,7 +3708,7 @@ impl YoutubeDl {
     /// (`--use-extractors`, else the enabled ones), for `_make_archive_id`'s
     /// search of a suitable extractor; `--force-generic-extractor` does not
     /// change it.
-    pub fn uses_extractor(&self, name: &str, enabled: bool) -> bool {
+    pub(crate) fn uses_extractor(&self, name: &str, enabled: bool) -> bool {
         match &self.allowed_extractors {
             None => enabled,
             Some(order) => order
@@ -3700,13 +3720,13 @@ impl YoutubeDl {
 
     /// Upstream `writesubtitles`/`listsubtitles`: extractors'
     /// `extract_subtitles` (lazy subtitle requests) run only with them.
-    pub fn with_subtitles_requested(self, requested: bool) -> Self {
+    pub(crate) fn with_subtitles_requested(self, requested: bool) -> Self {
         extractor::SUBTITLES_REQUESTED.store(requested, std::sync::atomic::Ordering::Relaxed);
         self
     }
 
     /// `--force-generic-extractor`: only the generic extractor is used.
-    pub fn with_force_generic_extractor(mut self, force: bool) -> Self {
+    pub(crate) fn with_force_generic_extractor(mut self, force: bool) -> Self {
         self.force_generic = force;
         extractor::html5::FORCE_GENERIC.store(force, std::sync::atomic::Ordering::Relaxed);
         self
@@ -3719,7 +3739,7 @@ impl YoutubeDl {
     }
 
     /// `--enable-file-urls`: extract and download local `file:` media.
-    pub fn with_file_urls(mut self, enable: bool) -> Self {
+    pub(crate) fn with_file_urls(mut self, enable: bool) -> Self {
         self.enable_file_urls = enable;
         self
     }
@@ -3738,7 +3758,7 @@ impl YoutubeDl {
 
     /// `--downloader [PROTO:]NAME` with the given name or path (`native`,
     /// `ffmpeg`, `curl`, `wget`, `aria2c`, `axel`, `httpie`, ...).
-    pub fn with_downloader_name(mut self, protocol: &str, name: &str) -> Self {
+    pub(crate) fn with_downloader_name(mut self, protocol: &str, name: &str) -> Self {
         self.downloaders
             .insert(protocol.to_owned(), name.to_owned());
         self
@@ -3746,7 +3766,7 @@ impl YoutubeDl {
 
     /// Parameters for the external downloaders (`--downloader-args` are
     /// added by [`Self::with_downloader_args`]).
-    pub fn with_external_settings(mut self, settings: ExternalSettings) -> Self {
+    pub(crate) fn with_external_settings(mut self, settings: ExternalSettings) -> Self {
         let args = std::mem::take(&mut self.external_settings.args);
         self.external_settings = ExternalSettings { args, ..settings };
         self
@@ -3794,7 +3814,7 @@ impl YoutubeDl {
 
     /// `--downloader-args NAME:ARGS` for FFmpegFD (`ffmpeg`, `ffmpeg_o`,
     /// `ffmpeg_oN`, `ffmpeg_i`, `ffmpeg_iN`, `default`).
-    pub fn with_downloader_args(mut self, key: &str, args: Vec<String>) -> Self {
+    pub(crate) fn with_downloader_args(mut self, key: &str, args: Vec<String>) -> Self {
         self.ffmpeg_settings
             .args
             .insert(key.to_lowercase(), args.clone());
@@ -3855,7 +3875,7 @@ impl YoutubeDl {
     /// without ffmpeg, or `--downloader native` without
     /// [`Self::with_live_dash_snapshot`]), so no fragment count is announced
     /// for it.
-    pub fn live_dash_fails(&self, info: &VideoInfo) -> bool {
+    pub(crate) fn live_dash_fails(&self, info: &VideoInfo) -> bool {
         match self.live_dash(info) {
             Some(LiveDash::Native) => !self.live_dash_snapshot,
             Some(LiveDash::Ffmpeg) => self.ffmpeg.is_none(),
@@ -3865,7 +3885,7 @@ impl YoutubeDl {
 
     /// Upstream `get_suitable_downloader(...) == FFmpegFD`: partial downloads,
     /// or every selected protocol assigned to `ffmpeg` by `--downloader`.
-    pub fn uses_ffmpeg_fd(&self, info: &VideoInfo) -> bool {
+    pub(crate) fn uses_ffmpeg_fd(&self, info: &VideoInfo) -> bool {
         // `FFmpegFD.can_download` needs ffmpeg; otherwise the native
         // downloaders are used (a partial download without ffmpeg is an
         // error unless `--compat-options no-direct-merge`).
@@ -3917,7 +3937,7 @@ impl YoutubeDl {
     }
 
     /// Upstream `check_formats`.
-    pub fn with_check_formats(mut self, check: CheckFormats) -> Self {
+    pub(crate) fn with_check_formats(mut self, check: CheckFormats) -> Self {
         extractor::CHECK_FORMATS_NEVER.store(
             check == CheckFormats::Never,
             std::sync::atomic::Ordering::Relaxed,
@@ -3928,7 +3948,7 @@ impl YoutubeDl {
 
     /// `--check-all-formats`: test every format, best first, before listing
     /// and selection, dropping those that fail (`process_video_result`).
-    pub fn check_all_formats(&self, info: &mut VideoInfo) {
+    pub(crate) fn check_all_formats(&self, info: &mut VideoInfo) {
         if self.check_formats != CheckFormats::All {
             return;
         }
@@ -3949,31 +3969,31 @@ impl YoutubeDl {
     }
 
     /// `--default-search PREFIX` for inputs without a URL scheme.
-    pub fn with_default_search(mut self, prefix: Option<String>) -> Self {
+    pub(crate) fn with_default_search(mut self, prefix: Option<String>) -> Self {
         self.default_search = prefix;
         self
     }
 
     /// `--test`: download only the first 10241 bytes of HTTP media.
-    pub fn with_test(mut self, test: bool) -> Self {
+    pub(crate) fn with_test(mut self, test: bool) -> Self {
         self.test = test;
         self.ffmpeg_settings.test = test;
         self
     }
 
     /// `--hls-use-mpegts` for FFmpeg HLS downloads.
-    pub fn with_hls_use_mpegts(mut self, mpegts: Option<bool>) -> Self {
+    pub(crate) fn with_hls_use_mpegts(mut self, mpegts: Option<bool>) -> Self {
         self.ffmpeg_settings.hls_use_mpegts = mpegts;
         self
     }
 
-    pub fn with_prefer_best_format(mut self, prefer_best: bool) -> Self {
+    pub(crate) fn with_prefer_best_format(mut self, prefer_best: bool) -> Self {
         self.prefer_best = prefer_best;
         self
     }
 
     /// Sort formats like upstream with user fields and flags.
-    pub fn with_format_sort(mut self, options: FormatSortOptions) -> Self {
+    pub(crate) fn with_format_sort(mut self, options: FormatSortOptions) -> Self {
         self.format_sort = options;
         self
     }
@@ -3981,7 +4001,7 @@ impl YoutubeDl {
     /// Upstream `process_video_result` format processing for every video of
     /// an extracted or loaded result: common fields, thumbnails, per-format
     /// fills, `FormatSorter` order (worst first) and format ID cleanup.
-    pub fn process_result(&self, result: &mut ExtractResult) -> Result<()> {
+    pub(crate) fn process_result(&self, result: &mut ExtractResult) -> Result<()> {
         // Nested playlists are processed like extracted ones.
         if let ExtractResult::Playlist(playlist) = result
             && !playlist.nested.is_empty()
@@ -4458,7 +4478,7 @@ impl YoutubeDl {
 
     /// Upstream `--merge-output-format`: ordered containers that a merge may
     /// use, passed to `get_compatible_ext` as preferences.
-    pub fn with_merge_output_format(mut self, formats: Vec<String>) -> Self {
+    pub(crate) fn with_merge_output_format(mut self, formats: Vec<String>) -> Self {
         self.merge_output_format = Some(formats);
         self
     }
@@ -4466,13 +4486,13 @@ impl YoutubeDl {
     /// `--allow-dynamic-mpd` (the default) or `--ignore-dynamic-mpd`
     /// (`dynamic_mpd`): whether dynamic (live) DASH manifests give formats.
     /// Like upstream's parameter, this applies to every extraction.
-    pub fn with_dynamic_mpd(self, process: bool) -> Self {
+    pub(crate) fn with_dynamic_mpd(self, process: bool) -> Self {
         dash::set_dynamic_mpd(process);
         self
     }
 
     /// `--live-from-start`: live streams keep their title and default format.
-    pub fn with_live_from_start(mut self, from_start: bool) -> Self {
+    pub(crate) fn with_live_from_start(mut self, from_start: bool) -> Self {
         self.live_from_start = from_start;
         extractor::TWITCH_LIVE_FROM_START.store(from_start, std::sync::atomic::Ordering::Relaxed);
         self
@@ -4480,11 +4500,11 @@ impl YoutubeDl {
 
     /// Upstream DashSegmentsFD's `report_error('Live DASH videos are not
     /// supported')` for a live DASH format with `--downloader native`: with
-    /// `true` (the CLI's default `ignoreerrors='only_download'`) the caller
-    /// reports [`LIVE_DASH_UNSUPPORTED`] ([`Self::report_live_dash`]) and the
-    /// download continues with the fragments of the extraction's
-    /// manifest snapshot; with `false` (`--abort-on-error`, the library
-    /// default) the download fails with that error.
+    /// `true` (the CLI's default `ignoreerrors='only_download'`, where the
+    /// CLI also reports that error) the download continues with the
+    /// fragments of the extraction's manifest snapshot; with `false`
+    /// (`--abort-on-error`, the library default) the download fails with
+    /// `Error::Reported("Live DASH videos are not supported")`.
     pub fn with_live_dash_snapshot(mut self, snapshot: bool) -> Self {
         self.live_dash_snapshot = snapshot;
         self
@@ -4494,7 +4514,7 @@ impl YoutubeDl {
     /// live DASH format whose snapshot is then downloaded (see
     /// [`Self::with_live_dash_snapshot`]); the run still fails
     /// ([`trouble_reported`]).
-    pub fn report_live_dash(&self, info: &VideoInfo) {
+    pub(crate) fn report_live_dash(&self, info: &VideoInfo) {
         if self.live_dash(info) == Some(LiveDash::Native) && self.live_dash_snapshot {
             report_trouble(LIVE_DASH_UNSUPPORTED);
         }
@@ -4502,13 +4522,13 @@ impl YoutubeDl {
 
     /// Whether `info` is live and downloaded from now (upstream's
     /// `not get_from_start`).
-    pub fn live_from_now(&self, info: &VideoInfo) -> bool {
+    pub(crate) fn live_from_now(&self, info: &VideoInfo) -> bool {
         is_live(info) && !self.live_from_start
     }
 
     /// Upstream `allow_multiple_video_streams`/`allow_multiple_audio_streams`:
     /// merges may combine several video or audio streams.
-    pub fn with_multistreams(mut self, video: bool, audio: bool) -> Self {
+    pub(crate) fn with_multistreams(mut self, video: bool, audio: bool) -> Self {
         self.multistreams = (video, audio);
         self
     }
@@ -4658,15 +4678,6 @@ impl YoutubeDl {
         )
     }
 
-    /// Select formats for one video or playlist entry (upstream
-    /// `process_video_result`), leaving it unchanged on failure; with
-    /// several selected formats (`,`, `all`), the first is applied.
-    pub fn select_video(&self, info: &mut VideoInfo, format: Option<&str>) -> Result<()> {
-        let mut selected = self.select_videos(info, format)?;
-        *info = selected.remove(0);
-        Ok(())
-    }
-
     /// `--growing-file`: selected live results become QuickTime files (or
     /// fragmented MP4 for codecs MOV cannot hold, such as AV1).
     fn growing_ext(&self, mut selected: Vec<VideoInfo>) -> Vec<VideoInfo> {
@@ -4686,7 +4697,11 @@ impl YoutubeDl {
 
     /// Upstream `formats_to_download`: one result per selected format, each
     /// downloaded on its own by `process_info`.
-    pub fn select_videos(&self, info: &VideoInfo, format: Option<&str>) -> Result<Vec<VideoInfo>> {
+    pub(crate) fn select_videos(
+        &self,
+        info: &VideoInfo,
+        format: Option<&str>,
+    ) -> Result<Vec<VideoInfo>> {
         // `--ignore-no-formats-error`: "Process what we can, even without
         // any available formats" (`formats_to_download = [{}]`).
         if info.has_no_formats() {
@@ -4929,7 +4944,7 @@ impl YoutubeDl {
     /// and URL ID (`ie.get_temp_id(url)`) of `url` when its extractor is
     /// known without extracting (YouTube videos and the embeddable sites), for
     /// `--download-archive` to skip a recorded video without any request.
-    pub fn temp_archive_identity(&self, url: &str) -> Option<(String, String)> {
+    pub(crate) fn temp_archive_identity(&self, url: &str) -> Option<(String, String)> {
         if self.force_generic {
             return None;
         }
@@ -5027,7 +5042,7 @@ impl YoutubeDl {
 
     /// The extraction error of a playlist entry whose processing failed
     /// (upstream reports it for that entry and continues with the others).
-    pub fn entry_error(entry: &VideoInfo) -> Option<&str> {
+    pub(crate) fn entry_error(entry: &VideoInfo) -> Option<&str> {
         entry
             .extra
             .get(ENTRY_ERROR)
@@ -5036,7 +5051,7 @@ impl YoutubeDl {
 
     /// The error of a paged playlist entry whose page failed to download
     /// (already reported upstream; the entry is `None`).
-    pub fn fetch_error(entry: &VideoInfo) -> Option<&str> {
+    pub(crate) fn fetch_error(entry: &VideoInfo) -> Option<&str> {
         extractor::paged::fetch_error(entry)
     }
 
@@ -5045,7 +5060,7 @@ impl YoutubeDl {
     /// `url_key` of the entry's `url` (the first suitable extractor's
     /// `ie_key`, see [`Self::uses_extractor`]); else `None` (never in the
     /// archive).
-    pub fn entry_archive_identity(
+    pub(crate) fn entry_archive_identity(
         entry: &VideoInfo,
         url_key: &dyn Fn(&str) -> Option<String>,
     ) -> Option<(String, String)> {
@@ -5073,7 +5088,7 @@ impl YoutubeDl {
 
     /// The `title` of an unresolved entry's upstream entry dict (`None`
     /// without one); `Some(entry.title)` for other entries.
-    pub fn entry_title(entry: &VideoInfo) -> Option<&str> {
+    pub(crate) fn entry_title(entry: &VideoInfo) -> Option<&str> {
         match entry.extra.get(TRANSPARENT).map(|marker| &marker["entry"]) {
             Some(serde_json::Value::Object(raw)) => {
                 raw.get("title").and_then(serde_json::Value::as_str)
@@ -5083,32 +5098,19 @@ impl YoutubeDl {
     }
 
     /// The URL an unresolved `url_transparent` entry resolves.
-    pub fn transparent_url(entry: &VideoInfo) -> Option<&str> {
+    pub(crate) fn transparent_url(entry: &VideoInfo) -> Option<&str> {
         entry.extra.get(TRANSPARENT)?["url"].as_str()
     }
 
     /// Whether `entry` is an unresolved `url_transparent` entry.
-    pub fn is_transparent(entry: &VideoInfo) -> bool {
+    pub(crate) fn is_transparent(entry: &VideoInfo) -> bool {
         entry.extra.contains_key(TRANSPARENT)
-    }
-
-    /// Upstream `process_ie_result` for a `url_transparent` playlist entry
-    /// (RSS items): its URL is extracted (smuggling the `guid` as
-    /// `force_videoid`), then updated with the entry's non-`None` fields,
-    /// keeping the playlist fields. Other entries are returned unchanged.
-    /// An entry resolving to a playlist is an error here; see
-    /// [`Self::resolve_entry_result`].
-    pub fn resolve_entry(&self, entry: VideoInfo) -> Result<VideoInfo> {
-        match self.resolve_entry_result(entry)? {
-            ExtractResult::Video(info) => Ok(info),
-            ExtractResult::Playlist(_) => Err(Error::PlaylistRequiresResult),
-        }
     }
 
     /// [`Self::resolve_entry`], where an entry resolving to a playlist is
     /// that playlist (upstream processes it inline as a nested playlist),
     /// updated with the entry's non-`None` fields like a video.
-    pub fn resolve_entry_result(&self, entry: VideoInfo) -> Result<ExtractResult> {
+    pub(crate) fn resolve_entry_result(&self, entry: VideoInfo) -> Result<ExtractResult> {
         let Some(marker) = entry.extra.get(TRANSPARENT).cloned() else {
             return Ok(ExtractResult::Video(entry));
         };
@@ -5238,7 +5240,7 @@ impl YoutubeDl {
     /// A `--flat-playlist` `url_transparent` entry, unextracted: upstream's
     /// raw entry dict (`-J`) and, with `epoch`, the dict its forced
     /// printings see (`-j`, `--print`).
-    pub fn flat_entry(
+    pub(crate) fn flat_entry(
         entry: &VideoInfo,
         epoch: u64,
     ) -> Option<(
@@ -6138,7 +6140,12 @@ impl YoutubeDl {
 
     /// Convert a local thumbnail image with the explicit FFmpeg (upstream
     /// `FFmpegThumbnailsConvertorPP.convert_thumbnail`).
-    pub fn convert_thumbnail(&self, input: &Path, output: &Path, target: &str) -> Result<()> {
+    pub(crate) fn convert_thumbnail(
+        &self,
+        input: &Path,
+        output: &Path,
+        target: &str,
+    ) -> Result<()> {
         let ffmpeg = self.ffmpeg.as_ref().ok_or_else(|| {
             Error::Postprocess(
                 "thumbnail conversion requires an explicit --ffmpeg-location PATH".into(),
@@ -6150,7 +6157,7 @@ impl YoutubeDl {
     }
 
     /// Copy a thumbnail URL to `destination` without overwriting it.
-    pub fn download_thumbnail(
+    pub(crate) fn download_thumbnail(
         &self,
         url: &str,
         destination: impl AsRef<Path>,
@@ -6634,7 +6641,7 @@ impl YoutubeDl {
 
 /// Upstream's per-format merge input name: `correct_ext` of the destination
 /// for the stream's extension, then `prepend_extension` with `fFORMAT_ID`.
-pub fn stream_path(destination: &Path, merged_ext: &str, stream: &VideoFormat) -> PathBuf {
+pub(crate) fn stream_path(destination: &Path, merged_ext: &str, stream: &VideoFormat) -> PathBuf {
     let name = destination
         .file_name()
         .map(|name| name.to_string_lossy().into_owned())

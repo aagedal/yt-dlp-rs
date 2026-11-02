@@ -1116,7 +1116,7 @@ impl GenericHttp {
     /// `_extract_embeds`' result for other extractors' embeds: one is
     /// followed as a `url` result (the page fields are dropped), several
     /// are `url` entries of the page's playlist that
-    /// [`crate::YoutubeDl::resolve_entry`] extracts when processed.
+    /// [`crate::YoutubeDl::resolve_entry_result`] extracts when processed.
     fn embed_results(
         &self,
         client: &Client,
@@ -2727,7 +2727,7 @@ fn embeds(client: &Client, url: &Url, html: &str) -> Result<Vec<(&'static EmbedS
 }
 
 /// `_extract_rss`'s playlist: `url_transparent` placeholder entries that
-/// [`crate::YoutubeDl::resolve_entry`] extracts when they are processed.
+/// [`crate::YoutubeDl::resolve_entry_result`] extracts when they are processed.
 fn rss_playlist(feed: super::rss::Feed, url: &Url, page_url: &Url) -> ExtractResult {
     use serde_json::Value;
     let entries = feed

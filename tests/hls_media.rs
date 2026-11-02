@@ -129,7 +129,7 @@ fn saved_transport_stream_and_fragmented_mp4_assemble_exact_media() {
         let directory = tempfile::tempdir().unwrap();
         let output = directory.path().join(format!("media.{ext}"));
         let bytes = dl.download(&info, &output).unwrap();
-        assert_eq!(yt_dlp_rs::container::sniff(&output), Some(ext), "{kind}");
+        assert_eq!(yt_dlp_rs::__private::sniff(&output), Some(ext), "{kind}");
         let actual = std::fs::read(&output).unwrap();
         let mut expected = Vec::new();
         for (index, fragment) in info.fragments.iter().enumerate() {
@@ -378,7 +378,7 @@ fn transport_stream_downloads_get_upstream_fixup_m3u8_or_warnings() {
         )),
         "{stderr}"
     );
-    assert_eq!(yt_dlp_rs::container::sniff_bytes(&bytes), Some("ts"));
+    assert_eq!(yt_dlp_rs::__private::sniff_bytes(&bytes), Some("ts"));
     let (stdout, stderr, bytes) = run(&["--fixup", "warn"], true);
     assert!(stderr.contains(&format!("{message}\n")), "{stderr}");
     assert!(!stdout.contains("FixupM3u8"));

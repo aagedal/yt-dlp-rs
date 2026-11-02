@@ -1764,7 +1764,7 @@ pub use youtube::search::{
 pub use youtube::tab::suitable as youtube_tab_suitable;
 pub(crate) use youtube::tab::{YoutubeTab, fetch_pages as fetch_youtube_tab_pages};
 pub use youtube::{
-    JsRuntime, JsRuntimeName, WaitForVideo, Youtube, YoutubeOptions,
+    JsRuntime, WaitForVideo, Youtube, YoutubeOptions,
     extractor_suitable as youtube_extractor_suitable, js_runtimes, suitable as youtube_suitable,
 };
 pub use zapiks::{Zapiks, suitable as zapiks_suitable};

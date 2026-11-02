@@ -33,14 +33,15 @@ pub struct Youtube;
 
 /// Opt-in YouTube challenge runtime. Defaults to challenge-free extraction.
 #[derive(Debug, Clone, Default)]
+#[non_exhaustive]
 pub struct YoutubeOptions {
     /// Explicit Deno 2.3+ or Node.js 22+ executable path; never discovered or installed.
     /// Inspected only when an eligible format has a supported URL challenge.
-    /// It replaces [`Self::js_runtimes`].
+    /// It replaces the CLI's `--js-runtimes` list.
     pub js_runtime: Option<PathBuf>,
     /// `--js-runtimes` runtimes ([`js_runtimes`]), tried in upstream's
     /// provider preference order.
-    pub js_runtimes: Vec<JsRuntime>,
+    pub(crate) js_runtimes: Vec<JsRuntime>,
     /// Include translated manual captions in automatic-caption metadata.
     /// Original ASR captions/translations are always discovered without fetching.
     pub include_translated_subtitles: bool,
@@ -53,8 +54,8 @@ pub struct YoutubeOptions {
     /// runs until the stream ends.
     pub skip_download: bool,
     /// Upstream `wait_for_video`: wait for a video without formats.
-    pub wait_for_video: Option<WaitForVideo>,
-    /// Upstream `getcomments`: extract comments in [`crate::YoutubeDl::post_extract`].
+    pub(crate) wait_for_video: Option<WaitForVideo>,
+    /// Upstream `getcomments`: extract comments after the video's extraction.
     pub get_comments: bool,
     /// Upstream `live_from_start`: live adaptive formats are downloaded from
     /// the stream's start.
@@ -87,7 +88,7 @@ struct ConfiguredYoutube {
 
 impl YoutubeOptions {
     /// The configured challenge runtimes.
-    pub fn runtimes(&self) -> Vec<JsRuntime> {
+    pub(crate) fn runtimes(&self) -> Vec<JsRuntime> {
         match &self.js_runtime {
             Some(path) => vec![JsRuntime {
                 name: JsRuntimeName::Detect,

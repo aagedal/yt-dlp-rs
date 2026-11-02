@@ -14,6 +14,7 @@ use std::{
 /// Local processors run in upstream order: audio, remux/recode, then subtitles.
 /// Source and intermediate retention is enabled by either keep flag.
 #[derive(Debug, Clone, Default)]
+#[non_exhaustive]
 pub struct PostprocessOptions {
     pub audio: Option<AudioOptions>,
     pub video: Option<VideoOptions>,
@@ -26,9 +27,9 @@ pub struct PostprocessOptions {
     pub chapters: bool,
     /// `--embed-info-json` (`if_exists` with `--embed-metadata`): attach the
     /// info JSON to mkv/mka files.
-    pub infojson: Option<InfoJsonEmbed>,
+    pub(crate) infojson: Option<InfoJsonEmbed>,
     /// Upstream `fixup()` before the processors; `None` skips fixups.
-    pub fixup: Option<crate::FixupOptions>,
+    pub(crate) fixup: Option<crate::FixupOptions>,
     /// `--embed-thumbnail`: a local thumbnail embedded after metadata.
     pub thumbnail: Option<PathBuf>,
     /// `--ignore-errors`: a failed processor is reported and skipped, and the
@@ -38,11 +39,11 @@ pub struct PostprocessOptions {
     pub no_post_overwrites: bool,
     /// `--remove-chapters`: upstream `ModifyChaptersPP` after subtitle
     /// embedding.
-    pub modify_chapters: Option<ModifyChapters>,
+    pub(crate) modify_chapters: Option<ModifyChapters>,
     /// `--parse-metadata`/`--replace-in-metadata` actions with their
     /// template options: the `post_process` ones run after the fixups and
     /// before the other processors, changing the info dict they read.
-    pub metadata_parser: Option<(
+    pub(crate) metadata_parser: Option<(
         crate::metadata_parser::MetadataActions,
         crate::output::TemplateOptions,
     )>,
@@ -91,6 +92,7 @@ pub struct InfoJsonEmbed {
 
 /// Published final media and any sources/intermediates retained by keep-video.
 #[derive(Debug, Clone)]
+#[non_exhaustive]
 pub struct ProcessedDownload {
     pub path: PathBuf,
     pub bytes: u64,

@@ -198,11 +198,6 @@ impl DownloadSections {
         }
         requested
     }
-
-    /// Whether the option was given with anything but the whole video.
-    pub fn is_empty(&self) -> bool {
-        self.chapters.is_empty() && self.ranges.is_empty() && !self.from_url
-    }
 }
 
 /// `f'{value:.1f}'`.

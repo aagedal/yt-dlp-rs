@@ -597,7 +597,7 @@ fn templates_are_explicit_and_metadata_cannot_inject_paths_or_fields() {
             .unwrap()
             .to_str()
             .unwrap(),
-        yt_dlp_rs::output::host_path("downloads/%-..⧸folder⧸%(id)s.mp4")
+        yt_dlp_rs::__private::host_path("downloads/%-..⧸folder⧸%(id)s.mp4")
     );
     assert_eq!(
         render_template("%(title)03d", &info).unwrap(),
@@ -697,11 +697,10 @@ fn youtube_runtime_configuration_is_lazy_for_generic_extraction() {
     let server = Server::start();
     let directory = tempfile::tempdir().unwrap();
     let runtime = directory.path().join("nonexistent-deno");
-    let dl = YoutubeDl::with_youtube_options(YoutubeOptions {
-        include_translated_subtitles: false,
-        no_playlist: false,
-        js_runtime: Some(runtime.clone()),
-        ..Default::default()
+    let dl = YoutubeDl::with_youtube_options({
+        let mut options = YoutubeOptions::default();
+        options.js_runtime = Some(runtime.clone());
+        options
     })
     .unwrap();
     for (path, extractor) in [("/clip.mp4", "generic"), ("/video.html", "html5")] {
@@ -923,9 +922,9 @@ fn html5_playlist_metadata_order_and_legacy_boundary() {
         dl.extract_info_with_format(&page, Some("0")),
         Err(Error::PlaylistRequiresResult)
     ));
-    let generic = yt_dlp_rs::extractor::GenericHttp;
+    let generic = yt_dlp_rs::__private::GenericHttp;
     assert!(matches!(
-        yt_dlp_rs::extractor::Extractor::extract(
+        yt_dlp_rs::__private::Extractor::extract(
             &generic,
             &reqwest::blocking::Client::new(),
             &page.parse().unwrap()
@@ -1170,8 +1169,8 @@ fn cli_playlist_download_failures_continue_to_later_entries_and_urls() {
 #[test]
 fn existing_video_extractors_use_the_default_typed_adapter() {
     use yt_dlp_rs::{
+        __private::{DirectHttp, Extractor},
         Result, VideoInfo,
-        extractor::{DirectHttp, Extractor},
     };
     struct Custom;
     impl Extractor for Custom {

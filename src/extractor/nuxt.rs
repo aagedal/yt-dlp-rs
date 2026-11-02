@@ -139,6 +139,7 @@ pub fn search_nuxt_data(
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Mode {
     Fatal,
+    #[cfg_attr(not(test), allow(dead_code))] // no ported extractor passes it yet
     Warn,
     Default,
 }

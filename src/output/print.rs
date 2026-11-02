@@ -171,6 +171,7 @@ impl PrintToFile {
     }
 
     /// Render the line and its sanitized destination for one video.
+    #[cfg(test)]
     pub fn render(
         &self,
         info: &VideoInfo,

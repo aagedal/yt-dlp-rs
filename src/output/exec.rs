@@ -333,10 +333,6 @@ impl ExecCommands {
         Ok(Self { commands })
     }
 
-    pub fn is_empty(&self) -> bool {
-        self.commands.is_empty()
-    }
-
     pub fn has(&self, stage: Stage) -> bool {
         self.commands.iter().any(|(s, _)| *s == stage)
     }

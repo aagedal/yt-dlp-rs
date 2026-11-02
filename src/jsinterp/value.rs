@@ -150,10 +150,6 @@ impl Namespace {
         self.0.iter().find_map(|frame| frame.get(key))
     }
 
-    pub fn contains(&self, key: &str) -> bool {
-        self.0.iter().any(|frame| frame.contains(key))
-    }
-
     /// `ChainMap.__getitem__`: a `KeyError` when missing.
     pub(super) fn getitem(&self, key: &str) -> Result<JsValue, JsError> {
         self.get(key)

@@ -187,20 +187,16 @@ fn success(output: &Output) {
     );
 }
 fn configured() -> YoutubeDl {
-    YoutubeDl::with_options(
-        YoutubeOptions::default(),
-        HttpOptions {
-            proxy: None,
-            cookies: None,
-            headers: vec![
-                ("X-Token".into(), "local-value".into()),
-                ("Accept-Encoding".into(), "gzip".into()),
-            ],
-            user_agent: Some("header-fixture/1".into()),
-            referer: Some("https://referrer.invalid/start".into()),
-            ..Default::default()
-        },
-    )
+    YoutubeDl::with_options(YoutubeOptions::default(), {
+        let mut options = HttpOptions::default();
+        options.headers = vec![
+            ("X-Token".into(), "local-value".into()),
+            ("Accept-Encoding".into(), "gzip".into()),
+        ];
+        options.user_agent = Some("header-fixture/1".into());
+        options.referer = Some("https://referrer.invalid/start".into());
+        options
+    })
     .unwrap()
 }
 fn assert_defaults(requests: &[Request]) {
@@ -275,17 +271,13 @@ fn cli_headers_ua_duplicates_first_colon_and_referrer_rules_cover_page_media_and
 fn library_defaults_support_http_token_names_and_tabs_for_direct_probe_and_download() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
-    let dl = YoutubeDl::with_options(
-        YoutubeOptions::default(),
-        HttpOptions {
-            proxy: None,
-            cookies: None,
-            headers: vec![("X!Token".into(), "one\ttwo".into())],
-            user_agent: Some("library-fixture/1".into()),
-            referer: Some("https://referrer.invalid/direct".into()),
-            ..Default::default()
-        },
-    )
+    let dl = YoutubeDl::with_options(YoutubeOptions::default(), {
+        let mut options = HttpOptions::default();
+        options.headers = vec![("X!Token".into(), "one\ttwo".into())];
+        options.user_agent = Some("library-fixture/1".into());
+        options.referer = Some("https://referrer.invalid/direct".into());
+        options
+    })
     .unwrap();
     let info = dl.extract_info(&server.url("/media.mp4")).unwrap();
     dl.download(&info, directory.path().join("media.mp4"))
@@ -468,15 +460,11 @@ fn library_header_controls_cookie_and_resource_limits_fail_during_construction()
     ];
     for headers in cases {
         assert!(
-            YoutubeDl::with_options(
-                YoutubeOptions::default(),
-                HttpOptions {
-                    proxy: None,
-                    cookies: None,
-                    headers,
-                    ..Default::default()
-                }
-            )
+            YoutubeDl::with_options(YoutubeOptions::default(), {
+                let mut options = HttpOptions::default();
+                options.headers = headers;
+                options
+            })
             .is_err()
         );
     }

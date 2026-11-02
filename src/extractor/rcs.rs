@@ -16,6 +16,7 @@ use std::sync::LazyLock;
 use url::Url;
 
 pub struct RCSEmbeds;
+#[allow(clippy::upper_case_acronyms)] // upstream `RCSIE`
 pub struct RCS;
 pub struct RCSVarious;
 

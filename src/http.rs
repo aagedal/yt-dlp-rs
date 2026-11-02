@@ -15,6 +15,7 @@ use std::{net::IpAddr, time::Duration};
 /// Global request defaults. Extractor/transport headers take precedence.
 /// Raw Cookie headers are unsupported; use the scoped cookie jar instead.
 #[derive(Clone, Default)]
+#[non_exhaustive]
 pub struct HttpOptions {
     /// None inherits system routing; an empty string forces direct connections.
     pub proxy: Option<String>,

@@ -17,11 +17,11 @@ pub struct SubtitleConversion {
     pub keep_original: bool,
 }
 impl SubtitleConversion {
-    pub fn is_enabled(&self) -> bool {
+    pub(crate) fn is_enabled(&self) -> bool {
         self.target.is_some()
     }
     /// The requested extension, if conversion is enabled.
-    pub fn target(&self) -> Option<&'static str> {
+    pub(crate) fn target(&self) -> Option<&'static str> {
         self.target
     }
     pub fn new(format: &str) -> Result<Self> {
@@ -44,7 +44,7 @@ impl SubtitleConversion {
     }
     /// Predict the converted sidecar name without I/O. Source JSON and matching
     /// extensions are skips; active conversions replace the final suffix.
-    pub fn output_path(&self, source: &Path, source_ext: &str) -> Result<PathBuf> {
+    pub(crate) fn output_path(&self, source: &Path, source_ext: &str) -> Result<PathBuf> {
         if source.file_name().is_none() {
             return Err(Error::Subtitle("subtitle source has no filename".into()));
         }
@@ -59,7 +59,7 @@ impl SubtitleConversion {
         )
     }
     /// TTML first becomes SRT when another output format is requested.
-    pub fn intermediate_path(&self, source: &Path, source_ext: &str) -> Option<PathBuf> {
+    pub(crate) fn intermediate_path(&self, source: &Path, source_ext: &str) -> Option<PathBuf> {
         (matches!(source_ext, "dfxp" | "ttml" | "tt")
             && self.target.is_some_and(|target| target != "srt"))
         .then(|| source.with_extension("srt"))
@@ -67,6 +67,7 @@ impl SubtitleConversion {
 }
 
 #[derive(Debug, Clone)]
+#[non_exhaustive]
 pub struct ConvertedSubtitle {
     pub path: PathBuf,
     pub ext: String,

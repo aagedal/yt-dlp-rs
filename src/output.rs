@@ -1,41 +1,40 @@
-pub mod color;
-pub mod encoding;
+pub(crate) mod color;
+pub(crate) mod encoding;
 pub(crate) mod exec;
 mod filename;
 pub(crate) mod formats;
 mod links;
 mod print;
-pub mod progress;
-mod sanitize;
+pub(crate) mod progress;
+pub(crate) mod sanitize;
 mod subtitles;
 mod template;
 mod thumbnails;
 pub(crate) mod traverse;
-pub use exec::{ExecCommand, ExecCommands, Stage, shell_command, shell_quote, shell_quote_command};
-pub use filename::{OUTPUT_TYPES, OutputTemplates, parse_paths, replace_extension};
+pub(crate) use exec::{ExecCommand, ExecCommands, Stage, shell_command, shell_quote};
+pub(crate) use filename::{OutputTemplates, parse_paths, replace_extension};
+pub use formats::render_formats;
+pub(crate) use formats::render_formats_listing;
 pub(crate) use formats::render_table;
-pub use formats::{render_formats, render_formats_listing, render_formats_table};
-pub use links::{iri_to_uri, link_file};
-pub use print::{ForcedFields, PrintTemplate, PrintToFile, StagePaths};
+pub(crate) use links::{iri_to_uri, link_file};
+pub(crate) use print::{ForcedFields, PrintTemplate, PrintToFile, StagePaths};
 
 /// The case-insensitive `WHEN:` stage name of a `--print` value (`video`
 /// when absent), as upstream's `when_prefix` splits it.
-pub fn print_stage_name(spec: &str) -> String {
+pub(crate) fn print_stage_name(spec: &str) -> String {
     exec::Stage::split(spec, "video").0
 }
-pub use sanitize::{
-    FilenameMode, force_sanitize_path, host_path, sanitize_filename, windows_sanitize_path,
-};
-pub use subtitles::{render_automatic_captions, render_subtitles};
-pub use thumbnails::render_thumbnails;
+pub(crate) use sanitize::{FilenameMode, sanitize_filename};
+pub(crate) use subtitles::{render_automatic_captions, render_subtitles};
+pub(crate) use thumbnails::render_thumbnails;
 
-use crate::{PlaylistCounts, PlaylistInfo, Result, VideoInfo};
+use crate::{Result, VideoInfo};
 use std::path::PathBuf;
 
-pub const DEFAULT_TEMPLATE: &str = "%(title)s [%(id)s].%(ext)s";
+pub(crate) const DEFAULT_TEMPLATE: &str = "%(title)s [%(id)s].%(ext)s";
 
 /// Upstream `_parse_outtmpl`: restricted names remove spaces in the default template.
-pub fn default_template(restricted: bool) -> String {
+pub(crate) fn default_template(restricted: bool) -> String {
     if restricted {
         DEFAULT_TEMPLATE.replace(" - ", " ").replace(' ', "-")
     } else {
@@ -68,33 +67,33 @@ pub struct TemplateOptions {
     /// Used for unavailable metadata or failed numeric conversion.
     pub na_placeholder: String,
     /// Metadata sanitization (`--restrict-filenames`/`--no-windows-filenames`).
-    pub filename_mode: FilenameMode,
+    pub(crate) filename_mode: FilenameMode,
     /// `--windows-filenames`: force upstream Windows path sanitization.
-    pub windows_filenames: bool,
+    pub(crate) windows_filenames: bool,
     /// `--trim-filenames`: Python-slice length excluding extensions; 0 disables.
-    pub trim_file_name: i64,
+    pub(crate) trim_file_name: i64,
     /// `--paths`: `home` and output-type directories joined before names.
-    pub paths: std::collections::BTreeMap<String, String>,
+    pub(crate) paths: std::collections::BTreeMap<String, String>,
     /// Upstream `autonumber` (`autonumber_start - 1 + downloads`) for the
     /// video being processed, set by the caller.
-    pub autonumber: std::cell::Cell<Option<u64>>,
+    pub(crate) autonumber: std::cell::Cell<Option<u64>>,
     /// `--autonumber-size`: `%(autonumber)s` zero padding (default 5).
-    pub autonumber_size: usize,
+    pub(crate) autonumber_size: usize,
     /// Upstream `video_autonumber` (videos processed so far).
-    pub video_autonumber: std::cell::Cell<Option<u64>>,
+    pub(crate) video_autonumber: std::cell::Cell<Option<u64>>,
     /// `--compat-options filename-sanitization`: youtube-dl's `is_id` rules.
-    pub legacy_sanitization: bool,
+    pub(crate) legacy_sanitization: bool,
     /// `--compat-options allow-unsafe-exec-expansion`: skip `ExecPP`'s
     /// template safety validation.
-    pub allow_unsafe_exec: bool,
+    pub(crate) allow_unsafe_exec: bool,
     /// `--list-formats-old` (or `--compat-options list-formats`): the
     /// legacy layout for `--print`'s `formats_table`.
-    pub list_formats_old: bool,
+    pub(crate) list_formats_old: bool,
 }
 
 impl TemplateOptions {
     /// Resolve upstream's restrict/windows filename options for this platform.
-    pub fn filename_mode(restrict: bool, windows: Option<bool>) -> FilenameMode {
+    pub(crate) fn filename_mode(restrict: bool, windows: Option<bool>) -> FilenameMode {
         if restrict {
             FilenameMode::Restricted
         } else if !cfg!(windows) && windows == Some(false) {
@@ -125,7 +124,7 @@ impl Default for TemplateOptions {
 
 /// Python `json.dumps(value)` (default separators, `ensure_ascii`), as
 /// upstream prints `-j`/`-J`.
-pub fn python_json_dumps(value: &serde_json::Value) -> String {
+pub(crate) fn python_json_dumps(value: &serde_json::Value) -> String {
     traverse::py_json(value, true)
 }
 
@@ -146,7 +145,7 @@ pub fn render_template_with_options(
 
 /// Upstream `prepare_filename(dict, kind)` over an arbitrary dict (the
 /// playlist `pl_video` file of `--concat-playlist`).
-pub fn render_dict_filename(
+pub(crate) fn render_dict_filename(
     template: &str,
     dict: &serde_json::Value,
     options: &TemplateOptions,
@@ -162,7 +161,7 @@ pub fn render_dict_filename(
 
 /// Upstream `evaluate_outtmpl(template, dict)` over an arbitrary dict, as
 /// `--progress-template` renders `{'info': ..., 'progress': ...}`.
-pub fn evaluate_dict_template(
+pub(crate) fn evaluate_dict_template(
     template: &str,
     dict: &serde_json::Value,
     options: &TemplateOptions,
@@ -172,7 +171,7 @@ pub fn evaluate_dict_template(
 
 /// Upstream `evaluate_outtmpl(template, info)`: unsanitized text, as
 /// printing renders it (without `filename`/`urls`).
-pub fn evaluate_template(
+pub(crate) fn evaluate_template(
     template: &str,
     info: &VideoInfo,
     options: &TemplateOptions,
@@ -194,10 +193,11 @@ pub fn evaluate_template(
 /// Render a playlist-level file name, as upstream's playlist info JSON does.
 /// Playlist metadata supplies id/title/extractor/webpage URL plus
 /// `playlist_index` 0 and the counts; other represented fields are missing.
-pub fn render_playlist_template_with_options(
+#[cfg(test)]
+pub(crate) fn render_playlist_template_with_options(
     template: &str,
-    info: &PlaylistInfo,
-    counts: PlaylistCounts,
+    info: &crate::PlaylistInfo,
+    counts: crate::PlaylistCounts,
     options: &TemplateOptions,
 ) -> Result<PathBuf> {
     let source = template::Source::Playlist {
@@ -210,7 +210,7 @@ pub fn render_playlist_template_with_options(
 }
 
 /// Upstream `_UnsafeExtensionError.ALLOWED_EXTENSIONS`.
-pub const ALLOWED_EXTENSIONS: &[&str] = &[
+pub(crate) const ALLOWED_EXTENSIONS: &[&str] = &[
     "3g2",
     "3ga",
     "3gp",
@@ -346,7 +346,7 @@ pub const ALLOWED_EXTENSIONS: &[&str] = &[
 
 /// Upstream `_UnsafeExtensionError.sanitize_extension` acceptance: the last
 /// dotted part, case-insensitively (`bin` is treated as `unknown_video`).
-pub fn allowed_extension(extension: &str) -> bool {
+pub(crate) fn allowed_extension(extension: &str) -> bool {
     if extension.contains(['/', '\\']) {
         return false;
     }
