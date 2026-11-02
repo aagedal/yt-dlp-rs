@@ -327,6 +327,11 @@ Work in this order; each step lands with deterministic tests like any other chan
    Instagram posts (`unsupported DASH fractional duration`), the Vimeo player
    (HTTP 401 where upstream succeeds), Twitch clip downloads (`unsupported
    HTML5 media`) and a Bandcamp title keeping a double space upstream collapses.
+   Fixed (2026-11-02, fixture cases each): DASH durations with more than nine
+   fractional digits, site extractors' downloads re-checking the response
+   type, and Bandcamp's data attributes skipping `clean_html`. The Vimeo
+   player 401 needs impersonation; in CI's network upstream fails on it too,
+   as it does on the Facebook canary.
 3. **Interruptible transfers.** Stop/Cancel and SIGINT/SIGTERM interrupt
    blocking connects and reads promptly instead of waiting for the socket timeout.
    Status (2026-11-01): requests send on a helper thread and stream their body
