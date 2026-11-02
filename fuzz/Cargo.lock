@@ -2445,10 +2445,11 @@ dependencies = [
 
 [[package]]
 name = "yt-dlp-rs"
-version = "0.7.0-beta.2"
+version = "0.8.0-beta.1"
 dependencies = [
  "aes 0.9.3",
  "base64 0.22.1",
+ "bytes",
  "cbc 0.2.1",
  "clap",
  "cookie",
@@ -2456,6 +2457,7 @@ dependencies = [
  "encoding_rs",
  "flate2",
  "http",
+ "http-body",
  "httpdate",
  "icu_normalizer",
  "icu_properties",
