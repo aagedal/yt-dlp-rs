@@ -20,5 +20,6 @@
  {"url": "https://www.facebook.com/ads/library/?id=8888888888", "args": ["-J"]},
  {"url": "https://www.facebook.com/ads/library/?id=9999999999", "args": ["-J"]},
  {"url": "https://www.facebook.com/ads/library/?id=7777777777", "args": ["-j"]},
- {"url": "https://www.facebook.com/reel/1212121212", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(uploader)s|%(uploader_id)s|%(duration)s"]}
+ {"url": "https://www.facebook.com/reel/1212121212", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(uploader)s|%(uploader_id)s|%(duration)s"]},
+ {"url": "facebook:1111111111", "args": ["-J"]}
 ]

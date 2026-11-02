@@ -14,5 +14,9 @@
  {
   "url": "http://www.cbc.ca/player/play/1",
   "args": ["-J", "--no-geo-bypass"]
+ },
+ {
+  "url": "cbcplayer:2657631896",
+  "args": ["-J", "--no-geo-bypass"]
  }
 ]

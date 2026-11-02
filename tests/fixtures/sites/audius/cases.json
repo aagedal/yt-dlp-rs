@@ -30,5 +30,50 @@
   "args": [
    "-J"
   ]
+ },
+ {
+  "url": "audius:KKdy2",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "audius:http://discoveryprovider.audius.prod-us-west-2.staked.cloud/v1/tracks/KKdy2",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(extractor)s|%(extractor_key)s|%(webpage_url)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://audius.co/voltra/radar-103692",
+  "args": [
+   "-s"
+  ]
+ },
+ {
+  "url": "audius:KKdy2",
+  "args": [
+   "-s"
+  ]
+ },
+ {
+  "url": "https://audius.co/test_acc/playlist/test-playlist-22910",
+  "args": [
+   "-s",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://audius.co/pzl/",
+  "args": [
+   "-s",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://audius.co/voltra/this-track-does-not-exist-zz",
+  "args": [
+   "-s"
+  ]
  }
 ]

@@ -5,11 +5,15 @@ extensions for video editing workflows. Extraction and downloads run entirely
 in Rust: the binary never invokes Python or an installed yt-dlp.
 
 This is a beta. The port follows upstream release **2026.10.26** (pinned in
-[upstream/manifest.json](upstream/manifest.json)) and covers over 700 extractors
-(`yt-dlp-rs --list-extractors`). Each one is checked against pinned upstream
-output on saved responses. That is tested behavior, not a general promise of
-yt-dlp compatibility: options this port does not implement are rejected with
-an error rather than ignored.
+[upstream/manifest.json](upstream/manifest.json)) and covers over 900 extractors
+([docs/SITES.md](docs/SITES.md), or `yt-dlp-rs --list-extractors`). The
+tier-1 sites (YouTube, Instagram, TikTok, X, Facebook, Reddit, Vimeo,
+Twitch, Bluesky, SoundCloud, Bandcamp) are checked daily against the live
+site; the rest are checked against pinned upstream output on saved
+responses and are best effort (see [supported sites](docs/COMPATIBILITY.md#supported-sites)).
+That is tested behavior, not a general promise of yt-dlp compatibility:
+options this port does not implement are rejected with an error rather
+than ignored.
 
 ## Install
 
@@ -139,8 +143,8 @@ WhatsApp, WeChat, Messenger and Kuaishou have no upstream extractor.
 Beyond these, the port includes Vimeo, Dailymotion, Twitch, Kick, SoundCloud,
 Bandcamp, Tumblr, Bluesky, Niconico, PeerTube, Brightcove, Kaltura, JW Player,
 Wistia, the major European public broadcasters (NRK, SVT, DR, Yle, ARD, ZDF,
-Arte, France Télévisions) and several hundred smaller sites. Run
-`yt-dlp-rs --list-extractors` for the full list. Other URLs go through the
+Arte, France Télévisions) and several hundred smaller sites. The full list,
+with each extractor's tier, is in [docs/SITES.md](docs/SITES.md). Other URLs go through the
 generic extractor: direct media, HLS and DASH manifests, HTML5
 `<video>`/`<audio>` pages, JSON-LD, JW Player, video.js and KVS players,
 `og:video`/`twitter:player` metadata, RSS, SMIL and XSPF, and the embedded

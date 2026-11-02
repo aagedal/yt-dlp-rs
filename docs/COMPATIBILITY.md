@@ -3,6 +3,29 @@
 This inventory describes tested behavior, not general yt-dlp compatibility.
 All extraction and downloads run in Rust. Python is development tooling only.
 
+## Supported sites
+
+904 of upstream's 1754 extractors are ported (`--list-extractors`). Every
+one is listed with its tier in [SITES.md](SITES.md), generated from the
+registry, the saved fixtures and the canary list by
+`tools/extractor_tiers.py` and checked in CI.
+
+| Tier | Extractors | What it means |
+| --- | ---: | --- |
+| 1 | 12 | The live canary sites of `tools/canary_sites.json`: YouTube, Instagram, TikTok, X/Twitter, Facebook, Reddit, Vimeo, Twitch (VODs and clips), Bluesky, SoundCloud, Bandcamp. Checked daily against the live site and the pinned upstream; breakage opens a `canary` issue |
+| 2 | 890 | Compared with pinned upstream on saved responses (`tests/fixtures/sites/`) for the cases those responses cover. Best effort: nothing checks the live site, which may have changed since the responses were saved |
+| untested | 2 | No saved case: GettrStreaming and ximalaya:album, registered only to report that they are not ported |
+
+Tier 1 covers the canary URLs' extractors, not every extractor of the site
+(`youtube:tab` or `instagram:story` are tier 2). Within a tier, the ported
+part of each upstream extractor is the scope in `upstream/manifest.json`;
+unported parts are errors, not guesses. Extractors that the pinned upstream
+marks `_WORKING = False` (9 here) behave like upstream: `(CURRENTLY BROKEN)`
+in `--list-extractors`, left out of `--extractor-descriptions`, and a
+warning before extraction. Dead sites follow upstream: their extractors are
+marked when upstream marks them and removed when upstream removes them
+([extractor tiers](../upstream/notes/extractor-tiers.md)).
+
 ## CLI
 
 The machine-readable output that consumers can rely on (progress templates,
@@ -102,7 +125,7 @@ print stages, exit codes, signals) is specified in
 | `--alias ALIASES OPTIONS` | Upstream option aliases: each name (prefixed with `--` unless it starts with `-`) takes as many arguments as the `str.format` fields in OPTIONS, which are shell-quoted into the template, shlex-split and parsed in place (aliases may chain, at most 100 triggers each); templates without fields are used as-is. Aliases are expanded before parsing, so they are not listed in `--help` |
 | `-t NAME`, `--preset-alias NAME` | Upstream `_PRESET_ALIASES` (`mp3`, `aac`, `mp4`, `mkv`, `sleep`), expanded in place before parsing; `Unknown preset alias: NAME` usage error. Like optparse, every option that takes a value now accepts one starting with `-` |
 | Format filter fields | Besides the original fields, `[...]` filters accept upstream's `acodec`, `vcodec`, `container`, `protocol`, `dynamic_range`, `resolution`, `video_ext`, `audio_ext`, `format` (string operators, `!`, `?`) and numeric `fps`, `vbr`, `asr`, `audio_channels`; like upstream, any other key is looked up too, and a format without it matches only with `?` (see Format selection) |
-| `--list-extractors`, `--extractor-descriptions` | Upstream `print_extractor_information` for this port's extractors only (`html5`, `youtube`, `generic`, with upstream's descriptions); command-line URLs are listed under every suitable extractor (`generic` takes the rest). Upstream lists about 1800 extractors |
+| `--list-extractors`, `--extractor-descriptions` | Upstream `print_extractor_information` for this port's extractors only (`html5`, `youtube`, `generic`, with upstream's descriptions); command-line URLs are listed under every suitable extractor (`generic` takes the rest). Extractors upstream marks `_WORKING = False` carry its `(CURRENTLY BROKEN)` suffix and have no description line. Upstream lists about 1800 extractors; [SITES.md](SITES.md) has this port's list with tiers |
 | `--color [STREAM:]POLICY`, `--no-colors`, `--no-colours` | Upstream's per-stream dict (`stdout`/`stderr` keys, comma-separated, both by default; `--no-colors` replaces it with `no_color`) in command-line order, with only the final values validated (`"X" is not a valid color policy`). `process_color_policy`: `auto` (default) colors a terminal stream when `TERM` is set and not `dumb` (Windows: VT mode) unless `NO_COLOR` is set (then `no_color`); `auto-tty`/`no_color-tty` ignore `NO_COLOR`; `always`, `never`, `no_color`; `-o -` gives the output stream stderr's policy and quiet modes move screen lines there. `minicurses.format_text` and `YoutubeDL.Styles` color the `ERROR:`/`WARNING:`/`Deprecated Feature:` prefixes, the `-F`/`--list-subs`/`--list-thumbnails` headers and `-F`'s IDs, `│`/`─` delimiters (when stdout's encoding has them), suppressed `audio only`/`video only`/`~` sizes and DRM/UNSUPPORTED/Untested notes, unavailable impersonate targets, `Downloading item N of M`, archive skips, the `--wait-for-video` countdown and the unplayable-formats warning; `ProgressStyles` color the progress fields (also in `--progress-template` values), and a stream allowing sequences (`always`, `no_color`) erases progress lines with `\r\x1b[K` like `MultilinePrinter`'s `_HAVE_FULLCAP`. `_search_regex`/`_search_json`'s `Unable to extract NAME` (and the `unable to extract NAME` warning) style the name in error and warning lines, except for the messages upstream raises literally (`Unable to extract video URL`, `JSON-LD`, …, matched by their pinned texts). Not styled: update/plugin warnings this port does not have |
 | `--write-comments`, `--get-comments`, `--no-write-comments`, `--no-get-comments` | Upstream `getcomments`: without `--write-info-json`/`--no-write-info-json` or `--embed-info-json`, and unless `-j` prints the JSON, it implies `--write-info-json`. The generic extractor has no comments, so nothing else changes; YouTube watch pages extract comments as described under [YouTube comments](#youtube-comments) |
 | `--clean-info-json`, `--clean-infojson`, `--no-clean-info-json`, `--no-clean-infojson` | Upstream `clean_infojson`: the default drops `None` values, `__` keys and the private bookkeeping keys; `--no-clean-info-json` writes every represented field |

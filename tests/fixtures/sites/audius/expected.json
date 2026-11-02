@@ -64,6 +64,121 @@
     "ERROR: [Audius] Unexpected API response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
    ],
    "files": {}
+  },
+  {
+   "url": "audius:KKdy2",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"KKdy2\", \"title\": \"RADAR\", \"url\": \"https://api.audius.co/v1/tracks/KKdy2/stream\", \"ext\": \"mp3\", \"description\": null, \"duration\": 318, \"track\": \"RADAR\", \"artist\": \"voltra\", \"genre\": \"Trance\", \"thumbnails\": [{\"url\": \"https://audius-content-13.figment.io/content/QmRC9A2zyoBDtmy8kyCDiP4T1Y3V6bxt3iA2ErEAFtiBSo/150x150.jpg\", \"preference\": 150, \"id\": \"0\"}, {\"url\": \"https://audius-content-13.figment.io/content/QmRC9A2zyoBDtmy8kyCDiP4T1Y3V6bxt3iA2ErEAFtiBSo/480x480.jpg\", \"preference\": 480, \"id\": \"1\"}, {\"url\": \"https://audius-content-13.figment.io/content/QmRC9A2zyoBDtmy8kyCDiP4T1Y3V6bxt3iA2ErEAFtiBSo/1000x1000.jpg\", \"preference\": 1000, \"id\": \"2\"}], \"view_count\": 11314, \"like_count\": 129, \"repost_count\": 59, \"webpage_url\": \"audius:KKdy2\", \"original_url\": \"audius:KKdy2\", \"webpage_url_basename\": \"KKdy2\", \"webpage_url_domain\": null, \"extractor\": \"audius:track\", \"extractor_key\": \"AudiusTrack\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://audius-content-13.figment.io/content/QmRC9A2zyoBDtmy8kyCDiP4T1Y3V6bxt3iA2ErEAFtiBSo/1000x1000.jpg\", \"display_id\": \"KKdy2\", \"fulltitle\": \"RADAR\", \"duration_string\": \"5:18\", \"release_year\": null, \"artists\": [\"voltra\"], \"genres\": [\"Trance\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"RADAR [KKdy2].mp3\", \"filename\": \"RADAR [KKdy2].mp3\", \"__write_download_archive\": false}], \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "audius:http://discoveryprovider.audius.prod-us-west-2.staked.cloud/v1/tracks/KKdy2",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(extractor_key)s|%(webpage_url)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "KKdy2|RADAR|audius:track|AudiusTrack|audius:http://discoveryprovider.audius.prod-us-west-2.staked.cloud/v1/tracks/KKdy2|https://api.audius.co/v1/tracks/KKdy2/stream"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://audius.co/voltra/radar-103692",
+   "args": [
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Audius] Extracting URL: https://audius.co/voltra/radar-103692",
+    "[Audius] Requesting available API hosts",
+    "[Audius] radar-103692: Downloading JSON metadata",
+    "[info] KKdy2: Downloading 1 format(s): 0"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "audius:KKdy2",
+   "args": [
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[audius:track] Extracting URL: audius:KKdy2",
+    "[audius:track] Requesting available API hosts",
+    "[audius:track] KKdy2: Downloading JSON metadata",
+    "[info] KKdy2: Downloading 1 format(s): 0"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://audius.co/test_acc/playlist/test-playlist-22910",
+   "args": [
+    "-s",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[audius:playlist] Extracting URL: https://audius.co/test_acc/playlist/test-playlist-22910",
+    "[audius:playlist] Requesting available API hosts",
+    "[audius:playlist] test-playlist-22910: Downloading JSON metadata",
+    "[audius:playlist] test-playlist-22910: Downloading playlist tracks metadata",
+    "[download] Downloading playlist: test playlist",
+    "[audius:playlist] Playlist test playlist: Downloading 3 items of 3",
+    "[download] Downloading item 1 of 3",
+    "[download] Downloading item 2 of 3",
+    "[download] Downloading item 3 of 3",
+    "[download] Finished downloading playlist: test playlist"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://audius.co/pzl/",
+   "args": [
+    "-s",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[audius:artist] Extracting URL: https://audius.co/pzl/",
+    "[audius:artist] Requesting available API hosts",
+    "[audius:artist] pzl: Downloading JSON metadata",
+    "[audius:artist] pzl: Downloading JSON metadata",
+    "[download] Downloading playlist: pzl",
+    "[audius:artist] Playlist pzl: Downloading 3 items of 3",
+    "[download] Downloading item 1 of 3",
+    "[download] Downloading item 2 of 3",
+    "[download] Downloading item 3 of 3",
+    "[download] Finished downloading playlist: pzl"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://audius.co/voltra/this-track-does-not-exist-zz",
+   "args": [
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[Audius] Extracting URL: https://audius.co/voltra/this-track-does-not-exist-zz",
+    "[Audius] Requesting available API hosts",
+    "[Audius] this-track-does-not-exist-zz: Downloading JSON metadata"
+   ],
+   "stderr": [
+    "ERROR: [Audius] Unexpected API response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
   }
  ]
 }

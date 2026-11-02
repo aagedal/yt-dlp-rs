@@ -71,7 +71,13 @@ For each update, the agent should:
    Never advance it merely because a scheduled report or CI job succeeded.
    With the new baseline, regenerate the extractor order that the archive's
    URL fallback searches: `tools/extractor_keys.py --upstream DIR --write`
-   (without `--write` it checks `src/data/extractor_keys.tsv`).
+   (without `--write` it checks `src/data/extractor_keys.tsv`). Then run
+   `tools/extractor_tiers.py --survey --upstream DIR`: an extractor upstream
+   newly marks `_WORKING = False` gets the same mark and warning here (with
+   a fixture), one upstream removed is removed here with its fixtures and
+   manifest entry, and the descriptions must match
+   ([extractor tiers](../upstream/notes/extractor-tiers.md)). Regenerate
+   `docs/SITES.md` with `tools/extractor_tiers.py --write`.
 
 Before enabling unattended updates, implement the differential harness, persistent
 triage/update notes, PR/review integration, and release rollback/versioning. The
