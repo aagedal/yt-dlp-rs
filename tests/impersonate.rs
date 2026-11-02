@@ -3,6 +3,8 @@
 //! `CONNECT` proxy records the TLS ClientHello, the negotiated ALPN and the
 //! first HTTP/2 SETTINGS frame or HTTP/1.1 request head of the `wreq`
 //! transport, compared with the default rustls client.
+mod support;
+
 use std::process::{Command, Output};
 
 fn run(args: &[&str]) -> Output {
@@ -363,7 +365,6 @@ mod transport {
 
     /// SIGTERM ends an impersonated request whose TLS handshake stalls
     /// within the interrupt poll, not after the socket timeout.
-    #[cfg(unix)]
     #[test]
     fn a_signal_ends_a_stalled_impersonated_request() {
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
@@ -379,23 +380,21 @@ mod transport {
             }
         });
         let directory = tempfile::tempdir().unwrap();
-        let child = std::process::Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
-            .args(["--ignore-config", "--impersonate", "chrome", "-s"])
-            .arg(format!("https://127.0.0.1:{port}/page"))
-            .current_dir(directory.path())
-            .stdin(std::process::Stdio::null())
-            .stdout(std::process::Stdio::piped())
-            .stderr(std::process::Stdio::piped())
-            .spawn()
-            .unwrap();
+        let child = super::support::stoppable(&mut std::process::Command::new(env!(
+            "CARGO_BIN_EXE_yt-dlp-rs"
+        )))
+        .args(["--ignore-config", "--impersonate", "chrome", "-s"])
+        .arg(format!("https://127.0.0.1:{port}/page"))
+        .current_dir(directory.path())
+        .stdin(std::process::Stdio::null())
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped())
+        .spawn()
+        .unwrap();
         connected.recv_timeout(Duration::from_secs(30)).unwrap();
         thread::sleep(Duration::from_millis(300));
         let sent = std::time::Instant::now();
-        let status = std::process::Command::new("kill")
-            .args(["-TERM", &child.id().to_string()])
-            .status()
-            .unwrap();
-        assert!(status.success());
+        super::support::stop(&child);
         let output = child.wait_with_output().unwrap();
         assert!(
             sent.elapsed() < Duration::from_secs(3),

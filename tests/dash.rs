@@ -477,15 +477,19 @@ fn protected_dash_formats_are_dropped_like_upstream() {
     server.assert_no_fragments();
 }
 
-#[cfg(unix)]
 #[test]
 fn cli_ffmpeg_location_follows_upstream_determine_executables() {
-    use std::os::unix::fs::PermissionsExt;
     let server = Server::new();
     let tools = tempfile::tempdir().unwrap();
-    let ffmpeg = tools.path().join("ffmpeg");
+    let ffmpeg = tools
+        .path()
+        .join(format!("ffmpeg{}", std::env::consts::EXE_SUFFIX));
     std::fs::write(&ffmpeg, "").unwrap();
-    std::fs::set_permissions(&ffmpeg, std::fs::Permissions::from_mode(0o755)).unwrap();
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        std::fs::set_permissions(&ffmpeg, std::fs::Permissions::from_mode(0o755)).unwrap();
+    }
     let empty = tempfile::tempdir().unwrap();
     let run = |path: &std::path::Path, args: &[&str]| {
         let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))

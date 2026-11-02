@@ -1,3 +1,4 @@
+use crate::paths::Canonical;
 mod archive;
 mod audio;
 mod audio_download;
@@ -61,6 +62,7 @@ pub mod netrc;
 pub mod no_formats;
 pub mod output;
 mod partial;
+mod paths;
 mod playlist;
 mod postprocess;
 pub mod pp_args;
@@ -6108,7 +6110,7 @@ impl YoutubeDl {
             }
         };
         let executable = executable
-            .map(|executable| executable.canonicalize())
+            .map(|executable| executable.canonical())
             .transpose()
             .map_err(|error| {
                 Error::Postprocess(format!("invalid ffmpeg executable path: {error}"))

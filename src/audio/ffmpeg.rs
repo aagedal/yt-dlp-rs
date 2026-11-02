@@ -1,5 +1,6 @@
 //! Explicit local-file probing and bounded audio conversion. No discovery or shell.
 use super::AudioPlan;
+use crate::paths::Canonical;
 use crate::{Error, Result};
 use serde::Deserialize;
 use std::{
@@ -30,8 +31,8 @@ fn demuxer(ext: &str) -> Result<&'static str> {
     })
 }
 fn paths(executable: &Path, input: &Path) -> Result<(PathBuf, PathBuf)> {
-    let executable = executable.canonicalize()?;
-    let input = input.canonicalize()?;
+    let executable = executable.canonical()?;
+    let input = input.canonical()?;
     if !executable.is_file() || !input.is_file() {
         return Err(failure("audio tool and input must be regular files"));
     }
@@ -177,7 +178,7 @@ fn convert_with_deadline(
         .parent()
         .filter(|path| !path.as_os_str().is_empty())
         .unwrap_or(Path::new("."))
-        .canonicalize()?;
+        .canonical()?;
     let output = directory.join(
         output
             .file_name()

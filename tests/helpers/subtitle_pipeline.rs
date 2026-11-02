@@ -14,7 +14,8 @@ fn main() {
     };
     for (name, _) in std::env::vars_os() {
         assert!(
-            name == "SystemRoot" || name == "WINDIR",
+            // Windows on ARM adds PROCESSOR_ARCHITECTURE to every child.
+            name == "SystemRoot" || name == "WINDIR" || name == "PROCESSOR_ARCHITECTURE",
             "ambient environment leaked"
         );
     }
@@ -34,7 +35,9 @@ fn main() {
     }
     let input = Path::new(&args[10]);
     let output = Path::new(args.last().unwrap());
-    let directory = std::env::current_dir().unwrap().canonicalize().unwrap();
+    // The runner starts the tool in its canonical directory (without Windows'
+    // `\\?\` prefix), which the paths it passes are joined to.
+    let directory = std::env::current_dir().unwrap();
     assert_eq!(input.parent().unwrap(), directory);
     assert_eq!(output.parent().unwrap(), directory);
     assert_ne!(input, output);

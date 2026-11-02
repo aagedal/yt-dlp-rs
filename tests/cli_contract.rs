@@ -5,8 +5,10 @@
 //! of `tools/capture_cli_contract.py`: the same routes from a local server,
 //! the same fake FFmpeg and the same normalization, compared exactly.
 //! The port's own SIGTERM and `--keep-partial-on-stop` behavior (no
-//! upstream equivalent) is tested by hand below.
-#![cfg(unix)]
+//! upstream equivalent) is tested by hand below. On Windows both signals
+//! are a console Ctrl+Break, which the port handles like them.
+mod support;
+
 use serde_json::Value;
 use std::{
     collections::BTreeMap,
@@ -171,7 +173,8 @@ fn normalize(text: &str, replacements: &[(String, &str)]) -> Vec<String> {
                     .collect::<Vec<_>>()
                     .join(", ")
             ),
-            _ => line.to_owned(),
+            // Windows paths compare with `/` separators.
+            _ => support::slashes(line),
         };
         if lines.last() != Some(&line) {
             lines.push(line);
@@ -184,12 +187,7 @@ fn run_case(case: &Value, routes: &serde_json::Map<String, Value>) -> Value {
     let server = Server::start(routes);
     let work = tempfile::tempdir().unwrap();
     let tools = tempfile::tempdir().unwrap();
-    let ffmpeg = tools.path().join("ffmpeg");
-    std::fs::write(&ffmpeg, FAKE_FFMPEG).unwrap();
-    {
-        use std::os::unix::fs::PermissionsExt;
-        std::fs::set_permissions(&ffmpeg, std::fs::Permissions::from_mode(0o755)).unwrap();
-    }
+    let ffmpeg = support::fake_tool(tools.path(), "ffmpeg", FAKE_FFMPEG);
     for (name, content) in case["files"].as_object().into_iter().flatten() {
         std::fs::write(
             work.path().join(name),
@@ -208,15 +206,23 @@ fn run_case(case: &Value, routes: &serde_json::Map<String, Value>) -> Value {
                 .replace("FFMPEG", &ffmpeg.to_string_lossy())
         })
         .collect();
-    use std::os::unix::process::CommandExt;
-    // A SIGINT ignored on entry (a background job) would stay ignored.
-    let child = Command::new("perl")
-        .args(["-e", "$SIG{INT} = 'DEFAULT'; exec @ARGV or die"])
-        .arg(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+    #[cfg(unix)]
+    let mut command = {
+        use std::os::unix::process::CommandExt;
+        // A SIGINT ignored on entry (a background job) would stay ignored.
+        let mut command = Command::new("perl");
+        command
+            .args(["-e", "$SIG{INT} = 'DEFAULT'; exec @ARGV or die"])
+            .arg(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .process_group(0);
+        command
+    };
+    #[cfg(windows)]
+    let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
+    let child = support::stoppable(&mut command)
         .arg("--ignore-config")
         .args(&args)
         .current_dir(work.path())
-        .process_group(0)
         .stdin(Stdio::null())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -226,12 +232,20 @@ fn run_case(case: &Value, routes: &serde_json::Map<String, Value>) -> Value {
         server.wait_stalled();
         // The client reads the data sent before the stall first.
         thread::sleep(Duration::from_secs(1));
-        let name = signal.strip_prefix("SIG").unwrap();
-        let status = Command::new("kill")
-            .args([&format!("-{name}"), "--", &format!("-{}", child.id())])
-            .status()
-            .unwrap();
-        assert!(status.success());
+        #[cfg(unix)]
+        {
+            let name = signal.strip_prefix("SIG").unwrap();
+            let status = Command::new("kill")
+                .args([&format!("-{name}"), "--", &format!("-{}", child.id())])
+                .status()
+                .unwrap();
+            assert!(status.success());
+        }
+        #[cfg(windows)]
+        {
+            let _ = signal;
+            support::stop(&child);
+        }
     }
     let output = child.wait_with_output().unwrap();
     let base = server.base.clone();

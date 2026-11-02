@@ -1,5 +1,6 @@
 //! Upstream `FFmpegFixupPostProcessor` remuxes: `FixupM3u8` (MPEG-TS in an
 //! MP4-labeled HLS download) and `FixupM4a` (DASH m4a container).
+use crate::paths::Canonical;
 use crate::{Error, Result};
 use std::{
     ffi::OsString,
@@ -186,8 +187,8 @@ fn stream_copy_with(
 ) -> Result<()> {
     let started = Instant::now();
     let demuxer = demuxer(container)?;
-    let executable = ffmpeg.canonicalize()?;
-    let input = path.canonicalize()?;
+    let executable = ffmpeg.canonical()?;
+    let input = path.canonical()?;
     if !executable.is_file() || !input.is_file() {
         return Err(failure("ffmpeg and the fixup input must be regular files"));
     }
@@ -276,15 +277,15 @@ pub(crate) fn cut(
     let container =
         crate::container::sniff(input).ok_or_else(|| failure("unknown chapter input container"))?;
     let demuxer = demuxer(container)?;
-    let executable = ffmpeg.canonicalize()?;
-    let input = input.canonicalize()?;
+    let executable = ffmpeg.canonical()?;
+    let input = input.canonical()?;
     let directory = output
         .parent()
         .filter(|parent| !parent.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
     // `_ensure_dir_exists`.
     std::fs::create_dir_all(directory)?;
-    let directory = directory.canonicalize()?;
+    let directory = directory.canonical()?;
     let output = directory.join(
         output
             .file_name()

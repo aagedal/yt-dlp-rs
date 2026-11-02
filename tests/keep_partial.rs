@@ -3,7 +3,8 @@
 //! merged download's streams so far, audio first, merged), prints the
 //! `after_move` path and exits with "Interrupted by user". Local servers
 //! that trickle the later data so the signal lands mid-transfer.
-#![cfg(unix)]
+mod support;
+
 use std::{
     io::{BufRead, BufReader, Read, Write},
     net::TcpListener,
@@ -104,7 +105,7 @@ fn stop_when(
     requests: &Arc<Mutex<Vec<String>>>,
     ready: impl Fn(&[String]) -> bool,
 ) -> (bool, String, String) {
-    let child = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+    let child = support::stoppable(&mut Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs")))
         .args([
             "--ignore-config",
             "--keep-partial-on-stop",
@@ -126,11 +127,7 @@ fn stop_when(
     }
     // Some data of the trickled response first.
     thread::sleep(Duration::from_millis(300));
-    let status = Command::new("kill")
-        .args(["-TERM", &child.id().to_string()])
-        .status()
-        .unwrap();
-    assert!(status.success());
+    support::stop(&child);
     let output = child.wait_with_output().unwrap();
     (
         output.status.success(),
@@ -185,20 +182,17 @@ fn a_stopped_hls_download_keeps_its_whole_fragments_at_the_final_name() {
 /// `run` (a shell snippet) gets the `-i` inputs in `$inputs` and the output
 /// (the last argument) in `$out`.
 fn fake_ffmpeg(directory: &Path, run: &str) -> String {
-    use std::os::unix::fs::PermissionsExt;
-    let ffmpeg = directory.join("ffmpeg");
-    std::fs::write(
-        &ffmpeg,
-        format!(
+    let ffmpeg = support::fake_tool(
+        directory,
+        "ffmpeg",
+        &format!(
             "#!/bin/sh\n\
              case \"$1\" in -version) echo 'ffmpeg version keep-partial-fixture'; exit 0;; esac\n\
              prev=; inputs=\n\
              for a; do [ \"$prev\" = -i ] && inputs=\"$inputs ${{a#file:}}\"; prev=$a; out=${{a#file:}}; done\n\
              {run}\n"
         ),
-    )
-    .unwrap();
-    std::fs::set_permissions(&ffmpeg, std::fs::Permissions::from_mode(0o755)).unwrap();
+    );
     ffmpeg.to_string_lossy().into_owned()
 }
 

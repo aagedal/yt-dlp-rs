@@ -1,5 +1,6 @@
 //! Bounded FFmpeg processing of downloaded local media; no runtime discovery.
 use super::VideoPlan;
+use crate::paths::Canonical;
 use crate::{Error, Result};
 use std::{
     ffi::OsString,
@@ -61,8 +62,8 @@ fn convert_with_deadline(
     }
     let demuxer = demuxer(input_ext)?;
     let started = Instant::now();
-    let executable = ffmpeg.canonicalize()?;
-    let input = input.canonicalize()?;
+    let executable = ffmpeg.canonical()?;
+    let input = input.canonical()?;
     if !executable.is_file() || !input.is_file() {
         return Err(error("video tool and input must be regular files"));
     }
@@ -70,7 +71,7 @@ fn convert_with_deadline(
         .parent()
         .filter(|parent| !parent.as_os_str().is_empty())
         .unwrap_or_else(|| Path::new("."))
-        .canonicalize()?;
+        .canonical()?;
     let output = directory.join(
         output
             .file_name()

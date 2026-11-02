@@ -10,7 +10,8 @@ The human-readable output (`[download] 45.2% of …`, `[download] Destination:`,
 keeps following upstream as closely as the port can, but it is **not** part
 of the contract. It may change with upstream or between releases.
 
-Covered by `tests/cli_contract.rs` on Unix, with local servers only. The test
+Covered by `tests/cli_contract.rs` on Linux, macOS and Windows (GitHub's
+hosted runners), with local servers only. The test
 compares the port with saved output of the pinned upstream
 (`f264a6cbd1f630894da0f368df00f8aae50140e0`, 2026.10.26), which
 `tools/capture_cli_contract.py` captures from
@@ -19,8 +20,9 @@ normalization described in that tool: paths and the server origin are
 replaced, a JSON line becomes its list of keys, and repeated lines are
 collapsed. Values that depend on timing (speed, ETA, elapsed time, how many
 `downloading` statuses a transfer reports) are not compared. Only what
-those tests cover is promised. Windows is not covered: there are no signals
-there, and the tests use a shell-script FFmpeg stand-in.
+those tests cover is promised. On Windows the shell-script FFmpeg stand-in
+runs through Git for Windows' `sh`, both signal cases are a Ctrl+Break, and
+`\` in paths is compared as `/`; see [Windows](#windows) for what differs.
 
 ## Streams
 
@@ -208,8 +210,32 @@ Cancel (stop and delete) is the consumer's job: send the signal without
 
 Growing-file recordings (`--growing-file`) and live downloads through FFmpeg
 handle the signal themselves: they finish the file and exit 0
-(`docs/COMPATIBILITY.md`). Windows keeps the default Ctrl+C behavior: the
-process ends at once.
+(`docs/COMPATIBILITY.md`).
+
+## Windows
+
+Everything above holds on Windows, tested on GitHub's `windows-latest`
+runners, except:
+
+- Signals. Windows has no SIGTERM. Ctrl+C (SIGINT, as for Python) and
+  Ctrl+Break (the port's stand-in for SIGTERM) both stop the run as
+  described in [Signals](#signals-stop-and-cancel), `--keep-partial-on-stop`
+  included. A console event reaches every process attached to the console
+  in the target process group, FFmpeg included. To stop one run, start it
+  with `CREATE_NEW_PROCESS_GROUP` and send
+  `GenerateConsoleCtrlEvent(CTRL_BREAK_EVENT, PID)`; Ctrl+C cannot be sent
+  to one group, and a new group ignores it. A process without a console
+  (started with `DETACHED_PROCESS`) cannot receive either. Upstream on
+  Windows handles Ctrl+C the same way; Python installs no Ctrl+Break
+  handler, so Windows' default one ends it without a message.
+- Exit codes are the same. A process ended with `TerminateProcess` exits
+  with the code its killer chose; there is no "killed by a signal" status.
+- Paths in `--print` output, `filename`/`tmpfilename` and messages use
+  `\` separators and drive letters (`C:\Users\...`), as upstream's do;
+  `--print after_move:filepath` is absolute. `%(...)q` in `--exec` quotes
+  for `cmd.exe`, not a POSIX shell.
+- Lines end with `\n`, not `\r\n`. Output of `--exec` commands is their
+  own (`cmd`'s `echo` ends lines with `\r\n`).
 
 ## Migration note for Aagedal Media Converter
 

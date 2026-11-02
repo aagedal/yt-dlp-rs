@@ -2,6 +2,7 @@
 //! remove, merging cuts while re-timing the remaining (and sponsor)
 //! chapters, and the concat demuxer options that cut the media.
 use crate::info::{Chapter, PyNumber};
+use crate::paths::Canonical;
 use std::{cmp::Ordering, collections::BinaryHeap, ffi::OsString, path::Path};
 
 /// `_TINY_CHAPTER_DURATION`.
@@ -546,9 +547,9 @@ fn ffmpeg_error(message: impl Into<String>) -> crate::Error {
 /// Run a tool with `merge::execute` from `output`'s directory.
 fn run(executable: &Path, args: &[OsString], directory: &Path) -> crate::Result<Vec<u8>> {
     crate::merge::execute(
-        &executable.canonicalize()?,
+        &executable.canonical()?,
         args,
-        &directory.canonicalize()?,
+        &directory.canonical()?,
         std::time::Instant::now(),
         DEADLINE,
         &mut || std::ops::ControlFlow::Continue(()),
@@ -573,7 +574,7 @@ pub(crate) fn probe_duration(ffprobe: &Path, input: &Path, container: &str) -> c
     ]
     .into_iter()
     .map(OsString::from)
-    .chain([input.canonicalize()?.into_os_string()])
+    .chain([input.canonical()?.into_os_string()])
     .collect();
     let output = run(ffprobe, &args, directory)?;
     serde_json::from_slice::<serde_json::Value>(&output)
@@ -633,7 +634,7 @@ pub(crate) fn force_keyframes(
     args.extend(["-protocol_whitelist", "file"].map(OsString::from));
     args.extend(crate::pp_args::input(pp, 1));
     args.push("-i".into());
-    args.push(input.canonicalize()?.into_os_string());
+    args.push(input.canonical()?.into_os_string());
     args.extend(stream_copy(false, ext));
     args.push("-force_key_frames".into());
     args.push(
@@ -666,7 +667,7 @@ pub(crate) fn concat(
 ) -> crate::Result<()> {
     let directory = output.parent().unwrap_or(Path::new("."));
     let spec = std::path::absolute(output)?.with_extension(format!("{ext}.concat"));
-    let file = format!("file:{}", input.canonicalize()?.display());
+    let file = format!("file:{}", input.canonical()?.display());
     std::fs::write(&spec, concat_spec(&file, options))?;
     let mut args: Vec<OsString> = [
         "-nostdin",
@@ -721,7 +722,7 @@ fn codecs(ffprobe: &Path, input: &Path) -> crate::Result<Vec<String>> {
     ]
     .into_iter()
     .map(OsString::from)
-    .chain([input.canonicalize()?.into_os_string()])
+    .chain([input.canonical()?.into_os_string()])
     .collect();
     let output = run(ffprobe, &args, directory)?;
     let probe: serde_json::Value =
@@ -771,7 +772,7 @@ pub(crate) fn concat_files(
     let spec = workspace.path().join("files.concat");
     let mut text = String::from("ffconcat version 1.0\n");
     for input in inputs {
-        let file = format!("file:{}", input.canonicalize()?.display());
+        let file = format!("file:{}", input.canonical()?.display());
         text.push_str(&format!("file {}\n", quote_for_ffmpeg(&file)));
     }
     std::fs::write(&spec, text)?;

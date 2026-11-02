@@ -3,7 +3,8 @@ use std::{ffi::OsString, io::Write, time::Duration};
 fn main() {
     for (name, _) in std::env::vars_os() {
         assert!(
-            name == "SystemRoot" || name == "WINDIR",
+            // Windows on ARM adds PROCESSOR_ARCHITECTURE to every child.
+            name == "SystemRoot" || name == "WINDIR" || name == "PROCESSOR_ARCHITECTURE",
             "ambient environment leaked"
         );
     }

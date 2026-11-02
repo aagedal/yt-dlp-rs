@@ -1,5 +1,6 @@
 //! Bounded embedding of already downloaded local subtitles, without shell or discovery.
 use super::EmbedPlan;
+use crate::paths::Canonical;
 use crate::{Error, Result};
 use std::{
     ffi::OsString,
@@ -57,8 +58,8 @@ fn embed_with_deadline(
     }
     let demuxer = media_demuxer(input_ext)?;
     let started = Instant::now();
-    let executable = ffmpeg.canonicalize()?;
-    let input = input.canonicalize()?;
+    let executable = ffmpeg.canonical()?;
+    let input = input.canonical()?;
     if !executable.is_file() || !input.is_file() {
         return Err(error("embedding tool and input must be regular files"));
     }
@@ -66,7 +67,7 @@ fn embed_with_deadline(
         .parent()
         .filter(|parent| !parent.as_os_str().is_empty())
         .unwrap_or_else(|| Path::new("."))
-        .canonicalize()?;
+        .canonical()?;
     let output = directory.join(
         output
             .file_name()
@@ -94,7 +95,7 @@ fn embed_with_deadline(
     args.push(input.into_os_string());
     for (index, file) in plan.files.iter().enumerate() {
         let demuxer = subtitle_demuxer(&file.ext)?;
-        let path = file.path.canonicalize()?;
+        let path = file.path.canonical()?;
         if !path.is_file() {
             return Err(error("subtitle embedding input must be regular"));
         }
@@ -165,7 +166,7 @@ mod tests {
     }
     fn fixture(mode: &str, container: &str) -> (tempfile::TempDir, PathBuf, PathBuf, EmbedPlan) {
         let directory = tempfile::tempdir().unwrap();
-        let root = directory.path().canonicalize().unwrap();
+        let root = directory.path().canonical().unwrap();
         let input = root.join(format!("input.{container}"));
         let sub = root.join("input.en.vtt");
         let output = root.join(format!("output.{container}"));

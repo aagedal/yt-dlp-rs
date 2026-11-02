@@ -1,5 +1,6 @@
 //! Upstream `FFmpegThumbnailsConvertorPP` and the FFmpeg paths of
 //! `EmbedThumbnailPP`, with explicit tools and bounded execution.
+use crate::paths::Canonical;
 
 use crate::{Error, Result};
 use regex::Regex;
@@ -97,7 +98,7 @@ fn tool(
     started: Instant,
     callback: &mut dyn FnMut() -> ControlFlow<()>,
 ) -> Result<(PathBuf, PathBuf)> {
-    let executable = path.canonicalize()?;
+    let executable = path.canonical()?;
     if !executable.is_file() {
         return Err(failure("thumbnail tools must be regular files"));
     }
@@ -123,7 +124,7 @@ fn tool(
 
 /// An image input, with `pp`'s `--postprocessor-args` for input `number`.
 fn image_input(path: &Path, pp: &str, number: usize) -> Result<Vec<OsString>> {
-    let path = path.canonicalize()?;
+    let path = path.canonical()?;
     if !path.is_file() {
         return Err(failure("thumbnail input must be a regular file"));
     }
@@ -206,7 +207,7 @@ fn stream_number(
     ]
     .map(OsString::from)
     .into();
-    args.push(media.canonicalize()?.into_os_string());
+    args.push(media.canonical()?.into_os_string());
     let output =
         crate::merge::execute(&executable, &args, &directory, started, DEADLINE, callback)?;
     let probe: Value =
@@ -312,7 +313,7 @@ pub fn embed(
     }
     let started = Instant::now();
     let (executable, directory) = tool(ffmpeg, b"ffmpeg version ", started, callback)?;
-    let media = media.canonicalize()?;
+    let media = media.canonical()?;
     let mut args: Vec<OsString> = [
         "-nostdin",
         "-hide_banner",
@@ -372,7 +373,7 @@ pub fn embed(
                 new -= 1;
             }
             args.push("-attach".into());
-            args.push(thumbnail.canonicalize()?.into_os_string());
+            args.push(thumbnail.canonical()?.into_os_string());
             args.extend([
                 format!("-metadata:s:{new}").into(),
                 format!("mimetype={mimetype}").into(),

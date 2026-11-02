@@ -455,6 +455,15 @@ mod tests {
         let fixture: serde_json::Value =
             serde_json::from_str(include_str!("../../tests/fixtures/print/cases.json")).unwrap();
         for case in fixture["cases"].as_array().unwrap() {
+            let args = case["args"].as_array().unwrap();
+            if cfg!(windows)
+                && args.iter().any(|arg| {
+                    arg.as_str()
+                        .is_some_and(crate::output::template::tests::posix_quoted)
+                })
+            {
+                continue;
+            }
             let info: VideoInfo = serde_json::from_value(case["info"].clone()).unwrap();
             let options = TemplateOptions {
                 na_placeholder: case["na_placeholder"].as_str().unwrap().into(),

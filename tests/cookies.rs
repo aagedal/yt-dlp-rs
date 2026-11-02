@@ -463,6 +463,7 @@ fn invalid_cookie_files_symlinks_nonregular_paths_and_raw_cookie_headers_fail_be
     let invalid = directory.path().join("invalid.txt");
     std::fs::write(&invalid, [0xff]).unwrap();
     let paths = vec![invalid.clone(), directory.path().to_path_buf()];
+    // Unix only: Windows symlinks need Developer Mode or administrator rights.
     #[cfg(unix)]
     let paths = {
         let mut paths = paths;

@@ -2,6 +2,8 @@
 //! scopes whose headers and cookies reach only their origin, extraction
 //! cancellation, and `Interrupt::stop` (keep the partial file) versus
 //! `Interrupt::cancel` (discard it). Local HTTP servers only.
+mod support;
+
 use std::{
     io::{BufRead, BufReader, Read, Write},
     net::TcpListener,
@@ -441,22 +443,18 @@ fn a_stopped_whole_file_download_keeps_the_received_bytes() {
 
 /// A stop while the second stream downloads merges the first stream with
 /// the second one's received bytes (a fake FFmpeg concatenates its inputs).
-#[cfg(unix)]
 #[test]
 fn a_stopped_merged_download_merges_the_streams_so_far() {
-    use std::os::unix::fs::PermissionsExt;
     let tools = tempfile::tempdir().unwrap();
-    let ffmpeg = tools.path().join("ffmpeg");
-    std::fs::write(
-        &ffmpeg,
+    let ffmpeg = support::fake_tool(
+        tools.path(),
+        "ffmpeg",
         "#!/bin/sh\n\
          case \"$1\" in -version) echo 'ffmpeg version control-fixture'; exit 0;; esac\n\
          prev=; set -- \"$@\"; inputs=\n\
          for a; do [ \"$prev\" = -i ] && inputs=\"$inputs ${a#file:}\"; prev=$a; out=$a; done\n\
          cat $inputs > \"${out#file:}\"\n",
-    )
-    .unwrap();
-    std::fs::set_permissions(&ffmpeg, std::fs::Permissions::from_mode(0o755)).unwrap();
+    );
     let audio: Vec<u8> = (0..4 * 1024 * 1024)
         .map(|index| (index % 251) as u8)
         .collect();

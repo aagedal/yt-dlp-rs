@@ -1,6 +1,7 @@
 //! Upstream `FFmpegFD.real_download`: interrupting a live download asks
 //! FFmpeg to quit (`q` on its stdin) and completes it like a finished one.
-#![cfg(unix)]
+mod support;
+
 use std::{
     path::Path,
     process::{Command, Stdio},
@@ -10,10 +11,9 @@ use std::{
 /// A fake FFmpeg: answers `-version`, writes `partial` to its output (the
 /// last argument, a `file:` URL), then waits for `q` on stdin and writes `finished`.
 fn fake_ffmpeg(directory: &Path) -> String {
-    use std::os::unix::fs::PermissionsExt;
-    let path = directory.join("ffmpeg");
-    std::fs::write(
-        &path,
+    let path = support::fake_tool(
+        directory,
+        "ffmpeg",
         "#!/bin/sh\n\
          case \"$1\" in -version) echo 'ffmpeg version live-fixture'; exit 0;; esac\n\
          for out; do :; done\n\
@@ -21,9 +21,7 @@ fn fake_ffmpeg(directory: &Path) -> String {
          printf partial > \"$out\"\n\
          while :; do c=$(dd bs=1 count=1 2>/dev/null); [ \"$c\" = q ] && break; [ -z \"$c\" ] && exit 9; done\n\
          printf finished > \"$out\"\n",
-    )
-    .unwrap();
-    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    );
     path.display().to_string()
 }
 
@@ -42,7 +40,7 @@ fn an_interrupted_live_download_is_finished_and_published() {
         .to_string(),
     )
     .unwrap();
-    let child = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+    let child = support::stoppable(&mut Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs")))
         .args(["--ignore-config", "--no-progress", "--fixup", "never"])
         .args(["--ffmpeg-location", &ffmpeg, "-o", "o.%(ext)s"])
         .args(["--load-info-json", "live.info.json"])
@@ -58,11 +56,7 @@ fn an_interrupted_live_download_is_finished_and_published() {
         assert!(Instant::now() < deadline, "FFmpeg never started");
         std::thread::sleep(Duration::from_millis(20));
     }
-    let status = Command::new("kill")
-        .args(["-INT", &child.id().to_string()])
-        .status()
-        .unwrap();
-    assert!(status.success());
+    support::interrupt(&child);
     let output = child.wait_with_output().unwrap();
     let stdout = String::from_utf8_lossy(&output.stdout);
     assert!(

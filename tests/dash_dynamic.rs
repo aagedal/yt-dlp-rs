@@ -5,6 +5,8 @@
 //! the same saved manifests (`tests/fixtures/dash/dynamic-*.mpd`); the format
 //! dicts themselves are compared by `tools/compare_dash.py` and
 //! `tests/info_order.rs`. No test reads a segment or needs a real FFmpeg.
+mod support;
+
 use std::{
     io::{Read, Write},
     net::TcpListener,
@@ -191,18 +193,16 @@ fn live_from_start_has_no_dynamic_dash_formats() {
     );
 }
 
-#[cfg(unix)]
 mod download {
     use super::*;
 
     /// A fake FFmpeg recording its arguments (NUL-separated) in `args`
     /// and writing `live` to its output (the last argument, a `file:` URL).
     fn fake_ffmpeg(directory: &Path) -> String {
-        use std::os::unix::fs::PermissionsExt;
-        let path = directory.join("ffmpeg");
-        std::fs::write(
-            &path,
-            format!(
+        let path = super::support::fake_tool(
+            directory,
+            "ffmpeg",
+            &format!(
                 "#!/bin/sh\n\
                  case \"$1\" in -version) echo 'ffmpeg version 7.0 Copyright'; exit 0;; esac\n\
                  printf '%s\\0' \"$@\" > '{}'\n\
@@ -210,9 +210,7 @@ mod download {
                  printf live > \"${{out#file:}}\"\n",
                 directory.join("args").display()
             ),
-        )
-        .unwrap();
-        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+        );
         path.display().to_string()
     }
 

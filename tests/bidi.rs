@@ -1,5 +1,6 @@
 //! Upstream `--bidi-workaround`: messages pass through `bidiv`/`fribidi`
-//! on a pseudo-terminal; without either, upstream's warning.
+//! on a pseudo-terminal; without either, upstream's warning. Unix only:
+//! Windows has no pseudo-terminals (upstream's `pty.openpty`).
 #![cfg(unix)]
 use std::{os::unix::fs::PermissionsExt, process::Command};
 

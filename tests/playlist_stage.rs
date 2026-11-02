@@ -1,7 +1,8 @@
 //! Upstream's `playlist` stage after the entries: `--print playlist:`,
 //! `--exec playlist:` and `--concat-playlist always` (FFmpegConcatPP) with
 //! recording FFmpeg/ffprobe stand-ins.
-#![cfg(unix)]
+mod support;
+
 use std::{
     io::{Read, Write},
     net::TcpListener,
@@ -39,16 +40,13 @@ fn serve() -> String {
 }
 
 fn tools(directory: &Path) {
-    use std::os::unix::fs::PermissionsExt;
     let ffmpeg = "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffmpeg version test'; exit 0; fi\n\
-        dir=\"${0%/ffmpeg}\"\nprev=\nfor a in \"$@\"; do\n  case \"$prev:$a\" in -i:*.concat) cp \"$a\" \"$dir/spec.txt\";; esac\n  \
+        dir=\"${0%/*}\"\nprev=\nfor a in \"$@\"; do\n  case \"$prev:$a\" in -i:*.concat) cp \"$a\" \"$dir/spec.txt\";; esac\n  \
         prev=\"$a\"; last=\"$a\"\ndone\nprintf 'joined' > \"$last\"\n";
     let ffprobe = "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffprobe version test'; exit 0; fi\n\
         printf '{\"streams\": [{\"codec_name\": \"h264\"}, {\"codec_name\": \"aac\"}]}'\n";
     for (name, script) in [("ffmpeg", ffmpeg), ("ffprobe", ffprobe)] {
-        let path = directory.join(name);
-        std::fs::write(&path, script).unwrap();
-        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+        support::fake_tool(directory, name, script);
     }
 }
 
@@ -113,7 +111,11 @@ fn playlist_prints_exec_and_concatenation_follow_upstream() {
     let stdout = stdout(&output);
     let first = directory.path().join("Two (1).mp4");
     let second = directory.path().join("Two (2).mp4");
+    // Windows' canonical form is a `\\?\` path; the CLI shows the plain one.
     let canonical = |path: &Path| {
+        if cfg!(windows) {
+            return path.to_path_buf();
+        }
         std::fs::canonicalize(path.parent().unwrap())
             .unwrap()
             .join(path.file_name().unwrap())
@@ -127,7 +129,8 @@ fn playlist_prints_exec_and_concatenation_follow_upstream() {
     // Upstream names the absolute moved paths; the temporary directory may
     // be reached through a symlink, so compare from the concat line on.
     let tail = &stdout[stdout.find("[Concat]").unwrap()..];
-    let normalize = |text: &str| text.replace("/private/", "/");
+    // `cmd`'s `echo` ends its line with CRLF.
+    let normalize = |text: &str| text.replace("/private/", "/").replace("\r\n", "\n");
     assert_eq!(normalize(tail), normalize(&expected));
     assert_eq!(
         std::fs::read(directory.path().join("Two.mp4")).unwrap(),

@@ -1,4 +1,5 @@
 //! Local postprocessing orchestration and no-clobber publication.
+use crate::paths::Canonical;
 use crate::{
     AudioOptions, DownloadOptions, DownloadPhase, DownloadProgress, Error, Result,
     SubtitleEmbedding, VideoInfo, VideoOptions, YoutubeDl, audio_original_path, audio_output_path,
@@ -752,7 +753,7 @@ pub(crate) fn download(
                                 "subtitle embedding input exceeds 16 MiB".into(),
                             ));
                         }
-                        let canonical = file.path.canonicalize()?;
+                        let canonical = file.path.canonical()?;
                         let mut bytes = Vec::new();
                         fs::File::open(&file.path)?
                             .take(16 * 1024 * 1024 + 1)
@@ -1104,7 +1105,7 @@ pub(crate) fn download(
                             attachment = match embed.written.as_ref().filter(|path| path.is_file())
                             {
                                 // FFmpeg runs in the workspace, so name it absolutely.
-                                Some(path) => Some(path.canonicalize()?),
+                                Some(path) => Some(path.canonical()?),
                                 None if embed.explicit => {
                                     let path = workspace.path().join("info.json.temp");
                                     fs::write(&path, &embed.json)?;

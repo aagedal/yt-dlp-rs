@@ -1,6 +1,7 @@
 //! Existing downloads (upstream `existing_video_file` and
 //! `FileDownloader.download`): reported, and processed again in place.
-#![cfg(unix)]
+mod support;
+
 use std::{
     io::{Read, Write},
     net::TcpListener,
@@ -31,16 +32,12 @@ fn serve() -> String {
 
 /// Writes `remuxed` to its last argument (the output file).
 fn fake_ffmpeg(directory: &Path) -> PathBuf {
-    use std::os::unix::fs::PermissionsExt;
-    let path = directory.join("ffmpeg");
-    std::fs::write(
-        &path,
+    support::fake_tool(
+        directory,
+        "ffmpeg",
         "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffmpeg version test'; exit 0; fi\n\
          for a in \"$@\"; do last=\"$a\"; done\nprintf 'remuxed' > \"$last\"\n",
     )
-    .unwrap();
-    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
-    path
 }
 
 fn run(directory: &Path, args: &[&str], url: &str) -> Output {

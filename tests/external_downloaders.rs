@@ -1,6 +1,7 @@
 //! Upstream `ExternalFD` downloaders (`--downloader curl|wget|aria2c|axel|
 //! httpie`) for whole-file HTTP formats, with recording fake executables.
-#![cfg(unix)]
+mod support;
+
 use std::{
     io::{Read, Write},
     net::TcpListener,
@@ -33,22 +34,20 @@ fn serve() -> String {
 /// arguments (and curl's stdin, read with shell builtins: `PATH` is empty), writes `external` to its output argument
 /// and exits with `$FAKE_EXIT` (printing `boom` to stderr) if set.
 fn fake(directory: &Path, name: &str) -> String {
-    use std::os::unix::fs::PermissionsExt;
-    let path = directory.join(name);
-    std::fs::write(
-        &path,
+    let path = support::fake_tool(
+        directory,
+        name,
         "#!/bin/sh\n\
          case \"$1\" in -V|-v|--version) echo 'curl 8.7.1 (fake)'; exit 0;; esac\n\
          dir=\"${0%/*}\"\n\
          printf '%s\\n' \"$@\" > \"$dir/args.txt\"\n\
-         if [ \"${0##*/}\" = curl ]; then while IFS= read -r line; do printf '%s\\n' \"$line\"; done > \"$dir/stdin.txt\"; fi\n\
+         name=\"${0##*/}\"\n\
+         if [ \"${name%.sh}\" = curl ]; then while IFS= read -r line; do printf '%s\\n' \"$line\"; done > \"$dir/stdin.txt\"; fi\n\
          if [ -n \"$FAKE_EXIT\" ]; then echo boom >&2; exit \"$FAKE_EXIT\"; fi\n\
          prev=; out=; base=\n\
          for a in \"$@\"; do case \"$prev\" in -o|-O|--out|--output) out=\"$a\";; --dir) base=\"$a\";; esac; prev=\"$a\"; done\n\
          printf external > \"$base$out\"\n",
-    )
-    .unwrap();
-    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    );
     path.display().to_string()
 }
 
@@ -150,7 +149,12 @@ fn curl_gets_upstream_arguments_and_cookies_on_stdin() {
         stderr.contains(&format!("[debug] Invoking curl downloader on \"{url}\"")),
         "{stderr}"
     );
-    assert!(stderr.contains("[debug] curl command line: "), "{stderr}");
+    // Upstream names the program by its path's base name.
+    let name = format!("curl{}", std::env::consts::EXE_SUFFIX);
+    assert!(
+        stderr.contains(&format!("[debug] {name} command line: ")),
+        "{stderr}"
+    );
     assert_eq!(
         std::fs::read(directory.path().join("o.mp4")).unwrap(),
         b"external"
@@ -195,6 +199,9 @@ fn aria2c_writes_a_temporary_cookie_file_and_relative_paths() {
     );
     // The temporary cookie file is removed afterwards.
     assert!(!Path::new(&cookies).exists());
+    // Upstream `_aria2c_filename` joins with `os.path.sep`.
+    let sep = std::path::MAIN_SEPARATOR;
+    let (dir, out) = (format!(".{sep}sub dir{sep}"), format!(".{sep}o.mp4.part"));
     let expected = [
         "--check-certificate=true",
         "--remote-time=false",
@@ -205,9 +212,9 @@ fn aria2c_writes_a_temporary_cookie_file_and_relative_paths() {
         "--auto-file-renaming=false",
         "--force-save=false",
         "--dir",
-        "./sub dir/",
+        &dir,
         "--out",
-        "./o.mp4.part",
+        &out,
         "--",
         &url,
     ];

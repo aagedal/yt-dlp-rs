@@ -3,7 +3,8 @@
 //! segments are requested, and FFmpeg cuts the local file. Formats without a
 //! usable index, servers without ranged responses and `--downloader ffmpeg`
 //! keep upstream's `FFmpegFD` reading the URL.
-#![cfg(unix)]
+mod support;
+
 use std::{
     io::{Read, Write},
     net::TcpListener,
@@ -118,19 +119,15 @@ fn serve_cut(body: Vec<u8>, ranges: bool, cut: Option<usize>) -> (String, Arc<Mu
 /// A recording stand-in: arguments go to `args.txt` and the first input
 /// (a local `file:` input, else nothing) is copied to the output.
 fn fake_ffmpeg(directory: &Path) -> PathBuf {
-    use std::os::unix::fs::PermissionsExt;
-    let path = directory.join("ffmpeg");
-    std::fs::write(
-        &path,
+    support::fake_tool(
+        directory,
+        "ffmpeg",
         "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffmpeg version test'; exit 0; fi\n\
-         for a in \"$@\"; do printf '%s\\n' \"$a\"; done > \"${0%/ffmpeg}/args.txt\"\n\
+         for a in \"$@\"; do printf '%s\\n' \"$a\"; done > \"${0%/*}/args.txt\"\n\
          input=; previous=; for a in \"$@\"; do\n\
            if [ \"$previous\" = -i ] && [ -z \"$input\" ]; then input=\"$a\"; fi; previous=\"$a\"; last=\"$a\"; done\n\
          case \"$input\" in file:*) cp \"${input#file:}\" \"${last#file:}\";; *) printf remote > \"${last#file:}\";; esac\n",
     )
-    .unwrap();
-    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
-    path
 }
 
 fn info(url: &str, index: Option<ByteIndex>) -> VideoInfo {

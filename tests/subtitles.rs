@@ -733,6 +733,7 @@ fn library_subtitle_cancellation_at_request_or_publication_never_leaves_final_or
     }
 }
 
+// Unix only: Windows symlinks need Developer Mode or administrator rights.
 #[cfg(unix)]
 #[test]
 fn dangling_media_or_sidecar_symlinks_are_preserved_and_refused_before_caption_requests() {

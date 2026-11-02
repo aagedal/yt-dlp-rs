@@ -46,7 +46,6 @@ fn run(directory: &Path, args: &[&str], url: &str) -> Output {
 const TEMPLATE: &str = "postprocess:PP %(info.id)s %(progress.postprocessor)s %(progress.status)s";
 
 #[test]
-#[cfg_attr(windows, ignore = "--exec is unsupported on Windows")]
 fn postprocessor_hooks_surround_each_processor_run() {
     let url = serve();
     let directory = tempfile::tempdir().unwrap();
@@ -71,6 +70,15 @@ fn postprocessor_hooks_surround_each_processor_run() {
         "{}",
         String::from_utf8_lossy(&output.stderr)
     );
+    // The CLI joins the working directory (a symlink on macOS).
+    let path = if cfg!(windows) {
+        directory.path().join("o.mp4")
+    } else {
+        directory.path().canonicalize().unwrap().join("o.mp4")
+    }
+    .display()
+    .to_string();
+    let quoted = yt_dlp_rs::output::shell_quote_command(&path);
     let lines: Vec<&str> = stdout
         .lines()
         .filter(|line| !line.starts_with("[generic]") && !line.starts_with("[info]"))
@@ -90,24 +98,9 @@ fn postprocessor_hooks_surround_each_processor_run() {
             "PP a MoveFiles started",
             "PP a MoveFiles finished",
             "PP a Exec started",
-            &format!(
-                "[Exec] Executing command: echo after {}",
-                directory
-                    .path()
-                    .canonicalize()
-                    .unwrap()
-                    .join("o.mp4")
-                    .display()
-            ),
-            &format!(
-                "after {}",
-                directory
-                    .path()
-                    .canonicalize()
-                    .unwrap()
-                    .join("o.mp4")
-                    .display()
-            ),
+            &format!("[Exec] Executing command: echo after {quoted}"),
+            // `cmd`'s `echo` keeps the quotes.
+            &format!("after {}", if cfg!(windows) { &quoted } else { &path }),
             "PP a Exec finished",
         ][..]
             .iter()
@@ -160,6 +153,7 @@ fn console_title_needs_a_terminal() {
     }
 }
 
+// Unix only: console sequences are checked on a POSIX pseudo-terminal.
 #[cfg(unix)]
 mod pty {
     use super::*;
@@ -279,7 +273,6 @@ mod pty {
 }
 
 #[test]
-#[cfg_attr(windows, ignore = "--exec is unsupported on Windows")]
 fn metadata_parsing_runs_at_later_stages_after_their_prints() {
     let url = serve();
     let directory = tempfile::tempdir().unwrap();
@@ -361,7 +354,6 @@ fn serve_playlist() -> String {
 }
 
 #[test]
-#[cfg_attr(windows, ignore = "--exec is unsupported on Windows")]
 fn playlist_metadata_parsing_follows_playlist_prints() {
     let url = serve_playlist();
     let directory = tempfile::tempdir().unwrap();
@@ -386,5 +378,7 @@ fn playlist_metadata_parsing_follows_playlist_prints() {
         "{}",
         String::from_utf8_lossy(&output.stderr)
     );
+    // `cmd`'s `echo` ends lines with CRLF.
+    let stdout = stdout.replace("\r\n", "\n");
     assert!(stdout.ends_with("P Two\nE Zwo\n"), "{stdout}");
 }

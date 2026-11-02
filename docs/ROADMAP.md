@@ -375,6 +375,29 @@ Work in this order; each step lands with deterministic tests like any other chan
    matched yet: some lazy `-J` entry dicts.
 6. **Platform parity.** Impersonation in the Windows release (or a documented
    tier-2 limitation), and test runs on real Windows hardware.
+   Status (2026-11-02): the `impersonate` feature (BoringSSL through
+   `btls-sys`, built without assembly by MSVC) builds and passes its tests
+   on `windows-latest`, and the Windows release now includes it. The whole
+   `cargo test` suite runs on GitHub's Windows runners: the tests' shell
+   FFmpeg and downloader stand-ins run there through a compiled shim and
+   Git for Windows' `sh` (`tests/support/mod.rs`), and signal tests send
+   Ctrl+Break. Unix-only with a stated reason: pseudo-terminal, symlink,
+   named-pipe and non-UTF-8-path tests. Fixed on the way: Ctrl+C ended the
+   process at once (now SIGINT, with Ctrl+Break for SIGTERM, so stops,
+   `--keep-partial-on-stop` and interruptible transfers work); `--exec`
+   was rejected (now upstream's `cmd.exe` call and quoting, also for
+   `--netrc-cmd`); `--ffmpeg-location DIR` missed `ffmpeg.exe`; FFmpeg
+   arguments and messages used `\\?\` paths; a killed run's files were
+   never recovered. Windows differences are in `docs/CLI_CONTRACT.md`.
+   Also run on a Windows 11 ARM64 VM (UTM on Apple Silicon): the whole suite
+   passes natively (it found an ARM64-only environment variable the test
+   helpers rejected), and the x64 release build with impersonation runs
+   under emulation; a native ARM64 build of the feature fails in `btls-sys`
+   0.5.6. Not covered: x86-64 Windows hardware outside the hosted runners,
+   a console Ctrl+C typed during a download and merge (signal tests send
+   Ctrl+Break from a parent), a live `--impersonate` download from a site
+   that needs it, Defender scanning `.part` renames, echo-free password
+   prompts and named pipes for `--growing-file --live-from-start`.
 7. **Core gaps.** Impersonation for media transfers, environment proxy
    discovery and per-extractor proxy policies, the archive URL-suitable
    fallback and native live DASH.

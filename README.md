@@ -24,7 +24,10 @@ cargo install --locked --path .
 The default build uses rustls. `cargo build --locked --features impersonate`
 adds browser impersonation (TLS/HTTP2 fingerprints, as upstream's
 `curl_cffi`) through `wreq`; it builds BoringSSL from source and needs CMake
-and a C/C++ compiler. The Linux and macOS release binaries include it.
+and a C/C++ compiler (on Windows, MSVC and LLVM's libclang). Every release
+binary includes it. A native `aarch64-pc-windows-msvc` build of the feature
+fails in `btls-sys` 0.5.6 (BoringSSL links x86-64 assembly); on Windows on
+ARM use the x64 release, which runs under emulation.
 
 Optional tools, found on `PATH` like upstream (or with `--ffmpeg-location`
 and `--ffprobe-location`):
@@ -152,10 +155,10 @@ players of supported sites.
 - Generic-page features beyond HTML5 media elements and known embeds, such as
   JavaScript-built players.
 - Chromium cookies on Windows (DPAPI) and from the GNOME keyring.
-- Graceful Ctrl+C on Windows: there it ends the process at once (on other
-  platforms `.part` files are kept for `--continue`, as upstream, and a
-  transfer blocked on the network ends within about 100 ms). Library
-  `Interrupt` stop/cancel works on every platform.
+- On Windows: password and two-factor prompts echo the input (upstream
+  reads them without echo), and `--growing-file` with `--live-from-start`
+  (it needs named pipes). Stopping a run there uses Ctrl+Break
+  instead of SIGTERM (see [CLI contract](docs/CLI_CONTRACT.md#windows)).
 - Upstream options this port has not implemented: they are errors, never
   silently ignored.
 
@@ -170,7 +173,10 @@ python3 -m unittest discover -s tools -p 'test_*.py' -v
 
 Python 3.10+ and Git are needed only for the development tools. The HTTP
 integration tests bind localhost sockets; no test contacts a live site. CI runs
-on Linux, macOS and Windows. Pushing a `vX.Y.Z[-PRE]` tag runs
+the whole suite on Linux, macOS and Windows (GitHub's hosted runners). On
+Windows the tests' FFmpeg and downloader stand-ins are shell scripts run by
+Git for Windows' `sh.exe` (or `YT_DLP_RS_TEST_SH`); the few tests that need
+POSIX pseudo-terminals, symlinks, named pipes or non-UTF-8 paths are Unix-only. Pushing a `vX.Y.Z[-PRE]` tag runs
 `.github/workflows/release.yml`, and a tag with a pre-release suffix publishes
 a pre-release.
 

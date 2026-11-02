@@ -1243,6 +1243,7 @@ mod tests {
         assert!(CookieJar::load(path.join("child/grandchild")).is_err());
     }
 
+    // Unix only: Windows symlinks need Developer Mode or administrator rights.
     #[cfg(unix)]
     #[test]
     fn symlink_targets_are_rejected_without_touching_referent() {

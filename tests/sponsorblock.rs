@@ -1,7 +1,8 @@
 //! SponsorBlock (`SponsorBlockPP` with `ModifyChaptersPP`) against a local
 //! API stand-in; lines and chapters were checked against pinned upstream
 //! with the same saved response and real media.
-#![cfg(unix)]
+mod support;
+
 use std::{
     io::{Read, Write},
     net::TcpListener,
@@ -47,16 +48,13 @@ fn serve() -> (String, Arc<Mutex<Vec<String>>>) {
 }
 
 fn tools(directory: &Path) {
-    use std::os::unix::fs::PermissionsExt;
     let ffmpeg = "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffmpeg version test'; exit 0; fi\n\
-        dir=\"${0%/ffmpeg}\"\nprev=\nfor a in \"$@\"; do\n  case \"$prev:$a\" in -i:*.concat) cp \"$a\" \"$dir/spec.txt\";; esac\n  \
+        dir=\"${0%/*}\"\nprev=\nfor a in \"$@\"; do\n  case \"$prev:$a\" in -i:*.concat) cp \"$a\" \"$dir/spec.txt\";; esac\n  \
         prev=\"$a\"; last=\"$a\"\ndone\nprintf 'cut' > \"$last\"\n";
     let ffprobe = "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffprobe version test'; exit 0; fi\n\
         printf '{\"format\": {\"duration\": \"10.000000\"}}'\n";
     for (name, script) in [("ffmpeg", ffmpeg), ("ffprobe", ffprobe)] {
-        let path = directory.join(name);
-        std::fs::write(&path, script).unwrap();
-        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+        support::fake_tool(directory, name, script);
     }
 }
 
@@ -222,7 +220,18 @@ fn unreachable_api_is_a_deferred_preprocessing_error() {
     let stderr = String::from_utf8_lossy(&output.stderr);
     let lines: Vec<&str> = stderr.lines().collect();
     assert_eq!(lines.len(), 3, "{stderr}");
-    assert!(lines[0].starts_with("WARNING: Unable to communicate with SponsorBlock API: [Errno "));
+    // CPython words Windows socket errors as `[WinError N]`.
+    let errno = if cfg!(windows) {
+        "[WinError "
+    } else {
+        "[Errno "
+    };
+    assert!(
+        lines[0].starts_with(&format!(
+            "WARNING: Unable to communicate with SponsorBlock API: {errno}"
+        )),
+        "{stderr}"
+    );
     assert!(lines[0].ends_with(". Retrying (1/1)..."));
     assert!(
         lines[1].starts_with("ERROR: Preprocessing: Unable to communicate with SponsorBlock API: ")

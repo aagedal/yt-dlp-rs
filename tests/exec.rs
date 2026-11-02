@@ -1,6 +1,6 @@
 //! `--exec [WHEN:]CMD` through the CLI with a local media server; commands
-//! append to a log so stage order and arguments are observable.
-#![cfg(unix)]
+//! append to a log so stage order and arguments are observable. Commands
+//! are written to work in both `/bin/sh` and Windows `cmd.exe`.
 use std::{
     io::{Read, Write},
     net::TcpListener,
@@ -78,8 +78,28 @@ fn cli(args: &[&str], directory: &Path) -> Output {
         .unwrap()
 }
 
+/// Makes the shell ignore the rest of a command: the quoted file path
+/// appended to commands without fields.
+/// `cmd` keeps a space before `&` in the output, so none is written.
+const REST: &str = if cfg!(windows) { "& rem" } else { " #" };
+
+/// A command that fails with `code`.
+fn fail(code: u8) -> String {
+    if cfg!(windows) {
+        format!("exit {code}{REST}")
+    } else {
+        format!("sh -c 'exit {code}'")
+    }
+}
+
+/// The log, with `cmd`'s `echo` output (CRLF, quoted paths) read like `sh`'s.
 fn log(directory: &Path) -> String {
-    std::fs::read_to_string(directory.join("log")).unwrap_or_default()
+    let log = std::fs::read_to_string(directory.join("log")).unwrap_or_default();
+    if cfg!(windows) {
+        log.replace("\r\n", "\n").replace('"', "")
+    } else {
+        log
+    }
 }
 
 fn stderr(output: &Output) -> String {
@@ -94,21 +114,27 @@ fn stdout(output: &Output) -> String {
 fn stages_run_in_upstream_order_with_quoted_paths_and_fields() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
-    let absolute = std::fs::canonicalize(directory.path())
-        .unwrap()
-        .join("v.mp4");
+    // The CLI joins the working directory, which macOS reaches through a
+    // symlink; Windows' canonical form is a `\\?\` path instead.
+    let absolute = if cfg!(windows) {
+        directory.path().join("v.mp4")
+    } else {
+        std::fs::canonicalize(directory.path())
+            .unwrap()
+            .join("v.mp4")
+    };
     let output = cli(
         &[
             "--exec",
-            "after_video:echo after_video {} >> log",
+            "after_video:echo after_video {}>>log",
             "--exec",
-            "echo after_move {} >> log",
+            "echo after_move {}>>log",
             "--exec",
-            "POST_PROCESS:echo post_process %(filepath)q %(_filename)q %(id)q %(width)d >> log",
+            "POST_PROCESS:echo post_process %(filepath)q %(_filename)q %(id)q %(width)d>>log",
             "--exec",
-            "before_dl:echo before_dl {} >> log",
+            "before_dl:echo before_dl {}>>log",
             "--exec",
-            "video:echo video {} >> log",
+            "video:echo video {}>>log",
             &server.url,
         ],
         directory.path(),
@@ -121,7 +147,7 @@ fn stages_run_in_upstream_order_with_quoted_paths_and_fields() {
             absolute.display()
         )
     );
-    assert!(stdout(&output).contains("[Exec] Executing command: echo before_dl v.mp4 >> log"));
+    assert!(stdout(&output).contains("[Exec] Executing command: echo before_dl v.mp4>>log"));
 }
 
 #[test]
@@ -132,7 +158,7 @@ fn failures_follow_run_pp_and_pending_preprocessing_errors() {
     let output = cli(
         &[
             "--exec",
-            "false",
+            &fail(1),
             "--download-archive",
             "archive",
             &server.url,
@@ -148,9 +174,9 @@ fn failures_follow_run_pp_and_pending_preprocessing_errors() {
         &[
             "-i",
             "--exec",
-            "post_process:sh -c 'exit 3'",
+            &format!("post_process:{}", fail(3)),
             "--exec",
-            "echo moved >> log #",
+            &format!("echo moved>>log{REST}"),
             "--download-archive",
             "archive",
             &server.url,
@@ -167,9 +193,9 @@ fn failures_follow_run_pp_and_pending_preprocessing_errors() {
     let output = cli(
         &[
             "--exec",
-            "before_dl:false",
+            &format!("before_dl:{}", fail(1)),
             "--exec",
-            "echo moved >> log #",
+            &format!("echo moved>>log{REST}"),
             &server.url,
         ],
         pending.path(),
@@ -192,13 +218,13 @@ fn simulation_skip_download_validation_and_resets() {
         &[
             "-s",
             "--exec",
-            "video:echo video %(id)q >> log",
+            "video:echo video %(id)q>>log",
             "--exec",
-            "before_dl:echo never >> log",
+            "before_dl:echo never>>log",
             "--exec",
-            "echo never >> log",
+            "echo never>>log",
             "--exec",
-            "after_video:echo after_video >> log",
+            &format!("after_video:echo after_video>>log{REST}"),
             &server.url,
         ],
         directory.path(),
@@ -210,14 +236,14 @@ fn simulation_skip_download_validation_and_resets() {
         &[
             "--skip-download",
             "--exec",
-            "before_dl:echo before {} >> log",
+            "before_dl:echo before {}>>log",
             "--exec",
-            "echo never >> log",
+            "echo never>>log",
             "--exec",
             "one",
             "--no-exec",
             "--exec",
-            "echo 100%% %(id)q >> log",
+            "echo 100%% %(id)q>>log",
             &server.url,
         ],
         skipped.path(),
@@ -247,9 +273,9 @@ fn simulation_skip_download_validation_and_resets() {
     let output = cli(
         &[
             "--exec-before-download",
-            "echo old >> log #",
+            &format!("echo old>>log{REST}"),
             "--exec",
-            "before_dl:echo new >> log #",
+            &format!("before_dl:echo new>>log{REST}"),
             &server.url,
         ],
         skipped.path(),
@@ -268,11 +294,11 @@ fn use_postprocessor_exec_runs_before_exec_commands_of_its_stage() {
     let output = cli(
         &[
             "--exec",
-            "after_move:echo exec >> log #",
+            &format!("after_move:echo exec>>log{REST}"),
             "--use-postprocessor",
-            "ExecPP:exec_cmd=echo added %(id)q >> log;when=after_move",
+            "ExecPP:exec_cmd=echo added %(id)q>>log;when=after_move",
             "--use-postprocessor",
-            "Exec:exec_cmd=echo default >> log #",
+            &format!("Exec:exec_cmd=echo default>>log{REST}"),
             &server.url,
         ],
         directory.path(),

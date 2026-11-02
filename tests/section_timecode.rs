@@ -2,7 +2,8 @@
 //! its timecode in the whole video from ffprobe's frame rate, as `-timecode`
 //! on the FFmpeg cut, when the result is MP4/MOV. Recording FFmpeg/ffprobe
 //! stand-ins; real FFmpeg was checked against full downloads.
-#![cfg(unix)]
+mod support;
+
 use std::{
     io::{Read, Write},
     net::TcpListener,
@@ -35,19 +36,15 @@ fn serve() -> String {
 /// (one per line, each call ended by `--`). FFmpeg writes its last argument;
 /// ffprobe reports 25 fps and, after a seek, a first packet at 20 s.
 fn tools(directory: &Path) -> std::path::PathBuf {
-    use std::os::unix::fs::PermissionsExt;
     let write = |name: &str, body: &str| {
-        let path = directory.join(name);
-        std::fs::write(
-            &path,
-            format!(
+        support::fake_tool(
+            directory,
+            name,
+            &format!(
                 "#!/bin/sh\nif [ \"$1\" = -version ]; then echo '{name} version test'; exit 0; fi\n\
-                 {{ echo {name}; for a in \"$@\"; do printf '%s\\n' \"$a\"; done; echo --; }} >> \"${{0%/{name}}}/calls.txt\"\n{body}"
+                 {{ echo {name}; for a in \"$@\"; do printf '%s\\n' \"$a\"; done; echo --; }} >> \"${{0%/*}}/calls.txt\"\n{body}"
             ),
         )
-        .unwrap();
-        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
-        path
     };
     write(
         "ffprobe",
@@ -80,7 +77,7 @@ fn run(directory: &Path, args: &[&str]) -> Output {
     let _ = std::fs::remove_file(directory.join("calls.txt"));
     Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
         .args(["--ignore-config", "--no-progress", "--ffmpeg-location"])
-        .arg(directory.join("ffmpeg"))
+        .arg(directory.join(format!("ffmpeg{}", std::env::consts::EXE_SUFFIX)))
         .args(args)
         .current_dir(directory)
         .env("PATH", "")
@@ -210,7 +207,12 @@ fn audio_sections_and_missing_ffprobe_are_warned_about() {
         text(&output.stderr)
             .contains("WARNING: Not writing a section timecode: the section has no video stream\n")
     );
-    std::fs::remove_file(directory.path().join("ffprobe")).unwrap();
+    std::fs::remove_file(
+        directory
+            .path()
+            .join(format!("ffprobe{}", std::env::consts::EXE_SUFFIX)),
+    )
+    .unwrap();
     let video = info(directory.path(), &origin, "mp4", "avc1");
     let output = run(
         directory.path(),
