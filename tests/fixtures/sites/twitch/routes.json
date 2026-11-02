@@ -294,7 +294,7 @@
   {
    "url": "https://production.assets.clips.twitchcdn.net/v2/media/abc%7C396245304-720.mp4?sig=CLIPSIG&token=%7B%22clip_uri%22%3A%22x%22%7D",
    "headers": {
-    "Content-Type": "video/mp4"
+    "Content-Type": "binary/octet-stream"
    },
    "body": "0000ftypisom-clip"
   },

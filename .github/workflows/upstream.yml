@@ -1,0 +1,76 @@
+name: Upstream
+# Road to 1.0 step 10: a baseline advance within a week of each upstream
+# release (tools/upstream_watch.py). Never a required check: it runs on a
+# schedule or by hand, keeps one issue labelled `upstream` open while a
+# release is pending, and fails once the release is overdue.
+on:
+  schedule:
+    - cron: '41 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: upstream
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      # Commits and trees only: the report needs history and file names, not
+      # file contents.
+      - name: Fetch upstream with tags
+        run: |
+          repository=$(jq -r .repository upstream/manifest.json)
+          git clone --quiet --filter=blob:none --no-checkout "$repository" .upstream/yt-dlp
+      - name: Check for a pending release
+        id: watch
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set +e
+          python tools/upstream_watch.py .upstream/yt-dlp --report upstream-report.json \
+            --issue upstream-issue.json --run-url "$RUN_URL"
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: upstream-report
+          path: upstream-report.json
+          if-no-files-found: ignore
+      - name: Open, update or close the upstream issue
+        if: always() && (steps.watch.outputs.code == '0' || steps.watch.outputs.code == '1')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh label create upstream --color 1D76DB --description 'Pending upstream baseline advance' 2>/dev/null || true
+          number=$(gh issue list --label upstream --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -f upstream-issue.json ]; then
+            title=$(jq -r .title upstream-issue.json)
+            jq -r .body upstream-issue.json > upstream-issue.md
+            if [ -n "$number" ]; then
+              old=$(gh issue view "$number" --json title --jq .title)
+              gh issue edit "$number" --title "$title" --body-file upstream-issue.md
+              if [ "$old" != "$title" ]; then
+                gh issue comment "$number" --body "$title ($RUN_URL)"
+              fi
+            else
+              gh issue create --title "$title" --body-file upstream-issue.md --label upstream
+            fi
+          elif [ -n "$number" ]; then
+            release=$(jq -r .release upstream-report.json)
+            gh issue close "$number" --comment "The baseline now contains upstream $release ($RUN_URL)."
+          fi
+      - name: Fail when a release is overdue or the check failed
+        if: steps.watch.outputs.code != '0'
+        run: exit 1
