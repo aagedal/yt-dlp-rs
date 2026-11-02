@@ -60,7 +60,7 @@ pub(crate) fn failure_delay(error: &Error) -> Option<Duration> {
             source,
             retry_after,
         } if transient_request(source) => Some(*retry_after),
-        Error::ExtractionRead(_) => Some(Duration::ZERO),
+        Error::ExtractionRead(_) | Error::MediaTransport(_) => Some(Duration::ZERO),
         _ => None,
     }
 }
@@ -84,7 +84,7 @@ pub(crate) fn download_failure_delay(error: &Error) -> Option<Duration> {
             source,
             retry_after,
         } => server_error(source).then_some(*retry_after),
-        Error::ExtractionRead(_) => Some(Duration::ZERO),
+        Error::ExtractionRead(_) | Error::MediaTransport(_) => Some(Duration::ZERO),
         _ => None,
     }
 }

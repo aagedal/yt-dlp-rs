@@ -94,6 +94,10 @@ pub enum Error {
     /// `TransportError` from `curl_cffi`).
     #[error("HTTP request failed: {0}")]
     Impersonate(String),
+    /// A media transfer through the impersonating transport failed before
+    /// its response (upstream's `TransportError`, retried like one).
+    #[error("{0}")]
+    MediaTransport(String),
     #[error("extraction response body failed: {0}")]
     ExtractionRead(#[source] std::io::Error),
     #[error("server returned an unsolicited partial response; full media was requested")]

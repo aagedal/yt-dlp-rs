@@ -2837,6 +2837,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             None
         })
         .with_live_from_start(args.live_from_start)
+        // DashSegmentsFD's live error raises only with `--abort-on-error`.
+        .with_live_dash_snapshot(error_mode != ErrorMode::Abort)
         .with_dynamic_mpd(!args.ignore_dynamic_mpd);
     let output_paths = yt_dlp_rs::output::parse_paths(&args.paths)?;
     let template_options = TemplateOptions {
@@ -3251,6 +3253,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 .collect::<Vec<_>>(),
         )
         .map_err(usage)?;
+    let _ = ARCHIVE_IES.set(archive_ies(&downloader));
     for policy in policies.iter().flatten() {
         if !matches!(
             policy.as_str(),
@@ -3315,1705 +3318,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Sorted by `IE_NAME.lower()`, generic last; each URL under every
         // suitable extractor, and under generic when none is.
         let mut remaining: Vec<&String> = urls.iter().collect();
-        type Suitable = fn(&str) -> bool;
-        let suitable: &[(&str, Suitable)] = &[
-            ("17live", yt_dlp_rs::extractor::ichinana_live_suitable),
-            ("17live:clip", yt_dlp_rs::extractor::ichinana_clip_suitable),
-            ("17live:vod", yt_dlp_rs::extractor::ichinana_vod_suitable),
-            ("1News", yt_dlp_rs::extractor::onenewsnz_suitable),
-            ("1tv", yt_dlp_rs::extractor::firsttv_suitable),
-            ("1tv:live", yt_dlp_rs::extractor::firsttv_live_suitable),
-            ("23video", yt_dlp_rs::extractor::twentythreevideo_suitable),
-            ("24tv.ua", yt_dlp_rs::extractor::tv24ua_suitable),
-            ("3qsdn", yt_dlp_rs::extractor::threeqsdn_suitable),
-            ("3sat", yt_dlp_rs::extractor::dreisat_suitable),
-            ("9gag", yt_dlp_rs::extractor::ninegag_suitable),
-            ("9News", yt_dlp_rs::extractor::ninenews_suitable),
-            ("9now.com.au", yt_dlp_rs::extractor::ninenow_suitable),
-            ("abc.net.au", yt_dlp_rs::extractor::abc_suitable),
-            ("abcnews:video", yt_dlp_rs::extractor::abcnews_suitable),
-            ("abcotvs", yt_dlp_rs::extractor::abcotvs_suitable),
-            (
-                "abcotvs:clips",
-                yt_dlp_rs::extractor::abcotvs_clips_suitable,
-            ),
-            ("acast", yt_dlp_rs::extractor::acast_suitable),
-            (
-                "acast:channel",
-                yt_dlp_rs::extractor::acast_channel_suitable,
-            ),
-            ("AcFunVideo", yt_dlp_rs::extractor::acfun_suitable),
-            ("adobetv", yt_dlp_rs::extractor::adobetv_suitable),
-            ("AeonCo", yt_dlp_rs::extractor::aeonco_suitable),
-            ("agalega:videos", yt_dlp_rs::extractor::agalega_suitable),
-            ("AitubeKZVideo", yt_dlp_rs::extractor::aitube_suitable),
-            ("Alibaba", yt_dlp_rs::extractor::alibaba_suitable),
-            ("AliExpressLive", yt_dlp_rs::extractor::aliexpress_suitable),
-            ("AlJazeera", yt_dlp_rs::extractor::aljazeera_suitable),
-            ("Allstar", yt_dlp_rs::extractor::allstar_suitable),
-            (
-                "AllstarProfile",
-                yt_dlp_rs::extractor::allstar_profile_suitable,
-            ),
-            ("altcensored", yt_dlp_rs::extractor::altcensored_suitable),
-            (
-                "altcensored:channel",
-                yt_dlp_rs::extractor::altcensored_channel_suitable,
-            ),
-            ("AmadeusTV", yt_dlp_rs::extractor::amadeustv_suitable),
-            ("AmazonStore", yt_dlp_rs::extractor::amazon_suitable),
-            ("AMCNetworks", yt_dlp_rs::extractor::amcnetworks_suitable),
-            (
-                "AmericasTestKitchen",
-                yt_dlp_rs::extractor::americastestkitchen_suitable,
-            ),
-            (
-                "AmericasTestKitchenSeason",
-                yt_dlp_rs::extractor::americastestkitchen_season_suitable,
-            ),
-            ("Angel", yt_dlp_rs::extractor::angel_suitable),
-            (
-                "ant1newsgr:embed",
-                yt_dlp_rs::extractor::ant1newsgr_embed_suitable,
-            ),
-            ("APA", yt_dlp_rs::extractor::apa_suitable),
-            (
-                "apple:music:connect",
-                yt_dlp_rs::extractor::appleconnect_suitable,
-            ),
-            (
-                "apple:podcasts",
-                yt_dlp_rs::extractor::applepodcasts_suitable,
-            ),
-            ("archive.org", yt_dlp_rs::extractor::archiveorg_suitable),
-            (
-                "ArcPublishing",
-                yt_dlp_rs::extractor::arcpublishing_suitable,
-            ),
-            ("ARDAudiothek", yt_dlp_rs::extractor::ard_audiothek_suitable),
-            (
-                "ARDAudiothekPlaylist",
-                yt_dlp_rs::extractor::ard_audiothek_playlist_suitable,
-            ),
-            ("ARDMediathek", yt_dlp_rs::extractor::ard_suitable),
-            (
-                "ARDMediathekCollection",
-                yt_dlp_rs::extractor::ard_collection_suitable,
-            ),
-            ("Art19", yt_dlp_rs::extractor::art19_suitable),
-            ("ArteTV", yt_dlp_rs::extractor::artetv_suitable),
-            (
-                "ArteTVCategory",
-                yt_dlp_rs::extractor::artetv_category_suitable,
-            ),
-            ("ArteTVEmbed", yt_dlp_rs::extractor::artetv_embed_suitable),
-            (
-                "ArteTVPlaylist",
-                yt_dlp_rs::extractor::artetv_playlist_suitable,
-            ),
-            ("asobichannel", yt_dlp_rs::extractor::asobichannel_suitable),
-            (
-                "asobichannel:tag",
-                yt_dlp_rs::extractor::asobichannel_tag_suitable,
-            ),
-            ("AsobiStage", yt_dlp_rs::extractor::asobistage_suitable),
-            ("AtresPlayer", yt_dlp_rs::extractor::atresplayer_suitable),
-            (
-                "AtScaleConfEvent",
-                yt_dlp_rs::extractor::atscaleconf_suitable,
-            ),
-            ("AudiMedia", yt_dlp_rs::extractor::audimedia_suitable),
-            ("AudioBoom", yt_dlp_rs::extractor::audioboom_suitable),
-            (
-                "Audiodraft:custom",
-                yt_dlp_rs::extractor::audiodraft_suitable,
-            ),
-            (
-                "Audiodraft:generic",
-                yt_dlp_rs::extractor::audiodraft_generic_suitable,
-            ),
-            ("audiomack", yt_dlp_rs::extractor::audiomack_suitable),
-            (
-                "audiomack:album",
-                yt_dlp_rs::extractor::audiomack_album_suitable,
-            ),
-            ("Audius", yt_dlp_rs::extractor::audius_suitable),
-            (
-                "audius:artist",
-                yt_dlp_rs::extractor::audius_profile_suitable,
-            ),
-            (
-                "audius:playlist",
-                yt_dlp_rs::extractor::audius_playlist_suitable,
-            ),
-            ("audius:track", yt_dlp_rs::extractor::audius_track_suitable),
-            ("AZMedien", yt_dlp_rs::extractor::azmedien_suitable),
-            ("BaiduVideo", yt_dlp_rs::extractor::baidu_suitable),
-            ("Bandcamp", yt_dlp_rs::extractor::bandcamp_suitable),
-            (
-                "Bandcamp:album",
-                yt_dlp_rs::extractor::bandcamp_album_suitable,
-            ),
-            (
-                "Bandcamp:user",
-                yt_dlp_rs::extractor::bandcamp_user_suitable,
-            ),
-            (
-                "Bandcamp:weekly",
-                yt_dlp_rs::extractor::bandcamp_weekly_suitable,
-            ),
-            ("Bandlab", yt_dlp_rs::extractor::bandlab_suitable),
-            (
-                "bbc.co.uk:playlist",
-                yt_dlp_rs::extractor::bbc_couk_playlist_suitable,
-            ),
-            ("BeaconTv", yt_dlp_rs::extractor::beacon_suitable),
-            ("Beatport", yt_dlp_rs::extractor::beatport_suitable),
-            ("Beeg", yt_dlp_rs::extractor::beeg_suitable),
-            (
-                "BehindKink (CURRENTLY BROKEN)",
-                yt_dlp_rs::extractor::behindkink_suitable,
-            ),
-            ("BerufeTV", yt_dlp_rs::extractor::berufetv_suitable),
-            ("bfmtv", yt_dlp_rs::extractor::bfmtv_suitable),
-            (
-                "bfmtv:article",
-                yt_dlp_rs::extractor::bfmtv_article_suitable,
-            ),
-            ("bfmtv:live", yt_dlp_rs::extractor::bfmtv_live_suitable),
-            ("Bigo", yt_dlp_rs::extractor::bigo_suitable),
-            ("Bild", yt_dlp_rs::extractor::bild_suitable),
-            ("BiliBili", yt_dlp_rs::extractor::bilibili_suitable),
-            ("BilibiliAudio", yt_dlp_rs::extractor::audio_suitable),
-            (
-                "BilibiliAudioAlbum",
-                yt_dlp_rs::extractor::audio_album_suitable,
-            ),
-            (
-                "BiliBiliBangumi",
-                yt_dlp_rs::extractor::bangumi_episode_suitable,
-            ),
-            (
-                "BiliBiliBangumiMedia",
-                yt_dlp_rs::extractor::bangumi_media_suitable,
-            ),
-            (
-                "BiliBiliBangumiSeason",
-                yt_dlp_rs::extractor::bangumi_season_suitable,
-            ),
-            (
-                "BilibiliSpaceAudio",
-                yt_dlp_rs::extractor::space_audio_suitable,
-            ),
-            (
-                "BioBioChileTV",
-                yt_dlp_rs::extractor::biobiochiletv_suitable,
-            ),
-            ("BitChute", yt_dlp_rs::extractor::bitchute_suitable),
-            (
-                "BitChuteChannel",
-                yt_dlp_rs::extractor::bitchute_channel_suitable,
-            ),
-            ("Bitmovin", yt_dlp_rs::extractor::bitmovin_suitable),
-            ("blerp", yt_dlp_rs::extractor::blerp_suitable),
-            ("blogger.com", yt_dlp_rs::extractor::blogger_suitable),
-            ("Bloomberg", yt_dlp_rs::extractor::bloomberg_suitable),
-            ("Bluesky", yt_dlp_rs::extractor::bluesky_suitable),
-            ("BongaCams", yt_dlp_rs::extractor::bongacams_suitable),
-            ("Boosty", yt_dlp_rs::extractor::boosty_suitable),
-            ("BostonGlobe", yt_dlp_rs::extractor::bostonglobe_suitable),
-            ("Box", yt_dlp_rs::extractor::box_suitable),
-            ("BoxCastVideo", yt_dlp_rs::extractor::boxcast_suitable),
-            ("Bpb", yt_dlp_rs::extractor::bpb_suitable),
-            ("BreitBart", yt_dlp_rs::extractor::breitbart_suitable),
-            (
-                "brightcove:legacy",
-                yt_dlp_rs::extractor::brightcove_legacy_suitable,
-            ),
-            (
-                "brightcove:new",
-                yt_dlp_rs::extractor::brightcove_new_suitable,
-            ),
-            ("BTVPlus", yt_dlp_rs::extractor::btvplus_suitable),
-            ("Bundesliga", yt_dlp_rs::extractor::bundesliga_suitable),
-            ("Bundestag", yt_dlp_rs::extractor::bundestag_suitable),
-            ("BunnyCdn", yt_dlp_rs::extractor::bunnycdn_suitable),
-            (
-                "BusinessInsider",
-                yt_dlp_rs::extractor::businessinsider_suitable,
-            ),
-            ("Caltrans", yt_dlp_rs::extractor::caltrans_suitable),
-            ("CAM4", yt_dlp_rs::extractor::cam4_suitable),
-            ("CanalAlpha", yt_dlp_rs::extractor::canalalpha_suitable),
-            ("Canalsurmas", yt_dlp_rs::extractor::canalsurmas_suitable),
-            ("cbc.ca:listen", yt_dlp_rs::extractor::cbc_listen_suitable),
-            ("cbc.ca:player", yt_dlp_rs::extractor::cbc_player_suitable),
-            ("CCMA", yt_dlp_rs::extractor::ccma_suitable),
-            ("CCTV", yt_dlp_rs::extractor::cctv_suitable),
-            ("CDA", yt_dlp_rs::extractor::cda_suitable),
-            ("Cellebrite", yt_dlp_rs::extractor::cellebrite_suitable),
-            ("CGTN", yt_dlp_rs::extractor::cgtn_suitable),
-            ("CharlieRose", yt_dlp_rs::extractor::charlierose_suitable),
-            ("Chaturbate", yt_dlp_rs::extractor::chaturbate_suitable),
-            ("Chilloutzone", yt_dlp_rs::extractor::chilloutzone_suitable),
-            (
-                "CiscoLiveSearch",
-                yt_dlp_rs::extractor::ciscolive_search_suitable,
-            ),
-            (
-                "CiscoLiveSession",
-                yt_dlp_rs::extractor::ciscolive_session_suitable,
-            ),
-            ("CJSW", yt_dlp_rs::extractor::cjsw_suitable),
-            ("Clipchamp", yt_dlp_rs::extractor::clipchamp_suitable),
-            (
-                "CloudflareStream",
-                yt_dlp_rs::extractor::cloudflarestream_suitable,
-            ),
-            ("CloudyCDN", yt_dlp_rs::extractor::cloudycdn_suitable),
-            ("Clyp", yt_dlp_rs::extractor::clyp_suitable),
-            ("CNBCVideo", yt_dlp_rs::extractor::cnbc_suitable),
-            ("CNN", yt_dlp_rs::extractor::cnn_suitable),
-            ("CondeNast", yt_dlp_rs::extractor::condenast_suitable),
-            (
-                "CookingChannel",
-                yt_dlp_rs::extractor::cooking_channel_suitable,
-            ),
-            ("Coub", yt_dlp_rs::extractor::coub_suitable),
-            ("CozyTV", yt_dlp_rs::extractor::cozytv_suitable),
-            ("cpac", yt_dlp_rs::extractor::cpac_suitable),
-            (
-                "cpac:playlist",
-                yt_dlp_rs::extractor::cpac_playlist_suitable,
-            ),
-            ("Craftsy", yt_dlp_rs::extractor::craftsy_suitable),
-            (
-                "CrooksAndLiars",
-                yt_dlp_rs::extractor::crooksandliars_suitable,
-            ),
-            ("Crtvg", yt_dlp_rs::extractor::crtvg_suitable),
-            ("CtsNews", yt_dlp_rs::extractor::ctsnews_suitable),
-            (
-                "CultureUnplugged",
-                yt_dlp_rs::extractor::cultureunplugged_suitable,
-            ),
-            (
-                "curiositystream",
-                yt_dlp_rs::extractor::curiositystream_suitable,
-            ),
-            (
-                "curiositystream:collections",
-                yt_dlp_rs::extractor::curiositystream_collections_suitable,
-            ),
-            (
-                "curiositystream:series",
-                yt_dlp_rs::extractor::curiositystream_series_suitable,
-            ),
-            (
-                "DacastPlaylist",
-                yt_dlp_rs::extractor::dacast_playlist_suitable,
-            ),
-            ("DacastVOD", yt_dlp_rs::extractor::dacast_suitable),
-            ("DailyMail", yt_dlp_rs::extractor::dailymail_suitable),
-            ("dailymotion", yt_dlp_rs::extractor::dailymotion_suitable),
-            (
-                "dailymotion:playlist",
-                yt_dlp_rs::extractor::dailymotion_playlist_suitable,
-            ),
-            (
-                "dailymotion:search",
-                yt_dlp_rs::extractor::dailymotion_search_suitable,
-            ),
-            (
-                "dailymotion:user",
-                yt_dlp_rs::extractor::dailymotion_user_suitable,
-            ),
-            (
-                "damtomo:record",
-                yt_dlp_rs::extractor::damtomo_record_suitable,
-            ),
-            (
-                "damtomo:video",
-                yt_dlp_rs::extractor::damtomo_video_suitable,
-            ),
-            ("daystar:clip", yt_dlp_rs::extractor::daystar_suitable),
-            ("DBTV", yt_dlp_rs::extractor::dbtv_suitable),
-            ("DctpTv", yt_dlp_rs::extractor::dctp_suitable),
-            ("democracynow", yt_dlp_rs::extractor::democracynow_suitable),
-            ("DetikEmbed", |_| false),
-            ("DeuxM", yt_dlp_rs::extractor::deuxm_suitable),
-            ("DeuxMNews", yt_dlp_rs::extractor::deuxm_news_suitable),
-            ("Digiteka", yt_dlp_rs::extractor::digiteka_suitable),
-            (
-                "DiscogsReleasePlaylist",
-                yt_dlp_rs::extractor::discogs_suitable,
-            ),
-            (
-                "DiscoveryLife",
-                yt_dlp_rs::extractor::discovery_life_suitable,
-            ),
-            ("dlf", yt_dlp_rs::extractor::dlf_suitable),
-            ("dlf:corpus", yt_dlp_rs::extractor::dlf_corpus_suitable),
-            ("dlive:stream", yt_dlp_rs::extractor::dlive_stream_suitable),
-            ("dlive:vod", yt_dlp_rs::extractor::dlive_vod_suitable),
-            ("Douyin", yt_dlp_rs::extractor::douyin_suitable),
-            ("Dropbox", yt_dlp_rs::extractor::dropbox_suitable),
-            ("DrTalks", yt_dlp_rs::extractor::drtalks_suitable),
-            ("drtv", yt_dlp_rs::extractor::drtv_suitable),
-            ("drtv:live", yt_dlp_rs::extractor::drtv_live_suitable),
-            ("drtv:season", yt_dlp_rs::extractor::drtv_season_suitable),
-            ("drtv:series", yt_dlp_rs::extractor::drtv_series_suitable),
-            ("Dumpert", yt_dlp_rs::extractor::dumpert_suitable),
-            ("Duoplay", yt_dlp_rs::extractor::duoplay_suitable),
-            ("dvtv", yt_dlp_rs::extractor::dvtv_suitable),
-            ("dzen.ru", yt_dlp_rs::extractor::zen_yandex_suitable),
-            (
-                "dzen.ru:channel",
-                yt_dlp_rs::extractor::zen_yandex_channel_suitable,
-            ),
-            ("EbaumsWorld", yt_dlp_rs::extractor::ebaumsworld_suitable),
-            ("Ebay", yt_dlp_rs::extractor::ebay_suitable),
-            (
-                "egghead:course",
-                yt_dlp_rs::extractor::egghead_course_suitable,
-            ),
-            (
-                "egghead:lesson",
-                yt_dlp_rs::extractor::egghead_lesson_suitable,
-            ),
-            ("eggs:artist", yt_dlp_rs::extractor::eggs_artist_suitable),
-            ("eggs:single", yt_dlp_rs::extractor::eggs_suitable),
-            ("Elonet", yt_dlp_rs::extractor::elonet_suitable),
-            ("ElPais", yt_dlp_rs::extractor::elpais_suitable),
-            ("ElTreceTV", yt_dlp_rs::extractor::eltrecetv_suitable),
-            ("Embedly", yt_dlp_rs::extractor::embedly_suitable),
-            ("EMPFlix", yt_dlp_rs::extractor::tnaflix_empflix_suitable),
-            (
-                "EpidemicSound",
-                yt_dlp_rs::extractor::epidemicsound_suitable,
-            ),
-            ("Epoch", yt_dlp_rs::extractor::epoch_suitable),
-            ("Eporner", yt_dlp_rs::extractor::eporner_suitable),
-            ("Erocast", yt_dlp_rs::extractor::erocast_suitable),
-            (
-                "EroProfile:album",
-                yt_dlp_rs::extractor::eroprofile_album_suitable,
-            ),
-            ("ERRArhiiv", yt_dlp_rs::extractor::err_arhiiv_suitable),
-            ("ERRJupiter", yt_dlp_rs::extractor::err_jupiter_suitable),
-            ("ertflix", yt_dlp_rs::extractor::ertflix_vod_suitable),
-            ("ertflix:codename", yt_dlp_rs::extractor::ertgr_suitable),
-            ("EttuTv", yt_dlp_rs::extractor::ettutv_suitable),
-            ("EuropeanTour", yt_dlp_rs::extractor::europeantour_suitable),
-            ("EUScreen", yt_dlp_rs::extractor::euscreen_suitable),
-            ("Expressen", yt_dlp_rs::extractor::expressen_suitable),
-            ("facebook", yt_dlp_rs::extractor::facebook_suitable),
-            ("facebook:ads", yt_dlp_rs::extractor::facebook_ads_suitable),
-            (
-                "facebook:reel",
-                yt_dlp_rs::extractor::facebook_reel_suitable,
-            ),
-            (
-                "FacebookPluginsVideo",
-                yt_dlp_rs::extractor::facebook_plugins_suitable,
-            ),
-            (
-                "FacebookRedirectURL",
-                yt_dlp_rs::extractor::facebook_redirect_suitable,
-            ),
-            ("Fathom", yt_dlp_rs::extractor::fathom_suitable),
-            ("Faulio", yt_dlp_rs::extractor::faulio_suitable),
-            ("faz.net", yt_dlp_rs::extractor::faz_suitable),
-            ("fc2", yt_dlp_rs::extractor::fc2_suitable),
-            ("fc2:embed", yt_dlp_rs::extractor::fc2_embed_suitable),
-            ("Fczenit", yt_dlp_rs::extractor::fczenit_suitable),
-            ("FilmArchiv", yt_dlp_rs::extractor::filmarchiv_suitable),
-            ("filmon", yt_dlp_rs::extractor::filmon_suitable),
-            (
-                "filmon:channel",
-                yt_dlp_rs::extractor::filmon_channel_suitable,
-            ),
-            ("Filmweb", yt_dlp_rs::extractor::filmweb_suitable),
-            ("FiveTV", yt_dlp_rs::extractor::fivetv_suitable),
-            ("Flickr", yt_dlp_rs::extractor::flickr_suitable),
-            ("FootyRoom", yt_dlp_rs::extractor::footyroom_suitable),
-            ("Formula1", yt_dlp_rs::extractor::formula1_suitable),
-            ("foxnews", yt_dlp_rs::extractor::foxnews_suitable),
-            (
-                "foxnews:article",
-                yt_dlp_rs::extractor::foxnews_article_suitable,
-            ),
-            ("FoxNewsVideo", yt_dlp_rs::extractor::foxnews_video_suitable),
-            (
-                "FrancaisFacile",
-                yt_dlp_rs::extractor::francaisfacile_suitable,
-            ),
-            (
-                "FranceCulture",
-                yt_dlp_rs::extractor::franceculture_suitable,
-            ),
-            ("franceinfo", yt_dlp_rs::extractor::francetv_info_suitable),
-            ("francetv", yt_dlp_rs::extractor::francetv_suitable),
-            (
-                "francetv:site",
-                yt_dlp_rs::extractor::francetv_site_suitable,
-            ),
-            ("Freesound", yt_dlp_rs::extractor::freesound_suitable),
-            ("freespeech.org", yt_dlp_rs::extractor::freespeech_suitable),
-            ("freetv:series", yt_dlp_rs::extractor::freetv_suitable),
-            ("FreeTvMovies", yt_dlp_rs::extractor::freetv_movies_suitable),
-            ("Funker530", yt_dlp_rs::extractor::funker530_suitable),
-            ("FuyinTV", yt_dlp_rs::extractor::fuyintv_suitable),
-            ("Gab", yt_dlp_rs::extractor::gab_suitable),
-            ("Gaia", yt_dlp_rs::extractor::gaia_suitable),
-            ("GameJolt", yt_dlp_rs::extractor::gamejolt_suitable),
-            ("GameJoltGame", yt_dlp_rs::extractor::gamejolt_game_suitable),
-            (
-                "GameJoltGameSoundtrack",
-                yt_dlp_rs::extractor::gamejolt_soundtrack_suitable,
-            ),
-            ("GameSpot", yt_dlp_rs::extractor::gamespot_suitable),
-            ("GameStar", yt_dlp_rs::extractor::gamestar_suitable),
-            ("Gaskrank", yt_dlp_rs::extractor::gaskrank_suitable),
-            ("GBNews", yt_dlp_rs::extractor::gbnews_suitable),
-            ("Genius", yt_dlp_rs::extractor::genius_suitable),
-            ("GeniusLyrics", yt_dlp_rs::extractor::genius_lyrics_suitable),
-            ("Germanupa", yt_dlp_rs::extractor::germanupa_suitable),
-            ("Gettr", yt_dlp_rs::extractor::gettr_suitable),
-            (
-                "GettrStreaming",
-                yt_dlp_rs::extractor::gettr_streaming_suitable,
-            ),
-            ("Glide", yt_dlp_rs::extractor::glide_suitable),
-            (
-                "GlobalPlayerAudio",
-                yt_dlp_rs::extractor::globalplayer_audio_suitable,
-            ),
-            (
-                "GlobalPlayerAudioEpisode",
-                yt_dlp_rs::extractor::globalplayer_episode_suitable,
-            ),
-            (
-                "GlobalPlayerLive",
-                yt_dlp_rs::extractor::globalplayer_live_suitable,
-            ),
-            (
-                "GlobalPlayerLivePlaylist",
-                yt_dlp_rs::extractor::globalplayer_live_playlist_suitable,
-            ),
-            (
-                "GlobalPlayerVideo",
-                yt_dlp_rs::extractor::globalplayer_video_suitable,
-            ),
-            ("Globo", yt_dlp_rs::extractor::globo_suitable),
-            ("GloboArticle", yt_dlp_rs::extractor::globo_article_suitable),
-            ("glomex", yt_dlp_rs::extractor::glomex_suitable),
-            ("glomex:embed", yt_dlp_rs::extractor::glomex_embed_suitable),
-            ("GMANetworkVideo", yt_dlp_rs::extractor::gmanetwork_suitable),
-            ("GoDiscovery", yt_dlp_rs::extractor::go_discovery_suitable),
-            ("GodResource", yt_dlp_rs::extractor::godresource_suitable),
-            // `_WORKING = False` extractors are marked.
-            (
-                "GodTube (CURRENTLY BROKEN)",
-                yt_dlp_rs::extractor::godtube_suitable,
-            ),
-            ("Golem", yt_dlp_rs::extractor::golem_suitable),
-            ("goodgame:stream", yt_dlp_rs::extractor::goodgame_suitable),
-            ("GoogleDrive", yt_dlp_rs::extractor::googledrive_suitable),
-            (
-                "GoogleDrive:Folder",
-                yt_dlp_rs::extractor::googledrive_folder_suitable,
-            ),
-            ("GoPro\nGoToStage", yt_dlp_rs::extractor::gopro_suitable),
-            ("Graspop", yt_dlp_rs::extractor::graspop_suitable),
-            ("Gronkh", yt_dlp_rs::extractor::gronkh_suitable),
-            ("Groupon", yt_dlp_rs::extractor::groupon_suitable),
-            ("Harpodeon", yt_dlp_rs::extractor::harpodeon_suitable),
-            ("HearThisAt", yt_dlp_rs::extractor::hearthisat_suitable),
-            ("Heise", yt_dlp_rs::extractor::heise_suitable),
-            ("HellPorno", yt_dlp_rs::extractor::hellporno_suitable),
-            ("HGTVUsa", yt_dlp_rs::extractor::hgtv_usa_suitable),
-            (
-                "HistoricFilms",
-                yt_dlp_rs::extractor::historicfilms_suitable,
-            ),
-            ("HitRecord", yt_dlp_rs::extractor::hitrecord_suitable),
-            (
-                "HollywoodReporter",
-                yt_dlp_rs::extractor::hollywoodreporter_suitable,
-            ),
-            (
-                "HollywoodReporterPlaylist",
-                yt_dlp_rs::extractor::hollywoodreporter_playlist_suitable,
-            ),
-            ("Holodex", yt_dlp_rs::extractor::holodex_suitable),
-            ("href.li", yt_dlp_rs::extractor::hrefli_suitable),
-            ("hrfernsehen", yt_dlp_rs::extractor::hrfensehen_suitable),
-            ("HSEProduct", yt_dlp_rs::extractor::hse_product_suitable),
-            ("HSEShow", yt_dlp_rs::extractor::hse_show_suitable),
-            ("html5", |_| false),
-            ("Huajiao", yt_dlp_rs::extractor::huajiao_suitable),
-            ("HuffPost", yt_dlp_rs::extractor::huffpost_suitable),
-            ("huya:live", yt_dlp_rs::extractor::huya_live_suitable),
-            ("huya:video", yt_dlp_rs::extractor::huya_video_suitable),
-            ("Hypem", yt_dlp_rs::extractor::hypem_suitable),
-            ("Hytale", yt_dlp_rs::extractor::hytale_suitable),
-            ("IdagioAlbum", yt_dlp_rs::extractor::idagio_album_suitable),
-            (
-                "IdagioPersonalPlaylist",
-                yt_dlp_rs::extractor::idagio_personal_suitable,
-            ),
-            (
-                "IdagioPlaylist",
-                yt_dlp_rs::extractor::idagio_playlist_suitable,
-            ),
-            (
-                "IdagioRecording",
-                yt_dlp_rs::extractor::idagio_recording_suitable,
-            ),
-            ("IdagioTrack", yt_dlp_rs::extractor::idagio_track_suitable),
-            ("iheartradio", yt_dlp_rs::extractor::iheart_suitable),
-            (
-                "iheartradio:podcast",
-                yt_dlp_rs::extractor::iheart_podcast_suitable,
-            ),
-            ("IlPost", yt_dlp_rs::extractor::ilpost_suitable),
-            ("Iltalehti", yt_dlp_rs::extractor::iltalehti_suitable),
-            ("imdb", yt_dlp_rs::extractor::imdb_suitable),
-            ("imdb:list", yt_dlp_rs::extractor::imdb_list_suitable),
-            ("Imgur", yt_dlp_rs::extractor::imgur_suitable),
-            ("imgur:album", yt_dlp_rs::extractor::imgur_album_suitable),
-            (
-                "imgur:gallery",
-                yt_dlp_rs::extractor::imgur_gallery_suitable,
-            ),
-            ("Ina", yt_dlp_rs::extractor::ina_suitable),
-            ("Inc", yt_dlp_rs::extractor::inc_suitable),
-            ("IndavideoEmbed", yt_dlp_rs::extractor::indavideo_suitable),
-            ("InfoQ", yt_dlp_rs::extractor::infoq_suitable),
-            ("Instagram", yt_dlp_rs::extractor::instagram_suitable),
-            (
-                "instagram:story",
-                yt_dlp_rs::extractor::instagram_story_suitable,
-            ),
-            (
-                "instagram:tag",
-                yt_dlp_rs::extractor::instagram_tag_suitable,
-            ),
-            // `_WORKING = False` extractors are marked.
-            (
-                "instagram:user (CURRENTLY BROKEN)",
-                yt_dlp_rs::extractor::instagram_user_suitable,
-            ),
-            ("InstagramIOS", yt_dlp_rs::extractor::instagram_ios_suitable),
-            (
-                "Internazionale",
-                yt_dlp_rs::extractor::internazionale_suitable,
-            ),
-            (
-                "InvestigationDiscovery",
-                yt_dlp_rs::extractor::investigation_discovery_suitable,
-            ),
-            ("IslamChannel", yt_dlp_rs::extractor::islamchannel_suitable),
-            (
-                "IslamChannelSeries",
-                yt_dlp_rs::extractor::islamchannel_series_suitable,
-            ),
-            (
-                "IsraelNationalNews",
-                yt_dlp_rs::extractor::israelnationalnews_suitable,
-            ),
-            ("ivideon", yt_dlp_rs::extractor::ivideon_suitable),
-            ("Ivoox", yt_dlp_rs::extractor::ivoox_suitable),
-            ("iwara", yt_dlp_rs::extractor::iwara_suitable),
-            (
-                "iwara:playlist",
-                yt_dlp_rs::extractor::iwara_playlist_suitable,
-            ),
-            ("iwara:user", yt_dlp_rs::extractor::iwara_user_suitable),
-            ("Jamendo", yt_dlp_rs::extractor::jamendo_suitable),
-            ("JamendoAlbum", yt_dlp_rs::extractor::jamendo_album_suitable),
-            (
-                "jiosaavn:album",
-                yt_dlp_rs::extractor::jiosaavn_album_suitable,
-            ),
-            (
-                "jiosaavn:artist",
-                yt_dlp_rs::extractor::jiosaavn_artist_suitable,
-            ),
-            (
-                "jiosaavn:playlist",
-                yt_dlp_rs::extractor::jiosaavn_playlist_suitable,
-            ),
-            (
-                "jiosaavn:show",
-                yt_dlp_rs::extractor::jiosaavn_show_suitable,
-            ),
-            (
-                "jiosaavn:show:playlist",
-                yt_dlp_rs::extractor::jiosaavn_show_playlist_suitable,
-            ),
-            (
-                "jiosaavn:song",
-                yt_dlp_rs::extractor::jiosaavn_song_suitable,
-            ),
-            ("Joj", yt_dlp_rs::extractor::joj_suitable),
-            ("Jove", yt_dlp_rs::extractor::jove_suitable),
-            ("JStream", yt_dlp_rs::extractor::jstream_suitable),
-            ("JWPlatform", yt_dlp_rs::extractor::jwplatform_suitable),
-            ("Kaltura", yt_dlp_rs::extractor::kaltura_suitable),
-            (
-                "KankaNews (CURRENTLY BROKEN)",
-                yt_dlp_rs::extractor::kankanews_suitable,
-            ),
-            (
-                "Kenh14Playlist",
-                yt_dlp_rs::extractor::kenh14_playlist_suitable,
-            ),
-            ("Kenh14Video", yt_dlp_rs::extractor::kenh14_video_suitable),
-            ("kick:clip", yt_dlp_rs::extractor::kick_clip_suitable),
-            ("kick:clips", yt_dlp_rs::extractor::kick_clips_suitable),
-            ("kick:live", yt_dlp_rs::extractor::kick_live_suitable),
-            ("kick:videos", yt_dlp_rs::extractor::kick_videos_suitable),
-            ("kick:vod", yt_dlp_rs::extractor::kick_vod_suitable),
-            ("Kicker", yt_dlp_rs::extractor::kicker_suitable),
-            ("KickStarter", yt_dlp_rs::extractor::kickstarter_suitable),
-            ("Kika", yt_dlp_rs::extractor::kika_suitable),
-            ("KikaPlaylist", yt_dlp_rs::extractor::kika_playlist_suitable),
-            ("KinoPoisk", yt_dlp_rs::extractor::kinopoisk_suitable),
-            ("Kommunetv", yt_dlp_rs::extractor::kommunetv_suitable),
-            ("KompasVideo", yt_dlp_rs::extractor::kompas_suitable),
-            ("KTH", yt_dlp_rs::extractor::kth_suitable),
-            ("Ku6", yt_dlp_rs::extractor::ku6_suitable),
-            ("KukuluLive", yt_dlp_rs::extractor::kukululive_suitable),
-            ("LastFM", yt_dlp_rs::extractor::lastfm_suitable),
-            (
-                "LastFMPlaylist",
-                yt_dlp_rs::extractor::lastfm_playlist_suitable,
-            ),
-            ("LastFMUser", yt_dlp_rs::extractor::lastfm_user_suitable),
-            ("lbry", yt_dlp_rs::extractor::lbry_suitable),
-            ("lbry:channel", yt_dlp_rs::extractor::lbry_channel_suitable),
-            (
-                "lbry:playlist",
-                yt_dlp_rs::extractor::lbry_playlist_suitable,
-            ),
-            ("LCI", yt_dlp_rs::extractor::lci_suitable),
-            ("Lecturio", yt_dlp_rs::extractor::lecturio_suitable),
-            (
-                "LeFigaroVideoEmbed",
-                yt_dlp_rs::extractor::lefigaro_embed_suitable,
-            ),
-            (
-                "LeFigaroVideoSection",
-                yt_dlp_rs::extractor::lefigaro_section_suitable,
-            ),
-            ("LEGO", yt_dlp_rs::extractor::lego_suitable),
-            ("Lemonde", yt_dlp_rs::extractor::lemonde_suitable),
-            ("Libsyn", yt_dlp_rs::extractor::libsyn_suitable),
-            ("LinkedIn", yt_dlp_rs::extractor::linkedin_suitable),
-            ("Liputan6", yt_dlp_rs::extractor::liputan6_suitable),
-            ("ListenNotes", yt_dlp_rs::extractor::listennotes_suitable),
-            ("LiTV", yt_dlp_rs::extractor::litv_suitable),
-            (
-                "Livestreamfails",
-                yt_dlp_rs::extractor::livestreamfails_suitable,
-            ),
-            ("Lnk", yt_dlp_rs::extractor::lnk_suitable),
-            ("loc", yt_dlp_rs::extractor::libraryofcongress_suitable),
-            ("loom", yt_dlp_rs::extractor::loom_suitable),
-            ("LRTRadio", yt_dlp_rs::extractor::lrt_radio_suitable),
-            ("LRTStream", yt_dlp_rs::extractor::lrt_stream_suitable),
-            ("LRTVOD", yt_dlp_rs::extractor::lrt_vod_suitable),
-            ("LSMLTVEmbed", yt_dlp_rs::extractor::ltv_embed_suitable),
-            ("LSMReplay", yt_dlp_rs::extractor::replay_suitable),
-            ("maariv.co.il", yt_dlp_rs::extractor::maariv_suitable),
-            ("MagellanTV", yt_dlp_rs::extractor::magellantv_suitable),
-            ("mailru", yt_dlp_rs::extractor::mailru_suitable),
-            ("mailru:music", yt_dlp_rs::extractor::mailru_music_suitable),
-            (
-                "mailru:music:search",
-                yt_dlp_rs::extractor::mailru_music_search_suitable,
-            ),
-            (
-                "MainStreaming",
-                yt_dlp_rs::extractor::mainstreaming_suitable,
-            ),
-            (
-                "mangomolo:live",
-                yt_dlp_rs::extractor::mangomolo_live_suitable,
-            ),
-            (
-                "mangomolo:video",
-                yt_dlp_rs::extractor::mangomolo_video_suitable,
-            ),
-            ("MangoTV", yt_dlp_rs::extractor::mgtv_suitable),
-            ("MaoriTV", yt_dlp_rs::extractor::maoritv_suitable),
-            (
-                "massengeschmack.tv",
-                yt_dlp_rs::extractor::massengeschmacktv_suitable,
-            ),
-            ("Masters", yt_dlp_rs::extractor::masters_suitable),
-            ("MatchiTV", yt_dlp_rs::extractor::matchitv_suitable),
-            ("MatchTV", yt_dlp_rs::extractor::matchtv_suitable),
-            ("mave", yt_dlp_rs::extractor::mave_suitable),
-            ("mave:channel", yt_dlp_rs::extractor::mave_channel_suitable),
-            ("MBN", yt_dlp_rs::extractor::mbn_suitable),
-            ("MDR", yt_dlp_rs::extractor::mdr_suitable),
-            ("MedalTV", yt_dlp_rs::extractor::medaltv_suitable),
-            ("media.ccc.de", yt_dlp_rs::extractor::ccc_suitable),
-            (
-                "media.ccc.de:lists",
-                yt_dlp_rs::extractor::ccc_playlist_suitable,
-            ),
-            ("Mediaite", yt_dlp_rs::extractor::mediaite_suitable),
-            ("MediaKlikk", yt_dlp_rs::extractor::mediaklikk_suitable),
-            ("MediaStream", yt_dlp_rs::extractor::mediastream_suitable),
-            (
-                "MediaWorksNZVOD",
-                yt_dlp_rs::extractor::mediaworksnz_suitable,
-            ),
-            ("Medici", yt_dlp_rs::extractor::medici_suitable),
-            ("megaphone.fm", yt_dlp_rs::extractor::megaphone_suitable),
-            ("megatvcom", yt_dlp_rs::extractor::megatvcom_suitable),
-            ("Meipai", yt_dlp_rs::extractor::meipai_suitable),
-            (
-                "mellowfan:capture",
-                yt_dlp_rs::extractor::openrec_capture_suitable,
-            ),
-            (
-                "mellowfan:channel:search",
-                yt_dlp_rs::extractor::openrec_channel_search_suitable,
-            ),
-            (
-                "mellowfan:playlist",
-                yt_dlp_rs::extractor::openrec_playlist_suitable,
-            ),
-            ("MelonVOD", yt_dlp_rs::extractor::melonvod_suitable),
-            (
-                "MicrosoftLearnEpisode",
-                yt_dlp_rs::extractor::microsoft_learn_episode_suitable,
-            ),
-            (
-                "MicrosoftLearnPlaylist",
-                yt_dlp_rs::extractor::microsoft_learn_playlist_suitable,
-            ),
-            ("mir24.tv", yt_dlp_rs::extractor::mir24tv_suitable),
-            ("MirrorCoUK", yt_dlp_rs::extractor::mirrorcouk_suitable),
-            ("mixch", yt_dlp_rs::extractor::mixch_suitable),
-            (
-                "mixch:archive",
-                yt_dlp_rs::extractor::mixch_archive_suitable,
-            ),
-            ("mixch:movie", yt_dlp_rs::extractor::mixch_movie_suitable),
-            ("mixcloud", yt_dlp_rs::extractor::mixcloud_suitable),
-            (
-                "mixcloud:playlist",
-                yt_dlp_rs::extractor::mixcloud_playlist_suitable,
-            ),
-            (
-                "mixcloud:user",
-                yt_dlp_rs::extractor::mixcloud_user_suitable,
-            ),
-            ("Mixlr", yt_dlp_rs::extractor::mixlr_suitable),
-            (
-                "MixlrRecoring",
-                yt_dlp_rs::extractor::mixlr_recording_suitable,
-            ),
-            ("MLB", yt_dlp_rs::extractor::mlb_suitable),
-            ("MLBVideo", yt_dlp_rs::extractor::mlb_video_suitable),
-            ("MLSSoccer", yt_dlp_rs::extractor::mlssoccer_suitable),
-            ("MochaVideo", yt_dlp_rs::extractor::mocha_suitable),
-            ("Mojevideo", yt_dlp_rs::extractor::mojevideo_suitable),
-            ("Monstercat", yt_dlp_rs::extractor::monstercat_suitable),
-            ("monstersiren", yt_dlp_rs::extractor::hypergryph_suitable),
-            ("moviepilot", yt_dlp_rs::extractor::moviepilot_suitable),
-            ("MovingImage", yt_dlp_rs::extractor::movingimage_suitable),
-            ("MuseScore", yt_dlp_rs::extractor::musescore_suitable),
-            ("Mux", yt_dlp_rs::extractor::mux_suitable),
-            ("MySpace", yt_dlp_rs::extractor::myspace_suitable),
-            (
-                "MySpace:album",
-                yt_dlp_rs::extractor::myspace_album_suitable,
-            ),
-            ("MySpass", yt_dlp_rs::extractor::myspass_suitable),
-            ("MyVideoGe", yt_dlp_rs::extractor::myvideoge_suitable),
-            ("MyVidster", yt_dlp_rs::extractor::myvidster_suitable),
-            ("n-tv.de", yt_dlp_rs::extractor::ntvde_suitable),
-            ("N1Info:article", yt_dlp_rs::extractor::n1_suitable),
-            ("N1InfoAsset", yt_dlp_rs::extractor::n1_asset_suitable),
-            (
-                "NascarClassics",
-                yt_dlp_rs::extractor::nascar_classics_suitable,
-            ),
-            ("Nate", yt_dlp_rs::extractor::nate_suitable),
-            ("NekoHacker", yt_dlp_rs::extractor::nekohacker_suitable),
-            ("Nest", yt_dlp_rs::extractor::nest_suitable),
-            ("NestClip", yt_dlp_rs::extractor::nest_clip_suitable),
-            (
-                "NetAppCollection",
-                yt_dlp_rs::extractor::netapp_collection_suitable,
-            ),
-            ("NetAppVideo", yt_dlp_rs::extractor::netapp_video_suitable),
-            (
-                "netease:djradio",
-                yt_dlp_rs::extractor::netease_djradio_suitable,
-            ),
-            ("netease:mv", yt_dlp_rs::extractor::netease_mv_suitable),
-            (
-                "netease:program",
-                yt_dlp_rs::extractor::netease_program_suitable,
-            ),
-            ("Netzkino", yt_dlp_rs::extractor::netzkino_suitable),
-            ("Newsy", yt_dlp_rs::extractor::newsy_suitable),
-            ("Nexx", yt_dlp_rs::extractor::nexx_suitable),
-            ("NFHSNetwork", yt_dlp_rs::extractor::nfhsnetwork_suitable),
-            (
-                "nfl.com:article",
-                yt_dlp_rs::extractor::nfl_article_suitable,
-            ),
-            ("NhkVod", yt_dlp_rs::extractor::nhk_vod_suitable),
-            ("NhkVodProgram", yt_dlp_rs::extractor::nhk_program_suitable),
-            ("niconico", yt_dlp_rs::extractor::niconico_suitable),
-            (
-                "niconico:history",
-                yt_dlp_rs::extractor::niconico_history_suitable,
-            ),
-            (
-                "niconico:playlist",
-                yt_dlp_rs::extractor::niconico_playlist_suitable,
-            ),
-            (
-                "niconico:series",
-                yt_dlp_rs::extractor::niconico_series_suitable,
-            ),
-            ("niconico:tag", yt_dlp_rs::extractor::niconico_tag_suitable),
-            ("NiconicoUser", yt_dlp_rs::extractor::niconico_user_suitable),
-            (
-                "nicovideo:search",
-                yt_dlp_rs::extractor::nicovideo_search_suitable,
-            ),
-            (
-                "nicovideo:search:date",
-                yt_dlp_rs::extractor::nicovideo_search_date_suitable,
-            ),
-            (
-                "nicovideo:search_url",
-                yt_dlp_rs::extractor::nicovideo_search_url_suitable,
-            ),
-            ("NobelPrize", yt_dlp_rs::extractor::nobelprize_suitable),
-            ("NoicePodcast", yt_dlp_rs::extractor::noice_suitable),
-            (
-                "NoodleMagazine",
-                yt_dlp_rs::extractor::noodlemagazine_suitable,
-            ),
-            ("NOSNLArticle", yt_dlp_rs::extractor::nosnl_suitable),
-            ("NovaEmbed", yt_dlp_rs::extractor::nova_suitable),
-            ("NovaPlay", yt_dlp_rs::extractor::novaplay_suitable),
-            ("NowCanal", yt_dlp_rs::extractor::nowcanal_suitable),
-            ("nowness", yt_dlp_rs::extractor::nowness_suitable),
-            (
-                "nowness:playlist",
-                yt_dlp_rs::extractor::nowness_playlist_suitable,
-            ),
-            (
-                "nowness:series",
-                yt_dlp_rs::extractor::nowness_series_suitable,
-            ),
-            ("Npr", yt_dlp_rs::extractor::npr_suitable),
-            ("NRK", yt_dlp_rs::extractor::nrk_suitable),
-            ("NRKPlaylist", yt_dlp_rs::extractor::nrk_playlist_suitable),
-            (
-                "NRKRadioPodkast",
-                yt_dlp_rs::extractor::nrk_radio_podkast_suitable,
-            ),
-            ("NRKTV", yt_dlp_rs::extractor::nrk_tv_suitable),
-            (
-                "NRKTVDirekte",
-                yt_dlp_rs::extractor::nrk_tv_direkte_suitable,
-            ),
-            (
-                "NRKTVEpisode",
-                yt_dlp_rs::extractor::nrk_tv_episode_suitable,
-            ),
-            ("NRKTVSeason", yt_dlp_rs::extractor::nrk_tv_season_suitable),
-            ("NRKTVSeries", yt_dlp_rs::extractor::nrk_tv_series_suitable),
-            ("nts.live", yt_dlp_rs::extractor::nts_suitable),
-            ("ntv.ru", yt_dlp_rs::extractor::ntvru_suitable),
-            ("Nuvid", yt_dlp_rs::extractor::nuvid_suitable),
-            ("NYTimes", yt_dlp_rs::extractor::nytimes_suitable),
-            ("nzherald", yt_dlp_rs::extractor::nzherald_suitable),
-            ("NZOnScreen", yt_dlp_rs::extractor::nzonscreen_suitable),
-            ("NZZ", yt_dlp_rs::extractor::nzz_suitable),
-            (
-                "Odnoklassniki",
-                yt_dlp_rs::extractor::odnoklassniki_suitable,
-            ),
-            ("OlympicsReplay", yt_dlp_rs::extractor::olympics_suitable),
-            ("Omnyfm", yt_dlp_rs::extractor::omnyfm_suitable),
-            (
-                "OmnyfmPlaylist",
-                yt_dlp_rs::extractor::omnyfm_playlist_suitable,
-            ),
-            ("OmnyfmShow", yt_dlp_rs::extractor::omnyfm_show_suitable),
-            ("on24", yt_dlp_rs::extractor::on24_suitable),
-            (
-                "OnDemandKorea",
-                yt_dlp_rs::extractor::ondemandkorea_suitable,
-            ),
-            (
-                "OnDemandKoreaProgram",
-                yt_dlp_rs::extractor::ondemandkorea_program_suitable,
-            ),
-            ("OneFootball", yt_dlp_rs::extractor::onefootball_suitable),
-            ("OnePlacePodcast", yt_dlp_rs::extractor::oneplace_suitable),
-            ("onsen", yt_dlp_rs::extractor::onsen_suitable),
-            ("Opencast", yt_dlp_rs::extractor::opencast_suitable),
-            (
-                "OpencastPlaylist",
-                yt_dlp_rs::extractor::opencast_playlist_suitable,
-            ),
-            ("orf:on", yt_dlp_rs::extractor::orf_on_suitable),
-            ("orf:podcast", yt_dlp_rs::extractor::orf_podcast_suitable),
-            ("orf:radio", yt_dlp_rs::extractor::orf_radio_suitable),
-            ("OutsideTV", yt_dlp_rs::extractor::outsidetv_suitable),
-            ("PacktPub", yt_dlp_rs::extractor::packtpub_suitable),
-            (
-                "PacktPubCourse",
-                yt_dlp_rs::extractor::packtpub_course_suitable,
-            ),
-            ("parliamentlive.tv", yt_dlp_rs::extractor::redbee_suitable),
-            ("Parlview", yt_dlp_rs::extractor::parlview_suitable),
-            (
-                "parti:livestream",
-                yt_dlp_rs::extractor::parti_livestream_suitable,
-            ),
-            ("parti:video", yt_dlp_rs::extractor::parti_video_suitable),
-            ("PearVideo", yt_dlp_rs::extractor::pearvideo_suitable),
-            ("peer.tv", yt_dlp_rs::extractor::peertv_suitable),
-            ("PeerTube", yt_dlp_rs::extractor::peertube_suitable),
-            (
-                "PeerTube:Playlist",
-                yt_dlp_rs::extractor::peertube_playlist_suitable,
-            ),
-            ("periscope", yt_dlp_rs::extractor::periscope_suitable),
-            ("PGATour", yt_dlp_rs::extractor::pgatour_suitable),
-            (
-                "PhilharmonieDeParis",
-                yt_dlp_rs::extractor::philharmoniedeparis_suitable,
-            ),
-            ("Photobucket", yt_dlp_rs::extractor::photobucket_suitable),
-            ("PiaLive", yt_dlp_rs::extractor::pialive_suitable),
-            ("picarto", yt_dlp_rs::extractor::picarto_suitable),
-            ("picarto:vod", yt_dlp_rs::extractor::picarto_vod_suitable),
-            ("Piksel", yt_dlp_rs::extractor::piksel_suitable),
-            ("Pinkbike", yt_dlp_rs::extractor::pinkbike_suitable),
-            ("Pinterest", yt_dlp_rs::extractor::pinterest_suitable),
-            (
-                "PinterestCollection",
-                yt_dlp_rs::extractor::pinterest_collection_suitable,
-            ),
-            ("PlayerFm", yt_dlp_rs::extractor::playerfm_suitable),
-            ("PodbayFM", yt_dlp_rs::extractor::podbayfm_suitable),
-            (
-                "PodbayFMChannel",
-                yt_dlp_rs::extractor::podbayfm_channel_suitable,
-            ),
-            ("Podchaser", yt_dlp_rs::extractor::podchaser_suitable),
-            ("PolskieRadio", yt_dlp_rs::extractor::polskieradio_suitable),
-            (
-                "polskieradio:legacy",
-                yt_dlp_rs::extractor::polskieradio_legacy_suitable,
-            ),
-            (
-                "polskieradio:podcast:list",
-                yt_dlp_rs::extractor::polskieradio_podcast_list_suitable,
-            ),
-            ("Popcorntimes", yt_dlp_rs::extractor::popcorntimes_suitable),
-            ("PopcornTV", yt_dlp_rs::extractor::popcorntv_suitable),
-            ("PornHub", yt_dlp_rs::extractor::pornhub_suitable),
-            (
-                "PornHubPagedVideoList",
-                yt_dlp_rs::extractor::pornhub_paged_suitable,
-            ),
-            (
-                "PornHubPlaylist",
-                yt_dlp_rs::extractor::pornhub_playlist_suitable,
-            ),
-            ("PornHubUser", yt_dlp_rs::extractor::pornhub_user_suitable),
-            ("PornTop", yt_dlp_rs::extractor::porntop_suitable),
-            ("PrankCast", yt_dlp_rs::extractor::prankcast_suitable),
-            (
-                "PrankCastPost",
-                yt_dlp_rs::extractor::prankcast_post_suitable,
-            ),
-            (
-                "PremiershipRugby",
-                yt_dlp_rs::extractor::premiershiprugby_suitable,
-            ),
-            ("PressTV", yt_dlp_rs::extractor::presstv_suitable),
-            (
-                "ProjectVeritas (CURRENTLY BROKEN)",
-                yt_dlp_rs::extractor::projectveritas_suitable,
-            ),
-            ("Pyvideo", yt_dlp_rs::extractor::pyvideo_suitable),
-            ("QingTing", yt_dlp_rs::extractor::qingting_suitable),
-            ("radiocanada", yt_dlp_rs::extractor::radiocanada_suitable),
-            (
-                "radiocanada:audiovideo",
-                yt_dlp_rs::extractor::radiocanada_audio_video_suitable,
-            ),
-            ("radiokapital", yt_dlp_rs::extractor::radiokapital_suitable),
-            (
-                "radiokapital:show",
-                yt_dlp_rs::extractor::radiokapital_show_suitable,
-            ),
-            (
-                "RadioRadicale",
-                yt_dlp_rs::extractor::radioradicale_suitable,
-            ),
-            ("RadioZetPodcast", yt_dlp_rs::extractor::radiozet_suitable),
-            ("Rai", yt_dlp_rs::extractor::rai_suitable),
-            ("RaiCultura", yt_dlp_rs::extractor::raicultura_suitable),
-            ("RaiNews", yt_dlp_rs::extractor::rainews_suitable),
-            ("RaiPlay", yt_dlp_rs::extractor::raiplay_suitable),
-            ("RaiPlayLive", yt_dlp_rs::extractor::raiplaylive_suitable),
-            (
-                "RaiPlayPlaylist",
-                yt_dlp_rs::extractor::raiplayplaylist_suitable,
-            ),
-            ("RaiPlaySound", yt_dlp_rs::extractor::raiplaysound_suitable),
-            (
-                "RaiPlaySoundLive",
-                yt_dlp_rs::extractor::raiplaysoundlive_suitable,
-            ),
-            (
-                "RaiPlaySoundPlaylist",
-                yt_dlp_rs::extractor::raiplaysoundplaylist_suitable,
-            ),
-            ("RaiSudtirol", yt_dlp_rs::extractor::raisudtirol_suitable),
-            ("RCS", yt_dlp_rs::extractor::rcs_suitable),
-            ("RCSEmbeds", yt_dlp_rs::extractor::rcs_embeds_suitable),
-            ("RCSVarious", yt_dlp_rs::extractor::rcs_various_suitable),
-            ("RCTIPlus", yt_dlp_rs::extractor::rcti_suitable),
-            ("RCTIPlusSeries", yt_dlp_rs::extractor::rcti_series_suitable),
-            ("Reddit", yt_dlp_rs::extractor::reddit_suitable),
-            ("RedGifs", yt_dlp_rs::extractor::redgifs_suitable),
-            (
-                "RedGifsSearch",
-                yt_dlp_rs::extractor::redgifs_search_suitable,
-            ),
-            ("RedGifsUser", yt_dlp_rs::extractor::redgifs_user_suitable),
-            ("RedTube", yt_dlp_rs::extractor::redtube_suitable),
-            ("ReverbNation", yt_dlp_rs::extractor::reverbnation_suitable),
-            ("RinseFM", yt_dlp_rs::extractor::rinsefm_suitable),
-            (
-                "RinseFMArtistPlaylist",
-                yt_dlp_rs::extractor::rinsefm_playlist_suitable,
-            ),
-            ("Rokfin", yt_dlp_rs::extractor::rokfin_suitable),
-            ("rokfin:stack", yt_dlp_rs::extractor::rokfin_stack_suitable),
-            (
-                "RottenTomatoes",
-                yt_dlp_rs::extractor::rottentomatoes_suitable,
-            ),
-            ("RoyaLive", yt_dlp_rs::extractor::roya_suitable),
-            ("Rozhlas", yt_dlp_rs::extractor::rozhlas_audio_suitable),
-            (
-                "RozhlasVltava",
-                yt_dlp_rs::extractor::rozhlas_vltava_suitable,
-            ),
-            ("rte", yt_dlp_rs::extractor::rte_suitable),
-            ("rte:radio", yt_dlp_rs::extractor::rte_radio_suitable),
-            ("RTRFM", yt_dlp_rs::extractor::rtrfm_suitable),
-            ("RTVCKaltura", yt_dlp_rs::extractor::rtvcplay_suitable),
-            ("RTVCPlay", yt_dlp_rs::extractor::rtvcplay_play_suitable),
-            (
-                "rtve.es:alacarta",
-                yt_dlp_rs::extractor::rtve_alacarta_suitable,
-            ),
-            ("rtve.es:audio", yt_dlp_rs::extractor::rtve_audio_suitable),
-            ("rtve.es:live", yt_dlp_rs::extractor::rtve_live_suitable),
-            (
-                "rtve.es:program",
-                yt_dlp_rs::extractor::rtve_program_suitable,
-            ),
-            (
-                "rtve.es:television",
-                yt_dlp_rs::extractor::rtve_television_suitable,
-            ),
-            ("rtvslo.si", yt_dlp_rs::extractor::rtvslo_suitable),
-            ("rtvslo.si:show", yt_dlp_rs::extractor::rtvslo_show_suitable),
-            ("RudoVideo", yt_dlp_rs::extractor::rudovideo_suitable),
-            ("Rumble", yt_dlp_rs::extractor::rumble_suitable),
-            ("RumbleEmbed", yt_dlp_rs::extractor::rumble_embed_suitable),
-            ("rutube", yt_dlp_rs::extractor::rutube_suitable),
-            (
-                "rutube:channel",
-                yt_dlp_rs::extractor::rutube_channel_suitable,
-            ),
-            ("rutube:embed", yt_dlp_rs::extractor::rutube_embed_suitable),
-            (
-                "rutube:person",
-                yt_dlp_rs::extractor::rutube_person_suitable,
-            ),
-            (
-                "rutube:playlist",
-                yt_dlp_rs::extractor::rutube_playlist_suitable,
-            ),
-            ("Ruv", yt_dlp_rs::extractor::ruv_suitable),
-            ("ruv.is:spila", yt_dlp_rs::extractor::ruv_spila_suitable),
-            ("S4C", yt_dlp_rs::extractor::s4c_suitable),
-            ("S4CSeries", yt_dlp_rs::extractor::s4c_series_suitable),
-            ("Sapo", yt_dlp_rs::extractor::sapo_suitable),
-            ("SBS", yt_dlp_rs::extractor::sbs_suitable),
-            (
-                "ScienceChannel",
-                yt_dlp_rs::extractor::science_channel_suitable,
-            ),
-            ("Screen9", yt_dlp_rs::extractor::screen9_suitable),
-            ("Screencast", yt_dlp_rs::extractor::screencast_suitable),
-            (
-                "Screencastify",
-                yt_dlp_rs::extractor::screencastify_suitable,
-            ),
-            ("ScreenRec", yt_dlp_rs::extractor::screenrec_suitable),
-            ("Sen", yt_dlp_rs::extractor::sen_suitable),
-            ("Servus", yt_dlp_rs::extractor::servus_suitable),
-            ("SharePoint", yt_dlp_rs::extractor::sharepoint_suitable),
-            ("ShemarooMe", yt_dlp_rs::extractor::shemaroome_suitable),
-            (
-                "showroom:live",
-                yt_dlp_rs::extractor::showroom_live_suitable,
-            ),
-            ("showroom:vod", yt_dlp_rs::extractor::showroom_vod_suitable),
-            (
-                "ShugiinItvLive",
-                yt_dlp_rs::extractor::shugiinitvlive_suitable,
-            ),
-            (
-                "ShugiinItvVod",
-                yt_dlp_rs::extractor::shugiinitvvod_suitable,
-            ),
-            ("simplecast", yt_dlp_rs::extractor::simplecast_suitable),
-            (
-                "simplecast:episode",
-                yt_dlp_rs::extractor::simplecast_episode_suitable,
-            ),
-            (
-                "simplecast:podcast",
-                yt_dlp_rs::extractor::simplecast_podcast_suitable,
-            ),
-            ("Sina", yt_dlp_rs::extractor::sina_suitable),
-            ("Skeb", yt_dlp_rs::extractor::skeb_suitable),
-            ("sky:news", yt_dlp_rs::extractor::sky_news_suitable),
-            (
-                "sky:news:story",
-                yt_dlp_rs::extractor::sky_news_story_suitable,
-            ),
-            ("sky:sports", yt_dlp_rs::extractor::sky_sports_suitable),
-            (
-                "sky:sports:news",
-                yt_dlp_rs::extractor::sky_sports_news_suitable,
-            ),
-            (
-                "SkylineWebcams (CURRENTLY BROKEN)",
-                yt_dlp_rs::extractor::skylinewebcams_suitable,
-            ),
-            ("SkyNewsAU", yt_dlp_rs::extractor::skynewsau_suitable),
-            ("SnapchatSpotlight", yt_dlp_rs::extractor::snapchat_suitable),
-            ("Sohu", yt_dlp_rs::extractor::sohu_suitable),
-            ("SohuV", yt_dlp_rs::extractor::sohu_v_suitable),
-            ("soop", yt_dlp_rs::extractor::afreecatv_vod_suitable),
-            (
-                "soop:catchstory",
-                yt_dlp_rs::extractor::afreecatv_catchstory_suitable,
-            ),
-            ("soop:user", yt_dlp_rs::extractor::afreecatv_user_suitable),
-            ("soundcloud", yt_dlp_rs::extractor::soundcloud_suitable),
-            (
-                "soundcloud:playlist",
-                yt_dlp_rs::extractor::soundcloud_playlist_suitable,
-            ),
-            (
-                "soundcloud:related",
-                yt_dlp_rs::extractor::soundcloud_related_suitable,
-            ),
-            (
-                "soundcloud:search",
-                yt_dlp_rs::extractor::soundcloud_search_suitable,
-            ),
-            (
-                "soundcloud:set",
-                yt_dlp_rs::extractor::soundcloud_set_suitable,
-            ),
-            (
-                "soundcloud:trackstation",
-                yt_dlp_rs::extractor::soundcloud_track_station_suitable,
-            ),
-            (
-                "soundcloud:user",
-                yt_dlp_rs::extractor::soundcloud_user_suitable,
-            ),
-            (
-                "soundcloud:user:permalink",
-                yt_dlp_rs::extractor::soundcloud_user_permalink_suitable,
-            ),
-            (
-                "SoundcloudEmbed",
-                yt_dlp_rs::extractor::soundcloud_embed_suitable,
-            ),
-            ("soundgasm", yt_dlp_rs::extractor::soundgasm_suitable),
-            (
-                "soundgasm:profile",
-                yt_dlp_rs::extractor::soundgasm_profile_suitable,
-            ),
-            (
-                "SovietsCloset",
-                yt_dlp_rs::extractor::sovietscloset_suitable,
-            ),
-            (
-                "SovietsClosetPlaylist",
-                yt_dlp_rs::extractor::sovietscloset_playlist_suitable,
-            ),
-            ("Spiegel", yt_dlp_rs::extractor::spiegel_suitable),
-            ("Sport5", yt_dlp_rs::extractor::sport5_suitable),
-            ("Spreaker", yt_dlp_rs::extractor::spreaker_suitable),
-            ("SpreakerShow", yt_dlp_rs::extractor::spreaker_show_suitable),
-            ("SproutVideo", yt_dlp_rs::extractor::sproutvideo_suitable),
-            ("SRGSSR", yt_dlp_rs::extractor::srgssr_suitable),
-            ("SRGSSRPlay", yt_dlp_rs::extractor::srgssr_play_suitable),
-            ("startrek", yt_dlp_rs::extractor::startrek_suitable),
-            ("startv", yt_dlp_rs::extractor::startv_suitable),
-            ("Steam", yt_dlp_rs::extractor::steam_suitable),
-            (
-                "SteamCommunity",
-                yt_dlp_rs::extractor::steam_community_suitable,
-            ),
-            (
-                "SteamCommunityBroadcast",
-                yt_dlp_rs::extractor::steam_broadcast_suitable,
-            ),
-            ("Streaks", yt_dlp_rs::extractor::streaks_suitable),
-            ("Streamable", yt_dlp_rs::extractor::streamable_suitable),
-            ("StreamCZ", yt_dlp_rs::extractor::streamcz_suitable),
-            ("StreetVoice", yt_dlp_rs::extractor::streetvoice_suitable),
-            ("stv:player", yt_dlp_rs::extractor::stv_player_suitable),
-            ("stvr", yt_dlp_rs::extractor::rtvs_suitable),
-            ("Subsplash", yt_dlp_rs::extractor::subsplash_suitable),
-            (
-                "subsplash:playlist",
-                yt_dlp_rs::extractor::subsplash_playlist_suitable,
-            ),
-            ("Substack", yt_dlp_rs::extractor::substack_suitable),
-            (
-                "sverigesradio:episode",
-                yt_dlp_rs::extractor::sverigesradio_episode_suitable,
-            ),
-            (
-                "sverigesradio:publication",
-                yt_dlp_rs::extractor::sverigesradio_publication_suitable,
-            ),
-            ("svt:page", yt_dlp_rs::extractor::svt_page_suitable),
-            ("svt:play", yt_dlp_rs::extractor::svt_suitable),
-            ("svt:play:series", yt_dlp_rs::extractor::svt_series_suitable),
-            ("SztvHu", yt_dlp_rs::extractor::sztvhu_suitable),
-            ("TapTapApp", yt_dlp_rs::extractor::taptap_app_suitable),
-            (
-                "TapTapAppIntl",
-                yt_dlp_rs::extractor::taptap_app_intl_suitable,
-            ),
-            ("TapTapMoment", yt_dlp_rs::extractor::taptap_moment_suitable),
-            (
-                "TapTapPostIntl",
-                yt_dlp_rs::extractor::taptap_post_intl_suitable,
-            ),
-            ("Teamcoco", yt_dlp_rs::extractor::teamcoco_suitable),
-            (
-                "TeamTreeHouse",
-                yt_dlp_rs::extractor::teamtreehouse_suitable,
-            ),
-            ("TedEmbed", yt_dlp_rs::extractor::ted_embed_suitable),
-            ("TedPlaylist", yt_dlp_rs::extractor::ted_playlist_suitable),
-            ("TedSeries", yt_dlp_rs::extractor::ted_series_suitable),
-            ("TedTalk", yt_dlp_rs::extractor::ted_talk_suitable),
-            ("Tele13", yt_dlp_rs::extractor::tele13_suitable),
-            (
-                "TeleBruxelles",
-                yt_dlp_rs::extractor::telebruxelles_suitable,
-            ),
-            ("Telegraaf", yt_dlp_rs::extractor::telegraaf_suitable),
-            ("telegram:embed", yt_dlp_rs::extractor::telegram_suitable),
-            (
-                "TeleTask (CURRENTLY BROKEN)",
-                yt_dlp_rs::extractor::teletask_suitable,
-            ),
-            ("Telewebion", yt_dlp_rs::extractor::telewebion_suitable),
-            ("TF1", yt_dlp_rs::extractor::tf1_suitable),
-            ("TheChosen", yt_dlp_rs::extractor::thechosen_suitable),
-            (
-                "TheGuardianPodcast",
-                yt_dlp_rs::extractor::theguardian_suitable,
-            ),
-            ("TheHighWire", yt_dlp_rs::extractor::thehighwire_suitable),
-            ("TheIntercept", yt_dlp_rs::extractor::theintercept_suitable),
-            ("TheStar", yt_dlp_rs::extractor::thestar_suitable),
-            ("TheSun", yt_dlp_rs::extractor::thesun_suitable),
-            (
-                "ThisAmericanLife",
-                yt_dlp_rs::extractor::thisamericanlife_suitable,
-            ),
-            ("ThisOldHouse", yt_dlp_rs::extractor::thisoldhouse_suitable),
-            ("ThreeSpeak", yt_dlp_rs::extractor::threespeak_suitable),
-            (
-                "ThreeSpeakUser",
-                yt_dlp_rs::extractor::threespeak_user_suitable,
-            ),
-            ("TikTok", yt_dlp_rs::extractor::tiktok_suitable),
-            (
-                "tiktok:collection",
-                yt_dlp_rs::extractor::tiktok_collection_suitable,
-            ),
-            ("tiktok:live", yt_dlp_rs::extractor::tiktok_live_suitable),
-            ("tiktok:user", yt_dlp_rs::extractor::tiktok_user_suitable),
-            ("TMZ", yt_dlp_rs::extractor::tmz_suitable),
-            ("TNAFlix", yt_dlp_rs::extractor::tnaflix_suitable),
-            (
-                "TNAFlixNetworkEmbed",
-                yt_dlp_rs::extractor::tnaflix_network_embed_suitable,
-            ),
-            (
-                "tokfm:audition",
-                yt_dlp_rs::extractor::tokfm_audition_suitable,
-            ),
-            (
-                "tokfm:podcast",
-                yt_dlp_rs::extractor::tokfm_podcast_suitable,
-            ),
-            ("ToonGoggles", yt_dlp_rs::extractor::toongoggles_suitable),
-            ("toutiao", yt_dlp_rs::extractor::toutiao_suitable),
-            (
-                "Toypics (CURRENTLY BROKEN)",
-                yt_dlp_rs::extractor::toypics_suitable,
-            ),
-            ("TrtCocukVideo", yt_dlp_rs::extractor::trtcocuk_suitable),
-            ("TrtWorld", yt_dlp_rs::extractor::trtworld_suitable),
-            ("TruNews", yt_dlp_rs::extractor::trunews_suitable),
-            ("Truth", yt_dlp_rs::extractor::truth_suitable),
-            ("Tumblr", yt_dlp_rs::extractor::tumblr_suitable),
-            ("tunein:embed", yt_dlp_rs::extractor::tunein_embed_suitable),
-            (
-                "tunein:podcast",
-                yt_dlp_rs::extractor::tunein_episode_suitable,
-            ),
-            (
-                "tunein:podcast:program",
-                yt_dlp_rs::extractor::tunein_podcast_suitable,
-            ),
-            (
-                "tunein:shortener",
-                yt_dlp_rs::extractor::tunein_shortener_suitable,
-            ),
-            (
-                "tunein:station",
-                yt_dlp_rs::extractor::tunein_station_suitable,
-            ),
-            ("tv.dfb.de", yt_dlp_rs::extractor::dfb_suitable),
-            ("TV2", yt_dlp_rs::extractor::tv2_suitable),
-            ("TV2Article", yt_dlp_rs::extractor::tv2_article_suitable),
-            ("TV2DK", yt_dlp_rs::extractor::tv2dk_suitable),
-            (
-                "TV2DKBornholmPlay",
-                yt_dlp_rs::extractor::tv2dk_bornholm_suitable,
-            ),
-            ("tv2play.hu", yt_dlp_rs::extractor::tv2hu_suitable),
-            (
-                "tv2playseries.hu",
-                yt_dlp_rs::extractor::tv2hu_series_suitable,
-            ),
-            ("TV4", yt_dlp_rs::extractor::tv4_suitable),
-            ("TV5MONDE", yt_dlp_rs::extractor::tv5mondeplus_suitable),
-            ("tv5unis", yt_dlp_rs::extractor::tv5unis_suitable),
-            (
-                "tv5unis:video",
-                yt_dlp_rs::extractor::tv5unis_video_suitable,
-            ),
-            ("TVANouvelles", yt_dlp_rs::extractor::tvanouvelles_suitable),
-            (
-                "TVANouvellesArticle",
-                yt_dlp_rs::extractor::tvanouvelles_article_suitable,
-            ),
-            ("tvaplus", yt_dlp_rs::extractor::tva_suitable),
-            ("tvigle", yt_dlp_rs::extractor::tvigle_suitable),
-            ("TVIPlayer", yt_dlp_rs::extractor::tviplayer_suitable),
-            ("tvnoe", yt_dlp_rs::extractor::tvnoe_suitable),
-            ("TVO", yt_dlp_rs::extractor::tvo_suitable),
-            (
-                "tvopengr:embed",
-                yt_dlp_rs::extractor::tvopengr_embed_suitable,
-            ),
-            ("tvopengr:watch", yt_dlp_rs::extractor::tvopengr_suitable),
-            ("tvp:embed", yt_dlp_rs::extractor::tvp_embed_suitable),
-            ("tvp:vod", yt_dlp_rs::extractor::tvp_vod_video_suitable),
-            (
-                "tvp:vod:series",
-                yt_dlp_rs::extractor::tvp_vod_series_suitable,
-            ),
-            ("tvw", yt_dlp_rs::extractor::tvw_suitable),
-            ("tvw:news", yt_dlp_rs::extractor::tvw_news_suitable),
-            ("tvw:tvchannels", yt_dlp_rs::extractor::tvw_channel_suitable),
-            ("Tweakers", yt_dlp_rs::extractor::tweakers_suitable),
-            ("twitch:clips", yt_dlp_rs::extractor::twitch_clips_suitable),
-            (
-                "twitch:collection",
-                yt_dlp_rs::extractor::twitch_collection_suitable,
-            ),
-            (
-                "twitch:stream",
-                yt_dlp_rs::extractor::twitch_stream_suitable,
-            ),
-            (
-                "twitch:videos",
-                yt_dlp_rs::extractor::twitch_videos_suitable,
-            ),
-            (
-                "twitch:videos:clips",
-                yt_dlp_rs::extractor::twitch_videos_clips_suitable,
-            ),
-            (
-                "twitch:videos:collections",
-                yt_dlp_rs::extractor::twitch_videos_collections_suitable,
-            ),
-            ("twitch:vod", yt_dlp_rs::extractor::twitch_vod_suitable),
-            ("twitter", yt_dlp_rs::extractor::twitter_suitable),
-            (
-                "twitter:amplify",
-                yt_dlp_rs::extractor::twitter_amplify_suitable,
-            ),
-            (
-                "twitter:broadcast",
-                yt_dlp_rs::extractor::twitter_broadcast_suitable,
-            ),
-            ("twitter:card", yt_dlp_rs::extractor::twitter_card_suitable),
-            (
-                "twitter:shortener",
-                yt_dlp_rs::extractor::twitter_shortener_suitable,
-            ),
-            (
-                "twitter:spaces",
-                yt_dlp_rs::extractor::twitter_spaces_suitable,
-            ),
-            ("Txxx", yt_dlp_rs::extractor::txxx_suitable),
-            ("UDNEmbed", yt_dlp_rs::extractor::udn_suitable),
-            ("UlizaPlayer", yt_dlp_rs::extractor::uliza_player_suitable),
-            ("UlizaPortal", yt_dlp_rs::extractor::uliza_portal_suitable),
-            ("umg:de", yt_dlp_rs::extractor::umg_suitable),
-            ("Unistra", yt_dlp_rs::extractor::unistra_suitable),
-            (
-                "UnitedNationsWebTv",
-                yt_dlp_rs::extractor::unitednations_suitable,
-            ),
-            ("uol.com.br", yt_dlp_rs::extractor::uol_suitable),
-            ("URPlay", yt_dlp_rs::extractor::urplay_suitable),
-            ("USAToday", yt_dlp_rs::extractor::usatoday_suitable),
-            ("ustudio", yt_dlp_rs::extractor::ustudio_suitable),
-            (
-                "ustudio:embed",
-                yt_dlp_rs::extractor::ustudio_embed_suitable,
-            ),
-            ("Vbox7", yt_dlp_rs::extractor::vbox7_suitable),
-            ("Veo", yt_dlp_rs::extractor::veo_suitable),
-            ("Videa", yt_dlp_rs::extractor::videa_suitable),
-            ("video.arnes.si", yt_dlp_rs::extractor::arnes_suitable),
-            ("VideoPress", yt_dlp_rs::extractor::videopress_suitable),
-            ("Vidio", yt_dlp_rs::extractor::vidio_suitable),
-            ("VidioPremier", yt_dlp_rs::extractor::vidio_premier_suitable),
-            ("VidLii", yt_dlp_rs::extractor::vidlii_suitable),
-            ("Vidly", yt_dlp_rs::extractor::vidly_suitable),
-            ("vids.io", yt_dlp_rs::extractor::sproutvideo_vids_suitable),
-            ("Vidyard", yt_dlp_rs::extractor::vidyard_suitable),
-            ("vimeo", yt_dlp_rs::extractor::vimeo_suitable),
-            ("vimeo:album", yt_dlp_rs::extractor::vimeo_album_suitable),
-            ("vimeo:group", yt_dlp_rs::extractor::vimeo_groups_suitable),
-            ("ViMP", yt_dlp_rs::extractor::videocampus_sachsen_suitable),
-            (
-                "ViMP:Playlist",
-                yt_dlp_rs::extractor::videocampus_sachsen_playlist_suitable,
-            ),
-            ("Viously", |_| false),
-            ("Visir", yt_dlp_rs::extractor::visir_suitable),
-            ("vk", yt_dlp_rs::extractor::vk_suitable),
-            (
-                "vk:uservideos",
-                yt_dlp_rs::extractor::vk_user_videos_suitable,
-            ),
-            ("vk:wallpost", yt_dlp_rs::extractor::vk_wall_post_suitable),
-            ("VKPlay", yt_dlp_rs::extractor::vkplay_suitable),
-            ("VKPlayLive", yt_dlp_rs::extractor::vkplay_live_suitable),
-            ("vm.tiktok", yt_dlp_rs::extractor::tiktok_vm_suitable),
-            ("Vocaroo", yt_dlp_rs::extractor::vocaroo_suitable),
-            ("VODPlatform", yt_dlp_rs::extractor::vodplatform_suitable),
-            (
-                "volejtv:category",
-                yt_dlp_rs::extractor::volejtv_category_suitable,
-            ),
-            ("volejtv:club", yt_dlp_rs::extractor::volejtv_club_suitable),
-            ("volejtv:match", yt_dlp_rs::extractor::volejtv_suitable),
-            ("VTV", yt_dlp_rs::extractor::vtv_suitable),
-            ("VTVGo", yt_dlp_rs::extractor::vtv_go_suitable),
-            (
-                "washingtonpost",
-                yt_dlp_rs::extractor::washingtonpost_suitable,
-            ),
-            (
-                "washingtonpost:article",
-                yt_dlp_rs::extractor::washingtonpost_article_suitable,
-            ),
-            ("wat.tv", yt_dlp_rs::extractor::wat_suitable),
-            ("WDR", yt_dlp_rs::extractor::wdr_suitable),
-            ("WDRElefant", yt_dlp_rs::extractor::wdr_elefant_suitable),
-            ("Webcamerapl", yt_dlp_rs::extractor::webcamerapl_suitable),
-            ("WebOfStories", yt_dlp_rs::extractor::webofstories_suitable),
-            (
-                "WebOfStoriesPlaylist",
-                yt_dlp_rs::extractor::webofstories_playlist_suitable,
-            ),
-            ("Weibo", yt_dlp_rs::extractor::weibo_suitable),
-            ("WeiboUser", yt_dlp_rs::extractor::weibo_user_suitable),
-            ("WeiboVideo", yt_dlp_rs::extractor::weibo_video_suitable),
-            ("Whyp", yt_dlp_rs::extractor::whyp_suitable),
-            ("wikimedia.org", yt_dlp_rs::extractor::wikimedia_suitable),
-            ("Wimbledon", yt_dlp_rs::extractor::wimbledon_suitable),
-            ("Wistia", yt_dlp_rs::extractor::wistia_suitable),
-            (
-                "WistiaChannel",
-                yt_dlp_rs::extractor::wistia_channel_suitable,
-            ),
-            (
-                "WistiaPlaylist",
-                yt_dlp_rs::extractor::wistia_playlist_suitable,
-            ),
-            (
-                "WorldStarHipHop",
-                yt_dlp_rs::extractor::worldstarhiphop_suitable,
-            ),
-            ("WSJ", yt_dlp_rs::extractor::wsj_suitable),
-            ("WSJArticle", yt_dlp_rs::extractor::wsj_article_suitable),
-            (
-                "wyborcza:video",
-                yt_dlp_rs::extractor::wyborcza_video_suitable,
-            ),
-            (
-                "WyborczaPodcast",
-                yt_dlp_rs::extractor::wyborcza_podcast_suitable,
-            ),
-            ("wykop:dig", yt_dlp_rs::extractor::wykop_dig_suitable),
-            (
-                "wykop:dig:comment",
-                yt_dlp_rs::extractor::wykop_dig_comment_suitable,
-            ),
-            ("wykop:post", yt_dlp_rs::extractor::wykop_post_suitable),
-            (
-                "wykop:post:comment",
-                yt_dlp_rs::extractor::wykop_post_comment_suitable,
-            ),
-            ("XboxClips", yt_dlp_rs::extractor::xboxclips_suitable),
-            ("XHamster", yt_dlp_rs::extractor::xhamster_suitable),
-            ("XHamsterUser", yt_dlp_rs::extractor::xhamster_user_suitable),
-            ("XiaoHongShu", yt_dlp_rs::extractor::xiaohongshu_suitable),
-            ("ximalaya", yt_dlp_rs::extractor::ximalaya_suitable),
-            (
-                "ximalaya:album",
-                yt_dlp_rs::extractor::ximalaya_album_suitable,
-            ),
-            ("Xinpianchang", yt_dlp_rs::extractor::xinpianchang_suitable),
-            ("XNXX", yt_dlp_rs::extractor::xnxx_suitable),
-            ("XVideos", yt_dlp_rs::extractor::xvideos_suitable),
-            (
-                "xvideos:quickies",
-                yt_dlp_rs::extractor::xvideos_quickies_suitable,
-            ),
-            ("XXXYMovies", yt_dlp_rs::extractor::xxxymovies_suitable),
-            ("YandexDisk", yt_dlp_rs::extractor::yandexdisk_suitable),
-            (
-                "Yappy (CURRENTLY BROKEN)",
-                yt_dlp_rs::extractor::yappy_suitable,
-            ),
-            ("YappyProfile", yt_dlp_rs::extractor::yappy_profile_suitable),
-            ("yfanefa", yt_dlp_rs::extractor::yfanefa_suitable),
-            ("YleAreena", yt_dlp_rs::extractor::yle_areena_suitable),
-            ("YouJizz", yt_dlp_rs::extractor::youjizz_suitable),
-            ("youku", yt_dlp_rs::extractor::youku_suitable),
-            ("YouPorn", yt_dlp_rs::extractor::youporn_suitable),
-            ("youtube", yt_dlp_rs::extractor::youtube_suitable),
-            ("youtube:clip", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:clip", url)
-            }),
-            ("youtube:consent", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:consent", url)
-            }),
-            ("youtube:favorites", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:favorites", url)
-            }),
-            ("youtube:history", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:history", url)
-            }),
-            ("youtube:music:search_url", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:music:search_url", url)
-            }),
-            ("youtube:notif", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:notif", url)
-            }),
-            ("youtube:playlist", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:playlist", url)
-            }),
-            ("youtube:recommended", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:recommended", url)
-            }),
-            (
-                "youtube:search",
-                yt_dlp_rs::extractor::youtube_search_suitable,
-            ),
-            (
-                "youtube:search_url",
-                yt_dlp_rs::extractor::youtube_search_url_suitable,
-            ),
-            ("youtube:shorts:pivot:audio", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:shorts:pivot:audio", url)
-            }),
-            ("youtube:subscriptions", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:subscriptions", url)
-            }),
-            ("youtube:tab", yt_dlp_rs::extractor::youtube_tab_suitable),
-            ("youtube:truncated_id", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:truncated_id", url)
-            }),
-            ("youtube:truncated_url", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:truncated_url", url)
-            }),
-            ("youtube:user", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:user", url)
-            }),
-            ("youtube:watchlater", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:watchlater", url)
-            }),
-            ("YoutubeLivestreamEmbed", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("YoutubeLivestreamEmbed", url)
-            }),
-            ("YoutubeYtBe", |url| {
-                yt_dlp_rs::extractor::youtube_extractor_suitable("YoutubeYtBe", url)
-            }),
-            ("Zapiks", yt_dlp_rs::extractor::zapiks_suitable),
-            ("zdf", yt_dlp_rs::extractor::zdf_suitable),
-            ("zdf:channel", yt_dlp_rs::extractor::zdf_channel_suitable),
-            ("ZenPorn", yt_dlp_rs::extractor::zenporn_suitable),
-            ("ZetlandDKArticle", yt_dlp_rs::extractor::zetland_suitable),
-            ("Zhihu", yt_dlp_rs::extractor::zhihu_suitable),
-            ("zoom", yt_dlp_rs::extractor::zoom_suitable),
-            ("zoom:clips", yt_dlp_rs::extractor::zoom_clips_suitable),
-            ("Zype", yt_dlp_rs::extractor::zype_suitable),
-            ("generic", |_| true),
-        ];
+        let suitable = SUITABLE;
         for &(name, matches) in suitable {
             writeln!(out, "{name}")?;
             if name == "generic" {
@@ -6941,6 +5246,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     None
                                 };
                                 let info = refreshed.as_ref().unwrap_or(&info);
+                                if !ffmpeg_fd && info.requested_formats.is_empty() {
+                                    downloader.report_live_dash(info);
+                                }
                                 if !ffmpeg_fd
                                     && info.requested_formats.is_empty()
                                     && !info.fragments.is_empty()
@@ -7119,6 +5427,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     let stream = refreshed.as_ref().unwrap_or(stream);
                                     // A single result already announced itself above.
                                     if !info.requested_formats.is_empty() {
+                                        downloader.report_live_dash(stream);
                                         if !stream.fragments.is_empty()
                                             && !downloader.live_dash_fails(stream)
                                         {
@@ -10074,7 +8383,10 @@ impl<'a> ProgressReporter<'a> {
                 * f64::from(count);
             // `state['elapsed']` is read before the update.
             let elapsed = state.calculator.elapsed;
-            state.calculator.set_total(Some(estimate));
+            // `if not ctx['live']`: live fragments have no estimate.
+            state
+                .calculator
+                .set_total((!fragment.live).then_some(estimate));
             state.calculator.update(fragment.index, fragment.downloaded);
             if fragment.finished {
                 state.index += 1;
@@ -11081,6 +9393,1749 @@ fn prefilter(
     }
 }
 
+type Suitable = fn(&str) -> bool;
+
+/// Each extractor's `--list-extractors` name and `suitable(url)`, sorted by
+/// `IE_NAME.lower()` with generic last.
+static SUITABLE: &[(&str, Suitable)] = &[
+    ("17live", yt_dlp_rs::extractor::ichinana_live_suitable),
+    ("17live:clip", yt_dlp_rs::extractor::ichinana_clip_suitable),
+    ("17live:vod", yt_dlp_rs::extractor::ichinana_vod_suitable),
+    ("1News", yt_dlp_rs::extractor::onenewsnz_suitable),
+    ("1tv", yt_dlp_rs::extractor::firsttv_suitable),
+    ("1tv:live", yt_dlp_rs::extractor::firsttv_live_suitable),
+    ("23video", yt_dlp_rs::extractor::twentythreevideo_suitable),
+    ("24tv.ua", yt_dlp_rs::extractor::tv24ua_suitable),
+    ("3qsdn", yt_dlp_rs::extractor::threeqsdn_suitable),
+    ("3sat", yt_dlp_rs::extractor::dreisat_suitable),
+    ("9gag", yt_dlp_rs::extractor::ninegag_suitable),
+    ("9News", yt_dlp_rs::extractor::ninenews_suitable),
+    ("9now.com.au", yt_dlp_rs::extractor::ninenow_suitable),
+    ("abc.net.au", yt_dlp_rs::extractor::abc_suitable),
+    ("abcnews:video", yt_dlp_rs::extractor::abcnews_suitable),
+    ("abcotvs", yt_dlp_rs::extractor::abcotvs_suitable),
+    (
+        "abcotvs:clips",
+        yt_dlp_rs::extractor::abcotvs_clips_suitable,
+    ),
+    ("acast", yt_dlp_rs::extractor::acast_suitable),
+    (
+        "acast:channel",
+        yt_dlp_rs::extractor::acast_channel_suitable,
+    ),
+    ("AcFunVideo", yt_dlp_rs::extractor::acfun_suitable),
+    ("adobetv", yt_dlp_rs::extractor::adobetv_suitable),
+    ("AeonCo", yt_dlp_rs::extractor::aeonco_suitable),
+    ("agalega:videos", yt_dlp_rs::extractor::agalega_suitable),
+    ("AitubeKZVideo", yt_dlp_rs::extractor::aitube_suitable),
+    ("Alibaba", yt_dlp_rs::extractor::alibaba_suitable),
+    ("AliExpressLive", yt_dlp_rs::extractor::aliexpress_suitable),
+    ("AlJazeera", yt_dlp_rs::extractor::aljazeera_suitable),
+    ("Allstar", yt_dlp_rs::extractor::allstar_suitable),
+    (
+        "AllstarProfile",
+        yt_dlp_rs::extractor::allstar_profile_suitable,
+    ),
+    ("altcensored", yt_dlp_rs::extractor::altcensored_suitable),
+    (
+        "altcensored:channel",
+        yt_dlp_rs::extractor::altcensored_channel_suitable,
+    ),
+    ("AmadeusTV", yt_dlp_rs::extractor::amadeustv_suitable),
+    ("AmazonStore", yt_dlp_rs::extractor::amazon_suitable),
+    ("AMCNetworks", yt_dlp_rs::extractor::amcnetworks_suitable),
+    (
+        "AmericasTestKitchen",
+        yt_dlp_rs::extractor::americastestkitchen_suitable,
+    ),
+    (
+        "AmericasTestKitchenSeason",
+        yt_dlp_rs::extractor::americastestkitchen_season_suitable,
+    ),
+    ("Angel", yt_dlp_rs::extractor::angel_suitable),
+    (
+        "ant1newsgr:embed",
+        yt_dlp_rs::extractor::ant1newsgr_embed_suitable,
+    ),
+    ("APA", yt_dlp_rs::extractor::apa_suitable),
+    (
+        "apple:music:connect",
+        yt_dlp_rs::extractor::appleconnect_suitable,
+    ),
+    (
+        "apple:podcasts",
+        yt_dlp_rs::extractor::applepodcasts_suitable,
+    ),
+    ("archive.org", yt_dlp_rs::extractor::archiveorg_suitable),
+    (
+        "ArcPublishing",
+        yt_dlp_rs::extractor::arcpublishing_suitable,
+    ),
+    ("ARDAudiothek", yt_dlp_rs::extractor::ard_audiothek_suitable),
+    (
+        "ARDAudiothekPlaylist",
+        yt_dlp_rs::extractor::ard_audiothek_playlist_suitable,
+    ),
+    ("ARDMediathek", yt_dlp_rs::extractor::ard_suitable),
+    (
+        "ARDMediathekCollection",
+        yt_dlp_rs::extractor::ard_collection_suitable,
+    ),
+    ("Art19", yt_dlp_rs::extractor::art19_suitable),
+    ("ArteTV", yt_dlp_rs::extractor::artetv_suitable),
+    (
+        "ArteTVCategory",
+        yt_dlp_rs::extractor::artetv_category_suitable,
+    ),
+    ("ArteTVEmbed", yt_dlp_rs::extractor::artetv_embed_suitable),
+    (
+        "ArteTVPlaylist",
+        yt_dlp_rs::extractor::artetv_playlist_suitable,
+    ),
+    ("asobichannel", yt_dlp_rs::extractor::asobichannel_suitable),
+    (
+        "asobichannel:tag",
+        yt_dlp_rs::extractor::asobichannel_tag_suitable,
+    ),
+    ("AsobiStage", yt_dlp_rs::extractor::asobistage_suitable),
+    ("AtresPlayer", yt_dlp_rs::extractor::atresplayer_suitable),
+    (
+        "AtScaleConfEvent",
+        yt_dlp_rs::extractor::atscaleconf_suitable,
+    ),
+    ("AudiMedia", yt_dlp_rs::extractor::audimedia_suitable),
+    ("AudioBoom", yt_dlp_rs::extractor::audioboom_suitable),
+    (
+        "Audiodraft:custom",
+        yt_dlp_rs::extractor::audiodraft_suitable,
+    ),
+    (
+        "Audiodraft:generic",
+        yt_dlp_rs::extractor::audiodraft_generic_suitable,
+    ),
+    ("audiomack", yt_dlp_rs::extractor::audiomack_suitable),
+    (
+        "audiomack:album",
+        yt_dlp_rs::extractor::audiomack_album_suitable,
+    ),
+    ("Audius", yt_dlp_rs::extractor::audius_suitable),
+    (
+        "audius:artist",
+        yt_dlp_rs::extractor::audius_profile_suitable,
+    ),
+    (
+        "audius:playlist",
+        yt_dlp_rs::extractor::audius_playlist_suitable,
+    ),
+    ("audius:track", yt_dlp_rs::extractor::audius_track_suitable),
+    ("AZMedien", yt_dlp_rs::extractor::azmedien_suitable),
+    ("BaiduVideo", yt_dlp_rs::extractor::baidu_suitable),
+    ("Bandcamp", yt_dlp_rs::extractor::bandcamp_suitable),
+    (
+        "Bandcamp:album",
+        yt_dlp_rs::extractor::bandcamp_album_suitable,
+    ),
+    (
+        "Bandcamp:user",
+        yt_dlp_rs::extractor::bandcamp_user_suitable,
+    ),
+    (
+        "Bandcamp:weekly",
+        yt_dlp_rs::extractor::bandcamp_weekly_suitable,
+    ),
+    ("Bandlab", yt_dlp_rs::extractor::bandlab_suitable),
+    (
+        "bbc.co.uk:playlist",
+        yt_dlp_rs::extractor::bbc_couk_playlist_suitable,
+    ),
+    ("BeaconTv", yt_dlp_rs::extractor::beacon_suitable),
+    ("Beatport", yt_dlp_rs::extractor::beatport_suitable),
+    ("Beeg", yt_dlp_rs::extractor::beeg_suitable),
+    (
+        "BehindKink (CURRENTLY BROKEN)",
+        yt_dlp_rs::extractor::behindkink_suitable,
+    ),
+    ("BerufeTV", yt_dlp_rs::extractor::berufetv_suitable),
+    ("bfmtv", yt_dlp_rs::extractor::bfmtv_suitable),
+    (
+        "bfmtv:article",
+        yt_dlp_rs::extractor::bfmtv_article_suitable,
+    ),
+    ("bfmtv:live", yt_dlp_rs::extractor::bfmtv_live_suitable),
+    ("Bigo", yt_dlp_rs::extractor::bigo_suitable),
+    ("Bild", yt_dlp_rs::extractor::bild_suitable),
+    ("BiliBili", yt_dlp_rs::extractor::bilibili_suitable),
+    ("BilibiliAudio", yt_dlp_rs::extractor::audio_suitable),
+    (
+        "BilibiliAudioAlbum",
+        yt_dlp_rs::extractor::audio_album_suitable,
+    ),
+    (
+        "BiliBiliBangumi",
+        yt_dlp_rs::extractor::bangumi_episode_suitable,
+    ),
+    (
+        "BiliBiliBangumiMedia",
+        yt_dlp_rs::extractor::bangumi_media_suitable,
+    ),
+    (
+        "BiliBiliBangumiSeason",
+        yt_dlp_rs::extractor::bangumi_season_suitable,
+    ),
+    (
+        "BilibiliSpaceAudio",
+        yt_dlp_rs::extractor::space_audio_suitable,
+    ),
+    (
+        "BioBioChileTV",
+        yt_dlp_rs::extractor::biobiochiletv_suitable,
+    ),
+    ("BitChute", yt_dlp_rs::extractor::bitchute_suitable),
+    (
+        "BitChuteChannel",
+        yt_dlp_rs::extractor::bitchute_channel_suitable,
+    ),
+    ("Bitmovin", yt_dlp_rs::extractor::bitmovin_suitable),
+    ("blerp", yt_dlp_rs::extractor::blerp_suitable),
+    ("blogger.com", yt_dlp_rs::extractor::blogger_suitable),
+    ("Bloomberg", yt_dlp_rs::extractor::bloomberg_suitable),
+    ("Bluesky", yt_dlp_rs::extractor::bluesky_suitable),
+    ("BongaCams", yt_dlp_rs::extractor::bongacams_suitable),
+    ("Boosty", yt_dlp_rs::extractor::boosty_suitable),
+    ("BostonGlobe", yt_dlp_rs::extractor::bostonglobe_suitable),
+    ("Box", yt_dlp_rs::extractor::box_suitable),
+    ("BoxCastVideo", yt_dlp_rs::extractor::boxcast_suitable),
+    ("Bpb", yt_dlp_rs::extractor::bpb_suitable),
+    ("BreitBart", yt_dlp_rs::extractor::breitbart_suitable),
+    (
+        "brightcove:legacy",
+        yt_dlp_rs::extractor::brightcove_legacy_suitable,
+    ),
+    (
+        "brightcove:new",
+        yt_dlp_rs::extractor::brightcove_new_suitable,
+    ),
+    ("BTVPlus", yt_dlp_rs::extractor::btvplus_suitable),
+    ("Bundesliga", yt_dlp_rs::extractor::bundesliga_suitable),
+    ("Bundestag", yt_dlp_rs::extractor::bundestag_suitable),
+    ("BunnyCdn", yt_dlp_rs::extractor::bunnycdn_suitable),
+    (
+        "BusinessInsider",
+        yt_dlp_rs::extractor::businessinsider_suitable,
+    ),
+    ("Caltrans", yt_dlp_rs::extractor::caltrans_suitable),
+    ("CAM4", yt_dlp_rs::extractor::cam4_suitable),
+    ("CanalAlpha", yt_dlp_rs::extractor::canalalpha_suitable),
+    ("Canalsurmas", yt_dlp_rs::extractor::canalsurmas_suitable),
+    ("cbc.ca:listen", yt_dlp_rs::extractor::cbc_listen_suitable),
+    ("cbc.ca:player", yt_dlp_rs::extractor::cbc_player_suitable),
+    ("CCMA", yt_dlp_rs::extractor::ccma_suitable),
+    ("CCTV", yt_dlp_rs::extractor::cctv_suitable),
+    ("CDA", yt_dlp_rs::extractor::cda_suitable),
+    ("Cellebrite", yt_dlp_rs::extractor::cellebrite_suitable),
+    ("CGTN", yt_dlp_rs::extractor::cgtn_suitable),
+    ("CharlieRose", yt_dlp_rs::extractor::charlierose_suitable),
+    ("Chaturbate", yt_dlp_rs::extractor::chaturbate_suitable),
+    ("Chilloutzone", yt_dlp_rs::extractor::chilloutzone_suitable),
+    (
+        "CiscoLiveSearch",
+        yt_dlp_rs::extractor::ciscolive_search_suitable,
+    ),
+    (
+        "CiscoLiveSession",
+        yt_dlp_rs::extractor::ciscolive_session_suitable,
+    ),
+    ("CJSW", yt_dlp_rs::extractor::cjsw_suitable),
+    ("Clipchamp", yt_dlp_rs::extractor::clipchamp_suitable),
+    (
+        "CloudflareStream",
+        yt_dlp_rs::extractor::cloudflarestream_suitable,
+    ),
+    ("CloudyCDN", yt_dlp_rs::extractor::cloudycdn_suitable),
+    ("Clyp", yt_dlp_rs::extractor::clyp_suitable),
+    ("CNBCVideo", yt_dlp_rs::extractor::cnbc_suitable),
+    ("CNN", yt_dlp_rs::extractor::cnn_suitable),
+    ("CondeNast", yt_dlp_rs::extractor::condenast_suitable),
+    (
+        "CookingChannel",
+        yt_dlp_rs::extractor::cooking_channel_suitable,
+    ),
+    ("Coub", yt_dlp_rs::extractor::coub_suitable),
+    ("CozyTV", yt_dlp_rs::extractor::cozytv_suitable),
+    ("cpac", yt_dlp_rs::extractor::cpac_suitable),
+    (
+        "cpac:playlist",
+        yt_dlp_rs::extractor::cpac_playlist_suitable,
+    ),
+    ("Craftsy", yt_dlp_rs::extractor::craftsy_suitable),
+    (
+        "CrooksAndLiars",
+        yt_dlp_rs::extractor::crooksandliars_suitable,
+    ),
+    ("Crtvg", yt_dlp_rs::extractor::crtvg_suitable),
+    ("CtsNews", yt_dlp_rs::extractor::ctsnews_suitable),
+    (
+        "CultureUnplugged",
+        yt_dlp_rs::extractor::cultureunplugged_suitable,
+    ),
+    (
+        "curiositystream",
+        yt_dlp_rs::extractor::curiositystream_suitable,
+    ),
+    (
+        "curiositystream:collections",
+        yt_dlp_rs::extractor::curiositystream_collections_suitable,
+    ),
+    (
+        "curiositystream:series",
+        yt_dlp_rs::extractor::curiositystream_series_suitable,
+    ),
+    (
+        "DacastPlaylist",
+        yt_dlp_rs::extractor::dacast_playlist_suitable,
+    ),
+    ("DacastVOD", yt_dlp_rs::extractor::dacast_suitable),
+    ("DailyMail", yt_dlp_rs::extractor::dailymail_suitable),
+    ("dailymotion", yt_dlp_rs::extractor::dailymotion_suitable),
+    (
+        "dailymotion:playlist",
+        yt_dlp_rs::extractor::dailymotion_playlist_suitable,
+    ),
+    (
+        "dailymotion:search",
+        yt_dlp_rs::extractor::dailymotion_search_suitable,
+    ),
+    (
+        "dailymotion:user",
+        yt_dlp_rs::extractor::dailymotion_user_suitable,
+    ),
+    (
+        "damtomo:record",
+        yt_dlp_rs::extractor::damtomo_record_suitable,
+    ),
+    (
+        "damtomo:video",
+        yt_dlp_rs::extractor::damtomo_video_suitable,
+    ),
+    ("daystar:clip", yt_dlp_rs::extractor::daystar_suitable),
+    ("DBTV", yt_dlp_rs::extractor::dbtv_suitable),
+    ("DctpTv", yt_dlp_rs::extractor::dctp_suitable),
+    ("democracynow", yt_dlp_rs::extractor::democracynow_suitable),
+    ("DetikEmbed", |_| false),
+    ("DeuxM", yt_dlp_rs::extractor::deuxm_suitable),
+    ("DeuxMNews", yt_dlp_rs::extractor::deuxm_news_suitable),
+    ("Digiteka", yt_dlp_rs::extractor::digiteka_suitable),
+    (
+        "DiscogsReleasePlaylist",
+        yt_dlp_rs::extractor::discogs_suitable,
+    ),
+    (
+        "DiscoveryLife",
+        yt_dlp_rs::extractor::discovery_life_suitable,
+    ),
+    ("dlf", yt_dlp_rs::extractor::dlf_suitable),
+    ("dlf:corpus", yt_dlp_rs::extractor::dlf_corpus_suitable),
+    ("dlive:stream", yt_dlp_rs::extractor::dlive_stream_suitable),
+    ("dlive:vod", yt_dlp_rs::extractor::dlive_vod_suitable),
+    ("Douyin", yt_dlp_rs::extractor::douyin_suitable),
+    ("Dropbox", yt_dlp_rs::extractor::dropbox_suitable),
+    ("DrTalks", yt_dlp_rs::extractor::drtalks_suitable),
+    ("drtv", yt_dlp_rs::extractor::drtv_suitable),
+    ("drtv:live", yt_dlp_rs::extractor::drtv_live_suitable),
+    ("drtv:season", yt_dlp_rs::extractor::drtv_season_suitable),
+    ("drtv:series", yt_dlp_rs::extractor::drtv_series_suitable),
+    ("Dumpert", yt_dlp_rs::extractor::dumpert_suitable),
+    ("Duoplay", yt_dlp_rs::extractor::duoplay_suitable),
+    ("dvtv", yt_dlp_rs::extractor::dvtv_suitable),
+    ("dzen.ru", yt_dlp_rs::extractor::zen_yandex_suitable),
+    (
+        "dzen.ru:channel",
+        yt_dlp_rs::extractor::zen_yandex_channel_suitable,
+    ),
+    ("EbaumsWorld", yt_dlp_rs::extractor::ebaumsworld_suitable),
+    ("Ebay", yt_dlp_rs::extractor::ebay_suitable),
+    (
+        "egghead:course",
+        yt_dlp_rs::extractor::egghead_course_suitable,
+    ),
+    (
+        "egghead:lesson",
+        yt_dlp_rs::extractor::egghead_lesson_suitable,
+    ),
+    ("eggs:artist", yt_dlp_rs::extractor::eggs_artist_suitable),
+    ("eggs:single", yt_dlp_rs::extractor::eggs_suitable),
+    ("Elonet", yt_dlp_rs::extractor::elonet_suitable),
+    ("ElPais", yt_dlp_rs::extractor::elpais_suitable),
+    ("ElTreceTV", yt_dlp_rs::extractor::eltrecetv_suitable),
+    ("Embedly", yt_dlp_rs::extractor::embedly_suitable),
+    ("EMPFlix", yt_dlp_rs::extractor::tnaflix_empflix_suitable),
+    (
+        "EpidemicSound",
+        yt_dlp_rs::extractor::epidemicsound_suitable,
+    ),
+    ("Epoch", yt_dlp_rs::extractor::epoch_suitable),
+    ("Eporner", yt_dlp_rs::extractor::eporner_suitable),
+    ("Erocast", yt_dlp_rs::extractor::erocast_suitable),
+    (
+        "EroProfile:album",
+        yt_dlp_rs::extractor::eroprofile_album_suitable,
+    ),
+    ("ERRArhiiv", yt_dlp_rs::extractor::err_arhiiv_suitable),
+    ("ERRJupiter", yt_dlp_rs::extractor::err_jupiter_suitable),
+    ("ertflix", yt_dlp_rs::extractor::ertflix_vod_suitable),
+    ("ertflix:codename", yt_dlp_rs::extractor::ertgr_suitable),
+    ("EttuTv", yt_dlp_rs::extractor::ettutv_suitable),
+    ("EuropeanTour", yt_dlp_rs::extractor::europeantour_suitable),
+    ("EUScreen", yt_dlp_rs::extractor::euscreen_suitable),
+    ("Expressen", yt_dlp_rs::extractor::expressen_suitable),
+    ("facebook", yt_dlp_rs::extractor::facebook_suitable),
+    ("facebook:ads", yt_dlp_rs::extractor::facebook_ads_suitable),
+    (
+        "facebook:reel",
+        yt_dlp_rs::extractor::facebook_reel_suitable,
+    ),
+    (
+        "FacebookPluginsVideo",
+        yt_dlp_rs::extractor::facebook_plugins_suitable,
+    ),
+    (
+        "FacebookRedirectURL",
+        yt_dlp_rs::extractor::facebook_redirect_suitable,
+    ),
+    ("Fathom", yt_dlp_rs::extractor::fathom_suitable),
+    ("Faulio", yt_dlp_rs::extractor::faulio_suitable),
+    ("faz.net", yt_dlp_rs::extractor::faz_suitable),
+    ("fc2", yt_dlp_rs::extractor::fc2_suitable),
+    ("fc2:embed", yt_dlp_rs::extractor::fc2_embed_suitable),
+    ("Fczenit", yt_dlp_rs::extractor::fczenit_suitable),
+    ("FilmArchiv", yt_dlp_rs::extractor::filmarchiv_suitable),
+    ("filmon", yt_dlp_rs::extractor::filmon_suitable),
+    (
+        "filmon:channel",
+        yt_dlp_rs::extractor::filmon_channel_suitable,
+    ),
+    ("Filmweb", yt_dlp_rs::extractor::filmweb_suitable),
+    ("FiveTV", yt_dlp_rs::extractor::fivetv_suitable),
+    ("Flickr", yt_dlp_rs::extractor::flickr_suitable),
+    ("FootyRoom", yt_dlp_rs::extractor::footyroom_suitable),
+    ("Formula1", yt_dlp_rs::extractor::formula1_suitable),
+    ("foxnews", yt_dlp_rs::extractor::foxnews_suitable),
+    (
+        "foxnews:article",
+        yt_dlp_rs::extractor::foxnews_article_suitable,
+    ),
+    ("FoxNewsVideo", yt_dlp_rs::extractor::foxnews_video_suitable),
+    (
+        "FrancaisFacile",
+        yt_dlp_rs::extractor::francaisfacile_suitable,
+    ),
+    (
+        "FranceCulture",
+        yt_dlp_rs::extractor::franceculture_suitable,
+    ),
+    ("franceinfo", yt_dlp_rs::extractor::francetv_info_suitable),
+    ("francetv", yt_dlp_rs::extractor::francetv_suitable),
+    (
+        "francetv:site",
+        yt_dlp_rs::extractor::francetv_site_suitable,
+    ),
+    ("Freesound", yt_dlp_rs::extractor::freesound_suitable),
+    ("freespeech.org", yt_dlp_rs::extractor::freespeech_suitable),
+    ("freetv:series", yt_dlp_rs::extractor::freetv_suitable),
+    ("FreeTvMovies", yt_dlp_rs::extractor::freetv_movies_suitable),
+    ("Funker530", yt_dlp_rs::extractor::funker530_suitable),
+    ("FuyinTV", yt_dlp_rs::extractor::fuyintv_suitable),
+    ("Gab", yt_dlp_rs::extractor::gab_suitable),
+    ("Gaia", yt_dlp_rs::extractor::gaia_suitable),
+    ("GameJolt", yt_dlp_rs::extractor::gamejolt_suitable),
+    ("GameJoltGame", yt_dlp_rs::extractor::gamejolt_game_suitable),
+    (
+        "GameJoltGameSoundtrack",
+        yt_dlp_rs::extractor::gamejolt_soundtrack_suitable,
+    ),
+    ("GameSpot", yt_dlp_rs::extractor::gamespot_suitable),
+    ("GameStar", yt_dlp_rs::extractor::gamestar_suitable),
+    ("Gaskrank", yt_dlp_rs::extractor::gaskrank_suitable),
+    ("GBNews", yt_dlp_rs::extractor::gbnews_suitable),
+    ("Genius", yt_dlp_rs::extractor::genius_suitable),
+    ("GeniusLyrics", yt_dlp_rs::extractor::genius_lyrics_suitable),
+    ("Germanupa", yt_dlp_rs::extractor::germanupa_suitable),
+    ("Gettr", yt_dlp_rs::extractor::gettr_suitable),
+    (
+        "GettrStreaming",
+        yt_dlp_rs::extractor::gettr_streaming_suitable,
+    ),
+    ("Glide", yt_dlp_rs::extractor::glide_suitable),
+    (
+        "GlobalPlayerAudio",
+        yt_dlp_rs::extractor::globalplayer_audio_suitable,
+    ),
+    (
+        "GlobalPlayerAudioEpisode",
+        yt_dlp_rs::extractor::globalplayer_episode_suitable,
+    ),
+    (
+        "GlobalPlayerLive",
+        yt_dlp_rs::extractor::globalplayer_live_suitable,
+    ),
+    (
+        "GlobalPlayerLivePlaylist",
+        yt_dlp_rs::extractor::globalplayer_live_playlist_suitable,
+    ),
+    (
+        "GlobalPlayerVideo",
+        yt_dlp_rs::extractor::globalplayer_video_suitable,
+    ),
+    ("Globo", yt_dlp_rs::extractor::globo_suitable),
+    ("GloboArticle", yt_dlp_rs::extractor::globo_article_suitable),
+    ("glomex", yt_dlp_rs::extractor::glomex_suitable),
+    ("glomex:embed", yt_dlp_rs::extractor::glomex_embed_suitable),
+    ("GMANetworkVideo", yt_dlp_rs::extractor::gmanetwork_suitable),
+    ("GoDiscovery", yt_dlp_rs::extractor::go_discovery_suitable),
+    ("GodResource", yt_dlp_rs::extractor::godresource_suitable),
+    // `_WORKING = False` extractors are marked.
+    (
+        "GodTube (CURRENTLY BROKEN)",
+        yt_dlp_rs::extractor::godtube_suitable,
+    ),
+    ("Golem", yt_dlp_rs::extractor::golem_suitable),
+    ("goodgame:stream", yt_dlp_rs::extractor::goodgame_suitable),
+    ("GoogleDrive", yt_dlp_rs::extractor::googledrive_suitable),
+    (
+        "GoogleDrive:Folder",
+        yt_dlp_rs::extractor::googledrive_folder_suitable,
+    ),
+    ("GoPro", yt_dlp_rs::extractor::gopro_suitable),
+    ("GoToStage", yt_dlp_rs::extractor::gotostage_suitable),
+    ("Graspop", yt_dlp_rs::extractor::graspop_suitable),
+    ("Gronkh", yt_dlp_rs::extractor::gronkh_suitable),
+    ("Groupon", yt_dlp_rs::extractor::groupon_suitable),
+    ("Harpodeon", yt_dlp_rs::extractor::harpodeon_suitable),
+    ("HearThisAt", yt_dlp_rs::extractor::hearthisat_suitable),
+    ("Heise", yt_dlp_rs::extractor::heise_suitable),
+    ("HellPorno", yt_dlp_rs::extractor::hellporno_suitable),
+    ("HGTVUsa", yt_dlp_rs::extractor::hgtv_usa_suitable),
+    (
+        "HistoricFilms",
+        yt_dlp_rs::extractor::historicfilms_suitable,
+    ),
+    ("HitRecord", yt_dlp_rs::extractor::hitrecord_suitable),
+    (
+        "HollywoodReporter",
+        yt_dlp_rs::extractor::hollywoodreporter_suitable,
+    ),
+    (
+        "HollywoodReporterPlaylist",
+        yt_dlp_rs::extractor::hollywoodreporter_playlist_suitable,
+    ),
+    ("Holodex", yt_dlp_rs::extractor::holodex_suitable),
+    ("href.li", yt_dlp_rs::extractor::hrefli_suitable),
+    ("hrfernsehen", yt_dlp_rs::extractor::hrfensehen_suitable),
+    ("HSEProduct", yt_dlp_rs::extractor::hse_product_suitable),
+    ("HSEShow", yt_dlp_rs::extractor::hse_show_suitable),
+    ("html5", |_| false),
+    ("Huajiao", yt_dlp_rs::extractor::huajiao_suitable),
+    ("HuffPost", yt_dlp_rs::extractor::huffpost_suitable),
+    ("huya:live", yt_dlp_rs::extractor::huya_live_suitable),
+    ("huya:video", yt_dlp_rs::extractor::huya_video_suitable),
+    ("Hypem", yt_dlp_rs::extractor::hypem_suitable),
+    ("Hytale", yt_dlp_rs::extractor::hytale_suitable),
+    ("IdagioAlbum", yt_dlp_rs::extractor::idagio_album_suitable),
+    (
+        "IdagioPersonalPlaylist",
+        yt_dlp_rs::extractor::idagio_personal_suitable,
+    ),
+    (
+        "IdagioPlaylist",
+        yt_dlp_rs::extractor::idagio_playlist_suitable,
+    ),
+    (
+        "IdagioRecording",
+        yt_dlp_rs::extractor::idagio_recording_suitable,
+    ),
+    ("IdagioTrack", yt_dlp_rs::extractor::idagio_track_suitable),
+    ("iheartradio", yt_dlp_rs::extractor::iheart_suitable),
+    (
+        "iheartradio:podcast",
+        yt_dlp_rs::extractor::iheart_podcast_suitable,
+    ),
+    ("IlPost", yt_dlp_rs::extractor::ilpost_suitable),
+    ("Iltalehti", yt_dlp_rs::extractor::iltalehti_suitable),
+    ("imdb", yt_dlp_rs::extractor::imdb_suitable),
+    ("imdb:list", yt_dlp_rs::extractor::imdb_list_suitable),
+    ("Imgur", yt_dlp_rs::extractor::imgur_suitable),
+    ("imgur:album", yt_dlp_rs::extractor::imgur_album_suitable),
+    (
+        "imgur:gallery",
+        yt_dlp_rs::extractor::imgur_gallery_suitable,
+    ),
+    ("Ina", yt_dlp_rs::extractor::ina_suitable),
+    ("Inc", yt_dlp_rs::extractor::inc_suitable),
+    ("IndavideoEmbed", yt_dlp_rs::extractor::indavideo_suitable),
+    ("InfoQ", yt_dlp_rs::extractor::infoq_suitable),
+    ("Instagram", yt_dlp_rs::extractor::instagram_suitable),
+    (
+        "instagram:story",
+        yt_dlp_rs::extractor::instagram_story_suitable,
+    ),
+    (
+        "instagram:tag",
+        yt_dlp_rs::extractor::instagram_tag_suitable,
+    ),
+    // `_WORKING = False` extractors are marked.
+    (
+        "instagram:user (CURRENTLY BROKEN)",
+        yt_dlp_rs::extractor::instagram_user_suitable,
+    ),
+    ("InstagramIOS", yt_dlp_rs::extractor::instagram_ios_suitable),
+    (
+        "Internazionale",
+        yt_dlp_rs::extractor::internazionale_suitable,
+    ),
+    (
+        "InvestigationDiscovery",
+        yt_dlp_rs::extractor::investigation_discovery_suitable,
+    ),
+    ("IslamChannel", yt_dlp_rs::extractor::islamchannel_suitable),
+    (
+        "IslamChannelSeries",
+        yt_dlp_rs::extractor::islamchannel_series_suitable,
+    ),
+    (
+        "IsraelNationalNews",
+        yt_dlp_rs::extractor::israelnationalnews_suitable,
+    ),
+    ("ivideon", yt_dlp_rs::extractor::ivideon_suitable),
+    ("Ivoox", yt_dlp_rs::extractor::ivoox_suitable),
+    ("iwara", yt_dlp_rs::extractor::iwara_suitable),
+    (
+        "iwara:playlist",
+        yt_dlp_rs::extractor::iwara_playlist_suitable,
+    ),
+    ("iwara:user", yt_dlp_rs::extractor::iwara_user_suitable),
+    ("Jamendo", yt_dlp_rs::extractor::jamendo_suitable),
+    ("JamendoAlbum", yt_dlp_rs::extractor::jamendo_album_suitable),
+    (
+        "jiosaavn:album",
+        yt_dlp_rs::extractor::jiosaavn_album_suitable,
+    ),
+    (
+        "jiosaavn:artist",
+        yt_dlp_rs::extractor::jiosaavn_artist_suitable,
+    ),
+    (
+        "jiosaavn:playlist",
+        yt_dlp_rs::extractor::jiosaavn_playlist_suitable,
+    ),
+    (
+        "jiosaavn:show",
+        yt_dlp_rs::extractor::jiosaavn_show_suitable,
+    ),
+    (
+        "jiosaavn:show:playlist",
+        yt_dlp_rs::extractor::jiosaavn_show_playlist_suitable,
+    ),
+    (
+        "jiosaavn:song",
+        yt_dlp_rs::extractor::jiosaavn_song_suitable,
+    ),
+    ("Joj", yt_dlp_rs::extractor::joj_suitable),
+    ("Jove", yt_dlp_rs::extractor::jove_suitable),
+    ("JStream", yt_dlp_rs::extractor::jstream_suitable),
+    ("JWPlatform", yt_dlp_rs::extractor::jwplatform_suitable),
+    ("Kaltura", yt_dlp_rs::extractor::kaltura_suitable),
+    (
+        "KankaNews (CURRENTLY BROKEN)",
+        yt_dlp_rs::extractor::kankanews_suitable,
+    ),
+    (
+        "Kenh14Playlist",
+        yt_dlp_rs::extractor::kenh14_playlist_suitable,
+    ),
+    ("Kenh14Video", yt_dlp_rs::extractor::kenh14_video_suitable),
+    ("kick:clip", yt_dlp_rs::extractor::kick_clip_suitable),
+    ("kick:clips", yt_dlp_rs::extractor::kick_clips_suitable),
+    ("kick:live", yt_dlp_rs::extractor::kick_live_suitable),
+    ("kick:videos", yt_dlp_rs::extractor::kick_videos_suitable),
+    ("kick:vod", yt_dlp_rs::extractor::kick_vod_suitable),
+    ("Kicker", yt_dlp_rs::extractor::kicker_suitable),
+    ("KickStarter", yt_dlp_rs::extractor::kickstarter_suitable),
+    ("Kika", yt_dlp_rs::extractor::kika_suitable),
+    ("KikaPlaylist", yt_dlp_rs::extractor::kika_playlist_suitable),
+    ("KinoPoisk", yt_dlp_rs::extractor::kinopoisk_suitable),
+    ("Kommunetv", yt_dlp_rs::extractor::kommunetv_suitable),
+    ("KompasVideo", yt_dlp_rs::extractor::kompas_suitable),
+    ("KTH", yt_dlp_rs::extractor::kth_suitable),
+    ("Ku6", yt_dlp_rs::extractor::ku6_suitable),
+    ("KukuluLive", yt_dlp_rs::extractor::kukululive_suitable),
+    ("LastFM", yt_dlp_rs::extractor::lastfm_suitable),
+    (
+        "LastFMPlaylist",
+        yt_dlp_rs::extractor::lastfm_playlist_suitable,
+    ),
+    ("LastFMUser", yt_dlp_rs::extractor::lastfm_user_suitable),
+    ("lbry", yt_dlp_rs::extractor::lbry_suitable),
+    ("lbry:channel", yt_dlp_rs::extractor::lbry_channel_suitable),
+    (
+        "lbry:playlist",
+        yt_dlp_rs::extractor::lbry_playlist_suitable,
+    ),
+    ("LCI", yt_dlp_rs::extractor::lci_suitable),
+    ("Lecturio", yt_dlp_rs::extractor::lecturio_suitable),
+    (
+        "LeFigaroVideoEmbed",
+        yt_dlp_rs::extractor::lefigaro_embed_suitable,
+    ),
+    (
+        "LeFigaroVideoSection",
+        yt_dlp_rs::extractor::lefigaro_section_suitable,
+    ),
+    ("LEGO", yt_dlp_rs::extractor::lego_suitable),
+    ("Lemonde", yt_dlp_rs::extractor::lemonde_suitable),
+    ("Libsyn", yt_dlp_rs::extractor::libsyn_suitable),
+    ("LinkedIn", yt_dlp_rs::extractor::linkedin_suitable),
+    ("Liputan6", yt_dlp_rs::extractor::liputan6_suitable),
+    ("ListenNotes", yt_dlp_rs::extractor::listennotes_suitable),
+    ("LiTV", yt_dlp_rs::extractor::litv_suitable),
+    (
+        "Livestreamfails",
+        yt_dlp_rs::extractor::livestreamfails_suitable,
+    ),
+    ("Lnk", yt_dlp_rs::extractor::lnk_suitable),
+    ("loc", yt_dlp_rs::extractor::libraryofcongress_suitable),
+    ("loom", yt_dlp_rs::extractor::loom_suitable),
+    ("LRTRadio", yt_dlp_rs::extractor::lrt_radio_suitable),
+    ("LRTStream", yt_dlp_rs::extractor::lrt_stream_suitable),
+    ("LRTVOD", yt_dlp_rs::extractor::lrt_vod_suitable),
+    ("LSMLTVEmbed", yt_dlp_rs::extractor::ltv_embed_suitable),
+    ("LSMReplay", yt_dlp_rs::extractor::replay_suitable),
+    ("maariv.co.il", yt_dlp_rs::extractor::maariv_suitable),
+    ("MagellanTV", yt_dlp_rs::extractor::magellantv_suitable),
+    ("mailru", yt_dlp_rs::extractor::mailru_suitable),
+    ("mailru:music", yt_dlp_rs::extractor::mailru_music_suitable),
+    (
+        "mailru:music:search",
+        yt_dlp_rs::extractor::mailru_music_search_suitable,
+    ),
+    (
+        "MainStreaming",
+        yt_dlp_rs::extractor::mainstreaming_suitable,
+    ),
+    (
+        "mangomolo:live",
+        yt_dlp_rs::extractor::mangomolo_live_suitable,
+    ),
+    (
+        "mangomolo:video",
+        yt_dlp_rs::extractor::mangomolo_video_suitable,
+    ),
+    ("MangoTV", yt_dlp_rs::extractor::mgtv_suitable),
+    ("MaoriTV", yt_dlp_rs::extractor::maoritv_suitable),
+    (
+        "massengeschmack.tv",
+        yt_dlp_rs::extractor::massengeschmacktv_suitable,
+    ),
+    ("Masters", yt_dlp_rs::extractor::masters_suitable),
+    ("MatchiTV", yt_dlp_rs::extractor::matchitv_suitable),
+    ("MatchTV", yt_dlp_rs::extractor::matchtv_suitable),
+    ("mave", yt_dlp_rs::extractor::mave_suitable),
+    ("mave:channel", yt_dlp_rs::extractor::mave_channel_suitable),
+    ("MBN", yt_dlp_rs::extractor::mbn_suitable),
+    ("MDR", yt_dlp_rs::extractor::mdr_suitable),
+    ("MedalTV", yt_dlp_rs::extractor::medaltv_suitable),
+    ("media.ccc.de", yt_dlp_rs::extractor::ccc_suitable),
+    (
+        "media.ccc.de:lists",
+        yt_dlp_rs::extractor::ccc_playlist_suitable,
+    ),
+    ("Mediaite", yt_dlp_rs::extractor::mediaite_suitable),
+    ("MediaKlikk", yt_dlp_rs::extractor::mediaklikk_suitable),
+    ("MediaStream", yt_dlp_rs::extractor::mediastream_suitable),
+    (
+        "MediaWorksNZVOD",
+        yt_dlp_rs::extractor::mediaworksnz_suitable,
+    ),
+    ("Medici", yt_dlp_rs::extractor::medici_suitable),
+    ("megaphone.fm", yt_dlp_rs::extractor::megaphone_suitable),
+    ("megatvcom", yt_dlp_rs::extractor::megatvcom_suitable),
+    ("Meipai", yt_dlp_rs::extractor::meipai_suitable),
+    (
+        "mellowfan:capture",
+        yt_dlp_rs::extractor::openrec_capture_suitable,
+    ),
+    (
+        "mellowfan:channel:search",
+        yt_dlp_rs::extractor::openrec_channel_search_suitable,
+    ),
+    (
+        "mellowfan:playlist",
+        yt_dlp_rs::extractor::openrec_playlist_suitable,
+    ),
+    ("MelonVOD", yt_dlp_rs::extractor::melonvod_suitable),
+    (
+        "MicrosoftLearnEpisode",
+        yt_dlp_rs::extractor::microsoft_learn_episode_suitable,
+    ),
+    (
+        "MicrosoftLearnPlaylist",
+        yt_dlp_rs::extractor::microsoft_learn_playlist_suitable,
+    ),
+    ("mir24.tv", yt_dlp_rs::extractor::mir24tv_suitable),
+    ("MirrorCoUK", yt_dlp_rs::extractor::mirrorcouk_suitable),
+    ("mixch", yt_dlp_rs::extractor::mixch_suitable),
+    (
+        "mixch:archive",
+        yt_dlp_rs::extractor::mixch_archive_suitable,
+    ),
+    ("mixch:movie", yt_dlp_rs::extractor::mixch_movie_suitable),
+    ("mixcloud", yt_dlp_rs::extractor::mixcloud_suitable),
+    (
+        "mixcloud:playlist",
+        yt_dlp_rs::extractor::mixcloud_playlist_suitable,
+    ),
+    (
+        "mixcloud:user",
+        yt_dlp_rs::extractor::mixcloud_user_suitable,
+    ),
+    ("Mixlr", yt_dlp_rs::extractor::mixlr_suitable),
+    (
+        "MixlrRecoring",
+        yt_dlp_rs::extractor::mixlr_recording_suitable,
+    ),
+    ("MLB", yt_dlp_rs::extractor::mlb_suitable),
+    ("MLBVideo", yt_dlp_rs::extractor::mlb_video_suitable),
+    ("MLSSoccer", yt_dlp_rs::extractor::mlssoccer_suitable),
+    ("MochaVideo", yt_dlp_rs::extractor::mocha_suitable),
+    ("Mojevideo", yt_dlp_rs::extractor::mojevideo_suitable),
+    ("Monstercat", yt_dlp_rs::extractor::monstercat_suitable),
+    ("monstersiren", yt_dlp_rs::extractor::hypergryph_suitable),
+    ("moviepilot", yt_dlp_rs::extractor::moviepilot_suitable),
+    ("MovingImage", yt_dlp_rs::extractor::movingimage_suitable),
+    ("MuseScore", yt_dlp_rs::extractor::musescore_suitable),
+    ("Mux", yt_dlp_rs::extractor::mux_suitable),
+    ("MySpace", yt_dlp_rs::extractor::myspace_suitable),
+    (
+        "MySpace:album",
+        yt_dlp_rs::extractor::myspace_album_suitable,
+    ),
+    ("MySpass", yt_dlp_rs::extractor::myspass_suitable),
+    ("MyVideoGe", yt_dlp_rs::extractor::myvideoge_suitable),
+    ("MyVidster", yt_dlp_rs::extractor::myvidster_suitable),
+    ("n-tv.de", yt_dlp_rs::extractor::ntvde_suitable),
+    ("N1Info:article", yt_dlp_rs::extractor::n1_suitable),
+    ("N1InfoAsset", yt_dlp_rs::extractor::n1_asset_suitable),
+    (
+        "NascarClassics",
+        yt_dlp_rs::extractor::nascar_classics_suitable,
+    ),
+    ("Nate", yt_dlp_rs::extractor::nate_suitable),
+    ("NekoHacker", yt_dlp_rs::extractor::nekohacker_suitable),
+    ("Nest", yt_dlp_rs::extractor::nest_suitable),
+    ("NestClip", yt_dlp_rs::extractor::nest_clip_suitable),
+    (
+        "NetAppCollection",
+        yt_dlp_rs::extractor::netapp_collection_suitable,
+    ),
+    ("NetAppVideo", yt_dlp_rs::extractor::netapp_video_suitable),
+    (
+        "netease:djradio",
+        yt_dlp_rs::extractor::netease_djradio_suitable,
+    ),
+    ("netease:mv", yt_dlp_rs::extractor::netease_mv_suitable),
+    (
+        "netease:program",
+        yt_dlp_rs::extractor::netease_program_suitable,
+    ),
+    ("Netzkino", yt_dlp_rs::extractor::netzkino_suitable),
+    ("Newsy", yt_dlp_rs::extractor::newsy_suitable),
+    ("Nexx", yt_dlp_rs::extractor::nexx_suitable),
+    ("NFHSNetwork", yt_dlp_rs::extractor::nfhsnetwork_suitable),
+    (
+        "nfl.com:article",
+        yt_dlp_rs::extractor::nfl_article_suitable,
+    ),
+    ("NhkVod", yt_dlp_rs::extractor::nhk_vod_suitable),
+    ("NhkVodProgram", yt_dlp_rs::extractor::nhk_program_suitable),
+    ("niconico", yt_dlp_rs::extractor::niconico_suitable),
+    (
+        "niconico:history",
+        yt_dlp_rs::extractor::niconico_history_suitable,
+    ),
+    (
+        "niconico:playlist",
+        yt_dlp_rs::extractor::niconico_playlist_suitable,
+    ),
+    (
+        "niconico:series",
+        yt_dlp_rs::extractor::niconico_series_suitable,
+    ),
+    ("niconico:tag", yt_dlp_rs::extractor::niconico_tag_suitable),
+    ("NiconicoUser", yt_dlp_rs::extractor::niconico_user_suitable),
+    (
+        "nicovideo:search",
+        yt_dlp_rs::extractor::nicovideo_search_suitable,
+    ),
+    (
+        "nicovideo:search:date",
+        yt_dlp_rs::extractor::nicovideo_search_date_suitable,
+    ),
+    (
+        "nicovideo:search_url",
+        yt_dlp_rs::extractor::nicovideo_search_url_suitable,
+    ),
+    ("NobelPrize", yt_dlp_rs::extractor::nobelprize_suitable),
+    ("NoicePodcast", yt_dlp_rs::extractor::noice_suitable),
+    (
+        "NoodleMagazine",
+        yt_dlp_rs::extractor::noodlemagazine_suitable,
+    ),
+    ("NOSNLArticle", yt_dlp_rs::extractor::nosnl_suitable),
+    ("NovaEmbed", yt_dlp_rs::extractor::nova_suitable),
+    ("NovaPlay", yt_dlp_rs::extractor::novaplay_suitable),
+    ("NowCanal", yt_dlp_rs::extractor::nowcanal_suitable),
+    ("nowness", yt_dlp_rs::extractor::nowness_suitable),
+    (
+        "nowness:playlist",
+        yt_dlp_rs::extractor::nowness_playlist_suitable,
+    ),
+    (
+        "nowness:series",
+        yt_dlp_rs::extractor::nowness_series_suitable,
+    ),
+    ("Npr", yt_dlp_rs::extractor::npr_suitable),
+    ("NRK", yt_dlp_rs::extractor::nrk_suitable),
+    ("NRKPlaylist", yt_dlp_rs::extractor::nrk_playlist_suitable),
+    (
+        "NRKRadioPodkast",
+        yt_dlp_rs::extractor::nrk_radio_podkast_suitable,
+    ),
+    ("NRKTV", yt_dlp_rs::extractor::nrk_tv_suitable),
+    (
+        "NRKTVDirekte",
+        yt_dlp_rs::extractor::nrk_tv_direkte_suitable,
+    ),
+    (
+        "NRKTVEpisode",
+        yt_dlp_rs::extractor::nrk_tv_episode_suitable,
+    ),
+    ("NRKTVSeason", yt_dlp_rs::extractor::nrk_tv_season_suitable),
+    ("NRKTVSeries", yt_dlp_rs::extractor::nrk_tv_series_suitable),
+    ("nts.live", yt_dlp_rs::extractor::nts_suitable),
+    ("ntv.ru", yt_dlp_rs::extractor::ntvru_suitable),
+    ("Nuvid", yt_dlp_rs::extractor::nuvid_suitable),
+    ("NYTimes", yt_dlp_rs::extractor::nytimes_suitable),
+    ("nzherald", yt_dlp_rs::extractor::nzherald_suitable),
+    ("NZOnScreen", yt_dlp_rs::extractor::nzonscreen_suitable),
+    ("NZZ", yt_dlp_rs::extractor::nzz_suitable),
+    (
+        "Odnoklassniki",
+        yt_dlp_rs::extractor::odnoklassniki_suitable,
+    ),
+    ("OlympicsReplay", yt_dlp_rs::extractor::olympics_suitable),
+    ("Omnyfm", yt_dlp_rs::extractor::omnyfm_suitable),
+    (
+        "OmnyfmPlaylist",
+        yt_dlp_rs::extractor::omnyfm_playlist_suitable,
+    ),
+    ("OmnyfmShow", yt_dlp_rs::extractor::omnyfm_show_suitable),
+    ("on24", yt_dlp_rs::extractor::on24_suitable),
+    (
+        "OnDemandKorea",
+        yt_dlp_rs::extractor::ondemandkorea_suitable,
+    ),
+    (
+        "OnDemandKoreaProgram",
+        yt_dlp_rs::extractor::ondemandkorea_program_suitable,
+    ),
+    ("OneFootball", yt_dlp_rs::extractor::onefootball_suitable),
+    ("OnePlacePodcast", yt_dlp_rs::extractor::oneplace_suitable),
+    ("onsen", yt_dlp_rs::extractor::onsen_suitable),
+    ("Opencast", yt_dlp_rs::extractor::opencast_suitable),
+    (
+        "OpencastPlaylist",
+        yt_dlp_rs::extractor::opencast_playlist_suitable,
+    ),
+    ("orf:on", yt_dlp_rs::extractor::orf_on_suitable),
+    ("orf:podcast", yt_dlp_rs::extractor::orf_podcast_suitable),
+    ("orf:radio", yt_dlp_rs::extractor::orf_radio_suitable),
+    ("OutsideTV", yt_dlp_rs::extractor::outsidetv_suitable),
+    ("PacktPub", yt_dlp_rs::extractor::packtpub_suitable),
+    (
+        "PacktPubCourse",
+        yt_dlp_rs::extractor::packtpub_course_suitable,
+    ),
+    ("parliamentlive.tv", yt_dlp_rs::extractor::redbee_suitable),
+    ("Parlview", yt_dlp_rs::extractor::parlview_suitable),
+    (
+        "parti:livestream",
+        yt_dlp_rs::extractor::parti_livestream_suitable,
+    ),
+    ("parti:video", yt_dlp_rs::extractor::parti_video_suitable),
+    ("PearVideo", yt_dlp_rs::extractor::pearvideo_suitable),
+    ("peer.tv", yt_dlp_rs::extractor::peertv_suitable),
+    ("PeerTube", yt_dlp_rs::extractor::peertube_suitable),
+    (
+        "PeerTube:Playlist",
+        yt_dlp_rs::extractor::peertube_playlist_suitable,
+    ),
+    ("periscope", yt_dlp_rs::extractor::periscope_suitable),
+    ("PGATour", yt_dlp_rs::extractor::pgatour_suitable),
+    (
+        "PhilharmonieDeParis",
+        yt_dlp_rs::extractor::philharmoniedeparis_suitable,
+    ),
+    ("Photobucket", yt_dlp_rs::extractor::photobucket_suitable),
+    ("PiaLive", yt_dlp_rs::extractor::pialive_suitable),
+    ("picarto", yt_dlp_rs::extractor::picarto_suitable),
+    ("picarto:vod", yt_dlp_rs::extractor::picarto_vod_suitable),
+    ("Piksel", yt_dlp_rs::extractor::piksel_suitable),
+    ("Pinkbike", yt_dlp_rs::extractor::pinkbike_suitable),
+    ("Pinterest", yt_dlp_rs::extractor::pinterest_suitable),
+    (
+        "PinterestCollection",
+        yt_dlp_rs::extractor::pinterest_collection_suitable,
+    ),
+    ("PlayerFm", yt_dlp_rs::extractor::playerfm_suitable),
+    ("PodbayFM", yt_dlp_rs::extractor::podbayfm_suitable),
+    (
+        "PodbayFMChannel",
+        yt_dlp_rs::extractor::podbayfm_channel_suitable,
+    ),
+    ("Podchaser", yt_dlp_rs::extractor::podchaser_suitable),
+    ("PolskieRadio", yt_dlp_rs::extractor::polskieradio_suitable),
+    (
+        "polskieradio:legacy",
+        yt_dlp_rs::extractor::polskieradio_legacy_suitable,
+    ),
+    (
+        "polskieradio:podcast:list",
+        yt_dlp_rs::extractor::polskieradio_podcast_list_suitable,
+    ),
+    ("Popcorntimes", yt_dlp_rs::extractor::popcorntimes_suitable),
+    ("PopcornTV", yt_dlp_rs::extractor::popcorntv_suitable),
+    ("PornHub", yt_dlp_rs::extractor::pornhub_suitable),
+    (
+        "PornHubPagedVideoList",
+        yt_dlp_rs::extractor::pornhub_paged_suitable,
+    ),
+    (
+        "PornHubPlaylist",
+        yt_dlp_rs::extractor::pornhub_playlist_suitable,
+    ),
+    ("PornHubUser", yt_dlp_rs::extractor::pornhub_user_suitable),
+    ("PornTop", yt_dlp_rs::extractor::porntop_suitable),
+    ("PrankCast", yt_dlp_rs::extractor::prankcast_suitable),
+    (
+        "PrankCastPost",
+        yt_dlp_rs::extractor::prankcast_post_suitable,
+    ),
+    (
+        "PremiershipRugby",
+        yt_dlp_rs::extractor::premiershiprugby_suitable,
+    ),
+    ("PressTV", yt_dlp_rs::extractor::presstv_suitable),
+    (
+        "ProjectVeritas (CURRENTLY BROKEN)",
+        yt_dlp_rs::extractor::projectveritas_suitable,
+    ),
+    ("Pyvideo", yt_dlp_rs::extractor::pyvideo_suitable),
+    ("QingTing", yt_dlp_rs::extractor::qingting_suitable),
+    ("radiocanada", yt_dlp_rs::extractor::radiocanada_suitable),
+    (
+        "radiocanada:audiovideo",
+        yt_dlp_rs::extractor::radiocanada_audio_video_suitable,
+    ),
+    ("radiokapital", yt_dlp_rs::extractor::radiokapital_suitable),
+    (
+        "radiokapital:show",
+        yt_dlp_rs::extractor::radiokapital_show_suitable,
+    ),
+    (
+        "RadioRadicale",
+        yt_dlp_rs::extractor::radioradicale_suitable,
+    ),
+    ("RadioZetPodcast", yt_dlp_rs::extractor::radiozet_suitable),
+    ("Rai", yt_dlp_rs::extractor::rai_suitable),
+    ("RaiCultura", yt_dlp_rs::extractor::raicultura_suitable),
+    ("RaiNews", yt_dlp_rs::extractor::rainews_suitable),
+    ("RaiPlay", yt_dlp_rs::extractor::raiplay_suitable),
+    ("RaiPlayLive", yt_dlp_rs::extractor::raiplaylive_suitable),
+    (
+        "RaiPlayPlaylist",
+        yt_dlp_rs::extractor::raiplayplaylist_suitable,
+    ),
+    ("RaiPlaySound", yt_dlp_rs::extractor::raiplaysound_suitable),
+    (
+        "RaiPlaySoundLive",
+        yt_dlp_rs::extractor::raiplaysoundlive_suitable,
+    ),
+    (
+        "RaiPlaySoundPlaylist",
+        yt_dlp_rs::extractor::raiplaysoundplaylist_suitable,
+    ),
+    ("RaiSudtirol", yt_dlp_rs::extractor::raisudtirol_suitable),
+    ("RCS", yt_dlp_rs::extractor::rcs_suitable),
+    ("RCSEmbeds", yt_dlp_rs::extractor::rcs_embeds_suitable),
+    ("RCSVarious", yt_dlp_rs::extractor::rcs_various_suitable),
+    ("RCTIPlus", yt_dlp_rs::extractor::rcti_suitable),
+    ("RCTIPlusSeries", yt_dlp_rs::extractor::rcti_series_suitable),
+    ("Reddit", yt_dlp_rs::extractor::reddit_suitable),
+    ("RedGifs", yt_dlp_rs::extractor::redgifs_suitable),
+    (
+        "RedGifsSearch",
+        yt_dlp_rs::extractor::redgifs_search_suitable,
+    ),
+    ("RedGifsUser", yt_dlp_rs::extractor::redgifs_user_suitable),
+    ("RedTube", yt_dlp_rs::extractor::redtube_suitable),
+    ("ReverbNation", yt_dlp_rs::extractor::reverbnation_suitable),
+    ("RinseFM", yt_dlp_rs::extractor::rinsefm_suitable),
+    (
+        "RinseFMArtistPlaylist",
+        yt_dlp_rs::extractor::rinsefm_playlist_suitable,
+    ),
+    ("Rokfin", yt_dlp_rs::extractor::rokfin_suitable),
+    ("rokfin:stack", yt_dlp_rs::extractor::rokfin_stack_suitable),
+    (
+        "RottenTomatoes",
+        yt_dlp_rs::extractor::rottentomatoes_suitable,
+    ),
+    ("RoyaLive", yt_dlp_rs::extractor::roya_suitable),
+    ("Rozhlas", yt_dlp_rs::extractor::rozhlas_audio_suitable),
+    (
+        "RozhlasVltava",
+        yt_dlp_rs::extractor::rozhlas_vltava_suitable,
+    ),
+    ("rte", yt_dlp_rs::extractor::rte_suitable),
+    ("rte:radio", yt_dlp_rs::extractor::rte_radio_suitable),
+    ("RTRFM", yt_dlp_rs::extractor::rtrfm_suitable),
+    ("RTVCKaltura", yt_dlp_rs::extractor::rtvcplay_suitable),
+    ("RTVCPlay", yt_dlp_rs::extractor::rtvcplay_play_suitable),
+    (
+        "rtve.es:alacarta",
+        yt_dlp_rs::extractor::rtve_alacarta_suitable,
+    ),
+    ("rtve.es:audio", yt_dlp_rs::extractor::rtve_audio_suitable),
+    ("rtve.es:live", yt_dlp_rs::extractor::rtve_live_suitable),
+    (
+        "rtve.es:program",
+        yt_dlp_rs::extractor::rtve_program_suitable,
+    ),
+    (
+        "rtve.es:television",
+        yt_dlp_rs::extractor::rtve_television_suitable,
+    ),
+    ("rtvslo.si", yt_dlp_rs::extractor::rtvslo_suitable),
+    ("rtvslo.si:show", yt_dlp_rs::extractor::rtvslo_show_suitable),
+    ("RudoVideo", yt_dlp_rs::extractor::rudovideo_suitable),
+    ("Rumble", yt_dlp_rs::extractor::rumble_suitable),
+    ("RumbleEmbed", yt_dlp_rs::extractor::rumble_embed_suitable),
+    ("rutube", yt_dlp_rs::extractor::rutube_suitable),
+    (
+        "rutube:channel",
+        yt_dlp_rs::extractor::rutube_channel_suitable,
+    ),
+    ("rutube:embed", yt_dlp_rs::extractor::rutube_embed_suitable),
+    (
+        "rutube:person",
+        yt_dlp_rs::extractor::rutube_person_suitable,
+    ),
+    (
+        "rutube:playlist",
+        yt_dlp_rs::extractor::rutube_playlist_suitable,
+    ),
+    ("Ruv", yt_dlp_rs::extractor::ruv_suitable),
+    ("ruv.is:spila", yt_dlp_rs::extractor::ruv_spila_suitable),
+    ("S4C", yt_dlp_rs::extractor::s4c_suitable),
+    ("S4CSeries", yt_dlp_rs::extractor::s4c_series_suitable),
+    ("Sapo", yt_dlp_rs::extractor::sapo_suitable),
+    ("SBS", yt_dlp_rs::extractor::sbs_suitable),
+    (
+        "ScienceChannel",
+        yt_dlp_rs::extractor::science_channel_suitable,
+    ),
+    ("Screen9", yt_dlp_rs::extractor::screen9_suitable),
+    ("Screencast", yt_dlp_rs::extractor::screencast_suitable),
+    (
+        "Screencastify",
+        yt_dlp_rs::extractor::screencastify_suitable,
+    ),
+    ("ScreenRec", yt_dlp_rs::extractor::screenrec_suitable),
+    ("Sen", yt_dlp_rs::extractor::sen_suitable),
+    ("Servus", yt_dlp_rs::extractor::servus_suitable),
+    ("SharePoint", yt_dlp_rs::extractor::sharepoint_suitable),
+    ("ShemarooMe", yt_dlp_rs::extractor::shemaroome_suitable),
+    (
+        "showroom:live",
+        yt_dlp_rs::extractor::showroom_live_suitable,
+    ),
+    ("showroom:vod", yt_dlp_rs::extractor::showroom_vod_suitable),
+    (
+        "ShugiinItvLive",
+        yt_dlp_rs::extractor::shugiinitvlive_suitable,
+    ),
+    (
+        "ShugiinItvVod",
+        yt_dlp_rs::extractor::shugiinitvvod_suitable,
+    ),
+    ("simplecast", yt_dlp_rs::extractor::simplecast_suitable),
+    (
+        "simplecast:episode",
+        yt_dlp_rs::extractor::simplecast_episode_suitable,
+    ),
+    (
+        "simplecast:podcast",
+        yt_dlp_rs::extractor::simplecast_podcast_suitable,
+    ),
+    ("Sina", yt_dlp_rs::extractor::sina_suitable),
+    ("Skeb", yt_dlp_rs::extractor::skeb_suitable),
+    ("sky:news", yt_dlp_rs::extractor::sky_news_suitable),
+    (
+        "sky:news:story",
+        yt_dlp_rs::extractor::sky_news_story_suitable,
+    ),
+    ("sky:sports", yt_dlp_rs::extractor::sky_sports_suitable),
+    (
+        "sky:sports:news",
+        yt_dlp_rs::extractor::sky_sports_news_suitable,
+    ),
+    (
+        "SkylineWebcams (CURRENTLY BROKEN)",
+        yt_dlp_rs::extractor::skylinewebcams_suitable,
+    ),
+    ("SkyNewsAU", yt_dlp_rs::extractor::skynewsau_suitable),
+    ("SnapchatSpotlight", yt_dlp_rs::extractor::snapchat_suitable),
+    ("Sohu", yt_dlp_rs::extractor::sohu_suitable),
+    ("SohuV", yt_dlp_rs::extractor::sohu_v_suitable),
+    ("soop", yt_dlp_rs::extractor::afreecatv_vod_suitable),
+    (
+        "soop:catchstory",
+        yt_dlp_rs::extractor::afreecatv_catchstory_suitable,
+    ),
+    ("soop:user", yt_dlp_rs::extractor::afreecatv_user_suitable),
+    ("soundcloud", yt_dlp_rs::extractor::soundcloud_suitable),
+    (
+        "soundcloud:playlist",
+        yt_dlp_rs::extractor::soundcloud_playlist_suitable,
+    ),
+    (
+        "soundcloud:related",
+        yt_dlp_rs::extractor::soundcloud_related_suitable,
+    ),
+    (
+        "soundcloud:search",
+        yt_dlp_rs::extractor::soundcloud_search_suitable,
+    ),
+    (
+        "soundcloud:set",
+        yt_dlp_rs::extractor::soundcloud_set_suitable,
+    ),
+    (
+        "soundcloud:trackstation",
+        yt_dlp_rs::extractor::soundcloud_track_station_suitable,
+    ),
+    (
+        "soundcloud:user",
+        yt_dlp_rs::extractor::soundcloud_user_suitable,
+    ),
+    (
+        "soundcloud:user:permalink",
+        yt_dlp_rs::extractor::soundcloud_user_permalink_suitable,
+    ),
+    (
+        "SoundcloudEmbed",
+        yt_dlp_rs::extractor::soundcloud_embed_suitable,
+    ),
+    ("soundgasm", yt_dlp_rs::extractor::soundgasm_suitable),
+    (
+        "soundgasm:profile",
+        yt_dlp_rs::extractor::soundgasm_profile_suitable,
+    ),
+    (
+        "SovietsCloset",
+        yt_dlp_rs::extractor::sovietscloset_suitable,
+    ),
+    (
+        "SovietsClosetPlaylist",
+        yt_dlp_rs::extractor::sovietscloset_playlist_suitable,
+    ),
+    ("Spiegel", yt_dlp_rs::extractor::spiegel_suitable),
+    ("Sport5", yt_dlp_rs::extractor::sport5_suitable),
+    ("Spreaker", yt_dlp_rs::extractor::spreaker_suitable),
+    ("SpreakerShow", yt_dlp_rs::extractor::spreaker_show_suitable),
+    ("SproutVideo", yt_dlp_rs::extractor::sproutvideo_suitable),
+    ("SRGSSR", yt_dlp_rs::extractor::srgssr_suitable),
+    ("SRGSSRPlay", yt_dlp_rs::extractor::srgssr_play_suitable),
+    ("startrek", yt_dlp_rs::extractor::startrek_suitable),
+    ("startv", yt_dlp_rs::extractor::startv_suitable),
+    ("Steam", yt_dlp_rs::extractor::steam_suitable),
+    (
+        "SteamCommunity",
+        yt_dlp_rs::extractor::steam_community_suitable,
+    ),
+    (
+        "SteamCommunityBroadcast",
+        yt_dlp_rs::extractor::steam_broadcast_suitable,
+    ),
+    ("Streaks", yt_dlp_rs::extractor::streaks_suitable),
+    ("Streamable", yt_dlp_rs::extractor::streamable_suitable),
+    ("StreamCZ", yt_dlp_rs::extractor::streamcz_suitable),
+    ("StreetVoice", yt_dlp_rs::extractor::streetvoice_suitable),
+    ("stv:player", yt_dlp_rs::extractor::stv_player_suitable),
+    ("stvr", yt_dlp_rs::extractor::rtvs_suitable),
+    ("Subsplash", yt_dlp_rs::extractor::subsplash_suitable),
+    (
+        "subsplash:playlist",
+        yt_dlp_rs::extractor::subsplash_playlist_suitable,
+    ),
+    ("Substack", yt_dlp_rs::extractor::substack_suitable),
+    (
+        "sverigesradio:episode",
+        yt_dlp_rs::extractor::sverigesradio_episode_suitable,
+    ),
+    (
+        "sverigesradio:publication",
+        yt_dlp_rs::extractor::sverigesradio_publication_suitable,
+    ),
+    ("svt:page", yt_dlp_rs::extractor::svt_page_suitable),
+    ("svt:play", yt_dlp_rs::extractor::svt_suitable),
+    ("svt:play:series", yt_dlp_rs::extractor::svt_series_suitable),
+    ("SztvHu", yt_dlp_rs::extractor::sztvhu_suitable),
+    ("TapTapApp", yt_dlp_rs::extractor::taptap_app_suitable),
+    (
+        "TapTapAppIntl",
+        yt_dlp_rs::extractor::taptap_app_intl_suitable,
+    ),
+    ("TapTapMoment", yt_dlp_rs::extractor::taptap_moment_suitable),
+    (
+        "TapTapPostIntl",
+        yt_dlp_rs::extractor::taptap_post_intl_suitable,
+    ),
+    ("Teamcoco", yt_dlp_rs::extractor::teamcoco_suitable),
+    (
+        "TeamTreeHouse",
+        yt_dlp_rs::extractor::teamtreehouse_suitable,
+    ),
+    ("TedEmbed", yt_dlp_rs::extractor::ted_embed_suitable),
+    ("TedPlaylist", yt_dlp_rs::extractor::ted_playlist_suitable),
+    ("TedSeries", yt_dlp_rs::extractor::ted_series_suitable),
+    ("TedTalk", yt_dlp_rs::extractor::ted_talk_suitable),
+    ("Tele13", yt_dlp_rs::extractor::tele13_suitable),
+    (
+        "TeleBruxelles",
+        yt_dlp_rs::extractor::telebruxelles_suitable,
+    ),
+    ("Telegraaf", yt_dlp_rs::extractor::telegraaf_suitable),
+    ("telegram:embed", yt_dlp_rs::extractor::telegram_suitable),
+    (
+        "TeleTask (CURRENTLY BROKEN)",
+        yt_dlp_rs::extractor::teletask_suitable,
+    ),
+    ("Telewebion", yt_dlp_rs::extractor::telewebion_suitable),
+    ("TF1", yt_dlp_rs::extractor::tf1_suitable),
+    ("TheChosen", yt_dlp_rs::extractor::thechosen_suitable),
+    (
+        "TheGuardianPodcast",
+        yt_dlp_rs::extractor::theguardian_suitable,
+    ),
+    ("TheHighWire", yt_dlp_rs::extractor::thehighwire_suitable),
+    ("TheIntercept", yt_dlp_rs::extractor::theintercept_suitable),
+    ("TheStar", yt_dlp_rs::extractor::thestar_suitable),
+    ("TheSun", yt_dlp_rs::extractor::thesun_suitable),
+    (
+        "ThisAmericanLife",
+        yt_dlp_rs::extractor::thisamericanlife_suitable,
+    ),
+    ("ThisOldHouse", yt_dlp_rs::extractor::thisoldhouse_suitable),
+    ("ThreeSpeak", yt_dlp_rs::extractor::threespeak_suitable),
+    (
+        "ThreeSpeakUser",
+        yt_dlp_rs::extractor::threespeak_user_suitable,
+    ),
+    ("TikTok", yt_dlp_rs::extractor::tiktok_suitable),
+    (
+        "tiktok:collection",
+        yt_dlp_rs::extractor::tiktok_collection_suitable,
+    ),
+    ("tiktok:live", yt_dlp_rs::extractor::tiktok_live_suitable),
+    ("tiktok:user", yt_dlp_rs::extractor::tiktok_user_suitable),
+    ("TMZ", yt_dlp_rs::extractor::tmz_suitable),
+    ("TNAFlix", yt_dlp_rs::extractor::tnaflix_suitable),
+    (
+        "TNAFlixNetworkEmbed",
+        yt_dlp_rs::extractor::tnaflix_network_embed_suitable,
+    ),
+    (
+        "tokfm:audition",
+        yt_dlp_rs::extractor::tokfm_audition_suitable,
+    ),
+    (
+        "tokfm:podcast",
+        yt_dlp_rs::extractor::tokfm_podcast_suitable,
+    ),
+    ("ToonGoggles", yt_dlp_rs::extractor::toongoggles_suitable),
+    ("toutiao", yt_dlp_rs::extractor::toutiao_suitable),
+    (
+        "Toypics (CURRENTLY BROKEN)",
+        yt_dlp_rs::extractor::toypics_suitable,
+    ),
+    ("TrtCocukVideo", yt_dlp_rs::extractor::trtcocuk_suitable),
+    ("TrtWorld", yt_dlp_rs::extractor::trtworld_suitable),
+    ("TruNews", yt_dlp_rs::extractor::trunews_suitable),
+    ("Truth", yt_dlp_rs::extractor::truth_suitable),
+    ("Tumblr", yt_dlp_rs::extractor::tumblr_suitable),
+    ("tunein:embed", yt_dlp_rs::extractor::tunein_embed_suitable),
+    (
+        "tunein:podcast",
+        yt_dlp_rs::extractor::tunein_episode_suitable,
+    ),
+    (
+        "tunein:podcast:program",
+        yt_dlp_rs::extractor::tunein_podcast_suitable,
+    ),
+    (
+        "tunein:shortener",
+        yt_dlp_rs::extractor::tunein_shortener_suitable,
+    ),
+    (
+        "tunein:station",
+        yt_dlp_rs::extractor::tunein_station_suitable,
+    ),
+    ("tv.dfb.de", yt_dlp_rs::extractor::dfb_suitable),
+    ("TV2", yt_dlp_rs::extractor::tv2_suitable),
+    ("TV2Article", yt_dlp_rs::extractor::tv2_article_suitable),
+    ("TV2DK", yt_dlp_rs::extractor::tv2dk_suitable),
+    (
+        "TV2DKBornholmPlay",
+        yt_dlp_rs::extractor::tv2dk_bornholm_suitable,
+    ),
+    ("tv2play.hu", yt_dlp_rs::extractor::tv2hu_suitable),
+    (
+        "tv2playseries.hu",
+        yt_dlp_rs::extractor::tv2hu_series_suitable,
+    ),
+    ("TV4", yt_dlp_rs::extractor::tv4_suitable),
+    ("TV5MONDE", yt_dlp_rs::extractor::tv5mondeplus_suitable),
+    ("tv5unis", yt_dlp_rs::extractor::tv5unis_suitable),
+    (
+        "tv5unis:video",
+        yt_dlp_rs::extractor::tv5unis_video_suitable,
+    ),
+    ("TVANouvelles", yt_dlp_rs::extractor::tvanouvelles_suitable),
+    (
+        "TVANouvellesArticle",
+        yt_dlp_rs::extractor::tvanouvelles_article_suitable,
+    ),
+    ("tvaplus", yt_dlp_rs::extractor::tva_suitable),
+    ("tvigle", yt_dlp_rs::extractor::tvigle_suitable),
+    ("TVIPlayer", yt_dlp_rs::extractor::tviplayer_suitable),
+    ("tvnoe", yt_dlp_rs::extractor::tvnoe_suitable),
+    ("TVO", yt_dlp_rs::extractor::tvo_suitable),
+    (
+        "tvopengr:embed",
+        yt_dlp_rs::extractor::tvopengr_embed_suitable,
+    ),
+    ("tvopengr:watch", yt_dlp_rs::extractor::tvopengr_suitable),
+    ("tvp:embed", yt_dlp_rs::extractor::tvp_embed_suitable),
+    ("tvp:vod", yt_dlp_rs::extractor::tvp_vod_video_suitable),
+    (
+        "tvp:vod:series",
+        yt_dlp_rs::extractor::tvp_vod_series_suitable,
+    ),
+    ("tvw", yt_dlp_rs::extractor::tvw_suitable),
+    ("tvw:news", yt_dlp_rs::extractor::tvw_news_suitable),
+    ("tvw:tvchannels", yt_dlp_rs::extractor::tvw_channel_suitable),
+    ("Tweakers", yt_dlp_rs::extractor::tweakers_suitable),
+    ("twitch:clips", yt_dlp_rs::extractor::twitch_clips_suitable),
+    (
+        "twitch:collection",
+        yt_dlp_rs::extractor::twitch_collection_suitable,
+    ),
+    (
+        "twitch:stream",
+        yt_dlp_rs::extractor::twitch_stream_suitable,
+    ),
+    (
+        "twitch:videos",
+        yt_dlp_rs::extractor::twitch_videos_suitable,
+    ),
+    (
+        "twitch:videos:clips",
+        yt_dlp_rs::extractor::twitch_videos_clips_suitable,
+    ),
+    (
+        "twitch:videos:collections",
+        yt_dlp_rs::extractor::twitch_videos_collections_suitable,
+    ),
+    ("twitch:vod", yt_dlp_rs::extractor::twitch_vod_suitable),
+    ("twitter", yt_dlp_rs::extractor::twitter_suitable),
+    (
+        "twitter:amplify",
+        yt_dlp_rs::extractor::twitter_amplify_suitable,
+    ),
+    (
+        "twitter:broadcast",
+        yt_dlp_rs::extractor::twitter_broadcast_suitable,
+    ),
+    ("twitter:card", yt_dlp_rs::extractor::twitter_card_suitable),
+    (
+        "twitter:shortener",
+        yt_dlp_rs::extractor::twitter_shortener_suitable,
+    ),
+    (
+        "twitter:spaces",
+        yt_dlp_rs::extractor::twitter_spaces_suitable,
+    ),
+    ("Txxx", yt_dlp_rs::extractor::txxx_suitable),
+    ("UDNEmbed", yt_dlp_rs::extractor::udn_suitable),
+    ("UlizaPlayer", yt_dlp_rs::extractor::uliza_player_suitable),
+    ("UlizaPortal", yt_dlp_rs::extractor::uliza_portal_suitable),
+    ("umg:de", yt_dlp_rs::extractor::umg_suitable),
+    ("Unistra", yt_dlp_rs::extractor::unistra_suitable),
+    (
+        "UnitedNationsWebTv",
+        yt_dlp_rs::extractor::unitednations_suitable,
+    ),
+    ("uol.com.br", yt_dlp_rs::extractor::uol_suitable),
+    ("URPlay", yt_dlp_rs::extractor::urplay_suitable),
+    ("USAToday", yt_dlp_rs::extractor::usatoday_suitable),
+    ("ustudio", yt_dlp_rs::extractor::ustudio_suitable),
+    (
+        "ustudio:embed",
+        yt_dlp_rs::extractor::ustudio_embed_suitable,
+    ),
+    ("Vbox7", yt_dlp_rs::extractor::vbox7_suitable),
+    ("Veo", yt_dlp_rs::extractor::veo_suitable),
+    ("Videa", yt_dlp_rs::extractor::videa_suitable),
+    ("video.arnes.si", yt_dlp_rs::extractor::arnes_suitable),
+    ("VideoPress", yt_dlp_rs::extractor::videopress_suitable),
+    ("Vidio", yt_dlp_rs::extractor::vidio_suitable),
+    ("VidioPremier", yt_dlp_rs::extractor::vidio_premier_suitable),
+    ("VidLii", yt_dlp_rs::extractor::vidlii_suitable),
+    ("Vidly", yt_dlp_rs::extractor::vidly_suitable),
+    ("vids.io", yt_dlp_rs::extractor::sproutvideo_vids_suitable),
+    ("Vidyard", yt_dlp_rs::extractor::vidyard_suitable),
+    ("vimeo", yt_dlp_rs::extractor::vimeo_suitable),
+    ("vimeo:album", yt_dlp_rs::extractor::vimeo_album_suitable),
+    ("vimeo:group", yt_dlp_rs::extractor::vimeo_groups_suitable),
+    ("ViMP", yt_dlp_rs::extractor::videocampus_sachsen_suitable),
+    (
+        "ViMP:Playlist",
+        yt_dlp_rs::extractor::videocampus_sachsen_playlist_suitable,
+    ),
+    ("Viously", |_| false),
+    ("Visir", yt_dlp_rs::extractor::visir_suitable),
+    ("vk", yt_dlp_rs::extractor::vk_suitable),
+    (
+        "vk:uservideos",
+        yt_dlp_rs::extractor::vk_user_videos_suitable,
+    ),
+    ("vk:wallpost", yt_dlp_rs::extractor::vk_wall_post_suitable),
+    ("VKPlay", yt_dlp_rs::extractor::vkplay_suitable),
+    ("VKPlayLive", yt_dlp_rs::extractor::vkplay_live_suitable),
+    ("vm.tiktok", yt_dlp_rs::extractor::tiktok_vm_suitable),
+    ("Vocaroo", yt_dlp_rs::extractor::vocaroo_suitable),
+    ("VODPlatform", yt_dlp_rs::extractor::vodplatform_suitable),
+    (
+        "volejtv:category",
+        yt_dlp_rs::extractor::volejtv_category_suitable,
+    ),
+    ("volejtv:club", yt_dlp_rs::extractor::volejtv_club_suitable),
+    ("volejtv:match", yt_dlp_rs::extractor::volejtv_suitable),
+    ("VTV", yt_dlp_rs::extractor::vtv_suitable),
+    ("VTVGo", yt_dlp_rs::extractor::vtv_go_suitable),
+    (
+        "washingtonpost",
+        yt_dlp_rs::extractor::washingtonpost_suitable,
+    ),
+    (
+        "washingtonpost:article",
+        yt_dlp_rs::extractor::washingtonpost_article_suitable,
+    ),
+    ("wat.tv", yt_dlp_rs::extractor::wat_suitable),
+    ("WDR", yt_dlp_rs::extractor::wdr_suitable),
+    ("WDRElefant", yt_dlp_rs::extractor::wdr_elefant_suitable),
+    ("Webcamerapl", yt_dlp_rs::extractor::webcamerapl_suitable),
+    ("WebOfStories", yt_dlp_rs::extractor::webofstories_suitable),
+    (
+        "WebOfStoriesPlaylist",
+        yt_dlp_rs::extractor::webofstories_playlist_suitable,
+    ),
+    ("Weibo", yt_dlp_rs::extractor::weibo_suitable),
+    ("WeiboUser", yt_dlp_rs::extractor::weibo_user_suitable),
+    ("WeiboVideo", yt_dlp_rs::extractor::weibo_video_suitable),
+    ("Whyp", yt_dlp_rs::extractor::whyp_suitable),
+    ("wikimedia.org", yt_dlp_rs::extractor::wikimedia_suitable),
+    ("Wimbledon", yt_dlp_rs::extractor::wimbledon_suitable),
+    ("Wistia", yt_dlp_rs::extractor::wistia_suitable),
+    (
+        "WistiaChannel",
+        yt_dlp_rs::extractor::wistia_channel_suitable,
+    ),
+    (
+        "WistiaPlaylist",
+        yt_dlp_rs::extractor::wistia_playlist_suitable,
+    ),
+    (
+        "WorldStarHipHop",
+        yt_dlp_rs::extractor::worldstarhiphop_suitable,
+    ),
+    ("WSJ", yt_dlp_rs::extractor::wsj_suitable),
+    ("WSJArticle", yt_dlp_rs::extractor::wsj_article_suitable),
+    (
+        "wyborcza:video",
+        yt_dlp_rs::extractor::wyborcza_video_suitable,
+    ),
+    (
+        "WyborczaPodcast",
+        yt_dlp_rs::extractor::wyborcza_podcast_suitable,
+    ),
+    ("wykop:dig", yt_dlp_rs::extractor::wykop_dig_suitable),
+    (
+        "wykop:dig:comment",
+        yt_dlp_rs::extractor::wykop_dig_comment_suitable,
+    ),
+    ("wykop:post", yt_dlp_rs::extractor::wykop_post_suitable),
+    (
+        "wykop:post:comment",
+        yt_dlp_rs::extractor::wykop_post_comment_suitable,
+    ),
+    ("XboxClips", yt_dlp_rs::extractor::xboxclips_suitable),
+    ("XHamster", yt_dlp_rs::extractor::xhamster_suitable),
+    ("XHamsterUser", yt_dlp_rs::extractor::xhamster_user_suitable),
+    ("XiaoHongShu", yt_dlp_rs::extractor::xiaohongshu_suitable),
+    ("ximalaya", yt_dlp_rs::extractor::ximalaya_suitable),
+    (
+        "ximalaya:album",
+        yt_dlp_rs::extractor::ximalaya_album_suitable,
+    ),
+    ("Xinpianchang", yt_dlp_rs::extractor::xinpianchang_suitable),
+    ("XNXX", yt_dlp_rs::extractor::xnxx_suitable),
+    ("XVideos", yt_dlp_rs::extractor::xvideos_suitable),
+    (
+        "xvideos:quickies",
+        yt_dlp_rs::extractor::xvideos_quickies_suitable,
+    ),
+    ("XXXYMovies", yt_dlp_rs::extractor::xxxymovies_suitable),
+    ("YandexDisk", yt_dlp_rs::extractor::yandexdisk_suitable),
+    (
+        "Yappy (CURRENTLY BROKEN)",
+        yt_dlp_rs::extractor::yappy_suitable,
+    ),
+    ("YappyProfile", yt_dlp_rs::extractor::yappy_profile_suitable),
+    ("yfanefa", yt_dlp_rs::extractor::yfanefa_suitable),
+    ("YleAreena", yt_dlp_rs::extractor::yle_areena_suitable),
+    ("YouJizz", yt_dlp_rs::extractor::youjizz_suitable),
+    ("youku", yt_dlp_rs::extractor::youku_suitable),
+    ("YouPorn", yt_dlp_rs::extractor::youporn_suitable),
+    ("youtube", yt_dlp_rs::extractor::youtube_suitable),
+    ("youtube:clip", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:clip", url)
+    }),
+    ("youtube:consent", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:consent", url)
+    }),
+    ("youtube:favorites", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:favorites", url)
+    }),
+    ("youtube:history", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:history", url)
+    }),
+    ("youtube:music:search_url", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:music:search_url", url)
+    }),
+    ("youtube:notif", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:notif", url)
+    }),
+    ("youtube:playlist", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:playlist", url)
+    }),
+    ("youtube:recommended", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:recommended", url)
+    }),
+    (
+        "youtube:search",
+        yt_dlp_rs::extractor::youtube_search_suitable,
+    ),
+    (
+        "youtube:search_url",
+        yt_dlp_rs::extractor::youtube_search_url_suitable,
+    ),
+    ("youtube:shorts:pivot:audio", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:shorts:pivot:audio", url)
+    }),
+    ("youtube:subscriptions", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:subscriptions", url)
+    }),
+    ("youtube:tab", yt_dlp_rs::extractor::youtube_tab_suitable),
+    ("youtube:truncated_id", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:truncated_id", url)
+    }),
+    ("youtube:truncated_url", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:truncated_url", url)
+    }),
+    ("youtube:user", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:user", url)
+    }),
+    ("youtube:watchlater", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:watchlater", url)
+    }),
+    ("YoutubeLivestreamEmbed", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("YoutubeLivestreamEmbed", url)
+    }),
+    ("YoutubeYtBe", |url| {
+        yt_dlp_rs::extractor::youtube_extractor_suitable("YoutubeYtBe", url)
+    }),
+    ("Zapiks", yt_dlp_rs::extractor::zapiks_suitable),
+    ("zdf", yt_dlp_rs::extractor::zdf_suitable),
+    ("zdf:channel", yt_dlp_rs::extractor::zdf_channel_suitable),
+    ("ZenPorn", yt_dlp_rs::extractor::zenporn_suitable),
+    ("ZetlandDKArticle", yt_dlp_rs::extractor::zetland_suitable),
+    ("Zhihu", yt_dlp_rs::extractor::zhihu_suitable),
+    ("zoom", yt_dlp_rs::extractor::zoom_suitable),
+    ("zoom:clips", yt_dlp_rs::extractor::zoom_clips_suitable),
+    ("Zype", yt_dlp_rs::extractor::zype_suitable),
+    ("generic", |_| true),
+];
+
+/// Upstream `YoutubeDL._ies` as `_make_archive_id` searches it for an
+/// entry's URL: the `ie_key` and `suitable` of each extractor in use that
+/// this port has, in upstream's order (`src/data/extractor_keys.tsv`, from
+/// `tools/extractor_keys.py`). Set once the extractors are configured.
+static ARCHIVE_IES: std::sync::OnceLock<Vec<(&'static str, Suitable)>> = std::sync::OnceLock::new();
+
+fn archive_ies(downloader: &YoutubeDl) -> Vec<(&'static str, Suitable)> {
+    let by_name: std::collections::HashMap<String, Suitable> = SUITABLE
+        .iter()
+        .map(|(name, suitable)| {
+            (
+                name.trim_end_matches(" (CURRENTLY BROKEN)").to_lowercase(),
+                *suitable,
+            )
+        })
+        .collect();
+    include_str!("data/extractor_keys.tsv")
+        .lines()
+        .filter_map(|line| {
+            let mut fields = line.split('\t');
+            let (name, key, enabled) = (fields.next()?, fields.next()?, fields.next()?);
+            downloader
+                .uses_extractor(name, enabled == "1")
+                .then(|| Some((key, *by_name.get(&name.to_lowercase())?)))
+                .flatten()
+        })
+        .collect()
+}
+
+/// `_make_archive_id`'s fallback for an entry without an extractor key: the
+/// `ie_key` of the first extractor suitable for its URL.
+fn url_archive_key(url: &str) -> Option<String> {
+    ARCHIVE_IES
+        .get()?
+        .iter()
+        .find(|(_, suitable)| suitable(url))
+        .map(|(key, _)| (*key).to_owned())
+}
+
 /// Upstream `_match_entry`'s archive reason: `format_field`s of the ID and
 /// title (each left out when missing).
 fn archived_reason(info: &yt_dlp_rs::VideoInfo) -> String {
@@ -11089,22 +11144,19 @@ fn archived_reason(info: &yt_dlp_rs::VideoInfo) -> String {
     } else {
         format!("{}: ", color::format_screen(&info.id, color::styles::ID))
     };
-    let title = if info.title.is_empty() {
-        String::new()
-    } else {
-        format!(
-            "{} ",
-            color::format_screen(&info.title, color::styles::EMPHASIS)
-        )
+    let title = match YoutubeDl::entry_title(info).filter(|title| !title.is_empty()) {
+        Some(title) => format!("{} ", color::format_screen(title, color::styles::EMPHASIS)),
+        None => String::new(),
     };
     format!("[download] {id}{title}has already been recorded in the archive")
 }
 
 /// Upstream `in_download_archive`. An unresolved entry is checked by its own
-/// `ie_key` and `id`; one without them is not in the archive until resolved.
+/// `ie_key` (else its URL's extractor) and `id`; one without them is not in
+/// the archive until resolved.
 fn archived(info: &yt_dlp_rs::VideoInfo, archive: &DownloadArchive) -> yt_dlp_rs::Result<bool> {
     if YoutubeDl::is_transparent(info) {
-        Ok(YoutubeDl::entry_archive_identity(info)
+        Ok(YoutubeDl::entry_archive_identity(info, &url_archive_key)
             .is_some_and(|(key, id)| archive.contains_identity(&key, &id)))
     } else {
         archive.contains(info)
@@ -11245,8 +11297,8 @@ fn cli() -> std::process::ExitCode {
         return std::process::ExitCode::FAILURE;
     }
     match result {
-        Ok(true) => std::process::ExitCode::SUCCESS,
-        Ok(false) => std::process::ExitCode::FAILURE,
+        Ok(true) if !yt_dlp_rs::trouble_reported() => std::process::ExitCode::SUCCESS,
+        Ok(_) => std::process::ExitCode::FAILURE,
         Err(error) if error.is::<Cancel>() => std::process::ExitCode::from(101),
         Err(error) if error.is::<UsageError>() => {
             // Upstream `_generate_error_message`, written after a newline.
@@ -11266,6 +11318,19 @@ fn cli() -> std::process::ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// `_make_archive_id`'s URL fallback finds every listed extractor's key.
+    #[test]
+    fn every_listed_extractor_has_an_upstream_key() {
+        let names: std::collections::HashSet<String> = include_str!("data/extractor_keys.tsv")
+            .lines()
+            .map(|line| line.split('\t').next().unwrap().to_lowercase())
+            .collect();
+        for (name, _) in SUITABLE {
+            let name = name.trim_end_matches(" (CURRENTLY BROKEN)");
+            assert!(names.contains(&name.to_lowercase()), "{name}");
+        }
+    }
 
     /// Building the parser needs more stack than test threads have.
     fn with_stack<T: Send + 'static>(f: impl FnOnce() -> T + Send + 'static) -> T {

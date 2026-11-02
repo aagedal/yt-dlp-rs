@@ -31,6 +31,10 @@ const DEPTH: usize = 4;
 
 /// Helper threads only wait on reqwest's own runtime thread.
 const STACK: usize = 256 * 1024;
+/// [`stream`]'s helper drives the other transport itself (a BoringSSL
+/// handshake needs more than [`STACK`]).
+#[cfg_attr(not(feature = "impersonate"), allow(dead_code))]
+const STREAM_STACK: usize = 2 * 1024 * 1024;
 
 /// A transfer ended by a stop, cancel or signal (in the source chain of the
 /// I/O error a body read returns).
@@ -77,7 +81,7 @@ pub(crate) fn send(
         return Err(Interrupted);
     }
     let (sender, receiver) = mpsc::sync_channel(1);
-    let shared = Arc::new(Shared::new(watch.clone()));
+    let shared = Arc::new(Shared::new(Some(watch.clone())));
     let pump = Arc::clone(&shared);
     let spawned = std::thread::Builder::new()
         .name("yt-dlp-rs-http".into())
@@ -112,6 +116,76 @@ pub(crate) fn send(
                 return Ok(Err(spawn_failed(std::io::Error::other(
                     "the HTTP thread ended without a response",
                 ))));
+            }
+        }
+    };
+    Ok(Ok(head.response(shared)))
+}
+
+/// A response from another transport: its head, and its body as a
+/// blocking reader.
+#[cfg_attr(not(feature = "impersonate"), allow(dead_code))]
+pub(crate) struct Streamed {
+    pub(crate) status: reqwest::StatusCode,
+    pub(crate) version: reqwest::Version,
+    pub(crate) headers: reqwest::header::HeaderMap,
+    pub(crate) url: url::Url,
+    pub(crate) content_length: Option<u64>,
+    pub(crate) body: Box<dyn Read + Send>,
+}
+
+/// [`send`] for another transport: `open` sends the request on a helper
+/// thread, whose body then streams through the same queue (also without an
+/// interrupt source, so a body is never held in memory).
+#[cfg_attr(not(feature = "impersonate"), allow(dead_code))]
+pub(crate) fn stream(
+    open: impl FnOnce() -> crate::Result<Streamed> + Send + 'static,
+) -> std::result::Result<crate::Result<Response>, Interrupted> {
+    let watch = crate::control::watch();
+    if watch.as_ref().is_some_and(Watch::requested) {
+        return Err(Interrupted);
+    }
+    let (sender, receiver) = mpsc::sync_channel(1);
+    let shared = Arc::new(Shared::new(watch.clone()));
+    let pump = Arc::clone(&shared);
+    let spawned = std::thread::Builder::new()
+        .name("yt-dlp-rs-http".into())
+        .stack_size(STREAM_STACK)
+        .spawn(move || match open() {
+            Ok(streamed) => {
+                let head = Head {
+                    status: streamed.status,
+                    version: streamed.version,
+                    headers: streamed.headers,
+                    extensions: http::Extensions::new(),
+                    url: streamed.url,
+                    content_length: streamed.content_length,
+                };
+                if sender.send(Ok(head)).is_ok() {
+                    pump.fill(streamed.body);
+                }
+            }
+            Err(error) => {
+                let _ = sender.send(Err(error));
+            }
+        });
+    if let Err(error) = spawned {
+        return Ok(Err(crate::Error::Io(error)));
+    }
+    let head = loop {
+        match receiver.recv_timeout(POLL) {
+            Ok(Ok(head)) => break head,
+            Ok(Err(error)) => return Ok(Err(error)),
+            Err(mpsc::RecvTimeoutError::Timeout)
+                if watch.as_ref().is_some_and(Watch::requested) =>
+            {
+                return Err(Interrupted);
+            }
+            Err(mpsc::RecvTimeoutError::Timeout) => {}
+            Err(mpsc::RecvTimeoutError::Disconnected) => {
+                return Ok(Err(crate::Error::MediaTransport(
+                    "the HTTP thread ended without a response".into(),
+                )));
             }
         }
     };
@@ -183,7 +257,9 @@ impl Head {
         if let Some(extensions) = builder.extensions_mut() {
             *extensions = self.extensions;
         }
-        watcher::register(&shared);
+        if shared.watch.is_some() {
+            watcher::register(&shared);
+        }
         let body = Body {
             shared,
             content_length: self.content_length,
@@ -199,7 +275,8 @@ impl Head {
 }
 
 struct Shared {
-    watch: Watch,
+    /// `None`: nothing can interrupt the transfer.
+    watch: Option<Watch>,
     state: Mutex<State>,
     /// Signals the helper that the queue has room or the reader left.
     space: Condvar,
@@ -217,7 +294,7 @@ struct State {
 }
 
 impl Shared {
-    fn new(watch: Watch) -> Self {
+    fn new(watch: Option<Watch>) -> Self {
         Self {
             watch,
             state: Mutex::new(State::default()),
@@ -225,9 +302,13 @@ impl Shared {
         }
     }
 
+    fn requested(&self) -> bool {
+        self.watch.as_ref().is_some_and(Watch::requested)
+    }
+
     /// The helper thread: read `response` into the queue until its end, an
     /// error or the reader leaving.
-    fn fill(&self, mut response: Response) {
+    fn fill(&self, mut response: impl Read) {
         let mut buffer = vec![0; CHUNK];
         loop {
             let read = loop {
@@ -266,7 +347,7 @@ impl Shared {
 
     /// Wake the reader if an interrupt arrived (the watcher's check).
     fn check(&self) {
-        if self.watch.requested()
+        if self.requested()
             && let Some(waker) = self
                 .state
                 .lock()
@@ -308,7 +389,7 @@ impl http_body::Body for Body {
             self.done = true;
             return Poll::Ready(end.err().map(Err));
         }
-        if self.shared.watch.requested() {
+        if self.shared.requested() {
             drop(state);
             self.done = true;
             return Poll::Ready(Some(Err(std::io::Error::other(Interrupted))));

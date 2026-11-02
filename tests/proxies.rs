@@ -701,6 +701,100 @@ fn https_destinations_use_connect_and_proxy_authentication_failure_is_explicit()
     assert!(requests[0].value("proxy-authorization").is_some());
 }
 
+/// Without `--proxy`, upstream's environment discovery: `https` falls back
+/// to the `http` route (CONNECT through it), credentials from the variable
+/// are sent, `NO_PROXY` entries match the host or `host:port`, and CGI
+/// requests ignore an uppercase `HTTP_PROXY`. The matching rules themselves
+/// are compared with upstream in `src/http/proxy.rs`.
+#[test]
+fn environment_routes_follow_upstream_discovery_and_no_proxy() {
+    let proxy = Proxy::new();
+    let directory = tempfile::tempdir().unwrap();
+    let with_user = proxy.url.replace("http://", "http://env-user:env%3Apass@");
+    let output = command(
+        "https://destination.invalid/media.mp4",
+        &["-j"],
+        directory.path(),
+    )
+    .env("HTTP_PROXY", &with_user)
+    .output()
+    .unwrap();
+    assert!(!output.status.success());
+    assert!(!String::from_utf8_lossy(&output.stderr).contains("env%3Apass"));
+    let requests = proxy.requests();
+    assert_eq!(requests.len(), 1);
+    assert_eq!(requests[0].method, "CONNECT");
+    assert_eq!(requests[0].target, "destination.invalid:443");
+    // `env-user:env:pass`.
+    assert_eq!(
+        requests[0].value("proxy-authorization"),
+        Some("Basic ZW52LXVzZXI6ZW52OnBhc3M=")
+    );
+
+    // Bypassed hosts connect directly; others use `ALL_PROXY`.
+    let origin = Proxy::new();
+    let host_port = origin.url.trim_start_matches("http://").to_owned();
+    for no_proxy in [
+        " .Destination.Invalid , 127.0.0.1".to_owned(),
+        format!("other.invalid,{host_port}"),
+    ] {
+        success(
+            &command(&origin.origin("/media.mp4"), &["-j"], directory.path())
+                .env("ALL_PROXY", &proxy.url)
+                .env("NO_PROXY", &no_proxy)
+                .output()
+                .unwrap(),
+        );
+    }
+    assert!(
+        origin
+            .requests()
+            .iter()
+            .all(|request| request.target == "/media.mp4"),
+        "{:?}",
+        origin.requests()
+    );
+    assert_eq!(origin.requests().len(), 2);
+    assert_eq!(proxy.requests().len(), 1);
+
+    // `REQUEST_METHOD` (CGI): an uppercase `HTTP_PROXY` is ignored.
+    success(
+        &command(&origin.origin("/media.mp4"), &["-j"], directory.path())
+            .env("REQUEST_METHOD", "GET")
+            .env("HTTP_PROXY", &proxy.url)
+            .output()
+            .unwrap(),
+    );
+    assert_eq!(origin.requests().len(), 3);
+    assert_eq!(proxy.requests().len(), 1);
+}
+
+/// Lowercase variables win over uppercase ones (two spellings of one name
+/// cannot both be set on Windows, whose environment names ignore case).
+#[cfg(not(windows))]
+#[test]
+fn lowercase_environment_proxies_win() {
+    let proxy = Proxy::new();
+    let directory = tempfile::tempdir().unwrap();
+    success(
+        &command(
+            "http://destination.invalid/media.mp4",
+            &["-j"],
+            directory.path(),
+        )
+        .env("HTTP_PROXY", "http://127.0.0.1:1")
+        .env("http_proxy", &proxy.url)
+        .env("ALL_PROXY", "http://127.0.0.1:1")
+        .env("NO_PROXY", "destination.invalid")
+        .env("no_proxy", "")
+        .output()
+        .unwrap(),
+    );
+    let requests = proxy.requests();
+    assert_eq!(requests.len(), 1);
+    assert_eq!(requests[0].target, "http://destination.invalid/media.mp4");
+}
+
 #[test]
 fn invalid_proxy_urls_fail_before_network_and_do_not_expose_credentials() {
     let proxy = Proxy::new();

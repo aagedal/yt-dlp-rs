@@ -8,14 +8,15 @@ import tempfile
 import unittest
 from unittest import mock
 
-from compare_proxies import FIXTURE, PINNED_UPSTREAM, UPSTREAM_WORKER, compare, main
+from compare_proxies import FIXTURE, KEYS, PINNED_UPSTREAM, UPSTREAM_WORKER, compare, main
 
 
 class ProxyComparisonTests(unittest.TestCase):
     def setUp(self):
         self.fixture=json.loads(FIXTURE.read_text(encoding='utf-8'))
         self.result={key:[{'name':c['name'],**c['expected']} for c in self.fixture[key]]
-                     for key in ('cases','source_only_cases')}
+                     for key in KEYS}
+        self.environment={c['name']:c['expected'] for c in self.fixture['environment_cases']}
         self.cases={c['name']:c['expected'] for c in self.fixture['cases']}
 
     def test_exact_endpoint_auth_route_and_source_boundaries_are_compared(self):
@@ -66,12 +67,21 @@ class ProxyComparisonTests(unittest.TestCase):
                          'socket.socket=socket.create_connection=forbidden','subprocess.Popen=forbidden']:
             self.assertIn(fragment,UPSTREAM_WORKER)
         self.assertEqual(self.fixture['upstream_commit'],PINNED_UPSTREAM)
-        policy_cases=[c for c in self.fixture['cases'] if 'native_policy' in c]
-        self.assertEqual(len(policy_cases),6)
-        self.assertEqual(sum(c['expected']['proxy_option'] is None for c in policy_cases),6)
-        # SOCKS4 userinfo is compared natively (USERID through a loopback relay).
-        self.assertEqual(sum(c['name'].startswith('socks4-auth-') for c in policy_cases),0)
-        self.assertEqual(sum('native_policy' not in c for c in self.fixture['cases']),44)
+        # Every configuration is compared natively, the six discovered
+        # environment mappings included.
+        self.assertFalse(any('native_policy' in c for c in self.fixture['cases']))
+        self.assertEqual(sum(c['expected']['proxy_option'] is None for c in self.fixture['cases']),6)
+        for fragment in ['getproxies_environment','proxy_bypass_environment','os.environ.clear()']:
+            self.assertIn(fragment,UPSTREAM_WORKER)
+
+    def test_raw_environment_discovery_cases(self):
+        self.assertEqual(len(self.environment),15)
+        self.assertEqual(self.environment['lowercase-wins']['selected'][1]['host'],'lower.test')
+        self.assertEqual(self.environment['cgi-drops-uppercase-http']['selected'],[None,None])
+        self.assertEqual(self.environment['cgi-keeps-lowercase-http']['selected'][0]['host'],'lower.test')
+        self.assertEqual(self.environment['noproxy-sentinel-falls-back-to-all']['selected'][1]['host'],'all.test')
+        self.assertEqual([s and s['host'] for s in self.environment['no-proxy-suffixes-and-ports']['selected']],
+                         [None,None,'all.test',None,'all.test',None,None])
 
     def run_main(self,revision,fixture_path=None):
         with tempfile.TemporaryDirectory() as directory:
@@ -90,6 +100,7 @@ class ProxyComparisonTests(unittest.TestCase):
         self.assertEqual(status,0);self.assertEqual(run.call_count,2)
         self.assertEqual(json.loads(run.call_args.kwargs['input']),self.fixture)
         self.assertIn('50 source configurations',stdout)
+        self.assertIn('15 raw environment cases',stdout)
 
     def test_wrong_revision_stops_before_worker(self):
         status,run,_,stderr=self.run_main('0'*40)

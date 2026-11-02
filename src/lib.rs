@@ -216,6 +216,9 @@ pub struct YoutubeDl {
     multistreams: (bool, bool),
     /// `--live-from-start`.
     live_from_start: bool,
+    /// After `Live DASH videos are not supported` (`--downloader native`),
+    /// download the manifest snapshot like upstream's DashSegmentsFD.
+    live_dash_snapshot: bool,
     /// `--growing-file` (port extension).
     growing_file: bool,
     /// `--keep-partial-on-stop` (port extension).
@@ -295,14 +298,46 @@ fn live_generated(info: &VideoInfo) -> bool {
     }
 }
 
-/// A transport error as urllib words it: `[Errno N] TEXT` for an OS error.
-/// HlsFD's `Total fragments` for `info` after `refresh_hls`: the whole
-/// playlist's fragments even when only a discontinuity section downloads.
-pub fn total_fragments(info: &VideoInfo) -> usize {
-    FRAGMENT_TOTAL.with(|total| match &*total.borrow() {
-        Some((url, count)) if *url == info.url => *count,
-        _ => info.fragments.len(),
-    })
+/// The `Total fragments: N` text of a fragment download: HlsFD's count after
+/// `refresh_hls` is the whole playlist's fragments even when only a
+/// discontinuity section downloads; a live DASH snapshot is `unknown (live)`
+/// (`_prepare_frag_download`'s `ctx['live']`).
+pub fn total_fragments(info: &VideoInfo) -> String {
+    if live_snapshot(info) {
+        return "unknown (live)".into();
+    }
+    FRAGMENT_TOTAL
+        .with(|total| match &*total.borrow() {
+            Some((url, count)) if *url == info.url => *count,
+            _ => info.fragments.len(),
+        })
+        .to_string()
+}
+
+static TROUBLE: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+/// Upstream `trouble` with `ignoreerrors`: an `ERROR:` line on stderr that
+/// does not stop the work.
+fn report_trouble(message: &str) {
+    screen::stderr(&format!("ERROR: {message}"));
+    TROUBLE.store(true, std::sync::atomic::Ordering::Relaxed);
+}
+
+/// Whether an error was reported without stopping the work (upstream's
+/// `_download_retcode = 1`): the CLI then exits 1.
+pub fn trouble_reported() -> bool {
+    TROUBLE.load(std::sync::atomic::Ordering::Relaxed)
+}
+
+/// DashSegmentsFD's error for a live format (see
+/// [`YoutubeDl::with_live_dash_snapshot`]).
+pub const LIVE_DASH_UNSUPPORTED: &str = "Live DASH videos are not supported";
+
+/// A live `http_dash_segments` format downloaded by DashSegmentsFD (its
+/// manifest snapshot, after `Live DASH videos are not supported`): upstream's
+/// `ctx['live']`, with no `.ytdl` resume state.
+pub(crate) fn live_snapshot(info: &VideoInfo) -> bool {
+    is_live(info) && info.protocol.as_deref() == Some("http_dash_segments")
 }
 
 thread_local! {
@@ -1583,6 +1618,7 @@ impl YoutubeDl {
             merge_output_format: None,
             multistreams: (false, false),
             live_from_start: false,
+            live_dash_snapshot: false,
             growing_file: false,
             keep_partial_on_stop: false,
             youtube_runtime,
@@ -3648,6 +3684,20 @@ impl YoutubeDl {
         Ok(self)
     }
 
+    /// Whether upstream's `YoutubeDL._ies` holds the extractor `name`
+    /// (`--use-extractors`, else the enabled ones), for `_make_archive_id`'s
+    /// search of a suitable extractor; `--force-generic-extractor` does not
+    /// change it.
+    pub fn uses_extractor(&self, name: &str, enabled: bool) -> bool {
+        match &self.allowed_extractors {
+            None => enabled,
+            Some(order) => order
+                .iter()
+                .take_while(|item| **item != "end")
+                .any(|item| item.eq_ignore_ascii_case(name)),
+        }
+    }
+
     /// Upstream `writesubtitles`/`listsubtitles`: extractors'
     /// `extract_subtitles` (lazy subtitle requests) run only with them.
     pub fn with_subtitles_requested(self, requested: bool) -> Self {
@@ -3717,7 +3767,15 @@ impl YoutubeDl {
         info: &VideoInfo,
         destination: &Path,
     ) -> Option<external_fd::Available> {
-        if !info.requested_formats.is_empty() || self.uses_ffmpeg_fd(info) {
+        // A format asking for impersonation stays native
+        // (`info_dict.get('impersonate') is None`).
+        if !info.requested_formats.is_empty()
+            || self.uses_ffmpeg_fd(info)
+            || info
+                .extra
+                .get("impersonate")
+                .is_some_and(|field| !field.is_null())
+        {
             return None;
         }
         let protocol = info
@@ -3794,11 +3852,12 @@ impl YoutubeDl {
     }
 
     /// Whether a live DASH download fails before its fragments (FFmpegFD
-    /// without ffmpeg, or `--downloader native`), so no fragment count is
-    /// announced for it.
+    /// without ffmpeg, or `--downloader native` without
+    /// [`Self::with_live_dash_snapshot`]), so no fragment count is announced
+    /// for it.
     pub fn live_dash_fails(&self, info: &VideoInfo) -> bool {
         match self.live_dash(info) {
-            Some(LiveDash::Native) => true,
+            Some(LiveDash::Native) => !self.live_dash_snapshot,
             Some(LiveDash::Ffmpeg) => self.ffmpeg.is_none(),
             None => false,
         }
@@ -4419,6 +4478,28 @@ impl YoutubeDl {
         self
     }
 
+    /// Upstream DashSegmentsFD's `report_error('Live DASH videos are not
+    /// supported')` for a live DASH format with `--downloader native`: with
+    /// `true` (the CLI's default `ignoreerrors='only_download'`) the caller
+    /// reports [`LIVE_DASH_UNSUPPORTED`] ([`Self::report_live_dash`]) and the
+    /// download continues with the fragments of the extraction's
+    /// manifest snapshot; with `false` (`--abort-on-error`, the library
+    /// default) the download fails with that error.
+    pub fn with_live_dash_snapshot(mut self, snapshot: bool) -> Self {
+        self.live_dash_snapshot = snapshot;
+        self
+    }
+
+    /// Before a fragment download: DashSegmentsFD's `report_error` for a
+    /// live DASH format whose snapshot is then downloaded (see
+    /// [`Self::with_live_dash_snapshot`]); the run still fails
+    /// ([`trouble_reported`]).
+    pub fn report_live_dash(&self, info: &VideoInfo) {
+        if self.live_dash(info) == Some(LiveDash::Native) && self.live_dash_snapshot {
+            report_trouble(LIVE_DASH_UNSUPPORTED);
+        }
+    }
+
     /// Whether `info` is live and downloaded from now (upstream's
     /// `not get_from_start`).
     pub fn live_from_now(&self, info: &VideoInfo) -> bool {
@@ -4960,11 +5041,14 @@ impl YoutubeDl {
     }
 
     /// Upstream `_make_archive_id` for an unresolved `url`/`url_transparent`
-    /// entry: its `extractor_key` or `ie_key` and `id`, else `None` (never in
-    /// the archive). Upstream's fallback to the first extractor suitable for
-    /// the entry's URL is not reproduced; such entries are checked when they
-    /// are resolved.
-    pub fn entry_archive_identity(entry: &VideoInfo) -> Option<(String, String)> {
+    /// entry: its `extractor_key` or `ie_key` and `id`; without a key,
+    /// `url_key` of the entry's `url` (the first suitable extractor's
+    /// `ie_key`, see [`Self::uses_extractor`]); else `None` (never in the
+    /// archive).
+    pub fn entry_archive_identity(
+        entry: &VideoInfo,
+        url_key: &dyn Fn(&str) -> Option<String>,
+    ) -> Option<(String, String)> {
         let marker = entry.extra.get(TRANSPARENT)?;
         let raw = marker["entry"].as_object();
         let text = |value: Option<&serde_json::Value>| {
@@ -4978,10 +5062,24 @@ impl YoutubeDl {
             Some(raw) => text(raw.get("id")),
             None => Some(entry.id.clone()).filter(|id| !id.is_empty()),
         }?;
-        let key = raw
-            .and_then(|raw| text(raw.get("extractor_key")).or_else(|| text(raw.get("ie_key"))))
-            .or_else(|| text(marker.get("ie_key")))?;
+        let key = match raw {
+            Some(raw) => text(raw.get("extractor_key"))
+                .or_else(|| text(raw.get("ie_key")))
+                .or_else(|| url_key(&text(raw.get("url"))?))?,
+            None => text(marker.get("ie_key"))?,
+        };
         Some((key, id))
+    }
+
+    /// The `title` of an unresolved entry's upstream entry dict (`None`
+    /// without one); `Some(entry.title)` for other entries.
+    pub fn entry_title(entry: &VideoInfo) -> Option<&str> {
+        match entry.extra.get(TRANSPARENT).map(|marker| &marker["entry"]) {
+            Some(serde_json::Value::Object(raw)) => {
+                raw.get("title").and_then(serde_json::Value::as_str)
+            }
+            _ => Some(entry.title.as_str()),
+        }
     }
 
     /// The URL an unresolved `url_transparent` entry resolves.
@@ -5709,10 +5807,10 @@ impl YoutubeDl {
             ));
         }
         // `DashSegmentsFD.real_download` reports this error for a live
-        // `http_dash_segments` download, then tries the manifest's snapshot
-        // fragments; this port stops instead.
-        if live_dash == Some(LiveDash::Native) {
-            return Err(Error::Reported("Live DASH videos are not supported".into()));
+        // `http_dash_segments` download, then (unless it raised) downloads
+        // the manifest's snapshot fragments.
+        if live_dash == Some(LiveDash::Native) && !self.live_dash_snapshot {
+            return Err(Error::Reported(LIVE_DASH_UNSUPPORTED.into()));
         }
         // Merged F4M formats are not supported (upstream merges F4mFD files).
         if info
@@ -6306,6 +6404,7 @@ impl YoutubeDl {
                 if let Some(refreshed) = self.refresh_hls(&part)? {
                     part = refreshed;
                 }
+                self.report_live_dash(&part);
                 if !part.fragments.is_empty() && !self.live_dash_fails(&part) {
                     let downloader = match part.protocol.as_deref() {
                         // `sidx_fd`'s byte-range fragments.

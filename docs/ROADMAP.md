@@ -185,8 +185,9 @@ suspended as a `PlaylistRun` and resumed through the input queue).
    Explicit HTTP/HTTPS/SOCKS proxies and direct overrides now route all native
    clients, including verified HTTPS proxy/CONNECT transport and SOCKS4 user
    IDs; `--geo-verification-proxy` routes upstream's geo verification requests.
-   Full upstream environment discovery/bypass and other per-extractor proxy
-   policies remain open.
+   Environment proxies follow upstream's `urllib` discovery and `no_proxy`
+   bypass (Road to 1.0 step 7); macOS and Windows system proxy settings are
+   not read.
 4. **YouTube vertical slice.** Player/API request fixtures, client selection,
    progressive and adaptive formats, signature/JavaScript challenge strategy,
    playlist handling, and end-to-end validation. Split request/client machinery
@@ -401,6 +402,29 @@ Work in this order; each step lands with deterministic tests like any other chan
 7. **Core gaps.** Impersonation for media transfers, environment proxy
    discovery and per-extractor proxy policies, the archive URL-suitable
    fallback and native live DASH.
+   Status (2026-11-02): surveyed against the pinned upstream first
+   (`upstream/notes/core-gaps.md`), then ported one change each. Media
+   transfers (whole files, ranges, fragments and keys, also with `-N`,
+   subtitles, thumbnails) use the `--impersonate` target, and a format's or
+   subtitle's own `impersonate` field applies to HttpFD transfers with
+   upstream's warning; impersonated bodies stream through the interruptible
+   queue (`tests/impersonate.rs` captures their TLS ClientHello and stops a
+   stalled one). Without `--proxy`, both transports discover proxies like
+   upstream's `getproxies()` and `select_proxy` (lowercase variables, CGI
+   rule, `http`→`https` fallback, `no_proxy`), compared with the pinned
+   source's own functions on 21 cases; the only per-extractor policy in
+   ported code, `--geo-verification-proxy`, was already ported. Archive
+   entries with an `id` but no `ie_key` take the first suitable extractor's
+   key in upstream's `_ies` order (`tools/extractor_keys.py`). A live DASH
+   format with `--downloader native` reports upstream's error and downloads
+   the manifest snapshot (exit 1), as upstream does. Fixed on the way: Rokfin
+   stack request notes and skip-line titles, and GoPro/GoToStage sharing
+   one `--list-extractors` row. Not covered: recording live DASH at the live
+   edge without FFmpeg (upstream has no native recorder either; the port
+   does this only for HLS), macOS/Windows system proxy settings, archive
+   keys of extractors this port lacks, impersonated FFmpeg or external
+   downloader transfers (none upstream), and the native ARM64 Windows
+   impersonation build.
 8. **Library API.** Shrink the public surface to what consumers use, mark
    growing structs `#[non_exhaustive]` or give them builders, one public error
    type, and `cargo-semver-checks` in CI.

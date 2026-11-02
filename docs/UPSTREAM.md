@@ -69,6 +69,9 @@ For each update, the agent should:
    deferrals and unresolved compatibility differences.
 5. Advance the baseline only once all intervening changes are accounted for.
    Never advance it merely because a scheduled report or CI job succeeded.
+   With the new baseline, regenerate the extractor order that the archive's
+   URL fallback searches: `tools/extractor_keys.py --upstream DIR --write`
+   (without `--write` it checks `src/data/extractor_keys.tsv`).
 
 Before enabling unattended updates, implement the differential harness, persistent
 triage/update notes, PR/review integration, and release rollback/versioning. The

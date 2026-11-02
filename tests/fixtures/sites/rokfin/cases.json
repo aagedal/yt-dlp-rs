@@ -20,5 +20,33 @@
    "-J",
    "--no-geo-bypass"
   ]
+ },
+ {
+  "url": "https://www.rokfin.com/stack/271/Tulsi-Gabbard-Portsmouth-Townhall-FULL--Feb-9-2020",
+  "args": [
+   "-s",
+   "--flat-playlist",
+   "--no-geo-bypass",
+   "--download-archive",
+   "archive-key.txt"
+  ],
+  "copy": [
+   "archive-key.txt"
+  ]
+ },
+ {
+  "url": "https://www.rokfin.com/stack/271/Tulsi-Gabbard-Portsmouth-Townhall-FULL--Feb-9-2020",
+  "args": [
+   "-s",
+   "--flat-playlist",
+   "--no-geo-bypass",
+   "--use-extractors",
+   "rokfin:stack,generic",
+   "--download-archive",
+   "archive-generic.txt"
+  ],
+  "copy": [
+   "archive-generic.txt"
+  ]
  }
 ]

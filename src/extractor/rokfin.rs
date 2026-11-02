@@ -317,7 +317,8 @@ impl Extractor for RokfinStack {
             "[{STACK_NAME}] Extracting URL: {}",
             crate::screen::extracting_url(url.as_str())
         ));
-        let metadata = api_json(client, &format!("stack/{list_id}"), &list_id)?;
+        let stack_url = Url::parse(&format!("{API_BASE}stack/{list_id}"))?;
+        let metadata = super::download_json(client, &stack_url, STACK_NAME, &list_id)?;
         let mut entries = Vec::new();
         for content in metadata
             .get("content")

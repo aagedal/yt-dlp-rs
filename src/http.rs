@@ -4,6 +4,8 @@ mod legacy_tls;
 mod proxy;
 mod socks4_relay;
 use crate::{CookieJar, Error, Result};
+#[cfg(feature = "impersonate")]
+pub(crate) use proxy::EnvironmentProxies;
 pub(crate) use proxy::ProxyConfig;
 use reqwest::blocking::ClientBuilder;
 use reqwest::header::{COOKIE, HeaderMap, HeaderName, HeaderValue, REFERER, USER_AGENT};
@@ -76,6 +78,11 @@ pub(crate) fn send_media(
     request: reqwest::blocking::RequestBuilder,
 ) -> Result<reqwest::blocking::Response> {
     let request = crate::control::scoped(request)?;
+    // Upstream's request handlers impersonate media too.
+    #[cfg(feature = "impersonate")]
+    if let Some(target) = crate::impersonate::media_target() {
+        return crate::impersonate::send_media(request, target);
+    }
     match interruptible::send(request) {
         Ok(response) => Ok(response?),
         Err(interruptible::Interrupted) => Err(Error::DownloadCancelled),

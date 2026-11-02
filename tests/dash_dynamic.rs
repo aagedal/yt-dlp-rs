@@ -16,8 +16,9 @@ use std::{
     thread,
 };
 
-/// Serves `tests/fixtures/dash/NAME.mpd`; anything else is a 404. Records
-/// every request path.
+/// Serves `tests/fixtures/dash/NAME.mpd` and the `v/` segments of
+/// `dynamic-timeline.mpd` (`INIT` and `S` + the path's time); anything else
+/// is a 404. Records every request path.
 struct Server {
     origin: String,
     requests: Arc<Mutex<Vec<String>>>,
@@ -53,11 +54,23 @@ impl Server {
                         )
                         .ok()
                     })
-                    .flatten();
+                    .flatten()
+                    .or_else(|| {
+                        let segment = name.strip_prefix("v/")?;
+                        Some(match segment.strip_suffix(".m4s") {
+                            Some(time) => format!("S{time}").into_bytes(),
+                            None => b"INIT".to_vec(),
+                        })
+                    });
+                let kind = if name.ends_with(".mpd") {
+                    "application/dash+xml"
+                } else {
+                    "video/mp4"
+                };
                 let _ = match body {
                     Some(body) => write!(
                         stream,
-                        "HTTP/1.1 200 OK\r\nContent-Type: application/dash+xml\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                        "HTTP/1.1 200 OK\r\nContent-Type: {kind}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
                         body.len()
                     )
                     .and_then(|()| stream.write_all(&body)),
@@ -321,23 +334,122 @@ mod download {
         server.assert_only_manifests();
     }
 
-    /// `--downloader native` keeps DashSegmentsFD, whose live check is
-    /// upstream's `Live DASH videos are not supported` (upstream then tries
-    /// the snapshot's fragments; this port stops). Without ffmpeg, FFmpegFD
-    /// fails like upstream.
+    /// `--downloader native` keeps DashSegmentsFD, which reports upstream's
+    /// `Live DASH videos are not supported` and, without `--abort-on-error`,
+    /// downloads the fragments of the extraction's manifest snapshot as a
+    /// live download (`unknown (live)`, no `.ytdl` state, no size estimate);
+    /// the run exits 1. Captured from pinned upstream on the same server.
     #[test]
-    fn native_or_missing_ffmpeg_live_dash_downloads_fail_explicitly() {
+    fn native_live_dash_downloads_the_snapshot_after_its_error() {
+        let server = Server::new();
+        let manifest = server.url("dynamic-timeline.mpd");
+        for downloader in ["native", "dash:native"] {
+            let directory = tempfile::tempdir().unwrap();
+            let output = run(
+                directory.path(),
+                &[
+                    "--downloader",
+                    downloader,
+                    "--fixup",
+                    "never",
+                    "--newline",
+                    "-f",
+                    "v",
+                    "-o",
+                    "o.%(ext)s",
+                    &manifest,
+                ],
+            );
+            let (stdout, stderr) = (text(&output.stdout), text(&output.stderr));
+            assert_eq!(output.status.code(), Some(1), "{stdout}{stderr}");
+            assert_eq!(
+                stderr,
+                "WARNING: [generic] Falling back on generic information extractor\n\
+                 ERROR: Live DASH videos are not supported\n"
+            );
+            assert!(
+                stdout.contains(
+                    "[info] dynamic-timeline: Downloading 1 format(s): v\n\
+                     [dashsegments] Total fragments: unknown (live)\n\
+                     [download] Destination: o.mp4\n\
+                     [download]      4.00B at "
+                ),
+                "{stdout}"
+            );
+            assert!(stdout.contains("(frag 6/6)\n"), "{stdout}");
+            let files: Vec<_> = std::fs::read_dir(directory.path())
+                .unwrap()
+                .map(|entry| entry.unwrap().file_name())
+                .collect();
+            assert_eq!(files, ["o.mp4"]);
+            assert_eq!(
+                std::fs::read_to_string(directory.path().join("o.mp4")).unwrap(),
+                "INITS900000S1080000S1260000S1440000S1530000"
+            );
+        }
+        // Upstream's FragmentFD progress keys for a live download.
+        let directory = tempfile::tempdir().unwrap();
+        let output = run(
+            directory.path(),
+            &[
+                "--downloader",
+                "native",
+                "--fixup",
+                "never",
+                "-q",
+                "--progress",
+                "--newline",
+                "--progress-template",
+                "%(progress)j",
+                "-f",
+                "v",
+                "-o",
+                "o.%(ext)s",
+                &manifest,
+            ],
+        );
+        assert_eq!(output.status.code(), Some(1));
+        let statuses: Vec<serde_json::Value> = text(&output.stdout)
+            .lines()
+            .map(|line| serde_json::from_str(line).unwrap())
+            .collect();
+        let (finished, downloading) = statuses.split_last().unwrap();
+        assert_eq!(finished["status"], "finished");
+        assert_eq!(downloading.len(), 12);
+        for status in downloading {
+            assert_eq!(status["status"], "downloading");
+            assert_eq!(status["fragment_count"], 6);
+            assert!(status.get("total_bytes_estimate").is_none(), "{status}");
+        }
+        assert_eq!(downloading.last().unwrap()["fragment_index"], 6);
+        let requests = server.requests.lock().unwrap();
+        assert_eq!(
+            requests
+                .iter()
+                .filter(|path| path.as_str() == "/v/init.mp4")
+                .count(),
+            3
+        );
+    }
+
+    /// With `--abort-on-error` the error stops the download (upstream's
+    /// `report_error` raises), and without ffmpeg FFmpegFD fails like
+    /// upstream; neither requests a segment.
+    #[test]
+    fn aborting_or_missing_ffmpeg_live_dash_downloads_fail_explicitly() {
         let server = Server::new();
         let tools = tempfile::tempdir().unwrap();
         let ffmpeg = fake_ffmpeg(tools.path());
         let manifest = server.url("dynamic-timeline.mpd");
         for (args, message) in [
             (
-                vec!["--ffmpeg-location", &ffmpeg, "--downloader", "native"],
-                "ERROR: Live DASH videos are not supported\n",
-            ),
-            (
-                vec!["--ffmpeg-location", &ffmpeg, "--downloader", "dash:native"],
+                vec![
+                    "--ffmpeg-location",
+                    &ffmpeg,
+                    "--abort-on-error",
+                    "--downloader",
+                    "native",
+                ],
                 "ERROR: Live DASH videos are not supported\n",
             ),
             (
@@ -351,7 +463,8 @@ mod download {
             let output = run(directory.path(), &args);
             let (stdout, stderr) = (text(&output.stdout), text(&output.stderr));
             assert_eq!(output.status.code(), Some(1), "{stdout}{stderr}");
-            assert!(stderr.contains(message), "{stderr}");
+            assert!(stderr.ends_with(message), "{stderr}");
+            assert_eq!(stderr.matches("ERROR:").count(), 1, "{stderr}");
             assert!(!stdout.contains("Total fragments"), "{stdout}");
             assert!(!tools.path().join("args").exists());
             assert_eq!(
