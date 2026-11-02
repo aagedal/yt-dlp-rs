@@ -64,7 +64,8 @@ fn data_attr_in(
         ));
     };
     let raw = found.get(1).or(found.get(2)).map_or("", |raw| raw.as_str());
-    let text = crate::html::unescape_html(raw);
+    // `_html_search_regex` cleans the match: whitespace runs collapse.
+    let text = crate::html::clean_html(raw);
     serde_json::from_str(&text).or_else(|error| {
         if fatal {
             Err(fail_in(

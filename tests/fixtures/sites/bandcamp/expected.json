@@ -70,6 +70,20 @@
    "files": {
     "2650410135.mp3": 12
    }
+  },
+  {
+   "url": "https://youtube-dl.bandcamp.com/track/whitespace",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1812978516\", \"title\": \"youtube-dl \\\"'/ - test song\", \"thumbnail\": \"https://f4.bcbits.com/img/a123_5.jpg\", \"uploader\": \"youtube-dl \\\"'/\", \"uploader_id\": \"youtube-dl\", \"uploader_url\": \"https://youtube-dl.bandcamp.com\", \"timestamp\": 1354224127, \"release_timestamp\": null, \"duration\": 9.8485, \"track\": \"test song\", \"track_number\": null, \"track_id\": \"1812978516\", \"artist\": \"youtube-dl \\\"'/\", \"album\": null, \"album_artist\": null, \"formats\": [{\"format_id\": \"mp3-128\", \"url\": \"https://t4.bcbits.com/stream/ws/mp3-128/1812978516\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"acodec\": \"mp3\", \"abr\": 128, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 157576, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3-128 - audio only\"}], \"tags\": [\"house\", \"deep&house\"], \"webpage_url\": \"https://youtube-dl.bandcamp.com/track/whitespace\", \"original_url\": \"https://youtube-dl.bandcamp.com/track/whitespace\", \"webpage_url_basename\": \"whitespace\", \"webpage_url_domain\": \"youtube-dl.bandcamp.com\", \"extractor\": \"Bandcamp\", \"extractor_key\": \"Bandcamp\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://f4.bcbits.com/img/a123_5.jpg\", \"id\": \"0\"}], \"display_id\": \"1812978516\", \"fulltitle\": \"youtube-dl \\\"'/ - test song\", \"duration_string\": \"9\", \"upload_date\": \"20121129\", \"release_year\": null, \"artists\": [\"youtube-dl \\\"'/\"], \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"mp3-128\", \"url\": \"https://t4.bcbits.com/stream/ws/mp3-128/1812978516\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"acodec\": \"mp3\", \"abr\": 128, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"filesize_approx\": 157576, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3-128 - audio only\", \"_filename\": \"youtube-dl \\uff02'\\u29f8 - test song [1812978516].mp3\", \"filename\": \"youtube-dl \\uff02'\\u29f8 - test song [1812978516].mp3\", \"__write_download_archive\": false}], \"format_id\": \"mp3-128\", \"url\": \"https://t4.bcbits.com/stream/ws/mp3-128/1812978516\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"acodec\": \"mp3\", \"abr\": 128, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 157576, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3-128 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Bandcamp] unable to extract album artist; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
   }
  ]
 }

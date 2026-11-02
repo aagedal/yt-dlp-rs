@@ -47,6 +47,13 @@
     "Content-Type": "audio/mpeg"
    },
    "body": "ID3-bandcamp"
+  },
+  {
+   "url": "https://youtube-dl.bandcamp.com/track/whitespace",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "whitespace.html"
   }
  ]
 }

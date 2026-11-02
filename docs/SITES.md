@@ -86,7 +86,7 @@ another extractor.
 | audius:track | 2 | 3 |  |
 | AZMedien | 2 | 3 |  |
 | BaiduVideo | 2 | 2 |  |
-| Bandcamp | 1 | 4 | canary: Bandcamp |
+| Bandcamp | 1 | 5 | canary: Bandcamp |
 | Bandcamp:album | 2 | 4 |  |
 | Bandcamp:user | 2 | 2 |  |
 | Bandcamp:weekly | 2 | 2 |  |
