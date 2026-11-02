@@ -75,6 +75,11 @@ class ExtractorTiersTest(unittest.TestCase):
         self.assertIn('| Gamma | 2 | 0 | reached via `beta` |', text)
         self.assertTrue(text.endswith('|\n'))
 
+    def test_summary_lines(self):
+        self.assertEqual(extractor_tiers.summary_lines(self.classified()), [
+            "5 of upstream's", '| 1 | 1 |', '| 2 | 4 |', '| untested | 0 |',
+            '`_WORKING = False` (1 here)'])
+
     def test_survey(self):
         rows = self.classified()
         upstream = [

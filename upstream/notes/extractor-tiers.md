@@ -106,3 +106,24 @@ and it lacked seven that upstream accepts:
   `tools/extractor_tiers.py --write` from the registry, the fixtures and the
   canary list; CI's Linux `rust` job runs `--check` after the tests so it
   cannot drift.
+
+## Outcome
+
+Ported, each compared with pinned upstream on new fixture cases:
+
+- `pseudo_url` accepts `cbcplayer:`, `facebook:`, `globo:`, `nexx:`,
+  `radiocanada:` and `wyborcza:video:` (one case each, reusing the saved
+  responses; `facebook:` adds the `video/video.php` route upstream requests).
+- `audius:ID` reaches audius:track, which then had the Audius name: the
+  shared helpers hardcoded it. Track, playlist and profile now use their own
+  `IE_NAME` in notes and errors and print `Extracting URL`, and the
+  404-tolerant resolve prints its `Downloading JSON metadata` note (new
+  `-s` cases for every class).
+- `video.arnes.si: Arnes Video` in `--extractor-descriptions`.
+
+After these, the survey reports 12 tier-1, 890 tier-2 and 2 untested
+extractors (GettrStreaming, ximalaya:album) and no differing description.
+Deferred: `lbry://@channel` and `at://did:...` inputs (they need the input
+text to reach the extractor instead of a parsed `Url`, like the bare-input
+path), and fixtures for the two not-ported stubs, which have no ported
+behavior to compare.

@@ -15,7 +15,8 @@ Each extractor is attributed:
 Tier 1 extractors handle a canary URL. Tier 2 extractors have at least one
 saved fixture case (or, for the few in OTHER_TESTS, another upstream
 comparison). The rest are `untested`. `--write` regenerates docs/SITES.md,
-`--check` (CI) fails when it differs. `--survey --upstream PATH` prints the
+`--check` (CI) fails when it differs or when the supported-sites summary in
+docs/COMPATIBILITY.md states other counts. `--survey --upstream PATH` prints the
 counts recorded in upstream/notes/extractor-tiers.md, with the pinned
 upstream's own flags (`_WORKING`, `_ENABLED`, `IE_DESC = False`) and a
 comparison of both listings.
@@ -32,6 +33,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SITES = ROOT / 'tests/fixtures/sites'
 CANARY = ROOT / 'tools/canary_sites.json'
 OUTPUT = ROOT / 'docs/SITES.md'
+SUMMARY = ROOT / 'docs/COMPATIBILITY.md'
 BROKEN = ' (CURRENTLY BROKEN)'
 # Extractors without a URL pattern of their own, tested outside the site fixtures.
 OTHER_TESTS = {
@@ -185,6 +187,14 @@ def render(rows):
     return '\n'.join(lines) + '\n'
 
 
+def summary_lines(rows):
+    """The counts COMPATIBILITY.md's supported-sites summary must state."""
+    counts = Counter(row['tier'] for row in rows)
+    return [f'{len(rows)} of upstream\'s', f'| 1 | {counts["1"]} |',
+            f'| 2 | {counts["2"]} |', f'| untested | {counts["untested"]} |',
+            f'`_WORKING = False` ({sum(row["broken"] for row in rows)} here)']
+
+
 def build(binary):
     names, _ = parse_listing(run(binary, '--list-extractors'))
     cases = fixture_cases()
@@ -264,10 +274,16 @@ def main():
     if args.write:
         OUTPUT.write_text(text, encoding='utf-8', newline='\n')
         return 0
+    status = 0
     if OUTPUT.read_text(encoding='utf-8') != text:
         print(f'{OUTPUT} is stale; run tools/extractor_tiers.py --write', file=sys.stderr)
-        return 1
-    return 0
+        status = 1
+    summary = SUMMARY.read_text(encoding='utf-8')
+    for line in summary_lines(rows):
+        if line not in summary:
+            print(f'{SUMMARY}: supported-sites summary lacks {line!r}', file=sys.stderr)
+            status = 1
+    return status
 
 
 if __name__ == '__main__':
