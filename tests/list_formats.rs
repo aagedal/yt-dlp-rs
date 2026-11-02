@@ -437,13 +437,11 @@ fn transient_listing_retries_complete_extraction_before_printing_once() {
     let library_server = Server::new();
     let info = YoutubeDl::new()
         .unwrap()
-        .extract_result_unselected_with_options(
-            &library_server.url("/retry.html"),
-            ExtractionOptions {
-                retries: 1,
-                ..Default::default()
-            },
-        )
+        .extract_result_unselected_with_options(&library_server.url("/retry.html"), {
+            let mut options = ExtractionOptions::default();
+            options.retries = 1;
+            options
+        })
         .unwrap()
         .into_video()
         .unwrap();
@@ -455,7 +453,7 @@ fn transient_listing_retries_complete_extraction_before_printing_once() {
 #[test]
 fn shared_upstream_listing_fixture_runs_through_unselected_orchestration_and_native_renderer() {
     struct SavedFixture;
-    impl yt_dlp_rs::extractor::Extractor for SavedFixture {
+    impl yt_dlp_rs::__private::Extractor for SavedFixture {
         fn key(&self) -> &'static str {
             "SavedListingFixture"
         }

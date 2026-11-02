@@ -171,13 +171,15 @@ fn an_inline_playlist_downloads_with_headers_and_cookies_scoped_to_its_origin() 
     let client = YoutubeDl::new().unwrap();
     let mut result = client
         .extract_manifest(
-            &Manifest {
-                id: Some("clip".into()),
-                ..Manifest::inline(ManifestKind::Hls, base.clone(), text)
+            &{
+                let mut manifest = Manifest::inline(ManifestKind::Hls, base.clone(), text);
+                manifest.id = Some("clip".into());
+                manifest
             },
-            ExtractionOptions {
-                scope: Some(scope.clone()),
-                ..Default::default()
+            {
+                let mut options = ExtractionOptions::default();
+                options.scope = Some(scope.clone());
+                options
             },
         )
         .unwrap();
@@ -188,10 +190,8 @@ fn an_inline_playlist_downloads_with_headers_and_cookies_scoped_to_its_origin() 
     assert_eq!((info.id.as_str(), info.title.as_str()), ("clip", "clip"));
     let directory = tempfile::tempdir().unwrap();
     let destination = directory.path().join("clip.mp4");
-    let control = DownloadControl {
-        scope: Some(scope),
-        ..Default::default()
-    };
+    let mut control = DownloadControl::default();
+    control.scope = Some(scope);
     client
         .download_with_control(
             &info,
@@ -242,13 +242,11 @@ fn a_fetched_master_playlist_requests_variants_with_the_scope() {
     let client = YoutubeDl::new().unwrap();
     let info = video(
         client
-            .extract_manifest(
-                &Manifest::new(ManifestKind::Hls, url),
-                ExtractionOptions {
-                    scope: Some(scope),
-                    ..Default::default()
-                },
-            )
+            .extract_manifest(&Manifest::new(ManifestKind::Hls, url), {
+                let mut options = ExtractionOptions::default();
+                options.scope = Some(scope);
+                options
+            })
             .unwrap(),
     );
     assert_eq!(info.formats.len(), 1);
@@ -301,21 +299,20 @@ fn an_interrupted_extraction_makes_no_request() {
     let error = client
         .extract_manifest(
             &Manifest::new(ManifestKind::Hls, server.url("127.0.0.1", "/index.m3u8")),
-            ExtractionOptions {
-                interrupt: Some(interrupt.clone()),
-                ..Default::default()
+            {
+                let mut options = ExtractionOptions::default();
+                options.interrupt = Some(interrupt.clone());
+                options
             },
         )
         .unwrap_err();
     assert!(matches!(error, Error::ExtractionCancelled), "{error}");
     let error = client
-        .extract_result_unselected_with_options(
-            server.url("127.0.0.1", "/page").as_str(),
-            ExtractionOptions {
-                interrupt: Some(interrupt),
-                ..Default::default()
-            },
-        )
+        .extract_result_unselected_with_options(server.url("127.0.0.1", "/page").as_str(), {
+            let mut options = ExtractionOptions::default();
+            options.interrupt = Some(interrupt);
+            options
+        })
         .unwrap_err();
     assert!(matches!(error, Error::ExtractionCancelled), "{error}");
     assert!(server.paths().is_empty(), "{:?}", server.paths());
@@ -345,10 +342,8 @@ fn interrupted_fragments(stop: bool) -> (tempfile::TempDir, std::path::PathBuf, 
     let directory = tempfile::tempdir().unwrap();
     let destination = directory.path().join("partial.mp4");
     let interrupt = Interrupt::new();
-    let control = DownloadControl {
-        interrupt: Some(interrupt.clone()),
-        ..Default::default()
-    };
+    let mut control = DownloadControl::default();
+    control.interrupt = Some(interrupt.clone());
     let error = client
         .download_with_control(
             &info,
@@ -411,10 +406,8 @@ fn a_stopped_whole_file_download_keeps_the_received_bytes() {
     let directory = tempfile::tempdir().unwrap();
     let destination = directory.path().join("v.mp4");
     let interrupt = Interrupt::new();
-    let control = DownloadControl {
-        interrupt: Some(interrupt.clone()),
-        ..Default::default()
-    };
+    let mut control = DownloadControl::default();
+    control.interrupt = Some(interrupt.clone());
     let client = YoutubeDl::new().unwrap();
     let error = client
         .download_with_control(
@@ -480,10 +473,8 @@ fn a_stopped_merged_download_merges_the_streams_so_far() {
     let directory = tempfile::tempdir().unwrap();
     let destination = directory.path().join("m.mp4");
     let interrupt = Interrupt::new();
-    let control = DownloadControl {
-        interrupt: Some(interrupt.clone()),
-        ..Default::default()
-    };
+    let mut control = DownloadControl::default();
+    control.interrupt = Some(interrupt.clone());
     let error = YoutubeDl::new()
         .unwrap()
         .with_ffmpeg(&ffmpeg)
@@ -562,10 +553,8 @@ fn a_stopped_ffmpeg_download_is_finished_and_kept() {
     let directory = tempfile::tempdir().unwrap();
     let destination = directory.path().join("f.mp4");
     let interrupt = Interrupt::new();
-    let control = DownloadControl {
-        interrupt: Some(interrupt.clone()),
-        ..Default::default()
-    };
+    let mut control = DownloadControl::default();
+    control.interrupt = Some(interrupt.clone());
     let started = std::time::Instant::now();
     let error = client
         .download_with_control(

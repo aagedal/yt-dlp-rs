@@ -340,10 +340,6 @@ impl MetadataActions {
         Ok(())
     }
 
-    pub fn is_empty(&self) -> bool {
-        self.stages.is_empty()
-    }
-
     /// Whether any action runs at `when`.
     pub fn has(&self, when: &str) -> bool {
         self.stages.iter().any(|(stage, _)| stage == when)

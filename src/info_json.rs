@@ -4,7 +4,7 @@ use crate::{Error, PlaylistCounts, PlaylistInfo, Result, VideoInfo};
 use serde_json::{Map, Value};
 use std::{
     io::{self, Write},
-    path::{Path, PathBuf},
+    path::Path,
 };
 
 /// Keys removed by upstream's default `clean_infojson`, besides `__` keys and nulls.
@@ -32,7 +32,8 @@ pub enum InfoJsonWrite {
 /// Upstream `replace_extension(name, "info.json", ext)`: replace the final
 /// extension when it matches `ext` (or any extension when `ext` is absent),
 /// otherwise append. Extension splitting follows Python's `os.path.splitext`.
-pub fn info_json_path(path: &Path, ext: Option<&str>) -> PathBuf {
+#[cfg(test)]
+pub fn info_json_path(path: &Path, ext: Option<&str>) -> std::path::PathBuf {
     let Some(text) = path.to_str() else {
         let mut name = path.as_os_str().to_owned();
         name.push(".info.json");
@@ -51,6 +52,7 @@ pub fn info_json_path(path: &Path, ext: Option<&str>) -> PathBuf {
 }
 
 /// Python `splitext` on one component: the last dot preceded by a non-dot.
+#[cfg(test)]
 fn splitext(name: &str) -> Option<(&str, &str)> {
     let dot = name.rfind('.')?;
     name[..dot]
@@ -59,28 +61,16 @@ fn splitext(name: &str) -> Option<(&str, &str)> {
         .then(|| (&name[..dot], &name[dot + 1..]))
 }
 
-/// The cleaned video info dictionary, with upstream's `_type` and `epoch` defaults.
+/// The video info dictionary, with upstream's `_type` and `epoch` defaults,
+/// cleaned like upstream `clean_infojson` unless `clean` is false
+/// (`--no-clean-info-json` keeps `None` values and private keys).
 /// `_version` is omitted because this is not an upstream release.
-pub fn video_info_json(info: &VideoInfo, epoch: u64) -> Result<Value> {
-    video_info_json_with(info, epoch, true)
-}
-
-/// [`video_info_json`] with upstream `clean_infojson` (`--no-clean-info-json`
-/// keeps `None` values and private keys).
 pub fn video_info_json_with(info: &VideoInfo, epoch: u64, clean: bool) -> Result<Value> {
     finish(raw_value(info)?, "video", epoch, clean)
 }
 
-/// The cleaned playlist dictionary written before its entries are processed.
-pub fn playlist_info_json(
-    info: &PlaylistInfo,
-    counts: PlaylistCounts,
-    epoch: u64,
-) -> Result<Value> {
-    playlist_info_json_with(info, counts, epoch, true)
-}
-
-/// [`playlist_info_json`] with upstream `clean_infojson`.
+/// The playlist dictionary written before its entries are processed, with
+/// upstream `clean_infojson` unless `clean` is false.
 pub fn playlist_info_json_with(
     info: &PlaylistInfo,
     counts: PlaylistCounts,
@@ -341,6 +331,7 @@ impl serde_json::ser::Formatter for PythonFormatter {
 /// Write `value` to `path` unless a file already exists there. Parent directories
 /// are created, data is synced in a sibling temporary file, and publication
 /// never replaces a concurrently created destination.
+#[cfg(test)]
 pub fn write_info_json(path: &Path, value: &Value) -> Result<InfoJsonWrite> {
     write_info_json_with(path, value, false)
 }
@@ -394,6 +385,7 @@ pub fn write_info_json_with(path: &Path, value: &Value, overwrite: bool) -> Resu
 mod tests {
     use super::*;
     use serde_json::json;
+    use std::path::PathBuf;
 
     #[test]
     fn info_json_names_follow_replace_extension() {
@@ -511,7 +503,7 @@ mod tests {
             let path = info_json_path(&name, None);
             assert_eq!(
                 path.to_str().unwrap(),
-                crate::output::host_path(case["expected"].as_str().unwrap()),
+                crate::output::sanitize::host_path(case["expected"].as_str().unwrap()),
                 "{}",
                 case["name"]
             );

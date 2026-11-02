@@ -197,9 +197,10 @@ fn retries_discard_partial_fragment_without_repeating_previous_fragments() {
         .download_with_progress(
             &server.whole(),
             &output,
-            DownloadOptions {
-                retries: 1,
-                ..Default::default()
+            {
+                let mut options = DownloadOptions::default();
+                options.retries = 1;
+                options
             },
             |event| {
                 progress.push(event);
@@ -244,9 +245,10 @@ fn transient_status_retries_and_cancelled_retry_wait_cleans_output() {
         let result = YoutubeDl::new().unwrap().download_with_progress(
             &server.whole(),
             &output,
-            DownloadOptions {
-                retries: 1,
-                ..Default::default()
+            {
+                let mut options = DownloadOptions::default();
+                options.retries = 1;
+                options
             },
             |event| {
                 if cancel && event.phase == DownloadPhase::WaitingToRetry {
@@ -497,14 +499,11 @@ fn exhausted_partial_fragment_retries_remove_the_assembled_prefix() {
     assert!(
         YoutubeDl::new()
             .unwrap()
-            .download_with_options(
-                &server.whole(),
-                &output,
-                DownloadOptions {
-                    fragment_retries: 1,
-                    ..Default::default()
-                }
-            )
+            .download_with_options(&server.whole(), &output, {
+                let mut options = DownloadOptions::default();
+                options.fragment_retries = 1;
+                options
+            })
             .is_err()
     );
     assert_eq!(server.requests().len(), 3);
@@ -556,9 +555,10 @@ fn update_time_uses_the_latest_fragment_last_modified() {
             .download_with_progress(
                 &server.whole(),
                 &output,
-                DownloadOptions {
-                    update_time,
-                    ..Default::default()
+                {
+                    let mut options = DownloadOptions::default();
+                    options.update_time = update_time;
+                    options
                 },
                 |_| ControlFlow::Continue(()),
             )
@@ -637,9 +637,10 @@ fn a_failed_append_stops_concurrent_workers() {
         .download_with_progress(
             &info,
             directory.path().join("o.ts"),
-            DownloadOptions {
-                part_files: yt_dlp_rs::PartFiles::Part { resume: false },
-                ..Default::default()
+            {
+                let mut options = DownloadOptions::default();
+                options.part_files = yt_dlp_rs::PartFiles::Part { resume: false };
+                options
             },
             |_| ControlFlow::Continue(()),
         );
@@ -675,9 +676,10 @@ fn keep_fragments_writes_upstream_frag_files_sequentially_and_concurrently() {
             .download_with_progress(
                 &info,
                 &output,
-                DownloadOptions {
-                    part_files: yt_dlp_rs::PartFiles::Part { resume: false },
-                    ..Default::default()
+                {
+                    let mut options = DownloadOptions::default();
+                    options.part_files = yt_dlp_rs::PartFiles::Part { resume: false };
+                    options
                 },
                 |_| ControlFlow::Continue(()),
             )

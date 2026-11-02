@@ -1,20 +1,100 @@
 # Library API
 
-The `yt_dlp_rs` crate exposes the extraction and download pipeline the CLI uses.
-The API is unstable while the port is in beta. See the
+The `yt_dlp_rs` crate exposes the extraction and download pipeline the CLI
+uses. The CLI and its machine-readable output ([CLI_CONTRACT.md](CLI_CONTRACT.md))
+are the primary contract; Aagedal Media Converter runs the binary. The library
+is secondary and unstable until 1.0 (see [Stability](#stability)). See the
 [compatibility inventory](COMPATIBILITY.md) for the behavior behind each call.
 
-The library exposes `YoutubeDl`, `ExtractResult`, `PlaylistInfo`, `VideoInfo`,
+```rust,no_run
+use std::ops::ControlFlow;
+use yt_dlp_rs::{DownloadControl, DownloadOptions, Error, Interrupt, YoutubeDl};
+
+fn main() -> yt_dlp_rs::Result<()> {
+    let client = YoutubeDl::new()?.with_ffmpeg("ffmpeg");
+    let result = client.extract_result_with_format("https://example.com/clip", Some("best"))?;
+    for info in result.into_entries() {
+        // Another thread may call `stop()` (keep the partial file) or `cancel()`.
+        let interrupt = Interrupt::new();
+        let mut control = DownloadControl::default();
+        control.interrupt = Some(interrupt.clone());
+        let mut options = DownloadOptions::default();
+        options.retries = 1;
+        let path = format!("{}.{}", info.id, info.ext);
+        match client.download_with_control(&info, &path, options, &control, |progress| {
+            eprintln!("{:?}: {} bytes", progress.phase, progress.downloaded_bytes);
+            ControlFlow::Continue(())
+        }) {
+            Ok(bytes) => println!("{path}: {bytes} bytes"),
+            Err(Error::DownloadStopped { path }) => println!("stopped: {}", path.display()),
+            Err(error) => return Err(error),
+        }
+    }
+    Ok(())
+}
+```
+
+## Stability
+
+The public API is what rustdoc shows for the crate root and `output`. Two
+modules are `#[doc(hidden)]` and not part of it: `cli` (the binary's
+implementation; `src/main.rs` only calls `cli::main`) and `__private`
+(helpers the integration tests use, including the `Extractor` trait and
+`YoutubeDl::register_extractor`, whose hooks follow upstream's extractor
+internals and expose the reqwest client). Anything there can change in any
+release.
+
+- **Growing types are `#[non_exhaustive]`**: the option, control, progress,
+  result and info structs (`HttpOptions`, `YoutubeOptions`,
+  `ExtractionOptions`, `DownloadOptions`, `DownloadControl`,
+  `PostprocessOptions`, `SubtitleEmbedding`, `SubtitleFile`, `Manifest`,
+  `RetrySleep`, `DownloadProgress`, `FragmentBytes`, `PlaylistCounts`,
+  `ProcessedDownload`, `AudioDownload`, `ConvertedSubtitle`,
+  `SubtitleSelection`, `VideoInfo`, `PlaylistInfo`, `VideoFormat`,
+  `Fragment`, `Metadata`, `Thumbnail`, `Chapter`, `DownloaderOptions`,
+  `SubtitleFormat`) and the enums `Error`, `DownloadPhase`, `StreamKind`,
+  `PartFiles`, `MergeFiles`, `ManifestKind` and `VideoMode`. Build a struct
+  from `Default` (or its constructor: `Manifest::new`/`inline`,
+  `Fragment::new`, `SubtitleFile::new`) and assign its public fields, and
+  give a `match` on these enums a wildcard arm, so that a new field or
+  variant is not a breaking change. `ExtractResult`, `ByteRange`,
+  `ByteIndex`, `HlsAes128` and `PyNumber` are complete and stay exhaustive.
+  Types with private fields (`AudioOptions`, `VideoOptions`,
+  `SubtitleConversion`, `SubtitleOptions`, `TemplateOptions`, `CookieJar`,
+  `Interrupt`, `RequestScope`, ...) are built through their methods.
+- **One error type**: every call returns `yt_dlp_rs::Result<T>` with
+  `yt_dlp_rs::Error`. Its `Display` text is the CLI's upstream message, so
+  match variants instead of parsing text.
+- **Public dependencies**: `url` 2 (`Url`), `serde_json` 1 (the info structs'
+  `extra` maps and `http_headers`) and `reqwest` 0.12 (`Error::Http` and
+  `Error::HttpRetryAfter` carry a `reqwest::Error`, for its status and
+  kind). A major update of one of them is a breaking release.
+- **Process-wide settings**: `no_playlist`, `age_limit`, `get_comments` and
+  `skip_download` (`YoutubeOptions`) and `geo_verification_proxy`
+  (`HttpOptions`) are stored process-wide when a `YoutubeDl` is built, so
+  clients with different values interfere; the last one built wins.
+- **`cargo-semver-checks`**: CI's `semver` job (`tools/semver_check.py`)
+  compares the library with the latest `v*` release tag, default features
+  only (`impersonate` adds no public items). From 1.0 on a breaking change
+  fails the job unless `Cargo.toml`'s major version is above the tag's;
+  before 1.0 the job only reports it (a warning), since a 0.x release may
+  break the API. Run it locally with
+  `cargo install cargo-semver-checks --locked` and
+  `python3 tools/semver_check.py`.
+
+## Reference
+
+The crate root exposes `YoutubeDl`, `ExtractResult`, `PlaylistInfo`, `VideoInfo`,
 `VideoFormat`, `StreamKind`, `Fragment`, `ByteRange`, `HlsAes128`, `DownloadOptions`, `DownloadProgress`, `DownloadPhase`,
-`ExtractionOptions`, `YoutubeOptions`, and an `Extractor` interface.
-`YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path), ..Default::default() })`
-configures optional YouTube signature/n solving; `YoutubeDl::new()` keeps it disabled.
-`include_translated_subtitles: true` additionally exposes translated manual captions
+`ExtractionOptions`, `YoutubeOptions`, `HttpOptions` and the types below.
+Setting `YoutubeOptions::js_runtime` to `Some(path)` and passing the options to
+`YoutubeDl::with_youtube_options` configures optional YouTube signature/n
+solving; `YoutubeDl::new()` keeps it disabled.
+`include_translated_subtitles = true` additionally exposes translated manual captions
 in `automatic_captions`; the CLI enables this with `--write-auto-subs` or `--list-subs`.
 ASR translations are discovered independently, without fetching their payloads.
-`YoutubeDl::with_options(YoutubeOptions::default(), HttpOptions {
-user_agent: Some("My media client".into()), ..Default::default()
-})` configures HTTP defaults; `HttpOptions.headers` holds name/value pairs.
+`YoutubeDl::with_options(youtube, http)` also takes `HttpOptions` (for example
+`http.user_agent = Some("My media client".into())`); `HttpOptions.headers` holds name/value pairs.
 `HttpOptions::from_cli(user_agent, referer, &headers)` parses repeated FIELD:VALUE
 strings with the same normalization and validation as the binary.
 `CookieJar::load(path)` and `save(path)` expose explicit Netscape persistence;
@@ -52,7 +132,7 @@ library callers choose when to filter and record, after successful publication.
 `archive_id` returns the supported lowercase extractor-key plus case-sensitive ID.
 The existing `extract_info` methods accept single videos and reject playlists.
 `--dump-json` emits one video object per entry.
-`download_with_options(info, path, DownloadOptions { retries: 0 })` disables
+`download_with_options(info, path, options)` with `options.retries = 0` disables
 download retries for a library call; `download` uses the default policy.
 `download_with_progress(info, path, options, callback)` reports one-based attempts,
 stored bytes, optional total bytes, and the current phase. Fragment downloads also report one-based fragment indexes
@@ -62,12 +142,21 @@ A callback's `Break` is cooperative: it is seen at the next checkpoint, not
 during a blocking request, read, or filesystem operation; use an `Interrupt`
 (below) to end a transfer blocked on the network. See the compatibility
 inventory for checkpoints.
-`extract_result_with_options(url, None, ExtractionOptions { retries: 2, ..Default::default() })` enables
-whole-extraction retries; existing extraction methods keep retries disabled.
+`extract_result_with_options(url, None, options)` with `options.retries = 2`
+(`ExtractionOptions`) enables whole-extraction retries; the other extraction
+methods keep retries disabled.
 `YoutubeDl::with_growing_file(true)` makes `download_with_progress` record live
 results as one growing QuickTime file (see `--growing-file` in the
 [CLI table](COMPATIBILITY.md#cli)); `YoutubeDl::grows(&info)` tells whether a
 result will be recorded that way.
+`with_ffprobe`, `with_concurrent_fragments` (`-N`), `with_keep_fragments`
+(`-k`), `with_downloader(protocol, ffmpeg)` and `with_live_dash_snapshot`
+configure the downloads like their CLI options. `download_processed_with_options`
+/ `_with_progress` (`PostprocessOptions`: audio extraction with `AudioOptions`,
+remux/recode with `VideoOptions`, subtitle embedding with `SubtitleEmbedding`,
+metadata, chapters and thumbnail embedding), `download_audio_with_options` /
+`_with_progress` and `convert_subtitle_with_options` / `_with_progress`
+(`SubtitleConversion`) run the local FFmpeg processors.
 
 ## Call controls, request scopes and inline manifests
 
@@ -118,9 +207,9 @@ custom (non-`Authorization`) headers on a redirect to another host.
 `CookieJar::set_cookie(&url, "name=value; ...")` stores a cookie permanently,
 for copying another application's cookies into the shared jar.
 
-Pass both through `ExtractionOptions { interrupt, scope, .. }` to
+Pass both through the `interrupt` and `scope` fields of `ExtractionOptions` to
 `extract_result_with_options`, `extract_result_unselected_with_options` or
-`extract_manifest`, and through `DownloadControl { interrupt, scope }` to
+`extract_manifest`, and of `DownloadControl` to
 `download_with_control(info, path, options, &control, callback)`, which
 otherwise behaves like `download_with_progress`.
 

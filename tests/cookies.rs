@@ -420,22 +420,18 @@ fn explicit_library_arc_jar_loads_learns_across_requests_and_saves_on_demand() {
     let output = directory.path().join("output.txt");
     seed(&input);
     let jar = Arc::new(CookieJar::load(&input).unwrap());
-    let dl = YoutubeDl::with_options(
-        YoutubeOptions::default(),
-        HttpOptions {
-            cookies: Some(jar.clone()),
-            ..Default::default()
-        },
-    )
+    let dl = YoutubeDl::with_options(YoutubeOptions::default(), {
+        let mut options = HttpOptions::default();
+        options.cookies = Some(jar.clone());
+        options
+    })
     .unwrap();
     let info = dl.extract_info(&server.url("/set-only.mp4")).unwrap();
-    let observer = YoutubeDl::with_options(
-        YoutubeOptions::default(),
-        HttpOptions {
-            cookies: Some(jar.clone()),
-            ..Default::default()
-        },
-    )
+    let observer = YoutubeDl::with_options(YoutubeOptions::default(), {
+        let mut options = HttpOptions::default();
+        options.cookies = Some(jar.clone());
+        options
+    })
     .unwrap();
     observer.extract_info(&server.url("/outside.mp4")).unwrap();
     dl.download(&info, directory.path().join("out.mp4"))

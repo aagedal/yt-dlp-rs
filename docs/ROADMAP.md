@@ -14,7 +14,7 @@ tractable for future agents.
 
 ## Current architecture
 
-- `src/main.rs`: strict CLI subset, per-URL errors, per-video NDJSON metadata output, sequential HTML5 playlist processing.
+- `src/cli.rs` (the hidden `cli` module; `src/main.rs` only calls it): strict CLI subset, per-URL errors, per-video NDJSON metadata output, sequential HTML5 playlist processing.
 - `src/lib.rs`: ordered extractor registry and download orchestration.
 - `src/info.rs`: typed subset of upstream video info fields and video/HTML5 playlist results.
 - `src/extractor/`: independent extractors, generic fallback last.
@@ -428,6 +428,25 @@ Work in this order; each step lands with deterministic tests like any other chan
 8. **Library API.** Shrink the public surface to what consumers use, mark
    growing structs `#[non_exhaustive]` or give them builders, one public error
    type, and `cargo-semver-checks` in CI.
+   Status (2026-11-02): surveyed first (`upstream/notes/library-api.md`):
+   2321 public paths and 91 `YoutubeDl` methods, nearly all public only
+   because the binary was its own crate. The CLI now lives in the library
+   as the hidden `cli` module (`src/cli.rs`, moved unsplit; `src/main.rs`
+   calls it), so CLI-only items are crate-private: about 140 paths and 35
+   `YoutubeDl` methods remain, documented in `docs/LIBRARY.md`. Test-only
+   helpers, including the `Extractor` trait, sit in the hidden `__private`
+   module. Option, progress, result and info structs and the growing enums
+   are `#[non_exhaustive]` (built from `Default` or a constructor), and
+   `Error` is the only public error type. CI's `semver` job runs
+   `cargo-semver-checks` against the latest release tag through
+   `tools/semver_check.py`: a warning before 1.0, a failure afterwards
+   unless the major version grew. LIBRARY.md is the crate documentation and
+   its example compiles as a doctest. Removed on the way: unused wrappers
+   (`fixup_m3u8`, `fixup_m4a`, `select_video`, `resolve_entry`,
+   `target_available`, ...) the old surface hid from dead-code checks. Not
+   covered: `reqwest::Error` stays inside `Error::Http`/`HttpRetryAfter`
+   (reqwest 0.12 is a public dependency), and some `YoutubeOptions` and
+   `HttpOptions` settings are still process-wide.
 9. **Extractor tiers.** Tier 1 is the canary list; tier 2 is fixture-tested and
    best effort; extractors for dead sites are removed or marked. A short
    supported-sites summary goes at the top of `docs/COMPATIBILITY.md`.
@@ -435,5 +454,5 @@ Work in this order; each step lands with deterministic tests like any other chan
     milestone 6 loop within a week of an upstream release.
 
 Then a release candidate runs against the canaries for a few weeks before 1.0.
-Not required: splitting `src/main.rs`, self-update (`-U` stays an error;
+Not required: splitting `src/cli.rs`, self-update (`-U` stays an error;
 distribution goes through package managers and Media Converter's bundle).

@@ -82,7 +82,7 @@ impl DownloadArchive {
     }
     /// Upstream `in_download_archive({'id': temp_id, 'ie_key': key})`
     /// before extraction: whether `key id` is recorded.
-    pub fn contains_identity(&self, key: &str, id: &str) -> bool {
+    pub(crate) fn contains_identity(&self, key: &str, id: &str) -> bool {
         self.entries
             .contains(&format!("{} {id}", key.to_lowercase()))
     }

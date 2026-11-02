@@ -187,22 +187,10 @@ fn clean(path: &Path) {
 }
 
 fn options(format: &str, mode: VideoMode, keep: bool) -> PostprocessOptions {
-    PostprocessOptions {
-        existing: None,
-        no_post_overwrites: false,
-        modify_chapters: None,
-        ignore_errors: false,
-        thumbnail: None,
-        metadata: false,
-        chapters: false,
-        infojson: None,
-        fixup: None,
-        audio: None,
-        video: Some(VideoOptions::new(format, mode).unwrap()),
-        keep_video: keep,
-        embed: None,
-        ..Default::default()
-    }
+    let mut options = PostprocessOptions::default();
+    options.video = Some(VideoOptions::new(format, mode).unwrap());
+    options.keep_video = keep;
+    options
 }
 
 #[test]

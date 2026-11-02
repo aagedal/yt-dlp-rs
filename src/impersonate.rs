@@ -133,11 +133,6 @@ fn resolve<'a>(supported: &'a [Supported], target: &ImpersonateTarget) -> Option
     supported.iter().find(|entry| entry.target.contains(target))
 }
 
-/// `YoutubeDL._impersonate_target_available`.
-pub fn target_available(target: &ImpersonateTarget) -> bool {
-    resolve(supported_targets(), target).is_some()
-}
-
 /// `--impersonate`: the target (an index into [`supported_targets`]) that
 /// requests impersonate unless their extractor or format asks for one
 /// (upstream passes the option to every request handler as its default

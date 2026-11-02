@@ -409,14 +409,7 @@ fn real_ffmpeg_stream_copy_preserves_video_and_audio() {
         // TS files exercise the fragment route used by HLS extraction.
         for format in &mut info.requested_formats {
             if format.ext == "ts" {
-                format.fragments = vec![yt_dlp_rs::Fragment {
-                    url: format.url.clone(),
-                    byte_range: None,
-                    encryption: None,
-                    path: None,
-                    duration: None,
-                    fragment_count: None,
-                }];
+                format.fragments = vec![yt_dlp_rs::Fragment::new(format.url.clone())];
             }
         }
         let directory = tempfile::tempdir().unwrap();
@@ -492,14 +485,11 @@ fn upstream_merge_files_are_named_reused_and_deleted_unless_kept() {
         YoutubeDl::new()
             .unwrap()
             .with_ffmpeg(helper())
-            .download_with_options(
-                &server.info(false),
-                &output,
-                DownloadOptions {
-                    merge_files: MergeFiles::Upstream { keep },
-                    ..Default::default()
-                },
-            )
+            .download_with_options(&server.info(false), &output, {
+                let mut options = DownloadOptions::default();
+                options.merge_files = MergeFiles::Upstream { keep };
+                options
+            })
             .unwrap();
         assert_eq!(server.requests(), ["GET /audio HTTP/1.1"]);
         assert_eq!(std::fs::read(&output).unwrap(), b"merged-video-audio");

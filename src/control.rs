@@ -143,6 +143,7 @@ impl RequestScope {
 
 /// Library download controls (`YoutubeDl::download_with_control`).
 #[derive(Debug, Clone, Default)]
+#[non_exhaustive]
 pub struct DownloadControl {
     /// Stop (keep the partial file) or cancel from another thread.
     pub interrupt: Option<Interrupt>,

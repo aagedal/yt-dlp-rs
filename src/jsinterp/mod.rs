@@ -16,10 +16,11 @@
 mod ops;
 mod value;
 
-pub use ops::{int_to_int32, js_number_to_string};
+#[cfg(test)]
+use ops::int_to_int32;
+pub use ops::js_number_to_string;
 pub use value::{
-    Frame, JsError, JsFunction, JsValue, Namespace, Scope, py_eq, py_float_repr, py_repr, py_str,
-    scope,
+    Frame, JsError, JsFunction, JsValue, Namespace, Scope, py_eq, py_repr, py_str, scope,
 };
 
 use crate::batch::{is_py_space, py_strip};
@@ -696,6 +697,7 @@ impl JsInterpreter {
     }
 
     /// `_undefined_varnames`: names read without being defined.
+    #[cfg(test)]
     pub fn undefined_varnames(&self) -> BTreeSet<String> {
         self.undefined_varnames.borrow().clone()
     }
@@ -880,17 +882,6 @@ impl JsInterpreter {
                 ))
             }
         })
-    }
-
-    /// `interpret_statement(stmt, local_vars, allow_recursion)`: the value and
-    /// whether the statement returns.
-    pub fn interpret_statement(
-        &self,
-        stmt: &str,
-        local_vars: &Namespace,
-        allow_recursion: i32,
-    ) -> Result<(JsValue, bool)> {
-        self.statement(stmt, local_vars, allow_recursion, false)
     }
 
     /// `interpret_expression(expr, local_vars, allow_recursion)`.
@@ -2078,6 +2069,7 @@ impl JsInterpreter {
     }
 
     /// `call_function(funcname, *args)`.
+    #[cfg(test)]
     pub fn call_function(&self, funcname: &str, args: Vec<JsValue>) -> Result<JsValue> {
         let function = self.extract_function(funcname)?;
         self.call(&function, args)

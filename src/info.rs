@@ -74,6 +74,7 @@ pub enum ExtractResult {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct PlaylistInfo {
     pub id: String,
     pub title: String,
@@ -90,7 +91,7 @@ pub struct PlaylistInfo {
     /// Entries the extractor fetches when the playlist is processed (upstream
     /// lazily extracted entries); see [`crate::YoutubeDl::fetch_pending`].
     #[serde(skip)]
-    pub pending: Option<PendingEntries>,
+    pub(crate) pending: Option<PendingEntries>,
     /// Unmodeled info-dict keys (upstream's `add_default_extra_info`).
     #[serde(flatten, default)]
     pub extra: serde_json::Map<String, serde_json::Value>,
@@ -214,7 +215,7 @@ pub const NESTED_INDEX: &str = "__yt_dlp_rs_nested_index";
 
 impl PlaylistInfo {
     /// Upstream `_type`: `multi_video` (see [`MULTI_VIDEO`]) or `playlist`.
-    pub fn result_type(&self) -> &'static str {
+    pub(crate) fn result_type(&self) -> &'static str {
         if self.extra.get(MULTI_VIDEO) == Some(&serde_json::Value::Bool(true)) {
             "multi_video"
         } else {
@@ -226,7 +227,7 @@ impl PlaylistInfo {
     /// (`--playlist-items`, reverse, random) applies to them; each carries
     /// [`NESTED_INDEX`]. Entries already present (`url` entries following
     /// the nested playlists) stay after them.
-    pub fn nested_placeholders(&mut self) {
+    pub(crate) fn nested_placeholders(&mut self) {
         let following = std::mem::take(&mut self.entries);
         self.entries = self
             .nested
@@ -307,6 +308,7 @@ impl ExtractResult {
 /// Whether a source can play independently or requires a complementary stream.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum StreamKind {
     /// A generic or muxed source; its precise composition may be unknown.
     #[default]
@@ -337,6 +339,7 @@ pub struct HlsAes128 {
 
 /// An ordered whole-resource or byte-range media fragment.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct Fragment {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub encryption: Option<HlsAes128>,
@@ -356,8 +359,23 @@ pub struct Fragment {
     pub fragment_count: Option<u64>,
 }
 
+impl Fragment {
+    /// A whole, unencrypted fragment at `url`.
+    pub fn new(url: Url) -> Self {
+        Self {
+            encryption: None,
+            url,
+            byte_range: None,
+            path: None,
+            duration: None,
+            fragment_count: None,
+        }
+    }
+}
+
 /// A direct source or finite manifest plan, with an extractor-assigned format ID.
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct VideoFormat {
     /// Upstream `_calc_headers`: the request headers for this format.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -463,6 +481,7 @@ pub struct ByteIndex {
 
 /// One upstream thumbnail dictionary.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct Thumbnail {
     pub url: String,
     /// An extractor's preference precedes the `id` `_sanitize_thumbnails`
@@ -547,6 +566,7 @@ pub fn sanitize_url(url: &str) -> String {
 
 /// Upstream `downloader_options` of a format.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct DownloaderOptions {
     /// Chunked HTTP downloading (YouTube HTTPS formats use 10 MiB).
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -559,6 +579,7 @@ pub struct DownloaderOptions {
 
 /// One upstream chapter dictionary.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct Chapter {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub start_time: Option<PyNumber>,
@@ -575,6 +596,7 @@ pub struct Chapter {
 /// Represented descriptive metadata; every field is optional and omitted when
 /// unknown. Field names and types follow the upstream info dictionary.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct Metadata {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
@@ -643,7 +665,7 @@ pub struct Metadata {
 
 impl Metadata {
     /// Upstream `_fill_common_fields`: derive `upload_date` from `timestamp`.
-    pub fn fill_common_fields(&mut self) {
+    pub(crate) fn fill_common_fields(&mut self) {
         if let Some(duration) = self.duration {
             self.duration_string = Some(format_seconds(duration.whole_seconds()));
         }
@@ -658,7 +680,7 @@ impl Metadata {
     /// Upstream `process_video_result` chapter filling: a leading chapter
     /// from 0, start/end times from the neighbours (the duration ends the
     /// last one) and `<Untitled Chapter N>` titles.
-    pub fn fill_chapters(&mut self) {
+    pub(crate) fn fill_chapters(&mut self) {
         let chapters = &mut self.chapters;
         if chapters
             .first()
@@ -701,7 +723,7 @@ impl Metadata {
     /// Upstream `YoutubeDL._sanitize_thumbnails` (without `--check-formats`):
     /// fall back to `thumbnail`, sort ascending by preference/width/height/
     /// id/url, assign index IDs and resolutions and sanitize URLs.
-    pub fn sanitize_thumbnails(&mut self) {
+    pub(crate) fn sanitize_thumbnails(&mut self) {
         if self.thumbnails.is_empty() {
             match &self.thumbnail {
                 Some(url) if !url.is_empty() => self.thumbnails.push(Thumbnail {
@@ -761,6 +783,7 @@ pub static COMPAT_FORMAT_SPEC: std::sync::atomic::AtomicBool =
 
 /// Small, explicitly supported subset of yt-dlp's info dictionary.
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct VideoInfo {
     #[serde(flatten)]
     pub metadata: Metadata,
@@ -885,14 +908,14 @@ pub struct VideoInfo {
 impl VideoInfo {
     /// Whether this result was processed without formats
     /// (`--ignore-no-formats-error`).
-    pub fn has_no_formats(&self) -> bool {
+    pub(crate) fn has_no_formats(&self) -> bool {
         self.extra.contains_key(FORMATS_IGNORED)
     }
 
     /// Before format selection (`pre_process`/`after_filter` prints): the
     /// `ext` and `url` keys the extractor's own dict did not set are
     /// missing, as they come from the selected format.
-    pub fn mark_unselected(&mut self) {
+    pub(crate) fn mark_unselected(&mut self) {
         let shape = self
             .extra
             .get(crate::info_order::INFO_SHAPE)
@@ -914,7 +937,7 @@ impl VideoInfo {
 
     /// Whether `key` is missing before format selection (see
     /// [`VideoInfo::mark_unselected`]).
-    pub fn unselected(&self, key: &str) -> bool {
+    pub(crate) fn unselected(&self, key: &str) -> bool {
         self.extra
             .get(UNSELECTED)
             .and_then(serde_json::Value::as_array)
@@ -923,7 +946,7 @@ impl VideoInfo {
 
     /// This result narrowed to one of its formats (upstream
     /// `new_info.update(fmt)` for a requested format's download).
-    pub fn with_selected_format(&self, format: &VideoFormat) -> VideoInfo {
+    pub(crate) fn with_selected_format(&self, format: &VideoFormat) -> VideoInfo {
         let mut info = self.clone();
         info.requested_formats.clear();
         info.apply_single(format);
@@ -1231,7 +1254,7 @@ fn is_false(value: &bool) -> bool {
 /// suffixes, and IDs that are another common extension get an `f` prefix.
 impl VideoFormat {
     /// Upstream `determine_protocol` for the represented URL schemes.
-    pub fn determine_protocol(&self) -> String {
+    pub(crate) fn determine_protocol(&self) -> String {
         if let Some(protocol) = &self.protocol {
             return protocol.clone();
         }
@@ -1337,7 +1360,7 @@ pub enum PyNumber {
 
 impl PyNumber {
     /// Whole seconds (truncated, at least 0), as `timetuple_from_msec`.
-    pub fn whole_seconds(self) -> u64 {
+    pub(crate) fn whole_seconds(self) -> u64 {
         match self {
             Self::Int(value) => value.max(0) as u64,
             Self::Float(value) => value.max(0.0) as u64,
@@ -1345,7 +1368,7 @@ impl PyNumber {
     }
 
     /// `int(math.floor(value))`, as `datetime.fromtimestamp` dates a float.
-    pub fn floor_i64(self) -> i64 {
+    pub(crate) fn floor_i64(self) -> i64 {
         match self {
             Self::Int(value) => value,
             Self::Float(value) => value.floor() as i64,

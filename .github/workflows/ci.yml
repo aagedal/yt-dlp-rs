@@ -69,6 +69,22 @@ jobs:
         with:
           name: fuzz-artifacts
           path: fuzz/artifacts
+  semver:
+    # The library API against the latest release tag; breaking changes fail
+    # from 1.0 on (tools/semver_check.py, docs/LIBRARY.md "Stability").
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: semver
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-semver-checks
+      - run: python3 tools/semver_check.py
   upstream-tooling:
     runs-on: ubuntu-latest
     steps:

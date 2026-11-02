@@ -217,7 +217,7 @@ More documentation:
 
 - [Compatibility inventory](docs/COMPATIBILITY.md): every supported option and
   its exact behavior.
-- [Library API](docs/LIBRARY.md): using the `yt_dlp_rs` crate.
+- [Library API](docs/LIBRARY.md): using the `yt_dlp_rs` crate (unstable until 1.0).
 - [Benchmarks](docs/BENCHMARKS.md): local comparisons with upstream and how to
   rerun them.
 - [Roadmap](docs/ROADMAP.md): architecture and upcoming work.

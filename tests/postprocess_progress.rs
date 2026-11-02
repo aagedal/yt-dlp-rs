@@ -78,7 +78,7 @@ fn postprocessor_hooks_surround_each_processor_run() {
     }
     .display()
     .to_string();
-    let quoted = yt_dlp_rs::output::shell_quote_command(&path);
+    let quoted = yt_dlp_rs::__private::shell_quote_command(&path);
     let lines: Vec<&str> = stdout
         .lines()
         .filter(|line| !line.starts_with("[generic]") && !line.starts_with("[info]"))

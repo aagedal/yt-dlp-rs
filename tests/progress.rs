@@ -164,9 +164,10 @@ fn success_reports_download_headers_bytes_and_publication_order() {
         .download_with_progress(
             &info,
             &destination,
-            DownloadOptions {
-                retries: 0,
-                ..Default::default()
+            {
+                let mut options = DownloadOptions::default();
+                options.retries = 0;
+                options
             },
             |event| {
                 // Even Publishing is cancellable before the final path appears.
@@ -220,9 +221,10 @@ fn unknown_download_length_does_not_reuse_extraction_length() {
             .download_with_progress(
                 &info,
                 directory.path().join("clip.mp4"),
-                DownloadOptions {
-                    retries: 0,
-                    ..Default::default()
+                {
+                    let mut options = DownloadOptions::default();
+                    options.retries = 0;
+                    options
                 },
                 |event| {
                     events.push(event);
@@ -252,9 +254,10 @@ fn cancellation_before_request_after_bytes_and_before_publication_cleans_output(
             .download_with_progress(
                 &info,
                 directory.path().join("clip.mp4"),
-                DownloadOptions {
-                    retries: 2,
-                    ..Default::default()
+                {
+                    let mut options = DownloadOptions::default();
+                    options.retries = 2;
+                    options
                 },
                 |event| {
                     assert!(!cancelled, "callback invoked after cancellation");
@@ -305,9 +308,10 @@ fn cancellation_during_retry_after_wait_prevents_the_retry() {
         .download_with_progress(
             &info,
             directory.path().join("clip.mp4"),
-            DownloadOptions {
-                retries: 1,
-                ..Default::default()
+            {
+                let mut options = DownloadOptions::default();
+                options.retries = 1;
+                options
             },
             |event| {
                 if event.phase == DownloadPhase::WaitingToRetry {
@@ -355,9 +359,10 @@ fn resumed_retry_keeps_offsets_and_original_total() {
             .download_with_progress(
                 &info,
                 &destination,
-                DownloadOptions {
-                    retries: 1,
-                    ..Default::default()
+                {
+                    let mut options = DownloadOptions::default();
+                    options.retries = 1;
+                    options
                 },
                 |event| {
                     events.push(event);
@@ -412,9 +417,10 @@ fn full_response_to_range_retry_resets_bytes_and_total() {
             .download_with_progress(
                 &info,
                 &destination,
-                DownloadOptions {
-                    retries: 1,
-                    ..Default::default()
+                {
+                    let mut options = DownloadOptions::default();
+                    options.retries = 1;
+                    options
                 },
                 |event| {
                     events.push(event);
@@ -503,9 +509,10 @@ fn destination_created_during_publication_is_preserved_and_temp_is_removed() {
         .download_with_progress(
             &info,
             &destination,
-            DownloadOptions {
-                retries: 2,
-                ..Default::default()
+            {
+                let mut options = DownloadOptions::default();
+                options.retries = 2;
+                options
             },
             |event| {
                 assert!(!publishing, "callback invoked after publication attempt");

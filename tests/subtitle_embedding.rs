@@ -197,27 +197,14 @@ fn clean(path: &Path) {
 const SRT: &[u8] = b"1\n00:00:01,250 --> 00:00:03,500\nHello world\n";
 const TTML: &[u8] = b"<tt xmlns='http://www.w3.org/ns/ttml'><body><div><p begin='1.25s' end='3.5s'>Hello world</p></div></body></tt>";
 fn embedding(path: &Path, ext: &str, keep: bool) -> PostprocessOptions {
-    PostprocessOptions {
-        existing: None,
-        no_post_overwrites: false,
-        modify_chapters: None,
-        ignore_errors: false,
-        thumbnail: None,
-        metadata: false,
-        chapters: false,
-        infojson: None,
-        fixup: None,
-        embed: Some(SubtitleEmbedding {
-            subtitles: vec![SubtitleFile {
-                path: path.into(),
-                ext: ext.into(),
-                language: "en".into(),
-                name: Some("English captions".into()),
-            }],
-            keep_subtitles: keep,
-        }),
-        ..Default::default()
-    }
+    let mut file = SubtitleFile::new(path, ext, "en");
+    file.name = Some("English captions".into());
+    let mut embed = SubtitleEmbedding::default();
+    embed.subtitles = vec![file];
+    embed.keep_subtitles = keep;
+    let mut options = PostprocessOptions::default();
+    options.embed = Some(embed);
+    options
 }
 
 #[test]
@@ -473,22 +460,8 @@ fn empty_embedding_skips_tools_and_cli_last_disable_prevents_implicit_caption_do
         .unwrap()
         .with_ffmpeg(directory.path().join("missing"));
     let info = client.extract_info(&server.url("source.mp4")).unwrap();
-    let plan = PostprocessOptions {
-        existing: None,
-        no_post_overwrites: false,
-        modify_chapters: None,
-        ignore_errors: false,
-        thumbnail: None,
-        metadata: false,
-        chapters: false,
-        infojson: None,
-        fixup: None,
-        embed: Some(SubtitleEmbedding {
-            subtitles: Vec::new(),
-            keep_subtitles: false,
-        }),
-        ..Default::default()
-    };
+    let mut plan = PostprocessOptions::default();
+    plan.embed = Some(SubtitleEmbedding::default());
     let result = client
         .download_processed_with_options(
             &info,

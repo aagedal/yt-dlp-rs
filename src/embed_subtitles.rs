@@ -6,13 +6,26 @@ pub(crate) use languages::short_to_long;
 use std::path::PathBuf;
 
 #[derive(Debug, Clone)]
+#[non_exhaustive]
 pub struct SubtitleFile {
     pub path: PathBuf,
     pub ext: String,
     pub language: String,
     pub name: Option<String>,
 }
+impl SubtitleFile {
+    /// A subtitle file on disk with its extension and language, unnamed.
+    pub fn new(path: impl Into<PathBuf>, ext: &str, language: &str) -> Self {
+        Self {
+            path: path.into(),
+            ext: ext.into(),
+            language: language.into(),
+            name: None,
+        }
+    }
+}
 #[derive(Debug, Clone, Default)]
+#[non_exhaustive]
 pub struct SubtitleEmbedding {
     pub subtitles: Vec<SubtitleFile>,
     pub keep_subtitles: bool,

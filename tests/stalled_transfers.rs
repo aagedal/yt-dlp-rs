@@ -225,10 +225,8 @@ fn download(
     destination: &Path,
     interrupt: &Interrupt,
 ) -> Result<u64, Error> {
-    let control = DownloadControl {
-        interrupt: Some(interrupt.clone()),
-        ..Default::default()
-    };
+    let mut control = DownloadControl::default();
+    control.interrupt = Some(interrupt.clone());
     client.download_with_control(
         info,
         destination,
@@ -417,13 +415,11 @@ fn an_interrupt_ends_a_stalled_extraction_request() {
             path,
             || interrupt.stop(),
             || {
-                client.extract_result_unselected_with_options(
-                    url.as_str(),
-                    ExtractionOptions {
-                        interrupt: Some(interrupt.clone()),
-                        ..Default::default()
-                    },
-                )
+                client.extract_result_unselected_with_options(url.as_str(), {
+                    let mut options = ExtractionOptions::default();
+                    options.interrupt = Some(interrupt.clone());
+                    options
+                })
             },
         );
         assert!(took < BOUND, "{path}: {took:?}");
@@ -443,9 +439,10 @@ fn an_interrupt_ends_a_stalled_extraction_request() {
         || {
             client.extract_manifest(
                 &Manifest::new(ManifestKind::Hls, server.url("/stalled.m3u8")),
-                ExtractionOptions {
-                    interrupt: Some(interrupt.clone()),
-                    ..Default::default()
+                {
+                    let mut options = ExtractionOptions::default();
+                    options.interrupt = Some(interrupt.clone());
+                    options
                 },
             )
         },

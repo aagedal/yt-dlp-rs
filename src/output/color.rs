@@ -76,7 +76,6 @@ pub fn screen() -> Allow {
 pub mod styles {
     pub const HEADERS: &str = "yellow";
     pub const EMPHASIS: &str = "light blue";
-    pub const FILENAME: &str = "green";
     pub const ID: &str = "green";
     pub const DELIM: &str = "blue";
     pub const ERROR: &str = "red";
