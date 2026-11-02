@@ -1104,7 +1104,7 @@ fn substitution(
             };
             let quoted = items
                 .iter()
-                .map(|item| bounded(item).map(super::exec::shell_quote))
+                .map(|item| bounded(item).map(super::exec::shell_quote_command))
                 .collect::<Result<Vec<_>>>()?
                 .join(" ");
             text(&clean(&quoted)?, &format)
@@ -1428,7 +1428,7 @@ pub(super) fn exec_fields(template: &str) -> Vec<(Option<char>, Option<&str>)> {
 }
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use super::*;
     use serde_json::json;
 
@@ -1596,6 +1596,16 @@ mod tests {
         assert_eq!(output("%(title)08f", &info), "00000inf");
     }
 
+    /// Whether `template` uses the `q` conversion, which pinned upstream
+    /// rendered with POSIX quoting where the saved cases were captured;
+    /// Windows' `cmd` quoting is checked in `output::exec` instead.
+    pub(crate) fn posix_quoted(template: &str) -> bool {
+        static Q: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+            regex::Regex::new(r"%\([^)]*\)[#0\- +]*[0-9*]*(?:\.[0-9*]+)?q").unwrap()
+        });
+        Q.is_match(template)
+    }
+
     #[test]
     fn saved_pinned_template_cases_match_actual_upstream() {
         let fixture: serde_json::Value =
@@ -1603,6 +1613,9 @@ mod tests {
                 .unwrap();
         let mut failures = Vec::new();
         for case in fixture["cases"].as_array().unwrap() {
+            if cfg!(windows) && posix_quoted(case["template"].as_str().unwrap()) {
+                continue;
+            }
             let info: VideoInfo = serde_json::from_value(case["info"].clone()).unwrap();
             let options = super::super::TemplateOptions {
                 na_placeholder: case["na_placeholder"].as_str().unwrap().into(),

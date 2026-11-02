@@ -1,3 +1,5 @@
+mod support;
+
 use std::{
     io::{Read, Write},
     net::TcpListener,
@@ -395,10 +397,8 @@ fn unknown_tags_are_ignored_like_upstream() {
 /// Upstream `HlsFD.can_download`: a `SAMPLE-AES` playlist is extracted, then
 /// its download is delegated to FFmpegFD (which needs ffmpeg); a DRM one
 /// is marked `has_drm` and fails like `_has_drm`.
-#[cfg(unix)]
 #[test]
 fn unsupported_keys_delegate_to_ffmpeg_and_drm_fails() {
-    use std::os::unix::fs::PermissionsExt;
     let server = Server::new();
     let info = YoutubeDl::new()
         .unwrap()
@@ -408,11 +408,11 @@ fn unsupported_keys_delegate_to_ffmpeg_and_drm_fails() {
     assert_eq!(info.formats[0].extra["has_drm"], false);
 
     let tools = tempfile::tempdir().unwrap();
-    let ffmpeg = tools.path().join("ffmpeg");
     let log = tools.path().join("args");
-    std::fs::write(
-        &ffmpeg,
-        format!(
+    let ffmpeg = support::fake_tool(
+        tools.path(),
+        "ffmpeg",
+        &format!(
             "#!/bin/sh\n\
              case \"$1\" in -version) echo 'ffmpeg version fixture'; exit 0;; esac\n\
              echo \"$@\" >> '{}'\n\
@@ -420,9 +420,7 @@ fn unsupported_keys_delegate_to_ffmpeg_and_drm_fails() {
              printf media > \"${{last#file:}}\"\n",
             log.display()
         ),
-    )
-    .unwrap();
-    std::fs::set_permissions(&ffmpeg, std::fs::Permissions::from_mode(0o755)).unwrap();
+    );
     let directory = tempfile::tempdir().unwrap();
     let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
         .args(["--ffmpeg-location", &ffmpeg.display().to_string()])
@@ -662,17 +660,15 @@ fn live_media_playlist_extracts_as_one_live_format() {
 }
 
 /// Upstream `_get_suitable_downloader`: live HLS downloads through FFmpegFD.
-#[cfg(unix)]
 #[test]
 fn live_media_playlist_downloads_through_ffmpeg() {
-    use std::os::unix::fs::PermissionsExt;
     let server = Server::new();
     let tools = tempfile::tempdir().unwrap();
-    let ffmpeg = tools.path().join("ffmpeg");
     let log = tools.path().join("args");
-    std::fs::write(
-        &ffmpeg,
-        format!(
+    let ffmpeg = support::fake_tool(
+        tools.path(),
+        "ffmpeg",
+        &format!(
             "#!/bin/sh\n\
              case \"$1\" in -version) echo 'ffmpeg version live-fixture'; exit 0;; esac\n\
              echo \"$@\" >> '{}'\n\
@@ -680,9 +676,7 @@ fn live_media_playlist_downloads_through_ffmpeg() {
              printf live > \"${{last#file:}}\"\n",
             log.display()
         ),
-    )
-    .unwrap();
-    std::fs::set_permissions(&ffmpeg, std::fs::Permissions::from_mode(0o755)).unwrap();
+    );
     let directory = tempfile::tempdir().unwrap();
     let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
         .args(["--ffmpeg-location", &ffmpeg.display().to_string()])

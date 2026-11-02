@@ -1,7 +1,8 @@
 //! `-P temp:` and `MoveFilesAfterDownloadPP`: files are written beside the
 //! temporary media name and moved to their final names afterwards. Lines were
 //! checked against pinned upstream with the same saved info JSON.
-#![cfg(unix)]
+mod support;
+
 use std::{
     io::{Read, Write},
     net::TcpListener,
@@ -38,15 +39,12 @@ fn serve() -> String {
 
 /// Records nothing; writes its last argument like a successful FFmpeg.
 fn fake_ffmpeg(directory: &Path) {
-    use std::os::unix::fs::PermissionsExt;
-    let path = directory.join("ffmpeg");
-    std::fs::write(
-        &path,
+    support::fake_tool(
+        directory,
+        "ffmpeg",
         "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffmpeg version test'; exit 0; fi\n\
          for a in \"$@\"; do last=\"$a\"; done\nprintf 'merged' > \"$last\"\n",
-    )
-    .unwrap();
-    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    );
 }
 
 fn run(directory: &Path, origin: &str, merged: bool, args: &[&str]) -> Output {
@@ -94,9 +92,11 @@ fn success(output: &Output, directory: &Path) -> String {
         String::from_utf8_lossy(&output.stderr)
     );
     let root = std::fs::canonicalize(directory).unwrap();
-    String::from_utf8_lossy(&output.stdout)
-        .replace(&*root.to_string_lossy(), "D")
-        .replace(&*directory.to_string_lossy(), "D")
+    support::slashes(
+        &String::from_utf8_lossy(&output.stdout)
+            .replace(&*root.to_string_lossy(), "D")
+            .replace(&*directory.to_string_lossy(), "D"),
+    )
 }
 
 fn lines(stdout: &str, prefix: &str) -> Vec<String> {
@@ -238,9 +238,11 @@ fn kept_formats_move_and_existing_targets_follow_overwrites() {
         let output = run(dir, &origin, true, &args);
         success(&output, dir);
         let root = std::fs::canonicalize(dir).unwrap();
-        let stderr = String::from_utf8_lossy(&output.stderr)
-            .replace(&*root.to_string_lossy(), "D")
-            .replace(&*dir.to_string_lossy(), "D");
+        let stderr = support::slashes(
+            &String::from_utf8_lossy(&output.stderr)
+                .replace(&*root.to_string_lossy(), "D")
+                .replace(&*dir.to_string_lossy(), "D"),
+        );
         assert_eq!(stderr, warning);
         assert_eq!(dir.join("t/o.fv.mp4").exists(), kept);
         assert_eq!(

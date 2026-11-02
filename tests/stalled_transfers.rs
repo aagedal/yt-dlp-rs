@@ -3,6 +3,8 @@
 //! (20 s by default), keeping the same outcome as at a progress checkpoint.
 //! Local servers accept and then never answer, stall inside the response
 //! headers, or stall in the middle of the body.
+mod support;
+
 use std::{
     io::{BufRead, BufReader, Write},
     net::TcpListener,
@@ -495,16 +497,14 @@ fn healthy_transfers_are_unaffected_by_an_interrupt_handle() {
     assert_eq!(std::fs::read(&destination).unwrap(), body);
 }
 
-/// SIGINT/SIGTERM to the CLI (Unix; on Windows Ctrl+C ends the process at
-/// once). SIGTERM is sent, as background test processes may inherit an
-/// ignored SIGINT.
-#[cfg(unix)]
+/// SIGINT/SIGTERM to the CLI (Ctrl+Break on Windows). SIGTERM is sent, as
+/// background test processes may inherit an ignored SIGINT.
 mod signals {
     use super::*;
     use std::process::{Child, Command, Stdio};
 
     fn spawn(directory: &Path, args: &[&str]) -> Child {
-        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        support::stoppable(&mut Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs")))
             .args([
                 "--ignore-config",
                 "--fixup",
@@ -521,14 +521,6 @@ mod signals {
             .unwrap()
     }
 
-    fn terminate(child: &Child) {
-        let status = Command::new("kill")
-            .args(["-TERM", &child.id().to_string()])
-            .status()
-            .unwrap();
-        assert!(status.success());
-    }
-
     /// Signal the run once `path` was requested and the transfer blocks;
     /// returns the exit code, stderr, stdout and the directory's names.
     fn interrupted_run(
@@ -541,7 +533,7 @@ mod signals {
         server.wait_for(path);
         thread::sleep(Duration::from_millis(300));
         let sent = Instant::now();
-        terminate(&child);
+        support::stop(&child);
         let output = child.wait_with_output().unwrap();
         let took = sent.elapsed();
         let stderr = String::from_utf8_lossy(&output.stderr).into_owned();
@@ -630,7 +622,7 @@ mod signals {
             );
         }
         let sent = Instant::now();
-        terminate(&child);
+        support::stop(&child);
         let output = child.wait_with_output().unwrap();
         assert!(sent.elapsed() < BOUND, "{:?}", sent.elapsed());
         assert_interrupted(

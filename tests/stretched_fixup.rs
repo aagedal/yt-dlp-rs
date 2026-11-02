@@ -1,6 +1,7 @@
 //! Upstream `FFmpegFixupStretchedPP` for a loaded info dict's
 //! `stretched_ratio`, with a recording FFmpeg.
-#![cfg(unix)]
+mod support;
+
 use std::{
     io::{Read, Write},
     net::TcpListener,
@@ -30,16 +31,13 @@ fn serve() -> String {
 }
 
 fn fake_ffmpeg(directory: &Path) {
-    use std::os::unix::fs::PermissionsExt;
-    let path = directory.join("ffmpeg");
-    std::fs::write(
-        &path,
+    support::fake_tool(
+        directory,
+        "ffmpeg",
         "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffmpeg version test'; exit 0; fi\n\
-         printf '%s\\n' \"$@\" > \"${0%/ffmpeg}/args.txt\"\n\
+         printf '%s\\n' \"$@\" > \"${0%/*}/args.txt\"\n\
          for a in \"$@\"; do last=\"$a\"; done\nprintf 'fixed' > \"$last\"\n",
-    )
-    .unwrap();
-    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    );
 }
 
 fn run(directory: &Path, tools: &Path, ratio: serde_json::Value, args: &[&str]) -> Output {

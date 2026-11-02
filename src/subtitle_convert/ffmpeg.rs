@@ -1,4 +1,5 @@
 //! Bounded conversion of already-downloaded subtitle files using local FFmpeg.
+use crate::paths::Canonical;
 use crate::{Error, Result};
 use std::{
     ffi::OsString,
@@ -55,8 +56,8 @@ fn convert_with_deadline(
     let demuxer = demuxer(input_ext)?;
     let muxer = muxer(output_ext)?;
     let started = Instant::now();
-    let executable = ffmpeg.canonicalize()?;
-    let input = input.canonicalize()?;
+    let executable = ffmpeg.canonical()?;
+    let input = input.canonical()?;
     if !executable.is_file() || !input.is_file() {
         return Err(error("subtitle tool and input must be regular files"));
     }
@@ -64,7 +65,7 @@ fn convert_with_deadline(
         .parent()
         .filter(|path| !path.as_os_str().is_empty())
         .unwrap_or_else(|| Path::new("."))
-        .canonicalize()?;
+        .canonical()?;
     let output = directory.join(
         output
             .file_name()

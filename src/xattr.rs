@@ -205,3 +205,32 @@ mod tests {
         );
     }
 }
+
+#[cfg(all(test, windows))]
+mod windows_tests {
+    use super::*;
+
+    #[test]
+    fn metadata_goes_to_alternate_data_streams() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("o.mp4");
+        std::fs::write(&path, b"media").unwrap();
+        let info: VideoInfo = serde_json::from_value(serde_json::json!({"id": "v", "title": "Title",
+            "url": "https://example.test/v.mp4", "webpage_url": "https://example.test/watch",
+            "ext": "mp4", "extractor": "generic", "extractor_key": "Generic", "upload_date": "20260102"}))
+        .unwrap();
+        assert!(write_metadata(&path, &info).unwrap().is_empty());
+        let stream = |name: &str| {
+            let mut stream = path.as_os_str().to_owned();
+            stream.push(format!(":{name}"));
+            std::fs::read_to_string(stream).unwrap()
+        };
+        assert_eq!(stream("user.dublincore.date"), "2026-01-02");
+        assert_eq!(
+            stream("user.xdg.referrer.url"),
+            "https://example.test/watch"
+        );
+        // The file's own data is untouched.
+        assert_eq!(std::fs::read(&path).unwrap(), b"media");
+    }
+}

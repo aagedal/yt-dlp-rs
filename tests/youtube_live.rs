@@ -1,6 +1,8 @@
 //! YouTube `--live-from-start` downloads (upstream `DashSegmentsFD` over
 //! `_live_adaptive_fragments`): the `youtube-live-from-start` fixture's
 //! pages with a test-controlled `X-Head-Seqnum` and generated fragments.
+mod support;
+
 #[path = "helpers/site_proxy.rs"]
 mod site_proxy;
 
@@ -45,7 +47,7 @@ fn proxy(heads: Arc<dyn Fn() -> i64 + Send + Sync>, delay: Duration) -> site_pro
 
 fn command(proxy: &site_proxy::SiteProxy, directory: &Path) -> Command {
     let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
-    command
+    support::stoppable(&mut command)
         .args([
             "--ignore-config",
             "--proxy",
@@ -120,24 +122,19 @@ fn a_live_format_downloads_every_fragment_up_to_the_head_sequence_number() {
 }
 
 /// A fake FFmpeg merging by concatenating its `-i` inputs into the output.
-#[cfg(unix)]
 fn fake_ffmpeg(directory: &Path) -> String {
-    use std::os::unix::fs::PermissionsExt;
-    let path = directory.join("ffmpeg");
-    std::fs::write(
-        &path,
+    let path = support::fake_tool(
+        directory,
+        "ffmpeg",
         "#!/bin/sh\n\
          case \"$1\" in -version) echo 'ffmpeg version live-fixture'; exit 0;; esac\n\
          inputs=''\n\
          while [ $# -gt 1 ]; do [ \"$1\" = -i ] && inputs=\"$inputs $2\"; shift; done\n\
          cat $inputs > \"${1#file:}\"\n",
-    )
-    .unwrap();
-    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    );
     path.display().to_string()
 }
 
-#[cfg(unix)]
 #[test]
 fn video_and_audio_download_in_parallel_then_merge() {
     let proxy = proxy(Arc::new(|| 1), Duration::ZERO);
@@ -167,7 +164,6 @@ fn video_and_audio_download_in_parallel_then_merge() {
     assert_eq!(merged, [expected("137", 1), expected("140", 1)].concat());
 }
 
-#[cfg(unix)]
 #[test]
 fn an_interrupted_live_from_start_download_is_completed() {
     // A long stream of slow fragments, interrupted once some arrived.
@@ -186,11 +182,7 @@ fn an_interrupted_live_from_start_download_is_completed() {
         assert!(std::time::Instant::now() < deadline, "no fragment arrived");
         std::thread::sleep(Duration::from_millis(20));
     }
-    let status = Command::new("kill")
-        .args(["-INT", &child.id().to_string()])
-        .status()
-        .unwrap();
-    assert!(status.success());
+    support::interrupt(&child);
     let output = child.wait_with_output().unwrap();
     assert!(output.status.success(), "{}", text(&output));
     let file = std::fs::read(work.path().join("LiveStart01.m4a")).unwrap();
@@ -205,26 +197,24 @@ fn an_interrupted_live_from_start_download_is_completed() {
 /// `--growing-file` (port extension): a fake FFmpeg recording its arguments
 /// in `calls.txt`, reporting one `-progress` block on stdout and copying its
 /// `-i` inputs (the named pipes the fragment downloads feed) in order into
-/// the output.
+/// the output. Unix only: the port feeds FFmpeg through named pipes there.
 #[cfg(unix)]
 fn growing_ffmpeg(directory: &Path) -> String {
-    use std::os::unix::fs::PermissionsExt;
-    let path = directory.join("ffmpeg");
-    std::fs::write(
-        &path,
+    let path = support::fake_tool(
+        directory,
+        "ffmpeg",
         "#!/bin/sh\n\
          case \"$1\" in -version) echo 'ffmpeg version live-fixture'; exit 0;; esac\n\
-         for a in \"$@\"; do printf '%s\\n' \"$a\"; done > \"${0%/ffmpeg}/calls.txt\"\n\
+         for a in \"$@\"; do printf '%s\\n' \"$a\"; done > \"${0%/*}/calls.txt\"\n\
          inputs=''\n\
          while [ $# -gt 1 ]; do [ \"$1\" = -i ] && inputs=\"$inputs ${2#file:}\"; shift; done\n\
          cat $inputs > \"${1#file:}\"\n\
          printf 'out_time_us=1500000\\ntotal_size=24\\nprogress=end\\n'\n",
-    )
-    .unwrap();
-    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    );
     path.display().to_string()
 }
 
+// Unix only: named pipes (see `growing_ffmpeg`).
 #[cfg(unix)]
 #[test]
 fn a_growing_file_is_fed_through_named_pipes_without_a_merge() {
@@ -291,6 +281,7 @@ fn a_growing_file_is_fed_through_named_pipes_without_a_merge() {
     );
 }
 
+// Unix only: named pipes (see `growing_ffmpeg`).
 #[cfg(unix)]
 #[test]
 fn an_interrupted_growing_file_keeps_whole_fragments() {

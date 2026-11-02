@@ -2,6 +2,8 @@
 //! `tests/fixtures/sites/SITE/expected.json` case (captured by
 //! `tools/capture_sites.py`) runs through the fixture proxy, comparing the
 //! exit code, stdout, `ERROR:`/`WARNING:` stderr lines and written files.
+mod support;
+
 #[path = "helpers/site_proxy.rs"]
 mod site_proxy;
 
@@ -222,13 +224,11 @@ fn hds_downloads_assemble_flv_like_upstream_f4mfd() {
     assert_eq!(std::fs::read(work.path().join("o.flv")).unwrap(), expected);
 }
 
-#[cfg(unix)]
 #[test]
 fn multi_video_results_are_concatenated_by_default() {
     // ORF ON's segment playlist is upstream's `multi_video`: the default
     // `--concat-playlist multi_video` joins its entries (FFmpegConcatPP)
     // and `never` keeps them. FFmpeg/ffprobe are recording stand-ins.
-    use std::os::unix::fs::PermissionsExt;
     let proxy = site_proxy::SiteProxy::start("orf");
     let tools = tempfile::tempdir().unwrap();
     let ffmpeg = "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffmpeg version test'; exit 0; fi\n\
@@ -236,9 +236,7 @@ fn multi_video_results_are_concatenated_by_default() {
     let ffprobe = "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffprobe version test'; exit 0; fi\n\
         printf '{\"streams\": [{\"codec_name\": \"h264\"}, {\"codec_name\": \"aac\"}]}'\n";
     for (name, script) in [("ffmpeg", ffmpeg), ("ffprobe", ffprobe)] {
-        let path = tools.path().join(name);
-        std::fs::write(&path, script).unwrap();
-        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+        support::fake_tool(tools.path(), name, script);
     }
     let run = |args: &[&str]| {
         let work = tempfile::tempdir().unwrap();

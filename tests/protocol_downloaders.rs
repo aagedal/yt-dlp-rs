@@ -3,7 +3,8 @@
 //! `-rtmp_*` options) and `websocket_frag` (WebSocketFragmentFD feeding
 //! FFmpeg's stdin), with recording fake executables and a local websocket
 //! server.
-#![cfg(unix)]
+mod support;
+
 use std::{
     net::TcpListener,
     path::Path,
@@ -16,11 +17,10 @@ use std::{
 /// just the tools directory). Each run records its arguments in
 /// `argsN.txt`.
 fn script(directory: &Path, name: &str, body: &str) -> String {
-    use std::os::unix::fs::PermissionsExt;
-    let path = directory.join(name);
-    std::fs::write(
-        &path,
-        format!(
+    let path = support::fake_tool(
+        directory,
+        name,
+        &(format!(
             "#!/bin/sh\n{body}\
              dir=\"${{0%/*}}\"\n\
              n=0; if [ -f \"$dir/count\" ]; then read n < \"$dir/count\"; fi; n=$((n+1)); echo $n > \"$dir/count\"\n\
@@ -44,10 +44,8 @@ fn script(directory: &Path, name: &str, body: &str) -> String {
                  while IFS= read -r line; do printf '%s\\n' \"$line\"; done > \"$dir/stdin.txt\"; fi; prev=$a; done\n\
                  printf ffmpeg > \"$out\"\n"
             }
-        },
-    )
-    .unwrap();
-    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+        }),
+    );
     path.display().to_string()
 }
 

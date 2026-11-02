@@ -482,6 +482,7 @@ mod tests {
         held.try_lock().unwrap();
         held.unlock().unwrap();
     }
+    // Unix only: `dup` descriptors share the `flock` lock.
     #[cfg(unix)]
     #[test]
     fn explicit_unlock_releases_lock_even_when_a_duplicate_descriptor_survives() {
@@ -591,6 +592,7 @@ mod tests {
         assert!(archive.record(&info("Test", "next")).is_err());
         assert_eq!(fs::read(&valid).unwrap(), [0xff]);
     }
+    // Unix only: Windows symlinks need Developer Mode or administrator rights.
     #[cfg(unix)]
     #[test]
     fn symlinks_to_regular_files_follow_normal_filesystem_behavior() {

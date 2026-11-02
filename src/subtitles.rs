@@ -684,6 +684,7 @@ mod tests {
         assert!(subtitle_paths(&info, Path::new("movie.mp4")).is_err());
     }
 
+    // Unix only: Windows paths are UTF-16, never arbitrary bytes.
     #[cfg(unix)]
     #[test]
     fn sidecar_paths_preserve_non_utf8_literal_path_bytes() {

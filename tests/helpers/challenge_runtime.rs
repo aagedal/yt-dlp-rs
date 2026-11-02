@@ -8,7 +8,10 @@ const SOLVED: &str = r#"{"type":"result","responses":[{"type":"result","data":{"
 
 /// The solver script for the `n` challenge `a`.
 fn check_script(script: &str) {
-    assert!(script.contains("Object.assign(globalThis, lib);"), "{script}");
+    assert!(
+        script.contains("Object.assign(globalThis, lib);"),
+        "{script}"
+    );
     assert!(
         script.contains(r#""requests":[{"type":"n","challenges":["a"]}]"#),
         "{script}"
@@ -23,16 +26,36 @@ fn named(kind: &str, version: &str, args: &[String]) {
         std::io::stdin().read_to_string(&mut input).unwrap();
         input
     };
-    match (kind, args.iter().map(String::as_str).collect::<Vec<_>>().as_slice()) {
+    match (
+        kind,
+        args.iter()
+            .map(String::as_str)
+            .collect::<Vec<_>>()
+            .as_slice(),
+    ) {
         ("node", ["--version"]) => println!("v{version}"),
         ("bun", ["--version"]) => println!("{version}"),
         // `qjs --help` exits with status 1.
         ("qjs" | "qjs-ng", ["--help"]) => {
-            let name = if kind == "qjs" { "QuickJS" } else { "QuickJS-ng" };
+            let name = if kind == "qjs" {
+                "QuickJS"
+            } else {
+                "QuickJS-ng"
+            };
             println!("{name} version {version}\nusage: qjs [options] [file [args]]");
             std::process::exit(1);
         }
-        ("bun", ["--bun", "run", "--no-addons", "--prefer-offline", "--no-install", "-"]) => {
+        (
+            "bun",
+            [
+                "--bun",
+                "run",
+                "--no-addons",
+                "--prefer-offline",
+                "--no-install",
+                "-",
+            ],
+        ) => {
             assert_eq!(
                 std::env::var("BUN_RUNTIME_TRANSPILER_CACHE_PATH").as_deref(),
                 Ok("0")
@@ -57,9 +80,14 @@ fn named(kind: &str, version: &str, args: &[String]) {
             check_script(&stdin());
             println!("{SOLVED}");
         }
-        ("node", ["--experimental-permission", "--no-warnings=ExperimentalWarning", "-"])
-            if version.starts_with("22.") =>
-        {
+        (
+            "node",
+            [
+                "--experimental-permission",
+                "--no-warnings=ExperimentalWarning",
+                "-",
+            ],
+        ) if version.starts_with("22.") => {
             check_script(&stdin());
             println!("{SOLVED}");
         }
@@ -71,7 +99,9 @@ fn main() {
     let args: Vec<_> = std::env::args().skip(1).collect();
     let program = std::env::current_exe().unwrap();
     let name = program.file_name().unwrap().to_string_lossy().into_owned();
-    let stem = name.strip_suffix(std::env::consts::EXE_SUFFIX).unwrap_or(&name);
+    let stem = name
+        .strip_suffix(std::env::consts::EXE_SUFFIX)
+        .unwrap_or(&name);
     if let Some((kind, version)) = stem.split_once('@') {
         return named(kind, version, &args);
     }
@@ -143,7 +173,9 @@ fn main() {
                         "NO_COLOR",
                         "BUN_RUNTIME_TRANSPILER_CACHE_PATH",
                         "SystemRoot",
-                        "WINDIR"
+                        "WINDIR",
+                        // Windows on ARM adds it to every child.
+                        "PROCESSOR_ARCHITECTURE",
                     ]
                     .iter()
                     .any(|name| key == *name),

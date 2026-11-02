@@ -1,6 +1,7 @@
 //! `--postprocessor-args`/`--ppa`: arguments by postprocessor key, before
 //! each input and the output file, with a recording FFmpeg stand-in.
-#![cfg(unix)]
+mod support;
+
 use std::{
     io::{Read, Write},
     net::TcpListener,
@@ -32,17 +33,13 @@ fn serve() -> String {
 /// Records its arguments (one per line) in `args.txt` and writes the last
 /// argument as the output file.
 fn fake_ffmpeg(directory: &Path) -> PathBuf {
-    use std::os::unix::fs::PermissionsExt;
-    let path = directory.join("ffmpeg");
-    std::fs::write(
-        &path,
+    support::fake_tool(
+        directory,
+        "ffmpeg",
         "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffmpeg version test'; exit 0; fi\n\
-         for a in \"$@\"; do printf '%s\\n' \"$a\"; done > \"${0%/ffmpeg}/args.txt\"\n\
+         for a in \"$@\"; do printf '%s\\n' \"$a\"; done > \"${0%/*}/args.txt\"\n\
          for a in \"$@\"; do last=\"$a\"; done\nprintf 'remuxed' > \"$last\"\n",
     )
-    .unwrap();
-    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
-    path
 }
 
 fn run(directory: &Path, ffmpeg: &Path, args: &[&str], url: &str) -> Output {

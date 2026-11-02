@@ -406,20 +406,8 @@ fn get_netrc_login_info(
 /// `Popen.run(cmd, text=True, shell=True, stdout=PIPE)`: the command's
 /// stdout (universal newlines), or `Command returned error code N`.
 fn run_shell(command: &str) -> std::result::Result<String, String> {
-    #[cfg(windows)]
-    let mut process = {
-        let mut process = std::process::Command::new(
-            std::env::var_os("COMSPEC").unwrap_or_else(|| "cmd.exe".into()),
-        );
-        process.args(["/c", command]);
-        process
-    };
-    #[cfg(not(windows))]
-    let mut process = {
-        let mut process = std::process::Command::new("/bin/sh");
-        process.args(["-c", command]);
-        process
-    };
+    let mut process = crate::output::shell_command(command)
+        .map_err(|error| crate::netrc::os_error_text(&error, command))?;
     let output = process
         .stderr(std::process::Stdio::inherit())
         .output()

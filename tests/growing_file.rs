@@ -3,7 +3,8 @@
 //! with Blackmagic's recording attribute until the recording ends, and
 //! FFmpeg's `-progress` reports become the recorded time. A recording FFmpeg
 //! stand-in; real FFmpeg was checked against a local live HLS stream.
-#![cfg(unix)]
+mod support;
+
 use std::{
     path::Path,
     process::{Command, Stdio},
@@ -17,14 +18,13 @@ const TAG: &str = "com.blackmagicdesign.metadata:recording";
 /// any) to `tag.txt`, writes `partial` with one `-progress` report, then
 /// waits for `q` on stdin and writes `finished` with a final report.
 fn fake_ffmpeg(directory: &Path) -> String {
-    use std::os::unix::fs::PermissionsExt;
-    let path = directory.join("ffmpeg");
-    std::fs::write(
-        &path,
-        format!(
+    let path = support::fake_tool(
+        directory,
+        "ffmpeg",
+        &format!(
             "#!/bin/sh\n\
              case \"$1\" in -version) echo 'ffmpeg version growing-fixture'; exit 0;; esac\n\
-             dir=${{0%/ffmpeg}}\n\
+             dir=${{0%/*}}\n\
              {{ for a in \"$@\"; do printf '%s\\n' \"$a\"; done; echo --; }} >> \"$dir/calls.txt\"\n\
              for out; do :; done\n\
              out=${{out#file:}}\n\
@@ -35,9 +35,7 @@ fn fake_ffmpeg(directory: &Path) -> String {
              printf finished > \"$out\"\n\
              printf 'out_time_us=3500000\\ntotal_size=8\\nprogress=end\\n'\n"
         ),
-    )
-    .unwrap();
-    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    );
     path.display().to_string()
 }
 
@@ -61,7 +59,7 @@ fn live_info_with(directory: &Path, extra: serde_json::Value) {
 
 fn command(directory: &Path) -> Command {
     let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
-    command
+    support::stoppable(&mut command)
         .args(["--ignore-config", "--growing-file", "-o", "o.%(ext)s"])
         .args(["--load-info-json", "live.info.json"])
         .current_dir(directory)
@@ -103,11 +101,7 @@ fn a_live_stream_is_recorded_into_a_growing_quicktime_file() {
     }
     #[cfg(target_os = "macos")]
     assert!(tag(&file).is_some(), "not tagged while recording");
-    let status = Command::new("kill")
-        .args(["-INT", &child.id().to_string()])
-        .status()
-        .unwrap();
-    assert!(status.success());
+    support::interrupt(&child);
     let output = child.wait_with_output().unwrap();
     let stdout = String::from_utf8_lossy(&output.stdout);
     assert!(
@@ -189,11 +183,7 @@ fn an_av1_live_stream_grows_as_fragmented_mp4() {
     }
     #[cfg(target_os = "macos")]
     assert!(tag(&file).is_some(), "not tagged while recording");
-    let status = Command::new("kill")
-        .args(["-INT", &child.id().to_string()])
-        .status()
-        .unwrap();
-    assert!(status.success());
+    support::interrupt(&child);
     let output = child.wait_with_output().unwrap();
     assert!(
         output.status.success(),

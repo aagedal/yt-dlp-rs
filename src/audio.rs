@@ -443,6 +443,7 @@ mod tests {
         assert!(audio_output_path(Path::new(""), "mp4", "mp3").is_err());
         assert!(audio_original_path(Path::new("/")).is_err());
     }
+    // Unix only: Windows paths are UTF-16, never arbitrary bytes.
     #[cfg(unix)]
     #[test]
     fn non_utf8_literal_paths_preserve_every_byte() {

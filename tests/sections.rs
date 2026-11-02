@@ -1,6 +1,8 @@
 //! `--download-sections`: upstream's section planning, `section_*` fields and
 //! the FFmpegFD invocation, with a recording FFmpeg stand-in. Expected lines
 //! were checked against pinned upstream with the same media.
+mod support;
+
 use std::{
     io::{Read, Write},
     net::TcpListener,
@@ -39,21 +41,16 @@ fn serve() -> String {
 
 /// A recording stand-in: arguments go to `args.txt` (one per line) and the
 /// output file (`file:` prefix stripped) receives fixed bytes.
-#[cfg(unix)]
 fn fake_ffmpeg(directory: &Path, status: u8) -> std::path::PathBuf {
-    use std::os::unix::fs::PermissionsExt;
-    let path = directory.join("ffmpeg");
-    std::fs::write(
-        &path,
-        format!(
+    support::fake_tool(
+        directory,
+        "ffmpeg",
+        &format!(
             "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffmpeg version test'; exit 0; fi\n\
-             for a in \"$@\"; do printf '%s\\n' \"$a\"; done > \"${{0%/ffmpeg}}/args.txt\"\n\
+             for a in \"$@\"; do printf '%s\\n' \"$a\"; done > \"${{0%/*}}/args.txt\"\n\
              for a in \"$@\"; do last=\"$a\"; done\nprintf 'section' > \"${{last#file:}}\"\nexit {status}\n"
         ),
     )
-    .unwrap();
-    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
-    path
 }
 
 fn run(directory: &Path, args: &[&str]) -> Output {
@@ -141,7 +138,6 @@ fn invalid_sections_are_usage_errors() {
     }
 }
 
-#[cfg(unix)]
 #[test]
 fn ffmpeg_downloads_each_section_with_upstream_arguments() {
     let origin = serve();
@@ -215,7 +211,6 @@ fn ffmpeg_downloads_each_section_with_upstream_arguments() {
     assert!(args.contains("\n-ss\n2\n-t\n2\n-i\n"), "{args}");
 }
 
-#[cfg(unix)]
 #[test]
 fn ffmpeg_failures_are_reported_like_upstream() {
     let origin = serve();
@@ -238,7 +233,6 @@ fn ffmpeg_failures_are_reported_like_upstream() {
     assert!(!directory.path().join("o.mp4").exists());
 }
 
-#[cfg(unix)]
 #[test]
 fn split_chapters_cut_each_chapter_with_the_chapter_template() {
     let origin = serve();

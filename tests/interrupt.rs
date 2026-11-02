@@ -3,9 +3,10 @@
 //! later URLs are not processed, the upstream `.part` file is kept for
 //! `--continue` (also when postprocessors are enabled) and no private
 //! temporary files remain. A blocked read ends within its interrupt poll
-//! (see also `stalled_transfers.rs`). SIGTERM is sent,
-//! since background test processes may inherit an ignored SIGINT.
-#![cfg(unix)]
+//! (see also `stalled_transfers.rs`). SIGTERM (Ctrl+Break on Windows) is
+//! sent, since background test processes may inherit an ignored SIGINT.
+mod support;
+
 use std::{
     io::{BufRead, BufReader, Write},
     net::TcpListener,
@@ -76,7 +77,7 @@ fn server() -> (u16, Arc<Mutex<Vec<String>>>) {
 }
 
 fn spawn(directory: &Path, args: &[&str]) -> Child {
-    Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+    support::stoppable(&mut Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs")))
         .args([
             "--ignore-config",
             "--fixup",
@@ -104,14 +105,6 @@ fn wait_for(requests: &Arc<Mutex<Vec<String>>>, path: &str) {
         assert!(Instant::now() < deadline, "{:?}", requests.lock().unwrap());
         thread::sleep(Duration::from_millis(20));
     }
-}
-
-fn terminate(child: &Child) {
-    let status = Command::new("kill")
-        .args(["-TERM", &child.id().to_string()])
-        .status()
-        .unwrap();
-    assert!(status.success());
 }
 
 /// Exit status code, stderr and the directory's file names.
@@ -142,7 +135,7 @@ fn a_signal_ends_the_run_and_keeps_the_part_file() {
     let child = spawn(directory.path(), &[&slow, &next]);
     wait_for(&requests, "/slow.mp4");
     thread::sleep(Duration::from_millis(300));
-    terminate(&child);
+    support::stop(&child);
     let (code, stderr, names) = finish(child, directory.path());
     assert_eq!(code, Some(1), "{stderr}");
     assert!(
@@ -168,13 +161,11 @@ fn a_signal_keeps_the_part_file_of_a_download_to_be_processed() {
     let directory = tempfile::tempdir().unwrap();
     // An FFmpeg that only answers version checks: the signal comes first.
     let tools = tempfile::tempdir().unwrap();
-    let ffmpeg = tools.path().join("ffmpeg");
-    std::fs::write(
-        &ffmpeg,
+    let ffmpeg = support::fake_tool(
+        tools.path(),
+        "ffmpeg",
         "#!/bin/sh\necho 'ffmpeg version 7.1 Copyright (c) 2000-2024 the FFmpeg developers'\n",
-    )
-    .unwrap();
-    std::fs::set_permissions(&ffmpeg, std::os::unix::fs::PermissionsExt::from_mode(0o755)).unwrap();
+    );
     let slow = format!("http://127.0.0.1:{port}/slow.mp4");
     let child = spawn(
         directory.path(),
@@ -187,7 +178,7 @@ fn a_signal_keeps_the_part_file_of_a_download_to_be_processed() {
     );
     wait_for(&requests, "/slow.mp4");
     thread::sleep(Duration::from_millis(300));
-    terminate(&child);
+    support::stop(&child);
     let (code, stderr, names) = finish(child, directory.path());
     assert_eq!(code, Some(1), "{stderr}");
     assert!(
@@ -209,7 +200,7 @@ fn a_signal_ends_a_stalled_read_at_once() {
     thread::sleep(Duration::from_millis(300));
     // The blocked read ends within its interrupt poll, not the socket timeout.
     let sent = Instant::now();
-    terminate(&child);
+    support::stop(&child);
     let (code, stderr, names) = finish(child, directory.path());
     assert!(
         sent.elapsed() < Duration::from_secs(3),
@@ -231,7 +222,7 @@ fn a_signal_at_a_prompt_exits_at_once() {
     let directory = tempfile::tempdir().unwrap();
     let slow = format!("http://127.0.0.1:{port}/slow.mp4");
     // `-f -` asks for a selector on stdin, which stays open.
-    let mut child = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+    let mut child = support::stoppable(&mut Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs")))
         .args(["--ignore-config", "-f", "-", &slow])
         .current_dir(directory.path())
         .stdin(Stdio::piped())
@@ -257,7 +248,7 @@ fn a_signal_at_a_prompt_exits_at_once() {
             .all(|path| path == "/slow.mp4")
     );
     let sent = Instant::now();
-    terminate(&child);
+    support::stop(&child);
     let (code, stderr, names) = finish(child, directory.path());
     drop(stdin);
     assert!(sent.elapsed() < Duration::from_secs(5));
@@ -275,13 +266,11 @@ fn a_killed_runs_finished_download_is_recovered_by_the_next_run() {
     let directory = tempfile::tempdir().unwrap();
     // An FFmpeg that answers version checks and hangs when processing.
     let tools = tempfile::tempdir().unwrap();
-    let ffmpeg = tools.path().join("ffmpeg");
-    std::fs::write(
-        &ffmpeg,
+    let ffmpeg = support::fake_tool(
+        tools.path(),
+        "ffmpeg",
         "#!/bin/sh\ncase \"$1\" in -version|-bsfs) echo 'ffmpeg version 7.1';; *) sleep 30;; esac\n",
-    )
-    .unwrap();
-    std::fs::set_permissions(&ffmpeg, std::os::unix::fs::PermissionsExt::from_mode(0o755)).unwrap();
+    );
     let fast = format!("http://127.0.0.1:{port}/fast.mp4");
     let mut child = spawn(
         directory.path(),

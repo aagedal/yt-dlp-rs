@@ -5,7 +5,8 @@ fn main() {
     let mode = std::fs::read_to_string("mode").unwrap();
     for (name, _) in std::env::vars_os() {
         assert!(
-            name == "SystemRoot" || name == "WINDIR",
+            // Windows on ARM adds PROCESSOR_ARCHITECTURE to every child.
+            name == "SystemRoot" || name == "WINDIR" || name == "PROCESSOR_ARCHITECTURE",
             "ambient environment leaked: {name:?}"
         );
     }
@@ -20,8 +21,9 @@ fn main() {
         println!("ffmpeg version test-fixture");
         return;
     }
-    // Match the runner's canonical paths, including Windows verbatim prefixes.
-    let directory = std::env::current_dir().unwrap().canonicalize().unwrap();
+    // The runner starts the tool in its canonical directory (without Windows'
+    // `\\?\` prefix), which the paths it passes are joined to.
+    let directory = std::env::current_dir().unwrap();
     let (video_ext, video_demuxer, audio_ext, audio_demuxer, output_ext, muxer) =
         match mode.as_str() {
             "success-ts-aac" => ("ts", "mpegts", "aac", "aac", "mp4", "mp4"),

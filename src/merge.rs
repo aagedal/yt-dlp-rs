@@ -1,4 +1,5 @@
 //! Explicit, bounded FFmpeg stream copying of already downloaded local files.
+use crate::paths::Canonical;
 use crate::{Error, Result};
 use std::{
     ffi::OsString,
@@ -135,10 +136,10 @@ fn merge_inputs_with_deadline(
         "ts" => "mpegts",
         _ => return Err(failure("unsupported output container")),
     };
-    let executable = executable.canonicalize()?;
+    let executable = executable.canonical()?;
     let paths = inputs
         .iter()
-        .map(|input| input.path.canonicalize())
+        .map(|input| input.path.canonical())
         .collect::<std::io::Result<Vec<_>>>()?;
     if !executable.is_file() || paths.iter().any(|path| !path.is_file()) {
         return Err(failure("executable and inputs must be files"));
@@ -147,7 +148,7 @@ fn merge_inputs_with_deadline(
         .parent()
         .filter(|p| !p.as_os_str().is_empty())
         .unwrap_or(Path::new("."))
-        .canonicalize()?;
+        .canonical()?;
     let output = directory.join(
         output
             .file_name()

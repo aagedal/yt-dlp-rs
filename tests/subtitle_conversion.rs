@@ -339,6 +339,7 @@ fn conversion_cancellation_leaves_source_and_no_published_output() {
         assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
     }
 }
+// Unix only: Windows symlinks need Developer Mode or administrator rights.
 #[cfg(unix)]
 #[test]
 fn symlink_input_and_output_are_refused_without_touching_files() {

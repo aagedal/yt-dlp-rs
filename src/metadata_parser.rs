@@ -776,11 +776,15 @@ mod tests {
             actions.add_interpret("title").unwrap_err(),
             "--parse-metadata title is invalid; it should be FROM:TO, not 'title'"
         );
+        // Quoted like upstream's `shell_quote` on this host.
         assert!(
             actions
                 .add_interpret("title:(?P<a>")
                 .unwrap_err()
-                .starts_with("--parse-metadata 'title:(?P<a>' is invalid; ")
+                .starts_with(&format!(
+                    "--parse-metadata {} is invalid; ",
+                    crate::output::shell_quote("title:(?P<a>")
+                ))
         );
         actions.add_interpret("VIDEO:title:%(x)s").unwrap();
         actions.add_replace("after_move:title", "a", "b").unwrap();

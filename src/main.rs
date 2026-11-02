@@ -10552,9 +10552,20 @@ fn ffmpeg_executables(location: Option<&Path>) -> (Option<PathBuf>, Option<PathB
         let directory = absolute.parent().map(Path::to_path_buf).unwrap_or_default();
         (directory, Some((basename, filename)))
     };
+    // Upstream runs `DIR/ffmpeg`, which Windows' `CreateProcess` completes
+    // with `.exe`; Rust starts exactly the path given.
+    let program_in = |directory: &Path, program: &str| {
+        let path = directory.join(program);
+        let exe = directory.join(format!("{program}{}", std::env::consts::EXE_SUFFIX));
+        if cfg!(windows) && !path.exists() && exe.is_file() {
+            exe
+        } else {
+            path
+        }
+    };
     let [ffmpeg, ffprobe] = PROGRAMS.map(|program| {
         let Some((basename, filename)) = &named else {
-            return directory.join(program);
+            return program_in(&directory, program);
         };
         if *basename == program {
             return location.to_path_buf();
@@ -10565,7 +10576,7 @@ fn ffmpeg_executables(location: Option<&Path>) -> (Option<PathBuf>, Option<PathB
                 return sibling;
             }
         }
-        directory.join(program)
+        program_in(&directory, program)
     });
     (Some(ffmpeg), Some(ffprobe))
 }
