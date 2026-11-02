@@ -78,6 +78,11 @@ pub(crate) fn send_media(
     request: reqwest::blocking::RequestBuilder,
 ) -> Result<reqwest::blocking::Response> {
     let request = crate::control::scoped(request)?;
+    // Upstream's request handlers impersonate media too.
+    #[cfg(feature = "impersonate")]
+    if let Some(target) = crate::impersonate::media_target() {
+        return crate::impersonate::send_media(request, target);
+    }
     match interruptible::send(request) {
         Ok(response) => Ok(response?),
         Err(interruptible::Interrupted) => Err(Error::DownloadCancelled),

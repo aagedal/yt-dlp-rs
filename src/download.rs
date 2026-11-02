@@ -580,6 +580,7 @@ pub(crate) fn download(
             user_agent: own_user_agent(info.extra.get("http_headers")),
             validate_media: !info.is_direct(),
             subtitle: false,
+            impersonate: info.extra.get("impersonate"),
             limits: (options.min_filesize, options.max_filesize),
             rate_limit: options.rate_limit,
             throttled_rate: options.throttled_rate,
@@ -666,6 +667,7 @@ pub(crate) fn download_subtitle(
             user_agent: own_user_agent(subtitle.extra.get("http_headers")),
             validate_media: false,
             subtitle: true,
+            impersonate: subtitle.extra.get("impersonate"),
             limits: (None, None),
             rate_limit: None,
             throttled_rate: None,
@@ -777,6 +779,8 @@ fn join_subtitle_fragments(
                 user_agent: None,
                 validate_media: false,
                 subtitle: true,
+                // FragmentFD's fragments do not read the field.
+                impersonate: None,
                 limits: (None, None),
                 rate_limit: None,
                 throttled_rate: None,
@@ -865,6 +869,8 @@ pub(crate) fn download_thumbnail(
             user_agent: None,
             validate_media: false,
             subtitle: false,
+            // Upstream fetches thumbnails with `urlopen`, not HttpFD.
+            impersonate: None,
             limits: (None, None),
             rate_limit: None,
             throttled_rate: None,
@@ -894,6 +900,8 @@ struct HttpResource<'a> {
     user_agent: Option<&'a str>,
     validate_media: bool,
     subtitle: bool,
+    /// The format's or subtitle track's `impersonate` field.
+    impersonate: Option<&'a serde_json::Value>,
     /// Minimum/maximum declared total length in bytes.
     limits: (Option<u64>, Option<u64>),
     rate_limit: Option<u64>,
@@ -1013,6 +1021,8 @@ fn download_resource(
     options: DownloadOptions,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
+    // HttpFD's `_get_impersonate_target`, before the transfer.
+    let _impersonate = crate::impersonate::download_scope(resource.impersonate);
     check_destination(destination, &options)?;
     let parent = destination
         .parent()

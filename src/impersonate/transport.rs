@@ -237,6 +237,7 @@ fn client(
 fn impersonate_headers(
     global: &reqwest::header::HeaderMap,
     request: &reqwest::header::HeaderMap,
+    media: bool,
 ) -> reqwest::header::HeaderMap {
     let mut merged = global.clone();
     for name in request.keys() {
@@ -257,21 +258,21 @@ fn impersonate_headers(
             merged.remove(name.as_str());
         }
     }
-    if merged
-        .get(reqwest::header::ACCEPT_ENCODING)
-        .is_some_and(|value| value == "identity" || value == "gzip, deflate")
+    // HttpFD's own `Accept-Encoding: identity` is not a `std_headers`
+    // value, so upstream keeps it on media transfers.
+    if !media
+        && merged
+            .get(reqwest::header::ACCEPT_ENCODING)
+            .is_some_and(|value| value == "identity" || value == "gzip, deflate")
     {
         merged.remove(reqwest::header::ACCEPT_ENCODING);
     }
     merged
 }
 
-/// Send `request` impersonating `target`.
-pub(super) fn send(
-    request: reqwest::blocking::RequestBuilder,
-    target: &Supported,
-) -> Result<reqwest::blocking::Response> {
-    // Inside a geo scope, the `--geo-verification-proxy` transport, if any.
+/// The transport for a request on this thread: inside a geo scope, the
+/// `--geo-verification-proxy` one, if any.
+fn current() -> Result<Arc<Transport>> {
     let geo = super::geo_active()
         .then(|| {
             GEO_TRANSPORT
@@ -280,17 +281,25 @@ pub(super) fn send(
                 .and_then(|transport| transport.clone())
         })
         .flatten();
-    let transport = geo
-        .or_else(|| {
-            TRANSPORT
-                .read()
-                .ok()
-                .and_then(|transport| transport.clone())
-        })
-        .ok_or_else(|| error("impersonation with client certificates is not supported natively"))?;
-    let runtime = RUNTIME.as_ref().map_err(error)?;
+    geo.or_else(|| {
+        TRANSPORT
+            .read()
+            .ok()
+            .and_then(|transport| transport.clone())
+    })
+    .ok_or_else(|| error("impersonation with client certificates is not supported natively"))
+}
+
+/// `request` as a `wreq` request impersonating `target` (with HttpFD's
+/// `Accept-Encoding` kept for `media`).
+fn prepare(
+    request: reqwest::blocking::RequestBuilder,
+    target: &Supported,
+    media: bool,
+) -> Result<wreq::RequestBuilder> {
+    let transport = current()?;
     let request = request.build()?;
-    let headers = impersonate_headers(&transport.headers, request.headers());
+    let headers = impersonate_headers(&transport.headers, request.headers(), media);
     let body = request
         .body()
         .and_then(|body| body.as_bytes())
@@ -316,6 +325,81 @@ pub(super) fn send(
     if let Some(body) = body {
         outgoing = outgoing.body(body);
     }
+    Ok(outgoing)
+}
+
+/// Send a media request impersonating `target`. Unlike [`send`], the body
+/// streams through [`crate::http::interruptible::stream`]'s bounded queue,
+/// so a transfer is never held in memory and a stop, cancel or signal ends
+/// the connect, the header wait or any body read within its poll.
+pub(super) fn send_media(
+    request: reqwest::blocking::RequestBuilder,
+    target: &Supported,
+) -> Result<reqwest::blocking::Response> {
+    let outgoing = prepare(request, target, true)?;
+    let runtime = RUNTIME.as_ref().map_err(error)?;
+    let transport = |error: wreq::Error| Error::MediaTransport(error.to_string());
+    let opened = crate::http::interruptible::stream(move || {
+        let response = runtime.block_on(outgoing.send()).map_err(transport)?;
+        let status = reqwest::StatusCode::from_u16(response.status().as_u16()).map_err(error)?;
+        Ok(crate::http::interruptible::Streamed {
+            status,
+            version: response.version(),
+            headers: response.headers().clone(),
+            url: url::Url::parse(&response.uri().to_string())?,
+            content_length: response.content_length(),
+            body: Box::new(MediaBody {
+                runtime,
+                response: Box::pin(response),
+                chunk: bytes::Bytes::new(),
+            }),
+        })
+    });
+    match opened {
+        Ok(response) => response,
+        Err(crate::http::interruptible::Interrupted) => Err(Error::DownloadCancelled),
+    }
+}
+
+/// A `wreq` response body as a blocking reader (on the queue's helper
+/// thread); the client's read timeout bounds each wait.
+struct MediaBody {
+    runtime: &'static tokio::runtime::Runtime,
+    response: std::pin::Pin<Box<wreq::Response>>,
+    chunk: bytes::Bytes,
+}
+
+impl std::io::Read for MediaBody {
+    fn read(&mut self, buffer: &mut [u8]) -> std::io::Result<usize> {
+        use http_body::Body as _;
+        while self.chunk.is_empty() {
+            let response = &mut self.response;
+            let frame = self.runtime.block_on(std::future::poll_fn(|context| {
+                response.as_mut().poll_frame(context)
+            }));
+            match frame {
+                None => return Ok(0),
+                Some(Ok(frame)) => {
+                    if let Ok(data) = frame.into_data() {
+                        self.chunk = data;
+                    }
+                }
+                Some(Err(error)) => return Err(std::io::Error::other(error)),
+            }
+        }
+        let count = buffer.len().min(self.chunk.len());
+        buffer[..count].copy_from_slice(&self.chunk.split_to(count));
+        Ok(count)
+    }
+}
+
+/// Send `request` impersonating `target`.
+pub(super) fn send(
+    request: reqwest::blocking::RequestBuilder,
+    target: &Supported,
+) -> Result<reqwest::blocking::Response> {
+    let outgoing = prepare(request, target, false)?;
+    let runtime = RUNTIME.as_ref().map_err(error)?;
     let exchange = async move {
         let response = outgoing.send().await?;
         let status = response.status();
@@ -378,14 +462,25 @@ mod tests {
         let mut request = HeaderMap::new();
         request.insert("accept-encoding", HeaderValue::from_static("identity"));
         request.insert("x-global", HeaderValue::from_static("request"));
-        let merged = impersonate_headers(&global, &request);
+        let merged = impersonate_headers(&global, &request, false);
         assert_eq!(merged.len(), 1);
         assert_eq!(merged["x-global"], "request");
         // A user agent other than upstream's random one is kept.
         global.insert("user-agent", HeaderValue::from_static("custom"));
         assert_eq!(
-            impersonate_headers(&global, &request)["user-agent"],
+            impersonate_headers(&global, &request, false)["user-agent"],
             "custom"
+        );
+    }
+
+    #[test]
+    fn media_requests_keep_identity_encoding() {
+        use reqwest::header::{HeaderMap, HeaderValue};
+        let mut request = HeaderMap::new();
+        request.insert("accept-encoding", HeaderValue::from_static("identity"));
+        assert_eq!(
+            impersonate_headers(&HeaderMap::new(), &request, true)["accept-encoding"],
+            "identity"
         );
     }
 

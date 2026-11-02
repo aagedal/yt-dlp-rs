@@ -3767,7 +3767,15 @@ impl YoutubeDl {
         info: &VideoInfo,
         destination: &Path,
     ) -> Option<external_fd::Available> {
-        if !info.requested_formats.is_empty() || self.uses_ffmpeg_fd(info) {
+        // A format asking for impersonation stays native
+        // (`info_dict.get('impersonate') is None`).
+        if !info.requested_formats.is_empty()
+            || self.uses_ffmpeg_fd(info)
+            || info
+                .extra
+                .get("impersonate")
+                .is_some_and(|field| !field.is_null())
+        {
             return None;
         }
         let protocol = info

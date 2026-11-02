@@ -139,9 +139,9 @@ pub fn target_available(target: &ImpersonateTarget) -> bool {
 }
 
 /// `--impersonate`: the target (an index into [`supported_targets`]) that
-/// extraction requests impersonate unless their extractor asks for one
-/// (upstream's `urlopen` sets the `impersonate` extension from the option
-/// on requests without it). Media transfers stay on the plain client.
+/// requests impersonate unless their extractor or format asks for one
+/// (upstream passes the option to every request handler as its default
+/// target): extraction requests and media transfers alike.
 static DEFAULT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(usize::MAX);
 
 /// Impersonate `target` on extraction requests (`--impersonate`); `false`
@@ -304,6 +304,15 @@ impl Drop for Scope {
 /// first available requested target (resolved like
 /// `_get_request_target`); with none, `Err` is upstream's message.
 fn select(requested: &[&str], require: bool) -> Result<Scope, String> {
+    select_with_note(
+        requested,
+        "The extractor is attempting impersonation",
+        require,
+    )
+}
+
+/// [`select`] with the unavailable message's `note`.
+fn select_with_note(requested: &[&str], note: &str, require: bool) -> Result<Scope, String> {
     let requested: Vec<ImpersonateTarget> = requested
         .iter()
         .filter_map(|target| ImpersonateTarget::parse(target).ok())
@@ -314,11 +323,7 @@ fn select(requested: &[&str], require: bool) -> Result<Scope, String> {
         .find_map(|target| resolve(supported, target).map(|entry| (target, entry)));
     let previous = ACTIVE.with(Cell::get);
     let Some((target, entry)) = resolved else {
-        return Err(unavailable_message(
-            &requested,
-            "The extractor is attempting impersonation",
-            require,
-        ));
+        return Err(unavailable_message(&requested, note, require));
     };
     let index = supported
         .iter()
@@ -355,6 +360,55 @@ pub(crate) fn attempt(requested: &[&str], warn: impl FnOnce(&str)) -> Scope {
 /// `Err` is the `ExtractorError` message without its `[EXTRACTOR]` prefix.
 pub(crate) fn require(requested: &[&str]) -> Result<Scope, String> {
     select(requested, true)
+}
+
+/// HttpFD's `_get_impersonate_target` for a format's or subtitle's
+/// `impersonate` field (`True`, `''`, a target or a list of them): while the
+/// returned scope lives, this thread's media transfers impersonate the first
+/// available target. Without one, upstream's warning (`The extractor
+/// specified to use impersonation for this download, but ...`) and the
+/// `--impersonate` target, if any, apply. Fragments do not read the field.
+pub(crate) fn download_scope(field: Option<&serde_json::Value>) -> Option<Scope> {
+    use serde_json::Value;
+    let requested: Vec<&str> = match field? {
+        Value::Bool(true) => ANY.to_vec(),
+        Value::String(target) => vec![target.as_str()],
+        Value::Array(targets) => targets.iter().filter_map(Value::as_str).collect(),
+        _ => return None,
+    };
+    if requested.is_empty() {
+        return None;
+    }
+    match select_with_note(
+        &requested,
+        "The extractor specified to use impersonation for this download",
+        false,
+    ) {
+        Ok(scope) => Some(scope),
+        Err(message) => {
+            crate::screen::warning(&message);
+            None
+        }
+    }
+}
+
+/// The target a media transfer on this thread impersonates: a format's
+/// ([`download_scope`]), else `--impersonate`'s.
+#[cfg(feature = "impersonate")]
+pub(crate) fn media_target() -> Option<&'static Supported> {
+    ACTIVE
+        .with(Cell::get)
+        .or_else(default_target)
+        .map(|index| &supported_targets()[index])
+}
+
+/// Send a media request impersonating `target`, its body streamed.
+#[cfg(feature = "impersonate")]
+pub(crate) fn send_media(
+    request: reqwest::blocking::RequestBuilder,
+    target: &Supported,
+) -> crate::Result<reqwest::blocking::Response> {
+    transport::send_media(request, target)
 }
 
 thread_local! {
