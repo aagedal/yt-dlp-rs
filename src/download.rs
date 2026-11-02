@@ -584,7 +584,12 @@ pub(crate) fn download(
             referrer: (!info.is_direct()).then_some(&info.webpage_url),
             forwarded_for: crate::geo::forwarded_for(info),
             user_agent: own_user_agent(info.extra.get("http_headers")),
-            validate_media: !info.is_direct(),
+            // Generic HTML5 sources were sniffed at extraction, so one that
+            // now serves a page is not media. Site extractors' formats
+            // download whatever the server sends, like upstream's HttpFD
+            // (Twitch clips answer `binary/octet-stream`).
+            validate_media: !info.is_direct()
+                && matches!(info.extractor_key.as_str(), "Generic" | "HTML5MediaEmbed"),
             subtitle: false,
             impersonate: info.extra.get("impersonate"),
             limits: (options.min_filesize, options.max_filesize),
