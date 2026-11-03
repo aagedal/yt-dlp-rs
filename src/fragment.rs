@@ -697,7 +697,8 @@ fn fetch_with_retries(
         // unavailable fragments may be skipped.
         let retry = failure.retry.or_else(|| {
             (options.skip_unavailable_fragments.is_some()
-                && matches!(&failure.error, Error::Http(source) if source.status().is_some()))
+                && (matches!(&failure.error, Error::Http(source) if source.status().is_some())
+                    || matches!(failure.error, Error::HttpStatus { .. })))
             .then_some(Duration::ZERO)
         });
         if let Some(retry_after) = retry

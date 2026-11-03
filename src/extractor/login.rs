@@ -174,7 +174,7 @@ impl Session {
     ) -> Result<Page> {
         self.request_inner(client, url, (note, errnote), headers, data, expected)
             .map_err(|error| match error {
-                Error::Http(_) | Error::HttpRetryAfter { .. } => {
+                Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
                     let mut text = super::request_error_text(self.ie, &self.id, "LOGIN", &error);
                     if self.id.is_empty() {
                         text = text.replacen("] : ", "] ", 1);
@@ -202,7 +202,9 @@ impl Session {
     ) -> Result<Option<Page>> {
         match self.request_inner(client, url, (note, errnote), headers, data, expected) {
             Ok(page) => Ok(Some(page)),
-            Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+            Err(
+                error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. }),
+            ) => {
                 self.warning(&format!(
                     "{errnote}: {}",
                     crate::upstream_error_text(&error)

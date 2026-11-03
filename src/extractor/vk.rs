@@ -420,12 +420,14 @@ fn download_payload(
             body.clone(),
         )
         .map_err(|error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor,
-                id: video_id.to_owned(),
-                what: "JSON metadata",
-                source: Box::new(error),
-            },
+            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                Error::ExtractorRequest {
+                    extractor,
+                    id: video_id.to_owned(),
+                    what: "JSON metadata",
+                    source: Box::new(error),
+                }
+            }
             error => error,
         })?;
         let mut bytes = Vec::new();

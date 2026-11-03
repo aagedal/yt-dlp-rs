@@ -210,7 +210,7 @@ fn download_json_optional(client: &Client, url: &Url, id: &str) -> Result<Option
     crate::screen::screen(&format!("[{NAME}] {id}: Downloading JSON metadata"));
     let mut response = match super::direct::request(client, url, None) {
         Ok(response) => response,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             crate::screen::warning(&format!(
                 "[{NAME}] {id}: Unable to download JSON metadata: {}",
                 crate::upstream_error_text(&error)
@@ -304,12 +304,14 @@ fn call_api(
     crate::screen::screen(&format!("[{NAME}] {id}: Downloading JSON metadata"));
     let mut response = super::direct::request_expecting(client, api, headers, &[401, 403])
         .map_err(|error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor: NAME,
-                id: id.to_owned(),
-                what: "JSON metadata",
-                source: Box::new(error),
-            },
+            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                Error::ExtractorRequest {
+                    extractor: NAME,
+                    id: id.to_owned(),
+                    what: "JSON metadata",
+                    source: Box::new(error),
+                }
+            }
             error => error,
         })?;
     let status = response.status().as_u16();

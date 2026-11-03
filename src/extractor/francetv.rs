@@ -110,7 +110,7 @@ fn download_json_optional(
     crate::screen::screen(&format!("[{TV_NAME}] {id}: {note}"));
     let mut response = match super::direct::request_expecting(client, url, &[], expected) {
         Ok(response) => response,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             crate::screen::warning(&format!(
                 "[{TV_NAME}] {id}: Unable to download JSON metadata: {}",
                 crate::upstream_error_text(&error)
@@ -430,7 +430,9 @@ fn extract_video(client: &Client, page: &Url, video_id: &str, hostname: &str) ->
                     )?;
                 }
             }
-            Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+            Err(
+                error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. }),
+            ) => {
                 crate::screen::warning(&format!(
                     "[{TV_NAME}] {video_id}: Unable to download webpage: {}",
                     crate::upstream_error_text(&error)

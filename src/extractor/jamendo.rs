@@ -186,7 +186,9 @@ fn thumbnails(client: &Client, track: &Value, track_id: &str) -> Result<Vec<Valu
             };
             let response = match super::direct::head_with_headers(client, &target, &[]) {
                 Ok(response) => response,
-                Err(Error::Http(_) | Error::HttpRetryAfter { .. }) => continue,
+                Err(Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. }) => {
+                    continue;
+                }
                 Err(error) => return Err(error),
             };
             let size = cover_size(cover_id);

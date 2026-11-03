@@ -89,12 +89,14 @@ fn playback(client: &Client, video_id: &str, protocol: &str) -> Result<Value> {
         &[401],
     )
     .map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-            extractor: NAME,
-            id: video_id.to_owned(),
-            what: "JSON metadata",
-            source: Box::new(error),
-        },
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::ExtractorRequest {
+                extractor: NAME,
+                id: video_id.to_owned(),
+                what: "JSON metadata",
+                source: Box::new(error),
+            }
+        }
         error => error,
     })?;
     let status = response.status().as_u16();

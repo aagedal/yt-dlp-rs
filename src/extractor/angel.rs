@@ -67,12 +67,14 @@ impl Extractor for Angel {
         );
         let parsed = super::direct::request(client, &manifest, None)
             .map_err(|error| match error {
-                Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                    extractor: NAME,
-                    id: id.clone(),
-                    what: "m3u8 information",
-                    source: Box::new(error),
-                },
+                Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                    Error::ExtractorRequest {
+                        extractor: NAME,
+                        id: id.clone(),
+                        what: "m3u8 information",
+                        source: Box::new(error),
+                    }
+                }
                 error => error,
             })
             .and_then(|response| hls::from_response(client, response, &manifest, None, true, None));

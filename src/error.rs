@@ -84,12 +84,18 @@ pub enum Error {
     HttpConfiguration(String),
     #[error("HTTP request failed: {0}")]
     Http(#[from] reqwest::Error),
-    /// urllib's redirect loop (`HTTPRedirectHandler`): more than 10 URLs,
-    /// or one URL 4 times.
+    /// Upstream's `HTTPError` for a redirect urllib refuses to follow: a
+    /// loop (more than 10 URLs, or one URL 4 times) or another scheme.
+    /// Handled wherever a status error is.
     #[error(
-        "HTTP Error {status}: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\n{reason}"
+        "HTTP Error {status}: {reason}{}",
+        if *redirect_loop { " (redirect loop detected)" } else { "" }
     )]
-    RedirectLoop { status: u16, reason: String },
+    HttpStatus {
+        status: u16,
+        reason: String,
+        redirect_loop: bool,
+    },
     /// A transient HTTP status with a supported, bounded Retry-After hint.
     #[error("HTTP request failed: {source}")]
     HttpRetryAfter {

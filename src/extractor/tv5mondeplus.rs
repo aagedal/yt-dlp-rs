@@ -107,7 +107,7 @@ fn deferred(client: &Client, asset: &str, token: &str, id: &str) -> Result<Optio
     });
     let mut response = match response {
         Ok(response) => response,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             crate::screen::warning(&format!(
                 "[{NAME}] {id}: Unable to download JSON metadata: {}",
                 crate::upstream_error_text(&error)

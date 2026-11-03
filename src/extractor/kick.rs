@@ -290,12 +290,14 @@ fn call_api(client: &Client, name: &'static str, call: ApiCall<'_>) -> Result<Va
         None => super::direct::request_expecting(client, &api, &headers, call.expected),
     };
     let mut response = response.map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-            extractor: name,
-            id: call.id.to_owned(),
-            what: "JSON metadata",
-            source: Box::new(error),
-        },
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::ExtractorRequest {
+                extractor: name,
+                id: call.id.to_owned(),
+                what: "JSON metadata",
+                source: Box::new(error),
+            }
+        }
         error => error,
     })?;
     let page_url = response.url().clone();

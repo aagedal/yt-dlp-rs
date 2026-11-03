@@ -5935,7 +5935,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     }
                     // `process_info`: `unable to download video data: ERR` for
                     // network errors of the media download.
-                    Some(error @ (crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. })) => {
+                    Some(
+                        error @ (crate::Error::Http(_)
+                        | crate::Error::HttpRetryAfter { .. }
+                        | crate::Error::HttpStatus { .. }),
+                    ) => {
                         report_error!(
                             "ERROR: unable to download video data: {}",
                             crate::upstream_error_text(error)

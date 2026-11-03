@@ -111,7 +111,7 @@ fn api_json(
     url.query_pairs_mut().extend_pairs(query);
     crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
     let mut response = super::direct::request(client, &url, None).map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => {
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
             Error::Reported(super::request_error_text(extractor, id, what, &error))
         }
         error => error,

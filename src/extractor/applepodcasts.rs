@@ -139,7 +139,7 @@ pub(crate) fn get_token(
 /// An HTTP error as upstream's `errnote` text.
 fn errnote(name: &str, error: Error, id: &str, note: &str) -> Error {
     match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => {
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
             Error::Reported(super::request_errnote_text(name, id, note, &error))
         }
         error => error,
@@ -472,12 +472,14 @@ impl Extractor for ApplePodcasts {
         crate::screen::screen(&format!("[{NAME}] {id}: Downloading webpage"));
         let webpage =
             download_text(client, url, &[], &[500], &id).map_err(|error| match error {
-                Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                    extractor: NAME,
-                    id: id.clone(),
-                    what: "webpage",
-                    source: Box::new(error),
-                },
+                Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                    Error::ExtractorRequest {
+                        extractor: NAME,
+                        id: id.clone(),
+                        what: "webpage",
+                        source: Box::new(error),
+                    }
+                }
                 error => error,
             })?;
         let fields = match from_webpage(&webpage, &id) {

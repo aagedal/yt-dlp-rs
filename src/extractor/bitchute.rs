@@ -87,7 +87,7 @@ fn call_api(
     );
     let mut response = match response {
         Ok(response) => response,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             let text = super::request_error_text(NAME, id, &what, &error);
             let message = text
                 .split_once(": ")
@@ -164,7 +164,9 @@ fn check_format(client: &Client, media_url: &str, id: &str) -> Result<Option<Map
                 );
                 return Ok(Some(format));
             }
-            Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+            Err(
+                error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. }),
+            ) => {
                 crate::screen::screen(&format!(
                     "[{NAME}] {id}: URL is invalid, skipping: {}",
                     crate::upstream_error_text(&error)
@@ -537,12 +539,14 @@ fn post_page(client: &Client, playlist_url: &str, playlist_id: &str, page: usize
         body,
     )
     .map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-            extractor: CHANNEL_NAME,
-            id: playlist_id.to_owned(),
-            what: "JSON metadata",
-            source: Box::new(error),
-        },
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::ExtractorRequest {
+                extractor: CHANNEL_NAME,
+                id: playlist_id.to_owned(),
+                what: "JSON metadata",
+                source: Box::new(error),
+            }
+        }
         error => error,
     })?;
     let mut bytes = Vec::new();

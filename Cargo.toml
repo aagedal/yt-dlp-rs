@@ -18,6 +18,7 @@ flate2 = "1"
 http = "1"
 http-body = "1"
 httpdate = "1"
+hyper = { version = "1", default-features = false }
 log = { version = "0.4", features = ["std"] }
 icu_normalizer = "2.3"
 icu_properties = "2.3"

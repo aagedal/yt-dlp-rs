@@ -127,12 +127,14 @@ fn post_json(client: &Client, slug: &str, id: &str) -> Result<Value> {
     crate::screen::screen(&format!("[{NAME}] {id}: Downloading JSON metadata"));
     let mut response = super::direct::request_expecting(client, &api, &[], &[403]).map_err(
         |error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor: NAME,
-                id: id.to_owned(),
-                what: "JSON metadata",
-                source: Box::new(error),
-            },
+            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                Error::ExtractorRequest {
+                    extractor: NAME,
+                    id: id.to_owned(),
+                    what: "JSON metadata",
+                    source: Box::new(error),
+                }
+            }
             error => error,
         },
     )?;

@@ -128,12 +128,14 @@ fn post_json(
     crate::screen::screen(&format!("[{NAME}] {id}: Downloading JSON metadata"));
     let mut response =
         super::direct::post(client, url, headers, body).map_err(|error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor: NAME,
-                id: id.to_owned(),
-                what: "JSON metadata",
-                source: Box::new(error),
-            },
+            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                Error::ExtractorRequest {
+                    extractor: NAME,
+                    id: id.to_owned(),
+                    what: "JSON metadata",
+                    source: Box::new(error),
+                }
+            }
             error => error,
         })?;
     let mut bytes = Vec::new();
@@ -483,13 +485,15 @@ impl Extractor for Niconico {
             &[400, 404],
         )
         .map_err(|error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::Reported(
-                super::request_error_text(NAME, &video_id, "API JSON", &error).replacen(
-                    ": Unable to download API JSON:",
-                    ": Unable to fetch data:",
-                    1,
-                ),
-            ),
+            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                Error::Reported(
+                    super::request_error_text(NAME, &video_id, "API JSON", &error).replacen(
+                        ": Unable to download API JSON:",
+                        ": Unable to fetch data:",
+                        1,
+                    ),
+                )
+            }
             error => error,
         })?;
         let mut bytes = Vec::new();

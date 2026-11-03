@@ -40,12 +40,23 @@ fn follow(client: &Client, mut request: Request) -> Result<Response> {
         let Some(target) = response
             .headers()
             .get(LOCATION)
-            .and_then(|location| location.to_str().ok())
-            .and_then(|location| response.url().join(&location.replace(' ', "%20")).ok())
-            .filter(|target| matches!(target.scheme(), "http" | "https"))
+            .and_then(|location| response.url().join(&quote(location.as_bytes())).ok())
         else {
             return Ok(response);
         };
+        // urllib refuses to follow anything but http, https and ftp; the
+        // port does not support ftp.
+        match target.scheme() {
+            "http" | "https" => {}
+            "ftp" => return Err(Error::UnsupportedScheme("ftp".into())),
+            _ => {
+                return Err(Error::HttpStatus {
+                    status: status.as_u16(),
+                    reason: reason(&response),
+                    redirect_loop: false,
+                });
+            }
+        }
         let Some(mut next) = retry else {
             return Ok(response);
         };
@@ -53,15 +64,43 @@ fn follow(client: &Client, mut request: Request) -> Result<Response> {
         if visited.get(&target).copied().unwrap_or(0) >= MAX_REPEATS
             || visited.len() >= MAX_REDIRECTIONS
         {
-            return Err(Error::RedirectLoop {
+            return Err(Error::HttpStatus {
                 status: status.as_u16(),
-                reason: status.canonical_reason().unwrap_or("").to_owned(),
+                reason: reason(&response),
+                redirect_loop: true,
             });
         }
         *visited.entry(target.clone()).or_default() += 1;
         redirect(&mut next, status, &target);
         request = next;
     }
+}
+
+/// The server's reason phrase (`Response.reason`), or the status's own.
+fn reason(response: &Response) -> String {
+    match response.extensions().get::<hyper::ext::ReasonPhrase>() {
+        Some(reason) => String::from_utf8_lossy(reason.as_bytes()).into_owned(),
+        None => response
+            .status()
+            .canonical_reason()
+            .unwrap_or("")
+            .to_owned(),
+    }
+}
+
+/// `quote(location, encoding="iso-8859-1", safe=string.punctuation)`:
+/// `Location`'s raw bytes with spaces, controls and non-ASCII bytes
+/// percent-encoded.
+fn quote(location: &[u8]) -> String {
+    let mut quoted = String::with_capacity(location.len());
+    for &byte in location {
+        if byte.is_ascii_alphanumeric() || byte.is_ascii_punctuation() {
+            quoted.push(char::from(byte));
+        } else {
+            quoted.push_str(&format!("%{byte:02X}"));
+        }
+    }
+    quoted
 }
 
 /// `RedirectHandler.redirect_request`: the next hop of `request`.
@@ -167,6 +206,13 @@ mod tests {
         let names: Vec<_> = request.headers().keys().map(|n| n.as_str()).collect();
         assert_eq!(names, ["host", "x-custom"]);
         assert_eq!(request.headers()[HOST], "other.test");
+    }
+
+    #[test]
+    fn locations_are_quoted_like_urllib() {
+        assert_eq!(quote(b"/a b"), "/a%20b");
+        assert_eq!(quote("/café?x=1#y".as_bytes()), "/caf%C3%A9?x=1#y");
+        assert_eq!(quote(b"/%41\xff\t"), "/%41%FF%09");
     }
 
     #[test]

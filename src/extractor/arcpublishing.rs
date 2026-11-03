@@ -134,7 +134,7 @@ fn smil_formats(client: &Client, url: &str, uuid: &str) -> Result<Vec<VideoForma
     crate::screen::screen(&format!("[{NAME}] {uuid}: Downloading SMIL file"));
     let mut response = match super::direct::request(client, &smil_url, None) {
         Ok(response) => response,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             crate::screen::warning(&format!(
                 "[{NAME}] {uuid}: Unable to download SMIL file: {}",
                 crate::upstream_error_text(&error)

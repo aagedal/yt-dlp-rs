@@ -128,12 +128,14 @@ fn download_api(
 ) -> Result<Value> {
     crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
     let response = direct::request(client, url, None).map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-            extractor,
-            id: id.to_owned(),
-            what,
-            source: Box::new(error),
-        },
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::ExtractorRequest {
+                extractor,
+                id: id.to_owned(),
+                what,
+                source: Box::new(error),
+            }
+        }
         other => other,
     })?;
     let text = response.text().map_err(Error::Http)?;

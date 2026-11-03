@@ -1866,9 +1866,13 @@ pub(crate) fn request_errnote_text(
         crate::Error::Http(source) | crate::Error::HttpRetryAfter { source, .. } => source.status(),
         _ => None,
     };
-    let cause = match status {
-        Some(_) => format!("<{}>", text.replacen("HTTP Error ", "HTTPError ", 1)),
-        None => format!("TransportError({})", crate::batch::py_repr(&text)),
+    let cause = match (status, error) {
+        (Some(_), _) => format!("<{}>", text.replacen("HTTP Error ", "HTTPError ", 1)),
+        // `HTTPError.__repr__` names the status and reason only.
+        (None, crate::Error::HttpStatus { status, reason, .. }) => {
+            format!("<HTTPError {status}: {reason}>")
+        }
+        (None, _) => format!("TransportError({})", crate::batch::py_repr(&text)),
     };
     // `video_id=None` omits the `ID: ` prefix.
     let id = if id.is_empty() {
@@ -2005,7 +2009,9 @@ fn extract_m3u8_fatal_with(
     }
     let parsed = response
         .map_err(|error| match error {
-            crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => crate::Error::Reported(
+            crate::Error::Http(_)
+            | crate::Error::HttpRetryAfter { .. }
+            | crate::Error::HttpStatus { .. } => crate::Error::Reported(
                 request_error_text(extractor, id, "m3u8 information", &error).replacen(
                     ": Unable to download ",
                     ": Failed to download ",
@@ -2057,7 +2063,9 @@ pub(crate) fn extract_mpd_fatal(
     }
     let parsed = response
         .map_err(|error| match error {
-            crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => crate::Error::Reported(
+            crate::Error::Http(_)
+            | crate::Error::HttpRetryAfter { .. }
+            | crate::Error::HttpStatus { .. } => crate::Error::Reported(
                 request_error_text(extractor, id, "MPD manifest", &error).replacen(
                     ": Unable to download ",
                     ": Failed to download ",
@@ -2596,14 +2604,14 @@ fn download_json_with(
     };
     crate::screen::screen(&format!("{prefix} {note}"));
     let wrap = |error: crate::Error| match error {
-        crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => {
-            crate::Error::ExtractorRequest {
-                extractor,
-                id: id.to_owned(),
-                what: "JSON metadata",
-                source: Box::new(error),
-            }
-        }
+        crate::Error::Http(_)
+        | crate::Error::HttpRetryAfter { .. }
+        | crate::Error::HttpStatus { .. } => crate::Error::ExtractorRequest {
+            extractor,
+            id: id.to_owned(),
+            what: "JSON metadata",
+            source: Box::new(error),
+        },
         error => error,
     };
     let mut response = direct::request_with_headers(client, url, None, headers).map_err(wrap)?;
@@ -2740,7 +2748,9 @@ fn post_json_with(
     let data = body.clone();
     let response = direct::post_expecting(client, url, headers, body, expected);
     let mut response = response.map_err(|error| match error {
-        crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => match errnote {
+        crate::Error::Http(_)
+        | crate::Error::HttpRetryAfter { .. }
+        | crate::Error::HttpStatus { .. } => match errnote {
             Some(errnote) => {
                 crate::Error::Reported(request_errnote_text(extractor, id, errnote, &error))
             }
@@ -2913,14 +2923,14 @@ fn download_webpage_response_headers(
 ) -> Result<(String, Url, reqwest::header::HeaderMap)> {
     use std::io::Read;
     let wrap = |error: crate::Error| match error {
-        crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => {
-            crate::Error::ExtractorRequest {
-                extractor,
-                id: id.to_owned(),
-                what: "webpage",
-                source: Box::new(error),
-            }
-        }
+        crate::Error::Http(_)
+        | crate::Error::HttpRetryAfter { .. }
+        | crate::Error::HttpStatus { .. } => crate::Error::ExtractorRequest {
+            extractor,
+            id: id.to_owned(),
+            what: "webpage",
+            source: Box::new(error),
+        },
         error => error,
     };
     let mut response = direct::request_with_headers(client, url, None, headers).map_err(wrap)?;
@@ -3225,14 +3235,14 @@ pub(crate) fn download_xml_note(
     };
     crate::screen::screen(&format!("{prefix} {note}"));
     let wrap = |error: crate::Error| match error {
-        crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => {
-            crate::Error::ExtractorRequest {
-                extractor,
-                id: id.to_owned(),
-                what: "XML",
-                source: Box::new(error),
-            }
-        }
+        crate::Error::Http(_)
+        | crate::Error::HttpRetryAfter { .. }
+        | crate::Error::HttpStatus { .. } => crate::Error::ExtractorRequest {
+            extractor,
+            id: id.to_owned(),
+            what: "XML",
+            source: Box::new(error),
+        },
         error => error,
     };
     let mut response = direct::request(client, url, None).map_err(wrap)?;
@@ -3704,7 +3714,7 @@ pub(crate) fn extract_f4m_optional(
     });
     let (final_url, body) = match body {
         Ok(found) => found,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             crate::screen::warning(&format!(
                 "[{extractor}] {id}: Unable to download f4m manifest: {}",
                 crate::upstream_error_text(&error)
@@ -3813,7 +3823,7 @@ pub(crate) fn extract_ism_optional(
     crate::screen::screen(&format!("[{extractor}] {id}: Downloading ISM manifest"));
     let mut response = match direct::request(client, manifest, None) {
         Ok(response) => response,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             crate::screen::warning(&format!(
                 "[{extractor}] {id}: Failed to download ISM manifest: {}",
                 crate::upstream_error_text(&error)
@@ -3860,7 +3870,11 @@ pub(crate) fn is_valid_url(
     crate::screen::screen(&format!("[{extractor}] {id}: Checking {item} URL"));
     match direct::request_with_headers(client, &parsed, None, &[]) {
         Ok(_) => Ok(true),
-        Err(error @ (crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. })) => {
+        Err(
+            error @ (crate::Error::Http(_)
+            | crate::Error::HttpRetryAfter { .. }
+            | crate::Error::HttpStatus { .. }),
+        ) => {
             crate::screen::screen(&format!(
                 "[{extractor}] {id}: {item} URL is invalid, skipping: {}",
                 crate::upstream_error_text(&error)

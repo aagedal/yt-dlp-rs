@@ -286,9 +286,9 @@ fn fetch(
         };
         match response.and_then(|response| response.text().map_err(Error::Http)) {
             Ok(text) => return Ok(text),
-            Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. }))
-                if attempt < options.fragment_retries =>
-            {
+            Err(
+                error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. }),
+            ) if attempt < options.fragment_retries => {
                 let delay = crate::retry::announce_retry(
                     &error,
                     attempt,
@@ -299,7 +299,9 @@ fn fetch(
                 crate::retry::backoff(attempt, delay.unwrap_or_default());
                 attempt += 1;
             }
-            Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) if attempt > 0 => {
+            Err(
+                error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. }),
+            ) if attempt > 0 => {
                 return Err(crate::retry::exhausted(error, options.fragment_retries));
             }
             Err(error) => return Err(error),

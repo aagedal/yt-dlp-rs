@@ -926,7 +926,9 @@ impl<'a> ApiRequest<'a> {
             &ERROR_STATUSES,
         ) {
             Ok(response) => response,
-            Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+            Err(
+                error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. }),
+            ) => {
                 return Err(failure(error));
             }
             Err(error) => {

@@ -900,12 +900,14 @@ fn graphql_query(client: &Client, name: &'static str, urn: &str, query: &str) ->
     let mut response =
         super::direct::post(client, &url, &[("Content-Type", "application/json")], body).map_err(
             |error| match error {
-                Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                    extractor: name,
-                    id: urn.to_owned(),
-                    what: "JSON metadata",
-                    source: Box::new(error),
-                },
+                Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                    Error::ExtractorRequest {
+                        extractor: name,
+                        id: urn.to_owned(),
+                        what: "JSON metadata",
+                        source: Box::new(error),
+                    }
+                }
                 error => error,
             },
         )?;

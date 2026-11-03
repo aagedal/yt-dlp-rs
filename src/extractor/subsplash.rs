@@ -73,12 +73,14 @@ fn download_page(client: &Client, url: &Url, id: &str) -> Result<(String, Option
     crate::screen::screen(&format!("[{NAME}] {id}: Downloading webpage"));
     let mut response = super::direct::request_with_headers(client, url, None, &[]).map_err(
         |error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor: NAME,
-                id: id.to_owned(),
-                what: "webpage",
-                source: Box::new(error),
-            },
+            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                Error::ExtractorRequest {
+                    extractor: NAME,
+                    id: id.to_owned(),
+                    what: "webpage",
+                    source: Box::new(error),
+                }
+            }
             error => error,
         },
     )?;

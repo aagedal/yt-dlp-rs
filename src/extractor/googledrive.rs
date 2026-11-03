@@ -191,7 +191,7 @@ fn request_warning(
 ) -> Result<Option<Response>> {
     match result {
         Ok(response) => Ok(Some(response)),
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             crate::screen::warning(&format!(
                 "[{NAME}] {video_id}: {errnote}: {}",
                 crate::upstream_error_text(&error)
@@ -582,7 +582,7 @@ fn call_api(
     );
     let mut response = match response {
         Ok(response) => response,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             if fatal {
                 return Err(Error::ExtractorRequest {
                     extractor: FOLDER_NAME,

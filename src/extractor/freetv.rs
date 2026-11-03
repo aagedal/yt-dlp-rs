@@ -101,12 +101,14 @@ fn api_response(
         body.finish(),
     )
     .map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-            extractor: name,
-            id: content_id.to_owned(),
-            what: "JSON metadata",
-            source: Box::new(error),
-        },
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::ExtractorRequest {
+                extractor: name,
+                id: content_id.to_owned(),
+                what: "JSON metadata",
+                source: Box::new(error),
+            }
+        }
         error => error,
     })?;
     let mut bytes = Vec::new();

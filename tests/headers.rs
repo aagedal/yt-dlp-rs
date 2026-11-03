@@ -107,7 +107,7 @@ impl Server {
                         b"retry".to_vec(),
                         "Retry-After: 0\r\n".into(),
                     ),
-                    "/media.mp4" | "/retry.mp4" => {
+                    "/media.mp4" | "/retry.mp4" | "/caf%C3%A9.mp4" => {
                         (200, "video/mp4", b"media".to_vec(), String::new())
                     }
                     "/captions.vtt" => (200, "text/vtt", b"WEBVTT\n\n".to_vec(), String::new()),
@@ -118,6 +118,18 @@ impl Server {
                         "Location: /media.mp4\r\n".into(),
                     ),
                     "/loop" => (302, "text/plain", Vec::new(), "Location: /loop\r\n".into()),
+                    "/utf8" => (
+                        302,
+                        "text/plain",
+                        Vec::new(),
+                        "Location: /caf\u{e9}.mp4\r\n".into(),
+                    ),
+                    "/app" => (
+                        302,
+                        "text/plain",
+                        Vec::new(),
+                        "Location: intent://media\r\n".into(),
+                    ),
                     "/cross" => (
                         302,
                         "text/plain",
@@ -452,7 +464,8 @@ fn host_is_the_first_header_of_every_request_and_redirect_hop() {
     }
 }
 
-/// urllib's `HTTPRedirectHandler`: a fifth visit to one URL is a loop.
+/// urllib's `HTTPRedirectHandler`: a fifth visit to one URL is a loop,
+/// which yt-dlp reports as an `HTTPError` with the server's reason phrase.
 #[test]
 fn a_redirect_loop_fails_like_urllib() {
     let server = Server::new();
@@ -462,11 +475,44 @@ fn a_redirect_loop_fails_like_urllib() {
     let stderr = String::from_utf8_lossy(&output.stderr);
     assert!(
         stderr.contains(
-            "HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound"
+            "ERROR: [generic] loop: Unable to download webpage: HTTP Error 302: Fixture (redirect loop detected) (caused by <HTTPError 302: Fixture>)\n"
         ),
         "{stderr}"
     );
     assert_eq!(server.recorded().len(), 5);
+}
+
+/// urllib percent-encodes a `Location`'s raw (here UTF-8) bytes.
+#[test]
+fn a_non_ascii_redirect_location_is_followed_like_urllib() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let output = server.cli("/utf8", &["-j"], directory.path());
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let paths: Vec<_> = server.recorded().into_iter().map(|r| r.path).collect();
+    assert_eq!(paths[..2], ["/utf8", "/caf%C3%A9.mp4"]);
+}
+
+/// urllib refuses a redirect to a scheme other than http, https or ftp;
+/// yt-dlp reports the 302 response as an `HTTPError`.
+#[test]
+fn a_redirect_to_another_scheme_fails_like_urllib() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let output = server.cli("/app", &["-j"], directory.path());
+    assert!(!output.status.success());
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        stderr.contains(
+            "ERROR: [generic] app: Unable to download webpage: HTTP Error 302: Fixture (caused by <HTTPError 302: Fixture>)\n"
+        ),
+        "{stderr}"
+    );
+    assert_eq!(server.recorded().len(), 1);
 }
 
 #[test]

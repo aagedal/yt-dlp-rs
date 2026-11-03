@@ -58,9 +58,14 @@ fn register_session(client: &Client, manifest_url: &str, video_id: &str) -> Resu
         &[],
     )
     .map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::Reported(
-            super::request_errnote_text(NAME, video_id, "Unable to register session", &error),
-        ),
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::Reported(super::request_errnote_text(
+                NAME,
+                video_id,
+                "Unable to register session",
+                &error,
+            ))
+        }
         error => error,
     })?;
     let mut body = Vec::new();

@@ -253,12 +253,14 @@ impl Flow<'_> {
         let (extractor, id) = (self.caller.extractor, self.caller.id);
         crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
         let wrap = |error: Error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor,
-                id: id.to_owned(),
-                what,
-                source: Box::new(error),
-            },
+            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                Error::ExtractorRequest {
+                    extractor,
+                    id: id.to_owned(),
+                    what,
+                    source: Box::new(error),
+                }
+            }
             error => error,
         };
         let response = match &data {

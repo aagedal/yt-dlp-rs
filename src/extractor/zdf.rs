@@ -263,14 +263,16 @@ pub(crate) fn request_json(
         None => super::direct::request_with_headers(client, url, None, headers),
     };
     let mut response = response.map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::Reported(match id {
-            Some(id) => super::request_errnote_text(name, id, errnote, &error),
-            None => super::request_errnote_text(name, "", errnote, &error).replacen(
-                &format!("[{name}] : "),
-                &format!("[{name}] "),
-                1,
-            ),
-        }),
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::Reported(match id {
+                Some(id) => super::request_errnote_text(name, id, errnote, &error),
+                None => super::request_errnote_text(name, "", errnote, &error).replacen(
+                    &format!("[{name}] : "),
+                    &format!("[{name}] "),
+                    1,
+                ),
+            })
+        }
         error => error,
     })?;
     let page_url = response.url().clone();

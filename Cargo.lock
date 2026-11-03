@@ -2947,6 +2947,7 @@ dependencies = [
  "http",
  "http-body",
  "httpdate",
+ "hyper",
  "icu_normalizer",
  "icu_properties",
  "log",

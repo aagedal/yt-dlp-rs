@@ -108,7 +108,7 @@ fn post(
     );
     let mut response = match response {
         Ok(response) => response,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             let text = super::request_error_text(NAME, id, "X", &error);
             // `report_warning(errmsg)` / `ExtractorError(errmsg)` without the cause.
             let detail = text

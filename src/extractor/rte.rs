@@ -75,7 +75,7 @@ fn feed(client: &Client, url: &Url, name: &'static str, id: &str) -> Result<Feed
     crate::screen::screen(&format!("[{name}] {id}: Downloading JSON metadata"));
     let mut response = match super::direct::request_expecting(client, url, &[], &[404]) {
         Ok(response) => response,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             return Ok(Feed::Failed(
                 Error::ExtractorRequest {
                     extractor: name,

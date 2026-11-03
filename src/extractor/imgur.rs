@@ -549,7 +549,7 @@ fn gallery(
                 }
             }
         }
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             crate::screen::warning(&format!(
                 "[{extractor}] {gallery_id}: Unable to download JSON metadata: {}",
                 crate::upstream_error_text(&error)

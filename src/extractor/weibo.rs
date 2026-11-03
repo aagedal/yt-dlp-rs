@@ -123,12 +123,14 @@ fn fetch(
         None => super::direct::request_with_headers(client, url, None, headers),
     };
     let mut response = response.map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-            extractor,
-            id: id.to_owned(),
-            what: "webpage",
-            source: Box::new(error),
-        },
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::ExtractorRequest {
+                extractor,
+                id: id.to_owned(),
+                what: "webpage",
+                source: Box::new(error),
+            }
+        }
         error => error,
     })?;
     let final_url = response.url().clone();

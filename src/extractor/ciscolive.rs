@@ -99,7 +99,7 @@ fn call_api(
         body,
     )
     .map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => {
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
             let text = super::request_error_text(name, "\u{0}", "JSON metadata", &error);
             Error::Reported(match rf_id {
                 Some(id) => text.replacen('\u{0}', id, 1),
