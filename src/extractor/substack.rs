@@ -143,7 +143,9 @@ impl Extractor for Substack {
                     .inspect(|_| crate::screen::after_request())
                     .and_then(crate::retry::check_response)
                     .map_err(|error| match error {
-                        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::Reported(format!(
+                        Error::Http(_)
+                        | Error::HttpRetryAfter { .. }
+                        | Error::HttpStatus { .. } => Error::Reported(format!(
                             "[{NAME}] {display_id}: Podcast URL is invalid: {}",
                             crate::upstream_error_text(&error)
                         )),

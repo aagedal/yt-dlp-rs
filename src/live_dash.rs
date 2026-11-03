@@ -3,7 +3,8 @@
 //! lazy generator and are appended as they are downloaded, the formats in
 //! parallel (`download_and_append_fragments_multiple`). Like upstream's live
 //! fragment downloads there is no `.ytdl` state file, and an interrupt
-//! (SIGINT) ends the lists and completes the files instead of failing.
+//! (SIGINT, or a library `Interrupt::stop`) ends the lists and completes
+//! the files instead of failing.
 use crate::{
     DownloadOptions, DownloadPhase, DownloadProgress, Error, PartFiles, Result, VideoInfo,
     extractor::LiveFragments,
@@ -142,12 +143,19 @@ pub(crate) fn download(
             fragment: None,
             recorded_ms: None,
         };
-        if callback(finished).is_break() {
+        // The recording has ended; only a cancel discards it.
+        if callback(finished).is_break() && !ending() {
             return Err(Error::DownloadCancelled);
         }
         debug_assert!(destination.exists());
     }
     Ok(sizes)
+}
+
+/// Whether the recording ends and is kept: a signal, or a library
+/// `Interrupt::stop` (a cancel discards it).
+fn ending() -> bool {
+    crate::interrupt::interrupted() || crate::control::stop_requested()
 }
 
 /// `_prepare_frag_download` (no `.ytdl` file for a live download), the
@@ -190,7 +198,7 @@ fn run(
         Some(path) => Some(fs::File::create(path)?),
         None => None,
     };
-    let halted = || stop.load(Ordering::SeqCst) || crate::interrupt::interrupted();
+    let halted = || stop.load(Ordering::SeqCst) || ending();
     let mut stored = 0_u64;
     let mut index = 0_usize;
     {
@@ -220,12 +228,12 @@ fn run(
             ) {
                 Ok(_) => progress(stored),
                 // An interrupted fragment is dropped; the rest is kept.
-                Err(Error::DownloadCancelled) if crate::interrupt::interrupted() => break,
+                Err(Error::DownloadCancelled) if ending() => break,
                 Err(error) => return Err(error),
             }
             index += 1;
         }
-        if stop.load(Ordering::SeqCst) && !crate::interrupt::interrupted() {
+        if stop.load(Ordering::SeqCst) && !ending() {
             return Err(Error::DownloadCancelled);
         }
         file.flush()?;
@@ -235,6 +243,10 @@ fn run(
         drop(named);
         if let Some(path) = &part_path {
             let _ = fs::remove_file(path);
+        }
+        // A library stop before any whole fragment is a cancel.
+        if crate::control::stop_requested() {
+            return Err(Error::DownloadCancelled);
         }
         return Err(Error::Reported("The downloaded file is empty".into()));
     }
@@ -272,7 +284,7 @@ fn feed(
         .filter(|parent| !parent.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
     let mut scratch = tempfile::tempfile_in(parent)?;
-    let halted = || stop.load(Ordering::SeqCst) || crate::interrupt::interrupted();
+    let halted = || stop.load(Ordering::SeqCst) || ending();
     let mut stored = 0_u64;
     let mut index = 0_usize;
     while let Some(fragment) = job.fragments.next(&halted)? {
@@ -296,7 +308,7 @@ fn feed(
             &mut forward,
         ) {
             Ok(_) => {}
-            Err(Error::DownloadCancelled) if crate::interrupt::interrupted() => break,
+            Err(Error::DownloadCancelled) if ending() => break,
             Err(error) => return Err(error),
         }
         use std::io::{Seek, SeekFrom};
@@ -312,7 +324,7 @@ fn feed(
         progress(stored);
         index += 1;
     }
-    if stop.load(Ordering::SeqCst) && !crate::interrupt::interrupted() {
+    if stop.load(Ordering::SeqCst) && !ending() {
         return Err(Error::DownloadCancelled);
     }
     Ok(stored)

@@ -81,12 +81,14 @@ fn download_feed(client: &Client, url: &Url, video_id: &str) -> Result<Value> {
     // `_download_json(url, None, ...)`: the note has no video ID.
     crate::screen::screen(&format!("[{NAME}] Downloading Akamai AMP feed"));
     let response = direct::request(client, url, None).map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-            extractor: NAME,
-            id: video_id.to_owned(),
-            what: "Akamai AMP feed",
-            source: Box::new(error),
-        },
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::ExtractorRequest {
+                extractor: NAME,
+                id: video_id.to_owned(),
+                what: "Akamai AMP feed",
+                source: Box::new(error),
+            }
+        }
         other => other,
     })?;
     let text = response.text().map_err(Error::Http)?;

@@ -183,7 +183,9 @@ fn playback(client: &Client, video_id: &str) -> Result<Option<Value>> {
     let mut response =
         match direct::request_expecting(client, &url, &[("service-name", "odk")], &[403, 404]) {
             Ok(response) => response,
-            Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+            Err(
+                error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. }),
+            ) => {
                 let text = super::request_error_text(NAME, video_id, "JSON metadata", &error);
                 crate::screen::warning(&text);
                 return Ok(None);

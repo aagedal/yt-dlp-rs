@@ -184,12 +184,14 @@ fn post_json(
     });
     let mut response =
         super::direct::post(client, url, headers, body).map_err(|error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor: ie,
-                id: id.to_owned(),
-                what: "JSON metadata",
-                source: Box::new(error),
-            },
+            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                Error::ExtractorRequest {
+                    extractor: ie,
+                    id: id.to_owned(),
+                    what: "JSON metadata",
+                    source: Box::new(error),
+                }
+            }
             error => error,
         })?;
     let mut body = Vec::new();

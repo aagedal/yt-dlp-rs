@@ -57,12 +57,14 @@ impl Extractor for Vocaroo {
         .inspect(|_| crate::screen::after_request())
         .and_then(crate::retry::check_response)
         .map_err(|error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor: NAME,
-                id: id.clone(),
-                what: "webpage",
-                source: Box::new(error),
-            },
+            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                Error::ExtractorRequest {
+                    extractor: NAME,
+                    id: id.clone(),
+                    what: "webpage",
+                    source: Box::new(error),
+                }
+            }
             error => error,
         })?;
         // `float_or_none(header, scale=1000)`.

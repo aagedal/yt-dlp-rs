@@ -187,27 +187,28 @@ pub(super) fn m3u8_formats(
         )
     });
     crate::screen::clear_page();
-    let mut stream =
-        match parsed {
-            Ok(Some(stream)) => stream,
-            Ok(None) => return Ok(Vec::new()),
-            Err(error) if fatal => {
-                return Err(match error {
-                    Error::Http(_) | Error::HttpRetryAfter { .. } => Error::Reported(
+    let mut stream = match parsed {
+        Ok(Some(stream)) => stream,
+        Ok(None) => return Ok(Vec::new()),
+        Err(error) if fatal => {
+            return Err(match error {
+                Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                    Error::Reported(
                         super::request_error_text(extractor, id, "m3u8 information", &error)
                             .replacen(": Unable to download ", ": Failed to download ", 1),
-                    ),
-                    error => error,
-                });
-            }
-            Err(error) => {
-                crate::screen::warning(&format!(
-                    "[{extractor}] {id}: Failed to download m3u8 information: {}",
-                    crate::upstream_error_text(&error)
-                ));
-                return Ok(Vec::new());
-            }
-        };
+                    )
+                }
+                error => error,
+            });
+        }
+        Err(error) => {
+            crate::screen::warning(&format!(
+                "[{extractor}] {id}: Failed to download m3u8 information: {}",
+                crate::upstream_error_text(&error)
+            ));
+            return Ok(Vec::new());
+        }
+    };
     super::ignore_subtitles(&mut stream, extractor, "HLS");
     if live {
         super::hls::live_format_ids(&mut stream.formats, m3u8_id);

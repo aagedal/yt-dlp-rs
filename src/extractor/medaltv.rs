@@ -35,12 +35,14 @@ fn final_url(client: &Client, url: &Url, id: &str, note: &str) -> Result<Url> {
     super::direct::request_with_headers(client, url, None, &[])
         .map(|response| response.url().clone())
         .map_err(|error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor: NAME,
-                id: id.to_owned(),
-                what: "webpage",
-                source: Box::new(error),
-            },
+            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                Error::ExtractorRequest {
+                    extractor: NAME,
+                    id: id.to_owned(),
+                    what: "webpage",
+                    source: Box::new(error),
+                }
+            }
             error => error,
         })
 }

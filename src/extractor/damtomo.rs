@@ -98,12 +98,14 @@ fn download_sjis(
     use std::io::Read;
     crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
     let mut response = super::direct::request(client, url, None).map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-            extractor,
-            id: id.to_owned(),
-            what,
-            source: Box::new(error),
-        },
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::ExtractorRequest {
+                extractor,
+                id: id.to_owned(),
+                what,
+                source: Box::new(error),
+            }
+        }
         error => error,
     })?;
     let page_url = response.url().clone();

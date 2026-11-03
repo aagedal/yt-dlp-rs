@@ -156,7 +156,7 @@ fn from_api(client: &Client, url: &Url, video_id: &str, tld: &str) -> Result<Opt
                 }
             }
         }
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             crate::screen::warning(&format!(
                 "[{NAME}] {video_id}: Unable to download JSON metadata: {}",
                 crate::upstream_error_text(&error)

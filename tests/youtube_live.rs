@@ -200,6 +200,17 @@ fn keep_partial_on_stop_still_merges_a_stopped_live_from_start_download() {
     // leave the formats unmerged. Like upstream's interrupted live download
     // (and the run without the flag), it ends the recording, merges it and
     // succeeds.
+    stop_a_live_from_start_download_keeping_partial(&[]);
+}
+
+#[test]
+fn keep_partial_on_stop_merges_a_stopped_live_from_start_download_with_processors() {
+    // Postprocessing (here FFmpegMetadata) wraps the download in its own
+    // interrupt check, which must not cancel the signalled recording either.
+    stop_a_live_from_start_download_keeping_partial(&["--embed-metadata"]);
+}
+
+fn stop_a_live_from_start_download_keeping_partial(extra: &[&str]) {
     let proxy = proxy(Arc::new(|| 1000), Duration::from_millis(100));
     let tools = tempfile::tempdir().unwrap();
     let ffmpeg = fake_ffmpeg(tools.path());
@@ -214,6 +225,7 @@ fn keep_partial_on_stop_still_merges_a_stopped_live_from_start_download() {
         ])
         .args(["--progress-template", "download:%(progress.filename)s"])
         .args(["--print", "after_move:filepath"])
+        .args(extra)
         .arg("https://www.youtube.com/watch?v=LiveStart01")
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())

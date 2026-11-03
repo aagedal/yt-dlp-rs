@@ -1615,12 +1615,14 @@ fn download_smil(client: &Client, url: &Url, video_id: &str) -> Result<(super::s
     use std::io::Read;
     crate::screen::screen(&format!("[generic] {video_id}: Downloading SMIL file"));
     let response = direct::request(client, url, None).map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-            extractor: "generic",
-            id: video_id.to_owned(),
-            what: "SMIL file",
-            source: Box::new(error),
-        },
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::ExtractorRequest {
+                extractor: "generic",
+                id: video_id.to_owned(),
+                what: "SMIL file",
+                source: Box::new(error),
+            }
+        }
         error => error,
     })?;
     let final_url = response.url().clone();
@@ -3387,10 +3389,12 @@ pub(crate) fn page_title(html: &str) -> Option<String> {
 /// The generic page request's failure (see `Error::Webpage`).
 fn webpage_error(id: &str, error: Error) -> Error {
     match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::Webpage {
-            id: id.into(),
-            source: Box::new(error),
-        },
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::Webpage {
+                id: id.into(),
+                source: Box::new(error),
+            }
+        }
         error => error,
     }
 }

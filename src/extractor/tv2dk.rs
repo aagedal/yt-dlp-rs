@@ -154,12 +154,14 @@ fn specifik_video(client: &Client, video_id: &str) -> Result<Value> {
         body,
     )
     .map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-            extractor: BORNHOLM_NAME,
-            id: video_id.to_owned(),
-            what: "JSON metadata",
-            source: Box::new(error),
-        },
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::ExtractorRequest {
+                extractor: BORNHOLM_NAME,
+                id: video_id.to_owned(),
+                what: "JSON metadata",
+                source: Box::new(error),
+            }
+        }
         error => error,
     })?;
     let mut body = Vec::new();

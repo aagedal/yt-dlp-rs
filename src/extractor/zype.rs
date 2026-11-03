@@ -113,7 +113,7 @@ fn player_response(client: &Client, api: &Url, video_id: &str) -> Result<Value> 
     crate::screen::screen(&format!("[{NAME}] {video_id}: Downloading JSON metadata"));
     let mut response = match super::direct::request_expecting(client, api, &[], &[400, 401, 403]) {
         Ok(response) => response,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             return Err(Error::ExtractorRequest {
                 extractor: NAME,
                 id: video_id.to_owned(),

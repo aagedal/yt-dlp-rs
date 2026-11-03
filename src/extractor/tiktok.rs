@@ -386,7 +386,7 @@ fn download_page_target(
     crate::screen::screen(&format!("[{name}] {id}: {note}"));
     let mut response = match super::direct::request(client, url, None) {
         Ok(response) => response,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             if !fatal {
                 if let Some(what) = what {
                     crate::screen::warning(&format!(
@@ -1635,12 +1635,14 @@ impl Extractor for TikTokVm {
             &[("User-Agent", "facebookexternalhit/1.1")],
         )
         .map_err(|error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor: VM_NAME,
-                id: id.clone(),
-                what: "webpage",
-                source: Box::new(error),
-            },
+            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                Error::ExtractorRequest {
+                    extractor: VM_NAME,
+                    id: id.clone(),
+                    what: "webpage",
+                    source: Box::new(error),
+                }
+            }
             error => error,
         })?;
         let target = response.url().clone();

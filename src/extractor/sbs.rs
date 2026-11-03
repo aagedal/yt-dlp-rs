@@ -83,7 +83,7 @@ fn smil_formats(client: &Client, url: &Url, id: &str) -> Result<(Vec<VideoFormat
     crate::screen::screen(&format!("[{NAME}] {id}: Downloading SMIL file"));
     let mut response = match super::direct::request(client, url, None) {
         Ok(response) => response,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             if !crate::no_formats::ignore() {
                 return Err(Error::ExtractorRequest {
                     extractor: NAME,
@@ -210,7 +210,11 @@ impl Extractor for Sbs {
                         ));
                     }
                 }
-                Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+                Err(
+                    error @ (Error::Http(_)
+                    | Error::HttpRetryAfter { .. }
+                    | Error::HttpStatus { .. }),
+                ) => {
                     crate::screen::warning(&format!(
                         "[{NAME}] {video_id}: Unable to download webpage: {}",
                         crate::upstream_error_text(&error)

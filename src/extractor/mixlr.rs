@@ -153,7 +153,11 @@ impl Extractor for Mixlr {
                     )?);
                 }
                 Ok(_) => {}
-                Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+                Err(
+                    error @ (Error::Http(_)
+                    | Error::HttpRetryAfter { .. }
+                    | Error::HttpStatus { .. }),
+                ) => {
                     crate::screen::warning(&format!(
                         "[{NAME}] {event_id}: Unable to download webpage: {}",
                         crate::upstream_error_text(&error)

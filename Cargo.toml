@@ -1,6 +1,6 @@
 [package]
 name = "yt-dlp-rs"
-version = "0.8.0-beta.1"
+version = "0.9.0-beta.1"
 edition = "2024"
 license = "Unlicense"
 description = "An incremental, native Rust adaptation of yt-dlp"
@@ -18,6 +18,7 @@ flate2 = "1"
 http = "1"
 http-body = "1"
 httpdate = "1"
+hyper = { version = "1", default-features = false }
 log = { version = "0.4", features = ["std"] }
 icu_normalizer = "2.3"
 icu_properties = "2.3"

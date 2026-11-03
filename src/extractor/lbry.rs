@@ -84,12 +84,14 @@ fn call_api(
     let url = Url::parse("https://api.lbry.tv/api/v1/proxy")?;
     let mut response =
         super::direct::post(client, &url, &headers, body).map_err(|error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor: name,
-                id: id.to_owned(),
-                what: "JSON metadata",
-                source: Box::new(error),
-            },
+            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                Error::ExtractorRequest {
+                    extractor: name,
+                    id: id.to_owned(),
+                    what: "JSON metadata",
+                    source: Box::new(error),
+                }
+            }
             error => error,
         })?;
     let mut text = Vec::new();

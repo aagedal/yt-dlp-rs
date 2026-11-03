@@ -72,7 +72,7 @@ fn download_json_optional(
     crate::screen::screen(&format!("[{NAME}] {id}: {note}"));
     let mut response = match super::direct::request(client, url, None) {
         Ok(response) => response,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             crate::screen::warning(&format!(
                 "[{NAME}] {id}: Unable to download JSON metadata: {}",
                 crate::upstream_error_text(&error)

@@ -219,12 +219,14 @@ fn base_gql(
     let body = crate::output::python_json_dumps(ops);
     let mut response =
         super::direct::post(client, &url, &headers, body).map_err(|error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor: name,
-                id: id.to_owned(),
-                what: "JSON metadata",
-                source: Box::new(error),
-            },
+            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                Error::ExtractorRequest {
+                    extractor: name,
+                    id: id.to_owned(),
+                    what: "JSON metadata",
+                    source: Box::new(error),
+                }
+            }
             error => error,
         })?;
     let mut body = Vec::new();
@@ -413,13 +415,15 @@ fn usher_formats(
         crate::screen::screen(&note);
     }
     let failed = |error: Error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::Reported(
-            super::request_error_text(name, id, "m3u8 information", &error).replacen(
-                ": Unable to download ",
-                ": Failed to download ",
-                1,
-            ),
-        ),
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::Reported(
+                super::request_error_text(name, id, "m3u8 information", &error).replacen(
+                    ": Unable to download ",
+                    ": Failed to download ",
+                    1,
+                ),
+            )
+        }
         error => error,
     };
     let parsed = match response {

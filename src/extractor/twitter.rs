@@ -198,12 +198,14 @@ fn request_error<'a>(
     what: &'static str,
 ) -> impl Fn(Error) -> Error + 'a {
     move |error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-            extractor,
-            id: id.to_owned(),
-            what,
-            source: Box::new(error),
-        },
+        Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+            Error::ExtractorRequest {
+                extractor,
+                id: id.to_owned(),
+                what,
+                source: Box::new(error),
+            }
+        }
         error => error,
     }
 }
@@ -1841,12 +1843,14 @@ impl Extractor for TwitterShortener {
         let response =
             super::direct::request_with_headers(client, &target, None, &[("User-Agent", "curl")])
                 .map_err(|error| match error {
-                Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                    extractor: SHORTENER_NAME,
-                    id: shortcode.clone(),
-                    what: "webpage",
-                    source: Box::new(error),
-                },
+                Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                    Error::ExtractorRequest {
+                        extractor: SHORTENER_NAME,
+                        id: shortcode.clone(),
+                        what: "webpage",
+                        source: Box::new(error),
+                    }
+                }
                 error => error,
             })?;
         const UNSAFE_LINK: &str = "https://twitter.com/safety/unsafe_link_warning?unsafe_link=";

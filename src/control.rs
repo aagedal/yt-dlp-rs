@@ -333,14 +333,18 @@ pub(crate) fn requested() -> bool {
 
 /// Whether the active [`Interrupt`] is a stop that keeps partial data.
 pub(crate) fn stopping() -> bool {
-    signalled()
-        || ACTIVE.with(|active| {
-            active
-                .borrow()
-                .as_ref()
-                .and_then(|context| context.interrupt.as_ref())
-                .is_some_and(Interrupt::is_stop)
-        })
+    signalled() || stop_requested()
+}
+
+/// Whether the active [`Interrupt`] is a stop (not a signal).
+pub(crate) fn stop_requested() -> bool {
+    ACTIVE.with(|active| {
+        active
+            .borrow()
+            .as_ref()
+            .and_then(|context| context.interrupt.as_ref())
+            .is_some_and(Interrupt::is_stop)
+    })
 }
 
 /// What can interrupt the current call, checked from another thread while

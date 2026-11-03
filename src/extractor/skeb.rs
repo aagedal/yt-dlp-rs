@@ -40,12 +40,14 @@ fn call_api(
     crate::screen::screen(&format!("[{NAME}] {work_id}: Downloading JSON metadata"));
     let mut response = super::direct::request_expecting(client, api, HEADERS, &[429]).map_err(
         |error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor: NAME,
-                id: work_id.to_owned(),
-                what: "JSON metadata",
-                source: Box::new(error),
-            },
+            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                Error::ExtractorRequest {
+                    extractor: NAME,
+                    id: work_id.to_owned(),
+                    what: "JSON metadata",
+                    source: Box::new(error),
+                }
+            }
             error => error,
         },
     )?;

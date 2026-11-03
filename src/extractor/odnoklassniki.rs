@@ -224,12 +224,14 @@ impl Extractor for Odnoklassniki {
                     body.finish(),
                 )
                 .map_err(|error| match error {
-                    Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                        extractor: NAME,
-                        id: video_id.clone(),
-                        what: "JSON metadata",
-                        source: Box::new(error),
-                    },
+                    Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
+                        Error::ExtractorRequest {
+                            extractor: NAME,
+                            id: video_id.clone(),
+                            what: "JSON metadata",
+                            source: Box::new(error),
+                        }
+                    }
                     error => error,
                 })?;
                 let mut bytes = Vec::new();
