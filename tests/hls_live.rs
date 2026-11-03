@@ -155,7 +155,9 @@ fn a_library_stop_keeps_a_native_live_hls_recording() {
             yt_dlp_rs::DownloadOptions::default(),
             &control,
             |progress| {
-                if progress.downloaded_bytes > 0 {
+                // Past the first 9-byte segment: it was stored whole (a
+                // stop during the first one keeps nothing, a cancel).
+                if progress.downloaded_bytes > 9 {
                     interrupt.stop();
                 }
                 std::ops::ControlFlow::Continue(())
@@ -196,6 +198,34 @@ fn a_library_cancel_discards_a_native_live_hls_recording() {
                 if progress.downloaded_bytes > 0 {
                     interrupt.cancel();
                 }
+                std::ops::ControlFlow::Continue(())
+            },
+        )
+        .unwrap_err();
+    assert!(
+        matches!(error, yt_dlp_rs::Error::DownloadCancelled),
+        "{error}"
+    );
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+}
+
+#[test]
+fn a_library_stop_before_a_whole_segment_is_a_cancel() {
+    let base = serve(endless);
+    let client = yt_dlp_rs::YoutubeDl::new().unwrap();
+    let info = client.extract_info(&format!("{base}/live.m3u8")).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let interrupt = yt_dlp_rs::Interrupt::new();
+    let mut control = yt_dlp_rs::DownloadControl::default();
+    control.interrupt = Some(interrupt.clone());
+    let error = client
+        .download_with_control(
+            &info,
+            directory.path().join("live.mp4"),
+            yt_dlp_rs::DownloadOptions::default(),
+            &control,
+            |_| {
+                interrupt.stop();
                 std::ops::ControlFlow::Continue(())
             },
         )

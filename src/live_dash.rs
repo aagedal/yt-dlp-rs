@@ -244,6 +244,10 @@ fn run(
         if let Some(path) = &part_path {
             let _ = fs::remove_file(path);
         }
+        // A library stop before any whole fragment is a cancel.
+        if crate::control::stop_requested() {
+            return Err(Error::DownloadCancelled);
+        }
         return Err(Error::Reported("The downloaded file is empty".into()));
     }
     match (private, part_path) {
