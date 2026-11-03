@@ -2,8 +2,8 @@
 //! the episode's 64k HLS stream as an untyped `m4a` result with the page's
 //! meta title, description and OpenGraph image.
 use super::{Extractor, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use std::sync::LazyLock;
 use url::Url;
@@ -12,11 +12,10 @@ pub struct ThisAmericanLife;
 
 const NAME: &str = "ThisAmericanLife";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?thisamericanlife\.org/(?:radio-archives/episode/|play_full\.php\?play=)(?P<id>\d+)",
     )
-    .unwrap()
 });
 
 /// `_match_id`.

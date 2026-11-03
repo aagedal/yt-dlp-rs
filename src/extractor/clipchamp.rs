@@ -6,6 +6,7 @@ use super::{
     Extractor, dict_info, download_webpage, download_webpage_note, extract_m3u8_master_optional,
     extract_mpd_optional, search_nextjs_data,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,9 +18,8 @@ pub struct Clipchamp;
 
 const NAME: &str = "Clipchamp";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?clipchamp\.com/watch/(?P<id>[\w-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?clipchamp\.com/watch/(?P<id>[\w-]+)"));
 static SUBDOMAIN: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"\bcustomer-domain-prefix=(?:"(?P<a>[\w-]+)"|'(?P<b>[\w-]+)')"#).unwrap()
 });

@@ -1,8 +1,8 @@
 //! Upstream `OutsideTVIE` (`yt_dlp/extractor/outsidetv.py`): Outside TV
 //! videos as `url` results of their JW Platform media ID.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use std::sync::LazyLock;
 use url::Url;
@@ -12,8 +12,10 @@ pub struct OutsideTv;
 const NAME: &str = "OutsideTV";
 const KEY: &str = "OutsideTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?outsidetv\.com/(?:[^/]+/)*?play/[a-zA-Z0-9]{8}/\d+/\d+/(?P<id>[a-zA-Z0-9]{8})").unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^https?://(?:www\.)?outsidetv\.com/(?:[^/]+/)*?play/[a-zA-Z0-9]{8}/\d+/\d+/(?P<id>[a-zA-Z0-9]{8})",
+    )
 });
 
 /// `_match_id`.

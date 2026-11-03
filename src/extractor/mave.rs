@@ -2,8 +2,8 @@
 //! podcast episode's and a channel's metadata from the Mave website API,
 //! with each episode's audio file from the storage host.
 use super::{Extractor, dict_info, direct, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -20,14 +20,11 @@ const API_BASE_URL: &str = "https://api.mave.digital/v1/website";
 const API_BASE_STORAGE_URL: &str = "https://store.cloud.mts.ru/mave/";
 const PAGE_SIZE: usize = 50;
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?P<channel_id>[\w-]+)\.mave\.digital/ep-(?P<episode_code>\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?P<channel_id>[\w-]+)\.mave\.digital/ep-(?P<episode_code>\d+)")
 });
-static CHANNEL_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?P<id>[\w-]+)\.mave\.digital/?(?:$|[?#])").unwrap());
+static CHANNEL_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?P<id>[\w-]+)\.mave\.digital/?(?:$|[?#])"));
 
 /// `_match_valid_url` for the episode IE.
 pub fn suitable(url: &str) -> bool {

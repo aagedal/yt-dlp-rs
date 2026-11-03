@@ -2,6 +2,7 @@
 //! lecture page's `<video class="KIND"><source src>` pairs as a playlist of
 //! untyped entries with the lecture's title and date.
 use super::{Extractor, broken_warning, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct TeleTask;
 
 const NAME: &str = "TeleTask";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?tele-task\.de/archive/video/html5/(?P<id>[0-9]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?tele-task\.de/archive/video/html5/(?P<id>[0-9]+)")
 });
 static TITLE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"itemprop="name">([^<]+)</a>"#).unwrap());

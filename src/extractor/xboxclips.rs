@@ -2,6 +2,7 @@
 //! clip page's first HTML5 media entry with its title, recording date, size,
 //! duration and views.
 use super::{Extractor, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct XboxClips;
 
 const NAME: &str = "XboxClips";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:xboxclips\.com|gameclips\.io)/(?:video\.php\?.*vid=|[^/]+/)(?P<id>[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12})",
     )
-    .unwrap()
 });
 static RECORDED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r">Recorded: (\d{2})-(Jan|Feb|Mar|Apr|May|Ju[nl]|Aug|Sep|Oct|Nov|Dec)-(\d{4})")

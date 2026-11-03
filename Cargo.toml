@@ -63,3 +63,5 @@ impersonate = ["dep:tokio", "dep:wreq", "dep:wreq-util"]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(fuzzing)'] }
 
 [dev-dependencies]
+# `tests/url_literals.rs` derives each URL pattern's prefilter literals.
+regex-syntax = "0.8"

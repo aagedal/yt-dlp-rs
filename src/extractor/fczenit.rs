@@ -1,6 +1,7 @@
 //! Upstream `FczenitIE` (`yt_dlp/extractor/fczenit.py`): the page's MSI
 //! video ID and the player's `msi/video` JSON qualities as formats.
 use super::{Extractor, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,9 +13,8 @@ pub struct Fczenit;
 
 const NAME: &str = "Fczenit";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?fc-zenit\.ru/video/(?P<id>[0-9]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?fc-zenit\.ru/video/(?P<id>[0-9]+)"));
 
 static MSI_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)config\s*=\s*\{.+?video_id\s*:\s*'([^']+)'").unwrap());

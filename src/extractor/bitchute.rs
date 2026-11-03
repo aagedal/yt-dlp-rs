@@ -5,6 +5,7 @@
 //! playlist page (title, description, video count) and its `extend/` pages
 //! (`OnDemandPagedList`, 25 per page) of `url_transparent` entries.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -35,9 +36,10 @@ const SEEDS: [&str; 16] = [
     "zb10-7gsop1v78",
 ];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:(?:www|old)\.)?bitchute\.com/(?:video|embed|torrent/[^/?#]+)/(?P<id>[^/?#&]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^https?://(?:(?:www|old)\.)?bitchute\.com/(?:video|embed|torrent/[^/?#]+)/(?P<id>[^/?#&]+)",
+    )
 });
 static SEED: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^(https?://)(seed\d+)(\.bitchute\.com)").unwrap());
@@ -415,11 +417,10 @@ const TOKEN: &str = "zyG6tQcGPE5swyAEFLqKUwMuMMuF6IO2DZ6ZDQjGfsL0e4dcTLwqkTTul05
 /// `BitChuteChannelIE.PAGE_SIZE`.
 const PAGE_SIZE: usize = 25;
 
-static CHANNEL_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static CHANNEL_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:(?:www|old)\.)?bitchute\.com/(?P<type>channel|playlist)/(?P<id>[^/?#&]+)",
     )
-    .unwrap()
 });
 static VIDEO_HREF: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<a\s[^>]*\bhref=["']/video/([^"'/]+)"#).unwrap());

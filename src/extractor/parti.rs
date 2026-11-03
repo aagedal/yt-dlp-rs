@@ -4,8 +4,8 @@
 //! user ID and channel info (`UserNotLive` when offline).
 use super::streamable::int_or_none;
 use super::{Extractor, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -19,12 +19,12 @@ const VIDEO_KEY: &str = "PartiVideo";
 const LIVE: &str = "parti:livestream";
 const LIVE_KEY: &str = "PartiLivestream";
 
-static VIDEO_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?parti\.com/video/(?P<id>\d+)").unwrap());
+static VIDEO_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?parti\.com/video/(?P<id>\d+)"));
 /// `parti\.com/(?!video/)(?P<id>[\w/-]+)`: the lookahead is checked in
 /// [`live_id`].
-static LIVE_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?parti\.com/(?P<id>[\w/-]+)").unwrap());
+static LIVE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?parti\.com/(?P<id>[\w/-]+)"));
 
 /// `PartiVideoIE._match_id`.
 pub fn video_suitable(url: &str) -> bool {

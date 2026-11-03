@@ -4,8 +4,8 @@
 //! audio result, or a playlist's or profile's tracks as `url` entries.
 //! Backslash-carrying titles are re-quoted the way upstream does.
 use super::{Extractor, direct, download_json_note, nrk};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::hash::{BuildHasher, Hasher};
@@ -27,21 +27,19 @@ const PROFILE_IE_KEY: &str = "AudiusProfile";
 const DISCOVERY: &str = "https://api.audius.co/";
 const API_VERSION: &str = "/v1";
 
-static TRACK_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?audius\.co/(?P<uploader>[\w\d-]+)/(?P<title>\S+)").unwrap()
+static TRACK_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?audius\.co/(?P<uploader>[\w\d-]+)/(?P<title>\S+)")
 });
-static TRACK_ID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^audius:(?:https?://(?:www\.)?.+/v1/tracks/)?(?P<track_id>\w+)").unwrap()
+static TRACK_ID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^audius:(?:https?://(?:www\.)?.+/v1/tracks/)?(?P<track_id>\w+)")
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?audius\.co/(?P<uploader>[\w\d-]+)/(?:album|playlist)/(?P<title>\S+)",
     )
-    .unwrap()
 });
-static PROFILE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www)?audius\.co/(?P<id>[^/]+)/?(?:[?#]|$)").unwrap()
-});
+static PROFILE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www)?audius\.co/(?P<id>[^/]+)/?(?:[?#]|$)"));
 
 /// `AudiusIE`'s pattern without its `(?!/album|/playlist)` lookahead.
 fn track_match(url: &str) -> Option<(String, String)> {

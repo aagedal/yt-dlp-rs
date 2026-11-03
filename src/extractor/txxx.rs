@@ -3,6 +3,7 @@
 //! of its `video_url` MP4 files, and the Txxx network's video API (the file
 //! list and the video's metadata JSON) with the same base64 MP4 URLs.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -19,18 +20,16 @@ const TXXX_NAME: &str = "Txxx";
 /// `TxxxIE._DOMAINS` (regex alternation).
 const TXXX_DOMAINS: &str = r"hclips\.com|hdzog\.com|hdzog\.tube|hotmovs\.com|hotmovs\.tube|inporn\.com|privatehomeclips\.com|tubepornclassic\.com|txxx\.com|txxx\.tube|upornia\.com|upornia\.tube|vjav\.com|vjav\.tube|vxxx\.com|voyeurhit\.com|voyeurhit\.tube";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(concat!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(concat!(
         r"^https?://(?P<host>(?:www\.)?porntop\.com)/video/(?P<id>\d+)",
         r"(?:/(?P<display_id>[^/?]+))?",
     ))
-    .unwrap()
 });
-static TXXX_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static TXXX_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"^https?://(?:www\.)?(?P<host>{TXXX_DOMAINS})/(?:videos?[/-]|embed/)(?P<id>\d+)(?:/(?P<display_id>[^/?#]+))?"
     ))
-    .unwrap()
 });
 static SCHEMA_JSON: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"\bschemaJson\s*=\s*(\{[^<]+?VideoObject[^<]+\});").unwrap());

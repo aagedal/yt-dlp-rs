@@ -1,6 +1,7 @@
 //! Upstream `GlideIE` (`yt_dlp/extractor/glide.py`): a share page's
 //! `<source>` (else OpenGraph video) URL as an untyped result.
 use super::{Extractor, download_webpage, proto_relative, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,9 +13,8 @@ pub struct Glide;
 
 const NAME: &str = "Glide";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://share\.glide\.me/(?P<id>[A-Za-z0-9\-=_+]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://share\.glide\.me/(?P<id>[A-Za-z0-9\-=_+]+)"));
 
 static SOURCE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<source[^>]+src=(?:"(?P<a>.+?)"|'(?P<b>.+?)')"#).unwrap());

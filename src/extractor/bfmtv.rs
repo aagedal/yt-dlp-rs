@@ -3,6 +3,7 @@
 //! articles, whose `data-video-id` blocks become Brightcove player `url`
 //! results (an article's as a playlist).
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -23,19 +24,17 @@ const ARTICLE_KEY: &str = "BFMTVArticle";
 
 const BASE: &str = r"^https?://(?:www\.|rmc\.)?bfmtv\.com/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"{BASE}(?:[^/]+/)*[^/?&#]+_V[A-Z]-(?P<id>\d{{12}})\.html"
     ))
-    .unwrap()
 });
-static LIVE_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(&format!(r"{BASE}(?P<id>(?:[^/]+/)?en-direct)")).unwrap());
-static ARTICLE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+static LIVE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(format!(r"{BASE}(?P<id>(?:[^/]+/)?en-direct)")));
+static ARTICLE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(format!(
         r"{BASE}(?:[^/]+/)*[^/?&#]+_A[A-Z]-(?P<id>\d{{12}})\.html"
     ))
-    .unwrap()
 });
 static VIDEO_BLOCK: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(<div[^>]+\bdata-video-id=[^>]+>.*?</div>)").unwrap());

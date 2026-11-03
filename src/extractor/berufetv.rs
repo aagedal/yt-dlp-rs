@@ -3,8 +3,8 @@
 //! sources, and subtitle tracks), with the film metadata API's title,
 //! description, thumbnail, category and topics.
 use super::{Extractor, dict_format, dict_info, download_json_note, download_json_note_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -14,11 +14,10 @@ pub struct BerufeTv;
 
 const NAME: &str = "BerufeTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?web\.arbeitsagentur\.de/berufetv/[^?#]+/film;filmId=(?P<id>[\w-]+)",
     )
-    .unwrap()
 });
 
 /// `_match_id`.

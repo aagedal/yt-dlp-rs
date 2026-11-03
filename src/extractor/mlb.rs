@@ -4,6 +4,7 @@
 //! with their size and bitrate read from the names. MLB.TV, articles and
 //! closed-caption tracks are not ported; closed captions keep their error.
 use super::{Extractor, dict_format, dict_info, direct, download_json, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -43,15 +44,13 @@ const GRAPHQL: &str = r#"{
   }
 }"#;
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:[\da-z_-]+\.)*mlb\.com/(?:(?:(?:[^/]+/)*video/[^/]+/c-|(?:shared/video/embed/(?:embed|m-internal-embed)\.html|(?:[^/]+/)+(?:play|index)\.jsp|)\?.*?\bcontent_id=)(?P<id>\d+))",
     )
-    .unwrap()
 });
-static VIDEO_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?mlb\.com/(?:[^/]+/)*video/(?P<id>[^/?&#]+)")
-        .unwrap()
+static VIDEO_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?mlb\.com/(?:[^/]+/)*video/(?P<id>[^/?&#]+)")
 });
 static BITRATE_NAME: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"_(\d+)K_(\d+)X(\d+)").unwrap());

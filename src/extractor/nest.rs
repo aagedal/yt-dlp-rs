@@ -2,8 +2,8 @@
 //! camera's live HLS playlist from the dropcam camera API, and a clip's
 //! `videos.get_by_filename` item as its untitled-by-default direct URL.
 use super::{Extractor, direct, download_json, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -15,13 +15,10 @@ pub struct NestClip;
 const NAME: &str = "Nest";
 const CLIP_NAME: &str = "NestClip";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://video\.nest\.com/(?:embedded/)?live/(?P<id>\w+)")
-        .unwrap()
-});
-static CLIP_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://video\.nest\.com/(?:embedded/)?clip/(?P<id>\w+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://video\.nest\.com/(?:embedded/)?live/(?P<id>\w+)"));
+static CLIP_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://video\.nest\.com/(?:embedded/)?clip/(?P<id>\w+)"));
 
 /// `NestIE._match_id`.
 pub fn suitable(url: &str) -> bool {

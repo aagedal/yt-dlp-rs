@@ -10,8 +10,8 @@ use super::{
     Extractor, dict_format, dict_info, download_json, extract_m3u8_master_optional,
     extract_mpd_optional_note,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, Subtitles, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -23,12 +23,11 @@ pub struct ErrArhiiv;
 const JUPITER_NAME: &str = "ERRJupiter";
 const ARHIIV_NAME: &str = "ERRArhiiv";
 
-static JUPITER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:jupiter(?:pluss)?|lasteekraan)\.err\.ee/(?P<id>\d+)").unwrap()
+static JUPITER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:jupiter(?:pluss)?|lasteekraan)\.err\.ee/(?P<id>\d+)")
 });
-static ARHIIV_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https://arhiiv\.err\.ee/video/(?:vaata/)?(?P<id>[^/?#]+)").unwrap()
-});
+static ARHIIV_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https://arhiiv\.err\.ee/video/(?:vaata/)?(?P<id>[^/?#]+)"));
 
 /// `ERRJupiterIE._match_id`.
 pub fn jupiter_suitable(url: &str) -> bool {

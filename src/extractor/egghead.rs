@@ -3,8 +3,8 @@
 //! their lessons' `url` results (with the non-fatal course metadata), and
 //! lessons from the lesson API (HLS, DASH and direct media URLs).
 use super::{Extractor, dict_format, dict_info, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -19,11 +19,11 @@ const LESSON_NAME: &str = "egghead:lesson";
 const LESSON_KEY: &str = "EggheadLesson";
 const API: &str = "https://app.egghead.io/api/v1/";
 
-static COURSE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:app\.)?egghead\.io/(?:course|playlist)s/(?P<id>[^/?#&]+)").unwrap()
+static COURSE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:app\.)?egghead\.io/(?:course|playlist)s/(?P<id>[^/?#&]+)")
 });
-static LESSON_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:app\.)?egghead\.io/(?:api/v1/)?lessons/(?P<id>[^/?#&]+)").unwrap()
+static LESSON_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:app\.)?egghead\.io/(?:api/v1/)?lessons/(?P<id>[^/?#&]+)")
 });
 
 /// `EggheadCourseIE._match_id`.

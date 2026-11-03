@@ -7,6 +7,7 @@
 //! `RaiSudtirolIE`. Not ported: the `f4m` relinker format and the
 //! `_EMBED_REGEX` iframe hand-off of the news classes.
 use super::{Extractor, dict_format, dict_info, download_json_note, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -40,63 +41,50 @@ const RAIPLAYSOUNDLIVE_NAME: &str = "RaiPlaySoundLive";
 const RAIPLAYSOUNDPLAYLIST_NAME: &str = "RaiPlaySoundPlaylist";
 const RAISUDTIROL_NAME: &str = "RaiSudtirol";
 
-static RAI_VALID: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static RAI_VALID: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"^https?://[^/]+\.(?:rai\.(?:it|tv))/.+?-(?P<id>{UUID})(?:-.+?)?\.html"
     ))
-    .unwrap()
 });
 // `(?!articoli)` is checked by `news_match`: the regex crate has no lookahead.
-static RAINEWS_VALID: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static RAINEWS_VALID: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"^https?://(?:www\.)?rainews\.it/(?P<path>[^?#]+)-(?P<id>{UUID})(?:-[^/?#]+)?\.html"
     ))
-    .unwrap()
 });
-static RAICULTURA_VALID: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static RAICULTURA_VALID: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"^https?://(?:www\.)?raicultura\.it/(?P<path>[^?#]+)-(?P<id>{UUID})(?:-[^/?#]+)?\.html"
     ))
-    .unwrap()
 });
-static RAIPLAY_VALID: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static RAIPLAY_VALID: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"^(?P<base>https?://(?:www\.)?raiplay\.it/.+?-(?P<id>{UUID}))\.(?:html|json)"
     ))
-    .unwrap()
 });
-static RAIPLAYLIVE_VALID: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^(?P<base>https?://(?:www\.)?raiplay\.it/dirette/(?P<id>[^/?#&]+))",
-    )
-    .unwrap()
+static RAIPLAYLIVE_VALID: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^(?P<base>https?://(?:www\.)?raiplay\.it/dirette/(?P<id>[^/?#&]+))")
 });
-static RAIPLAYPLAYLIST_VALID: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static RAIPLAYPLAYLIST_VALID: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?P<base>https?://(?:www\.)?raiplay\.it/programmi/(?P<id>[^/?#&]+))(?:/(?P<extra_id>[^?#&]+))?",
     )
-    .unwrap()
 });
-static RAIPLAYSOUND_VALID: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static RAIPLAYSOUND_VALID: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"^(?P<base>https?://(?:www\.)?raiplaysound\.it/.+?-(?P<id>{UUID}))\.(?:html|json)"
     ))
-    .unwrap()
 });
-static RAIPLAYSOUNDLIVE_VALID: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^(?P<base>https?://(?:www\.)?raiplaysound\.it/(?P<id>[^/?#&]+)$)")
-        .unwrap()
+static RAIPLAYSOUNDLIVE_VALID: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^(?P<base>https?://(?:www\.)?raiplaysound\.it/(?P<id>[^/?#&]+)$)")
 });
-static RAIPLAYSOUNDPLAYLIST_VALID: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static RAIPLAYSOUNDPLAYLIST_VALID: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?P<base>https?://(?:www\.)?raiplaysound\.it/(?:programmi|playlist|audiolibri)/(?P<id>[^/?#&]+))(?:/(?P<extra_id>[^?#&]+))?",
     )
-    .unwrap()
 });
-static RAISUDTIROL_VALID: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://rai(?:bz|sudtirol)\.rai\.it/.+media=(?P<id>\w+)")
-        .unwrap()
-});
+static RAISUDTIROL_VALID: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://rai(?:bz|sudtirol)\.rai\.it/.+media=(?P<id>\w+)"));
 
 static MEDIA_QUALITY_TBR: [(i64, [i64; 2]); 13] = [
     (250, [352, 198]),

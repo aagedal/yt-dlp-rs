@@ -6,8 +6,8 @@
 use super::Extractor;
 use super::{dict_format, dict_info, download_json_note_headers, post_json_errnote};
 use super::{request_errnote_text, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -19,9 +19,8 @@ pub struct Canalsurmas;
 const NAME: &str = "Canalsurmas";
 const API_BASE: &str = "https://api-rtva.interactvty.com";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?canalsurmas\.es/videos/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?canalsurmas\.es/videos/(?P<id>\d+)"));
 
 /// `_match_valid_url`.
 pub fn suitable(url: &str) -> bool {

@@ -2,6 +2,7 @@
 //! `Fusion.globalContent` video (Brightcove) and YouTube elements as a
 //! playlist of `url` results.
 use super::{Extractor, download_webpage, search_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,8 @@ pub struct OneNewsNz;
 const NAME: &str = "1News";
 const KEY: &str = "OneNewsNZ";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?(?:1|one)news\.co\.nz/\d+/\d+/\d+/(?P<id>[^/?#&]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?(?:1|one)news\.co\.nz/\d+/\d+/\d+/(?P<id>[^/?#&]+)")
 });
 static FUSION: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"Fusion\.globalContent\s*=\s*").unwrap());

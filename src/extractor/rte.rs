@@ -4,6 +4,7 @@
 //! feed's `IE_NAME said: MESSAGE` 404 error.
 use super::clyp::{float_or_none, key_error};
 use super::{Extractor, dict_format, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,14 +15,13 @@ use url::Url;
 pub struct Rte;
 pub struct RteRadio;
 
-static RTE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?rte\.ie/player/[^/]{2,3}/show/[^/]+/(?P<id>[0-9]+)").unwrap()
+static RTE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?rte\.ie/player/[^/]{2,3}/show/[^/]+/(?P<id>[0-9]+)")
 });
-static RADIO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static RADIO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?rte\.ie/radio/utils/radioplayer/rteradioweb\.html#!rii=(?:b?[0-9]*)(?:%3A|:|%5F|_)(?P<id>[0-9]+)",
     )
-    .unwrap()
 });
 static RTMP: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^(?P<url>rtmpe?://[^/]+)/(?P<app>.+)/(?P<playpath>mp4:.*)").unwrap()

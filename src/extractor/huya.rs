@@ -3,6 +3,7 @@
 //! HLS definitions. Live streams that need the signed-secret (`encrypt`)
 //! path crash upstream on Python 3 and are reported as unsupported here.
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -20,14 +21,12 @@ const VIDEO_KEY: &str = "HuyaVideo";
 
 /// `(?!(?:video/play/))` (no look-ahead in the regex crate) is applied in
 /// [`live_suitable`].
-static LIVE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.|m\.)?huya\.com/(?P<id>[^/#?&]+)(?:\D|$)").unwrap()
-});
+static LIVE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.|m\.)?huya\.com/(?P<id>[^/#?&]+)(?:\D|$)"));
 static VIDEO_PLAY_PREFIX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^https?://(?:www\.|m\.)?huya\.com/video/play/").unwrap());
-static VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?huya\.com/video/play/(?P<id>\d+)\.html").unwrap()
-});
+static VIDEO_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?huya\.com/video/play/(?P<id>\d+)\.html"));
 static STREAM_START: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"stream:\s").unwrap());
 static DISPLAY_NAME: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^(?s)(.+?)(?:(\d+)M)?$").unwrap());

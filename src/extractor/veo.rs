@@ -2,8 +2,8 @@
 //! its video list as formats (transport streams skipped, panoramic videos
 //! checked first).
 use super::{Extractor, download_json, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -13,9 +13,8 @@ pub struct Veo;
 
 const NAME: &str = "Veo";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://app\.veo\.co/matches/(?P<id>[0-9A-Za-z\-_]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://app\.veo\.co/matches/(?P<id>[0-9A-Za-z\-_]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

@@ -3,6 +3,7 @@
 //! supplies the video, as a `url_transparent` result that keeps the page's
 //! title, thumbnail and uploader.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct BioBioChileTv;
 
 const NAME: &str = "BioBioChileTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:tv|www)\.biobiochile\.cl/(?:notas|noticias)/(?:[^/]+/)+(?P<id>[^/]+)\.shtml",
     )
-    .unwrap()
 });
 /// `_EMBED`-style search for the Rudo iframe (the `(?P=q1)` quote backreference
 /// is written as two alternatives).

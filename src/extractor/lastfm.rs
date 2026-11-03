@@ -3,6 +3,7 @@
 //! `url` result, and artist, tag and user playlist pages' `data-youtube-url`
 //! links as a lazily paged playlist of YouTube `url` results.
 use super::{Extractor, download_webpage, download_webpage_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -19,16 +20,14 @@ const PLAYLIST_NAME: &str = "LastFMPlaylist";
 const USER_NAME: &str = "LastFMUser";
 const PENDING_KIND: &str = "LastFM";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?last\.fm/music(?:/[^/]+){2}/(?P<id>[^/#?]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?last\.fm/music(?:/[^/]+){2}/(?P<id>[^/#?]+)")
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?last\.fm/(music|tag)/(?P<id>[^/]+)(?:/[^/]+)?/?(?:[?#]|$)")
-        .unwrap()
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?last\.fm/(music|tag)/(?P<id>[^/]+)(?:/[^/]+)?/?(?:[?#]|$)")
 });
-static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?last\.fm/user/[^/]+/playlists/(?P<id>[^/#?]+)").unwrap()
+static USER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?last\.fm/user/[^/]+/playlists/(?P<id>[^/#?]+)")
 });
 static PLAYLINK: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"(?s)class="header-new-playlink"\s+href="([^"]+)""#).unwrap());

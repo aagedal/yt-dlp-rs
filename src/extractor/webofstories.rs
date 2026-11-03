@@ -3,6 +3,7 @@
 //! arguments as its MP4 and RTMP formats, and a speaker's `playAll` page as
 //! a playlist of story pages.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -19,15 +20,11 @@ const VIDEO_DOMAIN: &str = "http://eu-mobile.webofstories.com/";
 const GREAT_LIFE_STREAMER: &str = "rtmp://eu-cdn1.webofstories.com/cfx/st/";
 const USER_STREAMER: &str = "rtmp://eu-users.webofstories.com/cfx/st/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?webofstories\.com/play/(?:[^/]+/)?(?P<id>[0-9]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?webofstories\.com/play/(?:[^/]+/)?(?P<id>[0-9]+)")
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?webofstories\.com/playAll/(?P<id>[^/]+)").unwrap()
-});
+static PLAYLIST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?webofstories\.com/playAll/(?P<id>[^/]+)"));
 static TITLE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)<strong>Title:\s*</strong>(.+?)<").unwrap());
 static EMBED_PARAMS: LazyLock<Regex> = LazyLock::new(|| {

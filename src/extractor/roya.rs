@@ -1,8 +1,8 @@
 //! Upstream `RoyaLiveIE` (`yt_dlp/extractor/roya.py`): a Roya TV fast
 //! channel's secured live HLS URL and its schedule title.
 use super::{Extractor, download_json, extract_m3u8_fatal_live};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -13,9 +13,8 @@ pub struct RoyaLive;
 const NAME: &str = "RoyaLive";
 const SCHEDULE: &str = "https://backend.roya.tv/api/v01/channels/schedule-pagination";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:en\.)?roya\.tv/live-stream/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:en\.)?roya\.tv/live-stream/(?P<id>\d+)"));
 
 /// `_match_valid_url`.
 pub fn suitable(url: &str) -> bool {

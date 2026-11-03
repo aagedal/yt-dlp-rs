@@ -4,8 +4,8 @@
 //! (paged through the omny API). The `asahi.com` embed pages upstream also
 //! handles through `_WEBPAGE_TESTS` are reached only when the page links here.
 use super::{Extractor, direct, download_webpage, nrk, search_nextjs_data};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -24,20 +24,18 @@ const PAGE_SIZE: usize = 100;
 
 // Upstream's episode pattern has a negative lookahead rejecting an ID of
 // `playlists`; the `regex` crate has none, so that is checked in code.
-static EPISODE: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static EPISODE: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r#"^https?://omny\.fm/shows/(?P<uploader_id>[\w-]+)/(?P<id>[\w-]+)(?:/embed)?(?:[?#"']|$)"#,
     )
-    .unwrap()
 });
-static PLAYLIST: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static PLAYLIST: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r#"^https?://omny\.fm/shows/(?P<uploader_id>[\w-]+)/playlists(?:/(?P<id>[\w-]+))?(?:/embed)?/?(?:[?#"']|$)"#,
     )
-    .unwrap()
 });
-static SHOW: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://omny\.fm/shows/(?P<id>[\w-]+)/?(?:[?#]|$)").unwrap());
+static SHOW: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://omny\.fm/shows/(?P<id>[\w-]+)/?(?:[?#]|$)"));
 
 /// An episode URL, not the `playlists` index of a show.
 fn episode_match(url: &str) -> Option<(String, String)> {

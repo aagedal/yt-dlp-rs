@@ -4,6 +4,7 @@
 //! galleries/albums as playlists of `url` results (a gallery with one video
 //! is a `url_transparent` result).
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -21,18 +22,16 @@ const ALBUM: &str = "imgur:album";
 const CLIENT_ID: &str = "546c25a59c58ad7";
 
 // `(?!(?:a|gallery|t|topic|r)/)` is checked in `media_id`.
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:i\.)?imgur\.com/(?P<rest>)(?:[^/?#]+-)?(?P<id>[a-zA-Z0-9]+)",
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:i\.)?imgur\.com/(?P<rest>)(?:[^/?#]+-)?(?P<id>[a-zA-Z0-9]+)")
+});
+static GALLERY_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:i\.)?imgur\.com/(?:gallery|(?:t(?:opic)?|r)/[^/?#]+)/(?:[^/?#]+-)?(?P<id>[a-zA-Z0-9]+)",
     )
-    .unwrap()
 });
-static GALLERY_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:i\.)?imgur\.com/(?:gallery|(?:t(?:opic)?|r)/[^/?#]+)/(?:[^/?#]+-)?(?P<id>[a-zA-Z0-9]+)")
-        .unwrap()
-});
-static ALBUM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:i\.)?imgur\.com/a/(?:[^/?#]+-)?(?P<id>[a-zA-Z0-9]+)").unwrap()
+static ALBUM_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:i\.)?imgur\.com/a/(?:[^/?#]+-)?(?P<id>[a-zA-Z0-9]+)")
 });
 static VIDEO_ELEMENTS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"(?s)<div class="video-elements">(.*?)</div>"#).unwrap());

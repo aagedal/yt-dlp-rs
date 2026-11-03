@@ -2,6 +2,7 @@
 //! `data-video-id-pending` videos as a playlist of `url` results of their
 //! accounts' Brightcove players, titled by the OpenGraph title.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct TheSun;
 
 const NAME: &str = "TheSun";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?the-?sun(\.co\.uk|\.com)/[^/]+/(?P<id>\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?the-?sun(\.co\.uk|\.com)/[^/]+/(?P<id>\d+)")
 });
 static VIDEO: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"<video[^>]+data-video-id-pending=[^>]+>").unwrap());

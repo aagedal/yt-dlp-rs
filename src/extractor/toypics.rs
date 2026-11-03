@@ -2,6 +2,7 @@
 //! first HTML5 media entry's formats, the heading and the uploader.
 //! `ToypicsUserIE` (profile playlists) is not ported.
 use super::{Extractor, broken_warning, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct Toypics;
 
 const NAME: &str = "Toypics";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://videos\.toypics\.net/view/(?P<id>[0-9]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://videos\.toypics\.net/view/(?P<id>[0-9]+)"));
 static TITLES: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [
         Regex::new(r#"<h1[^>]+class=["']view-video-title[^>]+>([^<]+)</h"#).unwrap(),

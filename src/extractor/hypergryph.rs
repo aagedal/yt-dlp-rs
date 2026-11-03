@@ -2,8 +2,8 @@
 //! Monster Siren songs from the song API (its error messages, source URL,
 //! artists and lyrics) with the album's name, intro and cover.
 use super::{Extractor, dict_info, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -15,9 +15,8 @@ const NAME: &str = "monstersiren";
 const KEY: &str = "MonsterSirenHypergryphMusic";
 const API_BASE: &str = "https://monster-siren.hypergryph.com/api";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://monster-siren\.hypergryph\.com/music/(?P<id>\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://monster-siren\.hypergryph\.com/music/(?P<id>\d+)")
 });
 
 /// `_match_id`.

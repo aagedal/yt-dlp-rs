@@ -3,6 +3,7 @@
 //! Simplestream show-stream API (the page's token, expiry and key) and its
 //! tokenized HLS playlist, and series pages as playlists of their shows.
 use super::{Extractor, dict_info, download_json_headers, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,12 +17,10 @@ pub struct IslamChannelSeries;
 const NAME: &str = "IslamChannel";
 const SERIES_NAME: &str = "IslamChannelSeries";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://watch\.islamchannel\.tv/watch/(?P<id>\d+)").unwrap()
-});
-static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://watch\.islamchannel\.tv/series/(?P<id>[a-f\d-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://watch\.islamchannel\.tv/watch/(?P<id>\d+)"));
+static SERIES_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://watch\.islamchannel\.tv/series/(?P<id>[a-f\d-]+)"));
 static SHOW_LINK: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<a\s+href="(/watch/\d+)"[^>]+?data-video-type="show">"#).unwrap()
 });

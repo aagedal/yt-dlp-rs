@@ -1,6 +1,7 @@
 //! Upstream `MovingImageIE` (`yt_dlp/extractor/movingimage.py`): a film
 //! page's player HLS manifest and its labelled fields.
 use super::{Extractor, download_webpage, extract_m3u8_fatal, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -11,9 +12,8 @@ pub struct MovingImage;
 
 const NAME: &str = "MovingImage";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://movingimage\.nls\.uk/film/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://movingimage\.nls\.uk/film/(?P<id>\d+)"));
 static MANIFEST: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"file\s*:\s*"([^"]+)""#).unwrap());
 static THUMBNAIL: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"image\s*:\s*'([^']+)'").unwrap());
 

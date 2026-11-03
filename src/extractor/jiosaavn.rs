@@ -5,6 +5,7 @@
 //! `_extract_episode`), their per-bitrate `generateAuthToken` URLs and the
 //! `url_transparent` song and episode entries of the list extractors.
 use super::{Extractor, dict_format, dict_info, direct};
+use crate::extractor::UrlRegex;
 use crate::info::PlaylistInfo;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
@@ -40,35 +41,29 @@ const PAGE_SIZE: usize = 50;
 const SHOW_PAGE_SIZE: usize = 10;
 const URL_BASE: &str = r"^https?://(?:www\.)?(?:jio)?saavn\.com";
 
-static SONG_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static SONG_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"{URL_BASE}(?:/song/[^/?#]+/|/s/song/(?:[^/?#]+/){{3}})(?P<id>[^/?#]+)"
     ))
-    .unwrap()
 });
-static ALBUM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(r"{URL_BASE}/album/[^/?#]+/(?P<id>[^/?#]+)")).unwrap()
-});
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static ALBUM_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(&format!(r"{URL_BASE}/album/[^/?#]+/(?P<id>[^/?#]+)")));
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"{URL_BASE}/(?:s/playlist/(?:[^/?#]+/){{2}}|featured/[^/?#]+/)(?P<id>[^/?#]+)"
     ))
-    .unwrap()
 });
-static ARTIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(r"{URL_BASE}/artist/[^/?#]+/(?P<id>[^/?#]+)")).unwrap()
-});
-static SHOW_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static ARTIST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(&format!(r"{URL_BASE}/artist/[^/?#]+/(?P<id>[^/?#]+)")));
+static SHOW_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"{URL_BASE}/shows/[^/?#]+/(?P<id>[^/?#]{{11,}})/?(?:$|[?#])"
     ))
-    .unwrap()
 });
-static SHOW_PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static SHOW_PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"{URL_BASE}/shows/(?P<show>[^#/?]+)/(?P<season>\d+)/[^/?#]+"
     ))
-    .unwrap()
 });
 static INITIAL_DATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.__INITIAL_DATA__\s*=").unwrap());

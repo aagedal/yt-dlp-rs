@@ -6,6 +6,7 @@
 use super::{
     Extractor, dict_info, download_json, download_json_note, download_webpage, update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::html::clean_html;
 use crate::html_elements::elements_text_and_html_by_class;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
@@ -29,23 +30,20 @@ const BASE_URL: &str = "https://www.mellow-fan.com";
 const API_BASE: &str = "https://apiv5.mellow-fan.com/api/v5";
 const PUBLIC_API_BASE: &str = "https://public.mellow-fan.com/external/api/v5";
 
-static CAPTURE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static CAPTURE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:mellow-fan\.com|openrec\.tv)/(?:m/)?capture/(?P<id>[^/?#]+)",
     )
-    .unwrap()
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:mellow-fan\.com|openrec\.tv)/(?:m/)?user/[^/?#]+/playlist/(?P<id>[^/?#]+)",
     )
-    .unwrap()
 });
-static SEARCH_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static SEARCH_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:mellow-fan\.com|openrec\.tv)/(?:m/)?user/(?P<id>[^/?#]+)/search(?:/(?P<type>capture|movie))?(?:[/?#]|$)",
     )
-    .unwrap()
 });
 static PAGE_STORE_START: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.pageStore\s*=").unwrap());

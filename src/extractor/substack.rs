@@ -7,6 +7,7 @@
 //! Not ported: `_extract_embed_urls` (custom-domain pages in the generic
 //! extractor).
 use super::{Extractor, dict_format, dict_info, download_webpage, extract_m3u8_master_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -18,9 +19,8 @@ pub struct Substack;
 
 const NAME: &str = "Substack";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://[\w-]+\.substack\.com/p/(?P<id>[\w-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://[\w-]+\.substack\.com/p/(?P<id>[\w-]+)"));
 /// `_search_json(r'window\._preloads\s*=\s*JSON\.parse\(', ...,
 /// contains_pattern=r'"{(?s:.+)}"')`.
 static PRELOADS: LazyLock<Regex> = LazyLock::new(|| {

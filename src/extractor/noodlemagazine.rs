@@ -2,6 +2,7 @@
 //! watch page's OpenGraph and `video:*` metadata and the `window.playlist`
 //! JSON's direct MP4 sources. HLS sources are not supported natively.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::extractor::streamable::int_or_none;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
@@ -15,11 +16,8 @@ pub struct NoodleMagazine;
 const NAME: &str = "NoodleMagazine";
 const BASE: &str = "https://adult.noodlemagazine.com";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www|adult\.)?noodlemagazine\.com/watch/(?P<id>[0-9_-]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www|adult\.)?noodlemagazine\.com/watch/(?P<id>[0-9_-]+)")
 });
 static PLAYLIST: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"window\.playlist\s*=").unwrap());
 

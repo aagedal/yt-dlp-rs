@@ -1,6 +1,7 @@
 //! Upstream `WebcameraplIE` (`yt_dlp/extractor/webcamerapl.py`): a camera
 //! page's ROT13-encoded live HLS manifest and its heading.
 use super::{Extractor, download_webpage, extract_m3u8_fatal_live};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,9 +13,8 @@ pub struct Webcamerapl;
 
 const NAME: &str = "Webcamerapl";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?P<id>[\w-]+)\.webcamera\.pl").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?P<id>[\w-]+)\.webcamera\.pl"));
 static MANIFEST: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-src\s*=\s*"(uggc[^"]+\.z3h8)""#).unwrap());
 static TITLE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<h1\b[^>]*>([^>]+)</h1>").unwrap());

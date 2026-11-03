@@ -1,8 +1,8 @@
 //! Upstream `BildIE` (`yt_dlp/extractor/bild.py`): the article's
 //! `,view=json` clip data with its HLS and MP4 sources as formats.
 use super::{Extractor, download_json, extract_m3u8_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -12,8 +12,10 @@ pub struct Bild;
 
 const NAME: &str = "Bild";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?bild\.de/(?:[^/]+/)+(?P<display_id>[^/]+)-(?P<id>\d+)(?:,auto=true)?\.bild\.html").unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^https?://(?:www\.)?bild\.de/(?:[^/]+/)+(?P<display_id>[^/]+)-(?P<id>\d+)(?:,auto=true)?\.bild\.html",
+    )
 });
 
 /// `_match_id`.

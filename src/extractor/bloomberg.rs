@@ -4,6 +4,7 @@
 //! as HDS (`hds`), with the OpenGraph title (without `: Video`),
 //! description and thumbnail.
 use super::{Extractor, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,9 +16,8 @@ pub struct Bloomberg;
 
 const NAME: &str = "Bloomberg";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?bloomberg\.com/(?:[^/]+/)*(?P<id>[^/?#]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?bloomberg\.com/(?:[^/]+/)*(?P<id>[^/?#]+)")
 });
 // `(["\'])(?P<id>(?:(?!\1).)+)\1` for each quote.
 static VIDEO_ID: LazyLock<[Regex; 3]> = LazyLock::new(|| {

@@ -4,8 +4,8 @@
 //! document has them), and brands as a generator of `url` results read one
 //! `videosPageUrl` page at a time.
 use super::{Extractor, dict_format, dict_info, download_json, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -17,13 +17,11 @@ pub struct KikaPlaylist;
 const NAME: &str = "Kika";
 const PLAYLIST_NAME: &str = "KikaPlaylist";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?kika\.de/[\w/-]+/videos/(?P<id>[a-z-]+\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?kika\.de/[\w/-]+/videos/(?P<id>[a-z-]+\d+)")
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?kika\.de/[\w-]+/(?P<id>[a-z-]+\d+)").unwrap()
-});
+static PLAYLIST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?kika\.de/[\w-]+/(?P<id>[a-z-]+\d+)"));
 
 /// `KikaIE._match_id`.
 pub fn suitable(url: &str) -> bool {

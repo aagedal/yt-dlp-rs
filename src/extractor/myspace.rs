@@ -3,6 +3,7 @@
 //! `data-*` button attributes, and an album's `music:song` links as `url`
 //! entries.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,14 +18,13 @@ const NAME: &str = "MySpace";
 const ALBUM_NAME: &str = "MySpace:album";
 const ALBUM_KEY: &str = "MySpaceAlbum";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://myspace\.com/[^/]+/(?P<mediatype>video/[^/]+/(?P<video_id>\d+)|music/song/[^/?#&]+-(?P<song_id>\d+)-\d+(?:[/?#&]|$))",
     )
-    .unwrap()
 });
-static ALBUM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://myspace\.com/([^/]+)/music/album/(?P<title>.*-)(?P<id>\d+)").unwrap()
+static ALBUM_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://myspace\.com/([^/]+)/music/album/(?P<title>.*-)(?P<id>\d+)")
 });
 static PLAYER_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"videoSwf":"([^"?]*)"#).unwrap());

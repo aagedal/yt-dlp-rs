@@ -3,6 +3,7 @@
 //! Tumblr-hosted video (iframe sources or the post's media), external
 //! provider embeds as `url` results, and the post metadata.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,9 +17,10 @@ const NAME: &str = "Tumblr";
 const OAUTH_URL: &str = "https://www.tumblr.com/api/v2/oauth2/token";
 const LOGIN_URL: &str = "https://www.tumblr.com/login";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?P<blog1>[^/?#&]+)\.tumblr\.com/(?:post|video|(?P<blog2>[a-zA-Z\d-]+))/(?P<id>[0-9]+)(?:$|[/?#])")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^https?://(?P<blog1>[^/?#&]+)\.tumblr\.com/(?:post|video|(?P<blog2>[a-zA-Z\d-]+))/(?P<id>[0-9]+)(?:$|[/?#])",
+    )
 });
 static API_TOKEN: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#""API_TOKEN":\s*"(\w+)""#).unwrap());

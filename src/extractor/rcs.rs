@@ -8,6 +8,7 @@ use super::{
     Extractor, dict_format, dict_info, download_json, download_webpage,
     extract_m3u8_master_optional,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -29,21 +30,20 @@ static UUID_RE: LazyLock<Regex> = LazyLock::new(|| {
 });
 static RCS_ID_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[\w-]+-\d{10}").unwrap());
 
-static EMBEDS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static EMBEDS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?P<vid>video)\.(?P<cdn>(?:rcs|(?:corriere\w+\.)?corriere|(?:gazzanet\.)?gazzetta)\.it)/video-embed/(?P<id>[^/=&\?]+?)(?:$|\?)",
     )
-    .unwrap()
 });
-static RCS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static RCS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?P<vid>video|viaggi)\.(?P<cdn>(?:corrieredelmezzogiorno\.|corrieredelveneto\.|corrieredibologna\.|corrierefiorentino\.)?corriere\.it|(?:gazzanet\.)?gazzetta\.it)/[^?#]+?/(?P<id>[^/\?]+)(?:\?|/?$)",
     )
-    .unwrap()
 });
-static VARIOUS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://www\.(?P<cdn>leitv\.it|youreporter\.it|amica\.it)/(?:[^/]+/)?(?P<id>[^/]+?)(?:$|\?|/)")
-        .unwrap()
+static VARIOUS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://www\.(?P<cdn>leitv\.it|youreporter\.it|amica\.it)/(?:[^/]+/)?(?P<id>[^/]+?)(?:$|\?|/)",
+    )
 });
 // `_EMBED_REGEX`: a `data-frame-src=` or `<iframe ... src=` RCS embed (one
 // alternative per quote, as upstream's `(["\'])` backreference).

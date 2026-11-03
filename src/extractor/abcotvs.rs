@@ -5,8 +5,8 @@
 use super::{
     Extractor, dict_format, dict_info, download_json, download_json_note, update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -20,15 +20,13 @@ const KEY: &str = "ABCOTVS";
 const CLIPS_NAME: &str = "abcotvs:clips";
 const CLIPS_KEY: &str = "ABCOTVSClips";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?P<site>abc(?:7(?:news|ny|chicago)?|11|13|30)|6abc)\.com(?:(?:/[^/]+)*/(?P<display_id>[^/]+))?/(?P<id>\d+)",
     )
-    .unwrap()
 });
-static CLIPS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://clips\.abcotvs\.com/(?:[^/]+/)*video/(?P<id>\d+)").unwrap()
-});
+static CLIPS_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://clips\.abcotvs\.com/(?:[^/]+/)*video/(?P<id>\d+)"));
 
 /// The station code for each site (`_SITE_MAP`).
 fn station(site: &str) -> Option<&'static str> {

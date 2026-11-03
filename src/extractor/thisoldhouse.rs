@@ -4,6 +4,7 @@
 //! `referrer`). Subscriber-only pages raise login-required errors; the
 //! account login (`--username`) is not supported natively.
 use super::{Extractor, direct, follow_url, proto_relative};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ pub struct ThisOldHouse;
 
 const NAME: &str = "ThisOldHouse";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?thisoldhouse\.com/(?:(?:watch|how-to|tv-episode|(?:[^/?#]+/)?\d+)/(?P<id>[^/?#]+)|ask-this-old-house/(?P<ask_id>season-\d+/episode-\d+))",
     )
-    .unwrap()
 });
 static ZYPE_IFRAME: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

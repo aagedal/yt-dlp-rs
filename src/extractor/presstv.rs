@@ -2,6 +2,7 @@
 //! `inpPlayback` path as four fixed-height MP4 formats, with the meta title
 //! and OpenGraph thumbnail and description.
 use super::{Extractor, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -20,11 +21,10 @@ const FORMATS: [(u32, &str); 4] = [
     (1080, ".mp4"),
 ];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?presstv\.ir/[^/]+/(?P<y>\d+)/(?P<m>\d+)/(?P<d>\d+)/(?P<id>\d+)/(?P<display_id>[^/]+)?",
     )
-    .unwrap()
 });
 static INPUT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)(<input[^>]+>)").unwrap());
 

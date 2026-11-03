@@ -8,6 +8,7 @@
 mod instances;
 
 use super::{Extractor, dict_format, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -31,12 +32,11 @@ fn instances_re() -> String {
     format!("(?:{})", instances::INSTANCES.join("|"))
 }
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"^(?:peertube:(?P<host>[^:]+):|https?://(?P<host_2>{})/(?:videos/(?:watch|embed)|api/v\d/videos|w)/)(?P<id>{UUID_RE})",
         instances_re()
     ))
-    .unwrap()
 });
 /// `PeerTubePlaylistIE._TYPES`, in upstream order.
 const TYPES: [(&str, &str); 3] = [
@@ -44,12 +44,11 @@ const TYPES: [(&str, &str); 3] = [
     ("c", "video-channels"),
     ("w/p", "video-playlists"),
 ];
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(format!(
         r"^https?://(?P<host>{})/(?P<type>(?:a|c|w/p))/(?P<id>[^/]+)",
         instances_re()
     ))
-    .unwrap()
 });
 
 /// `PeerTubeIE._match_valid_url`.

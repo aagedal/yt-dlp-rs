@@ -2,8 +2,8 @@
 //! ON): the CDN playlist derived from the media ID as fatal HLS formats and
 //! subtitles, with the page's `<title-div>` title and prose description.
 use super::{Extractor, download_webpage, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -13,11 +13,10 @@ pub struct FilmArchiv;
 
 const NAME: &str = "FilmArchiv";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?filmarchiv\.at/de/filmarchiv-on/video/(?P<id>f_[0-9a-zA-Z]{5,})",
     )
-    .unwrap()
 });
 
 /// `_match_id`.

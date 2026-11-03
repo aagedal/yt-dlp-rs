@@ -8,8 +8,8 @@ use super::{
     Extractor, dict_info, download_json, download_json_note, extract_m3u8_master_optional,
     extract_mpd_optional_note, update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{Result, Subtitles, VideoFormat};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -20,11 +20,10 @@ pub struct AtresPlayer;
 const NAME: &str = "AtresPlayer";
 const API_BASE: &str = "https://api.atresplayer.com/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?atresplayer\.com/(?:[^/?#]+/){4}(?P<display_id>.+?)_(?P<id>[0-9a-f]{24})",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`'s `display_id` and `id` groups.

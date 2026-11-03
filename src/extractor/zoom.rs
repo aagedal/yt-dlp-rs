@@ -7,6 +7,7 @@
 use super::{
     Extractor, dict_format, dict_info, download_json_note, download_webpage_note, update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, SubtitleFormat, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -21,11 +22,10 @@ pub struct Zoom;
 const RECORDING_NAME: &str = "zoom";
 const RECORDING_KEY: &str = "Zoom";
 
-static RECORDING_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static RECORDING_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?P<base_url>https?://(?:[^.]+\.)?zoom\.us/)rec(?:ording)?/(?P<type>play|share)/(?P<id>[\w.-]+)",
     )
-    .unwrap()
 });
 static PAGE_DATA: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"window\.__data__\s*=").unwrap());
 static PASSWORD_FORM: LazyLock<Regex> =
@@ -35,10 +35,8 @@ static RESOLUTION: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"_(\d+x\d+)\.m
 const NAME: &str = "zoom:clips";
 const KEY: &str = "ZoomClips";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"https?://(?:[^.]+\.)?zoom\.us/clips/share/(?P<id>[\w.-]+)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"https?://(?:[^.]+\.)?zoom\.us/clips/share/(?P<id>[\w.-]+)"));
 
 /// `_match_id`.
 pub fn clips_suitable(url: &str) -> bool {

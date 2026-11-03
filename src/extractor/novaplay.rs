@@ -2,8 +2,8 @@
 //! videos from the page's Next.js `video` props, the client API's access
 //! token (cached for the run) and the fite.tv streams API's HLS playlist.
 use super::{Extractor, dict_info, download_json_headers, download_json_note, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::{LazyLock, Mutex};
@@ -13,9 +13,8 @@ pub struct NovaPlay;
 
 const NAME: &str = "NovaPlay";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://play\.nova\.bg/video/[^?#]+/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://play\.nova\.bg/video/[^?#]+/(?P<id>\d+)"));
 
 /// The class attribute `_access_token`, kept for later URLs.
 static ACCESS_TOKEN: Mutex<Option<String>> = Mutex::new(None);

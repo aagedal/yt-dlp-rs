@@ -3,6 +3,7 @@
 //! player's `videojs(...)` sources as HLS formats and subtitles, with Open
 //! Graph (else `product-title`) metadata.
 use super::{Extractor, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct BtvPlus;
 
 const NAME: &str = "BTVPlus";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?btvplus\.bg/produkt/(?:predavaniya|seriali|novini)/(?P<id>\d+)",
     )
-    .unwrap()
 });
 static PLAYER_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"var\s+videoUrl\s*=\s*['"]([^'"]+)['"]"#).unwrap());

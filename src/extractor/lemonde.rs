@@ -3,6 +3,7 @@
 //! result. Pages without one fall back to upstream's `Generic` extractor,
 //! which is this port's generic route (`Ok(None)` lets it run).
 use super::{Extractor, download_webpage, follow_url, proto_relative};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct Lemonde;
 
 const NAME: &str = "Lemonde";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:.+?\.)?lemonde\.fr/(?:[^/]+/)*(?P<id>[^/]+)\.html")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:.+?\.)?lemonde\.fr/(?:[^/]+/)*(?P<id>[^/]+)\.html")
 });
 // `url\s*:\s*(["'])(?P<url>...)\1` split into one alternative per quote.
 static DIGITEKA: LazyLock<Regex> = LazyLock::new(|| {

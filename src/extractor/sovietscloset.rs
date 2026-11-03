@@ -5,6 +5,7 @@
 //! `url` entries from the global payload.
 use super::nuxt::{Step, search_nuxt_data};
 use super::{Extractor, download_webpage, download_webpage_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -19,12 +20,12 @@ const NAME: &str = "SovietsCloset";
 const PLAYLIST_NAME: &str = "SovietsClosetPlaylist";
 const MEDIADELIVERY_REFERER: &str = "https://iframe.mediadelivery.net/";
 
-static VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?sovietscloset\.com/video/(?P<id>[0-9]+)/?").unwrap()
+static VIDEO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?sovietscloset\.com/video/(?P<id>[0-9]+)/?")
 });
 // Upstream's `(?!video)` lookahead, applied to the captured path below.
-static PLAYLIST_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?sovietscloset\.com/(?P<id>[^#?]+)").unwrap());
+static PLAYLIST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?sovietscloset\.com/(?P<id>[^#?]+)"));
 static STATIC_BASE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(/_nuxt/static/\d+)").unwrap());
 
 /// `_match_valid_url` for the video IE.

@@ -3,8 +3,8 @@
 //! JSON (its cleaned media URL as the only format) and a podcast's episode
 //! list as `iheartradio:ID` entries.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -19,15 +19,16 @@ const PODCAST_NAME: &str = "IHeartRadioPodcast";
 const PODCAST_IE_NAME: &str = "iheartradio:podcast";
 const API: &str = "https://api.iheart.com/api/v3/podcast/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^(?:https?://(?:www\.)?iheart\.com/podcast/[^/]+/episode/(?P<display_id>[^/?&#]+)-|iheartradio:)(?P<id>\d+)").unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^(?:https?://(?:www\.)?iheart\.com/podcast/[^/]+/episode/(?P<display_id>[^/?&#]+)-|iheartradio:)(?P<id>\d+)",
+    )
 });
 
-static PODCAST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static PODCAST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?iheart(?:podcastnetwork)?\.com/podcast/[^/?&#]+-(?P<id>\d+)/?(?:[?#&]|$)",
     )
-    .unwrap()
 });
 
 /// `IHeartRadioIE._match_valid_url`.

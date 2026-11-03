@@ -2,6 +2,7 @@
 //! the page's player `data-href` (or `videoplayer` link), with the generic
 //! title and the OpenGraph description, image and duration.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct FiveTv;
 
 const NAME: &str = "FiveTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?5-tv\.ru/(?:(?:[^/]+/)+(?P<id>\d+)|(?P<path>[^/?#]+)(?:[/?#])?)",
     )
-    .unwrap()
 });
 static VIDEO_URL: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [

@@ -1,8 +1,8 @@
 //! Upstream `GraspopIE` (`yt_dlp/extractor/graspop.py`): the Proximus
 //! festival stream's HLS manifest (over `http:`), name and poster.
 use super::{Extractor, download_json, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,9 +12,8 @@ pub struct Graspop;
 
 const NAME: &str = "Graspop";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://vod\.graspop\.be/[a-z]{2}/(?P<id>\d+)/").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://vod\.graspop\.be/[a-z]{2}/(?P<id>\d+)/"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

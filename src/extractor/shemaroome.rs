@@ -4,6 +4,7 @@
 //! (zero IV); items it does not release are refused as premium. The master
 //! playlist is read with the `stream_key` header, which every format keeps.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::subtitles::SubtitleFormat;
 use crate::{Error, Result, Subtitles, VideoInfo};
 use base64::Engine as _;
@@ -19,11 +20,8 @@ const NAME: &str = "ShemarooMe";
 const USER_LISTS: &str = "https://www.shemaroome.com/users/user_all_lists";
 const PREMIUM: &str = "Premium videos cannot be downloaded yet.";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?shemaroome\.com/(?:movies|shows)/(?P<id>[^?#]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?shemaroome\.com/(?:movies|shows)/(?P<id>[^?#]+)")
 });
 static DESCRIPTION: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)>Synopsis(</.+?)</").unwrap());

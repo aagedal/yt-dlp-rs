@@ -1,6 +1,7 @@
 //! Upstream `WorldStarHipHopIE` (`yt_dlp/extractor/worldstarhiphop.py`):
 //! the first HTML5 media entry with the page heading as its title.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,11 +13,10 @@ pub struct WorldStarHipHop;
 
 const NAME: &str = "WorldStarHipHop";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www|m)\.worldstar(?:candy|hiphop)\.com/(?:videos|android)/video\.php\?.*?\bv=(?P<id>[^&]+)",
     )
-    .unwrap()
 });
 static TITLES: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [

@@ -2,8 +2,8 @@
 //! (`yt_dlp/extractor/rinsefm.py`): the query API's episode entry as an
 //! untyped audio result, and a show's audio episodes as a playlist of them.
 use super::{Extractor, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -16,11 +16,10 @@ const NAME: &str = "RinseFM";
 const PLAYLIST_NAME: &str = "RinseFMArtistPlaylist";
 const API_BASE: &str = "https://rinse.fm/api/query/v1";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?rinse\.fm/episodes/(?P<id>[^/?#]+)").unwrap()
-});
-static PLAYLIST_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?rinse\.fm/shows/(?P<id>[^/?#]+)").unwrap());
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?rinse\.fm/episodes/(?P<id>[^/?#]+)"));
+static PLAYLIST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?rinse\.fm/shows/(?P<id>[^/?#]+)"));
 
 /// `RinseFMIE._match_id`.
 pub fn suitable(url: &str) -> bool {

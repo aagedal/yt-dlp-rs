@@ -6,6 +6,7 @@
 use super::{
     Extractor, dict_format, dict_info, download_webpage, search_warning, update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::html::{clean_html, html_search_meta_clean};
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoFormat, VideoInfo};
 use regex::Regex;
@@ -99,27 +100,25 @@ const INSTANCES: &[&str] = &[
     "www2.univ-sba.dz",
 ];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
     let hosts = INSTANCES
         .iter()
         .map(|host| regex::escape(host))
         .collect::<Vec<_>>()
         .join("|");
-    crate::extractor::url_regex(&format!(
+    UrlRegex::ascii(&format!(
         r"^https?://(?P<host>{hosts})/(?:m/(?P<tmp_id>[0-9a-f]+)|(?:category/)?video/(?P<display_id>[\w-]+)/(?P<id>[0-9a-f]{{32}})|media/embed.*(?:\?|&)key=(?P<embed_id>[0-9a-f]{{32}}&?))"
     ))
-    .unwrap()
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
     let hosts = INSTANCES
         .iter()
         .map(|host| regex::escape(host))
         .collect::<Vec<_>>()
         .join("|");
-    crate::extractor::url_regex(&format!(
+    UrlRegex::ascii(&format!(
         r"^(?P<host>https?://(?:{hosts}))/(?:(?P<mode1>album)/view/aid/(?P<album_id>[0-9]+)|(?P<mode2>category|channel)/(?P<name>[\w-]+)/(?P<channel_id>[0-9]+)|(?P<mode3>tag)/(?P<tag_id>[0-9]+))"
     ))
-    .unwrap()
 });
 /// The `"..../video/..."` links of a `boxList` page (`ViMPPlaylistIE._fetch_page`).
 static PLAYLIST_VIDEO: LazyLock<Regex> =

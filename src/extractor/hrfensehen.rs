@@ -3,6 +3,7 @@
 //! JSON, its progressive MP4 qualities and the optional German subtitle track.
 use super::clyp::key_error;
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ pub struct HrFernsehen;
 const NAME: &str = "hrfernsehen";
 const KEY: &str = "HRFernsehen";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://www\.(?:hr-fernsehen|hessenschau)\.de/.*,video-(?P<id>[0-9]{6})\.html",
     )
-    .unwrap()
 });
 static LOADER: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"data-(?:new-)?hr-mediaplayer-loader='([^']*)'").unwrap());

@@ -4,6 +4,7 @@
 //! the `downloads` links and the subtitle tracks. vids.io pages hand off to
 //! the SproutVideo embed they contain; password-protected pages are reported.
 use super::{Extractor, dict_format, dict_info, download_webpage_note_headers, follow_url};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -24,11 +25,8 @@ const M3U8_URL_TEMPLATE: &str =
     "https://{base}.videos.sproutvideo.com/{s3_user_hash}/{s3_video_hash}/video/index.m3u8";
 const QUALITIES: [&str; 3] = ["hd", "uhd", "source"];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://videos\.sproutvideo\.com/embed/(?P<id>[\da-f]+)/[\da-f]+",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://videos\.sproutvideo\.com/embed/(?P<id>[\da-f]+)/[\da-f]+")
 });
 
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
@@ -45,9 +43,8 @@ static PLAYER_INFO: LazyLock<Regex> = LazyLock::new(|| {
     .unwrap()
 });
 
-static VIDS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://[\w-]+\.vids\.io/videos/(?P<id>[\da-f]+)/(?P<display_id>[\w-]+)")
-        .unwrap()
+static VIDS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://[\w-]+\.vids\.io/videos/(?P<id>[\da-f]+)/(?P<display_id>[\w-]+)")
 });
 
 /// `_match_valid_url` of `SproutVideoIE`.

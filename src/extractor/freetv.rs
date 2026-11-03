@@ -3,6 +3,7 @@
 //! (HLS playlists with subtitles); a series' seasons are read lazily as its
 //! episodes are requested.
 use super::{Extractor, dict_info, download_webpage, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -18,11 +19,10 @@ const SERIES_NAME: &str = "freetv:series";
 const SERIES_KEY: &str = "FreeTv";
 const API: &str = "https://www.freetv.com/wordpress/wp-admin/admin-ajax.php";
 
-static MOVIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?freetv\.com/peliculas/(?P<id>[^/]+)").unwrap()
-});
-static SERIES_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?freetv\.com/series/(?P<id>[^/]+)").unwrap());
+static MOVIES_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?freetv\.com/peliculas/(?P<id>[^/]+)"));
+static SERIES_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?freetv\.com/series/(?P<id>[^/]+)"));
 static VIDEO_IDS: LazyLock<[Regex; 3]> = LazyLock::new(|| {
     [
         Regex::new(r#"class=["'][^>]+postid-(?P<video_id>\d+)"#).unwrap(),

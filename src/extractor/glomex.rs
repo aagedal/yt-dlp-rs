@@ -3,8 +3,8 @@
 //! API lists the video's HLS and progressive sources. Playlists of several
 //! videos and the webpage hand-off to embeds are not ported.
 use super::{Extractor, dict_format, dict_info, extract_m3u8_master_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, Subtitles, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -20,11 +20,12 @@ const DEFAULT_ORIGIN: &str = "https://player.glomex.com/";
 const API_URL: &str = "https://integration-cloudfront-eu-west-1.mes.glomex.cloud/";
 const PLAYER_PATH: &str = "//player.glomex.com/integration/1/iframe-player.html";
 
-static PAGE_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://video\.glomex\.com/[^/]+/(?P<id>v-[^-]+)").unwrap());
-static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?:(?://player\.glomex\.com/integration/[^/]/iframe-player\.html)\?([^#]+&)?playlistId=(?P<id>[^#&]+)")
-        .unwrap()
+static PAGE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://video\.glomex\.com/[^/]+/(?P<id>v-[^-]+)"));
+static EMBED_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?:(?://player\.glomex\.com/integration/[^/]/iframe-player\.html)\?([^#]+&)?playlistId=(?P<id>[^#&]+)",
+    )
 });
 
 /// `_match_valid_url` for `video.glomex.com` pages.

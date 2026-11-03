@@ -4,6 +4,7 @@
 use super::{
     Extractor, dict_info, download_webpage, extract_m3u8_master_optional, extract_mpd_optional,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,8 @@ pub struct Elonet;
 
 const NAME: &str = "Elonet";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://elonet\.finna\.fi/Record/kavi\.elonet_elokuva_(?P<id>[0-9]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://elonet\.finna\.fi/Record/kavi\.elonet_elokuva_(?P<id>[0-9]+)")
 });
 static SOURCES: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"id='video-data'[^>]+data-video-sources="([^"]+)""#).unwrap());

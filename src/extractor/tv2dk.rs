@@ -8,6 +8,7 @@ use super::{
     Extractor, dict_format, dict_info, download_webpage, extract_m3u8_master_optional,
     extract_mpd_optional_note,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -21,14 +22,13 @@ pub struct Tv2DkBornholmPlay;
 const NAME: &str = "TV2DK";
 const BORNHOLM_NAME: &str = "TV2DKBornholmPlay";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:tvsyd|tv2ostjylland|tvmidtvest|tv2fyn|tv2east|tv2lorry|tv2nord|tv2kosmopol)\.dk/(?:[^/?#]+/)*(?P<id>[^/?\#&]+)",
     )
-    .unwrap()
 });
-static BORNHOLM_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://play\.tv2bornholm\.dk/\?.*?\bid=(?P<id>\d+)").unwrap());
+static BORNHOLM_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://play\.tv2bornholm\.dk/\?.*?\bid=(?P<id>\d+)"));
 static PLAYER: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"x-data="(?:video_player|simple_player)\((\{[^"]+\})"#).unwrap());
 static TITLE: LazyLock<Regex> =

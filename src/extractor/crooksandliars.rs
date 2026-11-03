@@ -1,6 +1,7 @@
 //! Upstream `CrooksAndLiarsIE` (`yt_dlp/extractor/crooksandliars.py`): an
 //! embed page's `manifest` JSON video flavors, and its embeds.
 use super::{Extractor, download_webpage, proto_relative, search_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct CrooksAndLiars;
 pub(crate) const NAME: &str = "CrooksAndLiars";
 pub(crate) const KEY: &str = "CrooksAndLiars";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://embed\.crooksandliars\.com/(?:embed|v)/(?P<id>[A-Za-z0-9]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://embed\.crooksandliars\.com/(?:embed|v)/(?P<id>[A-Za-z0-9]+)")
 });
 /// `_EMBED_REGEX` (`\1` is one quote character, so the backreference is an
 /// alternation of both).

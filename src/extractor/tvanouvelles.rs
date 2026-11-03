@@ -3,6 +3,7 @@
 //! TVA Nouvelles Brightcove player, and an article's `data-video-id` videos
 //! as a playlist of `url` results of those video pages.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,11 +17,10 @@ pub struct TvaNouvellesArticle;
 const NAME: &str = "TVANouvelles";
 const ARTICLE_NAME: &str = "TVANouvellesArticle";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?tvanouvelles\.ca/videos/(?P<id>\d+)").unwrap()
-});
-static ARTICLE_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?tvanouvelles\.ca/(?:[^/]+/)+(?P<id>[^/?#&]+)").unwrap()
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?tvanouvelles\.ca/videos/(?P<id>\d+)"));
+static ARTICLE_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?tvanouvelles\.ca/(?:[^/]+/)+(?P<id>[^/?#&]+)")
 });
 static VIDEO_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-video-id=(["'])?(?P<id>\d+)"#).unwrap());

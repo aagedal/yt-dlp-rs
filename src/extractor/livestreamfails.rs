@@ -1,8 +1,8 @@
 //! Upstream `LivestreamfailsIE` (`yt_dlp/extractor/livestreamfails.py`):
 //! the clip API JSON as an untyped result.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,11 +12,8 @@ pub struct Livestreamfails;
 
 const NAME: &str = "Livestreamfails";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?livestreamfails\.com/(?:clip|post)/(?P<id>[0-9]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?livestreamfails\.com/(?:clip|post)/(?P<id>[0-9]+)")
 });
 
 /// `_match_id`.

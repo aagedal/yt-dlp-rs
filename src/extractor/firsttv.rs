@@ -5,6 +5,7 @@ use super::{
     Extractor, dict_format, dict_info, direct, download_json, download_webpage,
     extract_m3u8_master_optional, extract_mpd_fatal_id, extract_mpd_optional,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,11 +18,8 @@ pub struct FirstTv;
 const NAME: &str = "1tv";
 const KEY: &str = "FirstTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?(?:sport)?1tv\.ru/(?:[^/?#]+/)+(?P<id>[^/?#]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?(?:sport)?1tv\.ru/(?:[^/?#]+/)+(?P<id>[^/?#]+)")
 });
 /// `data-playlist-url=(["'])(?P<url>(?:(?!\1).)+)\1`, without a backreference.
 static PLAYLIST_URL: LazyLock<Regex> =
@@ -288,8 +286,8 @@ const LIVE_NAME: &str = "1tv:live";
 const LIVE_KEY: &str = "FirstTVLive";
 const LIVE_PLAYLIST: &str = "https://stream.1tv.ru/api/playlist/1tvch-v1_as_array.json";
 
-static LIVE_VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| crate::extractor::url_regex(r"^https?://(?:www\.)?1tv\.ru/live").unwrap());
+static LIVE_VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?1tv\.ru/live"));
 
 /// `_match_id` for `FirstTVLiveIE`.
 pub fn live_suitable(url: &str) -> bool {

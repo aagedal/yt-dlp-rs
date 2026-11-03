@@ -3,8 +3,8 @@
 //! (or podcast audio) data and the content's title, description and
 //! publication time.
 use super::{Extractor, download_webpage, search_nextjs_data};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -16,9 +16,8 @@ const NAME: &str = "BeaconTv";
 const MEMBER_TIER: &str = "MemberTier:65b258d178f89be87b4dc0a4";
 const LOGIN_HINT: &str = "Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?beacon\.tv/content/(?P<id>[\w-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?beacon\.tv/content/(?P<id>[\w-]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

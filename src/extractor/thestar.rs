@@ -1,6 +1,7 @@
 //! Upstream `TheStarIE` (`yt_dlp/extractor/thestar.py`): the page's
 //! `mainartBrightcoveVideoId` as a `url` result of its Brightcove player.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -11,9 +12,8 @@ pub struct TheStar;
 
 const NAME: &str = "TheStar";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?thestar\.com/(?:[^/]+/)*(?P<id>.+)\.html")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?thestar\.com/(?:[^/]+/)*(?P<id>.+)\.html")
 });
 static BRIGHTCOVE_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"mainartBrightcoveVideoId["']?\s*:\s*["']?(\d+)"#).unwrap());

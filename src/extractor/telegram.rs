@@ -3,6 +3,7 @@
 //! text, author and date; posts with several videos are playlists unless the
 //! URL has `single` or `--no-playlist` picks the post's own video.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,9 +16,8 @@ pub struct TelegramEmbed;
 const NAME: &str = "telegram:embed";
 const KEY: &str = "TelegramEmbed";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://t\.me/(?P<channel_id>[^/]+)/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://t\.me/(?P<channel_id>[^/]+)/(?P<id>\d+)"));
 static TIMESTAMP: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<time[^>]*datetime="([^"]*)""#).unwrap());
 static VIDEO_PLAYER: LazyLock<Regex> = LazyLock::new(|| {

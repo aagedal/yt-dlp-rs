@@ -3,6 +3,7 @@
 //! playlist and thumbnail, and the original file when anonymous downloads
 //! are enabled. Password-protected files remain explicit errors.
 use super::{Extractor, dict_format, dict_info, download_webpage, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -15,11 +16,8 @@ pub struct Dropbox;
 
 const NAME: &str = "Dropbox";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?dropbox\.com/(?:(?:e/)?scl/f[io]|sh?)/(?P<id>\w+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?dropbox\.com/(?:(?:e/)?scl/f[io]|sh?)/(?P<id>\w+)")
 });
 static PREFETCH: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"registerStreamedPrefetch\s*\(\s*"[\w/+=]+"\s*,\s*"([\w/+=]+)""#).unwrap()

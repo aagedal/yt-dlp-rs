@@ -2,6 +2,7 @@
 //! `displayList-data` JSON, then the served source's URL as an untyped
 //! `mp3` result.
 use super::{Extractor, download_json_note, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,10 +14,8 @@ pub struct Hypem;
 
 const NAME: &str = "Hypem";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?hypem\.com/track/(?P<id>[0-9a-z]{5})")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?hypem\.com/track/(?P<id>[0-9a-z]{5})"));
 
 static TRACKS: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?s)<script\s+type="application/json"\s+id="displayList-data">(.+?)</script>"#)

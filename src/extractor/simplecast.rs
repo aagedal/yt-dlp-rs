@@ -5,6 +5,7 @@
 //! episodes as a generator of the same results, and `SimplecastIE`'s iframe
 //! embeds.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -25,18 +26,17 @@ const PODCAST_KEY: &str = "SimplecastPodcast";
 
 const UUID: &str = r"[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12}";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"^https?://(?:api\.simplecast\.com/episodes|player\.simplecast\.com)/(?P<id>{UUID})"
     ))
-    .unwrap()
 });
 /// `SimplecastEpisodeIE._VALID_URL` without its `(?!api\.)` look-ahead.
-static EPISODE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://([^/]+)\.simplecast\.com/episodes/(?P<id>[^/?&#]+)").unwrap()
+static EPISODE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://([^/]+)\.simplecast\.com/episodes/(?P<id>[^/?&#]+)")
 });
 /// `SimplecastPodcastIE._VALID_URL`'s scheme and host part.
-static PODCAST_HOST: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^https?://([^/]+)").unwrap());
+static PODCAST_HOST: LazyLock<UrlRegex> = LazyLock::new(|| UrlRegex::new(r"^https?://([^/]+)"));
 static PODCAST_EPISODE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^/episodes/[^/?&#]+").unwrap());
 /// `_EMBED_REGEX`.

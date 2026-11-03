@@ -3,8 +3,8 @@
 //! (privacy-protected guest URLs dropped), the `socialVideoUrl` redirect
 //! fallback and the clip metadata.
 use super::{Extractor, dict_format, dict_info, download_json_headers, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -14,11 +14,8 @@ pub struct MedalTv;
 
 const NAME: &str = "MedalTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?medal\.tv/games/[^/?#&]+/clips/(?P<id>[^/?#&]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?medal\.tv/games/[^/?#&]+/clips/(?P<id>[^/?#&]+)")
 });
 
 /// `_match_id`.

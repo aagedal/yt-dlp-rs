@@ -5,8 +5,8 @@
 //! query as `extra_param_to_segment_url`, description chapters and, when
 //! requested, the transcript subtitles. Folders are not supported.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -18,11 +18,8 @@ const NAME: &str = "loom";
 const KEY: &str = "Loom";
 const APOLLO_VERSION: &str = "45a5bd4";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?loom\.com/(?:share|embed)/(?P<id>[\da-f]{32})",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?loom\.com/(?:share|embed)/(?P<id>[\da-f]{32})")
 });
 
 /// `LoomIE._GRAPHQL_QUERIES` (verbatim).

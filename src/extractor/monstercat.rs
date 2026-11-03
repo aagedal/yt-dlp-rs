@@ -2,6 +2,7 @@
 //! release page's track table as a playlist of `track-stream` MP3 entries
 //! carrying the release's title, cover, artists and date.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct Monstercat;
 
 const NAME: &str = "Monstercat";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://www\.monstercat\.com/release/(?P<id>\d{12}|MC[A-Z]+\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://www\.monstercat\.com/release/(?P<id>\d{12}|MC[A-Z]+\d+)")
 });
 static ROW: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<tr[^<]*>").unwrap());
 

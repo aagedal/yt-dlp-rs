@@ -4,8 +4,8 @@
 //! `VideoObject` JSON-LD is merged with the player API's stream, HLS and
 //! DASH formats.
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage, follow_url};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoFormat, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -20,14 +20,13 @@ const EMBED_NAME: &str = "tvopengr:embed";
 const EMBED_KEY: &str = "TVOpenGrEmbed";
 const API_ENDPOINT: &str = "https://www.tvopen.gr/templates/data/player";
 
-static WATCH_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static WATCH_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?P<netloc>(?:www\.)?(?:tvopen|ethnos)\.gr)/watch/(?P<id>\d+)/(?P<slug>[^/]+)",
     )
-    .unwrap()
 });
-static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?:https?:)?//(?:www\.|cdn\.|)(?:tvopen|ethnos).gr/embed/(?P<id>\d+)").unwrap()
+static EMBED_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^(?:https?:)?//(?:www\.|cdn\.|)(?:tvopen|ethnos).gr/embed/(?P<id>\d+)")
 });
 
 /// `TVOpenGrWatchIE._match_valid_url`.

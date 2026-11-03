@@ -5,8 +5,8 @@
 //! entries, and the embed and `tun.in` redirects followed as URL results.
 //! HLS streams are not supported natively.
 use super::{Extractor, dict_format, dict_info, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -25,16 +25,14 @@ const PAGE_SIZE: usize = 20;
 const EMBED_NAME: &str = "tunein:embed";
 const SHORTENER_NAME: &str = "tunein:shortener";
 
-static STATION_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://tunein\.com/radio/[^/?#]+(?P<id>s\d+)").unwrap());
-static PODCAST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://tunein\.com/podcasts(?:/[^/?#]+){1,2}(?P<id>p\d+)").unwrap()
-});
-static EPISODE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static STATION_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://tunein\.com/radio/[^/?#]+(?P<id>s\d+)"));
+static PODCAST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://tunein\.com/podcasts(?:/[^/?#]+){1,2}(?P<id>p\d+)"));
+static EPISODE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"(?i)^https?://tunein\.com/podcasts(?:/[^/?#]+){1,2}(?P<series_id>p\d+)/?\?(?:[^#]+&)?topicid=(?P<id>\d+)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url` for `TuneInStationIE`.
@@ -52,10 +50,10 @@ pub fn episode_suitable(url: &str) -> bool {
     EPISODE_URL.is_match(url)
 }
 
-static EMBED_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://tunein\.com/embed/player/(?P<id>[^/?#]+)").unwrap());
-static SHORTENER_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://tun\.in/(?P<id>[^/?#]+)").unwrap());
+static EMBED_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://tunein\.com/embed/player/(?P<id>[^/?#]+)"));
+static SHORTENER_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://tun\.in/(?P<id>[^/?#]+)"));
 
 /// `_match_valid_url` for `TuneInEmbedIE`.
 pub fn embed_suitable(url: &str) -> bool {

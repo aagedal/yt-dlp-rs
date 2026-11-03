@@ -2,6 +2,7 @@
 //! from the page's player `index.m3u8`, and VTV.vn videos from the
 //! highlight box's `data-vid`, both as fatal HLS with OpenGraph metadata.
 use super::{Extractor, dict_info, download_webpage, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,20 +16,18 @@ pub struct Vtv;
 const GO_NAME: &str = "VTVGo";
 const NAME: &str = "VTV";
 
-static GO_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+static GO_URLS: LazyLock<[UrlRegex; 2]> = LazyLock::new(|| {
     [
-        Regex::new(
+        UrlRegex::new(
             r"^https?://(?:www\.)?vtvgo\.vn/(kho-video|tin-tuc)/[\w.-]*?(?P<id>\d+)(?:\.[a-z]+|/)?(?:$|[?#])",
-        )
-        .unwrap(),
-        Regex::new(r"^https?://(?:www\.)?vtvgo\.vn/digital/detail\.php\?(?:[^#]+&)?content_id=(?P<id>\d+)")
-            .unwrap(),
+        ),
+        UrlRegex::new(
+            r"^https?://(?:www\.)?vtvgo\.vn/digital/detail\.php\?(?:[^#]+&)?content_id=(?P<id>\d+)",
+        ),
     ]
 });
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?vtv\.vn/video/[\w-]*?(?P<id>\d+)\.htm")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?vtv\.vn/video/[\w-]*?(?P<id>\d+)\.htm"));
 static M3U8: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?:var\s+link\s*=\s*|addPlayer\()["'](https://[^"']+/index\.m3u8)["']"#).unwrap()
 });

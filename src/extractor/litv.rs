@@ -3,8 +3,8 @@
 //! episodes unless `--no-playlist`), the `get-urls` API (a JSON POST; its
 //! region and other errors) and the asset's HLS formats.
 use super::{Extractor, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -14,11 +14,10 @@ pub struct LiTv;
 
 const NAME: &str = "LiTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?litv\.tv/(?:[^/?#]+/watch/|vod/[^/?#]+/content\.do\?content_id=)(?P<id>[\w-]+)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

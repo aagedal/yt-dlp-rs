@@ -2,6 +2,7 @@
 //! page's `initialStoreTree` post as a `url_transparent` result of its
 //! `jwplatform:` video, overlaid with the post's fields.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,10 +14,8 @@ pub struct TheIntercept;
 
 const NAME: &str = "TheIntercept";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://theintercept\.com/fieldofvision/(?P<id>[^/?#]+)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://theintercept\.com/fieldofvision/(?P<id>[^/?#]+)"));
 
 static STORE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"initialStoreTree\s*=\s*(\{.+\})").unwrap());

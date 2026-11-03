@@ -1,6 +1,7 @@
 //! Upstream `ParlviewIE` (`yt_dlp/extractor/parlview.py`): the ParlView
 //! API's video file as fatal HLS formats with its traversed metadata.
 use super::{Extractor, download_json, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,11 +13,10 @@ pub struct Parlview;
 
 const NAME: &str = "Parlview";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?aph\.gov\.au/News_and_Events/Watch_Read_Listen/ParlView/video/(?P<id>[^/?#]+)",
     )
-    .unwrap()
 });
 static DURATION: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^(?P<duration>\d+:\d+:\d+):\d+$").unwrap());

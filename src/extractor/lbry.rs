@@ -6,6 +6,7 @@
 //! playlist's `claim_search`, then `claim_search` pages (`OnDemandPagedList`,
 //! 50 per page) of `url` entries, filtered by the URL's query.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -19,12 +20,11 @@ const NAME: &str = "lbry";
 const KEY: &str = "LBRY";
 const CLAIM: &str = "[0-9a-f]{1,40}";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
     let opt = format!(r"[^$@:/?#&]+(?:[:#]{CLAIM})?");
-    crate::extractor::url_regex(&format!(
+    UrlRegex::ascii(&format!(
         r"^(?:https?://(?:www\.)?(?:lbry\.tv|odysee\.com)/|lbry://)(?:\$/(?:download|embed)/)?(?P<id>[^$@:/?#]+/{CLAIM}|(?:@{opt}/)?{opt})"
     ))
-    .unwrap()
 });
 static API_VERSION: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"/api/v\d+/").unwrap());
 
@@ -477,17 +477,15 @@ const PLAYLIST_KEY: &str = "LBRYPlaylist";
 /// `LBRYBaseIE._PAGE_SIZE`.
 const PAGE_SIZE: usize = 50;
 
-static CHANNEL_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+static CHANNEL_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(format!(
         r"^(?:https?://(?:www\.)?(?:lbry\.tv|odysee\.com)/|lbry://)(?P<id>@[^$@:/?#&]+(?:[:#]{CLAIM})?)/?(?:[?&]|$)"
     ))
-    .unwrap()
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^(?:https?://(?:www\.)?(?:lbry\.tv|odysee\.com)/|lbry://)\$/(?:play)?list/(?P<id>[0-9a-f-]+)",
     )
-    .unwrap()
 });
 
 /// `LBRYChannelIE.suitable`.

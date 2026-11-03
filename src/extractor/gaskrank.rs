@@ -2,6 +2,7 @@
 //! videos from the page's first HTML5 media entry, with its title, category,
 //! uploader, date, homepage, tags, views and rating.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct Gaskrank;
 
 const NAME: &str = "Gaskrank";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?gaskrank\.tv/tv/(?P<categories>[^/]+)/(?P<id>[^/]+)\.htm",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?gaskrank\.tv/tv/(?P<categories>[^/]+)/(?P<id>[^/]+)\.htm")
 });
 static UPLOADER: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

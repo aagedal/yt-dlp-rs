@@ -4,6 +4,7 @@
 //! MP4s. Pages with a config XML (the `flashvars`/`config`/`vkey`+`nkey`
 //! branch, MovieFap's) are not supported natively.
 use super::{Extractor, dict_format, dict_info, download_json_headers, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -18,20 +19,17 @@ pub struct EMPFlix;
 const NAME: &str = "TNAFlix";
 const EMPFLIX_NAME: &str = "EMPFlix";
 
-static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://player\.(?P<host>tnaflix)\.com/video/(?P<id>\d+)").unwrap()
-});
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static EMBED_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://player\.(?P<host>tnaflix)\.com/video/(?P<id>\d+)"));
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?P<host>tnaflix)\.com/[^/]+/(?P<display_id>[^/]+)/video(?P<id>\d+)",
     )
-    .unwrap()
 });
-static EMPFLIX_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static EMPFLIX_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?P<host>empflix)\.com/(?:videos/(?P<display_id>.+?)-|[^/]+/(?P<display_id_2>[^/]+)/video)(?P<id>[0-9]+)",
     )
-    .unwrap()
 });
 static CONFIG: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

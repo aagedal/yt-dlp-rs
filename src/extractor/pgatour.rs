@@ -1,8 +1,8 @@
 //! Upstream `PGATourIE` (`yt_dlp/extractor/pgatour.py`): PGA Tour videos
 //! (and TOURCast `T` videos) as `url` results of their Brightcove player.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use std::sync::LazyLock;
 use url::Url;
@@ -11,11 +11,8 @@ pub struct PgaTour;
 
 const NAME: &str = "PGATour";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?pgatour\.com/video/[\w-]+/(?P<tc>T)?(?P<id>\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?pgatour\.com/video/[\w-]+/(?P<tc>T)?(?P<id>\d+)")
 });
 
 /// `_match_valid_url`.

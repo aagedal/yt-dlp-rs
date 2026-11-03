@@ -5,6 +5,7 @@
 //! `auth_token` cookie are not used, so the anonymous API responses are the
 //! only input; RTMP encodings are not supported natively.
 use super::{Extractor, dict_format, dict_info, download_json, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -27,16 +28,14 @@ const MEDIA_API: &str = "https://api.curiositystream.com/v1/media/";
 const COLLECTIONS_API: &str = "https://api.curiositystream.com/v2/collections/";
 const SERIES_API: &str = "https://api.curiositystream.com/v2/series/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:app\.)?curiositystream\.com/video/(?P<id>\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:app\.)?curiositystream\.com/video/(?P<id>\d+)")
 });
-static COLLECTIONS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:app\.)?curiositystream\.com/collections/(?P<id>\d+)").unwrap()
+static COLLECTIONS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:app\.)?curiositystream\.com/collections/(?P<id>\d+)")
 });
-static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:app\.)?curiositystream\.com/(?:series|collection)/(?P<id>\d+)")
-        .unwrap()
+static SERIES_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:app\.)?curiositystream\.com/(?:series|collection)/(?P<id>\d+)")
 });
 static RTMP: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^rtmpe?://[^/]+/.+/mp[34]:.+$").unwrap());

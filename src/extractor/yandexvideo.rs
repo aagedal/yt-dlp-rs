@@ -3,6 +3,7 @@
 //! `ssrData` and its stream manifests, and a channel's paged feed of video
 //! URLs. Upstream's `YandexVideoIE` and `YandexVideoPreviewIE` are not ported.
 use super::{Extractor, dict_format, dict_info, download_json_note, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, PlaylistInfo, Result, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -18,12 +19,11 @@ const CHANNEL_NAME: &str = "dzen.ru:channel";
 /// `qualities(('4', '0', '1', '2', '3', '5', '6', '7'))`.
 const QUALITIES: [&str; 8] = ["4", "0", "1", "2", "3", "5", "6", "7"];
 
-static VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(concat!(
+static VIDEO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(concat!(
         r"^https?://(?:zen\.yandex|dzen)\.ru(?:/video)?/(?:media|watch)/",
         r"(?:(?:id/[^/]+/|[^/]+/)(?:[a-z0-9-]+)-)?(?P<id>[a-z0-9-]+)",
     ))
-    .unwrap()
 });
 static CHANNEL_URL: LazyLock<Regex> = LazyLock::new(|| {
     crate::extractor::url_regex(r"^https?://(?:zen\.yandex|dzen)\.ru/(?:id/)?(?P<id>[a-z0-9-_]+)")

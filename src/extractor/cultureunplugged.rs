@@ -1,8 +1,8 @@
 //! Upstream `CultureUnpluggedIE` (`yt_dlp/extractor/cultureunplugged.py`):
 //! the movie data JSON as an untyped result with its named thumbnails.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,11 +12,10 @@ pub struct CultureUnplugged;
 
 const NAME: &str = "CultureUnplugged";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?cultureunplugged\.com/(?:documentary/watch-online/)?play/(?P<id>\d+)(?:/(?P<display_id>[^/#?]+))?",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

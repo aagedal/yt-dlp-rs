@@ -3,6 +3,7 @@
 //! `public_video_stream` JSON, else the page's inline `initial-state`
 //! script, with their `playerUrls` HLS, DASH and progressive formats.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,14 +18,13 @@ const RECORD: &str = "VKPlay";
 const LIVE: &str = "VKPlayLive";
 const BASE_URL: &str = r"^https?://(?:vkplay\.live|live\.vk(?:play|video)\.ru)/";
 
-static RECORD_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+static RECORD_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(format!(
         r"{BASE_URL}(?P<username>[^/#?]+)/record/(?P<id>[\da-f-]+)"
     ))
-    .unwrap()
 });
-static LIVE_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(&format!(r"{BASE_URL}(?P<id>[^/#?]+)/?(?:[#?]|$)")).unwrap());
+static LIVE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(format!(r"{BASE_URL}(?P<id>[^/#?]+)/?(?:[#?]|$)")));
 static INITIAL_STATE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<script[^>]+\bid="initial-state"[^>]*>"#).unwrap());
 

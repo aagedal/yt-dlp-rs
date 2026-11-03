@@ -2,6 +2,7 @@
 //! video pages whose `data-options` attribute names the first Brightcove
 //! video of the page, as a `url` result of its player.
 use super::{Extractor, download_webpage, follow_url};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct MlsSoccer;
 
 const NAME: &str = "MLSSoccer";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:(?:cfmontreal|intermiamicf|lagalaxy|lafc|houstondynamofc|dcunited|atlutd|mlssoccer|fcdallas|columbuscrew|coloradorapids|fccincinnati|chicagofirefc|austinfc|nashvillesc|whitecapsfc|sportingkc|soundersfc|sjearthquakes|rsl|timbers|philadelphiaunion|orlandocitysc|newyorkredbulls|nycfc)\.com|(?:torontofc)\.ca|(?:revolutionsoccer)\.net)/video/#?(?P<id>[^/&$#?]+)",
     )
-    .unwrap()
 });
 static OPTIONS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-options="([^"]+)""#).unwrap());

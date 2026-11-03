@@ -8,6 +8,7 @@ use super::{
     Extractor, dict_info, direct, download_json, download_json_transformed, download_xml,
     extract_f4m_optional, extract_m3u8_fatal_master, update_url_query, weibo::strip_jsonp,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -22,19 +23,16 @@ pub struct WdrElefant;
 const NAME: &str = "WDR";
 const ELEFANT_NAME: &str = "WDRElefant";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:deviceids-medp\.wdr\.de/ondemand/\d+/|kinder\.wdr\.de/[^#?]+-)(?P<id>\d+)\.(?:js|assetjsonp)",
     )
-    .unwrap()
 });
 // `kinder\.wdr\.de/(?!mediathek/)`.
 static KINDER_MEDIATHEK: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^https?://kinder\.wdr\.de/mediathek/").unwrap());
-static ELEFANT_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)wdrmaus\.de/elefantenseite/#(?P<id>.+)")
-        .unwrap()
-});
+static ELEFANT_VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)wdrmaus\.de/elefantenseite/#(?P<id>.+)"));
 
 const TABLE_OF_CONTENTS: &str = "https://www.wdrmaus.de/elefantenseite/data/tableOfContentsJS.php5";
 const ELEFANT_BASE: &str = "https://www.wdrmaus.de/elefantenseite/";

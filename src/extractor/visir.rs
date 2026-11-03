@@ -4,6 +4,7 @@
 //! pages follow their canonical clip URL, and player iframes on other pages
 //! are followed.
 use super::{Extractor, dict_info, download_webpage, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -19,8 +20,8 @@ pub(crate) const KEY: &str = "Visir";
 const VALID_PATTERN: &str =
     r"https?://(?:www\.)?visir\.is/(?P<type>k|player)/(?P<id>[\da-f-]+)(?:/(?P<slug>[\w.-]+))?";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| crate::extractor::url_regex(&format!("^{VALID_PATTERN}")).unwrap());
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(&format!("^{VALID_PATTERN}")));
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(&format!(r#"<iframe[^>]+src=["'](?P<url>{VALID_PATTERN})"#)).unwrap()
 });

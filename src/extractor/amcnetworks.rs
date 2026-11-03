@@ -2,6 +2,7 @@
 //! America, IFC, WE tv and Sundance TV pages whose `window.initialData`
 //! names a Brightcove video, as a `url` result of its player.
 use super::{Extractor, download_webpage, follow_url};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct AmcNetworks;
 
 const NAME: &str = "AMCNetworks";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:amc|bbcamerica|ifc|(?:we|sundance)tv)\.com/(?P<id>(?:movies|shows(?:/[^/?#]+)+)/[^/?#&]+)",
     )
-    .unwrap()
 });
 static INITIAL_DATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.initialData\s*=\s*JSON\.parse\(String\.raw`").unwrap());

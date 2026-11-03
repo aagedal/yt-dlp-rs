@@ -2,8 +2,8 @@
 //! non-sidebar `simplestream` player element, its Simplestream player API
 //! host and stream JSON, and the stream's HLS formats.
 use super::{Extractor, dict_info, download_json_note, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -15,9 +15,8 @@ const NAME: &str = "GBNews";
 const PLATFORM: &str = "safari";
 const SSMP_URL: &str = "https://mm-v2.simplestream.com/ssmp/api.php";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?gbnews\.(?:uk|com)/(?:\w+/)?(?P<id>[^#?]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?gbnews\.(?:uk|com)/(?:\w+/)?(?P<id>[^#?]+)")
 });
 
 /// `_match_id`.

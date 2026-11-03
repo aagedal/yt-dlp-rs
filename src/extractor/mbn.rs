@@ -4,6 +4,7 @@
 //! playlist, with the title, play time, broadcast date, image, programme
 //! and episode number.
 use super::{Extractor, dict_info, download_json_note, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ pub struct Mbn;
 
 const NAME: &str = "MBN";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?mbn\.co\.kr/vod/programContents/preview(?:list)?/\d+/\d+/(?P<id>\d+)",
     )
-    .unwrap()
 });
 static CONTENT_CLS_CD: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#""\?content_cls_cd=(\d+)&"#).unwrap());

@@ -4,6 +4,7 @@
 //! classes (radiovisions, live streams, playlists and schedules) are not
 //! ported.
 use super::{Extractor, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ pub struct FranceCulture;
 
 const NAME: &str = "FranceCulture";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?radiofrance\.fr/(?:franceculture|franceinfo|franceinter|francemusique|fip|mouv)/podcasts/(?:[^?#]+/)?(?P<display_id>[^?#]+)-(?P<id>\d{6,})(?:$|[?#])",
     )
-    .unwrap()
 });
 // `_search_json('', webpage, 'audio data', ...,
 // contains_pattern=r'{\s*"@type"\s*:\s*"AudioObject".+}')`.

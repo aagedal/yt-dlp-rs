@@ -2,6 +2,7 @@
 //! video page's `data-job-id`/`data-video-path` attributes, the non-fatal
 //! HLS and DASH manifests they name and the page's OpenGraph metadata.
 use super::{Extractor, download_webpage, extract_m3u8_optional, extract_mpd_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct Internazionale;
 
 const NAME: &str = "Internazionale";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?internazionale\.it/video/(?:[^/]+/)*(?P<id>[^/?#&]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?internazionale\.it/video/(?:[^/]+/)*(?P<id>[^/?#&]+)")
 });
 
 /// `_match_id`.

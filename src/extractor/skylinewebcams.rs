@@ -2,6 +2,7 @@
 //! webcam page's live `m3u8` stream URL as the result's own format, with
 //! its OpenGraph title and description.
 use super::{Extractor, broken_warning, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct SkylineWebcams;
 
 const NAME: &str = "SkylineWebcams";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?skylinewebcams\.com/[^/]+/webcam/(?:[^/]+/)+(?P<id>[^/]+)\.html",
     )
-    .unwrap()
 });
 /// `(?:url|source)\s*:\s*(["\'])(?P<url>(?:https?:)?//.+?\.m3u8.*?)\1` as
 /// one alternative per quote.

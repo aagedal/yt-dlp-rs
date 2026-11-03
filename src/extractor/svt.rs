@@ -12,6 +12,7 @@ use super::{
     Extractor, dict_format, dict_info, download_json, download_json_note, download_webpage,
     extract_m3u8_master_optional, extract_mpd_optional_note, search_json, search_warning,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, Subtitles, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -30,21 +31,18 @@ const SERIES_KEY: &str = "SVTSeries";
 const PAGE_NAME: &str = "svt:page";
 const PAGE_KEY: &str = "SVTPage";
 
-static PLAY_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static PLAY_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^(?:(?:svt:|https?://(?:www\.)?svt\.se/barnkanalen/barnplay/[^/]+/)(?P<svt_id>[^/?#&]+)|https?://(?:www\.)?(?:svtplay|oppetarkiv)\.se/(?:video|klipp|kanaler)/(?P<id>[^/?#&]+)(?:.*?(?:modalId|id)=(?P<modal_id>[\da-zA-Z-]+))?)",
     )
-    .unwrap()
 });
-static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static SERIES_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?svtplay\.se/(?P<id>[^/?&#]+)(?:.+?\btab=(?P<season_slug>[^&#]+))?",
     )
-    .unwrap()
 });
-static PAGE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?svt\.se/(?:[^/?#]+/)*(?P<id>[^/?&#]+)").unwrap()
-});
+static PAGE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?svt\.se/(?:[^/?#]+/)*(?P<id>[^/?&#]+)"));
 /// `(?<=[\s.])URQL_DATA\s*=` without look-behind (the match end is the same).
 static URQL_DATA: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"[\s.]URQL_DATA\s*=").unwrap());
 static URQL_STATE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"urqlState\s*[=:]").unwrap());

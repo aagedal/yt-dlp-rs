@@ -3,6 +3,7 @@
 //! progressive sources with the title, description and poster; APA embed
 //! iframes on other pages are embeds.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,11 +18,10 @@ pub(crate) const KEY: &str = "APA";
 
 const UUID: &str = r"[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"^(?P<base_url>https?://[^/]+\.apa\.at)/embed/(?P<id>{UUID})"
     ))
-    .unwrap()
 });
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(&format!(

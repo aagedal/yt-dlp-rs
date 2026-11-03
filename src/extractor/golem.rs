@@ -2,8 +2,8 @@
 //! config, one format per child element with a URL and its teaser
 //! thumbnails.
 use super::{Extractor, download_xml};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -14,9 +14,8 @@ pub struct Golem;
 const NAME: &str = "Golem";
 const PREFIX: &str = "http://video.golem.de";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://video\.golem\.de/.+?/(?P<id>.+?)/").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://video\.golem\.de/.+?/(?P<id>.+?)/"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

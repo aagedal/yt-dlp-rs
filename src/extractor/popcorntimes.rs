@@ -3,6 +3,7 @@
 //! the heading (or original-name meta) title, description, preview image and
 //! the video meta tags.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -15,11 +16,8 @@ pub struct Popcorntimes;
 
 const NAME: &str = "Popcorntimes";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://popcorntimes\.tv/[^/]+/m/(?P<id>[^/]+)/(?P<display_id>[^/?#&]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://popcorntimes\.tv/[^/]+/m/(?P<id>[^/]+)/(?P<display_id>[^/?#&]+)")
 });
 static HEADING: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<h1>([^<]+)").unwrap());
 static LOC: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"PCTMLOC\s*=\s*(["'])"#).unwrap());

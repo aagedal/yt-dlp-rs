@@ -2,8 +2,8 @@
 //! song's API record as a direct audio result (or a YouTube-linked song as
 //! a followed result), and an artist's songs as a playlist.
 use super::{Extractor, download_json_headers};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::hash::{BuildHasher, Hasher, RandomState};
@@ -18,11 +18,10 @@ const KEY: &str = "Eggs";
 const ARTIST_NAME: &str = "eggs:artist";
 const ARTIST_KEY: &str = "EggsArtist";
 
-static SONG_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://eggs\.mu/artist/[^/?#]+/song/(?P<id>[\da-f-]+)").unwrap()
-});
-static ARTIST_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://eggs\.mu/artist/(?P<id>\w+)/?(?:[?#&]|$)").unwrap());
+static SONG_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://eggs\.mu/artist/[^/?#]+/song/(?P<id>[\da-f-]+)"));
+static ARTIST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://eggs\.mu/artist/(?P<id>\w+)/?(?:[?#&]|$)"));
 
 /// `EggsIE._match_valid_url`.
 pub fn suitable(url: &str) -> bool {

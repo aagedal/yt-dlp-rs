@@ -4,8 +4,8 @@
 use super::cloudycdn::post_json;
 use super::clyp::key_error;
 use super::{Extractor, dict_info, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -20,11 +20,11 @@ const STREAM: &str = "dlive:stream";
 const STREAM_KEY: &str = "DLiveStream";
 const API: &str = "https://graphigo.prd.dlive.tv/";
 
-static VOD_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?dlive\.tv/p/(?P<uploader_id>.+?)\+(?P<id>[^/?#&]+)").unwrap()
+static VOD_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?dlive\.tv/p/(?P<uploader_id>.+?)\+(?P<id>[^/?#&]+)")
 });
-static STREAM_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?dlive\.tv/(?P<id>[\w.-]+)").unwrap());
+static STREAM_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?dlive\.tv/(?P<id>[\w.-]+)"));
 
 /// `DLiveVODIE._match_valid_url`.
 pub fn vod_suitable(url: &str) -> bool {

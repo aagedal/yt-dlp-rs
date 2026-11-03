@@ -7,6 +7,7 @@ use super::{
     Extractor, dict_format, dict_info, download_json_note_headers, extract_m3u8_master_optional,
     search_json, update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -27,18 +28,18 @@ const ITEM_INCLUDE: &str =
 const SERIES_INCLUDE: &str =
     "images,audio.audio-outputs,audio.video,video.video-outputs,video.playlists,document";
 
-static VALID_URL: LazyLock<Vec<Regex>> = LazyLock::new(|| {
+static VALID_URL: LazyLock<Vec<UrlRegex>> = LazyLock::new(|| {
     vec![
-        crate::extractor::url_regex(
+        UrlRegex::ascii(
             r"^https?://(?:www\.)?subsplash\.com/(?:u/)?[^/?#]+/[^/?#]+/(?:d/|mi/\+)(?P<id>\w+)",
-        )
-        .unwrap(),
-        crate::extractor::url_regex(r"^https?://(?:\w+\.)?subspla\.sh/(?P<id>\w+)").unwrap(),
+        ),
+        UrlRegex::ascii(r"^https?://(?:\w+\.)?subspla\.sh/(?P<id>\w+)"),
     ]
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?subsplash\.com/[^/?#]+/(?:our-videos|media)/ms/\+(?P<id>\w+)")
-        .unwrap()
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:www\.)?subsplash\.com/[^/?#]+/(?:our-videos|media)/ms/\+(?P<id>\w+)",
+    )
 });
 static SHOEBOX_TOKENS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<script[^>]+\bid="shoebox-tokens"[^>]*>"#).unwrap());

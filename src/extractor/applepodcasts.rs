@@ -3,6 +3,7 @@
 //! share item, else the amp-api catalog episode, authorized with the JSON Web
 //! Token found in the page's JS asset (`AppleBaseIE._get_token`).
 use super::{Extractor, download_json_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -19,11 +20,10 @@ const KEY: &str = "ApplePodcasts";
 const BASE_URL: &str = "https://podcasts.apple.com";
 const JWT_KEY_ID: &str = "C4J7GBP74H";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://podcasts\.apple\.com/(?P<country>[^/?#]+/)?podcast(?:/[^/?#]+){1,2}/?\?(?:[^#]+&)?i=(?P<id>\d+)",
     )
-    .unwrap()
 });
 static JS_ASSET: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<script [^>]*\bsrc="(/assets/index~[0-9a-f]+\.js)">"#).unwrap());

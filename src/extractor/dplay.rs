@@ -13,6 +13,7 @@ use super::{
     Extractor, dict_format, dict_info, download_json_headers, download_json_note,
     extract_m3u8_master_optional, extract_mpd_optional_note, post_json_note_headers,
 };
+use crate::extractor::UrlRegex;
 use crate::{Result, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -341,8 +342,8 @@ fn key_error(id: &str, key: &str) -> crate::Error {
 /// and its [`Site`].
 macro_rules! disco_class {
     ($struct:ident, $name:literal, $suitable:ident, $valid:ident, $prefix:literal, $site:expr) => {
-        static $valid: LazyLock<Regex> =
-            LazyLock::new(|| super::url_regex(&format!("^{}{}", $prefix, PATH_REGEX)).unwrap());
+        static $valid: LazyLock<UrlRegex> =
+            LazyLock::new(|| UrlRegex::ascii(&format!("^{}{}", $prefix, PATH_REGEX)));
 
         /// `_match_valid_url`.
         pub fn $suitable(url: &str) -> bool {

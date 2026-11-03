@@ -2953,6 +2953,7 @@ dependencies = [
  "percent-encoding",
  "pkcs8",
  "regex",
+ "regex-syntax",
  "reqwest",
  "ring",
  "roxmltree",

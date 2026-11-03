@@ -7,8 +7,8 @@ use super::{
     Extractor, dict_format, dict_info, direct, extract_f4m_optional, extract_m3u8_master_optional,
     streamable::int_or_none,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, Subtitles, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -19,8 +19,8 @@ pub struct AbcNewsVideo;
 const NAME: &str = "abcnews:video";
 const KEY: &str = "AbcNewsVideo";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(concat!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(concat!(
         r"(?x)^https?://(?:",
         r"abcnews\.go\.com/",
         r"(?:",
@@ -30,7 +30,6 @@ static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
         r"fivethirtyeight\.abcnews\.go\.com/video/embed/\d+/",
         r")(?P<id>\d+)",
     ))
-    .unwrap()
 });
 
 /// `_match_valid_url`.

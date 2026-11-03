@@ -3,6 +3,7 @@
 //! video (`P.s`) and the MP3 download form's probed audio. Pages without a
 //! `jsclassref` are not supported natively.
 use super::{Extractor, dict_format, dict_info, download_webpage, is_valid_url, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use base64::Engine as _;
 use regex::Regex;
@@ -15,9 +16,8 @@ pub struct InfoQ;
 
 const NAME: &str = "InfoQ";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?infoq\.com/(?:[^/]+/)+(?P<id>[^/]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?infoq\.com/(?:[^/]+/)+(?P<id>[^/]+)"));
 static JSCLASSREF: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"jsclassref\s*=\s*'([^']*)'").unwrap());
 static PLAYER_URL: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"P\.s\s*=\s*'([^']+)'").unwrap());

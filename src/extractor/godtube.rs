@@ -1,8 +1,8 @@
 //! Upstream `GodTubeIE` (`yt_dlp/extractor/godtube.py`, marked broken): the
 //! player config and media XML as an untyped result.
 use super::{Extractor, broken_warning, download_xml_note, find_text};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,9 +12,8 @@ pub struct GodTube;
 
 const NAME: &str = "GodTube";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?godtube\.com/watch/\?v=(?P<id>[\da-zA-Z]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?godtube\.com/watch/\?v=(?P<id>[\da-zA-Z]+)")
 });
 
 /// `_match_valid_url`.

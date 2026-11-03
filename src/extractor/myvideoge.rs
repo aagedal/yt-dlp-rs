@@ -3,6 +3,7 @@
 //! as `_parse_jwplayer_formats` formats ranked SD < HD, the title,
 //! description, uploader, Georgian upload date and like counts.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct MyVideoGe;
 
 const NAME: &str = "MyVideoGe";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?myvideo\.ge/v/(?P<id>[0-9]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?myvideo\.ge/v/(?P<id>[0-9]+)"));
 static SOURCES: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(
         r#"(?s)jwplayer\s*\(\s*['"]mvplayer['"]\s*\)\s*\.\s*setup\s*\(.*?\bsources\s*:\s*(\[.*?])\s*[,});]"#,

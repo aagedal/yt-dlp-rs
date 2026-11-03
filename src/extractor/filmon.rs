@@ -3,8 +3,8 @@
 //! `filmon:ID` episode playlists) and channels (live streams, or Wowza
 //! formats for VOD channels), with the APIs' error messages.
 use super::{Extractor, dict_format, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -18,12 +18,11 @@ const KEY: &str = "FilmOn";
 const CHANNEL_NAME: &str = "filmon:channel";
 const CHANNEL_KEY: &str = "FilmOnChannel";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^(?:https?://(?:www\.)?filmon\.com/vod/view/|filmon:)(?P<id>\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^(?:https?://(?:www\.)?filmon\.com/vod/view/|filmon:)(?P<id>\d+)")
 });
-static CHANNEL_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?filmon\.com/(?:tv|channel)/(?P<id>[a-z0-9-]+)").unwrap()
+static CHANNEL_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?filmon\.com/(?:tv|channel)/(?P<id>[a-z0-9-]+)")
 });
 
 /// `FilmOnIE._match_valid_url`.

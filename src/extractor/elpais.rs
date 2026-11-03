@@ -2,6 +2,7 @@
 //! the page's `url_cache` prefix and its multimedia JSONP (else the page's
 //! media-file variable), with the still, title, date and description.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct ElPais;
 
 const NAME: &str = "ElPais";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:[^.]+\.)?elpais\.com/.*/(?P<id>[^/#?]+)\.html(?:$|[?#])",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:[^.]+\.)?elpais\.com/.*/(?P<id>[^/#?]+)\.html(?:$|[?#])")
 });
 static PREFIX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"var\s+url_cache\s*=\s*"([^"]+)";"#).unwrap());

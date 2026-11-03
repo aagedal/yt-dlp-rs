@@ -3,6 +3,7 @@
 //! page's metadata (a multi-part video's part is in the title). The
 //! `AcFunBangumiIE` class is not ported: its test URLs no longer resolve.
 use super::{Extractor, dict_info, download_webpage, extract_m3u8_master_optional, search_json};
+use crate::extractor::UrlRegex;
 use crate::info::PyNumber;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
@@ -22,9 +23,8 @@ type Metadata = (
     Vec<(&'static str, Value)>,
 );
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://www\.acfun\.cn/v/ac(?P<id>[_\d]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://www\.acfun\.cn/v/ac(?P<id>[_\d]+)"));
 static VIDEO_INFO: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"window.videoInfo\s*=").unwrap());
 
 /// `_match_valid_url`.

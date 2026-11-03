@@ -11,6 +11,7 @@
 //! (the video list request, the clip cursor pages) fetched while the
 //! playlist is processed, only as far as the selection needs.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -31,23 +32,23 @@ const CLIP: &str = "kick:clip";
 const VIDEOS: &str = "kick:videos";
 const CLIPS: &str = "kick:clips";
 
-static LIVE_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?kick\.com/(?P<id>[\w-]+)").unwrap());
-static VOD_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?kick\.com/[\w-]+/videos/(?P<id>[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12})")
-        .unwrap()
+static LIVE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?kick\.com/(?P<id>[\w-]+)"));
+static VOD_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:www\.)?kick\.com/[\w-]+/videos/(?P<id>[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12})",
+    )
 });
-static CLIP_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static CLIP_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?kick\.com/[\w-]+(?:/clips/|/?\?(?:[^#]+&)?clip=)(?P<id>clip_[\w-]+)",
     )
-    .unwrap()
 });
-static VIDEOS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?kick\.com/(?P<id>[\w-]+)/videos/?(?:[?#]|$)").unwrap()
+static VIDEOS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?kick\.com/(?P<id>[\w-]+)/videos/?(?:[?#]|$)")
 });
-static CLIPS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?kick\.com/(?P<id>[\w-]+)/clips/?(?:[?#]|$)").unwrap()
+static CLIPS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?kick\.com/(?P<id>[\w-]+)/clips/?(?:[?#]|$)")
 });
 
 /// `KickVODIE.suitable`.

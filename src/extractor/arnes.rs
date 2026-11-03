@@ -4,8 +4,8 @@
 //! views, hashtags and the URL's `t` start time.
 use super::streamable::int_or_none;
 use super::{Extractor, dict_format, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -17,11 +17,10 @@ const NAME: &str = "video.arnes.si";
 const KEY: &str = "Arnes";
 const BASE_URL: &str = "https://video.arnes.si";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://video\.arnes\.si/(?:[a-z]{2}/)?(?:watch|embed|api/(?:asset|public/video))/(?P<id>[0-9a-zA-Z]{12})",
     )
-    .unwrap()
 });
 
 /// `_match_id`.

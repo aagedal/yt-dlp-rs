@@ -2,8 +2,8 @@
 //! `umg-artist-screenname` meta artist, the `_3Y0Lj` description element and
 //! the `hls.universal-music.de/get` HLS formats.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -13,11 +13,10 @@ pub struct UmgDe;
 
 const NAME: &str = "umg:de";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?universal-music\.de/[^/?#]+/videos/(?P<slug>[^/?#]+-(?P<id>\d+))",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

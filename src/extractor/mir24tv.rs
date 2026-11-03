@@ -1,6 +1,7 @@
 //! Upstream `Mir24TvIE` (`yt_dlp/extractor/mir24tv.py`): a news page's
 //! player iframe `source` query parameter as fatal HLS formats.
 use super::{Extractor, download_webpage, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,10 +14,8 @@ pub struct Mir24Tv;
 const NAME: &str = "mir24.tv";
 const KEY: &str = "Mir24Tv";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?mir24\.tv/news/(?P<id>[0-9]+)/[^/?#]+")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?mir24\.tv/news/(?P<id>[0-9]+)/[^/?#]+"));
 static IFRAME: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<iframe\b[^>]+\bsrc=["'](https?://mir24\.tv/players/[^"']+)"#).unwrap()
 });

@@ -2,6 +2,7 @@
 //! transparent `url` results: 11-character IDs for YouTube, 8-character IDs
 //! for JW Platform; Dagbladet embed iframes on other pages are embeds.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct Dbtv;
 pub(crate) const NAME: &str = "DBTV";
 pub(crate) const KEY: &str = "DBTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?dagbladet\.no/video/(?:(?:embed|(?P<display_id>[^/]+))/)?(?P<id>[0-9A-Za-z_-]{11}|[a-zA-Z0-9]{8})",
     )
-    .unwrap()
 });
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

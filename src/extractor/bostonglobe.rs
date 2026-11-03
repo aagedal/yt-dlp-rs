@@ -3,6 +3,7 @@
 //! `url` results (one directly, several as a playlist titled by the
 //! OpenGraph title).
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,8 @@ pub struct BostonGlobe;
 
 const NAME: &str = "BostonGlobe";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"(?i)^https?://(?:www\.)?bostonglobe\.com/.*/(?P<id>[^/]+)/\w+(?:\.html)?",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"(?i)^https?://(?:www\.)?bostonglobe\.com/.*/(?P<id>[^/]+)/\w+(?:\.html)?")
 });
 static VIDEO: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)(<video[^>]+>)").unwrap());
 

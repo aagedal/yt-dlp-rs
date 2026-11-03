@@ -3,8 +3,8 @@
 //! HLS or HTTP media URLs and metadata, else the YouTube platform's ID.
 use super::nuxt::{Step, search_nuxt_data};
 use super::{Extractor, download_webpage, extract_m3u8_master_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -14,9 +14,8 @@ pub struct TrtWorld;
 
 const NAME: &str = "TrtWorld";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://www\.trtworld\.com/video/[\w-]+/[\w-]+-(?P<id>\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://www\.trtworld\.com/video/[\w-]+/[\w-]+-(?P<id>\d+)")
 });
 
 /// `_match_id`.

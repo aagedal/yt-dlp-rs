@@ -2,6 +2,7 @@
 //! match pages as playlists of the Streamable embeds in the page's
 //! `DataStore.media` payloads, with the OpenGraph title.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct FootyRoom;
 const NAME: &str = "FootyRoom";
 const STREAMABLE: &str = "Streamable";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://footyroom\.com/matches/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://footyroom\.com/matches/(?P<id>\d+)"));
 static MEDIA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"DataStore\.media\s*=\s*([^;]+)").unwrap());
 static STREAMABLE_EMBED: LazyLock<Regex> = LazyLock::new(|| {

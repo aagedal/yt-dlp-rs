@@ -4,6 +4,7 @@
 //! direct file, VTT subtitles, clips as chapters).
 use super::clyp::key_error;
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -18,17 +19,13 @@ const NAME: &str = "Ruv";
 const SPILA_NAME: &str = "ruv.is:spila";
 const SPILA_KEY: &str = "RuvSpila";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?ruv\.is/(?:sarpurinn/[^/]+|node)/(?P<id>[^/]+(?:/\d+)?)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?ruv\.is/(?:sarpurinn/[^/]+|node)/(?P<id>[^/]+(?:/\d+)?)")
 });
-static SPILA_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static SPILA_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?ruv\.is/(?:(?:sjon|ut)varp|(?:krakka|ung)ruv)/spila/.+/(?P<series_id>[0-9]+)/(?P<id>[a-z0-9]+)",
     )
-    .unwrap()
 });
 /// `video\.FIELD\s*=\s*(["\'])(?P<url>(?:(?!\1).)+)\1` as one alternative
 /// per quote; `quote` is the first group, which `_search_regex` returns

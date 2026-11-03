@@ -4,6 +4,7 @@
 //! OpenGraph and JSON-LD metadata.
 use super::nuxt::{Step, search_nuxt_data};
 use super::{Extractor, download_json_note_headers, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,13 +16,12 @@ pub struct Ivoox;
 
 const NAME: &str = "Ivoox";
 
-static VALID_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+static VALID_URLS: LazyLock<[UrlRegex; 2]> = LazyLock::new(|| {
     [
-        crate::extractor::url_regex(
+        UrlRegex::ascii(
             r"^https?://(?:www\.)?ivoox\.com/(?:\w{2}/)?[^/?#]+_rf_(?P<id>[0-9]+)_1\.html",
-        )
-        .unwrap(),
-        crate::extractor::url_regex(r"^https?://go\.ivoox\.com/rf/(?P<id>[0-9]+)").unwrap(),
+        ),
+        UrlRegex::ascii(r"^https?://go\.ivoox\.com/rf/(?P<id>[0-9]+)"),
     ]
 });
 

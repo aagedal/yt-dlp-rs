@@ -6,8 +6,8 @@
 use super::clyp::float_or_none;
 use super::streamable::int_or_none;
 use super::{Extractor, download_json_note_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -24,17 +24,15 @@ const HEADERS: &[(&str, &str)] = &[
     ("x-client-version", "10.1.124"),
 ];
 
-static TRACK_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static TRACK_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?bandlab.com/(?P<url_type>track|post|revision)/(?P<id>[\da-f_-]+)",
     )
-    .unwrap()
 });
-static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static EMBED_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?bandlab.com/(?P<url_type>embed)/\?(?:[^#]*&)?id=(?P<id>[\da-f-]+)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url` over both of upstream's patterns.

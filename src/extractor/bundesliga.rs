@@ -1,8 +1,8 @@
 //! Upstream `BundesligaIE` (`yt_dlp/extractor/bundesliga.py`): the `vid`
 //! query's JW Player media as a `url` result of `jwplatform:ID`.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use std::sync::LazyLock;
 use url::Url;
@@ -11,11 +11,10 @@ pub struct Bundesliga;
 
 const NAME: &str = "Bundesliga";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?bundesliga\.com/[a-z]{2}/bundesliga/videos(?:/[^?]+)?\?vid=(?P<id>[a-zA-Z0-9]{8})",
     )
-    .unwrap()
 });
 
 /// `_match_id`.

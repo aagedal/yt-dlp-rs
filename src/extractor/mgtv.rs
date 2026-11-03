@@ -5,6 +5,7 @@
 use super::{
     Extractor, dict_format, dict_info, direct, download_json, download_json_note, json_ld,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -20,11 +21,8 @@ pub struct Mgtv;
 const NAME: &str = "MangoTV";
 const KEY: &str = "MGTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:w(?:ww)?\.)?mgtv\.com/[bv]/(?:[^/]+/)*(?P<id>\d+)\.html",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:w(?:ww)?\.)?mgtv\.com/[bv]/(?:[^/]+/)*(?P<id>\d+)\.html")
 });
 static TBR: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"_(\d+)_mp4/").unwrap());
 

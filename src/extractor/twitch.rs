@@ -5,6 +5,7 @@
 //! `TwitchVideosCollectionsIE`, `TwitchCollectionIE`), whose paged GraphQL
 //! entries are `url_transparent` results.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -66,13 +67,15 @@ macro_rules! twitch_login {
 /// live stream resolves to the VOD being recorded.
 pub(crate) static LIVE_FROM_START: AtomicBool = AtomicBool::new(false);
 
-static VOD_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:(?:www|go|m)\.)?twitch\.tv/(?:[^/]+/v(?:ideo)?|videos)/|player\.twitch\.tv/\?.*?\bvideo=v?|www\.twitch\.tv/[^/]+/schedule\?vodID=)(?P<id>\d+)")
-        .unwrap()
+static VOD_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:(?:(?:www|go|m)\.)?twitch\.tv/(?:[^/]+/v(?:ideo)?|videos)/|player\.twitch\.tv/\?.*?\bvideo=v?|www\.twitch\.tv/[^/]+/schedule\?vodID=)(?P<id>\d+)",
+    )
 });
-static CLIPS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:clips\.twitch\.tv/(?:embed\?.*?\bclip=|(?:[^/]+/)*)|(?:(?:www|go|m)\.)?twitch\.tv/(?:[^/]+/)?clip/)(?P<id>[^/?#&]+)")
-        .unwrap()
+static CLIPS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:clips\.twitch\.tv/(?:embed\?.*?\bclip=|(?:[^/]+/)*)|(?:(?:www|go|m)\.)?twitch\.tv/(?:[^/]+/)?clip/)(?P<id>[^/?#&]+)",
+    )
 });
 static THUMBNAIL_SIZE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"\d+x\d+(\.\w+)($|[?#])").unwrap());
@@ -88,25 +91,26 @@ pub fn clips_suitable(url: &str) -> bool {
     CLIPS_URL.is_match(url)
 }
 
-static COLLECTION_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www|go|m)\.)?twitch\.tv/collections/(?P<id>[^/]+)").unwrap()
+static COLLECTION_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:(?:www|go|m)\.)?twitch\.tv/collections/(?P<id>[^/]+)")
 });
-static VIDEOS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www|go|m)\.)?twitch\.tv/(?P<id>[^/]+)/(?:videos|profile)").unwrap()
+static VIDEOS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:(?:www|go|m)\.)?twitch\.tv/(?P<id>[^/]+)/(?:videos|profile)")
 });
-static VIDEOS_CLIPS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www|go|m)\.)?twitch\.tv/(?P<id>[^/]+)/(?:clips|videos/*?\?.*?\bfilter=clips)")
-        .unwrap()
+static VIDEOS_CLIPS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:(?:www|go|m)\.)?twitch\.tv/(?P<id>[^/]+)/(?:clips|videos/*?\?.*?\bfilter=clips)",
+    )
 });
-static VIDEOS_COLLECTIONS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static VIDEOS_COLLECTIONS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:(?:www|go|m)\.)?twitch\.tv/(?P<id>[^/]+)/videos/*?\?.*?\bfilter=collections",
     )
-    .unwrap()
 });
-static STREAM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:(?:www|go|m)\.)?twitch\.tv/|player\.twitch\.tv/\?.*?\bchannel=)(?P<id>[^/#?]+)")
-        .unwrap()
+static STREAM_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:(?:(?:www|go|m)\.)?twitch\.tv/|player\.twitch\.tv/\?.*?\bchannel=)(?P<id>[^/#?]+)",
+    )
 });
 
 /// `TwitchCollectionIE.suitable`.

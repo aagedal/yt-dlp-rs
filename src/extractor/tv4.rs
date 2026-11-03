@@ -7,6 +7,7 @@ use super::{
     Extractor, dict_info, download_json_note, extract_f4m_optional, extract_ism_optional,
     extract_m3u8_master_optional, extract_mpd_optional_note,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -18,11 +19,10 @@ pub struct Tv4;
 
 const NAME: &str = "TV4";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:tv4\.se/(?:[^/]+)/klipp/(?:.*)-|tv4play\.se/(?:(?:program|barn)/(?:(?:[^/]+/){1,2}|(?:[^\?]+)\?video_id=)|iframe/video/|film/|sport/|))(?P<id>[0-9]+)",
     )
-    .unwrap()
 });
 static ISM_PATH: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\.ism/.*?\.m3u8").unwrap());
 

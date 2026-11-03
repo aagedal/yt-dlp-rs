@@ -3,6 +3,7 @@
 //! SoundCloud or Mixcloud page) is followed as a `url_transparent` result
 //! overlaid with the episode's name, description, genres and dates.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,8 @@ pub struct NtsLive;
 
 const NAME: &str = "nts.live";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?nts\.live/shows/[^/?#]+/episodes/(?P<id>[^/?#]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?nts\.live/shows/[^/?#]+/episodes/(?P<id>[^/?#]+)")
 });
 static REACT_STATE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\._REACT_STATE_\s*=").unwrap());

@@ -3,6 +3,7 @@
 //! the OpenGraph (or player) title and thumbnail, OpenGraph duration and the
 //! view count.
 use super::{Extractor, dict_format, dict_info, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct Xnxx;
 
 const NAME: &str = "XNXX";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:video|www)\.xnxx3?\.com/video-?(?P<id>[0-9a-z]+)/")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:video|www)\.xnxx3?\.com/video-?(?P<id>[0-9a-z]+)/")
 });
 // `(?P<q>["'])(?P<url>(?:https?:)?//.+?)(?P=q)` without a backreference.
 static VIDEO: LazyLock<Regex> = LazyLock::new(|| {

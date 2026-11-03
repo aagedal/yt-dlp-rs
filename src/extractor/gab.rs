@@ -2,8 +2,8 @@
 //! status JSON, each video/gifv attachment's original and playable MP4 as
 //! formats, and a playlist when the post has more than one video.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -13,9 +13,8 @@ pub struct Gab;
 
 const NAME: &str = "Gab";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?gab\.com/[^/]+/posts/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?gab\.com/[^/]+/posts/(?P<id>\d+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

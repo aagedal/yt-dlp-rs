@@ -2,6 +2,7 @@
 //! page's `clipId` and the clip's metadata XML: its error, title,
 //! description, duration, posters, categories and MP4 playback links.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct Sport5;
 
 const NAME: &str = "Sport5";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www|vod)?\.sport5\.co\.il/.*\b(?:Vi|docID)=(?P<id>\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www|vod)?\.sport5\.co\.il/.*\b(?:Vi|docID)=(?P<id>\d+)")
 });
 static CLIP_ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"clipId=([\w-]+)").unwrap());
 

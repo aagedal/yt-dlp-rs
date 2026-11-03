@@ -2,6 +2,7 @@
 //! `Pb.Data.Shared.MEDIA` JSON with the embed code's `file=` URL as an
 //! untyped result.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use percent_encoding::percent_decode_str;
 use regex::Regex;
@@ -14,11 +15,10 @@ pub struct Photobucket;
 
 const NAME: &str = "Photobucket";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:[a-z0-9]+\.)?photobucket\.com/.*(([\?\&]current=)|_)(?P<id>.*)\.(?P<ext>(flv)|(mp4))",
     )
-    .unwrap()
 });
 
 static MEDIA: LazyLock<Regex> = LazyLock::new(|| {

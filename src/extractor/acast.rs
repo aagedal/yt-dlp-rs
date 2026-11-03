@@ -3,6 +3,7 @@
 //! result, a show's episode list as a playlist of them, and `ACastIE`'s
 //! iframe embeds.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -21,11 +22,12 @@ const API: &str = "https://feeder.acast.com/api/v1/shows/";
 
 const VALID_URL_BODY: &str = r#"https?://(?:(?:(?:embed|www|shows)\.)?acast\.com/|play\.acast\.com/s/)(?P<channel>[^/?#]+)/(?:episodes/)?(?P<id>[^/#?"]+)"#;
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| crate::extractor::url_regex(&format!("^{VALID_URL_BODY}")).unwrap());
-static CHANNEL_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:(?:www|shows)\.)?acast\.com/|play\.acast\.com/s/)(?P<id>[^/#?]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(&format!("^{VALID_URL_BODY}")));
+static CHANNEL_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:(?:(?:www|shows)\.)?acast\.com/|play\.acast\.com/s/)(?P<id>[^/#?]+)",
+    )
 });
 /// `_EMBED_REGEX`: an iframe `src` matching `_VALID_URL`.
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {

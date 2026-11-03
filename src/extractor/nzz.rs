@@ -2,6 +2,7 @@
 //! `jw-video-jw*` scripts' `var settings` JW Player data, each parsed with
 //! `_parse_jwplayer_data` under the article ID, as a generator playlist.
 use super::{Extractor, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct Nzz;
 
 const NAME: &str = "NZZ";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?nzz\.ch/(?:[^/]+/)*[^/?#]+-ld\.(?P<id>\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?nzz\.ch/(?:[^/]+/)*[^/?#]+-ld\.(?P<id>\d+)")
 });
 static SCRIPT: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?s)<script[^>]* data-hid="jw-video-jw[^>]+>(.+?)</script>"#).unwrap()

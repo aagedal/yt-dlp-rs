@@ -3,6 +3,7 @@
 //! title, description, cover, duration and age restriction with the playlist
 //! entity's HLS formats.
 use super::{Extractor, dict_info, download_webpage, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct KinoPoisk;
 
 const NAME: &str = "KinoPoisk";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?kinopoisk\.ru/film/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?kinopoisk\.ru/film/(?P<id>\d+)"));
 static DATA: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?s)<script[^>]+\btype=["']application/json[^>]+>(.+?)<"#).unwrap()
 });

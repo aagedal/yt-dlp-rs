@@ -3,6 +3,7 @@
 //! single-part videos, and the base64 `tv.sohu.com/v/` link as a followed
 //! result. Multi-part videos are not ported.
 use super::{Extractor, dict_format, dict_info, download_json_note, download_webpage, follow_url};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoFormat, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -19,13 +20,12 @@ const V_NAME: &str = "SohuV";
 
 /// `my.tv.sohu.com/.../ID.shtml` (the `(?(mytv)|n)` conditional in two
 /// patterns, since the regex crate has no conditionals).
-static MYTV_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://my\.tv\.sohu\.com/.+?/(?P<id>\d+)\.shtml").unwrap());
-static TV_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://tv\.sohu\.com/.+?/n(?P<id>\d+)\.shtml").unwrap());
-static V_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://tv\.sohu\.com/v/(?P<id>[\w=-]+)\.html(?:$|[#?])").unwrap()
-});
+static MYTV_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://my\.tv\.sohu\.com/.+?/(?P<id>\d+)\.shtml"));
+static TV_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://tv\.sohu\.com/.+?/n(?P<id>\d+)\.shtml"));
+static V_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://tv\.sohu\.com/v/(?P<id>[\w=-]+)\.html(?:$|[#?])"));
 static VIDEO_PATH: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"var vid ?= ?["'](\d+)["']"#).unwrap());
 static PUBLISH_TIME: LazyLock<Regex> =

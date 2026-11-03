@@ -1,8 +1,8 @@
 //! Upstream `GoodGameIE` (`yt_dlp/extractor/goodgame.py`): a channel's
 //! stream API and, while it is live, the master HLS playlist.
 use super::{Extractor, download_json, extract_m3u8_fatal_live};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,9 +12,8 @@ pub struct GoodGame;
 
 const NAME: &str = "goodgame:stream";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://goodgame\.ru/(?P<id>[\w.*-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://goodgame\.ru/(?P<id>[\w.*-]+)"));
 
 /// `_match_id` (`(?!channel/)` checked separately).
 pub fn suitable(url: &str) -> bool {

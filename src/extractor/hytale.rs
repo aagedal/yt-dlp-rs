@@ -2,6 +2,7 @@
 //! playlists of their Cloudflare Stream embeds (transparent `url` results
 //! titled from the media page's clip captions), with the OpenGraph title.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct Hytale;
 const NAME: &str = "Hytale";
 const CLOUDFLARE: &str = "CloudflareStream";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?hytale\.com/news/\d+/\d+/(?P<id>[a-z0-9-]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?hytale\.com/news/\d+/\d+/(?P<id>[a-z0-9-]+)")
 });
 static CLIPS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.__INITIAL_COMPONENTS_STATE__\s*=\s*\[\s*").unwrap());

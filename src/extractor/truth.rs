@@ -2,8 +2,8 @@
 //! fetched with impersonation, and its first media attachment as the
 //! untitled URL result.
 use super::{Extractor, direct, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -13,9 +13,8 @@ pub struct Truth;
 
 const NAME: &str = "Truth";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://truthsocial\.com/@[^/?#]+(?:/posts)?/(?P<id>\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://truthsocial\.com/@[^/?#]+(?:/posts)?/(?P<id>\d+)")
 });
 
 /// `_match_id`'s pattern is a match, so no ID is extracted from other URLs.

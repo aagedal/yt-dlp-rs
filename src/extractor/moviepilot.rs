@@ -2,8 +2,8 @@
 //! movie trailers as transparent Dailymotion `url` results, with the trailer
 //! page's Next.js title and summary.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -14,9 +14,8 @@ pub struct Moviepilot;
 const NAME: &str = "moviepilot";
 const KEY: &str = "Moviepilot";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?moviepilot\.de/movies/(?P<id>[^/]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?moviepilot\.de/movies/(?P<id>[^/]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

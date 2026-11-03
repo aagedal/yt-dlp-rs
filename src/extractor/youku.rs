@@ -3,8 +3,8 @@
 //! streams. `YoukuShowIE` (the `list.youku.com` episode lists) is not ported.
 use super::direct;
 use super::{Extractor, dict_format, dict_info, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -15,11 +15,10 @@ pub struct Youku;
 const NAME: &str = "youku";
 const KEY: &str = "Youku";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?:https?://((?:v|play(?:er)?)\.(?:youku|tudou)\.com/(?:v_show/id_|player\.php/sid/)|video\.tudou\.com/v/)|youku:)(?P<id>[A-Za-z0-9]+)(?:\.html|/v\.swf|)",
     )
-    .unwrap()
 });
 
 /// `YoukuIE._match_valid_url`.

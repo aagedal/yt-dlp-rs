@@ -3,8 +3,8 @@
 //! MP3 and the broadcast's metadata.
 use super::clyp::key_error;
 use super::{Extractor, dict_format, dict_info, download_webpage, search_nextjs_data};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -16,17 +16,15 @@ pub struct PrankCastPost;
 const NAME: &str = "PrankCast";
 const POST_NAME: &str = "PrankCastPost";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?prankcast\.com/[^/?#]+/showreel/(?P<id>\d+)-(?P<display_id>[^/?#]+)",
     )
-    .unwrap()
 });
-static POST_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static POST_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?prankcast\.com/[^/?#]+/posts/(?P<id>\d+)-(?P<display_id>[^/?#]+)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

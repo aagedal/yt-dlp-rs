@@ -1,8 +1,8 @@
 //! Upstream `KommunetvIE` (`yt_dlp/extractor/kommunetv.py`): the streams
 //! API's title and first playlist file as non-fatal HLS formats.
 use super::{Extractor, download_json_headers, extract_m3u8_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,9 +12,8 @@ pub struct Kommunetv;
 
 const NAME: &str = "Kommunetv";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://\w+\.kommunetv\.no/archive/(?P<id>\w+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://\w+\.kommunetv\.no/archive/(?P<id>\w+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

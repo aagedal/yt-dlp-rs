@@ -1,8 +1,8 @@
 //! Upstream `BongaCamsIE` (`yt_dlp/extractor/bongacams.py`): the room's
 //! `tools/amf.php` `getRoomData` POST and its live HLS playlist.
 use super::{Extractor, extract_m3u8_fatal_live};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,11 +12,8 @@ pub struct BongaCams;
 
 const NAME: &str = "BongaCams";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?P<host>(?:[^/]+\.)?bongacams\d*\.(?:com|net))/(?P<id>[^/?&#]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?P<host>(?:[^/]+\.)?bongacams\d*\.(?:com|net))/(?P<id>[^/?&#]+)")
 });
 
 /// `_match_valid_url`.

@@ -1,8 +1,8 @@
 //! Upstream `HitRecordIE` (`yt_dlp/extractor/hitrecord.py`): the records
 //! API's MP4 URL and metadata as an untyped result.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,9 +12,8 @@ pub struct HitRecord;
 
 const NAME: &str = "HitRecord";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?hitrecord\.org/records/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?hitrecord\.org/records/(?P<id>\d+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

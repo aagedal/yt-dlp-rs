@@ -7,6 +7,7 @@ use super::{
     Extractor, dict_info, direct, download_webpage, extract_m3u8_fatal_master, follow_url,
     nuxt::Step, search_json, streamable::int_or_none,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::{Captures, Regex};
 use reqwest::blocking::Client;
@@ -20,18 +21,15 @@ pub struct LsmReplay;
 const LTV_NAME: &str = "LSMLTVEmbed";
 const REPLAY_NAME: &str = "LSMReplay";
 
-static LTV_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://ltv\.lsm\.lv/embed\?(?:[^#]+&)?c=(?P<id>[^#&]+)")
-        .unwrap()
-});
+static LTV_VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://ltv\.lsm\.lv/embed\?(?:[^#]+&)?c=(?P<id>[^#&]+)"));
 static LTV_PAYLOAD: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.ltvEmbedPayload\s*=").unwrap());
 
-static REPLAY_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static REPLAY_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://replay\.lsm\.lv/[^/?#]+/(?:skaties/|klausies/)?(?:ieraksts|statja)/[^/?#]+/(?P<id>\d+)",
     )
-    .unwrap()
 });
 /// `Object.create(null, {...})` (or `Object.create(null)`) in the Nuxt data.
 static OBJECT_CREATE: LazyLock<Regex> =

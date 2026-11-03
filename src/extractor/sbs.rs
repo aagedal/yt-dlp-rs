@@ -4,6 +4,7 @@
 //! the HEAD geo-restriction check when it has no formats, and the non-fatal
 //! `video_stream` JSON merged with the MPX catalogue JSON's metadata.
 use super::{Extractor, dict_info, download_json, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, Subtitles, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -18,11 +19,10 @@ pub(crate) const KEY: &str = "SBS";
 
 const PLAYER_API: &str = "https://www.sbs.com.au/api/v3";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?sbs\.com\.au/(?:ondemand(?:/video/(?:single/)?|/(?:movie|tv-program)/[^/]+/|/(?:tv|news)-series/(?:[^/]+/){3}|.*?\bplay=|/watch/)|news/(?:embeds/)?video/)(?P<id>[0-9]+)",
     )
-    .unwrap()
 });
 /// `_EMBED_REGEX`, including the literal `]` its verbose pattern starts
 /// with (`(?x)]`), and its `(["\'])...\1` quotes as alternatives.

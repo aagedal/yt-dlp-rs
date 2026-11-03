@@ -2,6 +2,7 @@
 //! `23video`): the player's `api/photo/list` JSON with its audio and video
 //! downloads as formats and thumbnails.
 use super::{Extractor, download_json_transformed, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct TwentyThreeVideo;
 const NAME: &str = "23video";
 const KEY: &str = "TwentyThreeVideo";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?P<domain>[^.]+\.(?:twentythree\.net|23video\.com|filmweb\.no))/v\.ihtml/player\.html\?(?P<query>.*?\bphoto(?:_|%5f)id=(?P<id>\d+).*)",
     )
-    .unwrap()
 });
 
 static OBJECT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?s)(\{.+\})").unwrap());

@@ -2,6 +2,7 @@
 //! CTSPlayer video (its `get_id` hidden input's MP4 feed `source_url`), else
 //! the first YouTube embed of the page as a `url` result.
 use super::{Extractor, download_webpage, follow_url, login, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct CtsNews;
 
 const NAME: &str = "CtsNews";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://news\.cts\.com\.tw/[a-z]+/[a-z]+/\d+/(?P<id>\d+)\.html")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://news\.cts\.com\.tw/[a-z]+/[a-z]+/\d+/(?P<id>\d+)\.html")
 });
 static DATETIME: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(\d{4}/\d{2}/\d{2} \d{2}:\d{2})").unwrap());

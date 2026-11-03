@@ -5,6 +5,7 @@
 //! turns into a playlist of `url_result`s) and the `iview` API classes
 //! (`ABCIViewIE`, `ABCIViewShowSeriesIE`) are not supported natively.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,11 +18,10 @@ pub struct Abc;
 const NAME: &str = "abc.net.au";
 const KEY: &str = "ABC";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?abc\.net\.au/(?:news|btn|listen)/(?:[^/?#]+/){1,4}(?P<id>\d{5,})",
     )
-    .unwrap()
 });
 static DOWNLOAD_LINK: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

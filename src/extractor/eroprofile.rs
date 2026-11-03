@@ -2,6 +2,7 @@
 //! album's `/m/videos/view/` links across its `?pnum=` pages as url results.
 //! The single-video `EroProfileIE` (login, `glbUpdViews` ID) is not ported.
 use super::{Extractor, download_webpage_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct EroProfileAlbum;
 const NAME: &str = "EroProfile:album";
 const VIEW_IE: &str = "EroProfile";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?eroprofile\.com/m/videos/album/(?P<id>[^/]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?eroprofile\.com/m/videos/album/(?P<id>[^/]+)")
 });
 static VIEW_LINK: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"href=".*?(/m/videos/view/[^"]+)""#).unwrap());

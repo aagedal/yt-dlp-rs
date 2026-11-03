@@ -8,6 +8,7 @@ use super::{
     Extractor, dict_format, dict_info, download_webpage, download_webpage_note,
     extract_mpd_optional_note, post_json_errnote_optional,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use percent_encoding::percent_decode_str;
 use regex::Regex;
@@ -21,11 +22,10 @@ pub struct Cda;
 const NAME: &str = "CDA";
 const BASE_URL: &str = "https://www.cda.pl";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:(?:www|m)\.)?cda\.pl/video|ebd\.cda\.pl/[0-9]+x[0-9]+)/(?P<id>[0-9a-z]+)",
     )
-    .unwrap()
 });
 static PREMIUM: &str = "Ten film jest dostępny dla użytkowników premium";
 static GEO: LazyLock<Regex> =

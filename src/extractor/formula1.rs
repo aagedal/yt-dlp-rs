@@ -1,19 +1,16 @@
 //! Upstream `Formula1IE` (`yt_dlp/extractor/formula1.py`): the URL's
 //! Brightcove ID as a `url` result of the Formula 1 Brightcove player.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use std::sync::LazyLock;
 use url::Url;
 
 pub struct Formula1;
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?formula1\.com/en/latest/video\.[^.]+\.(?P<id>\d+)\.html",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?formula1\.com/en/latest/video\.[^.]+\.(?P<id>\d+)\.html")
 });
 
 /// `_match_id`.

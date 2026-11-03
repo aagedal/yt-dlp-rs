@@ -7,6 +7,7 @@
 use super::{
     Extractor, dict_format, download_webpage, extract_m3u8_master_optional, extract_mpd_optional,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -19,11 +20,10 @@ pub struct MainStreaming;
 
 const NAME: &str = "MainStreaming";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"https?://(?:webtools-?)?(?P<host>[A-Za-z0-9-]*\.msvdn\.net)/(?:embed|amp_embed|content)/(?P<id>\w+)",
     )
-    .unwrap()
 });
 static CONFIG: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)config\s*=\s*(\{.+?\})\s*;").unwrap());

@@ -3,6 +3,7 @@
 //! HLS and DASH manifests, with the title, description, poster, date and
 //! duration.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,8 @@ pub struct CanalAlpha;
 
 const NAME: &str = "CanalAlpha";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?canalalpha\.ch/play/[^/]+/[^/]+/(?P<id>\d+)/?.*",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?canalalpha\.ch/play/[^/]+/[^/]+/(?P<id>\d+)/?.*")
 });
 static STATE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.__SERVER_STATE__\s?=\s?").unwrap());

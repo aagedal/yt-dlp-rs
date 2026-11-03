@@ -14,6 +14,7 @@
 //! Collection pages are pending entries, fetched while processing like
 //! upstream's `OnDemandPagedList`.
 use super::{Extractor, dict_format, dict_info, download_json_headers, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -35,29 +36,25 @@ const TOKEN_URL: &str = "https://sso.ardmediathek.de/sso/token";
 const PAGE_SIZE: usize = 100;
 const GRAPHQL: &str = "https://api.ardaudiothek.de/graphql";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:beta|www)\.)?ardmediathek\.de/(?:[^/]+/)?(?:player|live|video)/(?:[^?#]+/)?(?P<id>[a-zA-Z0-9]+)/?(?:[?#]|$)",
     )
-    .unwrap()
 });
-static COLLECTION_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static COLLECTION_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:(?:beta|www)\.)?ardmediathek\.de/(?:[^/?#]+/)?(?P<playlist>sendung|serie|sammlung)/(?:(?P<display_id>[^?#]+?)/)?(?P<id>[a-zA-Z0-9]+)(?:/(?P<season>\d+)(?:/(?P<version>OV|AD))?)?/?(?:[?#]|$)",
     )
-    .unwrap()
 });
-static AUDIO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static AUDIO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https:?//(?:www\.)?ard(?:audiothek|sounds)\.de/episode/(?P<id>urn:ard:(?:episode|section|extra):[a-f0-9]{16})",
     )
-    .unwrap()
 });
-static AUDIO_PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static AUDIO_PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https:?//(?:www\.)?ard(?:audiothek|sounds)\.de/sendung/(?P<playlist>[\w-]+)/(?P<id>urn:ard:show:[a-f0-9]{16})",
     )
-    .unwrap()
 });
 /// `ARDBetaMediathekIE._extract_episode_info`'s patterns, tried in order.
 static EPISODE_PATTERNS: LazyLock<Vec<Regex>> = LazyLock::new(|| {

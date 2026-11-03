@@ -3,6 +3,7 @@
 //! playlist JSON: an MP3 source or the HLS playlist, with the item's title,
 //! description, length, image and creation time.
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ pub struct Rtvs;
 const NAME: &str = "stvr";
 const KEY: &str = "RTVS";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:rtvs|stvr)\.sk/(?:radio|televizia)/archiv(?:/\d+)?/(?P<id>\d+)/?(?:[#?]|$)",
     )
-    .unwrap()
 });
 static IFRAME_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<iframe[^>]+id\s*=\s*"player_[^_]+_([0-9]+)""#).unwrap());

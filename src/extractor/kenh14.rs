@@ -8,8 +8,8 @@ use super::{
     Extractor, dict_format, dict_info, download_json_note, download_webpage,
     extract_m3u8_master_optional, extract_mpd_optional_note, search_warning,
 };
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, PlaylistInfo, Result, Subtitles, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -21,11 +21,11 @@ pub struct Kenh14Playlist;
 const VIDEO_NAME: &str = "Kenh14Video";
 const PLAYLIST_NAME: &str = "Kenh14Playlist";
 
-static VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://video\.kenh14\.vn/(?:video/)?[\w-]+-(?P<id>[0-9]+)\.chn").unwrap()
+static VIDEO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://video\.kenh14\.vn/(?:video/)?[\w-]+-(?P<id>[0-9]+)\.chn")
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://video\.kenh14\.vn/playlist/[\w-]+-(?P<id>[0-9]+)\.chn").unwrap()
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://video\.kenh14\.vn/playlist/[\w-]+-(?P<id>[0-9]+)\.chn")
 });
 
 /// `Kenh14VideoIE._match_id`.

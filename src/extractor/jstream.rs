@@ -3,6 +3,7 @@
 //! its `auto` HLS playlists, title, duration and thumbnail; pages loading
 //! the J-Stream player `if.js` embed their `PlayerFactoryIF.create` movies.
 use super::{Extractor, dict_info, download_webpage_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, Subtitles, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -16,11 +17,8 @@ pub struct JStream;
 pub(crate) const NAME: &str = "JStream";
 pub(crate) const KEY: &str = "JStream";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^jstream:(?P<host>www\d+):(?P<id>(?P<publisher>[a-z0-9]+):(?P<mid>\d+))",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^jstream:(?P<host>www\d+):(?P<id>(?P<publisher>[a-z0-9]+):(?P<mid>\d+))")
 });
 static METADATA: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\s*metaDataResult\s*\(").unwrap());
 static SCRIPT_TAG: LazyLock<Regex> = LazyLock::new(|| {

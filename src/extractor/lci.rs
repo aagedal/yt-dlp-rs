@@ -1,8 +1,8 @@
 //! Upstream `LCIIE` (`yt_dlp/extractor/lci.py`): LCI and TF1 Info videos as
 //! `url` results of the first WAT ID in the page's Next.js `tms.videos`.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,11 +12,10 @@ pub struct Lci;
 
 const NAME: &str = "LCI";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:lci|tf1info)\.fr/(?:[^/?#]+/)+[\w-]+-(?P<id>\d+)\.html",
     )
-    .unwrap()
 });
 
 /// `_match_id`.

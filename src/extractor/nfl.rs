@@ -6,6 +6,7 @@
 //! extractors and the account-login path (`_get_account_info`) are not ported.
 use super::clyp::key_error;
 use super::{Extractor, dict_info, download_webpage, post_json_note_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -27,9 +28,8 @@ const ASSET_URL: &str = "https://api.nfl.com/play/v1/asset";
 /// `NFLBaseIE._VALID_URL_BASE`.
 const VALID_URL_BASE: &str = r"https?://(?:www\.)?(?:(?:nfl|buffalobills|miamidolphins|patriots|newyorkjets|baltimoreravens|bengals|clevelandbrowns|steelers|houstontexans|colts|jaguars|(?:titansonline|tennesseetitans)|denverbroncos|(?:kc)?chiefs|raiders|chargers|dallascowboys|giants|philadelphiaeagles|(?:redskins|washingtonfootball)|chicagobears|detroitlions|packers|vikings|atlantafalcons|panthers|neworleanssaints|buccaneers|azcardinals|(?:stlouis|the)rams|49ers|seahawks)\.com|.+?\.clubs\.nfl\.com)/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(r"^{VALID_URL_BASE}news/(?P<id>[^/#?&]+)")).unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(&format!(r"^{VALID_URL_BASE}news/(?P<id>[^/#?&]+)")));
 static VIDEO_CONFIG: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(
         r#"<script[^>]+id="[^"]*video-config-[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}[^"]*"[^>]*>\s*(\{.+\});?\s*</script>"#,

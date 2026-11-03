@@ -3,8 +3,8 @@
 //! streaming-URL APIs (fatal HLS formats) with the non-fatal programme
 //! details, and series as playlists of their programmes' `url` results.
 use super::{Extractor, dict_info, download_json, download_json_note, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -16,13 +16,10 @@ pub struct S4cSeries;
 const NAME: &str = "S4C";
 const SERIES_NAME: &str = "S4CSeries";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?s4c\.cymru/clic/programme/(?P<id>\d+)")
-        .unwrap()
-});
-static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?s4c\.cymru/clic/series/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?s4c\.cymru/clic/programme/(?P<id>\d+)"));
+static SERIES_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?s4c\.cymru/clic/series/(?P<id>\d+)"));
 
 /// `S4CIE._match_id`.
 pub fn suitable(url: &str) -> bool {

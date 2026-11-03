@@ -2,8 +2,8 @@
 //! XML's video entry and, for its stream access URL and the `iphone`
 //! variant, the token manifest as optional HDS or HLS formats.
 use super::{Extractor, download_xml, extract_m3u8_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -13,9 +13,8 @@ pub struct Dfb;
 
 const NAME: &str = "tv.dfb.de";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://tv\.dfb\.de/video/(?P<display_id>[^/]+)/(?P<id>\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://tv\.dfb\.de/video/(?P<display_id>[^/]+)/(?P<id>\d+)")
 });
 
 /// `_match_valid_url`.

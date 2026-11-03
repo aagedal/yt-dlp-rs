@@ -3,6 +3,7 @@
 //! `data-article-data` attributes (an HLS playlist or a direct stream);
 //! player iframes on other pages are followed.
 use super::{Extractor, dict_format, dict_info, download_webpage, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ pub struct Expressen;
 pub(crate) const NAME: &str = "Expressen";
 pub(crate) const KEY: &str = "Expressen";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:expressen|di)\.se/(?:(?:tvspelare/video|video-?player/embed)/)?(?:tv|nyheter)/(?:[^/?#]+/)*(?P<id>[^/?#&]+)",
     )
-    .unwrap()
 });
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

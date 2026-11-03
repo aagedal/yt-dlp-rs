@@ -4,6 +4,7 @@
 //! `url_transparent` results of their Brightcove players (articles as
 //! playlists).
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -25,17 +26,15 @@ const STORY_KEY: &str = "SkyNewsStory";
 const SPORTS_NEWS_NAME: &str = "sky:sports:news";
 const SPORTS_NEWS_KEY: &str = "SkySportsNews";
 
-static SPORTS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?skysports\.com/watch/video/([^/]+/)*(?P<id>[0-9]+)").unwrap()
+static SPORTS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?skysports\.com/watch/video/([^/]+/)*(?P<id>[0-9]+)")
 });
-static NEWS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://news\.sky\.com/video/[0-9a-z-]+-(?P<id>[0-9]+)").unwrap()
-});
-static STORY_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://news\.sky\.com/story/[0-9a-z-]+-(?P<id>[0-9]+)").unwrap()
-});
-static SPORTS_NEWS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?skysports\.com/([^/]+/)*news/\d+/(?P<id>\d+)").unwrap()
+static NEWS_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://news\.sky\.com/video/[0-9a-z-]+-(?P<id>[0-9]+)"));
+static STORY_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://news\.sky\.com/story/[0-9a-z-]+-(?P<id>[0-9]+)"));
+static SPORTS_NEWS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?skysports\.com/([^/]+/)*news/\d+/(?P<id>\d+)")
 });
 static SDC_EL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?s)(<div[^>]+data-(?:component-name|fn)="sdc-(?:articl|sit)e-video"[^>]*>)"#)

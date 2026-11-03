@@ -10,6 +10,7 @@ use super::{
     Extractor, dict_format, dict_info, download_json, download_json_note, download_webpage,
     extract_m3u8_master_optional, extract_mpd_optional_note,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -28,11 +29,8 @@ const PROGRAM_NAME: &str = "rtve.es:program";
 const PROGRAM_KEY: &str = "RTVEProgram";
 /// `RTVEProgramIE._PAGE_SIZE`.
 const PROGRAM_PAGE_SIZE: usize = 60;
-static PROGRAM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?rtve\.es/play/videos/(?P<id>[\w-]+)/?(?:[?#]|$)",
-    )
-    .unwrap()
+static PROGRAM_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?rtve\.es/play/videos/(?P<id>[\w-]+)/?(?:[?#]|$)")
 });
 
 const ALACARTA_NAME: &str = "rtve.es:alacarta";
@@ -44,28 +42,29 @@ const LIVE_KEY: &str = "RTVELive";
 const TELEVISION_NAME: &str = "rtve.es:television";
 const TELEVISION_KEY: &str = "RTVETelevision";
 
-static ALACARTA_URL: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+static ALACARTA_URL: LazyLock<[UrlRegex; 2]> = LazyLock::new(|| {
     [
-        Regex::new(r"^https?://(?:www\.)?rtve\.es/(?:m/)?(?:(?:alacarta|play)/videos|filmoteca)/(?:[^/?#]+/){2}(?P<id>\d+)").unwrap(),
-        Regex::new(r"^https?://(?:www\.)?rtve\.es/infantil/serie/[^/?#]+/video/[^/?#]+/(?P<id>\d+)").unwrap(),
+        UrlRegex::new(
+            r"^https?://(?:www\.)?rtve\.es/(?:m/)?(?:(?:alacarta|play)/videos|filmoteca)/(?:[^/?#]+/){2}(?P<id>\d+)",
+        ),
+        UrlRegex::new(
+            r"^https?://(?:www\.)?rtve\.es/infantil/serie/[^/?#]+/video/[^/?#]+/(?P<id>\d+)",
+        ),
     ]
 });
-static AUDIO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?rtve\.es/(alacarta|play)/audios/(?:[^/?#]+/){2}(?P<id>\d+)")
-        .unwrap()
+static AUDIO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?rtve\.es/(alacarta|play)/audios/(?:[^/?#]+/){2}(?P<id>\d+)")
 });
-static LIVE_URL: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+static LIVE_URL: LazyLock<[UrlRegex; 2]> = LazyLock::new(|| {
     [
-        Regex::new(r"^https?://(?:www\.)?rtve\.es/directo/(?P<id>[a-zA-Z0-9-]+)").unwrap(),
-        Regex::new(
+        UrlRegex::new(r"^https?://(?:www\.)?rtve\.es/directo/(?P<id>[a-zA-Z0-9-]+)"),
+        UrlRegex::new(
             r"^https?://(?:www\.)?rtve\.es/play/videos/directo/[^/?#]+/(?P<id>[a-zA-Z0-9-]+)",
-        )
-        .unwrap(),
+        ),
     ]
 });
-static TELEVISION_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?rtve\.es/television/[^/?#]+/[^/?#]+/(?P<id>\d+).shtml")
-        .unwrap()
+static TELEVISION_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?rtve\.es/television/[^/?#]+/[^/?#]+/(?P<id>\d+).shtml")
 });
 static DATA_SETUP: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<div[^>]+class="[^"]*videoPlayer[^"]*"[^>]*data-setup='"#).unwrap()
@@ -74,11 +73,10 @@ static DATA_SETUP: LazyLock<Regex> = LazyLock::new(|| {
 /// `RTVEALaCartaIE._match_valid_url`: its `(?!directo)` look-ahead as a
 /// separate check (the segment after `videos/` is not `directo...`).
 fn alacarta_id(url: &str) -> Option<String> {
-    static DIRECTO: LazyLock<Regex> = LazyLock::new(|| {
-        Regex::new(
+    static DIRECTO: LazyLock<UrlRegex> = LazyLock::new(|| {
+        UrlRegex::new(
             r"^https?://(?:www\.)?rtve\.es/(?:m/)?(?:(?:alacarta|play)/videos|filmoteca)/directo",
         )
-        .unwrap()
     });
     if DIRECTO.is_match(url) {
         return ALACARTA_URL[1]

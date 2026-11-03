@@ -3,6 +3,7 @@
 //! page's `srp_player_params` artwork. Pages that only embed something are
 //! errors here: Spotify embeds, and the generic hand-off, which is not ported.
 use super::{Extractor, direct, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,9 +16,8 @@ pub struct NekoHacker;
 const NAME: &str = "NekoHacker";
 const ARTIST: &str = "Neko Hacker";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?nekohacker\.com/(?P<id>[\w-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?nekohacker\.com/(?P<id>[\w-]+)"));
 static IFRAME: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?is)<iframe\b[^>]*>").unwrap());
 static TRACK: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(<li[^>]+data-audiopath[^>]+>)").unwrap());

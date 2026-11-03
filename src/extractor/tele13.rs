@@ -3,6 +3,7 @@
 //! YouTube as a `url` result, else files ranked by label) with the setup's
 //! title and image and the page description.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,9 +16,8 @@ pub struct Tele13;
 const NAME: &str = "Tele13";
 const LABELS: [&str; 3] = ["Móvil", "SD", "HD"];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?t13\.cl/videos(?:/[^/]+)+/(?P<id>[\w-]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?t13\.cl/videos(?:/[^/]+)+/(?P<id>[\w-]+)")
 });
 static SETUP: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)jwplayer\('player-vivo'\).setup\((\{.*?\})\)").unwrap());

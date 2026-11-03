@@ -4,8 +4,8 @@
 use super::clyp::key_error;
 use super::streamable::int_or_none;
 use super::{Extractor, dict_format, dict_info, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -16,11 +16,8 @@ pub struct Flickr;
 const NAME: &str = "Flickr";
 const API_BASE_URL: &str = "https://api.flickr.com/services/rest?";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.|secure\.)?flickr\.com/photos/[\w\-_@]+/(?P<id>\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.|secure\.)?flickr\.com/photos/[\w\-_@]+/(?P<id>\d+)")
 });
 
 const QUALITIES: [&str; 10] = [

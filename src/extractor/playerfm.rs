@@ -1,6 +1,7 @@
 //! Upstream `PlayerFmIE` (`yt_dlp/extractor/playerfm.py`): an episode's
 //! `.json` document as an untyped audio result.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,11 +13,8 @@ pub struct PlayerFm;
 
 const NAME: &str = "PlayerFm";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^(?P<url>https?://(?:www\.)?player\.fm/(?:series/)?[\w-]+/(?P<id>[\w-]+))",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^(?P<url>https?://(?:www\.)?player\.fm/(?:series/)?[\w-]+/(?P<id>[\w-]+))")
 });
 
 /// Upstream `clean_podcast_url`'s tracking prefixes.

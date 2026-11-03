@@ -2,6 +2,7 @@
 //! Brightcove player is embedded in the page, or whose Fusion metadata names
 //! the video's Brightcove ID, as `url` results of the player.
 use super::{Extractor, brightcove, download_webpage, follow_url};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct NzHerald;
 
 const NAME: &str = "nzherald";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?nzherald\.co\.nz/[\w/-]+/(?P<id>[A-Z0-9]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?nzherald\.co\.nz/[\w/-]+/(?P<id>[A-Z0-9]+)")
 });
 /// `BrightcoveNewIE._VALID_URL` as an `embedUrl` JSON-LD value.
 static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {

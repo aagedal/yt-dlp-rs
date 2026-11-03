@@ -4,8 +4,8 @@
 //! Subtitle tracks are unsupported (upstream lists them without an
 //! extension).
 use super::{Extractor, dict_format, dict_info, download_json, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -15,11 +15,10 @@ pub struct Ccma;
 
 const NAME: &str = "CCMA";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?3cat\.cat/(?:3cat|tv3/sx3)/[^/?#]+/(?P<type>video|audio)/(?P<id>\d+)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

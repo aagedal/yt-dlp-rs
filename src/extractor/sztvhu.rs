@@ -1,6 +1,7 @@
 //! Upstream `SztvHuIE` (`yt_dlp/extractor/sztvhu.py`): the page's player
 //! file under `media.sztv.hu/vod/` with its meta title and description.
 use super::{Extractor, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -11,11 +12,10 @@ pub struct SztvHu;
 
 const NAME: &str = "SztvHu";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:www\.)?sztv\.hu|www\.tvszombathely\.hu)/(?:[^/]+)/.+-(?P<id>[0-9]+)",
     )
-    .unwrap()
 });
 
 static FILE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"file: "...:(.*?)","#).unwrap());

@@ -8,6 +8,7 @@ use super::dict_format;
 use super::dict_info;
 use super::download_webpage;
 use super::json_ld::{url_or_none, yield_json_ld};
+use crate::extractor::UrlRegex;
 use crate::html_elements::{
     element_text_and_html_by_tag, elements_text_and_html_by_class, extract_attributes,
 };
@@ -22,11 +23,8 @@ pub struct Bpb;
 
 const NAME: &str = "Bpb";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.|m\.)?bpb\.de/(?:[^/?#]+/)*(?P<id>\d+)(?:[/?#]|$)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.|m\.)?bpb\.de/(?:[^/?#]+/)*(?P<id>\d+)(?:[/?#]|$)")
 });
 /// `_TITLE_RE`, matched at the start of the opening header's content.
 static TITLE: LazyLock<Regex> =

@@ -2,6 +2,7 @@
 //! `__NEXT_DATA__` dehydrated `CmsMovie` query (DRM licences refused) and its
 //! PMD video URL as an untyped result with the movie's metadata.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,10 +14,8 @@ pub struct Netzkino;
 
 const NAME: &str = "Netzkino";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?netzkino\.de/details/(?P<id>[^/?#]+)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?netzkino\.de/details/(?P<id>[^/?#]+)"));
 static ABSOLUTE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^(?:[a-zA-Z][a-zA-Z0-9+.-]*:)?//").unwrap());
 

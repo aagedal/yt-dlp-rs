@@ -2,8 +2,8 @@
 //! podcast and `player_ids` API JSON as an untyped audio result, and a
 //! podcast's paged `list/episode` API episodes as a playlist of them.
 use super::{Extractor, download_json, post_json_note_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -17,11 +17,10 @@ const PAGE_SIZE: usize = 100;
 /// An info dict's fields in order.
 type Fields = Vec<(&'static str, Value)>;
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?podchaser\.com/podcasts/[\w-]+-(?P<podcast_id>\d+)(?:/episodes/[\w-]+-(?P<id>\d+))?",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

@@ -2,6 +2,7 @@
 //! full-episode page's `YOUTUBE_VIDEO` variable, else its network content API
 //! `video_file` (YouTube) or `dailymotion_file`, followed as `url` results.
 use super::{Extractor, download_json, download_webpage, follow_url};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,11 +13,10 @@ pub struct GmaNetworkVideo;
 
 const NAME: &str = "GMANetworkVideo";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www)\.gmanetwork\.com/(?:\w+/){3}(?P<id>\d+)/(?P<display_id>[\w-]+)/video",
     )
-    .unwrap()
 });
 static YOUTUBE_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"var\s*YOUTUBE_VIDEO\s*=\s*['"]+(?P<yt_id>[\w-]+)"#).unwrap());

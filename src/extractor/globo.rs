@@ -9,6 +9,7 @@ use super::{
     Extractor, dict_info, direct, download_json_headers, download_webpage,
     extract_m3u8_fatal_master, post_json_note_headers,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -42,17 +43,13 @@ const VIDEO_VIEW: &str = r#"
     }
     "#;
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"(?:globo:|https?://[^/?#]+?\.globo\.com/(?:[^/?#]+/))(?P<id>\d{7,})",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"(?:globo:|https?://[^/?#]+?\.globo\.com/(?:[^/?#]+/))(?P<id>\d{7,})")
 });
 /// `GloboArticleIE._VALID_URL` without its `(?!globoplay)` lookahead, which
 /// `article_suitable` applies by hand.
-static ARTICLE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"https?://(?P<rest>.+?\.globo\.com/(?:[^/?#]+/)*(?P<id>[^/?#.]+)(?:\.html)?)")
-        .unwrap()
+static ARTICLE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"https?://(?P<rest>.+?\.globo\.com/(?:[^/?#]+/)*(?P<id>[^/?#.]+)(?:\.html)?)")
 });
 static VIDEO_ID_REGEXES: LazyLock<Vec<Regex>> = LazyLock::new(|| {
     [

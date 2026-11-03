@@ -5,6 +5,7 @@
 //! upstream's type qualities, subtitles, page meta fields and YouTube-hosted
 //! videos as `url_transparent` results.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -18,9 +19,10 @@ const NAME: &str = "Odnoklassniki";
 const LOGIN_HINT: &str = "Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies";
 const QUALITIES: [&str; 8] = ["4", "0", "1", "2", "3", "5", "6", "7"];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?(?:odnoklassniki|ok)\.ru/(?:video(?P<embed>embed)?/|web-api/video/moviePlayer/|live/|dk\?.*?st\.mvId=)(?P<id>[\d-]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^https?://(?:www\.)?(?:odnoklassniki|ok)\.ru/(?:video(?P<embed>embed)?/|web-api/video/moviePlayer/|live/|dk\?.*?st\.mvId=)(?P<id>[\d-]+)",
+    )
 });
 static TYPE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\btype[/=](\d)").unwrap());
 

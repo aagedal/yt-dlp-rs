@@ -2,6 +2,7 @@
 //! `KINDUrl = "..."` assignments as ranked formats, else the `videoStatus.jsp`
 //! API's videos, with the page's title, summary and date.
 use super::{Extractor, download_json_headers, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct PearVideo;
 const NAME: &str = "PearVideo";
 const QUALITIES: [&str; 7] = ["ldflv", "ld", "sdflv", "sd", "hdflv", "hd", "src"];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?pearvideo\.com/video_(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?pearvideo\.com/video_(?P<id>\d+)"));
 // `(?P<id>[a-zA-Z]+)Url\s*=\s*(["\'])(?P<url>(?:https?:)?//.+?)\2`.
 static FORMAT_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

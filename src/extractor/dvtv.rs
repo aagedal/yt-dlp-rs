@@ -2,6 +2,7 @@
 //! `BBXPlayer.setup(...)` or its `playlist.push(...)` entries, whose HLS,
 //! DASH and MP4 tracks become formats.
 use super::{Extractor, dict_format, dict_info, direct, download_webpage, nrk};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct DvTv;
 const NAME: &str = "dvtv";
 const KEY: &str = "DVTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://video\.aktualne\.cz/(?:[^/]+/)+r~(?P<id>[0-9a-f]{32})")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://video\.aktualne\.cz/(?:[^/]+/)+r~(?P<id>[0-9a-f]{32})")
 });
 static PLAYLIST_ITEM: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)playlist\.push\((\{.+?\})\);").unwrap());

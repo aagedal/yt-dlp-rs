@@ -2,8 +2,8 @@
 //! JSON-LD `VideoObject` embed URL, followed (a Vimeo embed carries the page
 //! as its `referer`, smuggled into the URL).
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -13,9 +13,8 @@ pub struct AeonCo;
 
 const NAME: &str = "AeonCo";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?aeon\.co/videos/(?P<id>[^/?]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?aeon\.co/videos/(?P<id>[^/?]+)"));
 
 /// `_match_valid_url`.
 pub fn suitable(url: &str) -> bool {

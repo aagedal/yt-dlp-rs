@@ -1,8 +1,8 @@
 //! Upstream `GodResourceIE` (`yt_dlp/extractor/godresource.py`): the streams
 //! API's VOD HLS or MP4 URL with its traversed metadata.
 use super::{Extractor, download_json, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -12,9 +12,8 @@ pub struct GodResource;
 
 const NAME: &str = "GodResource";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://new\.godresource\.com/video/(?P<id>\w+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://new\.godresource\.com/video/(?P<id>\w+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

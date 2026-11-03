@@ -3,8 +3,8 @@
 //! names) as four fixed audio formats and HEAD-checked cover thumbnails, and
 //! an album's tracks as `url_transparent` entries carrying the album name.
 use super::{Extractor, download_json_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -16,14 +16,13 @@ pub struct JamendoAlbum;
 const NAME: &str = "Jamendo";
 const ALBUM_NAME: &str = "JamendoAlbum";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:licensing\.jamendo\.com/[^/]+|(?:www\.)?jamendo\.com)/track/(?P<id>[0-9]+)(?:/(?P<display_id>[^/?#&]+))?",
     )
-    .unwrap()
 });
-static ALBUM_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?jamendo\.com/album/(?P<id>[0-9]+)").unwrap());
+static ALBUM_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?jamendo\.com/album/(?P<id>[0-9]+)"));
 
 /// `JamendoIE._match_valid_url`.
 pub fn suitable(url: &str) -> bool {

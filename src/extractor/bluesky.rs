@@ -2,8 +2,8 @@
 //! JSON, its video embeds' HLS playlists and PDS blobs (with captions),
 //! external links as `url` results, quoted posts and the post metadata.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -13,12 +13,13 @@ pub struct Bluesky;
 
 const NAME: &str = "Bluesky";
 
-static WEB_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?(?:bsky\.app|main\.bsky\.dev)/profile/(?P<handle>[\w.:%-]+)/post/(?P<id>\w+)")
-        .unwrap()
+static WEB_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:www\.)?(?:bsky\.app|main\.bsky\.dev)/profile/(?P<handle>[\w.:%-]+)/post/(?P<id>\w+)",
+    )
 });
-static AT_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^at://(?P<handle>[\w.:%-]+)/app\.bsky\.feed\.post/(?P<id>\w+)").unwrap()
+static AT_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^at://(?P<handle>[\w.:%-]+)/app\.bsky\.feed\.post/(?P<id>\w+)")
 });
 
 /// `BlueskyIE.suitable`.

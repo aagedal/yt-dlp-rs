@@ -4,6 +4,7 @@
 //! metadata with OpenGraph fallbacks), playlists and series seasons as
 //! playlists of talk URLs, and embeds rewritten to talk pages.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -25,14 +26,13 @@ fn base(kind: &str) -> String {
     format!(r"^https?://www\.ted\.com/(?:{kind})(?:/lang/[^/#?]+)?/(?P<id>[\w-]+)")
 }
 
-static TALK_URL: LazyLock<Regex> = LazyLock::new(|| Regex::new(&base("talks")).unwrap());
-static PLAYLIST_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(&base(r"playlists(?:/\d+)?")).unwrap());
-static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(r"{}(?:#season_(?P<season>\d+))?", base("series"))).unwrap()
-});
-static EMBED_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://embed(?:-ssl)?\.ted\.com/").unwrap());
+static TALK_URL: LazyLock<UrlRegex> = LazyLock::new(|| UrlRegex::new(base("talks")));
+static PLAYLIST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(base(r"playlists(?:/\d+)?")));
+static SERIES_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(format!(r"{}(?:#season_(?P<season>\d+))?", base("series"))));
+static EMBED_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://embed(?:-ssl)?\.ted\.com/"));
 static EMBED_HOST: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"://embed(-ssl)?").unwrap());
 
 /// `TedTalkIE.suitable`.

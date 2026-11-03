@@ -2,6 +2,7 @@
 //! `mediaId` as a `url_transparent` result of its `jwplatform:` video,
 //! overlaid with the article ID and `og:title`.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,8 +14,10 @@ pub struct Spiegel;
 
 const NAME: &str = "Spiegel";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?(?:spiegel|manager-magazin)\.de(?:/[^/]+)+/[^/]*-(?P<id>[0-9]+|[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})(?:-embed|-iframe)?(?:\.html)?(?:$|[#?])").unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^https?://(?:www\.)?(?:spiegel|manager-magazin)\.de(?:/[^/]+)+/[^/]*-(?P<id>[0-9]+|[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})(?:-embed|-iframe)?(?:\.html)?(?:$|[#?])",
+    )
 });
 
 /// `(&#34;|["\'])mediaId\1\s*:\s*(&#34;|["\'])(?P<id>(?:(?!\2).)+)\2`, with

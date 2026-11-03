@@ -5,6 +5,7 @@
 //! the entry metadata; `_extract_embed_urls` for generic pages. Player URLs
 //! of `playlistAPI.kpl0Id` playlists remain an explicit native error.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -19,11 +20,10 @@ pub(crate) const KEY: &str = "Kaltura";
 const SERVICE_URL: &str = "http://cdnapi.kaltura.com";
 const SERVICE_BASE: &str = "/api_v3/service/multirequest";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?:kaltura:(?P<partner_id>\w+):(?P<id>\w+)(?::(?P<player_type>\w+))?|https?://(?:(?:www|cdnapi(?:sec)?)\.)?kaltura\.com(?::\d+)?/(?:(?:index\.php/(?:kwidget|extwidget/preview)|html5/html5lib/[^/]+/mwEmbedFrame\.php))(?:/(?P<path>[^?]+))?(?:\?(?P<query>.*))?)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

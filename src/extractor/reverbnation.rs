@@ -1,8 +1,8 @@
 //! Upstream `ReverbNationIE` (`yt_dlp/extractor/reverbnation.py`): a song's
 //! API JSON as a single-URL (untyped) result.
 use super::{Extractor, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,9 +12,8 @@ pub struct ReverbNation;
 
 const NAME: &str = "ReverbNation";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?reverbnation\.com/.*?/song/(?P<id>\d+).*?$")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?reverbnation\.com/.*?/song/(?P<id>\d+).*?$")
 });
 
 /// `_match_id`.

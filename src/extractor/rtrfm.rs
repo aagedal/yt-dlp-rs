@@ -1,6 +1,7 @@
 //! Upstream `RTRFMIE` (`yt_dlp/extractor/rtrfm.py`): a show page's
 //! `playShow` details and the restream API's MP3 URL as an untyped result.
 use super::{Extractor, download_json_note, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,11 +13,8 @@ pub struct Rtrfm;
 
 const NAME: &str = "RTRFM";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?rtrfm\.com\.au/(?:shows|show-episode)/(?P<id>[^/?\#&]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?rtrfm\.com\.au/(?:shows|show-episode)/(?P<id>[^/?\#&]+)")
 });
 
 static DETAILS: LazyLock<Regex> = LazyLock::new(|| {

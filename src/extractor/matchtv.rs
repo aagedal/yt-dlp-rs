@@ -1,6 +1,7 @@
 //! Upstream `MatchTVIE` (`yt_dlp/extractor/matchtv.py`): the Match TV live
 //! channel's iframe `data-config` feed as a live HLS master.
 use super::{Extractor, download_webpage, extract_m3u8_fatal_live};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ const NAME: &str = "MatchTV";
 const ID: &str = "matchtv-live";
 const IFRAME: &str = "https://video.matchtv.ru/iframe/channel/106";
 
-static VALID_URL: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+static VALID_URL: LazyLock<[UrlRegex; 2]> = LazyLock::new(|| {
     [
-        crate::extractor::url_regex(r"^https?://matchtv\.ru/on-air/?(?:$|[?#])").unwrap(),
-        crate::extractor::url_regex(r"^https?://video\.matchtv\.ru/iframe/channel/106/?(?:$|[?#])")
-            .unwrap(),
+        UrlRegex::ascii(r"^https?://matchtv\.ru/on-air/?(?:$|[?#])"),
+        UrlRegex::ascii(r"^https?://video\.matchtv\.ru/iframe/channel/106/?(?:$|[?#])"),
     ]
 });
 static CONFIG: LazyLock<Regex> =

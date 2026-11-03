@@ -2,6 +2,7 @@
 //! page's player `data-id` and its `getPodcast` API entry as an untyped
 //! result.
 use super::{Extractor, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct RadioZetPodcast;
 
 const NAME: &str = "RadioZetPodcast";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://player\.radiozet\.pl/Podcasty/.*?/(?P<id>.+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://player\.radiozet\.pl/Podcasty/.*?/(?P<id>.+)"));
 static PODCAST_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<div.*?\sid="player".*?\sdata-id=['"]([^'"]+)['"]"#).unwrap());
 

@@ -2,6 +2,7 @@
 //! page's oEmbed iframe, followed as a Vimeo video (its page as the
 //! `referer`); members-only pages raise the login error.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct Germanupa;
 
 const NAME: &str = "Germanupa";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://germanupa\.de/mediathek/(?P<id>[\w-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://germanupa\.de/mediathek/(?P<id>[\w-]+)"));
 // The upstream `\1` back-reference, as one alternative per quote style.
 static OEMBED_IFRAME: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(concat!(

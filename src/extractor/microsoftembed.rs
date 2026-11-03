@@ -11,10 +11,10 @@ use super::{
     extract_m3u8_master_optional, extract_mpd_optional_note, html5::parse_resolution,
     search_warning, update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{
     Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoFormat, VideoInfo,
 };
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -26,18 +26,14 @@ pub struct MicrosoftLearnPlaylist;
 const NAME: &str = "MicrosoftLearnEpisode";
 const PLAYLIST_NAME: &str = "MicrosoftLearnPlaylist";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://learn\.microsoft\.com/(?:[\w-]+/)?shows/[\w-]+/(?P<id>[^?#/]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://learn\.microsoft\.com/(?:[\w-]+/)?shows/[\w-]+/(?P<id>[^?#/]+)")
 });
 
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://learn\.microsoft\.com/(?:[\w-]+/)?(?P<type>shows|events)/(?P<id>[\w-]+)/?(?:[?#]|$)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url` for the episode pattern.

@@ -2,8 +2,8 @@
 //! `api-v2.hearthis.at` track JSON, its stream MP3 and the original download
 //! (when its file name has a known extension) as formats.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -13,11 +13,8 @@ pub struct HearThisAt;
 
 const NAME: &str = "HearThisAt";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?hearthis\.at/(?P<artist>[^/?#]+)/(?P<title>[\w.-]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?hearthis\.at/(?P<artist>[^/?#]+)/(?P<title>[\w.-]+)")
 });
 
 /// `_match_valid_url`.

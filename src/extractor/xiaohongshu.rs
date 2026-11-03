@@ -4,6 +4,7 @@
 //! `sns-video-bd.xhscdn.com` serves it, the note's images as thumbnails and
 //! its title, description, tags and uploader ID.
 use super::{Extractor, download_webpage, search_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,8 @@ pub struct XiaoHongShu;
 
 const NAME: &str = "XiaoHongShu";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://www\.xiaohongshu\.com/(?:explore|discovery/item)/(?P<id>[\da-f]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://www\.xiaohongshu\.com/(?:explore|discovery/item)/(?P<id>[\da-f]+)")
 });
 
 static INITIAL_STATE: LazyLock<Regex> =

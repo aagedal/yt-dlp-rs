@@ -1,8 +1,8 @@
 //! Upstream `KompasVideoIE` (`yt_dlp/extractor/kompas.py`): Kompas.com
 //! videos through their Jixie ID (`JixieBaseIE`).
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use std::sync::LazyLock;
 use url::Url;
@@ -11,9 +11,8 @@ pub struct KompasVideo;
 
 const NAME: &str = "KompasVideo";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://video\.kompas\.com/\w+/(?P<id>\d+)/(?P<slug>[\w-]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://video\.kompas\.com/\w+/(?P<id>\d+)/(?P<slug>[\w-]+)")
 });
 
 /// `_match_valid_url`.

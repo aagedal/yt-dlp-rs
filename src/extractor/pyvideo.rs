@@ -2,6 +2,7 @@
 //! playlists of their `pyvideo/data` JSON videos (YouTube `url` results or
 //! direct media), or of the page's "Media URL" links when that JSON fails.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct Pyvideo;
 
 const NAME: &str = "Pyvideo";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?pyvideo\.org/(?P<category>[^/]+)/(?P<id>[^/?#&.]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?pyvideo\.org/(?P<category>[^/]+)/(?P<id>[^/?#&.]+)")
 });
 static MEDIA_URLS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)Media URL:(.+?)</li>").unwrap());

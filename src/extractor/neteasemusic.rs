@@ -5,9 +5,9 @@
 //! `netease:song` (geo-restricted here), the album, singer and playlist
 //! classes and logged-in requests are not ported.
 use super::{Extractor, dict_format, dict_info, nrk, post_json_note_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoFormat, VideoInfo};
 use aes::cipher::{BlockCipherEncrypt, KeyInit};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -32,15 +32,13 @@ const LEVELS: [&str; 8] = [
     "standard", "higher", "exhigh", "lossless", "hires", "jyeffect", "jymaster", "sky",
 ];
 
-static MV_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://music\.163\.com/(?:#/)?mv\?id=(?P<id>[0-9]+)").unwrap()
+static MV_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://music\.163\.com/(?:#/)?mv\?id=(?P<id>[0-9]+)"));
+static PROGRAM_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://music\.163\.com/(?:#/)?(?:dj|program)\?id=(?P<id>[0-9]+)")
 });
-static PROGRAM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://music\.163\.com/(?:#/)?(?:dj|program)\?id=(?P<id>[0-9]+)").unwrap()
-});
-static DJRADIO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://music\.163\.com/(?:#/)?djradio\?id=(?P<id>[0-9]+)").unwrap()
-});
+static DJRADIO_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://music\.163\.com/(?:#/)?djradio\?id=(?P<id>[0-9]+)"));
 
 /// `NetEaseMusicMvIE._match_valid_url`.
 pub fn mv_suitable(url: &str) -> bool {

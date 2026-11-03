@@ -6,6 +6,7 @@
 use super::{
     Extractor, dict_info, download_json_note, download_webpage, extract_m3u8_fatal_master,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -18,11 +19,10 @@ pub struct OlympicsReplay;
 const NAME: &str = "OlympicsReplay";
 const GEO_MESSAGE: &str = "This video is not available from your location due to geo restriction";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?olympics\.com/[a-z]{2}/(?:paris-2024/)?(?:replay|videos?|original-series/episode)/(?P<id>[\w-]+)",
     )
-    .unwrap()
 });
 static IMAGES: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"["']image["']:\s*["']([^"']+)["']"#).unwrap());

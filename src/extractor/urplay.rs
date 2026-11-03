@@ -6,6 +6,7 @@
 use super::{
     Extractor, dict_info, download_json_note, download_webpage, extract_m3u8_fatal_master,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, SubtitleFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,11 +18,10 @@ pub struct UrPlay;
 
 const NAME: &str = "URPlay";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?ur(?:play|skola)\.se/(?:program|Produkter)/(?P<id>[0-9]+)",
     )
-    .unwrap()
 });
 static REACT_PROPS: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

@@ -2,6 +2,7 @@
 //! `VideoObject`. A page whose JSON-LD has no media URL hands off to a
 //! YouTube video (`cueVideoById`) or to a tweet embedded as a blockquote.
 use super::{Extractor, dict_info, direct, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,8 +14,8 @@ pub struct Tmz;
 
 const NAME: &str = "TMZ";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| crate::extractor::url_regex(r"^https?://(?:www\.)?tmz\.com/.*").unwrap());
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?tmz\.com/.*"));
 static CUE_VIDEO: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"\.cueVideoById\(\s*(?:'(?P<sq>.*?)'|"(?P<dq>.*?)")"#).unwrap());
 static TWEET_LINK: LazyLock<Regex> =

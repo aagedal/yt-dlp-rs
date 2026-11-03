@@ -5,6 +5,7 @@
 //! Player item merged with the API metadata) and radioteka audios (the
 //! `rest-api/media` item's HLS playlist and metadata).
 use super::{Extractor, dict_info, download_json, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -20,19 +21,19 @@ const STREAM_NAME: &str = "LRTStream";
 const VOD_NAME: &str = "LRTVOD";
 const RADIO_NAME: &str = "LRTRadio";
 
-static STREAM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?lrt\.lt/mediateka/tiesiogiai/(?P<id>[\w-]+)").unwrap()
+static STREAM_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?lrt\.lt/mediateka/tiesiogiai/(?P<id>[\w-]+)")
 });
-static VOD_URL: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+static VOD_URL: LazyLock<[UrlRegex; 2]> = LazyLock::new(|| {
     [
-        Regex::new(r"^https?://(?:(?:www|archyvai)\.)?lrt\.lt/mediateka/irasas/(?P<id>[0-9]+)")
-            .unwrap(),
-        Regex::new(r"^https?://(?:(?:www|archyvai)\.)?lrt\.lt/mediateka/video/[^?#]+\?(?:[^#]*&)?episode=(?P<id>[0-9]+)").unwrap(),
+        UrlRegex::new(r"^https?://(?:(?:www|archyvai)\.)?lrt\.lt/mediateka/irasas/(?P<id>[0-9]+)"),
+        UrlRegex::new(
+            r"^https?://(?:(?:www|archyvai)\.)?lrt\.lt/mediateka/video/[^?#]+\?(?:[^#]*&)?episode=(?P<id>[0-9]+)",
+        ),
     ]
 });
-static RADIO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?lrt\.lt/radioteka/irasas/(?P<id>\d+)/(?P<path>[^?#/]+)")
-        .unwrap()
+static RADIO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?lrt\.lt/radioteka/irasas/(?P<id>\d+)/(?P<path>[^?#/]+)")
 });
 static STREAMS_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"\\"get_streams_url\\":\\"([^"]+)\\""#).unwrap());

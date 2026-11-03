@@ -1,6 +1,7 @@
 //! Upstream `SapoIE` (`yt_dlp/extractor/sapo.py`): a video's
 //! `rd3.videos.sapo.pt` RSS item (MRSS fields) as its SD and HD MP4 files.
 use super::{Extractor, dict_format, dict_info, download_xml};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ const NAME: &str = "Sapo";
 const SAPO_NS: &str = "http://videos.sapo.pt/mrss/";
 const MRSS_NS: &str = "http://search.yahoo.com/mrss/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:v2|www)\.)?videos\.sapo\.(?:pt|cv|ao|mz|tl)/(?P<id>[\da-zA-Z]{20})",
     )
-    .unwrap()
 });
 static MOV_1: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"/mov/1$").unwrap());
 

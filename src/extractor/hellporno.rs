@@ -2,6 +2,7 @@
 //! media entry merged with the page's ID, title, description, keywords and
 //! OpenGraph duration/release date.
 use super::{Extractor, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct HellPorno;
 
 const NAME: &str = "HellPorno";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?hellporno\.(?:com/videos|net/v)/(?P<id>[^/]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?hellporno\.(?:com/videos|net/v)/(?P<id>[^/]+)")
 });
 static VIDEO_IDS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [

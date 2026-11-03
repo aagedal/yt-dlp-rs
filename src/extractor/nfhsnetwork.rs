@@ -2,6 +2,7 @@
 //! Network events from the `cfunity` game/event API (the first publisher's
 //! broadcast or VOD) and the stream URL API's HLS playlist.
 use super::{Extractor, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct NfhsNetwork;
 const NAME: &str = "NFHSNetwork";
 const API: &str = "https://cfunity.nfhsnetwork.com/v2";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?nfhsnetwork\.com/events/[\w-]+/(?P<id>(?:gam|evt|dd|)?[\w\d]{0,10})",
     )
-    .unwrap()
 });
 static TITLE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<h1 class="sr-hidden">(.*?)</h1>"#).unwrap());

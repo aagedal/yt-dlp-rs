@@ -8,8 +8,8 @@ use super::{
     Extractor, dict_format, dict_info, download_json, extract_ism_optional,
     extract_m3u8_master_optional, extract_mpd_optional_note, streamable::int_or_none,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -19,15 +19,14 @@ pub struct Nexx;
 
 const NAME: &str = "Nexx";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    super::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"(?x)^(?:
             https?://api\.nexx(?:\.cloud|cdn\.com)/v3(?:\.\d)?/(?P<domain_id>\d+)/videos/byid/|
             nexx:(?:(?P<domain_id_s>\d+):)?|
             https?://arc\.nexx\.cloud/api/video/
         )(?P<id>\d+)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

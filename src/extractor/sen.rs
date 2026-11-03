@@ -1,8 +1,8 @@
 //! Upstream `SenIE` (`yt_dlp/extractor/sen.py`): the content API's player
 //! node HLS stream (else the VOD manifest) and its details node metadata.
 use super::{Extractor, download_json, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,9 +12,8 @@ pub struct Sen;
 
 const NAME: &str = "Sen";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?sen\.com/video/(?P<id>[0-9a-f-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?sen\.com/video/(?P<id>[0-9a-f-]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

@@ -2,8 +2,8 @@
 //! videos from the player info (title, artists) and streaming info (HLS
 //! playlist, image, play time and open date) JSON.
 use super::{Extractor, dict_info, download_json_note, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -13,11 +13,8 @@ pub struct MelonVod;
 
 const NAME: &str = "MelonVOD";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://vod\.melon\.com/video/detail2\.html?\?.*?mvId=(?P<id>[0-9]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://vod\.melon\.com/video/detail2\.html?\?.*?mvId=(?P<id>[0-9]+)")
 });
 
 /// `_match_id`.

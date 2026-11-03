@@ -3,8 +3,8 @@
 //! Brightcove `url` results with the detail API's name, description and
 //! creation time, and collections as playlists of such results.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -17,12 +17,11 @@ const VIDEO_NAME: &str = "NetAppVideo";
 const COLLECTION_NAME: &str = "NetAppCollection";
 const BRIGHTCOVE: &str = "BrightcoveNew";
 
-static VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://media\.netapp\.com/video-detail/(?P<id>[0-9a-f-]+)").unwrap()
+static VIDEO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://media\.netapp\.com/video-detail/(?P<id>[0-9a-f-]+)")
 });
-static COLLECTION_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://media\.netapp\.com/collection/(?P<id>[0-9a-f-]+)").unwrap()
-});
+static COLLECTION_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://media\.netapp\.com/collection/(?P<id>[0-9a-f-]+)"));
 
 /// `NetAppVideoIE._match_id`.
 pub fn video_suitable(url: &str) -> bool {

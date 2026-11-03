@@ -1,8 +1,8 @@
 //! Upstream `FuyinTVIE` (`yt_dlp/extractor/fuyintv.py`): the movie API's
 //! URL as an untyped MP4 result with the page's description meta.
 use super::{Extractor, download_json, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,9 +12,8 @@ pub struct FuyinTv;
 
 const NAME: &str = "FuyinTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?fuyin\.tv/html/(?:\d+)/(?P<id>\d+)\.html")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?fuyin\.tv/html/(?:\d+)/(?P<id>\d+)\.html")
 });
 
 /// `_match_id`.

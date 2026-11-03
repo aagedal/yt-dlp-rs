@@ -1,6 +1,7 @@
 //! Upstream `PeerTVIE` (`yt_dlp/extractor/peertv.py`): the page's player
 //! key, the player script's session ID and the player page's HLS playlist.
 use super::{Extractor, download_webpage, download_webpage_note, download_webpage_note_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,9 +13,8 @@ pub struct PeerTv;
 
 const NAME: &str = "peer.tv";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?peer\.tv/(?:de|it|en)/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?peer\.tv/(?:de|it|en)/(?P<id>\d+)"));
 static VIDEO_KEY: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"player\.peer\.tv/js/([a-zA-Z0-9]+)").unwrap());
 static SESSION_ID: LazyLock<Regex> =

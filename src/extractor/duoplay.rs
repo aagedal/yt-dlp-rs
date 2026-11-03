@@ -3,8 +3,8 @@
 //! with a registered session token, and its `:episode` metadata (movies
 //! without the episode fields).
 use super::{Extractor, dict_info, download_webpage, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -14,9 +14,8 @@ pub struct Duoplay;
 
 const NAME: &str = "Duoplay";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://duoplay\.ee/(?P<id>\d+)(?:[/?#]|$)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://duoplay\.ee/(?P<id>\d+)(?:[/?#]|$)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

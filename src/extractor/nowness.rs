@@ -5,6 +5,7 @@
 //! video; `cinematique` sources are skipped. Brightcove Legacy players are
 //! explicit unsupported errors.
 use super::{Extractor, clyp::key_error, download_json_headers, download_webpage_note, follow_url};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -20,14 +21,16 @@ const NAME: &str = "nowness";
 const PLAYLIST_NAME: &str = "nowness:playlist";
 const SERIES_NAME: &str = "nowness:series";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:(?:www|cn)\.)?nowness\.com/(?:story|(?:series|category)/[^/]+)/(?P<id>[^/]+?)(?:$|[?#])").unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^https?://(?:(?:www|cn)\.)?nowness\.com/(?:story|(?:series|category)/[^/]+)/(?P<id>[^/]+?)(?:$|[?#])",
+    )
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www|cn)\.)?nowness\.com/playlist/(?P<id>\d+)").unwrap()
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:(?:www|cn)\.)?nowness\.com/playlist/(?P<id>\d+)")
 });
-static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www|cn)\.)?nowness\.com/series/(?P<id>[^/]+?)(?:$|[?#])").unwrap()
+static SERIES_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:(?:www|cn)\.)?nowness\.com/series/(?P<id>[^/]+?)(?:$|[?#])")
 });
 // `BrightcoveLegacyIE._extract_brightcove_urls`' embed patterns: a Legacy
 // player URL is an unsupported Brightcove player.

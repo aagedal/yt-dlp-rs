@@ -7,6 +7,7 @@
 //! and `SEARCH_QUERY` pages as `OnDemandPagedList`s of Dailymotion `url`
 //! results, whose pages are pending entries (see [`super::paged`]).
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -25,8 +26,7 @@ const COMMON_MEDIA_FIELDS: &str =
 /// `_VALID_URL` without its `(?ix)` flags. `swf/(?!video)` is tried after
 /// the `video/` alternative (the only one overlapping it) and refused apart.
 const URL_RE: &str = r"(?:https?:)?//(?:dai\.ly/|(?:(?:(?:www|touch|geo)\.)?dailymotion\.[a-z]{2,3}|(?:www\.)?lequipe\.fr)/(?:(?:(?:crawler|embed|swf)/)?video/|(?P<swf>swf/)|player(?:/[\da-z]+)?\.html\?(?:video|(?P<is_playlist>playlist))=))(?P<id>[^/?_&#]+)(?:[\w-]*\?playlist=(?P<playlist_id>x[0-9a-z]+))?";
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| crate::extractor::url_regex(&format!("(?i)^{URL_RE}")).unwrap());
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| UrlRegex::ascii(&format!("(?i)^{URL_RE}")));
 static H264: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"/H264-(\d+)x(\d+)(?:-(60)/)?").unwrap());
 
@@ -755,20 +755,17 @@ const PAGE_SIZE: usize = 100;
 const SEARCH_PAGE_SIZE: usize = 20;
 const SEARCH_QUERY: &str = "query SEARCH_QUERY( $query: String! $page: Int $limit: Int ) { search { videos( query: $query first: $limit page: $page ) { edges { node { xid } } } } } ";
 
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?:https?://)?(?:www\.)?dailymotion\.[a-z]{2,3}/playlist/(?P<id>x[0-9a-z]+)")
-        .unwrap()
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^(?:https?://)?(?:www\.)?dailymotion\.[a-z]{2,3}/playlist/(?P<id>x[0-9a-z]+)")
 });
-static SEARCH_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?dailymotion\.[a-z]{2,3}/search/(?P<id>[^/?#]+)/videos")
-        .unwrap()
+static SEARCH_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?dailymotion\.[a-z]{2,3}/search/(?P<id>[^/?#]+)/videos")
 });
 /// `DailymotionUserIE._VALID_URL` without its lookahead (checked apart).
-static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static USER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^(?P<site>https?://(?:www\.)?dailymotion\.[a-z]{2,3}/)(?:(?:old/)?user/)?(?P<id>[^/?#]+)",
     )
-    .unwrap()
 });
 
 /// `DailymotionPlaylistIE.suitable`.

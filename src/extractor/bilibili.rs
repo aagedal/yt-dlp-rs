@@ -6,6 +6,7 @@
 //! upstream's errors. Interactive videos, inline SRT subtitles and bangumi
 //! redirects are reported as unsupported.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -24,9 +25,10 @@ const MIXIN_KEY_ENC_TAB: [usize; 64] = [
     54, 21, 56, 59, 6, 63, 57, 62, 11, 36, 20, 34, 44, 52,
 ];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?bilibili\.com/(?:video/|festival/[^/?#]+\?(?:[^#]*&)?bvid=)(?P<prefix>[aAbB][vV])(?P<id>[^/?#&]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^https?://(?:www\.)?bilibili\.com/(?:video/|festival/[^/?#]+\?(?:[^#]*&)?bvid=)(?P<prefix>[aAbB][vV])(?P<id>[^/?#&]+)",
+    )
 });
 static BANGUMI_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?bilibili\.com/bangumi/play/ep\d+").unwrap());
@@ -1408,15 +1410,12 @@ fn subtitles_with(
 const BANGUMI_NAME: &str = "BiliBiliBangumi";
 const BANGUMI_MEDIA_NAME: &str = "BiliBiliBangumiMedia";
 const BANGUMI_SEASON_NAME: &str = "BiliBiliBangumiSeason";
-static BANGUMI_EP: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?bilibili\.com/bangumi/play/ep(\d+)").unwrap()
-});
-static BANGUMI_SS: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?bilibili\.com/bangumi/play/ss(\d+)").unwrap()
-});
-static BANGUMI_MD: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?bilibili\.com/bangumi/media/md(\d+)").unwrap()
-});
+static BANGUMI_EP: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?bilibili\.com/bangumi/play/ep(\d+)"));
+static BANGUMI_SS: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?bilibili\.com/bangumi/play/ss(\d+)"));
+static BANGUMI_MD: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?bilibili\.com/bangumi/media/md(\d+)"));
 static PLAYURL_SSR: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"playurlSSRData\s*=").unwrap());
 static LD_JSON: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<script[^>]+type="application/ld\+json"[^>]*>"#).unwrap());
@@ -2022,10 +2021,10 @@ impl Extractor for BiliBiliBangumiMedia {
 
 const AUDIO_NAME: &str = "BilibiliAudio";
 const AUDIO_ALBUM_NAME: &str = "BilibiliAudioAlbum";
-static AUDIO_AU: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?bilibili\.com/audio/au(\d+)").unwrap());
-static AUDIO_AM: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?bilibili\.com/audio/am(\d+)").unwrap());
+static AUDIO_AU: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?bilibili\.com/audio/au(\d+)"));
+static AUDIO_AM: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?bilibili\.com/audio/am(\d+)"));
 
 /// `BilibiliAudioIE.suitable`.
 pub fn audio_suitable(url: &str) -> bool {
@@ -2226,9 +2225,8 @@ impl Extractor for BilibiliAudioAlbum {
 // ---------------------------------------------------------------------------
 
 const SPACE_AUDIO_NAME: &str = "BilibiliSpaceAudio";
-static SPACE_AUDIO: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://space\.bilibili\.com/(\d+)/(?:upload/)?audio").unwrap()
-});
+static SPACE_AUDIO: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://space\.bilibili\.com/(\d+)/(?:upload/)?audio"));
 
 /// `BilibiliSpaceAudioIE.suitable`.
 pub fn space_audio_suitable(url: &str) -> bool {

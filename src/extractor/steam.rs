@@ -6,6 +6,7 @@
 //! The app's trailers are pending entries, extracted as the playlist is
 //! processed like upstream's generator.
 use super::{Extractor, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -21,17 +22,18 @@ const NAME: &str = "Steam";
 const COMMUNITY_NAME: &str = "SteamCommunity";
 const BROADCAST_NAME: &str = "SteamCommunityBroadcast";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://store\.steampowered\.com(?:/agecheck)?/app/(?P<id>\d+)/?(?:[^?/#]+/?)?(?:[?#]|$)",
     )
-    .unwrap()
 });
-static COMMUNITY_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?steamcommunity\.com/sharedfiles/filedetails(?:/?\?(?:[^#]+&)?id=|/)(?P<id>\d+)").unwrap()
+static COMMUNITY_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:www\.)?steamcommunity\.com/sharedfiles/filedetails(?:/?\?(?:[^#]+&)?id=|/)(?P<id>\d+)",
+    )
 });
-static BROADCAST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?steamcommunity\.com/broadcast/watch/(?P<id>\d+)").unwrap()
+static BROADCAST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?steamcommunity\.com/broadcast/watch/(?P<id>\d+)")
 });
 static FLASHVARS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"var\s+rgMovieFlashvars\s*=").unwrap());

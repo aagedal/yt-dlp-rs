@@ -3,6 +3,7 @@
 //! the episode's audio.
 use super::clyp::{float_or_none, key_error};
 use super::{Extractor, download_webpage, search_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct IlPost;
 
 const NAME: &str = "IlPost";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?ilpost\.it/episodes/(?P<id>[^/?#]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?ilpost\.it/episodes/(?P<id>[^/?#]+)"));
 static METADATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"var\s+ilpostpodcast\s*=").unwrap());
 

@@ -3,6 +3,7 @@
 //! `playAudio('player_entry_ID')` (or the contest URL's `eid`) POSTed to the
 //! player info endpoint, whose JSON gives the MP3 URL and entry metadata.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -18,11 +19,10 @@ const CUSTOM_KEY: &str = "AudiodraftCustom";
 const GENERIC_NAME: &str = "Audiodraft:generic";
 const GENERIC_KEY: &str = "AudiodraftGeneric";
 
-static CUSTOM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:[-\w]+)\.audiodraft\.com/entry/(?P<id>\d+)").unwrap()
-});
-static GENERIC_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://www\.audiodraft\.com/contests/[^/#]+#entries&eid=(?P<id>\d+)").unwrap()
+static CUSTOM_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:[-\w]+)\.audiodraft\.com/entry/(?P<id>\d+)"));
+static GENERIC_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://www\.audiodraft\.com/contests/[^/#]+#entries&eid=(?P<id>\d+)")
 });
 static PLAYER_ENTRY: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"playAudio\('(player_entry_\d+)'\);").unwrap());

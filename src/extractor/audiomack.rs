@@ -4,6 +4,7 @@
 //! track as a `url` result of the SoundCloud extractor), and an album's
 //! songs queried one track number at a time until an empty URL.
 use super::{Extractor, download_json, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -21,14 +22,11 @@ const ALBUM_IE_NAME: &str = "audiomack:album";
 
 /// `(?:song/|(?=.+/song/))(?P<id>[\w/-]+)`: the lookahead as a check that
 /// the rest contains `/song/`.
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?audiomack\.com/(?P<song>song/)?(?P<id>[\w/-]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?audiomack\.com/(?P<song>song/)?(?P<id>[\w/-]+)")
 });
-static ALBUM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?audiomack\.com/(?P<album>album/)?(?P<id>[\w/-]+)").unwrap()
+static ALBUM_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?audiomack\.com/(?P<album>album/)?(?P<id>[\w/-]+)")
 });
 
 /// `_match_id` for `audiomack.com/(?:KIND/|(?=.+/KIND/))(?P<id>[\w/-]+)`.

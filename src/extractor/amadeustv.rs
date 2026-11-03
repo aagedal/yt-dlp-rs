@@ -3,8 +3,8 @@
 //! Cloud VOD play info as HTTP formats, and the item's metadata.
 use super::nuxt::{Step, search_nuxt_data};
 use super::{Extractor, download_json_headers, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -15,10 +15,8 @@ pub struct AmadeusTv;
 const NAME: &str = "AmadeusTV";
 const REFERER: &str = "http://www.amadeus.tv/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?amadeus\.tv/library/(?P<id>[\da-f]+)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?amadeus\.tv/library/(?P<id>[\da-f]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

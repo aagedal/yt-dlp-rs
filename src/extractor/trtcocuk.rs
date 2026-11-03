@@ -3,8 +3,8 @@
 //! string or a plain URL) and metadata, with the page `<title>`.
 use super::nuxt::{Step, search_nuxt_data};
 use super::{Extractor, download_webpage, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -14,9 +14,8 @@ pub struct TrtCocukVideo;
 
 const NAME: &str = "TrtCocukVideo";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://www\.trtcocuk\.net\.tr/video/(?P<id>[\w-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://www\.trtcocuk\.net\.tr/video/(?P<id>[\w-]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

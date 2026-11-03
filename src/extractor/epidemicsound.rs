@@ -2,8 +2,8 @@
 //! JSON (or a sound effect's kosmos-ID JSON), its cover thumbnails and the
 //! stems' MP3 files.
 use super::{Extractor, dict_format, dict_info, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Result, VideoFormat, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -13,11 +13,10 @@ pub struct EpidemicSound;
 
 const NAME: &str = "EpidemicSound";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?epidemicsound\.com/(?:(?P<sfx>sound-effects/tracks)|track)/(?P<id>[0-9a-zA-Z-]+)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

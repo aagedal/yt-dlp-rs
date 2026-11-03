@@ -1,6 +1,7 @@
 //! Upstream `NowCanalIE` (`yt_dlp/extractor/nowcanal.py`): NOW Canal pages
 //! as `url` results of their Brightcove video.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct NowCanal;
 const NAME: &str = "NowCanal";
 const KEY: &str = "NowCanal";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?nowcanal\.pt(?:/[\w-]+)+/detalhe/(?P<id>[\w-]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?nowcanal\.pt(?:/[\w-]+)+/detalhe/(?P<id>[\w-]+)")
 });
 
 /// `_match_id`.

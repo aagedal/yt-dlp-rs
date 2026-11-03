@@ -2,6 +2,7 @@
 //! (TeleZüri, TeleBärn, Tele M1, TVO) videos as `url` results of their
 //! Kaltura entry: the URL's `#video=` ID, else the page's Apollo state.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct AzMedien;
 const NAME: &str = "AZMedien";
 const PARTNER_ID: &str = "1719221";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.|tv\.)?(?:telezueri\.ch|telebaern\.tv|telem1\.ch|tvo-online\.ch)/[^/?#]+/(?P<id>[^/?#]+-\d+)(?:\#video=(?P<kaltura_id>[_0-9a-z]+))?",
     )
-    .unwrap()
 });
 static APOLLO_STATE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.__APOLLO_STATE__\s*=\s*").unwrap());

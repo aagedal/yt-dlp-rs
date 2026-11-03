@@ -8,8 +8,8 @@ use super::{
     Extractor, dict_info, download_json_note, download_webpage, extract_m3u8_master_optional,
     search_nextjs_data, search_warning,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::io::Read;
@@ -21,11 +21,10 @@ pub struct AsobiStage;
 const NAME: &str = "AsobiStage";
 const API_HOST: &str = "https://asobistage-api.asobistore.jp";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://asobistage\.asobistore\.jp/event/(?P<id>(?P<event>\w+)/(?P<type>archive|player)/(?P<slug>\w+))(?:[?#]|$)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url(url)`: the event, type and slug of an event page.

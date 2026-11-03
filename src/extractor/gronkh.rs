@@ -3,8 +3,8 @@
 //! and chapters. The feed and VOD listing extractors are not ported.
 use super::clyp::{float_or_none, key_error};
 use super::{Extractor, dict_info, download_json, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -14,9 +14,8 @@ pub struct Gronkh;
 
 const NAME: &str = "Gronkh";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?gronkh\.tv/(?:watch/)?streams?/(?P<id>\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?gronkh\.tv/(?:watch/)?streams?/(?P<id>\d+)")
 });
 
 /// `_match_id`.

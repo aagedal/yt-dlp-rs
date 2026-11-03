@@ -2,6 +2,7 @@
 //! page's `playlistItem` JSON, its episode and podcast titles, description,
 //! release date and the libsyn/main/download media URLs as formats.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct Libsyn;
 
 const NAME: &str = "Libsyn";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?P<mainurl>https?://html5-player\.libsyn\.com/embed/episode/id/(?P<id>[0-9]+))",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

@@ -7,6 +7,7 @@
 use super::{
     Extractor, dict_format, dict_info, download_json, download_webpage, extract_wowza_formats,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -25,15 +26,13 @@ const GEO_COUNTRIES: &[&str] = &["SI"];
 const GEO_MESSAGE: &str = "This video is not available from your location due to geo restriction";
 const SKIP_PROTOCOLS: &[&str] = &["smil", "f4m", "dash"];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:365|4d)\.rtvslo.si/arhiv/[^/?#&;]+|(?:www\.)?rtvslo\.si/rtv365/arhiv)/(?P<id>\d+)",
     )
-    .unwrap()
 });
-static SHOW_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:365|4d)\.rtvslo.si/oddaja/[^/?#&]+/(?P<id>\d+)").unwrap()
-});
+static SHOW_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:365|4d)\.rtvslo.si/oddaja/[^/?#&]+/(?P<id>\d+)"));
 static ARCHIVE_LINK: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<a [^>]*\bhref="(/arhiv/[^"]+)""#).unwrap());
 

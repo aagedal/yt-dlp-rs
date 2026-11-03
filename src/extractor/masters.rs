@@ -1,8 +1,8 @@
 //! Upstream `MastersIE` (`yt_dlp/extractor/masters.py`): the related-content
 //! API's HLS stream, title and first image set, dated from the URL.
 use super::{Extractor, download_json, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,11 +12,10 @@ pub struct Masters;
 
 const NAME: &str = "Masters";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?masters\.com/en_US/watch/(?P<date>\d{4}-\d{2}-\d{2})/(?P<id>\d+)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

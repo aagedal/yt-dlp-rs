@@ -7,6 +7,7 @@
 use super::Extractor;
 use super::login::Session;
 use super::soundcloud::{API_V2_BASE, Soundcloud, call_api, int, thumbnails};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -36,28 +37,35 @@ const SEARCH_NAME: &str = "soundcloud:search";
 /// `SoundcloudSearchIE`'s `_MAX_RESULTS_PER_PAGE`.
 const MAX_RESULTS_PER_PAGE: usize = 200;
 
-static SET_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www|m)\.)?soundcloud\.com/(?P<uploader>[\w\d-]+)/sets/(?P<slug_title>[:\w\d-]+)(?:/(?P<token>[^?/]+))?").unwrap()
+static SET_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:(?:www|m)\.)?soundcloud\.com/(?P<uploader>[\w\d-]+)/sets/(?P<slug_title>[:\w\d-]+)(?:/(?P<token>[^?/]+))?",
+    )
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://api(?:-v2)?\.soundcloud\.com/playlists/(?:soundcloud(?:%3A|:)playlists(?:%3A|:))?(?P<id>[0-9]+)(?:/?\?secret_token=(?P<token>[^&]+?))?$").unwrap()
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://api(?:-v2)?\.soundcloud\.com/playlists/(?:soundcloud(?:%3A|:)playlists(?:%3A|:))?(?P<id>[0-9]+)(?:/?\?secret_token=(?P<token>[^&]+?))?$",
+    )
 });
-static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www|m)\.)?soundcloud\.com/(?P<user>[^/]+)(?:/(?P<rsrc>tracks|albums|sets|reposts|likes|spotlight|comments))?/?(?:[?#].*)?$").unwrap()
+static USER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:(?:www|m)\.)?soundcloud\.com/(?P<user>[^/]+)(?:/(?P<rsrc>tracks|albums|sets|reposts|likes|spotlight|comments))?/?(?:[?#].*)?$",
+    )
 });
-static PERMALINK_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://api\.soundcloud\.com/users/(?P<id>\d+)").unwrap());
-static STATION_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www|m)\.)?soundcloud\.com/stations/track/[^/]+/(?P<id>[^/?#&]+)")
-        .unwrap()
+static PERMALINK_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://api\.soundcloud\.com/users/(?P<id>\d+)"));
+static STATION_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:(?:www|m)\.)?soundcloud\.com/stations/track/[^/]+/(?P<id>[^/?#&]+)",
+    )
 });
-static RELATED_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www|m)\.)?soundcloud\.com/(?P<slug>[\w\d-]+/[\w\d-]+)/(?P<relation>albums|sets|recommended)")
-        .unwrap()
+static RELATED_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:(?:www|m)\.)?soundcloud\.com/(?P<slug>[\w\d-]+/[\w\d-]+)/(?P<relation>albums|sets|recommended)",
+    )
 });
-static SEARCH_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^scsearch(?P<prefix>|[1-9][0-9]*|all):(?P<query>[\s\S]+)").unwrap()
-});
+static SEARCH_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^scsearch(?P<prefix>|[1-9][0-9]*|all):(?P<query>[\s\S]+)"));
 static TRACK_STATION_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"soundcloud:track-stations:(\d+)").unwrap());
 static TAGS: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#""([^"]+)"|([^ ]+)"#).unwrap());

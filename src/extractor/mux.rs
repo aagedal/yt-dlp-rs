@@ -3,8 +3,8 @@
 //! `playback-token` as `token`), titled by the ID. Generic-page iframe and
 //! `<mux-player>` embeds (and their smuggled titles) are not detected.
 use super::{Extractor, dict_info, extract_m3u8_fatal, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -14,11 +14,8 @@ pub struct Mux;
 
 const NAME: &str = "Mux";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:stream\.new/v|player\.mux\.com)/(?P<id>[A-Za-z0-9-]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:stream\.new/v|player\.mux\.com)/(?P<id>[A-Za-z0-9-]+)")
 });
 
 /// `_match_id`.

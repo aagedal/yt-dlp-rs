@@ -3,8 +3,8 @@
 //! renditions as formats. `NYTimesArticleIE`, `NYTimesCookingIE` and
 //! `NYTimesCookingRecipeIE` (article and recipe pages) are not ported.
 use super::{Extractor, dict_format, dict_info, post_json_errnote_optional};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, VideoFormat, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -50,11 +50,10 @@ const GRAPHQL_QUERY: &str = "query VideoQuery($id: String!) {
   }
 }";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:www\.)?nytimes\.com/video/(?:[^/]+/)+?|graphics8\.nytimes\.com/bcvideo/\d+(?:\.\d+)?/iframe/embed\.html\?videoId=)(?P<id>\d+)",
     )
-    .unwrap()
 });
 
 /// `uuid.uuid5(namespace, name)` (RFC 4122 version 5, SHA-1).

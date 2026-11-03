@@ -3,8 +3,8 @@
 //! canonical player host, whose `jsonPlayer` API gives the video's `url`
 //! (HLS or a progressive file) and an optional `thumb`.
 use super::{Extractor, dict_format, dict_info, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -16,11 +16,10 @@ const NAME: &str = "ant1newsgr:embed";
 const KEY: &str = "Ant1NewsGrEmbed";
 const API_PATH: &str = "/templates/data/jsonPlayer";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^(?:https?:)?//(?:[a-zA-Z0-9\-]+\.)?(?:antenna|ant1news)\.gr/templates/pages/player\?(?:[^#]+&)?cid=(?P<id>[^#&]+)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`'s `id` for the player URL.

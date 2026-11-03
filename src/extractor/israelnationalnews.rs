@@ -2,8 +2,8 @@
 //! the article API's `Content2` embed `src` URLs as a playlist of YouTube
 //! results.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -13,9 +13,8 @@ pub struct IsraelNationalNews;
 
 const NAME: &str = "IsraelNationalNews";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?israelnationalnews\.com/news/(?P<id>\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?israelnationalnews\.com/news/(?P<id>\d+)")
 });
 
 /// `_match_id`.

@@ -3,6 +3,7 @@
 //! sources (with AV1 variants when the page offers them), merged with the
 //! page's JSON-LD, duration and view count.
 use super::{Extractor, dict_format, dict_info, download_json_note, download_webpage_handle};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct Eporner;
 
 const NAME: &str = "Eporner";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?eporner\.com/(?:(?:hd-porn|embed)/|video-)(?P<id>\w+)(?:/(?P<display_id>[\w-]+))?",
     )
-    .unwrap()
 });
 static HASH: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"hash\s*[:=]\s*["']([\da-f]{32})"#).unwrap());

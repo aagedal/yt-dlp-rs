@@ -8,6 +8,7 @@
 //! `_parse_api_response`, video passwords) and original formats. The
 //! `android` client (cached OAuth tokens only) is not ported.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -21,8 +22,8 @@ pub(crate) const NAME: &str = "vimeo";
 pub(crate) const KEY: &str = "Vimeo";
 const QUALITIES: [&str; 3] = ["low", "medium", "high"];
 
-static HOST: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:(?:www|player)\.)?vimeo\.com/").unwrap());
+static HOST: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:(?:www|player)\.)?vimeo\.com/"));
 static USER: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^user(?P<id>[0-9]+)(?P<rest>[^#]*)(?:#.*)?$").unwrap());
 /// `_VALID_URL` after its optional path prefix (`(?:(?!event/).*?/)??`).
@@ -32,9 +33,10 @@ static TAIL: LazyLock<Regex> = LazyLock::new(|| {
     )
     .unwrap()
 });
-static EXCLUDED: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www|player)\.)?vimeo\.com/(?:(?:channels|album|showcase)/[^/?#]+/?(?:$|[?#])|[^/]+/review/|ondemand/|(?:.*?/)??event/)")
-        .unwrap()
+static EXCLUDED: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:(?:www|player)\.)?vimeo\.com/(?:(?:channels|album|showcase)/[^/?#]+/?(?:$|[?#])|[^/]+/review/|ondemand/|(?:.*?/)??event/)",
+    )
 });
 static UNLISTED: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^/(?P<hash>[\da-f]{10})/?(?:\?.*)?$").unwrap());
@@ -1857,14 +1859,13 @@ const ALBUM_KEY: &str = "VimeoAlbum";
 const GROUP_NAME: &str = "vimeo:group";
 const GROUP_KEY: &str = "VimeoGroups";
 
-static ALBUM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static ALBUM_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https://vimeo\.com/(?:album|showcase)/(?P<id>[^/?#]+)(?:$|[?#]|(?P<is_embed>/embed))",
     )
-    .unwrap()
 });
-static GROUP_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https://vimeo\.com/groups/(?P<id>[^/]+)(?P<tail>.*)$").unwrap());
+static GROUP_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https://vimeo\.com/groups/(?P<id>[^/]+)(?P<tail>.*)$"));
 /// `(?!videos?/\d+)` of the group pattern.
 static GROUP_VIDEO_PATH: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^/videos?/\d+").unwrap());
 static VIDEO_ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"/videos/(\d+)").unwrap());

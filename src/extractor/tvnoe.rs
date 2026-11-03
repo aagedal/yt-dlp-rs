@@ -4,6 +4,7 @@
 use super::{
     Extractor, dict_info, download_webpage, extract_m3u8_master_optional, extract_mpd_optional_note,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,9 +17,8 @@ pub struct TvNoe;
 const NAME: &str = "tvnoe";
 const KEY: &str = "TVNoe";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?tvnoe\.cz/porad/(?P<id>[\w-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?tvnoe\.cz/porad/(?P<id>[\w-]+)"));
 static INIT_PLAYER: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"var\s+INIT_PLAYER\s*=").unwrap());
 static DESCRIPTION: LazyLock<Regex> =

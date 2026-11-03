@@ -4,6 +4,7 @@
 //! and `_extract_m3u8_formats`) are not supported natively, and `RozhlasIE`
 //! (`prehravac.rozhlas.cz`, a single URL-only result) is not ported yet.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,8 +16,8 @@ pub struct RozhlasVltava;
 
 const VLTAVA_NAME: &str = "RozhlasVltava";
 
-static VLTAVA_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:\w+\.rozhlas|english\.radio)\.cz/[\w-]+-(?P<id>\d+)").unwrap()
+static VLTAVA_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:\w+\.rozhlas|english\.radio)\.cz/[\w-]+-(?P<id>\d+)")
 });
 static PLAYER: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(<div class="mujRozhlasPlayer" data-player='[^']+'>)"#).unwrap()
@@ -223,8 +224,8 @@ fn extract_video(entry: &Value, url: &Url) -> Result<VideoInfo> {
 pub struct RozhlasAudio;
 
 const AUDIO_NAME: &str = "Rozhlas";
-static AUDIO_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?prehravac\.rozhlas\.cz/audio/(?P<id>[0-9]+)").unwrap()
+static AUDIO_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?prehravac\.rozhlas\.cz/audio/(?P<id>[0-9]+)")
 });
 /// `<h3>(.+?)</h3>\s*<p[^>]*>.*?</p>\s*<div[^>]+id=["']player-track`.
 static AUDIO_TITLE: LazyLock<Regex> = LazyLock::new(|| {

@@ -3,6 +3,7 @@
 //! files), with its title, poster and duration. DRM-only sources are
 //! reported as DRM protected. The article pages (`NovaIE`) are not ported.
 use super::{Extractor, dict_format, dict_info, download_webpage, extract_mpd_optional_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct NovaEmbed;
 
 const NAME: &str = "NovaEmbed";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://media(?:tn)?\.cms\.nova\.cz/embed/(?P<id>[^/?#&]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://media(?:tn)?\.cms\.nova\.cz/embed/(?P<id>[^/?#&]+)")
 });
 static PLAYER: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"player:\s*").unwrap());
 static PLAYER_END: LazyLock<Regex> = LazyLock::new(|| Regex::new(r";\s*</script>").unwrap());

@@ -1,8 +1,8 @@
 //! Upstream `YoutubeClipIE` (`yt_dlp/extractor/youtube/_clip.py`): a clip page
 //! names its video and loop section, which the `youtube` extractor downloads.
 use super::tab::{at, extract_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -10,9 +10,8 @@ use url::Url;
 
 const NAME: &str = "youtube:clip";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?youtube\.com/clip/(?P<id>[^/?#]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?youtube\.com/clip/(?P<id>[^/?#]+)"));
 
 /// `YoutubeClipIE.suitable`.
 pub(crate) fn suitable(url: &str) -> bool {

@@ -1,6 +1,7 @@
 //! Upstream `GameStarIE` (`yt_dlp/extractor/gamestar.py`): the page's first
 //! `VideoObject` JSON-LD script and the portal's video URL.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,11 +13,10 @@ pub struct GameStar;
 
 const NAME: &str = "GameStar";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?game(?P<site>pro|star)\.de/videos/.*,(?P<id>[0-9]+)\.html",
     )
-    .unwrap()
 });
 // `type=(["\'])application/ld\+json\1` without the backreference.
 static JSON_LD: LazyLock<Regex> = LazyLock::new(|| {

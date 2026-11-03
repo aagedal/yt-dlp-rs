@@ -3,6 +3,7 @@
 //! `url` entries, through the `notification/get_notification_menu` API.
 use super::tab::{at, text_at, thumbnails, ucid_or_none};
 use super::watch;
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,8 +13,8 @@ use url::Url;
 
 pub(crate) const NAME: &str = "youtube:notif";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| crate::extractor::url_regex(r"^:ytnotif(?:ication)?s?").unwrap());
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^:ytnotif(?:ication)?s?"));
 
 /// `YoutubeNotificationsIE.suitable`.
 pub(crate) fn suitable(url: &str) -> bool {

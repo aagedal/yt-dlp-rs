@@ -5,6 +5,7 @@ use super::{
     Extractor, dict_info, download_json_headers, extract_m3u8_master_optional_headers,
     update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -21,9 +22,8 @@ const BASE_URL: &str = "https://www.onsen.ag";
 const HEADERS: [(&str, &str); 1] = [("Referer", "https://www.onsen.ag/")];
 const API_HEADERS: [(&str, &str); 1] = [("X-Client", "onsen-web")];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:(?:share|www)\.)onsen\.ag/program/(?P<id>[^/?#]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:(?:share|www)\.)onsen\.ag/program/(?P<id>[^/?#]+)")
 });
 
 /// `_get_encoded_id`: the urlsafe base64 of the program's ID.

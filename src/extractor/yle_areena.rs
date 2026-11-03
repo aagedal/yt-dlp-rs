@@ -4,6 +4,7 @@
 //! `url_transparent` result of `kaltura:1955031:ID`) or `gone` notice, with
 //! the on-demand SRT subtitles and the programme metadata.
 use super::{Extractor, download_json_headers, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,9 +16,8 @@ pub struct YleAreena;
 
 const NAME: &str = "YleAreena";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://areena\.yle\.fi/(?P<podcast>podcastit/)?(?P<id>[\d-]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://areena\.yle\.fi/(?P<podcast>podcastit/)?(?P<id>[\d-]+)")
 });
 /// `K(?P<season_no>\d+),\s*J(?P<episode_no>\d+):?\s*\b(?P<episode>[^|]+)\s*|\s*(?P<series>.+)`:
 /// the top-level alternation makes either the episode groups or the series

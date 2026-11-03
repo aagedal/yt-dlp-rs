@@ -1,6 +1,7 @@
 //! Upstream `KickerIE` (`yt_dlp/extractor/kicker.py`): the page's private
 //! Dailymotion ID as a `url` result for the Dailymotion extractor.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -11,9 +12,8 @@ pub struct Kicker;
 
 const NAME: &str = "Kicker";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)kicker\.(?:de)/(?P<id>[\w-]+)/video").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)kicker\.(?:de)/(?P<id>[\w-]+)/video"));
 static PRIVATE_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-dmprivateid\s*=\s*['"](?P<video_id>\w+)"#).unwrap());
 

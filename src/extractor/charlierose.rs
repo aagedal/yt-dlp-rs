@@ -3,8 +3,8 @@
 //! removed), titled from its OpenGraph title without the ` - Charlie Rose`
 //! suffix, with the OpenGraph thumbnail and description.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -14,11 +14,10 @@ pub struct CharlieRose;
 
 const NAME: &str = "CharlieRose";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?charlierose\.com/(?:video|episode)(?:s|/player)/(?P<id>\d+)",
     )
-    .unwrap()
 });
 
 /// `_match_id`.

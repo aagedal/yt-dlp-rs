@@ -1,6 +1,7 @@
 //! Upstream `CrtvgIE` (`yt_dlp/extractor/crtvg.py`): a page's `var url`
 //! stream base as non-fatal HLS and DASH formats with its meta tags.
 use super::{Extractor, download_webpage, extract_m3u8_optional, extract_mpd_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,10 +13,8 @@ pub struct Crtvg;
 
 const NAME: &str = "Crtvg";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?crtvg\.es/tvg/a-carta/(?P<id>[^/#?]+)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?crtvg\.es/tvg/a-carta/(?P<id>[^/#?]+)"));
 static VIDEO_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"var\s+url\s*=\s*["']([^"']+)"#).unwrap());
 static OLD_ID: LazyLock<Regex> =

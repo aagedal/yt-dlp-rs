@@ -5,8 +5,8 @@
 use super::{
     Extractor, dict_info, direct, download_json, extract_m3u8_master_optional, extract_mpd_optional,
 };
+use crate::extractor::UrlRegex;
 use crate::{Result, Subtitles, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -16,11 +16,8 @@ pub struct TheChosen;
 
 const NAME: &str = "TheChosen";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?watch\.thechosen\.tv/(?:video|watch)/(?P<id>[0-9]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?watch\.thechosen\.tv/(?:video|watch)/(?P<id>[0-9]+)")
 });
 
 /// `_match_valid_url`.

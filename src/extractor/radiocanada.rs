@@ -3,8 +3,8 @@
 //! validation API as an HLS result with its closed captions, and the
 //! audio-video pages as `radiocanada:medianet:` URL results.
 use super::{Extractor, dict_info, download_json, extract_m3u8_fatal_master, follow_url};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -19,12 +19,13 @@ const AUDIO_VIDEO_KEY: &str = "RadioCanadaAudioVideo";
 const CLIENT_KEY: &str = "773aea60-0e80-41bb-9c7f-e6d7c3ad17fb";
 const GEO_COUNTRIES: [&str; 1] = ["CA"];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^(?:radiocanada:|https?://ici\.radio-canada\.ca/widgets/mediaconsole/)(?P<app_code>[^:/]+)[:/](?P<id>[0-9]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^(?:radiocanada:|https?://ici\.radio-canada\.ca/widgets/mediaconsole/)(?P<app_code>[^:/]+)[:/](?P<id>[0-9]+)",
+    )
 });
-static AUDIO_VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://ici\.radio-canada\.ca/([^/]+/)*media-(?P<id>[0-9]+)").unwrap()
+static AUDIO_VIDEO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://ici\.radio-canada\.ca/([^/]+/)*media-(?P<id>[0-9]+)")
 });
 
 /// `_call_api`: `query` first, then `client_key` and `output`, then the

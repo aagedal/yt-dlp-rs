@@ -1,6 +1,7 @@
 //! Upstream `CaltransIE` (`yt_dlp/extractor/caltrans.py`): a camera page's
 //! global script variables and its live HLS stream.
 use super::{Extractor, download_webpage, extract_m3u8_fatal_live, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,11 +13,8 @@ pub struct Caltrans;
 
 const NAME: &str = "Caltrans";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:[^/]+\.)?ca\.gov/vm/loc/[^/]+/(?P<id>[a-z0-9_]+)\.htm",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:[^/]+\.)?ca\.gov/vm/loc/[^/]+/(?P<id>[a-z0-9_]+)\.htm")
 });
 static GLOBAL_VARS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"<script[^<]+?([^<]+\.m3u8[^<]+)</script>").unwrap());

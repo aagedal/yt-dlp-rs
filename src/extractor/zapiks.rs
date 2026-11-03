@@ -2,6 +2,7 @@
 //! (followed when it is not a Zapiks page), the `video-responsive` player's
 //! data (a media URL to follow, or its `sources`) and the page's metadata.
 use super::{Extractor, dict_format, dict_info, download_webpage, follow_url};
+use crate::extractor::UrlRegex;
 use crate::html_elements::{
     element_text_and_html_by_tag, elements_text_and_html_by_class, extract_attributes,
 };
@@ -16,14 +17,12 @@ pub struct Zapiks;
 
 const NAME: &str = "Zapiks";
 
-static VALID_URL: LazyLock<Vec<Regex>> = LazyLock::new(|| {
+static VALID_URL: LazyLock<Vec<UrlRegex>> = LazyLock::new(|| {
     vec![
-        crate::extractor::url_regex(r"^https?://(?:www\.)?zapiks\.(?:com|fr)/(?P<id>[\w-]+)\.html")
-            .unwrap(),
-        crate::extractor::url_regex(
+        UrlRegex::ascii(r"^https?://(?:www\.)?zapiks\.(?:com|fr)/(?P<id>[\w-]+)\.html"),
+        UrlRegex::ascii(
             r"^https?://(?:www\.)?zapiks\.fr/index\.php\?(?:[^#]+&)?media_id=(?P<id>\d+)",
-        )
-        .unwrap(),
+        ),
     ]
 });
 static UPLOADER_ID: LazyLock<Regex> =

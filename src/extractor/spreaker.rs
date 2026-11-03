@@ -2,8 +2,8 @@
 //! the `api.spreaker.com` v2 episode JSON as an untyped MP3 result, and a
 //! show's paged episode list as a generator of the same results.
 use super::{Extractor, download_json, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -15,27 +15,25 @@ pub struct SpreakerShow;
 const NAME: &str = "Spreaker";
 const SHOW_NAME: &str = "SpreakerShow";
 
-static VALID_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+static VALID_URLS: LazyLock<[UrlRegex; 2]> = LazyLock::new(|| {
     [
-        crate::extractor::url_regex(
+        UrlRegex::ascii(
             r"^https?://api\.spreaker\.com/(?:(?:download/)?episode|v2/episodes)/(?P<id>\d+)",
-        )
-        .unwrap(),
-        crate::extractor::url_regex(
+        ),
+        UrlRegex::ascii(
             r"^https?://(?:www\.)?spreaker\.com/episode/[^#?/]*?(?P<id>\d+)/?(?:[?#]|$)",
-        )
-        .unwrap(),
+        ),
     ]
 });
-static SHOW_URLS: LazyLock<[Regex; 3]> = LazyLock::new(|| {
+static SHOW_URLS: LazyLock<[UrlRegex; 3]> = LazyLock::new(|| {
     [
-        Regex::new(r"^https?://api\.spreaker\.com/show/(?P<id>\d+)").unwrap(),
-        Regex::new(r"^https?://(?:www\.)?spreaker\.com/podcast/[\w-]+--(?P<id>[\d]+)").unwrap(),
-        Regex::new(r"^https?://(?:www\.)?spreaker\.com/show/(?P<id>\d+)/episodes/feed").unwrap(),
+        UrlRegex::new(r"^https?://api\.spreaker\.com/show/(?P<id>\d+)"),
+        UrlRegex::new(r"^https?://(?:www\.)?spreaker\.com/podcast/[\w-]+--(?P<id>[\d]+)"),
+        UrlRegex::new(r"^https?://(?:www\.)?spreaker\.com/show/(?P<id>\d+)/episodes/feed"),
     ]
 });
 
-fn match_id(patterns: &[Regex], url: &str) -> Option<String> {
+fn match_id(patterns: &[UrlRegex], url: &str) -> Option<String> {
     patterns
         .iter()
         .find_map(|pattern| pattern.captures(url))

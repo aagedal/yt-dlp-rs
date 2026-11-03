@@ -6,6 +6,7 @@ use super::{
     Extractor, dict_format, dict_info, download_webpage, extract_m3u8_fatal_master,
     extract_mpd_fatal,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,9 +18,8 @@ pub struct MediaStream;
 
 const NAME: &str = "MediaStream";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://mdstrm\.com/(?:embed|live-stream)/(?P<id>\w+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://mdstrm\.com/(?:embed|live-stream)/(?P<id>\w+)"));
 static OPTIONS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.MDSTRM\.OPTIONS\s*=").unwrap());
 

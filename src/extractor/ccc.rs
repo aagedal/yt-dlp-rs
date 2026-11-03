@@ -4,6 +4,7 @@
 //! `CCC` url entries.
 use super::clyp::key_error;
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -20,15 +21,13 @@ const PLAYLIST_KEY: &str = "CCCPlaylist";
 const NAME: &str = "media.ccc.de";
 const KEY: &str = "CCC";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?media\.ccc\.de/v/(?P<id>[^/?#&]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?media\.ccc\.de/v/(?P<id>[^/?#&]+)"));
 static EVENT_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-id=(?:'(?P<a>\d+)'|"(?P<b>\d+)")"#).unwrap());
 
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"https?://(?:www\.)?media\.ccc\.de/c/(?P<id>[^/?#&]+)").unwrap()
-});
+static PLAYLIST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"https?://(?:www\.)?media\.ccc\.de/c/(?P<id>[^/?#&]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {
