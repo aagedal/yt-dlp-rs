@@ -5,6 +5,12 @@
 //! fragment downloads there is no `.ytdl` state file, and an interrupt
 //! (SIGINT, or a library `Interrupt::stop`) ends the lists and completes
 //! the files instead of failing.
+//!
+//! Port fix: upstream lets the formats drift apart (the small audio
+//! fragments race minutes ahead of the video), so a stopped recording
+//! merges far more audio than video. Here a stop ends the file formats at
+//! their last common fragment, and none gets more than [`AHEAD`] fragments
+//! ahead (which the stop would discard).
 use crate::{
     DownloadOptions, DownloadPhase, DownloadProgress, Error, PartFiles, Result, VideoInfo,
     extractor::LiveFragments,
@@ -12,14 +18,23 @@ use crate::{
 use reqwest::blocking::Client;
 use std::{
     fs,
-    io::{Read, Write},
+    io::Read,
     ops::ControlFlow,
     path::{Path, PathBuf},
     sync::{
+        Condvar, Mutex,
         atomic::{AtomicBool, Ordering},
         mpsc,
     },
+    time::Duration,
 };
+
+/// How many fragments a format downloaded to a file may get ahead of the
+/// slowest other one: enough that one format's slow fragments do not hold
+/// the others back, few enough that a stop discards little. The formats'
+/// lists share sequence numbers (both start at the stream's first, or the
+/// same 120-hour cutoff).
+const AHEAD: usize = 10;
 
 /// A lazy live fragment list: the next fragment, `None` once the stream
 /// ends. `stop` is polled while waiting (an interrupt ends the list).
@@ -43,6 +58,64 @@ pub(crate) struct Job {
     pub pipe: bool,
 }
 
+/// The whole fragments each file format has downloaded, `None` for a
+/// format that has ended (or feeds a pipe, which FFmpeg's reads pace).
+struct Pace {
+    done: Mutex<Vec<Option<usize>>>,
+    changed: Condvar,
+}
+
+impl Pace {
+    /// Wait until `job` may download fragment `index`: no other running
+    /// format is more than [`AHEAD`] fragments behind it.
+    fn wait(&self, job: usize, index: usize, halted: &dyn Fn() -> bool) {
+        let mut done = self.done.lock().unwrap_or_else(|e| e.into_inner());
+        while !halted()
+            && done.iter().enumerate().any(|(other, count)| {
+                other != job && count.is_some_and(|count| count + AHEAD < index)
+            })
+        {
+            done = self
+                .changed
+                .wait_timeout(done, Duration::from_millis(50))
+                .unwrap_or_else(|e| e.into_inner())
+                .0;
+        }
+    }
+
+    fn set(&self, job: usize, count: Option<usize>) {
+        self.done.lock().unwrap_or_else(|e| e.into_inner())[job] = count;
+        self.changed.notify_all();
+    }
+}
+
+/// Marks a format ended however its download returns.
+struct Leave<'a>(&'a Pace, usize);
+
+impl Drop for Leave<'_> {
+    fn drop(&mut self) {
+        self.0.set(self.1, None);
+    }
+}
+
+/// A format's download before it is published.
+enum Recorded {
+    /// Fed to FFmpeg: the bytes written.
+    Fed(u64),
+    File {
+        output: Output,
+        /// The file's size after each fragment.
+        ends: Vec<u64>,
+    },
+}
+
+/// Where a format's fragments were appended.
+enum Output {
+    Private(tempfile::NamedTempFile),
+    /// The `.part` file, or the destination itself with `--no-part`.
+    Named(fs::File, PathBuf),
+}
+
 /// A worker's report to the calling thread, which may hold the output
 /// streams: its downloaded byte count or a screen message.
 enum Event {
@@ -64,12 +137,16 @@ pub(crate) fn download(
     let count = jobs.len();
     let (sender, receiver) = mpsc::channel::<Event>();
     let destinations: Vec<PathBuf> = jobs.iter().map(|job| job.destination.clone()).collect();
-    let results: Vec<Result<u64>> = std::thread::scope(|scope| {
+    let pace = Pace {
+        done: Mutex::new(jobs.iter().map(|job| (!job.pipe).then_some(0)).collect()),
+        changed: Condvar::new(),
+    };
+    let results: Vec<Result<Recorded>> = std::thread::scope(|scope| {
         let handles: Vec<_> = jobs
             .into_iter()
             .enumerate()
             .map(|(index, job)| {
-                let (sender, stop) = (sender.clone(), &stop);
+                let (sender, stop, pace) = (sender.clone(), &stop, &pace);
                 let context = crate::control::current();
                 scope.spawn(move || {
                     let _context = crate::control::resume(context);
@@ -77,9 +154,11 @@ pub(crate) fn download(
                     crate::screen::forward(Some(Box::new(move |message| {
                         let _ = messages.send(Event::Message(message));
                     })));
-                    let result = run(client, job, &options, stop, &mut |bytes| {
+                    let pace = Leave(pace, index);
+                    let result = run(client, job, &options, stop, &pace, &mut |bytes| {
                         let _ = sender.send(Event::Progress { job: index, bytes });
                     });
+                    drop(pace);
                     crate::screen::forward(None);
                     if result.is_err() {
                         stop.store(true, Ordering::SeqCst);
@@ -125,9 +204,26 @@ pub(crate) fn download(
             })
             .collect()
     });
+    let recorded = results.into_iter().collect::<Result<Vec<_>>>()?;
+    // A stop ends the file formats at their last common fragment.
+    let common = recorded
+        .iter()
+        .filter_map(|recorded| match recorded {
+            Recorded::File { ends, .. } => Some(ends.len()),
+            Recorded::Fed(_) => None,
+        })
+        .min()
+        .filter(|_| ending());
     let mut sizes = Vec::with_capacity(count);
-    for (index, (result, destination)) in results.into_iter().zip(destinations).enumerate() {
-        let size = result?;
+    for (index, (recorded, destination)) in recorded.into_iter().zip(destinations).enumerate() {
+        let size = match recorded {
+            Recorded::Fed(size) => size,
+            Recorded::File { output, ends } => {
+                let whole = common.unwrap_or(ends.len());
+                let size = whole.checked_sub(1).map_or(0, |last| ends[last]);
+                publish(output, size, &destination, &options)?
+            }
+        };
         sizes.push(size);
         // `_finish_frag_download`'s `finished` status for each format.
         let finished = DownloadProgress {
@@ -165,11 +261,13 @@ fn run(
     mut job: Job,
     options: &DownloadOptions,
     stop: &AtomicBool,
+    pace: &Leave<'_>,
     progress: &mut dyn FnMut(u64),
-) -> Result<u64> {
+) -> Result<Recorded> {
     if job.pipe {
-        return feed(client, job, options, stop, progress);
+        return feed(client, job, options, stop, progress).map(Recorded::Fed);
     }
+    let Leave(pace, slot) = *pace;
     let destination = job.destination.as_path();
     crate::download::check_destination(destination, options)?;
     let parent = destination
@@ -200,14 +298,19 @@ fn run(
     };
     let halted = || stop.load(Ordering::SeqCst) || ending();
     let mut stored = 0_u64;
-    let mut index = 0_usize;
+    let mut ends = Vec::new();
     {
         let file = match (&mut private, &mut named) {
             (Some(temporary), _) => temporary.as_file_mut(),
             (_, Some(file)) => file,
             _ => unreachable!("one output file is open"),
         };
-        while let Some(fragment) = job.fragments.next(&halted)? {
+        loop {
+            let index = ends.len();
+            pace.wait(slot, index, &halted);
+            let Some(fragment) = job.fragments.next(&halted)? else {
+                break;
+            };
             let mut forward = |event: DownloadProgress| {
                 progress(event.downloaded_bytes);
                 if halted() {
@@ -231,17 +334,38 @@ fn run(
                 Err(Error::DownloadCancelled) if ending() => break,
                 Err(error) => return Err(error),
             }
-            index += 1;
+            ends.push(stored);
+            pace.set(slot, Some(ends.len()));
         }
         if stop.load(Ordering::SeqCst) && !ending() {
             return Err(Error::DownloadCancelled);
         }
-        file.flush()?;
-        file.sync_all()?;
     }
-    if stored == 0 {
-        drop(named);
-        if let Some(path) = &part_path {
+    let output = match (private, named, part_path) {
+        (Some(temporary), _, _) => Output::Private(temporary),
+        (None, Some(file), Some(path)) => Output::Named(file, path),
+        _ => unreachable!("one output file is open"),
+    };
+    Ok(Recorded::File { output, ends })
+}
+
+/// `_finish_frag_download`: the first `size` bytes of `output` at the
+/// destination.
+fn publish(
+    output: Output,
+    size: u64,
+    destination: &Path,
+    options: &DownloadOptions,
+) -> Result<u64> {
+    let file = match &output {
+        Output::Private(temporary) => temporary.as_file(),
+        Output::Named(file, _) => file,
+    };
+    file.set_len(size)?;
+    file.sync_all()?;
+    if size == 0 {
+        if let Output::Named(file, path) = output {
+            drop(file);
             let _ = fs::remove_file(path);
         }
         // A library stop before any whole fragment is a cancel.
@@ -250,19 +374,18 @@ fn run(
         }
         return Err(Error::Reported("The downloaded file is empty".into()));
     }
-    match (private, part_path) {
-        (Some(temporary), _) => {
+    match output {
+        Output::Private(temporary) => {
             crate::download::persist(temporary, destination, options.overwrite)?
         }
-        (None, Some(path)) => {
-            drop(named);
+        Output::Named(file, path) => {
+            drop(file);
             if path != destination {
                 fs::rename(&path, destination)?;
             }
         }
-        _ => {}
     }
-    Ok(stored)
+    Ok(size)
 }
 
 /// `--growing-file` (port extension): each fragment is downloaded into a

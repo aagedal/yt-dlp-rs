@@ -21,6 +21,14 @@ const BASE: &str = "https://rr1.googlevideo.test/videoplayback?itag=";
 /// Fragments `ITAG:SQ;` behind a bare URL whose HEAD answers the sequence
 /// numbers `heads` yields (each fragment request waits `delay`).
 fn proxy(heads: Arc<dyn Fn() -> i64 + Send + Sync>, delay: Duration) -> site_proxy::SiteProxy {
+    proxy_with(heads, Arc::new(move |_| delay))
+}
+
+/// [`proxy`] with each format's fragment delay (by itag).
+fn proxy_with(
+    heads: Arc<dyn Fn() -> i64 + Send + Sync>,
+    delay: Arc<dyn Fn(&str) -> Duration + Send + Sync>,
+) -> site_proxy::SiteProxy {
     let dynamic: site_proxy::Dynamic = Arc::new(move |method: &str, url: &str| {
         let rest = url.strip_prefix(BASE)?;
         let (itag, query) = rest.split_once('&')?;
@@ -32,7 +40,7 @@ fn proxy(heads: Arc<dyn Fn() -> i64 + Send + Sync>, delay: Duration) -> site_pro
             )),
             Some(sq) => {
                 let sq = sq.strip_prefix("&sq=")?;
-                std::thread::sleep(delay);
+                std::thread::sleep(delay(itag));
                 Some((
                     200,
                     vec![("Content-Type".to_owned(), "video/mp4".to_owned())],
@@ -192,6 +200,49 @@ fn an_interrupted_live_from_start_download_is_completed() {
     assert!((2..1000).contains(&count), "{text_file}");
     assert_eq!(text_file.into_bytes(), expected("140", count - 1));
     assert!(!part.exists());
+}
+
+#[test]
+fn an_interrupted_merge_ends_its_formats_at_the_same_fragment() {
+    // Port fix: the small audio fragments arrive much faster than the
+    // video's. Upstream lets them race ahead, so a stopped recording merged
+    // far more audio than video; the formats now end at their last common
+    // fragment.
+    let proxy = proxy_with(
+        Arc::new(|| 1000),
+        Arc::new(|itag| match itag {
+            "137" => Duration::from_millis(150),
+            _ => Duration::ZERO,
+        }),
+    );
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = fake_ffmpeg(tools.path());
+    let work = tempfile::tempdir().unwrap();
+    let child = command(&proxy, work.path())
+        .args(["-f", "137+140", "--ffmpeg-location", &ffmpeg])
+        .arg("https://www.youtube.com/watch?v=LiveStart01")
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .unwrap();
+    let video = work.path().join("LiveStart01.f137.mp4.part");
+    let deadline = std::time::Instant::now() + Duration::from_secs(30);
+    // Three whole video fragments (`137:N;`).
+    while std::fs::metadata(&video).map_or(0, |metadata| metadata.len()) < 18 {
+        assert!(std::time::Instant::now() < deadline, "no fragment arrived");
+        std::thread::sleep(Duration::from_millis(20));
+    }
+    support::interrupt(&child);
+    let output = child.wait_with_output().unwrap();
+    assert!(output.status.success(), "{}", text(&output));
+    let merged =
+        String::from_utf8(std::fs::read(work.path().join("LiveStart01.mp4")).unwrap()).unwrap();
+    let count = merged.matches("137:").count() as i64;
+    assert!((3..1000).contains(&count), "{merged}");
+    assert_eq!(
+        merged.into_bytes(),
+        [expected("137", count - 1), expected("140", count - 1)].concat()
+    );
 }
 
 #[test]
