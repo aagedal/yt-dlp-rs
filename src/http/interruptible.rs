@@ -75,7 +75,7 @@ pub(crate) fn send(
     request: RequestBuilder,
 ) -> std::result::Result<crate::Result<Response>, Interrupted> {
     let Some(watch) = crate::control::watch() else {
-        return Ok(super::follow::send(request));
+        return Ok(super::follow::send(request, &|| false));
     };
     if watch.requested() {
         return Err(Interrupted);
@@ -83,11 +83,12 @@ pub(crate) fn send(
     let (sender, receiver) = mpsc::sync_channel(1);
     let shared = Arc::new(Shared::new(Some(watch.clone())));
     let pump = Arc::clone(&shared);
+    let hops = watch.clone();
     let spawned = std::thread::Builder::new()
         .name("yt-dlp-rs-http".into())
         .stack_size(STACK)
         .spawn(move || {
-            let response = match super::follow::send(request) {
+            let response = match super::follow::send(request, &|| hops.requested()) {
                 Ok(response) => response,
                 Err(error) => {
                     let _ = sender.send(Err(error));
@@ -527,6 +528,46 @@ mod tests {
         let started = Instant::now();
         assert!(send(client().get(&url)).is_err());
         within(started);
+    }
+
+    #[test]
+    fn an_interrupt_ends_a_redirect_chain() {
+        // Every request redirects to a new URL after 300 ms.
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let requests = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+        let count = Arc::clone(&requests);
+        std::thread::spawn(move || {
+            for stream in listener.incoming() {
+                let Ok(mut stream) = stream else { return };
+                let hop = count.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                let mut request = [0; 4096];
+                let _ = stream.read(&mut request);
+                std::thread::sleep(Duration::from_millis(300));
+                let _ = write!(
+                    stream,
+                    "HTTP/1.1 302 Found\r\nLocation: /{}\r\nContent-Length: 0\r\nConnection: close\r\n\r\n",
+                    hop + 1
+                );
+            }
+        });
+        let client = reqwest::blocking::Client::builder()
+            .redirect(reqwest::redirect::Policy::none())
+            .build()
+            .unwrap();
+        let jar = Arc::new(crate::CookieJar::default());
+        let interrupt = crate::Interrupt::new();
+        let _context = crate::control::enter(Some(&interrupt), None, &jar).unwrap();
+        let canceller = interrupt.clone();
+        std::thread::spawn(move || {
+            std::thread::sleep(Duration::from_millis(450));
+            canceller.cancel();
+        });
+        assert!(send(client.get(format!("http://{address}/0"))).is_err());
+        // Without the check, the helper thread would follow all 10 hops.
+        std::thread::sleep(Duration::from_millis(1500));
+        let sent = requests.load(std::sync::atomic::Ordering::SeqCst);
+        assert!(sent <= 2, "{sent} requests");
     }
 
     #[test]

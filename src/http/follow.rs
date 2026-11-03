@@ -20,13 +20,17 @@ use std::collections::HashMap;
 const MAX_REDIRECTIONS: usize = 10;
 const MAX_REPEATS: usize = 4;
 
-/// Send `request`, following redirects.
-pub(super) fn send(request: RequestBuilder) -> Result<Response> {
+/// Send `request`, following redirects until `interrupted`.
+pub(super) fn send(request: RequestBuilder, interrupted: &dyn Fn() -> bool) -> Result<Response> {
     let (client, request) = request.build_split();
-    follow(&client, request?)
+    follow(&client, request?, interrupted)
 }
 
-fn follow(client: &Client, mut request: Request) -> Result<Response> {
+fn follow(
+    client: &Client,
+    mut request: Request,
+    interrupted: &dyn Fn() -> bool,
+) -> Result<Response> {
     let mut visited: HashMap<url::Url, usize> = HashMap::new();
     loop {
         // A body that cannot be sent twice ends the chain at its redirect,
@@ -71,6 +75,10 @@ fn follow(client: &Client, mut request: Request) -> Result<Response> {
             });
         }
         *visited.entry(target.clone()).or_default() += 1;
+        // The caller already reported the interrupt; send no further hop.
+        if interrupted() {
+            return Err(Error::ExtractionCancelled);
+        }
         redirect(&mut next, status, &target);
         request = next;
     }
