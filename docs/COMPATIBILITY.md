@@ -5395,7 +5395,10 @@ and stops when the stream ends or the score passes 30. A merge's formats
 (`FILE.fFORMAT.EXT`, named with the merged extension like upstream) download
 in parallel and are then merged. An interrupt ends the fragment lists,
 drops the fragment in flight and completes the download (publication, merge
-and post-processing). Progress is one combined line rather than upstream's
+and post-processing). Port fix: upstream lets the formats drift apart, so a
+stopped recording merges minutes more audio than video; here a stop ends a
+merge's formats at their last common fragment, and none gets more than ten
+fragments ahead of the others (which the stop would discard). Progress is one combined line rather than upstream's
 per-format multiline status, and `-j` omits the generator (upstream prints its
 `repr`). `youtube-live-from-start` compares extraction with pinned upstream;
 `tests/youtube_live.rs` covers downloads, merging and interrupts against a
