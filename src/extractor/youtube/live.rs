@@ -69,9 +69,9 @@ fn head_seqnum(client: &Client, url: &str) -> Option<i64> {
     let response = match crate::control::scoped(client.head(url)) {
         // An interrupt leaves no sequence number.
         Ok(request) => crate::http::interruptible::send(request).ok()?,
-        Err(error) => Err(error),
+        Err(error) => Err(error.into()),
     };
-    match response.and_then(|r| r.error_for_status()) {
+    match response.and_then(|r| r.error_for_status().map_err(crate::Error::from)) {
         Ok(response) => response
             .headers()
             .get("X-Head-Seqnum")?
@@ -83,7 +83,7 @@ fn head_seqnum(client: &Client, url: &str) -> Option<i64> {
         Err(error) => {
             crate::screen::debug(&format!(
                 "[youtube] Fragment request failed: {}",
-                crate::retry::urllib_error(&error)
+                crate::retry::upstream_error_text(&error)
             ));
             None
         }

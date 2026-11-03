@@ -1614,7 +1614,8 @@ impl YoutubeDl {
                 .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
                 .default_headers(headers.clone())
                 .cookie_provider(cookies.clone())
-                .redirect(reqwest::redirect::Policy::limited(10))
+                // Redirects are followed in `http::follow`, like urllib.
+                .redirect(reqwest::redirect::Policy::none())
                 // Preserve an HTML5 page's explicit referrer across media redirects.
                 .referer(false)
                 // Python's http.client sends `User-Agent`, not `user-agent`;
@@ -3080,11 +3081,11 @@ impl YoutubeDl {
             let sent = match crate::control::scoped(self.client.get(&url)) {
                 Ok(request) => crate::http::interruptible::send(request)
                     .map_err(|_| Error::DownloadCancelled)?,
-                Err(error) => Err(error),
+                Err(error) => Err(error.into()),
             };
             let result = sent
                 .inspect(|_| crate::screen::after_request())
-                .map_err(|error| retry::urllib_error(&error))
+                .map_err(|error| retry::upstream_error_text(&error))
                 .and_then(|response| {
                     let status = response.status();
                     if status == reqwest::StatusCode::NOT_FOUND {
@@ -5837,8 +5838,13 @@ impl YoutubeDl {
         // `--keep-partial-on-stop`: SIGINT/SIGTERM stop the download like
         // `Interrupt::stop` (the outermost call holds the signal guard).
         let _signals = self.keep_partial_on_stop.then(control::SignalStop::enter);
+        // Except a `--live-from-start` download: a signal ends its fragment
+        // lists, and it finishes (merged) and succeeds like upstream's
+        // interrupted live download, as live FFmpeg and `--growing-file`
+        // recordings do.
+        let live = live_generated(info);
         let mut callback = move |progress| {
-            if control::requested() {
+            if control::requested() && !(live && crate::interrupt::interrupted()) {
                 std::ops::ControlFlow::Break(())
             } else {
                 callback(progress)
@@ -6268,11 +6274,7 @@ impl YoutubeDl {
                         None => workspace
                             .path()
                             .join(format!("input-{index}.{}", stream.ext)),
-                        Some(_) => {
-                            let mut named = stream.clone();
-                            named.ext = info.ext.clone();
-                            stream_path(destination, &info.ext, &named)
-                        }
+                        Some(_) => merge_input_path(destination, info, stream),
                     };
                     (info.with_selected_format(stream), path)
                 })
@@ -6572,7 +6574,7 @@ impl YoutubeDl {
             ));
             let mut kept = Vec::new();
             for (&index, path) in downloaded.iter().zip(&paths) {
-                let target = stream_path(destination, &info.ext, &streams[index]);
+                let target = merge_input_path(destination, info, &streams[index]);
                 // A rename, so a failure never removes the data.
                 if *path != target {
                     if !options.overwrite && fs::symlink_metadata(&target).is_ok() {
@@ -6639,6 +6641,23 @@ impl YoutubeDl {
             });
         }
         Ok(bytes)
+    }
+}
+
+/// [`stream_path`] for `info`'s format `stream`: `--live-from-start`
+/// formats, downloaded together by DashSegmentsFD, take the merged
+/// extension (upstream's `f['filepath']`).
+pub(crate) fn merge_input_path(
+    destination: &Path,
+    info: &VideoInfo,
+    stream: &VideoFormat,
+) -> PathBuf {
+    if live_generated(info) {
+        let mut named = stream.clone();
+        named.ext = info.ext.clone();
+        stream_path(destination, &info.ext, &named)
+    } else {
+        stream_path(destination, &info.ext, stream)
     }
 }
 

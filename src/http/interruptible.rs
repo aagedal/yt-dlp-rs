@@ -73,9 +73,9 @@ pub(crate) fn is_interrupted(error: &(dyn std::error::Error + 'static)) -> bool 
 /// response's body reads end with an [`Interrupted`] I/O error the same way.
 pub(crate) fn send(
     request: RequestBuilder,
-) -> std::result::Result<reqwest::Result<Response>, Interrupted> {
+) -> std::result::Result<crate::Result<Response>, Interrupted> {
     let Some(watch) = crate::control::watch() else {
-        return Ok(request.send());
+        return Ok(super::follow::send(request));
     };
     if watch.requested() {
         return Err(Interrupted);
@@ -87,7 +87,7 @@ pub(crate) fn send(
         .name("yt-dlp-rs-http".into())
         .stack_size(STACK)
         .spawn(move || {
-            let response = match request.send() {
+            let response = match super::follow::send(request) {
                 Ok(response) => response,
                 Err(error) => {
                     let _ = sender.send(Err(error));
@@ -102,7 +102,7 @@ pub(crate) fn send(
     if let Err(error) = spawned {
         // No thread to wait on: send directly.
         crate::screen::debug(&format!("Unable to start an HTTP thread: {error}"));
-        return Ok(Err(spawn_failed(error)));
+        return Ok(Err(spawn_failed(error).into()));
     }
     let head = loop {
         match receiver.recv_timeout(POLL) {
@@ -115,7 +115,8 @@ pub(crate) fn send(
             Err(mpsc::RecvTimeoutError::Disconnected) => {
                 return Ok(Err(spawn_failed(std::io::Error::other(
                     "the HTTP thread ended without a response",
-                ))));
+                ))
+                .into()));
             }
         }
     };
@@ -619,6 +620,9 @@ mod tests {
         let error = send(client().get(format!("http://127.0.0.1:{port}/")))
             .unwrap()
             .unwrap_err();
-        assert!(error.is_connect(), "{error:?}");
+        assert!(
+            matches!(&error, crate::Error::Http(source) if source.is_connect()),
+            "{error:?}"
+        );
     }
 }

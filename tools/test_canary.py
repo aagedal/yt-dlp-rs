@@ -328,8 +328,12 @@ class RunnerTests(unittest.TestCase):
                          ('diverged', "title: yt-dlp-rs 'T', upstream 'U'"))
         self.assertIn('download', result['urls'][0])
         self.state.unlink()
+        # Both fail (Facebook's login wall and Vimeo's 401 in CI): not a port bug.
         result, _ = self.check('broken', upstream=str(upstream))
         self.assertEqual(result['urls'][0]['upstream']['status'], 'error')
+        self.assertEqual((result['status'], result['urls'][0]['reason']),
+                         ('blocked', 'upstream fails too: '
+                                     'ERROR: [youtube] a: Unable to extract nsig function'))
 
     def test_site_timeout(self):
         with mock.patch.dict(os.environ, {'FAKE_STATE': str(self.state), 'FAKE_MODE': 'ok'}):

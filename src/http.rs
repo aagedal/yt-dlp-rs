@@ -1,4 +1,5 @@
 //! Validated global HTTP defaults, separate from extractor-owned request headers.
+mod follow;
 pub(crate) mod interruptible;
 mod legacy_tls;
 mod proxy;
