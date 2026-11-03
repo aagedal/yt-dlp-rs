@@ -15,6 +15,28 @@ That is tested behavior, not a general promise of yt-dlp compatibility:
 options this port does not implement are rejected with an error rather
 than ignored.
 
+## Compared with yt-dlp
+
+| | yt-dlp-rs | yt-dlp 2026.10.26 |
+|---|---:|---:|
+| Extractors | 904 | 1754 (136 marked broken) |
+| `--version` | 0.007 s | 0.09 s |
+| Start on a direct media URL (`--simulate`) | 0.015 s, 24 MiB | 0.54 s, 75 MiB |
+| Extract a YouTube video (`-J`) | 0.024 s, 32 MiB | 0.45 s, 69 MiB |
+| Extract from nine other sites (`-J`) | 0.015–0.023 s, 20–22 MiB | 0.46–0.54 s, 70–74 MiB |
+| Download 25 MiB of HLS, 50 ms per request, `-N 1` | 6.1 s | 7.3 s |
+| The same with `-N 4` | 1.7 s | 2.4 s |
+| Download 400 MiB of HLS, no added latency, `-N 1` | 0.30 s | 1.59 s |
+
+Medians of five runs on an Apple M5 Pro (2026-11-03), upstream from source
+on CPython 3.15 with its native downloaders. Everything runs against local
+servers: extraction uses saved site responses (YouTube without a JavaScript
+runtime), and downloads come from a generated stream with a fixed delay
+standing in for network latency. On a real connection a download is
+mostly bound by the network and the site, so expect the large differences
+at startup and extraction, not in transfer speed. Method, all cases and
+their limits: [docs/BENCHMARKS.md](docs/BENCHMARKS.md).
+
 ## Install
 
 Pre-release binaries for Linux, macOS and Windows are attached to the
