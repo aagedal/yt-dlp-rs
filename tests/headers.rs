@@ -117,6 +117,7 @@ impl Server {
                         Vec::new(),
                         "Location: /media.mp4\r\n".into(),
                     ),
+                    "/loop" => (302, "text/plain", Vec::new(), "Location: /loop\r\n".into()),
                     "/cross" => (
                         302,
                         "text/plain",
@@ -396,8 +397,11 @@ fn extractor_and_download_retries_keep_configured_headers() {
     assert_defaults(&requests);
 }
 
+/// `--add-headers` are global (upstream's `http_headers`): every request
+/// sends them, redirected ones too (yt-dlp's `RedirectHandler` keeps every
+/// header but `Cookie`).
 #[test]
-fn redirects_keep_custom_headers_but_strip_authorization_across_origins() {
+fn redirects_keep_custom_and_global_authorization_headers_across_origins() {
     let target = Server::new();
     let server = Server::redirecting_to(Some(target.url("/media.mp4")));
     let directory = tempfile::tempdir().unwrap();
@@ -417,7 +421,52 @@ fn redirects_keep_custom_headers_but_strip_authorization_across_origins() {
     let target_requests = target.recorded();
     assert_eq!(target_requests.len(), 1);
     assert_eq!(target_requests[0].values("x-custom"), ["visible"]);
-    assert!(target_requests[0].values("authorization").is_empty());
+    assert_eq!(
+        target_requests[0].values("authorization"),
+        ["Bearer local-test-token"]
+    );
+}
+
+/// http.client writes `Host` first; hyper appended it last, which some
+/// Cloudflare rules refuse (Dailymotion's manifests, issue #74). Each hop
+/// of a redirect names its own host.
+#[test]
+fn host_is_the_first_header_of_every_request_and_redirect_hop() {
+    let target = Server::new();
+    let server = Server::redirecting_to(Some(target.url("/media.mp4")));
+    let directory = tempfile::tempdir().unwrap();
+    success(&server.cli("/redirect", &["-j"], directory.path()));
+    success(&server.cli("/cross", &["-j"], directory.path()));
+    for (server, count) in [(&server, 3), (&target, 1)] {
+        let requests = server.recorded();
+        assert_eq!(requests.len(), count, "{requests:?}");
+        let host = server.origin.trim_start_matches("http://");
+        for request in requests {
+            assert_eq!(
+                request.headers.first(),
+                Some(&("host".to_owned(), host.to_owned())),
+                "{request:?}"
+            );
+            assert_eq!(request.values("host").len(), 1);
+        }
+    }
+}
+
+/// urllib's `HTTPRedirectHandler`: a fifth visit to one URL is a loop.
+#[test]
+fn a_redirect_loop_fails_like_urllib() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let output = server.cli("/loop", &["-j"], directory.path());
+    assert!(!output.status.success());
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        stderr.contains(
+            "HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.\nThe last 30x error message was:\nFound"
+        ),
+        "{stderr}"
+    );
+    assert_eq!(server.recorded().len(), 5);
 }
 
 #[test]

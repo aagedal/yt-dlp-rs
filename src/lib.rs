@@ -1611,7 +1611,8 @@ impl YoutubeDl {
                 .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
                 .default_headers(headers.clone())
                 .cookie_provider(cookies.clone())
-                .redirect(reqwest::redirect::Policy::limited(10))
+                // Redirects are followed in `http::follow`, like urllib.
+                .redirect(reqwest::redirect::Policy::none())
                 // Preserve an HTML5 page's explicit referrer across media redirects.
                 .referer(false)
                 // Python's http.client sends `User-Agent`, not `user-agent`;
@@ -3077,11 +3078,11 @@ impl YoutubeDl {
             let sent = match crate::control::scoped(self.client.get(&url)) {
                 Ok(request) => crate::http::interruptible::send(request)
                     .map_err(|_| Error::DownloadCancelled)?,
-                Err(error) => Err(error),
+                Err(error) => Err(error.into()),
             };
             let result = sent
                 .inspect(|_| crate::screen::after_request())
-                .map_err(|error| retry::urllib_error(&error))
+                .map_err(|error| retry::upstream_error_text(&error))
                 .and_then(|response| {
                     let status = response.status();
                     if status == reqwest::StatusCode::NOT_FOUND {
