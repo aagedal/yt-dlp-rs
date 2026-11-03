@@ -384,6 +384,9 @@ Work in this order; each step lands with deterministic tests like any other chan
    17–37 MiB in every benchmark case and is now below upstream's; and `-N > 1`
    keeps fragments in memory spools (32 MiB per download, spilling to a file
    beyond that) instead of writing every byte twice.
+   Dispatch then compiles only the URL patterns whose literals a URL
+   contains (`UrlRegex`, generated `src/extractor/url_literals.rs`): startup
+   with a YouTube URL went from about 57 ms and 58 MiB to 24 ms and 32 MiB.
 6. **Platform parity.** Impersonation in the Windows release (or a documented
    tier-2 limitation), and test runs on real Windows hardware.
    Status (2026-11-02): the `impersonate` feature (BoringSSL through

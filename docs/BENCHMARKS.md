@@ -37,37 +37,51 @@ the 2026-11-01 run before these changes is in
 
 ### Startup and extraction
 
+With the URL prefilter below (run separately on 2026-11-03,
+[`benchmarks/2026-11-03-apple-m5-pro-url-prefilter.json`](benchmarks/2026-11-03-apple-m5-pro-url-prefilter.json);
+upstream's times were about 15% above the earlier run's on the same machine):
+
 | Case | yt-dlp-rs | upstream | yt-dlp-rs RSS | upstream RSS |
 |---|---:|---:|---:|---:|
-| `--version` | 0.007 s | 0.117 s | 6.0 MiB | 38.3 MiB |
-| `--simulate` direct URL | 0.068 s | 0.474 s | 64.3 MiB | 74.6 MiB |
-| YouTube `-J` (`--no-js-runtimes`) | 0.057 s | 0.383 s | 57.8 MiB | 69.3 MiB |
-| Instagram `-J` | 0.029 s | 0.410 s | 31.5 MiB | 70.0 MiB |
-| TikTok `-J` | 0.034 s | 0.475 s | 31.2 MiB | 73.7 MiB |
-| Vimeo `-J` | 0.035 s | 0.482 s | 32.8 MiB | 74.0 MiB |
-| Dailymotion `-J` | 0.034 s | 0.403 s | 32.4 MiB | 69.7 MiB |
-| Bandcamp `-J` | 0.033 s | 0.393 s | 35.5 MiB | 69.5 MiB |
-| SoundCloud `-J` | 0.038 s | 0.477 s | 34.4 MiB | 73.7 MiB |
-| X `-J` | 0.034 s | 0.481 s | 30.7 MiB | 73.8 MiB |
-| Facebook `-J` | 0.029 s | 0.401 s | 32.7 MiB | 69.8 MiB |
-| Bluesky `-J` | 0.036 s | 0.392 s | 35.8 MiB | 69.5 MiB |
+| `--version` | 0.007 s | 0.094 s | 6.1 MiB | 38.3 MiB |
+| `--simulate` direct URL | 0.015 s | 0.536 s | 23.7 MiB | 74.7 MiB |
+| YouTube `-J` (`--no-js-runtimes`) | 0.024 s | 0.451 s | 31.9 MiB | 69.3 MiB |
+| Instagram `-J` | 0.015 s | 0.474 s | 19.9 MiB | 70.1 MiB |
+| TikTok `-J` | 0.022 s | 0.543 s | 20.4 MiB | 73.7 MiB |
+| Vimeo `-J` | 0.021 s | 0.543 s | 21.2 MiB | 73.9 MiB |
+| Dailymotion `-J` | 0.019 s | 0.461 s | 20.7 MiB | 69.8 MiB |
+| Bandcamp `-J` | 0.017 s | 0.457 s | 22.0 MiB | 69.5 MiB |
+| SoundCloud `-J` | 0.023 s | 0.536 s | 22.0 MiB | 73.7 MiB |
+| X `-J` | 0.022 s | 0.542 s | 21.7 MiB | 73.8 MiB |
+| Facebook `-J` | 0.015 s | 0.466 s | 21.3 MiB | 69.8 MiB |
+| Bluesky `-J` | 0.017 s | 0.457 s | 20.8 MiB | 69.5 MiB |
 
-The port starts and extracts these fixtures 7–16× faster in wall time;
+The port starts and extracts these fixtures 19–36× faster in wall time;
 upstream's time is mostly interpreter start and imports.
 
 Matching a URL means trying every extractor in upstream's order, and each
-one compiles its URL pattern on first use, so a URL no site extractor takes
-compiles all of them. On 2026-11-01 that cost about 80 MiB (101 MiB peak for
-the direct-URL `--simulate` case; `--use-extractors generic`, 18 MiB). Most
-of it (41 MiB, measured with `MallocStackLogging`) was the `regex` crate's
-one-pass DFA, which it builds for every pattern with a capture group but
-only uses for anchored searches. The crate is now built without its
-`perf-onepass` feature: anchored captures use the bounded backtracker,
-which is as fast on URL-sized input. Peak RSS fell by 17–37 MiB in every
-case, now below upstream's everywhere, and wall time by 5–10%. What remains
-(about 37 MiB of compiled patterns and 19 MiB of touched code for the
-direct URL) would need patterns compiled only after a cheap literal check,
-across about 1900 pattern definitions; not done.
+one compiled its URL pattern on first use, so a URL no site extractor takes
+compiled all of them (YouTube's extractors come late, so a YouTube URL
+compiled nearly all). On 2026-11-01 that cost about 80 MiB (101 MiB peak for
+the direct-URL `--simulate` case; `--use-extractors generic`, 18 MiB) and
+most of the wall time. Two changes removed it:
+
+- Most of the memory (41 MiB, measured with `MallocStackLogging`) was the
+  `regex` crate's one-pass DFA, which it builds for every pattern with a
+  capture group but only uses for anchored searches. The crate is built
+  without its `perf-onepass` feature: anchored captures use the bounded
+  backtracker, which is as fast on URL-sized input. That alone cut 17–37 MiB
+  per case (direct URL 101 → 64 MiB, YouTube 91 → 58 MiB).
+- The patterns dispatch tries (about 930) are `UrlRegex`es
+  (`src/extractor/mod.rs`): each has a set of literals of which every
+  match contains one, and compiles only when the haystack contains one of
+  them, so a YouTube URL compiles only a few. The sets are derived from the
+  patterns' syntax trees by `tests/url_literals.rs` and saved, keyed by
+  pattern hash, in the generated `src/extractor/url_literals.rs`, so
+  finding them costs nothing at run time; the test fails when a pattern
+  lacks an entry and checks the sets against every fixture URL. Direct URL
+  0.068 → 0.015 s and 64 → 24 MiB; YouTube `-J` 0.057 → 0.024 s and 58 → 32
+  MiB.
 
 ### HLS and DASH, 100 × 256 KiB (25 MiB)
 

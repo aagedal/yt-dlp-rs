@@ -10,6 +10,10 @@ or download fallback. Do not claim yt-dlp compatibility beyond tested behavior.
 
 - Keep extraction, orchestration, output rendering, and transport separate.
 - Add site extractors through `Extractor` and register them before `DirectHttp`.
+- Patterns an extractor checks while declining a URL (`_VALID_URL` and the
+  like) are `UrlRegex` (`UrlRegex::ascii` for `url_regex`'s ASCII classes);
+  regenerate `src/extractor/url_literals.rs` with
+  `YT_DLP_RS_WRITE_URL_LITERALS=1 cargo test --test url_literals`.
 - Add deterministic local HTTP/fixture tests for each newly supported behavior.
 - For site extractors, save responses under `tests/fixtures/sites/SITE/` and capture
   pinned upstream output with `tools/capture_sites.py` (fixture-only proxy).

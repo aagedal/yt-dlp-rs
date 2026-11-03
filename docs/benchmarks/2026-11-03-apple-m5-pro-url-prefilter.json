@@ -1,0 +1,261 @@
+{
+ "system": {
+  "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "python": "3.15.2",
+  "cpus": 18,
+  "cpu": "Apple M5 Pro",
+  "memory_bytes": "68719476736"
+ },
+ "programs": {
+  "yt-dlp-rs": "yt-dlp-rs 0.8.0-beta.1",
+  "upstream": "2026.10.26"
+ },
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "runs": 5,
+ "media": {
+  "segments": 100,
+  "segment_bytes": 262144,
+  "total_bytes": 26214400
+ },
+ "groups": [
+  {
+   "name": "startup",
+   "cases": [
+    {
+     "label": "--version",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.0075,
+       "min_s": 0.007,
+       "max_s": 0.0086,
+       "peak_rss_mib": 6.1
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 0.0939,
+       "min_s": 0.0935,
+       "max_s": 0.0949,
+       "peak_rss_mib": 38.3
+      }
+     }
+    },
+    {
+     "label": "simulate direct URL",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.015,
+       "min_s": 0.0148,
+       "max_s": 0.0188,
+       "peak_rss_mib": 23.7
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 0.5364,
+       "min_s": 0.5318,
+       "max_s": 0.5426,
+       "peak_rss_mib": 74.7
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "extract",
+   "cases": [
+    {
+     "label": "youtube --no-js-runtimes -J",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.0242,
+       "min_s": 0.0241,
+       "max_s": 0.0244,
+       "peak_rss_mib": 31.9
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 0.4512,
+       "min_s": 0.4228,
+       "max_s": 0.4766,
+       "peak_rss_mib": 69.3
+      }
+     }
+    },
+    {
+     "label": "instagram -J",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.0151,
+       "min_s": 0.0146,
+       "max_s": 0.0155,
+       "peak_rss_mib": 19.9
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 0.4739,
+       "min_s": 0.4682,
+       "max_s": 0.4747,
+       "peak_rss_mib": 70.1
+      }
+     }
+    },
+    {
+     "label": "tiktok -J",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.0222,
+       "min_s": 0.0204,
+       "max_s": 0.023,
+       "peak_rss_mib": 20.4
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 0.5427,
+       "min_s": 0.5348,
+       "max_s": 0.544,
+       "peak_rss_mib": 73.7
+      }
+     }
+    },
+    {
+     "label": "vimeo -J",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.0211,
+       "min_s": 0.0204,
+       "max_s": 0.0214,
+       "peak_rss_mib": 21.2
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 0.5434,
+       "min_s": 0.5407,
+       "max_s": 0.5532,
+       "peak_rss_mib": 73.9
+      }
+     }
+    },
+    {
+     "label": "dailymotion -J",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.0193,
+       "min_s": 0.0183,
+       "max_s": 0.0196,
+       "peak_rss_mib": 20.7
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 0.4606,
+       "min_s": 0.458,
+       "max_s": 0.4611,
+       "peak_rss_mib": 69.8
+      }
+     }
+    },
+    {
+     "label": "bandcamp -J",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.0166,
+       "min_s": 0.0163,
+       "max_s": 0.0171,
+       "peak_rss_mib": 22.0
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 0.4569,
+       "min_s": 0.448,
+       "max_s": 0.4651,
+       "peak_rss_mib": 69.5
+      }
+     }
+    },
+    {
+     "label": "soundcloud -J",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.0231,
+       "min_s": 0.0228,
+       "max_s": 0.0234,
+       "peak_rss_mib": 22.0
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 0.5357,
+       "min_s": 0.5318,
+       "max_s": 0.55,
+       "peak_rss_mib": 73.7
+      }
+     }
+    },
+    {
+     "label": "twitter -J",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.0217,
+       "min_s": 0.0214,
+       "max_s": 0.0223,
+       "peak_rss_mib": 21.7
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 0.5424,
+       "min_s": 0.5376,
+       "max_s": 0.5588,
+       "peak_rss_mib": 73.8
+      }
+     }
+    },
+    {
+     "label": "facebook -J",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.015,
+       "min_s": 0.0149,
+       "max_s": 0.0157,
+       "peak_rss_mib": 21.3
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 0.4659,
+       "min_s": 0.456,
+       "max_s": 0.4799,
+       "peak_rss_mib": 69.8
+      }
+     }
+    },
+    {
+     "label": "bluesky -J",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.0171,
+       "min_s": 0.0163,
+       "max_s": 0.0178,
+       "peak_rss_mib": 20.8
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 0.4567,
+       "min_s": 0.4508,
+       "max_s": 0.4657,
+       "peak_rss_mib": 69.5
+      }
+     }
+    }
+   ]
+  }
+ ]
+}
