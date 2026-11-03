@@ -1,0 +1,159 @@
+{
+ "system": {
+  "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "python": "3.15.2",
+  "cpus": 18,
+  "cpu": "Apple M5 Pro",
+  "memory_bytes": "68719476736"
+ },
+ "programs": {
+  "yt-dlp-rs": "yt-dlp-rs 0.8.0-beta.1",
+  "upstream": "2026.10.26"
+ },
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "runs": 5,
+ "media": {
+  "segments": 400,
+  "segment_bytes": 1048576,
+  "total_bytes": 419430400
+ },
+ "groups": [
+  {
+   "name": "hls",
+   "cases": [
+    {
+     "label": "-N 1, 0 ms latency",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.3021,
+       "min_s": 0.282,
+       "max_s": 0.3215,
+       "peak_rss_mib": 67.8,
+       "mib_per_s": 1324.1
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 1.5903,
+       "min_s": 1.5701,
+       "max_s": 1.6358,
+       "peak_rss_mib": 75.4,
+       "mib_per_s": 251.5
+      }
+     }
+    },
+    {
+     "label": "-N 4, 0 ms latency",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.4668,
+       "min_s": 0.4266,
+       "max_s": 0.4936,
+       "peak_rss_mib": 118.8,
+       "mib_per_s": 856.9
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 1.3716,
+       "min_s": 1.2907,
+       "max_s": 1.4661,
+       "peak_rss_mib": 81.2,
+       "mib_per_s": 291.6
+      }
+     }
+    },
+    {
+     "label": "-N 8, 0 ms latency",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.4678,
+       "min_s": 0.4573,
+       "max_s": 0.5792,
+       "peak_rss_mib": 138.9,
+       "mib_per_s": 855.1
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 1.3693,
+       "min_s": 1.3186,
+       "max_s": 1.519,
+       "peak_rss_mib": 83.3,
+       "mib_per_s": 292.1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "dash",
+   "cases": [
+    {
+     "label": "-N 1, 0 ms latency",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.3041,
+       "min_s": 0.2839,
+       "max_s": 0.332,
+       "peak_rss_mib": 68.4,
+       "mib_per_s": 1315.4
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 1.7394,
+       "min_s": 1.6818,
+       "max_s": 1.7545,
+       "peak_rss_mib": 75.4,
+       "mib_per_s": 230.0
+      }
+     }
+    },
+    {
+     "label": "-N 4, 0 ms latency",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.4602,
+       "min_s": 0.4448,
+       "max_s": 0.522,
+       "peak_rss_mib": 121.7,
+       "mib_per_s": 869.2
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 1.4212,
+       "min_s": 1.2867,
+       "max_s": 1.4765,
+       "peak_rss_mib": 79.8,
+       "mib_per_s": 281.5
+      }
+     }
+    },
+    {
+     "label": "-N 8, 0 ms latency",
+     "results": {
+      "yt-dlp-rs": {
+       "runs": 5,
+       "median_s": 0.4792,
+       "min_s": 0.4603,
+       "max_s": 0.5007,
+       "peak_rss_mib": 135.2,
+       "mib_per_s": 834.7
+      },
+      "upstream": {
+       "runs": 5,
+       "median_s": 1.3335,
+       "min_s": 1.332,
+       "max_s": 1.477,
+       "peak_rss_mib": 82.8,
+       "mib_per_s": 300.0
+      }
+     }
+    }
+   ]
+  }
+ ]
+}
