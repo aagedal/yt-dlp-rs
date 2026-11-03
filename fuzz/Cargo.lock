@@ -2445,7 +2445,7 @@ dependencies = [
 
 [[package]]
 name = "yt-dlp-rs"
-version = "0.8.0-beta.1"
+version = "0.9.0-beta.1"
 dependencies = [
  "aes 0.9.3",
  "base64 0.22.1",
@@ -2459,6 +2459,7 @@ dependencies = [
  "http",
  "http-body",
  "httpdate",
+ "hyper",
  "icu_normalizer",
  "icu_properties",
  "log",
