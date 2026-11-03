@@ -130,9 +130,12 @@ impl Guard {
     pub(crate) fn install() -> Self {
         #[cfg(any(unix, windows))]
         {
+            // Over another guard, whose SIGINT handler is not the previous
+            // one when SIGINT is ignored (`replace` keeps it ignored) but
+            // which still handles SIGTERM.
+            let nested =
+                (GUARDS.load(Ordering::SeqCst) > 0).then(|| INTERRUPTED.load(Ordering::SeqCst));
             let previous = replace(SIGINT);
-            let nested = (previous == record as extern "C" fn(i32) as usize)
-                .then(|| INTERRUPTED.load(Ordering::SeqCst));
             if nested.is_some() {
                 NESTED.fetch_add(1, Ordering::SeqCst);
             }
