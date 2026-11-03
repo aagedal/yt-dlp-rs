@@ -270,9 +270,12 @@ pub(crate) fn download(
     processors: &PostprocessOptions,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<ProcessedDownload> {
-    // Processors check interrupts at their checkpoints, as downloads do.
+    // Processors check interrupts at their checkpoints, as downloads do;
+    // a signal ends a `--live-from-start` recording, which is then
+    // processed (`YoutubeDl::download_with_progress`).
+    let live = crate::live_generated(info);
     let callback = &mut |progress| {
-        if crate::control::requested() {
+        if crate::control::requested() && !(live && crate::interrupt::interrupted()) {
             ControlFlow::Break(())
         } else {
             callback(progress)
