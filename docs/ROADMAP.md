@@ -379,6 +379,11 @@ Work in this order; each step lands with deterministic tests like any other chan
    the previous one is processed, like upstream, so `--max-downloads` stops
    page fetches (`tests/lazy_playlist.rs`, new site fixture cases). Not
    matched yet: some lazy `-J` entry dicts.
+   Follow-ups (2026-11-03): the `regex` crate is built without its one-pass
+   DFA, which held about half of dispatch's memory, so peak RSS fell by
+   17–37 MiB in every benchmark case and is now below upstream's; and `-N > 1`
+   keeps fragments in memory spools (32 MiB per download, spilling to a file
+   beyond that) instead of writing every byte twice.
 6. **Platform parity.** Impersonation in the Windows release (or a documented
    tier-2 limitation), and test runs on real Windows hardware.
    Status (2026-11-02): the `impersonate` feature (BoringSSL through

@@ -22,7 +22,11 @@ log = { version = "0.4", features = ["std"] }
 icu_normalizer = "2.3"
 icu_properties = "2.3"
 percent-encoding = "2.3"
-regex = "1"
+# Without `perf-onepass`: a one-pass DFA is built for every pattern with a
+# capture group but only serves anchored searches (URL matches, where the
+# backtracker is as fast), and dispatch compiles nearly every extractor's
+# `_VALID_URL`, so it was most of the peak memory (docs/BENCHMARKS.md).
+regex = { version = "1", default-features = false, features = ["std", "unicode", "perf-backtrack", "perf-cache", "perf-dfa", "perf-inline", "perf-literal"] }
 ring = "0.17"
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls", "cookies", "socks"] }
 roxmltree = "0.21"

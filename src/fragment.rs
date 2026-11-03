@@ -11,6 +11,7 @@ use std::{
     io::{Read, Seek, SeekFrom, Write},
     ops::ControlFlow,
     path::Path,
+    sync::atomic::{AtomicUsize, Ordering},
     time::{Duration, Instant},
 };
 
@@ -674,14 +675,13 @@ fn fetch_with_retries(
     fragment: &Fragment,
     options: &DownloadOptions,
     keys: &mut HashMap<url::Url, [u8; 16]>,
-    file: &mut fs::File,
+    file: &mut dyn Sink,
     prefix: u64,
     stored: &mut u64,
     reporter: &mut Reporter<'_>,
 ) -> Result<Option<Option<String>>> {
     for attempt in 0..=options.fragment_retries {
-        file.set_len(prefix)?;
-        file.seek(SeekFrom::Start(prefix))?;
+        file.truncate(prefix)?;
         *stored = prefix;
         reporter.attempt = u16::try_from(attempt.saturating_add(1)).unwrap_or(u16::MAX);
         reporter.report(DownloadPhase::Requesting, *stored)?;
@@ -691,8 +691,7 @@ fn fetch_with_retries(
         };
         // Discard every byte from the failed fragment, including bytes
         // reported to observers, before waiting, retrying or skipping.
-        file.set_len(prefix)?;
-        file.seek(SeekFrom::Start(prefix))?;
+        file.truncate(prefix)?;
         *stored = prefix;
         // Upstream retries every HTTP status error for fragments when
         // unavailable fragments may be skipped.
@@ -744,8 +743,120 @@ fn fetch_with_retries(
     unreachable!("the final attempt returns or errors")
 }
 
+/// Where a fragment's bytes go: the output file, or a concurrent worker's
+/// [`Spool`].
+trait Sink: Write {
+    /// Keeps the first `len` bytes and writes after them.
+    fn truncate(&mut self, len: u64) -> std::io::Result<()>;
+}
+
+impl Sink for fs::File {
+    fn truncate(&mut self, len: u64) -> std::io::Result<()> {
+        self.set_len(len)?;
+        self.seek(SeekFrom::Start(len)).map(drop)
+    }
+}
+
+/// Memory the spools of one concurrent download allocate together.
+const SPOOL_MEMORY: usize = 32 << 20;
+
+/// A concurrent worker's fragment until the assembling thread appends it:
+/// in memory while the download's spools hold less than [`SPOOL_MEMORY`],
+/// then in a private file, so most bytes are written to disk only once.
+struct Spool<'a> {
+    memory: Vec<u8>,
+    file: Option<tempfile::NamedTempFile>,
+    len: u64,
+    /// This spool's share of `held`.
+    reserved: usize,
+    /// The memory every spool of the download reserved.
+    held: &'a AtomicUsize,
+    parent: &'a Path,
+}
+
+impl<'a> Spool<'a> {
+    fn new(held: &'a AtomicUsize, parent: &'a Path) -> Self {
+        Spool {
+            memory: Vec::new(),
+            file: None,
+            len: 0,
+            reserved: 0,
+            held,
+            parent,
+        }
+    }
+
+    fn reader(&self) -> std::io::Result<Box<dyn Read + '_>> {
+        Ok(match &self.file {
+            Some(file) => Box::new(file.reopen()?),
+            None => Box::new(self.memory.as_slice()),
+        })
+    }
+
+    fn release(&mut self) {
+        self.held.fetch_sub(self.reserved, Ordering::Relaxed);
+        self.reserved = 0;
+        self.memory = Vec::new();
+    }
+}
+
+impl Write for Spool<'_> {
+    fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+        if self.file.is_none() {
+            // Doubling like `Vec`, but counted before it allocates.
+            let needed = self.memory.len() + bytes.len();
+            let more = needed
+                .saturating_sub(self.reserved)
+                .max(if needed > self.reserved {
+                    self.reserved
+                } else {
+                    0
+                });
+            let held = self.held.fetch_add(more, Ordering::Relaxed);
+            if held + more <= SPOOL_MEMORY {
+                self.reserved += more;
+                self.memory.reserve_exact(self.reserved - self.memory.len());
+                self.memory.extend_from_slice(bytes);
+                self.len += bytes.len() as u64;
+                return Ok(bytes.len());
+            }
+            self.held.fetch_sub(more, Ordering::Relaxed);
+            let mut file = tempfile::Builder::new()
+                .prefix(&crate::scratch::prefix(".yt-dlp-rs-fragment-", self.parent))
+                .tempfile_in(self.parent)?;
+            file.write_all(&self.memory)?;
+            self.release();
+            self.file = Some(file);
+        }
+        let written = self.file.as_mut().expect("spilled above").write(bytes)?;
+        self.len += written as u64;
+        Ok(written)
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        Ok(())
+    }
+}
+
+impl Sink for Spool<'_> {
+    fn truncate(&mut self, len: u64) -> std::io::Result<()> {
+        match &mut self.file {
+            Some(file) => file.as_file_mut().truncate(len)?,
+            None => self.memory.truncate(len as usize),
+        }
+        self.len = len;
+        Ok(())
+    }
+}
+
+impl Drop for Spool<'_> {
+    fn drop(&mut self) {
+        self.release();
+    }
+}
+
 /// A fragment worker's report to the assembling thread.
-enum Event {
+enum Event<'a> {
     Progress {
         index: usize,
         bytes: u64,
@@ -754,12 +865,12 @@ enum Event {
     },
     Done {
         index: usize,
-        result: Result<Option<(tempfile::NamedTempFile, Option<String>)>>,
+        result: Result<Option<(Spool<'a>, Option<String>)>>,
     },
 }
 
 /// Upstream `--concurrent-fragments`: `concurrency` workers fetch fragments
-/// (each with its own retries) into private files, appended in order.
+/// (each with its own retries) into [`Spool`]s, appended in order.
 /// Returns the stored length and the latest fragment filetime.
 #[allow(clippy::too_many_arguments)]
 fn download_concurrent(
@@ -774,11 +885,9 @@ fn download_concurrent(
     keep_fragment: &dyn Fn(usize, &mut dyn Read) -> Result<()>,
     appended: &mut dyn FnMut(usize) -> Result<()>,
 ) -> Result<(u64, Option<i64>)> {
-    use std::sync::{
-        Arc,
-        atomic::{AtomicBool, AtomicUsize, Ordering},
-        mpsc,
-    };
+    use std::sync::{Arc, atomic::AtomicBool, mpsc};
+    let held = AtomicUsize::new(0);
+    let held = &held;
     let next = Arc::new(AtomicUsize::new(start));
     let cancelled = Arc::new(AtomicBool::new(false));
     let (sender, receiver) = mpsc::channel::<Event>();
@@ -828,9 +937,7 @@ fn download_concurrent(
                         live: crate::live_snapshot(info),
                     };
                     let result = (|| {
-                        let mut file = tempfile::Builder::new()
-                            .prefix(&crate::scratch::prefix(".yt-dlp-rs-fragment-", parent))
-                            .tempfile_in(parent)?;
+                        let mut file = Spool::new(held, parent);
                         let mut stored = 0;
                         let outcome = fetch_with_retries(
                             client,
@@ -839,7 +946,7 @@ fn download_concurrent(
                             &info.fragments[index],
                             options,
                             &mut keys,
-                            file.as_file_mut(),
+                            &mut file,
                             0,
                             &mut stored,
                             &mut worker,
@@ -879,8 +986,7 @@ fn download_concurrent(
         }
         let _stop = StopWorkers(&cancelled);
         // Assemble in order while reporting the in-flight total.
-        let mut finished: HashMap<usize, Option<(tempfile::NamedTempFile, Option<String>)>> =
-            HashMap::new();
+        let mut finished: HashMap<usize, Option<(Spool<'_>, Option<String>)>> = HashMap::new();
         let mut in_flight: HashMap<usize, u64> = HashMap::new();
         let (mut written, mut done, mut cursor) = (0_u64, start, start);
         let mut latest = None;
@@ -913,20 +1019,23 @@ fn download_concurrent(
             }
             while let Some(file) = finished.remove(&cursor) {
                 if let Some((file, modified)) = file {
-                    let mut source = file.reopen()?;
-                    written += std::io::copy(&mut source, output)?;
-                    keep_fragment(cursor, &mut file.reopen()?)?;
+                    match &file.file {
+                        Some(spilled) => {
+                            written += std::io::copy(&mut spilled.reopen()?, output)?;
+                        }
+                        None => {
+                            output.write_all(&file.memory)?;
+                            written += file.len;
+                        }
+                    }
+                    keep_fragment(cursor, &mut file.reader()?)?;
                     appended(cursor)?;
                     latest = crate::filetime::filetime(modified.as_deref()).or(latest);
                 }
                 cursor += 1;
             }
             if outcome.is_ok() {
-                let pending: u64 = finished
-                    .values()
-                    .flatten()
-                    .map(|(file, _)| file.as_file().metadata().map_or(0, |m| m.len()))
-                    .sum();
+                let pending: u64 = finished.values().flatten().map(|(file, _)| file.len).sum();
                 reporter.index = (done + 1).min(count) as u32;
                 reporter.attempt = 1;
                 let total = written + pending + in_flight.values().sum::<u64>();
@@ -946,7 +1055,7 @@ fn fetch(
     info: &VideoInfo,
     fragment: &Fragment,
     keys: &mut HashMap<url::Url, [u8; 16]>,
-    file: &mut fs::File,
+    file: &mut dyn Sink,
     stored: &mut u64,
     reporter: &mut Reporter<'_>,
 ) -> std::result::Result<Option<String>, Failure> {
@@ -1054,7 +1163,7 @@ fn fetch(
     Ok(modified)
 }
 fn append(
-    file: &mut fs::File,
+    file: &mut dyn Sink,
     bytes: &[u8],
     stored: &mut u64,
     received: &mut u64,
@@ -1255,7 +1364,7 @@ fn decrypt_response(
     mut response: Response,
     expected: Option<u64>,
     mut decryptor: crate::crypto::Decryptor,
-    file: &mut fs::File,
+    file: &mut dyn Sink,
     stored: &mut u64,
     reporter: &mut Reporter<'_>,
 ) -> std::result::Result<(), Failure> {
@@ -1323,7 +1432,7 @@ fn write_plain(
     bytes: &[u8],
     prefix: &mut Vec<u8>,
     sniffed: &mut bool,
-    file: &mut fs::File,
+    file: &mut dyn Sink,
     stored: &mut u64,
     plain_bytes: &mut u64,
     reporter: &mut Reporter<'_>,
@@ -1341,4 +1450,59 @@ fn write_plain(
         append(file, &bytes[take..], stored, plain_bytes, None, reporter)?;
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn contents(spool: &Spool<'_>) -> Vec<u8> {
+        let mut bytes = Vec::new();
+        spool.reader().unwrap().read_to_end(&mut bytes).unwrap();
+        bytes
+    }
+
+    #[test]
+    fn spool_keeps_fragments_in_memory_within_the_budget() {
+        let dir = tempfile::tempdir().unwrap();
+        let held = AtomicUsize::new(0);
+        let mut spool = Spool::new(&held, dir.path());
+        spool.write_all(b"abc").unwrap();
+        spool.write_all(b"defgh").unwrap();
+        assert!(spool.file.is_none());
+        assert_eq!(spool.len, 8);
+        assert_eq!(held.load(Ordering::Relaxed), spool.reserved);
+        assert!(spool.memory.capacity() >= spool.reserved);
+        // A failed attempt starts the fragment over.
+        spool.truncate(0).unwrap();
+        spool.write_all(b"xyz").unwrap();
+        assert_eq!(contents(&spool), b"xyz");
+        drop(spool);
+        assert_eq!(held.load(Ordering::Relaxed), 0);
+    }
+
+    #[test]
+    fn spool_moves_to_a_file_when_the_download_reaches_the_budget() {
+        let dir = tempfile::tempdir().unwrap();
+        let held = AtomicUsize::new(0);
+        let mut first = Spool::new(&held, dir.path());
+        first.write_all(&vec![1; SPOOL_MEMORY - 4]).unwrap();
+        let mut second = Spool::new(&held, dir.path());
+        second.write_all(b"ab").unwrap();
+        assert!(second.file.is_none());
+        second.write_all(b"cdefgh").unwrap();
+        assert!(second.file.is_some());
+        // Its memory went back to the budget when it moved.
+        assert_eq!(held.load(Ordering::Relaxed), first.reserved);
+        assert_eq!(second.len, 8);
+        assert_eq!(contents(&second), b"abcdefgh");
+        second.truncate(0).unwrap();
+        second.write_all(b"z").unwrap();
+        assert_eq!(contents(&second), b"z");
+        drop(first);
+        assert_eq!(held.load(Ordering::Relaxed), 0);
+        let file = second.file.as_ref().unwrap().path().to_owned();
+        drop(second);
+        assert!(!file.exists());
+    }
 }

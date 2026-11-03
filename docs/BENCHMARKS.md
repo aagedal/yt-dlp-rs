@@ -24,80 +24,100 @@ What it measures:
   answering immediately and from one that waits 50 ms before every response.
   Each run must leave exactly the expected bytes on disk.
 
-## Results (2026-11-01)
+## Results (2026-11-03)
 
 Machine: Apple M5 Pro (18 cores), 64 GB, macOS 27.2, APFS SSD. yt-dlp-rs
-0.7.0-beta.2 (this branch, release build, Rust 1.99.1); upstream 2026.10.26
-(`f264a6cb`, the pinned baseline) on CPython 3.15.2, run from source.
-Five runs per case. The full data is in
+0.8.0-beta.1 plus the changes below (release build, Rust 1.99.1); upstream
+2026.10.26 (`f264a6cb`, the pinned baseline) on CPython 3.15.2, run from
+source. Five runs per case. The full data is in
+[`benchmarks/2026-11-03-apple-m5-pro.json`](benchmarks/2026-11-03-apple-m5-pro.json)
+and [`benchmarks/2026-11-03-apple-m5-pro-400mib.json`](benchmarks/2026-11-03-apple-m5-pro-400mib.json);
+the 2026-11-01 run before these changes is in
 [`benchmarks/2026-11-01-apple-m5-pro.json`](benchmarks/2026-11-01-apple-m5-pro.json).
 
 ### Startup and extraction
 
 | Case | yt-dlp-rs | upstream | yt-dlp-rs RSS | upstream RSS |
 |---|---:|---:|---:|---:|
-| `--version` | 0.007 s | 0.127 s | 5.7 MiB | 38.5 MiB |
-| `--simulate` direct URL | 0.077 s | 0.502 s | 101.1 MiB | 74.7 MiB |
-| YouTube `-J` (`--no-js-runtimes`) | 0.065 s | 0.407 s | 91.5 MiB | 69.3 MiB |
-| Instagram `-J` | 0.034 s | 0.434 s | 48.1 MiB | 70.1 MiB |
-| TikTok `-J` | 0.038 s | 0.504 s | 45.9 MiB | 73.8 MiB |
-| Vimeo `-J` | 0.040 s | 0.523 s | 50.1 MiB | 73.9 MiB |
-| Dailymotion `-J` | 0.037 s | 0.431 s | 49.3 MiB | 69.7 MiB |
-| Bandcamp `-J` | 0.038 s | 0.427 s | 53.0 MiB | 69.5 MiB |
-| SoundCloud `-J` | 0.044 s | 0.493 s | 51.9 MiB | 73.8 MiB |
-| X `-J` | 0.043 s | 0.518 s | 45.3 MiB | 73.9 MiB |
-| Facebook `-J` | 0.034 s | 0.415 s | 50.0 MiB | 69.9 MiB |
-| Bluesky `-J` | 0.041 s | 0.398 s | 56.0 MiB | 69.4 MiB |
+| `--version` | 0.007 s | 0.117 s | 6.0 MiB | 38.3 MiB |
+| `--simulate` direct URL | 0.068 s | 0.474 s | 64.3 MiB | 74.6 MiB |
+| YouTube `-J` (`--no-js-runtimes`) | 0.057 s | 0.383 s | 57.8 MiB | 69.3 MiB |
+| Instagram `-J` | 0.029 s | 0.410 s | 31.5 MiB | 70.0 MiB |
+| TikTok `-J` | 0.034 s | 0.475 s | 31.2 MiB | 73.7 MiB |
+| Vimeo `-J` | 0.035 s | 0.482 s | 32.8 MiB | 74.0 MiB |
+| Dailymotion `-J` | 0.034 s | 0.403 s | 32.4 MiB | 69.7 MiB |
+| Bandcamp `-J` | 0.033 s | 0.393 s | 35.5 MiB | 69.5 MiB |
+| SoundCloud `-J` | 0.038 s | 0.477 s | 34.4 MiB | 73.7 MiB |
+| X `-J` | 0.034 s | 0.481 s | 30.7 MiB | 73.8 MiB |
+| Facebook `-J` | 0.029 s | 0.401 s | 32.7 MiB | 69.8 MiB |
+| Bluesky `-J` | 0.036 s | 0.392 s | 35.8 MiB | 69.5 MiB |
 
-The port starts and extracts these fixtures 6–18× faster in wall time;
+The port starts and extracts these fixtures 7–16× faster in wall time;
 upstream's time is mostly interpreter start and imports.
 
-Peak memory is not uniformly lower. Matching a URL against every extractor
-compiles all of their URL patterns, which costs about 80 MiB here
-(`--use-extractors generic` brings the direct-URL `--simulate` case down to
-18 MiB). The YouTube case is higher still. Compiling patterns lazily or
-sharing them is a follow-up.
+Matching a URL means trying every extractor in upstream's order, and each
+one compiles its URL pattern on first use, so a URL no site extractor takes
+compiles all of them. On 2026-11-01 that cost about 80 MiB (101 MiB peak for
+the direct-URL `--simulate` case; `--use-extractors generic`, 18 MiB). Most
+of it (41 MiB, measured with `MallocStackLogging`) was the `regex` crate's
+one-pass DFA, which it builds for every pattern with a capture group but
+only uses for anchored searches. The crate is now built without its
+`perf-onepass` feature: anchored captures use the bounded backtracker,
+which is as fast on URL-sized input. Peak RSS fell by 17–37 MiB in every
+case, now below upstream's everywhere, and wall time by 5–10%. What remains
+(about 37 MiB of compiled patterns and 19 MiB of touched code for the
+direct URL) would need patterns compiled only after a cheap literal check,
+across about 1900 pattern definitions; not done.
 
 ### HLS and DASH, 100 × 256 KiB (25 MiB)
 
 | Case | yt-dlp-rs | upstream | yt-dlp-rs RSS | upstream RSS |
 |---|---:|---:|---:|---:|
-| HLS `-N 1`, no latency | 0.122 s | 0.733 s | 102.3 MiB | 75.3 MiB |
-| HLS `-N 4`, no latency | 0.162 s | 0.685 s | 105.3 MiB | 75.8 MiB |
-| HLS `-N 8`, no latency | 0.162 s | 0.732 s | 110.2 MiB | 77.4 MiB |
-| HLS `-N 1`, 50 ms | 5.717 s | 6.669 s | 105.1 MiB | 76.2 MiB |
-| HLS `-N 4`, 50 ms | 1.647 s | 2.223 s | 107.9 MiB | 76.0 MiB |
-| HLS `-N 8`, 50 ms | 0.964 s | 1.563 s | 110.4 MiB | 77.3 MiB |
-| DASH `-N 1`, no latency | 0.127 s | 0.774 s | 104.3 MiB | 75.4 MiB |
-| DASH `-N 4`, no latency | 0.173 s | 0.767 s | 107.5 MiB | 76.0 MiB |
-| DASH `-N 8`, no latency | 0.163 s | 0.760 s | 110.5 MiB | 77.2 MiB |
-| DASH `-N 1`, 50 ms | 5.640 s | 6.527 s | 105.2 MiB | 75.8 MiB |
-| DASH `-N 4`, 50 ms | 1.575 s | 2.123 s | 108.5 MiB | 75.8 MiB |
-| DASH `-N 8`, 50 ms | 0.869 s | 1.375 s | 110.1 MiB | 77.1 MiB |
+| HLS `-N 1`, no latency | 0.111 s | 0.696 s | 65.4 MiB | 75.5 MiB |
+| HLS `-N 4`, no latency | 0.089 s | 0.655 s | 76.0 MiB | 75.6 MiB |
+| HLS `-N 8`, no latency | 0.090 s | 0.659 s | 80.8 MiB | 77.2 MiB |
+| HLS `-N 1`, 50 ms | 6.061 s | 7.333 s | 67.1 MiB | 75.9 MiB |
+| HLS `-N 4`, 50 ms | 1.711 s | 2.361 s | 72.8 MiB | 75.8 MiB |
+| HLS `-N 8`, 50 ms | 1.020 s | 1.574 s | 76.2 MiB | 76.5 MiB |
+| DASH `-N 1`, no latency | 0.109 s | 0.693 s | 66.1 MiB | 75.4 MiB |
+| DASH `-N 4`, no latency | 0.090 s | 0.660 s | 74.5 MiB | 75.8 MiB |
+| DASH `-N 8`, no latency | 0.090 s | 0.661 s | 78.9 MiB | 77.2 MiB |
+| DASH `-N 1`, 50 ms | 6.023 s | 7.208 s | 68.0 MiB | 76.0 MiB |
+| DASH `-N 4`, 50 ms | 1.647 s | 2.200 s | 74.2 MiB | 75.9 MiB |
+| DASH `-N 8`, 50 ms | 0.913 s | 1.397 s | 81.3 MiB | 77.0 MiB |
 
 ### HLS and DASH, 400 × 1 MiB (400 MiB), no latency
 
 | Case | yt-dlp-rs | upstream | yt-dlp-rs RSS | upstream RSS |
 |---|---:|---:|---:|---:|
-| HLS `-N 1` | 0.364 s | 1.758 s | 108.9 MiB | 75.6 MiB |
-| HLS `-N 4` | 0.666 s | 1.464 s | 120.9 MiB | 80.4 MiB |
-| HLS `-N 8` | 0.688 s | 1.540 s | 130.0 MiB | 82.8 MiB |
-| DASH `-N 1` | 0.321 s | 1.856 s | 108.2 MiB | 75.4 MiB |
-| DASH `-N 4` | 0.673 s | 1.522 s | 121.5 MiB | 81.5 MiB |
-| DASH `-N 8` | 0.690 s | 1.520 s | 129.8 MiB | 86.2 MiB |
+| HLS `-N 1` | 0.302 s | 1.590 s | 67.8 MiB | 75.4 MiB |
+| HLS `-N 4` | 0.467 s | 1.372 s | 118.8 MiB | 81.2 MiB |
+| HLS `-N 8` | 0.468 s | 1.369 s | 138.9 MiB | 83.3 MiB |
+| DASH `-N 1` | 0.304 s | 1.739 s | 68.4 MiB | 75.4 MiB |
+| DASH `-N 4` | 0.460 s | 1.421 s | 121.7 MiB | 79.8 MiB |
+| DASH `-N 8` | 0.479 s | 1.333 s | 135.2 MiB | 82.8 MiB |
 
 With 50 ms per request, both programs are bound by request count, and `-N`
-helps both about equally: `-N 4` is 3.5× (port) and 3.0× (upstream) faster
-than `-N 1`, `-N 8` is 5.9–6.5× and 4.3–4.7×.
+helps both about equally: `-N 4` is 3.5× (port) and 3.1–3.3× (upstream)
+faster than `-N 1`, `-N 8` is 5.9–6.6× and 4.7–5.2×. The 50 ms timings of
+both programs are 5–10% above 2026-11-01's on the same machine, so compare
+them within one run only.
 
-Without latency, the port's `-N 1` writes fragments straight into the
-output file. Its `-N > 1` path stores each fragment in a private temporary
-file and then copies it into place, so every byte is written twice. On
-localhost that makes `-N 4/8` take 1.8–2.1× as long as `-N 1` on 400 MiB
-(still about 2.2× faster than upstream, which uses fragment files at every
-`-N`). At about
-600 MiB/s this only matters when the network is faster than that.
-Assembling concurrent fragments without the second copy is a follow-up.
+`-N 1` writes fragments straight into the output file. On 2026-11-01 the
+`-N > 1` path stored every fragment in a private temporary file and then
+copied it into place, so every byte was written twice and `-N 4/8` took
+1.8–2.1× as long as `-N 1` on 400 MiB. Concurrent workers now fill
+in-memory spools that the assembling thread writes once. A download's
+spools share 32 MiB (`SPOOL_MEMORY` in `src/fragment.rs`, counted before
+each allocation); a fragment that would exceed it moves to a private
+file as before. On 25 MiB, `-N 4/8` is now faster than `-N 1`. On 400 MiB
+the localhost server outruns the single writer, the backlog fills the
+budget and later fragments spill, so `-N 4/8` take 1.5× as long as `-N 1`
+(0.68 s before; budgets of 0, 16, 64 and 128 MiB gave 0.67, 0.52, 0.39
+and 0.28 s at `-N 4`, with peak RSS rising from 83 to 202 MiB). Memory was
+chosen over this case: on a real network, fragments arrive slower than a
+disk writes them, so the spools stay small. The extra RSS over `-N 1` is
+the budget plus per-worker buffers and stacks.
 
 ### Default `-N`
 
@@ -105,11 +125,11 @@ The port keeps upstream's default of `-N 1` (`concurrent_fragment_downloads`
 1). The measurements favor `-N 4` only when every request has real
 latency. The default is a compatibility surface: some sites rate-limit or
 throttle parallel fragment requests, and upstream's choice is what users
-and scripts expect. On a fast link the port's `-N > 1` is currently slower
-(see above). The gain is available on request:
-Media Converter can pass `-N 4` for HLS/DASH downloads, as yt-dlp users do.
-Revisit if the double write above is removed and canary runs show no
-throttling.
+and scripts expect. Where the network outruns the disk, the port's
+`-N > 1` can still be slower than `-N 1` (see above). The gain is
+available on request: Media Converter can pass `-N 4` for HLS/DASH
+downloads, as yt-dlp users do. Revisit if canary runs with `-N 4` show
+no throttling.
 
 ### Not covered
 
