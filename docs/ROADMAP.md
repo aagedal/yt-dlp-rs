@@ -331,7 +331,10 @@ Work in this order; each step lands with deterministic tests like any other chan
    fractional digits, site extractors' downloads re-checking the response
    type, and Bandcamp's data attributes skipping `clean_html`. The Vimeo
    player 401 needs impersonation; in CI's network upstream fails on it too,
-   as it does on the Facebook canary.
+   as it does on the Facebook canary. Since 2026-11-03 a URL the pinned upstream
+   fails on too counts as blocked (reported, not failing), so the issue
+   closes once only such sites remain; the 2026-11-03 run had no other
+   failures.
 3. **Interruptible transfers.** Stop/Cancel and SIGINT/SIGTERM interrupt
    blocking connects and reads promptly instead of waiting for the socket timeout.
    Status (2026-11-01): requests send on a helper thread and stream their body

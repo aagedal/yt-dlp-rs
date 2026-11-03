@@ -15,7 +15,9 @@ Every URL ends in one status:
 - diverged: yt-dlp-rs matched the canary list but differs from upstream in a
   key field (only when upstream succeeded too).
 - blocked: the error text matches BLOCKED_PATTERNS (bot checks, PO tokens,
-  login walls, IP blocks, rate limits). Not a port bug; reported separately.
+  login walls, IP blocks, rate limits), or the pinned upstream fails on the
+  URL too (the site or this network refuses both). Not a port bug; reported
+  separately.
 - skip: the entry needs cookies (CANARY_COOKIES_<SITE>) that are absent.
 
 A site takes its URLs' worst status (broken > diverged > blocked > skip > pass).
@@ -414,8 +416,12 @@ class Runner:
             result.update(status='blocked' if blocked else 'broken',
                           reason=f'{blocked}: {error}' if blocked else error)
             if self.upstream and not blocked:
-                # Context only: does upstream fail too (a site change) or not?
-                result['upstream'] = self.extract_upstream(url, cookies, deadline)[0]
+                # Does upstream fail too? Then the site or this network refuses
+                # both (a timeout says nothing either way).
+                upstream = self.extract_upstream(url, cookies, deadline)[0]
+                result['upstream'] = upstream
+                if upstream['status'] == 'error' and upstream['reason'] != 'timed out':
+                    result.update(status='blocked', reason=f'upstream fails too: {error}')
             return result
         result['metadata'] = {k: info.get(k) for k in (*UPSTREAM_FIELDS, 'ext', 'format_id')}
         result['metadata']['format_count'] = len(info.get('formats') or [])
