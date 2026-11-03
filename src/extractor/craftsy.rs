@@ -3,8 +3,8 @@
 //! video player's Livewire snapshot), or the `video-js` preview without
 //! access, with the page's title and description meta tags.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -14,9 +14,8 @@ pub struct Craftsy;
 
 const NAME: &str = "Craftsy";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://www\.craftsy\.com/class/(?P<id>[\w-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://www\.craftsy\.com/class/(?P<id>[\w-]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

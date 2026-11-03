@@ -3,6 +3,7 @@
 //! generic `url` results, titled from the page's OpenGraph title and
 //! description.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,8 @@ pub struct AtScaleConfEvent;
 
 const NAME: &str = "AtScaleConfEvent";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?atscaleconference\.com/events/(?P<id>[^/&$?]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?atscaleconference\.com/events/(?P<id>[^/&$?]+)")
 });
 static VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"data-url\s*=\s*"(https?://(?:www\.)?atscaleconference\.com/videos/[^"]+)""#)

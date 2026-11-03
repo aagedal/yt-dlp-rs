@@ -3,6 +3,7 @@
 //! in upstream's quality order) with the OpenGraph title and description
 //! and the JSON-LD metadata.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct Mojevideo;
 
 const NAME: &str = "Mojevideo";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?mojevideo\.sk/video/(?P<id>\w+)/(?P<display_id>[\w()]+?)\.html",
     )
-    .unwrap()
 });
 static VIDEO_ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\bvId\s*=\s*(\d+)").unwrap());
 static VIDEO_EXP: LazyLock<Regex> =

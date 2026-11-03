@@ -4,6 +4,7 @@
 //! subtitles and the headline, promo image, dates and duration; `powa`
 //! player divs on other pages are followed.
 use super::{Extractor, dict_format, dict_info, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, SubtitleFormat, Subtitles, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -18,9 +19,8 @@ pub(crate) const KEY: &str = "ArcPublishing";
 
 const UUID: &str = r"[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12}";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(r"^arcpublishing:(?P<org>[a-z]+):(?P<id>{UUID})")).unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(&format!(r"^arcpublishing:(?P<org>[a-z]+):(?P<id>{UUID})")));
 static POWA: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(&format!(
         r#"(<div[^>]+class="[^"]*\bpowa\b[^"]*"[^>]+data-uuid="{UUID}"[^>]*>)"#

@@ -2,6 +2,7 @@
 //! (`yt_dlp/extractor/soundgasm.py`): a sound page's jPlayer `m4a` URL with
 //! its title and description, and a profile's sound links as a playlist.
 use super::{Extractor, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,14 +18,13 @@ const IE_NAME: &str = "soundgasm";
 const PROFILE_NAME: &str = "SoundgasmProfile";
 const PROFILE_IE_NAME: &str = "soundgasm:profile";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?soundgasm\.net/u/(?P<user>[0-9a-zA-Z_-]+)/(?P<display_id>[0-9a-zA-Z_-]+)",
     )
-    .unwrap()
 });
-static PROFILE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?soundgasm\.net/u/(?P<id>[^/]+)/?(?:\#.*)?$").unwrap()
+static PROFILE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?soundgasm\.net/u/(?P<id>[^/]+)/?(?:\#.*)?$")
 });
 /// `(?s)m4a\s*:\s*(["\'])(?P<url>(?:(?!\1).)+)\1` as one alternative per
 /// quote.

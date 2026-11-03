@@ -3,8 +3,8 @@
 //! content URLs (HLS playlists or MP3 files) with the episode, season,
 //! catalog and aggregation metadata, falling back to the page's meta tags.
 use super::{Extractor, dict_format, dict_info, download_webpage, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -14,9 +14,8 @@ pub struct NoicePodcast;
 
 const NAME: &str = "NoicePodcast";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://open\.noice\.id/content/(?P<id>[a-fA-F0-9-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://open\.noice\.id/content/(?P<id>[a-fA-F0-9-]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

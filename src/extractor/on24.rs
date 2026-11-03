@@ -2,8 +2,8 @@
 //! event console's cached JSON: its `fhvideo1` video and `audio` files with
 //! the event's locale, description, start date and registrant count.
 use super::{Extractor, dict_format, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -14,19 +14,16 @@ pub struct On24;
 const NAME: &str = "on24";
 const KEY: &str = "On24";
 
-static VALID_URLS: LazyLock<[Regex; 3]> = LazyLock::new(|| {
+static VALID_URLS: LazyLock<[UrlRegex; 3]> = LazyLock::new(|| {
     let query = r"(?:[^#]*&)?eventid=(?P<id>\d{7})&(?:[^#]+&)?key=(?P<key>[0-9A-F]{32})";
     [
-        crate::extractor::url_regex(r"^https?://event\.on24\.com/wcc/r/(?P<id>\d{7})/(?P<key>[0-9A-F]{32})")
-            .unwrap(),
-        crate::extractor::url_regex(&format!(
+        UrlRegex::ascii(r"^https?://event\.on24\.com/wcc/r/(?P<id>\d{7})/(?P<key>[0-9A-F]{32})"),
+        UrlRegex::ascii(&format!(
             r"^https?://event\.on24\.com/eventRegistration/console/(?:EventConsoleApollo\.jsp|apollox/mainEvent/?)\?{query}"
-        ))
-        .unwrap(),
-        crate::extractor::url_regex(&format!(
+        )),
+        UrlRegex::ascii(&format!(
             r"^https?://event\.on24\.com/eventRegistration/EventLobbyServlet/?\?{query}"
-        ))
-        .unwrap(),
+        )),
     ]
 });
 

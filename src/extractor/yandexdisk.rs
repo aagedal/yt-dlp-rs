@@ -8,6 +8,7 @@ use super::{
     Extractor, dict_format, dict_info, download_webpage, extract_m3u8_master_optional,
     post_json_errnote_optional,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -19,11 +20,10 @@ pub struct YandexDisk;
 
 const NAME: &str = "YandexDisk";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?P<domain>yadi\.sk|disk\.(?:360\.)?yandex\.(?:az|by|co(?:m(?:\.(?:am|ge|tr))?|\.il)|ee|fr|k[gz]|l[tv]|md|t[jm]|u[az]|ru))/(?:[di]/|public.*?\bhash=)(?P<id>[^/?#&]+)",
     )
-    .unwrap()
 });
 static STORE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<script[^>]+id="store-prefetch"[^>]*>\s*(\{.+?\})\s*</script>"#).unwrap()

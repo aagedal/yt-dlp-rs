@@ -4,6 +4,7 @@
 //! manifest, the unquoted title, the `guid` and the page's description and
 //! OpenGraph thumbnail.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ pub struct GameSpot;
 
 const NAME: &str = "GameSpot";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?gamespot\.com/(?:video|article|review)s/(?:[^/]+/\d+-|embed/)(?P<id>\d+)",
     )
-    .unwrap()
 });
 // `data-video=(["\'])({.*?})\1`.
 static DATA_VIDEO: LazyLock<Regex> =

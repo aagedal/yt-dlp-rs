@@ -3,8 +3,8 @@
 //! data, and the track's audio/lossy/lossless URLs as audio formats.
 use super::nuxt::{Mode, search_nuxt_json};
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -14,11 +14,10 @@ pub struct Whyp;
 
 const NAME: &str = "Whyp";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?whyp\.it/tracks/(?:(?P<id>\d{5,})/)?(?P<display_id>[^/?#]+)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

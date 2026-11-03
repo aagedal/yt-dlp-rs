@@ -2,6 +2,7 @@
 //! `V5DetailPagePlayer` props (HTML-unescaped) with OpenGraph/meta
 //! fallbacks, as an untyped result.
 use super::{Extractor, download_webpage, search_json_with, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct AudioBoom;
 
 const NAME: &str = "AudioBoom";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?audioboom\.com/(?:boos|posts)/(?P<id>[0-9]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?audioboom\.com/(?:boos|posts)/(?P<id>[0-9]+)")
 });
 static STORE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"data-react-class="V5DetailPagePlayer"\s*data-react-props=["']"#).unwrap()

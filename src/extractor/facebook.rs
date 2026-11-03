@@ -8,6 +8,7 @@
 //! `FacebookRedirectURLIE` redirects; and `FacebookAdsIE`'s ad library
 //! snapshots.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -30,25 +31,22 @@ const VIDEO_PAGE_TEMPLATE: &str = "https://www.facebook.com/video/video.php?v=";
 const SUPPORTED_PAGELETS: &str =
     r"(?:pagelet_group_mall|permalink_video_pagelet|hyperfeed_story_id_[0-9a-f]+)";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?:https?://(?:[\w-]+\.)?(?:facebook\.com|facebookwkhpilnemxj7asaniu7vnjjbiltxjqhye3mhbshg7kx5tfyd\.onion)/(?:[^#]*?\#!/)?(?:(?:permalink\.php|video/video\.php|photo\.php|video\.php|video/embed|story\.php|watch(?:/live)?/?)\?(?:.*?)(?:v|video_id|story_fbid)=|[^/]+/videos/(?:[^/]+/)?|[^/]+/posts/|events/(?:[^/]+/)?|groups/[^/]+/(?:permalink|posts)/(?:[\da-f]+/)?|watchparty/)|facebook:)(?P<id>pfbid[A-Za-z0-9]+|\d+)",
     )
-    .unwrap()
 });
-static REEL_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:[\w-]+\.)?facebook\.com/reel/(?P<id>\d+)").unwrap());
-static PLUGINS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static REEL_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:[\w-]+\.)?facebook\.com/reel/(?P<id>\d+)"));
+static PLUGINS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:[\w-]+\.)?facebook\.com/plugins/video\.php\?.*?\bhref=(?P<id>https.+)",
     )
-    .unwrap()
 });
-static REDIRECT_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:[\w-]+\.)?facebook\.com/flx/warn[/?]").unwrap());
-static ADS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:[\w-]+\.)?facebook\.com/ads/library/?\?(?:[^#]+&)?id=(?P<id>\d+)")
-        .unwrap()
+static REDIRECT_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:[\w-]+\.)?facebook\.com/flx/warn[/?]"));
+static ADS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:[\w-]+\.)?facebook\.com/ads/library/?\?(?:[^#]+&)?id=(?P<id>\d+)")
 });
 static RELAY_VIDEO: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"data-sjs>(\{.*?"(?:dash_manifest|playable_url(?:_quality_hd)?).*?\})</script>"#)

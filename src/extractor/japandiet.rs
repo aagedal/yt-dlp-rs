@@ -4,6 +4,7 @@
 //! index page. Running proceedings are url entries to `ShugiinItvLiveRoom`,
 //! which is not ported, so an index with running rooms is an unsupported error.
 use super::{Extractor, dict_info, extract_m3u8_fatal_master, search_warning};
+use crate::extractor::UrlRegex;
 use crate::html::clean_html;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
@@ -19,14 +20,13 @@ const VOD_NAME: &str = "ShugiinItvVod";
 const LIVE_NAME: &str = "ShugiinItvLive";
 const PLAYLIST_TITLE: &str = "All proceedings for today";
 
-static VOD_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static VOD_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?shugiintv\.go\.jp/(?:jp|en)/index\.php\?ex=VL(?:&[^=]+=[^&]*)*&deli_id=(?P<id>\d+)",
     )
-    .unwrap()
 });
-static LIVE_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?shugiintv\.go\.jp/(?:jp|en)(?:/index\.php)?$").unwrap()
+static LIVE_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?shugiintv\.go\.jp/(?:jp|en)(?:/index\.php)?$")
 });
 static M3U8_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"id="vtag_src_base_vod"\s*value="(http.+?\.m3u8)""#).unwrap());

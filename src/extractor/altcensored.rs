@@ -3,6 +3,7 @@
 //! count as a `url_transparent` Archive.org item, and a channel's paged
 //! watch links as url entries.
 use super::{Extractor, download_webpage, download_webpage_note};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -19,14 +20,11 @@ const CHANNEL_NAME: &str = "altcensored:channel";
 const CHANNEL_KEY: &str = "AltCensoredChannel";
 const PAGE_SIZE: usize = 24;
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?altcensored\.com/(?:watch\?v=|embed/)(?P<id>[^/?#]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?altcensored\.com/(?:watch\?v=|embed/)(?P<id>[^/?#]+)")
 });
-static CHANNEL_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?altcensored\.com/channel/(?P<id>[^/?#]+)").unwrap()
+static CHANNEL_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?altcensored\.com/channel/(?P<id>[^/?#]+)")
 });
 static CATEGORY: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<a href="/category/\d+">([^<]+)</a>"#).unwrap());

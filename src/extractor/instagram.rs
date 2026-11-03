@@ -14,6 +14,7 @@
 //! - `InstagramUserIE` (marked broken upstream) and `InstagramTagIE`: the
 //!   page's `sharedData` and the GIS-signed GraphQL timeline pages.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -49,23 +50,21 @@ const COOKIE_DOMAINS: [&str; 6] = [
     ".instagram.com",
 ];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?P<url>https?://(?:www\.)?instagram\.com(?:/[^/?#]+)?/(?:p|tv|reels?)/(?P<id>[^/?#&]+))",
     )
-    .unwrap()
 });
-static IOS_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^instagram://media\?id=(?P<id>[\d_]+)").unwrap());
-static STORY_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?instagram\.com/stories/(?P<user>[^/?#]+)(?:/(?P<id>\d+))?")
-        .unwrap()
+static IOS_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^instagram://media\?id=(?P<id>[\d_]+)"));
+static STORY_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?instagram\.com/stories/(?P<user>[^/?#]+)(?:/(?P<id>\d+))?")
 });
-static TAG_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?instagram\.com/explore/tags/(?P<id>[^/]+)").unwrap()
+static TAG_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?instagram\.com/explore/tags/(?P<id>[^/]+)")
 });
-static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?instagram\.com/(?P<id>[^/]{2,})/?(?:$|[?#])").unwrap()
+static USER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?instagram\.com/(?P<id>[^/]{2,})/?(?:$|[?#])")
 });
 static SJS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)<script\b[^>]+\bdata-sjs>(\{.+?\})</script>").unwrap());

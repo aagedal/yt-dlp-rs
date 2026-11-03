@@ -2,8 +2,8 @@
 //! `url_transparent` result of the Wimbledon Brightcove player, overlaid
 //! with the related-content API's title, description and duration.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -13,11 +13,8 @@ pub struct Wimbledon;
 
 const NAME: &str = "Wimbledon";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?wimbledon\.com/\w+/video/media/(?P<id>\d+)\.html",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?wimbledon\.com/\w+/video/media/(?P<id>\d+)\.html")
 });
 
 /// `_match_id`.

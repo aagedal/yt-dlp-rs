@@ -2,6 +2,7 @@
 //! the page's `RENDER_DATA` script (`data.initialVideo`), with a `ttwid`
 //! cookie fetched once per run from the ByteDance registration endpoint.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,10 +16,8 @@ const NAME: &str = "toutiao";
 const KEY: &str = "Toutiao";
 const REGISTER: &str = "https://ttwid.bytedance.com/ttwid/union/register/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://www\.toutiao\.com/video/(?P<id>\d+)/?(?:[?#]|$)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://www\.toutiao\.com/video/(?P<id>\d+)/?(?:[?#]|$)"));
 static URL_OR_NONE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^(?:(?:https?|rt(?:m(?:pt?[es]?|fp)|sp[su]?)|mms|ftps?):)?//").unwrap()
 });

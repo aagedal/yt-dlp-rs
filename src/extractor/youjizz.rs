@@ -3,6 +3,7 @@
 //! its first HTML5 media entry, with the `<title>`, runtime, uploader and
 //! RTA age limit.
 use super::{Extractor, dict_format, dict_info, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct YouJizz;
 
 const NAME: &str = "YouJizz";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:\w+\.)?youjizz\.com/videos/(?:[^/#?]*-(?P<id>\d+)\.html|embed/(?P<embed_id>\d+))",
     )
-    .unwrap()
 });
 static ENCODINGS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"[Ee]ncodings\s*=\s*(\[.+?\]);\n").unwrap());

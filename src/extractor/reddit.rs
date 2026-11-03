@@ -2,6 +2,7 @@
 //! listing, its Reddit-hosted video (fallback, HLS and DASH formats), the
 //! videos embedded in a text post, or a `url_transparent` link.
 use super::{Extractor, extract_m3u8_optional, extract_mpd_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct Reddit;
 
 const NAME: &str = "Reddit";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:\w+\.)?reddit(?:media)?\.com/(?P<slug>(?:(?:r|user)/[^/]+/)?comments/(?P<id>[^/?#&]+))",
     )
-    .unwrap()
 });
 static VIDEO_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"https?://v\.redd\.it/(?P<id>[^/?#&]+)").unwrap());

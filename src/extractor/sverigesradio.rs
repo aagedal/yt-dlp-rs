@@ -3,6 +3,7 @@
 //! `audio-button` or `gtm-metadata` page ID), the `playerajax`
 //! `audiometadata` item and one `getaudiourl` format per quality.
 use super::{Extractor, dict_format, dict_info, download_json_note, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,17 +17,15 @@ pub struct SverigesRadioEpisode;
 const BASE_URL: &str = "https://sverigesradio.se/sida/playerajax/";
 const QUALITIES: [&str; 3] = ["low", "medium", "high"];
 
-static PUBLICATION_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static PUBLICATION_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?sverigesradio\.se/(?:sida/)?(?:artikel|gruppsida)(?:\.aspx\?.*?\bartikel=(?P<id>[0-9]+)|/(?P<slug>[\w-]+))",
     )
-    .unwrap()
 });
-static EPISODE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static EPISODE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?sverigesradio\.se/(?:sida/)?avsnitt/(?:(?P<id>\d+)|(?P<slug>[\w-]+))(?:$|[#?])",
     )
-    .unwrap()
 });
 static AUDIO_BITRATE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"_a(\d+)\.m4a").unwrap());
 

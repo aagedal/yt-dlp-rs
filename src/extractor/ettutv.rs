@@ -1,8 +1,8 @@
 //! Upstream `EttuTvIE` (`yt_dlp/extractor/ettutv.py`): a player page's
 //! `player-settings`, its POSTed `streamAccess` HLS stream and metadata.
 use super::{Extractor, download_json, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,9 +12,8 @@ pub struct EttuTv;
 
 const NAME: &str = "EttuTv";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?ettu\.tv/[^?#]+/playerpage/(?P<id>[0-9]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?ettu\.tv/[^?#]+/playerpage/(?P<id>[0-9]+)")
 });
 
 /// `_match_id`.

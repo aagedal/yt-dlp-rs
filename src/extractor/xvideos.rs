@@ -3,6 +3,7 @@
 //! checked HLS playlist), the legacy `flv_url`, and quickies links as `url`
 //! results for the video page.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,14 +18,15 @@ const NAME: &str = "XVideos";
 const QUICKIES_NAME: &str = "XVideosQuickies";
 const QUICKIES_IE_NAME: &str = "xvideos:quickies";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:[^/]+\.)?xvideos2?\.com/video\.?|(?:www\.)?xvideos\.es/video\.?|(?:www|flashservice)\.xvideos\.com/embedframe/|static-hw\.xvideos\.com/swf/xv-player\.swf\?.*?\bid_video=)(?P<id>[0-9a-z]+)",
     )
-    .unwrap()
 });
-static QUICKIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?P<domain>(?:[^/?#]+\.)?xvideos2?\.com)/(?:profiles/|amateur-channels/)?[^/?#]+#quickies/a/(?P<id>\w+)").unwrap()
+static QUICKIES_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?P<domain>(?:[^/?#]+\.)?xvideos2?\.com)/(?:profiles/|amateur-channels/)?[^/?#]+#quickies/a/(?P<id>\w+)",
+    )
 });
 static INLINE_ERROR: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<h1 class="inlineError">(.+?)</h1>"#).unwrap());

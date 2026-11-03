@@ -7,8 +7,8 @@
 use super::{
     Extractor, dict_format, dict_info, download_json, post_json_errnote_optional, update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -22,8 +22,8 @@ const API: &str = "https://api.app.ertflix.gr/v1/Player/AcquireContent";
 /// `json.dumps` of the `$headers` query parameter (Python's separators).
 const API_HEADERS: &str = r#"{"X-Api-Date-Format": "iso", "X-Api-Camel-Case": false}"#;
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| crate::extractor::url_regex(r"^ertflix:(?P<id>[\w-]+)").unwrap());
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^ertflix:(?P<id>[\w-]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {
@@ -182,11 +182,8 @@ const TILES_API: &str = "https://api.app.ertflix.gr/v2/Tile/GetTiles";
 /// `json.dumps` of the `$headers` parameter of `_call_api` with `data`.
 const TILES_API_HEADERS: &str = r#"{"X-Api-Date-Format": "iso", "X-Api-Camel-Case": false, "Content-Type": "application/json;charset=utf-8"}"#;
 
-static VOD_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://www\.ertflix\.gr/(?:[^/]+/)?(?:series|vod)/(?P<id>[a-z]{3}\.\d+)",
-    )
-    .unwrap()
+static VOD_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://www\.ertflix\.gr/(?:[^/]+/)?(?:series|vod)/(?P<id>[a-z]{3}\.\d+)")
 });
 
 /// `_match_id` for `ERTFlixIE`.

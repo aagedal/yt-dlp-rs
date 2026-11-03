@@ -2,6 +2,7 @@
 //! pages as `url_transparent` results of their first Rumble (else YouTube)
 //! embed, with the page's description before `About the Author`.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,10 +14,8 @@ pub struct Funker530;
 
 const NAME: &str = "Funker530";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?funker530\.com/video/(?P<id>[^/?#]+)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?funker530\.com/video/(?P<id>[^/?#]+)"));
 static DESCRIPTION: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)(.+)About the Author").unwrap());
 

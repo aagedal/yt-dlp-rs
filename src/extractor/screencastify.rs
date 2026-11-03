@@ -3,8 +3,8 @@
 //! DASH and HLS manifests requested with the manifest's auth query, which
 //! is added to every format URL and kept as `extra_param_to_segment_url`.
 use super::{Extractor, dict_info, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -14,14 +14,10 @@ pub struct Screencastify;
 
 const NAME: &str = "Screencastify";
 
-static VALID_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+static VALID_URLS: LazyLock<[UrlRegex; 2]> = LazyLock::new(|| {
     [
-        crate::extractor::url_regex(r"^https?://watch\.screencastify\.com/v/(?P<id>[^/?#]+)")
-            .unwrap(),
-        crate::extractor::url_regex(
-            r"^https?://app\.screencastify\.com/v[23]/watch/(?P<id>[^/?#]+)",
-        )
-        .unwrap(),
+        UrlRegex::ascii(r"^https?://watch\.screencastify\.com/v/(?P<id>[^/?#]+)"),
+        UrlRegex::ascii(r"^https?://app\.screencastify\.com/v[23]/watch/(?P<id>[^/?#]+)"),
     ]
 });
 

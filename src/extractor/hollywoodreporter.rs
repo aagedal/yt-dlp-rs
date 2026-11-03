@@ -3,6 +3,7 @@
 //! for their JW Platform or YouTube showcase video, and video categories as
 //! paged playlists of their video page links.
 use super::{Extractor, download_webpage, download_webpage_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,13 +18,13 @@ const NAME: &str = "HollywoodReporter";
 const PLAYLIST_NAME: &str = "HollywoodReporterPlaylist";
 const PAGE_SIZE: usize = 15;
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?hollywoodreporter\.com/video/(?P<id>[\w-]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?hollywoodreporter\.com/video/(?P<id>[\w-]+)")
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?hollywoodreporter\.com/vcategory/(?P<slug>[\w-]+)-(?P<id>\d+)")
-        .unwrap()
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:www\.)?hollywoodreporter\.com/vcategory/(?P<slug>[\w-]+)-(?P<id>\d+)",
+    )
 });
 static TITLE_LINK: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<a[^>]+href="([^"]+)"[^>]+class="c-title__link"#).unwrap());

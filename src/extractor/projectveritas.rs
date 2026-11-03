@@ -2,8 +2,8 @@
 //! broken): the Gatsby `page-data.json` video/post, its Mux asset's HLS
 //! playlist and the post's title, date and OpenGraph image.
 use super::{Extractor, broken_warning, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -13,11 +13,8 @@ pub struct ProjectVeritas;
 
 const NAME: &str = "ProjectVeritas";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?projectveritas\.com/(?P<type>news|video)/(?P<id>[^/?#]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?projectveritas\.com/(?P<type>news|video)/(?P<id>[^/?#]+)")
 });
 
 /// `_match_valid_url`.

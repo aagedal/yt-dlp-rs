@@ -3,6 +3,7 @@
 //! MP4 renditions); Ultimedia embed iframes and scripts on other pages are
 //! followed.
 use super::{Extractor, dict_format, dict_info, download_json_note, extract_m3u8_master_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ pub struct Digiteka;
 pub(crate) const NAME: &str = "Digiteka";
 pub(crate) const KEY: &str = "Digiteka";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:digiteka\.net|ultimedia\.com)/(?:deliver/(?P<embed_type>generic|musique)(?:/[^/]+)*/(?:src|article)|default/index/video(?P<site_type>generic|music)/id)/(?P<id>[\d+a-z]+)",
     )
-    .unwrap()
 });
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

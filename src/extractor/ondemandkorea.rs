@@ -6,6 +6,7 @@
 use super::{
     Extractor, dict_info, direct, download_json_note_headers, extract_m3u8_master_optional,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -24,17 +25,15 @@ const PROGRAM_PAGE_SIZE: usize = 100;
 /// fixed (the playback API only uses it for ad targeting).
 const DEVICE_ID: &str = "00000000-0000-4000-8000-000000000000";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"https?://(?:www\.)?ondemandkorea\.com/(?:en/)?player/vod/[a-z0-9-]+\?(?:[^#]+&)?contentId=(?P<id>\d+)",
     )
-    .unwrap()
 });
-static PROGRAM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static PROGRAM_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"https?://(?:www\.)?ondemandkorea\.com/(?:en/)?player/vod/(?P<id>[a-z0-9-]+)(?:$|#)",
     )
-    .unwrap()
 });
 static QUALITY_720: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"_720(p?)\.m3u8").unwrap());
 

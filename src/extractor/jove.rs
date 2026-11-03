@@ -1,6 +1,7 @@
 //! Upstream `JoveIE` (`yt_dlp/extractor/jove.py`): the chapters XML's
 //! video URL as an untyped result with the page's citation metadata.
 use super::{Extractor, download_webpage, download_xml_note, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,9 +13,8 @@ pub struct Jove;
 
 const NAME: &str = "Jove";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?jove\.com/video/(?P<id>[0-9]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?jove\.com/video/(?P<id>[0-9]+)"));
 static CHAPTERS_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"/video-chapters\?videoid=([0-9]+)").unwrap());
 static DESCRIPTION: LazyLock<Regex> = LazyLock::new(|| {

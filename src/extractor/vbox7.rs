@@ -3,6 +3,7 @@
 //! source, the unavailable and geo errors), merged with the play page's
 //! JSON-LD; player iframes on other pages are followed.
 use super::{Extractor, dict_format, dict_info, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ pub struct Vbox7;
 pub(crate) const NAME: &str = "Vbox7";
 pub(crate) const KEY: &str = "Vbox7";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:[^/]+\.)?vbox7\.com/(?:play:|(?:emb/external\.php|player/ext\.swf)\?.*?\bvid=)(?P<id>[\da-fA-F]+)",
     )
-    .unwrap()
 });
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

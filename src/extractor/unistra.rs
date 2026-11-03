@@ -2,6 +2,7 @@
 //! player `file` paths as SD/HD formats on the university's VOD host, with
 //! the page's title, description and thumbnail.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct Unistra;
 
 const NAME: &str = "Unistra";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://utv\.unistra\.fr/(?:index|video)\.php\?id_video=(?P<id>\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://utv\.unistra\.fr/(?:index|video)\.php\?id_video=(?P<id>\d+)")
 });
 static FILE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"file\s*:\s*"(/[^"]+)""#).unwrap());
 static TITLE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<title>UTV - (.*?)</").unwrap());

@@ -11,6 +11,7 @@
 //! without the retry warning) and generic-page embed detection.
 use super::clyp::key_error;
 use super::{Extractor, dict_format, dict_info, download_json_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -33,24 +34,23 @@ const API_TOKEN: &str =
     "Nzc1Yjc1ZjJkYjk1NWFhN2I2MWEwMmRlMzAzNjI5NmU3NWU3ODg4ODJjOWMxNTMxYzEzZGRjYjg2ZGE4MmIwOA";
 const VALIDATED_AGE: (&str, &str) = ("x-validated-age", "18");
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?:https?://(?:(?:www\.)?arte\.tv/(?P<lang>fr|de|en|es|it|pl)/videos|api\.arte\.tv/api/player/v\d+/config/(?P<lang_2>fr|de|en|es|it|pl))|arte://program)/(?P<id>\d{6}-\d{3}-[AF]|LIVE)",
     )
-    .unwrap()
 });
-static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?arte\.tv/player/v\d+/index\.php\?.*?\bjson_url=.+").unwrap()
+static EMBED_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?arte\.tv/player/v\d+/index\.php\?.*?\bjson_url=.+")
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?arte\.tv/(?P<lang>fr|de|en|es|it|pl)/videos/(?P<id>RC-\d{6})")
-        .unwrap()
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:www\.)?arte\.tv/(?P<lang>fr|de|en|es|it|pl)/videos/(?P<id>RC-\d{6})",
+    )
 });
-static CATEGORY_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static CATEGORY_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?arte\.tv/(?P<lang>fr|de|en|es|it|pl)/videos/(?P<id>[\w-]+(?:/[\w-]+)*)/?\s*$",
     )
-    .unwrap()
 });
 /// `_VERSION_CODE_RE`, matched at the start like `re.match`.
 static VERSION_CODE: LazyLock<Regex> = LazyLock::new(|| {

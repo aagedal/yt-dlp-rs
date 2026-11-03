@@ -3,8 +3,8 @@
 //! balancer's stream sources, and recorded videos from the API's recording
 //! file as an HLS playlist.
 use super::{Extractor, dict_format, dict_info, download_json_headers, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -20,15 +20,13 @@ const VOD_KEY: &str = "PicartoVod";
 const API: &str = "https://ptvintern.picarto.tv/ptvapi";
 const HEADERS: [(&str, &str); 2] = [("Accept", "*/*"), ("Content-Type", "application/json")];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www.)?picarto\.tv/(?P<id>[^/#?]+)/?(?:$|[?#])")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www.)?picarto\.tv/(?P<id>[^/#?]+)/?(?:$|[?#])")
 });
-static VOD_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static VOD_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?picarto\.tv/(?:videopopout|\w+(?:/profile)?/videos)/(?P<id>[^/?#&]+)",
     )
-    .unwrap()
 });
 
 /// `PicartoIE.suitable`: not video URLs.

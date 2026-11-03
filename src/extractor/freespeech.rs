@@ -1,6 +1,7 @@
 //! Upstream `FreespeechIE` (`yt_dlp/extractor/freespeech.py`): Freespeech
 //! stories as `url` results of their `data-video-url` YouTube video.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,9 +13,8 @@ pub struct Freespeech;
 const NAME: &str = "freespeech.org";
 const KEY: &str = "Freespeech";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?freespeech\.org/stories/(?P<id>.+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?freespeech\.org/stories/(?P<id>.+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

@@ -4,8 +4,8 @@
 //! embeds resolve their `effective_video` first. F4M balancer entries and
 //! Rutube's playlist, channel, tag, person and movie pages are unsupported.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -24,12 +24,13 @@ const PERSON_NAME: &str = "rutube:person";
 const PLAYLIST_NAME: &str = "rutube:playlist";
 const CHANNEL_NAME: &str = "rutube:channel";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://rutube\.ru/(?:(?:live/)?video(?:/private)?|(?:play/)?embed)/(?P<id>[\da-z]{32})")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^https?://rutube\.ru/(?:(?:live/)?video(?:/private)?|(?:play/)?embed)/(?P<id>[\da-z]{32})",
+    )
 });
-static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://rutube\.ru/(?:video|play)/embed/(?P<id>[0-9]+)(?:[?#/]|$)").unwrap()
+static EMBED_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://rutube\.ru/(?:video|play)/embed/(?P<id>[0-9]+)(?:[?#/]|$)")
 });
 
 /// `RutubeIE.suitable`.
@@ -37,15 +38,14 @@ pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
 }
 
-static PERSON_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://rutube\.ru/video/person/(?P<id>\d+)").unwrap());
-static PLAYLIST_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://rutube\.ru/plst/(?P<id>\d+)").unwrap());
-static CHANNEL_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static PERSON_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://rutube\.ru/video/person/(?P<id>\d+)"));
+static PLAYLIST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://rutube\.ru/plst/(?P<id>\d+)"));
+static CHANNEL_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://rutube\.ru/(?:channel/(?P<id>\d+)|u/(?P<slug>\w+))(?:/(?P<section>videos|shorts|playlists))?",
     )
-    .unwrap()
 });
 
 /// `RutubePersonIE.suitable`.

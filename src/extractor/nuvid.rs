@@ -6,6 +6,7 @@
 use super::{
     Extractor, check_formats, dict_format, dict_info, download_json_headers, download_webpage_note,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,9 +18,8 @@ pub struct Nuvid;
 
 const NAME: &str = "Nuvid";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www|m)\.nuvid\.com/video/(?P<id>[0-9]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www|m)\.nuvid\.com/video/(?P<id>[0-9]+)"));
 static TITLE_ATTRIBUTE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<span\s[^>]*?\btitle\s*=\s*(?:"([^"]+)"|'([^']+)'|\b([^"]+))\s*>"#).unwrap()
 });

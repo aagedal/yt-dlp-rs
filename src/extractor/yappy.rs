@@ -6,8 +6,8 @@
 use super::{
     Extractor, dict_format, dict_info, download_json, download_json_note, download_webpage,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -20,11 +20,10 @@ const NAME: &str = "Yappy";
 const PROFILE_NAME: &str = "YappyProfile";
 const PAGE_SIZE: usize = 15;
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://yappy\.media/video/(?P<id>\w+)").unwrap()
-});
-static PROFILE_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://yappy\.media/profile/(?P<id>\w+)").unwrap());
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://yappy\.media/video/(?P<id>\w+)"));
+static PROFILE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://yappy\.media/profile/(?P<id>\w+)"));
 
 /// `YappyIE._match_id`.
 pub fn suitable(url: &str) -> bool {

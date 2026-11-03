@@ -3,6 +3,7 @@
 //! player `file` RTMP URL, as Wowza formats, with the article ID, the first
 //! `<h1>` (else Open Graph) title and the Open Graph description.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,8 @@ pub struct TeleBruxelles;
 
 const NAME: &str = "TeleBruxelles";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?(?:telebruxelles|bx1)\.be/(?:[^/]+/)*(?P<id>[^/#?]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?(?:telebruxelles|bx1)\.be/(?:[^/]+/)*(?P<id>[^/#?]+)")
 });
 static ARTICLE_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<article[^>]+\bid=["']post-(\d+)"#).unwrap());

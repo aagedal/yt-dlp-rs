@@ -4,6 +4,7 @@
 //! embed as a `url_transparent` result of `fc2:ID`. FC2LiveIE (a WebSocket
 //! session) and the login (`username`/`password`) path are not ported.
 use super::{Extractor, download_json, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -18,14 +19,11 @@ const NAME: &str = "fc2";
 const KEY: &str = "FC2";
 const EMBED_NAME: &str = "fc2:embed";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^(?:https?://video\.fc2\.com/(?:[^/]+/)*content/|fc2:)(?P<id>[^/]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^(?:https?://video\.fc2\.com/(?:[^/]+/)*content/|fc2:)(?P<id>[^/]+)")
 });
-static EMBED_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://video\.fc2\.com/flv2\.swf\?(?P<query>.+)").unwrap());
+static EMBED_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://video\.fc2\.com/flv2\.swf\?(?P<query>.+)"));
 static TITLE_PATTERNS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [
         Regex::new(r#"<h2\s+class="videoCnt_title">([^<]+?)</h2>"#).unwrap(),

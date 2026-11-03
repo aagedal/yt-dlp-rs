@@ -2,6 +2,7 @@
 //! JSON-LD HLS stream with the OpenGraph title, description and source
 //! thumbnail, merged with the remaining JSON-LD fields.
 use super::{Extractor, download_webpage, hls, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct Angel;
 
 const NAME: &str = "Angel";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?angel\.com/watch/(?P<series>[^/?#]+)/episode/(?P<id>[\w-]+)/season-(?P<season_number>\d+)/episode-(?P<episode_number>\d+)/(?P<title>[^/?#]+)",
     )
-    .unwrap()
 });
 
 static CLOUDINARY: LazyLock<Regex> =

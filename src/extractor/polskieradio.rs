@@ -6,6 +6,7 @@
 //! classes, and `PolskieRadioCategoryIE` (category pages with billennium or
 //! post-back pagination), are not ported.
 use super::{Extractor, dict_format, dict_info, direct, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::info_order::INFO_SHAPE;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
@@ -26,22 +27,16 @@ const PODCAST_KEY: &str = "PolskieRadioPodcastList";
 const PODCAST_API: &str = "https://apipodcasts.polskieradio.pl/api";
 const PODCAST_PAGE_SIZE: usize = 10;
 
-static LEGACY_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?polskieradio(?:24)?\.pl/\d+/\d+/[Aa]rtykul/(?P<id>\d+)",
-    )
-    .unwrap()
+static LEGACY_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?polskieradio(?:24)?\.pl/\d+/\d+/[Aa]rtykul/(?P<id>\d+)")
 });
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:[^/]+\.)?(?:polskieradio(?:24)?|radiokierowcow)\.pl/artykul/(?P<id>\d+)",
     )
-    .unwrap()
 });
-static PODCAST_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://podcasty\.polskieradio\.pl/podcast/(?P<id>\d+)")
-        .unwrap()
-});
+static PODCAST_VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://podcasty\.polskieradio\.pl/podcast/(?P<id>\d+)"));
 static CONTENT: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?s)<div[^>]+class="\s*this-article\s*"[^>]*>(.+?)<div[^>]+class="tags"[^>]*>"#)
         .unwrap()

@@ -2,6 +2,7 @@
 //! AliExpress live replays from the page's `runParams`: the replay HLS
 //! playlist with the title, cover, host name and start time.
 use super::{Extractor, dict_info, download_webpage, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct AliExpressLive;
 
 const NAME: &str = "AliExpressLive";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://live\.aliexpress\.com/live/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://live\.aliexpress\.com/live/(?P<id>\d+)"));
 static RUN_PARAMS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)runParams\s*=\s*(\{.+?\})\s*;?\s*var").unwrap());
 

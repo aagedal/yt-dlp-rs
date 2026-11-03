@@ -4,8 +4,8 @@
 //! which decrypts the `videa` RC4 payload) and albums are reported as
 //! unsupported.
 use super::{Extractor, dict_format, dict_info, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -19,15 +19,12 @@ const KEY: &str = "Ximalaya";
 const ALBUM_NAME: &str = "ximalaya:album";
 const ALBUM_KEY: &str = "XimalayaAlbum";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.|m\.)?ximalaya\.com/(?:(?P<uid>\d+)/)?sound/(?P<id>[0-9]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.|m\.)?ximalaya\.com/(?:(?P<uid>\d+)/)?sound/(?P<id>[0-9]+)")
 });
 
-static ALBUM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.|m\.)?ximalaya\.com/(?:\d+/)?album/(?P<id>[0-9]+)").unwrap()
+static ALBUM_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.|m\.)?ximalaya\.com/(?:\d+/)?album/(?P<id>[0-9]+)")
 });
 
 /// `_match_valid_url` of `XimalayaIE`.

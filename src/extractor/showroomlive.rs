@@ -6,6 +6,7 @@
 use super::{
     Extractor, download_json, download_webpage, extract_m3u8_fatal_master, update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -22,12 +23,12 @@ const VOD_NAME: &str = "showroom:vod";
 const VOD_KEY: &str = "ShowRoomVod";
 const API: &str = "https://www.showroom-live.com/api";
 
-static LIVE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?showroom-live\.com/r/(?P<id>[\w-]+)").unwrap()
-});
-static VOD_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?showroom-live\.com/episode/watch\?(?:[^#]+&)?id=(?P<id>\w+)")
-        .unwrap()
+static LIVE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?showroom-live\.com/r/(?P<id>[\w-]+)"));
+static VOD_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:www\.)?showroom-live\.com/episode/watch\?(?:[^#]+&)?id=(?P<id>\w+)",
+    )
 });
 static EPISODE_DATA: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?is)<[a-z0-9]+\b[^>]*\bid=["']episode-data["'][^>]*>"#).unwrap()

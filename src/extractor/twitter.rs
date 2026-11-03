@@ -8,6 +8,7 @@
 //! `TwitterSpacesIE` and `TwitterShortenerIE` (`t.co`).
 use super::Extractor;
 use super::periscope;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -38,32 +39,27 @@ const LEGACY_AUTH: &str = "AAAAAAAAAAAAAAAAAAAAAIK1zgAAAAAA2tUWuhGZ2JceoId5GwYWU
 const BASE_REGEX: &str = r"https?://(?:(?:www|m(?:obile)?)\.)?(?:(?:twitter|x)\.com|twitter3e4tixl4xyajtrzo62zg5vztmjuricljdp2c5kshju4avyoid\.onion)/";
 const VMAP_NAMESPACE: &str = "http://twitter.com/schema/videoVMapV2.xsd";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"^{BASE_REGEX}(?:(?:i/web|[^/]+)/status|statuses)/(?P<id>\d+)(?:/(?:video|photo)/(?P<index>\d+))?"
     ))
-    .unwrap()
 });
-static CARD_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+static CARD_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(format!(
         r"^{BASE_REGEX}i/(?:cards/tfw/v1|videos(?:/tweet)?)/(?P<id>\d+)"
     ))
-    .unwrap()
 });
-static AMPLIFY_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://amp\.twimg\.com/v/(?P<id>[0-9a-f\-]{36})").unwrap());
-static BROADCAST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+static AMPLIFY_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://amp\.twimg\.com/v/(?P<id>[0-9a-f\-]{36})"));
+static BROADCAST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(format!(
         r"^{BASE_REGEX}i/(?P<type>broadcasts|events)/(?P<id>\w+)"
     ))
-    .unwrap()
 });
-static SPACES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(r"^{BASE_REGEX}i/spaces/(?P<id>[0-9a-zA-Z]{{13}})")).unwrap()
-});
-static SHORTENER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?:https?://t\.co/(?P<id>[^?#]+)|tco:(?P<eid>[^?#]+))").unwrap()
-});
+static SPACES_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(format!(r"^{BASE_REGEX}i/spaces/(?P<id>[0-9a-zA-Z]{{13}})")));
+static SHORTENER_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^(?:https?://t\.co/(?P<id>[^?#]+)|tco:(?P<eid>[^?#]+))"));
 static DIMENSIONS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"/(?P<width>\d+)x(?P<height>\d+)/").unwrap());
 static AUDIO_BITRATE: LazyLock<Regex> =

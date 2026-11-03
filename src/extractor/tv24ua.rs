@@ -2,6 +2,7 @@
 //! pages from their `vPlayConfig.sources` (HLS or direct files), poster and
 //! page title and description; 24tv.ua player iframes are embeds.
 use super::{Extractor, dict_format, dict_info, download_webpage, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,8 +17,7 @@ pub(crate) const KEY: &str = "TV24UAVideo";
 
 const VALID: &str = r"https?://24tv\.ua/news/showPlayer\.do.*?(?:\?|&)objectId=(?P<id>\d+)";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| crate::extractor::url_regex(&format!("^{VALID}")).unwrap());
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| UrlRegex::ascii(&format!("^{VALID}")));
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(&format!(r#"<iframe[^>]+?src=["']?(?P<url>{VALID})["']?"#)).unwrap()
 });

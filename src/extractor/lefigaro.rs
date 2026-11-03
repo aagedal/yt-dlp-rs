@@ -3,8 +3,8 @@
 //! results of their JW Platform media, and video sections as a paged list
 //! (20 per page) of embed `url` results from the GraphQL playlist.
 use super::{Extractor, download_json_note, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -17,11 +17,10 @@ const EMBED_NAME: &str = "LeFigaroVideoEmbed";
 const SECTION_NAME: &str = "LeFigaroVideoSection";
 const PAGE_SIZE: usize = 20;
 
-static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://video\.lefigaro\.fr/embed/[^?#]+/(?P<id>[\w-]+)").unwrap()
-});
-static SECTION_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://video\.lefigaro\.fr/figaro/(?P<id>[\w-]+)/?(?:[#?]|$)").unwrap()
+static EMBED_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://video\.lefigaro\.fr/embed/[^?#]+/(?P<id>[\w-]+)"));
+static SECTION_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://video\.lefigaro\.fr/figaro/(?P<id>[\w-]+)/?(?:[#?]|$)")
 });
 
 /// `LeFigaroVideoEmbedIE._match_id`.

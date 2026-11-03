@@ -2,8 +2,8 @@
 //! as a `url` result of `kaltura:308:ID`, smuggling the KTH (NORDUnet)
 //! Kaltura service URL.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::json;
 use std::sync::LazyLock;
@@ -13,9 +13,8 @@ pub struct Kth;
 
 const NAME: &str = "KTH";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://play\.kth\.se/(?:[^/]+/)+(?P<id>[a-z0-9_]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://play\.kth\.se/(?:[^/]+/)+(?P<id>[a-z0-9_]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

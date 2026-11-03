@@ -3,6 +3,7 @@
 //! video detail (or the series' current episode) HLS manifests, metadata,
 //! and the error page's message when there are no formats.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,8 @@ pub struct MagellanTv;
 
 const NAME: &str = "MagellanTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?magellantv\.com/(?:watch|video)/(?P<id>[\w-]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?magellantv\.com/(?:watch|video)/(?P<id>[\w-]+)")
 });
 
 /// `url_or_none`'s scheme check.

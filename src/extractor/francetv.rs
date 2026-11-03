@@ -10,6 +10,7 @@
 use super::{
     Extractor, dict_format, dict_info, extract_m3u8_master_optional, extract_mpd_optional_note,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, Subtitles, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -30,18 +31,16 @@ const INFO_KEY: &str = "FranceTVInfo";
 const GEO_COUNTRIES: &[&str] = &["FR"];
 const GEO_MESSAGE: &str = "This video is not available from your location due to geo restriction";
 
-static TV_URL: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^francetv:(?P<id>[^@#]+)").unwrap());
-static SITE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static TV_URL: LazyLock<UrlRegex> = LazyLock::new(|| UrlRegex::new(r"^francetv:(?P<id>[^@#]+)"));
+static SITE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:(?:www\.)?france\.tv|mobile\.france\.tv)/(?:[^/]+/)*(?P<id>[^/]+)\.html",
     )
-    .unwrap()
 });
-static INFO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static INFO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www|mobile|france3-regions)\.france(?:tv)?info.fr/(?:[^/?#]+/)*(?P<id>[^/?#&.]+)",
     )
-    .unwrap()
 });
 static EPISODE_INFO: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"S(\d+)\s*E(\d+)").unwrap());
 

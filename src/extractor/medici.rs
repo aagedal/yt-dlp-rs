@@ -6,8 +6,8 @@ use super::json_ld::url_or_none;
 use super::{
     Extractor, dict_info, download_json_headers, download_webpage_note, extract_m3u8_fatal_master,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -17,11 +17,10 @@ pub struct Medici;
 
 const NAME: &str = "Medici";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?P<sub>www|edu)\.)?medici\.tv/[a-z]{2}/[\w.-]+/(?P<id>[^/?#&]+)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

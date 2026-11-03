@@ -1,8 +1,8 @@
 //! Upstream `FathomIE` (`yt_dlp/extractor/fathom.py`): the `app` element's
 //! `data-page` props with the call's HLS manifest.
 use super::{Extractor, download_webpage, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,10 +12,8 @@ pub struct Fathom;
 
 const NAME: &str = "Fathom";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?fathom\.video/share/(?P<id>[^/?#&]+)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?fathom\.video/share/(?P<id>[^/?#&]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

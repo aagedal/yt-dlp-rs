@@ -2,6 +2,7 @@
 //! broken): a post's `<source>` URL and OpenGraph fields as an untyped
 //! result dated by the URL.
 use super::{Extractor, broken_warning, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct BehindKink;
 
 const NAME: &str = "BehindKink";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?behindkink\.com/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/(?P<day>[0-9]{2})/(?P<id>[^/#?_]+)",
     )
-    .unwrap()
 });
 
 static SOURCE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"<source src="([^"]+)""#).unwrap());

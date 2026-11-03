@@ -6,6 +6,7 @@ use super::{
     Extractor, dict_info, download_json, download_json_note, download_webpage,
     extract_m3u8_master_optional_headers_id, extract_mpd_optional_note,
 };
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,11 +18,10 @@ pub struct Faulio;
 
 const NAME: &str = "Faulio";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:aloula\.sba\.sa|bahry\.com|maraya\.sba\.net\.ae|sat7plus\.org)/(?:(?:ar|en|fa)/)?(?:episode|media)/(?P<id>[a-zA-Z0-9-]+)",
     )
-    .unwrap()
 });
 static NUXT_CONFIG: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.__NUXT__\.config=").unwrap());

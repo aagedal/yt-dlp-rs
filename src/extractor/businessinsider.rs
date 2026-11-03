@@ -1,6 +1,7 @@
 //! Upstream `BusinessInsiderIE` (`yt_dlp/extractor/businessinsider.py`):
 //! Business Insider pages as `url` results of their JW Platform media.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -11,11 +12,10 @@ pub struct BusinessInsider;
 
 const NAME: &str = "BusinessInsider";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:[^/]+\.)?businessinsider\.(?:com|nl)/(?:[^/]+/)*(?P<id>[^/?#&]+)",
     )
-    .unwrap()
 });
 static JWPLATFORM_IDS: LazyLock<[Regex; 4]> = LazyLock::new(|| {
     [

@@ -2,8 +2,8 @@
 //! `mp3` URL (checked with a HEAD request carrying the site's Referer) as an
 //! untyped result with an empty title.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -14,11 +14,8 @@ pub struct Vocaroo;
 const NAME: &str = "Vocaroo";
 const REFERER: &str = "https://vocaroo.com/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?(?:vocaroo\.com|voca\.ro)/(?:embed/)?(?P<id>\w+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?(?:vocaroo\.com|voca\.ro)/(?:embed/)?(?P<id>\w+)")
 });
 
 /// `_match_id`.

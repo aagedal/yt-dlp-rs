@@ -3,8 +3,8 @@
 //! `TwitterBroadcastIE`) and its HLS formats with the Periscope `Referer`.
 //! `PeriscopeUserIE` and the `_EMBED_REGEX` embeds are not ported.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoFormat, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -17,11 +17,8 @@ const KEY: &str = "Periscope";
 /// `PeriscopeBaseIE._M3U8_HEADERS`.
 pub(super) const M3U8_REFERER: &str = "https://www.periscope.tv/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?(?:periscope|pscp)\.tv/[^/?#]+/(?P<id>[^/?#]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?(?:periscope|pscp)\.tv/[^/?#]+/(?P<id>[^/?#]+)")
 });
 
 /// `PeriscopeIE._match_valid_url`.

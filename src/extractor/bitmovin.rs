@@ -1,6 +1,7 @@
 //! Upstream `BitmovinIE` (`yt_dlp/extractor/bitmovin.py`): a stream's
 //! player config HLS manifest, title and poster, and its iframe embeds.
 use super::{Extractor, download_json, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct Bitmovin;
 pub(crate) const NAME: &str = "Bitmovin";
 pub(crate) const KEY: &str = "Bitmovin";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://streams\.bitmovin\.com/(?P<id>\w+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://streams\.bitmovin\.com/(?P<id>\w+)"));
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(
         r#"<iframe\b[^>]+\bsrc=["'](?P<url>(?:https?:)?//streams\.bitmovin\.com/(?P<id>\w+)[^"']+)"#,

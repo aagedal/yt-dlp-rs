@@ -2,8 +2,8 @@
 //! video/audio, iPhone and mobile-audio files with upstream's quality and
 //! source preferences, and its metadata; `coub:ID` pseudo-URLs too.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -15,9 +15,10 @@ const NAME: &str = "Coub";
 const QUALITIES: [&str; 4] = ["low", "med", "high", "higher"];
 const SOURCES: [&str; 3] = ["mobile", "iphone", "html5"];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^(?:coub:|https?://(?:coub\.com/(?:view|embed|coubs)/|c-cdn\.coub\.com/fb-player\.swf\?.*\bcoub(?:ID|id)=))(?P<id>[\da-z]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^(?:coub:|https?://(?:coub\.com/(?:view|embed|coubs)/|c-cdn\.coub\.com/fb-player\.swf\?.*\bcoub(?:ID|id)=))(?P<id>[\da-z]+)",
+    )
 });
 
 /// `CoubIE.suitable`.

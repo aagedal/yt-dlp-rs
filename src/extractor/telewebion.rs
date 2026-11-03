@@ -2,8 +2,8 @@
 //! episodes (decimal IDs as hexadecimal) from the GraphQL `queryEpisode`
 //! (a JSON POST): its metadata and the channel's episode HLS formats.
 use super::{Extractor, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -13,11 +13,8 @@ pub struct Telewebion;
 
 const NAME: &str = "Telewebion";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?telewebion\.ir/episode/(?P<id>(?:0x[a-fA-F\d]+|\d+))",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?telewebion\.ir/episode/(?P<id>(?:0x[a-fA-F\d]+|\d+))")
 });
 
 /// `textwrap.dedent` of the episode query.

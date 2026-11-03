@@ -2,6 +2,7 @@
 //! cameras as the demo-session FLV streams in three qualities, named from
 //! the camera page's config (non-fatal) or its meta tag and heading.
 use super::{Extractor, dict_format, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ const NAME: &str = "ivideon";
 const KEY: &str = "Ivideon";
 const QUALITIES: [&str; 3] = ["low", "mid", "hi"];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?ivideon\.com/tv/(?:[^/]+/)*camera/(?P<id>\d+-[\da-f]+)/(?P<camera_id>\d+)",
     )
-    .unwrap()
 });
 static CONFIG: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"var\s+config\s*=\s*(\{.+?\});").unwrap());

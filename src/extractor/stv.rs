@@ -3,8 +3,8 @@
 //! `url_transparent` result for the Brightcove player, with the episode's
 //! description, duration, subtitles, views and programme name.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -15,11 +15,8 @@ pub struct StvPlayer;
 const NAME: &str = "stv:player";
 const KEY: &str = "STVPlayer";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://player\.stv\.tv/(?P<type>episode|video)/(?P<id>[a-z0-9]{4})",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://player\.stv\.tv/(?P<type>episode|video)/(?P<id>[a-z0-9]{4})")
 });
 
 /// `_match_valid_url`.

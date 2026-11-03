@@ -3,6 +3,7 @@
 //! video type's resolved URL (HLS, HDS or MP4 with height and bitrate), with
 //! the title and poster; UDN embed iframes are embeds.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,10 +16,8 @@ pub struct UdnEmbed;
 pub(crate) const NAME: &str = "UDNEmbed";
 pub(crate) const KEY: &str = "UDNEmbed";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://video\.udn\.com/(?:embed|play)/news/(?P<id>\d+)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://video\.udn\.com/(?:embed|play)/news/(?P<id>\d+)"));
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(
         r#"<iframe[^>]+src="(?:https?:)?(?P<url>//video\.udn\.com/(?:embed|play)/news/\d+)""#,

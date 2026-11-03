@@ -1,6 +1,7 @@
 //! Upstream `NobelPrizeIE` (`yt_dlp/extractor/nobelprize.py`): the media
 //! player page's JSON-LD with its caption, description and duration.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,9 +13,8 @@ pub struct NobelPrize;
 
 const NAME: &str = "NobelPrize";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:(?:mediaplayer|www)\.)?nobelprize\.org/mediaplayer/")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:(?:mediaplayer|www)\.)?nobelprize\.org/mediaplayer/")
 });
 
 static DESCRIPTION: LazyLock<Regex> = LazyLock::new(|| {

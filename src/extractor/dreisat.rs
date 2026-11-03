@@ -6,6 +6,7 @@ use super::zdf::{
     PtmdUrl, extract_chapters, extract_ptmd, extract_thumbnails, int_or_none, key_error,
     mark_shape, parse_aspect_ratio, path, request_json, text, unsupported,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -19,9 +20,8 @@ const NAME: &str = "3sat";
 const KEY: &str = "DreiSat";
 const PLAYER_ID: &str = "android_native_6";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?3sat\.de/(?:[^/?#]+/)*(?P<id>[^/?#&]+)\.html")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?3sat\.de/(?:[^/?#]+/)*(?P<id>[^/?#&]+)\.html")
 });
 static PLAYER_JSON: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-zdfplayer-jsb=(["'])"#).unwrap());

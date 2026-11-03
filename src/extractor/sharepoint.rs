@@ -3,6 +3,7 @@
 //! `videomanifest` DASH and HLS renditions next to its transform URL, and
 //! the source download.
 use super::{Extractor, dict_format, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,14 +15,14 @@ pub struct SharePoint;
 
 const NAME: &str = "SharePoint";
 
-static VALID_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+static VALID_URLS: LazyLock<[UrlRegex; 2]> = LazyLock::new(|| {
     [
-        crate::extractor::url_regex(
+        UrlRegex::ascii(
             r"^https?://[\w-]+\.sharepoint\.com/:v:/[a-z]/(?:[^/?#]+/)*(?P<id>[^/?#]{46})/?(?:$|[?#])",
-        )
-        .unwrap(),
-        crate::extractor::url_regex(r"^https?://[\w-]+\.sharepoint\.com/(?:[^/?#]+/)*stream\.aspx\?(?:[^#]+&)?id=(?P<id>[^&#]+)")
-            .unwrap(),
+        ),
+        UrlRegex::ascii(
+            r"^https?://[\w-]+\.sharepoint\.com/(?:[^/?#]+/)*stream\.aspx\?(?:[^#]+&)?id=(?P<id>[^&#]+)",
+        ),
     ]
 });
 static FILE_INFO: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"g_fileInfo\s*=").unwrap());

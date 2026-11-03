@@ -1,8 +1,8 @@
 //! Upstream `CAM4IE` (`yt_dlp/extractor/cam4.py`): a channel's
 //! `streamInfo` `cdnURL` as live HLS formats.
 use super::{Extractor, download_json, extract_m3u8_fatal_live};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,9 +12,8 @@ pub struct Cam4;
 
 const NAME: &str = "CAM4";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:[^/]+\.)?cam4\.com/(?P<id>[a-z0-9_]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:[^/]+\.)?cam4\.com/(?P<id>[a-z0-9_]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

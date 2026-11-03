@@ -6,6 +6,7 @@ use super::{
     Extractor, dict_info, download_webpage, extract_m3u8_fatal_live, extract_m3u8_master_optional,
     post_json_note_headers,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -22,19 +23,16 @@ const NEWS_NAME: &str = "tvw:news";
 const CHANNEL_NAME: &str = "tvw:tvchannels";
 const API_KEY: &str = "7WhiEBzijpritypp8bqcU7pfU9uicDR";
 
-static EVENT_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+static EVENT_URLS: LazyLock<[UrlRegex; 2]> = LazyLock::new(|| {
     [
-        Regex::new(r"^https?://(?:www\.)?tvw\.org/video/(?P<id>[^/?#]+)").unwrap(),
-        Regex::new(r"^https?://(?:www\.)?tvw\.org/watch/?\?(?:[^#]+&)?eventID=(?P<id>\d+)")
-            .unwrap(),
+        UrlRegex::new(r"^https?://(?:www\.)?tvw\.org/video/(?P<id>[^/?#]+)"),
+        UrlRegex::new(r"^https?://(?:www\.)?tvw\.org/watch/?\?(?:[^#]+&)?eventID=(?P<id>\d+)"),
     ]
 });
-static NEWS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?tvw\.org/\d{4}/\d{2}/(?P<id>[^/?#]+)").unwrap()
-});
-static CHANNEL_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?tvw\.org/tvchannels/(?P<id>[^/?#]+)").unwrap()
-});
+static NEWS_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?tvw\.org/\d{4}/\d{2}/(?P<id>[^/?#]+)"));
+static CHANNEL_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?tvw\.org/tvchannels/(?P<id>[^/?#]+)"));
 static NEWS_PLAYER: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<[a-z]+\s[^>]*\bclass="[^"]*\binvintus-player\b[^"]*"[^>]*>"#).unwrap()
 });

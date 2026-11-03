@@ -4,6 +4,7 @@
 //! resolved through the player API with their bearer token), metadata,
 //! captions, the France-only geo error and the page title and summary.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, SubtitleFormat, Subtitles, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,9 +17,8 @@ pub struct Tv5MondePlus;
 const NAME: &str = "TV5MONDE";
 const KEY: &str = "TV5MondePlus";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?tv5monde\.com/tv/video/(?P<id>[^/?#]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?tv5monde\.com/tv/video/(?P<id>[^/?#]+)")
 });
 static LOADER: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"(<[^>]+class="video_player_loader"[^>]+>)"#).unwrap());

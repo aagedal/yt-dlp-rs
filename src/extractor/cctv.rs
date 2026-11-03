@@ -5,6 +5,7 @@ use super::{
     Extractor, dict_format, dict_info, download_json, download_webpage,
     extract_m3u8_master_optional,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,11 +17,10 @@ pub struct Cctv;
 
 const NAME: &str = "CCTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:[^/]+)\.(?:cntv|cctv)\.(?:com|cn)|(?:www\.)?ncpa-classic\.com)/(?:[^/]+/)*?(?P<id>[^/?#&]+?)(?:/index)?(?:\.s?html|[?#&]|$)",
     )
-    .unwrap()
 });
 static VIDEO_ID: LazyLock<Vec<Regex>> = LazyLock::new(|| {
     [

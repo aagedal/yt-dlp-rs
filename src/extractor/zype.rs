@@ -5,6 +5,7 @@
 //! messages are upstream's errors. Player scripts on other pages are
 //! followed.
 use super::{Extractor, dict_format, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, SubtitleFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -20,12 +21,11 @@ pub(crate) const KEY: &str = "Zype";
 const COMMON: &str =
     r"//player\.zype\.com/embed/{ID}\.(?:js|json|html)\?.*?(?:access_token|(?:ap[ip]|player)_key)=";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         "^https?:{}[^&]+",
         COMMON.replace("{ID}", r"(?P<id>[\da-fA-F]+)")
     ))
-    .unwrap()
 });
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     let common = COMMON.replace("{ID}", r"[\da-fA-F]+");

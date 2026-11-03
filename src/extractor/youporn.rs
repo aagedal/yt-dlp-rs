@@ -2,6 +2,7 @@
 //! `playervars` media definitions (the `/media/hls/` and `/media/mp4/` JSON
 //! lists with their HLS masters and MP4 URLs), its title, counts and JSON-LD.
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct YouPorn;
 
 const NAME: &str = "YouPorn";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"https?://(?:www\.)?youporn\.com/(?:watch|embed)/(?P<id>\d+)(?:/(?P<display_id>[^/?#&]+))?/?(?:[#?]|$)",
     )
-    .unwrap()
 });
 static WATCHABLE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<div\s[^>]*\bid\s*=\s*(?:'watch-container'|"watch-container"|watch-container(?:[^-\w]|$))"#)

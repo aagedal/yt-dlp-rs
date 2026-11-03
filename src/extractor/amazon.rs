@@ -3,6 +3,7 @@
 //! entries (`AmazonReviewsIE` is not ported: its review pages no longer carry
 //! the review body markup it reads).
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,9 +17,10 @@ const NAME: &str = "AmazonStore";
 /// `RetryManager()`'s default `retries=3`: four attempts in total.
 const RETRIES: u32 = 3;
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?amazon\.(?:[a-z]{2,3})(?:\.[a-z]{2})?/(?:[^/]+/)?(?:dp|gp/product)/(?P<id>[^/&#$?]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^https?://(?:www\.)?amazon\.(?:[a-z]{2,3})(?:\.[a-z]{2})?/(?:[^/]+/)?(?:dp|gp/product)/(?P<id>[^/&#$?]+)",
+    )
 });
 static DATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"var\s?obj\s?=\s?jQuery\.parseJSON\('").unwrap());

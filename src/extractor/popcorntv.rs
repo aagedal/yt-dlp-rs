@@ -1,6 +1,7 @@
 //! Upstream `PopcornTVIE` (`yt_dlp/extractor/popcorntv.py`): a page's
 //! `contentUrl`/`embedUrl` link HLS manifest with its microdata.
 use super::{Extractor, download_webpage, extract_m3u8_fatal, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,11 +13,8 @@ pub struct PopcornTv;
 
 const NAME: &str = "PopcornTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://[^/]+\.popcorntv\.it/guarda/(?P<display_id>[^/]+)/(?P<id>\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://[^/]+\.popcorntv\.it/guarda/(?P<display_id>[^/]+)/(?P<id>\d+)")
 });
 static LINK: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"(<link[^>]+itemprop=["'](?:content|embed)Url[^>]*>)"#).unwrap());

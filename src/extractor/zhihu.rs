@@ -1,8 +1,8 @@
 //! Upstream `ZhihuIE` (`yt_dlp/extractor/zhihu.py`): the zvideos API's
 //! playlist qualities as formats with the author and counts.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -12,9 +12,8 @@ pub struct Zhihu;
 
 const NAME: &str = "Zhihu";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?zhihu\.com/zvideo/(?P<id>[0-9]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?zhihu\.com/zvideo/(?P<id>[0-9]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

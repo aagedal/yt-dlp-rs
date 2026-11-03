@@ -3,6 +3,7 @@
 //! `ArchipelagoSingleArticleQuery` (else the page's Brightcove player URL)
 //! as a `url_transparent` result of the Brightcove player.
 use super::{Extractor, download_json_headers, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct AlJazeera;
 
 const NAME: &str = "AlJazeera";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?P<base>\w+\.aljazeera\.\w+)/(?P<type>programs?/[^/]+|(?:feature|video|new)s)?/\d{4}/\d{1,2}/\d{1,2}/(?P<id>[^/?&#]+)",
     )
-    .unwrap()
 });
 static BRIGHTCOVE_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

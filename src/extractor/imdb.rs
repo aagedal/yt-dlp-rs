@@ -3,6 +3,7 @@
 //! `VIDEO_PLAYBACK_DATA` API) with HLS and progressive encodings, and a
 //! list page's video player links as a playlist.
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -19,15 +20,12 @@ const IE_NAME: &str = "imdb";
 const LIST_NAME: &str = "ImdbList";
 const LIST_IE_NAME: &str = "imdb:list";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www|m)\.imdb\.com/(?:video|title|list).*?[/-]vi(?P<id>\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www|m)\.imdb\.com/(?:video|title|list).*?[/-]vi(?P<id>\d+)")
 });
 // Upstream's `(?!/videoplayer/vi\d+)` is checked in `list_id`.
-static LIST_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?imdb\.com/list/ls(?P<id>\d{9})").unwrap());
+static LIST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?imdb\.com/list/ls(?P<id>\d{9})"));
 static VIDEOPLAYER: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^/videoplayer/vi\d").unwrap());
 static LIST_TITLE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?s)<h1[^>]+class="[^"]*header[^"]*"[^>]*>(.*?)</h1>"#).unwrap()

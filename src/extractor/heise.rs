@@ -3,6 +3,7 @@
 //! page. Kaltura players and the `videout` feed (its direct formats) are not
 //! ported; those pages are unsupported errors.
 use super::{Extractor, download_webpage, search_warning, youtube};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,8 @@ pub struct Heise;
 
 const NAME: &str = "Heise";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?heise\.de/(?:[^/]+/)+[^/]+-(?P<id>[0-9]+)\.html",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?heise\.de/(?:[^/]+/)+[^/]+-(?P<id>[0-9]+)\.html")
 });
 static DATA_TITLE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<div[^>]+class="videoplayerjw"[^>]+data-title="([^"]+)""#).unwrap()

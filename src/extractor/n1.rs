@@ -5,6 +5,7 @@
 //! point at `N1InfoAssetIE`) are not supported natively; the asset
 //! extractor is not ported.
 use super::{Extractor, dict_info, download_webpage, extract_m3u8_master_optional, search_warning};
+use crate::extractor::UrlRegex;
 use crate::html_elements::extract_attributes;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
@@ -18,11 +19,10 @@ pub struct N1InfoArticle;
 const NAME: &str = "N1Info:article";
 const KEY: &str = "N1InfoI";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:\w+\.)?n1info\.\w+|nova\.rs)/(?:[^/?#]+/){1,2}(?P<id>[^/?#]+)",
     )
-    .unwrap()
 });
 static PLAYER: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"\$bp\("(?:Brid|TargetVideo)_\d+",\s(.+)\);"#).unwrap());
@@ -239,11 +239,8 @@ pub struct N1InfoAsset;
 const ASSET_NAME: &str = "N1InfoAsset";
 const ASSET_KEY: &str = "N1InfoAsset";
 
-static ASSET_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://best-vod\.umn\.cdn\.united\.cloud/stream\?asset=(?P<id>[^&]+)",
-    )
-    .unwrap()
+static ASSET_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://best-vod\.umn\.cdn\.united\.cloud/stream\?asset=(?P<id>[^&]+)")
 });
 
 /// `N1InfoAssetIE._VALID_URL`.

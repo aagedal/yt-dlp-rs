@@ -10,6 +10,7 @@ use super::{
     Extractor, dict_format, dict_info, download_json_note_headers, download_webpage,
     download_webpage_handle, extract_m3u8_master_optional, search_json,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -39,48 +40,41 @@ const PLAYLIST_NAME: &str = "NRKPlaylist";
 const ACCEPT: &str =
     "application/vnd.nrk.psapi+json; version=9; player=tv-player; device=player-core";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?:nrk:|https?://(?:(?:www\.)?nrk\.no/video/(?:PS\*|[^_]+_)|v8[-.]psapi\.nrk\.no/mediaelement/))(?P<id>[^?#&]+)",
     )
-    .unwrap()
 });
-static TV_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:tv|radio)\.nrk(?:super)?\.no/(?:[^/]+/)*(?P<id>[a-zA-Z]{4}\d{8})")
-        .unwrap()
+static TV_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:tv|radio)\.nrk(?:super)?\.no/(?:[^/]+/)*(?P<id>[a-zA-Z]{4}\d{8})")
 });
 static EPISODE_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^(?P<id>[a-zA-Z]{4}\d{8})$").unwrap());
-static DIREKTE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:tv|radio)\.nrk\.no/direkte/(?P<id>[^/?#&]+)").unwrap()
-});
-static PODKAST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static DIREKTE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:tv|radio)\.nrk\.no/direkte/(?P<id>[^/?#&]+)"));
+static PODKAST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://radio\.nrk\.no/pod[ck]ast/(?:[^/]+/)+(?P<id>l_[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})",
     )
-    .unwrap()
 });
-static EPISODE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static EPISODE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://tv\.nrk\.no/serie/(?P<id>[^/?#]+/sesong/(?P<season_number>\d+)/episode/(?P<episode_number>\d+))",
     )
-    .unwrap()
 });
-static SEASON_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static SEASON_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?P<domain>tv|radio)\.nrk\.no/(?P<serie_kind>serie|pod[ck]ast)/(?P<serie>[^/]+)/(?:(?:sesong/)?(?P<id>\d+)|sesong/(?P<id_2>[^/?#&]+))",
     )
-    .unwrap()
 });
-static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static SERIES_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?P<domain>(?:tv|radio)\.nrk|(?:tv\.)?nrksuper)\.no/(?P<serie_kind>serie|pod[ck]ast)/(?P<id>[^/]+)",
     )
-    .unwrap()
 });
 // `(?!video|skole)` is checked separately.
-static PLAYLIST_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?nrk\.no/(?P<rest>.*)").unwrap());
+static PLAYLIST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?nrk\.no/(?P<rest>.*)"));
 static PLAYLIST_PATH: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^(?:[^/]+/)+(?P<id>[^/]+)").unwrap());
 static PLAYLIST_ITEM: LazyLock<Regex> = LazyLock::new(|| {

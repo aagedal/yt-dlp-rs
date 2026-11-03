@@ -3,6 +3,7 @@
 //! playlist plus progressive copies of the `tracks-v1a1` variants below
 //! 1080p, with the config's title and thumbnail.
 use super::{Extractor, dict_format, dict_info, download_webpage, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct ElTreceTv;
 
 const NAME: &str = "ElTreceTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?eltrecetv\.com\.ar/[\w-]+/capitulos/temporada-\d+/(?P<id>[\w-]+)",
     )
-    .unwrap()
 });
 static CONTENT: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"Fusion.globalContent\s*=\s*").unwrap());

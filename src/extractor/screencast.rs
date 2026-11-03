@@ -2,6 +2,7 @@
 //! QuickTime embed, Flash variables, `og:video` meta or `MediaContentUrl`
 //! media URL, with OpenGraph metadata.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct Screencast;
 
 const NAME: &str = "Screencast";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?screencast\.com/t/(?P<id>[a-zA-Z0-9]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?screencast\.com/t/(?P<id>[a-zA-Z0-9]+)")
 });
 static EMBED: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<embed name="Video".*?src="([^"]+)""#).unwrap());

@@ -8,6 +8,7 @@
 //! viewer URLs) resolves the publisher ID (the query's `playerKey`, else the
 //! player page's) and follows the `players.brightcove.net` player.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -23,8 +24,10 @@ pub struct BrightcoveLegacy;
 pub(crate) const NAME: &str = "brightcove:new";
 pub(crate) const KEY: &str = "BrightcoveNew";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://players\.brightcove\.net/(?P<account_id>\d+)/(?P<player_id>[^/]+)_(?P<embed>[^/]+)/index\.html\?.*(?P<content_type>video|playlist)Id=(?P<video_id>\d+|ref:[^&]+)").unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^https?://players\.brightcove\.net/(?P<account_id>\d+)/(?P<player_id>[^/]+)_(?P<embed>[^/]+)/index\.html\?.*(?P<content_type>video|playlist)Id=(?P<video_id>\d+|ref:[^&]+)",
+    )
 });
 
 /// `_match_valid_url`.
@@ -839,11 +842,10 @@ impl Extractor for BrightcoveNew {
 const LEGACY_NAME: &str = "brightcove:legacy";
 const LEGACY_KEY: &str = "BrightcoveLegacy";
 
-static LEGACY_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static LEGACY_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?:https?://.*brightcove\.com/(?:services|viewer).*?\?|brightcove:)(?P<query>.*)",
     )
-    .unwrap()
 });
 /// `(?<=[?&])(videoI(d|D)|idVideo|bctid)` with the prefix kept.
 static LEGACY_VIDEO_ID: LazyLock<Regex> =

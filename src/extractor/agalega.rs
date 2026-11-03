@@ -3,8 +3,8 @@
 //! token): the content data's name, description and image (non-fatal) and
 //! the content resources' HLS playlists.
 use super::{Extractor, dict_info, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::{LazyLock, Mutex};
@@ -16,11 +16,8 @@ const NAME: &str = "agalega:videos";
 const KEY: &str = "AGalega";
 const TOKEN_URL: &str = "https://www.agalega.gal/api/fetch-api/jwt/token";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?agalega\.gal/videos/(?:detail/)?(?P<id>[0-9]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?agalega\.gal/videos/(?:detail/)?(?P<id>[0-9]+)")
 });
 
 /// `AGalegaBaseIE._access_token`: shared by every extraction of the run.

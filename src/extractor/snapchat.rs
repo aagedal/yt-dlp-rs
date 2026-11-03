@@ -2,8 +2,8 @@
 //! spotlight page's Next.js story metadata, whose `contentUrl` is the
 //! result's own (only) format.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -13,9 +13,8 @@ pub struct SnapchatSpotlight;
 
 const NAME: &str = "SnapchatSpotlight";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?snapchat\.com/spotlight/(?P<id>\w+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?snapchat\.com/spotlight/(?P<id>\w+)"));
 
 /// `_VALID_URL`.
 pub fn suitable(url: &str) -> bool {

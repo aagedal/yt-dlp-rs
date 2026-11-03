@@ -3,6 +3,7 @@
 //! restriction), else the room page's `initialRoomDossier` or embedded
 //! `.m3u8` URLs (fast and regular live HLS) and its error text.
 use super::{Extractor, dict_info, download_webpage_note_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct Chaturbate;
 
 const NAME: &str = "Chaturbate";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:[^/]+\.)?chaturbate\.(?P<tld>com|eu|global)/(?:fullvideo/?\?.*?\bb=)?(?P<id>[^/?&#]+)",
     )
-    .unwrap()
 });
 static DOSSIER: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"initialRoomDossier\s*=\s*(?:"(?P<dq>[^"\n]+)"|'(?P<sq>[^'\n]+)')"#).unwrap()

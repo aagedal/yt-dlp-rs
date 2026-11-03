@@ -5,6 +5,7 @@
 use super::clyp::{float_or_none, key_error};
 use super::streamable::int_or_none;
 use super::{Extractor, dict_format, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -23,21 +24,20 @@ pub(crate) const CHANNEL_KEY: &str = "WistiaChannel";
 const PLAYLIST_NAME: &str = "WistiaPlaylist";
 const EMBED_BASE_URL: &str = "http://fast.wistia.net/embed/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?:wistia:|https?://(?:\w+\.)?wistia\.(?:net|com)/(?:embed/)?(?:iframe|medias)/)(?P<id>[a-z0-9]{10})",
     )
-    .unwrap()
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:\w+\.)?wistia\.(?:net|com)/(?:embed/)?playlists/(?P<id>[a-z0-9]{10})")
-        .unwrap()
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:\w+\.)?wistia\.(?:net|com)/(?:embed/)?playlists/(?P<id>[a-z0-9]{10})",
+    )
 });
-static CHANNEL_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static CHANNEL_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^(?:wistiachannel:|https?://(?:\w+\.)?wistia\.(?:net|com)/(?:embed/)?channel/)(?P<id>[a-z0-9]{10})",
     )
-    .unwrap()
 });
 
 /// `WistiaIE._match_id`.

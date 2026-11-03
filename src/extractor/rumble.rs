@@ -3,6 +3,7 @@
 //! subtitles and metadata, and video pages as `url_transparent` results of
 //! their embed with the page's counts and description.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,12 +17,11 @@ pub struct Rumble;
 pub(crate) const EMBED_NAME: &str = "RumbleEmbed";
 pub(crate) const NAME: &str = "Rumble";
 
-static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?rumble\.com/embed/(?:[0-9a-z]+\.)?(?P<id>[0-9a-z]+)").unwrap()
+static EMBED_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?rumble\.com/embed/(?:[0-9a-z]+\.)?(?P<id>[0-9a-z]+)")
 });
-static VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?rumble\.com/(?P<id>v[\w.-]+)[^/]*$").unwrap()
-});
+static VIDEO_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?rumble\.com/(?P<id>v[\w.-]+)[^/]*$"));
 static EMBED_IN_PAGE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?:<(?:script|iframe)[^>]+\bsrc=|["']embedUrl["']\s*:\s*)["'](?P<url>https?://(?:www\.)?rumble\.com/embed/(?:[0-9a-z]+\.)?[0-9a-z]+)"#).unwrap()
 });

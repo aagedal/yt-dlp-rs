@@ -4,6 +4,7 @@
 //! embed API (with its `video.js`, `loader.js` and inline `config` fallbacks)
 //! supplies the sources and captions. Series pages are not supported natively.
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::subtitles::{SubtitleFormat, Subtitles};
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
@@ -40,8 +41,8 @@ const SITES: [&str; 19] = [
     "wmagazine",
 ];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         concat!(
             r"^https?://(?:video|www|player(?:-backend)?)\.(?:{sites})\.com/",
             r"(?:",
@@ -51,7 +52,6 @@ static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
         ),
         sites = SITES.join("|"),
     ))
-    .unwrap()
 });
 static PARAMS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)var\s+params\s*=\s*(\{.+?\})[;,]").unwrap());

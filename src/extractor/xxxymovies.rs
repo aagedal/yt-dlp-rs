@@ -3,6 +3,7 @@
 //! thumbnail, the keyword categories, the duration and the view, like and
 //! dislike counts, plus the RTA age rating.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,8 @@ pub struct XXXYMovies;
 
 const NAME: &str = "XXXYMovies";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?xxxymovies\.com/videos/(?P<id>\d+)/(?P<display_id>[^/]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?xxxymovies\.com/videos/(?P<id>\d+)/(?P<display_id>[^/]+)")
 });
 static VIDEO_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"video_url\s*:\s*'([^']+)'").unwrap());

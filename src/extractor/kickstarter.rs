@@ -2,6 +2,7 @@
 //! page's native `data-video-url` as an untyped result. Pages without one,
 //! which upstream hands to the generic extractor, are an explicit error.
 use super::{Extractor, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct KickStarter;
 
 const NAME: &str = "KickStarter";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?kickstarter\.com/projects/(?P<id>[^/]*)/.*")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?kickstarter\.com/projects/(?P<id>[^/]*)/.*")
 });
 static TITLE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"<title>\s*(.*?)(?:\s*&mdash;\s*Kickstarter)?\s*</title>").unwrap()

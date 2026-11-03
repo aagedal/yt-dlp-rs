@@ -3,6 +3,7 @@
 //! thumbnails and uploader), and a user's clips, montages or mobile clips as
 //! a paged playlist of those.
 use super::{Extractor, download_json, post_json_note_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -21,11 +22,10 @@ const PAGE_SIZE: usize = 10;
 
 /// Upstream's `(?P<type>...)\?(?P=type)=`: the query key must repeat the type,
 /// which the regex crate cannot express, so the two are compared.
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?allstar\.gg/(?P<type>clip|montage)\?(?P<key>clip|montage)=(?P<id>[^/?#&]+)",
     )
-    .unwrap()
 });
 
 /// The `(type, id)` of a clip or montage URL.
@@ -33,8 +33,8 @@ fn video_match(url: &str) -> Option<(String, String)> {
     let found = VALID_URL.captures(url)?;
     (found["type"] == found["key"]).then(|| (found["type"].to_owned(), found["id"].to_owned()))
 }
-static PROFILE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?allstar\.gg/(?:profile\?user=|u/)(?P<id>[^/?#&]+)").unwrap()
+static PROFILE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?allstar\.gg/(?:profile\?user=|u/)(?P<id>[^/?#&]+)")
 });
 
 const FIELDS: &str = "

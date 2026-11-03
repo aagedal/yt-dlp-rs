@@ -3,6 +3,7 @@
 //! and an embed's `app.ustudio.com` config JSON transcodes.
 use super::streamable::int_or_none;
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage, download_xml};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -18,15 +19,13 @@ const KEY: &str = "Ustudio";
 const EMBED_NAME: &str = "ustudio:embed";
 const EMBED_KEY: &str = "UstudioEmbed";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:www|v1)\.)?ustudio\.com/video/(?P<id>[^/]+)/(?P<display_id>[^/?#&]+)",
     )
-    .unwrap()
 });
-static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:app|embed)\.)?ustudio\.com/embed/(?P<uid>[^/]+)/(?P<id>[^/]+)")
-        .unwrap()
+static EMBED_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:(?:app|embed)\.)?ustudio\.com/embed/(?P<uid>[^/]+)/(?P<id>[^/]+)")
 });
 static UPLOAD_DATE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?s)Uploaded by\s*.+?\s*on\s*<span>([^<]+)</span>").unwrap());

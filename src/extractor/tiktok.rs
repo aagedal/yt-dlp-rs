@@ -7,6 +7,7 @@
 //! `_parse_aweme_video_app`, and user/collection lists from the web item list
 //! APIs as flat `url` entries.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -39,32 +40,28 @@ const DOUYIN_UPLOADER: &str = "https://www.douyin.com/user/";
 const DOUYIN_HOST: &str = "https://www.douyin.com/";
 const LOGIN_HINT: &str = "Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://www\.tiktokv?\.com/(?:embed|(?:share|@(?P<user_id>[\w\.-]+)?)/video)/(?P<id>\d+)",
     )
-    .unwrap()
 });
-static VM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:vm|vt)\.tiktok\.com|(?:www\.)tiktok\.com/t)/(?P<id>\w+)").unwrap()
+static VM_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:(?:vm|vt)\.tiktok\.com|(?:www\.)tiktok\.com/t)/(?P<id>\w+)")
 });
-static DOUYIN_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?douyin\.com/video/(?P<id>[0-9]+)").unwrap());
-static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?:tiktokuser:|https?://(?:www\.)?tiktok\.com/@)(?P<id>[\w.-]+)/?(?:$|[#?])")
-        .unwrap()
+static DOUYIN_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?douyin\.com/video/(?P<id>[0-9]+)"));
+static USER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^(?:tiktokuser:|https?://(?:www\.)?tiktok\.com/@)(?P<id>[\w.-]+)/?(?:$|[#?])")
 });
-static COLLECTION_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static COLLECTION_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://www\.tiktok\.com/@(?P<user_id>[\w.-]+)/collection/(?P<title>[^/?#]+)-(?P<id>\d+)/?(?:[?#]|$)",
     )
-    .unwrap()
 });
-static LIVE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static LIVE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:(?:www\.)?tiktok\.com/@(?P<uploader>[\w.-]+)/live|m\.tiktok\.com/share/live/(?P<id>\d+))",
     )
-    .unwrap()
 });
 static SEC_UID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^MS4wLjABAAAA[\w-]{64}$").unwrap());
 static UNIVERSAL_DATA: LazyLock<Regex> = LazyLock::new(|| {

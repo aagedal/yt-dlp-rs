@@ -3,8 +3,8 @@
 //! as a geo restriction): HDS, HLS and progressive qualities, the locale's
 //! SRT subtitles and the video metadata.
 use super::{Extractor, dict_format, dict_info, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, SubtitleFormat, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -14,11 +14,10 @@ pub struct Lego;
 
 const NAME: &str = "LEGO";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?lego\.com/(?P<locale>[a-z]{2}-[a-z]{2})/(?:[^/]+/)*videos/(?:[^/]+/)*[^/?#]+-(?P<id>[0-9a-f]{32})",
     )
-    .unwrap()
 });
 
 const QUALITIES: [&str; 5] = ["Lowest", "Low", "Medium", "High", "Highest"];

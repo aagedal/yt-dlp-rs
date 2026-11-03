@@ -4,6 +4,7 @@
 use super::dict::parse_count;
 use super::metadata::text as get_text;
 use super::watch;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -69,14 +70,13 @@ pub(super) fn report_playlist_authcheck(
 const RESERVED_NAMES: &str = "channel|c|user|playlist|watch|w|v|embed|e|live|watch_popup|clip|shorts|movies|results|search|shared|hashtag|trending|explore|feed|feeds|browse|oembed|get_video_info|iframe_api|s/player|source|storefront|oops|index|account|t/terms|about|upload|signin|logout";
 
 /// `_VALID_URL` and `_URL_RE`'s tail.
-static URL_RE: LazyLock<Regex> = LazyLock::new(|| {
+static URL_RE: LazyLock<UrlRegex> = LazyLock::new(|| {
     // The `(?!consent\.)` and direct-URL `(?!reserved\b)` look-aheads are
     // checked separately: the `regex` crate has no look-around.
-    Regex::new(&format!(
+    UrlRegex::new(format!(
         r"^(?P<pre>(?P<scheme>https?://)(?:\w+\.)?(?:youtube(?:kids)?\.com|{})/(?:(?P<channel_type>channel|c|user|browse)/|(?P<not_channel>feed/|hashtag/|(?:playlist|watch)\?.*?\blist=)|)(?P<id>[^/?#&]+))(?P<rest>.*)$",
         super::urls::invidious()
     ))
-    .unwrap()
 });
 static RESERVED: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(&format!(r"^(?:{RESERVED_NAMES})\b")).unwrap());

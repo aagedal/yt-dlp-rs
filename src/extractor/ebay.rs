@@ -4,6 +4,7 @@ use super::{
     Extractor, download_webpage, extract_m3u8_optional, extract_mpd_optional, search_json,
     search_warning,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,9 +16,8 @@ pub struct Ebay;
 
 const NAME: &str = "Ebay";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?ebay\.com/itm/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?ebay\.com/itm/(?P<id>\d+)"));
 static VIDEO_JSON: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#""video":"#).unwrap());
 
 /// `_match_id`.

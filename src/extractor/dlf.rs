@@ -5,6 +5,7 @@
 //! pattern is applied to the matched ID instead.
 use super::json_ld::url_or_none;
 use super::{Extractor, dict_format, dict_info, download_webpage, extract_m3u8_master_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -20,14 +21,13 @@ const KEY: &str = "DLF";
 const CORPUS_NAME: &str = "dlf:corpus";
 const CORPUS_KEY: &str = "DLFCorpus";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?deutschlandfunk\.de/[\w-]+-dlf-(?P<id>[\da-f]{8})-100\.html",
     )
-    .unwrap()
 });
-static CORPUS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?deutschlandfunk\.de/(?P<id>[\w-]+-\d+)\.html").unwrap()
+static CORPUS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?deutschlandfunk\.de/(?P<id>[\w-]+-\d+)\.html")
 });
 /// The `(?![\w-]+-dlf-[\da-f]{8})` lookahead of the corpus pattern.
 static DLF_ID_MARK: LazyLock<Regex> =

@@ -5,8 +5,8 @@
 //! `IwaraUserIE`/`IwaraPlaylistIE` listings are not ported: credentials are an
 //! error rather than an anonymous guess.
 use super::{Extractor, direct, download_json_headers, follow_url};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::io::Read;
@@ -23,11 +23,8 @@ const FILE_SECRET: &str = "mSvL05GfEmeEmsEYfGCnVpEjYgTJraJN";
 /// `qualities(['preview', '360', '540', 'Source'])`.
 const QUALITIES: [&str; 4] = ["preview", "360", "540", "Source"];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.|ecchi\.)?iwara\.tv/videos?/(?P<id>[a-zA-Z0-9]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.|ecchi\.)?iwara\.tv/videos?/(?P<id>[a-zA-Z0-9]+)")
 });
 
 /// `_match_valid_url` for the video URLs.
@@ -287,12 +284,10 @@ const USER_KEY: &str = "IwaraUser";
 const PLAYLIST_NAME: &str = "iwara:playlist";
 const PLAYLIST_KEY: &str = "IwaraPlaylist";
 
-static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?iwara\.tv/profile/(?P<id>[^/?#&]+)").unwrap()
-});
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?iwara\.tv/playlist/(?P<id>[0-9a-f-]+)").unwrap()
-});
+static USER_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?iwara\.tv/profile/(?P<id>[^/?#&]+)"));
+static PLAYLIST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?iwara\.tv/playlist/(?P<id>[0-9a-f-]+)"));
 
 /// `IwaraUserIE._VALID_URL`.
 pub fn user_suitable(url: &str) -> bool {

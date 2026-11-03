@@ -2,8 +2,8 @@
 //! series as playlists of their episodes' `url` results from the app API,
 //! with the series title and unescaped intro.
 use super::{Extractor, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -13,10 +13,8 @@ pub struct BaiduVideo;
 
 const NAME: &str = "BaiduVideo";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://v\.baidu\.com/(?P<type>[a-z]+)/(?P<id>\d+)\.htm")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://v\.baidu\.com/(?P<type>[a-z]+)/(?P<id>\d+)\.htm"));
 
 /// `_match_valid_url`.
 pub fn suitable(url: &str) -> bool {

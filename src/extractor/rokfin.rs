@@ -3,6 +3,7 @@
 //! playlist), and a stack's posts as `url` entries. Login (premium content,
 //! token refresh) and the channel and search classes are not supported.
 use super::{Extractor, dict_format, dict_info, download_webpage_note, extract_m3u8_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,13 +18,11 @@ const NAME: &str = "Rokfin";
 const STACK_NAME: &str = "rokfin:stack";
 const API_BASE: &str = "https://prod-api-v2.production.rokfin.com/api/v2/public/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"https?://(?:www\.)?rokfin\.com/(?P<id>(?P<type>post|stream)/\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"https?://(?:www\.)?rokfin\.com/(?P<id>(?P<type>post|stream)/\d+)")
 });
-static STACK_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"https?://(?:www\.)?rokfin\.com/stack/(?P<id>[^/]+)").unwrap()
-});
+static STACK_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"https?://(?:www\.)?rokfin\.com/stack/(?P<id>[^/]+)"));
 static STORYBOARD: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"https?://[^/]+/([^/]+)/storyboard\.vtt").unwrap());
 

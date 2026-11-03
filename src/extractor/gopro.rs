@@ -2,6 +2,7 @@
 //! the page's `__reflectData` and the media download API's variations, with
 //! the collection's title, creation time and account, and the music track.
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct GoPro;
 
 const NAME: &str = "GoPro";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(www\.)?gopro\.com/v/(?P<id>[A-Za-z0-9]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(www\.)?gopro\.com/v/(?P<id>[A-Za-z0-9]+)"));
 static METADATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.__reflectData\s*=\s*").unwrap());
 static TITLE: LazyLock<Regex> =

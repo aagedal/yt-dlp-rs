@@ -2,6 +2,7 @@
 //! v4 API metadata and its HLS, HTTP and original file URLs (each a
 //! non-fatal empty POST) as audio formats.
 use super::{Extractor, download_json, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,9 +16,8 @@ pub struct StreetVoice;
 const NAME: &str = "StreetVoice";
 const FIELDS: &str = "album,comments_count,created_at,id,image,length,likes_count,name,nickname,plays_count,profile,share_count,synopsis,user,username";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:.+?\.)?streetvoice\.com/[^/]+/songs/(?P<id>[0-9]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:.+?\.)?streetvoice\.com/[^/]+/songs/(?P<id>[0-9]+)")
 });
 static ABR: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\.mp3\.(\d+)k").unwrap());
 

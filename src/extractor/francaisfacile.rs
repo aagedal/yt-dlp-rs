@@ -2,6 +2,7 @@
 //! Français facile audio from the page's `data-media-id` JSON (media ID,
 //! title, first source URL and duration), the page title and its JSON-LD.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct FrancaisFacile;
 
 const NAME: &str = "FrancaisFacile";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://francaisfacile\.rfi\.fr/[a-z]{2}/(?:actualit%C3%A9|podcasts/[^/#?]+)/(?P<id>[^/#?]+)",
     )
-    .unwrap()
 });
 static AUDIO_DATA: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<script[^>]+\bdata-media-id=[^>]+\btype="application/json"[^>]*>\s*"#).unwrap()

@@ -2,6 +2,7 @@
 //! page's live-recording HLS URL (else its `data-video` URL), with the
 //! OpenGraph and `<meta>` metadata.
 use super::{Extractor, dict_format, dict_info, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, PyNumber, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct Meipai;
 
 const NAME: &str = "Meipai";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?meipai\.com/media/(?P<id>[0-9]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?meipai\.com/media/(?P<id>[0-9]+)"));
 /// `file:\s*encodeURIComponent\((["\'])(?P<url>(?:(?!\1).)+)\1\)` without
 /// backreferences.
 static M3U8_URL: LazyLock<Regex> = LazyLock::new(|| {

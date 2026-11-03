@@ -4,8 +4,8 @@
 //! `__NEXT_DATA__` props name the stream or media, which the BFF playables
 //! API resolves to a playable URL.
 use super::{Extractor, download_json, download_webpage, search_nextjs_data};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -22,25 +22,22 @@ const PLAYABLES: &str = "https://bff-web-guacamole.musicradio.com/playables/";
 const EPISODE_NAME: &str = "GlobalPlayerAudioEpisode";
 const EPISODE_KEY: &str = "GlobalPlayerAudioEpisode";
 
-static LIVE_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://www\.globalplayer\.com/live/(?P<id>\w+)/\w+").unwrap());
-static LIVE_PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://www\.globalplayer\.com/playlists/(?P<id>\w+)").unwrap()
-});
-static AUDIO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static LIVE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://www\.globalplayer\.com/live/(?P<id>\w+)/\w+"));
+static LIVE_PLAYLIST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://www\.globalplayer\.com/playlists/(?P<id>\w+)"));
+static AUDIO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://www\.globalplayer\.com/(?P<path>(?P<podcast>podcasts)/|catchup/\w+/\w+/)(?P<id>\w+)/?(?:$|[?#])",
     )
-    .unwrap()
 });
-static EPISODE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static EPISODE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://www\.globalplayer\.com/(?:(?P<podcast>podcasts)|catchup/\w+/\w+)/episodes/(?P<id>\w+)/?(?:$|[?#])",
     )
-    .unwrap()
 });
-static VIDEO_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://www\.globalplayer\.com/videos/(?P<id>\w+)").unwrap());
+static VIDEO_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://www\.globalplayer\.com/videos/(?P<id>\w+)"));
 
 /// `_match_valid_url` of the classes above, in upstream's order.
 pub fn live_suitable(url: &str) -> bool {

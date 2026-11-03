@@ -2,6 +2,7 @@
 //! `data-video-player` attribute (`js_to_json`), its HLS `stream` and
 //! metadata, merged under the page's JSON-LD (`merge_dicts`).
 use super::{Extractor, download_webpage, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,10 +14,8 @@ pub struct Newsy;
 
 const NAME: &str = "Newsy";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?newsy\.com/stories/(?P<id>[^/?#$&]+)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?newsy\.com/stories/(?P<id>[^/?#$&]+)"));
 
 static DATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-video-player\s?=\s?"(\{[^"]+\})">"#).unwrap());

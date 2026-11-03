@@ -2,6 +2,7 @@
 //! `data-quality`/`src` pairs as formats with the OpenGraph, description,
 //! uploader, date, location and stat counters.
 use super::{Extractor, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct Pinkbike;
 
 const NAME: &str = "Pinkbike";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:www\.)?pinkbike\.com/video/|es\.pinkbike\.org/i/kvid/kvid-y5\.swf\?id=)(?P<id>[0-9]+)",
     )
-    .unwrap()
 });
 // `data-quality=((?:\\)?["\'])(.+?)\1[^>]+src=\1(.+?)\1`, one alternative
 // per quote (in the backtracking engine's order).

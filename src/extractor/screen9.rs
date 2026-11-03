@@ -1,6 +1,7 @@
 //! Upstream `Screen9IE` (`yt_dlp/extractor/screen9.py`): the embed page's
 //! `config` HLS stream and progressive MP4 with its plugin metadata.
 use super::{Extractor, download_webpage, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,11 +13,10 @@ pub struct Screen9;
 
 const NAME: &str = "Screen9";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:\w+\.screen9\.(?:tv|com)|play\.su\.se)/(?:embed|media)/(?P<id>[^?#/]+)",
     )
-    .unwrap()
 });
 static CONFIG: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"var\s+config\s*=\s*").unwrap());
 

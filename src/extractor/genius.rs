@@ -3,6 +3,7 @@
 //! smuggled as the referrer), and lyrics pages' song media as a playlist of
 //! `url` results.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,14 +17,11 @@ pub struct GeniusLyrics;
 const NAME: &str = "Genius";
 const LYRICS_NAME: &str = "GeniusLyrics";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?genius\.com/(?:videos|(?P<article>a))/(?P<id>[^?/#]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?genius\.com/(?:videos|(?P<article>a))/(?P<id>[^?/#]+)")
 });
-static LYRICS_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?genius\.com/(?P<id>[^?/#]+)-lyrics(?:[?/#]|$)").unwrap()
+static LYRICS_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?genius\.com/(?P<id>[^?/#]+)-lyrics(?:[?/#]|$)")
 });
 static PAGE_DATA: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?s)<meta content="\s*(\{.+\})\s*"\s+itemprop="page_data""#).unwrap()

@@ -2,6 +2,7 @@
 //! transparent `url` results of their Brightcove video (smuggled with the
 //! `CA` geo countries), with the Next.js entity's episode metadata.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,8 @@ pub struct Tva;
 const NAME: &str = "tvaplus";
 const KEY: &str = "TVA";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?tvaplus\.ca/(?:[^/?#]+/)*[\w-]+-(?P<id>\d+)(?:$|[#?])",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?tvaplus\.ca/(?:[^/?#]+/)*[\w-]+-(?P<id>\d+)(?:$|[#?])")
 });
 static SEASON: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"/s(?:ai|ea)son-(\d+)/").unwrap());
 

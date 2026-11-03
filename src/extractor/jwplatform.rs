@@ -2,6 +2,7 @@
 //! `cdn.jwplayer.com/v2/media/ID` JSON through `_parse_jwplayer_data`
 //! (`require_title=True`).
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct JwPlatform;
 
 const NAME: &str = "JWPlatform";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?:https?://(?:content\.jwplatform|cdn\.jwplayer)\.com/(?:(?:feed|player|thumb|preview|manifest)s|jw6|v2/media)/|jwplatform:)(?P<id>[a-zA-Z0-9]{8})",
     )
-    .unwrap()
 });
 
 /// `JWPlatformIE._extract_embed_urls`: `<script>`/`<iframe>` `src` player

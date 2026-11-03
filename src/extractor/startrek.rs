@@ -3,8 +3,8 @@
 //! else the legacy video URL with its title, subhead, category, description,
 //! publication time, subtitles, poster and series.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -15,11 +15,8 @@ pub struct StarTrek;
 const NAME: &str = "startrek";
 const KEY: &str = "StarTrek";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?startrek\.com(?:/en-(?:ca|un))?/videos/(?P<id>[^/?#]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?startrek\.com(?:/en-(?:ca|un))?/videos/(?P<id>[^/?#]+)")
 });
 
 /// `_match_id`.

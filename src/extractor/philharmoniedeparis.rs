@@ -3,8 +3,8 @@
 //! playlist of its titled chapters, each with the `mobile`/`desktop` HLS
 //! manifests' formats.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -14,11 +14,10 @@ pub struct PhilharmonieDeParis;
 
 const NAME: &str = "PhilharmonieDeParis";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:live\.philharmoniedeparis\.fr/(?:[Cc]oncert/|embed(?:app)?/|misc/Playlist\.ashx\?id=)|pad\.philharmoniedeparis\.fr/(?:doc/CIMU/|player\.aspx\?id=)|philharmoniedeparis\.fr/fr/live/concert/|otoplayer\.philharmoniedeparis\.fr/fr/embed/)(?P<id>\d+)",
     )
-    .unwrap()
 });
 
 /// `_match_id`.

@@ -5,6 +5,7 @@
 use super::{
     Extractor, dict_info, download_json_note, download_webpage, extract_m3u8_fatal_master,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,11 +17,10 @@ pub struct Servus;
 
 const NAME: &str = "Servus";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:servus\.com/(?:(?:at|de)/p/[^/]+|tv/videos)|(?:servustv|pm-wissen)\.com/(?:[^/]+/)?v(?:ideos)?)/(?P<id>[aA]{2}-?\w+|\d+-\d+)",
     )
-    .unwrap()
 });
 static SEASON: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"Season (\d+)").unwrap());
 static EPISODE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"Episode (\d+)").unwrap());

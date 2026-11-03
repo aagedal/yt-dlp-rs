@@ -3,6 +3,7 @@
 //! and time-shifted recordings (the timeshift player's `fplayer_source`
 //! segments: one video, or a `multi_video` playlist of parts).
 use super::{Extractor, dict_format, dict_info, download_webpage, download_webpage_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,9 +16,8 @@ pub struct KukuluLive;
 const NAME: &str = "KukuluLive";
 const BASE: &str = "https://live.erinn.biz";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://live\.erinn\.biz/live\.php\?h(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://live\.erinn\.biz/live\.php\?h(?P<id>\d+)"));
 static LIVESTREAM: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"var\s+timeshift\s*=\s*false").unwrap());
 static SOURCE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"var\s+fplayer_source\s*=").unwrap());

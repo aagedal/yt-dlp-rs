@@ -1,6 +1,7 @@
 //! Upstream `OnePlacePodcastIE` (`yt_dlp/extractor/oneplace.py`): an
 //! episode page's MP3 URL, title and description as an untyped result.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,11 +13,8 @@ pub struct OnePlacePodcast;
 
 const NAME: &str = "OnePlacePodcast";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://www\.oneplace\.com/[\w]+/[^/]+/listen/[\w-]+-(?P<id>\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://www\.oneplace\.com/[\w]+/[^/]+/listen/[\w-]+-(?P<id>\d+)")
 });
 
 static MEDIA: LazyLock<[Regex; 2]> = LazyLock::new(|| {

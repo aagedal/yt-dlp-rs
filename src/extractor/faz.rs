@@ -2,6 +2,7 @@
 //! page's `data-videojs-media` XML configuration (its `LOW`, `HIGH` and `HQ`
 //! encodings by quality), with the OpenGraph title and description.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct Faz;
 const NAME: &str = "faz.net";
 const KEY: &str = "Faz";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?faz\.net/(?:[^/]+/)*.*?-(?P<id>\d+)\.html")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?faz\.net/(?:[^/]+/)*.*?-(?P<id>\d+)\.html")
 });
 static MEDIA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"data-videojs-media='([^']+)").unwrap());

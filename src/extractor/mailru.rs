@@ -7,6 +7,7 @@ use super::{
     Extractor, dict_format, dict_info, download_json_note, download_json_note_headers,
     download_webpage,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -22,22 +23,20 @@ const SEARCH_NAME: &str = "mailru:music:search";
 const SEARCH_KEY: &str = "MailRuMusicSearch";
 /// `MailRuMusicSearchBaseIE`'s `LIMIT`.
 const SEARCH_LIMIT: i64 = 100;
-static SEARCH_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"https?://my\.mail\.ru/+music/+search/+(?P<id>[^/?#&]+)").unwrap()
-});
+static SEARCH_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"https?://my\.mail\.ru/+music/+search/+(?P<id>[^/?#&]+)"));
 
 const NAME: &str = "mailru";
 const MUSIC_NAME: &str = "MailRuMusic";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(concat!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(concat!(
         r"https?://(?:(?:www|m|videoapi)\.)?my\.mail\.ru/+(?:",
         r"video/.*#video=/?(?P<idv1>(?:[^/]+/){3}\d+)|",
         r"(?:videos/embed/)?(?:(?P<idv2prefix>(?:[^/]+/+){2})(?:video/(?:embed/)?)?(?P<idv2suffix>[^/]+/\d+))(?:\.html)?|",
         r"(?:video/embed|\+/video/meta)/(?P<metaid>\d+)",
         r")",
     ))
-    .unwrap()
 });
 static PAGE_CONFIG: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?s)<script[^>]+class="sp-video__page-config"[^>]*>(.+?)</script>"#).unwrap()
@@ -45,8 +44,8 @@ static PAGE_CONFIG: LazyLock<Regex> = LazyLock::new(|| {
 static PAGE_VIDEO: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"(?s)"video":\s*(\{.+?\}),"#).unwrap());
 static HEIGHT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^(\d+)[pP]$").unwrap());
-static MUSIC_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"https?://my\.mail\.ru/+music/+songs/+[^/?#&]+-(?P<id>[\da-f]+)").unwrap()
+static MUSIC_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"https?://my\.mail\.ru/+music/+songs/+[^/?#&]+-(?P<id>[\da-f]+)")
 });
 
 /// `MailRuIE.suitable`.

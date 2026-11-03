@@ -8,8 +8,8 @@ use super::{
     Extractor, dict_info, download_json, download_json_headers, extract_m3u8_fatal_master,
     ignore_subtitles,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, Subtitles, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -19,11 +19,10 @@ pub struct Gaia;
 
 const NAME: &str = "Gaia";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?gaia\.com/video/(?P<id>[^/?]+).*?\bfullplayer=(?P<type>feature|preview)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

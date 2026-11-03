@@ -12,9 +12,9 @@
 //! streams) and `ORFPodcastIE` (a `sound.orf.at` podcast episode). Not
 //! ported: `orf:iptv` and `orf:fm4:story`.
 use super::{Extractor, dict_info, download_json, extract_m3u8_master_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoInfo};
 use base64::Engine;
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -27,9 +27,8 @@ pub struct OrfPodcast;
 const NAME: &str = "orf:on";
 const KEY: &str = "ORFON";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://on\.orf\.at/video/(?P<id>\d+)(?:/(?P<segment>\d+))?")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://on\.orf\.at/video/(?P<id>\d+)(?:/(?P<segment>\d+))?")
 });
 
 /// `ORFRadioIE.STATION_INFO`: the station's API name, loop channel and
@@ -53,15 +52,16 @@ const RADIO_KEY: &str = "ORFRadio";
 const PODCAST_NAME: &str = "orf:podcast";
 const PODCAST_KEY: &str = "ORFPodcast";
 
-static RADIO_URL: LazyLock<Regex> = LazyLock::new(|| {
+static RADIO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
     let stations = STATIONS.map(|(name, _)| name).join("|");
-    Regex::new(&format!(
+    UrlRegex::new(format!(
         r"^https?://(?:(?P<station>{stations})\.orf\.at/player|radiothek\.orf\.at/(?P<station2>{stations}))/(?P<date>[0-9]+)/(?P<show>\w+)"
     ))
-    .unwrap()
 });
-static PODCAST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://sound\.orf\.at/podcast/(?P<station>bgl|fm4|ktn|noe|oe1|oe3|ooe|sbg|stm|tir|tv|vbg|wie)/(?P<show>[\w-]+)/(?P<id>[\w-]+)").unwrap()
+static PODCAST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://sound\.orf\.at/podcast/(?P<station>bgl|fm4|ktn|noe|oe1|oe3|ooe|sbg|stm|tir|tv|vbg|wie)/(?P<show>[\w-]+)/(?P<id>[\w-]+)",
+    )
 });
 
 /// `_match_valid_url`.

@@ -1,6 +1,7 @@
 //! Upstream `Ku6IE` (`yt_dlp/extractor/ku6.py`): a show page's heading and
 //! the player JSON's download URL as an untyped result.
 use super::{Extractor, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -11,9 +12,8 @@ pub struct Ku6;
 
 const NAME: &str = "Ku6";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://v\.ku6\.com/show/(?P<id>[a-zA-Z0-9\-\_]+)(?:\.)*html")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://v\.ku6\.com/show/(?P<id>[a-zA-Z0-9\-\_]+)(?:\.)*html")
 });
 static TITLE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<h1 title=.*>(.*?)</h1>").unwrap());
 

@@ -3,6 +3,7 @@
 //! OpenGraph/title metadata, reaction count and JSON-LD author. LinkedIn
 //! Learning and events (which need a login) are not supported.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,16 +15,14 @@ pub struct LinkedIn;
 
 const NAME: &str = "LinkedIn";
 
-static VALID_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+static VALID_URLS: LazyLock<[UrlRegex; 2]> = LazyLock::new(|| {
     [
-        crate::extractor::url_regex(
+        UrlRegex::ascii(
             r"^https?://(?:www\.)?linkedin\.com/posts/[^/?#]+-(?P<id>\d+)-\w{4}/?(?:[?#]|$)",
-        )
-        .unwrap(),
-        crate::extractor::url_regex(
+        ),
+        UrlRegex::ascii(
             r"^https?://(?:www\.)?linkedin\.com/feed/update/urn:li:activity:(?P<id>\d+)",
-        )
-        .unwrap(),
+        ),
     ]
 });
 static VIDEO: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(<video[^>]+>)").unwrap());

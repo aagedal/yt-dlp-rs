@@ -9,6 +9,7 @@ use super::clyp::{float_or_none, key_error};
 use super::json_ld::url_or_none;
 use super::streamable::int_or_none;
 use super::{Extractor, dict_format, dict_info, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -25,13 +26,13 @@ pub(crate) const KEY: &str = "Vidyard";
 const REFERER: &str = "https://play.vidyard.com/";
 
 /// `_VALID_URL`, tried in order by `_match_valid_url`.
-static VALID_URLS: LazyLock<[Regex; 3]> = LazyLock::new(|| {
+static VALID_URLS: LazyLock<[UrlRegex; 3]> = LazyLock::new(|| {
     [
         r"^https?://[\w-]+(?:\.hubs)?\.vidyard\.com/watch/(?P<id>[\w-]+)",
         r"^https?://(?:embed|share)\.vidyard\.com/share/(?P<id>[\w-]+)",
         r"^https?://play\.vidyard\.com/(?:player/)?(?P<id>[\w-]+)",
     ]
-    .map(|pattern| crate::extractor::url_regex(pattern).unwrap())
+    .map(UrlRegex::ascii)
 });
 
 /// `_match_id`'s ID of a suitable URL.

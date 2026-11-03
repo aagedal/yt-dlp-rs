@@ -7,8 +7,8 @@
 //!
 //! Not ported: the NHK for School and Radiru extractors.
 use super::{Extractor, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -21,27 +21,23 @@ const VOD_NAME: &str = "NhkVod";
 const PROGRAM_NAME: &str = "NhkVodProgram";
 const BASE: &str = r"https?://www3\.nhk\.or\.jp/nhkworld/(?P<lang>[a-z]{2})/";
 
-static VOD_URL: LazyLock<[Regex; 3]> = LazyLock::new(|| {
+static VOD_URL: LazyLock<[UrlRegex; 3]> = LazyLock::new(|| {
     [
-        Regex::new(&format!(
+        UrlRegex::new(format!(
             r"^{BASE}shows/(?:(?P<type>video)/)?(?P<id>\d{{4}}[\da-z]\d+)/?(?:$|[?#])"
-        ))
-        .unwrap(),
-        Regex::new(&format!(
+        )),
+        UrlRegex::new(format!(
             r"^{BASE}(?:ondemand|shows)/(?P<type>audio)/(?P<id>[^/?#]+?-\d{{8}}-[\da-z]+)"
-        ))
-        .unwrap(),
-        Regex::new(&format!(
+        )),
+        UrlRegex::new(format!(
             r"^{BASE}ondemand/(?P<type>video)/(?P<id>\d{{4}}[\da-z]\d+)"
-        ))
-        .unwrap(),
+        )),
     ]
 });
-static PROGRAM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+static PROGRAM_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(format!(
         r"^{BASE}(?:shows|tv)/(?:(?P<type>audio)/programs/)?(?P<id>\w+)/?(?:\?(?:[^#]+&)?type=(?P<episode_type>clip|(?:radio|tv)Episode))?"
     ))
-    .unwrap()
 });
 
 /// `NhkVodIE._match_valid_url`: `(lang, type, id)`.

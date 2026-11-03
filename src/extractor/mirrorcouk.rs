@@ -3,6 +3,7 @@
 //! `json-placeholder` `videoData.videoId`, with the article ID as
 //! `display_id`.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,10 +15,8 @@ pub struct MirrorCoUk;
 
 const NAME: &str = "MirrorCoUK";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?mirror\.co\.uk/[/+\[\w-]+-(?P<id>\d+)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?mirror\.co\.uk/[/+\[\w-]+-(?P<id>\d+)"));
 static DATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"div\s+class="json-placeholder"\s+data-json=""#).unwrap());
 

@@ -2,8 +2,8 @@
 //! episodes as transparent Kaltura `url` results with the API's episode
 //! metadata, and shows as playlists of them.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -14,11 +14,10 @@ pub struct ToonGoggles;
 const NAME: &str = "ToonGoggles";
 const KALTURA: &str = "Kaltura";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?toongoggles\.com/shows/(?P<show_id>\d+)(?:/[^/]+/episodes/(?P<episode_id>\d+))?",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

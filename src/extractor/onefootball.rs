@@ -2,6 +2,7 @@
 //! `cdn.jwplayer.com/manifests/ID.m3u8` URL as a `url_transparent` result of
 //! `JWPlatformIE`, overlaid with the old archive ID and the page's JSON-LD.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct OneFootball;
 
 const NAME: &str = "OneFootball";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?onefootball\.com/[a-z]{2}/video/[^/&?#]+-(?P<id>\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?onefootball\.com/[a-z]{2}/video/[^/&?#]+-(?P<id>\d+)")
 });
 
 static M3U8: LazyLock<Regex> =

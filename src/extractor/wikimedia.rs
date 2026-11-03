@@ -3,6 +3,7 @@
 //! upstream's robot-policy User-Agent): the source file, its transcoded
 //! derivatives, timed text tracks and the extended metadata.
 use super::{Extractor, dict_format, dict_info, download_json_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, SubtitleFormat, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,9 +16,8 @@ pub struct Wikimedia;
 const NAME: &str = "wikimedia.org";
 const KEY: &str = "Wikimedia";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://commons\.wikimedia\.org/wiki/File:(?P<id>[^/#?]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://commons\.wikimedia\.org/wiki/File:(?P<id>[^/#?]+)")
 });
 static TYPE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"^(?P<mime>[^;]+)(?:;\s*codecs="(?P<codecs>[^"]+)")?"#).unwrap());

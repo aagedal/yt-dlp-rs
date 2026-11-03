@@ -13,6 +13,7 @@ use super::{
     Extractor, dict_info, download_json, download_json_note, download_json_note_headers,
     download_webpage, extract_m3u8_master_optional, search_warning, update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{
     Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoFormat, VideoInfo,
 };
@@ -38,26 +39,22 @@ const SERIES_KEY: &str = "DRTVSeries";
 
 const SERIES_API: &str = "https://production-cdn.dr-massive.com/api/page?device=web_browser&item_detail_expand=all&lang=da&max_list_prefetch=3&path=";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:www\.)?dr\.dk/tv/se(?:/ondemand)?/(?:[^/?#]+/)*|(?:www\.)?(?:dr\.dk|dr-massive\.com)/drtv/(?:se|episode|program)/)(?P<id>[\da-z_-]+)",
     )
-    .unwrap()
 });
-static LIVE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?dr\.dk/(?:tv|TV)/live/(?P<id>[\da-z-]+)").unwrap()
-});
-static SEASON_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static LIVE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?dr\.dk/(?:tv|TV)/live/(?P<id>[\da-z-]+)"));
+static SEASON_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?(?:dr\.dk|dr-massive\.com)/drtv/saeson/(?P<display_id>[\w-]+)_(?P<id>\d+)",
     )
-    .unwrap()
 });
-static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static SERIES_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?(?:dr\.dk|dr-massive\.com)/drtv/serie/(?P<display_id>[\w-]+)_(?P<id>\d+)",
     )
-    .unwrap()
 });
 static DATA: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"window\.__data\s*=").unwrap());
 

@@ -2,7 +2,7 @@
 //! `_video.py`): `YoutubeIE._VALID_URL` with `_INVIDIOUS_SITES`,
 //! `_PLAYLIST_ID_RE`, and Python's `parse_qs`/`urlencode` for them.
 //! Patterns are matched like `re.match`: anchored at the start only.
-use regex::Regex;
+use crate::extractor::UrlRegex;
 use std::sync::LazyLock;
 
 /// `_PLAYLIST_ID_RE`.
@@ -178,19 +178,18 @@ fn id_except(words: &[&str], length: usize) -> String {
 
 /// `YoutubeIE._VALID_URL` with its optional URL part: one ID group per
 /// alternative (`v/`, `embed/`… IDs exclude `videoseries` and `live_stream`).
-static VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {
+static VIDEO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
     let id = format!("[{ID_CHARS}]{{11}}");
     let path_id = id_except(&["videoseries", "live_stream"], 11);
     let invidious = invidious();
-    Regex::new(&format!(
+    UrlRegex::new(format!(
         r"^(?:https?://|//)(?:(?:(?:(?:\w+\.)?[yY][oO][uU][tT][uU][bB][eE](?:-nocookie|kids)?\.com|(?:www\.)?deturl\.com/www\.youtube\.com|(?:www\.)?pwnyoutube\.com|(?:www\.)?hooktube\.com|(?:www\.)?yourepeat\.com|tube\.majestyc\.net|{invidious}|youtube\.googleapis\.com)/(?:.*?#/)?(?:(?:v|embed|e|shorts|live)/(?P<path>{path_id})|(?:(?:watch|movie)(?:_popup)?(?:\.php)?/?)?(?:\?|#!?)(?:.*?[&;])??v=(?P<query>{id})))|(?:youtu\.be|vid\.plus|zwearz\.com/watch|{invidious})/(?P<short>{id})|(?:www\.)?cleanvideosearch\.com/media/action/yt/watch\?videoId=(?P<clean>{id}))"
     ))
-    .expect("static pattern")
 });
 
 /// `YoutubeIE._VALID_URL`'s naked ID: `(?P<id>…{11})(?:\#|$)`.
-static NAKED_ID: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(&format!(r"^([{ID_CHARS}]{{11}})(?:#|\n?$)")).unwrap());
+static NAKED_ID: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(format!(r"^([{ID_CHARS}]{{11}})(?:#|\n?$)")));
 
 /// `YoutubeIE._match_id`.
 pub(crate) fn video_id(url: &str) -> Option<String> {

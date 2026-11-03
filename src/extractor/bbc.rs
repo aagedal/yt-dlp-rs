@@ -4,6 +4,7 @@
 //! parameter stops after that page). `BBCIE`, `BBCCoUkIE` and the other BBC
 //! classes are not ported.
 use super::{Extractor, download_webpage, download_webpage_note, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -20,11 +21,10 @@ const ENTRY_KEY: &str = "BBCCoUk";
 /// `BBCCoUkIE._ID_REGEX`.
 const ID_REGEX: &str = "(?:[pbml][0-9a-z]{7}|w[0-9a-z]{7,14})";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(format!(
         r"^https?://(?:www\.)?bbc\.co\.uk/programmes/(?P<id>{ID_REGEX})/(?:episodes|broadcasts|clips)"
     ))
-    .unwrap()
 });
 static VIDEO_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(&format!(r#"data-pid=["']({ID_REGEX})"#)).unwrap());

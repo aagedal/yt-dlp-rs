@@ -1,6 +1,7 @@
 //! Upstream `ScreenRecIE` (`yt_dlp/extractor/screenrec.py`): a share
 //! page's `customUrl` HLS manifest with its OpenGraph metadata.
 use super::{Extractor, download_webpage, extract_m3u8_fatal, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,9 +13,8 @@ pub struct ScreenRec;
 
 const NAME: &str = "ScreenRec";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?screenrec\.com/share/(?P<id>\w{10})").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?screenrec\.com/share/(?P<id>\w{10})"));
 /// `customUrl\s*:\s*(["\'])(?P<url>(?:(?!\1).)+)\1` as one alternative per
 /// quote.
 static CUSTOM_URL: LazyLock<Regex> = LazyLock::new(|| {

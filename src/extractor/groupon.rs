@@ -2,6 +2,7 @@
 //! playlists of their `payload.carousel.dealVideos` YouTube `url` results,
 //! with the OpenGraph title and description.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct Groupon;
 
 const NAME: &str = "Groupon";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?groupon\.com/deals/(?P<id>[^/?#&]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?groupon\.com/deals/(?P<id>[^/?#&]+)"));
 static PAYLOAD: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?:var\s+|window\.)payload\s*=\s*(.*?);\n").unwrap());
 

@@ -4,6 +4,7 @@
 //! the shared/embedded post it links to when the post has no video.
 //! GETTR streams (`GettrStreamingIE`) are reported as unsupported.
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -20,13 +21,11 @@ const STREAMING_NAME: &str = "GettrStreaming";
 const MEDIA_BASE_URL: &str = "https://media.gettr.com/";
 const API_BASE_URL: &str = "https://api.gettr.com/u/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(www\.)?gettr\.com/post/(?P<id>[a-z0-9]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(www\.)?gettr\.com/post/(?P<id>[a-z0-9]+)"));
 
-static STREAMING_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(www\.)?gettr\.com/streaming/(?P<id>[a-z0-9]+)").unwrap()
-});
+static STREAMING_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(www\.)?gettr\.com/streaming/(?P<id>[a-z0-9]+)"));
 
 static UPLOADER: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^(.+?) on GETTR").unwrap());
 

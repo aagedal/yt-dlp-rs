@@ -3,8 +3,8 @@
 //! following a `Location` redirect), the playlist's TS and MP4 qualities
 //! with their codecs, and its subtitles.
 use super::{Extractor, dict_format, dict_info, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, SubtitleFormat, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -14,11 +14,10 @@ pub struct StreamCz;
 
 const NAME: &str = "StreamCZ";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:stream|televizeseznam)\.cz/[^?#]+/(?P<display_id>[^?#]+)-(?P<id>[0-9]+)",
     )
-    .unwrap()
 });
 
 const QUERY: &str = "

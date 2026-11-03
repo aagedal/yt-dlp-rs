@@ -3,6 +3,7 @@
 //! derivative (HLS and HTTP formats rewritten like the page's
 //! `setAVSource`), the page's download options and the closed captions.
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, SubtitleFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ pub struct LibraryOfCongress;
 const NAME: &str = "loc";
 const KEY: &str = "LibraryOfCongress";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?loc\.gov/(?:item/|today/cyberlc/feature_wdesc\.php\?.*\brec=)(?P<id>[0-9a-z_.]+)",
     )
-    .unwrap()
 });
 /// The media ID patterns, in upstream's order (backreferences as two
 /// quote alternatives).

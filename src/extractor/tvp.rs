@@ -8,8 +8,8 @@ use super::{
     Extractor, dict_format, dict_info, download_json, download_webpage, extract_ism_optional,
     extract_m3u8_master_optional, extract_mpd_optional_note, update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -29,24 +29,21 @@ const API_BASE: &str = "https://vod.tvp.pl/api/products";
 /// The JSONP callback (upstream picks one of several names at random).
 const CALLBACK: &str = "jebacpis";
 
-static EMBED_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static EMBED_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?:tvp:|https?://(?:[^/]+\.)?(?:tvp(?:parlament)?\.pl|tvp\.info|tvpworld\.com|swipeto\.pl)/(?:sess/(?:tvplayer\.php\?.*?object_id|TVPlayer2/(?:embed|api)\.php\?.*[Ii][Dd])|shared/details\.php\?.*?object_id)=)(?P<id>\d+)",
     )
-    .unwrap()
 });
 /// `(?<!-odcinki)` is checked on the slug (the regex crate has no lookbehind).
-static VIDEO_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VIDEO_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://vod\.tvp\.pl/(?P<category>[a-z\d-]+,\d+)/(?P<slug>[a-z\d-]+)(?:-odcinki,\d+/odcinek--?\d+,S-?\d+E-?\d+)?,(?P<id>\d+)/?(?:[?#]|$)",
     )
-    .unwrap()
 });
-static SERIES_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static SERIES_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://vod\.tvp\.pl/[a-z\d-]+,\d+/[a-z\d-]+-odcinki,(?P<id>\d+)(?:\?[^#]+)?(?:#.+)?$",
     )
-    .unwrap()
 });
 
 /// `_match_id` for `TVPEmbedIE`.

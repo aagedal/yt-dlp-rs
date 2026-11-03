@@ -3,6 +3,7 @@
 //! HDS or direct files) with the title, description, running time, start
 //! date and sized images; HuffPost Live embed iframes are embeds.
 use super::{Extractor, dict_format, dict_info, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ pub struct HuffPost;
 pub(crate) const NAME: &str = "HuffPost";
 pub(crate) const KEY: &str = "HuffPost";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(embed\.)?live\.huffingtonpost\.com/(?:r/segment/[^/]+/|HPLEmbedPlayer/\?segmentId=)(?P<id>[0-9a-f]+)",
     )
-    .unwrap()
 });
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

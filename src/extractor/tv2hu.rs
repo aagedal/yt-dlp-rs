@@ -3,8 +3,8 @@
 //! streaming JSON as HLS, with the series metadata), show pages as playlists
 //! of their ribbons, and ribbons as playlists of their cards.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -18,12 +18,10 @@ const KEY: &str = "TV2Hu";
 const SERIES_NAME: &str = "tv2playseries.hu";
 const SERIES_KEY: &str = "TV2HuSeries";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?tv2play\.hu/(?P<id>[^#&?]+)").unwrap()
-});
-static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?tv2play\.hu/szalag/(?P<id>[^#&?]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?tv2play\.hu/(?P<id>[^#&?]+)"));
+static SERIES_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?tv2play\.hu/szalag/(?P<id>[^#&?]+)"));
 
 /// `TV2HuIE._match_id` (`(?!szalag/)`).
 pub fn suitable(url: &str) -> bool {

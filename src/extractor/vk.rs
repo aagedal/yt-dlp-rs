@@ -11,6 +11,7 @@
 //! pages, pending entries fetched as the playlist is processed (upstream's
 //! `_entries` generator). `VKPlayIE`/`VKPlayLiveIE` are in [`super::vkplay`].
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -28,8 +29,8 @@ const WALL_POST: &str = "vk:wallpost";
 const USER_VIDEOS: &str = "vk:uservideos";
 const LOGIN_HINT: &str = "Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vk) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(concat!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(concat!(
         r"^https?://(?:",
         r"(?:(?:(?:m|new|vksport)\.)?vk(?:(?:video)?\.ru|\.com)/video_|(?:www\.)?daxab\.com/)",
         r"ext\.php\?(?P<embed_query>.*?\boid=(?P<oid>-?\d+).*?\bid=(?P<id>\d+).*)|",
@@ -37,7 +38,6 @@ static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
         r"(?P<videoid>-?\d+_\d+)(?:.*\blist=(?P<list_id>([\da-f]+)|(ln-[\da-zA-Z]+)))?",
         r")"
     ))
-    .unwrap()
 });
 static ERROR_MESSAGES: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [
@@ -141,20 +141,20 @@ static DATE: LazyLock<Regex> =
 static VIEWS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"class=["']mv_views_count[^>]+>\s*([\d,.]+)"#).unwrap());
 static HEIGHT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^(?:url|cache)(\d+)").unwrap());
-static WALL_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:(?:(?:m|new)\.)?vk\.com/(?:[^?]+\?.*\bw=)?wall(?P<id>-?\d+_\d+)))")
-        .unwrap()
+static WALL_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:(?:(?:(?:m|new)\.)?vk\.com/(?:[^?]+\?.*\bw=)?wall(?P<id>-?\d+_\d+)))",
+    )
 });
 /// `VKUserVideosIE._VALID_URL`; the second pattern's `(?!\?.*\bz=video)`
 /// is checked on `rest` (see [`user_videos_id`]).
-static USER_VIDEOS_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+static USER_VIDEOS_URLS: LazyLock<[UrlRegex; 2]> = LazyLock::new(|| {
     const BASE: &str = r"^https?://(?:(?:m|new)\.)?vk(?:video\.ru|\.com/video)";
     [
-        Regex::new(&format!(r"{BASE}/playlist/(?P<id>-?\d+_-?\d+)")).unwrap(),
-        Regex::new(&format!(
+        UrlRegex::new(format!(r"{BASE}/playlist/(?P<id>-?\d+_-?\d+)")),
+        UrlRegex::new(format!(
             r"{BASE}/(?P<id>@[^/?#]+)(?:/all)?/?(?P<rest>(?:[?#].*)?)$"
-        ))
-        .unwrap(),
+        )),
     ]
 });
 static Z_VIDEO: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^\?.*\bz=video").unwrap());

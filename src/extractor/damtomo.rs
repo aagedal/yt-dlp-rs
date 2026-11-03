@@ -3,6 +3,7 @@
 //! movies and posts from their Shift JIS page (the song, singer and counts)
 //! and the stream XML's HLS playlist.
 use super::{Extractor, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,23 +18,21 @@ pub struct DamtomoRecord;
 struct Site {
     name: &'static str,
     key: &'static str,
-    valid_url: &'static LazyLock<Regex>,
+    valid_url: &'static LazyLock<UrlRegex>,
     webpage_url_tmpl: &'static str,
     dkml_xml_url: &'static str,
     dkml_xml_ns: &'static str,
 }
 
-static VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static VIDEO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?clubdam\.com/app/damtomo/(?:SP/)?karaokeMovie/StreamingDkm\.do\?karaokeMovieId=(?P<id>\d+)",
     )
-    .unwrap()
 });
-static RECORD_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static RECORD_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?clubdam\.com/app/damtomo/(?:SP/)?karaokePost/StreamingKrk\.do\?karaokeContributeId=(?P<id>\d+)",
     )
-    .unwrap()
 });
 
 static VIDEO: Site = Site {

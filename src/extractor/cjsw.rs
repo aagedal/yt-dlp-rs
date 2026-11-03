@@ -1,6 +1,7 @@
 //! Upstream `CJSWIE` (`yt_dlp/extractor/cjsw.py`): an episode page's
 //! audio button source with its heading, description and show name.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,11 +13,8 @@ pub struct Cjsw;
 
 const NAME: &str = "CJSW";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?cjsw\.com/program/(?P<program>[^/]+)/episode/(?P<id>\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?cjsw\.com/program/(?P<program>[^/]+)/episode/(?P<id>\d+)")
 });
 
 /// `(["\'])(?P<NAME>(?:(?!\1).)+)\1` as one alternative per quote.

@@ -4,8 +4,8 @@
 //! its embedded video. The anonymous token is requested on every run (upstream
 //! caches it on disk and refreshes it after a `403`; not ported).
 use super::{Extractor, direct, download_json_headers, post_json_errnote};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -21,16 +21,15 @@ const DIG_COMMENT_NAME: &str = "wykop:dig:comment";
 const POST_NAME: &str = "wykop:post";
 const POST_COMMENT_NAME: &str = "wykop:post:comment";
 
-static DIG: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?wykop\.pl/link/(?P<id>\d+)").unwrap());
-static DIG_COMMENT: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?wykop\.pl/link/(?P<dig_id>\d+)/[^/]+/komentarz/(?P<id>\d+)")
-        .unwrap()
+static DIG: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?wykop\.pl/link/(?P<id>\d+)"));
+static DIG_COMMENT: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?wykop\.pl/link/(?P<dig_id>\d+)/[^/]+/komentarz/(?P<id>\d+)")
 });
-static POST: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?wykop\.pl/wpis/(?P<id>\d+)").unwrap());
-static POST_COMMENT: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?wykop\.pl/wpis/(?P<post_id>\d+)/[^/#]+#(?P<id>\d+)").unwrap()
+static POST: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?wykop\.pl/wpis/(?P<id>\d+)"));
+static POST_COMMENT: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?wykop\.pl/wpis/(?P<post_id>\d+)/[^/#]+#(?P<id>\d+)")
 });
 
 /// `WykopDigIE.suitable`: a link URL that is not a comment's.

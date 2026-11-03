@@ -1,6 +1,7 @@
 //! Upstream `ErocastIE` (`yt_dlp/extractor/erocast.py`): a track page's
 //! `song_data_ID` JSON, its HLS stream and metadata.
 use super::{Extractor, download_webpage, extract_m3u8_fatal, search_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,9 +13,8 @@ pub struct Erocast;
 
 const NAME: &str = "Erocast";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?erocast\.me/track/(?P<id>[0-9]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?erocast\.me/track/(?P<id>[0-9]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

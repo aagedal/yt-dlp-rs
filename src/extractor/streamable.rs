@@ -1,6 +1,7 @@
 //! Upstream `StreamableIE` (`yt_dlp/extractor/streamable.py`): the ajax
 //! API's video files as formats.
 use super::{Extractor, download_json, proto_relative};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,9 +13,8 @@ pub struct Streamable;
 
 const NAME: &str = "Streamable";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://streamable\.com/(?:[es]/)?(?P<id>\w+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://streamable\.com/(?:[es]/)?(?P<id>\w+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

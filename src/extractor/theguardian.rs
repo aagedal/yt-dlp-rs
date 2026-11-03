@@ -2,8 +2,8 @@
 //! episode page's `podcast__player` `data-source` with its OpenGraph and
 //! meta-tag metadata (the series playlist extractor is not ported).
 use super::{Extractor, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -13,11 +13,10 @@ pub struct TheGuardianPodcast;
 
 const NAME: &str = "TheGuardianPodcast";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?theguardian\.com/\w+/audio/\d{4}/\w{3}/\d{1,2}/(?P<id>[\w-]+)",
     )
-    .unwrap()
 });
 
 /// `_match_id`.

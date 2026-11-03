@@ -5,6 +5,7 @@
 use super::{
     Extractor, dict_format, dict_info, direct, download_json, download_webpage, update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,11 +17,10 @@ pub struct Piksel;
 
 const NAME: &str = "Piksel";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:player\.(?:olympusattelecom|vibebyvista)|(?:api|player)\.multicastmedia|(?:api-ovp|player)\.piksel)\.(?:com|tech)|(?:mz-edge\.stream\.co|movie-s\.nhk\.or)\.jp|vidego\.baltimorecity\.gov)/v/(?:refid/(?P<refid>[^/]+)/prefid/)?(?P<id>[\w-]+)",
     )
-    .unwrap()
 });
 static APP_TOKEN: LazyLock<[Regex; 2]> = LazyLock::new(|| {
     [

@@ -3,6 +3,7 @@
 //! its `videoUrl` HLS signed with the `wmsAuthSign` token fetched once per
 //! run, with Open Graph fallbacks and the JSON-LD `TVEpisode` season.
 use super::{Extractor, dict_info, download_webpage, download_webpage_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,8 @@ pub struct TviPlayer;
 
 const NAME: &str = "TVIPlayer";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://tviplayer\.iol\.pt(/programa/[\w-]+/[a-f0-9]+)?/\w+/(?P<id>\w+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://tviplayer\.iol\.pt(/programa/[\w-]+/[a-f0-9]+)?/\w+/(?P<id>\w+)")
 });
 static JSON_DATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"\sopts\s*=\s*\{\s*video\s*:\s*\[").unwrap());

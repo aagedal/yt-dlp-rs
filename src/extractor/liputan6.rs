@@ -3,6 +3,7 @@
 //! `vidio.com/watch/ID-DISPLAY_ID` URL (so `VidioIE` produces the result).
 use super::clyp::key_error;
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct Liputan6;
 
 const NAME: &str = "Liputan6";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"https?://www\.liputan6\.com/\w+/read/\d+/(?P<id>[\w-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"https?://www\.liputan6\.com/\w+/read/\d+/(?P<id>[\w-]+)"));
 static GTM: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"window\.kmklabs\.gtm\s*=").unwrap());
 
 /// `_match_valid_url`.

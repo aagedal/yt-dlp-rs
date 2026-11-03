@@ -1,6 +1,7 @@
 //! Upstream `FilmwebIE` (`yt_dlp/extractor/filmweb.py`): the article's
 //! trailer embed code, a `url_transparent` result of its 23video player.
 use super::{Extractor, download_json, download_webpage, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,11 +13,10 @@ pub struct Filmweb;
 
 const NAME: &str = "Filmweb";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?filmweb\.no/(?P<type>trailere|filmnytt)/article(?P<id>\d+)\.ece",
     )
-    .unwrap()
 });
 static VIDEO_ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"data-videoid="(\d+)""#).unwrap());
 static IFRAME: LazyLock<Regex> =

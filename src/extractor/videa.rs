@@ -3,6 +3,7 @@
 //! RC4-encrypted base64, keyed by the player's nonce, a random seed and the
 //! response's `x-videa-xs` header; its `video_source` entries give the formats.
 use super::{Extractor, dict_format, dict_info, download_webpage, download_webpage_with_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -19,15 +20,14 @@ const KEY: &str = "Videa";
 const STATIC_SECRET: &str = "xHb0ZvME5q8CBcoQi6AngerDu3FGO9fkUlwPmLVY_RTzj2hJIS4NasXWKy1td7p";
 const XML_URL: &str = "http://videa.hu/player/xml";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(concat!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(concat!(
         r"^https?://videa(?:kid)?\.hu/",
         r"(?:videok/(?:[^/]+/)*[^?#&]+-|",
         r"(?:videojs_)?player\?.*?\bv=|",
         r"player/v/)",
         r"(?P<id>[^?#&]+)",
     ))
-    .unwrap()
 });
 
 static PLAYER_IFRAME: LazyLock<Regex> =

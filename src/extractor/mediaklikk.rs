@@ -3,6 +3,7 @@
 //! as the query of the `playernew/player.php` page, whose `pl.setup(...)`
 //! playlist names the HLS master playlist.
 use super::{Extractor, dict_info, download_webpage, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct MediaKlikk;
 
 const NAME: &str = "MediaKlikk";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?(?:mediaklikk|m4sport|hirado)\.hu/.*?(?:videok?|cikk)/(?:(?P<year>[0-9]{4})/(?P<month>[0-9]{1,2})/(?P<day>[0-9]{1,2})/)?(?P<id>[^/#?_]+)",
     )
-    .unwrap()
 });
 static LOAD_PLAYER: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"loadPlayer\((?:\s*["'][^"']+["']\s*,)?"#).unwrap());

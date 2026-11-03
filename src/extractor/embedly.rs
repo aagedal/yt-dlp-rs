@@ -3,8 +3,8 @@
 //! `src` target, followed with the wrapper page as the referer. The
 //! page-embedded (`_extract_from_webpage`) form is not ported.
 use super::{Extractor, follow_url};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::json;
 use std::sync::LazyLock;
@@ -14,11 +14,10 @@ pub struct Embedly;
 
 const NAME: &str = "Embedly";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www|cdn\.)?embedly\.com/widgets/media\.html\?(?:[^#]*?&)?(?:src|url)=(?:[^#&]+)",
     )
-    .unwrap()
 });
 
 /// `_match_id`-free `suitable`.

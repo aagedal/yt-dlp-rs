@@ -2,8 +2,8 @@
 //! `url` results of the Zype player for the API's first video with that
 //! friendly title.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -14,10 +14,8 @@ pub struct TruNews;
 const NAME: &str = "TruNews";
 const KEY: &str = "TruNews";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?trunews\.com/stream/(?P<id>[^/?#&]+)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?trunews\.com/stream/(?P<id>[^/?#&]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

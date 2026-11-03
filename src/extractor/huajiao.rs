@@ -1,6 +1,7 @@
 //! Upstream `HuajiaoIE` (`yt_dlp/extractor/huajiao.py`): a live page's
 //! `var feed` JSON with its HLS manifest.
 use super::{Extractor, download_webpage, extract_m3u8_fatal, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,9 +13,8 @@ pub struct Huajiao;
 
 const NAME: &str = "Huajiao";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?huajiao\.com/l/(?P<id>[0-9]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?huajiao\.com/l/(?P<id>[0-9]+)"));
 static FEED: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"var\s+feed\s*=\s*(\{.+\})").unwrap());
 
 /// `_match_id`.

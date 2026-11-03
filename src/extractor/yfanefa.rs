@@ -1,6 +1,7 @@
 //! Upstream `YfanefaIE` (`yt_dlp/extractor/yfanefa.py`): the Yorkshire Film
 //! Archive player options' signed URL as HLS or MP4 formats.
 use super::{Extractor, download_webpage, extract_m3u8_fatal, search_json, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct Yfanefa;
 const NAME: &str = "yfanefa";
 const KEY: &str = "Yfanefa";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?yfanefa\.com/(?P<id>[^?#]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?yfanefa\.com/(?P<id>[^?#]+)"));
 static OPTIONS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"iwPlayer\.options\["[\w.]+"\]\s*="#).unwrap());
 

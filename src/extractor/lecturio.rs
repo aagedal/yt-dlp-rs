@@ -2,6 +2,7 @@
 //! files and captions from the lecture's HTML5 API JSON. Logging in and the
 //! course and `lecturio.de` course extractors are not supported natively.
 use super::{Extractor, dict_format, dict_info, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct Lecturio;
 const NAME: &str = "Lecturio";
 const API_BASE: &str = "https://app.lecturio.com/api/en/latest/html5/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https://(?:app\.lecturio\.com/(?:[^/?#]+/(?P<nt>[^/?#&]+)\.lecture|(?:\#/)?lecture/c/\d+/(?P<id>\d+))|(?:www\.)?lecturio\.de/(?:[^/?#]+/)+(?P<nt_de>[^/?#&]+)\.vortrag)",
     )
-    .unwrap()
 });
 static LABEL: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^(\d+)p\s*\(([^)]+)\)").unwrap());
 static CC_LANG: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"/([a-z]{2})_").unwrap());

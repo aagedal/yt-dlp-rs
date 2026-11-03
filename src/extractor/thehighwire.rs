@@ -2,8 +2,8 @@
 //! `ark-video-embed` iframe page's first HTML5 media entry, with the
 //! page's section header and episode description.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -13,9 +13,8 @@ pub struct TheHighWire;
 
 const NAME: &str = "TheHighWire";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?thehighwire\.com/ark-videos/(?P<id>[^/?#]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?thehighwire\.com/ark-videos/(?P<id>[^/?#]+)")
 });
 
 /// `_match_id`.

@@ -2,6 +2,7 @@
 //! client ID from the site's JS assets, the resolved track JSON, its
 //! requested transcodings' stream URLs, artwork thumbnails and metadata.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -35,13 +36,15 @@ const ARTWORK_MAP: [(&str, i64); 10] = [
     ("original", 0),
 ];
 
-static TRACK_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?:https?://)?(?:www\.|m\.)?soundcloud\.com/(?P<uploader>[\w\d-]+)/(?P<title>[\w\d-]+)(?:/(?P<token>[^?]+?))?(?:[?].*)?$")
-        .unwrap()
+static TRACK_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^(?:https?://)?(?:www\.|m\.)?soundcloud\.com/(?P<uploader>[\w\d-]+)/(?P<title>[\w\d-]+)(?:/(?P<token>[^?]+?))?(?:[?].*)?$",
+    )
 });
-static API_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?:https?://)?api(?:-v2)?\.soundcloud\.com/tracks/(?:soundcloud%3Atracks%3A)?(?P<track_id>\d+)(?:/?\?secret_token=(?P<secret_token>[^&]+))?")
-        .unwrap()
+static API_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^(?:https?://)?api(?:-v2)?\.soundcloud\.com/tracks/(?:soundcloud%3Atracks%3A)?(?P<track_id>\d+)(?:/?\?secret_token=(?P<secret_token>[^&]+))?",
+    )
 });
 static SCRIPT_SRC: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<script[^>]+src="([^"]+)""#).unwrap());
@@ -778,8 +781,8 @@ pub struct SoundcloudEmbed;
 
 pub(crate) const EMBED_NAME: &str = "SoundcloudEmbed";
 
-static EMBED_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:w|player|p)\.soundcloud\.com/player/?.*?\burl=(?P<id>.+)").unwrap()
+static EMBED_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:w|player|p)\.soundcloud\.com/player/?.*?\burl=(?P<id>.+)")
 });
 
 /// `SoundcloudEmbedIE.suitable`.

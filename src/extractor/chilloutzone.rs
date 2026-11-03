@@ -2,6 +2,7 @@
 //! page's base64 `cozVidData` JSON as its MP4 `mediaUrl`, or a YouTube or
 //! Vimeo url result when the native video takes priority.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
@@ -14,9 +15,8 @@ pub struct Chilloutzone;
 
 const NAME: &str = "Chilloutzone";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?chilloutzone\.net/video/(?P<id>[\w-]+)\.html")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?chilloutzone\.net/video/(?P<id>[\w-]+)\.html")
 });
 static VIDEO_DATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"var cozVidData\s*=\s*"([^"]+)""#).unwrap());

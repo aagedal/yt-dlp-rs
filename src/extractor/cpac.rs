@@ -3,8 +3,8 @@
 //! renditions prefer the URL's language) and programs or searches as
 //! playlists of their pages' episode URLs.
 use super::{Extractor, dict_info, download_json, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -19,17 +19,15 @@ const PLAYLIST_NAME: &str = "cpac:playlist";
 const PLAYLIST_KEY: &str = "CPACPlaylist";
 const API: &str = "https://www.cpac.ca/api/1/services/contentModel.json?url=/site/website/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?cpac\.ca/(?P<fr>l-)?episode\?id=(?P<id>[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12})",
     )
-    .unwrap()
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"(?i)^https?://(?:www\.)?cpac\.ca/(?:program|search|(?P<fr>emission|rechercher))\?(?:[^&]+&)*?(?P<id>(?:id=\d+|programId=\d+|key=[^&]+))",
     )
-    .unwrap()
 });
 
 /// `CPACIE._match_id`.

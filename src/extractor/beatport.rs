@@ -3,6 +3,7 @@
 //! (MP3/AAC audio), its artists, name and mix as the title, and its images.
 use super::streamable::int_or_none;
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct Beatport;
 
 const NAME: &str = "Beatport";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.|pro\.)?beatport\.com/track/(?P<display_id>[^/]+)/(?P<id>[0-9]+)",
     )
-    .unwrap()
 });
 
 static PLAYABLES: LazyLock<Regex> =

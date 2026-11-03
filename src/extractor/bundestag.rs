@@ -3,6 +3,7 @@
 //! share API's audio and download files, with the overlay page's title and
 //! description.
 use super::{Extractor, dict_format, dict_info, download_json_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,13 +15,12 @@ pub struct Bundestag;
 
 const NAME: &str = "Bundestag";
 
-static VALID_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+static VALID_URLS: LazyLock<[UrlRegex; 2]> = LazyLock::new(|| {
     [
-        crate::extractor::url_regex(r"^https?://dbtg\.tv/[cf]vid/(?P<id>\d+)").unwrap(),
-        crate::extractor::url_regex(
+        UrlRegex::ascii(r"^https?://dbtg\.tv/[cf]vid/(?P<id>\d+)"),
+        UrlRegex::ascii(
             r"^https?://www\.bundestag\.de/mediathek/?\?(?:[^#]+&)?videoid=(?P<id>\d+)",
-        )
-        .unwrap(),
+        ),
     ]
 });
 static SHARE_AUDIO: LazyLock<Regex> = LazyLock::new(|| {

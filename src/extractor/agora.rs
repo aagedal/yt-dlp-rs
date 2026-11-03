@@ -7,6 +7,7 @@ use super::{
     Extractor, dict_format, dict_info, download_json, download_json_headers, download_json_note,
     streamable::int_or_none, update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -33,20 +34,19 @@ const TOKFM_HEADERS: [(&str, &str); 1] = [(
     "Mozilla/5.0 (Linux; Android 9; Redmi 3S Build/PQ3A.190801.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/87.0.4280.101 Mobile Safari/537.36",
 )];
 
-static VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?:wyborcza:video:|https?://wyborcza\.pl/(?:api-)?video/)(?P<id>\d+)").unwrap()
+static VIDEO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"(?:wyborcza:video:|https?://wyborcza\.pl/(?:api-)?video/)(?P<id>\d+)")
 });
-static PODCAST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static PODCAST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"https?://(?:www\.)?(?:wyborcza\.pl/podcast(?:/0,172673\.html)?|wysokieobcasy\.pl/wysokie-obcasy/0,176631\.html)(?:\?(?:[^&#]+?&)*podcast=(?P<id>\d+))?",
     )
-    .unwrap()
 });
-static TOKFM_PODCAST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?:https?://audycje\.tokfm\.pl/podcast/|tokfm:podcast:)(?P<id>\d+),?").unwrap()
+static TOKFM_PODCAST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"(?:https?://audycje\.tokfm\.pl/podcast/|tokfm:podcast:)(?P<id>\d+),?")
 });
-static TOKFM_AUDITION_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?:https?://audycje\.tokfm\.pl/audycja/|tokfm:audition:)(?P<id>\d+),?").unwrap()
+static TOKFM_AUDITION_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"(?:https?://audycje\.tokfm\.pl/audycja/|tokfm:audition:)(?P<id>\d+),?")
 });
 static MP4_HEIGHT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"p(\d+)[a-z]+\.mp4$").unwrap());
 static PUBLISHED: LazyLock<Regex> =

@@ -2,6 +2,7 @@
 //! `data-tralbum`/`data-embed` JSON, its streaming files and, for free
 //! downloads, the download page's formats through their stat URLs.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct Bandcamp;
 
 const NAME: &str = "Bandcamp";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?P<uploader>[^/]+)\.bandcamp\.com/track/(?P<id>[^/?#&]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?P<uploader>[^/]+)\.bandcamp\.com/track/(?P<id>[^/?#&]+)")
 });
 static ALBUM_ARTIST: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<h3 class="albumTitle">[\S\s]*?by\s*<span>\s*<a href="[^>]+">\s*([^>]+?)\s*</a>"#)
@@ -468,22 +466,15 @@ const WEEKLY_KEY: &str = "BandcampWeekly";
 const USER_NAME: &str = "Bandcamp:user";
 const USER_KEY: &str = "BandcampUser";
 
-static ALBUM_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:(?P<subdomain>[^.]+)\.)?bandcamp\.com/album/(?P<id>[^/?#&]+)",
-    )
-    .unwrap()
+static ALBUM_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:(?P<subdomain>[^.]+)\.)?bandcamp\.com/album/(?P<id>[^/?#&]+)")
 });
-static WEEKLY_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?bandcamp\.com/radio/?\?(?:[^#]+&)?show=(?P<id>\d+)",
-    )
-    .unwrap()
+static WEEKLY_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?bandcamp\.com/radio/?\?(?:[^#]+&)?show=(?P<id>\d+)")
 });
 /// The `(?!www\.)` lookahead is applied by [`user_suitable`].
-static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?P<id>[^.]+)\.bandcamp\.com(?:/music)?/?(?:[#?]|$)")
-        .unwrap()
+static USER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?P<id>[^.]+)\.bandcamp\.com(?:/music)?/?(?:[#?]|$)")
 });
 /// `_yield_items`: `<li data-item-id=...><a href=...>`, minus merch links
 /// (the `(?!...)` lookahead is checked in [`is_merch`]).

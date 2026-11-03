@@ -3,8 +3,8 @@
 //! from the RainFocus API as `url_transparent` results of their Brightcove
 //! videos; search pages are read lazily as their sessions are requested.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -19,15 +19,13 @@ const API: &str = "https://events.rainfocus.com/api";
 const PROFILE_ID: &str = "Na3vqYdAlJFSxhYTYQGuMbpafMqftalz";
 const WIDGET_ID: &str = "n6l4Lo05R8fiy3RpUBm447dZN8uNWoye";
 
-static SESSION_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?ciscolive(?:\.cisco)?\.com/[^#]*#/session/(?P<id>[^/?&]+)")
-        .unwrap()
+static SESSION_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?ciscolive(?:\.cisco)?\.com/[^#]*#/session/(?P<id>[^/?&]+)")
 });
-static SEARCH_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static SEARCH_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?ciscolive(?:\.cisco)?\.com/(?:global/)?on-demand-library(?:\.html|/)",
     )
-    .unwrap()
 });
 
 /// `CiscoLiveSessionIE.suitable`.

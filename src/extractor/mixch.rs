@@ -4,8 +4,8 @@
 //! Live comments are only fetched with `--get-comments`, which is not
 //! supported natively yet.
 use super::{Extractor, dict_format, dict_info, download_json, extract_m3u8_fatal_master, json_ld};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -23,12 +23,12 @@ const MOVIE_NAME: &str = "mixch:movie";
 const MOVIE_KEY: &str = "MixchMovie";
 const LOGIN_HINT: &str = "Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| crate::extractor::url_regex(r"^https?://mixch\.tv/u/(?P<id>\d+)").unwrap());
-static ARCHIVE_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://mixch\.tv/archive/(?P<id>\d+)").unwrap());
-static MOVIE_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://mixch\.tv/m/(?P<id>\w+)").unwrap());
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://mixch\.tv/u/(?P<id>\d+)"));
+static ARCHIVE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://mixch\.tv/archive/(?P<id>\d+)"));
+static MOVIE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://mixch\.tv/m/(?P<id>\w+)"));
 
 /// `_match_id` for the live channel URLs.
 pub fn suitable(url: &str) -> bool {

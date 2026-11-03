@@ -4,6 +4,7 @@
 //! as HLS, MP3 or a direct file; YouTube players are followed, and Rudo
 //! iframes on other pages are embeds.
 use super::{Extractor, dict_format, dict_info, download_json_note, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,11 +17,8 @@ pub struct RudoVideo;
 pub(crate) const NAME: &str = "RudoVideo";
 pub(crate) const KEY: &str = "RudoVideo";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://rudo\.video/(?P<type>vod|podcast|live)/(?P<id>[^/?&#]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://rudo\.video/(?P<type>vod|podcast|live)/(?P<id>[^/?&#]+)")
 });
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

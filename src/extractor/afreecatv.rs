@@ -9,6 +9,7 @@ use super::{
     Extractor, dict_format, dict_info, direct, download_json_note_headers, post_json_errnote,
     update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -30,20 +31,18 @@ const API: &str = "https://api.m.sooplive.com";
 /// `AfreecaTVUserIE._PER_PAGE`.
 const USER_PAGE_SIZE: usize = 60;
 
-static CATCH_URL: LazyLock<Regex> = LazyLock::new(|| {
-    super::url_regex(r"^https?://vod\.sooplive\.com/player/(?P<id>\d+)/catchstory").unwrap()
+static CATCH_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://vod\.sooplive\.com/player/(?P<id>\d+)/catchstory")
 });
-static VOD_URL: LazyLock<Regex> = LazyLock::new(|| {
-    super::url_regex(
+static VOD_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://vod\.sooplive\.com/(?:PLAYER/STATION|player)/(?P<id>\d+)/?(?:$|[?#&])",
     )
-    .unwrap()
 });
-static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    super::url_regex(
+static USER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?sooplive\.com/station/(?P<id>[^/?#]+)/vod/?(?P<slug_type>[^/?#]+)?",
     )
-    .unwrap()
 });
 static ZONE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?:Z|[+-]\d{2}:?\d{2})$").unwrap());
 

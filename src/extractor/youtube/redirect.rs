@@ -6,9 +6,9 @@
 //! upstream's `url_result`, which the downloader follows through every
 //! extractor.
 use super::urls;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result};
 use base64::Engine;
-use regex::Regex;
 use reqwest::blocking::Client;
 use std::sync::LazyLock;
 use url::Url;
@@ -44,47 +44,48 @@ pub(super) fn check_login_required(name: &str) -> Result<()> {
     )))
 }
 
-fn pattern(text: &str) -> Regex {
-    Regex::new(text).expect("static pattern")
+fn pattern(text: &str) -> UrlRegex {
+    UrlRegex::new(text)
 }
 
-static CONSENT: LazyLock<Regex> = LazyLock::new(|| pattern(r"^https?://consent\.youtube\.com/m\?"));
-static FAVOURITES: LazyLock<Regex> = LazyLock::new(|| pattern(r"^:ytfav(?:ou?rite)?s?"));
-static HISTORY: LazyLock<Regex> = LazyLock::new(|| pattern(r"^:ythis(?:tory)?"));
-static LIVESTREAM_EMBED: LazyLock<Regex> = LazyLock::new(|| {
+static CONSENT: LazyLock<UrlRegex> =
+    LazyLock::new(|| pattern(r"^https?://consent\.youtube\.com/m\?"));
+static FAVOURITES: LazyLock<UrlRegex> = LazyLock::new(|| pattern(r"^:ytfav(?:ou?rite)?s?"));
+static HISTORY: LazyLock<UrlRegex> = LazyLock::new(|| pattern(r"^:ythis(?:tory)?"));
+static LIVESTREAM_EMBED: LazyLock<UrlRegex> = LazyLock::new(|| {
     pattern(
         r"^https?://(?:\w+\.)?youtube\.com/embed/live_stream/?\?(?:[^#]+&)?channel=(?P<id>[^&#]+)",
     )
 });
-static PLAYLIST: LazyLock<Regex> = LazyLock::new(|| {
+static PLAYLIST: LazyLock<UrlRegex> = LazyLock::new(|| {
     pattern(&format!(
         r"^(?:https?://)?(?:\w+\.)?(?:(?:youtube(?:kids)?\.com|{})/.*?\?.*?\blist=)?(?P<id>{})",
         urls::invidious(),
         urls::PLAYLIST_ID_RE
     ))
 });
-static RECOMMENDED: LazyLock<Regex> = LazyLock::new(|| {
+static RECOMMENDED: LazyLock<UrlRegex> = LazyLock::new(|| {
     pattern(r"^(?:https?://(?:www\.)?youtube\.com/?(?:[?#]|$)|:ytrec(?:ommended)?)")
 });
-static SHORTS_AUDIO_PIVOT: LazyLock<Regex> =
+static SHORTS_AUDIO_PIVOT: LazyLock<UrlRegex> =
     LazyLock::new(|| pattern(r"^https?://(?:www\.)?youtube\.com/source/(?P<id>[\w-]{11})/shorts"));
-static SUBSCRIPTIONS: LazyLock<Regex> = LazyLock::new(|| pattern(r"^:ytsub(?:scription)?s?"));
-static TRUNCATED_ID: LazyLock<Regex> = LazyLock::new(|| {
+static SUBSCRIPTIONS: LazyLock<UrlRegex> = LazyLock::new(|| pattern(r"^:ytsub(?:scription)?s?"));
+static TRUNCATED_ID: LazyLock<UrlRegex> = LazyLock::new(|| {
     pattern(r"^https?://(?:www\.)?youtube\.com/watch\?v=(?P<id>[0-9A-Za-z_-]{1,10})\n?$")
 });
-static TRUNCATED_URL: LazyLock<Regex> = LazyLock::new(|| {
+static TRUNCATED_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
     pattern(
         r"^(?:https?://)?(?:\w+\.)?[yY][oO][uU][tT][uU][bB][eE](?:-nocookie)?\.com/(?:watch\?(?:feature=[a-z_]+|annotation_id=annotation_[^&]+|x-yt-cl=[0-9]+|hl=[^&]*|t=[0-9]+)?|attribution_link\?a=[^&]+)\n?$",
     )
 });
-static WATCH_LATER: LazyLock<Regex> = LazyLock::new(|| pattern(r"^:ytwatchlater"));
-static YT_BE: LazyLock<Regex> = LazyLock::new(|| {
+static WATCH_LATER: LazyLock<UrlRegex> = LazyLock::new(|| pattern(r"^:ytwatchlater"));
+static YT_BE: LazyLock<UrlRegex> = LazyLock::new(|| {
     pattern(&format!(
         r"^https?://youtu\.be/(?P<id>[0-9A-Za-z_-]{{11}})/*?.*?\blist=(?P<playlist_id>{})",
         urls::PLAYLIST_ID_RE
     ))
 });
-static YT_USER: LazyLock<Regex> = LazyLock::new(|| pattern(r"^ytuser:(?P<id>.+)"));
+static YT_USER: LazyLock<UrlRegex> = LazyLock::new(|| pattern(r"^ytuser:(?P<id>.+)"));
 
 impl Kind {
     /// `IE_NAME`.
@@ -106,7 +107,7 @@ impl Kind {
         }
     }
 
-    fn regex(self) -> &'static Regex {
+    fn regex(self) -> &'static UrlRegex {
         match self {
             Kind::Consent => &CONSENT,
             Kind::Favourites => &FAVOURITES,

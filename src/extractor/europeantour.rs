@@ -2,6 +2,7 @@
 //! page's `brightcove-player` video ID and `ACCOUNT_ID` as a `url` result of
 //! that account's Brightcove player.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,11 +13,10 @@ pub struct EuropeanTour;
 
 const NAME: &str = "EuropeanTour";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?europeantour\.com/dpworld-tour/news/video/(?P<id>[^/&?#$]+)",
     )
-    .unwrap()
 });
 static PLAYER: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?s)brightcove-player\s?video-id="([^"]+)".*"ACCOUNT_ID":"([^"]+)""#).unwrap()

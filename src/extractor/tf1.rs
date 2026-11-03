@@ -3,8 +3,8 @@
 //! media, overlaid with the title, decoration thumbnails and description,
 //! date, duration, tags, program label and season/episode numbers.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -14,11 +14,10 @@ pub struct Tf1;
 
 const NAME: &str = "TF1";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?tf1\.fr/[^/]+/(?P<program_slug>[^/]+)/videos/(?P<id>[^/?&#]+)\.html",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

@@ -1,8 +1,8 @@
 //! Upstream `BigoIE` (`yt_dlp/extractor/bigo.py`): a room's
 //! `getInternalStudioInfo` (POSTed `siteId`) live HLS source and metadata.
 use super::{Extractor, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -12,10 +12,8 @@ pub struct Bigo;
 
 const NAME: &str = "Bigo";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?bigo\.tv/(?:[a-z]{2,}/)?(?P<id>[^/]+)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?bigo\.tv/(?:[a-z]{2,}/)?(?P<id>[^/]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

@@ -3,6 +3,7 @@
 //! page's title, description, thumbnail, uploader, date, duration, counts,
 //! rating, category and tags (each optional field warning like upstream).
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct VidLii;
 
 const NAME: &str = "VidLii";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?vidlii\.com/(?:watch|embed)\?.*?\bv=(?P<id>[0-9A-Za-z_-]{11})",
     )
-    .unwrap()
 });
 static SOURCE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"src\s*:\s*(?:"(?P<dq>(?:https?://)?[^"\n]+)"|'(?P<sq>(?:https?://)?[^'\n]+)')"#)

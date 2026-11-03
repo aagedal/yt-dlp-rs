@@ -2,8 +2,8 @@
 //! Discogs releases and masters as playlists of their API videos' YouTube
 //! `url` results, with the release title.
 use super::{Extractor, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -13,11 +13,8 @@ pub struct DiscogsReleasePlaylist;
 
 const NAME: &str = "DiscogsReleasePlaylist";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?discogs\.com/(?P<type>release|master)/(?P<id>\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?discogs\.com/(?P<type>release|master)/(?P<id>\d+)")
 });
 
 /// `_match_valid_url`.

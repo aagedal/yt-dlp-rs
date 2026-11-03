@@ -2,6 +2,7 @@
 //! `initCallback` player config, either a JW Player playlist or Vidly's own
 //! sources plus the CloudFront HLS master, which is requested best-effort.
 use super::{Extractor, dict_format, dict_info, download_webpage_note_headers, html5, jwplayer};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct Vidly;
 
 const NAME: &str = "Vidly";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:vid\.ly/|(?:s\.)?vid\.ly/embeded\.html\?(?:[^#]+&)?link=)(?P<id>\w+)",
     )
-    .unwrap()
 });
 static INIT_CALLBACK: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"initCallback\(").unwrap());
 

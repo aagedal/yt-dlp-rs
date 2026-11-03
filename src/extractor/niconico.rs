@@ -9,6 +9,7 @@
 //! `NiconicoSeriesIE`, `NiconicoHistoryIE` (`OnDemandPagedList` pages),
 //! `NiconicoUserIE` and the `NicovideoSearchBaseIE` searches (generators).
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -26,11 +27,10 @@ const HEADERS: [(&str, &str); 2] = [("X-Frontend-ID", "6"), ("X-Frontend-Version
 const LOGIN_HINT: &str = "Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (niconico) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies";
 const THUMB_PREFS: [&str; 6] = ["url", "middleUrl", "largeUrl", "player", "ogp", "short"];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:embed|sp|www)\.)?nicovideo\.jp/(?:shorts|watch)/(?P<id>(?:[a-z]{2})?\d+)",
     )
-    .unwrap()
 });
 
 /// `NiconicoIE.suitable`.
@@ -808,34 +808,31 @@ const SEARCH_START_DATE: (i64, i64, i64) = (2007, 1, 1);
 const RESULTS_PER_PAGE: usize = 32;
 const MAX_PAGES: u64 = 50;
 
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:(?:www\.|sp\.)?nicovideo\.jp|nico\.ms)/(?:user/\d+/)?(?:my/)?mylist/(?:#/)?(?P<id>\d+)").unwrap()
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:(?:www\.|sp\.)?nicovideo\.jp|nico\.ms)/(?:user/\d+/)?(?:my/)?mylist/(?:#/)?(?P<id>\d+)",
+    )
 });
-static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static SERIES_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:(?:www\.|sp\.)?nicovideo\.jp(?:/user/\d+)?|nico\.ms)/series/(?P<id>\d+)",
     )
-    .unwrap()
 });
-static HISTORY_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.|sp\.)?nicovideo\.jp/my/(?P<id>history(?:/like)?)").unwrap()
+static HISTORY_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.|sp\.)?nicovideo\.jp/my/(?P<id>history(?:/like)?)")
 });
-static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?nicovideo\.jp/user/(?P<id>\d+)(?:/video)?/?(?:$|[#?])")
-        .unwrap()
+static USER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?nicovideo\.jp/user/(?P<id>\d+)(?:/video)?/?(?:$|[#?])")
 });
-static SEARCH_RE: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^nicosearch(?P<prefix>|[1-9][0-9]*|all):(?P<query>[\s\S]+)").unwrap()
+static SEARCH_RE: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^nicosearch(?P<prefix>|[1-9][0-9]*|all):(?P<query>[\s\S]+)"));
+static SEARCH_DATE_RE: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^nicosearchdate(?P<prefix>|[1-9][0-9]*|all):(?P<query>[\s\S]+)")
 });
-static SEARCH_DATE_RE: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^nicosearchdate(?P<prefix>|[1-9][0-9]*|all):(?P<query>[\s\S]+)").unwrap()
-});
-static SEARCH_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?nicovideo\.jp/search/(?P<id>[^?#&]+)?").unwrap()
-});
-static TAG_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?nicovideo\.jp/tag/(?P<id>[^?#&]+)?").unwrap()
-});
+static SEARCH_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?nicovideo\.jp/search/(?P<id>[^?#&]+)?"));
+static TAG_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?nicovideo\.jp/tag/(?P<id>[^?#&]+)?"));
 
 /// `NiconicoPlaylistIE.suitable`.
 pub fn playlist_suitable(url: &str) -> bool {

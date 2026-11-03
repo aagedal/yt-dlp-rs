@@ -3,8 +3,8 @@
 //! `gif`/`sd`/`hd` MP4 renditions, and the search (`RedGifsSearchIE`) and
 //! user (`RedGifsUserIE`) listings as paged playlists of those GIFs.
 use super::{Extractor, dict_format, dict_info, download_json_note, download_json_note_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PendingEntries, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -22,22 +22,18 @@ const TOKEN_URL: &str = "https://api.redgifs.com/v2/auth/temporary";
 /// `_PAGE_SIZE` of the search and user listings.
 const PAGE_SIZE: usize = 80;
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:www\.)?redgifs\.com/(?:watch|ifr)/|thumbs2\.redgifs\.com/)(?P<id>[^-/?#.]+)",
     )
-    .unwrap()
 });
 
-static SEARCH_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?redgifs\.com/browse\?(?P<query>[^#]+)")
-        .unwrap()
-});
-static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static SEARCH_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?redgifs\.com/browse\?(?P<query>[^#]+)"));
+static USER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?redgifs\.com/users/(?P<username>[^/?#]+)(?:\?(?P<query>[^#]+))?",
     )
-    .unwrap()
 });
 
 /// `_match_id`.

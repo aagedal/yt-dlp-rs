@@ -3,6 +3,7 @@
 //! data: the progressive file and non-fatal HLS and DASH manifests, with the
 //! headline, intro, kicker, publication time, poster and length.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ pub struct NtvDe;
 const NAME: &str = "n-tv.de";
 const KEY: &str = "NTVDe";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?n-tv\.de/mediathek/(?:videos|magazine)/[^/?#]+/[^/?#]+-article(?P<id>[^/?#]+)\.html",
     )
-    .unwrap()
 });
 static ARTICLE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"article:").unwrap());
 static PLAYER: LazyLock<Regex> = LazyLock::new(|| {

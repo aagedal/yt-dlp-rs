@@ -2,6 +2,7 @@
 //! `asset-details-url` JSON and its resource URL as an untyped result.
 use super::clyp::key_error;
 use super::{Extractor, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct Ina;
 
 const NAME: &str = "Ina";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:(?:www|m)\.)?ina\.fr/(?:[^?#]+/)(?P<id>[\w-]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:(?:www|m)\.)?ina\.fr/(?:[^?#]+/)(?P<id>[\w-]+)")
 });
 static API_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"asset-details-url\s*=\s*["'](?P<api_url>[^"']+)"#).unwrap());

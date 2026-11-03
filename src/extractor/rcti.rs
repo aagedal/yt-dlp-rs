@@ -7,8 +7,8 @@ use super::{
     Extractor, dict_info, download_json_note, download_json_note_headers,
     post_json_errnote_optional,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::StatusCode;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
@@ -25,17 +25,15 @@ const SERIES_NAME: &str = "RCTIPlusSeries";
 const SERIES_KEY: &str = "RCTIPlusSeries";
 const REFERER: &str = "https://www.rctiplus.com/";
 
-static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static SERIES_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://www\.rctiplus\.com/programs/(?P<id>\d+)/(?P<display_id>[^/?#&]+)(?:/(?P<type>episodes|extras|clips))?",
     )
-    .unwrap()
 });
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://www\.rctiplus\.com/(?:programs/\d+?/.*?/)?(?P<type>episode|clip|extra|live-event|missed-event)/(?P<id>\d+)/(?P<display_id>[^/?#&]+)",
     )
-    .unwrap()
 });
 
 /// `_call_api(url, video_id, note)`: the bearer key's JSON `data` and `meta`.

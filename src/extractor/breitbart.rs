@@ -2,8 +2,8 @@
 //! manifest for a video page's ID with the page's generic title and
 //! OpenGraph metadata.
 use super::{Extractor, download_webpage, extract_m3u8_fatal, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -13,9 +13,8 @@ pub struct BreitBart;
 
 const NAME: &str = "BreitBart";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?breitbart\.com/videos/v/(?P<id>[^/?#]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?breitbart\.com/videos/v/(?P<id>[^/?#]+)")
 });
 
 /// `_match_id`.

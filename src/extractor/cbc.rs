@@ -8,6 +8,7 @@ use super::{
     Extractor, dict_format, dict_info, direct, download_json, download_json_note, download_webpage,
     search_json,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -23,17 +24,15 @@ const LISTEN_KEY: &str = "CBCListen";
 const PLAYER_NAME: &str = "cbc.ca:player";
 const PLAYER_KEY: &str = "CBCPlayer";
 
-static LISTEN_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static LISTEN_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?cbc\.ca/listen/(?:cbc-podcasts|live-radio)/[\w-]+/[\w-]+/(?P<id>\d+)",
     )
-    .unwrap()
 });
-static PLAYER_VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static PLAYER_VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?:cbcplayer:|https?://(?:www\.)?cbc\.ca/(?:player/play/(?:video/)?|i/caffeine/syndicate/\?mediaId=))(?P<id>(?:\d\.)?\d+)",
     )
-    .unwrap()
 });
 static LISTEN_STATE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.__PRELOADED_STATE__\s*=").unwrap());

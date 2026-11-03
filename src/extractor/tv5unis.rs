@@ -2,8 +2,8 @@
 //! the `api.tv5unis.ca` GraphQL product as an HLS result (with its
 //! `limelightmedia` archive ID), geo-restricted to Canada.
 use super::{Extractor, dict_info, download_json, extract_m3u8_fatal_master, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -15,14 +15,12 @@ pub struct TV5Unis;
 const API: &str = "https://api.tv5unis.ca/graphql";
 const GEO_COUNTRIES: [&str; 1] = ["CA"];
 
-static VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?tv5unis\.ca/videos/[^/?#]+/(?P<id>\d+)").unwrap()
-});
-static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static VIDEO_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?tv5unis\.ca/videos/[^/?#]+/(?P<id>\d+)"));
+static SERIES_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?tv5unis\.ca/videos/(?P<id>[^/?#]+)(?:/saisons/(?P<season_number>\d+)/episodes/(?P<episode_number>\d+))?/?(?:[?#&]|$)",
     )
-    .unwrap()
 });
 
 /// `value[key]`'s escaped `KeyError`.

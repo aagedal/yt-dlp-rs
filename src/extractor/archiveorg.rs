@@ -4,8 +4,8 @@
 //! (private files skipped without a `logged-in-sig` cookie), thumbnails and
 //! reviews as comments; one entry becomes the video, several a playlist.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -23,11 +23,8 @@ pub(crate) const KNOWN_EXTENSIONS: [&str; 42] = [
     "m3u8", "smil", "mpd",
 ];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?archive\.org/(?:details|embed)/(?P<id>[^?#]+)(?:[?].*)?$",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?archive\.org/(?:details|embed)/(?P<id>[^?#]+)(?:[?].*)?$")
 });
 
 /// `ArchiveOrgIE.suitable`.

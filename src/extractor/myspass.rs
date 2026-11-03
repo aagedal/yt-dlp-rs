@@ -2,6 +2,7 @@
 //! from the video metadata XML (its `url_flv` is the only format, with the
 //! path's oversized ID-multiplied numbers divided back by the video ID).
 use super::{Extractor, dict_info, download_xml};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct MySpass;
 
 const NAME: &str = "MySpass";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?myspass\.de/(?:[^/]+/)*(?P<id>\d+)/?[^/]*$")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?myspass\.de/(?:[^/]+/)*(?P<id>\d+)/?[^/]*$")
 });
 static PATH_NUMBERS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"/myspass2009/\d+/(\d+)/(\d+)/(\d+)/").unwrap());

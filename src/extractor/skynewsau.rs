@@ -3,6 +3,7 @@
 //! account's Brightcove player, overlaid with the news API's caption and
 //! creation date.
 use super::{Extractor, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ pub struct SkyNewsAU;
 const NAME: &str = "SkyNewsAU";
 const API_KEY: &str = "6krsj3w249nk779d8fukqx9f";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?skynews\.com\.au/[^/]+/[^/]+/[^/]+/video/(?P<id>[a-z0-9]+)",
     )
-    .unwrap()
 });
 static EMBEDCODE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"embedcode\s?=\s?"([^"]+)""#).unwrap());

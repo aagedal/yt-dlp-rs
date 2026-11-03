@@ -2,6 +2,7 @@
 //! JSON (with the URL's `token`), its Ogg/MP3 audio URLs and the page's
 //! `wavStreamUrl`.
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct Clyp;
 
 const NAME: &str = "Clyp";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?clyp\.it/(?P<id>[a-z0-9]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?clyp\.it/(?P<id>[a-z0-9]+)"));
 static WAV_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"var\s*wavStreamUrl\s*=\s*["'](?P<url>https?://[^'"]+)"#).unwrap()
 });

@@ -2,8 +2,8 @@
 //! 9Now clips and episodes, whose Next.js flight data names a Brightcove
 //! video; a `url_transparent` result of its player with the page's metadata.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -13,11 +13,10 @@ pub struct NineNow;
 
 const NAME: &str = "9now.com.au";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?9now\.com\.au/(?:[^/?#]+/){2}(?P<id>(?P<type>clip|episode)-[^/?#]+)",
     )
-    .unwrap()
 });
 
 /// `BRIGHTCOVE_URL_TEMPLATE`.

@@ -3,6 +3,7 @@
 //! results of their Arc Publishing (`arcpublishing:wapo:UUID`) media, and
 //! articles as playlists of their embedded videos.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -18,14 +19,13 @@ pub(crate) const KEY: &str = "WashingtonPost";
 const ARTICLE_NAME: &str = "washingtonpost:article";
 const ARTICLE_KEY: &str = "WashingtonPostArticle";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?:washingtonpost:|https?://(?:www\.)?washingtonpost\.com/(?:video|posttv)/(?:[^/]+/)*)(?P<id>[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})",
     )
-    .unwrap()
 });
-static ARTICLE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?washingtonpost\.com/(?:[^/]+/)*(?P<id>[^/?#]+)").unwrap()
+static ARTICLE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?washingtonpost\.com/(?:[^/]+/)*(?P<id>[^/?#]+)")
 });
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

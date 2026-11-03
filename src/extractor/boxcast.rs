@@ -3,6 +3,7 @@
 //! a recorded view's HLS playlist with the broadcast's metadata and the
 //! page's meta-tag fallbacks; BoxCast embed iframes are embeds.
 use super::{Extractor, dict_info, download_json, download_webpage, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,11 +16,10 @@ pub struct BoxCastVideo;
 pub(crate) const NAME: &str = "BoxCastVideo";
 pub(crate) const KEY: &str = "BoxCastVideo";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://boxcast\.tv/(?:view-embed/|channel/\w+\?(?:[^#]+&)?b=|video-portal/(?:\w+/){2})(?P<id>[\w-]+)",
     )
-    .unwrap()
 });
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<iframe[^>]+src=["'](?P<url>https?://boxcast\.tv/view-embed/[\w-]+)"#).unwrap()

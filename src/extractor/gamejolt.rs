@@ -7,8 +7,8 @@ use super::{
     Extractor, dict_format, dict_info, direct, download_json_headers, extract_m3u8_fatal_master,
     extract_mpd_fatal, post_json_note_headers,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -24,19 +24,15 @@ const SOUNDTRACK_NAME: &str = "GameJoltGameSoundtrack";
 const API_BASE: &str = "https://gamejolt.com/site-api/";
 const ACCEPT: [(&str, &str); 1] = [("Accept", "image/webp,*/*")];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"https?://(?:www\.)?gamejolt\.com/p/(?:[\w-]*-)?(?P<id>\w{8})")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"https?://(?:www\.)?gamejolt\.com/p/(?:[\w-]*-)?(?P<id>\w{8})")
 });
-static GAME_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"https?://(?:www\.)?gamejolt\.com/games/[\w-]+/(?P<id>\d+)")
-        .unwrap()
-});
-static SOUNDTRACK_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static GAME_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"https?://(?:www\.)?gamejolt\.com/games/[\w-]+/(?P<id>\d+)"));
+static SOUNDTRACK_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"https?://(?:www\.)?gamejolt\.com/get/soundtrack(?:\?|\#!?)(?:.*?[&;])??game=(?P<id>(?:\d+)+)",
     )
-    .unwrap()
 });
 
 /// `_match_id` of [`GameJolt`].

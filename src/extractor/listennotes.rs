@@ -2,6 +2,7 @@
 //! page's `original-content` JSON merged with its play button toolbar's
 //! attributes, as one audio URL with the episode and channel metadata.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct ListenNotes;
 
 const NAME: &str = "ListenNotes";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?listennotes\.com/podcasts/[^/]+/[^/]+-(?P<id>.+)/",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?listennotes\.com/podcasts/[^/]+/[^/]+-(?P<id>.+)/")
 });
 static CONTENT: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<script id="original-content"[^>]+\btype="application/json">"#).unwrap()

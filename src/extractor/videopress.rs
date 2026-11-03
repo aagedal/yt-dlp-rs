@@ -3,6 +3,7 @@
 //! as its MP4/Ogg files and original upload.
 use super::streamable::int_or_none;
 use super::{Extractor, dict_format, dict_info, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,9 +17,8 @@ const NAME: &str = "VideoPress";
 const QUALITIES: [&str; 3] = ["std", "dvd", "hd"];
 const FIELDS: &str = "description,duration,file_url_base,files,height,original,poster,rating,title,upload_date,width";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://video(?:\.word)?press\.com/embed/(?P<id>[\da-zA-Z]{8})")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://video(?:\.word)?press\.com/embed/(?P<id>[\da-zA-Z]{8})")
 });
 
 /// `_match_id`.

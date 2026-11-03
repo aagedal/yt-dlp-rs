@@ -3,6 +3,7 @@
 //! (`yt_dlp/extractor/idagio.py`): a track's content URL with its metadata,
 //! and recordings, albums and playlists as playlists of track URL results.
 use super::{Extractor, direct, download_json, streamable::int_or_none};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -19,22 +20,20 @@ pub struct IdagioPersonalPlaylist;
 const TRACK_NAME: &str = "IdagioTrack";
 const PREFIX: &str = r"^https?://(?:www\.)?app\.idagio\.com(?:/[a-z]{2})?";
 
-static TRACK_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+static TRACK_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(format!(
         r"{PREFIX}/recordings/\d+\?(?:[^#]+&)?trackId=(?P<id>\d+)"
     ))
-    .unwrap()
 });
-static RECORDING_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(&format!(r"{PREFIX}/recordings/(?P<id>\d+)")).unwrap());
+static RECORDING_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(format!(r"{PREFIX}/recordings/(?P<id>\d+)")));
 static TRACK_ID_QUERY: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"[&?]trackId=\d+").unwrap());
-static ALBUM_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(&format!(r"{PREFIX}/albums/(?P<id>[\w-]+)")).unwrap());
-static PLAYLIST_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(&format!(r"{PREFIX}/playlists/(?P<id>[\w-]+)")).unwrap());
-static PERSONAL_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(r"{PREFIX}/playlists/personal/(?P<id>[\da-f-]+)")).unwrap()
-});
+static ALBUM_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(format!(r"{PREFIX}/albums/(?P<id>[\w-]+)")));
+static PLAYLIST_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(format!(r"{PREFIX}/playlists/(?P<id>[\w-]+)")));
+static PERSONAL_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(format!(r"{PREFIX}/playlists/personal/(?P<id>[\da-f-]+)")));
 
 /// `_match_valid_url` of [`IdagioTrack`].
 pub fn track_suitable(url: &str) -> bool {

@@ -2,6 +2,7 @@
 //! page's tape ID, OpenGraph/meta fields, and the derived `.mov` URL as an
 //! untyped result.
 use super::{Extractor, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct HistoricFilms;
 
 const NAME: &str = "HistoricFilms";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?historicfilms\.com/(?:tapes/|play)(?P<id>\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?historicfilms\.com/(?:tapes/|play)(?P<id>\d+)")
 });
 
 static TAPE_ID: LazyLock<[Regex; 2]> = LazyLock::new(|| {

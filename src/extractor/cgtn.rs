@@ -2,6 +2,7 @@
 //! `data-video` HLS manifest with its date, section, author and OpenGraph
 //! metadata.
 use super::{Extractor, download_webpage, extract_m3u8_fatal, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct Cgtn;
 
 const NAME: &str = "CGTN";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://news\.cgtn\.com/news/[0-9]{4}-[0-9]{2}-[0-9]{2}/[a-zA-Z0-9-]+-(?P<id>[a-zA-Z0-9-]+)/index\.html",
     )
-    .unwrap()
 });
 static DOWNLOAD_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-video ="(?P<url>.+m3u8)""#).unwrap());

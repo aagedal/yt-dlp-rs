@@ -1,6 +1,7 @@
 //! Upstream `HSEShowIE` and `HSEProductIE` (`yt_dlp/extractor/hse.py`): a
 //! TV show's or product's `window.__REDUX_DATA__` and its HLS sources.
 use super::{Extractor, dict_info, download_webpage, extract_m3u8_fatal};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,12 +15,10 @@ pub struct HseProduct;
 const SHOW: &str = "HSEShow";
 const PRODUCT: &str = "HSEProduct";
 
-static SHOW_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?hse\.de/dpl/c/tv-shows/(?P<id>[0-9]+)").unwrap()
-});
-static PRODUCT_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?hse\.de/dpl/p/product/(?P<id>[0-9]+)").unwrap()
-});
+static SHOW_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?hse\.de/dpl/c/tv-shows/(?P<id>[0-9]+)"));
+static PRODUCT_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?hse\.de/dpl/p/product/(?P<id>[0-9]+)"));
 static REDUX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.__REDUX_DATA__\s*=\s*(\{.*\});?").unwrap());
 static CHANNEL: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"tvShow \| ([A-Z0-9]+)_").unwrap());

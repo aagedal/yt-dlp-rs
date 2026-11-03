@@ -2,6 +2,7 @@
 //! `window.App` state (through `js_to_json`), its main media and body
 //! `jwplayer` items as a playlist of `jwplatform:ID` results.
 use super::{Extractor, download_webpage, search_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct Iltalehti;
 const NAME: &str = "Iltalehti";
 
 // Upstream's ID group is a single character.
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?iltalehti\.fi/[^/?#]+/a/(?P<id>[^/?#])")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?iltalehti\.fi/[^/?#]+/a/(?P<id>[^/?#])")
 });
 
 static APP: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<script>\s*window.App\s*=").unwrap());

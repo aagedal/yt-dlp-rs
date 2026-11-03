@@ -1,6 +1,7 @@
 //! Upstream `MaoriTVIE` (`yt_dlp/extractor/maoritv.py`): the page's
 //! `data-main-video-id` as a `url` result of its Brightcove player.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -11,11 +12,8 @@ pub struct MaoriTV;
 
 const NAME: &str = "MaoriTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?maoritelevision\.com/shows/(?:[^/]+/)+(?P<id>[^/?&#]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?maoritelevision\.com/shows/(?:[^/]+/)+(?P<id>[^/?&#]+)")
 });
 static BRIGHTCOVE_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-main-video-id=["'](\d+)"#).unwrap());

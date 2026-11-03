@@ -3,9 +3,9 @@
 //! XOR-encrypted stream URLs (progressive, HLS, DASH), comments and
 //! metadata.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use base64::Engine;
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -63,11 +63,8 @@ const CLOUDCAST_FIELDS: &str = "audioLength
     restrictedReason
     id";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:(?:www|beta|m)\.)?mixcloud\.com/(?P<user>[^/]+)/(?P<slug>[^/]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:(?:www|beta|m)\.)?mixcloud\.com/(?P<user>[^/]+)/(?P<slug>[^/]+)")
 });
 
 /// `MixcloudIE._match_valid_url` (`(?!stream|uploads|...)` checked apart).
@@ -418,17 +415,15 @@ const PLAYLIST_NODE: &str = "cloudcast {
             owner { username }
           }";
 
-static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static USER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?mixcloud\.com/(?P<id>[^/]+)/(?P<type>uploads|favorites|listens|stream)?/?$",
     )
-    .unwrap()
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?mixcloud\.com/(?P<user>[^/]+)/playlists/(?P<playlist>[^/]+)/?$",
     )
-    .unwrap()
 });
 
 /// `MixcloudUserIE.suitable`.

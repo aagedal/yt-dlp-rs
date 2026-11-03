@@ -5,6 +5,7 @@
 //! first page plus its `viewChunked` pages. Logins and the PhantomJS
 //! challenge are not supported.
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage_handle};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -24,23 +25,20 @@ const PLAYLIST_NAME: &str = "PornHubPlaylist";
 
 const HOST: &str = r"(?:(?P<host>pornhub(?:premium)?\.(?:com|net|org))|pornhubvybmsymdol4iibwgwtkpwmeyd6luq2gxajgjzfjvotyt5zhyd\.onion)";
 
-static VIDEO_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static VIDEO_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"https?://(?:(?:[a-zA-Z0-9.-]+\.)?{HOST}/(?:(?:view_video\.php|video/show)\?viewkey=|embed/)|(?:www\.)?thumbzilla\.com/video/)(?P<id>[\da-z]+)"
     ))
-    .unwrap()
 });
-static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static USER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"^(?P<url>https?://(?:[a-zA-Z0-9.-]+\.)?{HOST}/(?:(?:user|channel)s|model|pornstar)/(?P<id>[^/?#&]+))(?P<rest>.*)$"
     ))
-    .unwrap()
 });
-static PAGED_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static PAGED_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"^https?://(?:[^/]+\.)?{HOST}/(?P<id>(?:[^/]+/)*[^/?#&]+)"
     ))
-    .unwrap()
 });
 static UPLOAD_URL: LazyLock<Regex> = LazyLock::new(|| {
     crate::extractor::url_regex(&format!(
@@ -48,11 +46,10 @@ static UPLOAD_URL: LazyLock<Regex> = LazyLock::new(|| {
     ))
     .unwrap()
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"(?P<url>https?://(?:[^/]+\.)?{HOST}/playlist/(?P<id>[^/?#&]+))"
     ))
-    .unwrap()
 });
 static FLASHVARS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"var\s+flashvars_\d+\s*=\s*(\{.+?\});").unwrap());

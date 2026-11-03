@@ -2,8 +2,8 @@
 //! the site's GraphQL API, a `url_transparent` result of the Brightcove
 //! player (smuggled as CA-only) with the video's metadata.
 use super::{Extractor, brightcove};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -13,11 +13,8 @@ pub struct Tvo;
 
 const NAME: &str = "TVO";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?tvo\.org/video(?:/documentaries)?/(?P<id>[\w-]+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?tvo\.org/video(?:/documentaries)?/(?P<id>[\w-]+)")
 });
 
 const GRAPHQL_URL: &str = "https://hmy0rc1bo2.execute-api.ca-central-1.amazonaws.com/graphql";

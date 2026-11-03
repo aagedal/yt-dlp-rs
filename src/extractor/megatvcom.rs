@@ -5,6 +5,7 @@
 //! extractor (`MegaTVComEmbedIE`) is not ported: upstream cannot resolve its
 //! canonical URLs any more.
 use super::{Extractor, dict_format, dict_info, download_webpage, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, SubtitleFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,11 +18,10 @@ pub struct MegaTVCom;
 const NAME: &str = "megatvcom";
 const PLAYER_DIV_ID: &str = "player_div_id";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?megatv\.com/(?:\d{4}/\d{2}/\d{2}|[^/]+/(?P<id>\d+))/(?P<slug>[^/]+)",
     )
-    .unwrap()
 });
 static ARTICLE_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<article[^>]*\sid=["']Article_(\d+)["']"#).unwrap());

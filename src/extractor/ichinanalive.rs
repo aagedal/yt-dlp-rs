@@ -6,8 +6,8 @@ use super::{
     Extractor, dict_format, dict_info, download_json, download_json_headers,
     extract_m3u8_fatal_master, post_json_errnote_expecting,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -25,16 +25,16 @@ const VOD_NAME: &str = "17live:vod";
 const VOD_KEY: &str = "IchinanaLiveVOD";
 const API: &str = "https://api-dsa.17app.co/api/v1";
 
-static LIVE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?17\.live/(?:[^/]+/)*(?:live|profile/r)/(?P<id>\d+)").unwrap()
+static LIVE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://(?:www\.)?17\.live/(?:[^/]+/)*(?:live|profile/r)/(?P<id>\d+)")
 });
-static CLIP_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?17\.live/(?:[^/]+/)*profile/r/(?P<uploader_id>\d+)/clip/(?P<id>[^/]+)")
-        .unwrap()
+static CLIP_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:www\.)?17\.live/(?:[^/]+/)*profile/r/(?P<uploader_id>\d+)/clip/(?P<id>[^/]+)",
+    )
 });
-static VOD_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?17\.live/ja/vod/[^/?#]+/(?P<id>[^/?#]+)").unwrap()
-});
+static VOD_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?17\.live/ja/vod/[^/?#]+/(?P<id>[^/?#]+)"));
 
 /// `IchinanaLiveIE.suitable`: the live pattern, minus the clip URLs.
 pub fn live_suitable(url: &str) -> bool {

@@ -3,8 +3,8 @@
 //! `yt_dlp/extractor/youtube/_search.py` and `_tab.py`'s `_search_results`.
 use super::tab::{at, entry_info, extract_entries};
 use super::watch;
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -15,12 +15,12 @@ pub(crate) const URL_NAME: &str = "youtube:search_url";
 /// `_SEARCH_PARAMS`: videos only.
 const SEARCH_PARAMS: &str = "EgIQAfABAQ==";
 
-static SEARCH_RE: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^ytsearch(?P<prefix>|[1-9][0-9]*|all):(?P<query>[\s\S]+)$").unwrap()
-});
-static URL_RE: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?youtube\.com/(?:results|search)\?([^#]+&)?(?:search_query|q)=(?:[^&]+)(?:[&#]|$)")
-        .unwrap()
+static SEARCH_RE: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^ytsearch(?P<prefix>|[1-9][0-9]*|all):(?P<query>[\s\S]+)$"));
+static URL_RE: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
+        r"^https?://(?:www\.)?youtube\.com/(?:results|search)\?([^#]+&)?(?:search_query|q)=(?:[^&]+)(?:[&#]|$)",
+    )
 });
 
 /// The input text of a `ytsearch` pseudo-URL (the URL parser
@@ -343,11 +343,10 @@ impl super::super::Extractor for YoutubeSearchUrl {
 
 pub(crate) const MUSIC_URL_NAME: &str = "youtube:music:search_url";
 
-static MUSIC_URL_RE: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static MUSIC_URL_RE: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://music\.youtube\.com/search\?([^#]+&)?(?:search_query|q)=(?:[^&]+)(?:[&#]|$)",
     )
-    .unwrap()
 });
 
 /// `YoutubeMusicSearchURLIE._SECTIONS`.

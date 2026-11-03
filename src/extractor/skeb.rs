@@ -2,6 +2,7 @@
 //! of their mp3/mp4/wav previews from the works API (retried with the
 //! `request_key` cookie a 429 page sets), with the work's metadata.
 use super::{Extractor, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,9 +14,8 @@ pub struct Skeb;
 
 const NAME: &str = "Skeb";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://skeb\.jp/@(?P<uploader_id>[^/?#]+)/works/(?P<id>\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://skeb\.jp/@(?P<uploader_id>[^/?#]+)/works/(?P<id>\d+)")
 });
 static REQUEST_KEY: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"document\.cookie\s*=\s*["']request_key=([^;"']+)"#).unwrap());

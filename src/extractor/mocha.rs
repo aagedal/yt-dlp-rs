@@ -1,8 +1,8 @@
 //! Upstream `MochaVideoIE` (`yt_dlp/extractor/mocha.py`): the Mocha video
 //! API's detail, its resolution HLS playlists and original MP4 as formats.
 use super::{Extractor, download_json, extract_m3u8_fatal, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -13,9 +13,8 @@ pub struct MochaVideo;
 const NAME: &str = "MochaVideo";
 const API: &str = "http://apivideo.mocha.com.vn:8081/onMediaBackendBiz/mochavideo/getVideoDetail";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://video\.mocha\.com\.vn/(?P<video_slug>[\w-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://video\.mocha\.com\.vn/(?P<video_slug>[\w-]+)"));
 
 /// `_match_valid_url`.
 pub fn suitable(url: &str) -> bool {

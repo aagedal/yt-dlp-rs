@@ -3,6 +3,7 @@
 //! the OpenGraph and JSON-LD metadata (one video, or a `multi_video`
 //! playlist of items).
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct RadioRadicale;
 
 const NAME: &str = "RadioRadicale";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?radioradicale\.it/scheda/(?P<id>[0-9]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?radioradicale\.it/scheda/(?P<id>[0-9]+)")
 });
 static SETTINGS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"jQuery\.extend\(Drupal\.settings\s*,").unwrap());

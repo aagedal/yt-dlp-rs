@@ -4,6 +4,7 @@
 //! player is the video itself; several make a playlist of the page's display
 //! ID. `CNNIndonesiaIE` is not ported: its embed page no longer resolves.
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::subtitles::{SubtitleFormat, Subtitles};
 use crate::{ExtractResult, PlaylistInfo, Result, VideoFormat, VideoInfo};
 use regex::Regex;
@@ -16,9 +17,10 @@ pub struct Cnn;
 
 const NAME: &str = "CNN";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:(?:edition|www|money|cnnespanol)\.)?cnn\.com/(?P<display_id>[^?#]+?)(?:[?#]|$|/index\.html)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^https?://(?:(?:edition|www|money|cnnespanol)\.)?cnn\.com/(?P<display_id>[^?#]+?)(?:[?#]|$|/index\.html)",
+    )
 });
 static WINDOW_ENV: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"window\.env\s*=").unwrap());
 static RESOLUTION: LazyLock<Regex> =

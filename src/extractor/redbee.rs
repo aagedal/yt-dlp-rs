@@ -9,8 +9,8 @@ use super::{
     Extractor, dict_info, download_json_headers, extract_m3u8_master_optional,
     post_json_note_headers,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, Subtitles, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::io::Read;
@@ -25,11 +25,10 @@ const KEY: &str = "ParliamentLiveUK";
 const CUSTOMER: &str = "UKParliament";
 const BUSINESS_UNIT: &str = "ParliamentLive";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"(?i)https?://(?:www\.)?parliamentlive\.tv/Event/Index/(?P<id>[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})",
     )
-    .unwrap()
 });
 
 /// `_match_id`.

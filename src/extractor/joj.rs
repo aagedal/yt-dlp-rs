@@ -3,6 +3,7 @@
 //! `js_to_json`), else the `Video.php` XML playlist's files, with the
 //! OpenGraph thumbnail and `videoDuration`.
 use super::{Extractor, dict_format, dict_info, download_webpage, download_xml};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,10 +15,8 @@ pub struct Joj;
 
 const NAME: &str = "Joj";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^(?:joj:|https?://media\.joj\.sk/embed/)(?P<id>[^/?#^]+)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^(?:joj:|https?://media\.joj\.sk/embed/)(?P<id>[^/?#^]+)"));
 static VIDEO_TITLE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"(?:videoTitle\s*:)\s*(?P<json>["'].+["'])\s*"#).unwrap());
 static BITRATES: LazyLock<Regex> =

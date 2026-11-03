@@ -4,6 +4,7 @@
 //! mixed-media posts as playlists, and `tv/show` pages resolved through the
 //! TV component API to their post.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -20,26 +21,25 @@ const KEY: &str = "Weibo";
 const VIDEO_NAME: &str = "WeiboVideo";
 const USER_NAME: &str = "WeiboUser";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:m\.weibo\.cn/(?:status|detail)|(?:www\.)?weibo\.com/\d+)/(?P<id>[a-zA-Z0-9]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^https?://(?:m\.weibo\.cn/(?:status|detail)|(?:www\.)?weibo\.com/\d+)/(?P<id>[a-zA-Z0-9]+)",
+    )
 });
-static VIDEO_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+static VIDEO_URLS: LazyLock<[UrlRegex; 2]> = LazyLock::new(|| {
     let id = r"\d+:(?:[\da-f]{32}|\d{16,})";
     [
-        Regex::new(&format!(
+        UrlRegex::new(format!(
             r"^https?://(?:www\.)?weibo\.com/tv/show/(?P<id>{id})"
-        ))
-        .unwrap(),
-        Regex::new(&format!(
+        )),
+        UrlRegex::new(format!(
             r"^https?://video\.weibo\.com/show/?\?(?:[^#]+&)?fid=(?P<id>{id})"
-        ))
-        .unwrap(),
+        )),
     ]
 });
 /// `WeiboUserIE._VALID_URL`.
-static USER_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?weibo\.com/u/(?P<id>\d+)").unwrap());
+static USER_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?weibo\.com/u/(?P<id>\d+)"));
 static CHROME: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"Chrome/(\d+)").unwrap());
 static FALLBACK_LABEL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"label=(\w+)&template=(\d+x\d+)").unwrap());

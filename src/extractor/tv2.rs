@@ -7,6 +7,7 @@
 use super::clyp::{float_or_none, key_error};
 use super::streamable::int_or_none;
 use super::{Extractor, dict_format, dict_info, download_json_note, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -23,16 +24,12 @@ const PROTOCOLS: [&str; 2] = ["HLS", "DASH"];
 const GEO_COUNTRIES: [&str; 1] = ["NO"];
 const PLAY_BODY: &str = r#"{"device":{"id":"1-1-1","name":"Nettleser (HTML)"}}"#;
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?tv2\.no/v(?:ideo)?\d*/(?:[^?#]+/)*(?P<id>\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?tv2\.no/v(?:ideo)?\d*/(?:[^?#]+/)*(?P<id>\d+)")
 });
 // Upstream's `(?!v(?:ideo)?\d*/)` after the host is checked in `article_id`.
-static ARTICLE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://(?:www\.)?tv2\.no/(?P<rest>[^?#]+/(?P<id>\d+))").unwrap()
-});
+static ARTICLE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?tv2\.no/(?P<rest>[^?#]+/(?P<id>\d+))"));
 static VIDEO_PREFIX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^v(?:ideo)?\d*/").unwrap());
 static ASSET_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-assetid=["'](\d+)"#).unwrap());

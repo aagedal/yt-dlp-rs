@@ -2,8 +2,8 @@
 //! `og:url` score ID, the `api/jmuse` MP3 URL (with the ID's MD5
 //! authorization token) and the page's OpenGraph and `musescore:` metadata.
 use super::{Extractor, dict_format, dict_info, download_json_note_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -13,11 +13,10 @@ pub struct MuseScore;
 
 const NAME: &str = "MuseScore";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?musescore\.com/(?:user/\d+|[^/]+)(?:/scores)?/(?P<id>[^#&?]+)",
     )
-    .unwrap()
 });
 
 /// `_match_id`.

@@ -3,8 +3,8 @@
 //! formats and HLS formats whose media playlist and segment requests carry
 //! the format's `ver`/`r`/`token`/`sign` query (`extra_param_to_segment_url`).
 use super::{Extractor, dict_format, dict_info, download_json, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -15,11 +15,10 @@ pub struct Uol;
 pub(crate) const NAME: &str = "uol.com.br";
 pub(crate) const KEY: &str = "UOL";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:.+?\.)?uol\.com\.br/.*?(?:(?:mediaId|v)=|view/(?:[a-z0-9]+/)?|video(?:=|/(?:\d{4}/\d{2}/\d{2}/)?))(?P<id>\d+|[\w-]+-[A-Z0-9]+)",
     )
-    .unwrap()
 });
 
 /// `qualities([...])`.

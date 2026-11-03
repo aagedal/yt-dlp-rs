@@ -3,8 +3,8 @@
 //! course's table of contents as `url_transparent` video entries. Logging in
 //! is not supported natively, so a locked video reports the login requirement.
 use super::{Extractor, download_json, login};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::io::Read;
@@ -19,17 +19,15 @@ const COURSE_NAME: &str = "PacktPubCourse";
 const STATIC_PRODUCTS_BASE: &str = "https://static.packt-cdn.com/products/";
 const PRODUCTS_API: &str = "https://services.packtpub.com/products-v1/products/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:www\.)?packtpub\.com/mapt|subscription\.packtpub\.com)/video/[^/]+/(?P<course_id>\d+)/(?P<chapter_id>[^/]+)/(?P<id>[^/]+)(?:/(?P<display_id>[^/?&#]+))?",
     )
-    .unwrap()
 });
-static COURSE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static COURSE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^(?P<url>https?://(?:(?:www\.)?packtpub\.com/mapt|subscription\.packtpub\.com)/video/[^/]+/(?P<id>\d+))",
     )
-    .unwrap()
 });
 
 /// `PacktPubIE._match_valid_url`.

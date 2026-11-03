@@ -5,6 +5,7 @@
 //! expects a `search-results` wrapper that the live API no longer sends, so
 //! the playlist reproduces upstream's KeyError.
 use super::{Extractor, dict_format, dict_info, direct, download_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -21,17 +22,15 @@ const PLAYLIST_NAME: &str = "OpencastPlaylist";
 const INSTANCES: &str = r"(?:opencast\.informatik\.kit\.edu|electures\.uni-muenster\.de|oc-presentation\.ltcc\.tuwien\.ac\.at|medien\.ph-noe\.ac\.at|oc-video\.ruhr-uni-bochum\.de|oc-video1\.ruhr-uni-bochum\.de|opencast\.informatik\.uni-goettingen\.de|heicast\.uni-heidelberg\.de|opencast\.hawk\.de:8080|opencast\.hs-osnabrueck\.de|video[0-9]+\.virtuos\.uni-osnabrueck\.de|opencast\.uni-koeln\.de|media\.opencast\.hochschule-rhein-waal\.de|matterhorn\.dce\.harvard\.edu|hs-harz\.opencast\.uni-halle\.de|videocampus\.urz\.uni-leipzig\.de|media\.uct\.ac\.za|vid\.igb\.illinois\.edu|cursosabertos\.c3sl\.ufpr\.br|mcmedia\.missioncollege\.org|clases\.odon\.edu\.uy|oc-p\.uni-jena\.de)";
 const UUID: &str = r"[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}";
 
-static EPISODE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+static EPISODE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(format!(
         r"^https?://(?P<host>{INSTANCES})/paella[0-9]*/ui/watch\.html\?(?:[^#]+&)?id=(?P<id>{UUID})"
     ))
-    .unwrap()
 });
-static SERIES_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+static SERIES_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(format!(
         r"^https?://(?P<host>{INSTANCES})(?:/engage/ui/index\.html\?(?:[^#]+&)?epFrom=|/ltitools/index\.html\?(?:[^#]+&)?series=)(?P<id>{UUID})"
     ))
-    .unwrap()
 });
 static RTMP: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"(?:rtmp://[^/]+/(?P<app>[^/]+))/(?P<ext>.+):(?P<playpath>.+)").unwrap()

@@ -7,6 +7,7 @@
 use super::{
     Extractor, dict_format, dict_info, direct, download_json_transformed, download_webpage,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, SubtitleFormat, Subtitles, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -22,18 +23,18 @@ const NAME: &str = "foxnews";
 const VIDEO_NAME: &str = "FoxNewsVideo";
 const ARTICLE_NAME: &str = "foxnews:article";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://video\.(?:insider\.)?fox(?:news|business)\.com/v/(?:video-embed\.html\?video_id=)?(?P<id>\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
+        r"^https?://video\.(?:insider\.)?fox(?:news|business)\.com/v/(?:video-embed\.html\?video_id=)?(?P<id>\d+)",
+    )
 });
-static VIDEO_PAGE: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?foxnews\.com/video/(?P<id>\d+)").unwrap());
+static VIDEO_PAGE: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://(?:www\.)?foxnews\.com/video/(?P<id>\d+)"));
 /// `(?!v)` is checked by hand: the first path segment must not start with `v`.
-static ARTICLE_PAGE: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static ARTICLE_PAGE: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?(?:insider\.)?foxnews\.com/(?P<path>(?:[^/]+/)+)(?P<id>[a-z-]+)",
     )
-    .unwrap()
 });
 static DATA_VIDEO_ID: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"data-video-id=(?:'|")([^'"]+)"#).unwrap());

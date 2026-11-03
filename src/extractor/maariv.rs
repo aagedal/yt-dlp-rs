@@ -1,6 +1,7 @@
 //! Upstream `MaarivIE` (`yt_dlp/extractor/maariv.py`): the Walla media API's
 //! HLS stream and HTTP stream URLs, and the player's iframe embeds.
 use super::{Extractor, download_json, extract_m3u8_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,8 +17,7 @@ pub(crate) const KEY: &str = "Maariv";
 const VALID: &str =
     r"https?://player\.maariv\.co\.il/public/player\.html\?(?:[^#]+&)?media=(?P<id>\d+)";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| crate::extractor::url_regex(&format!("^{VALID}")).unwrap());
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| UrlRegex::ascii(&format!("^{VALID}")));
 static EMBED: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(&format!(r#"<iframe[^>]+\bsrc=['"](?P<url>{VALID})"#)).unwrap());
 

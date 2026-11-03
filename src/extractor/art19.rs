@@ -3,8 +3,8 @@
 //! merged from the player and RSS JSON (both optional). `Art19ShowIE` is not
 //! ported.
 use super::{Extractor, dict_format, dict_info, download_json_note_headers};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -15,17 +15,15 @@ pub struct Art19;
 const NAME: &str = "Art19";
 const UUID: &str = r"[\da-f]{8}-?[\da-f]{4}-?[\da-f]{4}-?[\da-f]{4}-?[\da-f]{12}";
 
-static SHOW_EPISODE: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+static SHOW_EPISODE: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(format!(
         r"^https?://(?:www\.)?art19\.com/shows/[^/#?]+/episodes/(?P<id>{UUID})"
     ))
-    .unwrap()
 });
-static RSS_EPISODE: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(&format!(
+static RSS_EPISODE: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(format!(
         r"^https?://rss\.art19\.com/episodes/(?P<id>{UUID})\.mp3"
     ))
-    .unwrap()
 });
 
 /// `_match_id` over both `_VALID_URL` patterns.

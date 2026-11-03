@@ -5,6 +5,7 @@ use super::applepodcasts;
 use super::{
     Extractor, dict_format, dict_info, download_json_headers, download_webpage, update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -29,9 +30,8 @@ const QUALITIES: [(&str, Option<i64>); 6] = [
     ("1080pHdVideo", Some(1080)),
 ];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://music\.apple\.com/[\w-]+/post/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://music\.apple\.com/[\w-]+/post/(?P<id>\d+)"));
 static SIZE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(\d+)\s*[xX×,]\s*(\d+)").unwrap());
 static WIDTH: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?:^|\D)(\d{2,5})w(?:$|[^a-zA-Z0-9])").unwrap());

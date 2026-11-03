@@ -3,8 +3,8 @@
 //! `--no-playlist` is not), and a Holodex playlist API's video IDs as YouTube
 //! `url` entries.
 use super::{Extractor, download_json, follow_url, nrk::url_entry};
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -14,11 +14,10 @@ pub struct Holodex;
 
 const NAME: &str = "Holodex";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.|staging\.)?holodex\.net/(?:api/v2/playlist/(?P<playlist>\d+)|watch/(?P<id>[\w-]{11})(?:\?(?:[^#]+&)?playlist=(?P<playlist2>\d+))?)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

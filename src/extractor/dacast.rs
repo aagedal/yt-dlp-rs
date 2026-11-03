@@ -7,6 +7,7 @@ use super::{
     Extractor, dict_info, direct, download_json, download_json_note, download_webpage,
     update_url_query,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -24,12 +25,11 @@ const API_INFO_URL: &str = "https://playback.dacast.com/content/info";
 const API_ACCESS_URL: &str = "https://playback.dacast.com/content/access";
 const DEFAULT_SIGNING_SECRET: &str = "hGDtqMKYVeFdofrAfFmBcrsakaZELajI";
 
-static VOD_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://iframe\.dacast\.com/vod/(?P<user_id>[\w-]+)/(?P<id>[\w-]+)").unwrap()
+static VOD_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://iframe\.dacast\.com/vod/(?P<user_id>[\w-]+)/(?P<id>[\w-]+)")
 });
-static PLAYLIST_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://iframe\.dacast\.com/playlist/(?P<user_id>[\w-]+)/(?P<id>[\w-]+)")
-        .unwrap()
+static PLAYLIST_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://iframe\.dacast\.com/playlist/(?P<user_id>[\w-]+)/(?P<id>[\w-]+)")
 });
 static SIGNING_SECRET: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"\bUSP_SIGNING_SECRET\s*=\s*(?:"([^"]+)"|'([^']+)')"#).unwrap());

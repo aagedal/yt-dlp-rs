@@ -2,9 +2,9 @@
 //! an episode page's `__NEXT_DATA__` episode as an untyped MP3 result, and a
 //! channel's paged podcast API episodes as a playlist of them.
 use super::{Extractor, download_json_note, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use base64::Engine;
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -17,11 +17,10 @@ const NAME: &str = "PodbayFM";
 const CHANNEL_NAME: &str = "PodbayFMChannel";
 const PAGE_SIZE: usize = 10;
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://podbay\.fm/p/[^/?#]+/e/(?P<id>\d+)").unwrap()
-});
-static CHANNEL_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://podbay\.fm/p/(?P<id>[^/?#]+)/?(?:$|[?#])").unwrap());
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://podbay\.fm/p/[^/?#]+/e/(?P<id>\d+)"));
+static CHANNEL_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://podbay\.fm/p/(?P<id>[^/?#]+)/?(?:$|[?#])"));
 
 /// `PodbayFMIE._match_id`.
 pub fn suitable(url: &str) -> bool {

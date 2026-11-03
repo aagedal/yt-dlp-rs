@@ -2,6 +2,7 @@
 //! `player.megaphone.fm` page's OpenGraph audio fields and its `episode`
 //! script object.
 use super::{Extractor, download_webpage, proto_relative_https};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -15,9 +16,8 @@ pub struct Megaphone;
 pub(crate) const NAME: &str = "megaphone.fm";
 pub(crate) const KEY: &str = "Megaphone";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://player\.megaphone\.fm/(?P<id>[A-Z0-9]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://player\.megaphone\.fm/(?P<id>[A-Z0-9]+)"));
 
 /// `_EMBED_REGEX`: the `_VALID_URL` prefix of an iframe's `src`.
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {

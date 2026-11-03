@@ -7,6 +7,7 @@ use super::{
     Extractor, dict_info, download_json_note_headers, download_webpage, extract_mpd_fatal,
 };
 use super::{post_json_note_headers, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -19,11 +20,10 @@ pub struct BoxFile;
 const NAME: &str = "Box";
 const FILE_FIELDS: &str = "authenticated_download_url,created_at,created_by,description,extension,is_download_available,name,representations,size";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:[^.]+\.)?(?P<service>app|ent)\.box\.com/s/(?P<shared_name>[^/?#]+)(?:/file/(?P<id>\d+))?",
     )
-    .unwrap()
 });
 static POST_STREAM_DATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"Box\.postStreamData\s*=").unwrap());

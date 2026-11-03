@@ -94,7 +94,10 @@ pub(crate) mod xattr;
 #[doc(hidden)]
 pub mod __private {
     pub use crate::container::{sniff, sniff_bytes};
-    pub use crate::extractor::{DirectHttp, Extractor, GenericHttp, login::Session};
+    pub use crate::extractor::{
+        DirectHttp, Extractor, GenericHttp, login::Session, record_url_patterns,
+        recorded_url_patterns, url_pattern_hash,
+    };
     pub use crate::geo::GeoContext;
     pub use crate::output::{exec::shell_quote_command, sanitize::host_path};
 }

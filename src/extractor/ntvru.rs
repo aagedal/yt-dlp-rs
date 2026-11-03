@@ -3,6 +3,7 @@
 //! XML (progressive files, HLS and DASH playback) and the `exp/video/<id>`
 //! metadata XML that overrides the player's title, description and duration.
 use super::{Extractor, dict_format, dict_info, download_webpage, download_xml_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,10 +15,8 @@ pub struct NtvRu;
 
 const NAME: &str = "ntv.ru";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?ntv\.ru/(?:[^/#?]+/)*(?P<id>[^/?#&]+)")
-        .unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?ntv\.ru/(?:[^/#?]+/)*(?P<id>[^/?#&]+)"));
 static FEED_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(
         r#"<meta property="ya:ovs:feed_url" content="https?://www\.ntv\.ru/(?:exp/)?video/(\d+)"#,

@@ -4,6 +4,7 @@
 //! a Python `set()` upstream, so their order follows CPython's set table; that
 //! is reproduced for up to four videos and larger sets are unsupported.
 use super::{Extractor, extract_m3u8_master_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -35,14 +36,14 @@ pub struct TapTapApp;
 pub struct TapTapAppIntl;
 pub struct TapTapPostIntl;
 
-static MOMENT: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://www\.taptap\.cn/moment/(?P<id>\d+)").unwrap());
-static APP: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://www\.taptap\.cn/app/(?P<id>\d+)").unwrap());
-static APP_INTL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://www\.taptap\.io/app/(?P<id>\d+)").unwrap());
-static POST_INTL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^https?://www\.taptap\.io/post/(?P<id>\d+)").unwrap());
+static MOMENT: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://www\.taptap\.cn/moment/(?P<id>\d+)"));
+static APP: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://www\.taptap\.cn/app/(?P<id>\d+)"));
+static APP_INTL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://www\.taptap\.io/app/(?P<id>\d+)"));
+static POST_INTL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(r"^https?://www\.taptap\.io/post/(?P<id>\d+)"));
 static H265: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^(hev|hvc|hvt)\d").unwrap());
 
 fn pattern(kind: Kind) -> &'static Regex {

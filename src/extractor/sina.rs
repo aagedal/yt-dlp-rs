@@ -1,6 +1,7 @@
 //! Upstream `SinaIE` (`yt_dlp/extractor/sina.py`): the video ID (from the
 //! URL or the page's `video_id`), the `h5play` JSON and its MP4 qualities.
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,14 +14,13 @@ pub struct Sina;
 const NAME: &str = "Sina";
 const QUALITIES: [&str; 5] = ["cif", "sd", "hd", "fhd", "ffd"];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(concat!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(concat!(
         r"^https?://(?:[^/?#]+\.)?video\.sina\.com\.cn/(?:",
         r"(?:view/|.*\#)(?P<id>\d+)|",
         r".+?/(?P<pseudo_id>[^/?#]+)(?:\.s?html)|",
         r"api/sinawebApi/outplay\.php/(?P<token>.+?)\.swf)",
     ))
-    .unwrap()
 });
 static VIDEO_ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"video_id\s*:\s*'(\d+)'").unwrap());
 

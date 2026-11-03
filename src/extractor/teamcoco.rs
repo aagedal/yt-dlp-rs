@@ -4,6 +4,7 @@
 //! HLS sources, whose master playlists supply the formats. Upstream's
 //! `ConanClassicIE` (`_WORKING = False`) is not ported.
 use super::{Extractor, dict_format, dict_info, download_webpage, search_nextjs_data};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, Subtitles, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -24,9 +25,8 @@ const QUALITIES: &[(&str, (i64, i64))] = &[
     ("uhd", (1920, 1080)),
 ];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?teamcoco\.com/(?P<id>([^/]+/)*[^/?#]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?teamcoco\.com/(?P<id>([^/]+/)*[^/?#]+)")
 });
 static SCHEME_SLASH: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^https?:/[^/]").unwrap());
 

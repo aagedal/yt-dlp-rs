@@ -3,8 +3,8 @@
 //! (the quality is the URL's last two characters). `NateProgramIE` (a
 //! program's paged clip ranking) is not ported.
 use super::{Extractor, dict_format, dict_info, download_json, streamable::int_or_none};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -14,8 +14,8 @@ pub struct Nate;
 
 const NAME: &str = "Nate";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| super::url_regex(r"^https?://tv\.nate\.com/clip/(?P<id>[0-9]+)").unwrap());
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://tv\.nate\.com/clip/(?P<id>[0-9]+)"));
 
 /// `_QUALITY`: a rendition's height by its format code.
 fn quality_height(code: &str) -> Option<i64> {

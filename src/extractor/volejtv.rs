@@ -3,8 +3,8 @@
 //! `api-volejtv-prod` JSON (its CloudFront MP4 qualities and the teams/date
 //! title), and a category's or club's paged match list as `url` entries.
 use super::{Extractor, dict_format, dict_info, download_json, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -24,12 +24,12 @@ const CLUB_NAME: &str = "volejtv:club";
 const CLUB_KEY: &str = "VolejTVClubPlaylist";
 const CLUB_PAGE_SIZE: usize = 6;
 
-static MATCH_URL: LazyLock<Regex> =
-    LazyLock::new(|| super::url_regex(r"^https?://volej\.tv/match/(?P<id>\d+)").unwrap());
-static CATEGORY_URL: LazyLock<Regex> =
-    LazyLock::new(|| super::url_regex(r"^https?://volej\.tv/kategorie/(?P<id>[^/$?]+)").unwrap());
-static CLUB_URL: LazyLock<Regex> =
-    LazyLock::new(|| super::url_regex(r"^https?://volej\.tv/klub/(?P<id>\d+)").unwrap());
+static MATCH_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://volej\.tv/match/(?P<id>\d+)"));
+static CATEGORY_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://volej\.tv/kategorie/(?P<id>[^/$?]+)"));
+static CLUB_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://volej\.tv/klub/(?P<id>\d+)"));
 
 /// `int_or_none` rates are integers (`tbr`).
 fn rated(mut format: crate::VideoFormat) -> crate::VideoFormat {

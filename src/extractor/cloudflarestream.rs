@@ -2,9 +2,9 @@
 //! a video's (or signed token's) `manifest/video.m3u8` and `video.mpd`
 //! formats, both non-fatal.
 use super::{Extractor, dict_info, extract_m3u8_optional, extract_mpd_optional_note};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use base64::Engine;
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::sync::LazyLock;
@@ -14,15 +14,14 @@ pub struct CloudflareStream;
 
 const NAME: &str = "CloudflareStream";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
     let subdomain = r"(?:(?:watch|iframe|customer-\w+)\.)?";
     let domain = r"(?:cloudflarestream\.com|(?:videodelivery|bytehighway)\.net)";
     let embed = format!(r"(?:embed\.|{subdomain}){domain}/embed/[^/?#]+\.js\?(?:[^#]+&)?video=");
     let id = r"[\da-f]{32}|eyJ[\w-]+\.[\w-]+\.[\w-]+";
-    crate::extractor::url_regex(&format!(
+    UrlRegex::ascii(&format!(
         r"^https?://(?:{subdomain}(?P<domain>{domain})/|{embed})(?P<id>{id})"
     ))
-    .unwrap()
 });
 
 /// `_match_valid_url`.

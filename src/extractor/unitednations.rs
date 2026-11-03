@@ -2,6 +2,7 @@
 //! the asset page's `partnerId` and `kentryID` as a `url` result of
 //! `kaltura:PARTNER:ENTRY`.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -12,11 +13,8 @@ pub struct UnitedNationsWebTv;
 
 const NAME: &str = "UnitedNationsWebTv";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://webtv\.un\.org/(?:ar|zh|en|fr|ru|es)/asset/\w+/(?P<id>\w+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://webtv\.un\.org/(?:ar|zh|en|fr|ru|es)/asset/\w+/(?P<id>\w+)")
 });
 static PARTNER: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"partnerId:\s*(\d+)").unwrap());
 static ENTRY: LazyLock<Regex> =

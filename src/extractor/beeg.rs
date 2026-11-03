@@ -3,6 +3,7 @@
 //! with its `fl_cdn_N` height, the file's metadata and the first fact's ID
 //! and date; the page gives the age limit.
 use super::{Extractor, dict_info, download_json_note, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct Beeg;
 
 const NAME: &str = "Beeg";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?beeg\.(?:com(?:/video)?)/-?(?P<id>\d+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?beeg\.(?:com(?:/video)?)/-?(?P<id>\d+)")
 });
 static HEIGHT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"fl_cdn_(\d+)").unwrap());
 

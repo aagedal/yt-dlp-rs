@@ -3,6 +3,7 @@
 //! the ATK API as a Zype `url_transparent`, and a season (or the whole show,
 //! until a season page is missing) as a playlist of episode URLs.
 use super::{Extractor, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,21 +18,19 @@ const NAME: &str = "AmericasTestKitchen";
 const SEASON_NAME: &str = "AmericasTestKitchenSeason";
 const ZYPE_KEY: &str = "jZ9GUhRmxcPvX7M3SlfejB6Hle9jyHTdk2jVxG7wOHPLODgncEKVdPYBhuz9iWXQ";
 
-static EPISODE_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static EPISODE_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:www\.)?(?:americastestkitchen|cooks(?:country|illustrated))\.com/(?:cooks(?:country|illustrated)/)?(?P<resource_type>episode|videos)/(?P<id>\d+)",
     )
-    .unwrap()
 });
 
-static SEASON_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static SEASON_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"(?x)^https?://(?:www\.)?(?P<domain>americastestkitchen|cookscountry|cooksillustrated)\.com
         (?:/(?P<path>cookscountry|cooksillustrated))?
         (?:/episodes(?:/browse)?/season[-_](?P<season>\d+))?
         /?(?:[?\#]|$)",
     )
-    .unwrap()
 });
 
 static EPISODE_LINK: LazyLock<Regex> = LazyLock::new(|| {

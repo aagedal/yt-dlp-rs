@@ -4,8 +4,8 @@
 //! handling are not ported: DRM-only media and live `ssai` sources error
 //! out rather than guessing.
 use super::{Extractor, direct, extract_m3u8_master_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, SubtitleFormat, Subtitles, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -15,17 +15,15 @@ pub struct Streaks;
 
 const NAME: &str = "Streaks";
 
-static PLAYER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static PLAYER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://players\.streaks\.jp/(?P<project_id>[\w-]+)/(?P<api_key>[\da-f]+)/index\.html\?(?:[^#]+&)?m=(?P<id>(?:ref:)?[\w-]+)",
     )
-    .unwrap()
 });
-static PLAYBACK_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static PLAYBACK_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://playback\.api\.streaks\.jp/v1/projects/(?P<project_id>[\w-]+)/medias/(?P<id>(?:ref:)?[\w-]+)",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`: the first of the two patterns that matches.

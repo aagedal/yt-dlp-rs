@@ -2,6 +2,7 @@
 //! `__INITIAL_STATE__` Brightcove video ID and account as a `url` result of
 //! that account's default Brightcove player.
 use super::{Extractor, download_webpage, search_json};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct NineNews;
 
 const NAME: &str = "9News";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?9news\.com\.au/(?:[\w-]+/){2,3}(?P<id>[\w-]+)/?(?:$|[?#])",
     )
-    .unwrap()
 });
 static INITIAL_STATE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"var\s+__INITIAL_STATE__\s*=\s*").unwrap());

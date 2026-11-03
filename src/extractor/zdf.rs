@@ -14,6 +14,7 @@
 use super::{
     Extractor, dict_format, dict_info, download_webpage_handle, extract_m3u8_master_optional,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, Subtitles, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -35,7 +36,7 @@ const COLLECTION_HASH: &str = "cb49420e133bd668ad895a8cea0e65cba6aa11ac1cacb0234
 const SEASON_HASH: &str = "9412a0f4ac55dc37d46975d461ec64bfd14380d815df843a1492348f77b5c99a";
 const PAGE_SIZE: i64 = 24;
 
-static VIDEO_URLS: LazyLock<[Regex; 3]> = LazyLock::new(|| {
+static VIDEO_URLS: LazyLock<[UrlRegex; 3]> = LazyLock::new(|| {
     [
         r"^https?://(?:www\.)?zdf\.de/(?:video|play)/(?:[^/?#]+/)*(?P<id>[^/?#]+)",
         // Legacy redirects from before the 2025-03 redesign.
@@ -43,11 +44,11 @@ static VIDEO_URLS: LazyLock<[Regex; 3]> = LazyLock::new(|| {
         // Sister sites.
         r"^https?://(?:www\.)?(?:zdfheute|logo)\.de/(?:[^/?#]+/)*(?P<id>[^/?#]+)\.html",
     ]
-    .map(|pattern| Regex::new(pattern).unwrap())
+    .map(UrlRegex::new)
 });
 const CHANNEL_PATTERN: &str = r"https?://www\.zdf\.de/(?:[^/?#]+/)*(?P<id>[^/?#]+)";
-static CHANNEL_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(&format!("^{CHANNEL_PATTERN}")).unwrap());
+static CHANNEL_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(format!("^{CHANNEL_PATTERN}")));
 /// `_search_regex(_VALID_URL, urlh.url, ...)`: unanchored.
 static CHANNEL_SEARCH: LazyLock<Regex> = LazyLock::new(|| Regex::new(CHANNEL_PATTERN).unwrap());
 static PTMD_ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"/vod/ptmd/[^/?#]+/(\w+)").unwrap());

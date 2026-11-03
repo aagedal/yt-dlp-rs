@@ -2,8 +2,8 @@
 //! stories as their Next.js story audio files, with the story, page meta,
 //! HTML meta and JSON-LD metadata merged in that order (`merge_dicts`).
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -13,11 +13,10 @@ pub struct ZetlandDkArticle;
 
 const NAME: &str = "ZetlandDKArticle";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://www\.zetland\.dk/\w+/(?P<id>(?P<story_id>\w{8})-(?P<uploader_id>\w{8})-(?:\w{5}))",
     )
-    .unwrap()
 });
 
 /// `_match_valid_url`.

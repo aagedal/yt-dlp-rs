@@ -2,6 +2,7 @@
 //! player page's `VIDEO_CONFIG` (after `unicode_escape`) streams as formats,
 //! and its `_EMBED_REGEX` iframes on other pages.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct Blogger;
 pub(crate) const NAME: &str = "blogger.com";
 pub(crate) const KEY: &str = "Blogger";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?blogger\.com/video\.g\?token=(?P<id>.+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?blogger\.com/video\.g\?token=(?P<id>.+)")
 });
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<iframe[^>]+src=["'](?P<url>(?:https?:)?//(?:www\.)?blogger\.com/video\.g\?token=[^"']+)["']"#)

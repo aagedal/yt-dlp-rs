@@ -3,6 +3,7 @@
 //! HLS (`HLS`, quality 1), HDS (`HDS`, quality 1) or progressive formats,
 //! with the title, broadcast description, timestamp, duration and rights.
 use super::{Extractor, dict_format, dict_info, download_webpage, download_xml};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,8 @@ pub struct Mdr;
 
 const NAME: &str = "MDR";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?mdr\.de/(?:.*)/[a-z-]+-?(?P<id>\d+)(?:_.+?)?\.html",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?mdr\.de/(?:.*)/[a-z-]+-?(?P<id>\d+)(?:_.+?)?\.html")
 });
 static DATA_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

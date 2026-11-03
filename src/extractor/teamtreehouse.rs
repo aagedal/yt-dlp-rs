@@ -5,6 +5,7 @@
 //! ported; those pages fail with an explicit error.
 use super::html5::parse_html5_media_entries;
 use super::{Extractor, dict_info, direct, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,9 +17,8 @@ pub struct TeamTreeHouse;
 
 const NAME: &str = "TeamTreeHouse";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?teamtreehouse\.com/library/(?P<id>[^/]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?teamtreehouse\.com/library/(?P<id>[^/]+)")
 });
 const PREVIEW: &str = r#"data-preview="true""#;
 static DURATION: LazyLock<Regex> =

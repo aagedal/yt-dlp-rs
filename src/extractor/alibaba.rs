@@ -3,6 +3,7 @@
 //! item's ID, duration, cover and `videoUrl` formats, with the product's
 //! subject as the title.
 use super::{Extractor, dict_format, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,8 @@ pub struct Alibaba;
 
 const NAME: &str = "Alibaba";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?alibaba\.com/product-detail/[\w-]+_(?P<id>\d+)\.html",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?alibaba\.com/product-detail/[\w-]+_(?P<id>\d+)\.html")
 });
 static DETAIL_DATA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"window\.detailData\s*=\s*").unwrap());

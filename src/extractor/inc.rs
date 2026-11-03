@@ -3,6 +3,7 @@
 //! `vid_kaltura_id`) and partner ID as a `url` result of
 //! `kaltura:PARTNER:ENTRY`.
 use super::{Extractor, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,9 +15,8 @@ pub struct Inc;
 
 const NAME: &str = "Inc";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?inc\.com/(?:[^/]+/)+(?P<id>[^.]+).html")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?inc\.com/(?:[^/]+/)+(?P<id>[^.]+).html")
 });
 static PARTNER: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"var\s+_?bizo_data_partner_id\s*=\s*["'](\d+)"#).unwrap());

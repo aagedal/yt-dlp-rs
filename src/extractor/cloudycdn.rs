@@ -2,6 +2,7 @@
 //! player JSON (a form POST), its non-fatal HLS sources (video-only chunk
 //! lists without audio) and metadata.
 use super::{Extractor, dict_info, extract_m3u8_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,10 @@ pub struct CloudyCdn;
 
 const NAME: &str = "CloudyCDN";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?:https?:)?//embed\.(?P<domain>cloudycdn\.services|backscreen\.com)/(?P<site_id>[^/?#]+)/media/(?P<id>[\w-]+)",
     )
-    .unwrap()
 });
 static VIDEO_ONLY: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"chunklist_b\d+_vo_").unwrap());
 

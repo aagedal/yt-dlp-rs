@@ -3,8 +3,8 @@
 //! with the page's OpenGraph description (the video's when it has one), the
 //! old `cellebrite` archive ID and the OpenGraph image as an extra thumbnail.
 use super::{Extractor, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
 use std::sync::LazyLock;
@@ -14,9 +14,8 @@ pub struct Cellebrite;
 
 const NAME: &str = "Cellebrite";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://cellebrite\.com/(?:\w+)?/(?P<id>[\w-]+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://cellebrite\.com/(?:\w+)?/(?P<id>[\w-]+)"));
 
 /// `_match_id`.
 pub fn suitable(url: &str) -> bool {

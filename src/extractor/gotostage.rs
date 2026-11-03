@@ -2,8 +2,8 @@
 //! recordings through the contents API, a placeholder registration (a 409
 //! answer is accepted) and the registrant's asset download URL.
 use super::{Extractor, dict_info};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -13,11 +13,10 @@ pub struct GoToStage;
 
 const NAME: &str = "GoToStage";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?gotostage\.com/channel/[a-z0-9]+/recording/(?P<id>[a-z0-9]+)/watch",
     )
-    .unwrap()
 });
 
 /// `_match_id`.

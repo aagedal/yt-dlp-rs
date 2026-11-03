@@ -4,6 +4,7 @@
 //! poster merged with the page's JSON-LD. MediaCage activation and ping
 //! streams are not supported natively.
 use super::{Extractor, dict_format, dict_info, download_webpage_note_headers, html5};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -16,11 +17,10 @@ pub struct BunnyCdn;
 const NAME: &str = "BunnyCdn";
 const DEFAULT_REFERER: &str = "https://iframe.mediadelivery.net/";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:(?:iframe|player)\.mediadelivery\.net|video\.bunnycdn\.com)/(?:embed|play)/(?P<library_id>\d+)/(?P<id>[\da-f-]+)",
     )
-    .unwrap()
 });
 static ORIGINAL_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(?:var|const|let)\s+originalUrl\s*=\s*["']([^"']+)["']"#).unwrap()

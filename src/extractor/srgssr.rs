@@ -7,8 +7,8 @@
 //! episode podcast URLs, subtitles and metadata; play-site URLs of srf.ch,
 //! rts.ch, rsi.ch, rtr.ch and swissinfo.ch are `srgssr:` `url` results.
 use super::{Extractor, dict_format, dict_info, download_json, extract_m3u8_master_optional};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, SubtitleFormat, Subtitles, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -20,17 +20,15 @@ pub struct SrgSsrPlay;
 const NAME: &str = "SRGSSR";
 const PLAY_NAME: &str = "SRGSSRPlay";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^(?:https?://tp\.srgssr\.ch/p(?:/[^/]+)+\?urn=urn|srgssr):(?P<bu>srf|rts|rsi|rtr|swi):(?:[^:]+:)?(?P<type>video|audio):(?P<id>[0-9a-f\-]{36}|\d+)",
     )
-    .unwrap()
 });
-static PLAY_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static PLAY_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"^https?://(?:(?:www|play)\.)?(?P<bu>srf|rts|rsi|rtr|swissinfo)\.ch/play/(?:tv|radio)/(?:[^/]+/(?P<type>video|audio)/[^?]+|popup(?P<type_2>video|audio)player)\?.*?\b(?:id=|urn=urn:[^:]+:video:)(?P<id>[0-9a-f\-]{36}|\d+)",
     )
-    .unwrap()
 });
 
 /// `_ERRORS`.

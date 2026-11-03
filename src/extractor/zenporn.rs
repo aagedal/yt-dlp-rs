@@ -4,6 +4,7 @@
 //! characters the site substitutes (reverse engineered from the site's
 //! JavaScript like upstream).
 use super::{Extractor, dict_info, download_json_note, download_webpage, update_url_query};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use base64::Engine as _;
 use regex::Regex;
@@ -16,9 +17,8 @@ pub struct ZenPorn;
 
 const NAME: &str = "ZenPorn";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://(?:www\.)?zenporn\.com/video/(?P<id>\d+)").unwrap()
-});
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://(?:www\.)?zenporn\.com/video/(?P<id>\d+)"));
 static EMBED: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"https://(?P<ext_domain>[\w.-]+\.\w{3})/embed/(?P<extr_id>\d+)/").unwrap()
 });

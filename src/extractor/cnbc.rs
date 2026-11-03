@@ -2,6 +2,7 @@
 //! `window.__s_data` clip player module (its Akamai stream as HDS and HLS
 //! formats and its metadata) overlaid on the page's non-fatal JSON-LD.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct CnbcVideo;
 
 const NAME: &str = "CNBCVideo";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?cnbc\.com/video/(?:[^/?#]+/)+(?P<id>[^./?#&]+)\.html",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?cnbc\.com/video/(?:[^/?#]+/)+(?P<id>[^./?#&]+)\.html")
 });
 static S_DATA: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"window\.__s_data=").unwrap());
 

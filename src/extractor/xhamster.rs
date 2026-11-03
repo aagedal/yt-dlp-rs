@@ -4,6 +4,7 @@
 //! generators) and a user's `/videos` pages. The page's old layout (without
 //! `initials`) is not supported natively.
 use super::{Extractor, dict_format, dict_info, download_webpage_handle};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -21,17 +22,15 @@ const USER_NAME: &str = "XHamsterUser";
 const DOMAINS: &str =
     r"(?:xhamster\.(?:com|one|desi)|xhms\.pro|xhamster\d+\.(?:com|desi)|xhday\.com|xhvid\.com)";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"^https?://(?:[^/?#]+\.)?{DOMAINS}/(?:movies/(?P<id>[\dA-Za-z]+)/(?P<display_id>[^/]*)\.html|videos/(?P<display_id_2>[^/]*)-(?P<id_2>[\dA-Za-z]+))"
     ))
-    .unwrap()
 });
-static USER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(&format!(
+static USER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(&format!(
         r"^https?://(?:[^/?#]+\.)?{DOMAINS}/(?:(?P<user>users)|creators)/(?P<id>[^/?#&]+)"
     ))
-    .unwrap()
 });
 static MOBILE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^(https?://(?:.+?\.)?)m\.").unwrap());

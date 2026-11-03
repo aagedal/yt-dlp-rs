@@ -4,8 +4,8 @@
 //! its `hlsUrl` stream and, without formats, the page's JSON-LD
 //! `subjectOf` HLS URL.
 use super::{Extractor, dict_format, dict_info, download_json, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoFormat, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
@@ -18,11 +18,10 @@ const NAME: &str = "Npr";
 /// `KNOWN_FORMATS`, also `qualities(KNOWN_FORMATS)`'s order.
 const KNOWN_FORMATS: [&str; 5] = ["threegp", "m3u8", "smil", "mp4", "mp3"];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?npr\.org/(?:sections/[^/]+/)?\d{4}/\d{2}/\d{2}/(?P<id>\d+)",
     )
-    .unwrap()
 });
 
 /// `_match_id`.

@@ -6,6 +6,7 @@
 //! `duration`. Live channel IDs are base64; their iframes on generic pages
 //! are `url_transparent` embeds with the ID and the page's host as uploader.
 use super::{Extractor, dict_info, download_webpage};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -25,10 +26,10 @@ const BASE: &str = r"(?:https?:)?//(?:admin\.mangomolo\.com/analytics/index\.php
 const VIDEO_SLUG: &str = r"video\?.*?\bid=(?P<id>\d+)";
 const LIVE_SLUG: &str = r"(?:live|index)\?.*?\bchannelid=(?P<id>(?:[A-Za-z0-9+/=]|%2B|%2F|%3D)+)";
 
-static VIDEO_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(&format!("^{BASE}{VIDEO_SLUG}")).unwrap());
-static LIVE_URL: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(&format!("^{BASE}{LIVE_SLUG}")).unwrap());
+static VIDEO_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(format!("^{BASE}{VIDEO_SLUG}")));
+static LIVE_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::new(format!("^{BASE}{LIVE_SLUG}")));
 // `<iframe[^>]+src=(["\'])(?P<url>{_VALID_URL}.+?)\1`.
 static VIDEO_EMBED: LazyLock<Regex> = LazyLock::new(|| embed_regex(VIDEO_SLUG));
 static LIVE_EMBED: LazyLock<Regex> = LazyLock::new(|| embed_regex(LIVE_SLUG));

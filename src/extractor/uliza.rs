@@ -4,6 +4,7 @@
 //! the ulizaportal.jp page that hands its embedded player URL over as a
 //! transparent result (with the expiry check on its `expires` parameter).
 use super::{Extractor, dict_info, download_webpage_note_headers, extract_m3u8_fatal_master};
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -17,17 +18,15 @@ pub struct UlizaPortal;
 const PLAYER_NAME: &str = "UlizaPlayer";
 const PORTAL_NAME: &str = "UlizaPortal";
 
-static PLAYER_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static PLAYER_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"https://player-api\.p\.uliza\.jp/v1/players/[^?#]+\?(?:[^#]*&)?name=(?P<id>[^#&]+)",
     )
-    .unwrap()
 });
-static PORTAL_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static PORTAL_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(
         r"https?://(?:www\.)?ulizaportal\.jp/pages/(?P<id>[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12})",
     )
-    .unwrap()
 });
 static M3U8_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"["'](https://vms-api\.p\.uliza\.jp/v1/prog-index\.m3u8[^"']+)"#).unwrap()

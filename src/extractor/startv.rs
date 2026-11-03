@@ -2,6 +2,7 @@
 //! trailers and extras from the page's `videoUrl` API JSON (`data`), with
 //! its HLS flavor, release date and OpenGraph fallbacks.
 use super::{Extractor, dict_info, download_json, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -14,11 +15,10 @@ pub struct StarTv;
 const NAME: &str = "startv";
 const KEY: &str = "StarTV";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(
         r"^https?://(?:www\.)?startv\.com\.tr/(?:(?:dizi|program)/(?:[^/?#&]+)/(?:bolumler|fragmanlar|ekstralar)|video/arsiv/(?:dizi|program)/(?:[^/?#&]+))/(?P<id>[^/?#&]+)",
     )
-    .unwrap()
 });
 /// `(["\'])videoUrl\1\s*:\s*\1(?P<url>(?:(?!\1).)+)\1` without backreferences.
 static INFO_URL: LazyLock<Regex> = LazyLock::new(|| {

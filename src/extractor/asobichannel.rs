@@ -6,8 +6,8 @@ use super::{
     Extractor, dict_info, download_json, download_json_headers, download_webpage,
     extract_m3u8_fatal_master,
 };
+use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -23,12 +23,11 @@ const TAG_KEY: &str = "AsobiChannelTagURL";
 const MICROCMS_HEADER: [(&str, &str); 1] =
     [("X-MICROCMS-API-KEY", "qRaKehul9AHU8KtL0dnq1OCLKnFec6yrbcz3")];
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(r"^https?://asobichannel\.asobistore\.jp/watch/(?P<id>[\w-]+)")
-        .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://asobichannel\.asobistore\.jp/watch/(?P<id>[\w-]+)")
 });
-static TAG_URL: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^https?://asobichannel\.asobistore\.jp/tag/(?P<id>[a-z0-9-_]+)").unwrap()
+static TAG_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::new(r"^https?://asobichannel\.asobistore\.jp/tag/(?P<id>[a-z0-9-_]+)")
 });
 
 fn text(value: Option<&Value>) -> Option<Value> {

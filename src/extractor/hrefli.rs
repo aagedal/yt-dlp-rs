@@ -1,8 +1,8 @@
 //! Upstream `HrefLiRedirectIE` (`yt_dlp/extractor/hrefli.py`): the URL after
 //! `href.li/?` as a `url` result, followed when processed.
 use super::Extractor;
+use crate::extractor::UrlRegex;
 use crate::{ExtractResult, Result, VideoInfo};
-use regex::Regex;
 use reqwest::blocking::Client;
 use std::sync::LazyLock;
 use url::Url;
@@ -11,8 +11,8 @@ pub struct HrefLiRedirect;
 
 const NAME: &str = "href.li";
 
-static VALID_URL: LazyLock<Regex> =
-    LazyLock::new(|| crate::extractor::url_regex(r"^https?://href\.li/\?(?P<url>.+)").unwrap());
+static VALID_URL: LazyLock<UrlRegex> =
+    LazyLock::new(|| UrlRegex::ascii(r"^https?://href\.li/\?(?P<url>.+)"));
 
 /// `_match_valid_url`.
 pub fn suitable(url: &str) -> bool {

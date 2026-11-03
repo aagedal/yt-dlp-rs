@@ -2,6 +2,7 @@
 //! `hpBase`/`hpInjectVideo` MP4 as an untyped result with its `videoInfo`
 //! title, creator and year.
 use super::{Extractor, download_webpage, search_warning};
+use crate::extractor::UrlRegex;
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -13,11 +14,8 @@ pub struct Harpodeon;
 
 const NAME: &str = "Harpodeon";
 
-static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
-    crate::extractor::url_regex(
-        r"^https?://(?:www\.)?harpodeon\.com/(?:video|preview)/\w+/(?P<id>\d+)",
-    )
-    .unwrap()
+static VALID_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
+    UrlRegex::ascii(r"^https?://(?:www\.)?harpodeon\.com/(?:video|preview)/\w+/(?P<id>\d+)")
 });
 static INFO: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(
