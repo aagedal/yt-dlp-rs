@@ -172,7 +172,8 @@ Cancel buttons):
 - `interrupt.stop()` ends early but keeps what was downloaded: the data is
   published at the destination and the call returns
   `Error::DownloadStopped { path }`. A whole-file transfer keeps its received
-  bytes; HLS/DASH fragment downloads keep whole fragments only; a merged
+  bytes; HLS/DASH fragment downloads keep whole fragments only (a native
+  live HLS recording ends with the segments so far); a merged
   download merges the streams so far with FFmpeg (the last one partial),
   ending with the shortest stream (`-shortest`);
   FFmpeg-based downloads ask FFmpeg to finish (`q`). A stop before any data

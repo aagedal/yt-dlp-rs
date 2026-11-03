@@ -129,3 +129,80 @@ fn a_failed_reload_is_retried_and_an_ended_playlist_recorded_in_full() {
         "[seg0.ts][seg1.ts][seg2.ts][seg3.ts][seg4.ts][seg5.ts]"
     );
 }
+
+/// A playlist that gains a segment with each reload and never ends.
+fn endless(reload: usize) -> Option<String> {
+    Some(playlist(0, 2 + reload, false))
+}
+
+#[test]
+fn a_library_stop_keeps_a_native_live_hls_recording() {
+    // `Interrupt::stop` keeps a usable partial: the recording ends like an
+    // interrupted one, with the whole segments so far, instead of being
+    // discarded as a cancel.
+    let base = serve(endless);
+    let client = yt_dlp_rs::YoutubeDl::new().unwrap();
+    let info = client.extract_info(&format!("{base}/live.m3u8")).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let destination = directory.path().join("live.mp4");
+    let interrupt = yt_dlp_rs::Interrupt::new();
+    let mut control = yt_dlp_rs::DownloadControl::default();
+    control.interrupt = Some(interrupt.clone());
+    let error = client
+        .download_with_control(
+            &info,
+            &destination,
+            yt_dlp_rs::DownloadOptions::default(),
+            &control,
+            |progress| {
+                if progress.downloaded_bytes > 0 {
+                    interrupt.stop();
+                }
+                std::ops::ControlFlow::Continue(())
+            },
+        )
+        .unwrap_err();
+    match error {
+        yt_dlp_rs::Error::DownloadStopped { path } => assert_eq!(path, destination),
+        error => panic!("{error}"),
+    }
+    let recorded = std::fs::read_to_string(&destination).unwrap();
+    // Whole segments from the live edge on.
+    assert!(recorded.starts_with("[seg"), "{recorded}");
+    assert!(recorded.ends_with(".ts]"), "{recorded}");
+    let names: Vec<_> = std::fs::read_dir(directory.path())
+        .unwrap()
+        .map(|entry| entry.unwrap().file_name())
+        .collect();
+    assert_eq!(names, ["live.mp4"]);
+}
+
+#[test]
+fn a_library_cancel_discards_a_native_live_hls_recording() {
+    let base = serve(endless);
+    let client = yt_dlp_rs::YoutubeDl::new().unwrap();
+    let info = client.extract_info(&format!("{base}/live.m3u8")).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let interrupt = yt_dlp_rs::Interrupt::new();
+    let mut control = yt_dlp_rs::DownloadControl::default();
+    control.interrupt = Some(interrupt.clone());
+    let error = client
+        .download_with_control(
+            &info,
+            directory.path().join("live.mp4"),
+            yt_dlp_rs::DownloadOptions::default(),
+            &control,
+            |progress| {
+                if progress.downloaded_bytes > 0 {
+                    interrupt.cancel();
+                }
+                std::ops::ControlFlow::Continue(())
+            },
+        )
+        .unwrap_err();
+    assert!(
+        matches!(error, yt_dlp_rs::Error::DownloadCancelled),
+        "{error}"
+    );
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+}

@@ -5782,7 +5782,7 @@ impl YoutubeDl {
             };
             let sizes =
                 live_dash::download(&self.client, vec![job], options, false, &mut callback)?;
-            return Ok(sizes.iter().sum());
+            return live_stopped(destination, sizes.iter().sum());
         }
         // Upstream `HlsFD.real_download` refetches the media playlist (a
         // loaded format, or a merge's private stream, has no fragments yet).
@@ -5965,7 +5965,7 @@ impl YoutubeDl {
                 false,
                 &mut callback,
             )?;
-            return Ok(bytes.iter().sum());
+            return live_stopped(destination, bytes.iter().sum());
         }
         if !info.requested_formats.is_empty() {
             return self.download_merged(info, destination, options, &mut callback);
@@ -6295,6 +6295,8 @@ impl YoutubeDl {
             )?;
             stored = sizes.iter().sum();
             paths = jobs.into_iter().map(|(_, path)| path).collect();
+            // A library stop ended the recordings; a signal finishes them.
+            stopped = control::stop_requested();
         }
         // `--keep-partial-on-stop` fetches audio-only streams first, so a stop
         // during the (larger) video stream still has audio for all of it.
@@ -6642,6 +6644,17 @@ impl YoutubeDl {
         }
         Ok(bytes)
     }
+}
+
+/// A live recording's result: a library `Interrupt::stop` ended it, which
+/// reports the kept file as stopped; a signal finishes it like upstream.
+fn live_stopped(destination: &Path, bytes: u64) -> Result<u64> {
+    if control::stop_requested() {
+        return Err(Error::DownloadStopped {
+            path: destination.to_owned(),
+        });
+    }
+    Ok(bytes)
 }
 
 /// [`stream_path`] for `info`'s format `stream`: `--live-from-start`
