@@ -46,7 +46,14 @@ fn proxy(heads: Arc<dyn Fn() -> i64 + Send + Sync>, delay: Duration) -> site_pro
 }
 
 fn command(proxy: &site_proxy::SiteProxy, directory: &Path) -> Command {
-    let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
+    configure(
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs")),
+        proxy,
+        directory,
+    )
+}
+
+fn configure(mut command: Command, proxy: &site_proxy::SiteProxy, directory: &Path) -> Command {
     support::stoppable(&mut command)
         .args([
             "--ignore-config",
@@ -210,27 +217,52 @@ fn keep_partial_on_stop_merges_a_stopped_live_from_start_download_with_processor
     stop_a_live_from_start_download_keeping_partial(&["--embed-metadata"]);
 }
 
+// Unix only: `trap` sets the ignored disposition the child inherits.
+#[cfg(unix)]
+#[test]
+fn keep_partial_on_stop_succeeds_with_sigint_ignored() {
+    // A background job of a script starts with SIGINT ignored, which the
+    // live download's handler keeps; its SIGTERM stop used to be left for
+    // the run's own check, ending in `ERROR: Interrupted by user`.
+    let mut ignoring = Command::new("sh");
+    ignoring.args([
+        "-c",
+        "trap '' INT; exec \"$0\" \"$@\"",
+        env!("CARGO_BIN_EXE_yt-dlp-rs"),
+    ]);
+    stop_keeping_partial(Some(ignoring), &[]);
+}
+
 fn stop_a_live_from_start_download_keeping_partial(extra: &[&str]) {
+    stop_keeping_partial(None, extra);
+}
+
+/// Stop a merged live-from-start download with `--keep-partial-on-stop`,
+/// run by `program` (default: the binary itself).
+fn stop_keeping_partial(program: Option<Command>, extra: &[&str]) {
     let proxy = proxy(Arc::new(|| 1000), Duration::from_millis(100));
     let tools = tempfile::tempdir().unwrap();
     let ffmpeg = fake_ffmpeg(tools.path());
     let work = tempfile::tempdir().unwrap();
-    let child = command(&proxy, work.path())
-        .args(["-f", "137+140", "--ffmpeg-location", &ffmpeg])
-        .args([
-            "--keep-partial-on-stop",
-            "--no-part",
-            "--progress",
-            "--newline",
-        ])
-        .args(["--progress-template", "download:%(progress.filename)s"])
-        .args(["--print", "after_move:filepath"])
-        .args(extra)
-        .arg("https://www.youtube.com/watch?v=LiveStart01")
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .spawn()
-        .unwrap();
+    let child = match program {
+        Some(program) => configure(program, &proxy, work.path()),
+        None => command(&proxy, work.path()),
+    }
+    .args(["-f", "137+140", "--ffmpeg-location", &ffmpeg])
+    .args([
+        "--keep-partial-on-stop",
+        "--no-part",
+        "--progress",
+        "--newline",
+    ])
+    .args(["--progress-template", "download:%(progress.filename)s"])
+    .args(["--print", "after_move:filepath"])
+    .args(extra)
+    .arg("https://www.youtube.com/watch?v=LiveStart01")
+    .stdout(Stdio::piped())
+    .stderr(Stdio::piped())
+    .spawn()
+    .unwrap();
     let audio = work.path().join("LiveStart01.f140.mp4");
     let deadline = std::time::Instant::now() + Duration::from_secs(30);
     while std::fs::metadata(&audio).map_or(0, |metadata| metadata.len()) < 12 {
