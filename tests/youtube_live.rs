@@ -194,6 +194,64 @@ fn an_interrupted_live_from_start_download_is_completed() {
     assert!(!part.exists());
 }
 
+#[test]
+fn keep_partial_on_stop_still_merges_a_stopped_live_from_start_download() {
+    // Issue #73: the flag's stop used to cancel the parallel downloads and
+    // leave the formats unmerged. Like upstream's interrupted live download
+    // (and the run without the flag), it ends the recording, merges it and
+    // succeeds.
+    let proxy = proxy(Arc::new(|| 1000), Duration::from_millis(100));
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = fake_ffmpeg(tools.path());
+    let work = tempfile::tempdir().unwrap();
+    let child = command(&proxy, work.path())
+        .args(["-f", "137+140", "--ffmpeg-location", &ffmpeg])
+        .args([
+            "--keep-partial-on-stop",
+            "--no-part",
+            "--progress",
+            "--newline",
+        ])
+        .args(["--progress-template", "download:%(progress.filename)s"])
+        .args(["--print", "after_move:filepath"])
+        .arg("https://www.youtube.com/watch?v=LiveStart01")
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .unwrap();
+    let audio = work.path().join("LiveStart01.f140.mp4");
+    let deadline = std::time::Instant::now() + Duration::from_secs(30);
+    while std::fs::metadata(&audio).map_or(0, |metadata| metadata.len()) < 12 {
+        assert!(std::time::Instant::now() < deadline, "no fragment arrived");
+        std::thread::sleep(Duration::from_millis(20));
+    }
+    support::stop(&child);
+    let output = child.wait_with_output().unwrap();
+    assert!(output.status.success(), "{}", text(&output));
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    // Each format's status names its file (upstream `f['filepath']`).
+    for name in ["LiveStart01.f137.mp4", "LiveStart01.f140.mp4"] {
+        assert!(stdout.lines().any(|line| line == name), "{stdout}");
+    }
+    let merged = work.path().join("LiveStart01.mp4");
+    let printed = std::fs::canonicalize(&merged).unwrap();
+    assert!(
+        stdout
+            .lines()
+            .any(|line| std::fs::canonicalize(line).ok().as_ref() == Some(&printed)),
+        "{stdout}"
+    );
+    // The fake FFmpeg concatenates whole fragments of each format.
+    let text_file = String::from_utf8(std::fs::read(&merged).unwrap()).unwrap();
+    assert!(text_file.starts_with("137:0;"), "{text_file}");
+    assert!(text_file.contains("140:0;"), "{text_file}");
+    let names: Vec<_> = std::fs::read_dir(work.path())
+        .unwrap()
+        .map(|entry| entry.unwrap().file_name())
+        .collect();
+    assert_eq!(names, ["LiveStart01.mp4"]);
+}
+
 /// `--growing-file` (port extension): a fake FFmpeg recording its arguments
 /// in `calls.txt`, reporting one `-progress` block on stdout and copying its
 /// `-i` inputs (the named pipes the fragment downloads feed) in order into

@@ -5497,7 +5497,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             // `run_pp` with -k keeps the merged formats for `MoveFiles`.
                             if args.keep_video {
                                 for format in &info.requested_formats {
-                                    move_files.keep(crate::stream_path(&path, &info.ext, format));
+                                    move_files.keep(crate::merge_input_path(&path, info, format));
                                 }
                             }
                             // `--keep-partial-on-stop`: the partial file is published
@@ -5521,7 +5521,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     // A stopped merge FFmpeg could not finish keeps
                                     // every format file.
                                     for format in &info.requested_formats {
-                                        let kept = crate::stream_path(&path, &info.ext, format);
+                                        let kept = crate::merge_input_path(&path, info, format);
                                         if kept != stopped && kept.exists() {
                                             move_files.keep(kept);
                                         }
@@ -8195,7 +8195,7 @@ impl<'a> ProgressReporter<'a> {
                 .requested_formats
                 .iter()
                 .map(|format| {
-                    let path = crate::stream_path(filename, &info.ext, format);
+                    let path = crate::merge_input_path(filename, info, format);
                     (
                         crate::info_value(&info.with_selected_format(format)).unwrap_or_default(),
                         path.to_string_lossy().into_owned(),

@@ -211,9 +211,13 @@ Cancel (stop and delete) is the consumer's job: send the signal without
 `.ytdl` files that share the reported name (and `-FragN` files with
 `--keep-fragments`).
 
-Growing-file recordings (`--growing-file`) and live downloads through FFmpeg
-handle the signal themselves: they finish the file and exit 0
-(`docs/COMPATIBILITY.md`).
+Growing-file recordings (`--growing-file`), live downloads through FFmpeg
+and `--live-from-start` downloads handle the signal themselves, with or
+without `--keep-partial-on-stop`: they finish the file (merging the
+formats of a `--live-from-start` merge), print `after_move` and exit 0
+(`docs/COMPATIBILITY.md`). The format files of a `--live-from-start` merge
+are named with the merged extension (`NAME.fFORMAT_ID.mkv`), and their
+progress statuses report those names, like upstream.
 
 ## Windows
 
