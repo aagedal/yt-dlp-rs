@@ -2724,6 +2724,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         },
         http_options,
     )?;
+    // The run's whole thread works for this one client, also outside its
+    // public calls.
+    let _settings = downloader.enter();
     downloader = downloader
         .with_subtitles_requested(args.write_subs || args.list_subs)
         // Playlist entries are fetched as upstream's lazy entries are.
@@ -9024,9 +9027,7 @@ fn write_thumbnails(
                 on_disk.push((index, path));
                 written = true;
             }
-            Err(crate::Error::Http(error))
-                if error.status() == Some(reqwest::StatusCode::NOT_FOUND) =>
-            {
+            Err(crate::Error::Http(error)) if error.status() == Some(404) => {
                 let title: Vec<String> = display
                     .split(' ')
                     .map(|word| {

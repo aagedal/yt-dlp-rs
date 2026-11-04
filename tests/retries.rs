@@ -1010,7 +1010,7 @@ fn extraction_budget_is_bounded_and_returns_final_error() {
             panic!("{source}")
         };
         assert_eq!(
-            error.status().unwrap().as_u16(),
+            error.status().unwrap(),
             if retries == 0 { 503 } else { 429 }
         );
         assert_eq!(
@@ -1420,7 +1420,7 @@ fn retry_after_respects_exhausted_budgets_and_permanent_statuses() {
                         source,
                         retry_after,
                     } => {
-                        assert_eq!(source.status().unwrap().as_u16(), 503);
+                        assert_eq!(source.status().unwrap(), 503);
                         assert_eq!(retry_after, Duration::from_secs(60));
                     }
                     error => panic!("unexpected error: {error}"),

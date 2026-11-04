@@ -64,15 +64,19 @@ release.
   `Interrupt`, `RequestScope`, ...) are built through their methods.
 - **One error type**: every call returns `yt_dlp_rs::Result<T>` with
   `yt_dlp_rs::Error`. Its `Display` text is the CLI's upstream message, so
-  match variants instead of parsing text.
-- **Public dependencies**: `url` 2 (`Url`), `serde_json` 1 (the info structs'
-  `extra` maps and `http_headers`) and `reqwest` 0.12 (`Error::Http` and
-  `Error::HttpRetryAfter` carry a `reqwest::Error`, for its status and
-  kind). A major update of one of them is a breaking release.
-- **Process-wide settings**: `no_playlist`, `age_limit`, `get_comments` and
-  `skip_download` (`YoutubeOptions`) and `geo_verification_proxy`
-  (`HttpOptions`) are stored process-wide when a `YoutubeDl` is built, so
-  clients with different values interfere; the last one built wins.
+  match variants instead of parsing text. `Error::Http` and
+  `Error::HttpRetryAfter` carry an `HttpError`, which reports the status
+  (`status()`, a `u16`), URL, timeout and connect failures; the HTTP
+  client's own error type stays private, as does the client itself.
+- **Public dependencies**: `url` 2 (`Url`) and `serde_json` 1 (the info
+  structs' `extra` maps and `http_headers`). A major update of one of them
+  is a breaking release.
+- **Per-client settings**: every `YoutubeOptions` and `HttpOptions` setting
+  belongs to the `YoutubeDl` built with it, so clients with different
+  options (proxies, cookie jars, `no_playlist`, `age_limit`, ...) can be
+  used side by side, also from several threads. The one process-wide
+  effect is `print_traffic`: the first client with it installs the `log`
+  crate's logger, which fails silently if the program has its own.
 - **`cargo-semver-checks`**: CI's `semver` job (`tools/semver_check.py`)
   compares the library with the latest `v*` release tag, default features
   only (`impersonate` adds no public items). From 1.0 on a breaking change

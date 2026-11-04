@@ -138,7 +138,7 @@ fn download_api(
         }
         other => other,
     })?;
-    let text = response.text().map_err(Error::Http)?;
+    let text = response.text().map_err(Error::http)?;
     crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
             "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"

@@ -15,21 +15,16 @@ use std::{
 };
 use url::Url;
 
-/// The extraction client's jar, for extractors' `_set_cookie` and
-/// `_get_cookies`.
-static ACTIVE: RwLock<Option<std::sync::Arc<CookieJar>>> = RwLock::new(None);
-
-/// Make `jar` the one extractors read and write.
-pub(crate) fn register(jar: &std::sync::Arc<CookieJar>) {
-    if let Ok(mut active) = ACTIVE.write() {
-        *active = Some(jar.clone());
-    }
+/// The jar of the client whose call is running, for extractors'
+/// `_set_cookie` and `_get_cookies`.
+fn active() -> Option<std::sync::Arc<CookieJar>> {
+    crate::control::settings().and_then(|settings| settings.cookies.clone())
 }
 
 /// Upstream `_set_cookie(domain, name, value)`: a session cookie for the
 /// domain and its subdomains, path `/`.
 pub(crate) fn set_cookie(domain: &str, name: &str, value: &str) {
-    let Some(jar) = ACTIVE.read().ok().and_then(|active| active.clone()) else {
+    let Some(jar) = active() else {
         return;
     };
     let domain = domain.trim_start_matches('.');
@@ -46,7 +41,7 @@ pub(crate) fn set_cookie(domain: &str, name: &str, value: &str) {
 /// `cookiejar.clear(domain=DOMAIN)`: every cookie stored for exactly that
 /// domain (`.DOMAIN` for domain cookies, `DOMAIN` for host-only ones).
 pub(crate) fn clear_domain(domain: &str) {
-    if let Some(jar) = ACTIVE.read().ok().and_then(|active| active.clone()) {
+    if let Some(jar) = active() {
         jar.clear_domain(domain);
     }
 }
@@ -54,7 +49,7 @@ pub(crate) fn clear_domain(domain: &str) {
 /// `cookiejar.clear(domain=DOMAIN, path='/', name=NAME)`: an expired
 /// cookie replaces it.
 pub(crate) fn clear_cookie(domain: &str, name: &str) {
-    let Some(jar) = ACTIVE.read().ok().and_then(|active| active.clone()) else {
+    let Some(jar) = active() else {
         return;
     };
     let host = domain.trim_start_matches('.');
@@ -71,7 +66,7 @@ pub(crate) fn clear_cookie(domain: &str, name: &str) {
 
 /// Upstream `_get_cookies(url).get(name)`: the value sent to `url`.
 pub(crate) fn get_cookie(url: &str, name: &str) -> Option<String> {
-    let jar = ACTIVE.read().ok().and_then(|active| active.clone())?;
+    let jar = active()?;
     let url = Url::parse(url).ok()?;
     let header = jar.cookies(&url)?;
     header.to_str().ok()?.split("; ").find_map(|pair| {
@@ -683,8 +678,23 @@ impl CookieJar {
     }
 }
 
-impl HttpCookieStore for CookieJar {
+/// The jar as the HTTP client's cookie store; a private adapter, so the
+/// client's trait is not part of [`CookieJar`]'s public API.
+pub(crate) struct ClientCookies(pub(crate) std::sync::Arc<CookieJar>);
+
+impl HttpCookieStore for ClientCookies {
     fn set_cookies(&self, headers: &mut dyn Iterator<Item = &HeaderValue>, url: &Url) {
+        self.0.set_cookies(headers, url);
+    }
+
+    fn cookies(&self, url: &Url) -> Option<HeaderValue> {
+        self.0.cookies(url)
+    }
+}
+
+impl CookieJar {
+    /// Store `Set-Cookie` headers received from `url`.
+    pub(crate) fn set_cookies(&self, headers: &mut dyn Iterator<Item = &HeaderValue>, url: &Url) {
         let Ok(mut state) = self.state.write() else {
             return;
         };
@@ -762,7 +772,8 @@ impl HttpCookieStore for CookieJar {
             }
         }
     }
-    fn cookies(&self, url: &Url) -> Option<HeaderValue> {
+    /// The `Cookie` header for a request to `url`.
+    pub(crate) fn cookies(&self, url: &Url) -> Option<HeaderValue> {
         let Ok(mut state) = self.state.write() else {
             return None;
         };
@@ -913,6 +924,17 @@ mod tests {
                 assert_eq!(json!(parts), *order, "{}", case["name"]);
             }
         }
+    }
+    #[test]
+    fn secure_cookies_reach_only_https_through_the_client_store() {
+        let jar = std::sync::Arc::new(CookieJar::default());
+        let store = ClientCookies(jar.clone());
+        let secure: Url = "https://cookies.example.test/set".parse().unwrap();
+        let insecure: Url = "http://cookies.example.test/set".parse().unwrap();
+        let header = HeaderValue::from_static("secure=hidden; Secure; Path=/");
+        store.set_cookies(&mut std::iter::once(&header), &secure);
+        assert_eq!(store.cookies(&secure).unwrap(), "secure=hidden");
+        assert!(store.cookies(&insecure).is_none());
     }
     #[test]
     fn saved_pinned_netscape_and_response_cookie_cases_match() {

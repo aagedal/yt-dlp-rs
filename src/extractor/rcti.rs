@@ -9,7 +9,6 @@ use super::{
 };
 use crate::extractor::UrlRegex;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
-use reqwest::StatusCode;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::collections::hash_map::RandomState;
@@ -274,7 +273,7 @@ impl Extractor for RctiPlus {
                     .map(|info| info.formats)
                     .unwrap_or_default()
             }
-            Err(Error::Http(error)) if error.status() == Some(StatusCode::FORBIDDEN) => {
+            Err(Error::Http(error)) if error.status() == Some(403) => {
                 crate::geo::restricted_metadata_available(
                     NAME,
                     &format!("[{NAME}] {display_id}: "),

@@ -323,7 +323,7 @@ fn select_with_note(requested: &[&str], note: &str, require: bool) -> Result<Sco
     let index = supported
         .iter()
         .position(|candidate| std::ptr::eq(candidate, entry));
-    if PRINT_TRAFFIC.load(std::sync::atomic::Ordering::Relaxed) {
+    if print_traffic() {
         crate::screen::screen(&format!(
             "{SOURCE}: resolved impersonate target {target} to {}",
             entry.target
@@ -444,18 +444,34 @@ pub(crate) fn send(
     crate::http::send_prepared(request)
 }
 
-/// Configure the impersonating transport from the global HTTP options
+/// A client's impersonating transports (empty without the `impersonate`
+/// feature).
+#[derive(Default)]
+pub(crate) struct Transports {
+    #[cfg(feature = "impersonate")]
+    transports: transport::Transports,
+}
+
+/// Build a client's impersonating transports from its HTTP options
 /// (upstream passes the same options to every request handler).
 pub(crate) fn configure(
     options: &crate::HttpOptions,
     cookies: &std::sync::Arc<crate::CookieJar>,
-) -> crate::Result<()> {
-    PRINT_TRAFFIC.store(options.print_traffic, std::sync::atomic::Ordering::Relaxed);
+) -> crate::Result<Transports> {
     #[cfg(feature = "impersonate")]
-    transport::configure(options, cookies)?;
+    return Ok(Transports {
+        transports: transport::configure(options, cookies)?,
+    });
     #[cfg(not(feature = "impersonate"))]
-    let _ = (options, cookies);
-    Ok(())
+    {
+        let _ = (options, cookies);
+        Ok(Transports::default())
+    }
+}
+
+/// `--print-traffic` of the client whose call is running.
+fn print_traffic() -> bool {
+    crate::control::settings().is_some_and(|settings| settings.print_traffic)
 }
 
 /// Upstream `std_headers` as the CLI sends them: impersonated requests drop
@@ -466,9 +482,6 @@ pub fn set_std_headers(headers: Vec<(String, String)>) {
         *std = headers;
     }
 }
-
-/// `--print-traffic` (upstream's handler `verbose`).
-static PRINT_TRAFFIC: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
 
 pub(crate) static STD_HEADERS: std::sync::RwLock<Vec<(String, String)>> =
     std::sync::RwLock::new(Vec::new());

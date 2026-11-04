@@ -304,9 +304,7 @@ fn error_url(error: &Error) -> Option<&Url> {
 
 fn error_status(error: &Error) -> Option<u16> {
     match error {
-        Error::Http(source) | Error::HttpRetryAfter { source, .. } => {
-            source.status().map(|status| status.as_u16())
-        }
+        Error::Http(source) | Error::HttpRetryAfter { source, .. } => source.status(),
         Error::ExtractorRequest { source, .. } => error_status(source),
         _ => None,
     }

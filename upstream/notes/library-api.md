@@ -105,6 +105,11 @@ throughout.
   `Error::HttpRetryAfter` (tests read its status): reqwest 0.12 is a
   public dependency, documented as such, so a reqwest major update is a
   breaking release.
+  Superseded on 2026-11-04 before 1.0: the variants carry an opaque
+  `HttpError` (`status() -> Option<u16>`, `url`, `is_timeout`,
+  `is_connect`), `From<reqwest::Error>` and `CookieJar`'s reqwest
+  `CookieStore` impl are gone (a private adapter serves the client), so
+  a reqwest update no longer breaks the API.
 - **`cargo-semver-checks`** in CI compares the PR with the latest
   release tag's library.
 

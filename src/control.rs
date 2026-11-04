@@ -1,8 +1,9 @@
 //! Library call context: [`Interrupt`] (stop or cancel an extraction or a
-//! download from another thread) and [`RequestScope`] (headers and cookies
-//! that belong to one request origin, such as a manifest's authorization).
-//! Both are installed for the duration of one library call on the calling
-//! thread and checked before every request the call makes.
+//! download from another thread), [`RequestScope`] (headers and cookies
+//! that belong to one request origin, such as a manifest's authorization)
+//! and the calling client's [`ClientSettings`]. They are installed for the
+//! duration of one library call on the calling thread and checked before
+//! every request the call makes.
 use crate::{CookieJar, Error, Result};
 use reqwest::header::{HeaderName, HeaderValue};
 use std::{
@@ -151,11 +152,38 @@ pub struct DownloadControl {
     pub scope: Option<RequestScope>,
 }
 
+/// The settings of one `YoutubeDl` that code below it reads as upstream
+/// reads `self.get_param(...)`, so clients with different options can run
+/// side by side.
+#[derive(Default)]
+pub(crate) struct ClientSettings {
+    /// `noplaylist`, for `_yes_playlist`.
+    pub(crate) no_playlist: bool,
+    /// `age_limit`, for `age_restricted`.
+    pub(crate) age_limit: Option<i64>,
+    /// `getcomments`, for `extract_comments`.
+    pub(crate) get_comments: bool,
+    /// `skip_download`.
+    pub(crate) skip_download: bool,
+    /// `params['http_headers']['User-Agent']`.
+    pub(crate) user_agent: String,
+    /// The jar extractors' `_set_cookie` and `_get_cookies` use.
+    pub(crate) cookies: Option<Arc<CookieJar>>,
+    /// The client for `--geo-verification-proxy` requests.
+    pub(crate) geo_client: Option<reqwest::blocking::Client>,
+    /// `--print-traffic`.
+    pub(crate) print_traffic: bool,
+    /// The impersonating transports.
+    #[cfg_attr(not(feature = "impersonate"), allow(dead_code))]
+    pub(crate) impersonate: crate::impersonate::Transports,
+}
+
 /// What one library call installed on its thread.
 #[derive(Default)]
 pub(crate) struct Context {
     interrupt: Option<Interrupt>,
     scope: Option<Arc<RequestScope>>,
+    settings: Option<Arc<ClientSettings>>,
 }
 
 thread_local! {
@@ -271,20 +299,34 @@ impl Drop for Guard {
     }
 }
 
-/// Install `interrupt` and `scope` for one library call. Without either,
-/// the caller's context (if any) stays in effect.
+/// Install a client's `settings` for one library call; the caller's
+/// interrupt and scope (if any) stay in effect.
+pub(crate) fn enter_client(settings: &Arc<ClientSettings>) -> Guard {
+    let previous = current();
+    let context = Context {
+        interrupt: previous.as_ref().and_then(|p| p.interrupt.clone()),
+        scope: previous.as_ref().and_then(|p| p.scope.clone()),
+        settings: Some(settings.clone()),
+    };
+    ACTIVE.with(|active| *active.borrow_mut() = Some(Arc::new(context)));
+    Guard {
+        previous,
+        cookies: None,
+    }
+}
+
+/// Install a client's `settings`, `interrupt` and `scope` for one library
+/// call. Without `interrupt` or `scope`, the caller's stays in effect.
 pub(crate) fn enter(
+    settings: &Arc<ClientSettings>,
     interrupt: Option<&Interrupt>,
     scope: Option<&RequestScope>,
     jar: &Arc<CookieJar>,
 ) -> Result<Guard> {
-    let previous = current();
     if interrupt.is_none() && scope.is_none() {
-        return Ok(Guard {
-            previous: previous.clone(),
-            cookies: None,
-        });
+        return Ok(enter_client(settings));
     }
+    let previous = current();
     let mut cookies = None;
     if let Some(scope) = scope.filter(|scope| !scope.cookies.is_empty()) {
         let id = NEXT_SCOPE.fetch_add(1, Ordering::Relaxed);
@@ -298,6 +340,7 @@ pub(crate) fn enter(
         scope: scope
             .map(|scope| Arc::new(scope.clone()))
             .or_else(|| previous.as_ref().and_then(|p| p.scope.clone())),
+        settings: Some(settings.clone()),
     };
     ACTIVE.with(|active| *active.borrow_mut() = Some(Arc::new(context)));
     Ok(Guard { previous, cookies })
@@ -316,6 +359,17 @@ pub(crate) fn resume(context: Option<Arc<Context>>) -> Guard {
         previous,
         cookies: None,
     }
+}
+
+/// The settings of the client whose call is running on this thread; `None`
+/// outside a `YoutubeDl` call (defaults apply).
+pub(crate) fn settings() -> Option<Arc<ClientSettings>> {
+    ACTIVE.with(|active| {
+        active
+            .borrow()
+            .as_ref()
+            .and_then(|context| context.settings.clone())
+    })
 }
 
 /// Whether the active [`Interrupt`] asks to stop or cancel.
@@ -431,7 +485,7 @@ pub(crate) fn prepare(
     request: reqwest::blocking::RequestBuilder,
 ) -> Result<reqwest::blocking::RequestBuilder> {
     check()?;
-    Ok(scoped(request)?)
+    scoped(request).map_err(Error::http)
 }
 
 /// `request` with the active scope's headers (downloads check interrupts
@@ -482,7 +536,7 @@ mod tests {
             .unwrap();
         let client = reqwest::blocking::Client::new();
         let headers = |url: &str| {
-            let _guard = enter(None, Some(&scope), &jar).unwrap();
+            let _guard = enter(&Default::default(), None, Some(&scope), &jar).unwrap();
             prepare(client.get(url))
                 .unwrap()
                 .build()
@@ -511,7 +565,7 @@ mod tests {
     fn an_interrupt_fails_the_next_request() {
         let jar = Arc::new(CookieJar::default());
         let interrupt = Interrupt::new();
-        let _guard = enter(Some(&interrupt), None, &jar).unwrap();
+        let _guard = enter(&Default::default(), Some(&interrupt), None, &jar).unwrap();
         let client = reqwest::blocking::Client::new();
         assert!(prepare(client.get("https://example.test/")).is_ok());
         interrupt.stop();
@@ -523,7 +577,6 @@ mod tests {
 
     #[test]
     fn scoped_cookies_match_like_stored_ones_and_are_removed_after_the_call() {
-        use reqwest::cookie::CookieStore as _;
         let jar = Arc::new(CookieJar::default());
         let url = |text: &str| Url::parse(text).unwrap();
         let header = |target: &str| {
@@ -547,7 +600,7 @@ mod tests {
             .set_cookie("stored=2; Domain=example.test; Path=/video")
             .unwrap();
         {
-            let _guard = enter(None, Some(&scope), &jar).unwrap();
+            let _guard = enter(&Default::default(), None, Some(&scope), &jar).unwrap();
             assert_eq!(
                 header("https://media.example.test/a.ts").as_deref(),
                 Some("stored=1; session=s")

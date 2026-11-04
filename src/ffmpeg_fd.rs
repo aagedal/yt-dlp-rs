@@ -6,10 +6,7 @@ use crate::{
     CookieJar, DownloadOptions, DownloadPhase, DownloadProgress, Error, PartFiles, Result,
     VideoInfo, info::PyNumber,
 };
-use reqwest::{
-    cookie::CookieStore,
-    header::{COOKIE, HeaderMap, HeaderValue, REFERER, USER_AGENT},
-};
+use reqwest::header::{COOKIE, HeaderMap, HeaderValue, REFERER, USER_AGENT};
 use std::{
     ffi::OsString,
     ops::ControlFlow,

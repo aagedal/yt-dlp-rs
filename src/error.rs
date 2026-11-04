@@ -83,7 +83,7 @@ pub enum Error {
     #[error("invalid HTTP configuration: {0}")]
     HttpConfiguration(String),
     #[error("HTTP request failed: {0}")]
-    Http(#[from] reqwest::Error),
+    Http(HttpError),
     /// Upstream's `HTTPError` for a redirect urllib refuses to follow: a
     /// loop (more than 10 URLs, or one URL 4 times) or another scheme.
     /// Handled wherever a status error is.
@@ -100,7 +100,7 @@ pub enum Error {
     #[error("HTTP request failed: {source}")]
     HttpRetryAfter {
         #[source]
-        source: reqwest::Error,
+        source: HttpError,
         retry_after: std::time::Duration,
     },
     /// A transport failure of an impersonated request (upstream's
@@ -149,3 +149,60 @@ pub enum Error {
 }
 
 pub type Result<T> = std::result::Result<T, Error>;
+
+impl Error {
+    /// [`Error::Http`] for an HTTP client error.
+    pub(crate) fn http(error: reqwest::Error) -> Self {
+        Self::Http(HttpError(error))
+    }
+}
+
+/// An HTTP transport or status error ([`Error::Http`],
+/// [`Error::HttpRetryAfter`]). Its `Display` text and `source` chain are
+/// the HTTP client's; the client's own error type stays private, so
+/// updating the client is not a breaking change.
+#[derive(Debug)]
+pub struct HttpError(reqwest::Error);
+
+impl HttpError {
+    pub(crate) fn new(error: reqwest::Error) -> Self {
+        Self(error)
+    }
+
+    /// The HTTP client's error.
+    pub(crate) fn inner(&self) -> &reqwest::Error {
+        &self.0
+    }
+
+    /// The response status of a status error.
+    pub fn status(&self) -> Option<u16> {
+        self.0.status().map(|status| status.as_u16())
+    }
+
+    /// The URL of the failed request, when known.
+    pub fn url(&self) -> Option<&url::Url> {
+        self.0.url()
+    }
+
+    /// Whether the request timed out.
+    pub fn is_timeout(&self) -> bool {
+        self.0.is_timeout()
+    }
+
+    /// Whether connecting to the server failed.
+    pub fn is_connect(&self) -> bool {
+        self.0.is_connect()
+    }
+}
+
+impl std::fmt::Display for HttpError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl std::error::Error for HttpError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        self.0.source()
+    }
+}

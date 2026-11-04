@@ -64,7 +64,7 @@ fn is_not_found(error: &Error) -> bool {
         error,
         Error::ExtractorRequest { source, .. }
             if matches!(source.as_ref(), Error::Http(error)
-                if error.status().is_some_and(|status| status.as_u16() == 404))
+                if error.status().is_some_and(|status| status == 404))
     )
 }
 

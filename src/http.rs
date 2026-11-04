@@ -79,7 +79,7 @@ impl From<ProxyConfig> for TransportConfig {
 pub(crate) fn send_media(
     request: reqwest::blocking::RequestBuilder,
 ) -> Result<reqwest::blocking::Response> {
-    let request = crate::control::scoped(request)?;
+    let request = crate::control::scoped(request).map_err(crate::Error::http)?;
     // Upstream's request handlers impersonate media too.
     #[cfg(feature = "impersonate")]
     if let Some(target) = crate::impersonate::media_target() {

@@ -132,7 +132,9 @@ fn track_info(client: &Client, url: &Url, track_id: &str) -> Result<VideoInfo> {
         "[{TRACK_NAME}] {track_id}: Downloading JSON metadata"
     ));
     let track = direct::request_expecting(client, &metadata_url, &[], &[406])
-        .and_then(|response| Ok(crate::json::from_str::<Value>(&response.text()?).ok()))
+        .and_then(|response| {
+            Ok(crate::json::from_str::<Value>(&response.text().map_err(crate::Error::http)?).ok())
+        })
         .ok()
         .flatten()
         .unwrap_or(Value::Null);
