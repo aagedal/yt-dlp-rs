@@ -23,7 +23,7 @@ const MAX_REPEATS: usize = 4;
 /// Send `request`, following redirects until `interrupted`.
 pub(super) fn send(request: RequestBuilder, interrupted: &dyn Fn() -> bool) -> Result<Response> {
     let (client, request) = request.build_split();
-    follow(&client, request?, interrupted)
+    follow(&client, request.map_err(Error::http)?, interrupted)
 }
 
 fn follow(
@@ -36,7 +36,7 @@ fn follow(
         // A body that cannot be sent twice ends the chain at its redirect,
         // as in reqwest.
         let retry = request.try_clone();
-        let response = client.execute(host_first(request))?;
+        let response = client.execute(host_first(request)).map_err(Error::http)?;
         let status = response.status();
         if !matches!(status.as_u16(), 301 | 302 | 303 | 307 | 308) {
             return Ok(response);

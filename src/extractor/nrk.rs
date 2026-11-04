@@ -167,9 +167,7 @@ fn start(extractor: &'static str, url: &Url) {
 fn http_status(error: &Error) -> Option<u16> {
     match error {
         Error::ExtractorRequest { source, .. } => http_status(source),
-        Error::Http(source) | Error::HttpRetryAfter { source, .. } => {
-            source.status().map(|status| status.as_u16())
-        }
+        Error::Http(source) | Error::HttpRetryAfter { source, .. } => source.status(),
         _ => None,
     }
 }

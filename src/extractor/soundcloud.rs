@@ -228,7 +228,7 @@ pub(super) fn call_api(
                 if first
                     && matches!(
                         source.as_ref(),
-                        Error::Http(error) if error.status().is_some_and(|status| matches!(status.as_u16(), 401 | 403))
+                        Error::Http(error) if error.status().is_some_and(|status| matches!(status, 401 | 403))
                     ) =>
             {
                 // `_store_client_id(None)`, then `_update_client_id`.
@@ -403,7 +403,7 @@ fn info_dict(
             &query,
         ) {
             Ok(response) => response,
-            Err(Error::ExtractorRequest { source, .. }) if matches!(source.as_ref(), Error::Http(error) if error.status().is_some_and(|status| status.as_u16() == 404)) =>
+            Err(Error::ExtractorRequest { source, .. }) if matches!(source.as_ref(), Error::Http(error) if error.status().is_some_and(|status| status == 404)) =>
             {
                 crate::screen::warning(&format!("[{NAME}] {track_id}: {short} format not found"));
                 continue;

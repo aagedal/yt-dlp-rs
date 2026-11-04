@@ -1,4 +1,4 @@
-use crate::{Error, Result};
+use crate::{Error, HttpError, Result};
 use reqwest::{
     blocking::Response,
     header::{HeaderMap, RETRY_AFTER},
@@ -43,11 +43,11 @@ pub(crate) fn check_response(response: Response) -> Result<Response> {
             && let Some(retry_after) = retry_after(response.headers(), SystemTime::now())
         {
             return Err(Error::HttpRetryAfter {
-                source,
+                source: HttpError::new(source),
                 retry_after,
             });
         }
-        return Err(Error::Http(source));
+        return Err(Error::http(source));
     }
     Ok(response)
 }
@@ -55,11 +55,11 @@ pub(crate) fn check_response(response: Response) -> Result<Response> {
 pub(crate) fn failure_delay(error: &Error) -> Option<Duration> {
     match error {
         Error::Webpage { source, .. } => failure_delay(source),
-        Error::Http(error) if transient_request(error) => Some(Duration::ZERO),
+        Error::Http(error) if transient_request(error.inner()) => Some(Duration::ZERO),
         Error::HttpRetryAfter {
             source,
             retry_after,
-        } if transient_request(source) => Some(*retry_after),
+        } if transient_request(source.inner()) => Some(*retry_after),
         Error::ExtractionRead(_) | Error::MediaTransport(_) => Some(Duration::ZERO),
         _ => None,
     }
@@ -75,15 +75,16 @@ pub(crate) fn download_failure_delay(error: &Error) -> Option<Duration> {
     };
     match error {
         Error::Http(error) if error.status().is_some() => {
-            server_error(error).then_some(Duration::ZERO)
+            server_error(error.inner()).then_some(Duration::ZERO)
         }
         Error::Http(error) => {
+            let error = error.inner();
             (!error.is_builder() && !error.is_redirect()).then_some(Duration::ZERO)
         }
         Error::HttpRetryAfter {
             source,
             retry_after,
-        } => server_error(source).then_some(*retry_after),
+        } => server_error(source.inner()).then_some(*retry_after),
         Error::ExtractionRead(_) | Error::MediaTransport(_) => Some(Duration::ZERO),
         _ => None,
     }
@@ -206,13 +207,15 @@ pub(crate) fn exhausted(error: Error, retries: u32) -> Error {
 /// Upstream-style error text: `HTTP Error CODE: Reason` for HTTP statuses.
 pub fn upstream_error_text(error: &Error) -> String {
     let status = match error {
-        Error::Http(source) | Error::HttpRetryAfter { source, .. } => source.status(),
+        Error::Http(source) | Error::HttpRetryAfter { source, .. } => source.inner().status(),
         _ => None,
     };
     match status {
         Some(status) => {
             let reason = match error {
-                Error::Http(source) | Error::HttpRetryAfter { source, .. } => reason_phrase(source),
+                Error::Http(source) | Error::HttpRetryAfter { source, .. } => {
+                    reason_phrase(source.inner())
+                }
                 _ => None,
             };
             format!(
@@ -224,7 +227,7 @@ pub fn upstream_error_text(error: &Error) -> String {
             )
         }
         None => match error {
-            Error::Http(source) => urllib_error(source),
+            Error::Http(source) => urllib_error(source.inner()),
             _ => error.to_string(),
         },
     }

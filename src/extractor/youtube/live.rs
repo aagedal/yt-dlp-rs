@@ -69,9 +69,9 @@ fn head_seqnum(client: &Client, url: &str) -> Option<i64> {
     let response = match crate::control::scoped(client.head(url)) {
         // An interrupt leaves no sequence number.
         Ok(request) => crate::http::interruptible::send(request).ok()?,
-        Err(error) => Err(error.into()),
+        Err(error) => Err(crate::Error::http(error)),
     };
-    match response.and_then(|r| r.error_for_status().map_err(crate::Error::from)) {
+    match response.and_then(|r| r.error_for_status().map_err(crate::Error::http)) {
         Ok(response) => response
             .headers()
             .get("X-Head-Seqnum")?

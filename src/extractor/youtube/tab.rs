@@ -2343,7 +2343,7 @@ pub(super) fn extract_webpage(
                         | Error::HttpRetryAfter { source: http, .. })
                             if http
                                 .status()
-                                .is_none_or(|status| !matches!(status.as_u16(), 403 | 429)) =>
+                                .is_none_or(|status| !matches!(status, 403 | 429)) =>
                         {
                             Some(crate::upstream_error_text(source))
                         }

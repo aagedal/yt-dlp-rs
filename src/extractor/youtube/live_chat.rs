@@ -13,12 +13,8 @@ use std::io::Write;
 use std::ops::ControlFlow;
 use std::path::Path;
 use std::sync::LazyLock;
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use url::Url;
-
-/// Upstream `params['skip_download']`.
-pub(crate) static SKIP_DOWNLOAD: AtomicBool = AtomicBool::new(false);
 
 const FD_NAME: &str = "youtube_live_chat";
 
@@ -284,7 +280,7 @@ fn fetch(
                     .header(reqwest::header::ACCEPT_ENCODING, "identity"),
             ),
         };
-        match response.and_then(|response| response.text().map_err(Error::Http)) {
+        match response.and_then(|response| response.text().map_err(Error::http)) {
             Ok(text) => return Ok(text),
             Err(
                 error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. }),
@@ -327,7 +323,8 @@ pub(crate) fn download(
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
     crate::screen::screen(&format!("[{FD_NAME}] Downloading live chat"));
-    if live && !SKIP_DOWNLOAD.load(Ordering::Relaxed) {
+    // Upstream `params['skip_download']`.
+    if live && !crate::control::settings().is_some_and(|settings| settings.skip_download) {
         crate::screen::warning(
             "Live chat download runs until the livestream ends. If you wish to download the video simultaneously, run a separate yt-dlp instance",
         );

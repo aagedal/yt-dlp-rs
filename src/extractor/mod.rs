@@ -3593,14 +3593,10 @@ pub(crate) fn target_url(text: &str) -> crate::Result<Url> {
     }
 }
 
-/// Upstream `params['http_headers']['User-Agent']`.
-pub(crate) static USER_AGENT: std::sync::RwLock<String> = std::sync::RwLock::new(String::new());
-
 /// `self.get_param('http_headers')['User-Agent']`.
 pub(crate) fn user_agent() -> String {
-    USER_AGENT
-        .read()
-        .map(|agent| agent.clone())
+    crate::control::settings()
+        .map(|settings| settings.user_agent.clone())
         .unwrap_or_default()
 }
 
@@ -3648,34 +3644,23 @@ pub(crate) fn check_formats_never() -> bool {
     CHECK_FORMATS_NEVER.load(std::sync::atomic::Ordering::Relaxed)
 }
 
-/// Upstream `noplaylist` (`--no-playlist`), for `_yes_playlist`.
-pub(crate) static NO_PLAYLIST: std::sync::atomic::AtomicBool =
-    std::sync::atomic::AtomicBool::new(false);
-
-/// `self.get_param('noplaylist')`.
+/// `self.get_param('noplaylist')` (`--no-playlist`), for `_yes_playlist`.
 pub(crate) fn no_playlist() -> bool {
-    NO_PLAYLIST.load(std::sync::atomic::Ordering::Relaxed)
+    crate::control::settings().is_some_and(|settings| settings.no_playlist)
 }
-
-/// Upstream `age_limit` (`--age-limit`; `i64::MIN` without one), for
-/// [`age_restricted`].
-pub(crate) static AGE_LIMIT: std::sync::atomic::AtomicI64 =
-    std::sync::atomic::AtomicI64::new(i64::MIN);
 
 /// Upstream `age_restricted(content_limit, self.get_param('age_limit'))`:
 /// whether `--age-limit` is below the content's limit.
 pub(crate) fn age_restricted(content_limit: i64) -> bool {
-    let age_limit = AGE_LIMIT.load(std::sync::atomic::Ordering::Relaxed);
-    age_limit != i64::MIN && age_limit < content_limit
+    crate::control::settings()
+        .and_then(|settings| settings.age_limit)
+        .is_some_and(|age_limit| age_limit < content_limit)
 }
 
-/// Upstream `getcomments` (`--write-comments`), for `extract_comments`.
-pub(crate) static GET_COMMENTS: std::sync::atomic::AtomicBool =
-    std::sync::atomic::AtomicBool::new(false);
-
-/// `self.get_param('getcomments')`.
+/// `self.get_param('getcomments')` (`--write-comments`), for
+/// `extract_comments`.
 pub(crate) fn get_comments() -> bool {
-    GET_COMMENTS.load(std::sync::atomic::Ordering::Relaxed)
+    crate::control::settings().is_some_and(|settings| settings.get_comments)
 }
 
 /// Upstream `writesubtitles or listsubtitles` (`InfoExtractor.extract_subtitles`).
@@ -3710,7 +3695,7 @@ pub(crate) fn extract_f4m_optional(
     crate::screen::screen(&format!("[{extractor}] {id}: Downloading f4m manifest"));
     let body = direct::request(client, manifest, None).and_then(|response| {
         let final_url = response.url().clone();
-        Ok((final_url, response.text().map_err(Error::Http)?))
+        Ok((final_url, response.text().map_err(Error::http)?))
     });
     let (final_url, body) = match body {
         Ok(found) => found,
@@ -3916,23 +3901,12 @@ pub(crate) fn proto_relative_http(url: &str) -> String {
     }
 }
 
-/// The client for `--geo-verification-proxy` requests.
-static GEO_CLIENT: std::sync::RwLock<Option<Client>> = std::sync::RwLock::new(None);
-
-pub(crate) fn set_geo_verification_client(client: Option<Client>) {
-    if let Ok(mut slot) = GEO_CLIENT.write() {
-        *slot = client;
-    }
-}
-
 /// The client of a request upstream sends with `geo_verification_headers()`:
 /// its `Ytdl-request-proxy` routes it through `--geo-verification-proxy`,
 /// else it is `client`.
 pub(crate) fn geo_verification_client(client: &Client) -> Client {
-    GEO_CLIENT
-        .read()
-        .ok()
-        .and_then(|slot| slot.clone())
+    crate::control::settings()
+        .and_then(|settings| settings.geo_client.clone())
         .unwrap_or_else(|| client.clone())
 }
 

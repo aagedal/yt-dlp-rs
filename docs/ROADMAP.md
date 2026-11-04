@@ -460,9 +460,16 @@ Work in this order; each step lands with deterministic tests like any other chan
    its example compiles as a doctest. Removed on the way: unused wrappers
    (`fixup_m3u8`, `fixup_m4a`, `select_video`, `resolve_entry`,
    `target_available`, ...) the old surface hid from dead-code checks. Not
-   covered: `reqwest::Error` stays inside `Error::Http`/`HttpRetryAfter`
-   (reqwest 0.12 is a public dependency), and some `YoutubeOptions` and
-   `HttpOptions` settings are still process-wide.
+   covered at first: `reqwest::Error` inside `Error::Http`/`HttpRetryAfter`
+   and some `YoutubeOptions` and `HttpOptions` settings stored
+   process-wide. Since 2026-11-04 those variants carry an opaque
+   `HttpError` (status as `u16`), `CookieJar` no longer implements
+   reqwest's cookie-store trait, so reqwest is not a public dependency,
+   and each `YoutubeDl` installs its settings (cookie jar, user agent,
+   geo-verification and impersonating transports, `no_playlist`,
+   `age_limit`, `get_comments`, `skip_download`, `print_traffic`) for its
+   calls through the call context instead of process-wide statics
+   (`tests/geo_verification_proxy.rs` runs two clients side by side).
 9. **Extractor tiers.** Tier 1 is the canary list; tier 2 is fixture-tested and
    best effort; extractors for dead sites are removed or marked. A short
    supported-sites summary goes at the top of `docs/COMPATIBILITY.md`.

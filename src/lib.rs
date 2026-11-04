@@ -114,7 +114,7 @@ pub use download::{
 };
 pub(crate) use embed_metadata::COMPAT_EMBED_METADATA;
 pub use embed_subtitles::{SubtitleEmbedding, SubtitleFile};
-pub use error::{Error, Result};
+pub use error::{Error, HttpError, Result};
 pub use extractor::YoutubeOptions;
 pub use http::HttpOptions;
 pub use info::{
@@ -228,6 +228,9 @@ impl Manifest {
 pub struct YoutubeDl {
     client: Client,
     cookies: Arc<CookieJar>,
+    /// What code below this client reads as upstream's `get_param`,
+    /// installed for each call (see [`Self::enter`]).
+    settings: Arc<control::ClientSettings>,
     extractors: Vec<Box<dyn Extractor>>,
     ffmpeg: Option<PathBuf>,
     ffprobe: Option<PathBuf>,
@@ -1594,26 +1597,11 @@ impl YoutubeDl {
         let proxy_url = http.proxy.clone();
         let proxy = http.transport_config()?;
         let cookies = http.cookies.clone().unwrap_or_default();
-        cookies::register(&cookies);
-        extractor::NO_PLAYLIST.store(youtube.no_playlist, std::sync::atomic::Ordering::Relaxed);
-        extractor::AGE_LIMIT.store(
-            youtube.age_limit.unwrap_or(i64::MIN),
-            std::sync::atomic::Ordering::Relaxed,
-        );
-        extractor::GET_COMMENTS.store(youtube.get_comments, std::sync::atomic::Ordering::Relaxed);
-        extractor::youtube::live_chat::SKIP_DOWNLOAD
-            .store(youtube.skip_download, std::sync::atomic::Ordering::Relaxed);
-        if let Ok(mut agent) = extractor::USER_AGENT.write() {
-            *agent = headers
-                .get(reqwest::header::USER_AGENT)
-                .map(|value| String::from_utf8_lossy(value.as_bytes()).into_owned())
-                .unwrap_or_default();
-        }
         let builder = || {
             Client::builder()
                 .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
                 .default_headers(headers.clone())
-                .cookie_provider(cookies.clone())
+                .cookie_provider(Arc::new(cookies::ClientCookies(cookies.clone())))
                 // Redirects are followed in `http::follow`, like urllib.
                 .redirect(reqwest::redirect::Policy::none())
                 // Preserve an HTML5 page's explicit referrer across media redirects.
@@ -1627,14 +1615,26 @@ impl YoutubeDl {
         if http.print_traffic {
             traffic::enable();
         }
-        let client = proxy.apply(builder())?.build()?;
+        let client = proxy.apply(builder())?.build().map_err(Error::http)?;
         // The same client routed through `--geo-verification-proxy`.
         let geo_client = http
             .geo_transport_config()?
-            .map(|config| config.apply(builder())?.build().map_err(Error::from))
+            .map(|config| config.apply(builder())?.build().map_err(Error::http))
             .transpose()?;
-        extractor::set_geo_verification_client(geo_client);
-        impersonate::configure(&http, &cookies)?;
+        let settings = Arc::new(control::ClientSettings {
+            no_playlist: youtube.no_playlist,
+            age_limit: youtube.age_limit,
+            get_comments: youtube.get_comments,
+            skip_download: youtube.skip_download,
+            user_agent: headers
+                .get(reqwest::header::USER_AGENT)
+                .map(|value| String::from_utf8_lossy(value.as_bytes()).into_owned())
+                .unwrap_or_default(),
+            cookies: Some(cookies.clone()),
+            geo_client,
+            print_traffic: http.print_traffic,
+            impersonate: impersonate::configure(&http, &cookies)?,
+        });
         let youtube_runtime = youtube.runtimes();
         Ok(Self {
             client,
@@ -1676,6 +1676,7 @@ impl YoutubeDl {
             ffprobe: None,
             section_timecode: None,
             cookies: cookies.clone(),
+            settings,
             extractors: vec![
                 Box::new(extractor::YoutubeTab {
                     no_playlist: youtube.no_playlist,
@@ -2612,6 +2613,12 @@ impl YoutubeDl {
         })
     }
 
+    /// Install this client's settings for one public call (nested calls
+    /// keep the caller's interrupt and scope).
+    fn enter(&self) -> control::Guard {
+        control::enter_client(&self.settings)
+    }
+
     /// Return shared scoped cookies for explicit library persistence or reuse.
     pub fn cookie_jar(&self) -> Arc<CookieJar> {
         self.cookies.clone()
@@ -3081,7 +3088,7 @@ impl YoutubeDl {
             let sent = match crate::control::scoped(self.client.get(&url)) {
                 Ok(request) => crate::http::interruptible::send(request)
                     .map_err(|_| Error::DownloadCancelled)?,
-                Err(error) => Err(error.into()),
+                Err(error) => Err(Error::http(error)),
             };
             let result = sent
                 .inspect(|_| crate::screen::after_request())
@@ -4560,6 +4567,7 @@ impl YoutubeDl {
         audio: &AudioOptions,
         mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<AudioDownload> {
+        let _context = self.enter();
         audio_download::download(
             self,
             info,
@@ -4594,6 +4602,7 @@ impl YoutubeDl {
         processors: &PostprocessOptions,
         mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<ProcessedDownload> {
+        let _context = self.enter();
         postprocess::download(
             self,
             info,
@@ -4624,6 +4633,7 @@ impl YoutubeDl {
         options: &SubtitleConversion,
         mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<ConvertedSubtitle> {
+        let _context = self.enter();
         subtitle_convert::convert(self, source.as_ref(), source_ext, options, &mut callback)
     }
 
@@ -4673,6 +4683,7 @@ impl YoutubeDl {
 
     /// Apply a requested or configured default selector atomically to an extracted result.
     pub fn select_result(&self, result: &mut ExtractResult, format: Option<&str>) -> Result<()> {
+        let _context = self.enter();
         // Upstream `_default_format_spec` `prefer_best` (stdout output).
         let format = format.or(self.prefer_best.then_some("best/bestvideo+bestaudio"));
         result.select_format_with_merge(
@@ -4807,6 +4818,7 @@ impl YoutubeDl {
         options: ExtractionOptions,
     ) -> Result<ExtractResult> {
         let _context = control::enter(
+            &self.settings,
             options.interrupt.as_ref(),
             options.scope.as_ref(),
             &self.cookies,
@@ -4871,6 +4883,7 @@ impl YoutubeDl {
         options: ExtractionOptions,
     ) -> Result<ExtractResult> {
         let _context = control::enter(
+            &self.settings,
             options.interrupt.as_ref(),
             options.scope.as_ref(),
             &self.cookies,
@@ -5648,6 +5661,7 @@ impl YoutubeDl {
         mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<u64> {
         let _context = control::enter(
+            &self.settings,
             control.interrupt.as_ref(),
             control.scope.as_ref(),
             &self.cookies,
@@ -5684,6 +5698,7 @@ impl YoutubeDl {
         options: DownloadOptions,
         callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<u64> {
+        let _context = self.enter();
         match self.download_unrepaired(info, destination.as_ref(), options, callback) {
             Err(Error::DownloadStopped { path })
                 if info.requested_formats.is_empty() && !self.grows(info) =>
@@ -6101,6 +6116,7 @@ impl YoutubeDl {
         options: DownloadOptions,
         mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<u64> {
+        let _context = self.enter();
         if subtitle.protocol.as_deref() == Some("m3u8_native") {
             report_invoking("hlsnative", &[&subtitle.url]);
             return download::download_hls_subtitle(

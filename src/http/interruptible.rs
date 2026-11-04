@@ -103,7 +103,7 @@ pub(crate) fn send(
     if let Err(error) = spawned {
         // No thread to wait on: send directly.
         crate::screen::debug(&format!("Unable to start an HTTP thread: {error}"));
-        return Ok(Err(spawn_failed(error).into()));
+        return Ok(Err(crate::Error::http(spawn_failed(error))));
     }
     let head = loop {
         match receiver.recv_timeout(POLL) {
@@ -114,10 +114,9 @@ pub(crate) fn send(
             }
             Err(mpsc::RecvTimeoutError::Timeout) => {}
             Err(mpsc::RecvTimeoutError::Disconnected) => {
-                return Ok(Err(spawn_failed(std::io::Error::other(
-                    "the HTTP thread ended without a response",
-                ))
-                .into()));
+                return Ok(Err(crate::Error::http(spawn_failed(
+                    std::io::Error::other("the HTTP thread ended without a response"),
+                ))));
             }
         }
     };
@@ -519,7 +518,8 @@ mod tests {
         let url = stalling(b"HTTP/1.1 200 OK\r\nContent-Le", b"");
         let jar = Arc::new(crate::CookieJar::default());
         let interrupt = crate::Interrupt::new();
-        let _context = crate::control::enter(Some(&interrupt), None, &jar).unwrap();
+        let _context =
+            crate::control::enter(&Default::default(), Some(&interrupt), None, &jar).unwrap();
         let stopper = interrupt.clone();
         std::thread::spawn(move || {
             std::thread::sleep(Duration::from_millis(200));
@@ -557,7 +557,8 @@ mod tests {
             .unwrap();
         let jar = Arc::new(crate::CookieJar::default());
         let interrupt = crate::Interrupt::new();
-        let _context = crate::control::enter(Some(&interrupt), None, &jar).unwrap();
+        let _context =
+            crate::control::enter(&Default::default(), Some(&interrupt), None, &jar).unwrap();
         let canceller = interrupt.clone();
         std::thread::spawn(move || {
             std::thread::sleep(Duration::from_millis(450));
@@ -578,7 +579,8 @@ mod tests {
         );
         let jar = Arc::new(crate::CookieJar::default());
         let interrupt = crate::Interrupt::new();
-        let _context = crate::control::enter(Some(&interrupt), None, &jar).unwrap();
+        let _context =
+            crate::control::enter(&Default::default(), Some(&interrupt), None, &jar).unwrap();
         let mut response = send(client().get(&url)).unwrap().unwrap();
         assert_eq!(response.status(), 200);
         assert_eq!(response.content_length(), Some(100));
@@ -608,7 +610,8 @@ mod tests {
         );
         let jar = Arc::new(crate::CookieJar::default());
         let interrupt = crate::Interrupt::new();
-        let _context = crate::control::enter(Some(&interrupt), None, &jar).unwrap();
+        let _context =
+            crate::control::enter(&Default::default(), Some(&interrupt), None, &jar).unwrap();
         let response = send(client().get(&url)).unwrap().unwrap();
         let error = response.error_for_status().unwrap_err();
         assert!(error.to_string().contains("404 Gone Fishing"), "{error}");
@@ -619,7 +622,8 @@ mod tests {
         let url = stalling(b"HTTP/1.1 200 OK\r\nContent-Length: 100\r\n\r\n", b"01234");
         let jar = Arc::new(crate::CookieJar::default());
         let interrupt = crate::Interrupt::new();
-        let _context = crate::control::enter(Some(&interrupt), None, &jar).unwrap();
+        let _context =
+            crate::control::enter(&Default::default(), Some(&interrupt), None, &jar).unwrap();
         let response = send(client().get(&url)).unwrap().unwrap();
         let stopper = interrupt.clone();
         std::thread::spawn(move || {
@@ -651,7 +655,8 @@ mod tests {
         });
         let jar = Arc::new(crate::CookieJar::default());
         let interrupt = crate::Interrupt::new();
-        let _context = crate::control::enter(Some(&interrupt), None, &jar).unwrap();
+        let _context =
+            crate::control::enter(&Default::default(), Some(&interrupt), None, &jar).unwrap();
         let response = send(client().get(format!("http://{address}/"))).unwrap();
         assert_eq!(response.unwrap().bytes().unwrap().as_ref(), body.as_slice());
         // A refused connection fails as a reqwest connect error.

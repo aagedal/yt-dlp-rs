@@ -102,3 +102,43 @@ fn impersonated_geo_verification_requests_use_their_proxy() {
     );
     assert!(main_lines.lock().unwrap().is_empty(), "{stderr}");
 }
+
+/// Each library client keeps its own `geo_verification_proxy` (also for
+/// impersonated requests): building a second client does not reroute the
+/// first one's requests.
+#[test]
+fn library_clients_keep_their_own_geo_verification_proxy() {
+    use yt_dlp_rs::{HttpOptions, YoutubeDl, YoutubeOptions};
+    let client = |main: &str, geo: &str| {
+        let mut http = HttpOptions::default();
+        http.proxy = Some(main.to_owned());
+        http.geo_verification_proxy = Some(geo.to_owned());
+        YoutubeDl::with_options(YoutubeOptions::default(), http).unwrap()
+    };
+    let (first_geo, first_geo_lines) = recording_proxy();
+    let (first_main, first_main_lines) = recording_proxy();
+    let (second_geo, second_geo_lines) = recording_proxy();
+    let (second_main, second_main_lines) = recording_proxy();
+    let first = client(&first_main, &first_geo);
+    let second = client(&second_main, &second_geo);
+    for (url, host) in [
+        (
+            "https://www.lego.com/nl-nl/kids/videos/classic/creative-storytelling-the-little-puppy-aa24f27c7d5242bc86102ebdc0f24cba",
+            "services.slingshot.lego.com",
+        ),
+        ("https://chaturbate.com/siswet19/", "chaturbate.com"),
+    ] {
+        let error = first.extract_info(url).unwrap_err();
+        let lines = first_geo_lines.lock().unwrap().clone();
+        assert!(
+            lines
+                .iter()
+                .any(|line| line.starts_with(&format!("CONNECT {host}:443 "))),
+            "{lines:?} {error}"
+        );
+    }
+    assert!(first_main_lines.lock().unwrap().is_empty());
+    assert!(second_geo_lines.lock().unwrap().is_empty());
+    assert!(second_main_lines.lock().unwrap().is_empty());
+    drop(second);
+}

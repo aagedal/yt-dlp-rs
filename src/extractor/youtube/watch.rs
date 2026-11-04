@@ -909,7 +909,7 @@ impl<'a> ApiRequest<'a> {
                 _ => None,
             };
             Failure {
-                retry: status.is_none_or(|status| !matches!(status.as_u16(), 403 | 429)),
+                retry: status.is_none_or(|status| !matches!(status, 403 | 429)),
                 error: Error::ExtractorRequest {
                     extractor,
                     id: item_id.to_owned(),
@@ -962,7 +962,7 @@ impl<'a> ApiRequest<'a> {
                     ));
                 }
             }
-            return Err(failure(Error::Http(source)));
+            return Err(failure(Error::http(source)));
         }
         let text =
             read_page(response, item_id, Some(self.body.as_bytes())).map_err(|error| Failure {
@@ -1476,7 +1476,7 @@ fn download_initial_webpage(
                 source @ (Error::Http(http) | Error::HttpRetryAfter { source: http, .. })
                     if http
                         .status()
-                        .is_none_or(|status| !matches!(status.as_u16(), 403 | 429)) =>
+                        .is_none_or(|status| !matches!(status, 403 | 429)) =>
                 {
                     Some(crate::upstream_error_text(source))
                 }

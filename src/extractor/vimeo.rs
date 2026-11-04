@@ -618,7 +618,7 @@ fn fetch(
         Some(body) => super::direct::post_expecting(client, url, headers, body, &errors)?,
         None => super::direct::request_expecting(client, url, headers, &errors)?,
     };
-    let error = response.error_for_status_ref().err().map(Error::Http);
+    let error = response.error_for_status_ref().err().map(Error::http);
     let status = response.status().as_u16();
     let page_url = response.url().clone();
     let mut body = Vec::new();

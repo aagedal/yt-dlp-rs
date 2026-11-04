@@ -303,7 +303,6 @@ fn same_client_shares_cookies_across_inputs_and_redirect_cookie_path_scope_is_en
 
 #[test]
 fn cookies_reject_foreign_domains_expiration_insecure_secure_use_and_cross_host_leaks() {
-    use reqwest::{cookie::CookieStore, header::HeaderValue};
     let target = Server::new();
     let cross = Server::with_cross(Some(
         target.url("/outside.mp4").replace("127.0.0.1", "localhost"),
@@ -327,14 +326,6 @@ fn cookies_reject_foreign_domains_expiration_insecure_secure_use_and_cross_host_
         requests[0].cookie.is_empty(),
         "host-only cookie leaked to localhost: {requests:?}"
     );
-    // Check ordinary secure/insecure origins through the exact reqwest trait too.
-    let jar = CookieJar::default();
-    let secure_url = url::Url::parse("https://cookies.example.test/set").unwrap();
-    let insecure_url = url::Url::parse("http://cookies.example.test/set").unwrap();
-    let header = HeaderValue::from_static("secure=hidden; Secure; Path=/");
-    jar.set_cookies(&mut [&header].into_iter(), &secure_url);
-    assert_eq!(jar.cookies(&secure_url).unwrap(), "secure=hidden");
-    assert!(jar.cookies(&insecure_url).is_none());
 }
 
 #[test]

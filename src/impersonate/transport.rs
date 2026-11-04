@@ -5,8 +5,7 @@
 //! responses, so status checks and body reads stay unchanged.
 use super::{ImpersonateTarget, STD_HEADERS, Supported};
 use crate::{CookieJar, Error, HttpOptions, Result};
-use reqwest::cookie::CookieStore as _;
-use std::sync::{Arc, LazyLock, RwLock};
+use std::sync::{Arc, LazyLock};
 use wreq_util::{Emulation, Platform, Profile as Browser};
 
 /// A `wreq-util` browser profile on a platform.
@@ -129,9 +128,14 @@ static RUNTIME: LazyLock<std::result::Result<tokio::runtime::Runtime, String>> =
             .map_err(|error| error.to_string())
     });
 
-static TRANSPORT: RwLock<Option<Arc<Transport>>> = RwLock::new(None);
-/// The transport through `--geo-verification-proxy` (see [`super::geo_scope`]).
-static GEO_TRANSPORT: RwLock<Option<Arc<Transport>>> = RwLock::new(None);
+/// A client's transports.
+#[derive(Default)]
+pub(super) struct Transports {
+    transport: Option<Arc<Transport>>,
+    /// The transport through `--geo-verification-proxy` (see
+    /// [`super::geo_scope`]).
+    geo: Option<Arc<Transport>>,
+}
 
 fn error(message: impl std::fmt::Display) -> Error {
     Error::Impersonate(message.to_string())
@@ -163,9 +167,9 @@ impl wreq::cookie::CookieStore for SharedCookies {
     }
 }
 
-/// Build the shared client from the global options (upstream's handler
+/// Build a client's transports from its options (upstream's handler
 /// `proxies`, `verify`, `source_address`, `timeout` and cookie jar).
-pub(super) fn configure(options: &HttpOptions, cookies: &Arc<CookieJar>) -> Result<()> {
+pub(super) fn configure(options: &HttpOptions, cookies: &Arc<CookieJar>) -> Result<Transports> {
     let make = |transport: crate::http::TransportConfig| -> Result<Option<Arc<Transport>>> {
         let client = client(&transport, cookies)?;
         let environment = match transport.proxy {
@@ -182,19 +186,14 @@ pub(super) fn configure(options: &HttpOptions, cookies: &Arc<CookieJar>) -> Resu
             })
         }))
     };
-    let state = make(options.transport_config()?)?;
-    let geo = options
-        .geo_transport_config()?
-        .map(make)
-        .transpose()?
-        .flatten();
-    if let Ok(mut current) = TRANSPORT.write() {
-        *current = state;
-    }
-    if let Ok(mut current) = GEO_TRANSPORT.write() {
-        *current = geo;
-    }
-    Ok(())
+    Ok(Transports {
+        transport: make(options.transport_config()?)?,
+        geo: options
+            .geo_transport_config()?
+            .map(make)
+            .transpose()?
+            .flatten(),
+    })
 }
 
 /// A `wreq` client for one transport configuration.
@@ -270,24 +269,17 @@ fn impersonate_headers(
     merged
 }
 
-/// The transport for a request on this thread: inside a geo scope, the
-/// `--geo-verification-proxy` one, if any.
+/// The transport of the client whose call is running on this thread:
+/// inside a geo scope, the `--geo-verification-proxy` one, if any.
 fn current() -> Result<Arc<Transport>> {
+    let settings = crate::control::settings()
+        .ok_or_else(|| error("impersonated requests need a YoutubeDl call"))?;
+    let transports = &settings.impersonate.transports;
     let geo = super::geo_active()
-        .then(|| {
-            GEO_TRANSPORT
-                .read()
-                .ok()
-                .and_then(|transport| transport.clone())
-        })
+        .then(|| transports.geo.clone())
         .flatten();
-    geo.or_else(|| {
-        TRANSPORT
-            .read()
-            .ok()
-            .and_then(|transport| transport.clone())
-    })
-    .ok_or_else(|| error("impersonation with client certificates is not supported natively"))
+    geo.or_else(|| transports.transport.clone())
+        .ok_or_else(|| error("impersonation with client certificates is not supported natively"))
 }
 
 /// `request` as a `wreq` request impersonating `target` (with HttpFD's
@@ -298,7 +290,7 @@ fn prepare(
     media: bool,
 ) -> Result<wreq::RequestBuilder> {
     let transport = current()?;
-    let request = request.build()?;
+    let request = request.build().map_err(Error::http)?;
     let headers = impersonate_headers(&transport.headers, request.headers(), media);
     let body = request
         .body()
