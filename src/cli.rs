@@ -8961,7 +8961,9 @@ fn write_thumbnails(
         let id = thumbnail.id.as_deref().unwrap_or("None");
         let mut ext = determine_ext(&thumbnail.url);
         if multiple {
-            ext = format!("{id}.{ext}");
+            // Port hardening: upstream puts a site's id in the name as it
+            // is, so a separator in it could reach outside the directory.
+            ext = format!("{}.{ext}", id.replace(std::path::is_separator, "_"));
         }
         let display = format!("video thumbnail {id}");
         // Written beside the (temporary) media name, moved to the template's.
@@ -8975,7 +8977,11 @@ fn write_thumbnails(
             &ext,
             Some(&info.ext),
         ));
-        if let Some(parent) = path.parent().filter(|p| !p.as_os_str().is_empty()) {
+        // Upstream `_ensure_dir_exists(filename)`: the media's directory.
+        if let Some(parent) = Path::new(&*filename)
+            .parent()
+            .filter(|p| !p.as_os_str().is_empty())
+        {
             std::fs::create_dir_all(parent)?;
         }
         // Upstream `existing_file((final, written))`.
