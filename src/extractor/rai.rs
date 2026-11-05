@@ -383,7 +383,9 @@ fn subtitles(base: &Url, video: &Value) -> Value {
         };
         entries.push(json!({ "ext": ext, "url": sub_url }));
         if ext == "stl" {
-            let srt = format!("{}srt", &sub_url[..sub_url.len() - 3]);
+            // `sub_url[:-3]`: three characters, not bytes.
+            let cut = sub_url.char_indices().rev().nth(2).map_or(0, |(at, _)| at);
+            let srt = format!("{}srt", &sub_url[..cut]);
             entries.push(json!({ "ext": "srt", "url": srt }));
         }
     }
@@ -1641,6 +1643,17 @@ fn first_group(patterns: &[Regex], text: &str) -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn stl_subtitles_get_an_srt_twin_by_characters() {
+        let base = Url::parse("https://www.raiplay.it/").unwrap();
+        let subtitles = subtitles(
+            &base,
+            &json!({"subtitlesUrl": "https://x.test/a.stl?\u{20ac}x"}),
+        );
+        // Python drops `?€x`, as upstream does.
+        assert_eq!(subtitles["it"][1]["url"], "https://x.test/a.stlsrt");
+    }
 
     #[test]
     fn urls_follow_upstream_valid_url() {
