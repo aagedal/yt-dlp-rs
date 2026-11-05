@@ -122,3 +122,10 @@ path = "fuzz_targets/cover_art.rs"
 test = false
 doc = false
 bench = false
+
+[[bin]]
+name = "webvtt"
+path = "fuzz_targets/webvtt.rs"
+test = false
+doc = false
+bench = false

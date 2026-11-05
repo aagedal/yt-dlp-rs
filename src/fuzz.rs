@@ -129,6 +129,16 @@ pub fn dates(data: &[u8]) {
     let _ = crate::dates::timeconvert(date);
 }
 
+/// HLS WebVTT segments joined like HlsFD: NUL bytes separate the
+/// fragments.
+pub fn webvtt(data: &[u8]) {
+    let mut packer = crate::webvtt::Packer::default();
+    for (index, fragment) in data.split(|&byte| byte == 0).enumerate() {
+        let _ = packer.pack(fragment, index + 1, &mut |_| {});
+    }
+    let _ = packer.finish();
+}
+
 /// Native cover-art embedding into downloaded FLAC, Ogg and MP4 files, and
 /// thumbnail sniffing. The first byte picks the container; a fixed PNG is
 /// the image.

@@ -74,7 +74,7 @@ fn timestamp(data: &str, position: usize) -> Option<(usize, i64)> {
 
 /// `_format_ts`: 90 kHz ticks as `HH:MM:SS.mmm` (rounded to milliseconds).
 fn format_ts(ticks: i64) -> String {
-    let milliseconds = (ticks + 45).div_euclid(90);
+    let milliseconds = ticks.saturating_add(45).div_euclid(90);
     let (hours, rest) = (milliseconds / 3_600_000, milliseconds % 3_600_000);
     format!(
         "{hours:02}:{:02}:{:02}.{:03}",
@@ -203,7 +203,8 @@ fn magic(data: &str, position: &mut usize) -> Result<Block> {
         }
         // `_REGEX_META`: `NAME:VALUE` without `-->`.
         let line = line_at(data, at);
-        let colon = line[1.min(line.len())..].find(':').map(|index| index + 1);
+        let first = line.chars().next().map_or(0, char::len_utf8);
+        let colon = line[first..].find(':').map(|index| index + first);
         if !line.contains("-->")
             && colon.is_some_and(|colon| colon + 1 < line.len())
             && let Some(length) = newline(data, at + line.len())
@@ -410,8 +411,9 @@ impl Packer {
                         self.mpegts_adjust += 1;
                         overflow = false;
                     }
-                    cue.start += adjust;
-                    cue.end += adjust;
+                    // Python's integers do not overflow; saturate instead.
+                    cue.start = cue.start.saturating_add(adjust);
+                    cue.end = cue.end.saturating_add(adjust);
                     let mut ready = Vec::new();
                     let mut is_new = true;
                     let mut i = 0;
@@ -448,10 +450,12 @@ impl Packer {
                     meta,
                 } => {
                     // MPEG PES timestamps wrap at 2^33.
-                    let mut mpegts = mpegts.unwrap_or(0) + (self.mpegts_adjust << 33);
+                    let mut mpegts = mpegts
+                        .unwrap_or(0)
+                        .saturating_add(self.mpegts_adjust.saturating_mul(1 << 33));
                     if mpegts < self.mpegts_last.unwrap_or(0) {
                         overflow = true;
-                        mpegts += 1 << 33;
+                        mpegts = mpegts.saturating_add(1 << 33);
                     }
                     mpegts_last = Some(mpegts);
                     if index == 1 {
@@ -472,7 +476,9 @@ impl Packer {
                         output.push_str(&meta);
                         output.push('\n');
                     } else if let Some(local) = local {
-                        adjust = (mpegts - self.mpegts) - (local - self.local);
+                        adjust = mpegts
+                            .saturating_sub(self.mpegts)
+                            .saturating_sub(local.saturating_sub(self.local));
                     }
                 }
                 Block::Header { kind, raw } => {
@@ -535,5 +541,45 @@ mod tests {
             "{error}"
         );
         assert!(parse_fragment("SRT").is_err());
+    }
+
+    #[test]
+    fn hostile_fragments_fail_or_saturate_without_panicking() {
+        let mut packer = Packer::default();
+        let mut warn = |_: &str| {};
+        // A header line starting with a multi-byte character.
+        assert!(
+            packer
+                .pack(
+                    "WEBVTT
+é:ab
+
+"
+                    .as_bytes(),
+                    1,
+                    &mut warn
+                )
+                .is_ok()
+        );
+        assert!(
+            packer
+                .pack(
+                    "WEBVTT
+é
+
+"
+                    .as_bytes(),
+                    2,
+                    &mut warn
+                )
+                .is_err()
+        );
+        // Timestamps and offsets at the integer limits.
+        let mut packer = Packer::default();
+        let first = b"WEBVTT\nX-TIMESTAMP-MAP=MPEGTS:0,LOCAL:99999999999999999999:00:00.000\n\n00:00.000 --> 99999999999999999999:00:00.000\nA\n";
+        let second = b"WEBVTT\nX-TIMESTAMP-MAP=MPEGTS:9223372036854775807,LOCAL:00:00.000\n\n00:00.000 --> 99999999999999999999:00:00.000\nB\n";
+        packer.pack(first, 1, &mut warn).unwrap();
+        packer.pack(second, 2, &mut warn).unwrap();
+        packer.finish();
     }
 }
