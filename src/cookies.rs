@@ -621,6 +621,18 @@ fn parse_record(line: &str, http_only: bool) -> std::result::Result<(Cookie<'sta
     Ok((cookie, nameless))
 }
 
+/// `DefaultCookiePolicy.set_ok_domain` (without `strict_domain`): a
+/// `Domain` attribute needs an embedded dot unless the effective request
+/// host is local (no dot, or `.local`), so a site cannot set a cookie for a
+/// whole top-level domain. Rejected silently, as upstream does.
+fn domain_ok(domain: Option<&str>, url: &Url) -> bool {
+    let Some(domain) = domain else {
+        return true;
+    };
+    let host = url.host_str().unwrap_or_default().to_ascii_lowercase();
+    domain.trim_start_matches('.').contains('.') || !host.contains('.') || host.ends_with(".local")
+}
+
 /// The request-scope cookies `scoped` sends to `url`.
 pub(crate) fn scope_matches<'a>(
     scoped: &'a [Cookie<'static>],
@@ -707,6 +719,9 @@ impl CookieJar {
             };
             if !valid_name(raw.name()) || !valid_value(raw.value()) {
                 self.warning.store(true, Ordering::Relaxed);
+                continue;
+            }
+            if !domain_ok(raw.domain(), url) {
                 continue;
             }
             let Ok(cookie) = Cookie::try_from_raw_cookie(&raw, url).map(Cookie::into_owned) else {
@@ -1118,6 +1133,31 @@ mod tests {
         let path = directory.path().join("too-large");
         fs::write(&path, vec![b'x'; MAX_FILE + 1]).unwrap();
         assert!(CookieJar::load(path).is_err());
+    }
+    #[test]
+    fn response_cookies_cannot_cover_a_top_level_domain() {
+        let jar = CookieJar::default();
+        response(
+            &jar,
+            "https://evil.com/",
+            &[
+                "tld=1; Domain=com",
+                "dot=1; Domain=.com",
+                "own=1; Domain=evil.com",
+            ],
+        );
+        assert_eq!(header(&jar, "https://bank.com/"), None);
+        assert_eq!(
+            header(&jar, "https://www.evil.com/").as_deref(),
+            Some("own=1")
+        );
+        // Local hosts (no dot, or `.local`) may name a dotless domain.
+        response(&jar, "http://localhost/", &["local=1; Domain=localhost"]);
+        assert_eq!(
+            header(&jar, "http://localhost/").as_deref(),
+            Some("local=1")
+        );
+        assert!(jar.take_warnings().is_empty());
     }
     #[test]
     fn invalid_response_cookies_and_oversized_headers_have_only_bounded_generic_warnings() {
