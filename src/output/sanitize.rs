@@ -148,19 +148,22 @@ fn collapse_and_strip(value: String) -> String {
         }
     }
     // The leftmost suffix that tokenizes completely and ends with a pair.
-    let mut end = chars.len();
-    for position in start..chars.len() {
-        let mut cursor = position;
-        let mut last_pair = false;
-        while let Some((length, pair)) = strip_token(&chars, cursor) {
-            cursor += length;
-            last_pair = pair;
-        }
-        if cursor == chars.len() && last_pair {
-            end = position;
-            break;
-        }
+    // Tokenizing is deterministic from each position, so whether one does
+    // follows from the position after its first token (right to left, in
+    // linear time).
+    let mut suffix = vec![false; chars.len() + 1];
+    for position in (start..chars.len()).rev() {
+        suffix[position] = strip_token(&chars, position).is_some_and(|(length, pair)| {
+            if position + length == chars.len() {
+                pair
+            } else {
+                suffix[position + length]
+            }
+        });
     }
+    let end = (start..chars.len())
+        .find(|&position| suffix[position])
+        .unwrap_or(chars.len());
     chars[start..end.max(start)].iter().collect()
 }
 
@@ -356,6 +359,68 @@ pub fn host_path(path: &str) -> String {
 
 #[cfg(test)]
 mod tests {
+
+    /// The quadratic scan `collapse_and_strip` replaced, for comparison.
+    fn suffix_start(chars: &[char], start: usize) -> usize {
+        for position in start..chars.len() {
+            let mut cursor = position;
+            let mut last_pair = false;
+            while let Some((length, pair)) = strip_token(chars, cursor) {
+                cursor += length;
+                last_pair = pair;
+            }
+            if cursor == chars.len() && last_pair {
+                return position;
+            }
+        }
+        chars.len()
+    }
+
+    #[test]
+    fn strip_suffix_matches_the_scan_and_is_linear() {
+        const ALPHABET: [char; 6] = ['\0', '\n', ' ', '_', '-', 'a'];
+        let mut state = 0x2545_f491_u32;
+        for _ in 0..20_000 {
+            let mut text = String::new();
+            for _ in 0..(state % 12) {
+                state ^= state << 13;
+                state ^= state >> 17;
+                state ^= state << 5;
+                text.push(ALPHABET[(state % 6) as usize]);
+            }
+            let chars: Vec<char> = text.chars().collect();
+            let stripped = collapse_and_strip(text.clone());
+            // The kept text ends where the scan finds the suffix (after the
+            // collapse, which these inputs leave unchanged when no pair
+            // repeats).
+            if chars.windows(4).any(|w| w[0] == '\0' && w[..2] == w[2..]) {
+                continue;
+            }
+            let start = stripped_start(&chars);
+            let end = suffix_start(&chars, start).max(start);
+            assert_eq!(
+                stripped,
+                chars[start..end].iter().collect::<String>(),
+                "{text:?}"
+            );
+        }
+        let long = "-".repeat(200_000) + "\0x";
+        let started = std::time::Instant::now();
+        assert_eq!(collapse_and_strip(long), "");
+        assert!(started.elapsed() < std::time::Duration::from_secs(2));
+    }
+
+    fn stripped_start(chars: &[char]) -> usize {
+        let mut start = 0;
+        if let Some((2, true)) = strip_token(chars, 0) {
+            start = 2;
+            while let Some((length, _)) = strip_token(chars, start) {
+                start += length;
+            }
+        }
+        start
+    }
+
     use super::*;
 
     #[test]
