@@ -162,6 +162,19 @@ pub fn live_chat(data: &[u8]) {
     );
 }
 
+/// The JS interpreter on a page's function body (as VK's challenge
+/// `salt()` runs) and on a whole script's function `f`.
+pub fn jsinterp(data: &[u8]) {
+    use crate::jsinterp::{JsInterpreter, JsValue};
+    let text = text(data);
+    for code in [format!("function f(a, b) {{{text}}}"), text.to_owned()] {
+        let jsi = JsInterpreter::new(code);
+        if let Ok(function) = jsi.extract_function("f") {
+            let _ = jsi.call(&function, vec![JsValue::Int(1), JsValue::str("ab")]);
+        }
+    }
+}
+
 /// Native cover-art embedding into downloaded FLAC, Ogg and MP4 files, and
 /// thumbnail sniffing. The first byte picks the container; a fixed PNG is
 /// the image.

@@ -143,3 +143,10 @@ path = "fuzz_targets/live_chat.rs"
 test = false
 doc = false
 bench = false
+
+[[bin]]
+name = "jsinterp"
+path = "fuzz_targets/jsinterp.rs"
+test = false
+doc = false
+bench = false
