@@ -130,6 +130,21 @@ fn a_failed_reload_is_retried_and_an_ended_playlist_recorded_in_full() {
     );
 }
 
+#[test]
+fn a_huge_target_duration_does_not_panic() {
+    // The poll deadline after a reload is past what an `Instant` holds.
+    let (output, directory) = record(&serve(|reload| {
+        let text = playlist(0, 2, reload >= 2);
+        Some(text.replace("TARGETDURATION:1", "TARGETDURATION:18446744073709551615"))
+    }));
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(output.status.success(), "{stderr}");
+    assert_eq!(
+        std::fs::read_to_string(directory.path().join("out.mp4")).unwrap(),
+        "[seg0.ts][seg1.ts]"
+    );
+}
+
 /// A playlist that gains a segment with each reload and never ends.
 fn endless(reload: usize) -> Option<String> {
     Some(playlist(0, 2 + reload, false))

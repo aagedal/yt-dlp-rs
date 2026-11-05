@@ -445,12 +445,15 @@ pub(crate) fn sleep(duration: std::time::Duration) -> bool {
         std::thread::sleep(duration);
         return true;
     };
-    let until = std::time::Instant::now() + duration;
+    // Beyond what an `Instant` holds, sleep until interrupted.
+    let until = std::time::Instant::now().checked_add(duration);
     loop {
         if watch.requested() {
             return false;
         }
-        let remaining = until.saturating_duration_since(std::time::Instant::now());
+        let remaining = until.map_or(std::time::Duration::MAX, |until| {
+            until.saturating_duration_since(std::time::Instant::now())
+        });
         if remaining.is_zero() {
             return true;
         }
@@ -605,6 +608,19 @@ mod tests {
                 .get("authorization")
                 .is_none()
         );
+    }
+
+    #[test]
+    fn sleeps_past_an_instant_end_at_an_interrupt() {
+        let jar = Arc::new(CookieJar::default());
+        let interrupt = Interrupt::new();
+        let _guard = enter(&Default::default(), Some(&interrupt), None, &jar).unwrap();
+        let stop = interrupt.clone();
+        std::thread::spawn(move || {
+            std::thread::sleep(std::time::Duration::from_millis(50));
+            stop.stop();
+        });
+        assert!(!sleep(std::time::Duration::MAX));
     }
 
     #[test]

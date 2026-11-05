@@ -1603,7 +1603,9 @@ impl SleepPolicy {
         if seconds > 0.0 {
             screen!("[download] Sleeping {seconds:.2} seconds {note}...");
             // A signal ends the sleep; the run stops at its next checkpoint.
-            crate::SignalInterrupt::sleep(Duration::from_secs_f64(seconds));
+            crate::SignalInterrupt::sleep(
+                Duration::try_from_secs_f64(seconds).unwrap_or(Duration::MAX),
+            );
         }
     }
 
@@ -1616,7 +1618,7 @@ impl SleepPolicy {
             let now = std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
                 .map_or(0, |elapsed| elapsed.as_secs() as i64);
-            let forced = (available_at - now) as f64;
+            let forced = available_at.saturating_sub(now) as f64;
             if forced > min {
                 note = "as required by the site";
                 min = forced;

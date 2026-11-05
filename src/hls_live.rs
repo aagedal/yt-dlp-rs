@@ -135,7 +135,7 @@ impl HlsLive {
         let fresh: Vec<Fragment> = segments
             .into_iter()
             .enumerate()
-            .filter(|(index, _)| first + *index as u64 >= start)
+            .filter(|(index, _)| first.saturating_add(*index as u64) >= start)
             .map(|(_, fragment)| fragment)
             .collect();
         let target = Duration::from_secs(window.target_duration.max(1));
@@ -177,7 +177,11 @@ impl LiveSource for HlsLive {
                 std::thread::sleep(remaining.min(Duration::from_millis(100)));
             }
             let delay = self.reload()?;
-            self.next_poll = Instant::now() + delay;
+            // A target duration past what an `Instant` holds polls daily.
+            let now = Instant::now();
+            self.next_poll = now
+                .checked_add(delay)
+                .unwrap_or_else(|| now + Duration::from_secs(86_400));
         }
     }
 }
