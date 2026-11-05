@@ -84,10 +84,13 @@ pub(crate) fn send(
     let shared = Arc::new(Shared::new(Some(watch.clone())));
     let pump = Arc::clone(&shared);
     let hops = watch.clone();
+    // Redirect hops apply the call's request scope again.
+    let context = crate::control::current();
     let spawned = std::thread::Builder::new()
         .name("yt-dlp-rs-http".into())
         .stack_size(STACK)
         .spawn(move || {
+            let _context = crate::control::resume(context);
             let response = match super::follow::send(request, &|| hops.requested()) {
                 Ok(response) => response,
                 Err(error) => {
@@ -149,25 +152,30 @@ pub(crate) fn stream(
     let (sender, receiver) = mpsc::sync_channel(1);
     let shared = Arc::new(Shared::new(watch.clone()));
     let pump = Arc::clone(&shared);
+    // The transport's cookie store reads the call's request scope.
+    let context = crate::control::current();
     let spawned = std::thread::Builder::new()
         .name("yt-dlp-rs-http".into())
         .stack_size(STREAM_STACK)
-        .spawn(move || match open() {
-            Ok(streamed) => {
-                let head = Head {
-                    status: streamed.status,
-                    version: streamed.version,
-                    headers: streamed.headers,
-                    extensions: http::Extensions::new(),
-                    url: streamed.url,
-                    content_length: streamed.content_length,
-                };
-                if sender.send(Ok(head)).is_ok() {
-                    pump.fill(streamed.body);
+        .spawn(move || {
+            let _context = crate::control::resume(context);
+            match open() {
+                Ok(streamed) => {
+                    let head = Head {
+                        status: streamed.status,
+                        version: streamed.version,
+                        headers: streamed.headers,
+                        extensions: http::Extensions::new(),
+                        url: streamed.url,
+                        content_length: streamed.content_length,
+                    };
+                    if sender.send(Ok(head)).is_ok() {
+                        pump.fill(streamed.body);
+                    }
                 }
-            }
-            Err(error) => {
-                let _ = sender.send(Err(error));
+                Err(error) => {
+                    let _ = sender.send(Err(error));
+                }
             }
         });
     if let Err(error) = spawned {

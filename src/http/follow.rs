@@ -80,6 +80,7 @@ fn follow(
             return Err(Error::ExtractionCancelled);
         }
         redirect(&mut next, status, &target);
+        crate::control::rescope(&mut next);
         request = next;
     }
 }
