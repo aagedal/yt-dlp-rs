@@ -458,6 +458,51 @@ fn load_info_json_reselects_and_downloads_without_extraction() {
 }
 
 #[test]
+fn loaded_file_format_urls_need_enable_file_urls() {
+    let server = Server::new();
+    let source = tempfile::tempdir().unwrap();
+    run(&server.cli(
+        source.path(),
+        "/playlist.html",
+        &[
+            "--write-info-json",
+            "--skip-download",
+            "-o",
+            "%(id)s.%(ext)s",
+        ],
+    ));
+    // A site or info.json naming a local file must not copy it out.
+    let dir = tempfile::tempdir().unwrap();
+    let secret = dir.path().join("secret.txt");
+    fs::write(&secret, "secret").unwrap();
+    let file_url = url::Url::from_file_path(&secret).unwrap().to_string();
+    let (_, mut info) = read(&source.path().join("playlist-1.info.json"));
+    info["url"] = json!(file_url);
+    for format in info["formats"].as_array_mut().unwrap() {
+        format["url"] = json!(file_url);
+    }
+    let entry = dir.path().join("in.info.json");
+    fs::write(&entry, serde_json::to_vec(&info).unwrap()).unwrap();
+    let output = load(dir.path(), &entry, &["-o", "out.%(ext)s"]);
+    assert_eq!(output.status.code(), Some(1));
+    assert!(
+        String::from_utf8_lossy(&output.stderr).contains(
+            "ERROR: unable to download video data: file:// URLs are disabled by default in yt-dlp for security reasons. Use --enable-file-urls to enable at your own risk."
+        ),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(!dir.path().join("out.mp4").exists());
+    // The user can still opt in.
+    run(&load(
+        dir.path(),
+        &entry,
+        &["-o", "out.%(ext)s", "--enable-file-urls"],
+    ));
+    assert_eq!(fs::read(dir.path().join("out.mp4")).unwrap(), b"secret");
+}
+
+#[test]
 fn internet_shortcuts_follow_upstream_write_link_file() {
     let server = Server::new();
     let dir = tempfile::tempdir().unwrap();

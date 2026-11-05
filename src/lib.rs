@@ -340,6 +340,9 @@ pub(crate) fn total_fragments(info: &VideoInfo) -> String {
         .to_string()
 }
 
+/// Upstream's refusal of a `file:` request without `--enable-file-urls`.
+const FILE_URLS_DISABLED: &str = "file:// URLs are disabled by default in yt-dlp for security reasons. Use --enable-file-urls to enable at your own risk.";
+
 static TROUBLE: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
 
 /// Upstream `trouble` with `ignoreerrors`: an `ERROR:` line on stderr that
@@ -4996,10 +4999,7 @@ impl YoutubeDl {
             screen::generic_id(url.as_str())
         ));
         if !self.enable_file_urls {
-            return Err(Error::Reported(
-                "file:// URLs are disabled by default in yt-dlp for security reasons. Use --enable-file-urls to enable at your own risk."
-                    .into(),
-            ));
+            return Err(Error::Reported(FILE_URLS_DISABLED.into()));
         }
         let mut result = ExtractResult::Video(extractor::direct::from_file(url)?);
         self.process_result(&mut result)?;
@@ -5762,6 +5762,18 @@ impl YoutubeDl {
         options: DownloadOptions,
         mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<u64> {
+        // Upstream's request director refuses `file:` without
+        // `--enable-file-urls`, wherever the URL came from: an extracted or
+        // loaded format must not read local files either.
+        if !self.enable_file_urls
+            && std::iter::once(&info.url)
+                .chain(info.requested_formats.iter().map(|format| &format.url))
+                .any(|url| url.scheme() == "file")
+        {
+            return Err(Error::Reported(format!(
+                "unable to download video data: {FILE_URLS_DISABLED}"
+            )));
+        }
         // What a killed run left beside the output (see `scratch`).
         crate::scratch::sweep(
             destination
