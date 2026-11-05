@@ -1176,7 +1176,7 @@ fn chunked_attempt(
         }
         .max(1);
         let start = *actual;
-        let mut end = start + size - 1;
+        let mut end = start.saturating_add(size - 1);
         if let Some(length) = content_len
             && end >= length
         {

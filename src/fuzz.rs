@@ -139,6 +139,29 @@ pub fn webvtt(data: &[u8]) {
     let _ = packer.finish();
 }
 
+/// Output filename sanitization of remote titles, both modes.
+pub fn sanitize_filename(data: &[u8]) {
+    let text = text(data);
+    let _ = crate::output::sanitize_filename(text, false);
+    let _ = crate::output::sanitize_filename(text, true);
+}
+
+/// YouTube live chat continuations, live and replayed.
+pub fn live_chat(data: &[u8]) {
+    let Ok(chat) = serde_json::from_slice::<serde_json::Value>(data) else {
+        return;
+    };
+    let mut output = Vec::new();
+    let _ = crate::extractor::youtube::live_chat::parse_actions_replay(&chat, &mut output);
+    let mut offset = 0;
+    let _ = crate::extractor::youtube::live_chat::parse_actions_live(
+        &chat,
+        0,
+        &mut offset,
+        &mut output,
+    );
+}
+
 /// Native cover-art embedding into downloaded FLAC, Ogg and MP4 files, and
 /// thumbnail sniffing. The first byte picks the container; a fixed PNG is
 /// the image.

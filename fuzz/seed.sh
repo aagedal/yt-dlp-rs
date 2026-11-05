@@ -23,6 +23,8 @@ seed js_to_json -name '*.js' -o -name '*.html'
 seed devalue -path '*devalue*' -o -name '*.json'
 seed ttml -name '*.ttml' -o -name '*.xml'
 seed webvtt -name '*.vtt'
+seed sanitize_filename -name '*.json' -size -4k
+seed live_chat -path '*live_chat*' -o -path '*youtube*' -name '*.json'
 seed cookie_file -name 'cookies*.txt' -o -path '*/cookies/*'
 seed sqlite -name '*.sqlite' -o -name 'Cookies' -o -name 'cookies.sqlite'
 seed f4m -name '*.abst' -o -name '*.f4m'

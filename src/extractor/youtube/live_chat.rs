@@ -26,7 +26,7 @@ static INITIAL_DATA: LazyLock<Regex> = LazyLock::new(|| {
 /// A continuation to request: its token, the player offset and its click
 /// tracking parameters.
 #[derive(Debug, Default, PartialEq)]
-struct Next {
+pub(crate) struct Next {
     continuation: Option<String>,
     offset: i64,
     click_tracking: Option<String>,
@@ -52,7 +52,7 @@ fn json_line(value: &Value, output: &mut Vec<u8>) -> Result<()> {
 
 /// `parse_actions_replay`: every action, the last replayed offset and, when
 /// there was one, the replay continuation.
-fn parse_actions_replay(chat: &Value, output: &mut Vec<u8>) -> Result<Next> {
+pub(crate) fn parse_actions_replay(chat: &Value, output: &mut Vec<u8>) -> Result<Next> {
     let mut offset = None;
     for action in chat
         .get("actions")
@@ -193,7 +193,7 @@ fn parse_live_timestamp(action: &Value) -> Option<i64> {
 /// `parse_actions_live`: each action wrapped like a replayed one, with its
 /// offset from the download's start, then the next continuation after its
 /// `timeoutMs`.
-fn parse_actions_live(
+pub(crate) fn parse_actions_live(
     chat: &Value,
     start_ms: i64,
     live_offset: &mut i64,
