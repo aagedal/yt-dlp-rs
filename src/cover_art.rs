@@ -281,7 +281,7 @@ fn parse_comments(data: &[u8]) -> Result<Comments<'_>> {
 /// `f['METADATA_BLOCK_PICTURE'] = value; f.save()` for an Ogg Opus or
 /// Vorbis file: the comment header gets the base64 picture (replacing any
 /// earlier one), the header pages are laced again and later pages renumbered.
-#[cfg(any(test, fuzzing))]
+#[cfg(fuzzing)]
 pub(crate) fn embed_ogg(file: &[u8], picture: &[u8]) -> Result<Vec<u8>> {
     let mut out = Vec::with_capacity(file.len() + picture.len() * 4 / 3 + 1024);
     embed_ogg_into(&mut std::io::Cursor::new(file), &mut out, picture)?;
